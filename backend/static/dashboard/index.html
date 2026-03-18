@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenEmpires - Matchmaking Dashboard</title>
+    <link rel="stylesheet" href="/dashboard/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <h1>OpenEmpires Matchmaking Dashboard</h1>
+        <div class="connection-status" id="connectionStatus">
+            <span class="status-indicator disconnected"></span>
+            <span class="status-text">Connecting...</span>
+        </div>
+    </header>
+
+    <main>
+        <!-- Global Summary Bar -->
+        <section class="global-summary">
+            <div class="summary-item">
+                <span class="summary-value" id="totalOnline">0</span>
+                <span class="summary-label">Total Online</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-value" id="totalInQueue">0</span>
+                <span class="summary-label">Total In Queue</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-value" id="totalInMatch">0</span>
+                <span class="summary-label">Total In Match</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-value" id="totalMatchesCreated">0</span>
+                <span class="summary-label">Total Matches</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-value" id="avgMatchDuration">-</span>
+                <span class="summary-label">Avg Duration</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-value" id="serversConnected">0/4</span>
+                <span class="summary-label">Servers Connected</span>
+            </div>
+        </section>
+
+        <!-- Server Cards Grid -->
+        <section class="servers-section">
+            <h2>Server Status</h2>
+            <div class="servers-grid">
+                <div class="server-card disconnected" data-server="virginia">
+                    <div class="server-header">
+                        <span class="server-status-indicator"></span>
+                        <span class="server-name">Virginia</span>
+                    </div>
+                    <div class="server-stats">
+                        <div class="server-stat">
+                            <span class="server-stat-value" id="virginia-online">-</span>
+                            <span class="server-stat-label">Online</span>
+                        </div>
+                        <div class="server-stat">
+                            <span class="server-stat-value" id="virginia-queue">-</span>
+                            <span class="server-stat-label">Queue</span>
+                        </div>
+                        <div class="server-stat">
+                            <span class="server-stat-value" id="virginia-match">-</span>
+                            <span class="server-stat-label">In Match</span>
+                        </div>
+                    </div>
+                    <div class="server-queues" id="virginia-queues">
+                        <span class="queue-mode">1v1: -</span>
+                        <span class="queue-mode">2v2: -</span>
+                        <span class="queue-mode">3v3: -</span>
+                        <span class="queue-mode">4v4: -</span>
+                    </div>
+                </div>
+
+                <div class="server-card disconnected" data-server="singapore">
+                    <div class="server-header">
+                        <span class="server-status-indicator"></span>
+                        <span class="server-name">Singapore</span>
+                    </div>
+                    <div class="server-stats">
+                        <div class="server-stat">
+                            <span class="server-stat-value" id="singapore-online">-</span>
+                            <span class="server-stat-label">Online</span>
+                        </div>
+                        <div class="server-stat">
+                            <span class="server-stat-value" id="singapore-queue">-</span>
+                            <span class="server-stat-label">Queue</span>
+                        </div>
+                        <div class="server-stat">
+                            <span class="server-stat-value" id="singapore-match">-</span>
+                            <span class="server-stat-label">In Match</span>
+                        </div>
+                    </div>
+                    <div class="server-queues" id="singapore-queues">
+                        <span class="queue-mode">1v1: -</span>
+                        <span class="queue-mode">2v2: -</span>
+                        <span class="queue-mode">3v3: -</span>
+                        <span class="queue-mode">4v4: -</span>
+                    </div>
+                </div>
+
+                <div class="server-card disconnected" data-server="oregon">
+                    <div class="server-header">
+                        <span class="server-status-indicator"></span>
+                        <span class="server-name">Oregon</span>
+                    </div>
+                    <div class="server-stats">
+                        <div class="server-stat">
+                            <span class="server-stat-value" id="oregon-online">-</span>
+                            <span class="server-stat-label">Online</span>
+                        </div>
+                        <div class="server-stat">
+                            <span class="server-stat-value" id="oregon-queue">-</span>
+                            <span class="server-stat-label">Queue</span>
+                        </div>
+                        <div class="server-stat">
+                            <span class="server-stat-value" id="oregon-match">-</span>
+                            <span class="server-stat-label">In Match</span>
+                        </div>
+                    </div>
+                    <div class="server-queues" id="oregon-queues">
+                        <span class="queue-mode">1v1: -</span>
+                        <span class="queue-mode">2v2: -</span>
+                        <span class="queue-mode">3v3: -</span>
+                        <span class="queue-mode">4v4: -</span>
+                    </div>
+                </div>
+
+                <div class="server-card disconnected" data-server="frankfurt">
+                    <div class="server-header">
+                        <span class="server-status-indicator"></span>
+                        <span class="server-name">Frankfurt</span>
+                    </div>
+                    <div class="server-stats">
+                        <div class="server-stat">
+                            <span class="server-stat-value" id="frankfurt-online">-</span>
+                            <span class="server-stat-label">Online</span>
+                        </div>
+                        <div class="server-stat">
+                            <span class="server-stat-value" id="frankfurt-queue">-</span>
+                            <span class="server-stat-label">Queue</span>
+                        </div>
+                        <div class="server-stat">
+                            <span class="server-stat-value" id="frankfurt-match">-</span>
+                            <span class="server-stat-label">In Match</span>
+                        </div>
+                    </div>
+                    <div class="server-queues" id="frankfurt-queues">
+                        <span class="queue-mode">1v1: -</span>
+                        <span class="queue-mode">2v2: -</span>
+                        <span class="queue-mode">3v3: -</span>
+                        <span class="queue-mode">4v4: -</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Charts Section -->
+        <section class="charts">
+            <div class="chart-container">
+                <h2>Total Queue Sizes (Last 30 Minutes)</h2>
+                <canvas id="queueSizeChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h2>Total Matches Per Minute (Last 30 Minutes)</h2>
+                <canvas id="matchesPerMinuteChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Weekly Matches Chart -->
+        <section class="charts">
+            <div class="chart-container full-width">
+                <h2>Weekly Match History</h2>
+                <canvas id="weeklyMatchChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Server Health Section -->
+        <section class="server-health">
+            <h2>Server Health</h2>
+            <div class="health-grid">
+                <div class="health-stats">
+                    <div class="health-stat">
+                        <span class="health-stat-value" id="matchTimeoutCount">0</span>
+                        <span class="health-stat-label">Match Timeouts</span>
+                    </div>
+                    <div class="health-stat">
+                        <span class="health-stat-value" id="playerDisconnectCount">0</span>
+                        <span class="health-stat-label">Player Disconnects</span>
+                    </div>
+                    <div class="health-stat">
+                        <span class="health-stat-value" id="relayErrorCount">0</span>
+                        <span class="health-stat-label">Relay Errors</span>
+                    </div>
+                </div>
+                <div class="failures-list" id="failuresList">
+                    <div class="failure-item placeholder">No recent failures</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Active Matches -->
+        <section class="active-matches">
+            <h2>Active Matches</h2>
+            <div class="matches-list" id="activeMatchesList">
+                <div class="match-item placeholder">No active matches</div>
+            </div>
+        </section>
+
+        <!-- Events Feed -->
+        <section class="events-feed">
+            <h2>Recent Events (All Servers)</h2>
+            <div class="events-list" id="eventsList">
+                <div class="event-item placeholder">Waiting for events...</div>
+            </div>
+        </section>
+    </main>
+
+    <script src="/dashboard/dashboard.js"></script>
+</body>
+</html>

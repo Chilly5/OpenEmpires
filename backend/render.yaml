@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: openempires-matchmaking
+    runtime: rust
+    buildCommand: cargo build --release
+    startCommand: ./target/release/openempires-matchmaking
+    envVars:
+      - key: RUST_LOG
+        value: info
