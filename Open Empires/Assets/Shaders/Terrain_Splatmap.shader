@@ -3,11 +3,13 @@ Shader "OpenEmpires/Terrain_Splatmap"
     Properties
     {
         _SplatMap ("Splat Map", 2D) = "white" {}
-        _TexGrass ("Grass Texture", 2D) = "white" {}
+        _GrassArray ("Grass Texture Array", 2DArray) = "" {}
+        _GrassIndexMap ("Grass Index Map", 2D) = "black" {}
+        _GrassArrayCount ("Grass Variant Count", Float) = 9
         _TexDirt ("Dirt Texture", 2D) = "white" {}
         _TexSand ("Sand Texture", 2D) = "white" {}
         _TexRock ("Rock Texture", 2D) = "white" {}
-        _TintGrass ("Grass Tint", Color) = (0.35, 0.55, 0.2, 1)
+        _TintGrass ("Grass Tint", Color) = (1, 1, 1, 1)
         _TintDirt ("Dirt Tint", Color) = (0.45, 0.35, 0.2, 1)
         _TintSand ("Sand Tint", Color) = (0.76, 0.70, 0.50, 1)
         _TintRock ("Rock Tint", Color) = (0.5, 0.48, 0.44, 1)
@@ -20,7 +22,7 @@ Shader "OpenEmpires/Terrain_Splatmap"
         _SnowFullHeight ("Snow Full Height", Float) = 7.6
         _SnowNoiseScale ("Snow Noise Scale", Float) = 0.08
         _SnowNoiseStrength ("Snow Noise Strength", Float) = 0.8
-        _TexScale ("Texture Tiling Scale", Float) = 8
+        _TexScale ("Texture Tiling Scale", Float) = 2
         _DetailScale ("Detail Noise Scale", Float) = 32
         _DetailStrength ("Detail Noise Strength", Float) = 0.12
         [HideInInspector] _FogOfWarTex ("Fog Of War", 2D) = "black" {}
@@ -64,7 +66,8 @@ Shader "OpenEmpires/Terrain_Splatmap"
             };
 
             TEXTURE2D(_SplatMap); SAMPLER(sampler_SplatMap);
-            TEXTURE2D(_TexGrass); SAMPLER(sampler_TexGrass);
+            TEXTURE2D_ARRAY(_GrassArray); SAMPLER(sampler_GrassArray);
+            TEXTURE2D(_GrassIndexMap); SAMPLER(sampler_GrassIndexMap);
             TEXTURE2D(_TexDirt); SAMPLER(sampler_TexDirt);
             TEXTURE2D(_TexSand); SAMPLER(sampler_TexSand);
             TEXTURE2D(_TexRock); SAMPLER(sampler_TexRock);
@@ -78,6 +81,7 @@ Shader "OpenEmpires/Terrain_Splatmap"
 
             CBUFFER_START(UnityPerMaterial)
                 float4 _SplatMap_ST;
+                float _GrassArrayCount;
                 float4 _TintGrass;
                 float4 _TintDirt;
                 float4 _TintSand;
@@ -133,8 +137,15 @@ Shader "OpenEmpires/Terrain_Splatmap"
                 // Sample splatmap: R=grass, G=dirt, B=sand, A=rock
                 half4 splat = SAMPLE_TEXTURE2D(_SplatMap, sampler_SplatMap, input.uv);
 
-                // Sample tiled terrain textures
-                half3 grass = SAMPLE_TEXTURE2D(_TexGrass, sampler_TexGrass, input.uvTiled).rgb * _TintGrass.rgb;
+                // Sample grass from texture array using index map
+                float grassIdxRaw = SAMPLE_TEXTURE2D(_GrassIndexMap, sampler_GrassIndexMap, input.uv).r;
+                float grassIdxF = grassIdxRaw * (_GrassArrayCount - 1.0);
+                float idx0 = floor(grassIdxF);
+                float idx1 = min(idx0 + 1.0, _GrassArrayCount - 1.0);
+                float blend = frac(grassIdxF);
+                half3 g0 = SAMPLE_TEXTURE2D_ARRAY(_GrassArray, sampler_GrassArray, input.uvTiled, idx0).rgb;
+                half3 g1 = SAMPLE_TEXTURE2D_ARRAY(_GrassArray, sampler_GrassArray, input.uvTiled, idx1).rgb;
+                half3 grass = lerp(g0, g1, blend) * _TintGrass.rgb;
                 half3 dirt = SAMPLE_TEXTURE2D(_TexDirt, sampler_TexDirt, input.uvTiled).rgb * _TintDirt.rgb;
                 half3 sand = SAMPLE_TEXTURE2D(_TexSand, sampler_TexSand, input.uvTiled).rgb * _TintSand.rgb;
                 half3 rock = SAMPLE_TEXTURE2D(_TexRock, sampler_TexRock, input.uvTiled).rgb * _TintRock.rgb;
