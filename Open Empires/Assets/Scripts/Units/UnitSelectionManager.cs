@@ -652,7 +652,7 @@ namespace OpenEmpires
 
                         bool valid = snappedPositionValid && CanAffordBuilding(sim);
                         bool inInfluence = valid && placementBuildingType == BuildingType.Farm
-                            && IsFarmInAnyMillInfluenceZone(sim, snappedTileX, snappedTileZ, fw, fh);
+                            && IsFarmInAnyInfluenceZone(sim, snappedTileX, snappedTileZ, fw, fh);
                         if (valid != ghostIsValid || inInfluence != ghostInInfluenceZone)
                         {
                             ghostIsValid = valid;
@@ -3054,7 +3054,7 @@ namespace OpenEmpires
             // Create attack range visualization for buildings that can attack
             CreateGhostAttackRangeRing(type, sim.Config);
             CreateGhostInfluenceZone(type, sim.Config);
-            CreateGhostInfluenceZonesForExistingMills(type, sim);
+            CreateGhostInfluenceZonesForExistingBuildings(type, sim);
 
             // Create grid overlay
             CreateGridOverlay(sim.MapData, sim.Config.TerrainHeightScale);
@@ -3099,11 +3099,13 @@ namespace OpenEmpires
                 ghostInfluenceZone = null;
             }
 
-            if (type != BuildingType.Mill) return;
+            var sim = GameBootstrapper.Instance?.Simulation;
+            BuildingType influenceBuildingType = sim != null ? sim.GetInfluenceBuildingType(LocalPlayerId) : BuildingType.Mill;
+            if (type != influenceBuildingType) return;
 
             int influenceRadius = config.MillInfluenceRadius;
-            int footprintW = config.MillFootprintWidth;
-            int footprintH = config.MillFootprintHeight;
+            int footprintW = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintWidth : config.MillFootprintWidth;
+            int footprintH = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintHeight : config.MillFootprintHeight;
             float halfX = (footprintW + 2 * influenceRadius) * 0.5f;
             float halfZ = (footprintH + 2 * influenceRadius) * 0.5f;
 
@@ -3125,7 +3127,7 @@ namespace OpenEmpires
             lr.endColor = new Color(1f, 0.6f, 0f, 0.8f);
         }
 
-        private void CreateGhostInfluenceZonesForExistingMills(BuildingType type, GameSimulation sim)
+        private void CreateGhostInfluenceZonesForExistingBuildings(BuildingType type, GameSimulation sim)
         {
             if (ghostInfluenceZones != null)
             {
@@ -3136,11 +3138,12 @@ namespace OpenEmpires
 
             if (type != BuildingType.Farm) return;
 
+            BuildingType influenceBuildingType = sim.GetInfluenceBuildingType(LocalPlayerId);
             ghostInfluenceZones = new List<GameObject>();
             var config = sim.Config;
             int influenceRadius = config.MillInfluenceRadius;
-            int footprintW = config.MillFootprintWidth;
-            int footprintH = config.MillFootprintHeight;
+            int footprintW = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintWidth : config.MillFootprintWidth;
+            int footprintH = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintHeight : config.MillFootprintHeight;
             float halfX = (footprintW + 2 * influenceRadius) * 0.5f;
             float halfZ = (footprintH + 2 * influenceRadius) * 0.5f;
 
@@ -3148,7 +3151,7 @@ namespace OpenEmpires
             for (int i = 0; i < buildings.Count; i++)
             {
                 var b = buildings[i];
-                if (b.Type != BuildingType.Mill) continue;
+                if (b.Type != influenceBuildingType) continue;
                 if (b.PlayerId != LocalPlayerId) continue;
                 if (b.IsDestroyed) continue;
 
@@ -3178,17 +3181,18 @@ namespace OpenEmpires
             }
         }
 
-        private bool IsFarmInAnyMillInfluenceZone(GameSimulation sim, int farmTileX, int farmTileZ, int farmW, int farmH)
+        private bool IsFarmInAnyInfluenceZone(GameSimulation sim, int farmTileX, int farmTileZ, int farmW, int farmH)
         {
             var config = sim.Config;
             int influenceRadius = config.MillInfluenceRadius;
-            int millW = config.MillFootprintWidth;
-            int millH = config.MillFootprintHeight;
+            BuildingType influenceBuildingType = sim.GetInfluenceBuildingType(LocalPlayerId);
+            int millW = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintWidth : config.MillFootprintWidth;
+            int millH = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintHeight : config.MillFootprintHeight;
             var buildings = sim.BuildingRegistry.GetAllBuildings();
             for (int i = 0; i < buildings.Count; i++)
             {
                 var b = buildings[i];
-                if (b.Type != BuildingType.Mill) continue;
+                if (b.Type != influenceBuildingType) continue;
                 if (b.PlayerId != LocalPlayerId) continue;
                 if (b.IsDestroyed) continue;
 

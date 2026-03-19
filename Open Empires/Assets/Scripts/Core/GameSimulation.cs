@@ -61,6 +61,12 @@ namespace OpenEmpires
             return Civilization.English;
         }
         public void SetPlayerCivilizations(Civilization[] civs) { playerCivilizations = civs; }
+        public BuildingType GetInfluenceBuildingType(int playerId)
+        {
+            return GetPlayerCivilization(playerId) == Civilization.English
+                ? BuildingType.TownCenter
+                : BuildingType.Mill;
+        }
         public int ResolveCivUnitType(int playerId, int baseUnitType)
         {
             var civ = GetPlayerCivilization(playerId);
@@ -714,7 +720,7 @@ namespace OpenEmpires
             CheckWinCondition();
             if (isMatchOver) return;
 
-            gatheringSystem.Tick(UnitRegistry, MapData, ResourceManager, BuildingRegistry, config, cachedTickDuration, currentTick);
+            gatheringSystem.Tick(UnitRegistry, MapData, ResourceManager, BuildingRegistry, config, cachedTickDuration, currentTick, GetInfluenceBuildingType);
             healingSystem.Tick(UnitRegistry, config, spatialGrid, playerTeamIds, currentTick, MapData, BuildingRegistry);
             if (hashSystems) lastSystemHashes[7] = ComputeQuickHash(); // after gathering
 

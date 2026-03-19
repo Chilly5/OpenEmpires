@@ -1009,6 +1009,38 @@ namespace OpenEmpires
             var rangeRingGO = CreateRangeRing(tc.transform, rangeDiameter);
             view.SetRangeRing(rangeRingGO);
 
+            // For English players, TC is the influence source — add influence zone
+            var sim2 = GameBootstrapper.Instance?.Simulation;
+            if (sim2 != null && sim2.GetInfluenceBuildingType(playerId) == BuildingType.TownCenter)
+            {
+                int influenceRadius = sim2.Config.MillInfluenceRadius;
+                int tcFootW = sim2.Config.TownCenterFootprintWidth;
+                int tcFootH = sim2.Config.TownCenterFootprintHeight;
+                float halfX = (tcFootW + 2 * influenceRadius) * 0.5f;
+                float halfZ = (tcFootH + 2 * influenceRadius) * 0.5f;
+
+                var zone = new GameObject("InfluenceZone");
+                zone.transform.SetParent(tc.transform);
+                zone.transform.localPosition = new Vector3(0f, 0.03f, 0f);
+                zone.layer = 11;
+                var zoneLR = zone.AddComponent<LineRenderer>();
+                zoneLR.useWorldSpace = false;
+                zoneLR.loop = true;
+                zoneLR.positionCount = 4;
+                zoneLR.SetPosition(0, new Vector3(-halfX, 0f, -halfZ));
+                zoneLR.SetPosition(1, new Vector3(halfX, 0f, -halfZ));
+                zoneLR.SetPosition(2, new Vector3(halfX, 0f, halfZ));
+                zoneLR.SetPosition(3, new Vector3(-halfX, 0f, halfZ));
+                zoneLR.startWidth = 0.08f;
+                zoneLR.endWidth = 0.08f;
+                var zoneMat = new Material(cachedUnlitShader);
+                zoneMat.color = new Color(1f, 0.6f, 0f, 0.8f);
+                zoneLR.material = zoneMat;
+                zoneLR.startColor = new Color(1f, 0.6f, 0f, 0.8f);
+                zoneLR.endColor = new Color(1f, 0.6f, 0f, 0.8f);
+                view.SetInfluenceZone(zone);
+            }
+
             return tc;
         }
 
@@ -1157,36 +1189,40 @@ namespace OpenEmpires
             if (ringCollider != null) Object.Destroy(ringCollider);
             ring.GetComponent<Renderer>().sharedMaterial = sharedSelectionRingMat;
 
-            // Influence zone outline (visible during Mill construction)
-            int influenceRadius = GameBootstrapper.Instance?.Simulation?.Config?.MillInfluenceRadius ?? 6;
-            int footprintW = GameBootstrapper.Instance?.Simulation?.Config?.MillFootprintWidth ?? 2;
-            int footprintH = GameBootstrapper.Instance?.Simulation?.Config?.MillFootprintHeight ?? 2;
-            float halfX = (footprintW + 2 * influenceRadius) * 0.5f;
-            float halfZ = (footprintH + 2 * influenceRadius) * 0.5f;
-
-            var zone = new GameObject("InfluenceZone");
-            zone.transform.SetParent(mill.transform);
-            zone.transform.localPosition = new Vector3(0f, 0.03f, 0f);
-            zone.layer = 11;
-            var zoneLR = zone.AddComponent<LineRenderer>();
-            zoneLR.useWorldSpace = false;
-            zoneLR.loop = true;
-            zoneLR.positionCount = 4;
-            zoneLR.SetPosition(0, new Vector3(-halfX, 0f, -halfZ));
-            zoneLR.SetPosition(1, new Vector3(halfX, 0f, -halfZ));
-            zoneLR.SetPosition(2, new Vector3(halfX, 0f, halfZ));
-            zoneLR.SetPosition(3, new Vector3(-halfX, 0f, halfZ));
-            zoneLR.startWidth = 0.08f;
-            zoneLR.endWidth = 0.08f;
-            var zoneMat = new Material(cachedUnlitShader);
-            zoneMat.color = new Color(1f, 0.6f, 0f, 0.8f);
-            zoneLR.material = zoneMat;
-            zoneLR.startColor = new Color(1f, 0.6f, 0f, 0.8f);
-            zoneLR.endColor = new Color(1f, 0.6f, 0f, 0.8f);
-
             var view = mill.AddComponent<BuildingView>();
             view.SetSelectionRing(ring);
-            view.SetInfluenceZone(zone);
+
+            // Influence zone outline (visible during Mill construction) — only for civs that use Mill as influence source
+            var simRef = GameBootstrapper.Instance?.Simulation;
+            if (simRef == null || simRef.GetInfluenceBuildingType(playerId) == BuildingType.Mill)
+            {
+                int influenceRadius = simRef?.Config?.MillInfluenceRadius ?? 6;
+                int footprintW = simRef?.Config?.MillFootprintWidth ?? 2;
+                int footprintH = simRef?.Config?.MillFootprintHeight ?? 2;
+                float halfX = (footprintW + 2 * influenceRadius) * 0.5f;
+                float halfZ = (footprintH + 2 * influenceRadius) * 0.5f;
+
+                var zone = new GameObject("InfluenceZone");
+                zone.transform.SetParent(mill.transform);
+                zone.transform.localPosition = new Vector3(0f, 0.03f, 0f);
+                zone.layer = 11;
+                var zoneLR = zone.AddComponent<LineRenderer>();
+                zoneLR.useWorldSpace = false;
+                zoneLR.loop = true;
+                zoneLR.positionCount = 4;
+                zoneLR.SetPosition(0, new Vector3(-halfX, 0f, -halfZ));
+                zoneLR.SetPosition(1, new Vector3(halfX, 0f, -halfZ));
+                zoneLR.SetPosition(2, new Vector3(halfX, 0f, halfZ));
+                zoneLR.SetPosition(3, new Vector3(-halfX, 0f, halfZ));
+                zoneLR.startWidth = 0.08f;
+                zoneLR.endWidth = 0.08f;
+                var zoneMat = new Material(cachedUnlitShader);
+                zoneMat.color = new Color(1f, 0.6f, 0f, 0.8f);
+                zoneLR.material = zoneMat;
+                zoneLR.startColor = new Color(1f, 0.6f, 0f, 0.8f);
+                zoneLR.endColor = new Color(1f, 0.6f, 0f, 0.8f);
+                view.SetInfluenceZone(zone);
+            }
             return mill;
         }
 

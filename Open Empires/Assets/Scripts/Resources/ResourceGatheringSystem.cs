@@ -99,7 +99,8 @@ namespace OpenEmpires
         }
 
         public void Tick(UnitRegistry unitRegistry, MapData mapData, ResourceManager resourceManager,
-            BuildingRegistry buildingRegistry, SimulationConfig config, Fixed32 tickDuration, int currentTick)
+            BuildingRegistry buildingRegistry, SimulationConfig config, Fixed32 tickDuration, int currentTick,
+            System.Func<int, BuildingType> getInfluenceBuildingType)
         {
             BuildOccupancyLookups(unitRegistry, mapData);
 
@@ -253,7 +254,8 @@ namespace OpenEmpires
                 else
                 {
                     int cooldown = StrikeCooldownTicks;
-                    if (node.IsFarmNode && IsFarmInfluencedByMill(node, unit.PlayerId, buildingRegistry, config.MillInfluenceRadius))
+                    var influenceType = getInfluenceBuildingType(unit.PlayerId);
+                    if (node.IsFarmNode && IsFarmInfluencedByBuilding(node, unit.PlayerId, buildingRegistry, config.MillInfluenceRadius, influenceType))
                         cooldown = StrikeCooldownTicks * (100 - config.MillInfluenceGatherBonusPercent) / 100;
                     unit.AttackCooldownRemaining = cooldown;
                     unit.LastAttackTick = currentTick;
@@ -686,14 +688,14 @@ namespace OpenEmpires
             return true;
         }
 
-        private bool IsFarmInfluencedByMill(ResourceNodeData farm, int playerId,
-            BuildingRegistry buildingRegistry, int influenceRadius)
+        private bool IsFarmInfluencedByBuilding(ResourceNodeData farm, int playerId,
+            BuildingRegistry buildingRegistry, int influenceRadius, BuildingType influenceSourceType)
         {
             var buildings = buildingRegistry.GetAllBuildings();
             for (int i = 0; i < buildings.Count; i++)
             {
                 var b = buildings[i];
-                if (b.Type != BuildingType.Mill) continue;
+                if (b.Type != influenceSourceType) continue;
                 if (b.PlayerId != playerId) continue;
                 if (b.IsDestroyed || b.IsUnderConstruction) continue;
 

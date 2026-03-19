@@ -334,7 +334,7 @@ namespace OpenEmpires
                     SFXManager.Instance?.Play(SFXType.ConstructionComplete, transform.position, 0.7f);
 
                     if (influenceZone != null)
-                        influenceZone.SetActive(false);
+                        influenceZone.SetActive(isSelected && PlayerId == GetLocalPlayerId());
                 }
             }
 
@@ -628,16 +628,17 @@ namespace OpenEmpires
             return net != null && net.IsMultiplayer ? net.LocalPlayerId : 0;
         }
 
-        private bool IsFarmInfluencedByAnyMill()
+        private bool IsFarmInfluencedByInfluenceBuilding()
         {
             var sim = GameBootstrapper.Instance?.Simulation;
             if (sim == null) return false;
             int radius = sim.Config.MillInfluenceRadius;
+            BuildingType influenceType = sim.GetInfluenceBuildingType(PlayerId);
             var buildings = sim.BuildingRegistry.GetAllBuildings();
             for (int i = 0; i < buildings.Count; i++)
             {
                 var b = buildings[i];
-                if (b.Type != BuildingType.Mill) continue;
+                if (b.Type != influenceType) continue;
                 if (b.PlayerId != PlayerId) continue;
                 if (b.IsDestroyed || b.IsUnderConstruction) continue;
                 int minX = b.OriginTileX - radius;
@@ -1153,7 +1154,7 @@ namespace OpenEmpires
             if (++influenceCheckCounter >= 60)
             {
                 influenceCheckCounter = 0;
-                cachedInfluenceResult = IsFarmInfluencedByAnyMill();
+                cachedInfluenceResult = IsFarmInfluencedByInfluenceBuilding();
             }
             bool influenced = cachedInfluenceResult;
             if (influenced && !influenceTinted)
@@ -1182,6 +1183,9 @@ namespace OpenEmpires
             isPreselected = false;
             if (selectionRing != null)
                 selectionRing.SetActive(selected);
+
+            if (influenceZone != null && !IsDestroyed && buildingData != null && !buildingData.IsUnderConstruction)
+                influenceZone.SetActive(selected && PlayerId == GetLocalPlayerId());
 
             UpdateAttackRangeDisplay();
         }
