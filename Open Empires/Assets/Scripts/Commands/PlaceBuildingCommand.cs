@@ -9,6 +9,7 @@ namespace OpenEmpires
         public int TileZ;
         public int[] VillagerUnitIds;
         public bool IsQueued;
+        public int LandmarkIdValue; // cast of LandmarkId, only meaningful when BuildingType == Landmark
 
         public PlaceBuildingCommand(int playerId, BuildingType buildingType, int tileX, int tileZ, int[] villagerUnitIds = null)
         {
@@ -18,6 +19,7 @@ namespace OpenEmpires
             TileZ = tileZ;
             VillagerUnitIds = villagerUnitIds;
             IsQueued = false;
+            LandmarkIdValue = -1;
         }
     }
 }

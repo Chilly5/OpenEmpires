@@ -118,6 +118,7 @@ namespace OpenEmpires
         private bool placementIsShiftQueued; // true when placement was kept alive via shift
         private BuildingType placementBuildingType;
         private int[] placementVillagerIds;
+        private LandmarkId placementLandmarkId; // only meaningful when placementBuildingType == Landmark
         private GameObject ghostBuilding;
         private GameObject ghostAttackRangeRing;
         private GameObject ghostInfluenceZone;       // follows ghost cursor (Mill placement)
@@ -431,6 +432,8 @@ namespace OpenEmpires
                     var placeCmd = new PlaceBuildingCommand(
                         LocalPlayerId, placementBuildingType, snappedTileX, snappedTileZ, placementVillagerIds);
                     placeCmd.IsQueued = multiSelectHeld;
+                    if (placementBuildingType == BuildingType.Landmark)
+                        placeCmd.LandmarkIdValue = (int)placementLandmarkId;
                     sim.CommandBuffer.EnqueueCommand(placeCmd);
 
                     placementConsumedClick = true;
@@ -3060,6 +3063,12 @@ namespace OpenEmpires
             CreateGridOverlay(sim.MapData, sim.Config.TerrainHeightScale);
         }
 
+        public void EnterLandmarkPlacement(LandmarkId landmarkId)
+        {
+            placementLandmarkId = landmarkId;
+            EnterBuildPlacement(BuildingType.Landmark);
+        }
+
         private void CreateGhostAttackRangeRing(BuildingType buildingType, SimulationConfig config)
         {
             // Destroy existing range ring if any
@@ -3667,6 +3676,12 @@ namespace OpenEmpires
 
         private bool CanAffordBuilding(GameSimulation sim)
         {
+            if (placementBuildingType == BuildingType.Landmark)
+            {
+                var def = LandmarkDefinitions.Get(placementLandmarkId);
+                var res = sim.ResourceManager.GetPlayerResources(LocalPlayerId);
+                return res.Food >= def.FoodCost && res.Gold >= def.GoldCost;
+            }
             int cost = sim.GetBuildingWoodCost(placementBuildingType);
             int stoneCost = sim.GetBuildingStoneCost(placementBuildingType);
             var resources = sim.ResourceManager.GetPlayerResources(LocalPlayerId);
@@ -3712,6 +3727,11 @@ namespace OpenEmpires
                 case BuildingType.Farm:
                     w = config.FarmFootprintWidth;
                     h = config.FarmFootprintHeight;
+                    break;
+                case BuildingType.Landmark:
+                    var ldef = LandmarkDefinitions.Get(placementLandmarkId);
+                    w = ldef.FootprintWidth;
+                    h = ldef.FootprintHeight;
                     break;
                 default:
                     w = config.HouseFootprintWidth;

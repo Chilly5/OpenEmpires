@@ -53,6 +53,9 @@ namespace OpenEmpires
         private bool warningShownForCurrentCap;
         private int lastPopCap = -1;
 
+        // Age indicator
+        private TMP_Text ageText;
+
         // Idle villager UI
         private GameObject idleVillagerPanel;
         private RectTransform idleVillagerPanelRT;
@@ -173,6 +176,35 @@ namespace OpenEmpires
             popText.color = Color.white;
             popText.alignment = TextAlignmentOptions.Left;
             popText.overflowMode = TextOverflowModes.Ellipsis;
+
+            // Age indicator panel (right of population panel)
+            var ageGO = new GameObject("AgePanel");
+            ageGO.transform.SetParent(canvasGO.transform, false);
+            var ageRT = ageGO.AddComponent<RectTransform>();
+            ageRT.anchorMin = new Vector2(0, 0);
+            ageRT.anchorMax = new Vector2(0, 0);
+            ageRT.pivot = new Vector2(0, 0);
+            ageRT.anchoredPosition = new Vector2(Margin + PopPanelWidth + PopGap, Margin + PanelHeight + PopGap);
+            ageRT.sizeDelta = new Vector2(50f, PopPanelHeight);
+            var ageImg = ageGO.AddComponent<Image>();
+            ageImg.color = new Color(0, 0, 0, 1f);
+            var ageOutline = ageGO.AddComponent<Outline>();
+            ageOutline.effectColor = new Color(0.5f, 0.5f, 0.5f, 1f);
+            ageOutline.effectDistance = new Vector2(2, -2);
+
+            var ageLabel = new GameObject("AgeText");
+            ageLabel.transform.SetParent(ageGO.transform, false);
+            var ageLabelRT = ageLabel.AddComponent<RectTransform>();
+            ageLabelRT.anchorMin = new Vector2(0, 0);
+            ageLabelRT.anchorMax = new Vector2(1, 1);
+            ageLabelRT.offsetMin = new Vector2(4f, 0);
+            ageLabelRT.offsetMax = new Vector2(-4f, 0);
+            ageText = ageLabel.AddComponent<TextMeshProUGUI>();
+            ageText.fontSize = 14;
+            ageText.fontStyle = FontStyles.Bold;
+            ageText.color = Color.white;
+            ageText.alignment = TextAlignmentOptions.Center;
+            ageText.text = "Age I";
 
             // Center-screen warning text
             BuildWarningLabel(canvasGO.transform);
@@ -445,6 +477,13 @@ namespace OpenEmpires
                 popText.color = Color.yellow;
             else
                 popText.color = Color.white;
+
+            // Update age display
+            if (ageText != null)
+            {
+                int age = sim.GetPlayerAge(localPlayerId);
+                ageText.text = $"Age {LandmarkDefinitions.AgeToRoman(age)}";
+            }
 
             int totalSeconds = sim.CurrentTick / 30;
             int minutes = totalSeconds / 60;

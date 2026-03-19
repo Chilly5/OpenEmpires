@@ -133,6 +133,9 @@ namespace OpenEmpires
         private Image[] actionButtonIcons;
         private Image[] actionButtonFills;
 
+        // Landmark choice panel
+        private GameObject landmarkPanelGO;
+
         // Mouse hold-to-delete on action button
         private bool deleteMouseHolding;
         private float deleteMouseHoldTimer;
@@ -1066,6 +1069,18 @@ namespace OpenEmpires
             var sim = GameBootstrapper.Instance?.Simulation;
             if (sim == null) return;
 
+            // Close landmark panel on Escape or right-click
+            if (landmarkPanelGO != null)
+            {
+                var kb = Keyboard.current;
+                var mouse = Mouse.current;
+                if ((kb != null && kb.escapeKey.wasPressedThisFrame) ||
+                    (mouse != null && mouse.rightButton.wasPressedThisFrame))
+                {
+                    CloseLandmarkChoicePanel();
+                }
+            }
+
             // Clear action callbacks
             for (int i = 0; i < 12; i++) actionCallbacks[i] = null;
             for (int i = 0; i < 12; i++) buildCallbacks[i] = null;
@@ -1700,6 +1715,7 @@ namespace OpenEmpires
         private GridButton?[] GetBuildMenuSlots(GameSimulation sim)
         {
             var resources = sim.ResourceManager.GetPlayerResources(selectionManager.LocalPlayerId);
+            int playerAge = sim.GetPlayerAge(selectionManager.LocalPlayerId);
             int houseCost = sim.Config.HouseWoodCost;
             int barracksCost = sim.Config.BarracksWoodCost;
             int tcCost = sim.Config.TownCenterWoodCost;
@@ -1732,25 +1748,33 @@ namespace OpenEmpires
                 Tooltip = $"<b>Mine</b>\nDrop-off point for gold and stone.\nCost: {mineCost} <sprite name=\"wood\">",
                 Enabled = resources.Wood >= mineCost, Icon = BuildingIcons.Get(BuildingType.Mine),
                 OnClick = () => selectionManager.EnterBuildPlacement(BuildingType.Mine) };
+            bool tcAgeOk = playerAge >= LandmarkDefinitions.GetBuildingRequiredAge(BuildingType.TownCenter);
             slots[4] = new GridButton { Label = "Town\nCenter", Hotkey = "A",
-                Tooltip = $"<b>Town Center</b>\nMain building. Trains villagers, drop-off for all resources.\nCost: {tcCost} <sprite name=\"wood\"> {tcStoneCost} <sprite name=\"stone\">",
-                Enabled = resources.Wood >= tcCost && resources.Stone >= tcStoneCost, Icon = BuildingIcons.Get(BuildingType.TownCenter),
+                Tooltip = $"<b>Town Center</b>\nMain building. Trains villagers, drop-off for all resources.\nCost: {tcCost} <sprite name=\"wood\"> {tcStoneCost} <sprite name=\"stone\">"
+                    + (tcAgeOk ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(LandmarkDefinitions.GetBuildingRequiredAge(BuildingType.TownCenter))}</color>"),
+                Enabled = tcAgeOk && resources.Wood >= tcCost && resources.Stone >= tcStoneCost, Icon = BuildingIcons.Get(BuildingType.TownCenter),
                 OnClick = () => selectionManager.EnterBuildPlacement(BuildingType.TownCenter) };
             slots[5] = new GridButton { Label = "Barracks", Hotkey = "S",
                 Tooltip = $"<b>Barracks</b>\nTrains spearmen.\nCost: {barracksCost} <sprite name=\"wood\">",
                 Enabled = resources.Wood >= barracksCost, Icon = BuildingIcons.Get(BuildingType.Barracks),
                 OnClick = () => selectionManager.EnterBuildPlacement(BuildingType.Barracks) };
+            bool archAgeOk = playerAge >= LandmarkDefinitions.GetBuildingRequiredAge(BuildingType.ArcheryRange);
             slots[6] = new GridButton { Label = "Archery", Hotkey = "D",
-                Tooltip = $"<b>Archery Range</b>\nTrains archers.\nCost: {archeryRangeCost} <sprite name=\"wood\">",
-                Enabled = resources.Wood >= archeryRangeCost, Icon = BuildingIcons.Get(BuildingType.ArcheryRange),
+                Tooltip = $"<b>Archery Range</b>\nTrains archers.\nCost: {archeryRangeCost} <sprite name=\"wood\">"
+                    + (archAgeOk ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(LandmarkDefinitions.GetBuildingRequiredAge(BuildingType.ArcheryRange))}</color>"),
+                Enabled = archAgeOk && resources.Wood >= archeryRangeCost, Icon = BuildingIcons.Get(BuildingType.ArcheryRange),
                 OnClick = () => selectionManager.EnterBuildPlacement(BuildingType.ArcheryRange) };
+            bool stabAgeOk = playerAge >= LandmarkDefinitions.GetBuildingRequiredAge(BuildingType.Stables);
             slots[7] = new GridButton { Label = "Stables", Hotkey = "F",
-                Tooltip = $"<b>Stables</b>\nTrains horsemen and scouts.\nCost: {stablesCost} <sprite name=\"wood\">",
-                Enabled = resources.Wood >= stablesCost, Icon = BuildingIcons.Get(BuildingType.Stables),
+                Tooltip = $"<b>Stables</b>\nTrains horsemen and scouts.\nCost: {stablesCost} <sprite name=\"wood\">"
+                    + (stabAgeOk ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(LandmarkDefinitions.GetBuildingRequiredAge(BuildingType.Stables))}</color>"),
+                Enabled = stabAgeOk && resources.Wood >= stablesCost, Icon = BuildingIcons.Get(BuildingType.Stables),
                 OnClick = () => selectionManager.EnterBuildPlacement(BuildingType.Stables) };
+            bool wallAgeOk = playerAge >= LandmarkDefinitions.GetBuildingRequiredAge(BuildingType.Wall);
             slots[8] = new GridButton { Label = "Wall", Hotkey = "Z",
-                Tooltip = $"<b>Wall</b>\nDefensive barrier. Can convert to gate.\nCost: {wallCost} <sprite name=\"wood\">",
-                Enabled = resources.Wood >= wallCost, Icon = BuildingIcons.Get(BuildingType.Wall),
+                Tooltip = $"<b>Wall</b>\nDefensive barrier. Can convert to gate.\nCost: {wallCost} <sprite name=\"wood\">"
+                    + (wallAgeOk ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(LandmarkDefinitions.GetBuildingRequiredAge(BuildingType.Wall))}</color>"),
+                Enabled = wallAgeOk && resources.Wood >= wallCost, Icon = BuildingIcons.Get(BuildingType.Wall),
                 OnClick = () => selectionManager.EnterWallPlacement() };
             slots[9] = new GridButton { Label = "Tower", Hotkey = "G",
                 Tooltip = $"<b>Tower</b>\nDefensive tower that attacks enemies. Can be upgraded.\nCost: {towerCost} <sprite name=\"wood\">",
@@ -1760,9 +1784,11 @@ namespace OpenEmpires
                 Tooltip = $"<b>Farm</b>\nProduces food.\nCost: {farmCost} <sprite name=\"wood\">",
                 Enabled = resources.Wood >= farmCost, Icon = BuildingIcons.Get(BuildingType.Farm),
                 OnClick = () => selectionManager.EnterBuildPlacement(BuildingType.Farm) };
+            bool monAgeOk = playerAge >= LandmarkDefinitions.GetBuildingRequiredAge(BuildingType.Monastery);
             slots[11] = new GridButton { Label = "Monastery", Hotkey = "C",
-                Tooltip = $"<b>Monastery</b>\nTrains monks (healers).\nCost: {monasteryCost} <sprite name=\"wood\">",
-                Enabled = resources.Wood >= monasteryCost, Icon = BuildingIcons.Get(BuildingType.Monastery),
+                Tooltip = $"<b>Monastery</b>\nTrains monks (healers).\nCost: {monasteryCost} <sprite name=\"wood\">"
+                    + (monAgeOk ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(LandmarkDefinitions.GetBuildingRequiredAge(BuildingType.Monastery))}</color>"),
+                Enabled = monAgeOk && resources.Wood >= monasteryCost, Icon = BuildingIcons.Get(BuildingType.Monastery),
                 OnClick = () => selectionManager.EnterBuildPlacement(BuildingType.Monastery) };
             return slots;
         }
@@ -1872,10 +1898,12 @@ namespace OpenEmpires
                             new TrainUnitCommand(building.PlayerId, building.Id, 1)) };
                     int maaFood = sim.Config.ManAtArmsFoodCost;
                     int maaGold = sim.Config.ManAtArmsGoldCost;
+                    bool maaAgeOk = sim.GetPlayerAge(building.PlayerId) >= LandmarkDefinitions.GetUnitRequiredAge(6);
                     slots[1] = new GridButton { Label = "MAA", Hotkey = "W",
-                        Enabled = resources.Food >= maaFood && resources.Gold >= maaGold,
+                        Enabled = maaAgeOk && resources.Food >= maaFood && resources.Gold >= maaGold,
                         Icon = UnitIcons.Get(6),
-                        Tooltip = $"<b>Man-at-Arms</b>\nHeavy armored infantry.\nCost: {maaFood} <sprite name=\"food\"> {maaGold} <sprite name=\"gold\">",
+                        Tooltip = $"<b>Man-at-Arms</b>\nHeavy armored infantry.\nCost: {maaFood} <sprite name=\"food\"> {maaGold} <sprite name=\"gold\">"
+                            + (maaAgeOk ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(3)}</color>"),
                         OnClick = () => sim.CommandBuffer.EnqueueCommand(
                             new TrainUnitCommand(building.PlayerId, building.Id, 6)) };
                     hasAny = true;
@@ -1897,10 +1925,12 @@ namespace OpenEmpires
                             new TrainUnitCommand(building.PlayerId, building.Id, 2)) };
                     int xbowFood = sim.Config.CrossbowmanFoodCost;
                     int xbowGold = sim.Config.CrossbowmanGoldCost;
+                    bool xbowAgeOk = sim.GetPlayerAge(building.PlayerId) >= LandmarkDefinitions.GetUnitRequiredAge(8);
                     slots[1] = new GridButton { Label = "Xbow", Hotkey = "W",
-                        Enabled = resources.Food >= xbowFood && resources.Gold >= xbowGold,
+                        Enabled = xbowAgeOk && resources.Food >= xbowFood && resources.Gold >= xbowGold,
                         Icon = UnitIcons.Get(8),
-                        Tooltip = $"<b>Crossbowman</b>\nRanged anti-armor unit.\nCost: {xbowFood} <sprite name=\"food\"> {xbowGold} <sprite name=\"gold\">",
+                        Tooltip = $"<b>Crossbowman</b>\nRanged anti-armor unit.\nCost: {xbowFood} <sprite name=\"food\"> {xbowGold} <sprite name=\"gold\">"
+                            + (xbowAgeOk ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(3)}</color>"),
                         OnClick = () => sim.CommandBuffer.EnqueueCommand(
                             new TrainUnitCommand(building.PlayerId, building.Id, 8)) };
                     hasAny = true;
@@ -1922,10 +1952,12 @@ namespace OpenEmpires
                             new TrainUnitCommand(building.PlayerId, building.Id, 3)) };
                     int knightFood = sim.Config.KnightFoodCost;
                     int knightGold = sim.Config.KnightGoldCost;
+                    bool knightAgeOk = sim.GetPlayerAge(building.PlayerId) >= LandmarkDefinitions.GetUnitRequiredAge(7);
                     slots[1] = new GridButton { Label = "Knight", Hotkey = "W",
-                        Enabled = resources.Food >= knightFood && resources.Gold >= knightGold,
+                        Enabled = knightAgeOk && resources.Food >= knightFood && resources.Gold >= knightGold,
                         Icon = UnitIcons.Get(7),
-                        Tooltip = $"<b>Knight</b>\nHeavy armored cavalry.\nCost: {knightFood} <sprite name=\"food\"> {knightGold} <sprite name=\"gold\">",
+                        Tooltip = $"<b>Knight</b>\nHeavy armored cavalry.\nCost: {knightFood} <sprite name=\"food\"> {knightGold} <sprite name=\"gold\">"
+                            + (knightAgeOk ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(3)}</color>"),
                         OnClick = () => sim.CommandBuffer.EnqueueCommand(
                             new TrainUnitCommand(building.PlayerId, building.Id, 7)) };
                     int scoutFood = sim.Config.ScoutFoodCost;
@@ -1941,10 +1973,12 @@ namespace OpenEmpires
                 {
                     int monkFood = sim.Config.MonkFoodCost;
                     int monkGold = sim.Config.MonkGoldCost;
+                    bool monkAgeOk = sim.GetPlayerAge(building.PlayerId) >= LandmarkDefinitions.GetUnitRequiredAge(9);
                     slots[0] = new GridButton { Label = "Monk", Hotkey = "Q",
-                        Enabled = resources.Food >= monkFood && resources.Gold >= monkGold,
+                        Enabled = monkAgeOk && resources.Food >= monkFood && resources.Gold >= monkGold,
                         Icon = UnitIcons.Get(9),
-                        Tooltip = $"<b>Monk</b>\nHealer unit. Automatically heals nearby friendly units.\nCost: {monkFood} <sprite name=\"food\"> {monkGold} <sprite name=\"gold\">",
+                        Tooltip = $"<b>Monk</b>\nHealer unit. Automatically heals nearby friendly units.\nCost: {monkFood} <sprite name=\"food\"> {monkGold} <sprite name=\"gold\">"
+                            + (monkAgeOk ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(3)}</color>"),
                         OnClick = () => sim.CommandBuffer.EnqueueCommand(
                             new TrainUnitCommand(building.PlayerId, building.Id, 9)) };
                     hasAny = true;
@@ -1965,6 +1999,33 @@ namespace OpenEmpires
                         Tooltip = $"<b>Scout</b>\nFast mounted unit with high vision.\nCost: {scoutFood} <sprite name=\"food\">",
                         OnClick = () => sim.CommandBuffer.EnqueueCommand(
                             new TrainUnitCommand(building.PlayerId, building.Id, 4)) };
+
+                    // Age Up button
+                    int currentAge = sim.GetPlayerAge(building.PlayerId);
+                    bool isAgingUp = sim.IsPlayerAgingUp(building.PlayerId);
+                    if (currentAge < 4 && !isAgingUp)
+                    {
+                        int targetAge = currentAge + 1;
+                        var civ = sim.GetPlayerCivilization(building.PlayerId);
+                        var (choiceA, choiceB) = LandmarkDefinitions.GetChoices(civ, targetAge);
+                        var defA = LandmarkDefinitions.Get(choiceA);
+                        var defB = LandmarkDefinitions.Get(choiceB);
+                        int minFood = Mathf.Min(defA.FoodCost, defB.FoodCost);
+                        int minGold = Mathf.Min(defA.GoldCost, defB.GoldCost);
+                        bool canAfford = resources.Food >= minFood && resources.Gold >= minGold;
+                        string ageRoman = LandmarkDefinitions.AgeToRoman(targetAge);
+                        slots[4] = new GridButton { Label = $"Age {ageRoman}", Hotkey = "A",
+                            Enabled = canAfford,
+                            Tooltip = $"<b>Advance to Age {ageRoman}</b>\nChoose a landmark to construct.\nCost: {minFood} <sprite name=\"food\"> {minGold} <sprite name=\"gold\">",
+                            OnClick = () => ShowLandmarkChoicePanel(sim, building.PlayerId, targetAge) };
+                    }
+                    else if (isAgingUp)
+                    {
+                        string ageRoman = LandmarkDefinitions.AgeToRoman(currentAge + 1);
+                        slots[4] = new GridButton { Label = $"Age {ageRoman}", Hotkey = "A",
+                            Enabled = false,
+                            Tooltip = $"<b>Advancing to Age {ageRoman}</b>\nLandmark under construction..." };
+                    }
                     hasAny = true;
                 }
                 else if (building.Type == BuildingType.Tower)
@@ -2024,6 +2085,144 @@ namespace OpenEmpires
             hasAny = true;
 
             return hasAny ? slots : null;
+        }
+
+        private void ShowLandmarkChoicePanel(GameSimulation sim, int playerId, int targetAge)
+        {
+            CloseLandmarkChoicePanel();
+
+            var civ = sim.GetPlayerCivilization(playerId);
+            var (choiceA, choiceB) = LandmarkDefinitions.GetChoices(civ, targetAge);
+            var defA = LandmarkDefinitions.Get(choiceA);
+            var defB = LandmarkDefinitions.Get(choiceB);
+            var resources = sim.ResourceManager.GetPlayerResources(playerId);
+
+            float panelW = 420f;
+            float panelH = 180f;
+            float btnW = 190f;
+            float btnH = 140f;
+
+            landmarkPanelGO = new GameObject("LandmarkChoicePanel");
+            landmarkPanelGO.transform.SetParent(canvasTransform, false);
+            var panelRT = landmarkPanelGO.AddComponent<RectTransform>();
+            panelRT.anchorMin = new Vector2(0.5f, 0.5f);
+            panelRT.anchorMax = new Vector2(0.5f, 0.5f);
+            panelRT.pivot = new Vector2(0.5f, 0.5f);
+            panelRT.sizeDelta = new Vector2(panelW, panelH);
+            var panelImg = landmarkPanelGO.AddComponent<Image>();
+            panelImg.color = new Color(0.05f, 0.05f, 0.05f, 0.95f);
+            var panelOutline = landmarkPanelGO.AddComponent<Outline>();
+            panelOutline.effectColor = new Color(0.6f, 0.6f, 0.6f, 1f);
+            panelOutline.effectDistance = new Vector2(2, -2);
+
+            // Title
+            var titleGO = new GameObject("Title");
+            titleGO.transform.SetParent(landmarkPanelGO.transform, false);
+            var titleRT = titleGO.AddComponent<RectTransform>();
+            titleRT.anchorMin = new Vector2(0, 1);
+            titleRT.anchorMax = new Vector2(1, 1);
+            titleRT.pivot = new Vector2(0.5f, 1);
+            titleRT.anchoredPosition = new Vector2(0, -4);
+            titleRT.sizeDelta = new Vector2(0, 24);
+            var titleText = titleGO.AddComponent<TextMeshProUGUI>();
+            titleText.text = $"Choose Landmark - Age {LandmarkDefinitions.AgeToRoman(targetAge)}";
+            titleText.fontSize = 16;
+            titleText.fontStyle = FontStyles.Bold;
+            titleText.color = Color.white;
+            titleText.alignment = TextAlignmentOptions.Center;
+
+            // Choice A button (left)
+            CreateLandmarkChoiceButton(landmarkPanelGO.transform, defA, choiceA, resources,
+                new Vector2(-btnW / 2 - 5, -20), new Vector2(btnW, btnH));
+
+            // Choice B button (right)
+            CreateLandmarkChoiceButton(landmarkPanelGO.transform, defB, choiceB, resources,
+                new Vector2(btnW / 2 + 5, -20), new Vector2(btnW, btnH));
+        }
+
+        private void CreateLandmarkChoiceButton(Transform parent, LandmarkDefinition def, LandmarkId landmarkId,
+            PlayerResources resources, Vector2 position, Vector2 size)
+        {
+            bool canAfford = resources.Food >= def.FoodCost && resources.Gold >= def.GoldCost;
+
+            var btnGO = new GameObject($"Choice_{landmarkId}");
+            btnGO.transform.SetParent(parent, false);
+            var btnRT = btnGO.AddComponent<RectTransform>();
+            btnRT.anchorMin = new Vector2(0.5f, 1);
+            btnRT.anchorMax = new Vector2(0.5f, 1);
+            btnRT.pivot = new Vector2(0.5f, 1);
+            btnRT.anchoredPosition = position;
+            btnRT.sizeDelta = size;
+            var btnImg = btnGO.AddComponent<Image>();
+            btnImg.color = canAfford ? new Color(0.2f, 0.2f, 0.2f, 1f) : new Color(0.15f, 0.1f, 0.1f, 1f);
+            var btn = btnGO.AddComponent<Button>();
+            btn.interactable = canAfford;
+
+            var capturedId = landmarkId;
+            btn.onClick.AddListener(() =>
+            {
+                CloseLandmarkChoicePanel();
+                selectionManager.EnterLandmarkPlacement(capturedId);
+            });
+
+            // Name text
+            var nameGO = new GameObject("Name");
+            nameGO.transform.SetParent(btnGO.transform, false);
+            var nameRT = nameGO.AddComponent<RectTransform>();
+            nameRT.anchorMin = new Vector2(0, 1);
+            nameRT.anchorMax = new Vector2(1, 1);
+            nameRT.pivot = new Vector2(0.5f, 1);
+            nameRT.anchoredPosition = new Vector2(0, -6);
+            nameRT.sizeDelta = new Vector2(-10, 24);
+            var nameText = nameGO.AddComponent<TextMeshProUGUI>();
+            nameText.text = def.Name;
+            nameText.fontSize = 14;
+            nameText.fontStyle = FontStyles.Bold;
+            nameText.color = canAfford ? Color.white : Color.gray;
+            nameText.alignment = TextAlignmentOptions.Center;
+
+            // Description
+            var descGO = new GameObject("Desc");
+            descGO.transform.SetParent(btnGO.transform, false);
+            var descRT = descGO.AddComponent<RectTransform>();
+            descRT.anchorMin = new Vector2(0, 1);
+            descRT.anchorMax = new Vector2(1, 1);
+            descRT.pivot = new Vector2(0.5f, 1);
+            descRT.anchoredPosition = new Vector2(0, -32);
+            descRT.sizeDelta = new Vector2(-10, 40);
+            var descText = descGO.AddComponent<TextMeshProUGUI>();
+            descText.text = def.Description;
+            descText.fontSize = 11;
+            descText.color = canAfford ? new Color(0.8f, 0.8f, 0.8f) : Color.gray;
+            descText.alignment = TextAlignmentOptions.Center;
+            descText.enableWordWrapping = true;
+
+            // Cost text
+            var costGO = new GameObject("Cost");
+            costGO.transform.SetParent(btnGO.transform, false);
+            var costRT = costGO.AddComponent<RectTransform>();
+            costRT.anchorMin = new Vector2(0, 0);
+            costRT.anchorMax = new Vector2(1, 0);
+            costRT.pivot = new Vector2(0.5f, 0);
+            costRT.anchoredPosition = new Vector2(0, 8);
+            costRT.sizeDelta = new Vector2(-10, 24);
+            var costText = costGO.AddComponent<TextMeshProUGUI>();
+            string foodColor = resources.Food >= def.FoodCost ? "white" : "#FF6666";
+            string goldColor = resources.Gold >= def.GoldCost ? "white" : "#FF6666";
+            costText.text = $"<color={foodColor}>{def.FoodCost} <sprite name=\"food\"></color>  <color={goldColor}>{def.GoldCost} <sprite name=\"gold\"></color>";
+            costText.fontSize = 13;
+            costText.color = Color.white;
+            costText.alignment = TextAlignmentOptions.Center;
+            costText.richText = true;
+        }
+
+        private void CloseLandmarkChoicePanel()
+        {
+            if (landmarkPanelGO != null)
+            {
+                Destroy(landmarkPanelGO);
+                landmarkPanelGO = null;
+            }
         }
 
         private BuildingType? GetEffectiveBuildingType(IReadOnlyList<BuildingView> buildings, int localPid)
@@ -2128,10 +2327,12 @@ namespace OpenEmpires
                                 SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f); } };
                         int maaFood = sim.Config.ManAtArmsFoodCost;
                         int maaGold = sim.Config.ManAtArmsGoldCost;
+                        bool maaAgeOk2 = sim.GetPlayerAge(localPid) >= LandmarkDefinitions.GetUnitRequiredAge(6);
                         slots[1] = new GridButton { Label = "MAA", Hotkey = "W",
-                            Enabled = resources.Food >= maaFood && resources.Gold >= maaGold,
+                            Enabled = maaAgeOk2 && resources.Food >= maaFood && resources.Gold >= maaGold,
                             Icon = UnitIcons.Get(6),
-                            Tooltip = $"<b>Man-at-Arms</b>\nHeavy armored infantry.\nCost: {maaFood} <sprite name=\"food\"> {maaGold} <sprite name=\"gold\">",
+                            Tooltip = $"<b>Man-at-Arms</b>\nHeavy armored infantry.\nCost: {maaFood} <sprite name=\"food\"> {maaGold} <sprite name=\"gold\">"
+                                + (maaAgeOk2 ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(3)}</color>"),
                             OnClick = () => { for (int i = 0; i < ready.Count; i++)
                                 sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(
                                     localPid, ready[i].BuildingId, 6));
@@ -2157,10 +2358,12 @@ namespace OpenEmpires
                                 SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f); } };
                         int xbowFood = sim.Config.CrossbowmanFoodCost;
                         int xbowGold = sim.Config.CrossbowmanGoldCost;
+                        bool xbowAgeOk2 = sim.GetPlayerAge(localPid) >= LandmarkDefinitions.GetUnitRequiredAge(8);
                         slots[1] = new GridButton { Label = "Xbow", Hotkey = "W",
-                            Enabled = resources.Food >= xbowFood && resources.Gold >= xbowGold,
+                            Enabled = xbowAgeOk2 && resources.Food >= xbowFood && resources.Gold >= xbowGold,
                             Icon = UnitIcons.Get(8),
-                            Tooltip = $"<b>Crossbowman</b>\nRanged anti-armor unit.\nCost: {xbowFood} <sprite name=\"food\"> {xbowGold} <sprite name=\"gold\">",
+                            Tooltip = $"<b>Crossbowman</b>\nRanged anti-armor unit.\nCost: {xbowFood} <sprite name=\"food\"> {xbowGold} <sprite name=\"gold\">"
+                                + (xbowAgeOk2 ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(3)}</color>"),
                             OnClick = () => { for (int i = 0; i < ready.Count; i++)
                                 sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(
                                     localPid, ready[i].BuildingId, 8));
@@ -2186,10 +2389,12 @@ namespace OpenEmpires
                                 SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f); } };
                         int knightFood = sim.Config.KnightFoodCost;
                         int knightGold = sim.Config.KnightGoldCost;
+                        bool knightAgeOk2 = sim.GetPlayerAge(localPid) >= LandmarkDefinitions.GetUnitRequiredAge(7);
                         slots[1] = new GridButton { Label = "Knight", Hotkey = "W",
-                            Enabled = resources.Food >= knightFood && resources.Gold >= knightGold,
+                            Enabled = knightAgeOk2 && resources.Food >= knightFood && resources.Gold >= knightGold,
                             Icon = UnitIcons.Get(7),
-                            Tooltip = $"<b>Knight</b>\nHeavy armored cavalry.\nCost: {knightFood} <sprite name=\"food\"> {knightGold} <sprite name=\"gold\">",
+                            Tooltip = $"<b>Knight</b>\nHeavy armored cavalry.\nCost: {knightFood} <sprite name=\"food\"> {knightGold} <sprite name=\"gold\">"
+                                + (knightAgeOk2 ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(3)}</color>"),
                             OnClick = () => { for (int i = 0; i < ready.Count; i++)
                                 sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(
                                     localPid, ready[i].BuildingId, 7));
@@ -2209,10 +2414,12 @@ namespace OpenEmpires
                     {
                         int monkFood = sim.Config.MonkFoodCost;
                         int monkGold = sim.Config.MonkGoldCost;
+                        bool monkAgeOk2 = sim.GetPlayerAge(localPid) >= LandmarkDefinitions.GetUnitRequiredAge(9);
                         slots[0] = new GridButton { Label = "Monk", Hotkey = "Q",
-                            Enabled = resources.Food >= monkFood && resources.Gold >= monkGold,
+                            Enabled = monkAgeOk2 && resources.Food >= monkFood && resources.Gold >= monkGold,
                             Icon = UnitIcons.Get(9),
-                            Tooltip = $"<b>Monk</b>\nHealer unit. Automatically heals nearby friendly units.\nCost: {monkFood} <sprite name=\"food\"> {monkGold} <sprite name=\"gold\">",
+                            Tooltip = $"<b>Monk</b>\nHealer unit. Automatically heals nearby friendly units.\nCost: {monkFood} <sprite name=\"food\"> {monkGold} <sprite name=\"gold\">"
+                                + (monkAgeOk2 ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(3)}</color>"),
                             OnClick = () => { for (int i = 0; i < ready.Count; i++)
                                 sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(
                                     localPid, ready[i].BuildingId, 9));

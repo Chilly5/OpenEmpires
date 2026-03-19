@@ -417,6 +417,10 @@ namespace OpenEmpires
         public int TsunamiWarningTicks => 60;          // 2 seconds
         public int TsunamiCooldownTicks => 300;
 
+        // Buildings - Landmark (defaults; per-landmark values come from LandmarkDefinitions)
+        public int LandmarkFootprintWidth => 4;
+        public int LandmarkFootprintHeight => 4;
+
         public float SecondsPerTick => 1f / TickRate;
         public Fixed32 SecondsPerTickFixed => Fixed32.FromFloat(SecondsPerTick);
     }

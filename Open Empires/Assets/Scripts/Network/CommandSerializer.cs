@@ -263,6 +263,7 @@ namespace OpenEmpires
             var cmd = new PlaceBuildingCommand(playerId, (BuildingType)data.buildingType,
                                                data.tileX, data.tileZ, data.villagerUnitIds);
             cmd.IsQueued = data.isQueued;
+            cmd.LandmarkIdValue = data.landmarkId;
             return cmd;
         }
 
@@ -530,6 +531,7 @@ namespace OpenEmpires
             public int tileZ;
             public int[] villagerUnitIds;
             public bool isQueued;
+            public int landmarkId = -1;
 
             public PlaceBuildingPayload() { }
 
@@ -540,6 +542,7 @@ namespace OpenEmpires
                 tileZ = cmd.TileZ;
                 villagerUnitIds = cmd.VillagerUnitIds ?? new int[0];
                 isQueued = cmd.IsQueued;
+                landmarkId = cmd.LandmarkIdValue;
             }
         }
 
@@ -990,6 +993,7 @@ namespace OpenEmpires
                             else
                                 w.Write(0);
                             w.Write(place.IsQueued);
+                            w.Write(place.LandmarkIdValue);
                             break;
                         case ConstructBuildingCommand construct:
                             WriteIntArray(w, construct.UnitIds);
@@ -1172,8 +1176,10 @@ namespace OpenEmpires
                             int ptX = r.ReadInt32(), ptZ = r.ReadInt32();
                             int[] vIds = ReadIntArray(r);
                             bool isPlaceQueued = r.ReadBoolean();
+                            int placeLandmarkId = r.ReadInt32();
                             var placeCmd = new PlaceBuildingCommand(playerId, bType, ptX, ptZ, vIds.Length > 0 ? vIds : null);
                             placeCmd.IsQueued = isPlaceQueued;
+                            placeCmd.LandmarkIdValue = placeLandmarkId;
                             commands.Add(placeCmd);
                             break;
                         case CommandType.ConstructBuilding:

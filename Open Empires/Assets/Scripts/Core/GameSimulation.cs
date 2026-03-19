@@ -54,6 +54,26 @@ namespace OpenEmpires
         private int[] playerTeamIds;
         public int[] PlayerTeamIds => playerTeamIds;
         private Civilization[] playerCivilizations;
+
+        // Age progression state
+        private int[] playerAges;              // all start at 1
+        private bool[] playerAgingUp;          // true while landmark under construction
+        private int[] playerAgingUpBuildingId; // building ID of in-progress landmark, -1 if none
+
+        public int GetPlayerAge(int playerId)
+        {
+            if (playerAges != null && playerId >= 0 && playerId < playerAges.Length)
+                return playerAges[playerId];
+            return 1;
+        }
+
+        public bool IsPlayerAgingUp(int playerId)
+        {
+            if (playerAgingUp != null && playerId >= 0 && playerId < playerAgingUp.Length)
+                return playerAgingUp[playerId];
+            return false;
+        }
+
         public Civilization GetPlayerCivilization(int playerId)
         {
             if (playerCivilizations != null && playerId >= 0 && playerId < playerCivilizations.Length)
@@ -397,6 +417,17 @@ namespace OpenEmpires
             for (int i = 0; i < playerTeamIds.Length; i++)
                 hash = hash * 31 + (uint)playerTeamIds[i];
 
+            // Hash age progression state
+            if (playerAges != null)
+            {
+                for (int i = 0; i < playerAges.Length; i++)
+                {
+                    hash = hash * 31 + (uint)playerAges[i];
+                    hash = hash * 31 + (playerAgingUp[i] ? 1u : 0u);
+                    hash = hash * 31 + (uint)(playerAgingUpBuildingId[i] + 1);
+                }
+            }
+
             // Hash win condition state
             hash = hash * 31 + (isMatchOver ? 1u : 0u);
             hash = hash * 31 + (uint)(winningTeamId + 1); // +1 so -1 maps to 0
@@ -529,6 +560,17 @@ namespace OpenEmpires
             tsunamiCooldownTick = new int[playerCount];
             simRngState = (uint)(config.MapSeed + 42);
             if (simRngState == 0) simRngState = 1;
+
+            // Age progression
+            playerAges = new int[playerCount];
+            playerAgingUp = new bool[playerCount];
+            playerAgingUpBuildingId = new int[playerCount];
+            for (int i = 0; i < playerCount; i++)
+            {
+                playerAges[i] = 1;
+                playerAgingUp[i] = false;
+                playerAgingUpBuildingId[i] = -1;
+            }
 
             GridPathfinder.Initialize(MapData.Width, MapData.Height);
             MapData.ComputeHoleMap();
@@ -760,6 +802,15 @@ namespace OpenEmpires
                     completedBuilding.LinkedResourceNodeId = farmNode.Id;
                     MapData.MarkFarmTiles(completedBuilding.OriginTileX, completedBuilding.OriginTileZ,
                         completedBuilding.TileFootprintWidth, completedBuilding.TileFootprintHeight);
+                }
+
+                if (completedBuilding.Type == BuildingType.Landmark)
+                {
+                    int pid = completedBuilding.PlayerId;
+                    var def = LandmarkDefinitions.Get(completedBuilding.LandmarkId);
+                    playerAges[pid] = def.TargetAge;
+                    playerAgingUp[pid] = false;
+                    playerAgingUpBuildingId[pid] = -1;
                 }
 
                 // Eject any units that ended up on the building footprint during construction
@@ -2711,6 +2762,12 @@ namespace OpenEmpires
                     maxHealth = config.MonasteryMaxHealth;
                     armor = config.MonasteryArmor;
                     break;
+                case BuildingType.Landmark:
+                    footprintW = config.LandmarkFootprintWidth;
+                    footprintH = config.LandmarkFootprintHeight;
+                    maxHealth = 2500;
+                    armor = 5;
+                    break;
                 default: // House
                     footprintW = config.HouseFootprintWidth;
                     footprintH = config.HouseFootprintHeight;
@@ -2798,6 +2855,7 @@ namespace OpenEmpires
                 case BuildingType.Farm: return config.FarmConstructionTicks;
                 case BuildingType.Tower: return config.TowerConstructionTicks;
                 case BuildingType.Monastery: return config.MonasteryConstructionTicks;
+                case BuildingType.Landmark: return 3000; // default; actual value set from LandmarkDefinitions
                 default: return config.HouseConstructionTicks;
             }
         }
@@ -2912,6 +2970,9 @@ namespace OpenEmpires
                 building.Type != BuildingType.ArcheryRange &&
                 building.Type != BuildingType.Stables &&
                 building.Type != BuildingType.Monastery) return;
+
+            // Age gate for units
+            if (playerAges[cmd.PlayerId] < LandmarkDefinitions.GetUnitRequiredAge(cmd.UnitType)) return;
 
             // Resolve civilization-unique unit substitution
             int resolvedUnitType = ResolveCivUnitType(cmd.PlayerId, cmd.UnitType);
@@ -3144,78 +3205,171 @@ namespace OpenEmpires
 
         private void ProcessPlaceBuildingCommand(PlaceBuildingCommand cmd)
         {
+            var resources = ResourceManager.GetPlayerResources(cmd.PlayerId);
+
+            // Landmark placement has special validation and cost
+            if (cmd.BuildingType == BuildingType.Landmark)
+            {
+                if (cmd.LandmarkIdValue < 0) return;
+                var landmarkId = (LandmarkId)cmd.LandmarkIdValue;
+                var def = LandmarkDefinitions.Get(landmarkId);
+
+                // Validate: civ matches, correct age, not already aging up, can afford
+                if (def.Civ != GetPlayerCivilization(cmd.PlayerId)) return;
+                if (playerAges[cmd.PlayerId] != def.TargetAge - 1) return;
+                if (playerAgingUp[cmd.PlayerId]) return;
+                if (resources.Food < def.FoodCost || resources.Gold < def.GoldCost) return;
+
+                int footprintW = def.FootprintWidth;
+                int footprintH = def.FootprintHeight;
+                int border = 1;
+                for (int x = cmd.TileX - border; x < cmd.TileX + footprintW + border; x++)
+                    for (int z = cmd.TileZ - border; z < cmd.TileZ + footprintH + border; z++)
+                        if (!MapData.IsBuildable(x, z)) return;
+
+                resources.Food -= def.FoodCost;
+                resources.Gold -= def.GoldCost;
+
+                bool hasVillagers = cmd.VillagerUnitIds != null && cmd.VillagerUnitIds.Length > 0;
+                var building = CreateBuilding(cmd.PlayerId, BuildingType.Landmark, cmd.TileX, cmd.TileZ, underConstruction: true);
+                building.LandmarkId = landmarkId;
+                building.MaxHealth = def.MaxHealth;
+                building.Armor = def.Armor;
+                building.ConstructionTicksTotal = def.ConstructionTicks;
+                building.ConstructionTicksRemaining = def.ConstructionTicks;
+                playerAgingUp[cmd.PlayerId] = true;
+                playerAgingUpBuildingId[cmd.PlayerId] = building.Id;
+                OnBuildingCreated?.Invoke(building);
+
+                if (hasVillagers)
+                {
+                    if (cmd.IsQueued)
+                    {
+                        for (int i = 0; i < cmd.VillagerUnitIds.Length; i++)
+                        {
+                            var villager = UnitRegistry.GetUnit(cmd.VillagerUnitIds[i]);
+                            if (villager == null || villager.State == UnitState.Dead || villager.PlayerId != cmd.PlayerId)
+                                continue;
+                            villager.CommandQueue.Add(QueuedCommand.ConstructWaypoint(building.Id));
+                            if (villager.State == UnitState.Idle)
+                                PopAndExecuteNextQueuedCommand(villager);
+                        }
+                    }
+                    else
+                    {
+                        var occupiedTiles = new HashSet<Vector2Int>();
+                        for (int i = 0; i < cmd.VillagerUnitIds.Length; i++)
+                        {
+                            var villager = UnitRegistry.GetUnit(cmd.VillagerUnitIds[i]);
+                            if (villager == null || villager.State == UnitState.Dead || villager.PlayerId != cmd.PlayerId)
+                                continue;
+                            villager.ClearCommandQueue();
+                            villager.ClearSavedPath();
+                            villager.ClearFormation();
+                            villager.CombatTargetId = -1;
+                            villager.CombatTargetBuildingId = -1;
+                            villager.TargetResourceNodeId = -1;
+                            villager.ConstructionTargetBuildingId = building.Id;
+                            villager.GatherTimer = Fixed32.Zero;
+                            villager.PlayerCommanded = true;
+                            villager.DropOffBuildingId = -1;
+                            villager.TargetGarrisonBuildingId = -1;
+                            villager.ClearPatrol();
+
+                            Vector2Int adjTile = FindNearestWalkableAdjacentTile(building, villager.SimPosition, occupiedTiles);
+                            occupiedTiles.Add(adjTile);
+                            Vector2Int startTile = MapData.WorldToTile(villager.SimPosition);
+                            var path = GridPathfinder.FindPath(MapData, startTile, adjTile, villager.PlayerId, BuildingRegistry);
+                            if (path.Count > 0)
+                            {
+                                villager.SetPath(path);
+                                villager.FinalDestination = MapData.TileToWorldFixed(adjTile.x, adjTile.y);
+                                villager.State = UnitState.MovingToBuild;
+                            }
+                            else
+                            {
+                                villager.State = UnitState.Constructing;
+                            }
+                        }
+                    }
+                }
+                return;
+            }
+
+            // Age gate for non-landmark buildings
+            if (playerAges[cmd.PlayerId] < LandmarkDefinitions.GetBuildingRequiredAge(cmd.BuildingType)) return;
+
             int cost = GetBuildingWoodCost(cmd.BuildingType);
             int stoneCost = GetBuildingStoneCost(cmd.BuildingType);
-            var resources = ResourceManager.GetPlayerResources(cmd.PlayerId);
             if (resources.Wood < cost || resources.Stone < stoneCost) return;
 
-            bool hasVillagers = cmd.VillagerUnitIds != null && cmd.VillagerUnitIds.Length > 0;
+            bool hasVillagers2 = cmd.VillagerUnitIds != null && cmd.VillagerUnitIds.Length > 0;
 
             // Get footprint size
-            int footprintW, footprintH;
+            int footprintW2, footprintH2;
             switch (cmd.BuildingType)
             {
                 case BuildingType.Barracks:
-                    footprintW = config.BarracksFootprintWidth;
-                    footprintH = config.BarracksFootprintHeight;
+                    footprintW2 = config.BarracksFootprintWidth;
+                    footprintH2 = config.BarracksFootprintHeight;
                     break;
                 case BuildingType.TownCenter:
-                    footprintW = config.TownCenterFootprintWidth;
-                    footprintH = config.TownCenterFootprintHeight;
+                    footprintW2 = config.TownCenterFootprintWidth;
+                    footprintH2 = config.TownCenterFootprintHeight;
                     break;
                 case BuildingType.Wall:
-                    footprintW = config.WallFootprintWidth;
-                    footprintH = config.WallFootprintHeight;
+                    footprintW2 = config.WallFootprintWidth;
+                    footprintH2 = config.WallFootprintHeight;
                     break;
                 case BuildingType.Mill:
-                    footprintW = config.MillFootprintWidth;
-                    footprintH = config.MillFootprintHeight;
+                    footprintW2 = config.MillFootprintWidth;
+                    footprintH2 = config.MillFootprintHeight;
                     break;
                 case BuildingType.LumberYard:
-                    footprintW = config.LumberYardFootprintWidth;
-                    footprintH = config.LumberYardFootprintHeight;
+                    footprintW2 = config.LumberYardFootprintWidth;
+                    footprintH2 = config.LumberYardFootprintHeight;
                     break;
                 case BuildingType.Mine:
-                    footprintW = config.MineFootprintWidth;
-                    footprintH = config.MineFootprintHeight;
+                    footprintW2 = config.MineFootprintWidth;
+                    footprintH2 = config.MineFootprintHeight;
                     break;
                 case BuildingType.ArcheryRange:
-                    footprintW = config.ArcheryRangeFootprintWidth;
-                    footprintH = config.ArcheryRangeFootprintHeight;
+                    footprintW2 = config.ArcheryRangeFootprintWidth;
+                    footprintH2 = config.ArcheryRangeFootprintHeight;
                     break;
                 case BuildingType.Stables:
-                    footprintW = config.StablesFootprintWidth;
-                    footprintH = config.StablesFootprintHeight;
+                    footprintW2 = config.StablesFootprintWidth;
+                    footprintH2 = config.StablesFootprintHeight;
                     break;
                 case BuildingType.Farm:
-                    footprintW = config.FarmFootprintWidth;
-                    footprintH = config.FarmFootprintHeight;
+                    footprintW2 = config.FarmFootprintWidth;
+                    footprintH2 = config.FarmFootprintHeight;
                     break;
                 case BuildingType.Monastery:
-                    footprintW = config.MonasteryFootprintWidth;
-                    footprintH = config.MonasteryFootprintHeight;
+                    footprintW2 = config.MonasteryFootprintWidth;
+                    footprintH2 = config.MonasteryFootprintHeight;
                     break;
                 default:
-                    footprintW = config.HouseFootprintWidth;
-                    footprintH = config.HouseFootprintHeight;
+                    footprintW2 = config.HouseFootprintWidth;
+                    footprintH2 = config.HouseFootprintHeight;
                     break;
             }
 
             // Validate footprint + border area is buildable
-            int border = (cmd.BuildingType == BuildingType.Wall || cmd.BuildingType == BuildingType.Farm) ? 0 : 1;
-            for (int x = cmd.TileX - border; x < cmd.TileX + footprintW + border; x++)
-                for (int z = cmd.TileZ - border; z < cmd.TileZ + footprintH + border; z++)
+            int border2 = (cmd.BuildingType == BuildingType.Wall || cmd.BuildingType == BuildingType.Farm) ? 0 : 1;
+            for (int x = cmd.TileX - border2; x < cmd.TileX + footprintW2 + border2; x++)
+                for (int z = cmd.TileZ - border2; z < cmd.TileZ + footprintH2 + border2; z++)
                     if (!MapData.IsBuildable(x, z)) return;
 
             resources.Wood -= cost;
             resources.Stone -= stoneCost;
-            var building = CreateBuilding(cmd.PlayerId, cmd.BuildingType, cmd.TileX, cmd.TileZ, underConstruction: hasVillagers);
-            OnBuildingCreated?.Invoke(building);
-            if (!hasVillagers)
-                EjectUnitsFromBuildingFootprint(building);
+            var building2 = CreateBuilding(cmd.PlayerId, cmd.BuildingType, cmd.TileX, cmd.TileZ, underConstruction: hasVillagers2);
+            OnBuildingCreated?.Invoke(building2);
+            if (!hasVillagers2)
+                EjectUnitsFromBuildingFootprint(building2);
 
             // Send all villagers to construct
-            if (hasVillagers)
+            if (hasVillagers2)
             {
                 if (cmd.IsQueued)
                 {
@@ -3226,7 +3380,7 @@ namespace OpenEmpires
                         if (villager == null || villager.State == UnitState.Dead || villager.PlayerId != cmd.PlayerId)
                             continue;
 
-                        villager.CommandQueue.Add(QueuedCommand.ConstructWaypoint(building.Id));
+                        villager.CommandQueue.Add(QueuedCommand.ConstructWaypoint(building2.Id));
 
                         if (villager.State == UnitState.Idle)
                             PopAndExecuteNextQueuedCommand(villager);
@@ -3247,7 +3401,7 @@ namespace OpenEmpires
                         villager.CombatTargetId = -1;
                         villager.CombatTargetBuildingId = -1;
                         villager.TargetResourceNodeId = -1;
-                        villager.ConstructionTargetBuildingId = building.Id;
+                        villager.ConstructionTargetBuildingId = building2.Id;
                         villager.GatherTimer = Fixed32.Zero;
                         villager.PlayerCommanded = true;
                         villager.DropOffBuildingId = -1;
@@ -3255,7 +3409,7 @@ namespace OpenEmpires
 
                         villager.ClearPatrol();
 
-                        Vector2Int adjTile = FindNearestWalkableAdjacentTile(building, villager.SimPosition, occupiedTiles);
+                        Vector2Int adjTile = FindNearestWalkableAdjacentTile(building2, villager.SimPosition, occupiedTiles);
                         occupiedTiles.Add(adjTile);
                         Vector2Int startTile = MapData.WorldToTile(villager.SimPosition);
 
@@ -3520,6 +3674,17 @@ namespace OpenEmpires
                 // Eject garrisoned units before destroying building
                 if (building.GarrisonCount > 0)
                     UngarrisonAll(building);
+
+                // Cancel age-up if in-progress landmark is destroyed
+                if (building.Type == BuildingType.Landmark)
+                {
+                    int pid = building.PlayerId;
+                    if (playerAgingUp[pid] && playerAgingUpBuildingId[pid] == building.Id)
+                    {
+                        playerAgingUp[pid] = false;
+                        playerAgingUpBuildingId[pid] = -1;
+                    }
+                }
 
                 if (building.Type == BuildingType.Farm && building.LinkedResourceNodeId >= 0)
                     MapData.RemoveResourceNode(building.LinkedResourceNodeId);
@@ -3839,6 +4004,7 @@ namespace OpenEmpires
                 case BuildingType.Farm: return config.FarmWoodCost;
                 case BuildingType.Tower: return config.TowerWoodCost;
                 case BuildingType.Monastery: return config.MonasteryWoodCost;
+                case BuildingType.Landmark: return 0; // landmarks use food/gold, not wood
                 default: return 0;
             }
         }

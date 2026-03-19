@@ -1669,6 +1669,75 @@ namespace OpenEmpires
             return monastery;
         }
 
+        private GameObject CreateLandmarkPrefab(int playerId, LandmarkId landmarkId)
+        {
+            var def = LandmarkDefinitions.Get(landmarkId);
+            var landmark = new GameObject($"Landmark_{def.Name}");
+            landmark.layer = 11;
+
+            // Main body (tall stone structure)
+            var body = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            body.name = "Body";
+            body.transform.SetParent(landmark.transform);
+            body.transform.localPosition = new Vector3(0f, 1.2f, 0f);
+            body.transform.localScale = new Vector3(3.2f, 2.4f, 3.2f);
+            body.layer = 11;
+
+            // Roof/crown
+            var roof = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            roof.name = "Roof";
+            roof.transform.SetParent(landmark.transform);
+            roof.transform.localPosition = new Vector3(0f, 2.8f, 0f);
+            roof.transform.localRotation = Quaternion.Euler(0f, 45f, 0f);
+            roof.transform.localScale = new Vector3(2.5f, 0.8f, 2.5f);
+            roof.layer = 11;
+
+            // Central spire/tower
+            var spire = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            spire.name = "Spire";
+            spire.transform.SetParent(landmark.transform);
+            spire.transform.localPosition = new Vector3(0f, 4.0f, 0f);
+            spire.transform.localScale = new Vector3(0.6f, 2.4f, 0.6f);
+            spire.layer = 11;
+
+            // Banner/flag element
+            var banner = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            banner.name = "Roof"; // named "Roof" so it gets player color material
+            banner.transform.SetParent(landmark.transform);
+            banner.transform.localPosition = new Vector3(0.5f, 4.8f, 0f);
+            banner.transform.localScale = new Vector3(0.8f, 0.5f, 0.1f);
+            banner.layer = 11;
+
+            // Remove individual colliders
+            Object.Destroy(body.GetComponent<Collider>());
+            Object.Destroy(roof.GetComponent<Collider>());
+            Object.Destroy(spire.GetComponent<Collider>());
+            Object.Destroy(banner.GetComponent<Collider>());
+
+            // Single box collider on root
+            var col = landmark.AddComponent<BoxCollider>();
+            col.center = new Vector3(0f, 1.8f, 0f);
+            col.size = new Vector3(3.4f, 3.6f, 3.4f);
+
+            // Selection reticle
+            var ring = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            ring.name = "SelectionRing";
+            ring.transform.SetParent(landmark.transform);
+            ring.transform.localPosition = new Vector3(0f, 0.02f, 0f);
+            ring.transform.localScale = new Vector3(4.5f, 0.01f, 4.5f);
+            ring.layer = 11;
+
+            var ringCollider = ring.GetComponent<Collider>();
+            if (ringCollider != null) Object.Destroy(ringCollider);
+
+            ring.GetComponent<Renderer>().sharedMaterial = sharedSelectionRingMat;
+
+            var view = landmark.AddComponent<BuildingView>();
+            view.SetSelectionRing(ring);
+
+            return landmark;
+        }
+
         private GameObject CreateWallMerlon(Transform parent, Vector3 localPos, Vector3 localScale)
         {
             var merlon = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -1761,6 +1830,9 @@ namespace OpenEmpires
                     break;
                 case BuildingType.Monastery:
                     prefab = CreateMonasteryPrefab(buildingData.PlayerId);
+                    break;
+                case BuildingType.Landmark:
+                    prefab = CreateLandmarkPrefab(buildingData.PlayerId, buildingData.LandmarkId);
                     break;
                 default:
                     prefab = CreateHousePrefab(buildingData.PlayerId);
