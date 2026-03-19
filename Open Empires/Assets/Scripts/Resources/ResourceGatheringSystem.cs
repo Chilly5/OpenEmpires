@@ -515,7 +515,27 @@ namespace OpenEmpires
 
         private bool TryGatherNearbyNode(UnitData unit, FixedVector3 searchPos, ResourceType type, MapData mapData, UnitRegistry unitRegistry, BuildingRegistry buildingRegistry)
         {
-            int newNodeId = FindNearestSameTypeNode(searchPos, type, unit.DetectionRange, mapData);
+            // For wood, prefer trees closer to the drop-off building so villagers clear edge-inward
+            FixedVector3 sortPos = searchPos;
+            if (type == ResourceType.Wood)
+            {
+                var buildings = buildingRegistry.GetAllBuildings();
+                Fixed32 bestDropDist = new Fixed32(int.MaxValue);
+                for (int i = 0; i < buildings.Count; i++)
+                {
+                    var b = buildings[i];
+                    if (b.PlayerId != unit.PlayerId || b.IsDestroyed || b.IsUnderConstruction) continue;
+                    if (!GameSimulation.AcceptsResourceType(b.Type, ResourceType.Wood)) continue;
+                    FixedVector3 diff = b.SimPosition - searchPos;
+                    Fixed32 dist = Fixed32.Abs(diff.x) > Fixed32.Abs(diff.z) ? Fixed32.Abs(diff.x) : Fixed32.Abs(diff.z);
+                    if (dist < bestDropDist)
+                    {
+                        bestDropDist = dist;
+                        sortPos = b.SimPosition;
+                    }
+                }
+            }
+            int newNodeId = FindNearestSameTypeNode(searchPos, type, unit.DetectionRange, mapData, sortPos, occupiedTilesByNode);
             if (newNodeId < 0) return false;
 
             var newNode = mapData.GetResourceNode(newNodeId);
@@ -554,11 +574,14 @@ namespace OpenEmpires
             return true;
         }
 
-        private int FindNearestSameTypeNode(FixedVector3 searchPos, ResourceType type, Fixed32 visionRange, MapData mapData)
+        private int FindNearestSameTypeNode(FixedVector3 searchPos, ResourceType type, Fixed32 visionRange, MapData mapData, FixedVector3 sortPos = default, Dictionary<int, HashSet<Vector2Int>> occupiedTilesByNode = null)
         {
+            // sortPos determines ranking; searchPos determines vision filter
+            if (sortPos.x == Fixed32.Zero && sortPos.z == Fixed32.Zero)
+                sortPos = searchPos;
+
             int bestId = -1;
-            Fixed32 visionRangeSq = visionRange * visionRange;
-            Fixed32 bestDistSq = visionRangeSq;
+            Fixed32 bestDistSq = new Fixed32(int.MaxValue);
 
             foreach (var node in mapData.GetAllResourceNodes())
             {
@@ -566,14 +589,24 @@ namespace OpenEmpires
                 if (node.Type != type) continue;
                 if (node.IsFarmNode) continue; // don't auto-reassign to farms
 
-                FixedVector3 diff = node.Position - searchPos;
-                // Overflow guard: skip if axis distance exceeds vision range
-                if (Fixed32.Abs(diff.x) > visionRange || Fixed32.Abs(diff.z) > visionRange) continue;
+                // Vision range filter uses searchPos (depleted tree position)
+                FixedVector3 filterDiff = node.Position - searchPos;
+                if (Fixed32.Abs(filterDiff.x) > visionRange || Fixed32.Abs(filterDiff.z) > visionRange) continue;
 
+                // Ranking uses sortPos (drop-off building position for wood)
+                FixedVector3 diff = node.Position - sortPos;
                 Fixed32 distSq = diff.x * diff.x + diff.z * diff.z;
-                if (distSq < bestDistSq || (distSq == bestDistSq && node.Id < bestId))
+
+                // Penalize nodes that already have gatherers — each existing gatherer adds 3² = 9 tiles worth of distance
+                int gathererCount = 0;
+                if (occupiedTilesByNode != null && occupiedTilesByNode.TryGetValue(node.Id, out var occupiedSet))
+                    gathererCount = occupiedSet.Count;
+                Fixed32 penalty = Fixed32.FromInt(gathererCount * 9);
+                Fixed32 effectiveDistSq = distSq + penalty;
+
+                if (effectiveDistSq < bestDistSq || (effectiveDistSq == bestDistSq && node.Id < bestId))
                 {
-                    bestDistSq = distSq;
+                    bestDistSq = effectiveDistSq;
                     bestId = node.Id;
                 }
             }
