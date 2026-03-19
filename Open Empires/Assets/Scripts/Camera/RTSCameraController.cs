@@ -5,13 +5,13 @@ namespace OpenEmpires
 {
     public class RTSCameraController : MonoBehaviour
     {
-        private float panSpeed = 40f;
+        private float panSpeed = 80f;
         private float edgeScrollThreshold = 10f;
         private bool enableEdgeScroll = true;
 
         private float zoomSpeed = 5f;
-        private float minZoomDistance = 8f;
-        private float maxZoomDistance = 200f;
+        private float minZoomDistance = 5f;
+        private float maxZoomDistance = 40f;
         private float zoomSmoothing = 8f;
 
         private float panSmoothing = 0.15f;
@@ -25,13 +25,14 @@ namespace OpenEmpires
 
         private Transform pivot;
         private Transform arm;
-        private float currentZoom = 25f;
-        private float targetZoom = 25f;
+        private float currentZoom = 15f;
+        private float targetZoom = 15f;
         private float currentYaw = 45f;
         private float targetYaw = 45f;
         private Vector3 targetPivotPos;
         private Vector3 pivotVelocity;
 
+        private Camera cam;
         private RTSInputActions inputActions;
         private Vector2 panInput;
         private Vector2 mousePosition;
@@ -72,10 +73,12 @@ namespace OpenEmpires
             transform.localPosition = Vector3.zero;
             transform.localRotation = Quaternion.identity;
 
-            // Black background so areas beyond the map edge appear black
-            var cam = GetComponent<Camera>();
+            // Orthographic camera with black background
+            cam = GetComponent<Camera>();
             if (cam != null)
             {
+                cam.orthographic = true;
+                cam.orthographicSize = currentZoom;
                 cam.clearFlags = CameraClearFlags.SolidColor;
                 cam.backgroundColor = Color.black;
             }
@@ -165,6 +168,8 @@ namespace OpenEmpires
         private void HandleZoomSmoothing()
         {
             currentZoom = Mathf.Lerp(currentZoom, targetZoom, Time.deltaTime * zoomSmoothing);
+            if (cam != null)
+                cam.orthographicSize = currentZoom;
         }
 
         private void HandleRotation()
@@ -201,7 +206,7 @@ namespace OpenEmpires
             pivot.rotation = Quaternion.Euler(0f, currentYaw, 0f);
             arm.localRotation = Quaternion.Euler(pitch, 0f, 0f);
             arm.localPosition = Vector3.zero;
-            transform.localPosition = new Vector3(0f, 0f, -currentZoom);
+            transform.localPosition = new Vector3(0f, 0f, -100f);
         }
     }
 }
