@@ -18,6 +18,30 @@
 
 ---
 
+## Features
+
+<div align="center">
+
+### Gather resources on a procedurally generated map
+
+<img src="resourcegathering.gif" alt="Resource Gathering" width="700"/>
+
+### Build a civilization based on the English, French, or Holy Roman Empire
+
+<img src="build_a_civilization.gif" alt="Build a Civilization" width="700"/>
+
+### Age of Empires-inspired medieval combat system
+
+<img src="aoe_style_combat.gif" alt="Combat System" width="700"/>
+
+### Support for multiplayer 1v1, 2v2, 3v3, and 4v4!
+
+<img src="supportfor4v4.gif" alt="Multiplayer Support" width="700"/>
+
+</div>
+
+---
+
 ## Tech Stack
 
 - **Engine**: Unity 6 (6000.3.9f1) with URP and New Input System
