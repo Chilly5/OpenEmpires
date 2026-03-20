@@ -122,8 +122,12 @@ namespace OpenEmpires
                 var mat = new Material(splatShader);
                 mat.SetTexture("_SplatMap", GenerateSplatmap(mapData));
 
-                var (grassTex, dirtTex, sandTex, rockTex, snowTex, forestFloorTex) = GenerateTerrainTextures();
-                mat.SetTexture("_TexGrass", grassTex);
+                var (dirtTex, sandTex, rockTex, snowTex, forestFloorTex) = GenerateTerrainTextures();
+                var grassArray = CreateGrassTextureArray();
+                var grassIndexMap = GenerateGrassIndexMap(mapData, 9);
+                mat.SetTexture("_GrassArray", grassArray);
+                mat.SetTexture("_GrassIndexMap", grassIndexMap);
+                mat.SetFloat("_GrassArrayCount", 9f);
                 mat.SetTexture("_TexDirt", dirtTex);
                 mat.SetTexture("_TexSand", sandTex);
                 mat.SetTexture("_TexRock", rockTex);
@@ -321,16 +325,101 @@ namespace OpenEmpires
             return mask;
         }
 
-        private (Texture2D grass, Texture2D dirt, Texture2D sand, Texture2D rock, Texture2D snow, Texture2D forestFloor) GenerateTerrainTextures()
+        private static readonly string[] GrassTextureNames = new string[]
+        {
+            "GroundTiles/Tile_Grass_1",
+            "GroundTiles/Tile_Grass_2",
+            "GroundTiles/Tile_Grass_3",
+            "GroundTiles/Tile_Grass_4",
+            "GroundTiles/Tile_RockyGrass_1",
+            "GroundTiles/Tile_RockyGrass_2",
+            "GroundTiles/Tile_RockyGrass_3",
+            "GroundTiles/Tile_RockyDirt_1",
+            "GroundTiles/Tile_Rocks_on_grass1",
+        };
+
+        private Texture2DArray CreateGrassTextureArray()
+        {
+            int size = 512;
+            var texArray = new Texture2DArray(size, size, GrassTextureNames.Length, TextureFormat.RGBA32, true);
+            texArray.filterMode = FilterMode.Trilinear;
+            texArray.wrapMode = TextureWrapMode.Repeat;
+            texArray.anisoLevel = 8;
+
+            for (int i = 0; i < GrassTextureNames.Length; i++)
+            {
+                var src = Resources.Load<Texture2D>(GrassTextureNames[i]);
+                if (src == null)
+                {
+                    Debug.LogError($"[MapRenderer] Failed to load grass texture: {GrassTextureNames[i]}");
+                    continue;
+                }
+
+                // If source is compressed or wrong size, blit to a readable RGBA32 texture
+                var readable = new RenderTexture(size, size, 0, RenderTextureFormat.ARGB32);
+                Graphics.Blit(src, readable);
+                var tmp = new Texture2D(size, size, TextureFormat.RGBA32, false);
+                RenderTexture.active = readable;
+                tmp.ReadPixels(new Rect(0, 0, size, size), 0, 0);
+                tmp.Apply();
+                RenderTexture.active = null;
+
+                Graphics.CopyTexture(tmp, 0, 0, texArray, i, 0);
+
+                // Generate mipmaps by copying mip 0 and letting Unity generate the rest
+                Object.Destroy(tmp);
+                Object.Destroy(readable);
+            }
+
+            texArray.Apply(true); // generate mipmaps
+            return texArray;
+        }
+
+        private Texture2D GenerateGrassIndexMap(MapData mapData, int variantCount)
+        {
+            int texW = mapData.Width * 4;
+            int texH = mapData.Height * 4;
+            var indexMap = new Texture2D(texW, texH, TextureFormat.R8, false);
+            indexMap.filterMode = FilterMode.Bilinear;
+            indexMap.wrapMode = TextureWrapMode.Clamp;
+
+            var pixels = new Color[texW * texH];
+
+            for (int pz = 0; pz < texH; pz++)
+            {
+                for (int px = 0; px < texW; px++)
+                {
+                    float worldX = (px + 0.5f) / 4f;
+                    float worldZ = (pz + 0.5f) / 4f;
+
+                    // Large-scale region noise for coherent patches
+                    float regionNoise = Mathf.PerlinNoise(worldX * 0.03f + 1000f, worldZ * 0.03f + 1000f);
+                    // Finer noise for local variation within regions
+                    float localNoise = Mathf.PerlinNoise(worldX * 0.12f + 2000f, worldZ * 0.12f + 2000f);
+                    float combined = regionNoise * 0.7f + localNoise * 0.3f;
+
+                    int idx = Mathf.FloorToInt(combined * variantCount);
+                    idx = Mathf.Clamp(idx, 0, variantCount - 1);
+
+                    float normalizedIdx = (float)idx / (variantCount - 1);
+                    pixels[pz * texW + px] = new Color(normalizedIdx, 0f, 0f, 1f);
+                }
+            }
+
+            indexMap.SetPixels(pixels);
+            indexMap.Apply();
+            return indexMap;
+        }
+
+        private (Texture2D dirt, Texture2D sand, Texture2D rock, Texture2D snow, Texture2D forestFloor) GenerateTerrainTextures()
         {
             int size = 1024;
-            var grass = GenerateNoiseTexture(size, 42, new Color(0.85f, 0.95f, 0.75f), new Color(0.6f, 0.8f, 0.5f));
             var dirt = GenerateNoiseTexture(size, 73, new Color(0.9f, 0.85f, 0.75f), new Color(0.65f, 0.55f, 0.4f));
             var sand = GenerateNoiseTexture(size, 104, new Color(0.95f, 0.92f, 0.82f), new Color(0.8f, 0.75f, 0.6f));
             var rock = GenerateNoiseTexture(size, 135, new Color(0.85f, 0.83f, 0.8f), new Color(0.55f, 0.52f, 0.48f));
             var snow = GenerateNoiseTexture(size, 166, new Color(0.95f, 0.96f, 0.98f), new Color(0.85f, 0.88f, 0.95f));
             var forestFloor = GenerateNoiseTexture(size, 197, new Color(0.65f, 0.62f, 0.42f), new Color(0.45f, 0.50f, 0.30f));
-            return (grass, dirt, sand, rock, snow, forestFloor);
+            return (dirt, sand, rock, snow, forestFloor);
         }
 
         private Texture2D GenerateNoiseTexture(int size, int seed, Color colorA, Color colorB)
