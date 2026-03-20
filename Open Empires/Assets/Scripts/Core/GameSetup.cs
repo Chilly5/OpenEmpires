@@ -527,8 +527,11 @@ namespace OpenEmpires
 
             if (markerMaterial != null)
             {
-                arrowShaft.sharedMaterial = markerMaterial;
-                arrowHead.sharedMaterial = markerMaterial;
+                var arrowMat = new Material(markerMaterial);
+                arrowMat.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always); // Always — render on top of terrain
+                arrowMat.renderQueue = 3000;
+                arrowShaft.sharedMaterial = arrowMat;
+                arrowHead.sharedMaterial = arrowMat;
             }
 
             facingArrow.SetActive(false);
@@ -1035,7 +1038,7 @@ namespace OpenEmpires
                 zoneLR.endWidth = 0.08f;
                 var zoneMat = new Material(cachedUnlitShader);
                 zoneMat.color = new Color(1f, 0.6f, 0f, 0.8f);
-                zoneMat.SetInt("_ZTest", 8);
+                zoneMat.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
                 zoneMat.renderQueue = 3000;
                 zoneLR.material = zoneMat;
                 zoneLR.startColor = new Color(1f, 0.6f, 0f, 0.8f);
@@ -1220,7 +1223,7 @@ namespace OpenEmpires
                 zoneLR.endWidth = 0.08f;
                 var zoneMat = new Material(cachedUnlitShader);
                 zoneMat.color = new Color(1f, 0.6f, 0f, 0.8f);
-                zoneMat.SetInt("_ZTest", 8);
+                zoneMat.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
                 zoneMat.renderQueue = 3000;
                 zoneLR.material = zoneMat;
                 zoneLR.startColor = new Color(1f, 0.6f, 0f, 0.8f);
@@ -1765,7 +1768,7 @@ namespace OpenEmpires
                 zoneLR.endWidth = 0.08f;
                 var zoneMat = new Material(cachedUnlitShader);
                 zoneMat.color = new Color(1f, 0.6f, 0f, 0.8f);
-                zoneMat.SetInt("_ZTest", 8);
+                zoneMat.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
                 zoneMat.renderQueue = 3000;
                 zoneLR.material = zoneMat;
                 zoneLR.startColor = new Color(1f, 0.6f, 0f, 0.8f);

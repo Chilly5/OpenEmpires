@@ -5319,7 +5319,7 @@ namespace OpenEmpires
                 var b = allBuildings[i];
                 if (b.Type != BuildingType.Landmark) continue;
                 if (b.PlayerId != building.PlayerId) continue;
-                if (b.IsDestroyed || b.IsUnderConstruction) continue;
+                if (b.IsDestroyed) continue;
                 if (LandmarkDefinitions.Get(b.LandmarkId).Civ != Civilization.French) continue;
 
                 int minX = b.OriginTileX - influenceRadius;
