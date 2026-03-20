@@ -409,7 +409,7 @@ namespace OpenEmpires
 
             // Resolve rally target position and color once
             Vector3 rallyPos = buildingData.RallyPoint.ToVector3();
-            bool isGreen = buildingData.RallyPointOnResource;
+            bool isGreen = buildingData.RallyPointOnResource || buildingData.RallyPointOnConstruction;
             if (showRally && buildingData.RallyPointUnitId >= 0)
             {
                 var sim = GameBootstrapper.Instance?.Simulation;

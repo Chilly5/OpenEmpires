@@ -13,6 +13,8 @@ namespace OpenEmpires
         private const float HealthBarWidth = 50f;
         private const float HealthBarHeight = 10f;
         private const float HealthBarGap = 4f;
+        private const float AgeColWidth = 24f;
+        private const float AgeColGap = 4f;
         private const float RowHeight = 22f;
         private const float RowGap = 3f;
         private const float Padding = 8f;
@@ -41,6 +43,7 @@ namespace OpenEmpires
         private Image[] healthBarBgs;
         private Image[] healthBarFills;
         private TextMeshProUGUI[] destroyedMarkers;
+        private TextMeshProUGUI[] ageLabels;
         private TextMeshProUGUI objectiveHint;
         private int localPlayerId;
         private bool showPing;
@@ -63,10 +66,10 @@ namespace OpenEmpires
             var panelGO = new GameObject("PlayerListPanel");
             panelGO.transform.SetParent(canvasGO.transform, false);
             panelRT = panelGO.AddComponent<RectTransform>();
-            panelRT.anchorMin = new Vector2(1, 1);
-            panelRT.anchorMax = new Vector2(1, 1);
-            panelRT.pivot = new Vector2(1, 1);
-            panelRT.anchoredPosition = new Vector2(-Margin, -Margin);
+            panelRT.anchorMin = new Vector2(0, 1);
+            panelRT.anchorMax = new Vector2(0, 1);
+            panelRT.pivot = new Vector2(0, 1);
+            panelRT.anchoredPosition = new Vector2(Margin, -Margin);
             panelRT.sizeDelta = new Vector2(PanelWidthBase, 0);
             var panelImg = panelGO.AddComponent<Image>();
             panelImg.color = new Color(0f, 0f, 0f, 1f);
@@ -75,20 +78,20 @@ namespace OpenEmpires
             outline.effectDistance = new Vector2(2, -2);
             panelGO.SetActive(false);
 
-            // Objective hint label below the panel
+            // Objective hint label above the panel
             var hintGO = new GameObject("ObjectiveHint");
             hintGO.transform.SetParent(canvasGO.transform, false);
             var hintRT = hintGO.AddComponent<RectTransform>();
-            hintRT.anchorMin = new Vector2(1, 1);
-            hintRT.anchorMax = new Vector2(1, 1);
-            hintRT.pivot = new Vector2(1, 0);
-            hintRT.anchoredPosition = new Vector2(-Margin, 0);
+            hintRT.anchorMin = new Vector2(0, 1);
+            hintRT.anchorMax = new Vector2(0, 1);
+            hintRT.pivot = new Vector2(0, 1);
+            hintRT.anchoredPosition = new Vector2(Margin, 0);
             hintRT.sizeDelta = new Vector2(300f, HintHeight);
             objectiveHint = hintGO.AddComponent<TextMeshProUGUI>();
             objectiveHint.text = "Destroy all enemy Headquarters to win.";
-            objectiveHint.fontSize = 11;
-            objectiveHint.color = new Color(1f, 1f, 1f, 0.7f);
-            objectiveHint.alignment = TextAlignmentOptions.TopRight;
+            objectiveHint.fontSize = 13;
+            objectiveHint.color = new Color(1f, 1f, 1f, 0.9f);
+            objectiveHint.alignment = TextAlignmentOptions.TopLeft;
             objectiveHint.raycastTarget = false;
             hintGO.SetActive(false);
         }
@@ -112,6 +115,7 @@ namespace OpenEmpires
                     UpdatePingLabels();
                 UpdateSurrenderState();
                 UpdateHealthBars();
+                UpdateAgeLabels();
             }
         }
 
@@ -150,6 +154,20 @@ namespace OpenEmpires
                     c.a = 0.5f;
                     nameLabels[pid].color = c;
                 }
+            }
+        }
+
+        private void UpdateAgeLabels()
+        {
+            if (ageLabels == null) return;
+            var sim = GameBootstrapper.Instance?.Simulation;
+            if (sim == null) return;
+
+            for (int pid = 0; pid < ageLabels.Length; pid++)
+            {
+                if (ageLabels[pid] == null) continue;
+                int age = sim.GetPlayerAge(pid);
+                ageLabels[pid].text = LandmarkDefinitions.AgeToRoman(age);
             }
         }
 
@@ -227,7 +245,7 @@ namespace OpenEmpires
                     teamGroups[0][i] = i;
             }
 
-            float panelWidth = PanelWidthBase + FlagGap + FlagWidth + HealthBarGap + HealthBarWidth;
+            float panelWidth = PanelWidthBase + FlagGap + FlagWidth + AgeColGap + AgeColWidth + HealthBarGap + HealthBarWidth;
             if (showPing)
                 panelWidth += PingColGap + PingColWidth;
 
@@ -235,6 +253,7 @@ namespace OpenEmpires
             healthBarBgs = new Image[playerCount];
             healthBarFills = new Image[playerCount];
             destroyedMarkers = new TextMeshProUGUI[playerCount];
+            ageLabels = new TextMeshProUGUI[playerCount];
             if (showPing)
                 pingLabels = new TextMeshProUGUI[playerCount];
 
@@ -249,12 +268,12 @@ namespace OpenEmpires
             }
             panelRT.sizeDelta = new Vector2(panelWidth, totalH);
 
-            // Position objective hint just below the panel
+            // Position objective hint above the panel, both within screen bounds
             if (objectiveHint != null)
             {
                 var hintRT = objectiveHint.GetComponent<RectTransform>();
-                float panelBottom = -Margin - totalH;
-                hintRT.anchoredPosition = new Vector2(-Margin, panelBottom - HintGap);
+                hintRT.anchoredPosition = new Vector2(Margin, -Margin);
+                panelRT.anchoredPosition = new Vector2(Margin, -Margin - HintHeight - HintGap);
                 objectiveHint.gameObject.SetActive(true);
             }
 
@@ -368,6 +387,25 @@ namespace OpenEmpires
             tmp.raycastTarget = false;
             if (playerId >= 0 && playerId < nameLabels.Length)
                 nameLabels[playerId] = tmp;
+
+            // Age label (between name and health bar)
+            float ageX = panelWidth - Padding - (showPing ? PingColGap + PingColWidth : 0f) - HealthBarWidth - HealthBarGap - AgeColWidth;
+            var ageGO = new GameObject($"Age{playerId}");
+            ageGO.transform.SetParent(parent, false);
+            var ageRT = ageGO.AddComponent<RectTransform>();
+            ageRT.anchorMin = new Vector2(0, 1);
+            ageRT.anchorMax = new Vector2(0, 1);
+            ageRT.pivot = new Vector2(0, 1);
+            ageRT.anchoredPosition = new Vector2(ageX, rowTopY);
+            ageRT.sizeDelta = new Vector2(AgeColWidth, RowHeight);
+            var ageTmp = ageGO.AddComponent<TextMeshProUGUI>();
+            ageTmp.text = "I";
+            ageTmp.fontSize = 11;
+            ageTmp.color = new Color(0.8f, 0.75f, 0.4f);
+            ageTmp.alignment = TextAlignmentOptions.Center;
+            ageTmp.raycastTarget = false;
+            if (playerId >= 0 && playerId < ageLabels.Length)
+                ageLabels[playerId] = ageTmp;
 
             // Health bar background
             float hbX = panelWidth - Padding - (showPing ? PingColGap + PingColWidth : 0f) - HealthBarWidth;

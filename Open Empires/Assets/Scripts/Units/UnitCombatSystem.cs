@@ -20,6 +20,8 @@ namespace OpenEmpires
         private static readonly Fixed32 BuildingReach = Fixed32.FromInt(2);
         private const int ChargeDamageMultiplier = 2;
         private const int ChargeCooldownTicks = 200; // 10 sec at 20 TPS
+        private static readonly Fixed32 ChargeKnockbackDist = Fixed32.FromFloat(1.5f);
+        private const int ChargeStunTicks = 15; // 0.75 sec at 20 TPS
 
         private List<int> deadList = new List<int>();
         private List<int> deadBuildingList = new List<int>();
@@ -43,6 +45,11 @@ namespace OpenEmpires
                     unit.AttackCooldownRemaining--;
                 if (unit.ChargeCooldownRemaining > 0)
                     unit.ChargeCooldownRemaining--;
+                if (unit.ChargeStunRemaining > 0)
+                {
+                    unit.ChargeStunRemaining--;
+                    continue;
+                }
 
                 bool recentlyDamaged = unit.LastDamageTick > 0 && (currentTick - unit.LastDamageTick) < RecentHitWindow;
 
@@ -292,6 +299,7 @@ namespace OpenEmpires
 
                     // Attack
                     int damage = unit.AttackDamage;
+                    bool wasCharging = unit.IsCharging;
                     if (unit.IsCharging)
                     {
                         damage = unit.AttackDamage * ChargeDamageMultiplier;
@@ -327,6 +335,24 @@ namespace OpenEmpires
 
                         closestEnemy.LastDamageTick = currentTick;
                         closestEnemy.LastDamageFromPos = unit.SimPosition;
+
+                        if (wasCharging)
+                        {
+                            closestEnemy.LastChargeHitTick = currentTick;
+                            closestEnemy.LastChargeHitFromPos = unit.SimPosition;
+                            closestEnemy.ChargeStunRemaining = ChargeStunTicks;
+
+                            // Knockback displacement
+                            var knockDir = targetDir;
+                            var displacement = new FixedVector3(
+                                knockDir.x * ChargeKnockbackDist,
+                                Fixed32.Zero,
+                                knockDir.z * ChargeKnockbackDist);
+                            var newPos = closestEnemy.SimPosition + displacement;
+                            Vector2Int newTile = mapData.WorldToTile(newPos);
+                            if (mapData.IsWalkable(newTile.x, newTile.y))
+                                closestEnemy.SimPosition = newPos;
+                        }
 
                         if (closestEnemy.CurrentHealth <= 0)
                         {

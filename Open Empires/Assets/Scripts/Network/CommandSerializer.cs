@@ -241,7 +241,8 @@ namespace OpenEmpires
                 data.buildingId,
                 new FixedVector3(new Fixed32(data.posX), new Fixed32(data.posY), new Fixed32(data.posZ)),
                 data.resourceNodeId,
-                data.targetUnitId
+                data.targetUnitId,
+                data.targetBuildingId
             );
         }
 
@@ -486,6 +487,7 @@ namespace OpenEmpires
             public int posX, posY, posZ;
             public int resourceNodeId = -1;
             public int targetUnitId = -1;
+            public int targetBuildingId = -1;
 
             public SetRallyPointPayload() { }
 
@@ -497,6 +499,7 @@ namespace OpenEmpires
                 posZ = cmd.Position.z.Raw;
                 resourceNodeId = cmd.ResourceNodeId;
                 targetUnitId = cmd.TargetUnitId;
+                targetBuildingId = cmd.TargetBuildingId;
             }
         }
 
@@ -983,6 +986,7 @@ namespace OpenEmpires
                             WriteFixedVector3(w, rally.Position);
                             w.Write(rally.ResourceNodeId);
                             w.Write(rally.TargetUnitId);
+                            w.Write(rally.TargetBuildingId);
                             break;
                         case PlaceBuildingCommand place:
                             w.Write((int)place.BuildingType);
@@ -1169,7 +1173,8 @@ namespace OpenEmpires
                             FixedVector3 rallyPos = ReadFixedVector3(r);
                             int rallyResourceNodeId = r.ReadInt32();
                             int rallyTargetUnitId = r.ReadInt32();
-                            commands.Add(new SetRallyPointCommand(playerId, rallyBuildingId, rallyPos, rallyResourceNodeId, rallyTargetUnitId));
+                            int rallyTargetBuildingId = r.ReadInt32();
+                            commands.Add(new SetRallyPointCommand(playerId, rallyBuildingId, rallyPos, rallyResourceNodeId, rallyTargetUnitId, rallyTargetBuildingId));
                             break;
                         case CommandType.PlaceBuilding:
                             var bType = (BuildingType)r.ReadInt32();

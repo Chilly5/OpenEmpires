@@ -70,6 +70,7 @@ namespace OpenEmpires
             var sim = GameBootstrapper.Instance.Simulation;
             sim.OnPlayerSurrendered += OnPlayerSurrendered;
             sim.OnSurrenderVoteUpdated += OnSurrenderVoteUpdated;
+            sim.OnPlayerAgedUp += OnPlayerAgedUp;
 
             gameStarted = true;
             canvasGO.SetActive(true);
@@ -89,6 +90,7 @@ namespace OpenEmpires
             {
                 sim.OnPlayerSurrendered -= OnPlayerSurrendered;
                 sim.OnSurrenderVoteUpdated -= OnSurrenderVoteUpdated;
+                sim.OnPlayerAgedUp -= OnPlayerAgedUp;
             }
         }
 
@@ -133,6 +135,13 @@ namespace OpenEmpires
                 IsSystem = false,
                 SenderPlayerId = msg.from_player_id
             });
+        }
+
+        private void OnPlayerAgedUp(int playerId, int newAge)
+        {
+            string name = ResolvePlayerName(playerId);
+            string ageRoman = LandmarkDefinitions.AgeToRoman(newAge);
+            ChatManager.AddSystemMessage($"{name} has advanced to Age {ageRoman}!");
         }
 
         private void OnPlayerSurrendered(int playerId)

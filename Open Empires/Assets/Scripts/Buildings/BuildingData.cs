@@ -65,6 +65,8 @@ namespace OpenEmpires
         public bool RallyPointOnResource;
         public ResourceType RallyPointResourceType;
         public int RallyPointUnitId = -1;
+        public bool RallyPointOnConstruction;
+        public int RallyPointConstructionBuildingId = -1;
 
         // Wall grouping (links segments from same drag placement)
         public int WallGroupId;

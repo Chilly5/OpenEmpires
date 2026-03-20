@@ -135,6 +135,8 @@ namespace OpenEmpires
 
         // Landmark choice panel
         private GameObject landmarkPanelGO;
+        private System.Action landmarkChoiceACallback;
+        private System.Action landmarkChoiceBCallback;
 
         // Mouse hold-to-delete on action button
         private bool deleteMouseHolding;
@@ -1069,7 +1071,7 @@ namespace OpenEmpires
             var sim = GameBootstrapper.Instance?.Simulation;
             if (sim == null) return;
 
-            // Close landmark panel on Escape or right-click
+            // Close landmark panel on Escape or right-click; Q/W to choose
             if (landmarkPanelGO != null)
             {
                 var kb = Keyboard.current;
@@ -1079,6 +1081,10 @@ namespace OpenEmpires
                 {
                     CloseLandmarkChoicePanel();
                 }
+                else if (kb != null && kb.qKey.wasPressedThisFrame && landmarkChoiceACallback != null)
+                    landmarkChoiceACallback();
+                else if (kb != null && kb.wKey.wasPressedThisFrame && landmarkChoiceBCallback != null)
+                    landmarkChoiceBCallback();
             }
 
             // Clear action callbacks
@@ -1669,6 +1675,34 @@ namespace OpenEmpires
                     Tooltip = "<b>Build</b>\nOpen the build menu.",
                     Enabled = true,
                     OnClick = () => { buildHotkeysActive = true; } };
+
+                // R = Age Up (villagers only)
+                int currentAge = sim.GetPlayerAge(view.PlayerId);
+                bool isAgingUp = sim.IsPlayerAgingUp(view.PlayerId);
+                if (currentAge < 4 && !isAgingUp)
+                {
+                    int targetAge = currentAge + 1;
+                    var civ = sim.GetPlayerCivilization(view.PlayerId);
+                    var (choiceA, choiceB) = LandmarkDefinitions.GetChoices(civ, targetAge);
+                    var defA = LandmarkDefinitions.Get(choiceA);
+                    var defB = LandmarkDefinitions.Get(choiceB);
+                    int minFood = Mathf.Min(defA.FoodCost, defB.FoodCost);
+                    int minGold = Mathf.Min(defA.GoldCost, defB.GoldCost);
+                    var resources = sim.ResourceManager.GetPlayerResources(view.PlayerId);
+                    bool canAfford = resources.Food >= minFood && resources.Gold >= minGold;
+                    string ageRoman = LandmarkDefinitions.AgeToRoman(targetAge);
+                    slots[3] = new GridButton { Label = $"Age {ageRoman}", Hotkey = "R",
+                        Enabled = canAfford,
+                        Tooltip = $"<b>Advance to Age {ageRoman}</b>\nChoose a landmark to construct.\nCost: {minFood} <sprite name=\"food\"> {minGold} <sprite name=\"gold\">",
+                        OnClick = () => ShowLandmarkChoicePanel(sim, view.PlayerId, targetAge) };
+                }
+                else if (isAgingUp)
+                {
+                    string ageRoman = LandmarkDefinitions.AgeToRoman(currentAge + 1);
+                    slots[3] = new GridButton { Label = $"Age {ageRoman}", Hotkey = "R",
+                        Enabled = false,
+                        Tooltip = $"<b>Advancing to Age {ageRoman}</b>\nLandmark under construction..." };
+                }
             }
 
             // A = Attack Move
@@ -1816,6 +1850,35 @@ namespace OpenEmpires
                     Tooltip = "<b>Build</b>\nOpen the build menu.",
                     Enabled = true,
                     OnClick = () => { buildHotkeysActive = true; } };
+
+                // R = Age Up (villagers only)
+                int localPid = selectionManager.LocalPlayerId;
+                int currentAge = sim.GetPlayerAge(localPid);
+                bool isAgingUp = sim.IsPlayerAgingUp(localPid);
+                if (currentAge < 4 && !isAgingUp)
+                {
+                    int targetAge = currentAge + 1;
+                    var civ = sim.GetPlayerCivilization(localPid);
+                    var (choiceA, choiceB) = LandmarkDefinitions.GetChoices(civ, targetAge);
+                    var defA = LandmarkDefinitions.Get(choiceA);
+                    var defB = LandmarkDefinitions.Get(choiceB);
+                    int minFood = Mathf.Min(defA.FoodCost, defB.FoodCost);
+                    int minGold = Mathf.Min(defA.GoldCost, defB.GoldCost);
+                    var resources = sim.ResourceManager.GetPlayerResources(localPid);
+                    bool canAfford = resources.Food >= minFood && resources.Gold >= minGold;
+                    string ageRoman = LandmarkDefinitions.AgeToRoman(targetAge);
+                    slots[3] = new GridButton { Label = $"Age {ageRoman}", Hotkey = "R",
+                        Enabled = canAfford,
+                        Tooltip = $"<b>Advance to Age {ageRoman}</b>\nChoose a landmark to construct.\nCost: {minFood} <sprite name=\"food\"> {minGold} <sprite name=\"gold\">",
+                        OnClick = () => ShowLandmarkChoicePanel(sim, localPid, targetAge) };
+                }
+                else if (isAgingUp)
+                {
+                    string ageRoman = LandmarkDefinitions.AgeToRoman(currentAge + 1);
+                    slots[3] = new GridButton { Label = $"Age {ageRoman}", Hotkey = "R",
+                        Enabled = false,
+                        Tooltip = $"<b>Advancing to Age {ageRoman}</b>\nLandmark under construction..." };
+                }
             }
 
             // A = Attack Move
@@ -2131,17 +2194,24 @@ namespace OpenEmpires
             titleText.color = Color.white;
             titleText.alignment = TextAlignmentOptions.Center;
 
+            bool canAffordA = resources.Food >= defA.FoodCost && resources.Gold >= defA.GoldCost;
+            bool canAffordB = resources.Food >= defB.FoodCost && resources.Gold >= defB.GoldCost;
+            var capturedChoiceA = choiceA;
+            var capturedChoiceB = choiceB;
+            landmarkChoiceACallback = canAffordA ? () => { CloseLandmarkChoicePanel(); selectionManager.EnterLandmarkPlacement(capturedChoiceA); } : null;
+            landmarkChoiceBCallback = canAffordB ? () => { CloseLandmarkChoicePanel(); selectionManager.EnterLandmarkPlacement(capturedChoiceB); } : null;
+
             // Choice A button (left)
             CreateLandmarkChoiceButton(landmarkPanelGO.transform, defA, choiceA, resources,
-                new Vector2(-btnW / 2 - 5, -20), new Vector2(btnW, btnH));
+                new Vector2(-btnW / 2 - 5, -20), new Vector2(btnW, btnH), "Q");
 
             // Choice B button (right)
             CreateLandmarkChoiceButton(landmarkPanelGO.transform, defB, choiceB, resources,
-                new Vector2(btnW / 2 + 5, -20), new Vector2(btnW, btnH));
+                new Vector2(btnW / 2 + 5, -20), new Vector2(btnW, btnH), "W");
         }
 
         private void CreateLandmarkChoiceButton(Transform parent, LandmarkDefinition def, LandmarkId landmarkId,
-            PlayerResources resources, Vector2 position, Vector2 size)
+            PlayerResources resources, Vector2 position, Vector2 size, string hotkeyLabel = null)
         {
             bool canAfford = resources.Food >= def.FoodCost && resources.Gold >= def.GoldCost;
 
@@ -2164,6 +2234,26 @@ namespace OpenEmpires
                 CloseLandmarkChoicePanel();
                 selectionManager.EnterLandmarkPlacement(capturedId);
             });
+
+            // Hotkey label (top-left corner)
+            if (!string.IsNullOrEmpty(hotkeyLabel))
+            {
+                var hkGO = new GameObject("Hotkey");
+                hkGO.transform.SetParent(btnGO.transform, false);
+                var hkRT = hkGO.AddComponent<RectTransform>();
+                hkRT.anchorMin = new Vector2(0, 1);
+                hkRT.anchorMax = new Vector2(0, 1);
+                hkRT.pivot = new Vector2(0, 1);
+                hkRT.anchoredPosition = new Vector2(4, -4);
+                hkRT.sizeDelta = new Vector2(16, 14);
+                var hkText = hkGO.AddComponent<TextMeshProUGUI>();
+                hkText.text = hotkeyLabel;
+                hkText.fontSize = 9;
+                hkText.fontStyle = FontStyles.Bold;
+                hkText.color = new Color(1f, 1f, 1f, 0.85f);
+                hkText.alignment = TextAlignmentOptions.TopLeft;
+                hkText.raycastTarget = false;
+            }
 
             // Name text
             var nameGO = new GameObject("Name");
@@ -2223,6 +2313,8 @@ namespace OpenEmpires
                 Destroy(landmarkPanelGO);
                 landmarkPanelGO = null;
             }
+            landmarkChoiceACallback = null;
+            landmarkChoiceBCallback = null;
         }
 
         private BuildingType? GetEffectiveBuildingType(IReadOnlyList<BuildingView> buildings, int localPid)
@@ -2567,6 +2659,16 @@ namespace OpenEmpires
                     }
                     SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f);
                 }
+                else if (WasKeyPressed(Key.A))
+                {
+                    int currentAge = sim.GetPlayerAge(localPid);
+                    bool isAgingUp = sim.IsPlayerAgingUp(localPid);
+                    if (currentAge < 4 && !isAgingUp)
+                    {
+                        FlashActionButton(4);
+                        ShowLandmarkChoicePanel(sim, localPid, currentAge + 1);
+                    }
+                }
             }
             else if (dominantType == BuildingType.Barracks)
             {
@@ -2805,6 +2907,19 @@ namespace OpenEmpires
             {
                 FlashActionButton(0);
                 buildHotkeysActive = true;
+                return;
+            }
+
+            // R = Age Up (villagers only)
+            if (allOwnedVillagers && WasKeyPressed(Key.R))
+            {
+                int currentAge = sim.GetPlayerAge(localPid);
+                bool isAgingUp = sim.IsPlayerAgingUp(localPid);
+                if (currentAge < 4 && !isAgingUp)
+                {
+                    FlashActionButton(3);
+                    ShowLandmarkChoicePanel(sim, localPid, currentAge + 1);
+                }
                 return;
             }
 

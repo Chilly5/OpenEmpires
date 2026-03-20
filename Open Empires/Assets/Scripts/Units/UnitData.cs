@@ -121,6 +121,7 @@ namespace OpenEmpires
         // Charge
         public bool IsCharging;
         public int ChargeCooldownRemaining;
+        public int ChargeStunRemaining;
         public int CombatTargetId = -1;
         public int CombatTargetBuildingId = -1;
 
@@ -129,6 +130,8 @@ namespace OpenEmpires
         public FixedVector3 LastAttackTargetPos;
         public int LastDamageTick;
         public FixedVector3 LastDamageFromPos;
+        public int LastChargeHitTick;
+        public FixedVector3 LastChargeHitFromPos;
 
         // Heal feedback (sim writes, view reads)
         public int LastHealTick;

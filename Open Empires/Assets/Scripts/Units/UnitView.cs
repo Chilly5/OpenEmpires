@@ -73,13 +73,20 @@ namespace OpenEmpires
         private const float DamageFlinchDuration = 0.22f;
         private const float DamageFlinchDistance = 0.04f;
 
-        // Meteor knockback arc
+        // Knockback arc (shared by meteor, charge, etc.)
         private bool meteorKnockbackActive;
         private Vector3 meteorKnockbackStart;
         private Vector3 meteorKnockbackEnd;
         private float meteorKnockbackTimer;
+        private float knockbackDuration;
+        private float knockbackArcHeight;
         private const float MeteorKnockbackDuration = 0.5f;
         private const float MeteorKnockbackArcHeight = 3f;
+        private const float ChargeKnockupDuration = 0.6f;
+        private const float ChargeKnockupArcHeight = 1.5f;
+
+        // Charge knockup detection
+        private int lastSeenChargeHitTick;
 
         // Damage flash
         private float damageFlashTimer;
@@ -946,6 +953,21 @@ namespace OpenEmpires
                 SFXManager.Instance?.Play(SFXType.UnitHurt, smoothedBasePos, 0.5f);
             }
 
+            // Detect charge hit — trigger knockback arc to sim-displaced position
+            if (unitData.LastChargeHitTick > lastSeenChargeHitTick && unitData.LastChargeHitTick > 0)
+            {
+                lastSeenChargeHitTick = unitData.LastChargeHitTick;
+                Vector3 endPos = unitData.SimPosition.ToVector3();
+                if (cachedMapData != null)
+                    endPos.y = cachedMapData.SampleHeight(endPos.x, endPos.z) * cachedHeightScale;
+                meteorKnockbackActive = true;
+                meteorKnockbackStart = smoothedBasePos;
+                meteorKnockbackEnd = endPos;
+                meteorKnockbackTimer = 0f;
+                knockbackDuration = ChargeKnockupDuration;
+                knockbackArcHeight = ChargeKnockupArcHeight;
+            }
+
             // Detect heal — spawn green + indicator
             if (unitData.LastHealTick > lastSeenHealTick && unitData.LastHealTick > 0)
             {
@@ -983,13 +1005,13 @@ namespace OpenEmpires
                 damageFlinchTimer -= Time.deltaTime;
             }
 
-            // Meteor knockback arc override
+            // Knockback arc override (meteor, charge, etc.)
             if (meteorKnockbackActive)
             {
                 meteorKnockbackTimer += Time.deltaTime;
-                float t = Mathf.Clamp01(meteorKnockbackTimer / MeteorKnockbackDuration);
+                float t = Mathf.Clamp01(meteorKnockbackTimer / knockbackDuration);
                 Vector3 pos = Vector3.Lerp(meteorKnockbackStart, meteorKnockbackEnd, t);
-                pos.y += 4f * MeteorKnockbackArcHeight * t * (1f - t);
+                pos.y += 4f * knockbackArcHeight * t * (1f - t);
                 transform.position = pos;
 
                 if (t >= 1f)
@@ -1440,6 +1462,8 @@ namespace OpenEmpires
             meteorKnockbackStart = startPos;
             meteorKnockbackEnd = endPos;
             meteorKnockbackTimer = 0f;
+            knockbackDuration = MeteorKnockbackDuration;
+            knockbackArcHeight = MeteorKnockbackArcHeight;
         }
 
         public void SetSelected(bool selected)

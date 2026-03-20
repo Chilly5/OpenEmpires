@@ -1926,24 +1926,41 @@ namespace OpenEmpires
                         }
                     }
 
-                    // Check if clicking on a farm building (treat like resource rally)
+                    // Check if clicking on a building (construction site or farm)
                     if (Physics.Raycast(rallyRay, out RaycastHit rallyBuildingHit, 1000f, buildingLayer))
                     {
                         var rallyBuildingView = rallyBuildingHit.collider.GetComponent<BuildingView>();
                         if (rallyBuildingView != null)
                         {
                             var rallyBuildingData = rallySim.BuildingRegistry.GetBuilding(rallyBuildingView.BuildingId);
-                            if (rallyBuildingData != null && rallyBuildingData.Type == BuildingType.Farm
-                                && !rallyBuildingData.IsUnderConstruction && rallyBuildingData.LinkedResourceNodeId >= 0)
+                            if (rallyBuildingData != null)
                             {
-                                FixedVector3 fixedPos = rallyBuildingData.SimPosition;
-                                for (int i = 0; i < selectedBuildings.Count; i++)
+                                // Under-construction building owned by local player → construction rally
+                                if (rallyBuildingData.IsUnderConstruction && rallyBuildingData.PlayerId == LocalPlayerId)
                                 {
-                                    rallySim.CommandBuffer.EnqueueCommand(new SetRallyPointCommand(
-                                        LocalPlayerId, selectedBuildings[i].BuildingId, fixedPos, rallyBuildingData.LinkedResourceNodeId));
+                                    FixedVector3 fixedPos = rallyBuildingData.SimPosition;
+                                    for (int i = 0; i < selectedBuildings.Count; i++)
+                                    {
+                                        rallySim.CommandBuffer.EnqueueCommand(new SetRallyPointCommand(
+                                            LocalPlayerId, selectedBuildings[i].BuildingId, fixedPos, -1, -1, rallyBuildingData.Id));
+                                    }
+                                    isRightDragging = false;
+                                    return;
                                 }
-                                isRightDragging = false;
-                                return;
+
+                                // Completed farm → resource rally
+                                if (rallyBuildingData.Type == BuildingType.Farm
+                                    && !rallyBuildingData.IsUnderConstruction && rallyBuildingData.LinkedResourceNodeId >= 0)
+                                {
+                                    FixedVector3 fixedPos = rallyBuildingData.SimPosition;
+                                    for (int i = 0; i < selectedBuildings.Count; i++)
+                                    {
+                                        rallySim.CommandBuffer.EnqueueCommand(new SetRallyPointCommand(
+                                            LocalPlayerId, selectedBuildings[i].BuildingId, fixedPos, rallyBuildingData.LinkedResourceNodeId));
+                                    }
+                                    isRightDragging = false;
+                                    return;
+                                }
                             }
                         }
                     }

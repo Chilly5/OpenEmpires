@@ -134,6 +134,7 @@ namespace OpenEmpires
 
         public event Action<int> OnPlayerSurrendered; // playerId
         public event Action<int, SurrenderVoteData> OnSurrenderVoteUpdated; // teamId, voteData (null = expired/cancelled)
+        public event Action<int, int> OnPlayerAgedUp; // playerId, newAge
 
         // Meteor strike state
         private struct PendingMeteor
@@ -360,6 +361,7 @@ namespace OpenEmpires
                 hash = hash * 31 + (uint)unit.TargetGarrisonBuildingId;
                 hash = hash * 31 + (unit.IsCharging ? 1u : 0u);
                 hash = hash * 31 + (uint)unit.ChargeCooldownRemaining;
+                hash = hash * 31 + (uint)unit.ChargeStunRemaining;
                 hash = hash * 31 + (unit.IsPatrolling ? 1u : 0u);
                 hash = hash * 31 + (uint)unit.PatrolCurrentIndex;
                 hash = hash * 31 + (unit.PatrolForward ? 1u : 0u);
@@ -811,6 +813,7 @@ namespace OpenEmpires
                     playerAges[pid] = def.TargetAge;
                     playerAgingUp[pid] = false;
                     playerAgingUpBuildingId[pid] = -1;
+                    OnPlayerAgedUp?.Invoke(pid, def.TargetAge);
                 }
 
                 // Eject any units that ended up on the building footprint during construction
@@ -3175,6 +3178,8 @@ namespace OpenEmpires
                 {
                     building.RallyPoint = targetUnit.SimPosition;
                     building.RallyPointOnResource = false;
+                    building.RallyPointOnConstruction = false;
+                    building.RallyPointConstructionBuildingId = -1;
                     building.RallyPointUnitId = cmd.TargetUnitId;
                     return;
                 }
@@ -3195,11 +3200,34 @@ namespace OpenEmpires
                     building.RallyPoint = cmd.Position;
                     building.RallyPointOnResource = false;
                 }
+                building.RallyPointOnConstruction = false;
+                building.RallyPointConstructionBuildingId = -1;
+            }
+            // Rally to an under-construction building
+            else if (cmd.TargetBuildingId >= 0)
+            {
+                var target = BuildingRegistry.GetBuilding(cmd.TargetBuildingId);
+                if (target != null && target.IsUnderConstruction && !target.IsDestroyed)
+                {
+                    building.RallyPoint = target.SimPosition;
+                    building.RallyPointOnResource = false;
+                    building.RallyPointOnConstruction = true;
+                    building.RallyPointConstructionBuildingId = cmd.TargetBuildingId;
+                }
+                else
+                {
+                    building.RallyPoint = cmd.Position;
+                    building.RallyPointOnResource = false;
+                    building.RallyPointOnConstruction = false;
+                    building.RallyPointConstructionBuildingId = -1;
+                }
             }
             else
             {
                 building.RallyPoint = cmd.Position;
                 building.RallyPointOnResource = false;
+                building.RallyPointOnConstruction = false;
+                building.RallyPointConstructionBuildingId = -1;
             }
         }
 
@@ -4103,7 +4131,7 @@ namespace OpenEmpires
                         if (path.Count > 0)
                         {
                             unitData.SetPath(path);
-                            unitData.FinalDestination = building.RallyPoint;
+                            unitData.FinalDestination = GetSafeFinalDestination(building.RallyPoint, path);
                             unitData.State = UnitState.Moving;
                             unitData.PlayerCommanded = true;
                         }
@@ -4190,10 +4218,65 @@ namespace OpenEmpires
                             if (path.Count > 0)
                             {
                                 unitData.SetPath(path);
-                                unitData.FinalDestination = building.RallyPoint;
+                                unitData.FinalDestination = GetSafeFinalDestination(building.RallyPoint, path);
                                 unitData.State = UnitState.Moving;
                                 unitData.PlayerCommanded = true;
                             }
+                        }
+                    }
+                }
+                // Rally point on an under-construction building — send villager to build
+                else if (building.RallyPointOnConstruction && unitData.IsVillager)
+                {
+                    var targetBuilding = BuildingRegistry.GetBuilding(building.RallyPointConstructionBuildingId);
+                    if (targetBuilding != null && targetBuilding.IsUnderConstruction && !targetBuilding.IsDestroyed)
+                    {
+                        unitData.ClearFormation();
+                        unitData.CombatTargetId = -1;
+                        unitData.CombatTargetBuildingId = -1;
+                        unitData.TargetResourceNodeId = -1;
+                        unitData.ConstructionTargetBuildingId = targetBuilding.Id;
+                        unitData.GatherTimer = Fixed32.Zero;
+                        unitData.PlayerCommanded = true;
+                        unitData.DropOffBuildingId = -1;
+                        unitData.TargetGarrisonBuildingId = -1;
+                        unitData.ClearPatrol();
+
+                        var occupiedTiles = new HashSet<Vector2Int>();
+                        var allUnits = UnitRegistry.GetAllUnits();
+                        for (int u = 0; u < allUnits.Count; u++)
+                        {
+                            var other = allUnits[u];
+                            if (other == unitData || other.State == UnitState.Dead) continue;
+                            if (other.ConstructionTargetBuildingId != targetBuilding.Id) continue;
+                            if (other.State == UnitState.MovingToBuild || other.State == UnitState.Constructing)
+                                occupiedTiles.Add(MapData.WorldToTile(other.FinalDestination));
+                        }
+
+                        Vector2Int adjTile = FindNearestWalkableAdjacentTile(targetBuilding, spawnPos, occupiedTiles);
+                        var path = GridPathfinder.FindPath(MapData, startTile, adjTile, unitData.PlayerId, BuildingRegistry);
+                        if (path.Count > 0)
+                        {
+                            unitData.SetPath(path);
+                            unitData.FinalDestination = MapData.TileToWorldFixed(adjTile.x, adjTile.y);
+                            unitData.State = UnitState.MovingToBuild;
+                        }
+                        else
+                        {
+                            unitData.State = UnitState.Constructing;
+                        }
+                    }
+                    else
+                    {
+                        // Building already finished or destroyed — just move to rally point
+                        Vector2Int goalTile = MapData.WorldToTile(building.RallyPoint);
+                        var path = GridPathfinder.FindPath(MapData, startTile, goalTile, unitData.PlayerId, BuildingRegistry);
+                        if (path.Count > 0)
+                        {
+                            unitData.SetPath(path);
+                            unitData.FinalDestination = GetSafeFinalDestination(building.RallyPoint, path);
+                            unitData.State = UnitState.Moving;
+                            unitData.PlayerCommanded = true;
                         }
                     }
                 }
@@ -4237,13 +4320,22 @@ namespace OpenEmpires
                         if (path.Count > 0)
                         {
                             unitData.SetPath(path);
-                            unitData.FinalDestination = building.RallyPoint;
+                            unitData.FinalDestination = GetSafeFinalDestination(building.RallyPoint, path);
                             unitData.State = UnitState.Moving;
                             unitData.PlayerCommanded = true;
                         }
                     }
                 }
             }
+        }
+
+        private FixedVector3 GetSafeFinalDestination(FixedVector3 desired, List<Vector2Int> path)
+        {
+            Vector2Int tile = MapData.WorldToTile(desired);
+            if (MapData.IsWalkable(tile.x, tile.y))
+                return desired;
+            var lastTile = path[path.Count - 1];
+            return MapData.TileToWorldFixed(lastTile.x, lastTile.y);
         }
 
         private UnitData CreateTrainedUnit(int playerId, int unitType, FixedVector3 spawnPos)
