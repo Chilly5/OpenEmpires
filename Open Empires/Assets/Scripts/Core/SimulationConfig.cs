@@ -272,6 +272,8 @@ namespace OpenEmpires
         public int MillFootprintHeight => 2;
         public int MillInfluenceRadius => 3; // tiles from footprint edge
         public int MillInfluenceGatherBonusPercent => 20; // 20% faster farm gathering
+        public int LandmarkInfluenceRadius => 5; // tiles from footprint edge (larger than mill since landmarks are rarer)
+        public int FrenchLandmarkTrainingDiscountPercent => 15; // 15% cheaper unit training near French landmarks
 
         // Buildings - Lumber Yard
         public int LumberYardMaxHealth => 200;

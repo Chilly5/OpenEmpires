@@ -3057,6 +3057,14 @@ namespace OpenEmpires
                     trainTime = config.SpearmanTrainTimeTicks;
                     break;
             }
+            if (IsBuildingInFrenchLandmarkInfluence(building))
+            {
+                int discount = config.FrenchLandmarkTrainingDiscountPercent;
+                foodCost = foodCost * (100 - discount) / 100;
+                woodCost = woodCost * (100 - discount) / 100;
+                goldCost = goldCost * (100 - discount) / 100;
+            }
+
             var resources = ResourceManager.GetPlayerResources(cmd.PlayerId);
             if (resources.Food < foodCost || resources.Wood < woodCost || resources.Gold < goldCost) return;
 
@@ -5298,6 +5306,35 @@ namespace OpenEmpires
                     cap += config.TownCenterPopulation;
             }
             return Mathf.Min(cap, config.MaxPopulation);
+        }
+        public bool IsBuildingInFrenchLandmarkInfluence(BuildingData building)
+        {
+            if (GetPlayerCivilization(building.PlayerId) != Civilization.French) return false;
+
+            var allBuildings = BuildingRegistry.GetAllBuildings();
+            int influenceRadius = config.LandmarkInfluenceRadius;
+
+            for (int i = 0; i < allBuildings.Count; i++)
+            {
+                var b = allBuildings[i];
+                if (b.Type != BuildingType.Landmark) continue;
+                if (b.PlayerId != building.PlayerId) continue;
+                if (b.IsDestroyed || b.IsUnderConstruction) continue;
+                if (LandmarkDefinitions.Get(b.LandmarkId).Civ != Civilization.French) continue;
+
+                int minX = b.OriginTileX - influenceRadius;
+                int maxX = b.OriginTileX + b.TileFootprintWidth + influenceRadius;
+                int minZ = b.OriginTileZ - influenceRadius;
+                int maxZ = b.OriginTileZ + b.TileFootprintHeight + influenceRadius;
+
+                // AABB overlap: check if any tile of the target building falls within influence
+                int bMaxX = building.OriginTileX + building.TileFootprintWidth;
+                int bMaxZ = building.OriginTileZ + building.TileFootprintHeight;
+                if (bMaxX > minX && building.OriginTileX < maxX &&
+                    bMaxZ > minZ && building.OriginTileZ < maxZ)
+                    return true;
+            }
+            return false;
         }
     }
 }

@@ -1943,6 +1943,8 @@ namespace OpenEmpires
             else if (!building.IsUnderConstruction)
             {
                 var resources = sim.ResourceManager.GetPlayerResources(building.PlayerId);
+                bool hasLandmarkDiscount = sim.IsBuildingInFrenchLandmarkInfluence(building);
+                int discPct = hasLandmarkDiscount ? sim.Config.FrenchLandmarkTrainingDiscountPercent : 0;
 
                 if (building.Type == BuildingType.Barracks)
                 {
@@ -1951,16 +1953,16 @@ namespace OpenEmpires
                     string spLabel = isLandsknecht ? "Lands." : "Spear";
                     string spName = isLandsknecht ? "Landsknecht" : "Spearman";
                     int spIcon = isLandsknecht ? 8 : 1;
-                    int spearmanFood = isLandsknecht ? sim.Config.LandsknechtFoodCost : sim.Config.SpearmanFoodCost;
-                    int spearmanWood = isLandsknecht ? sim.Config.LandsknechtWoodCost : sim.Config.SpearmanWoodCost;
+                    int spearmanFood = (isLandsknecht ? sim.Config.LandsknechtFoodCost : sim.Config.SpearmanFoodCost) * (100 - discPct) / 100;
+                    int spearmanWood = (isLandsknecht ? sim.Config.LandsknechtWoodCost : sim.Config.SpearmanWoodCost) * (100 - discPct) / 100;
                     slots[0] = new GridButton { Label = spLabel, Hotkey = "Q",
                         Enabled = resources.Food >= spearmanFood && resources.Wood >= spearmanWood,
                         Icon = UnitIcons.Get(spIcon),
                         Tooltip = $"<b>{spName}</b>\nMelee infantry unit.\nCost: {spearmanFood} <sprite name=\"food\"> {spearmanWood} <sprite name=\"wood\">",
                         OnClick = () => sim.CommandBuffer.EnqueueCommand(
                             new TrainUnitCommand(building.PlayerId, building.Id, 1)) };
-                    int maaFood = sim.Config.ManAtArmsFoodCost;
-                    int maaGold = sim.Config.ManAtArmsGoldCost;
+                    int maaFood = sim.Config.ManAtArmsFoodCost * (100 - discPct) / 100;
+                    int maaGold = sim.Config.ManAtArmsGoldCost * (100 - discPct) / 100;
                     bool maaAgeOk = sim.GetPlayerAge(building.PlayerId) >= LandmarkDefinitions.GetUnitRequiredAge(6);
                     slots[1] = new GridButton { Label = "MAA", Hotkey = "W",
                         Enabled = maaAgeOk && resources.Food >= maaFood && resources.Gold >= maaGold,
@@ -1978,16 +1980,16 @@ namespace OpenEmpires
                     string arLabel = isLongbow ? "Longbow" : "Archer";
                     string arName = isLongbow ? "Longbowman" : "Archer";
                     int arIcon = isLongbow ? 6 : 2;
-                    int archerFood = isLongbow ? sim.Config.LongbowmanFoodCost : sim.Config.ArcherFoodCost;
-                    int archerWood = isLongbow ? sim.Config.LongbowmanWoodCost : sim.Config.ArcherWoodCost;
+                    int archerFood = (isLongbow ? sim.Config.LongbowmanFoodCost : sim.Config.ArcherFoodCost) * (100 - discPct) / 100;
+                    int archerWood = (isLongbow ? sim.Config.LongbowmanWoodCost : sim.Config.ArcherWoodCost) * (100 - discPct) / 100;
                     slots[0] = new GridButton { Label = arLabel, Hotkey = "Q",
                         Enabled = resources.Food >= archerFood && resources.Wood >= archerWood,
                         Icon = UnitIcons.Get(arIcon),
                         Tooltip = $"<b>{arName}</b>\nRanged infantry unit.\nCost: {archerFood} <sprite name=\"food\"> {archerWood} <sprite name=\"wood\">",
                         OnClick = () => sim.CommandBuffer.EnqueueCommand(
                             new TrainUnitCommand(building.PlayerId, building.Id, 2)) };
-                    int xbowFood = sim.Config.CrossbowmanFoodCost;
-                    int xbowGold = sim.Config.CrossbowmanGoldCost;
+                    int xbowFood = sim.Config.CrossbowmanFoodCost * (100 - discPct) / 100;
+                    int xbowGold = sim.Config.CrossbowmanGoldCost * (100 - discPct) / 100;
                     bool xbowAgeOk = sim.GetPlayerAge(building.PlayerId) >= LandmarkDefinitions.GetUnitRequiredAge(8);
                     slots[1] = new GridButton { Label = "Xbow", Hotkey = "W",
                         Enabled = xbowAgeOk && resources.Food >= xbowFood && resources.Gold >= xbowGold,
@@ -2005,16 +2007,16 @@ namespace OpenEmpires
                     string hrLabel = isGendarme ? "Gendrm" : "Horse";
                     string hrName = isGendarme ? "Gendarme" : "Horseman";
                     int hrIcon = isGendarme ? 7 : 3;
-                    int horsemanFood = isGendarme ? sim.Config.GendarmeFoodCost : sim.Config.HorsemanFoodCost;
-                    int horsemanWood = isGendarme ? sim.Config.GendarmeWoodCost : sim.Config.HorsemanWoodCost;
+                    int horsemanFood = (isGendarme ? sim.Config.GendarmeFoodCost : sim.Config.HorsemanFoodCost) * (100 - discPct) / 100;
+                    int horsemanWood = (isGendarme ? sim.Config.GendarmeWoodCost : sim.Config.HorsemanWoodCost) * (100 - discPct) / 100;
                     slots[0] = new GridButton { Label = hrLabel, Hotkey = "Q",
                         Enabled = resources.Food >= horsemanFood && resources.Wood >= horsemanWood,
                         Icon = UnitIcons.Get(hrIcon),
                         Tooltip = $"<b>{hrName}</b>\nMounted melee unit.\nCost: {horsemanFood} <sprite name=\"food\"> {horsemanWood} <sprite name=\"wood\">",
                         OnClick = () => sim.CommandBuffer.EnqueueCommand(
                             new TrainUnitCommand(building.PlayerId, building.Id, 3)) };
-                    int knightFood = sim.Config.KnightFoodCost;
-                    int knightGold = sim.Config.KnightGoldCost;
+                    int knightFood = sim.Config.KnightFoodCost * (100 - discPct) / 100;
+                    int knightGold = sim.Config.KnightGoldCost * (100 - discPct) / 100;
                     bool knightAgeOk = sim.GetPlayerAge(building.PlayerId) >= LandmarkDefinitions.GetUnitRequiredAge(7);
                     slots[1] = new GridButton { Label = "Knight", Hotkey = "W",
                         Enabled = knightAgeOk && resources.Food >= knightFood && resources.Gold >= knightGold,
@@ -2023,7 +2025,7 @@ namespace OpenEmpires
                             + (knightAgeOk ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(3)}</color>"),
                         OnClick = () => sim.CommandBuffer.EnqueueCommand(
                             new TrainUnitCommand(building.PlayerId, building.Id, 7)) };
-                    int scoutFood = sim.Config.ScoutFoodCost;
+                    int scoutFood = sim.Config.ScoutFoodCost * (100 - discPct) / 100;
                     slots[2] = new GridButton { Label = "Scout", Hotkey = "E",
                         Enabled = resources.Food >= scoutFood,
                         Icon = UnitIcons.Get(4),
@@ -2034,8 +2036,8 @@ namespace OpenEmpires
                 }
                 else if (building.Type == BuildingType.Monastery)
                 {
-                    int monkFood = sim.Config.MonkFoodCost;
-                    int monkGold = sim.Config.MonkGoldCost;
+                    int monkFood = sim.Config.MonkFoodCost * (100 - discPct) / 100;
+                    int monkGold = sim.Config.MonkGoldCost * (100 - discPct) / 100;
                     bool monkAgeOk = sim.GetPlayerAge(building.PlayerId) >= LandmarkDefinitions.GetUnitRequiredAge(9);
                     slots[0] = new GridButton { Label = "Monk", Hotkey = "Q",
                         Enabled = monkAgeOk && resources.Food >= monkFood && resources.Gold >= monkGold,
@@ -2048,14 +2050,14 @@ namespace OpenEmpires
                 }
                 else if (building.Type == BuildingType.TownCenter)
                 {
-                    int villagerCost = sim.Config.VillagerFoodCost;
+                    int villagerCost = sim.Config.VillagerFoodCost * (100 - discPct) / 100;
                     slots[0] = new GridButton { Label = "Villager", Hotkey = "Q",
                         Enabled = resources.Food >= villagerCost,
                         Icon = UnitIcons.Get(0),
                         Tooltip = $"<b>Villager</b>\nGathers resources and constructs buildings.\nCost: {villagerCost} <sprite name=\"food\">",
                         OnClick = () => sim.CommandBuffer.EnqueueCommand(
                             new TrainUnitCommand(building.PlayerId, building.Id, 0)) };
-                    int scoutFood = sim.Config.ScoutFoodCost;
+                    int scoutFood = sim.Config.ScoutFoodCost * (100 - discPct) / 100;
                     slots[1] = new GridButton { Label = "Scout", Hotkey = "W",
                         Enabled = resources.Food >= scoutFood,
                         Icon = UnitIcons.Get(4),
