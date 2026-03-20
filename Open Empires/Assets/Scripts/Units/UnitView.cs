@@ -402,6 +402,7 @@ namespace OpenEmpires
             mat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
             mat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
             mat.SetInt("_ZWrite", 0);
+            mat.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always); // Always — render on top of terrain
             mat.EnableKeyword("_ALPHABLEND_ON");
             mat.renderQueue = 3000;
             SetMaterialColor(mat, color);

@@ -128,6 +128,8 @@ namespace OpenEmpires
         private Material ghostInfluenceMaterial;
         private bool ghostIsValid;
         private bool ghostInInfluenceZone;
+        private GameObject ghostInfluenceIcon; // the "+" overlay icon
+        private List<BuildingView> markedInfluenceBuildingViews = new List<BuildingView>();
         private int snappedTileX, snappedTileZ;
         private bool snappedPositionValid;
         private GameObject gridOverlay;
@@ -653,9 +655,19 @@ namespace OpenEmpires
                             ghostInfluenceZone.transform.position = new Vector3(ghostPosition.x, ghostPosition.y, ghostPosition.z);
                         }
 
+                        // Show buff marks on existing buildings within ghost influence zone
+                        UpdateGhostInfluenceBuildingMarks(snappedTileX, snappedTileZ, sim);
+
                         bool valid = snappedPositionValid && CanAffordBuilding(sim);
-                        bool inInfluence = valid && placementBuildingType == BuildingType.Farm
-                            && IsFarmInAnyInfluenceZone(sim, snappedTileX, snappedTileZ, fw, fh);
+                        bool inInfluence = false;
+                        if (valid)
+                        {
+                            if (placementBuildingType == BuildingType.Farm)
+                                inInfluence = IsFarmInAnyInfluenceZone(sim, snappedTileX, snappedTileZ, fw, fh);
+                            else if (IsUnitProducerType(placementBuildingType)
+                                && sim.GetPlayerCivilization(LocalPlayerId) == Civilization.French)
+                                inInfluence = IsGhostInFrenchLandmarkInfluence(sim, snappedTileX, snappedTileZ, fw, fh);
+                        }
                         if (valid != ghostIsValid || inInfluence != ghostInInfluenceZone)
                         {
                             ghostIsValid = valid;
@@ -664,6 +676,20 @@ namespace OpenEmpires
                                 : inInfluence ? ghostInfluenceMaterial
                                 : ghostValidMaterial;
                             ghostBuilding.GetComponent<Renderer>().sharedMaterial = mat;
+                        }
+
+                        // Ghost influence "+" icon
+                        if (inInfluence)
+                        {
+                            if (ghostInfluenceIcon == null) CreateGhostInfluenceIcon();
+                            ghostInfluenceIcon.SetActive(true);
+                            var cam = UnitView.CachedMainCamera ?? mainCamera;
+                            Vector3 sp = cam.WorldToScreenPoint(ghostPosition + Vector3.up * 2.5f);
+                            if (sp.z > 0) ghostInfluenceIcon.GetComponent<RectTransform>().position = new Vector3(sp.x, sp.y, 0f);
+                        }
+                        else if (ghostInfluenceIcon != null)
+                        {
+                            ghostInfluenceIcon.SetActive(false);
                         }
                     }
                 }
@@ -750,6 +776,7 @@ namespace OpenEmpires
                         ghostValidMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
                         ghostValidMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
                         ghostValidMaterial.SetInt("_ZWrite", 0);
+                        ghostValidMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
                         ghostValidMaterial.EnableKeyword("_ALPHABLEND_ON");
                         ghostValidMaterial.renderQueue = 3000;
                     }
@@ -3039,6 +3066,7 @@ namespace OpenEmpires
                 ghostValidMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
                 ghostValidMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
                 ghostValidMaterial.SetInt("_ZWrite", 0);
+                ghostValidMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always); // Always — render on top of terrain
                 ghostValidMaterial.EnableKeyword("_ALPHABLEND_ON");
                 ghostValidMaterial.renderQueue = 3000;
             }
@@ -3051,6 +3079,7 @@ namespace OpenEmpires
                 ghostInvalidMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
                 ghostInvalidMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
                 ghostInvalidMaterial.SetInt("_ZWrite", 0);
+                ghostInvalidMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
                 ghostInvalidMaterial.EnableKeyword("_ALPHABLEND_ON");
                 ghostInvalidMaterial.renderQueue = 3000;
             }
@@ -3063,6 +3092,7 @@ namespace OpenEmpires
                 ghostInfluenceMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
                 ghostInfluenceMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
                 ghostInfluenceMaterial.SetInt("_ZWrite", 0);
+                ghostInfluenceMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
                 ghostInfluenceMaterial.EnableKeyword("_ALPHABLEND_ON");
                 ghostInfluenceMaterial.renderQueue = 3000;
             }
@@ -3126,6 +3156,37 @@ namespace OpenEmpires
             }
 
             var sim = GameBootstrapper.Instance?.Simulation;
+
+            // French landmark influence zone
+            if (type == BuildingType.Landmark && sim != null && sim.GetPlayerCivilization(LocalPlayerId) == Civilization.French)
+            {
+                int lmInfluenceRadius = config.LandmarkInfluenceRadius;
+                int lmFootW = config.LandmarkFootprintWidth;
+                int lmFootH = config.LandmarkFootprintHeight;
+                float lmHalfX = (lmFootW + 2 * lmInfluenceRadius) * 0.5f;
+                float lmHalfZ = (lmFootH + 2 * lmInfluenceRadius) * 0.5f;
+
+                ghostInfluenceZone = new GameObject("GhostInfluenceZone");
+                var lmLr = ghostInfluenceZone.AddComponent<LineRenderer>();
+                lmLr.useWorldSpace = false;
+                lmLr.loop = true;
+                lmLr.positionCount = 4;
+                lmLr.SetPosition(0, new Vector3(-lmHalfX, 0f, -lmHalfZ));
+                lmLr.SetPosition(1, new Vector3(lmHalfX, 0f, -lmHalfZ));
+                lmLr.SetPosition(2, new Vector3(lmHalfX, 0f, lmHalfZ));
+                lmLr.SetPosition(3, new Vector3(-lmHalfX, 0f, lmHalfZ));
+                lmLr.startWidth = 0.08f;
+                lmLr.endWidth = 0.08f;
+                var lmZoneMat = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+                lmZoneMat.color = new Color(1f, 0.6f, 0f, 0.8f);
+                lmZoneMat.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
+                lmZoneMat.renderQueue = 3000;
+                lmLr.material = lmZoneMat;
+                lmLr.startColor = new Color(1f, 0.6f, 0f, 0.8f);
+                lmLr.endColor = new Color(1f, 0.6f, 0f, 0.8f);
+                return;
+            }
+
             BuildingType influenceBuildingType = sim != null ? sim.GetInfluenceBuildingType(LocalPlayerId) : BuildingType.Mill;
             if (type != influenceBuildingType) return;
 
@@ -3148,6 +3209,8 @@ namespace OpenEmpires
             lr.endWidth = 0.08f;
             var zoneMat = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
             zoneMat.color = new Color(1f, 0.6f, 0f, 0.8f);
+            zoneMat.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
+            zoneMat.renderQueue = 3000;
             lr.material = zoneMat;
             lr.startColor = new Color(1f, 0.6f, 0f, 0.8f);
             lr.endColor = new Color(1f, 0.6f, 0f, 0.8f);
@@ -3162,48 +3225,98 @@ namespace OpenEmpires
                 ghostInfluenceZones.Clear();
             }
 
-            if (type != BuildingType.Farm) return;
-
-            BuildingType influenceBuildingType = sim.GetInfluenceBuildingType(LocalPlayerId);
             ghostInfluenceZones = new List<GameObject>();
             var config = sim.Config;
-            int influenceRadius = config.MillInfluenceRadius;
-            int footprintW = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintWidth : config.MillFootprintWidth;
-            int footprintH = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintHeight : config.MillFootprintHeight;
-            float halfX = (footprintW + 2 * influenceRadius) * 0.5f;
-            float halfZ = (footprintH + 2 * influenceRadius) * 0.5f;
-
             var buildings = sim.BuildingRegistry.GetAllBuildings();
-            for (int i = 0; i < buildings.Count; i++)
+            bool isFrench = sim.GetPlayerCivilization(LocalPlayerId) == Civilization.French;
+
+            // Show mill/TC influence zones when placing farms
+            if (type == BuildingType.Farm)
             {
-                var b = buildings[i];
-                if (b.Type != influenceBuildingType) continue;
-                if (b.PlayerId != LocalPlayerId) continue;
-                if (b.IsDestroyed) continue;
+                BuildingType influenceBuildingType = sim.GetInfluenceBuildingType(LocalPlayerId);
+                int influenceRadius = config.MillInfluenceRadius;
+                int footprintW = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintWidth : config.MillFootprintWidth;
+                int footprintH = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintHeight : config.MillFootprintHeight;
+                float halfX = (footprintW + 2 * influenceRadius) * 0.5f;
+                float halfZ = (footprintH + 2 * influenceRadius) * 0.5f;
 
-                float centerX = b.OriginTileX + footprintW * 0.5f;
-                float centerZ = b.OriginTileZ + footprintH * 0.5f;
-                float centerY = sim.MapData.SampleHeight(centerX, centerZ) * config.TerrainHeightScale + 0.05f;
+                for (int i = 0; i < buildings.Count; i++)
+                {
+                    var b = buildings[i];
+                    if (b.Type != influenceBuildingType) continue;
+                    if (b.PlayerId != LocalPlayerId) continue;
+                    if (b.IsDestroyed) continue;
 
-                var zone = new GameObject("GhostMillInfluenceZone");
-                zone.transform.position = new Vector3(centerX, centerY, centerZ);
-                var lr = zone.AddComponent<LineRenderer>();
-                lr.useWorldSpace = false;
-                lr.loop = true;
-                lr.positionCount = 4;
-                lr.SetPosition(0, new Vector3(-halfX, 0f, -halfZ));
-                lr.SetPosition(1, new Vector3(halfX, 0f, -halfZ));
-                lr.SetPosition(2, new Vector3(halfX, 0f, halfZ));
-                lr.SetPosition(3, new Vector3(-halfX, 0f, halfZ));
-                lr.startWidth = 0.08f;
-                lr.endWidth = 0.08f;
-                var zoneMat = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-                zoneMat.color = new Color(1f, 0.6f, 0f, 0.8f);
-                lr.material = zoneMat;
-                lr.startColor = new Color(1f, 0.6f, 0f, 0.8f);
-                lr.endColor = new Color(1f, 0.6f, 0f, 0.8f);
+                    float centerX = b.OriginTileX + footprintW * 0.5f;
+                    float centerZ = b.OriginTileZ + footprintH * 0.5f;
+                    float centerY = sim.MapData.SampleHeight(centerX, centerZ) * config.TerrainHeightScale + 0.05f;
 
-                ghostInfluenceZones.Add(zone);
+                    var zone = new GameObject("GhostMillInfluenceZone");
+                    zone.transform.position = new Vector3(centerX, centerY, centerZ);
+                    var lr = zone.AddComponent<LineRenderer>();
+                    lr.useWorldSpace = false;
+                    lr.loop = true;
+                    lr.positionCount = 4;
+                    lr.SetPosition(0, new Vector3(-halfX, 0f, -halfZ));
+                    lr.SetPosition(1, new Vector3(halfX, 0f, -halfZ));
+                    lr.SetPosition(2, new Vector3(halfX, 0f, halfZ));
+                    lr.SetPosition(3, new Vector3(-halfX, 0f, halfZ));
+                    lr.startWidth = 0.08f;
+                    lr.endWidth = 0.08f;
+                    var zoneMat = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+                    zoneMat.color = new Color(1f, 0.6f, 0f, 0.8f);
+                    zoneMat.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
+                    zoneMat.renderQueue = 3000;
+                    lr.material = zoneMat;
+                    lr.startColor = new Color(1f, 0.6f, 0f, 0.8f);
+                    lr.endColor = new Color(1f, 0.6f, 0f, 0.8f);
+
+                    ghostInfluenceZones.Add(zone);
+                }
+            }
+
+            // Show French landmark influence zones when placing any building
+            if (isFrench && type != BuildingType.Landmark)
+            {
+                int lmRadius = config.LandmarkInfluenceRadius;
+                for (int i = 0; i < buildings.Count; i++)
+                {
+                    var b = buildings[i];
+                    if (b.Type != BuildingType.Landmark) continue;
+                    if (b.PlayerId != LocalPlayerId) continue;
+                    if (b.IsDestroyed) continue;
+                    if (LandmarkDefinitions.Get(b.LandmarkId).Civ != Civilization.French) continue;
+
+                    int lmFootW = b.TileFootprintWidth;
+                    int lmFootH = b.TileFootprintHeight;
+                    float lmHalfX = (lmFootW + 2 * lmRadius) * 0.5f;
+                    float lmHalfZ = (lmFootH + 2 * lmRadius) * 0.5f;
+                    float centerX = b.OriginTileX + lmFootW * 0.5f;
+                    float centerZ = b.OriginTileZ + lmFootH * 0.5f;
+                    float centerY = sim.MapData.SampleHeight(centerX, centerZ) * config.TerrainHeightScale + 0.05f;
+
+                    var zone = new GameObject("GhostLandmarkInfluenceZone");
+                    zone.transform.position = new Vector3(centerX, centerY, centerZ);
+                    var lr = zone.AddComponent<LineRenderer>();
+                    lr.useWorldSpace = false;
+                    lr.loop = true;
+                    lr.positionCount = 4;
+                    lr.SetPosition(0, new Vector3(-lmHalfX, 0f, -lmHalfZ));
+                    lr.SetPosition(1, new Vector3(lmHalfX, 0f, -lmHalfZ));
+                    lr.SetPosition(2, new Vector3(lmHalfX, 0f, lmHalfZ));
+                    lr.SetPosition(3, new Vector3(-lmHalfX, 0f, lmHalfZ));
+                    lr.startWidth = 0.08f;
+                    lr.endWidth = 0.08f;
+                    var zoneMat = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+                    zoneMat.color = new Color(1f, 0.6f, 0f, 0.8f);
+                    zoneMat.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
+                    zoneMat.renderQueue = 3000;
+                    lr.material = zoneMat;
+                    lr.startColor = new Color(1f, 0.6f, 0f, 0.8f);
+                    lr.endColor = new Color(1f, 0.6f, 0f, 0.8f);
+
+                    ghostInfluenceZones.Add(zone);
+                }
             }
         }
 
@@ -3232,6 +3345,147 @@ namespace OpenEmpires
                     return true;
             }
             return false;
+        }
+
+        private static bool IsUnitProducerType(BuildingType type)
+        {
+            return type == BuildingType.Barracks
+                || type == BuildingType.TownCenter
+                || type == BuildingType.ArcheryRange
+                || type == BuildingType.Stables
+                || type == BuildingType.Monastery;
+        }
+
+        private bool IsGhostInFrenchLandmarkInfluence(GameSimulation sim, int tileX, int tileZ, int footW, int footH)
+        {
+            int influenceRadius = sim.Config.LandmarkInfluenceRadius;
+            var buildings = sim.BuildingRegistry.GetAllBuildings();
+            for (int i = 0; i < buildings.Count; i++)
+            {
+                var b = buildings[i];
+                if (b.Type != BuildingType.Landmark) continue;
+                if (b.PlayerId != LocalPlayerId) continue;
+                if (b.IsDestroyed) continue;
+                if (LandmarkDefinitions.Get(b.LandmarkId).Civ != Civilization.French) continue;
+
+                int minX = b.OriginTileX - influenceRadius;
+                int maxX = b.OriginTileX + b.TileFootprintWidth + influenceRadius;
+                int minZ = b.OriginTileZ - influenceRadius;
+                int maxZ = b.OriginTileZ + b.TileFootprintHeight + influenceRadius;
+
+                if (tileX + footW > minX && tileX < maxX &&
+                    tileZ + footH > minZ && tileZ < maxZ)
+                    return true;
+            }
+            return false;
+        }
+
+        private void CreateGhostInfluenceIcon()
+        {
+            WorldOverlayCanvas.EnsureCreated();
+            ghostInfluenceIcon = new GameObject("GhostInfluenceIcon");
+            ghostInfluenceIcon.transform.SetParent(WorldOverlayCanvas.Instance.transform, false);
+            var rt = ghostInfluenceIcon.AddComponent<RectTransform>();
+            rt.sizeDelta = new Vector2(22f, 22f);
+            var img = ghostInfluenceIcon.AddComponent<Image>();
+            img.color = new Color(1f, 0.85f, 0f);
+            var plusGO = new GameObject("PlusText");
+            plusGO.transform.SetParent(ghostInfluenceIcon.transform, false);
+            var plusRT = plusGO.AddComponent<RectTransform>();
+            plusRT.anchorMin = Vector2.zero;
+            plusRT.anchorMax = Vector2.one;
+            plusRT.sizeDelta = Vector2.zero;
+            var plusTMP = plusGO.AddComponent<TextMeshProUGUI>();
+            plusTMP.text = "+";
+            plusTMP.fontSize = 16f;
+            plusTMP.fontStyle = FontStyles.Bold;
+            plusTMP.color = new Color(0.15f, 0.15f, 0.15f);
+            plusTMP.alignment = TextAlignmentOptions.Center;
+            plusTMP.raycastTarget = false;
+        }
+
+        private void ClearGhostInfluenceBuildingMarks()
+        {
+            for (int i = 0; i < markedInfluenceBuildingViews.Count; i++)
+            {
+                if (markedInfluenceBuildingViews[i] != null)
+                    markedInfluenceBuildingViews[i].SetExternalInfluenceMark(false);
+            }
+            markedInfluenceBuildingViews.Clear();
+        }
+
+        private void UpdateGhostInfluenceBuildingMarks(int tileX, int tileZ, GameSimulation sim)
+        {
+            // Clear previous marks
+            ClearGhostInfluenceBuildingMarks();
+
+            var config = sim.Config;
+            bool isFrench = sim.GetPlayerCivilization(LocalPlayerId) == Civilization.French;
+
+            // Determine if the building being placed is an influence source and what it affects
+            bool affectsUnitProducers = false;
+            bool affectsFarms = false;
+            int influenceRadius;
+            int footW, footH;
+
+            if (placementBuildingType == BuildingType.Landmark && isFrench)
+            {
+                affectsUnitProducers = true;
+                influenceRadius = config.LandmarkInfluenceRadius;
+                footW = config.LandmarkFootprintWidth;
+                footH = config.LandmarkFootprintHeight;
+            }
+            else
+            {
+                BuildingType influenceBuildingType = sim.GetInfluenceBuildingType(LocalPlayerId);
+                if (placementBuildingType != influenceBuildingType) return;
+                affectsFarms = true;
+                influenceRadius = config.MillInfluenceRadius;
+                footW = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintWidth : config.MillFootprintWidth;
+                footH = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintHeight : config.MillFootprintHeight;
+            }
+
+            // Compute influence zone AABB
+            int zoneMinX = tileX - influenceRadius;
+            int zoneMaxX = tileX + footW + influenceRadius;
+            int zoneMinZ = tileZ - influenceRadius;
+            int zoneMaxZ = tileZ + footH + influenceRadius;
+
+            // Check all local player's buildings
+            foreach (var kvp in buildingViews)
+            {
+                var bv = kvp.Value;
+                if (bv == null || bv.IsDestroyed) continue;
+                if (bv.PlayerId != LocalPlayerId) continue;
+
+                bool eligible = false;
+                if (affectsUnitProducers)
+                {
+                    eligible = bv.BuildingType == BuildingType.Barracks
+                        || bv.BuildingType == BuildingType.TownCenter
+                        || bv.BuildingType == BuildingType.ArcheryRange
+                        || bv.BuildingType == BuildingType.Stables
+                        || bv.BuildingType == BuildingType.Monastery;
+                }
+                else if (affectsFarms)
+                {
+                    eligible = bv.BuildingType == BuildingType.Farm;
+                }
+
+                if (!eligible) continue;
+
+                // AABB overlap check
+                var bData = sim.BuildingRegistry.GetBuilding(kvp.Key);
+                if (bData == null || bData.IsDestroyed) continue;
+                int bMaxX = bData.OriginTileX + bData.TileFootprintWidth;
+                int bMaxZ = bData.OriginTileZ + bData.TileFootprintHeight;
+                if (bMaxX > zoneMinX && bData.OriginTileX < zoneMaxX &&
+                    bMaxZ > zoneMinZ && bData.OriginTileZ < zoneMaxZ)
+                {
+                    bv.SetExternalInfluenceMark(true);
+                    markedInfluenceBuildingViews.Add(bv);
+                }
+            }
         }
 
         private void RefreshGridTexture(MapData mapData, FogOfWarData fogData, int playerId)
@@ -3341,6 +3595,12 @@ namespace OpenEmpires
             isPlacingBuilding = false;
             placementIsShiftQueued = false;
             placementVillagerIds = null;
+            ClearGhostInfluenceBuildingMarks();
+            if (ghostInfluenceIcon != null)
+            {
+                Object.Destroy(ghostInfluenceIcon);
+                ghostInfluenceIcon = null;
+            }
             if (ghostBuilding != null)
             {
                 Object.Destroy(ghostBuilding);
@@ -3596,6 +3856,7 @@ namespace OpenEmpires
                 ghostValidMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
                 ghostValidMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
                 ghostValidMaterial.SetInt("_ZWrite", 0);
+                ghostValidMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
                 ghostValidMaterial.EnableKeyword("_ALPHABLEND_ON");
                 ghostValidMaterial.renderQueue = 3000;
             }
@@ -3608,6 +3869,7 @@ namespace OpenEmpires
                 ghostInvalidMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
                 ghostInvalidMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
                 ghostInvalidMaterial.SetInt("_ZWrite", 0);
+                ghostInvalidMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
                 ghostInvalidMaterial.EnableKeyword("_ALPHABLEND_ON");
                 ghostInvalidMaterial.renderQueue = 3000;
             }

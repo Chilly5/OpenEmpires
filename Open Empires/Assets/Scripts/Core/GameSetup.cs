@@ -527,8 +527,11 @@ namespace OpenEmpires
 
             if (markerMaterial != null)
             {
-                arrowShaft.sharedMaterial = markerMaterial;
-                arrowHead.sharedMaterial = markerMaterial;
+                var arrowMat = new Material(markerMaterial);
+                arrowMat.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always); // Always — render on top of terrain
+                arrowMat.renderQueue = 3000;
+                arrowShaft.sharedMaterial = arrowMat;
+                arrowHead.sharedMaterial = arrowMat;
             }
 
             facingArrow.SetActive(false);
@@ -1035,6 +1038,8 @@ namespace OpenEmpires
                 zoneLR.endWidth = 0.08f;
                 var zoneMat = new Material(cachedUnlitShader);
                 zoneMat.color = new Color(1f, 0.6f, 0f, 0.8f);
+                zoneMat.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
+                zoneMat.renderQueue = 3000;
                 zoneLR.material = zoneMat;
                 zoneLR.startColor = new Color(1f, 0.6f, 0f, 0.8f);
                 zoneLR.endColor = new Color(1f, 0.6f, 0f, 0.8f);
@@ -1218,6 +1223,8 @@ namespace OpenEmpires
                 zoneLR.endWidth = 0.08f;
                 var zoneMat = new Material(cachedUnlitShader);
                 zoneMat.color = new Color(1f, 0.6f, 0f, 0.8f);
+                zoneMat.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
+                zoneMat.renderQueue = 3000;
                 zoneLR.material = zoneMat;
                 zoneLR.startColor = new Color(1f, 0.6f, 0f, 0.8f);
                 zoneLR.endColor = new Color(1f, 0.6f, 0f, 0.8f);
@@ -1734,6 +1741,40 @@ namespace OpenEmpires
 
             var view = landmark.AddComponent<BuildingView>();
             view.SetSelectionRing(ring);
+
+            // Influence zone for French landmarks (training cost discount)
+            if (LandmarkDefinitions.Get(landmarkId).Civ == Civilization.French)
+            {
+                var simRef = GameBootstrapper.Instance?.Simulation;
+                int influenceRadius = simRef?.Config?.LandmarkInfluenceRadius ?? 5;
+                int footprintW = def.FootprintWidth;
+                int footprintH = def.FootprintHeight;
+                float halfX = (footprintW + 2 * influenceRadius) * 0.5f;
+                float halfZ = (footprintH + 2 * influenceRadius) * 0.5f;
+
+                var zone = new GameObject("InfluenceZone");
+                zone.transform.SetParent(landmark.transform);
+                zone.transform.localPosition = new Vector3(0f, 0.03f, 0f);
+                zone.layer = 11;
+                var zoneLR = zone.AddComponent<LineRenderer>();
+                zoneLR.useWorldSpace = false;
+                zoneLR.loop = true;
+                zoneLR.positionCount = 4;
+                zoneLR.SetPosition(0, new Vector3(-halfX, 0f, -halfZ));
+                zoneLR.SetPosition(1, new Vector3(halfX, 0f, -halfZ));
+                zoneLR.SetPosition(2, new Vector3(halfX, 0f, halfZ));
+                zoneLR.SetPosition(3, new Vector3(-halfX, 0f, halfZ));
+                zoneLR.startWidth = 0.08f;
+                zoneLR.endWidth = 0.08f;
+                var zoneMat = new Material(cachedUnlitShader);
+                zoneMat.color = new Color(1f, 0.6f, 0f, 0.8f);
+                zoneMat.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
+                zoneMat.renderQueue = 3000;
+                zoneLR.material = zoneMat;
+                zoneLR.startColor = new Color(1f, 0.6f, 0f, 0.8f);
+                zoneLR.endColor = new Color(1f, 0.6f, 0f, 0.8f);
+                view.SetInfluenceZone(zone);
+            }
 
             return landmark;
         }

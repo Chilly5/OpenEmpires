@@ -17,6 +17,8 @@ namespace OpenEmpires
                 var shader = Shader.Find("Universal Render Pipeline/Unlit");
                 if (shader == null) shader = Shader.Find("Unlit/Color");
                 sharedRallyMaterial = new Material(shader);
+                sharedRallyMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always); // Always — render on top of terrain
+                sharedRallyMaterial.renderQueue = 3000;
                 SetMaterialColor(sharedRallyMaterial, Color.white);
             }
             return sharedRallyMaterial;
@@ -98,6 +100,14 @@ namespace OpenEmpires
         // Upgrade bar (for towers)
         private static readonly Color UpgradeBarColor = new Color(0.9f, 0.6f, 0.1f);
         private const float UpgradeBarYGap = 2f;
+
+        // Influence buff icon
+        private static readonly Color InfluenceIconColor = new Color(1f, 0.85f, 0f);
+        private const float InfluenceIconSize = 22f;
+        private GameObject influenceIconGO;
+        private bool cachedInInfluence;
+        private int influenceCheckCooldown;
+        private bool externalInfluenceMark;
 
         // Canvas overlay widgets
         private RectTransform overlayRoot;
@@ -640,7 +650,7 @@ namespace OpenEmpires
                 var b = buildings[i];
                 if (b.Type != influenceType) continue;
                 if (b.PlayerId != PlayerId) continue;
-                if (b.IsDestroyed || b.IsUnderConstruction) continue;
+                if (b.IsDestroyed) continue;
                 int minX = b.OriginTileX - radius;
                 int maxX = b.OriginTileX + b.TileFootprintWidth + radius;
                 int minZ = b.OriginTileZ - radius;
@@ -650,6 +660,11 @@ namespace OpenEmpires
                     return true;
             }
             return false;
+        }
+
+        public void SetExternalInfluenceMark(bool show)
+        {
+            externalInfluenceMark = show;
         }
 
         public void SetGateVisual(bool isGate, Material mat)
@@ -992,6 +1007,36 @@ namespace OpenEmpires
 
             upgradeBarGO.SetActive(false);
 
+            // Influence buff icon (yellow circle with + above queue area)
+            influenceIconGO = new GameObject("InfluenceIcon");
+            influenceIconGO.transform.SetParent(rootGO.transform, false);
+            var influenceRT = influenceIconGO.AddComponent<RectTransform>();
+            influenceRT.sizeDelta = new Vector2(InfluenceIconSize, InfluenceIconSize);
+            // Position above queue container area
+            float queueTop = HealthBarHeight * 0.5f + QueueYGap + QueueIconSize;
+            influenceRT.anchoredPosition = new Vector2(0f, queueTop + 4f + InfluenceIconSize * 0.5f);
+
+            // Yellow circle background
+            var circleImg = influenceIconGO.AddComponent<Image>();
+            circleImg.color = InfluenceIconColor;
+
+            // Plus text
+            var plusGO = new GameObject("PlusText");
+            plusGO.transform.SetParent(influenceIconGO.transform, false);
+            var plusRT = plusGO.AddComponent<RectTransform>();
+            plusRT.anchorMin = Vector2.zero;
+            plusRT.anchorMax = Vector2.one;
+            plusRT.sizeDelta = Vector2.zero;
+            var plusTMP = plusGO.AddComponent<TextMeshProUGUI>();
+            plusTMP.text = "+";
+            plusTMP.fontSize = 16f;
+            plusTMP.fontStyle = FontStyles.Bold;
+            plusTMP.color = new Color(0.15f, 0.15f, 0.15f);
+            plusTMP.alignment = TextAlignmentOptions.Center;
+            plusTMP.raycastTarget = false;
+
+            influenceIconGO.SetActive(false);
+
             rootGO.SetActive(false);
         }
 
@@ -1007,7 +1052,29 @@ namespace OpenEmpires
             bool damaged = buildingData.CurrentHealth < buildingData.MaxHealth;
             bool training = buildingData.IsTraining;
             bool upgrading = buildingData.Type == BuildingType.Tower && buildingData.IsUpgrading;
-            if (!isSelected && !damaged && !buildingData.IsUnderConstruction && !training && !upgrading)
+
+            // Check influence periodically (not every frame)
+            if (--influenceCheckCooldown <= 0)
+            {
+                influenceCheckCooldown = 30;
+                var sim = GameBootstrapper.Instance?.Simulation;
+                cachedInInfluence = false;
+                if (sim != null)
+                {
+                    bool isUnitProducer = buildingData.Type == BuildingType.Barracks
+                        || buildingData.Type == BuildingType.TownCenter
+                        || buildingData.Type == BuildingType.ArcheryRange
+                        || buildingData.Type == BuildingType.Stables
+                        || buildingData.Type == BuildingType.Monastery;
+                    if (isUnitProducer)
+                        cachedInInfluence = sim.IsBuildingInFrenchLandmarkInfluence(buildingData);
+                    else if (buildingData.Type == BuildingType.Farm)
+                        cachedInInfluence = IsFarmInfluencedByInfluenceBuilding();
+                }
+            }
+
+            bool showInfluence = cachedInInfluence || externalInfluenceMark;
+            if (!isSelected && !damaged && !buildingData.IsUnderConstruction && !training && !upgrading && !showInfluence)
             {
                 if (overlayRoot != null && overlayRoot.gameObject.activeSelf)
                     overlayRoot.gameObject.SetActive(false);
@@ -1137,6 +1204,10 @@ namespace OpenEmpires
                 controlGroupLabelTMP.gameObject.SetActive(showLabel);
             if (showLabel)
                 controlGroupLabelTMP.text = controlGroupLabel.ToString();
+
+            // Influence buff icon
+            if (influenceIconGO != null && influenceIconGO.activeSelf != showInfluence)
+                influenceIconGO.SetActive(showInfluence);
 
         }
 
