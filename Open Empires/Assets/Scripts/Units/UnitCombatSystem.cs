@@ -91,7 +91,35 @@ namespace OpenEmpires
                     }
 
                     if (closestEnemy == null)
-                        unit.CombatTargetId = -1;
+                    {
+                        if (unit.PlayerCommanded)
+                        {
+                            // Player explicitly targeted this unit — re-pathfind
+                            var target = registry.GetUnit(unit.CombatTargetId);
+                            if (target != null && target.State != UnitState.Dead)
+                            {
+                                Vector2Int startTile = mapData.WorldToTile(unit.SimPosition);
+                                Vector2Int goalTile = mapData.WorldToTile(target.SimPosition);
+                                var path = GridPathfinder.FindPath(mapData, startTile, goalTile, unit.PlayerId, buildingRegistry);
+                                if (path.Count > 0)
+                                {
+                                    unit.SetPath(path);
+                                    unit.FinalDestination = target.SimPosition;
+                                    unit.State = UnitState.Moving;
+                                    unit.ChaseBlockedTicks = 0;
+                                    continue;
+                                }
+                            }
+                            // Target dead or unreachable — give up
+                            unit.CombatTargetId = -1;
+                            unit.PlayerCommanded = false;
+                        }
+                        else
+                        {
+                            unit.CombatTargetId = -1;
+                        }
+                        unit.ChaseBlockedTicks = 0;
+                    }
                 }
 
                 // Scan for closest enemy if no locked target (spatial grid accelerated)
@@ -127,6 +155,7 @@ namespace OpenEmpires
                     {
                         unit.CombatTargetId = closestEnemy.Id;
                         unit.CombatTargetBuildingId = -1; // unit target takes priority
+                        unit.ChaseBlockedTicks = 0;
                     }
                 }
 
@@ -187,6 +216,7 @@ namespace OpenEmpires
                 {
                     unit.CombatTargetId = -1;
                     unit.IsCharging = false; // no cooldown — charge didn't land
+                    unit.ChaseBlockedTicks = 0;
                     if (unit.State == UnitState.InCombat && unit.CombatTargetBuildingId < 0)
                     {
                         if (unit.HasSavedPath)
@@ -370,7 +400,28 @@ namespace OpenEmpires
                     FixedVector3 newPos = unit.SimPosition + targetDir * step;
                     Vector2Int newTile = mapData.WorldToTile(newPos);
                     if (mapData.IsWalkable(newTile.x, newTile.y))
+                    {
                         unit.SimPosition = newPos;
+                        unit.ChaseBlockedTicks = 0;
+                    }
+                    else
+                    {
+                        unit.ChaseBlockedTicks++;
+                        if (unit.ChaseBlockedTicks >= 3)
+                        {
+                            unit.ChaseBlockedTicks = 0;
+                            Vector2Int startTile = mapData.WorldToTile(unit.SimPosition);
+                            Vector2Int goalTile = mapData.WorldToTile(closestEnemy.SimPosition);
+                            var path = GridPathfinder.FindPath(mapData, startTile, goalTile, unit.PlayerId, buildingRegistry);
+                            if (path.Count > 0)
+                            {
+                                unit.SetPath(path);
+                                unit.FinalDestination = closestEnemy.SimPosition;
+                                unit.PlayerCommanded = true;
+                                unit.State = UnitState.Moving;
+                            }
+                        }
+                    }
                 }
             }
 
@@ -431,7 +482,29 @@ namespace OpenEmpires
                         FixedVector3 newPos = unit.SimPosition + dir * step;
                         Vector2Int newTile = mapData.WorldToTile(newPos);
                         if (mapData.IsWalkable(newTile.x, newTile.y))
+                        {
                             unit.SimPosition = newPos;
+                            unit.ChaseBlockedTicks = 0;
+                        }
+                        else
+                        {
+                            unit.ChaseBlockedTicks++;
+                            if (unit.ChaseBlockedTicks >= 3)
+                            {
+                                unit.ChaseBlockedTicks = 0;
+                                Vector2Int startTile = mapData.WorldToTile(unit.SimPosition);
+                                Vector2Int goalTile = mapData.WorldToTile(building.SimPosition);
+                                var path = GridPathfinder.FindPath(mapData, startTile, goalTile, unit.PlayerId, buildingRegistry);
+                                if (path.Count > 0)
+                                {
+                                    unit.SetPath(path);
+                                    unit.FinalDestination = building.SimPosition;
+                                    unit.PlayerCommanded = true;
+                                    unit.State = UnitState.Moving;
+                                    continue;
+                                }
+                            }
+                        }
                         unit.SimFacing = dir;
                     }
                     unit.State = UnitState.InCombat;
@@ -516,7 +589,29 @@ namespace OpenEmpires
                         FixedVector3 newPos = unit.SimPosition + dir * step;
                         Vector2Int newTile = mapData.WorldToTile(newPos);
                         if (mapData.IsWalkable(newTile.x, newTile.y))
+                        {
                             unit.SimPosition = newPos;
+                            unit.ChaseBlockedTicks = 0;
+                        }
+                        else
+                        {
+                            unit.ChaseBlockedTicks++;
+                            if (unit.ChaseBlockedTicks >= 3)
+                            {
+                                unit.ChaseBlockedTicks = 0;
+                                Vector2Int startTile = mapData.WorldToTile(unit.SimPosition);
+                                Vector2Int goalTile = mapData.WorldToTile(building.SimPosition);
+                                var path = GridPathfinder.FindPath(mapData, startTile, goalTile, unit.PlayerId, buildingRegistry);
+                                if (path.Count > 0)
+                                {
+                                    unit.SetPath(path);
+                                    unit.FinalDestination = building.SimPosition;
+                                    unit.PlayerCommanded = true;
+                                    unit.State = UnitState.Moving;
+                                    continue;
+                                }
+                            }
+                        }
                         unit.SimFacing = dir;
                     }
                     unit.State = UnitState.InCombat;

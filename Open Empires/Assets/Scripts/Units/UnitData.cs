@@ -124,6 +124,7 @@ namespace OpenEmpires
         public int ChargeStunRemaining;
         public int CombatTargetId = -1;
         public int CombatTargetBuildingId = -1;
+        public int ChaseBlockedTicks;
 
         // Combat feedback (sim writes, view reads)
         public int LastAttackTick;

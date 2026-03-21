@@ -358,6 +358,19 @@ namespace OpenEmpires
         public int StablesWoodCost => 150;
         public int TowerWoodCost => 300;
         public int MonasteryWoodCost => 200;
+        public int BlacksmithWoodCost => 150;
+        public int MarketWoodCost => 150;
+        public int UniversityWoodCost => 200;
+        public int SiegeWorkshopWoodCost => 200;
+        public int KeepWoodCost => 300;
+        public int KeepStoneCost => 200;
+        public int StoneWallStoneCost => 3;
+        public int StoneGateStoneCost => 20;
+        public int WoodGateWoodCost => 10;
+        public int WonderFoodCost => 1000;
+        public int WonderWoodCost => 1000;
+        public int WonderGoldCost => 1000;
+        public int WonderStoneCost => 1000;
 
         // Building construction time (ticks, 30 ticks = 1s)
         public int HouseConstructionTicks => 450;              // 15s
@@ -372,6 +385,15 @@ namespace OpenEmpires
         public int FarmConstructionTicks => 180;                // 6s
         public int TowerConstructionTicks => 1800;              // 60s
         public int MonasteryConstructionTicks => 900;             // 30s
+        public int BlacksmithConstructionTicks => 900;          // 30s
+        public int MarketConstructionTicks => 900;              // 30s
+        public int UniversityConstructionTicks => 900;          // 30s
+        public int SiegeWorkshopConstructionTicks => 900;       // 30s
+        public int KeepConstructionTicks => 1200;               // 40s
+        public int StoneWallConstructionTicks => 180;           // 6s
+        public int StoneGateConstructionTicks => 180;           // 6s
+        public int WoodGateConstructionTicks => 150;            // 5s
+        public int WonderConstructionTicks => 9000;             // 300s
 
         // Starting resources
         public int StartingFood => 200;
@@ -418,6 +440,60 @@ namespace OpenEmpires
         public int TsunamiDamage => 30;
         public int TsunamiWarningTicks => 60;          // 2 seconds
         public int TsunamiCooldownTicks => 300;
+
+        // Buildings - Blacksmith
+        public int BlacksmithMaxHealth => 400;
+        public int BlacksmithArmor => 2;
+        public int BlacksmithFootprintWidth => 3;
+        public int BlacksmithFootprintHeight => 3;
+
+        // Buildings - Market
+        public int MarketMaxHealth => 400;
+        public int MarketArmor => 2;
+        public int MarketFootprintWidth => 3;
+        public int MarketFootprintHeight => 3;
+
+        // Buildings - University
+        public int UniversityMaxHealth => 400;
+        public int UniversityArmor => 2;
+        public int UniversityFootprintWidth => 3;
+        public int UniversityFootprintHeight => 3;
+
+        // Buildings - Siege Workshop
+        public int SiegeWorkshopMaxHealth => 450;
+        public int SiegeWorkshopArmor => 3;
+        public int SiegeWorkshopFootprintWidth => 3;
+        public int SiegeWorkshopFootprintHeight => 3;
+
+        // Buildings - Keep
+        public int KeepMaxHealth => 1000;
+        public int KeepArmor => 5;
+        public int KeepFootprintWidth => 3;
+        public int KeepFootprintHeight => 3;
+
+        // Buildings - Stone Wall
+        public int StoneWallMaxHealth => 400;
+        public int StoneWallArmor => 8;
+        public int StoneWallFootprintWidth => 1;
+        public int StoneWallFootprintHeight => 1;
+
+        // Buildings - Stone Gate
+        public int StoneGateMaxHealth => 500;
+        public int StoneGateArmor => 8;
+        public int StoneGateFootprintWidth => 1;
+        public int StoneGateFootprintHeight => 1;
+
+        // Buildings - Wood Gate
+        public int WoodGateMaxHealth => 200;
+        public int WoodGateArmor => 5;
+        public int WoodGateFootprintWidth => 1;
+        public int WoodGateFootprintHeight => 1;
+
+        // Buildings - Wonder
+        public int WonderMaxHealth => 5000;
+        public int WonderArmor => 10;
+        public int WonderFootprintWidth => 5;
+        public int WonderFootprintHeight => 5;
 
         // Buildings - Landmark (defaults; per-landmark values come from LandmarkDefinitions)
         public int LandmarkFootprintWidth => 4;

@@ -21,7 +21,7 @@ namespace OpenEmpires
         private const float ActionPanelWidth = 217f;
         private const float ActionPanelHeight = 166f;
         private const float PanelGap = 6f;
-        private const float StatsPanelWidth = 200f;
+        private const float StatsPanelWidth = 150f;
         private const float StatsPanelHeight = ActionPanelHeight;
         private const float ResourcePanelWidth = 130f;
         private const float Margin = 10f;
@@ -35,23 +35,32 @@ namespace OpenEmpires
         private const float QueueItemGap = 3f;
         private const int MaxVisibleQueueItems = 5;
 
+        // --- Build age panel constants ---
+        private const int BuildAgePanelCount = 3;
+        private const int BuildButtonsPerAge = 9;
+        private const int TotalBuildButtons = BuildAgePanelCount * BuildButtonsPerAge; // 27
+        private const int BuildGridCols = 3;
+        private const int BuildGridRows = 3;
+        private const float BuildPanelHeaderHeight = 18f;
+        private static readonly string[] AgeHeaders = { "Age I  [Q]", "Age II  [W]", "Age III  [E]" };
+
         // --- Panel references for hover detection ---
         private static RectTransform s_statsPanelRT;
         private static RectTransform s_actionPanelRT;
         private static bool s_actionPanelVisible;
-        private static RectTransform s_buildPanelRT;
-        private static bool s_buildPanelVisible;
+        private static RectTransform[] s_buildPanelRTs;
+        private static bool s_buildPanelsVisible;
         private static RectTransform s_queuePanelRT;
         private static RectTransform s_tooltipPanelRT;
         private static Camera s_uiCamera; // null for overlay canvas
 
         // --- Build hotkey state machine ---
         private static UnitInfoUI s_instance;
-        private bool buildHotkeysActive;
-        public static bool BuildHotkeysActive => s_instance != null && s_instance.buildHotkeysActive;
+        private int buildMenuAge; // 0 = not in build mode, 1/2/3 = showing that age's buildings
+        public static bool BuildHotkeysActive => s_instance != null && s_instance.buildMenuAge > 0;
         public static void DeactivateBuildHotkeys()
         {
-            if (s_instance != null) s_instance.buildHotkeysActive = false;
+            if (s_instance != null) s_instance.buildMenuAge = 0;
         }
 
         public static Rect StatsPanelRect
@@ -72,9 +81,13 @@ namespace OpenEmpires
             if (s_actionPanelVisible && s_actionPanelRT != null && s_actionPanelRT.gameObject.activeInHierarchy &&
                 RectTransformUtility.RectangleContainsScreenPoint(s_actionPanelRT, screenPos, s_uiCamera))
                 return true;
-            if (s_buildPanelVisible && s_buildPanelRT != null && s_buildPanelRT.gameObject.activeInHierarchy &&
-                RectTransformUtility.RectangleContainsScreenPoint(s_buildPanelRT, screenPos, s_uiCamera))
-                return true;
+            if (s_buildPanelsVisible && s_buildPanelRTs != null)
+            {
+                for (int i = 0; i < s_buildPanelRTs.Length; i++)
+                    if (s_buildPanelRTs[i] != null && s_buildPanelRTs[i].gameObject.activeInHierarchy &&
+                        RectTransformUtility.RectangleContainsScreenPoint(s_buildPanelRTs[i], screenPos, s_uiCamera))
+                        return true;
+            }
             if (s_queuePanelRT != null && s_queuePanelRT.gameObject.activeInHierarchy &&
                 RectTransformUtility.RectangleContainsScreenPoint(s_queuePanelRT, screenPos, s_uiCamera))
                 return true;
@@ -152,10 +165,11 @@ namespace OpenEmpires
         private static readonly Color ButtonNormalColor = new Color(0.25f, 0.25f, 0.25f);
         private static readonly Color IconPressedColor = new Color(0.6f, 0.6f, 0.6f);
 
-        // Build panel (villagers only)
-        private GameObject buildPanelGO;
-        private RectTransform buildPanelRT;
-        private GameObject[] buildButtonGOs;
+        // Build panels (3 age panels, villagers only)
+        private GameObject[] buildPanelGOs;
+        private RectTransform[] buildPanelRTs;
+        private Image[] buildPanelHeaderBgs;
+        private GameObject[] buildButtonGOs;        // [TotalBuildButtons] = 24
         private Button[] buildButtons;
         private TMP_Text[] buildButtonTexts;
         private TMP_Text[] buildButtonHotkeys;
@@ -209,8 +223,8 @@ namespace OpenEmpires
 
         private static readonly string[] UnitTypeNames = { "Villager", "Spearman", "Archer", "Horseman", "Scout", "Sheep", "Man-at-Arms", "Knight", "Crossbowman", "Monk", "Longbowman", "Gendarme", "Landsknecht" };
         private static readonly string[] UnitTypePlurals = { "Villagers", "Spearmen", "Archers", "Horsemen", "Scouts", "Sheep", "Men-at-Arms", "Knights", "Crossbowmen", "Monks", "Longbowmen", "Gendarmes", "Landsknechte" };
-        private static readonly string[] BuildingTypeNames = { "House", "Barracks", "Town Center", "Wall", "Mill", "Lumber Yard", "Mine", "Archery Range", "Stables", "Farm", "Tower", "Monastery" };
-        private static readonly string[] BuildingTypePlurals = { "Houses", "Barracks", "Town Centers", "Walls", "Mills", "Lumber Yards", "Mines", "Archery Ranges", "Stables", "Farms", "Towers", "Monasteries" };
+        private static readonly string[] BuildingTypeNames = { "House", "Barracks", "Town Center", "Wood Wall", "Mill", "Lumber Yard", "Mine", "Archery Range", "Stables", "Farm", "Tower", "Monastery", "Landmark", "Blacksmith", "Market", "University", "Siege Workshop", "Keep", "Stone Wall", "Stone Gate", "Wood Gate", "Wonder" };
+        private static readonly string[] BuildingTypePlurals = { "Houses", "Barracks", "Town Centers", "Wood Walls", "Mills", "Lumber Yards", "Mines", "Archery Ranges", "Stables", "Farms", "Towers", "Monasteries", "Landmarks", "Blacksmiths", "Markets", "Universities", "Siege Workshops", "Keeps", "Stone Walls", "Stone Gates", "Wood Gates", "Wonders" };
         private static readonly string[] ResourceNodeNames = { "Berry Bush", "Tree", "Gold Mine", "Stone Mine" };
 
         private void Awake()
@@ -222,10 +236,10 @@ namespace OpenEmpires
             BuildUI();
             actionCallbacks = new System.Action[12];
             actionTooltips = new string[12];
-            buildCallbacks = new System.Action[12];
-            buildTooltips = new string[12];
+            buildCallbacks = new System.Action[TotalBuildButtons];
+            buildTooltips = new string[TotalBuildButtons];
             actionFlashTimers = new float[12];
-            buildFlashTimers = new float[12];
+            buildFlashTimers = new float[TotalBuildButtons];
         }
 
         // =============================================================
@@ -362,14 +376,14 @@ namespace OpenEmpires
                 rt.sizeDelta = new Vector2(ActionButtonSize, ActionButtonSize);
 
                 var img = btnGO.AddComponent<Image>();
-                img.color = new Color(0.25f, 0.25f, 0.25f);
+                img.color = Color.white;
 
                 var btn = btnGO.AddComponent<Button>();
                 var colors = btn.colors;
-                colors.normalColor = new Color(0.25f, 0.25f, 0.25f);
-                colors.highlightedColor = new Color(0.35f, 0.35f, 0.35f);
-                colors.pressedColor = new Color(0.15f, 0.15f, 0.15f);
-                colors.disabledColor = new Color(0.15f, 0.15f, 0.15f, 0.5f);
+                colors.normalColor = new Color(0.38f, 0.38f, 0.38f);
+                colors.highlightedColor = new Color(0.48f, 0.48f, 0.48f);
+                colors.pressedColor = new Color(0.25f, 0.25f, 0.25f);
+                colors.disabledColor = new Color(0.2f, 0.2f, 0.2f);
                 btn.colors = colors;
 
                 int idx = i;
@@ -500,117 +514,165 @@ namespace OpenEmpires
 
         private void BuildBuildPanel(Transform parent)
         {
-            buildPanelGO = MakePanel(parent, "BuildPanel", ActionPanelWidth, ActionPanelHeight);
-            buildPanelRT = buildPanelGO.GetComponent<RectTransform>();
-            buildPanelRT.anchorMin = new Vector2(0, 0);
-            buildPanelRT.anchorMax = new Vector2(0, 0);
-            buildPanelRT.pivot = new Vector2(0, 0);
-            float buildX = Margin + ResourcePanelWidth + PanelGap + StatsPanelWidth + PanelGap + ActionPanelWidth + PanelGap;
-            buildPanelRT.anchoredPosition = new Vector2(buildX, Margin);
+            float buildPanelWidth = ActionPadding + BuildGridCols * (ActionButtonSize + ActionButtonGap) - ActionButtonGap + ActionPadding;
+            float panelHeight = ActionPadding + BuildPanelHeaderHeight + BuildGridRows * (ActionButtonSize + ActionButtonGap) - ActionButtonGap + ActionPadding;
+            float buildBaseX = Margin + ResourcePanelWidth + PanelGap + StatsPanelWidth + PanelGap + ActionPanelWidth + PanelGap;
 
-            buildButtonGOs = new GameObject[12];
-            buildButtons = new Button[12];
-            buildButtonTexts = new TMP_Text[12];
-            buildButtonIcons = new Image[12];
-            buildButtonHotkeys = new TMP_Text[12];
+            buildPanelGOs = new GameObject[BuildAgePanelCount];
+            buildPanelRTs = new RectTransform[BuildAgePanelCount];
+            buildPanelHeaderBgs = new Image[BuildAgePanelCount];
+            buildButtonGOs = new GameObject[TotalBuildButtons];
+            buildButtons = new Button[TotalBuildButtons];
+            buildButtonTexts = new TMP_Text[TotalBuildButtons];
+            buildButtonIcons = new Image[TotalBuildButtons];
+            buildButtonHotkeys = new TMP_Text[TotalBuildButtons];
+            s_buildPanelRTs = new RectTransform[BuildAgePanelCount];
 
-            for (int i = 0; i < 12; i++)
+            for (int age = 0; age < BuildAgePanelCount; age++)
             {
-                int col = i % ActionGridCols;
-                int row = i / ActionGridCols;
-                float bx = ActionPadding + col * (ActionButtonSize + ActionButtonGap);
-                float by = ActionPanelHeight - ActionPadding - (row + 1) * ActionButtonSize - row * ActionButtonGap;
+                float px = buildBaseX + age * (buildPanelWidth + PanelGap);
+                var panelGO = MakePanel(parent, $"BuildPanel_Age{age + 1}", buildPanelWidth, panelHeight);
+                var panelRT = panelGO.GetComponent<RectTransform>();
+                panelRT.anchorMin = new Vector2(0, 0);
+                panelRT.anchorMax = new Vector2(0, 0);
+                panelRT.pivot = new Vector2(0, 0);
+                panelRT.anchoredPosition = new Vector2(px, Margin);
+                buildPanelGOs[age] = panelGO;
+                buildPanelRTs[age] = panelRT;
 
-                var btnGO = new GameObject($"BuildBtn{i}");
-                btnGO.transform.SetParent(buildPanelGO.transform, false);
-                var rt = btnGO.AddComponent<RectTransform>();
-                rt.anchorMin = new Vector2(0, 0);
-                rt.anchorMax = new Vector2(0, 0);
-                rt.pivot = new Vector2(0, 0);
-                rt.anchoredPosition = new Vector2(bx, by);
-                rt.sizeDelta = new Vector2(ActionButtonSize, ActionButtonSize);
+                // Header background
+                var headerGO = new GameObject("Header");
+                headerGO.transform.SetParent(panelGO.transform, false);
+                var headerRT = headerGO.AddComponent<RectTransform>();
+                headerRT.anchorMin = new Vector2(0, 1);
+                headerRT.anchorMax = new Vector2(1, 1);
+                headerRT.pivot = new Vector2(0.5f, 1);
+                headerRT.anchoredPosition = new Vector2(0, -2f);
+                headerRT.sizeDelta = new Vector2(0, BuildPanelHeaderHeight);
+                var headerBg = headerGO.AddComponent<Image>();
+                headerBg.color = new Color(0.18f, 0.18f, 0.18f);
+                headerBg.raycastTarget = false;
+                buildPanelHeaderBgs[age] = headerBg;
 
-                var img = btnGO.AddComponent<Image>();
-                img.color = new Color(0.25f, 0.25f, 0.25f);
+                // Header text (child of header so Image and TMP don't conflict)
+                var headerTextGO = new GameObject("HeaderText");
+                headerTextGO.transform.SetParent(headerGO.transform, false);
+                var headerTextRT = headerTextGO.AddComponent<RectTransform>();
+                headerTextRT.anchorMin = Vector2.zero;
+                headerTextRT.anchorMax = Vector2.one;
+                headerTextRT.sizeDelta = Vector2.zero;
+                headerTextRT.offsetMin = Vector2.zero;
+                headerTextRT.offsetMax = Vector2.zero;
+                var headerTmp = headerTextGO.AddComponent<TextMeshProUGUI>();
+                headerTmp.text = AgeHeaders[age];
+                headerTmp.fontSize = 10;
+                headerTmp.fontStyle = FontStyles.Bold;
+                headerTmp.alignment = TextAlignmentOptions.Center;
+                headerTmp.color = Color.white;
+                headerTmp.raycastTarget = false;
 
-                var btn = btnGO.AddComponent<Button>();
-                var colors = btn.colors;
-                colors.normalColor = new Color(0.25f, 0.25f, 0.25f);
-                colors.highlightedColor = new Color(0.35f, 0.35f, 0.35f);
-                colors.pressedColor = new Color(0.15f, 0.15f, 0.15f);
-                colors.disabledColor = new Color(0.15f, 0.15f, 0.15f, 0.5f);
-                btn.colors = colors;
+                // Buttons
+                for (int slot = 0; slot < BuildButtonsPerAge; slot++)
+                {
+                    int globalIdx = age * BuildButtonsPerAge + slot;
+                    int col = slot % BuildGridCols;
+                    int row = slot / BuildGridCols;
+                    float bx = ActionPadding + col * (ActionButtonSize + ActionButtonGap);
+                    float by = panelHeight - ActionPadding - BuildPanelHeaderHeight - (row + 1) * ActionButtonSize - row * ActionButtonGap;
 
-                int idx = i;
-                btn.onClick.AddListener(() => { FlashBuildButton(idx); buildCallbacks[idx]?.Invoke(); });
+                    var btnGO = new GameObject($"BuildBtn{globalIdx}");
+                    btnGO.transform.SetParent(panelGO.transform, false);
+                    var rt = btnGO.AddComponent<RectTransform>();
+                    rt.anchorMin = new Vector2(0, 0);
+                    rt.anchorMax = new Vector2(0, 0);
+                    rt.pivot = new Vector2(0, 0);
+                    rt.anchoredPosition = new Vector2(bx, by);
+                    rt.sizeDelta = new Vector2(ActionButtonSize, ActionButtonSize);
 
-                // Icon image
-                var iconGO = new GameObject("Icon");
-                iconGO.transform.SetParent(btnGO.transform, false);
-                var iconRT = iconGO.AddComponent<RectTransform>();
-                iconRT.anchorMin = Vector2.zero;
-                iconRT.anchorMax = Vector2.one;
-                iconRT.sizeDelta = Vector2.zero;
-                iconRT.offsetMin = new Vector2(2, 2);
-                iconRT.offsetMax = new Vector2(-2, -2);
-                var iconImg = iconGO.AddComponent<Image>();
-                iconImg.preserveAspect = true;
-                iconImg.raycastTarget = false;
-                iconGO.SetActive(false);
-                buildButtonIcons[i] = iconImg;
+                    var img = btnGO.AddComponent<Image>();
+                    img.color = Color.white;
 
-                // Text label
-                var textGO = new GameObject("Text");
-                textGO.transform.SetParent(btnGO.transform, false);
-                var trt = textGO.AddComponent<RectTransform>();
-                trt.anchorMin = Vector2.zero;
-                trt.anchorMax = Vector2.one;
-                trt.sizeDelta = Vector2.zero;
-                trt.offsetMin = new Vector2(2, 2);
-                trt.offsetMax = new Vector2(-2, -2);
-                var tmp = textGO.AddComponent<TextMeshProUGUI>();
-                tmp.fontSize = 10;
-                tmp.alignment = TextAlignmentOptions.Center;
-                tmp.color = Color.white;
-                tmp.overflowMode = TextOverflowModes.Overflow;
-                tmp.textWrappingMode = TextWrappingModes.Normal;
-                tmp.raycastTarget = false;
+                    var btn = btnGO.AddComponent<Button>();
+                    var colors = btn.colors;
+                    colors.normalColor = new Color(0.38f, 0.38f, 0.38f);
+                    colors.highlightedColor = new Color(0.48f, 0.48f, 0.48f);
+                    colors.pressedColor = new Color(0.25f, 0.25f, 0.25f);
+                    colors.disabledColor = new Color(0.2f, 0.2f, 0.2f);
+                    btn.colors = colors;
 
-                // Hotkey label
-                var hotkeyGO = new GameObject("Hotkey");
-                hotkeyGO.transform.SetParent(btnGO.transform, false);
-                var hrt = hotkeyGO.AddComponent<RectTransform>();
-                hrt.anchorMin = new Vector2(0, 1);
-                hrt.anchorMax = new Vector2(0, 1);
-                hrt.pivot = new Vector2(0, 1);
-                hrt.anchoredPosition = new Vector2(2, -1);
-                hrt.sizeDelta = new Vector2(16, 14);
-                var hTmp = hotkeyGO.AddComponent<TextMeshProUGUI>();
-                hTmp.fontSize = 9;
-                hTmp.fontStyle = FontStyles.Bold;
-                hTmp.alignment = TextAlignmentOptions.TopLeft;
-                hTmp.color = new Color(1f, 1f, 1f, 0.85f);
-                hTmp.overflowMode = TextOverflowModes.Overflow;
-                hTmp.raycastTarget = false;
-                buildButtonHotkeys[i] = hTmp;
+                    int idx = globalIdx;
+                    btn.onClick.AddListener(() => { FlashBuildButton(idx); buildCallbacks[idx]?.Invoke(); });
 
-                // EventTrigger for tooltip hover
-                var trigger = btnGO.AddComponent<EventTrigger>();
-                var enterEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
-                int hoverIdx = i;
-                enterEntry.callback.AddListener((_) => ShowBuildTooltip(hoverIdx));
-                trigger.triggers.Add(enterEntry);
-                var exitEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerExit };
-                exitEntry.callback.AddListener((_) => HideBuildTooltip(hoverIdx));
-                trigger.triggers.Add(exitEntry);
+                    // Icon image
+                    var iconGO = new GameObject("Icon");
+                    iconGO.transform.SetParent(btnGO.transform, false);
+                    var iconRT = iconGO.AddComponent<RectTransform>();
+                    iconRT.anchorMin = Vector2.zero;
+                    iconRT.anchorMax = Vector2.one;
+                    iconRT.sizeDelta = Vector2.zero;
+                    iconRT.offsetMin = new Vector2(2, 2);
+                    iconRT.offsetMax = new Vector2(-2, -2);
+                    var iconImg = iconGO.AddComponent<Image>();
+                    iconImg.preserveAspect = true;
+                    iconImg.raycastTarget = false;
+                    iconGO.SetActive(false);
+                    buildButtonIcons[globalIdx] = iconImg;
 
-                buildButtonGOs[i] = btnGO;
-                buildButtons[i] = btn;
-                buildButtonTexts[i] = tmp;
-                btnGO.SetActive(false);
+                    // Text label
+                    var textGO = new GameObject("Text");
+                    textGO.transform.SetParent(btnGO.transform, false);
+                    var trt = textGO.AddComponent<RectTransform>();
+                    trt.anchorMin = Vector2.zero;
+                    trt.anchorMax = Vector2.one;
+                    trt.sizeDelta = Vector2.zero;
+                    trt.offsetMin = new Vector2(2, 2);
+                    trt.offsetMax = new Vector2(-2, -2);
+                    var tmp = textGO.AddComponent<TextMeshProUGUI>();
+                    tmp.fontSize = 10;
+                    tmp.alignment = TextAlignmentOptions.Center;
+                    tmp.color = Color.white;
+                    tmp.overflowMode = TextOverflowModes.Overflow;
+                    tmp.textWrappingMode = TextWrappingModes.Normal;
+                    tmp.raycastTarget = false;
+
+                    // Hotkey label
+                    var hotkeyGO = new GameObject("Hotkey");
+                    hotkeyGO.transform.SetParent(btnGO.transform, false);
+                    var hrt = hotkeyGO.AddComponent<RectTransform>();
+                    hrt.anchorMin = new Vector2(0, 1);
+                    hrt.anchorMax = new Vector2(0, 1);
+                    hrt.pivot = new Vector2(0, 1);
+                    hrt.anchoredPosition = new Vector2(2, -1);
+                    hrt.sizeDelta = new Vector2(16, 14);
+                    var hTmp = hotkeyGO.AddComponent<TextMeshProUGUI>();
+                    hTmp.fontSize = 9;
+                    hTmp.fontStyle = FontStyles.Bold;
+                    hTmp.alignment = TextAlignmentOptions.TopLeft;
+                    hTmp.color = new Color(1f, 1f, 1f, 0.85f);
+                    hTmp.overflowMode = TextOverflowModes.Overflow;
+                    hTmp.raycastTarget = false;
+                    buildButtonHotkeys[globalIdx] = hTmp;
+
+                    // EventTrigger for tooltip hover
+                    var trigger = btnGO.AddComponent<EventTrigger>();
+                    var enterEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+                    int hoverIdx = globalIdx;
+                    enterEntry.callback.AddListener((_) => ShowBuildTooltip(hoverIdx));
+                    trigger.triggers.Add(enterEntry);
+                    var exitEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerExit };
+                    exitEntry.callback.AddListener((_) => HideBuildTooltip(hoverIdx));
+                    trigger.triggers.Add(exitEntry);
+
+                    buildButtonGOs[globalIdx] = btnGO;
+                    buildButtons[globalIdx] = btn;
+                    buildButtonTexts[globalIdx] = tmp;
+                    btnGO.SetActive(false);
+                }
+
+                panelGO.SetActive(false);
             }
 
-            // Build panel tooltip
+            // Build panel tooltip (shared across all age panels)
             buildTooltipPanelGO = new GameObject("BuildTooltipPanel");
             buildTooltipPanelGO.transform.SetParent(canvasTransform, false);
             buildTooltipPanelRT = buildTooltipPanelGO.AddComponent<RectTransform>();
@@ -642,21 +704,22 @@ namespace OpenEmpires
             buildTooltipText.raycastTarget = false;
 
             buildTooltipPanelGO.SetActive(false);
-            buildPanelGO.SetActive(false);
         }
 
         private void ShowBuildTooltip(int index)
         {
-            if (buildTooltips[index] == null) return;
+            if (index < 0 || index >= TotalBuildButtons || buildTooltips[index] == null) return;
             hoveredBuildIndex = index;
             buildTooltipText.text = buildTooltips[index];
 
+            int age = index / BuildButtonsPerAge;
             var btnRT = buildButtonGOs[index].GetComponent<RectTransform>();
             const float tooltipWidth = 200f;
             const float gap = 4f;
             const float padding = 8f;
-            Vector2 buildPos = buildPanelRT.anchoredPosition;
-            float tx = buildPos.x + Mathf.Clamp(btnRT.anchoredPosition.x, 0, ActionPanelWidth - tooltipWidth);
+            float bpw = ActionPadding + BuildGridCols * (ActionButtonSize + ActionButtonGap) - ActionButtonGap + ActionPadding;
+            Vector2 buildPos = buildPanelRTs[age].anchoredPosition;
+            float tx = buildPos.x + Mathf.Clamp(btnRT.anchoredPosition.x, 0, bpw - tooltipWidth);
             float ty = buildPos.y + btnRT.anchoredPosition.y + ActionButtonSize + gap;
 
             buildTooltipText.ForceMeshUpdate();
@@ -985,7 +1048,7 @@ namespace OpenEmpires
 
         private void FlashBuildButton(int index)
         {
-            if (index < 0 || index >= 12) return;
+            if (index < 0 || index >= TotalBuildButtons) return;
             if (!buildButtonGOs[index].activeInHierarchy) return;
             buildFlashTimers[index] = ButtonFlashDuration;
             var cb = buildButtons[index].colors;
@@ -1012,6 +1075,9 @@ namespace OpenEmpires
                         actionButtonIcons[i].color = Color.white;
                     }
                 }
+            }
+            for (int i = 0; i < TotalBuildButtons; i++)
+            {
                 if (buildFlashTimers[i] > 0f)
                 {
                     buildFlashTimers[i] -= dt;
@@ -1089,7 +1155,7 @@ namespace OpenEmpires
 
             // Clear action callbacks
             for (int i = 0; i < 12; i++) actionCallbacks[i] = null;
-            for (int i = 0; i < 12; i++) buildCallbacks[i] = null;
+            for (int i = 0; i < TotalBuildButtons; i++) buildCallbacks[i] = null;
 
             GridButton?[] actionSlots = null;
             GridButton?[] buildSlots = null;
@@ -1126,7 +1192,7 @@ namespace OpenEmpires
                     PopulateUnitStats(selectedUnits[0], sim);
                     actionSlots = GetUnitActionSlots(selectedUnits[0], sim);
                     if (selectedUnits[0].UnitType == 0 && selectedUnits[0].PlayerId == selectionManager.LocalPlayerId)
-                        buildSlots = GetBuildMenuSlots(sim);
+                        buildSlots = GetAllAgeBuildSlots(sim);
                 }
                 else
                 {
@@ -1140,7 +1206,7 @@ namespace OpenEmpires
                         { allOwnedVillagers = false; break; }
                     }
                     if (allOwnedVillagers)
-                        buildSlots = GetBuildMenuSlots(sim);
+                        buildSlots = GetAllAgeBuildSlots(sim);
                 }
             }
 
@@ -1167,22 +1233,26 @@ namespace OpenEmpires
                 s_tooltipPanelRT = null;
             }
 
-            // Show/hide build panel + populate buttons
+            // Show/hide build panels (3 age panels)
             bool hasBuildSlots = buildSlots != null && HasAnySlot(buildSlots);
-            buildPanelGO.SetActive(hasBuildSlots);
-            s_buildPanelVisible = hasBuildSlots;
-            s_buildPanelRT = hasBuildSlots ? buildPanelRT : null;
+            for (int a = 0; a < BuildAgePanelCount; a++)
+            {
+                buildPanelGOs[a].SetActive(hasBuildSlots);
+                s_buildPanelRTs[a] = hasBuildSlots ? buildPanelRTs[a] : null;
+            }
+            s_buildPanelsVisible = hasBuildSlots;
             if (hasBuildSlots)
             {
                 PopulateBuildButtons(buildSlots);
+                UpdateBuildPanelHighlight();
             }
             else
             {
-                for (int i = 0; i < 12; i++) buildButtonGOs[i].SetActive(false);
+                for (int i = 0; i < TotalBuildButtons; i++) buildButtonGOs[i].SetActive(false);
                 hoveredBuildIndex = -1;
                 buildTooltipPanelGO.SetActive(false);
-                // Reset build hotkeys when build panel disappears
-                buildHotkeysActive = false;
+                // Reset build hotkeys when build panels disappear
+                buildMenuAge = 0;
             }
 
             // Toggle hotkey label visibility based on build mode
@@ -1481,13 +1551,31 @@ namespace OpenEmpires
 
         private void UpdateHotkeyVisibility()
         {
-            bool buildMode = buildHotkeysActive;
+            bool buildMode = buildMenuAge > 0;
             for (int i = 0; i < 12; i++)
             {
                 if (actionButtonGOs[i].activeSelf)
                     actionButtonHotkeys[i].gameObject.SetActive(!buildMode);
+            }
+            // Build button hotkeys always visible; they show which keys to press
+            for (int i = 0; i < TotalBuildButtons; i++)
+            {
                 if (buildButtonGOs[i].activeSelf)
-                    buildButtonHotkeys[i].gameObject.SetActive(buildMode);
+                {
+                    // Show hotkey only for the active age panel, or all if none active
+                    int age = i / BuildButtonsPerAge;
+                    buildButtonHotkeys[i].gameObject.SetActive(buildMode ? (buildMenuAge == age + 1) : true);
+                }
+            }
+        }
+
+        private void UpdateBuildPanelHighlight()
+        {
+            for (int a = 0; a < BuildAgePanelCount; a++)
+            {
+                bool active = buildMenuAge == a + 1;
+                if (buildPanelHeaderBgs[a] != null)
+                    buildPanelHeaderBgs[a].color = active ? new Color(0.3f, 0.4f, 0.55f) : new Color(0.18f, 0.18f, 0.18f);
             }
         }
 
@@ -1619,7 +1707,7 @@ namespace OpenEmpires
 
         private void PopulateBuildButtons(GridButton?[] slots)
         {
-            for (int i = 0; i < 12; i++)
+            for (int i = 0; i < TotalBuildButtons; i++)
             {
                 if (i < slots.Length && slots[i].HasValue)
                 {
@@ -1668,18 +1756,26 @@ namespace OpenEmpires
             CommandIcons.EnsureLoaded();
             var slots = new GridButton?[12];
 
-            // Q = Build (villagers only)
+            // Q/W/E = Build age tabs (villagers only)
             if (view.UnitType == 0)
             {
-                slots[0] = new GridButton { Label = "Build", Hotkey = "Q",
-                    Tooltip = "<b>Build</b>\nOpen the build menu.",
+                slots[0] = new GridButton { Label = "Build I", Hotkey = "Q",
+                    Tooltip = "<b>Build (Age I)</b>\nOpen Age I build menu.",
                     Enabled = true,
-                    OnClick = () => { buildHotkeysActive = true; } };
+                    OnClick = () => { buildMenuAge = 1; } };
+                slots[1] = new GridButton { Label = "Build II", Hotkey = "W",
+                    Tooltip = "<b>Build (Age II)</b>\nOpen Age II build menu.",
+                    Enabled = true,
+                    OnClick = () => { buildMenuAge = 2; } };
+                slots[2] = new GridButton { Label = "Build III", Hotkey = "E",
+                    Tooltip = "<b>Build (Age III)</b>\nOpen Age III build menu.",
+                    Enabled = true,
+                    OnClick = () => { buildMenuAge = 3; } };
 
                 // R = Age Up (villagers only)
                 int currentAge = sim.GetPlayerAge(view.PlayerId);
                 bool isAgingUp = sim.IsPlayerAgingUp(view.PlayerId);
-                if (currentAge < 4 && !isAgingUp)
+                if (currentAge < 3 && !isAgingUp)
                 {
                     int targetAge = currentAge + 1;
                     var civ = sim.GetPlayerCivilization(view.PlayerId);
@@ -1746,85 +1842,83 @@ namespace OpenEmpires
             return slots;
         }
 
-        private GridButton?[] GetBuildMenuSlots(GameSimulation sim)
+        private GridButton?[] GetAllAgeBuildSlots(GameSimulation sim)
         {
             var resources = sim.ResourceManager.GetPlayerResources(selectionManager.LocalPlayerId);
             int playerAge = sim.GetPlayerAge(selectionManager.LocalPlayerId);
-            int houseCost = sim.Config.HouseWoodCost;
-            int barracksCost = sim.Config.BarracksWoodCost;
-            int tcCost = sim.Config.TownCenterWoodCost;
-            int tcStoneCost = sim.Config.TownCenterStoneCost;
-            int wallCost = sim.Config.WallWoodCost;
-            int millCost = sim.Config.MillWoodCost;
-            int lumberYardCost = sim.Config.LumberYardWoodCost;
-            int mineCost = sim.Config.MineWoodCost;
-            int archeryRangeCost = sim.Config.ArcheryRangeWoodCost;
-            int stablesCost = sim.Config.StablesWoodCost;
-            int towerCost = sim.Config.TowerWoodCost;
-            int farmCost = sim.Config.FarmWoodCost;
+            var cfg = sim.Config;
 
-            int monasteryCost = sim.Config.MonasteryWoodCost;
+            var slots = new GridButton?[TotalBuildButtons];
 
-            var slots = new GridButton?[13];
-            slots[0] = new GridButton { Label = "House", Hotkey = "Q",
-                Tooltip = $"<b>House</b>\nIncreases population cap by 10.\nCost: {houseCost} <sprite name=\"wood\">",
-                Enabled = resources.Wood >= houseCost, Icon = BuildingIcons.Get(BuildingType.House),
-                OnClick = () => selectionManager.EnterBuildPlacement(BuildingType.House) };
-            slots[1] = new GridButton { Label = "Mill", Hotkey = "W",
-                Tooltip = $"<b>Mill</b>\nDrop-off point for food.\nCost: {millCost} <sprite name=\"wood\">",
-                Enabled = resources.Wood >= millCost, Icon = BuildingIcons.Get(BuildingType.Mill),
-                OnClick = () => selectionManager.EnterBuildPlacement(BuildingType.Mill) };
-            slots[2] = new GridButton { Label = "Lumber\nYard", Hotkey = "E",
-                Tooltip = $"<b>Lumber Yard</b>\nDrop-off point for wood.\nCost: {lumberYardCost} <sprite name=\"wood\">",
-                Enabled = resources.Wood >= lumberYardCost, Icon = BuildingIcons.Get(BuildingType.LumberYard),
-                OnClick = () => selectionManager.EnterBuildPlacement(BuildingType.LumberYard) };
-            slots[3] = new GridButton { Label = "Mine", Hotkey = "R",
-                Tooltip = $"<b>Mine</b>\nDrop-off point for gold and stone.\nCost: {mineCost} <sprite name=\"wood\">",
-                Enabled = resources.Wood >= mineCost, Icon = BuildingIcons.Get(BuildingType.Mine),
-                OnClick = () => selectionManager.EnterBuildPlacement(BuildingType.Mine) };
-            bool tcAgeOk = playerAge >= LandmarkDefinitions.GetBuildingRequiredAge(BuildingType.TownCenter);
-            slots[4] = new GridButton { Label = "Town\nCenter", Hotkey = "A",
-                Tooltip = $"<b>Town Center</b>\nMain building. Trains villagers, drop-off for all resources.\nCost: {tcCost} <sprite name=\"wood\"> {tcStoneCost} <sprite name=\"stone\">"
-                    + (tcAgeOk ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(LandmarkDefinitions.GetBuildingRequiredAge(BuildingType.TownCenter))}</color>"),
-                Enabled = tcAgeOk && resources.Wood >= tcCost && resources.Stone >= tcStoneCost, Icon = BuildingIcons.Get(BuildingType.TownCenter),
-                OnClick = () => selectionManager.EnterBuildPlacement(BuildingType.TownCenter) };
-            slots[5] = new GridButton { Label = "Barracks", Hotkey = "S",
-                Tooltip = $"<b>Barracks</b>\nTrains spearmen.\nCost: {barracksCost} <sprite name=\"wood\">",
-                Enabled = resources.Wood >= barracksCost, Icon = BuildingIcons.Get(BuildingType.Barracks),
-                OnClick = () => selectionManager.EnterBuildPlacement(BuildingType.Barracks) };
-            bool archAgeOk = playerAge >= LandmarkDefinitions.GetBuildingRequiredAge(BuildingType.ArcheryRange);
-            slots[6] = new GridButton { Label = "Archery", Hotkey = "D",
-                Tooltip = $"<b>Archery Range</b>\nTrains archers.\nCost: {archeryRangeCost} <sprite name=\"wood\">"
-                    + (archAgeOk ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(LandmarkDefinitions.GetBuildingRequiredAge(BuildingType.ArcheryRange))}</color>"),
-                Enabled = archAgeOk && resources.Wood >= archeryRangeCost, Icon = BuildingIcons.Get(BuildingType.ArcheryRange),
-                OnClick = () => selectionManager.EnterBuildPlacement(BuildingType.ArcheryRange) };
-            bool stabAgeOk = playerAge >= LandmarkDefinitions.GetBuildingRequiredAge(BuildingType.Stables);
-            slots[7] = new GridButton { Label = "Stables", Hotkey = "F",
-                Tooltip = $"<b>Stables</b>\nTrains horsemen and scouts.\nCost: {stablesCost} <sprite name=\"wood\">"
-                    + (stabAgeOk ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(LandmarkDefinitions.GetBuildingRequiredAge(BuildingType.Stables))}</color>"),
-                Enabled = stabAgeOk && resources.Wood >= stablesCost, Icon = BuildingIcons.Get(BuildingType.Stables),
-                OnClick = () => selectionManager.EnterBuildPlacement(BuildingType.Stables) };
-            bool wallAgeOk = playerAge >= LandmarkDefinitions.GetBuildingRequiredAge(BuildingType.Wall);
-            slots[8] = new GridButton { Label = "Wall", Hotkey = "Z",
-                Tooltip = $"<b>Wall</b>\nDefensive barrier. Can convert to gate.\nCost: {wallCost} <sprite name=\"wood\">"
-                    + (wallAgeOk ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(LandmarkDefinitions.GetBuildingRequiredAge(BuildingType.Wall))}</color>"),
-                Enabled = wallAgeOk && resources.Wood >= wallCost, Icon = BuildingIcons.Get(BuildingType.Wall),
-                OnClick = () => selectionManager.EnterWallPlacement() };
-            slots[9] = new GridButton { Label = "Tower", Hotkey = "G",
-                Tooltip = $"<b>Tower</b>\nDefensive tower that attacks enemies. Can be upgraded.\nCost: {towerCost} <sprite name=\"wood\">",
-                Enabled = resources.Wood >= towerCost, Icon = BuildingIcons.Get(BuildingType.Tower),
-                OnClick = () => selectionManager.EnterBuildPlacement(BuildingType.Tower) };
-            slots[10] = new GridButton { Label = "Farm", Hotkey = "X",
-                Tooltip = $"<b>Farm</b>\nProduces food.\nCost: {farmCost} <sprite name=\"wood\">",
-                Enabled = resources.Wood >= farmCost, Icon = BuildingIcons.Get(BuildingType.Farm),
-                OnClick = () => selectionManager.EnterBuildPlacement(BuildingType.Farm) };
-            bool monAgeOk = playerAge >= LandmarkDefinitions.GetBuildingRequiredAge(BuildingType.Monastery);
-            slots[11] = new GridButton { Label = "Monastery", Hotkey = "C",
-                Tooltip = $"<b>Monastery</b>\nTrains monks (healers).\nCost: {monasteryCost} <sprite name=\"wood\">"
-                    + (monAgeOk ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(LandmarkDefinitions.GetBuildingRequiredAge(BuildingType.Monastery))}</color>"),
-                Enabled = monAgeOk && resources.Wood >= monasteryCost, Icon = BuildingIcons.Get(BuildingType.Monastery),
-                OnClick = () => selectionManager.EnterBuildPlacement(BuildingType.Monastery) };
+            // Age 1 (offset 0): Q=Mill, W=LumberYard, E=Mine, A=House, S=Farm, D=Barracks, Z=WoodWall, X=WoodGate
+            int o = 0;
+            slots[o + 0] = MakeBuildSlot("Mill", "Q", "Drop-off point for food.", BuildingType.Mill, cfg.MillWoodCost, 0, 0, 0, resources, playerAge, false);
+            slots[o + 1] = MakeBuildSlot("Lumber\nYard", "W", "Drop-off point for wood.", BuildingType.LumberYard, cfg.LumberYardWoodCost, 0, 0, 0, resources, playerAge, false);
+            slots[o + 2] = MakeBuildSlot("Mine", "E", "Drop-off point for gold and stone.", BuildingType.Mine, cfg.MineWoodCost, 0, 0, 0, resources, playerAge, false);
+            slots[o + 3] = MakeBuildSlot("House", "A", "Increases population cap by 10.", BuildingType.House, cfg.HouseWoodCost, 0, 0, 0, resources, playerAge, false);
+            slots[o + 4] = MakeBuildSlot("Farm", "S", "Produces food.", BuildingType.Farm, cfg.FarmWoodCost, 0, 0, 0, resources, playerAge, false);
+            slots[o + 5] = MakeBuildSlot("Barracks", "D", "Trains spearmen.", BuildingType.Barracks, cfg.BarracksWoodCost, 0, 0, 0, resources, playerAge, false);
+            slots[o + 6] = MakeBuildSlot("Wood\nWall", "Z", "Defensive barrier. Can convert to gate.", BuildingType.Wall, cfg.WallWoodCost, 0, 0, 0, resources, playerAge, true);
+            slots[o + 7] = MakeBuildSlot("Wood\nGate", "X", "Gate that allows units to pass.", BuildingType.WoodGate, cfg.WoodGateWoodCost, 0, 0, 0, resources, playerAge, true, true);
+
+            // Age 2 (offset 8): Q=Blacksmith, W=Market, E=TownCenter, A=ArcheryRange, S=Stables, D=Tower
+            o = BuildButtonsPerAge;
+            slots[o + 0] = MakeBuildSlot("Blacksmith", "Q", "Upgrades weapons and armor.", BuildingType.Blacksmith, cfg.BlacksmithWoodCost, 0, 0, 0, resources, playerAge, false);
+            slots[o + 1] = MakeBuildSlot("Market", "W", "Trade and buy/sell resources.", BuildingType.Market, cfg.MarketWoodCost, 0, 0, 0, resources, playerAge, false);
+            slots[o + 2] = MakeBuildSlot("Town\nCenter", "E", "Trains villagers, drop-off for all resources.", BuildingType.TownCenter, cfg.TownCenterWoodCost, cfg.TownCenterStoneCost, 0, 0, resources, playerAge, false);
+            slots[o + 3] = MakeBuildSlot("Archery", "A", "Trains archers.", BuildingType.ArcheryRange, cfg.ArcheryRangeWoodCost, 0, 0, 0, resources, playerAge, false);
+            slots[o + 4] = MakeBuildSlot("Stables", "S", "Trains horsemen and scouts.", BuildingType.Stables, cfg.StablesWoodCost, 0, 0, 0, resources, playerAge, false);
+            slots[o + 5] = MakeBuildSlot("Tower", "D", "Defensive tower. Can be upgraded.", BuildingType.Tower, cfg.TowerWoodCost, 0, 0, 0, resources, playerAge, false);
+
+            // Age 3 (offset 16): Q=Monastery, W=University, E=SiegeWorkshop, A=Keep, S=StoneWall, D=StoneGate, Z=Wonder
+            o = 2 * BuildButtonsPerAge;
+            slots[o + 0] = MakeBuildSlot("Monastery", "Q", "Trains monks (healers).", BuildingType.Monastery, cfg.MonasteryWoodCost, 0, 0, 0, resources, playerAge, false);
+            slots[o + 1] = MakeBuildSlot("University", "W", "Researches advanced technologies.", BuildingType.University, cfg.UniversityWoodCost, 0, 0, 0, resources, playerAge, false);
+            slots[o + 2] = MakeBuildSlot("Siege\nWorkshop", "E", "Builds siege engines.", BuildingType.SiegeWorkshop, cfg.SiegeWorkshopWoodCost, 0, 0, 0, resources, playerAge, false);
+            slots[o + 3] = MakeBuildSlot("Keep", "A", "Fortified defensive structure.", BuildingType.Keep, cfg.KeepWoodCost, cfg.KeepStoneCost, 0, 0, resources, playerAge, false);
+            slots[o + 4] = MakeBuildSlot("Stone\nWall", "S", "Strong defensive barrier.", BuildingType.StoneWall, 0, cfg.StoneWallStoneCost, 0, 0, resources, playerAge, true);
+            slots[o + 5] = MakeBuildSlot("Stone\nGate", "D", "Stone gate that allows units to pass.", BuildingType.StoneGate, 0, cfg.StoneGateStoneCost, 0, 0, resources, playerAge, true, true);
+            slots[o + 6] = MakeBuildSlot("Wonder", "Z", "Build to achieve a wonder victory.", BuildingType.Wonder, cfg.WonderWoodCost, cfg.WonderStoneCost, cfg.WonderFoodCost, cfg.WonderGoldCost, resources, playerAge, false);
+
             return slots;
+        }
+
+        private GridButton MakeBuildSlot(string label, string hotkey, string desc, BuildingType type,
+            int woodCost, int stoneCost, int foodCost, int goldCost,
+            PlayerResources resources, int playerAge, bool isWall, bool isGate = false)
+        {
+            int reqAge = LandmarkDefinitions.GetBuildingRequiredAge(type);
+            bool ageOk = playerAge >= reqAge;
+            bool canAfford = resources.Wood >= woodCost && resources.Stone >= stoneCost
+                          && resources.Food >= foodCost && resources.Gold >= goldCost;
+
+            // Build cost string
+            string costStr = "";
+            if (woodCost > 0) costStr += $"{woodCost} <sprite name=\"wood\"> ";
+            if (stoneCost > 0) costStr += $"{stoneCost} <sprite name=\"stone\"> ";
+            if (foodCost > 0) costStr += $"{foodCost} <sprite name=\"food\"> ";
+            if (goldCost > 0) costStr += $"{goldCost} <sprite name=\"gold\"> ";
+            costStr = costStr.TrimEnd();
+
+            string tooltip = $"<b>{label.Replace("\n", " ")}</b>\n{desc}\nCost: {costStr}";
+            if (!ageOk)
+                tooltip += $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(reqAge)}</color>";
+
+            System.Action onClick;
+            if (isWall)
+                onClick = () => selectionManager.EnterWallPlacement(type, isGate);
+            else
+                onClick = () => selectionManager.EnterBuildPlacement(type);
+
+            return new GridButton
+            {
+                Label = label,
+                Hotkey = hotkey,
+                Tooltip = tooltip,
+                Enabled = ageOk && canAfford,
+                Icon = BuildingIcons.Get(type),
+                OnClick = onClick
+            };
         }
 
         private GridButton?[] GetMultiUnitActionSlots(IReadOnlyList<UnitView> selected, GameSimulation sim)
@@ -1843,19 +1937,27 @@ namespace OpenEmpires
             CommandIcons.EnsureLoaded();
             var slots = new GridButton?[12];
 
-            // Q = Build (only if all villagers)
+            // Q/W/E = Build age tabs (only if all villagers)
             if (allOwnedVillagers)
             {
-                slots[0] = new GridButton { Label = "Build", Hotkey = "Q",
-                    Tooltip = "<b>Build</b>\nOpen the build menu.",
+                slots[0] = new GridButton { Label = "Build I", Hotkey = "Q",
+                    Tooltip = "<b>Build (Age I)</b>\nOpen Age I build menu.",
                     Enabled = true,
-                    OnClick = () => { buildHotkeysActive = true; } };
+                    OnClick = () => { buildMenuAge = 1; } };
+                slots[1] = new GridButton { Label = "Build II", Hotkey = "W",
+                    Tooltip = "<b>Build (Age II)</b>\nOpen Age II build menu.",
+                    Enabled = true,
+                    OnClick = () => { buildMenuAge = 2; } };
+                slots[2] = new GridButton { Label = "Build III", Hotkey = "E",
+                    Tooltip = "<b>Build (Age III)</b>\nOpen Age III build menu.",
+                    Enabled = true,
+                    OnClick = () => { buildMenuAge = 3; } };
 
                 // R = Age Up (villagers only)
                 int localPid = selectionManager.LocalPlayerId;
                 int currentAge = sim.GetPlayerAge(localPid);
                 bool isAgingUp = sim.IsPlayerAgingUp(localPid);
-                if (currentAge < 4 && !isAgingUp)
+                if (currentAge < 3 && !isAgingUp)
                 {
                     int targetAge = currentAge + 1;
                     var civ = sim.GetPlayerCivilization(localPid);
@@ -1931,7 +2033,7 @@ namespace OpenEmpires
             var slots = new GridButton?[12];
             bool hasAny = false;
 
-            if (building.Type == BuildingType.Wall)
+            if (building.Type == BuildingType.Wall || building.Type == BuildingType.StoneWall || building.Type == BuildingType.StoneGate || building.Type == BuildingType.WoodGate)
             {
                 string gateLabel = building.IsGate ? "To Wall" : "To Gate";
                 slots[0] = new GridButton { Label = gateLabel, Hotkey = "Q", Enabled = true,
@@ -2068,7 +2170,7 @@ namespace OpenEmpires
                     // Age Up button
                     int currentAge = sim.GetPlayerAge(building.PlayerId);
                     bool isAgingUp = sim.IsPlayerAgingUp(building.PlayerId);
-                    if (currentAge < 4 && !isAgingUp)
+                    if (currentAge < 3 && !isAgingUp)
                     {
                         int targetAge = currentAge + 1;
                         var civ = sim.GetPlayerCivilization(building.PlayerId);
@@ -2365,12 +2467,12 @@ namespace OpenEmpires
             var slots = new GridButton?[12];
             bool hasAny = false;
 
-            if (dominantType == BuildingType.Wall)
+            if (IsWallType(dominantType.Value))
             {
                 // Walls: send gate toggle to all owned walls (including under construction)
                 var walls = new List<BuildingView>();
                 for (int i = 0; i < buildings.Count; i++)
-                    if (buildings[i].PlayerId == localPid && buildings[i].BuildingType == BuildingType.Wall)
+                    if (buildings[i].PlayerId == localPid && IsWallType(buildings[i].BuildingType))
                         walls.Add(buildings[i]);
                 slots[0] = new GridButton { Label = "Gate", Hotkey = "Q", Enabled = true,
                     Tooltip = "<b>Toggle Gate</b>\nConvert between wall and gate.",
@@ -2620,14 +2722,14 @@ namespace OpenEmpires
             var dominantType = GetEffectiveBuildingType(buildings, localPid);
             if (dominantType == null) return;
 
-            if (dominantType == BuildingType.Wall)
+            if (IsWallType(dominantType.Value))
             {
                 if (WasKeyPressed(Key.Q))
                 {
                     FlashActionButton(0);
                     for (int i = 0; i < buildings.Count; i++)
                     {
-                        if (buildings[i].PlayerId != localPid || buildings[i].BuildingType != BuildingType.Wall) continue;
+                        if (buildings[i].PlayerId != localPid || !IsWallType(buildings[i].BuildingType)) continue;
                         var bData = sim.BuildingRegistry.GetBuilding(buildings[i].BuildingId);
                         if (bData != null)
                             sim.CommandBuffer.EnqueueCommand(new ConvertToGateCommand(bData.PlayerId, bData.Id));
@@ -2665,7 +2767,7 @@ namespace OpenEmpires
                 {
                     int currentAge = sim.GetPlayerAge(localPid);
                     bool isAgingUp = sim.IsPlayerAgingUp(localPid);
-                    if (currentAge < 4 && !isAgingUp)
+                    if (currentAge < 3 && !isAgingUp)
                     {
                         FlashActionButton(4);
                         ShowLandmarkChoicePanel(sim, localPid, currentAge + 1);
@@ -2857,7 +2959,7 @@ namespace OpenEmpires
         {
             int localPid = selectionManager.LocalPlayerId;
 
-            if (buildHotkeysActive)
+            if (buildMenuAge > 0)
             {
                 ProcessBuildMenuHotkeys(sim, localPid);
                 return;
@@ -2866,34 +2968,61 @@ namespace OpenEmpires
             ProcessCommandHotkeys(units, sim, localPid);
         }
 
-        private void ProcessBuildMenuHotkeys(GameSimulation sim, int localPid)
+        private bool TryBuildHotkey(GameSimulation sim, int localPid, BuildingType type, int btnIndex, bool isWall = false, bool isGate = false)
         {
             var resources = sim.ResourceManager.GetPlayerResources(localPid);
+            int playerAge = sim.GetPlayerAge(localPid);
+            int reqAge = LandmarkDefinitions.GetBuildingRequiredAge(type);
+            if (playerAge < reqAge) return false;
 
-            if (WasKeyPressed(Key.Q) && resources.Wood >= sim.Config.HouseWoodCost)
-            { FlashBuildButton(0); selectionManager.EnterBuildPlacement(BuildingType.House); buildHotkeysActive = false; }
-            else if (WasKeyPressed(Key.W) && resources.Wood >= sim.Config.MillWoodCost)
-            { FlashBuildButton(1); selectionManager.EnterBuildPlacement(BuildingType.Mill); buildHotkeysActive = false; }
-            else if (WasKeyPressed(Key.E) && resources.Wood >= sim.Config.LumberYardWoodCost)
-            { FlashBuildButton(2); selectionManager.EnterBuildPlacement(BuildingType.LumberYard); buildHotkeysActive = false; }
-            else if (WasKeyPressed(Key.R) && resources.Wood >= sim.Config.MineWoodCost)
-            { FlashBuildButton(3); selectionManager.EnterBuildPlacement(BuildingType.Mine); buildHotkeysActive = false; }
-            else if (WasKeyPressed(Key.A) && resources.Wood >= sim.Config.TownCenterWoodCost && resources.Stone >= sim.Config.TownCenterStoneCost)
-            { FlashBuildButton(4); selectionManager.EnterBuildPlacement(BuildingType.TownCenter); buildHotkeysActive = false; }
-            else if (WasKeyPressed(Key.S) && resources.Wood >= sim.Config.BarracksWoodCost)
-            { FlashBuildButton(5); selectionManager.EnterBuildPlacement(BuildingType.Barracks); buildHotkeysActive = false; }
-            else if (WasKeyPressed(Key.D) && resources.Wood >= sim.Config.ArcheryRangeWoodCost)
-            { FlashBuildButton(6); selectionManager.EnterBuildPlacement(BuildingType.ArcheryRange); buildHotkeysActive = false; }
-            else if (WasKeyPressed(Key.F) && resources.Wood >= sim.Config.StablesWoodCost)
-            { FlashBuildButton(7); selectionManager.EnterBuildPlacement(BuildingType.Stables); buildHotkeysActive = false; }
-            else if (WasKeyPressed(Key.Z) && resources.Wood >= sim.Config.WallWoodCost)
-            { FlashBuildButton(8); selectionManager.EnterWallPlacement(); buildHotkeysActive = false; }
-            else if (WasKeyPressed(Key.G) && resources.Wood >= sim.Config.TowerWoodCost)
-            { FlashBuildButton(9); selectionManager.EnterBuildPlacement(BuildingType.Tower); buildHotkeysActive = false; }
-            else if (WasKeyPressed(Key.X) && resources.Wood >= sim.Config.FarmWoodCost)
-            { FlashBuildButton(10); selectionManager.EnterBuildPlacement(BuildingType.Farm); buildHotkeysActive = false; }
-            else if (WasKeyPressed(Key.C) && resources.Wood >= sim.Config.MonasteryWoodCost)
-            { FlashBuildButton(11); selectionManager.EnterBuildPlacement(BuildingType.Monastery); buildHotkeysActive = false; }
+            int wood = sim.GetBuildingWoodCost(type);
+            int stone = sim.GetBuildingStoneCost(type);
+            int food = sim.GetBuildingFoodCost(type);
+            int gold = sim.GetBuildingGoldCost(type);
+            if (resources.Wood < wood || resources.Stone < stone || resources.Food < food || resources.Gold < gold) return false;
+
+            FlashBuildButton(btnIndex);
+            if (isWall)
+                selectionManager.EnterWallPlacement(type, isGate);
+            else
+                selectionManager.EnterBuildPlacement(type);
+            buildMenuAge = 0;
+            return true;
+        }
+
+        private void ProcessBuildMenuHotkeys(GameSimulation sim, int localPid)
+        {
+            int o = (buildMenuAge - 1) * BuildButtonsPerAge; // global button index offset
+            switch (buildMenuAge)
+            {
+                case 1:
+                    if (WasKeyPressed(Key.Q)) TryBuildHotkey(sim, localPid, BuildingType.Mill, o + 0);
+                    else if (WasKeyPressed(Key.W)) TryBuildHotkey(sim, localPid, BuildingType.LumberYard, o + 1);
+                    else if (WasKeyPressed(Key.E)) TryBuildHotkey(sim, localPid, BuildingType.Mine, o + 2);
+                    else if (WasKeyPressed(Key.A)) TryBuildHotkey(sim, localPid, BuildingType.House, o + 3);
+                    else if (WasKeyPressed(Key.S)) TryBuildHotkey(sim, localPid, BuildingType.Farm, o + 4);
+                    else if (WasKeyPressed(Key.D)) TryBuildHotkey(sim, localPid, BuildingType.Barracks, o + 5);
+                    else if (WasKeyPressed(Key.Z)) TryBuildHotkey(sim, localPid, BuildingType.Wall, o + 6, isWall: true);
+                    else if (WasKeyPressed(Key.X)) TryBuildHotkey(sim, localPid, BuildingType.WoodGate, o + 7, isWall: true, isGate: true);
+                    break;
+                case 2:
+                    if (WasKeyPressed(Key.Q)) TryBuildHotkey(sim, localPid, BuildingType.Blacksmith, o + 0);
+                    else if (WasKeyPressed(Key.W)) TryBuildHotkey(sim, localPid, BuildingType.Market, o + 1);
+                    else if (WasKeyPressed(Key.E)) TryBuildHotkey(sim, localPid, BuildingType.TownCenter, o + 2);
+                    else if (WasKeyPressed(Key.A)) TryBuildHotkey(sim, localPid, BuildingType.ArcheryRange, o + 3);
+                    else if (WasKeyPressed(Key.S)) TryBuildHotkey(sim, localPid, BuildingType.Stables, o + 4);
+                    else if (WasKeyPressed(Key.D)) TryBuildHotkey(sim, localPid, BuildingType.Tower, o + 5);
+                    break;
+                case 3:
+                    if (WasKeyPressed(Key.Q)) TryBuildHotkey(sim, localPid, BuildingType.Monastery, o + 0);
+                    else if (WasKeyPressed(Key.W)) TryBuildHotkey(sim, localPid, BuildingType.University, o + 1);
+                    else if (WasKeyPressed(Key.E)) TryBuildHotkey(sim, localPid, BuildingType.SiegeWorkshop, o + 2);
+                    else if (WasKeyPressed(Key.A)) TryBuildHotkey(sim, localPid, BuildingType.Keep, o + 3);
+                    else if (WasKeyPressed(Key.S)) TryBuildHotkey(sim, localPid, BuildingType.StoneWall, o + 4, isWall: true);
+                    else if (WasKeyPressed(Key.D)) TryBuildHotkey(sim, localPid, BuildingType.StoneGate, o + 5, isWall: true, isGate: true);
+                    else if (WasKeyPressed(Key.Z)) TryBuildHotkey(sim, localPid, BuildingType.Wonder, o + 6);
+                    break;
+            }
         }
 
         private void ProcessCommandHotkeys(IReadOnlyList<UnitView> units, GameSimulation sim, int localPid)
@@ -2904,12 +3033,28 @@ namespace OpenEmpires
                 if (units[i].UnitType != 0 || units[i].PlayerId != localPid)
                 { allOwnedVillagers = false; break; }
             }
-            // Q = Build (villagers only) — activates build hotkey mode
-            if (allOwnedVillagers && WasKeyPressed(Key.Q))
+
+            // Q/W/E = Build age tabs (villagers only)
+            if (allOwnedVillagers)
             {
-                FlashActionButton(0);
-                buildHotkeysActive = true;
-                return;
+                if (WasKeyPressed(Key.Q))
+                {
+                    FlashActionButton(0);
+                    buildMenuAge = 1;
+                    return;
+                }
+                if (WasKeyPressed(Key.W))
+                {
+                    FlashActionButton(1);
+                    buildMenuAge = 2;
+                    return;
+                }
+                if (WasKeyPressed(Key.E))
+                {
+                    FlashActionButton(2);
+                    buildMenuAge = 3;
+                    return;
+                }
             }
 
             // R = Age Up (villagers only)
@@ -2917,7 +3062,7 @@ namespace OpenEmpires
             {
                 int currentAge = sim.GetPlayerAge(localPid);
                 bool isAgingUp = sim.IsPlayerAgingUp(localPid);
-                if (currentAge < 4 && !isAgingUp)
+                if (currentAge < 3 && !isAgingUp)
                 {
                     FlashActionButton(3);
                     ShowLandmarkChoicePanel(sim, localPid, currentAge + 1);
@@ -2963,6 +3108,11 @@ namespace OpenEmpires
         // =============================================================
         //  Tooltip helpers
         // =============================================================
+
+        private static bool IsWallType(BuildingType type)
+        {
+            return type == BuildingType.Wall || type == BuildingType.StoneWall || type == BuildingType.StoneGate || type == BuildingType.WoodGate;
+        }
 
         private void ShowActionTooltip(int index)
         {

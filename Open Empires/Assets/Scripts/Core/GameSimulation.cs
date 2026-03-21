@@ -370,6 +370,7 @@ namespace OpenEmpires
                 hash = hash * 31 + (unit.IsAttackMoving ? 1u : 0u);
                 hash = hash * 31 + (unit.HasLeash ? 1u : 0u);
                 hash = hash * 31 + (unit.HasSavedPath ? 1u : 0u);
+                hash = hash * 31 + (uint)unit.ChaseBlockedTicks;
             }
 
             // Hash building state
@@ -2223,6 +2224,8 @@ namespace OpenEmpires
             {
                 int woodCost = GetBuildingWoodCost(building.Type);
                 int stoneCost = GetBuildingStoneCost(building.Type);
+                int foodCost = GetBuildingFoodCost(building.Type);
+                int goldCost = GetBuildingGoldCost(building.Type);
 
                 // Expected health from construction progress alone
                 int ticksElapsed = building.ConstructionTicksTotal - building.ConstructionTicksRemaining;
@@ -2235,10 +2238,14 @@ namespace OpenEmpires
                 // Full refund minus proportion of enemy damage
                 int refundWood = woodCost - (woodCost * enemyDamage / building.MaxHealth);
                 int refundStone = stoneCost - (stoneCost * enemyDamage / building.MaxHealth);
+                int refundFood = foodCost - (foodCost * enemyDamage / building.MaxHealth);
+                int refundGold = goldCost - (goldCost * enemyDamage / building.MaxHealth);
 
                 var resources = ResourceManager.GetPlayerResources(building.PlayerId);
                 resources.Wood += refundWood;
                 resources.Stone += refundStone;
+                resources.Food += refundFood;
+                resources.Gold += refundGold;
             }
 
             CleanUpDestroyedBuilding(cmd.BuildingId);
@@ -2765,6 +2772,60 @@ namespace OpenEmpires
                     maxHealth = config.MonasteryMaxHealth;
                     armor = config.MonasteryArmor;
                     break;
+                case BuildingType.Blacksmith:
+                    footprintW = config.BlacksmithFootprintWidth;
+                    footprintH = config.BlacksmithFootprintHeight;
+                    maxHealth = config.BlacksmithMaxHealth;
+                    armor = config.BlacksmithArmor;
+                    break;
+                case BuildingType.Market:
+                    footprintW = config.MarketFootprintWidth;
+                    footprintH = config.MarketFootprintHeight;
+                    maxHealth = config.MarketMaxHealth;
+                    armor = config.MarketArmor;
+                    break;
+                case BuildingType.University:
+                    footprintW = config.UniversityFootprintWidth;
+                    footprintH = config.UniversityFootprintHeight;
+                    maxHealth = config.UniversityMaxHealth;
+                    armor = config.UniversityArmor;
+                    break;
+                case BuildingType.SiegeWorkshop:
+                    footprintW = config.SiegeWorkshopFootprintWidth;
+                    footprintH = config.SiegeWorkshopFootprintHeight;
+                    maxHealth = config.SiegeWorkshopMaxHealth;
+                    armor = config.SiegeWorkshopArmor;
+                    break;
+                case BuildingType.Keep:
+                    footprintW = config.KeepFootprintWidth;
+                    footprintH = config.KeepFootprintHeight;
+                    maxHealth = config.KeepMaxHealth;
+                    armor = config.KeepArmor;
+                    break;
+                case BuildingType.StoneWall:
+                    footprintW = config.StoneWallFootprintWidth;
+                    footprintH = config.StoneWallFootprintHeight;
+                    maxHealth = config.StoneWallMaxHealth;
+                    armor = config.StoneWallArmor;
+                    break;
+                case BuildingType.StoneGate:
+                    footprintW = config.StoneGateFootprintWidth;
+                    footprintH = config.StoneGateFootprintHeight;
+                    maxHealth = config.StoneGateMaxHealth;
+                    armor = config.StoneGateArmor;
+                    break;
+                case BuildingType.WoodGate:
+                    footprintW = config.WoodGateFootprintWidth;
+                    footprintH = config.WoodGateFootprintHeight;
+                    maxHealth = config.WoodGateMaxHealth;
+                    armor = config.WoodGateArmor;
+                    break;
+                case BuildingType.Wonder:
+                    footprintW = config.WonderFootprintWidth;
+                    footprintH = config.WonderFootprintHeight;
+                    maxHealth = config.WonderMaxHealth;
+                    armor = config.WonderArmor;
+                    break;
                 case BuildingType.Landmark:
                     footprintW = config.LandmarkFootprintWidth;
                     footprintH = config.LandmarkFootprintHeight;
@@ -2833,7 +2894,7 @@ namespace OpenEmpires
                 MapData.MarkBuildingTiles(tileX, tileZ, footprintW, footprintH);
             }
 
-            building.FoundationBorder = (type == BuildingType.Wall || type == BuildingType.Farm) ? 0 : 1;
+            building.FoundationBorder = (type == BuildingType.Wall || type == BuildingType.Farm || type == BuildingType.StoneWall || type == BuildingType.StoneGate || type == BuildingType.WoodGate) ? 0 : 1;
             MapData.MarkFoundationBorder(tileX, tileZ, footprintW, footprintH, building.FoundationBorder);
 
             if (type == BuildingType.TownCenter && !firstTownCenterIds.ContainsKey(playerId))
@@ -2858,6 +2919,15 @@ namespace OpenEmpires
                 case BuildingType.Farm: return config.FarmConstructionTicks;
                 case BuildingType.Tower: return config.TowerConstructionTicks;
                 case BuildingType.Monastery: return config.MonasteryConstructionTicks;
+                case BuildingType.Blacksmith: return config.BlacksmithConstructionTicks;
+                case BuildingType.Market: return config.MarketConstructionTicks;
+                case BuildingType.University: return config.UniversityConstructionTicks;
+                case BuildingType.SiegeWorkshop: return config.SiegeWorkshopConstructionTicks;
+                case BuildingType.Keep: return config.KeepConstructionTicks;
+                case BuildingType.StoneWall: return config.StoneWallConstructionTicks;
+                case BuildingType.StoneGate: return config.StoneGateConstructionTicks;
+                case BuildingType.WoodGate: return config.WoodGateConstructionTicks;
+                case BuildingType.Wonder: return config.WonderConstructionTicks;
                 case BuildingType.Landmark: return 3000; // default; actual value set from LandmarkDefinitions
                 default: return config.HouseConstructionTicks;
             }
@@ -2936,6 +3006,8 @@ namespace OpenEmpires
                 unit.CombatTargetId = cmd.TargetUnitId;
                 unit.CombatTargetBuildingId = -1;
                 unit.PlayerCommanded = true;
+                unit.IsAttackMoving = false;
+                unit.ChaseBlockedTicks = 0;
                 unit.TargetResourceNodeId = -1;
                 unit.ConstructionTargetBuildingId = -1;
                 unit.GatherTimer = Fixed32.Zero;
@@ -3337,7 +3409,9 @@ namespace OpenEmpires
 
             int cost = GetBuildingWoodCost(cmd.BuildingType);
             int stoneCost = GetBuildingStoneCost(cmd.BuildingType);
-            if (resources.Wood < cost || resources.Stone < stoneCost) return;
+            int foodCost = GetBuildingFoodCost(cmd.BuildingType);
+            int goldCost = GetBuildingGoldCost(cmd.BuildingType);
+            if (resources.Wood < cost || resources.Stone < stoneCost || resources.Food < foodCost || resources.Gold < goldCost) return;
 
             bool hasVillagers2 = cmd.VillagerUnitIds != null && cmd.VillagerUnitIds.Length > 0;
 
@@ -3385,6 +3459,42 @@ namespace OpenEmpires
                     footprintW2 = config.MonasteryFootprintWidth;
                     footprintH2 = config.MonasteryFootprintHeight;
                     break;
+                case BuildingType.Blacksmith:
+                    footprintW2 = config.BlacksmithFootprintWidth;
+                    footprintH2 = config.BlacksmithFootprintHeight;
+                    break;
+                case BuildingType.Market:
+                    footprintW2 = config.MarketFootprintWidth;
+                    footprintH2 = config.MarketFootprintHeight;
+                    break;
+                case BuildingType.University:
+                    footprintW2 = config.UniversityFootprintWidth;
+                    footprintH2 = config.UniversityFootprintHeight;
+                    break;
+                case BuildingType.SiegeWorkshop:
+                    footprintW2 = config.SiegeWorkshopFootprintWidth;
+                    footprintH2 = config.SiegeWorkshopFootprintHeight;
+                    break;
+                case BuildingType.Keep:
+                    footprintW2 = config.KeepFootprintWidth;
+                    footprintH2 = config.KeepFootprintHeight;
+                    break;
+                case BuildingType.StoneWall:
+                    footprintW2 = config.StoneWallFootprintWidth;
+                    footprintH2 = config.StoneWallFootprintHeight;
+                    break;
+                case BuildingType.StoneGate:
+                    footprintW2 = config.StoneGateFootprintWidth;
+                    footprintH2 = config.StoneGateFootprintHeight;
+                    break;
+                case BuildingType.WoodGate:
+                    footprintW2 = config.WoodGateFootprintWidth;
+                    footprintH2 = config.WoodGateFootprintHeight;
+                    break;
+                case BuildingType.Wonder:
+                    footprintW2 = config.WonderFootprintWidth;
+                    footprintH2 = config.WonderFootprintHeight;
+                    break;
                 default:
                     footprintW2 = config.HouseFootprintWidth;
                     footprintH2 = config.HouseFootprintHeight;
@@ -3392,13 +3502,15 @@ namespace OpenEmpires
             }
 
             // Validate footprint + border area is buildable
-            int border2 = (cmd.BuildingType == BuildingType.Wall || cmd.BuildingType == BuildingType.Farm) ? 0 : 1;
+            int border2 = (cmd.BuildingType == BuildingType.Wall || cmd.BuildingType == BuildingType.Farm || cmd.BuildingType == BuildingType.StoneWall || cmd.BuildingType == BuildingType.StoneGate || cmd.BuildingType == BuildingType.WoodGate) ? 0 : 1;
             for (int x = cmd.TileX - border2; x < cmd.TileX + footprintW2 + border2; x++)
                 for (int z = cmd.TileZ - border2; z < cmd.TileZ + footprintH2 + border2; z++)
                     if (!MapData.IsBuildable(x, z)) return;
 
             resources.Wood -= cost;
             resources.Stone -= stoneCost;
+            resources.Food -= foodCost;
+            resources.Gold -= goldCost;
             var building2 = CreateBuilding(cmd.PlayerId, cmd.BuildingType, cmd.TileX, cmd.TileZ, underConstruction: hasVillagers2);
             OnBuildingCreated?.Invoke(building2);
             if (!hasVillagers2)
@@ -3479,13 +3591,17 @@ namespace OpenEmpires
             }
             if (validTiles.Count == 0) return;
 
-            // Validate total wood cost
-            int costPerSegment = config.WallWoodCost;
-            int totalCost = costPerSegment * validTiles.Count;
+            // Validate total cost
+            BuildingType wallType = cmd.WallBuildingType;
+            int woodPerSegment = GetBuildingWoodCost(wallType);
+            int stonePerSegment = GetBuildingStoneCost(wallType);
+            int totalWood = woodPerSegment * validTiles.Count;
+            int totalStone = stonePerSegment * validTiles.Count;
             var resources = ResourceManager.GetPlayerResources(cmd.PlayerId);
-            if (resources.Wood < totalCost) return;
+            if (resources.Wood < totalWood || resources.Stone < totalStone) return;
 
-            resources.Wood -= totalCost;
+            resources.Wood -= totalWood;
+            resources.Stone -= totalStone;
             int wallGroupId = nextWallGroupId++;
             bool hasVillagers = cmd.VillagerUnitIds != null && cmd.VillagerUnitIds.Length > 0;
 
@@ -3494,8 +3610,9 @@ namespace OpenEmpires
             for (int i = 0; i < validTiles.Count; i++)
             {
                 var tile = validTiles[i];
-                var building = CreateBuilding(cmd.PlayerId, BuildingType.Wall, tile.x, tile.y, underConstruction: hasVillagers);
+                var building = CreateBuilding(cmd.PlayerId, wallType, tile.x, tile.y, underConstruction: hasVillagers);
                 building.WallGroupId = wallGroupId;
+                if (cmd.IsGate) building.IsGate = true;
                 createdBuildings.Add(building);
                 OnBuildingCreated?.Invoke(building);
                 if (!hasVillagers)
@@ -3564,7 +3681,7 @@ namespace OpenEmpires
         {
             var building = BuildingRegistry.GetBuilding(cmd.BuildingId);
             if (building == null || building.IsDestroyed) return;
-            if (building.Type != BuildingType.Wall) return;
+            if (building.Type != BuildingType.Wall && building.Type != BuildingType.StoneWall && building.Type != BuildingType.StoneGate && building.Type != BuildingType.WoodGate) return;
             if (building.PlayerId != cmd.PlayerId) return;
 
             building.IsGate = !building.IsGate;
@@ -4040,6 +4157,15 @@ namespace OpenEmpires
                 case BuildingType.Farm: return config.FarmWoodCost;
                 case BuildingType.Tower: return config.TowerWoodCost;
                 case BuildingType.Monastery: return config.MonasteryWoodCost;
+                case BuildingType.Blacksmith: return config.BlacksmithWoodCost;
+                case BuildingType.Market: return config.MarketWoodCost;
+                case BuildingType.University: return config.UniversityWoodCost;
+                case BuildingType.SiegeWorkshop: return config.SiegeWorkshopWoodCost;
+                case BuildingType.Keep: return config.KeepWoodCost;
+                case BuildingType.StoneWall: return 0;
+                case BuildingType.StoneGate: return 0;
+                case BuildingType.WoodGate: return config.WoodGateWoodCost;
+                case BuildingType.Wonder: return config.WonderWoodCost;
                 case BuildingType.Landmark: return 0; // landmarks use food/gold, not wood
                 default: return 0;
             }
@@ -4050,6 +4176,28 @@ namespace OpenEmpires
             switch (type)
             {
                 case BuildingType.TownCenter: return config.TownCenterStoneCost;
+                case BuildingType.Keep: return config.KeepStoneCost;
+                case BuildingType.StoneWall: return config.StoneWallStoneCost;
+                case BuildingType.StoneGate: return config.StoneGateStoneCost;
+                case BuildingType.Wonder: return config.WonderStoneCost;
+                default: return 0;
+            }
+        }
+
+        public int GetBuildingFoodCost(BuildingType type)
+        {
+            switch (type)
+            {
+                case BuildingType.Wonder: return config.WonderFoodCost;
+                default: return 0;
+            }
+        }
+
+        public int GetBuildingGoldCost(BuildingType type)
+        {
+            switch (type)
+            {
+                case BuildingType.Wonder: return config.WonderGoldCost;
                 default: return 0;
             }
         }

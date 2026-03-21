@@ -221,7 +221,7 @@ namespace OpenEmpires
 
             CacheRenderers();
 
-            if (data.Type == BuildingType.Wall)
+            if (data.Type == BuildingType.Wall || data.Type == BuildingType.StoneWall || data.Type == BuildingType.StoneGate || data.Type == BuildingType.WoodGate)
             {
                 wallGeometry = transform.Find("WallGeometry");
             }
@@ -327,7 +327,7 @@ namespace OpenEmpires
             if (IsDestroyed || buildingData == null) return;
 
             // Deferred wall connection setup (runs once, after all walls in the batch exist)
-            if (!wallConnectionsUpdated && BuildingType == BuildingType.Wall)
+            if (!wallConnectionsUpdated && (BuildingType == BuildingType.Wall || BuildingType == BuildingType.StoneWall || BuildingType == BuildingType.StoneGate || BuildingType == BuildingType.WoodGate))
                 UpdateWallConnections();
 
             // Construction scale animation
@@ -764,7 +764,7 @@ namespace OpenEmpires
 
         private void UpdateWallConnections()
         {
-            if (BuildingType != BuildingType.Wall || wallGeometry == null) return;
+            if ((BuildingType != BuildingType.Wall && BuildingType != BuildingType.StoneWall && BuildingType != BuildingType.StoneGate && BuildingType != BuildingType.WoodGate) || wallGeometry == null) return;
             wallConnectionsUpdated = true;
 
             var sim = GameBootstrapper.Instance?.Simulation;

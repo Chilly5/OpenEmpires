@@ -288,7 +288,8 @@ namespace OpenEmpires
         {
             var data = JsonUtility.FromJson<PlaceWallPayload>(payload);
             var cmd = new PlaceWallCommand(playerId, data.startTileX, data.startTileZ,
-                data.endTileX, data.endTileZ, data.villagerUnitIds);
+                data.endTileX, data.endTileZ, data.villagerUnitIds,
+                (BuildingType)data.wallBuildingType, data.isGate);
             cmd.IsQueued = data.isQueued;
             return cmd;
         }
@@ -592,6 +593,8 @@ namespace OpenEmpires
             public int endTileZ;
             public int[] villagerUnitIds;
             public bool isQueued;
+            public int wallBuildingType;
+            public bool isGate;
 
             public PlaceWallPayload() { }
 
@@ -603,6 +606,8 @@ namespace OpenEmpires
                 endTileZ = cmd.EndTileZ;
                 villagerUnitIds = cmd.VillagerUnitIds ?? new int[0];
                 isQueued = cmd.IsQueued;
+                wallBuildingType = (int)cmd.WallBuildingType;
+                isGate = cmd.IsGate;
             }
         }
 
@@ -1019,6 +1024,8 @@ namespace OpenEmpires
                             else
                                 w.Write(0);
                             w.Write(placeWall.IsQueued);
+                            w.Write((int)placeWall.WallBuildingType);
+                            w.Write(placeWall.IsGate);
                             break;
                         case ConvertToGateCommand convertToGate:
                             w.Write(convertToGate.BuildingId);
@@ -1208,8 +1215,11 @@ namespace OpenEmpires
                             int wallEndX = r.ReadInt32(), wallEndZ = r.ReadInt32();
                             int[] wallVIds = ReadIntArray(r);
                             bool isWallQueued = r.ReadBoolean();
+                            var wallBType = (BuildingType)r.ReadInt32();
+                            bool wallIsGate = r.ReadBoolean();
                             var wallCmd = new PlaceWallCommand(playerId, wallStartX, wallStartZ,
-                                wallEndX, wallEndZ, wallVIds.Length > 0 ? wallVIds : null);
+                                wallEndX, wallEndZ, wallVIds.Length > 0 ? wallVIds : null,
+                                wallBType, wallIsGate);
                             wallCmd.IsQueued = isWallQueued;
                             commands.Add(wallCmd);
                             break;

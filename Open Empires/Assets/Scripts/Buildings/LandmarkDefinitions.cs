@@ -6,20 +6,14 @@ namespace OpenEmpires
         English_Age2_B,
         English_Age3_A,
         English_Age3_B,
-        English_Age4_A,
-        English_Age4_B,
         French_Age2_A,
         French_Age2_B,
         French_Age3_A,
         French_Age3_B,
-        French_Age4_A,
-        French_Age4_B,
         HRE_Age2_A,
         HRE_Age2_B,
         HRE_Age3_A,
-        HRE_Age3_B,
-        HRE_Age4_A,
-        HRE_Age4_B
+        HRE_Age3_B
     }
 
     public struct LandmarkDefinition
@@ -78,23 +72,6 @@ namespace OpenEmpires
                         FoodCost = 800, GoldCost = 400, ConstructionTicks = 4500,
                         FootprintWidth = 4, FootprintHeight = 4, MaxHealth = 2500, Armor = 5
                     };
-                // English Age 4
-                case LandmarkId.English_Age4_A:
-                    return new LandmarkDefinition
-                    {
-                        Id = id, Civ = Civilization.English, TargetAge = 4,
-                        Name = "Wynguard Palace", Description = "The pinnacle of English power.",
-                        FoodCost = 1200, GoldCost = 600, ConstructionTicks = 6000,
-                        FootprintWidth = 4, FootprintHeight = 4, MaxHealth = 2500, Armor = 5
-                    };
-                case LandmarkId.English_Age4_B:
-                    return new LandmarkDefinition
-                    {
-                        Id = id, Civ = Civilization.English, TargetAge = 4,
-                        Name = "Berkshire Palace", Description = "A mighty seat of governance.",
-                        FoodCost = 1200, GoldCost = 600, ConstructionTicks = 6000,
-                        FootprintWidth = 4, FootprintHeight = 4, MaxHealth = 2500, Armor = 5
-                    };
 
                 // French Age 2
                 case LandmarkId.French_Age2_A:
@@ -128,23 +105,6 @@ namespace OpenEmpires
                         Id = id, Civ = Civilization.French, TargetAge = 3,
                         Name = "Guild Hall", Description = "Provides economic advantages.",
                         FoodCost = 800, GoldCost = 400, ConstructionTicks = 4500,
-                        FootprintWidth = 4, FootprintHeight = 4, MaxHealth = 2500, Armor = 5
-                    };
-                // French Age 4
-                case LandmarkId.French_Age4_A:
-                    return new LandmarkDefinition
-                    {
-                        Id = id, Civ = Civilization.French, TargetAge = 4,
-                        Name = "Red Palace", Description = "The ultimate French stronghold.",
-                        FoodCost = 1200, GoldCost = 600, ConstructionTicks = 6000,
-                        FootprintWidth = 4, FootprintHeight = 4, MaxHealth = 2500, Armor = 5
-                    };
-                case LandmarkId.French_Age4_B:
-                    return new LandmarkDefinition
-                    {
-                        Id = id, Civ = Civilization.French, TargetAge = 4,
-                        Name = "College of Artillery", Description = "Masters of siege warfare.",
-                        FoodCost = 1200, GoldCost = 600, ConstructionTicks = 6000,
                         FootprintWidth = 4, FootprintHeight = 4, MaxHealth = 2500, Armor = 5
                     };
 
@@ -182,23 +142,6 @@ namespace OpenEmpires
                         FoodCost = 800, GoldCost = 400, ConstructionTicks = 4500,
                         FootprintWidth = 4, FootprintHeight = 4, MaxHealth = 2500, Armor = 5
                     };
-                // HRE Age 4
-                case LandmarkId.HRE_Age4_A:
-                    return new LandmarkDefinition
-                    {
-                        Id = id, Civ = Civilization.HolyRomanEmpire, TargetAge = 4,
-                        Name = "Palace of Swabia", Description = "The seat of imperial authority.",
-                        FoodCost = 1200, GoldCost = 600, ConstructionTicks = 6000,
-                        FootprintWidth = 4, FootprintHeight = 4, MaxHealth = 2500, Armor = 5
-                    };
-                case LandmarkId.HRE_Age4_B:
-                    return new LandmarkDefinition
-                    {
-                        Id = id, Civ = Civilization.HolyRomanEmpire, TargetAge = 4,
-                        Name = "Elzbach Palace", Description = "A fortified imperial retreat.",
-                        FoodCost = 1200, GoldCost = 600, ConstructionTicks = 6000,
-                        FootprintWidth = 4, FootprintHeight = 4, MaxHealth = 2500, Armor = 5
-                    };
 
                 default:
                     return new LandmarkDefinition
@@ -220,7 +163,6 @@ namespace OpenEmpires
                     {
                         case 2: return (LandmarkId.English_Age2_A, LandmarkId.English_Age2_B);
                         case 3: return (LandmarkId.English_Age3_A, LandmarkId.English_Age3_B);
-                        case 4: return (LandmarkId.English_Age4_A, LandmarkId.English_Age4_B);
                     }
                     break;
                 case Civilization.French:
@@ -228,7 +170,6 @@ namespace OpenEmpires
                     {
                         case 2: return (LandmarkId.French_Age2_A, LandmarkId.French_Age2_B);
                         case 3: return (LandmarkId.French_Age3_A, LandmarkId.French_Age3_B);
-                        case 4: return (LandmarkId.French_Age4_A, LandmarkId.French_Age4_B);
                     }
                     break;
                 case Civilization.HolyRomanEmpire:
@@ -236,7 +177,6 @@ namespace OpenEmpires
                     {
                         case 2: return (LandmarkId.HRE_Age2_A, LandmarkId.HRE_Age2_B);
                         case 3: return (LandmarkId.HRE_Age3_A, LandmarkId.HRE_Age3_B);
-                        case 4: return (LandmarkId.HRE_Age4_A, LandmarkId.HRE_Age4_B);
                     }
                     break;
             }
@@ -254,13 +194,22 @@ namespace OpenEmpires
                 case BuildingType.Mine:
                 case BuildingType.Barracks:
                 case BuildingType.Tower:
+                case BuildingType.WoodGate:
                     return 1;
                 case BuildingType.Wall:
                 case BuildingType.ArcheryRange:
                 case BuildingType.Stables:
                 case BuildingType.TownCenter:
+                case BuildingType.Blacksmith:
+                case BuildingType.Market:
                     return 2;
                 case BuildingType.Monastery:
+                case BuildingType.University:
+                case BuildingType.SiegeWorkshop:
+                case BuildingType.Keep:
+                case BuildingType.StoneWall:
+                case BuildingType.StoneGate:
+                case BuildingType.Wonder:
                     return 3;
                 default:
                     return 1;
@@ -288,7 +237,6 @@ namespace OpenEmpires
                 case 1: return "I";
                 case 2: return "II";
                 case 3: return "III";
-                case 4: return "IV";
                 default: return age.ToString();
             }
         }

@@ -61,6 +61,8 @@ namespace OpenEmpires
         private int pendingLumberYardTick;
         private int pendingMineTick;
         private int pendingFarmTick;
+        private int pendingLandmarkTick;
+        private int pendingMonasteryTick;
         private const int BuildRetryDelay = 60; // 2s cooldown
 
         // ── Cached base position ───────────────────────────────────────
@@ -309,6 +311,9 @@ namespace OpenEmpires
 
             // 6. Military buildings based on economy milestones (not tick count)
             TryBuildMilitaryBuildings(resources, currentTick);
+
+            // 7. Age up via landmarks when ready
+            TryBuildLandmark(resources, currentTick);
         }
 
         private void TickOpening(int currentTick)
@@ -447,6 +452,11 @@ namespace OpenEmpires
                     targetFood = 8; targetWood = 6; targetGold = 4; targetStone = 2;
                     break;
             }
+
+            // Boost gold gathering in later ages for gold-cost units and landmarks
+            int age = sim.GetPlayerAge(playerId);
+            if (age >= 2) { targetGold += 2; targetWood -= 1; if (targetWood < 3) targetWood = 3; }
+            if (age >= 3) { targetGold += 2; targetFood -= 1; if (targetFood < 4) targetFood = 4; }
 
             // Dynamic adjustment: if low on wood and need to build, boost wood
             if (resources.Wood < 100)
@@ -762,19 +772,108 @@ namespace OpenEmpires
                 TryPlaceBuilding(BuildingType.Barracks, baseTileX + 6, baseTileZ, currentTick, ref pendingBarracksTick);
             }
 
-            // Archery Range: once we have barracks and 12+ villagers
-            if (HasBuilding(BuildingType.Barracks) && !HasBuilding(BuildingType.ArcheryRange)
+            // Archery Range: once we have barracks and 12+ villagers (requires Age 2)
+            if (sim.GetPlayerAge(playerId) >= 2 && HasBuilding(BuildingType.Barracks) && !HasBuilding(BuildingType.ArcheryRange)
                 && vilCount >= 12 && resources.Wood >= sim.Config.ArcheryRangeWoodCost)
             {
                 TryPlaceBuilding(BuildingType.ArcheryRange, baseTileX + 6, baseTileZ + 6, currentTick, ref pendingArcheryRangeTick);
             }
 
-            // Stables: once we have archery range and 16+ villagers with gold
-            if (HasBuilding(BuildingType.ArcheryRange) && !HasBuilding(BuildingType.Stables)
+            // Stables: once we have archery range and 16+ villagers with gold (requires Age 2)
+            if (sim.GetPlayerAge(playerId) >= 2 && HasBuilding(BuildingType.ArcheryRange) && !HasBuilding(BuildingType.Stables)
                 && vilCount >= 16 && resources.Wood >= sim.Config.StablesWoodCost && resources.Gold >= 150)
             {
                 TryPlaceBuilding(BuildingType.Stables, baseTileX - 6, baseTileZ + 6, currentTick, ref pendingStablesTick);
             }
+
+            // Monastery: once we have Age 3 and 20+ villagers
+            if (sim.GetPlayerAge(playerId) >= 3 && !HasBuilding(BuildingType.Monastery)
+                && vilCount >= 20 && resources.Wood >= sim.Config.MonasteryWoodCost)
+            {
+                TryPlaceBuilding(BuildingType.Monastery, baseTileX - 6, baseTileZ, currentTick, ref pendingMonasteryTick);
+            }
+        }
+
+        // ── Landmark / Age Up ─────────────────────────────────────────
+
+        private void TryBuildLandmark(PlayerResources resources, int currentTick)
+        {
+            if (sim.IsPlayerAgingUp(playerId)) return;
+            int currentAge = sim.GetPlayerAge(playerId);
+            if (currentAge >= 3) return;
+
+            int targetAge = currentAge + 1;
+            int vilCount = GetVillagerCount();
+
+            // Difficulty-based villager thresholds for aging up
+            int requiredVillagers;
+            switch (difficulty)
+            {
+                case AIDifficulty.Hard:
+                    requiredVillagers = targetAge == 2 ? 10 : targetAge == 3 ? 15 : 20;
+                    break;
+                case AIDifficulty.Easy:
+                    requiredVillagers = targetAge == 2 ? 15 : targetAge == 3 ? 22 : 28;
+                    break;
+                default: // Medium
+                    requiredVillagers = targetAge == 2 ? 12 : targetAge == 3 ? 18 : 24;
+                    break;
+            }
+            if (vilCount < requiredVillagers) return;
+
+            var civ = sim.GetPlayerCivilization(playerId);
+            var (choiceA, choiceB) = LandmarkDefinitions.GetChoices(civ, targetAge);
+            var landmarkId = NextRandom(2) == 0 ? choiceA : choiceB;
+            var def = LandmarkDefinitions.Get(landmarkId);
+
+            if (resources.Food < def.FoodCost || resources.Gold < def.GoldCost) return;
+
+            if (currentTick < pendingLandmarkTick) return;
+
+            int footW = def.FootprintWidth;
+            int footH = def.FootprintHeight;
+            var tile = FindBuildableTile(baseTileX, baseTileZ, footW, footH, BuildingType.Landmark);
+            if (tile.x < 0)
+            {
+                pendingLandmarkTick = currentTick + BuildRetryDelay;
+                return;
+            }
+
+            // Find up to 3 villagers for faster landmark construction
+            int[] villagerIds = FindMultipleVillagers(3);
+            if (villagerIds == null)
+            {
+                pendingLandmarkTick = currentTick + BuildRetryDelay;
+                return;
+            }
+
+            var cmd = new PlaceBuildingCommand(playerId, BuildingType.Landmark, tile.x, tile.y, villagerIds);
+            cmd.LandmarkIdValue = (int)landmarkId;
+            Issue(cmd);
+            for (int i = 0; i < villagerIds.Length; i++)
+                assignedBuilderIds.Add(villagerIds[i]);
+            pendingLandmarkTick = currentTick + BuildRetryDelay;
+        }
+
+        private int[] FindMultipleVillagers(int count)
+        {
+            GetMyVillagers(tempVillagers);
+            tempUnitIds.Clear();
+            // First pass: idle villagers
+            for (int i = 0; i < tempVillagers.Count && tempUnitIds.Count < count; i++)
+            {
+                if (tempVillagers[i].State == UnitState.Idle && !assignedBuilderIds.Contains(tempVillagers[i].Id))
+                    tempUnitIds.Add(tempVillagers[i].Id);
+            }
+            // Second pass: gathering villagers to fill remaining slots
+            for (int i = 0; i < tempVillagers.Count && tempUnitIds.Count < count; i++)
+            {
+                if (tempUnitIds.Contains(tempVillagers[i].Id)) continue;
+                var state = tempVillagers[i].State;
+                if (state == UnitState.Gathering || state == UnitState.MovingToGather || state == UnitState.MovingToDropoff)
+                    tempUnitIds.Add(tempVillagers[i].Id);
+            }
+            return tempUnitIds.Count > 0 ? tempUnitIds.ToArray() : null;
         }
 
         // ── Military Training ──────────────────────────────────────────
@@ -796,6 +895,7 @@ namespace OpenEmpires
             SetRallyIfNeeded(BuildingType.Barracks);
             SetRallyIfNeeded(BuildingType.ArcheryRange);
             SetRallyIfNeeded(BuildingType.Stables);
+            SetRallyIfNeeded(BuildingType.Monastery);
         }
 
         private void SetRallyIfNeeded(BuildingType type)
@@ -853,9 +953,10 @@ namespace OpenEmpires
             Issue(new SetRallyPointCommand(playerId, building.Id, rallyPos, -1));
         }
 
-        private void GetResolvedCosts(int baseType, out int unitType, out int food, out int wood)
+        private void GetResolvedCosts(int baseType, out int unitType, out int food, out int wood, out int gold)
         {
             unitType = sim.ResolveCivUnitType(playerId, baseType);
+            gold = 0;
             switch (unitType)
             {
                 case 10: food = sim.Config.LongbowmanFoodCost; wood = sim.Config.LongbowmanWoodCost; break;
@@ -870,15 +971,26 @@ namespace OpenEmpires
         private void TrainDefaultMix(PlayerResources resources)
         {
             // Default: train from available buildings evenly
-            GetResolvedCosts(1, out _, out int spFood, out int spWood);
-            TrainFromBuilding(BuildingType.Barracks, 1, spFood, spWood, 0, resources);
-            GetResolvedCosts(2, out _, out int arFood, out int arWood);
-            TrainFromBuilding(BuildingType.ArcheryRange, 2, arFood, arWood, 0, resources);
+            GetResolvedCosts(1, out _, out int spFood, out int spWood, out int spGold);
+            TrainFromBuilding(BuildingType.Barracks, 1, spFood, spWood, spGold, resources);
+            GetResolvedCosts(2, out _, out int arFood, out int arWood, out int arGold);
+            TrainFromBuilding(BuildingType.ArcheryRange, 2, arFood, arWood, arGold, resources);
 
             if (HasBuilding(BuildingType.Stables))
             {
-                GetResolvedCosts(3, out _, out int hrFood, out int hrWood);
-                TrainFromBuilding(BuildingType.Stables, 3, hrFood, hrWood, 0, resources);
+                GetResolvedCosts(3, out _, out int hrFood, out int hrWood, out int hrGold);
+                TrainFromBuilding(BuildingType.Stables, 3, hrFood, hrWood, hrGold, resources);
+            }
+
+            // Train advanced units when Age 3+
+            if (sim.GetPlayerAge(playerId) >= 3)
+            {
+                TrainFromBuilding(BuildingType.Barracks, 6, sim.Config.ManAtArmsFoodCost, 0, sim.Config.ManAtArmsGoldCost, resources);
+                TrainFromBuilding(BuildingType.ArcheryRange, 8, sim.Config.CrossbowmanFoodCost, 0, sim.Config.CrossbowmanGoldCost, resources);
+                if (HasBuilding(BuildingType.Stables))
+                    TrainFromBuilding(BuildingType.Stables, 7, sim.Config.KnightFoodCost, 0, sim.Config.KnightGoldCost, resources);
+                if (HasBuilding(BuildingType.Monastery))
+                    TrainFromBuilding(BuildingType.Monastery, 9, sim.Config.MonkFoodCost, 0, sim.Config.MonkGoldCost, resources);
             }
         }
 
@@ -903,30 +1015,44 @@ namespace OpenEmpires
                              : 3;  // counter archers with horsemen
 
             // Train the counter unit type preferentially
-            GetResolvedCosts(1, out _, out int spFood, out int spWood);
-            GetResolvedCosts(2, out _, out int arFood, out int arWood);
-            GetResolvedCosts(3, out _, out int hrFood, out int hrWood);
+            GetResolvedCosts(1, out _, out int spFood, out int spWood, out int spGold);
+            GetResolvedCosts(2, out _, out int arFood, out int arWood, out int arGold);
+            GetResolvedCosts(3, out _, out int hrFood, out int hrWood, out int hrGold);
+            bool age3 = sim.GetPlayerAge(playerId) >= 3;
             switch (dominantType)
             {
-                case 1: // Train Spearmen
-                    TrainFromBuilding(BuildingType.Barracks, 1, spFood, spWood, 0, resources);
-                    TrainFromBuilding(BuildingType.Barracks, 1, spFood, spWood, 0, resources);
-                    TrainFromBuilding(BuildingType.ArcheryRange, 2, arFood, arWood, 0, resources);
+                case 1: // Train Spearmen (counter horsemen)
+                    TrainFromBuilding(BuildingType.Barracks, 1, spFood, spWood, spGold, resources);
+                    if (age3)
+                        TrainFromBuilding(BuildingType.Barracks, 6, sim.Config.ManAtArmsFoodCost, 0, sim.Config.ManAtArmsGoldCost, resources);
+                    else
+                        TrainFromBuilding(BuildingType.Barracks, 1, spFood, spWood, spGold, resources);
+                    TrainFromBuilding(BuildingType.ArcheryRange, 2, arFood, arWood, arGold, resources);
                     break;
-                case 2: // Train Archers
-                    TrainFromBuilding(BuildingType.ArcheryRange, 2, arFood, arWood, 0, resources);
-                    TrainFromBuilding(BuildingType.ArcheryRange, 2, arFood, arWood, 0, resources);
-                    TrainFromBuilding(BuildingType.Barracks, 1, spFood, spWood, 0, resources);
+                case 2: // Train Archers (counter spearmen)
+                    TrainFromBuilding(BuildingType.ArcheryRange, 2, arFood, arWood, arGold, resources);
+                    if (age3)
+                        TrainFromBuilding(BuildingType.ArcheryRange, 8, sim.Config.CrossbowmanFoodCost, 0, sim.Config.CrossbowmanGoldCost, resources);
+                    else
+                        TrainFromBuilding(BuildingType.ArcheryRange, 2, arFood, arWood, arGold, resources);
+                    TrainFromBuilding(BuildingType.Barracks, 1, spFood, spWood, spGold, resources);
                     break;
-                case 3: // Train Horsemen
+                case 3: // Train Horsemen (counter archers)
                     if (HasBuilding(BuildingType.Stables))
                     {
-                        TrainFromBuilding(BuildingType.Stables, 3, hrFood, hrWood, 0, resources);
-                        TrainFromBuilding(BuildingType.Stables, 3, hrFood, hrWood, 0, resources);
+                        TrainFromBuilding(BuildingType.Stables, 3, hrFood, hrWood, hrGold, resources);
+                        if (age3)
+                            TrainFromBuilding(BuildingType.Stables, 7, sim.Config.KnightFoodCost, 0, sim.Config.KnightGoldCost, resources);
+                        else
+                            TrainFromBuilding(BuildingType.Stables, 3, hrFood, hrWood, hrGold, resources);
                     }
-                    TrainFromBuilding(BuildingType.Barracks, 1, spFood, spWood, 0, resources);
+                    TrainFromBuilding(BuildingType.Barracks, 1, spFood, spWood, spGold, resources);
                     break;
             }
+
+            // Also train monks for healing when Age 3+ and have Monastery
+            if (age3 && HasBuilding(BuildingType.Monastery))
+                TrainFromBuilding(BuildingType.Monastery, 9, sim.Config.MonkFoodCost, 0, sim.Config.MonkGoldCost, resources);
         }
 
         private void TrainFromBuilding(BuildingType buildingType, int unitType, int foodCost, int woodCost, int goldCost, PlayerResources resources)
@@ -1555,7 +1681,7 @@ namespace OpenEmpires
 
         private Vector2Int FindBuildableTile(int centerX, int centerZ, int footprintW, int footprintH, BuildingType type)
         {
-            int border = (type == BuildingType.Wall || type == BuildingType.Farm) ? 0 : 1;
+            int border = (type == BuildingType.Wall || type == BuildingType.Farm || type == BuildingType.StoneWall || type == BuildingType.StoneGate || type == BuildingType.WoodGate) ? 0 : 1;
             for (int radius = 1; radius <= 20; radius++)
             {
                 for (int dx = -radius; dx <= radius; dx++)
@@ -1598,6 +1724,17 @@ namespace OpenEmpires
                 case BuildingType.Stables: w = cfg.StablesFootprintWidth; h = cfg.StablesFootprintHeight; break;
                 case BuildingType.Farm: w = cfg.FarmFootprintWidth; h = cfg.FarmFootprintHeight; break;
                 case BuildingType.Tower: w = cfg.TowerFootprintWidth; h = cfg.TowerFootprintHeight; break;
+                case BuildingType.Monastery: w = cfg.MonasteryFootprintWidth; h = cfg.MonasteryFootprintHeight; break;
+                case BuildingType.Blacksmith: w = cfg.BlacksmithFootprintWidth; h = cfg.BlacksmithFootprintHeight; break;
+                case BuildingType.Market: w = cfg.MarketFootprintWidth; h = cfg.MarketFootprintHeight; break;
+                case BuildingType.University: w = cfg.UniversityFootprintWidth; h = cfg.UniversityFootprintHeight; break;
+                case BuildingType.SiegeWorkshop: w = cfg.SiegeWorkshopFootprintWidth; h = cfg.SiegeWorkshopFootprintHeight; break;
+                case BuildingType.Keep: w = cfg.KeepFootprintWidth; h = cfg.KeepFootprintHeight; break;
+                case BuildingType.StoneWall: w = cfg.StoneWallFootprintWidth; h = cfg.StoneWallFootprintHeight; break;
+                case BuildingType.StoneGate: w = cfg.StoneGateFootprintWidth; h = cfg.StoneGateFootprintHeight; break;
+                case BuildingType.WoodGate: w = cfg.WoodGateFootprintWidth; h = cfg.WoodGateFootprintHeight; break;
+                case BuildingType.Wonder: w = cfg.WonderFootprintWidth; h = cfg.WonderFootprintHeight; break;
+                case BuildingType.Landmark: w = 4; h = 4; break;
                 default: w = 2; h = 2; break;
             }
         }
