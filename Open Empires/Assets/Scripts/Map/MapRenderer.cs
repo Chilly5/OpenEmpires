@@ -10,7 +10,6 @@ namespace OpenEmpires
         [SerializeField] private float heightScale = 8f;
 
         [Header("Resource Prefabs")]
-        [SerializeField] private GameObject treePrefab;
         [SerializeField] private GameObject goldMinePrefab;
         [SerializeField] private GameObject stoneMinePrefab;
         [SerializeField] private GameObject berryBushPrefab;
@@ -18,6 +17,12 @@ namespace OpenEmpires
         private Dictionary<int, ResourceNode> resourceNodeViews = new Dictionary<int, ResourceNode>();
         private System.Random rng;
         private MapData cachedMapData;
+
+        // Tree billboard data (loaded at runtime from Resources)
+        private static readonly string[] TreeSpriteNames = { "TreeSprites/Beech1", "TreeSprites/Beech2", "TreeSprites/Bush1", "TreeSprites/Bush2" };
+        private Material[] treeMaterials;
+        public Material[] TreeMaterials => treeMaterials;
+        private Transform billboardContainer;
 
         private static readonly Vector2Int[] BerryRingOffsets = new Vector2Int[]
         {
@@ -36,12 +41,21 @@ namespace OpenEmpires
         {
             rng = new System.Random(seed);
             cachedMapData = mapData;
+            // Billboard sprites go in a separate container to avoid static batching
+            var containerGo = new GameObject("BillboardSprites");
+            billboardContainer = containerGo.transform;
+
+            LoadTreeMaterials();
             CreateTerrainMesh(mapData);
             CreateWaterPlane(mapData);
             SpawnResourceNodes(mapData, playerBases);
 
             Debug.Log($"[MapRenderer] Spawned {resourceNodeViews.Count} resource nodes. Running static batching...");
             StaticBatchingUtility.Combine(gameObject);
+
+            // Parent billboard container after batching so sprites aren't included
+            billboardContainer.SetParent(transform);
+            billboardContainer.localPosition = Vector3.zero;
         }
 
         public float GetWorldHeight(float x, float z)
@@ -336,6 +350,7 @@ namespace OpenEmpires
             "GroundTiles/Tile_RockyGrass_3",
             "GroundTiles/Tile_RockyDirt_1",
             "GroundTiles/Tile_Rocks_on_grass1",
+            "GroundTiles/Tile_DirtyGrass",
         };
 
         private Texture2DArray CreateGrassTextureArray()
@@ -418,7 +433,9 @@ namespace OpenEmpires
             var sand = GenerateNoiseTexture(size, 104, new Color(0.95f, 0.92f, 0.82f), new Color(0.8f, 0.75f, 0.6f));
             var rock = GenerateNoiseTexture(size, 135, new Color(0.85f, 0.83f, 0.8f), new Color(0.55f, 0.52f, 0.48f));
             var snow = GenerateNoiseTexture(size, 166, new Color(0.95f, 0.96f, 0.98f), new Color(0.85f, 0.88f, 0.95f));
-            var forestFloor = GenerateNoiseTexture(size, 197, new Color(0.65f, 0.62f, 0.42f), new Color(0.45f, 0.50f, 0.30f));
+            var forestFloor = Resources.Load<Texture2D>("GroundTiles/Tile_ForestFloor_4");
+            if (forestFloor == null)
+                forestFloor = GenerateNoiseTexture(size, 197, new Color(0.65f, 0.62f, 0.42f), new Color(0.45f, 0.50f, 0.30f));
             return (dirt, sand, rock, snow, forestFloor);
         }
 
@@ -624,6 +641,70 @@ namespace OpenEmpires
             return false;
         }
 
+        private void LoadTreeMaterials()
+        {
+            var shader = Shader.Find("OpenEmpires/Billboard");
+            if (shader == null)
+            {
+                Debug.LogError("[MapRenderer] OpenEmpires/Billboard shader not found!");
+                return;
+            }
+
+            treeMaterials = new Material[TreeSpriteNames.Length];
+            for (int i = 0; i < TreeSpriteNames.Length; i++)
+            {
+                var tex = Resources.Load<Texture2D>(TreeSpriteNames[i]);
+                if (tex == null)
+                {
+                    Debug.LogError($"[MapRenderer] Failed to load tree sprite: {TreeSpriteNames[i]}");
+                    continue;
+                }
+                var mat = new Material(shader);
+                mat.SetTexture("_MainTex", tex);
+                mat.SetColor("_Color", Color.white);
+                mat.SetFloat("_Cutoff", 0.5f);
+                mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry + 1;
+                mat.enableInstancing = true;
+                treeMaterials[i] = mat;
+            }
+            Debug.Log($"[MapRenderer] Loaded {treeMaterials.Length} tree materials with Billboard shader");
+        }
+
+        private GameObject CreateTreeBillboard(Vector3 position, int variantIndex)
+        {
+            if (treeMaterials == null || variantIndex >= treeMaterials.Length || treeMaterials[variantIndex] == null)
+                return null;
+
+            var root = new GameObject("Tree");
+            root.transform.SetParent(transform);
+            root.transform.position = position;
+            root.layer = 10;
+            root.tag = "Resource";
+
+            var capsule = root.AddComponent<CapsuleCollider>();
+            capsule.radius = 0.5f;
+            capsule.height = 2.5f;
+            capsule.direction = 1;
+            capsule.center = new Vector3(0f, 1f, 0f);
+
+            // Create quad child for the billboard sprite
+            var spriteGo = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            spriteGo.name = "Sprite";
+            spriteGo.layer = 10;
+            // Remove the auto-added MeshCollider
+            var mc = spriteGo.GetComponent<MeshCollider>();
+            if (mc != null) Destroy(mc);
+
+            spriteGo.transform.SetParent(billboardContainer);
+            spriteGo.transform.position = new Vector3(position.x, 5f, position.z);
+            spriteGo.transform.localScale = new Vector3(5f, 5f, 1f);
+
+            var renderer = spriteGo.GetComponent<MeshRenderer>();
+            renderer.sharedMaterial = treeMaterials[variantIndex];
+
+            return root;
+        }
+
         private void SpawnTreesFromForestDensity(MapData mapData)
         {
             float threshold = 0.68f;
@@ -633,7 +714,7 @@ namespace OpenEmpires
                 {
                     float density = mapData.ForestDensity[x, z];
                     if (density < threshold) continue;
-                    SpawnResourceNode(mapData, ResourceType.Wood, ClampToMap(x, z), 100, treePrefab);
+                    SpawnResourceNode(mapData, ResourceType.Wood, ClampToMap(x, z), 100, null);
                 }
             }
         }
@@ -790,7 +871,7 @@ namespace OpenEmpires
                     {
                         float tx = cx + (float)(rng.NextDouble() * clusterRadius * 2 - clusterRadius);
                         float tz = cz + (float)(rng.NextDouble() * clusterRadius * 2 - clusterRadius);
-                        SpawnResourceNode(mapData, ResourceType.Wood, ClampToMap(tx, tz), 100, treePrefab);
+                        SpawnResourceNode(mapData, ResourceType.Wood, ClampToMap(tx, tz), 100, null);
                     }
                     break;
                 }
@@ -842,23 +923,36 @@ namespace OpenEmpires
 
             var nodeData = mapData.AddResourceNode(type, position, amount, footprintW, footprintH);
 
-            if (prefab != null)
+            GameObject go = null;
+
+            if (type == ResourceType.Wood && treeMaterials != null && treeMaterials.Length > 0)
             {
-                var go = Instantiate(prefab, position, Quaternion.identity, transform);
+                int variant = rng.Next(treeMaterials.Length);
+                go = CreateTreeBillboard(position, variant);
+                if (go == null) Debug.LogError($"[MapRenderer] CreateTreeBillboard returned null for variant {variant} at {position}");
+            }
+            else if (prefab != null)
+            {
+                go = Instantiate(prefab, position, Quaternion.identity, transform);
                 go.transform.localScale *= 1.5f;
                 if (type == ResourceType.Gold || type == ResourceType.Stone)
                     go.transform.localScale *= 2f; // 1.5 * 2 = 3.0 total, fills 3x3 tiles
                 else if (type == ResourceType.Food)
                 {
                     go.transform.localScale *= 1.35f; // 1.5 * 1.35 ≈ 2.0 total, fills 2x2 tiles
-                    // Center child visuals (remove prefab Y offset)
                     foreach (Transform child in go.transform)
                         child.localPosition = Vector3.zero;
                 }
+            }
 
-                // Mark all GameObjects in hierarchy as static for batching
-                foreach (var t in go.GetComponentsInChildren<Transform>(true))
-                    t.gameObject.isStatic = true;
+            if (go != null)
+            {
+                // Mark non-Wood nodes as static for batching (billboard sprites can't be static)
+                if (type != ResourceType.Wood)
+                {
+                    foreach (var t in go.GetComponentsInChildren<Transform>(true))
+                        t.gameObject.isStatic = true;
+                }
 
                 // Enable GPU instancing on shared materials
                 foreach (var r in go.GetComponentsInChildren<Renderer>())
@@ -895,5 +989,6 @@ namespace OpenEmpires
             resourceNodeViews.TryGetValue(nodeId, out var view);
             return view;
         }
+
     }
 }

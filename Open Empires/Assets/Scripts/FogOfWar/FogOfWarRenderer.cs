@@ -53,6 +53,7 @@ namespace OpenEmpires
                     waterMaterial.SetTexture("_FogOfWarTex", fogTexture);
             }
             Shader.SetGlobalVector("_FogOfWarParams", new Vector4(mapWidth, mapHeight, 0, 0));
+            Shader.SetGlobalTexture("_FogOfWarTex", fogTexture);
         }
 
         public void UpdateTexture(FogOfWarData fogData, int playerId)
@@ -137,6 +138,12 @@ namespace OpenEmpires
 
             fogTexture.SetPixels32(pixelBuffer);
             fogTexture.Apply();
+        }
+
+        public void SetFogTexture(Material mat)
+        {
+            if (fogTexture != null && mat != null)
+                mat.SetTexture("_FogOfWarTex", fogTexture);
         }
 
         private void OnDestroy()

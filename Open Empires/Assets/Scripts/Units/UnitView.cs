@@ -275,6 +275,8 @@ namespace OpenEmpires
                     continue;
                 bodyRenderers[idx] = allRenderers[i];
                 originalColors[idx] = GetMaterialColor(allRenderers[i].sharedMaterial);
+                // Render after tree billboard sprites (Geometry+1)
+                bodyRenderers[idx].material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry + 2;
                 idx++;
             }
         }

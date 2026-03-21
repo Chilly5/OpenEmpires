@@ -263,6 +263,13 @@ namespace OpenEmpires
             int localPlayerId = selectionManager != null ? selectionManager.LocalPlayerId : 0;
             fogRenderer.Initialize(sim.MapData.Width, sim.MapData.Height, localPlayerId, sim.Config.TerrainHeightScale);
 
+            // Set fog of war texture on billboard tree materials
+            if (mapRenderer != null && mapRenderer.TreeMaterials != null)
+            {
+                foreach (var mat in mapRenderer.TreeMaterials)
+                    if (mat != null) fogRenderer.SetFogTexture(mat);
+            }
+
             // Initialize resource UI with local player ID
             var resourceUI = Object.FindFirstObjectByType<ResourceUI>();
             if (resourceUI != null)
