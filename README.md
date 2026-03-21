@@ -1,6 +1,48 @@
-# Open Empires
+<div align="center">
 
-An Age of Empires-inspired RTS built with Unity 6 and a Rust relay server backend, featuring deterministic lockstep multiplayer.
+<img src="openempirescover.png" alt="Open Empires" width="800"/>
+
+<br/>
+<br/>
+
+[![Discord](https://img.shields.io/badge/Discord-Join%20Community-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/invite/htUt9qv6Vk)
+[![YouTube](https://img.shields.io/badge/YouTube-ChillyEmpire-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@ChillyEmpire)
+[![Unity](https://img.shields.io/badge/Unity%206-6000.3.9f1-000000?style=for-the-badge&logo=unity&logoColor=white)](https://unity.com/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+
+<br/>
+
+**An open-source Age of Empires-inspired RTS built with Unity 6 and a Rust relay server backend, featuring deterministic lockstep multiplayer.**
+
+[**Play the Demo**](https://chilly5.github.io/OpenEmpires/)
+
+</div>
+
+---
+
+## Features
+
+<div align="center">
+
+### Gather resources on a procedurally generated map
+
+<img src="resourcegathering.gif" alt="Resource Gathering" width="700"/>
+
+### Build a civilization based on the English, French, or Holy Roman Empire
+
+<img src="build_a_civilization.gif" alt="Build a Civilization" width="700"/>
+
+### Age of Empires-inspired medieval combat system
+
+<img src="aoe_style_combat.gif" alt="Combat System" width="700"/>
+
+### Support for multiplayer 1v1, 2v2, 3v3, and 4v4!
+
+<img src="supportfor4v4.gif" alt="Multiplayer Support" width="700"/>
+
+</div>
+
+---
 
 ## Tech Stack
 
@@ -66,6 +108,11 @@ Open Empires/
 backend/               # Rust relay/matchmaking server
 docs/                  # WebGL build
 ```
+
+## Community
+
+- [Discord](https://discord.com/invite/htUt9qv6Vk) - Join the community, ask questions, share feedback
+- [YouTube](https://www.youtube.com/@ChillyEmpire) - Devlogs and gameplay videos
 
 ## Contributing
 
