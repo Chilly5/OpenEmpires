@@ -20,9 +20,16 @@ namespace OpenEmpires
                 {
                     if (unit.State == UnitState.Moving)
                     {
-                        unit.State = UnitState.Idle;
-                        if (!unit.IsVillager)
-                            unit.PlayerCommanded = false;
+                        if (unit.CombatTargetId >= 0 || unit.CombatTargetBuildingId >= 0)
+                        {
+                            unit.State = UnitState.InCombat;
+                        }
+                        else
+                        {
+                            unit.State = UnitState.Idle;
+                            if (!unit.IsVillager)
+                                unit.PlayerCommanded = false;
+                        }
                     }
                     else if (unit.State == UnitState.MovingToGather)
                     {
@@ -164,9 +171,16 @@ namespace OpenEmpires
                 {
                     if (unit.State == UnitState.Moving)
                     {
-                        unit.State = UnitState.Idle;
-                        if (!unit.IsVillager)
-                            unit.PlayerCommanded = false;
+                        if (unit.CombatTargetId >= 0 || unit.CombatTargetBuildingId >= 0)
+                        {
+                            unit.State = UnitState.InCombat;
+                        }
+                        else
+                        {
+                            unit.State = UnitState.Idle;
+                            if (!unit.IsVillager)
+                                unit.PlayerCommanded = false;
+                        }
                     }
                     else if (unit.State == UnitState.MovingToGather)
                     {

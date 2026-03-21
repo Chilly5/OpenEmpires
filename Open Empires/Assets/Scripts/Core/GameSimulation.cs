@@ -370,6 +370,7 @@ namespace OpenEmpires
                 hash = hash * 31 + (unit.IsAttackMoving ? 1u : 0u);
                 hash = hash * 31 + (unit.HasLeash ? 1u : 0u);
                 hash = hash * 31 + (unit.HasSavedPath ? 1u : 0u);
+                hash = hash * 31 + (uint)unit.ChaseBlockedTicks;
             }
 
             // Hash building state
@@ -2936,6 +2937,8 @@ namespace OpenEmpires
                 unit.CombatTargetId = cmd.TargetUnitId;
                 unit.CombatTargetBuildingId = -1;
                 unit.PlayerCommanded = true;
+                unit.IsAttackMoving = false;
+                unit.ChaseBlockedTicks = 0;
                 unit.TargetResourceNodeId = -1;
                 unit.ConstructionTargetBuildingId = -1;
                 unit.GatherTimer = Fixed32.Zero;
