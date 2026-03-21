@@ -1775,7 +1775,7 @@ namespace OpenEmpires
                 // R = Age Up (villagers only)
                 int currentAge = sim.GetPlayerAge(view.PlayerId);
                 bool isAgingUp = sim.IsPlayerAgingUp(view.PlayerId);
-                if (currentAge < 4 && !isAgingUp)
+                if (currentAge < 3 && !isAgingUp)
                 {
                     int targetAge = currentAge + 1;
                     var civ = sim.GetPlayerCivilization(view.PlayerId);
@@ -1957,7 +1957,7 @@ namespace OpenEmpires
                 int localPid = selectionManager.LocalPlayerId;
                 int currentAge = sim.GetPlayerAge(localPid);
                 bool isAgingUp = sim.IsPlayerAgingUp(localPid);
-                if (currentAge < 4 && !isAgingUp)
+                if (currentAge < 3 && !isAgingUp)
                 {
                     int targetAge = currentAge + 1;
                     var civ = sim.GetPlayerCivilization(localPid);
@@ -2170,7 +2170,7 @@ namespace OpenEmpires
                     // Age Up button
                     int currentAge = sim.GetPlayerAge(building.PlayerId);
                     bool isAgingUp = sim.IsPlayerAgingUp(building.PlayerId);
-                    if (currentAge < 4 && !isAgingUp)
+                    if (currentAge < 3 && !isAgingUp)
                     {
                         int targetAge = currentAge + 1;
                         var civ = sim.GetPlayerCivilization(building.PlayerId);
@@ -2767,7 +2767,7 @@ namespace OpenEmpires
                 {
                     int currentAge = sim.GetPlayerAge(localPid);
                     bool isAgingUp = sim.IsPlayerAgingUp(localPid);
-                    if (currentAge < 4 && !isAgingUp)
+                    if (currentAge < 3 && !isAgingUp)
                     {
                         FlashActionButton(4);
                         ShowLandmarkChoicePanel(sim, localPid, currentAge + 1);
@@ -3062,7 +3062,7 @@ namespace OpenEmpires
             {
                 int currentAge = sim.GetPlayerAge(localPid);
                 bool isAgingUp = sim.IsPlayerAgingUp(localPid);
-                if (currentAge < 4 && !isAgingUp)
+                if (currentAge < 3 && !isAgingUp)
                 {
                     FlashActionButton(3);
                     ShowLandmarkChoicePanel(sim, localPid, currentAge + 1);

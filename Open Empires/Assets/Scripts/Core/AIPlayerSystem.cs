@@ -800,7 +800,7 @@ namespace OpenEmpires
         {
             if (sim.IsPlayerAgingUp(playerId)) return;
             int currentAge = sim.GetPlayerAge(playerId);
-            if (currentAge >= 4) return;
+            if (currentAge >= 3) return;
 
             int targetAge = currentAge + 1;
             int vilCount = GetVillagerCount();
