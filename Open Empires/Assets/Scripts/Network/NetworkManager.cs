@@ -129,6 +129,7 @@ namespace OpenEmpires
         public Civilization SelectedCivilization => selectedCivilization;
         private Civilization[] playerCivilizations;
         private Image[] civButtonImages;
+        private TMP_Text civDescriptionLabel;
         private Texture2D englishFlagTex;
         private Texture2D frenchFlagTex;
         private Texture2D hreFlagTex;
@@ -1375,8 +1376,8 @@ namespace OpenEmpires
             {
                 if (regionButtonImages[i] != null)
                     regionButtonImages[i].color = i == selectedRegionIndex
-                        ? new Color(0.3f, 0.5f, 0.8f)
-                        : new Color(0.25f, 0.25f, 0.25f);
+                        ? new Color(0.25f, 0.4f, 0.7f)
+                        : new Color(0.22f, 0.22f, 0.25f);
             }
         }
 
@@ -1567,6 +1568,33 @@ namespace OpenEmpires
         {
             selectedCivilization = (Civilization)index;
             UpdateCivButtonVisuals();
+            UpdateCivDescription();
+        }
+
+        private void UpdateCivDescription()
+        {
+            if (civDescriptionLabel == null) return;
+            civDescriptionLabel.text = selectedCivilization switch
+            {
+                Civilization.English =>
+                    "<b>English</b>\n\n" +
+                    "<color=#AAAABB>Influence: Manors</color>\n" +
+                    "<color=#CCCCCC>English Town Centers emit an influence that boosts food production on farms.</color>\n\n" +
+                    "<color=#AAAABB>Unique Unit: Longbowman</color>\n" +
+                    "<color=#CCCCCC>An Archer with greater range.</color>",
+                Civilization.French =>
+                    "<b>French</b>\n\n" +
+                    "<color=#AAAABB>Influence: Royal Demesne</color>\n" +
+                    "<color=#CCCCCC>French Landmarks emit an influence that reduces the cost of all units by 15%.</color>\n\n" +
+                    "<color=#AAAABB>Unique Unit: Gendarme</color>\n" +
+                    "<color=#CCCCCC>A Horseman with greater health.</color>",
+                Civilization.HolyRomanEmpire =>
+                    "<b>HRE (Holy Roman Empire)</b>\n\n" +
+                    "<color=#AAAABB>Influence: Undefined</color>\n\n" +
+                    "<color=#AAAABB>Unique Unit: Landsknecht</color>\n" +
+                    "<color=#CCCCCC>A Spearman with greater movement speed.</color>",
+                _ => ""
+            };
         }
 
         private void UpdateCivButtonVisuals()
@@ -1576,8 +1604,8 @@ namespace OpenEmpires
             {
                 if (civButtonImages[i] != null)
                     civButtonImages[i].color = i == (int)selectedCivilization
-                        ? Color.white
-                        : new Color(0.4f, 0.4f, 0.4f);
+                        ? new Color(0.25f, 0.4f, 0.7f)
+                        : new Color(0.22f, 0.22f, 0.25f);
             }
         }
 
@@ -1654,8 +1682,11 @@ namespace OpenEmpires
 
             disconnectedPanel = overlayGO;
 
-            // Center card
-            float panelW = 680f, panelH = 614f;
+            // Center card — wide layout for left-right split
+            float panelW = 880f, panelH = 480f;
+            float leftX = -215f;  // center of left half
+            float rightX = 220f;  // center of right half
+
             var cardGO = new GameObject("Card");
             cardGO.transform.SetParent(overlayGO.transform, false);
             var cardRT = cardGO.AddComponent<RectTransform>();
@@ -1664,103 +1695,93 @@ namespace OpenEmpires
             cardRT.pivot = new Vector2(0.5f, 0.5f);
             cardRT.sizeDelta = new Vector2(panelW, panelH);
             var cardImg = cardGO.AddComponent<Image>();
-            cardImg.color = new Color(0.10f, 0.10f, 0.12f, 0.96f);
-            cardImg.raycastTarget = false;
+            cardImg.color = new Color(0.14f, 0.14f, 0.16f, 0.98f);
+            var cardOutline = cardGO.AddComponent<Outline>();
+            cardOutline.effectColor = new Color(0.3f, 0.3f, 0.35f, 0.6f);
+            cardOutline.effectDistance = new Vector2(2, -2);
 
-            // Decorative images
-            if (menuUnitTex != null)
-            {
-                var leftImg = new GameObject("SpearmanIcon");
-                leftImg.transform.SetParent(cardGO.transform, false);
-                var lrt = leftImg.AddComponent<RectTransform>();
-                lrt.anchorMin = new Vector2(0.5f, 0.5f);
-                lrt.anchorMax = new Vector2(0.5f, 0.5f);
-                lrt.pivot = new Vector2(0.5f, 0.5f);
-                lrt.anchoredPosition = new Vector2(-263f, 90f);
-                lrt.sizeDelta = new Vector2(150f, 200f);
-                var li = leftImg.AddComponent<RawImage>();
-                li.texture = menuUnitTex;
-                li.raycastTarget = false;
-            }
-            if (menuTCTex != null)
-            {
-                var rightImg = new GameObject("TCIcon");
-                rightImg.transform.SetParent(cardGO.transform, false);
-                var rrt = rightImg.AddComponent<RectTransform>();
-                rrt.anchorMin = new Vector2(0.5f, 0.5f);
-                rrt.anchorMax = new Vector2(0.5f, 0.5f);
-                rrt.pivot = new Vector2(0.5f, 0.5f);
-                rrt.anchoredPosition = new Vector2(253f, 90f);
-                rrt.sizeDelta = new Vector2(150f, 200f);
-                var ri = rightImg.AddComponent<RawImage>();
-                ri.texture = menuTCTex;
-                ri.raycastTarget = false;
-            }
+            // Vertical divider between left and right
+            var vDivGO = new GameObject("VerticalDivider");
+            vDivGO.transform.SetParent(cardGO.transform, false);
+            var vDivRT = vDivGO.AddComponent<RectTransform>();
+            vDivRT.anchorMin = new Vector2(0.5f, 0.5f);
+            vDivRT.anchorMax = new Vector2(0.5f, 0.5f);
+            vDivRT.pivot = new Vector2(0.5f, 0.5f);
+            vDivRT.anchoredPosition = new Vector2(0f, 0f);
+            vDivRT.sizeDelta = new Vector2(1f, panelH - 40f);
+            var vDivImg = vDivGO.AddComponent<Image>();
+            vDivImg.color = new Color(0.28f, 0.28f, 0.32f);
+            vDivImg.raycastTarget = false;
+
+            // =====================
+            //  LEFT SIDE — Menu
+            // =====================
+            float y = panelH / 2f;
 
             // Title
-            float y = panelH / 2f;
-            y -= 57f;
-            MakeLabel(cardGO.transform, "Open Empires", 0f, y, 340f, 55f, 40, FontStyles.Bold, TextAlignmentOptions.Center, true);
-            y -= 20f;
-            MakeLabel(cardGO.transform, "v0.1", 0f, y, 340f, 22f, 14, FontStyles.Normal, TextAlignmentOptions.Center, true, new Color(0.7f, 0.7f, 0.7f));
+            y -= 38f;
+            MakeLabel(cardGO.transform, "Open Empires", leftX, y, 380f, 48f, 36, FontStyles.Bold, TextAlignmentOptions.Center, true);
+            y -= 24f;
+            MakeLabel(cardGO.transform, "v0.1", leftX, y, 380f, 20f, 12, FontStyles.Normal, TextAlignmentOptions.Center, true, new Color(0.55f, 0.55f, 0.55f));
 
             // Divider
-            y -= 32f;
+            y -= 20f;
             var divGO = new GameObject("Divider");
             divGO.transform.SetParent(cardGO.transform, false);
             var divRT = divGO.AddComponent<RectTransform>();
             divRT.anchorMin = new Vector2(0.5f, 0.5f);
             divRT.anchorMax = new Vector2(0.5f, 0.5f);
             divRT.pivot = new Vector2(0.5f, 0.5f);
-            divRT.anchoredPosition = new Vector2(0f, y);
-            divRT.sizeDelta = new Vector2(340f, 2f);
+            divRT.anchoredPosition = new Vector2(leftX, y);
+            divRT.sizeDelta = new Vector2(300f, 1f);
             var divImg = divGO.AddComponent<Image>();
-            divImg.color = new Color(0.3f, 0.3f, 0.3f);
+            divImg.color = new Color(0.3f, 0.3f, 0.35f);
             divImg.raycastTarget = false;
 
-            // Player Name subtitle
-            y -= 16f;
-            MakeLabel(cardGO.transform, "Player Name", 0f, y, 340f, 22f, 14, FontStyles.Normal, TextAlignmentOptions.Center, true, new Color(0.7f, 0.7f, 0.7f));
+            // Player Name
+            y -= 20f;
+            MakeLabel(cardGO.transform, "Player Name", leftX, y, 300f, 18f, 12, FontStyles.Normal, TextAlignmentOptions.Center, true, new Color(0.6f, 0.6f, 0.65f));
+            y -= 24f;
+            nameInputField = CreateInputField(cardGO.transform, username, leftX, y, 240f, 32f);
 
-            // Input field
-            y -= 32f;
-            nameInputField = CreateInputField(cardGO.transform, username, 0f, y, 280f, 36f);
-
-            // Map Seed subtitle
-            y -= 28f;
-            MakeLabel(cardGO.transform, "Map Seed", 0f, y, 340f, 22f, 14, FontStyles.Normal, TextAlignmentOptions.Center, true, new Color(0.7f, 0.7f, 0.7f));
-
-            // Seed input field (default to a random seed each session)
-            y -= 32f;
+            // Map Seed — extra gap before new section
+            y -= 30f;
+            MakeLabel(cardGO.transform, "Map Seed", leftX, y, 300f, 18f, 12, FontStyles.Normal, TextAlignmentOptions.Center, true, new Color(0.6f, 0.6f, 0.65f));
+            y -= 24f;
             int defaultSeed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
-            seedInputField = CreateInputField(cardGO.transform, defaultSeed.ToString(), 0f, y, 280f, 36f);
+            seedInputField = CreateInputField(cardGO.transform, defaultSeed.ToString(), leftX, y, 240f, 32f);
             seedInputField.contentType = TMP_InputField.ContentType.IntegerNumber;
 
-            // Server Region subtitle
-            y -= 24f;
-            MakeLabel(cardGO.transform, "Server Region", 0f, y, 340f, 22f, 14, FontStyles.Normal, TextAlignmentOptions.Center, true, new Color(0.7f, 0.7f, 0.7f));
-
-            // Region selector buttons
+            // Server Region — extra gap before new section
             y -= 30f;
+            MakeLabel(cardGO.transform, "Server Region", leftX, y, 300f, 18f, 12, FontStyles.Normal, TextAlignmentOptions.Center, true, new Color(0.6f, 0.6f, 0.65f));
+            y -= 22f;
             regionButtonLabels = new TMP_Text[regions.Length];
             regionButtonImages = new Image[regions.Length];
-            float regionBtnW = 125f;
-            float regionTotalW = regions.Length * regionBtnW + (regions.Length - 1) * 6f;
-            float regionStartX = -regionTotalW / 2f + regionBtnW / 2f;
+            // 2x2 grid for region buttons
+            float regionBtnW = 115f;
+            float regionBtnH = 24f;
+            float regionGapX = 6f;
+            float regionGapY = 4f;
             for (int i = 0; i < regions.Length; i++)
             {
                 int regionIdx = i;
+                int col = i % 2;
+                int row = i / 2;
+                float rx = leftX - (regionBtnW + regionGapX) / 2f + col * (regionBtnW + regionGapX);
+                float rcy = y - row * (regionBtnH + regionGapY);
+
                 var btnGO = new GameObject($"Region{regions[i].Name}");
                 btnGO.transform.SetParent(cardGO.transform, false);
                 var btnRT = btnGO.AddComponent<RectTransform>();
                 btnRT.anchorMin = new Vector2(0.5f, 0.5f);
                 btnRT.anchorMax = new Vector2(0.5f, 0.5f);
                 btnRT.pivot = new Vector2(0.5f, 0.5f);
-                btnRT.anchoredPosition = new Vector2(regionStartX + i * (regionBtnW + 6f), y);
-                btnRT.sizeDelta = new Vector2(regionBtnW, 28f);
+                btnRT.anchoredPosition = new Vector2(rx, rcy);
+                btnRT.sizeDelta = new Vector2(regionBtnW, regionBtnH);
 
                 var img = btnGO.AddComponent<Image>();
-                img.color = new Color(0.25f, 0.25f, 0.25f);
+                img.color = new Color(0.22f, 0.22f, 0.25f);
                 regionButtonImages[i] = img;
 
                 var btn = btnGO.AddComponent<Button>();
@@ -1780,23 +1801,130 @@ namespace OpenEmpires
                 tmp.color = Color.white;
                 regionButtonLabels[i] = tmp;
             }
+            y -= (regionBtnH + regionGapY) * 2f; // skip past 2 rows
             UpdateRegionButtonVisuals();
 
-            // Civilization subtitle
-            y -= 24f;
-            MakeLabel(cardGO.transform, "Civilization", 0f, y, 340f, 22f, 14, FontStyles.Normal, TextAlignmentOptions.Center, true, new Color(0.7f, 0.7f, 0.7f));
+            // Action buttons
+            y -= 18f;
+            CreateButton(cardGO.transform, "Single Player", leftX, y, 250f, 34f, () =>
+            {
+                username = nameInputField.text;
+                LocalPlayerId = 0;
+                IsMultiplayer = false;
 
-            // Civilization flag buttons
-            y -= 30f;
+                if (int.TryParse(seedInputField.text, out int seed))
+                {
+                    var cfg = GameBootstrapper.Instance?.Config;
+                    if (cfg != null) cfg.MapSeed = seed;
+                }
+
+                GameBootstrapper.Instance?.SetPlayerCount(2);
+
+                playerCivilizations = new Civilization[2];
+                playerCivilizations[0] = selectedCivilization;
+                playerCivilizations[1] = (Civilization)UnityEngine.Random.Range(0, 3);
+                GameBootstrapper.Instance?.SetCivilizations(playerCivilizations);
+
+                if (dashboardPollCoroutine != null) { StopCoroutine(dashboardPollCoroutine); dashboardPollCoroutine = null; }
+                GameStarted = true;
+                FullscreenManager.Instance?.EnterFullscreen();
+            });
+
+            // Multiplayer button — taller to include players online text inside
+            y -= 48f;
+            var mpBtnGO = new GameObject("MultiplayerButton");
+            mpBtnGO.transform.SetParent(cardGO.transform, false);
+            var mpBtnRT = mpBtnGO.AddComponent<RectTransform>();
+            mpBtnRT.anchorMin = new Vector2(0.5f, 0.5f);
+            mpBtnRT.anchorMax = new Vector2(0.5f, 0.5f);
+            mpBtnRT.pivot = new Vector2(0.5f, 0.5f);
+            mpBtnRT.anchoredPosition = new Vector2(leftX, y);
+            mpBtnRT.sizeDelta = new Vector2(250f, 46f);
+            var mpImg = mpBtnGO.AddComponent<Image>();
+            mpImg.color = Color.white;
+            var mpOutline = mpBtnGO.AddComponent<Outline>();
+            mpOutline.effectColor = new Color(0.4f, 0.4f, 0.45f, 0.5f);
+            mpOutline.effectDistance = new Vector2(1, -1);
+            var mpBtn = mpBtnGO.AddComponent<Button>();
+            var mpColors = mpBtn.colors;
+            mpColors.normalColor = new Color(0.28f, 0.28f, 0.32f);
+            mpColors.highlightedColor = new Color(0.38f, 0.38f, 0.42f);
+            mpColors.pressedColor = new Color(0.20f, 0.20f, 0.23f);
+            mpBtn.colors = mpColors;
+            mpBtn.onClick.AddListener(() =>
+            {
+                if (isSoftwareRenderer)
+                {
+                    ShowHwAccelWarning();
+                    return;
+                }
+                username = nameInputField.text;
+
+                if (!useLocalServer)
+                {
+                    var region = regions[selectedRegionIndex];
+                    matchmakingManager.SetServerUrls(region.HttpUrl, region.WsUrl);
+                }
+
+                FullscreenManager.Instance?.EnterFullscreen();
+                matchmakingManager?.Login(username);
+            });
+            // "Multiplayer" label inside button (upper)
+            var mpTxtGO = new GameObject("Text");
+            mpTxtGO.transform.SetParent(mpBtnGO.transform, false);
+            var mpTxtRT = mpTxtGO.AddComponent<RectTransform>();
+            mpTxtRT.anchorMin = Vector2.zero;
+            mpTxtRT.anchorMax = Vector2.one;
+            mpTxtRT.offsetMin = new Vector2(0f, 12f);
+            mpTxtRT.offsetMax = Vector2.zero;
+            var mpTmp = mpTxtGO.AddComponent<TextMeshProUGUI>();
+            mpTmp.text = "Multiplayer";
+            mpTmp.fontSize = 16;
+            mpTmp.fontStyle = FontStyles.Bold;
+            mpTmp.alignment = TextAlignmentOptions.Center;
+            mpTmp.color = Color.white;
+            // "X Players Online" sub-label inside button (lower)
+            var mpSubGO = new GameObject("OnlineLabel");
+            mpSubGO.transform.SetParent(mpBtnGO.transform, false);
+            var mpSubRT = mpSubGO.AddComponent<RectTransform>();
+            mpSubRT.anchorMin = Vector2.zero;
+            mpSubRT.anchorMax = Vector2.one;
+            mpSubRT.offsetMin = Vector2.zero;
+            mpSubRT.offsetMax = new Vector2(0f, -22f);
+            var mpSubTmp = mpSubGO.AddComponent<TextMeshProUGUI>();
+            mpSubTmp.text = "";
+            mpSubTmp.fontSize = 10;
+            mpSubTmp.alignment = TextAlignmentOptions.Center;
+            mpSubTmp.color = new Color(0.7f, 0.7f, 0.75f);
+            mpSubTmp.raycastTarget = false;
+            playersOnlineLabel = mpSubTmp;
+
+            y -= 48f;
+            CreateButton(cardGO.transform, "Join Discord", leftX, y, 250f, 34f, () =>
+            {
+                Application.OpenURL("https://discord.gg/htUt9qv6Vk");
+            });
+
+            // =====================
+            //  RIGHT SIDE — Civilization Picker + Description
+            // =====================
+            float ry = panelH / 2f;
+
+            // Civilization label at top
+            ry -= 38f;
+            MakeLabel(cardGO.transform, "Civilization", rightX, ry, 380f, 22f, 14, FontStyles.Bold, TextAlignmentOptions.Center, true);
+
+            // Civ flag buttons
+            ry -= 30f;
             englishFlagTex = GenerateEnglishFlag(32, 20);
             frenchFlagTex = GenerateFrenchFlag(32, 20);
             hreFlagTex = GenerateHREFlag(32, 20);
             string[] civNames = { "English", "French", "HRE" };
             Texture2D[] civTextures = { englishFlagTex, frenchFlagTex, hreFlagTex };
             civButtonImages = new Image[civNames.Length];
-            float civBtnW = 110f;
-            float civTotalW = civNames.Length * civBtnW + (civNames.Length - 1) * 6f;
-            float civStartX = -civTotalW / 2f + civBtnW / 2f;
+            float civBtnW = 120f;
+            float civTotalW = civNames.Length * civBtnW + (civNames.Length - 1) * 8f;
+            float civStartX = rightX - civTotalW / 2f + civBtnW / 2f;
             for (int i = 0; i < civNames.Length; i++)
             {
                 int civIdx = i;
@@ -1806,11 +1934,11 @@ namespace OpenEmpires
                 civBtnRT.anchorMin = new Vector2(0.5f, 0.5f);
                 civBtnRT.anchorMax = new Vector2(0.5f, 0.5f);
                 civBtnRT.pivot = new Vector2(0.5f, 0.5f);
-                civBtnRT.anchoredPosition = new Vector2(civStartX + i * (civBtnW + 6f), y);
-                civBtnRT.sizeDelta = new Vector2(civBtnW, 28f);
+                civBtnRT.anchoredPosition = new Vector2(civStartX + i * (civBtnW + 8f), ry);
+                civBtnRT.sizeDelta = new Vector2(civBtnW, 30f);
 
                 var civImg = civBtnGO.AddComponent<Image>();
-                civImg.color = new Color(0.25f, 0.25f, 0.25f);
+                civImg.color = new Color(0.22f, 0.22f, 0.25f);
 
                 var civBtn = civBtnGO.AddComponent<Button>();
                 civBtn.onClick.AddListener(() => SelectCivilization(civIdx));
@@ -1822,8 +1950,8 @@ namespace OpenEmpires
                 flagRT.anchorMin = new Vector2(0, 0.5f);
                 flagRT.anchorMax = new Vector2(0, 0.5f);
                 flagRT.pivot = new Vector2(0, 0.5f);
-                flagRT.anchoredPosition = new Vector2(6f, 0f);
-                flagRT.sizeDelta = new Vector2(24f, 16f);
+                flagRT.anchoredPosition = new Vector2(8f, 0f);
+                flagRT.sizeDelta = new Vector2(26f, 17f);
                 var flagImg = flagGO.AddComponent<RawImage>();
                 flagImg.texture = civTextures[i];
                 flagImg.raycastTarget = false;
@@ -1835,73 +1963,43 @@ namespace OpenEmpires
                 var civTxtRT = civTxtGO.AddComponent<RectTransform>();
                 civTxtRT.anchorMin = Vector2.zero;
                 civTxtRT.anchorMax = Vector2.one;
-                civTxtRT.offsetMin = new Vector2(32f, 0f);
-                civTxtRT.offsetMax = Vector2.zero;
+                civTxtRT.offsetMin = new Vector2(36f, 0f);
+                civTxtRT.offsetMax = new Vector2(-4f, 0f);
                 var civTmp = civTxtGO.AddComponent<TextMeshProUGUI>();
                 civTmp.text = civNames[i];
-                civTmp.fontSize = 11;
+                civTmp.fontSize = 12;
                 civTmp.alignment = TextAlignmentOptions.Center;
                 civTmp.color = Color.white;
             }
             UpdateCivButtonVisuals();
 
-            // Buttons
-            y -= 42f;
-            CreateButton(cardGO.transform, "Single Player", 0f, y, 200f, 42f, () =>
-            {
-                username = nameInputField.text;
-                LocalPlayerId = 0;
-                IsMultiplayer = false;
+            // Divider below civ buttons
+            ry -= 24f;
+            var civDivGO = new GameObject("CivDivider");
+            civDivGO.transform.SetParent(cardGO.transform, false);
+            var civDivRT = civDivGO.AddComponent<RectTransform>();
+            civDivRT.anchorMin = new Vector2(0.5f, 0.5f);
+            civDivRT.anchorMax = new Vector2(0.5f, 0.5f);
+            civDivRT.pivot = new Vector2(0.5f, 0.5f);
+            civDivRT.anchoredPosition = new Vector2(rightX, ry);
+            civDivRT.sizeDelta = new Vector2(380f, 1f);
+            var civDivImg = civDivGO.AddComponent<Image>();
+            civDivImg.color = new Color(0.28f, 0.28f, 0.32f);
+            civDivImg.raycastTarget = false;
 
-                // Set map seed on config before game starts
-                if (int.TryParse(seedInputField.text, out int seed))
-                {
-                    var cfg = GameBootstrapper.Instance?.Config;
-                    if (cfg != null) cfg.MapSeed = seed;
-                }
+            // Civ description text area
+            ry -= 16f;
+            civDescriptionLabel = MakeLabel(cardGO.transform, "", rightX, ry, 370f, 280f, 13,
+                FontStyles.Normal, TextAlignmentOptions.TopLeft, true, Color.white);
+            civDescriptionLabel.enableWordWrapping = true;
+            civDescriptionLabel.overflowMode = TextOverflowModes.Overflow;
+            civDescriptionLabel.richText = true;
+            // Anchor the description to top so text flows down
+            var descRT = civDescriptionLabel.GetComponent<RectTransform>();
+            descRT.pivot = new Vector2(0.5f, 1f);
 
-                GameBootstrapper.Instance?.SetPlayerCount(2);
-
-                // Set civilizations: player 0 = selected, player 1 (AI) = random
-                playerCivilizations = new Civilization[2];
-                playerCivilizations[0] = selectedCivilization;
-                playerCivilizations[1] = (Civilization)UnityEngine.Random.Range(0, 3);
-                GameBootstrapper.Instance?.SetCivilizations(playerCivilizations);
-
-                if (dashboardPollCoroutine != null) { StopCoroutine(dashboardPollCoroutine); dashboardPollCoroutine = null; }
-                GameStarted = true;
-                FullscreenManager.Instance?.EnterFullscreen();
-            });
-
-            y -= 50f;
-            CreateButton(cardGO.transform, "Multiplayer", 0f, y, 200f, 42f, () =>
-            {
-                if (isSoftwareRenderer)
-                {
-                    ShowHwAccelWarning();
-                    return;
-                }
-                username = nameInputField.text;
-
-                // Set server URLs to the selected region (unless using local server)
-                if (!useLocalServer)
-                {
-                    var region = regions[selectedRegionIndex];
-                    matchmakingManager.SetServerUrls(region.HttpUrl, region.WsUrl);
-                }
-
-                FullscreenManager.Instance?.EnterFullscreen();
-                matchmakingManager?.Login(username);
-            });
-            y -= 14f;
-            playersOnlineLabel = MakeLabel(cardGO.transform, "", 0f, y, 200f, 20f, 11,
-                FontStyles.Normal, TextAlignmentOptions.Center, true, new Color(0.55f, 0.55f, 0.55f));
-
-            y -= 36f;
-            CreateButton(cardGO.transform, "Join Discord", 0f, y, 200f, 42f, () =>
-            {
-                Application.OpenURL("https://discord.gg/htUt9qv6Vk");
-            });
+            // Set initial description
+            UpdateCivDescription();
         }
 
         private void ShowHwAccelWarning()
@@ -2133,13 +2231,17 @@ namespace OpenEmpires
             btnRT.sizeDelta = new Vector2(w, h);
 
             var img = btnGO.AddComponent<Image>();
-            img.color = new Color(0.22f, 0.22f, 0.25f);
+            img.color = Color.white;
+
+            var outline = btnGO.AddComponent<Outline>();
+            outline.effectColor = new Color(0.4f, 0.4f, 0.45f, 0.5f);
+            outline.effectDistance = new Vector2(1, -1);
 
             var btn = btnGO.AddComponent<Button>();
             var colors = btn.colors;
-            colors.normalColor = new Color(0.22f, 0.22f, 0.25f);
-            colors.highlightedColor = new Color(0.30f, 0.30f, 0.34f);
-            colors.pressedColor = new Color(0.16f, 0.16f, 0.19f);
+            colors.normalColor = new Color(0.28f, 0.28f, 0.32f);
+            colors.highlightedColor = new Color(0.38f, 0.38f, 0.42f);
+            colors.pressedColor = new Color(0.20f, 0.20f, 0.23f);
             btn.colors = colors;
             btn.onClick.AddListener(() => onClick?.Invoke());
 
@@ -2152,7 +2254,7 @@ namespace OpenEmpires
             trt.offsetMax = Vector2.zero;
             var tmp = textGO.AddComponent<TextMeshProUGUI>();
             tmp.text = label;
-            tmp.fontSize = 18;
+            tmp.fontSize = 16;
             tmp.fontStyle = FontStyles.Bold;
             tmp.alignment = TextAlignmentOptions.Center;
             tmp.color = Color.white;
@@ -2170,7 +2272,11 @@ namespace OpenEmpires
             fieldRT.sizeDelta = new Vector2(w, h);
 
             var bgImg = fieldGO.AddComponent<Image>();
-            bgImg.color = new Color(0.18f, 0.18f, 0.20f);
+            bgImg.color = new Color(0.13f, 0.13f, 0.16f);
+
+            var outline = fieldGO.AddComponent<Outline>();
+            outline.effectColor = new Color(0.35f, 0.35f, 0.4f, 0.6f);
+            outline.effectDistance = new Vector2(1, -1);
 
             // Text area
             var textAreaGO = new GameObject("TextArea");
@@ -2192,9 +2298,9 @@ namespace OpenEmpires
             phRT.offsetMax = Vector2.zero;
             var phText = placeholderGO.AddComponent<TextMeshProUGUI>();
             phText.text = "Enter name...";
-            phText.fontSize = 18;
+            phText.fontSize = 16;
             phText.alignment = TextAlignmentOptions.Center;
-            phText.color = new Color(0.5f, 0.5f, 0.5f);
+            phText.color = new Color(0.45f, 0.45f, 0.5f);
             phText.fontStyle = FontStyles.Italic;
 
             // Text
@@ -2206,7 +2312,7 @@ namespace OpenEmpires
             trt.offsetMin = Vector2.zero;
             trt.offsetMax = Vector2.zero;
             var tmp = textGO.AddComponent<TextMeshProUGUI>();
-            tmp.fontSize = 18;
+            tmp.fontSize = 16;
             tmp.alignment = TextAlignmentOptions.Center;
             tmp.color = Color.white;
 
