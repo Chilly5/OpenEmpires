@@ -14,6 +14,8 @@
 
 **An open-source Age of Empires-inspired RTS built with Unity 6 and a Rust relay server backend, featuring deterministic lockstep multiplayer.**
 
+[**Play the Demo**](https://chilly5.github.io/OpenEmpires/)
+
 </div>
 
 ---
