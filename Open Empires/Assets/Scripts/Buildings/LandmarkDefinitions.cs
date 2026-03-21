@@ -254,13 +254,22 @@ namespace OpenEmpires
                 case BuildingType.Mine:
                 case BuildingType.Barracks:
                 case BuildingType.Tower:
+                case BuildingType.WoodGate:
                     return 1;
                 case BuildingType.Wall:
                 case BuildingType.ArcheryRange:
                 case BuildingType.Stables:
                 case BuildingType.TownCenter:
+                case BuildingType.Blacksmith:
+                case BuildingType.Market:
                     return 2;
                 case BuildingType.Monastery:
+                case BuildingType.University:
+                case BuildingType.SiegeWorkshop:
+                case BuildingType.Keep:
+                case BuildingType.StoneWall:
+                case BuildingType.StoneGate:
+                case BuildingType.Wonder:
                     return 3;
                 default:
                     return 1;

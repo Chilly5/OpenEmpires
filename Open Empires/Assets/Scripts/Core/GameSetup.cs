@@ -1676,6 +1676,57 @@ namespace OpenEmpires
             return monastery;
         }
 
+        private GameObject CreateGenericBuildingPrefab(int playerId, int footprintW, int footprintH, string name)
+        {
+            var building = new GameObject(name);
+            building.layer = 11;
+
+            float sizeX = footprintW * 0.85f;
+            float sizeZ = footprintH * 0.85f;
+            float height = footprintW >= 4 ? 2.0f : 1.4f;
+
+            // Body
+            var body = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            body.name = "Body";
+            body.transform.SetParent(building.transform);
+            body.transform.localPosition = new Vector3(0f, height * 0.5f, 0f);
+            body.transform.localScale = new Vector3(sizeX, height, sizeZ);
+            body.layer = 11;
+
+            // Roof
+            var roof = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            roof.name = "Roof";
+            roof.transform.SetParent(building.transform);
+            roof.transform.localPosition = new Vector3(0f, height + 0.1f, 0f);
+            roof.transform.localScale = new Vector3(sizeX + 0.2f, 0.2f, sizeZ + 0.2f);
+            roof.layer = 11;
+
+            Object.Destroy(body.GetComponent<Collider>());
+            Object.Destroy(roof.GetComponent<Collider>());
+
+            var col = building.AddComponent<BoxCollider>();
+            col.center = new Vector3(0f, height * 0.5f + 0.1f, 0f);
+            col.size = new Vector3(sizeX + 0.2f, height + 0.2f, sizeZ + 0.2f);
+
+            float ringSize = Mathf.Max(footprintW, footprintH) + 0.6f;
+            var ring = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            ring.name = "SelectionRing";
+            ring.transform.SetParent(building.transform);
+            ring.transform.localPosition = new Vector3(0f, 0.02f, 0f);
+            ring.transform.localScale = new Vector3(ringSize, 0.01f, ringSize);
+            ring.layer = 11;
+
+            var ringCollider = ring.GetComponent<Collider>();
+            if (ringCollider != null) Object.Destroy(ringCollider);
+
+            ring.GetComponent<Renderer>().sharedMaterial = sharedSelectionRingMat;
+
+            var view = building.AddComponent<BuildingView>();
+            view.SetSelectionRing(ring);
+
+            return building;
+        }
+
         private GameObject CreateLandmarkPrefab(int playerId, LandmarkId landmarkId)
         {
             var def = LandmarkDefinitions.Get(landmarkId);
@@ -1871,6 +1922,29 @@ namespace OpenEmpires
                     break;
                 case BuildingType.Monastery:
                     prefab = CreateMonasteryPrefab(buildingData.PlayerId);
+                    break;
+                case BuildingType.Blacksmith:
+                    prefab = CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "Blacksmith");
+                    break;
+                case BuildingType.Market:
+                    prefab = CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "Market");
+                    break;
+                case BuildingType.University:
+                    prefab = CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "University");
+                    break;
+                case BuildingType.SiegeWorkshop:
+                    prefab = CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "SiegeWorkshop");
+                    break;
+                case BuildingType.Keep:
+                    prefab = CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "Keep");
+                    break;
+                case BuildingType.StoneWall:
+                case BuildingType.StoneGate:
+                case BuildingType.WoodGate:
+                    prefab = CreateWallPrefab(buildingData.PlayerId);
+                    break;
+                case BuildingType.Wonder:
+                    prefab = CreateGenericBuildingPrefab(buildingData.PlayerId, 5, 5, "Wonder");
                     break;
                 case BuildingType.Landmark:
                     prefab = CreateLandmarkPrefab(buildingData.PlayerId, buildingData.LandmarkId);

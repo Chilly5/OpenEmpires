@@ -4,19 +4,28 @@ namespace OpenEmpires
 {
     public enum BuildingType
     {
-        House,
-        Barracks,
-        TownCenter,
-        Wall,
-        Mill,
-        LumberYard,
-        Mine,
-        ArcheryRange,
-        Stables,
-        Farm,
-        Tower,
-        Monastery,
-        Landmark
+        House,          // 0
+        Barracks,       // 1
+        TownCenter,     // 2
+        Wall,           // 3  (Wood Wall)
+        Mill,           // 4
+        LumberYard,     // 5
+        Mine,           // 6
+        ArcheryRange,   // 7
+        Stables,        // 8
+        Farm,           // 9
+        Tower,          // 10
+        Monastery,      // 11
+        Landmark,       // 12
+        Blacksmith,     // 13
+        Market,         // 14
+        University,     // 15
+        SiegeWorkshop,  // 16
+        Keep,           // 17
+        StoneWall,      // 18
+        StoneGate,      // 19
+        WoodGate,       // 20
+        Wonder          // 21
     }
 
     public class BuildingData

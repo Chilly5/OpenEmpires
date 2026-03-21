@@ -141,6 +141,8 @@ namespace OpenEmpires
         private bool wallDragging;
         private int wallStartTileX, wallStartTileZ;
         private int[] wallVillagerIds;
+        private BuildingType wallPlacementType = BuildingType.Wall;
+        private bool wallPlacementIsGate;
         private List<GameObject> wallGhostPool = new List<GameObject>();
         private int wallGhostActiveCount;
 
@@ -3049,7 +3051,7 @@ namespace OpenEmpires
             ghostBuilding = GameObject.CreatePrimitive(PrimitiveType.Quad);
             ghostBuilding.name = "BuildingGhost";
             ghostBuilding.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
-            int border = (type == BuildingType.Wall || type == BuildingType.Farm) ? 0 : 1;
+            int border = (type == BuildingType.Wall || type == BuildingType.Farm || type == BuildingType.StoneWall || type == BuildingType.StoneGate || type == BuildingType.WoodGate) ? 0 : 1;
             ghostBuilding.transform.localScale = new Vector3(w + border * 2, h + border * 2, 1f);
 
             // Remove collider so it doesn't interfere with raycasts
@@ -3829,13 +3831,15 @@ namespace OpenEmpires
             return 0f;
         }
 
-        public void EnterWallPlacement()
+        public void EnterWallPlacement(BuildingType wallType = BuildingType.Wall, bool isGate = false)
         {
             if (isPlacingBuilding) CancelBuildPlacement();
             if (isPlacingWall) CancelWallPlacement();
 
             isPlacingWall = true;
             wallDragging = false;
+            wallPlacementType = wallType;
+            wallPlacementIsGate = isGate;
 
             // Capture villager IDs
             var villagerIds = new List<int>();
@@ -3897,12 +3901,16 @@ namespace OpenEmpires
 
                     if (validCount > 0)
                     {
-                        int totalCost = validCount * sim.Config.WallWoodCost;
+                        int woodPerSeg = sim.GetBuildingWoodCost(wallPlacementType);
+                        int stonePerSeg = sim.GetBuildingStoneCost(wallPlacementType);
+                        int totalWood = validCount * woodPerSeg;
+                        int totalStone = validCount * stonePerSeg;
                         var resources = sim.ResourceManager.GetPlayerResources(LocalPlayerId);
-                        if (resources.Wood >= totalCost)
+                        if (resources.Wood >= totalWood && resources.Stone >= totalStone)
                         {
                             var wallCmd = new PlaceWallCommand(LocalPlayerId,
-                                wallStartTileX, wallStartTileZ, endTileX, endTileZ, wallVillagerIds);
+                                wallStartTileX, wallStartTileZ, endTileX, endTileZ, wallVillagerIds,
+                                wallPlacementType, wallPlacementIsGate);
                             wallCmd.IsQueued = multiSelectHeld;
                             sim.CommandBuffer.EnqueueCommand(wallCmd);
                         }
@@ -4007,6 +4015,50 @@ namespace OpenEmpires
                     w = config.FarmFootprintWidth;
                     h = config.FarmFootprintHeight;
                     break;
+                case BuildingType.Tower:
+                    w = config.TowerFootprintWidth;
+                    h = config.TowerFootprintHeight;
+                    break;
+                case BuildingType.Monastery:
+                    w = config.MonasteryFootprintWidth;
+                    h = config.MonasteryFootprintHeight;
+                    break;
+                case BuildingType.Blacksmith:
+                    w = config.BlacksmithFootprintWidth;
+                    h = config.BlacksmithFootprintHeight;
+                    break;
+                case BuildingType.Market:
+                    w = config.MarketFootprintWidth;
+                    h = config.MarketFootprintHeight;
+                    break;
+                case BuildingType.University:
+                    w = config.UniversityFootprintWidth;
+                    h = config.UniversityFootprintHeight;
+                    break;
+                case BuildingType.SiegeWorkshop:
+                    w = config.SiegeWorkshopFootprintWidth;
+                    h = config.SiegeWorkshopFootprintHeight;
+                    break;
+                case BuildingType.Keep:
+                    w = config.KeepFootprintWidth;
+                    h = config.KeepFootprintHeight;
+                    break;
+                case BuildingType.StoneWall:
+                    w = config.StoneWallFootprintWidth;
+                    h = config.StoneWallFootprintHeight;
+                    break;
+                case BuildingType.StoneGate:
+                    w = config.StoneGateFootprintWidth;
+                    h = config.StoneGateFootprintHeight;
+                    break;
+                case BuildingType.WoodGate:
+                    w = config.WoodGateFootprintWidth;
+                    h = config.WoodGateFootprintHeight;
+                    break;
+                case BuildingType.Wonder:
+                    w = config.WonderFootprintWidth;
+                    h = config.WonderFootprintHeight;
+                    break;
                 case BuildingType.Landmark:
                     var ldef = LandmarkDefinitions.Get(placementLandmarkId);
                     w = ldef.FootprintWidth;
@@ -4076,7 +4128,7 @@ namespace OpenEmpires
 
         private bool IsPlacementValid(MapData mapData, int tileX, int tileZ, int w, int h, BuildingType type = BuildingType.House)
         {
-            int border = (type == BuildingType.Wall || type == BuildingType.Farm) ? 0 : 1;
+            int border = (type == BuildingType.Wall || type == BuildingType.Farm || type == BuildingType.StoneWall || type == BuildingType.StoneGate || type == BuildingType.WoodGate) ? 0 : 1;
             for (int x = tileX - border; x < tileX + w + border; x++)
                 for (int z = tileZ - border; z < tileZ + h + border; z++)
                     if (!mapData.IsBuildable(x, z)) return false;

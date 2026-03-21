@@ -1681,7 +1681,7 @@ namespace OpenEmpires
 
         private Vector2Int FindBuildableTile(int centerX, int centerZ, int footprintW, int footprintH, BuildingType type)
         {
-            int border = (type == BuildingType.Wall || type == BuildingType.Farm) ? 0 : 1;
+            int border = (type == BuildingType.Wall || type == BuildingType.Farm || type == BuildingType.StoneWall || type == BuildingType.StoneGate || type == BuildingType.WoodGate) ? 0 : 1;
             for (int radius = 1; radius <= 20; radius++)
             {
                 for (int dx = -radius; dx <= radius; dx++)
@@ -1725,6 +1725,15 @@ namespace OpenEmpires
                 case BuildingType.Farm: w = cfg.FarmFootprintWidth; h = cfg.FarmFootprintHeight; break;
                 case BuildingType.Tower: w = cfg.TowerFootprintWidth; h = cfg.TowerFootprintHeight; break;
                 case BuildingType.Monastery: w = cfg.MonasteryFootprintWidth; h = cfg.MonasteryFootprintHeight; break;
+                case BuildingType.Blacksmith: w = cfg.BlacksmithFootprintWidth; h = cfg.BlacksmithFootprintHeight; break;
+                case BuildingType.Market: w = cfg.MarketFootprintWidth; h = cfg.MarketFootprintHeight; break;
+                case BuildingType.University: w = cfg.UniversityFootprintWidth; h = cfg.UniversityFootprintHeight; break;
+                case BuildingType.SiegeWorkshop: w = cfg.SiegeWorkshopFootprintWidth; h = cfg.SiegeWorkshopFootprintHeight; break;
+                case BuildingType.Keep: w = cfg.KeepFootprintWidth; h = cfg.KeepFootprintHeight; break;
+                case BuildingType.StoneWall: w = cfg.StoneWallFootprintWidth; h = cfg.StoneWallFootprintHeight; break;
+                case BuildingType.StoneGate: w = cfg.StoneGateFootprintWidth; h = cfg.StoneGateFootprintHeight; break;
+                case BuildingType.WoodGate: w = cfg.WoodGateFootprintWidth; h = cfg.WoodGateFootprintHeight; break;
+                case BuildingType.Wonder: w = cfg.WonderFootprintWidth; h = cfg.WonderFootprintHeight; break;
                 case BuildingType.Landmark: w = 4; h = 4; break;
                 default: w = 2; h = 2; break;
             }
