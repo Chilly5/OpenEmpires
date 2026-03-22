@@ -28,6 +28,25 @@ namespace OpenEmpires
         Wonder          // 21
     }
 
+    public enum TechnologyType
+    {
+        // Blacksmith (Age 2)
+        MeleeAttack1,       // +1 melee attack
+        MeleeArmor1,        // +1 melee armor
+        RangedAttack1,      // +1 ranged attack
+        RangedArmor1,       // +1 ranged armor
+        // Blacksmith (Age 3)
+        MeleeAttack2,       // +2 melee attack (cumulative)
+        MeleeArmor2,        // +2 melee armor
+        RangedAttack2,      // +2 ranged attack
+        RangedArmor2,       // +2 ranged armor
+        // University (Age 3)
+        Ballistics,         // Projectiles lead targets
+        SiegeEngineering,   // +40 siege unit HP
+        Chemistry,          // +1 ranged attack
+        MurderHoles,        // Towers have no minimum range
+    }
+
     public class BuildingData
     {
         public int Id;
@@ -120,6 +139,15 @@ namespace OpenEmpires
         public int TowerTargetBuildingId = -1;
         public int CombatTargetUnitId = -1; // For general building combat
 
+        // Research system (Blacksmith, University)
+        public bool IsResearching;
+        public TechnologyType CurrentResearch;
+        public int ResearchTicksRemaining;
+        public int ResearchTicksTotal;
+        public List<TechnologyType> ResearchQueue;
+        public float ResearchProgress => ResearchTicksTotal > 0
+            ? 1f - (float)ResearchTicksRemaining / ResearchTicksTotal : 0f;
+
         // Tower upgrade system
         public bool IsUpgrading;
         public TowerUpgradeType CurrentUpgrade;
@@ -144,6 +172,7 @@ namespace OpenEmpires
             TileFootprintWidth = footprintWidth;
             TileFootprintHeight = footprintHeight;
             TrainingQueue = new List<int>();
+            ResearchQueue = new List<TechnologyType>();
             UpgradeQueue = new List<TowerUpgradeType>();
             GarrisonedUnitIds = new List<int>();
         }
@@ -164,6 +193,26 @@ namespace OpenEmpires
             int unitType = TrainingQueue[0];
             TrainingQueue.RemoveAt(0);
             return unitType;
+        }
+
+        public void EnqueueResearch(TechnologyType tech, int ticks)
+        {
+            ResearchQueue.Add(tech);
+            if (ResearchQueue.Count == 1)
+            {
+                IsResearching = true;
+                CurrentResearch = tech;
+                ResearchTicksRemaining = ticks;
+                ResearchTicksTotal = ticks;
+            }
+        }
+
+        public TechnologyType DequeueResearch()
+        {
+            if (ResearchQueue.Count == 0) return default;
+            TechnologyType tech = ResearchQueue[0];
+            ResearchQueue.RemoveAt(0);
+            return tech;
         }
 
         public void EnqueueUpgrade(TowerUpgradeType upgradeType, int ticks)

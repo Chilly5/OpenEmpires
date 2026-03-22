@@ -533,7 +533,7 @@ namespace OpenEmpires
                         continue;
                     }
 
-                    int damage = unit.AttackDamage - building.Armor;
+                    int damage = unit.AttackDamage + unit.BonusDamageVsBuildings - building.Armor;
                     if (damage < 1) damage = 1;
                     unit.AttackCooldownRemaining = unit.AttackCooldownTicks;
 

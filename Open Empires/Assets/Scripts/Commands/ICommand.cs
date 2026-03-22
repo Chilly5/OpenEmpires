@@ -33,7 +33,9 @@ namespace OpenEmpires
         MeteorStrike,
         HealingRain,
         LightningStorm,
-        Tsunami
+        Tsunami,
+        MarketTrade,
+        Research
     }
 
     public interface ICommand

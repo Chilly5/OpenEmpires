@@ -76,6 +76,9 @@ namespace OpenEmpires
                 case 10: return config.LongbowmanTrainTimeTicks;
                 case 11: return config.GendarmeTrainTimeTicks;
                 case 12: return config.LandsknechtTrainTimeTicks;
+                case 13: return config.BatteringRamTrainTimeTicks;
+                case 14: return config.MangonelTrainTimeTicks;
+                case 15: return config.TrebuchetTrainTimeTicks;
                 case 4: return config.ScoutTrainTimeTicks;
                 case 3: return config.HorsemanTrainTimeTicks;
                 case 2: return config.ArcherTrainTimeTicks;

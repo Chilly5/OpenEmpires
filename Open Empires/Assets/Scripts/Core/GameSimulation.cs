@@ -60,6 +60,14 @@ namespace OpenEmpires
         private bool[] playerAgingUp;          // true while landmark under construction
         private int[] playerAgingUpBuildingId; // building ID of in-progress landmark, -1 if none
 
+        // Research state
+        private HashSet<TechnologyType>[] playerTechnologies;
+        private ResearchSystem researchSystem;
+
+        // Market trading state (per-player prices)
+        private int[] marketBuyPrice_Food, marketBuyPrice_Wood, marketBuyPrice_Stone;
+        private int[] marketSellPrice_Food, marketSellPrice_Wood, marketSellPrice_Stone;
+
         public int GetPlayerAge(int playerId)
         {
             if (playerAges != null && playerId >= 0 && playerId < playerAges.Length)
@@ -575,6 +583,30 @@ namespace OpenEmpires
                 playerAgingUpBuildingId[i] = -1;
             }
 
+            // Research
+            playerTechnologies = new HashSet<TechnologyType>[playerCount];
+            for (int i = 0; i < playerCount; i++)
+                playerTechnologies[i] = new HashSet<TechnologyType>();
+            researchSystem = new ResearchSystem();
+
+            // Market prices
+            int startPrice = config.MarketStartPrice;
+            marketBuyPrice_Food = new int[playerCount];
+            marketBuyPrice_Wood = new int[playerCount];
+            marketBuyPrice_Stone = new int[playerCount];
+            marketSellPrice_Food = new int[playerCount];
+            marketSellPrice_Wood = new int[playerCount];
+            marketSellPrice_Stone = new int[playerCount];
+            for (int i = 0; i < playerCount; i++)
+            {
+                marketBuyPrice_Food[i] = startPrice;
+                marketBuyPrice_Wood[i] = startPrice;
+                marketBuyPrice_Stone[i] = startPrice;
+                marketSellPrice_Food[i] = startPrice;
+                marketSellPrice_Wood[i] = startPrice;
+                marketSellPrice_Stone[i] = startPrice;
+            }
+
             GridPathfinder.Initialize(MapData.Width, MapData.Height);
             MapData.ComputeHoleMap();
 
@@ -827,6 +859,18 @@ namespace OpenEmpires
 
             // Tower upgrade system
             towerUpgradeSystem.Tick(BuildingRegistry, config, cachedCannonRange, cachedVisionUpgradeRangeBonus);
+
+            // Research system
+            var researchCompletions = researchSystem.Tick(BuildingRegistry, config);
+            if (researchCompletions != null)
+            {
+                for (int r = 0; r < researchCompletions.Count; r++)
+                {
+                    var rc = researchCompletions[r];
+                    playerTechnologies[rc.PlayerId].Add(rc.Tech);
+                    ApplyTechnologyToUnits(rc.PlayerId, rc.Tech);
+                }
+            }
 
             // Training system (units freeze at 99% when pop-capped)
             var completions = trainingSystem.Tick(BuildingRegistry, config,
@@ -1437,6 +1481,12 @@ namespace OpenEmpires
                 case TsunamiCommand tsunami:
                     ProcessTsunamiCommand(tsunami);
                     break;
+                case MarketTradeCommand marketTrade:
+                    ProcessMarketTradeCommand(marketTrade);
+                    break;
+                case ResearchCommand research:
+                    ProcessResearchCommand(research);
+                    break;
             }
         }
 
@@ -1894,6 +1944,295 @@ namespace OpenEmpires
                 }
 
                 OnTsunamiImpact?.Invoke(tsunami.Origin, tsunami.Direction, new List<int>(tsunamiHitBuffer));
+            }
+        }
+
+        private void ApplyTechnologyToUnits(int playerId, TechnologyType tech)
+        {
+            var allUnits = UnitRegistry.GetAllUnits();
+            for (int i = 0; i < allUnits.Count; i++)
+            {
+                var unit = allUnits[i];
+                if (unit.PlayerId != playerId) continue;
+                if (unit.State == UnitState.Dead) continue;
+                if (unit.IsSheep || unit.IsVillager) continue;
+
+                switch (tech)
+                {
+                    case TechnologyType.MeleeAttack1:
+                        if (!unit.IsRanged) unit.AttackDamage += config.MeleeAttackBonus1;
+                        break;
+                    case TechnologyType.MeleeAttack2:
+                        if (!unit.IsRanged) unit.AttackDamage += config.MeleeAttackBonus2;
+                        break;
+                    case TechnologyType.RangedAttack1:
+                        if (unit.IsRanged) unit.AttackDamage += config.RangedAttackBonus1;
+                        break;
+                    case TechnologyType.RangedAttack2:
+                        if (unit.IsRanged) unit.AttackDamage += config.RangedAttackBonus2;
+                        break;
+                    case TechnologyType.MeleeArmor1:
+                        unit.MeleeArmor += config.MeleeArmorBonus1;
+                        break;
+                    case TechnologyType.MeleeArmor2:
+                        unit.MeleeArmor += config.MeleeArmorBonus2;
+                        break;
+                    case TechnologyType.RangedArmor1:
+                        unit.RangedArmor += config.RangedArmorBonus1;
+                        break;
+                    case TechnologyType.RangedArmor2:
+                        unit.RangedArmor += config.RangedArmorBonus2;
+                        break;
+                    case TechnologyType.Chemistry:
+                        if (unit.IsRanged) unit.AttackDamage += config.ChemistryRangedBonus;
+                        break;
+                    case TechnologyType.SiegeEngineering:
+                        if (unit.UnitType >= 13 && unit.UnitType <= 15)
+                            unit.MaxHealth += config.SiegeEngineeringHPBonus;
+                        break;
+                }
+            }
+        }
+
+        public bool HasTechnology(int playerId, TechnologyType tech)
+        {
+            if (playerId < 0 || playerId >= playerCount) return false;
+            return playerTechnologies[playerId].Contains(tech);
+        }
+
+        public int GetMeleeAttackBonus(int playerId)
+        {
+            int bonus = 0;
+            if (HasTechnology(playerId, TechnologyType.MeleeAttack1)) bonus += config.MeleeAttackBonus1;
+            if (HasTechnology(playerId, TechnologyType.MeleeAttack2)) bonus += config.MeleeAttackBonus2;
+            return bonus;
+        }
+
+        public int GetRangedAttackBonus(int playerId)
+        {
+            int bonus = 0;
+            if (HasTechnology(playerId, TechnologyType.RangedAttack1)) bonus += config.RangedAttackBonus1;
+            if (HasTechnology(playerId, TechnologyType.RangedAttack2)) bonus += config.RangedAttackBonus2;
+            if (HasTechnology(playerId, TechnologyType.Chemistry)) bonus += config.ChemistryRangedBonus;
+            return bonus;
+        }
+
+        public int GetMeleeArmorBonus(int playerId)
+        {
+            int bonus = 0;
+            if (HasTechnology(playerId, TechnologyType.MeleeArmor1)) bonus += config.MeleeArmorBonus1;
+            if (HasTechnology(playerId, TechnologyType.MeleeArmor2)) bonus += config.MeleeArmorBonus2;
+            return bonus;
+        }
+
+        public int GetRangedArmorBonus(int playerId)
+        {
+            int bonus = 0;
+            if (HasTechnology(playerId, TechnologyType.RangedArmor1)) bonus += config.RangedArmorBonus1;
+            if (HasTechnology(playerId, TechnologyType.RangedArmor2)) bonus += config.RangedArmorBonus2;
+            return bonus;
+        }
+
+        private void ProcessResearchCommand(ResearchCommand cmd)
+        {
+            if (cmd.PlayerId < 0 || cmd.PlayerId >= playerCount) return;
+
+            var building = BuildingRegistry.GetBuilding(cmd.BuildingId);
+            if (building == null || building.IsDestroyed || building.IsUnderConstruction) return;
+            if (building.PlayerId != cmd.PlayerId) return;
+
+            var tech = (TechnologyType)cmd.TechType;
+
+            // Already researched or queued
+            if (playerTechnologies[cmd.PlayerId].Contains(tech)) return;
+            if (building.ResearchQueue.Contains(tech)) return;
+
+            // Check building type matches tech
+            bool validBuilding = false;
+            switch (tech)
+            {
+                case TechnologyType.MeleeAttack1:
+                case TechnologyType.MeleeArmor1:
+                case TechnologyType.RangedAttack1:
+                case TechnologyType.RangedArmor1:
+                case TechnologyType.MeleeAttack2:
+                case TechnologyType.MeleeArmor2:
+                case TechnologyType.RangedAttack2:
+                case TechnologyType.RangedArmor2:
+                    validBuilding = building.Type == BuildingType.Blacksmith;
+                    break;
+                case TechnologyType.Ballistics:
+                case TechnologyType.SiegeEngineering:
+                case TechnologyType.Chemistry:
+                case TechnologyType.MurderHoles:
+                    validBuilding = building.Type == BuildingType.University;
+                    break;
+            }
+            if (!validBuilding) return;
+
+            // Age requirement: tier 2 techs need age 3
+            int reqAge = GetRequiredAgeForTech(tech);
+            if (playerAges[cmd.PlayerId] < reqAge) return;
+
+            // Prerequisite: tier 2 requires tier 1
+            if (tech == TechnologyType.MeleeAttack2 && !playerTechnologies[cmd.PlayerId].Contains(TechnologyType.MeleeAttack1)) return;
+            if (tech == TechnologyType.MeleeArmor2 && !playerTechnologies[cmd.PlayerId].Contains(TechnologyType.MeleeArmor1)) return;
+            if (tech == TechnologyType.RangedAttack2 && !playerTechnologies[cmd.PlayerId].Contains(TechnologyType.RangedAttack1)) return;
+            if (tech == TechnologyType.RangedArmor2 && !playerTechnologies[cmd.PlayerId].Contains(TechnologyType.RangedArmor1)) return;
+
+            // Check cost
+            var resources = ResourceManager.GetPlayerResources(cmd.PlayerId);
+            int foodCost, goldCost;
+            GetResearchCost(tech, out foodCost, out goldCost);
+            if (resources.Food < foodCost || resources.Gold < goldCost) return;
+
+            resources.Food -= foodCost;
+            resources.Gold -= goldCost;
+
+            int ticks = ResearchSystem.GetResearchTicks(config, tech);
+            building.EnqueueResearch(tech, ticks);
+        }
+
+        private int GetRequiredAgeForTech(TechnologyType tech)
+        {
+            switch (tech)
+            {
+                case TechnologyType.MeleeAttack1:
+                case TechnologyType.MeleeArmor1:
+                case TechnologyType.RangedAttack1:
+                case TechnologyType.RangedArmor1:
+                    return 2;
+                default:
+                    return 3;
+            }
+        }
+
+        private void GetResearchCost(TechnologyType tech, out int food, out int gold)
+        {
+            food = 0;
+            switch (tech)
+            {
+                case TechnologyType.MeleeAttack1: gold = config.MeleeAttack1Cost; break;
+                case TechnologyType.MeleeArmor1: gold = config.MeleeArmor1Cost; break;
+                case TechnologyType.RangedAttack1: gold = config.RangedAttack1Cost; break;
+                case TechnologyType.RangedArmor1: gold = config.RangedArmor1Cost; break;
+                case TechnologyType.MeleeAttack2: gold = config.MeleeAttack2Cost; break;
+                case TechnologyType.MeleeArmor2: gold = config.MeleeArmor2Cost; break;
+                case TechnologyType.RangedAttack2: gold = config.RangedAttack2Cost; break;
+                case TechnologyType.RangedArmor2: gold = config.RangedArmor2Cost; break;
+                case TechnologyType.Ballistics: food = config.BallisticsFoodCost; gold = config.BallisticsGoldCost; break;
+                case TechnologyType.SiegeEngineering: food = config.SiegeEngineeringFoodCost; gold = config.SiegeEngineeringGoldCost; break;
+                case TechnologyType.Chemistry: food = config.ChemistryFoodCost; gold = config.ChemistryGoldCost; break;
+                case TechnologyType.MurderHoles: food = config.MurderHolesFoodCost; gold = config.MurderHolesGoldCost; break;
+                default: gold = 0; break;
+            }
+        }
+
+        private void ProcessMarketTradeCommand(MarketTradeCommand cmd)
+        {
+            if (cmd.PlayerId < 0 || cmd.PlayerId >= playerCount) return;
+
+            // Validate player owns a completed Market
+            bool hasMarket = false;
+            var buildings = BuildingRegistry.GetAllBuildings();
+            for (int i = 0; i < buildings.Count; i++)
+            {
+                var b = buildings[i];
+                if (b.Type == BuildingType.Market && b.PlayerId == cmd.PlayerId
+                    && !b.IsDestroyed && !b.IsUnderConstruction)
+                { hasMarket = true; break; }
+            }
+            if (!hasMarket) return;
+
+            var resources = ResourceManager.GetPlayerResources(cmd.PlayerId);
+            var rt = (ResourceType)cmd.TradeResource;
+            if (rt == ResourceType.Gold) return; // Can't buy/sell gold for gold
+
+            int tradeAmount = config.MarketTradeAmount;
+            int priceStep = config.MarketPriceStep;
+
+            if (cmd.IsBuying)
+            {
+                int price = GetMarketBuyPrice(cmd.PlayerId, rt);
+                if (resources.Gold < price) return;
+
+                resources.Gold -= price;
+                AddResource(resources, rt, tradeAmount);
+                SetMarketBuyPrice(cmd.PlayerId, rt, System.Math.Min(price + priceStep, config.MarketMaxPrice));
+            }
+            else
+            {
+                int sellPrice = GetMarketSellPrice(cmd.PlayerId, rt);
+                if (GetResource(resources, rt) < tradeAmount) return;
+
+                AddResource(resources, rt, -tradeAmount);
+                resources.Gold += sellPrice;
+                SetMarketSellPrice(cmd.PlayerId, rt, System.Math.Max(sellPrice - priceStep, config.MarketMinPrice));
+            }
+        }
+
+        public int GetMarketBuyPrice(int playerId, ResourceType type)
+        {
+            switch (type)
+            {
+                case ResourceType.Food: return marketBuyPrice_Food[playerId];
+                case ResourceType.Wood: return marketBuyPrice_Wood[playerId];
+                case ResourceType.Stone: return marketBuyPrice_Stone[playerId];
+                default: return 0;
+            }
+        }
+
+        public int GetMarketSellPrice(int playerId, ResourceType type)
+        {
+            switch (type)
+            {
+                case ResourceType.Food: return marketSellPrice_Food[playerId];
+                case ResourceType.Wood: return marketSellPrice_Wood[playerId];
+                case ResourceType.Stone: return marketSellPrice_Stone[playerId];
+                default: return 0;
+            }
+        }
+
+        private void SetMarketBuyPrice(int playerId, ResourceType type, int price)
+        {
+            switch (type)
+            {
+                case ResourceType.Food: marketBuyPrice_Food[playerId] = price; break;
+                case ResourceType.Wood: marketBuyPrice_Wood[playerId] = price; break;
+                case ResourceType.Stone: marketBuyPrice_Stone[playerId] = price; break;
+            }
+        }
+
+        private void SetMarketSellPrice(int playerId, ResourceType type, int price)
+        {
+            switch (type)
+            {
+                case ResourceType.Food: marketSellPrice_Food[playerId] = price; break;
+                case ResourceType.Wood: marketSellPrice_Wood[playerId] = price; break;
+                case ResourceType.Stone: marketSellPrice_Stone[playerId] = price; break;
+            }
+        }
+
+        private int GetResource(PlayerResources res, ResourceType type)
+        {
+            switch (type)
+            {
+                case ResourceType.Food: return res.Food;
+                case ResourceType.Wood: return res.Wood;
+                case ResourceType.Gold: return res.Gold;
+                case ResourceType.Stone: return res.Stone;
+                default: return 0;
+            }
+        }
+
+        private void AddResource(PlayerResources res, ResourceType type, int amount)
+        {
+            switch (type)
+            {
+                case ResourceType.Food: res.Food += amount; break;
+                case ResourceType.Wood: res.Wood += amount; break;
+                case ResourceType.Gold: res.Gold += amount; break;
+                case ResourceType.Stone: res.Stone += amount; break;
             }
         }
 
@@ -3166,6 +3505,9 @@ namespace OpenEmpires
                 case 10: foodCost = config.LongbowmanFoodCost; woodCost = config.LongbowmanWoodCost; goldCost = 0; break;
                 case 11: foodCost = config.GendarmeFoodCost; woodCost = config.GendarmeWoodCost; goldCost = 0; break;
                 case 12: foodCost = config.LandsknechtFoodCost; woodCost = config.LandsknechtWoodCost; goldCost = 0; break;
+                case 13: foodCost = 0; woodCost = config.BatteringRamWoodCost; goldCost = config.BatteringRamGoldCost; break;
+                case 14: foodCost = 0; woodCost = config.MangonelWoodCost; goldCost = config.MangonelGoldCost; break;
+                case 15: foodCost = 0; woodCost = config.TrebuchetWoodCost; goldCost = config.TrebuchetGoldCost; break;
                 case 4: foodCost = config.ScoutFoodCost; woodCost = config.ScoutWoodCost; goldCost = 0; break;
                 case 3: foodCost = config.HorsemanFoodCost; woodCost = config.HorsemanWoodCost; goldCost = 0; break;
                 case 2: foodCost = config.ArcherFoodCost; woodCost = config.ArcherWoodCost; goldCost = 0; break;
@@ -4662,6 +5004,51 @@ namespace OpenEmpires
                     unitData.BonusDamageVsType = config.ArcherBonusDamageVsType;
                     unitData.BonusDamageAmount = config.ArcherBonusDamageAmount;
                     break;
+                case 13: // Battering Ram
+                    unitData = UnitRegistry.CreateUnit(playerId, spawnPos,
+                        ConfigToFixed32(config.BatteringRamMoveSpeed),
+                        cachedUnitRadius,
+                        ConfigToFixed32(config.BatteringRamMass));
+                    unitData.UnitType = 13;
+                    unitData.MaxHealth = config.BatteringRamMaxHealth;
+                    unitData.AttackDamage = config.BatteringRamAttackDamage;
+                    unitData.AttackRange = ConfigToFixed32(config.BatteringRamAttackRange);
+                    unitData.AttackCooldownTicks = config.BatteringRamAttackCooldownTicks;
+                    unitData.MeleeArmor = config.BatteringRamMeleeArmor;
+                    unitData.RangedArmor = config.BatteringRamRangedArmor;
+                    unitData.DetectionRange = ConfigToFixed32(config.BatteringRamDetectionRange);
+                    unitData.BonusDamageVsBuildings = config.BatteringRamBonusDamageVsBuildings;
+                    break;
+                case 14: // Mangonel
+                    unitData = UnitRegistry.CreateUnit(playerId, spawnPos,
+                        ConfigToFixed32(config.MangonelMoveSpeed),
+                        cachedUnitRadius,
+                        ConfigToFixed32(config.MangonelMass));
+                    unitData.UnitType = 14;
+                    unitData.MaxHealth = config.MangonelMaxHealth;
+                    unitData.AttackDamage = config.MangonelAttackDamage;
+                    unitData.AttackRange = ConfigToFixed32(config.MangonelAttackRange);
+                    unitData.AttackCooldownTicks = config.MangonelAttackCooldownTicks;
+                    unitData.MeleeArmor = config.MangonelMeleeArmor;
+                    unitData.RangedArmor = config.MangonelRangedArmor;
+                    unitData.DetectionRange = ConfigToFixed32(config.MangonelDetectionRange);
+                    unitData.BonusDamageVsBuildings = config.MangonelBonusDamageVsBuildings;
+                    break;
+                case 15: // Trebuchet
+                    unitData = UnitRegistry.CreateUnit(playerId, spawnPos,
+                        ConfigToFixed32(config.TrebuchetMoveSpeed),
+                        cachedUnitRadius,
+                        ConfigToFixed32(config.TrebuchetMass));
+                    unitData.UnitType = 15;
+                    unitData.MaxHealth = config.TrebuchetMaxHealth;
+                    unitData.AttackDamage = config.TrebuchetAttackDamage;
+                    unitData.AttackRange = ConfigToFixed32(config.TrebuchetAttackRange);
+                    unitData.AttackCooldownTicks = config.TrebuchetAttackCooldownTicks;
+                    unitData.MeleeArmor = config.TrebuchetMeleeArmor;
+                    unitData.RangedArmor = config.TrebuchetRangedArmor;
+                    unitData.DetectionRange = ConfigToFixed32(config.TrebuchetDetectionRange);
+                    unitData.BonusDamageVsBuildings = config.TrebuchetBonusDamageVsBuildings;
+                    break;
                 case 0: // Villager
                     unitData = UnitRegistry.CreateUnit(playerId, spawnPos,
                         ConfigToFixed32(config.UnitMoveSpeed),
@@ -4696,6 +5083,36 @@ namespace OpenEmpires
                     break;
             }
             unitData.CurrentHealth = unitData.MaxHealth;
+
+            // Apply researched technologies to newly created units
+            if (!unitData.IsVillager && !unitData.IsSheep && playerId >= 0 && playerId < playerCount)
+            {
+                foreach (var tech in playerTechnologies[playerId])
+                {
+                    switch (tech)
+                    {
+                        case TechnologyType.MeleeAttack1:
+                            if (!unitData.IsRanged) unitData.AttackDamage += config.MeleeAttackBonus1; break;
+                        case TechnologyType.MeleeAttack2:
+                            if (!unitData.IsRanged) unitData.AttackDamage += config.MeleeAttackBonus2; break;
+                        case TechnologyType.RangedAttack1:
+                            if (unitData.IsRanged) unitData.AttackDamage += config.RangedAttackBonus1; break;
+                        case TechnologyType.RangedAttack2:
+                            if (unitData.IsRanged) unitData.AttackDamage += config.RangedAttackBonus2; break;
+                        case TechnologyType.MeleeArmor1: unitData.MeleeArmor += config.MeleeArmorBonus1; break;
+                        case TechnologyType.MeleeArmor2: unitData.MeleeArmor += config.MeleeArmorBonus2; break;
+                        case TechnologyType.RangedArmor1: unitData.RangedArmor += config.RangedArmorBonus1; break;
+                        case TechnologyType.RangedArmor2: unitData.RangedArmor += config.RangedArmorBonus2; break;
+                        case TechnologyType.Chemistry:
+                            if (unitData.IsRanged) unitData.AttackDamage += config.ChemistryRangedBonus; break;
+                        case TechnologyType.SiegeEngineering:
+                            if (unitData.UnitType >= 13 && unitData.UnitType <= 15)
+                            { unitData.MaxHealth += config.SiegeEngineeringHPBonus; unitData.CurrentHealth = unitData.MaxHealth; }
+                            break;
+                    }
+                }
+            }
+
             return unitData;
         }
 

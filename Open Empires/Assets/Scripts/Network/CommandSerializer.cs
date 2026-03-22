@@ -103,6 +103,12 @@ namespace OpenEmpires
                 case TsunamiCommand tsunami:
                     payload = JsonUtility.ToJson(new TsunamiPayload(tsunami));
                     break;
+                case MarketTradeCommand marketTrade:
+                    payload = JsonUtility.ToJson(new MarketTradePayload(marketTrade));
+                    break;
+                case ResearchCommand research:
+                    payload = JsonUtility.ToJson(new ResearchPayload(research));
+                    break;
                 case CheatResourceCommand:
                 case CheatProductionCommand:
                 case CheatVisionCommand:
@@ -154,6 +160,8 @@ namespace OpenEmpires
                     "HealingRain" => ParseHealingRainCommand(payload, playerId),
                     "LightningStorm" => ParseLightningStormCommand(payload, playerId),
                     "Tsunami" => ParseTsunamiCommand(payload, playerId),
+                    "MarketTrade" => ParseMarketTradeCommand(payload, playerId),
+                    "Research" => ParseResearchCommand(payload, playerId),
                     _ => null
                 };
             }
@@ -923,6 +931,48 @@ namespace OpenEmpires
             }
         }
 
+        [System.Serializable]
+        private class MarketTradePayload
+        {
+            public int tradeResource;
+            public bool isBuying;
+
+            public MarketTradePayload() { }
+
+            public MarketTradePayload(MarketTradeCommand cmd)
+            {
+                tradeResource = cmd.TradeResource;
+                isBuying = cmd.IsBuying;
+            }
+        }
+
+        private static MarketTradeCommand ParseMarketTradeCommand(string payload, int playerId)
+        {
+            var data = JsonUtility.FromJson<MarketTradePayload>(payload);
+            return new MarketTradeCommand(playerId, data.tradeResource, data.isBuying);
+        }
+
+        [System.Serializable]
+        private class ResearchPayload
+        {
+            public int buildingId;
+            public int techType;
+
+            public ResearchPayload() { }
+
+            public ResearchPayload(ResearchCommand cmd)
+            {
+                buildingId = cmd.BuildingId;
+                techType = cmd.TechType;
+            }
+        }
+
+        private static ResearchCommand ParseResearchCommand(string payload, int playerId)
+        {
+            var data = JsonUtility.FromJson<ResearchPayload>(payload);
+            return new ResearchCommand(playerId, data.buildingId, (TechnologyType)data.techType);
+        }
+
         private static TsunamiCommand ParseTsunamiCommand(string payload, int playerId)
         {
             var data = JsonUtility.FromJson<TsunamiPayload>(payload);
@@ -1090,6 +1140,14 @@ namespace OpenEmpires
                             w.Write(tsunami.TargetTileZ);
                             w.Write(tsunami.DirectionX);
                             w.Write(tsunami.DirectionZ);
+                            break;
+                        case MarketTradeCommand marketTrade:
+                            w.Write(marketTrade.TradeResource);
+                            w.Write(marketTrade.IsBuying);
+                            break;
+                        case ResearchCommand research:
+                            w.Write(research.BuildingId);
+                            w.Write(research.TechType);
                             break;
                         case CheatResourceCommand:
                         case CheatProductionCommand:
@@ -1325,6 +1383,16 @@ namespace OpenEmpires
                             int tsDirX = r.ReadInt32();
                             int tsDirZ = r.ReadInt32();
                             commands.Add(new TsunamiCommand(playerId, tsTileX, tsTileZ, tsDirX, tsDirZ));
+                            break;
+                        case CommandType.MarketTrade:
+                            int mtResource = r.ReadInt32();
+                            bool mtBuying = r.ReadBoolean();
+                            commands.Add(new MarketTradeCommand(playerId, mtResource, mtBuying));
+                            break;
+                        case CommandType.Research:
+                            int resBuildingId = r.ReadInt32();
+                            int resTechType = r.ReadInt32();
+                            commands.Add(new ResearchCommand(playerId, resBuildingId, (TechnologyType)resTechType));
                             break;
                     }
                 }
