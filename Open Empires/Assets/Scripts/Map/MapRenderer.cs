@@ -19,7 +19,24 @@ namespace OpenEmpires
         private MapData cachedMapData;
 
         // Tree billboard data (loaded at runtime from Resources)
-        private static readonly string[] TreeSpriteNames = { "TreeSprites/Beech1", "TreeSprites/Beech2", "TreeSprites/Bush1", "TreeSprites/Bush2" };
+        // Trees: Beech1, Beech2, Oak1, Birch1, Birch2 (indices 0-4)
+        // Bushes: Bush1, Bush2, Bush3 (indices 5-7)
+        // Meadow flowers: MeadowFlowers1, MeadowFlowers2 (indices 8-9)
+        private static readonly string[] TreeSpriteNames = {
+            "TreeSprites/Beech1", "TreeSprites/Beech2",   // 0-1: beech (most common)
+            "TreeSprites/Oak1",                             // 2: oak (second most)
+            "TreeSprites/Birch1", "TreeSprites/Birch2",   // 3-4: birch (third)
+            "TreeSprites/Bush1", "TreeSprites/Bush2", "TreeSprites/Bush3", // 5-7: bushes (woodline edges)
+            "TreeSprites/MeadowFlowers1", "TreeSprites/MeadowFlowers2"     // 8-9: meadow flowers (grass decoration)
+        };
+        // Weighted tree selection: beech ~40%, oak ~25%, birch ~20%, random mix ~15%
+        private static readonly int[] TreeWeightTable = {
+            0, 0, 0, 0, 0, 0, 0, 0, // Beech1 x8
+            1, 1, 1, 1, 1, 1, 1, 1, // Beech2 x8
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, // Oak1 x10
+            3, 3, 3, 3, 3, 3,       // Birch1 x6
+            4, 4, 4, 4, 4, 4,       // Birch2 x6
+        };
         private Material[] treeMaterials;
         public Material[] TreeMaterials => treeMaterials;
         private Transform billboardContainer;
@@ -489,33 +506,57 @@ namespace OpenEmpires
             var mf = waterGO.AddComponent<MeshFilter>();
             var mr = waterGO.AddComponent<MeshRenderer>();
 
-            // Simple quad mesh covering the map
+            // Subdivided grid mesh for wave displacement and shore effects
+            const int res = 64;
             var mesh = new Mesh();
             mesh.name = "WaterMesh";
+            mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
             float w = mapData.Width;
             float h = mapData.Height;
-            mesh.vertices = new Vector3[]
+
+            int vertCount = (res + 1) * (res + 1);
+            var vertices = new Vector3[vertCount];
+            var uvs = new Vector2[vertCount];
+            for (int z = 0; z <= res; z++)
             {
-                new Vector3(0, 0, 0),
-                new Vector3(w, 0, 0),
-                new Vector3(w, 0, h),
-                new Vector3(0, 0, h)
-            };
-            mesh.uv = new Vector2[]
+                for (int x = 0; x <= res; x++)
+                {
+                    int i = z * (res + 1) + x;
+                    float fx = (float)x / res;
+                    float fz = (float)z / res;
+                    vertices[i] = new Vector3(fx * w, 0f, fz * h);
+                    uvs[i] = new Vector2(fx, fz);
+                }
+            }
+
+            int triCount = res * res * 6;
+            var triangles = new int[triCount];
+            int ti = 0;
+            for (int z = 0; z < res; z++)
             {
-                new Vector2(0, 0),
-                new Vector2(1, 0),
-                new Vector2(1, 1),
-                new Vector2(0, 1)
-            };
-            mesh.triangles = new int[] { 0, 2, 1, 0, 3, 2 };
+                for (int x = 0; x < res; x++)
+                {
+                    int bl = z * (res + 1) + x;
+                    int br = bl + 1;
+                    int tl = bl + (res + 1);
+                    int tr = tl + 1;
+                    triangles[ti++] = bl;
+                    triangles[ti++] = tl;
+                    triangles[ti++] = br;
+                    triangles[ti++] = br;
+                    triangles[ti++] = tl;
+                    triangles[ti++] = tr;
+                }
+            }
+
+            mesh.vertices = vertices;
+            mesh.uv = uvs;
+            mesh.triangles = triangles;
             mesh.RecalculateNormals();
             mf.mesh = mesh;
 
-            // Custom water shader with fog of war support
+            // Custom water shader with animated waves, shore foam, caustics
             var mat = new Material(Shader.Find("OpenEmpires/Water"));
-            mat.SetColor("_Color", new Color(0.1f, 0.25f, 0.5f, 0.6f));
-            mat.SetFloat("_Smoothness", 0.9f);
             mr.material = mat;
             mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             mr.receiveShadows = false;
@@ -666,17 +707,17 @@ namespace OpenEmpires
                 mat.SetTexture("_MainTex", tex);
                 mat.SetColor("_Color", Color.white);
                 mat.SetFloat("_Cutoff", 0.5f);
-                mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry + 1;
+                mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
                 mat.enableInstancing = true;
                 treeMaterials[i] = mat;
             }
             Debug.Log($"[MapRenderer] Loaded {treeMaterials.Length} tree materials with Billboard shader");
         }
 
-        private GameObject CreateTreeBillboard(Vector3 position, int variantIndex)
+        private (GameObject root, GameObject sprite) CreateTreeBillboard(Vector3 position, int variantIndex)
         {
             if (treeMaterials == null || variantIndex >= treeMaterials.Length || treeMaterials[variantIndex] == null)
-                return null;
+                return (null, null);
 
             var root = new GameObject("Tree");
             root.transform.SetParent(transform);
@@ -705,7 +746,27 @@ namespace OpenEmpires
             var renderer = spriteGo.GetComponent<MeshRenderer>();
             renderer.sharedMaterial = treeMaterials[variantIndex];
 
-            return root;
+            return (root, spriteGo);
+        }
+
+        private int PickTreeVariant(MapData mapData, Vector3 position)
+        {
+            int x = Mathf.FloorToInt(position.x);
+            int z = Mathf.FloorToInt(position.z);
+            float density = 0f;
+            if (mapData.IsInBounds(x, z))
+                density = mapData.ForestDensity[x, z];
+
+            // At woodline edges (low density), spawn bushes for gradual transition
+            float edgeThreshold = 0.75f;
+            if (density < edgeThreshold)
+            {
+                // Bush zone: pick from Bush1, Bush2, Bush3 (indices 5-7)
+                return 5 + rng.Next(3);
+            }
+
+            // Interior forest: weighted tree selection
+            return TreeWeightTable[rng.Next(TreeWeightTable.Length)];
         }
 
         private void SpawnTreesFromForestDensity(MapData mapData)
@@ -725,8 +786,55 @@ namespace OpenEmpires
         private void SpawnResourceNodes(MapData mapData, Vector2Int[] playerBases)
         {
             SpawnTreesFromForestDensity(mapData);
+            SpawnMeadowFlowers(mapData);
             SpawnPerPlayerResources(mapData, playerBases);
             SpawnNeutralResources(mapData, playerBases);
+        }
+
+        private void SpawnMeadowFlowers(MapData mapData)
+        {
+            if (treeMaterials == null || treeMaterials.Length < 10) return;
+
+            // Spawn meadow flowers on grass tiles that aren't near forests or water
+            for (int z = 0; z < mapData.Height; z += 4)
+            {
+                for (int x = 0; x < mapData.Width; x += 4)
+                {
+                    if (!mapData.IsInBounds(x, z)) continue;
+                    if (mapData.Tiles[x, z] != TileType.Grass) continue;
+                    if (mapData.ForestDensity[x, z] >= 0.4f) continue;
+
+                    // ~8% chance per 4x4 block
+                    if (rng.NextDouble() > 0.08) continue;
+
+                    float fx = x + (float)(rng.NextDouble() * 3);
+                    float fz = z + (float)(rng.NextDouble() * 3);
+                    float fy = mapData.SampleHeight(fx, fz) * heightScale;
+
+                    // Pick MeadowFlowers1 or MeadowFlowers2 (indices 8-9)
+                    int variant = 8 + rng.Next(2);
+                    CreateFlowerBillboard(new Vector3(fx, fy, fz), variant);
+                }
+            }
+        }
+
+        private void CreateFlowerBillboard(Vector3 position, int variantIndex)
+        {
+            if (treeMaterials == null || variantIndex >= treeMaterials.Length || treeMaterials[variantIndex] == null)
+                return;
+
+            var spriteGo = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            spriteGo.name = "MeadowFlower";
+            spriteGo.layer = 0;
+            var mc = spriteGo.GetComponent<MeshCollider>();
+            if (mc != null) Destroy(mc);
+
+            spriteGo.transform.SetParent(billboardContainer);
+            spriteGo.transform.position = new Vector3(position.x, position.y + 1.5f, position.z);
+            spriteGo.transform.localScale = new Vector3(3f, 3f, 1f);
+
+            var renderer = spriteGo.GetComponent<MeshRenderer>();
+            renderer.sharedMaterial = treeMaterials[variantIndex];
         }
 
         private void SpawnPerPlayerResources(MapData mapData, Vector2Int[] playerBases)
@@ -928,11 +1036,14 @@ namespace OpenEmpires
             var nodeData = mapData.AddResourceNode(type, position, amount, footprintW, footprintH);
 
             GameObject go = null;
+            GameObject treeSprite = null;
 
             if (type == ResourceType.Wood && treeMaterials != null && treeMaterials.Length > 0)
             {
-                int variant = rng.Next(treeMaterials.Length);
-                go = CreateTreeBillboard(position, variant);
+                int variant = PickTreeVariant(mapData, position);
+                var result = CreateTreeBillboard(position, variant);
+                go = result.root;
+                treeSprite = result.sprite;
                 if (go == null) Debug.LogError($"[MapRenderer] CreateTreeBillboard returned null for variant {variant} at {position}");
             }
             else if (prefab != null)
@@ -967,6 +1078,8 @@ namespace OpenEmpires
                 if (nodeView == null)
                     nodeView = go.AddComponent<ResourceNode>();
                 nodeView.Initialize(nodeData.Id, nodeData);
+                if (treeSprite != null)
+                    nodeView.SetBillboardSprite(treeSprite);
                 resourceNodeViews[nodeData.Id] = nodeView;
             }
         }

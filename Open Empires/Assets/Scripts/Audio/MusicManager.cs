@@ -46,16 +46,19 @@ namespace OpenEmpires
 
         private AudioClip[] peacetimeTracks;
         private AudioClip[] wartimeTracks;
+        private Dictionary<Civilization, AudioClip[]> civPeacetimeTracks = new Dictionary<Civilization, AudioClip[]>();
 
         private List<int> peacetimeOrder = new List<int>();
         private List<int> wartimeOrder = new List<int>();
         private int currentIndex;
         private bool isWartime;
+        private bool playedCivIntro;
 
         private float lastCombatTime = -100f;
         private float nextPollTime;
 
         private bool gameStarted;
+        private bool playingMenuMusic;
         private bool crossfading;
         private float crossfadeTimer;
 
@@ -93,12 +96,17 @@ namespace OpenEmpires
             activeSource = sourceA;
             outgoingSource = sourceB;
 
-            peacetimeTracks = Resources.LoadAll<AudioClip>("Music/Peacetime");
+            peacetimeTracks = Resources.LoadAll<AudioClip>("Music/Peacetime/Generic");
             wartimeTracks = Resources.LoadAll<AudioClip>("Music/Wartime");
+
+            // Load civilization-specific peacetime tracks
+            civPeacetimeTracks[Civilization.English] = Resources.LoadAll<AudioClip>("Music/Peacetime/English");
+            civPeacetimeTracks[Civilization.French] = Resources.LoadAll<AudioClip>("Music/Peacetime/French");
+            civPeacetimeTracks[Civilization.HolyRomanEmpire] = Resources.LoadAll<AudioClip>("Music/Peacetime/HolyRomanEmpire");
 
             if (peacetimeTracks.Length == 0)
             {
-                Debug.LogWarning("MusicManager: No peacetime tracks found in Resources/Music/Peacetime");
+                Debug.LogWarning("MusicManager: No peacetime tracks found in Resources/Music/Peacetime/Generic");
             }
             if (wartimeTracks.Length == 0)
             {
@@ -117,15 +125,38 @@ namespace OpenEmpires
 
         private void Update()
         {
+            // Keep crossfade running even during menu music
+            UpdateCrossfade();
+
             if (!gameStarted)
             {
                 if (GameBootstrapper.Instance?.Simulation != null)
                 {
                     gameStarted = true;
-                    if (peacetimeTracks.Length > 0)
+                    playedCivIntro = false;
+
+                    if (playingMenuMusic && activeSource.isPlaying)
                     {
-                        StartTrack(peacetimeTracks[peacetimeOrder[0]], fadeIn: true);
+                        // Menu music is already the civ track — stop looping, let it finish, then advance to generic
+                        activeSource.loop = false;
+                        playedCivIntro = true;
+                        playingMenuMusic = false;
                     }
+                    else
+                    {
+                        // No menu music — try to play civ-specific intro track
+                        AudioClip introClip = GetCivIntroClip();
+                        if (introClip != null)
+                        {
+                            playedCivIntro = true;
+                            StartTrack(introClip, fadeIn: true);
+                        }
+                        else if (peacetimeTracks.Length > 0)
+                        {
+                            StartTrack(peacetimeTracks[peacetimeOrder[0]], fadeIn: true);
+                        }
+                    }
+                    playingMenuMusic = false;
                 }
                 return;
             }
@@ -205,6 +236,19 @@ namespace OpenEmpires
 
         private void AdvanceToNextTrack()
         {
+            // After civ intro finishes, start the generic peacetime playlist
+            if (playedCivIntro && !isWartime)
+            {
+                playedCivIntro = false;
+                if (peacetimeTracks.Length > 0)
+                {
+                    ShufflePlaylist(peacetimeOrder, peacetimeTracks.Length);
+                    currentIndex = 0;
+                    CrossfadeToTrack(peacetimeTracks[peacetimeOrder[0]]);
+                    return;
+                }
+            }
+
             var tracks = isWartime ? wartimeTracks : peacetimeTracks;
             var order = isWartime ? wartimeOrder : peacetimeOrder;
 
@@ -218,6 +262,22 @@ namespace OpenEmpires
             }
 
             CrossfadeToTrack(tracks[order[currentIndex]]);
+        }
+
+        private AudioClip GetCivIntroClip()
+        {
+            if (selectionManager == null)
+                selectionManager = FindFirstObjectByType<UnitSelectionManager>();
+
+            var sim = GameBootstrapper.Instance?.Simulation;
+            if (sim == null || selectionManager == null) return null;
+
+            Civilization civ = sim.GetPlayerCivilization(selectionManager.LocalPlayerId);
+            if (civPeacetimeTracks.TryGetValue(civ, out var clips) && clips.Length > 0)
+            {
+                return clips[Random.Range(0, clips.Length)];
+            }
+            return null;
         }
 
         private void ApplyVolume()
@@ -274,6 +334,31 @@ namespace OpenEmpires
             }
         }
 
+        public void PlayMenuMusic(Civilization civ)
+        {
+            if (gameStarted) return;
+
+            if (civPeacetimeTracks.TryGetValue(civ, out var clips) && clips.Length > 0)
+            {
+                var clip = clips[Random.Range(0, clips.Length)];
+
+                // Don't restart if already playing this clip
+                if (activeSource.isPlaying && activeSource.clip == clip) return;
+
+                if (playingMenuMusic && activeSource.isPlaying)
+                {
+                    CrossfadeToTrack(clip);
+                    activeSource.loop = true;
+                }
+                else
+                {
+                    StartTrack(clip, fadeIn: true);
+                    activeSource.loop = true;
+                }
+                playingMenuMusic = true;
+            }
+        }
+
         public void Stop()
         {
             sourceA.Stop();
@@ -283,6 +368,8 @@ namespace OpenEmpires
             activeSource = sourceA;
             outgoingSource = sourceB;
             gameStarted = false;
+            playingMenuMusic = false;
+            playedCivIntro = false;
             crossfading = false;
             crossfadeTimer = 0f;
             isWartime = false;

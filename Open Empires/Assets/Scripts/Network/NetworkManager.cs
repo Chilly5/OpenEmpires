@@ -232,6 +232,11 @@ namespace OpenEmpires
                 StartCoroutine(ProbeAllRegions());
         }
 
+        private void Start()
+        {
+            MusicManager.Instance?.PlayMenuMusic(selectedCivilization);
+        }
+
         private void OnEnable()
         {
             if (matchmakingManager != null)
@@ -1569,6 +1574,7 @@ namespace OpenEmpires
             selectedCivilization = (Civilization)index;
             UpdateCivButtonVisuals();
             UpdateCivDescription();
+            MusicManager.Instance?.PlayMenuMusic(selectedCivilization);
         }
 
         private void UpdateCivDescription()
@@ -1971,7 +1977,10 @@ namespace OpenEmpires
                 civTmp.alignment = TextAlignmentOptions.Center;
                 civTmp.color = Color.white;
             }
+            // Random starting civ
+            selectedCivilization = (Civilization)UnityEngine.Random.Range(0, 3);
             UpdateCivButtonVisuals();
+            UpdateCivDescription();
 
             // Divider below civ buttons
             ry -= 24f;
