@@ -118,6 +118,7 @@ namespace OpenEmpires
         public int BonusDamageAmount;
         public int BonusDamageVsType2 = -1; // second bonus target, -1 = none
         public int BonusDamageAmount2;
+        public int BonusDamageVsBuildings; // extra damage when attacking buildings
 
         // Charge
         public bool IsCharging;

@@ -221,8 +221,8 @@ namespace OpenEmpires
         private static readonly Color PanelBgColor = new Color(0, 0, 0, 1f);
         private static readonly Color BarBgColor = new Color(0.1f, 0.1f, 0.1f);
 
-        private static readonly string[] UnitTypeNames = { "Villager", "Spearman", "Archer", "Horseman", "Scout", "Sheep", "Man-at-Arms", "Knight", "Crossbowman", "Monk", "Longbowman", "Gendarme", "Landsknecht" };
-        private static readonly string[] UnitTypePlurals = { "Villagers", "Spearmen", "Archers", "Horsemen", "Scouts", "Sheep", "Men-at-Arms", "Knights", "Crossbowmen", "Monks", "Longbowmen", "Gendarmes", "Landsknechte" };
+        private static readonly string[] UnitTypeNames = { "Villager", "Spearman", "Archer", "Horseman", "Scout", "Sheep", "Man-at-Arms", "Knight", "Crossbowman", "Monk", "Longbowman", "Gendarme", "Landsknecht", "Battering Ram", "Mangonel", "Trebuchet" };
+        private static readonly string[] UnitTypePlurals = { "Villagers", "Spearmen", "Archers", "Horsemen", "Scouts", "Sheep", "Men-at-Arms", "Knights", "Crossbowmen", "Monks", "Longbowmen", "Gendarmes", "Landsknechte", "Battering Rams", "Mangonels", "Trebuchets" };
         private static readonly string[] BuildingTypeNames = { "House", "Barracks", "Town Center", "Wood Wall", "Mill", "Lumber Yard", "Mine", "Archery Range", "Stables", "Farm", "Tower", "Monastery", "Landmark", "Blacksmith", "Market", "University", "Siege Workshop", "Keep", "Stone Wall", "Stone Gate", "Wood Gate", "Wonder" };
         private static readonly string[] BuildingTypePlurals = { "Houses", "Barracks", "Town Centers", "Wood Walls", "Mills", "Lumber Yards", "Mines", "Archery Ranges", "Stables", "Farms", "Towers", "Monasteries", "Landmarks", "Blacksmiths", "Markets", "Universities", "Siege Workshops", "Keeps", "Stone Walls", "Stone Gates", "Wood Gates", "Wonders" };
         private static readonly string[] ResourceNodeNames = { "Berry Bush", "Tree", "Gold Mine", "Stone Mine" };
@@ -1895,6 +1895,46 @@ namespace OpenEmpires
             return slots;
         }
 
+        private GridButton MakeResearchButton(GameSimulation sim, int playerId, int buildingId,
+            TechnologyType tech, string label, string hotkey, string desc,
+            int foodCost, int goldCost, PlayerResources resources)
+        {
+            bool done = sim.HasTechnology(playerId, tech);
+            bool canAfford = resources.Food >= foodCost && resources.Gold >= goldCost;
+
+            // Check prerequisites for tier 2
+            bool prereqMet = true;
+            switch (tech)
+            {
+                case TechnologyType.MeleeAttack2: prereqMet = sim.HasTechnology(playerId, TechnologyType.MeleeAttack1); break;
+                case TechnologyType.MeleeArmor2: prereqMet = sim.HasTechnology(playerId, TechnologyType.MeleeArmor1); break;
+                case TechnologyType.RangedAttack2: prereqMet = sim.HasTechnology(playerId, TechnologyType.RangedAttack1); break;
+                case TechnologyType.RangedArmor2: prereqMet = sim.HasTechnology(playerId, TechnologyType.RangedArmor1); break;
+            }
+
+            // Age check
+            int reqAge = tech <= TechnologyType.RangedArmor1 ? 2 : 3;
+            bool ageOk = sim.GetPlayerAge(playerId) >= reqAge;
+
+            string costStr = "";
+            if (foodCost > 0) costStr += $"{foodCost} <sprite name=\"food\"> ";
+            if (goldCost > 0) costStr += $"{goldCost} <sprite name=\"gold\">";
+
+            string tooltip = $"<b>{label.Replace("\n", " ")}</b>\n{desc}\nCost: {costStr}";
+            if (done) tooltip += "\n<i>(Already researched)</i>";
+            else if (!ageOk) tooltip += $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(reqAge)}</color>";
+            else if (!prereqMet) tooltip += "\n<color=#FF6666>Requires previous tier</color>";
+
+            return new GridButton
+            {
+                Label = label,
+                Hotkey = hotkey,
+                Tooltip = tooltip,
+                Enabled = !done && canAfford && prereqMet && ageOk,
+                OnClick = () => sim.CommandBuffer.EnqueueCommand(new ResearchCommand(playerId, buildingId, tech))
+            };
+        }
+
         private GridButton MakeBuildSlot(string label, string hotkey, string desc, BuildingType type,
             int woodCost, int stoneCost, int foodCost, int goldCost,
             PlayerResources resources, int playerAge, bool isWall, bool isGate = false)
@@ -2175,6 +2215,32 @@ namespace OpenEmpires
                             new TrainUnitCommand(building.PlayerId, building.Id, 9)) };
                     hasAny = true;
                 }
+                else if (building.Type == BuildingType.SiegeWorkshop)
+                {
+                    int ramWood = sim.Config.BatteringRamWoodCost;
+                    int ramGold = sim.Config.BatteringRamGoldCost;
+                    int mangWood = sim.Config.MangonelWoodCost;
+                    int mangGold = sim.Config.MangonelGoldCost;
+                    int trebWood = sim.Config.TrebuchetWoodCost;
+                    int trebGold = sim.Config.TrebuchetGoldCost;
+
+                    slots[0] = new GridButton { Label = "Ram", Hotkey = "Q",
+                        Enabled = resources.Wood >= ramWood && resources.Gold >= ramGold,
+                        Tooltip = $"<b>Battering Ram</b>\nSlow melee siege unit. Devastating vs buildings.\nCost: {ramWood} <sprite name=\"wood\"> {ramGold} <sprite name=\"gold\">",
+                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
+                            new TrainUnitCommand(building.PlayerId, building.Id, 13)) };
+                    slots[1] = new GridButton { Label = "Mangonel", Hotkey = "W",
+                        Enabled = resources.Wood >= mangWood && resources.Gold >= mangGold,
+                        Tooltip = $"<b>Mangonel</b>\nRanged siege unit. Good vs groups and buildings.\nCost: {mangWood} <sprite name=\"wood\"> {mangGold} <sprite name=\"gold\">",
+                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
+                            new TrainUnitCommand(building.PlayerId, building.Id, 14)) };
+                    slots[2] = new GridButton { Label = "Trebuchet", Hotkey = "E",
+                        Enabled = resources.Wood >= trebWood && resources.Gold >= trebGold,
+                        Tooltip = $"<b>Trebuchet</b>\nLong-range siege unit. Extremely powerful vs buildings.\nCost: {trebWood} <sprite name=\"wood\"> {trebGold} <sprite name=\"gold\">",
+                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
+                            new TrainUnitCommand(building.PlayerId, building.Id, 15)) };
+                    hasAny = true;
+                }
                 else if (building.Type == BuildingType.TownCenter)
                 {
                     int villagerCost = sim.Config.VillagerFoodCost * (100 - discPct) / 100;
@@ -2264,6 +2330,87 @@ namespace OpenEmpires
                         Tooltip = $"<b>Vision Upgrade</b>\nIncreases vision/detection range.\nCost: {visionCost} <sprite name=\"wood\">" + (visionDone ? "\n<i>(Already applied or queued)</i>" : ""),
                         OnClick = () => sim.CommandBuffer.EnqueueCommand(
                             new UpgradeTowerCommand(building.PlayerId, building.Id, TowerUpgradeType.VisionUpgrade)) };
+                    hasAny = true;
+                }
+                else if (building.Type == BuildingType.Market)
+                {
+                    int pid = building.PlayerId;
+                    int buyFood = sim.GetMarketBuyPrice(pid, ResourceType.Food);
+                    int buyWood = sim.GetMarketBuyPrice(pid, ResourceType.Wood);
+                    int buyStone = sim.GetMarketBuyPrice(pid, ResourceType.Stone);
+                    int sellFood = sim.GetMarketSellPrice(pid, ResourceType.Food);
+                    int sellWood = sim.GetMarketSellPrice(pid, ResourceType.Wood);
+                    int sellStone = sim.GetMarketSellPrice(pid, ResourceType.Stone);
+                    int tradeAmt = sim.Config.MarketTradeAmount;
+
+                    slots[0] = new GridButton { Label = $"Buy\nFood", Hotkey = "Q",
+                        Enabled = resources.Gold >= buyFood,
+                        Tooltip = $"<b>Buy Food</b>\nBuy {tradeAmt} food.\nCost: {buyFood} <sprite name=\"gold\">",
+                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
+                            new MarketTradeCommand(pid, (int)ResourceType.Food, true)) };
+                    slots[1] = new GridButton { Label = $"Buy\nWood", Hotkey = "W",
+                        Enabled = resources.Gold >= buyWood,
+                        Tooltip = $"<b>Buy Wood</b>\nBuy {tradeAmt} wood.\nCost: {buyWood} <sprite name=\"gold\">",
+                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
+                            new MarketTradeCommand(pid, (int)ResourceType.Wood, true)) };
+                    slots[2] = new GridButton { Label = $"Buy\nStone", Hotkey = "E",
+                        Enabled = resources.Gold >= buyStone,
+                        Tooltip = $"<b>Buy Stone</b>\nBuy {tradeAmt} stone.\nCost: {buyStone} <sprite name=\"gold\">",
+                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
+                            new MarketTradeCommand(pid, (int)ResourceType.Stone, true)) };
+                    slots[4] = new GridButton { Label = $"Sell\nFood", Hotkey = "A",
+                        Enabled = resources.Food >= tradeAmt,
+                        Tooltip = $"<b>Sell Food</b>\nSell {tradeAmt} food.\nGain: {sellFood} <sprite name=\"gold\">",
+                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
+                            new MarketTradeCommand(pid, (int)ResourceType.Food, false)) };
+                    slots[5] = new GridButton { Label = $"Sell\nWood", Hotkey = "S",
+                        Enabled = resources.Wood >= tradeAmt,
+                        Tooltip = $"<b>Sell Wood</b>\nSell {tradeAmt} wood.\nGain: {sellWood} <sprite name=\"gold\">",
+                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
+                            new MarketTradeCommand(pid, (int)ResourceType.Wood, false)) };
+                    slots[6] = new GridButton { Label = $"Sell\nStone", Hotkey = "D",
+                        Enabled = resources.Stone >= tradeAmt,
+                        Tooltip = $"<b>Sell Stone</b>\nSell {tradeAmt} stone.\nGain: {sellStone} <sprite name=\"gold\">",
+                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
+                            new MarketTradeCommand(pid, (int)ResourceType.Stone, false)) };
+                    hasAny = true;
+                }
+                else if (building.Type == BuildingType.Blacksmith)
+                {
+                    int pid = building.PlayerId;
+                    int bid = building.Id;
+                    var cfg = sim.Config;
+                    slots[0] = MakeResearchButton(sim, pid, bid, TechnologyType.MeleeAttack1, "Melee\nAttack I", "Q",
+                        "Increases melee unit attack damage.", 0, cfg.MeleeAttack1Cost, resources);
+                    slots[1] = MakeResearchButton(sim, pid, bid, TechnologyType.MeleeArmor1, "Melee\nArmor I", "W",
+                        "Increases melee armor for all units.", 0, cfg.MeleeArmor1Cost, resources);
+                    slots[2] = MakeResearchButton(sim, pid, bid, TechnologyType.RangedAttack1, "Ranged\nAttack I", "E",
+                        "Increases ranged unit attack damage.", 0, cfg.RangedAttack1Cost, resources);
+                    slots[3] = MakeResearchButton(sim, pid, bid, TechnologyType.RangedArmor1, "Ranged\nArmor I", "R",
+                        "Increases ranged armor for all units.", 0, cfg.RangedArmor1Cost, resources);
+                    slots[4] = MakeResearchButton(sim, pid, bid, TechnologyType.MeleeAttack2, "Melee\nAttack II", "A",
+                        "Further increases melee attack damage.", 0, cfg.MeleeAttack2Cost, resources);
+                    slots[5] = MakeResearchButton(sim, pid, bid, TechnologyType.MeleeArmor2, "Melee\nArmor II", "S",
+                        "Further increases melee armor.", 0, cfg.MeleeArmor2Cost, resources);
+                    slots[6] = MakeResearchButton(sim, pid, bid, TechnologyType.RangedAttack2, "Ranged\nAttack II", "D",
+                        "Further increases ranged attack damage.", 0, cfg.RangedAttack2Cost, resources);
+                    slots[7] = MakeResearchButton(sim, pid, bid, TechnologyType.RangedArmor2, "Ranged\nArmor II", "F",
+                        "Further increases ranged armor.", 0, cfg.RangedArmor2Cost, resources);
+                    hasAny = true;
+                }
+                else if (building.Type == BuildingType.University)
+                {
+                    int pid = building.PlayerId;
+                    int bid = building.Id;
+                    var cfg = sim.Config;
+                    slots[0] = MakeResearchButton(sim, pid, bid, TechnologyType.Ballistics, "Ballistics", "Q",
+                        "Projectiles lead moving targets.", cfg.BallisticsFoodCost, cfg.BallisticsGoldCost, resources);
+                    slots[1] = MakeResearchButton(sim, pid, bid, TechnologyType.SiegeEngineering, "Siege\nEngr.", "W",
+                        "Increases siege unit HP.", cfg.SiegeEngineeringFoodCost, cfg.SiegeEngineeringGoldCost, resources);
+                    slots[2] = MakeResearchButton(sim, pid, bid, TechnologyType.Chemistry, "Chemistry", "E",
+                        "Increases ranged attack damage.", cfg.ChemistryFoodCost, cfg.ChemistryGoldCost, resources);
+                    slots[3] = MakeResearchButton(sim, pid, bid, TechnologyType.MurderHoles, "Murder\nHoles", "R",
+                        "Towers have no minimum range.", cfg.MurderHolesFoodCost, cfg.MurderHolesGoldCost, resources);
                     hasAny = true;
                 }
             }
@@ -2945,6 +3092,117 @@ namespace OpenEmpires
                         if (!IsReadyBuilding(buildings[i], BuildingType.Tower, localPid, sim)) continue;
                         sim.CommandBuffer.EnqueueCommand(new UpgradeTowerCommand(localPid, buildings[i].BuildingId, TowerUpgradeType.VisionUpgrade));
                     }
+                }
+            }
+            else if (dominantType == BuildingType.Blacksmith)
+            {
+                TechnologyType[] blacksmithTechs = {
+                    TechnologyType.MeleeAttack1, TechnologyType.MeleeArmor1,
+                    TechnologyType.RangedAttack1, TechnologyType.RangedArmor1,
+                    TechnologyType.MeleeAttack2, TechnologyType.MeleeArmor2,
+                    TechnologyType.RangedAttack2, TechnologyType.RangedArmor2
+                };
+                Key[] blacksmithKeys = { Key.Q, Key.W, Key.E, Key.R, Key.A, Key.S, Key.D, Key.F };
+                int[] blacksmithSlots = { 0, 1, 2, 3, 4, 5, 6, 7 };
+                for (int t = 0; t < blacksmithTechs.Length; t++)
+                {
+                    if (WasKeyPressed(blacksmithKeys[t]))
+                    {
+                        FlashActionButton(blacksmithSlots[t]);
+                        for (int i = 0; i < buildings.Count; i++)
+                        {
+                            if (!IsReadyBuilding(buildings[i], BuildingType.Blacksmith, localPid, sim)) continue;
+                            sim.CommandBuffer.EnqueueCommand(new ResearchCommand(localPid, buildings[i].BuildingId, blacksmithTechs[t]));
+                        }
+                        break;
+                    }
+                }
+            }
+            else if (dominantType == BuildingType.University)
+            {
+                TechnologyType[] uniTechs = {
+                    TechnologyType.Ballistics, TechnologyType.SiegeEngineering,
+                    TechnologyType.Chemistry, TechnologyType.MurderHoles
+                };
+                Key[] uniKeys = { Key.Q, Key.W, Key.E, Key.R };
+                for (int t = 0; t < uniTechs.Length; t++)
+                {
+                    if (WasKeyPressed(uniKeys[t]))
+                    {
+                        FlashActionButton(t);
+                        for (int i = 0; i < buildings.Count; i++)
+                        {
+                            if (!IsReadyBuilding(buildings[i], BuildingType.University, localPid, sim)) continue;
+                            sim.CommandBuffer.EnqueueCommand(new ResearchCommand(localPid, buildings[i].BuildingId, uniTechs[t]));
+                        }
+                        break;
+                    }
+                }
+            }
+            else if (dominantType == BuildingType.SiegeWorkshop)
+            {
+                if (WasKeyPressed(Key.Q) && resources.Wood >= sim.Config.BatteringRamWoodCost && resources.Gold >= sim.Config.BatteringRamGoldCost)
+                {
+                    FlashActionButton(0);
+                    for (int i = 0; i < buildings.Count; i++)
+                    {
+                        if (!IsReadyBuilding(buildings[i], BuildingType.SiegeWorkshop, localPid, sim)) continue;
+                        sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(localPid, buildings[i].BuildingId, 13));
+                    }
+                    SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f);
+                }
+                else if (WasKeyPressed(Key.W) && resources.Wood >= sim.Config.MangonelWoodCost && resources.Gold >= sim.Config.MangonelGoldCost)
+                {
+                    FlashActionButton(1);
+                    for (int i = 0; i < buildings.Count; i++)
+                    {
+                        if (!IsReadyBuilding(buildings[i], BuildingType.SiegeWorkshop, localPid, sim)) continue;
+                        sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(localPid, buildings[i].BuildingId, 14));
+                    }
+                    SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f);
+                }
+                else if (WasKeyPressed(Key.E) && resources.Wood >= sim.Config.TrebuchetWoodCost && resources.Gold >= sim.Config.TrebuchetGoldCost)
+                {
+                    FlashActionButton(2);
+                    for (int i = 0; i < buildings.Count; i++)
+                    {
+                        if (!IsReadyBuilding(buildings[i], BuildingType.SiegeWorkshop, localPid, sim)) continue;
+                        sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(localPid, buildings[i].BuildingId, 15));
+                    }
+                    SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f);
+                }
+            }
+            else if (dominantType == BuildingType.Market)
+            {
+                if (WasKeyPressed(Key.Q))
+                {
+                    FlashActionButton(0);
+                    sim.CommandBuffer.EnqueueCommand(new MarketTradeCommand(localPid, (int)ResourceType.Food, true));
+                }
+                else if (WasKeyPressed(Key.W))
+                {
+                    FlashActionButton(1);
+                    sim.CommandBuffer.EnqueueCommand(new MarketTradeCommand(localPid, (int)ResourceType.Wood, true));
+                }
+                else if (WasKeyPressed(Key.E))
+                {
+                    FlashActionButton(2);
+                    sim.CommandBuffer.EnqueueCommand(new MarketTradeCommand(localPid, (int)ResourceType.Stone, true));
+                }
+                else if (WasKeyPressed(Key.A))
+                {
+                    FlashActionButton(4);
+                    sim.CommandBuffer.EnqueueCommand(new MarketTradeCommand(localPid, (int)ResourceType.Food, false));
+                }
+                else if (WasKeyPressed(Key.S))
+                {
+                    FlashActionButton(5);
+                    sim.CommandBuffer.EnqueueCommand(new MarketTradeCommand(localPid, (int)ResourceType.Wood, false));
+                }
+                else if (WasKeyPressed(Key.D))
+                {
+                    FlashActionButton(6);
+                    sim.CommandBuffer.EnqueueCommand(new MarketTradeCommand(localPid, (int)ResourceType.Stone, false));
                 }
             }
 

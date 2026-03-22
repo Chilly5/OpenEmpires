@@ -256,6 +256,51 @@ namespace OpenEmpires
         public int MonkFoodCost => 0;
         public int MonkGoldCost => 100;
 
+        // Combat - Battering Ram (siege, anti-building melee)
+        public int BatteringRamMaxHealth => 200;
+        public int BatteringRamAttackDamage => 5;
+        public float BatteringRamAttackRange => 1.0f;
+        public float BatteringRamDetectionRange => 6f;
+        public int BatteringRamAttackCooldownTicks => 60;
+        public int BatteringRamMeleeArmor => 3;
+        public int BatteringRamRangedArmor => 0;
+        public float BatteringRamMass => 8f;
+        public float BatteringRamMoveSpeed => 0.6f;
+        public int BatteringRamBonusDamageVsBuildings => 80;
+        public int BatteringRamTrainTimeTicks => 600;
+        public int BatteringRamWoodCost => 200;
+        public int BatteringRamGoldCost => 100;
+
+        // Combat - Mangonel (siege, ranged AoE)
+        public int MangonelMaxHealth => 80;
+        public int MangonelAttackDamage => 30;
+        public float MangonelAttackRange => 14f;
+        public float MangonelDetectionRange => 16f;
+        public int MangonelAttackCooldownTicks => 90;
+        public int MangonelMeleeArmor => 0;
+        public int MangonelRangedArmor => 0;
+        public float MangonelMass => 6f;
+        public float MangonelMoveSpeed => 0.5f;
+        public int MangonelBonusDamageVsBuildings => 40;
+        public int MangonelTrainTimeTicks => 750;
+        public int MangonelWoodCost => 250;
+        public int MangonelGoldCost => 150;
+
+        // Combat - Trebuchet (siege, long-range anti-building)
+        public int TrebuchetMaxHealth => 60;
+        public int TrebuchetAttackDamage => 15;
+        public float TrebuchetAttackRange => 20f;
+        public float TrebuchetDetectionRange => 22f;
+        public int TrebuchetAttackCooldownTicks => 120;
+        public int TrebuchetMeleeArmor => 0;
+        public int TrebuchetRangedArmor => 0;
+        public float TrebuchetMass => 10f;
+        public float TrebuchetMoveSpeed => 0.4f;
+        public int TrebuchetBonusDamageVsBuildings => 100;
+        public int TrebuchetTrainTimeTicks => 900;
+        public int TrebuchetWoodCost => 300;
+        public int TrebuchetGoldCost => 200;
+
         // Projectiles
         public float ProjectileSpeed => 12f;
 
@@ -452,6 +497,47 @@ namespace OpenEmpires
         public int MarketArmor => 2;
         public int MarketFootprintWidth => 3;
         public int MarketFootprintHeight => 3;
+
+        // Research
+        public int ResearchTicks_Age2 => 600;       // 20s at 30 TPS
+        public int ResearchTicks_Age3 => 900;       // 30s
+        public int ResearchTicks_University => 750; // 25s
+        // Blacksmith costs (gold)
+        public int MeleeAttack1Cost => 100;
+        public int MeleeArmor1Cost => 100;
+        public int RangedAttack1Cost => 100;
+        public int RangedArmor1Cost => 100;
+        public int MeleeAttack2Cost => 200;
+        public int MeleeArmor2Cost => 200;
+        public int RangedAttack2Cost => 200;
+        public int RangedArmor2Cost => 200;
+        // University costs (food + gold)
+        public int BallisticsFoodCost => 200;
+        public int BallisticsGoldCost => 200;
+        public int SiegeEngineeringFoodCost => 150;
+        public int SiegeEngineeringGoldCost => 150;
+        public int ChemistryFoodCost => 200;
+        public int ChemistryGoldCost => 200;
+        public int MurderHolesFoodCost => 100;
+        public int MurderHolesGoldCost => 100;
+        // Research bonuses
+        public int MeleeAttackBonus1 => 1;
+        public int MeleeAttackBonus2 => 2;
+        public int MeleeArmorBonus1 => 1;
+        public int MeleeArmorBonus2 => 2;
+        public int RangedAttackBonus1 => 1;
+        public int RangedAttackBonus2 => 2;
+        public int RangedArmorBonus1 => 1;
+        public int RangedArmorBonus2 => 2;
+        public int ChemistryRangedBonus => 1;
+        public int SiegeEngineeringHPBonus => 40;
+
+        // Market trading
+        public int MarketTradeAmount => 100;        // Amount of resource bought/sold per transaction
+        public int MarketPriceStep => 5;            // Price change per transaction
+        public int MarketStartPrice => 100;         // Starting buy/sell price in gold
+        public int MarketMinPrice => 20;            // Minimum sell price
+        public int MarketMaxPrice => 300;           // Maximum buy price
 
         // Buildings - University
         public int UniversityMaxHealth => 400;

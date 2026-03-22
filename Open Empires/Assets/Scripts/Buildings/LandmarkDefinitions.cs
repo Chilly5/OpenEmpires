@@ -224,6 +224,9 @@ namespace OpenEmpires
                 case 7:  // Knight
                 case 8:  // Crossbowman
                 case 9:  // Monk
+                case 13: // Battering Ram
+                case 14: // Mangonel
+                case 15: // Trebuchet
                     return 3;
                 default:
                     return 1;

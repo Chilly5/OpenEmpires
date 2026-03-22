@@ -1947,6 +1947,11 @@ namespace OpenEmpires
                     return;
                 }
             }
+            if (unitType >= 13 && unitType <= 15)
+            {
+                SpawnProceduralSiege(unitData, spawnPos, unitType);
+                return;
+            }
             GameObject prefab;
             switch (unitType)
             {
@@ -2415,6 +2420,126 @@ namespace OpenEmpires
             var mapData = sim?.MapData;
             float hs = sim?.Config.TerrainHeightScale ?? 0f;
             unitView.Initialize(unitData.Id, spawnPos, unitData, 9, mapData, hs,
+                unitStencilMat, playerSilhouetteMaterials[unitData.PlayerId]);
+            unitViews[unitData.Id] = unitView;
+
+            if (selectionManager != null)
+                selectionManager.RegisterUnitView(unitView);
+
+            SFXManager.Instance?.Play(SFXType.UnitTrained, spawnPos, 0.6f);
+        }
+
+        private void SpawnProceduralSiege(UnitData unitData, Vector3 spawnPos, int unitType)
+        {
+            var sim = GameBootstrapper.Instance?.Simulation;
+            if (sim != null)
+                spawnPos.y = sim.MapData.SampleHeight(spawnPos.x, spawnPos.z) * sim.Config.TerrainHeightScale;
+
+            string[] names = { "", "", "", "", "", "", "", "", "", "", "", "", "", "BatteringRam", "Mangonel", "Trebuchet" };
+            var go = new GameObject(unitType < names.Length ? names[unitType] : "SiegeUnit");
+            go.layer = 8;
+
+            if (unitType == 13) // Battering Ram — long horizontal box with wheels
+            {
+                var body = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                body.name = "Body";
+                body.transform.SetParent(go.transform);
+                body.transform.localPosition = new Vector3(0f, 0.35f, 0f);
+                body.transform.localScale = new Vector3(0.5f, 0.4f, 1.2f);
+                body.layer = 8;
+                Object.Destroy(body.GetComponent<Collider>());
+
+                var ram = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                ram.name = "Ram";
+                ram.transform.SetParent(go.transform);
+                ram.transform.localPosition = new Vector3(0f, 0.3f, 0.6f);
+                ram.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+                ram.transform.localScale = new Vector3(0.15f, 0.4f, 0.15f);
+                ram.layer = 8;
+                Object.Destroy(ram.GetComponent<Collider>());
+            }
+            else if (unitType == 14) // Mangonel — box with arm
+            {
+                var body = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                body.name = "Body";
+                body.transform.SetParent(go.transform);
+                body.transform.localPosition = new Vector3(0f, 0.25f, 0f);
+                body.transform.localScale = new Vector3(0.6f, 0.3f, 0.8f);
+                body.layer = 8;
+                Object.Destroy(body.GetComponent<Collider>());
+
+                var arm = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                arm.name = "Arm";
+                arm.transform.SetParent(go.transform);
+                arm.transform.localPosition = new Vector3(0f, 0.6f, 0.1f);
+                arm.transform.localRotation = Quaternion.Euler(-30f, 0f, 0f);
+                arm.transform.localScale = new Vector3(0.08f, 0.08f, 0.7f);
+                arm.layer = 8;
+                Object.Destroy(arm.GetComponent<Collider>());
+            }
+            else // Trebuchet — tall frame with counterweight arm
+            {
+                var body = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                body.name = "Body";
+                body.transform.SetParent(go.transform);
+                body.transform.localPosition = new Vector3(0f, 0.2f, 0f);
+                body.transform.localScale = new Vector3(0.7f, 0.25f, 0.9f);
+                body.layer = 8;
+                Object.Destroy(body.GetComponent<Collider>());
+
+                var frame = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                frame.name = "Frame";
+                frame.transform.SetParent(go.transform);
+                frame.transform.localPosition = new Vector3(0f, 0.7f, 0f);
+                frame.transform.localScale = new Vector3(0.08f, 0.8f, 0.08f);
+                frame.layer = 8;
+                Object.Destroy(frame.GetComponent<Collider>());
+
+                var arm = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                arm.name = "Arm";
+                arm.transform.SetParent(go.transform);
+                arm.transform.localPosition = new Vector3(0f, 1.0f, 0.2f);
+                arm.transform.localRotation = Quaternion.Euler(-20f, 0f, 0f);
+                arm.transform.localScale = new Vector3(0.06f, 0.06f, 1.0f);
+                arm.layer = 8;
+                Object.Destroy(arm.GetComponent<Collider>());
+            }
+
+            // Root collider
+            var col = go.AddComponent<BoxCollider>();
+            col.center = new Vector3(0f, 0.35f, 0f);
+            col.size = new Vector3(0.7f, 0.7f, 1.0f);
+
+            // Selection ring
+            var ring = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            ring.name = "SelectionRing";
+            ring.transform.SetParent(go.transform);
+            ring.transform.localPosition = new Vector3(0f, 0.02f, 0f);
+            ring.transform.localScale = new Vector3(1.0f, 0.01f, 1.0f);
+            ring.layer = 8;
+            var ringCol = ring.GetComponent<Collider>();
+            if (ringCol != null) Object.Destroy(ringCol);
+            ring.GetComponent<Renderer>().sharedMaterial = sharedSelectionRingMat;
+
+            go.transform.position = spawnPos;
+            go.SetActive(true);
+
+            // Apply player color
+            var mat = playerMaterials[unitData.PlayerId];
+            var silMat = playerSilhouetteMaterials[unitData.PlayerId];
+            foreach (var r in go.GetComponentsInChildren<Renderer>())
+            {
+                var partName = r.gameObject.name;
+                if (partName == "SelectionRing") continue;
+                r.sharedMaterials = new Material[] { mat, unitStencilMat, silMat };
+            }
+
+            var unitView = go.AddComponent<UnitView>();
+            unitView.SetSelectionRing(ring);
+
+            var mapData = sim?.MapData;
+            float hs = sim?.Config.TerrainHeightScale ?? 0f;
+            unitView.Initialize(unitData.Id, spawnPos, unitData, unitType, mapData, hs,
                 unitStencilMat, playerSilhouetteMaterials[unitData.PlayerId]);
             unitViews[unitData.Id] = unitView;
 
