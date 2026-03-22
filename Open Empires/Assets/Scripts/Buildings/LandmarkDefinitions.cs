@@ -193,10 +193,10 @@ namespace OpenEmpires
                 case BuildingType.Farm:
                 case BuildingType.Mine:
                 case BuildingType.Barracks:
-                case BuildingType.Tower:
+                case BuildingType.Wall:
                 case BuildingType.WoodGate:
                     return 1;
-                case BuildingType.Wall:
+                case BuildingType.Tower:
                 case BuildingType.ArcheryRange:
                 case BuildingType.Stables:
                 case BuildingType.TownCenter:
