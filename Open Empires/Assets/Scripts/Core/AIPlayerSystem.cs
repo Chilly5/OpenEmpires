@@ -1693,7 +1693,7 @@ namespace OpenEmpires
                         int tx = centerX + dx;
                         int tz = centerZ + dz;
 
-                        if (IsAreaBuildable(tx, tz, footprintW, footprintH, border))
+                        if (IsAreaBuildable(tx, tz, footprintW, footprintH, border, type))
                             return new Vector2Int(tx, tz);
                     }
                 }
@@ -1701,11 +1701,12 @@ namespace OpenEmpires
             return new Vector2Int(-1, -1);
         }
 
-        private bool IsAreaBuildable(int tileX, int tileZ, int footW, int footH, int border)
+        private bool IsAreaBuildable(int tileX, int tileZ, int footW, int footH, int border, BuildingType type = BuildingType.House)
         {
+            bool isFarm = type == BuildingType.Farm;
             for (int x = tileX - border; x < tileX + footW + border; x++)
                 for (int z = tileZ - border; z < tileZ + footH + border; z++)
-                    if (!sim.MapData.IsBuildable(x, z)) return false;
+                    if (isFarm ? !sim.MapData.IsBuildableForFarm(x, z) : !sim.MapData.IsBuildable(x, z)) return false;
             return true;
         }
 

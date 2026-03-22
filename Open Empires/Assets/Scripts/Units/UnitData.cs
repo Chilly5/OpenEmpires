@@ -83,6 +83,7 @@ namespace OpenEmpires
         public bool IsHealer;
         public int HealTargetId = -1;
         public int FollowTargetId = -1;
+        public int SheepTargetBuildingId = -1; // Building the sheep is running toward
         public int WanderCooldown; // Ticks until next idle wander (sheep)
         public FixedVector3 SpawnPosition; // Original position for wander radius
 

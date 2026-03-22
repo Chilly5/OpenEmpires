@@ -22,9 +22,13 @@ namespace OpenEmpires
                 if (!sheep.IsSheep) continue;
                 if (sheep.State == UnitState.Dead) continue;
 
-                // Reset boosted speed when sheep arrives at destination (goes idle)
-                if (sheep.State == UnitState.Idle && sheep.MoveSpeed > Fixed32.FromFloat(config.SheepMoveSpeed))
-                    sheep.MoveSpeed = Fixed32.FromFloat(config.SheepMoveSpeed);
+                // Reset state when sheep goes idle
+                if (sheep.State == UnitState.Idle)
+                {
+                    if (sheep.MoveSpeed > Fixed32.FromFloat(config.SheepMoveSpeed))
+                        sheep.MoveSpeed = Fixed32.FromFloat(config.SheepMoveSpeed);
+                    sheep.SheepTargetBuildingId = -1;
+                }
 
                 // A. Conversion — neutral sheep
                 if (sheep.PlayerId == UnitData.NeutralPlayerId)
@@ -226,7 +230,25 @@ namespace OpenEmpires
                 // Walk along path for owned sheep (player move commands only, no wandering)
                 if (sheep.State == UnitState.Moving && sheep.HasPath)
                 {
+                    // Run at scout speed when heading toward a building and close enough
                     Fixed32 moveSpeed = Fixed32.FromFloat(config.SheepMoveSpeed);
+                    if (sheep.SheepTargetBuildingId >= 0)
+                    {
+                        var targetBuilding = buildingRegistry.GetBuilding(sheep.SheepTargetBuildingId);
+                        if (targetBuilding != null && !targetBuilding.IsDestroyed)
+                        {
+                            Fixed32 dxB = targetBuilding.SimPosition.x - sheep.SimPosition.x;
+                            Fixed32 dzB = targetBuilding.SimPosition.z - sheep.SimPosition.z;
+                            Fixed32 distSq = dxB * dxB + dzB * dzB;
+                            Fixed32 runRangeSq = Fixed32.FromFloat(config.SheepConversionRange * config.SheepConversionRange);
+                            if (distSq <= runRangeSq)
+                                moveSpeed = Fixed32.FromFloat(config.ScoutMoveSpeed);
+                        }
+                        else
+                        {
+                            sheep.SheepTargetBuildingId = -1;
+                        }
+                    }
                     Fixed32 remainingStep = moveSpeed * tickDuration;
                     FixedVector3 lastDir = FixedVector3.Zero;
 
@@ -310,14 +332,13 @@ namespace OpenEmpires
                     Fixed32 distToCenter = toCenter.Magnitude();
                     Fixed32 arrivalThreshold = Fixed32.FromFloat(0.5f);
 
-                    // Speed: 2x scout speed when far (>5 units from scout), 1x when close
+                    // Speed: scout speed when close enough to scout, normal sheep speed when too far
                     Fixed32 dxS = followed.SimPosition.x - sheep.SimPosition.x;
                     Fixed32 dzS = followed.SimPosition.z - sheep.SimPosition.z;
                     Fixed32 distToScoutSq = dxS * dxS + dzS * dzS;
-                    Fixed32 closeRangeSq = Fixed32.FromFloat(25f); // 5*5
-                    Fixed32 scoutSpeed = Fixed32.FromFloat(config.ScoutMoveSpeed);
-                    Fixed32 moveSpeed = distToScoutSq > closeRangeSq
-                        ? scoutSpeed * Fixed32.FromFloat(2f) : scoutSpeed;
+                    Fixed32 runRangeSq = Fixed32.FromFloat(config.SheepConversionRange * config.SheepConversionRange);
+                    Fixed32 moveSpeed = distToScoutSq <= runRangeSq
+                        ? Fixed32.FromFloat(config.ScoutMoveSpeed) : Fixed32.FromFloat(config.SheepMoveSpeed);
 
                     if (distToCenter > arrivalThreshold)
                     {

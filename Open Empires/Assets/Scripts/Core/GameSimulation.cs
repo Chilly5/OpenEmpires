@@ -2463,11 +2463,12 @@ namespace OpenEmpires
                     unit.DropOffBuildingId = -1;
                     unit.TargetGarrisonBuildingId = -1;
 
-                    // Sheep receiving a move command stops following and gets a speed boost
+                    // Sheep receiving a move command stops following
                     if (unit.IsSheep)
                     {
                         unit.FollowTargetId = -1;
-                        unit.MoveSpeed = ConfigToFixed32(config.ScoutMoveSpeed);
+                        // Check if original target is on or adjacent to a building — if so, sheep will run to it
+                        unit.SheepTargetBuildingId = FindBuildingNearPosition(cmd.TargetPosition, unit.PlayerId);
                     }
 
                     unit.ClearPatrol();
@@ -3503,9 +3504,10 @@ namespace OpenEmpires
 
             // Validate footprint + border area is buildable
             int border2 = (cmd.BuildingType == BuildingType.Wall || cmd.BuildingType == BuildingType.Farm || cmd.BuildingType == BuildingType.StoneWall || cmd.BuildingType == BuildingType.StoneGate || cmd.BuildingType == BuildingType.WoodGate) ? 0 : 1;
+            bool isFarm = cmd.BuildingType == BuildingType.Farm;
             for (int x = cmd.TileX - border2; x < cmd.TileX + footprintW2 + border2; x++)
                 for (int z = cmd.TileZ - border2; z < cmd.TileZ + footprintH2 + border2; z++)
-                    if (!MapData.IsBuildable(x, z)) return;
+                    if (isFarm ? !MapData.IsBuildableForFarm(x, z) : !MapData.IsBuildable(x, z)) return;
 
             resources.Wood -= cost;
             resources.Stone -= stoneCost;
@@ -5187,6 +5189,24 @@ namespace OpenEmpires
             }
 
             return nearestBuilding;
+        }
+
+        // Returns the ID of a friendly completed building whose footprint or adjacent border contains the given tile, or -1.
+        private int FindBuildingNearPosition(FixedVector3 position, int playerId)
+        {
+            Vector2Int tile = MapData.WorldToTile(position);
+            var buildings = BuildingRegistry.GetAllBuildings();
+            for (int i = 0; i < buildings.Count; i++)
+            {
+                var b = buildings[i];
+                if (b.IsDestroyed || b.IsUnderConstruction) continue;
+                if (b.PlayerId != playerId) continue;
+                // Check footprint + 1-tile border (since sheep path ends adjacent to building)
+                if (tile.x >= b.OriginTileX - 1 && tile.x < b.OriginTileX + b.TileFootprintWidth + 1
+                    && tile.y >= b.OriginTileZ - 1 && tile.y < b.OriginTileZ + b.TileFootprintHeight + 1)
+                    return b.Id;
+            }
+            return -1;
         }
 
         private void ProcessGarrisonCommand(GarrisonCommand cmd)

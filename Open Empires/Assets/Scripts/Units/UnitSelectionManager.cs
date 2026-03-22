@@ -628,7 +628,7 @@ namespace OpenEmpires
                 var sim = GameBootstrapper.Instance?.Simulation;
                 if (sim != null)
                 {
-                    RefreshGridTexture(sim.MapData, sim.FogOfWar, LocalPlayerId);
+                    RefreshGridTexture(sim.MapData, sim.FogOfWar, LocalPlayerId, placementBuildingType);
                     Ray placementRay = mainCamera.ScreenPointToRay(currentMousePos);
                     if (Physics.Raycast(placementRay, out RaycastHit placementHit, 1000f, groundLayer))
                     {
@@ -3490,7 +3490,7 @@ namespace OpenEmpires
             }
         }
 
-        private void RefreshGridTexture(MapData mapData, FogOfWarData fogData, int playerId)
+        private void RefreshGridTexture(MapData mapData, FogOfWarData fogData, int playerId, BuildingType buildingType = BuildingType.House)
         {
             if (gridTexture == null) return;
             int w = mapData.Width, h = mapData.Height;
@@ -3498,10 +3498,11 @@ namespace OpenEmpires
             Color32 buildable   = new Color32(0, 180, 0, 40);
             Color32 unbuildable = new Color32(200, 0, 0, 80);
             Color32 transparent = new Color32(0, 0, 0, 0);
+            bool isFarm = buildingType == BuildingType.Farm;
             for (int z = 0; z < h; z++)
                 for (int x = 0; x < w; x++)
                     pixels[z * w + x] = fogData.GetVisibility(playerId, x, z) != TileVisibility.Unexplored
-                        ? (mapData.IsBuildable(x, z) ? buildable : unbuildable)
+                        ? ((isFarm ? mapData.IsBuildableForFarm(x, z) : mapData.IsBuildable(x, z)) ? buildable : unbuildable)
                         : transparent;
             gridTexture.SetPixels32(pixels);
             gridTexture.Apply();
@@ -4129,9 +4130,10 @@ namespace OpenEmpires
         private bool IsPlacementValid(MapData mapData, int tileX, int tileZ, int w, int h, BuildingType type = BuildingType.House)
         {
             int border = (type == BuildingType.Wall || type == BuildingType.Farm || type == BuildingType.StoneWall || type == BuildingType.StoneGate || type == BuildingType.WoodGate) ? 0 : 1;
+            bool isFarm = type == BuildingType.Farm;
             for (int x = tileX - border; x < tileX + w + border; x++)
                 for (int z = tileZ - border; z < tileZ + h + border; z++)
-                    if (!mapData.IsBuildable(x, z)) return false;
+                    if (isFarm ? !mapData.IsBuildableForFarm(x, z) : !mapData.IsBuildable(x, z)) return false;
             return true;
         }
 
