@@ -5,7 +5,7 @@ namespace OpenEmpires
 {
     public class ResourceGatheringSystem
     {
-        private const int StrikeCooldownTicks = 20; // visual strike every 1s at 20 TPS
+        private const int StrikeCooldownTicks = 30; // 1 strike per second at 30 TPS
 
         private static readonly Fixed32 GatherRange = Fixed32.FromFloat(1.5f);
         private static readonly Fixed32 TurnRate = Fixed32.FromFloat(0.3f);
