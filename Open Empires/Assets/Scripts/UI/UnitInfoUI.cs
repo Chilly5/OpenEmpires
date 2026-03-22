@@ -1799,6 +1799,19 @@ namespace OpenEmpires
                         Enabled = false,
                         Tooltip = $"<b>Advancing to Age {ageRoman}</b>\nLandmark under construction..." };
                 }
+                else if (currentAge >= 3)
+                {
+                    var res = sim.ResourceManager.GetPlayerResources(view.PlayerId);
+                    var cfg = sim.Config;
+                    bool canAfford = res.Wood >= cfg.WonderWoodCost && res.Stone >= cfg.WonderStoneCost
+                                  && res.Food >= cfg.WonderFoodCost && res.Gold >= cfg.WonderGoldCost;
+                    string costStr = $"{cfg.WonderFoodCost} <sprite name=\"food\"> {cfg.WonderWoodCost} <sprite name=\"wood\"> {cfg.WonderGoldCost} <sprite name=\"gold\"> {cfg.WonderStoneCost} <sprite name=\"stone\">";
+                    slots[3] = new GridButton { Label = "Wonder", Hotkey = "R",
+                        Enabled = canAfford,
+                        Icon = BuildingIcons.Get(BuildingType.Wonder),
+                        Tooltip = $"<b>Wonder</b>\nBuild to achieve a wonder victory.\nCost: {costStr}",
+                        OnClick = () => selectionManager.EnterBuildPlacement(BuildingType.Wonder) };
+                }
             }
 
             // A = Attack Move
@@ -1878,7 +1891,6 @@ namespace OpenEmpires
             slots[o + 3] = MakeBuildSlot("Keep", "A", "Fortified defensive structure.", BuildingType.Keep, cfg.KeepWoodCost, cfg.KeepStoneCost, 0, 0, resources, playerAge, false);
             slots[o + 4] = MakeBuildSlot("Stone\nWall", "S", "Strong defensive barrier.", BuildingType.StoneWall, 0, cfg.StoneWallStoneCost, 0, 0, resources, playerAge, true);
             slots[o + 5] = MakeBuildSlot("Stone\nGate", "D", "Stone gate that allows units to pass.", BuildingType.StoneGate, 0, cfg.StoneGateStoneCost, 0, 0, resources, playerAge, true, true);
-            slots[o + 6] = MakeBuildSlot("Wonder", "Z", "Build to achieve a wonder victory.", BuildingType.Wonder, cfg.WonderWoodCost, cfg.WonderStoneCost, cfg.WonderFoodCost, cfg.WonderGoldCost, resources, playerAge, false);
 
             return slots;
         }
@@ -1980,6 +1992,19 @@ namespace OpenEmpires
                     slots[3] = new GridButton { Label = $"Age {ageRoman}", Hotkey = "R",
                         Enabled = false,
                         Tooltip = $"<b>Advancing to Age {ageRoman}</b>\nLandmark under construction..." };
+                }
+                else if (currentAge >= 3)
+                {
+                    var res = sim.ResourceManager.GetPlayerResources(localPid);
+                    var cfg = sim.Config;
+                    bool canAfford = res.Wood >= cfg.WonderWoodCost && res.Stone >= cfg.WonderStoneCost
+                                  && res.Food >= cfg.WonderFoodCost && res.Gold >= cfg.WonderGoldCost;
+                    string costStr = $"{cfg.WonderFoodCost} <sprite name=\"food\"> {cfg.WonderWoodCost} <sprite name=\"wood\"> {cfg.WonderGoldCost} <sprite name=\"gold\"> {cfg.WonderStoneCost} <sprite name=\"stone\">";
+                    slots[3] = new GridButton { Label = "Wonder", Hotkey = "R",
+                        Enabled = canAfford,
+                        Icon = BuildingIcons.Get(BuildingType.Wonder),
+                        Tooltip = $"<b>Wonder</b>\nBuild to achieve a wonder victory.\nCost: {costStr}",
+                        OnClick = () => selectionManager.EnterBuildPlacement(BuildingType.Wonder) };
                 }
             }
 
@@ -2192,6 +2217,18 @@ namespace OpenEmpires
                         slots[4] = new GridButton { Label = $"Age {ageRoman}", Hotkey = "A",
                             Enabled = false,
                             Tooltip = $"<b>Advancing to Age {ageRoman}</b>\nLandmark under construction..." };
+                    }
+                    else if (currentAge >= 3)
+                    {
+                        var cfg = sim.Config;
+                        bool canAfford = resources.Wood >= cfg.WonderWoodCost && resources.Stone >= cfg.WonderStoneCost
+                                      && resources.Food >= cfg.WonderFoodCost && resources.Gold >= cfg.WonderGoldCost;
+                        string costStr = $"{cfg.WonderFoodCost} <sprite name=\"food\"> {cfg.WonderWoodCost} <sprite name=\"wood\"> {cfg.WonderGoldCost} <sprite name=\"gold\"> {cfg.WonderStoneCost} <sprite name=\"stone\">";
+                        slots[4] = new GridButton { Label = "Wonder", Hotkey = "A",
+                            Enabled = canAfford,
+                            Icon = BuildingIcons.Get(BuildingType.Wonder),
+                            Tooltip = $"<b>Wonder</b>\nBuild to achieve a wonder victory.\nCost: {costStr}",
+                            OnClick = () => selectionManager.EnterBuildPlacement(BuildingType.Wonder) };
                     }
                     hasAny = true;
                 }
@@ -2772,6 +2809,11 @@ namespace OpenEmpires
                         FlashActionButton(4);
                         ShowLandmarkChoicePanel(sim, localPid, currentAge + 1);
                     }
+                    else if (currentAge >= 3)
+                    {
+                        FlashActionButton(4);
+                        selectionManager.EnterBuildPlacement(BuildingType.Wonder);
+                    }
                 }
             }
             else if (dominantType == BuildingType.Barracks)
@@ -3057,7 +3099,7 @@ namespace OpenEmpires
                 }
             }
 
-            // R = Age Up (villagers only)
+            // R = Age Up / Wonder (villagers only)
             if (allOwnedVillagers && WasKeyPressed(Key.R))
             {
                 int currentAge = sim.GetPlayerAge(localPid);
@@ -3066,6 +3108,11 @@ namespace OpenEmpires
                 {
                     FlashActionButton(3);
                     ShowLandmarkChoicePanel(sim, localPid, currentAge + 1);
+                }
+                else if (currentAge >= 3)
+                {
+                    FlashActionButton(3);
+                    selectionManager.EnterBuildPlacement(BuildingType.Wonder);
                 }
                 return;
             }

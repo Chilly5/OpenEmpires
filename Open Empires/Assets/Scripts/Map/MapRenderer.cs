@@ -548,8 +548,11 @@ namespace OpenEmpires
 
         private bool FindValidSpawnPosition(MapData mapData, ResourceType type, Vector3 target, int maxRadius, out Vector3 result)
         {
-            int footprintW = (type == ResourceType.Wood || type == ResourceType.Food) ? 2 : 3;
-            int footprintH = footprintW;
+            int footprintW, footprintH;
+            if (type == ResourceType.Wood || type == ResourceType.Food)
+            { footprintW = 2; footprintH = 2; }
+            else
+            { footprintW = 1; footprintH = 1; } // Gold/Stone: 1x1 (cluster spawns multiple)
 
             int startOriginX, startOriginZ;
             if (footprintW == 2)
@@ -559,8 +562,8 @@ namespace OpenEmpires
             }
             else
             {
-                startOriginX = Mathf.FloorToInt(target.x) - 1;
-                startOriginZ = Mathf.FloorToInt(target.z) - 1;
+                startOriginX = Mathf.FloorToInt(target.x);
+                startOriginZ = Mathf.FloorToInt(target.z);
             }
 
             for (int r = 0; r <= maxRadius; r++)
@@ -576,8 +579,8 @@ namespace OpenEmpires
 
                         if (IsFootprintValid(mapData, originX, originZ, footprintW, footprintH, type))
                         {
-                            float cx = (footprintW == 2) ? originX + 1.0f : originX + 1.5f;
-                            float cz = (footprintH == 2) ? originZ + 1.0f : originZ + 1.5f;
+                            float cx = (footprintW == 2) ? originX + 1.0f : originX + 0.5f;
+                            float cz = (footprintH == 2) ? originZ + 1.0f : originZ + 0.5f;
                             result = ClampToMap(cx, cz);
                             return true;
                         }
@@ -749,22 +752,22 @@ namespace OpenEmpires
                     Debug.LogWarning($"[MapRenderer] Could not place berry patch for player {p} near ({bx + 14}, {bz + 10})");
                 }
 
-                // Gold mine: target offset (-14, +10), spiral retry
+                // Gold cluster: target offset (-14, +10), spiral retry
                 Vector3 goldTarget = ClampToMap(bx - 14, bz + 10);
                 if (FindValidSpawnPosition(mapData, ResourceType.Gold, goldTarget, 15, out Vector3 goldPos))
                 {
-                    SpawnResourceNode(mapData, ResourceType.Gold, goldPos, 3000, goldMinePrefab);
+                    SpawnResourceCluster(mapData, ResourceType.Gold, goldPos, 3000, goldMinePrefab);
                 }
                 else
                 {
                     Debug.LogWarning($"[MapRenderer] Could not place gold mine for player {p} near ({bx - 14}, {bz + 10})");
                 }
 
-                // Stone mine: target offset (+10, -14), spiral retry
+                // Stone cluster: target offset (+10, -14), spiral retry
                 Vector3 stoneTarget = ClampToMap(bx + 10, bz - 14);
                 if (FindValidSpawnPosition(mapData, ResourceType.Stone, stoneTarget, 15, out Vector3 stonePos))
                 {
-                    SpawnResourceNode(mapData, ResourceType.Stone, stonePos, 3000, stoneMinePrefab);
+                    SpawnResourceCluster(mapData, ResourceType.Stone, stonePos, 3000, stoneMinePrefab);
                 }
                 else
                 {
@@ -809,7 +812,10 @@ namespace OpenEmpires
                     Vector3 target = ClampToMap(x, z);
                     if (FindValidSpawnPosition(mapData, type, target, 10, out Vector3 pos))
                     {
-                        SpawnResourceNode(mapData, type, pos, amount, prefab);
+                        if (type == ResourceType.Gold || type == ResourceType.Stone)
+                            SpawnResourceCluster(mapData, type, pos, amount, prefab);
+                        else
+                            SpawnResourceNode(mapData, type, pos, amount, prefab);
                         break;
                     }
                 }
@@ -896,12 +902,10 @@ namespace OpenEmpires
             }
             else if (type == ResourceType.Gold || type == ResourceType.Stone)
             {
-                // 3x3 footprint: snap position to center of 3x3 block
-                footprintW = 3;
-                footprintH = 3;
-                int originX = Mathf.FloorToInt(position.x) - 1;
-                int originZ = Mathf.FloorToInt(position.z) - 1;
-                position = new Vector3(originX + 1.5f, position.y, originZ + 1.5f);
+                // 1x1 footprint: snap position to tile center
+                int originX = Mathf.FloorToInt(position.x);
+                int originZ = Mathf.FloorToInt(position.z);
+                position = new Vector3(originX + 0.5f, position.y, originZ + 0.5f);
             }
 
             // Skip spawning if any footprint tile is water or already occupied
@@ -935,9 +939,7 @@ namespace OpenEmpires
             {
                 go = Instantiate(prefab, position, Quaternion.identity, transform);
                 go.transform.localScale *= 1.5f;
-                if (type == ResourceType.Gold || type == ResourceType.Stone)
-                    go.transform.localScale *= 2f; // 1.5 * 2 = 3.0 total, fills 3x3 tiles
-                else if (type == ResourceType.Food)
+                if (type == ResourceType.Food)
                 {
                     go.transform.localScale *= 1.35f; // 1.5 * 1.35 ≈ 2.0 total, fills 2x2 tiles
                     foreach (Transform child in go.transform)
@@ -966,6 +968,48 @@ namespace OpenEmpires
                     nodeView = go.AddComponent<ResourceNode>();
                 nodeView.Initialize(nodeData.Id, nodeData);
                 resourceNodeViews[nodeData.Id] = nodeView;
+            }
+        }
+
+        private const int ClusterNodeCount = 7;
+        private const int ClusterRadius = 2;
+
+        private void SpawnResourceCluster(MapData mapData, ResourceType type, Vector3 center, int totalAmount, GameObject prefab)
+        {
+            int centerTileX = Mathf.FloorToInt(center.x);
+            int centerTileZ = Mathf.FloorToInt(center.z);
+            int amountPerNode = totalAmount / ClusterNodeCount;
+
+            // Collect valid candidate tiles within radius
+            var candidates = new List<Vector2Int>();
+            for (int dx = -ClusterRadius; dx <= ClusterRadius; dx++)
+            {
+                for (int dz = -ClusterRadius; dz <= ClusterRadius; dz++)
+                {
+                    int tx = centerTileX + dx;
+                    int tz = centerTileZ + dz;
+                    if (!mapData.IsInBounds(tx, tz)) continue;
+                    var tt = mapData.Tiles[tx, tz];
+                    if (tt != TileType.Grass && tt != TileType.Sand) continue;
+                    if (mapData.ForestDensity[tx, tz] >= MapData.ForestWalkableThreshold) continue;
+                    candidates.Add(new Vector2Int(tx, tz));
+                }
+            }
+
+            // Shuffle and pick up to ClusterNodeCount tiles
+            for (int i = candidates.Count - 1; i > 0; i--)
+            {
+                int j = rng.Next(i + 1);
+                var tmp = candidates[i];
+                candidates[i] = candidates[j];
+                candidates[j] = tmp;
+            }
+
+            int spawnCount = Mathf.Min(ClusterNodeCount, candidates.Count);
+            for (int i = 0; i < spawnCount; i++)
+            {
+                Vector3 pos = new Vector3(candidates[i].x + 0.5f, 0f, candidates[i].y + 0.5f);
+                SpawnResourceNode(mapData, type, pos, amountPerNode, prefab);
             }
         }
 
