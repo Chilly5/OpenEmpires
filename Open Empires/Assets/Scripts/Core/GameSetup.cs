@@ -139,6 +139,9 @@ namespace OpenEmpires
         private int activePreviewCount;
         private const int MarkerPoolSize = 100;
 
+        // Building billboard sprites
+        private Dictionary<string, Material> buildingSpriteMaterials = new Dictionary<string, Material>();
+
         // Facing arrow
         private GameObject facingArrow;
         private LineRenderer arrowShaft;
@@ -846,6 +849,78 @@ namespace OpenEmpires
                     posIdx++;
                 }
             }
+        }
+
+        private Material GetOrCreateBuildingSpriteMaterial(string spriteName)
+        {
+            if (buildingSpriteMaterials.TryGetValue(spriteName, out var existing))
+                return existing;
+
+            var tex = Resources.Load<Texture2D>($"BuildingSprites/{spriteName}");
+            if (tex == null) return null;
+
+            var shader = Shader.Find("OpenEmpires/Billboard");
+            if (shader == null) return null;
+
+            var mat = new Material(shader);
+            mat.SetTexture("_MainTex", tex);
+            mat.SetColor("_Color", Color.white);
+            mat.SetFloat("_Cutoff", 0.5f);
+            mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry + 1;
+            mat.enableInstancing = true;
+            buildingSpriteMaterials[spriteName] = mat;
+
+            // Set fog of war texture if available
+            if (fogRenderer != null)
+                fogRenderer.SetFogTexture(mat);
+
+            return mat;
+        }
+
+        private GameObject CreateBuildingSpritePrefab(string name, string spriteName, int footprintW, int footprintH, float spriteScale = 5f)
+        {
+            var mat = GetOrCreateBuildingSpriteMaterial(spriteName);
+            if (mat == null)
+                return null; // Fallback to procedural
+
+            var building = new GameObject(name);
+            building.layer = 11;
+
+            // Billboard sprite quad
+            var spriteGo = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            spriteGo.name = "Sprite";
+            spriteGo.layer = 11;
+            var mc = spriteGo.GetComponent<MeshCollider>();
+            if (mc != null) Object.Destroy(mc);
+
+            spriteGo.transform.SetParent(building.transform);
+            spriteGo.transform.localPosition = new Vector3(0f, spriteScale * 0.2f, 0f);
+            spriteGo.transform.localScale = new Vector3(spriteScale, spriteScale, 1f);
+            spriteGo.GetComponent<MeshRenderer>().sharedMaterial = mat;
+
+            // Box collider on root for selection
+            var col = building.AddComponent<BoxCollider>();
+            float colW = footprintW * 0.85f;
+            float colH = footprintH * 0.85f;
+            col.center = new Vector3(0f, 0.8f, 0f);
+            col.size = new Vector3(colW, 1.6f, colH);
+
+            // Selection ring
+            float ringSize = Mathf.Max(footprintW, footprintH) + 0.6f;
+            var ring = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            ring.name = "SelectionRing";
+            ring.transform.SetParent(building.transform);
+            ring.transform.localPosition = new Vector3(0f, 0.02f, 0f);
+            ring.transform.localScale = new Vector3(ringSize, 0.01f, ringSize);
+            ring.layer = 11;
+            var ringCollider = ring.GetComponent<Collider>();
+            if (ringCollider != null) Object.Destroy(ringCollider);
+            ring.GetComponent<Renderer>().sharedMaterial = sharedSelectionRingMat;
+
+            var view = building.AddComponent<BuildingView>();
+            view.SetSelectionRing(ring);
+
+            return building;
         }
 
         private GameObject CreateHousePrefab(int playerId)
@@ -1897,8 +1972,17 @@ namespace OpenEmpires
             GameObject prefab;
             switch (buildingData.Type)
             {
+                case BuildingType.House:
+                {
+                    // Random house variant
+                    int variant = UnityEngine.Random.Range(1, 4); // 1, 2, or 3
+                    prefab = CreateBuildingSpritePrefab("House", $"House{variant}", 2, 2, 4f);
+                    if (prefab == null) prefab = CreateHousePrefab(buildingData.PlayerId);
+                    break;
+                }
                 case BuildingType.Barracks:
-                    prefab = CreateBarracksPrefab(buildingData.PlayerId);
+                    prefab = CreateBuildingSpritePrefab("Barracks", "Barracks", 3, 3, 5f)
+                          ?? CreateBarracksPrefab(buildingData.PlayerId);
                     break;
                 case BuildingType.TownCenter:
                     prefab = CreateTownCenterPrefab(buildingData.PlayerId);
@@ -1916,22 +2000,26 @@ namespace OpenEmpires
                     prefab = CreateMinePrefab(buildingData.PlayerId);
                     break;
                 case BuildingType.ArcheryRange:
-                    prefab = CreateArcheryRangePrefab(buildingData.PlayerId);
+                    prefab = CreateBuildingSpritePrefab("ArcheryRange", "ArcheryRange", 3, 3, 5f)
+                          ?? CreateArcheryRangePrefab(buildingData.PlayerId);
                     break;
                 case BuildingType.Stables:
-                    prefab = CreateStablesPrefab(buildingData.PlayerId);
+                    prefab = CreateBuildingSpritePrefab("Stables", "Stables", 3, 3, 5f)
+                          ?? CreateStablesPrefab(buildingData.PlayerId);
                     break;
                 case BuildingType.Farm:
                     prefab = CreateFarmPrefab(buildingData.PlayerId);
                     break;
                 case BuildingType.Tower:
-                    prefab = CreateTowerPrefab(buildingData.PlayerId);
+                    prefab = CreateBuildingSpritePrefab("Tower", "Tower", 1, 1, 5f)
+                          ?? CreateTowerPrefab(buildingData.PlayerId);
                     break;
                 case BuildingType.Monastery:
                     prefab = CreateMonasteryPrefab(buildingData.PlayerId);
                     break;
                 case BuildingType.Blacksmith:
-                    prefab = CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "Blacksmith");
+                    prefab = CreateBuildingSpritePrefab("Blacksmith", "Blacksmith", 3, 3, 5f)
+                          ?? CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "Blacksmith");
                     break;
                 case BuildingType.Market:
                     prefab = CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "Market");
@@ -1943,7 +2031,8 @@ namespace OpenEmpires
                     prefab = CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "SiegeWorkshop");
                     break;
                 case BuildingType.Keep:
-                    prefab = CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "Keep");
+                    prefab = CreateBuildingSpritePrefab("Keep", "Keep", 3, 3, 8f)
+                          ?? CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "Keep");
                     break;
                 case BuildingType.StoneWall:
                 case BuildingType.StoneGate:
@@ -1971,12 +2060,13 @@ namespace OpenEmpires
 
             prefab.transform.position = worldPos;
 
-            // Apply player color to roofs, neutral stone to body parts
+            // Apply player color to roofs, neutral stone to body parts (skip billboard sprites)
             var roofMat = playerMaterials[buildingData.PlayerId];
             foreach (var r in prefab.GetComponentsInChildren<Renderer>())
             {
                 if (r.gameObject.name == "SelectionRing") continue;
                 if (r.gameObject.name == "RangeRing") continue;
+                if (r.gameObject.name == "Sprite") continue; // Billboard sprite — keep its material
                 var mat = r.gameObject.name == "Roof" ? roofMat : buildingBodyMaterial;
                 r.sharedMaterial = mat;
             }

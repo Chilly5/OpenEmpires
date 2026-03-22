@@ -12,6 +12,7 @@ namespace OpenEmpires
         private bool isSelected;
         private bool isGhostMode;
         private GameObject selectionRing;
+        private GameObject billboardSprite;
 
         // Flash system (mirrors BuildingView)
         private Renderer[] bodyRenderers;
@@ -34,6 +35,11 @@ namespace OpenEmpires
             CacheRenderers();
             FitColliderToFootprint();
             enabled = false;
+        }
+
+        public void SetBillboardSprite(GameObject sprite)
+        {
+            billboardSprite = sprite;
         }
 
         private void FitColliderToFootprint()
@@ -217,6 +223,11 @@ namespace OpenEmpires
             if (data == null || data.IsDepleted)
             {
                 gameObject.SetActive(false);
+                if (billboardSprite != null)
+                {
+                    billboardSprite.SetActive(false);
+                    billboardSprite = null;
+                }
                 return;
             }
 

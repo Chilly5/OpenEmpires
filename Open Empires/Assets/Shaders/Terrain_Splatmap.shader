@@ -79,6 +79,17 @@ Shader "OpenEmpires/Terrain_Splatmap"
             TEXTURE2D(_FogOfWarTex); SAMPLER(sampler_FogOfWarTex);
             float4 _FogOfWarParams; // x=mapWidth, y=mapHeight
 
+            // Aerial perspective (global)
+            float4 _AerialFogColor;
+            float4 _AerialFogParams; // x=start, y=1/(end-start), z=maxAmount
+            float2 _CameraFocusXZ;
+            float4 _CameraFogDir; // xy = camera forward on XZ plane (normalized)
+
+            // Cloud shadows (global)
+            float4 _CloudParams;  // x=scale, y=speed, z=shadowIntensity, w=coverage
+            float4 _CloudParams2; // x=softness, y=reflectionIntensity
+            float4 _CloudDirection; // xy = wind direction (normalized)
+
             CBUFFER_START(UnityPerMaterial)
                 float4 _SplatMap_ST;
                 float _GrassArrayCount;
@@ -132,6 +143,25 @@ Shader "OpenEmpires/Terrain_Splatmap"
                 return lerp(lerp(a, b, f.x), lerp(c, d, f.x), f.y);
             }
 
+            float cloudFbm(float2 p)
+            {
+                return valueNoise(p) * 0.5
+                     + valueNoise(p * 2.03) * 0.25
+                     + valueNoise(p * 4.01) * 0.125
+                     + valueNoise(p * 8.05) * 0.0625;
+            }
+
+            float sampleClouds(float2 worldXZ)
+            {
+                float2 windOffset = _CloudDirection.xy * _Time.y * _CloudParams.y * _CloudParams.x;
+                float2 uv = worldXZ * _CloudParams.x + windOffset;
+                float n = cloudFbm(uv);
+                // Shape: remap noise based on coverage and softness
+                float coverage = _CloudParams.w;
+                float softness = max(_CloudParams2.x, 0.01);
+                return 1.0 - smoothstep(coverage - softness, coverage + softness, n);
+            }
+
             half4 frag(Varyings input) : SV_Target
             {
                 // Sample splatmap: R=grass, G=dirt, B=sand, A=rock
@@ -180,11 +210,23 @@ Shader "OpenEmpires/Terrain_Splatmap"
                 half NdotL = saturate(dot(normal, mainLight.direction));
                 half3 diffuse = mainLight.color * NdotL;
 
+                // Cloud shadows
+                float cloud = sampleClouds(input.positionWS.xz);
+                float cloudShadow = 1.0 - cloud * _CloudParams.z;
+                diffuse *= cloudShadow;
+
                 // Ambient
                 half3 ambient = SampleSH(normal);
 
                 half3 color = albedo * (diffuse + ambient);
                 color = MixFog(color, input.fogFactor);
+
+                // Aerial perspective: directional depth fog (further from camera = hazier)
+                float2 deltaXZ = input.positionWS.xz - _CameraFocusXZ;
+                float dist = dot(deltaXZ, _CameraFogDir.xy);
+                float aerialFog = saturate((dist - _AerialFogParams.x) * _AerialFogParams.y);
+                aerialFog *= _AerialFogParams.z;
+                color = lerp(color, _AerialFogColor.rgb, aerialFog);
 
                 // Fog of war: darken terrain based on visibility
                 float2 fogUV = input.positionWS.xz / _FogOfWarParams.xy;
