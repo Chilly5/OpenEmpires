@@ -155,6 +155,14 @@ namespace OpenEmpires
             return t == TileType.Grass || t == TileType.Sand;
         }
 
+        public bool IsBuildableForFarm(int x, int z)
+        {
+            if (!IsInBounds(x, z)) return false;
+            if (IsOutsideCircle(x, z)) return false;
+            var t = Tiles[x, z];
+            return t == TileType.Grass || t == TileType.Sand || t == TileType.Foundation || t == TileType.Farm;
+        }
+
         public bool IsWalkable(int x, int z, int playerId, BuildingRegistry buildingRegistry)
         {
             if (!IsInBounds(x, z)) return false;
