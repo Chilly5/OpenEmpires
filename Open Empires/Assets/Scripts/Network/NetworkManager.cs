@@ -133,6 +133,10 @@ namespace OpenEmpires
         private Texture2D englishFlagTex;
         private Texture2D frenchFlagTex;
         private Texture2D hreFlagTex;
+        private UnityEngine.Video.VideoPlayer englishFlagVideoPlayer;
+        private RenderTexture englishFlagVidRT;
+        private UnityEngine.Video.VideoPlayer frenchFlagVideoPlayer;
+        private RenderTexture frenchFlagRT;
 
         public Civilization GetPlayerCivilization(int playerId)
         {
@@ -1615,11 +1619,12 @@ namespace OpenEmpires
             }
         }
 
-        public Texture2D GetCivFlagTexture(Civilization civ)
+        public Texture GetCivFlagTexture(Civilization civ)
         {
             return civ switch
             {
-                Civilization.French => frenchFlagTex,
+                Civilization.English => englishFlagVidRT != null ? (Texture)englishFlagVidRT : englishFlagTex,
+                Civilization.French => frenchFlagRT != null ? (Texture)frenchFlagRT : frenchFlagTex,
                 Civilization.HolyRomanEmpire => hreFlagTex,
                 _ => englishFlagTex,
             };
@@ -1961,6 +1966,42 @@ namespace OpenEmpires
                 var flagImg = flagGO.AddComponent<RawImage>();
                 flagImg.texture = civTextures[i];
                 flagImg.raycastTarget = false;
+
+                // Animated video flags
+                if (civIdx == (int)Civilization.English)
+                {
+                    var flagClip = Resources.Load<UnityEngine.Video.VideoClip>("Flags/EnglishFlag");
+                    if (flagClip != null)
+                    {
+                        englishFlagVidRT = new RenderTexture(128, 80, 0);
+                        englishFlagVideoPlayer = flagGO.AddComponent<UnityEngine.Video.VideoPlayer>();
+                        englishFlagVideoPlayer.clip = flagClip;
+                        englishFlagVideoPlayer.renderMode = UnityEngine.Video.VideoRenderMode.RenderTexture;
+                        englishFlagVideoPlayer.targetTexture = englishFlagVidRT;
+                        englishFlagVideoPlayer.isLooping = true;
+                        englishFlagVideoPlayer.playOnAwake = true;
+                        englishFlagVideoPlayer.audioOutputMode = UnityEngine.Video.VideoAudioOutputMode.None;
+                        englishFlagVideoPlayer.Play();
+                        flagImg.texture = englishFlagVidRT;
+                    }
+                }
+                else if (civIdx == (int)Civilization.French)
+                {
+                    var flagClip = Resources.Load<UnityEngine.Video.VideoClip>("Flags/FrenchFlag");
+                    if (flagClip != null)
+                    {
+                        frenchFlagRT = new RenderTexture(128, 80, 0);
+                        frenchFlagVideoPlayer = flagGO.AddComponent<UnityEngine.Video.VideoPlayer>();
+                        frenchFlagVideoPlayer.clip = flagClip;
+                        frenchFlagVideoPlayer.renderMode = UnityEngine.Video.VideoRenderMode.RenderTexture;
+                        frenchFlagVideoPlayer.targetTexture = frenchFlagRT;
+                        frenchFlagVideoPlayer.isLooping = true;
+                        frenchFlagVideoPlayer.playOnAwake = true;
+                        frenchFlagVideoPlayer.audioOutputMode = UnityEngine.Video.VideoAudioOutputMode.None;
+                        frenchFlagVideoPlayer.Play();
+                        flagImg.texture = frenchFlagRT;
+                    }
+                }
                 civButtonImages[i] = civBtnGO.GetComponent<Image>();
 
                 // Label
