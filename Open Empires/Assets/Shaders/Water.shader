@@ -227,7 +227,9 @@ Shader "OpenEmpires/Water"
 
                 // Aerial perspective
                 float2 deltaXZ = wpos - _CameraFocusXZ;
-                float dist = dot(deltaXZ, _CameraFogDir.xy);
+                float dirDist = dot(deltaXZ, _CameraFogDir.xy);
+                float radialDist = length(deltaXZ);
+                float dist = max(dirDist, radialDist * _AerialFogParams.w);
                 float aerialFog = saturate((dist - _AerialFogParams.x) * _AerialFogParams.y) * _AerialFogParams.z;
                 color = lerp(color, _AerialFogColor.rgb, aerialFog);
 

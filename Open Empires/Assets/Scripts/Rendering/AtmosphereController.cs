@@ -4,10 +4,11 @@ using OpenEmpires;
 public class AtmosphereController : MonoBehaviour
 {
     [Header("Aerial Perspective")]
-    [SerializeField] private Color aerialFogColor = new Color(0.55f, 0.62f, 0.75f, 1f);
+    [SerializeField] private Color aerialFogColor = new Color(0.45f, 0.55f, 0.78f, 1f);
     [SerializeField] private float fogStart = 10f;
     [SerializeField] private float fogEnd = 80f;
     [SerializeField, Range(0f, 1f)] private float maxFogAmount = 0.5f;
+    [SerializeField, Range(0f, 1f)] private float fogBackAmount = 0.3f;
 
     [Header("Cloud Shadows")]
     [SerializeField] private float cloudScale = 0.06f;
@@ -55,7 +56,7 @@ public class AtmosphereController : MonoBehaviour
     {
         Shader.SetGlobalVector(AerialFogColorID, aerialFogColor);
         float range = Mathf.Max(fogEnd - fogStart, 0.001f);
-        Shader.SetGlobalVector(AerialFogParamsID, new Vector4(fogStart, 1f / range, maxFogAmount, 0f));
+        Shader.SetGlobalVector(AerialFogParamsID, new Vector4(fogStart, 1f / range, maxFogAmount, fogBackAmount));
 
         Vector2 dir = cloudDirection.normalized;
         Shader.SetGlobalVector(CloudDirectionID, new Vector4(dir.x, dir.y, 0f, 0f));
