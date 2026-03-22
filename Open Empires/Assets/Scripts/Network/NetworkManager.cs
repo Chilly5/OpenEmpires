@@ -137,6 +137,8 @@ namespace OpenEmpires
         private RenderTexture englishFlagVidRT;
         private UnityEngine.Video.VideoPlayer frenchFlagVideoPlayer;
         private RenderTexture frenchFlagRT;
+        private RawImage civArtImage;
+        private Dictionary<Civilization, Texture2D> civArtTextures = new Dictionary<Civilization, Texture2D>();
 
         public Civilization GetPlayerCivilization(int playerId)
         {
@@ -1578,7 +1580,36 @@ namespace OpenEmpires
             selectedCivilization = (Civilization)index;
             UpdateCivButtonVisuals();
             UpdateCivDescription();
+            UpdateCivArt();
             MusicManager.Instance?.PlayMenuMusic(selectedCivilization);
+        }
+
+        private void LoadCivArt()
+        {
+            var english = Resources.Load<Texture2D>("CivArt/English");
+            if (english != null) civArtTextures[Civilization.English] = english;
+            var french = Resources.Load<Texture2D>("CivArt/French");
+            if (french != null) civArtTextures[Civilization.French] = french;
+            var hre = Resources.Load<Texture2D>("CivArt/HolyRomanEmpire");
+            if (hre != null) civArtTextures[Civilization.HolyRomanEmpire] = hre;
+        }
+
+        private const float CivArtHeight = 350f;
+
+        private void UpdateCivArt()
+        {
+            if (civArtImage == null) return;
+            if (civArtTextures.TryGetValue(selectedCivilization, out var tex))
+            {
+                civArtImage.texture = tex;
+                civArtImage.enabled = true;
+                float aspect = (float)tex.width / tex.height;
+                civArtImage.rectTransform.sizeDelta = new Vector2(CivArtHeight * aspect, CivArtHeight);
+            }
+            else
+            {
+                civArtImage.enabled = false;
+            }
         }
 
         private void UpdateCivDescription()
@@ -1679,7 +1710,7 @@ namespace OpenEmpires
 
         private void BuildDisconnectedPanel(Transform parent)
         {
-            // Full-screen dark overlay
+            // Full-screen background image
             var overlayGO = new GameObject("Overlay");
             overlayGO.transform.SetParent(parent, false);
             var overlayRT = overlayGO.AddComponent<RectTransform>();
@@ -1687,11 +1718,38 @@ namespace OpenEmpires
             overlayRT.anchorMax = Vector2.one;
             overlayRT.offsetMin = Vector2.zero;
             overlayRT.offsetMax = Vector2.zero;
-            var overlayImg = overlayGO.AddComponent<Image>();
-            overlayImg.color = new Color(0.10f, 0.10f, 0.12f, 0.96f);
+
+            var bgTex = Resources.Load<Texture2D>("CivArt/MenuBackground");
+            if (bgTex != null)
+            {
+                var bgGO = new GameObject("Background");
+                bgGO.transform.SetParent(overlayGO.transform, false);
+                var bgRT = bgGO.AddComponent<RectTransform>();
+                bgRT.anchorMin = Vector2.zero;
+                bgRT.anchorMax = Vector2.one;
+                bgRT.offsetMin = Vector2.zero;
+                bgRT.offsetMax = Vector2.zero;
+                var bgImg = bgGO.AddComponent<RawImage>();
+                bgImg.texture = bgTex;
+                bgImg.raycastTarget = false;
+            }
+
+            // Dark tint over background so UI is readable
+            var tintGO = new GameObject("Tint");
+            tintGO.transform.SetParent(overlayGO.transform, false);
+            var tintRT = tintGO.AddComponent<RectTransform>();
+            tintRT.anchorMin = Vector2.zero;
+            tintRT.anchorMax = Vector2.one;
+            tintRT.offsetMin = Vector2.zero;
+            tintRT.offsetMax = Vector2.zero;
+            var overlayImg = tintGO.AddComponent<Image>();
+            overlayImg.color = new Color(0.05f, 0.05f, 0.08f, 0.6f);
             overlayImg.raycastTarget = false;
 
             disconnectedPanel = overlayGO;
+
+            // Load civ art textures
+            LoadCivArt();
 
             // Center card — wide layout for left-right split
             float panelW = 880f, panelH = 480f;
@@ -2050,6 +2108,22 @@ namespace OpenEmpires
 
             // Set initial description
             UpdateCivDescription();
+
+            // Civilization art — last child so it renders on top of everything
+            var civArtGO = new GameObject("CivArt");
+            civArtGO.transform.SetParent(overlayGO.transform, false);
+            civArtGO.transform.SetAsLastSibling();
+            var civArtRT = civArtGO.AddComponent<RectTransform>();
+            civArtRT.anchorMin = new Vector2(1f, 0f);
+            civArtRT.anchorMax = new Vector2(1f, 0f);
+            civArtRT.pivot = new Vector2(1f, 0f);
+            civArtRT.anchoredPosition = Vector2.zero;
+            civArtRT.sizeDelta = new Vector2(350f, 350f);
+            civArtImage = civArtGO.AddComponent<RawImage>();
+            civArtImage.uvRect = new Rect(0f, 0f, 1f, 0.99f);
+            civArtImage.raycastTarget = false;
+            civArtImage.enabled = false;
+            UpdateCivArt();
         }
 
         private void ShowHwAccelWarning()
