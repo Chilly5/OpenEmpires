@@ -21,6 +21,12 @@ jobs:
           restore-keys: |
             Library-WebGL-
 
+      - uses: game-ci/unity-activate@v1
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+
       - uses: game-ci/unity-builder@v4
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
