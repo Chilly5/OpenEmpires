@@ -32,10 +32,10 @@ jobs:
           targetPlatform: WebGL
           buildName: OpenEmpires
 
-      - uses: manleydev/butler-publish-itchio-action@v1.0.3
-        env:
-          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
-          CHANNEL: html5
-          ITCH_GAME: ${{ vars.ITCH_GAME }}
-          ITCH_USER: ${{ vars.ITCH_USER }}
-          PACKAGE: build/WebGL/OpenEmpires
+      - uses: Oval-Tutu/publish-to-itch-with-butler@v1
+        with:
+          api-key: ${{ secrets.BUTLER_CREDENTIALS }}
+          itch_user: ${{ vars.ITCH_USER }}
+          itch_game: ${{ vars.ITCH_GAME }}
+          channel: html5
+          package: build/WebGL/OpenEmpires
