@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace OpenEmpires
@@ -22,6 +23,7 @@ namespace OpenEmpires
         LobbyJoin,
         SheepConvert,
         UnderAttack,
+        MenuClick,
     }
 
     public class SFXManager : MonoBehaviour
@@ -37,6 +39,10 @@ namespace OpenEmpires
         private int poolIndex;
 
         private float[] lastPlayTime;
+
+        // Building-specific audio clips loaded from Resources
+        private Dictionary<BuildingType, AudioClip> buildingSelectClips;
+        private AudioClip buildingSelectFallback; // thud for buildings without a specific clip
 
         private static readonly float[] Cooldowns = new float[]
         {
@@ -58,6 +64,7 @@ namespace OpenEmpires
             0.3f,   // LobbyJoin
             0.3f,   // SheepConvert
             5.0f,   // UnderAttack
+            0.15f,  // MenuClick
         };
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -86,6 +93,7 @@ namespace OpenEmpires
                 lastPlayTime[i] = -100f;
 
             GenerateClips();
+            LoadBuildingClips();
             CreatePool();
         }
 
@@ -118,6 +126,7 @@ namespace OpenEmpires
             source.transform.position = worldPos;
             source.clip = clips[idx];
             source.volume = SfxVolume * volumeScale;
+            source.spatialBlend = 1f;
             source.Play();
         }
 
@@ -136,8 +145,92 @@ namespace OpenEmpires
             source.clip = clips[idx];
             source.volume = SfxVolume * volumeScale;
             source.spatialBlend = 0f;
+            if (type == SFXType.MenuClick)
+                Debug.Log($"[SFXManager] PlayUI MenuClick clip={clips[idx]?.name} len={clips[idx]?.length}s vol={SfxVolume * volumeScale}");
             source.Play();
-            source.spatialBlend = 1f; // restore for next 3D use
+        }
+
+        private void LoadBuildingClips()
+        {
+            buildingSelectClips = new Dictionary<BuildingType, AudioClip>();
+            buildingSelectFallback = Resources.Load<AudioClip>("SFX/Buildings/Thud");
+            Debug.Log($"[SFXManager] Thud fallback loaded: {buildingSelectFallback != null}");
+
+            var mapping = new (BuildingType type, string name)[]
+            {
+                (BuildingType.Mill, "Mill"),
+                (BuildingType.Blacksmith, "Blacksmith"),
+                (BuildingType.ArcheryRange, "ArcheryRange"),
+                (BuildingType.Stables, "Stables"),
+                (BuildingType.Barracks, "Barracks"),
+                (BuildingType.House, "House"),
+                (BuildingType.LumberYard, "LumberYard"),
+            };
+
+            foreach (var (type, name) in mapping)
+            {
+                var clip = Resources.Load<AudioClip>($"SFX/Buildings/{name}");
+                Debug.Log($"[SFXManager] Loading SFX/Buildings/{name}: {clip != null}");
+                if (clip != null)
+                    buildingSelectClips[type] = clip;
+            }
+
+            var menuClip = Resources.Load<AudioClip>("SFX/UI/WarDrum");
+            Debug.Log($"[SFXManager] WarDrum loaded: {menuClip != null}");
+            if (menuClip != null)
+                clips[(int)SFXType.MenuClick] = menuClip;
+        }
+
+        /// <summary>Play building-specific select sound (or thud fallback).</summary>
+        public void PlayBuildingSelect(BuildingType buildingType, float volumeScale = 0.5f)
+        {
+            int idx = (int)SFXType.BuildingSelect;
+            if (Time.time - lastPlayTime[idx] < Cooldowns[idx])
+                return;
+            lastPlayTime[idx] = Time.time;
+
+            AudioClip clip;
+            if (!buildingSelectClips.TryGetValue(buildingType, out clip))
+                clip = buildingSelectFallback;
+
+            if (clip == null) { Debug.LogWarning($"[SFXManager] PlayBuildingSelect: clip null for {buildingType}"); return; }
+
+            Debug.Log($"[SFXManager] PlayBuildingSelect {buildingType} clip={clip.name} len={clip.length}s samples={clip.samples} vol={SfxVolume * volumeScale}");
+
+            var source = pool[poolIndex];
+            poolIndex = (poolIndex + 1) % PoolSize;
+
+            source.transform.position = Vector3.zero;
+            source.clip = clip;
+            source.volume = SfxVolume * volumeScale;
+            source.spatialBlend = 0f;
+            source.Play();
+        }
+
+        /// <summary>Play building-specific sound at world position (for placement).</summary>
+        public void PlayBuildingPlace(BuildingType buildingType, Vector3 worldPos, float volumeScale = 0.8f)
+        {
+            int idx = (int)SFXType.BuildingPlace;
+            if (Time.time - lastPlayTime[idx] < Cooldowns[idx])
+                return;
+            lastPlayTime[idx] = Time.time;
+
+            AudioClip clip;
+            if (!buildingSelectClips.TryGetValue(buildingType, out clip))
+                clip = buildingSelectFallback;
+
+            if (clip == null) return;
+
+            Debug.Log($"[SFXManager] PlayBuildingPlace {buildingType} clip={clip.name} len={clip.length}s");
+
+            var source = pool[poolIndex];
+            poolIndex = (poolIndex + 1) % PoolSize;
+
+            source.transform.position = worldPos;
+            source.clip = clip;
+            source.volume = SfxVolume * volumeScale;
+            source.spatialBlend = 1f;
+            source.Play();
         }
 
         private void GenerateClips()

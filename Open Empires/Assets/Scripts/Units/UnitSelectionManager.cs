@@ -439,6 +439,7 @@ namespace OpenEmpires
                     if (placementBuildingType == BuildingType.Landmark)
                         placeCmd.LandmarkIdValue = (int)placementLandmarkId;
                     sim.CommandBuffer.EnqueueCommand(placeCmd);
+                    SFXManager.Instance?.PlayBuildingSelect(placementBuildingType, 0.5f);
 
                     placementConsumedClick = true;
 
@@ -1559,7 +1560,7 @@ namespace OpenEmpires
                         {
                             buildingView.SetSelected(true);
                             selectedBuildings.Add(buildingView);
-                            SFXManager.Instance?.PlayUI(SFXType.BuildingSelect, 0.5f);
+                            SFXManager.Instance?.PlayBuildingSelect(buildingView.BuildingType, 0.5f);
                         }
                     }
                     else
@@ -1570,7 +1571,7 @@ namespace OpenEmpires
                         DeselectBuilding();
                         buildingView.SetSelected(true);
                         selectedBuildings.Add(buildingView);
-                        SFXManager.Instance?.PlayUI(SFXType.BuildingSelect, 0.5f);
+                        SFXManager.Instance?.PlayBuildingSelect(buildingView.BuildingType, 0.5f);
                     }
                     return;
                 }
@@ -1750,7 +1751,7 @@ namespace OpenEmpires
                 }
 
                 if (selectedBuildings.Count > 0)
-                    SFXManager.Instance?.PlayUI(SFXType.BuildingSelect, 0.5f);
+                    SFXManager.Instance?.PlayBuildingSelect(selectedBuildings[0].BuildingType, 0.5f);
             }
             else
             {

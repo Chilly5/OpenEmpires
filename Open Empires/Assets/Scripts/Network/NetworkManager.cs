@@ -1374,6 +1374,7 @@ namespace OpenEmpires
 
         private void SelectRegion(int index)
         {
+            SFXManager.Instance?.PlayUI(SFXType.MenuClick, 0.5f);
             selectedRegionIndex = index;
             userManuallySelectedRegion = true;
             PlayerPrefs.SetInt("SelectedRegion", index);
@@ -1577,6 +1578,7 @@ namespace OpenEmpires
 
         private void SelectCivilization(int index)
         {
+            SFXManager.Instance?.PlayUI(SFXType.MenuClick, 0.5f);
             selectedCivilization = (Civilization)index;
             UpdateCivButtonVisuals();
             UpdateCivDescription();
@@ -1922,6 +1924,7 @@ namespace OpenEmpires
             mpBtn.colors = mpColors;
             mpBtn.onClick.AddListener(() =>
             {
+                SFXManager.Instance?.PlayUI(SFXType.MenuClick, 0.5f);
                 if (isSoftwareRenderer)
                 {
                     ShowHwAccelWarning();
@@ -2233,6 +2236,7 @@ namespace OpenEmpires
 
         private void SelectGameMode(int idx)
         {
+            SFXManager.Instance?.PlayUI(SFXType.MenuClick, 0.5f);
             selectedGameMode = (GameMode)idx;
             for (int i = 0; i < modeButtonImages.Length; i++)
                 modeButtonImages[i].color = i == idx ? new Color(0.3f, 0.5f, 0.8f) : new Color(0.25f, 0.25f, 0.25f);
@@ -2367,7 +2371,11 @@ namespace OpenEmpires
             colors.highlightedColor = new Color(0.38f, 0.38f, 0.42f);
             colors.pressedColor = new Color(0.20f, 0.20f, 0.23f);
             btn.colors = colors;
-            btn.onClick.AddListener(() => onClick?.Invoke());
+            btn.onClick.AddListener(() =>
+            {
+                SFXManager.Instance?.PlayUI(SFXType.MenuClick, 0.5f);
+                onClick?.Invoke();
+            });
 
             var textGO = new GameObject("Text");
             textGO.transform.SetParent(btnGO.transform, false);

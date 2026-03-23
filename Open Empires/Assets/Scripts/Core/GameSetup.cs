@@ -2093,7 +2093,7 @@ namespace OpenEmpires
 
         private void HandleBuildingCreated(BuildingData buildingData)
         {
-            SFXManager.Instance?.Play(SFXType.BuildingPlace, buildingData.SimPosition.ToVector3(), 0.8f);
+            SFXManager.Instance?.PlayBuildingPlace(buildingData.Type, buildingData.SimPosition.ToVector3(), 0.8f);
             SpawnBuilding(buildingData);
         }
 
