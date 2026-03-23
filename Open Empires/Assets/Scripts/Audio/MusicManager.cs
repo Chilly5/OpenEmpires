@@ -137,10 +137,15 @@ namespace OpenEmpires
 
                     if (playingMenuMusic && activeSource.isPlaying)
                     {
-                        // Menu music is already the civ track — stop looping, let it finish, then advance to generic
                         activeSource.loop = false;
-                        playedCivIntro = true;
                         playingMenuMusic = false;
+                        // Crossfade to generic peacetime immediately
+                        if (peacetimeTracks.Length > 0)
+                        {
+                            ShufflePlaylist(peacetimeOrder, peacetimeTracks.Length);
+                            currentIndex = 0;
+                            CrossfadeToTrack(peacetimeTracks[peacetimeOrder[0]]);
+                        }
                     }
                     else
                     {
