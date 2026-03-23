@@ -21,12 +21,6 @@ jobs:
           restore-keys: |
             Library-WebGL-
 
-      - uses: game-ci/unity-activate@v1
-        env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
-
       - uses: game-ci/unity-builder@v4
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
@@ -50,3 +44,6 @@ jobs:
           BUTLER_API_KEY: ${{ secrets.BUTLER_CREDENTIALS }}
         run: |
           ./butler push build/WebGL/OpenEmpires ${{ vars.ITCH_USER }}/${{ vars.ITCH_GAME }}:html5
+
+      - uses: game-ci/unity-return-license@v2
+        if: always()
