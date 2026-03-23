@@ -32,7 +32,7 @@ jobs:
           targetPlatform: WebGL
           buildName: OpenEmpires
 
-      - uses: Oval-Tutu/publish-to-itch-with-butler@v1
+      - uses: Oval-Tutu/publish-to-itch-with-butler@1.0.0
         with:
           api-key: ${{ secrets.BUTLER_CREDENTIALS }}
           itch_user: ${{ vars.ITCH_USER }}
