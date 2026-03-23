@@ -1,0 +1,41 @@
+name: Build and Deploy to itch.io
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-webgl:
+    name: Build WebGL & Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/cache@v4
+        with:
+          path: Open Empires/Library
+          key: Library-WebGL-${{ hashFiles('Open Empires/Assets/**', 'Open Empires/Packages/**', 'Open Empires/ProjectSettings/**') }}
+          restore-keys: |
+            Library-WebGL-
+
+      - uses: game-ci/unity-builder@v4
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          projectPath: Open Empires
+          unityVersion: 6000.3.9f1
+          targetPlatform: WebGL
+          buildName: OpenEmpires
+
+      - uses: manleydev/butler-publish-itchio-action@v1.0.3
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
+          CHANNEL: html5
+          ITCH_GAME: ${{ vars.ITCH_GAME }}
+          ITCH_USER: ${{ vars.ITCH_USER }}
+          PACKAGE: build/WebGL/OpenEmpires

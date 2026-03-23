@@ -14,7 +14,7 @@
 
 **An open-source Age of Empires-inspired RTS built with Unity 6 and a Rust relay server backend, featuring deterministic lockstep multiplayer.**
 
-[**Play the Demo**](https://chilly5.github.io/OpenEmpires/)
+[**Play the Demo**](https://chilly5.itch.io/open-empires)
 
 </div>
 
@@ -74,7 +74,7 @@
 
 ### WebGL Build
 
-A pre-built WebGL version is available in the `docs/` folder and can be served as a static site.
+WebGL builds are automatically deployed to itch.io via GitHub Actions on every push to `main`.
 
 ## Architecture
 
@@ -106,7 +106,7 @@ Open Empires/
     Prefabs/           # Unit and building prefabs
     Scenes/            # Game scenes
 backend/               # Rust relay/matchmaking server
-docs/                  # WebGL build
+.github/workflows/     # CI/CD pipeline
 ```
 
 ## Community
