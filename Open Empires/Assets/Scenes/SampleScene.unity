@@ -469,10 +469,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90d86c361d4d61d4e81df1c06c2e8d2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: OpenEmpires.Runtime::AtmosphereController
-  aerialFogColor: {r: 0.55, g: 0.62, b: 0.75, a: 1}
+  aerialFogColor: {r: 0.45, g: 0.55, b: 0.78, a: 1}
   fogStart: 10
   fogEnd: 80
   maxFogAmount: 0.6
+  fogBackAmount: 0.3
+  cloudScale: 0.06
+  cloudSpeed: 3
+  cloudDirection: {x: 1, y: 0.4}
+  cloudShadowIntensity: 0.4
+  cloudReflectionIntensity: 0.3
+  cloudCoverage: 0.52
+  cloudSoftness: 0.15
 --- !u!4 &630429102
 Transform:
   m_ObjectHideFlags: 0
@@ -551,7 +559,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 22400762, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.00002670288
+      value: 0.000022888184
       objectReference: {fileID: 0}
     - target: {fileID: 22426080, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
       propertyPath: m_AnchorMax.x
