@@ -32,10 +32,15 @@ jobs:
           targetPlatform: WebGL
           buildName: OpenEmpires
 
-      - uses: Oval-Tutu/publish-to-itch-with-butler@1.0.0
-        with:
-          api-key: ${{ secrets.BUTLER_CREDENTIALS }}
-          itch_user: ${{ vars.ITCH_USER }}
-          itch_game: ${{ vars.ITCH_GAME }}
-          channel: html5
-          package: build/WebGL/OpenEmpires
+      - name: Install butler
+        run: |
+          curl -L -o butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
+          unzip butler.zip
+          chmod +x butler
+          ./butler -V
+
+      - name: Deploy to itch.io
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_CREDENTIALS }}
+        run: |
+          ./butler push build/WebGL/OpenEmpires ${{ vars.ITCH_USER }}/${{ vars.ITCH_GAME }}:html5
