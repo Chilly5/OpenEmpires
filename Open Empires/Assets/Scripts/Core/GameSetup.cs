@@ -894,7 +894,7 @@ namespace OpenEmpires
             if (mc != null) Object.Destroy(mc);
 
             spriteGo.transform.SetParent(building.transform);
-            spriteGo.transform.localPosition = new Vector3(0f, spriteScale * 0.2f, 0f);
+            spriteGo.transform.localPosition = new Vector3(0f, spriteScale * 0.3f, 0f);
             spriteGo.transform.localScale = new Vector3(spriteScale, spriteScale, 1f);
             spriteGo.GetComponent<MeshRenderer>().sharedMaterial = mat;
 
