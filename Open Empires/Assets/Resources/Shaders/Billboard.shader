@@ -83,9 +83,9 @@ Shader "OpenEmpires/Billboard"
 
                 float3 worldPivot = TransformObjectToWorld(float3(0, 0, 0));
 
-                // Orthographic billboard: use view matrix vectors (uniform direction, no per-object rotation)
+                // Orthographic billboard: use camera right & up so sprite faces the camera plane
                 float3 camRight = normalize(UNITY_MATRIX_V[0].xyz);
-                float3 worldUp = float3(0, 1, 0);
+                float3 camUp = normalize(UNITY_MATRIX_V[1].xyz);
 
                 float3 scale;
                 scale.x = length(float3(UNITY_MATRIX_M[0].x, UNITY_MATRIX_M[1].x, UNITY_MATRIX_M[2].x));
@@ -94,7 +94,7 @@ Shader "OpenEmpires/Billboard"
 
                 float3 worldPos = worldPivot
                     + camRight * input.positionOS.x * scale.x
-                    + worldUp * input.positionOS.y * scale.y;
+                    + camUp * input.positionOS.y * scale.y;
 
                 output.positionCS = TransformWorldToHClip(worldPos);
                 output.uv = TRANSFORM_TEX(input.uv, _MainTex);

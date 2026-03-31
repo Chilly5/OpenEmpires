@@ -1979,15 +1979,20 @@ namespace OpenEmpires
             {
                 case BuildingType.House:
                 {
-                    // Random house variant
-                    int variant = UnityEngine.Random.Range(1, 4); // 1, 2, or 3
-                    prefab = CreateBuildingSpritePrefab("House", $"House{variant}", 2, 2, 4f);
+                    var simAge = GameBootstrapper.Instance?.Simulation;
+                    int houseAge = simAge != null ? Mathf.Clamp(simAge.GetPlayerAge(buildingData.PlayerId), 1, 3) : 1;
+                    prefab = CreateBuildingSpritePrefab("House", $"HouseAge{houseAge}", 2, 2, 6f);
                     if (prefab == null) prefab = CreateHousePrefab(buildingData.PlayerId);
                     break;
                 }
                 case BuildingType.Barracks:
-                    prefab = CreateBuildingSpritePrefab("Barracks", "Barracks", 3, 3, 5f)
+                {
+                    var simAge = GameBootstrapper.Instance?.Simulation;
+                    int barracksAge = simAge != null ? Mathf.Clamp(simAge.GetPlayerAge(buildingData.PlayerId), 1, 2) : 1;
+                    prefab = CreateBuildingSpritePrefab("Barracks", $"BarracksAge{barracksAge}", 3, 3, 7.5f)
                           ?? CreateBarracksPrefab(buildingData.PlayerId);
+                    break;
+                }
                     break;
                 case BuildingType.TownCenter:
                     prefab = CreateTownCenterPrefab(buildingData.PlayerId);
@@ -2080,6 +2085,11 @@ namespace OpenEmpires
             if (view != null)
             {
                 view.Initialize(buildingData.Id, worldPos, buildingData, mapData, hs);
+
+                if (buildingData.Type == BuildingType.House)
+                    view.SetAgeSpriteInfo("HouseAge", 3);
+                else if (buildingData.Type == BuildingType.Barracks)
+                    view.SetAgeSpriteInfo("BarracksAge", 2);
 
                 if (buildingData.IsGate)
                     view.SetGateVisual(true, buildingBodyMaterial);

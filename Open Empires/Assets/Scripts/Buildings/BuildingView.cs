@@ -187,6 +187,12 @@ namespace OpenEmpires
         private LineRenderer rallyLine;
         private GameObject rallyDot;
 
+        // Age-based sprite swap
+        private string ageSpritePrefix;
+        private int maxSpriteAge;
+        private int lastKnownAge;
+        private Renderer spriteRenderer;
+
         // Tower upgrade visuals
         private GameObject arrowSlitsVisual;
         private GameObject cannonVisual;
@@ -221,6 +227,11 @@ namespace OpenEmpires
 
             CacheRenderers();
 
+            // Cache reference to the billboard sprite renderer (if any)
+            var spriteTransform = transform.Find("Sprite");
+            if (spriteTransform != null)
+                spriteRenderer = spriteTransform.GetComponent<Renderer>();
+
             if (data.Type == BuildingType.Wall || data.Type == BuildingType.StoneWall || data.Type == BuildingType.StoneGate || data.Type == BuildingType.WoodGate)
             {
                 wallGeometry = transform.Find("WallGeometry");
@@ -228,6 +239,14 @@ namespace OpenEmpires
 
             CreateRallyPointVisuals();
             CreateOverlayWidgets();
+        }
+
+        public void SetAgeSpriteInfo(string prefix, int maxAge)
+        {
+            ageSpritePrefix = prefix;
+            maxSpriteAge = maxAge;
+            var sim = GameBootstrapper.Instance?.Simulation;
+            lastKnownAge = sim != null ? Mathf.Clamp(sim.GetPlayerAge(PlayerId), 1, maxAge) : 1;
         }
 
         private void CreateRallyPointVisuals()
@@ -347,6 +366,23 @@ namespace OpenEmpires
 
                     if (influenceZone != null)
                         influenceZone.SetActive(isSelected && PlayerId == GetLocalPlayerId());
+                }
+            }
+
+            // Age-based sprite swap
+            if (ageSpritePrefix != null && spriteRenderer != null)
+            {
+                var sim = GameBootstrapper.Instance?.Simulation;
+                if (sim != null)
+                {
+                    int currentAge = Mathf.Clamp(sim.GetPlayerAge(PlayerId), 1, maxSpriteAge);
+                    if (currentAge != lastKnownAge)
+                    {
+                        lastKnownAge = currentAge;
+                        var tex = Resources.Load<Texture2D>($"BuildingSprites/{ageSpritePrefix}{currentAge}");
+                        if (tex != null)
+                            spriteRenderer.material.SetTexture("_MainTex", tex);
+                    }
                 }
             }
 

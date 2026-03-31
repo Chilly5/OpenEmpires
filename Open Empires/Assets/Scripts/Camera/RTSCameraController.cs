@@ -17,7 +17,7 @@ namespace OpenEmpires
         private float panSmoothing = 0.15f;
         private float rotateSpeed = 0.3f;
         private float rotationSmoothing = 10f;
-        private float pitch = 35f;
+        private float pitch = 30f;
 
         private float centerX;
         private float centerZ;
