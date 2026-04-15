@@ -366,7 +366,9 @@ namespace OpenEmpires
                         closestEnemy.LastDamageTick = currentTick;
                         closestEnemy.LastDamageFromPos = unit.SimPosition;
 
-                        if (wasCharging)
+                        // Only Knights (UnitType 7) produce a visible knock-up on charge hits;
+                        // other charging units still apply bonus damage but don't launch the target.
+                        if (wasCharging && unit.UnitType == 7)
                         {
                             closestEnemy.LastChargeHitTick = currentTick;
                             closestEnemy.LastChargeHitFromPos = unit.SimPosition;

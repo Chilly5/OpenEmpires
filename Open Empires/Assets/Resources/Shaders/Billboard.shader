@@ -12,9 +12,73 @@ Shader "OpenEmpires/Billboard"
     {
         Tags
         {
-            "RenderType" = "Transparent"
+            "RenderType" = "TransparentCutout"
             "RenderPipeline" = "UniversalPipeline"
-            "Queue" = "Transparent"
+            "Queue" = "AlphaTest"
+        }
+
+        // Pre-pass: at every sprite pixel whose underlying pixel is terrain (stencil bit 0 = 1),
+        // overwrite depth with the sprite's pivot depth. This lets the color pass win LEqual
+        // over terrain without affecting unit pixels (unit shader clears stencil bit 0).
+        Pass
+        {
+            Name "BillboardDepthPunch"
+            Tags { "LightMode" = "SRPDefaultUnlit" }
+
+            Cull Off
+            ZWrite On
+            ZTest Always
+            ColorMask 0
+
+            Stencil
+            {
+                Ref 1
+                ReadMask 1
+                Comp Equal
+                Pass Keep
+            }
+
+            HLSLPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
+            TEXTURE2D(_MainTex);
+            SAMPLER(sampler_MainTex);
+            CBUFFER_START(UnityPerMaterial)
+                float4 _MainTex_ST;
+                half _Cutoff;
+                half4 _Color;
+            CBUFFER_END
+
+            struct Attributes { float4 positionOS : POSITION; float2 uv : TEXCOORD0; };
+            struct Varyings { float4 positionCS : SV_POSITION; float2 uv : TEXCOORD0; };
+
+            Varyings vert(Attributes input)
+            {
+                Varyings output;
+                float3 worldPivot = TransformObjectToWorld(float3(0, 0, 0));
+                float3 camRight = normalize(UNITY_MATRIX_V[0].xyz);
+                float3 camUp = normalize(UNITY_MATRIX_V[1].xyz);
+                float3 scale;
+                scale.x = length(float3(UNITY_MATRIX_M[0].x, UNITY_MATRIX_M[1].x, UNITY_MATRIX_M[2].x));
+                scale.y = length(float3(UNITY_MATRIX_M[0].y, UNITY_MATRIX_M[1].y, UNITY_MATRIX_M[2].y));
+                float3 worldPos = worldPivot
+                    + camRight * input.positionOS.x * scale.x
+                    + camUp * input.positionOS.y * scale.y;
+                output.positionCS = TransformWorldToHClip(worldPos);
+                output.uv = TRANSFORM_TEX(input.uv, _MainTex);
+                return output;
+            }
+
+            half4 frag(Varyings input) : SV_Target
+            {
+                half a = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.uv).a * _Color.a;
+                clip(a - _Cutoff);
+                return 0;
+            }
+            ENDHLSL
         }
 
         Pass
@@ -23,9 +87,20 @@ Shader "OpenEmpires/Billboard"
             Tags { "LightMode" = "UniversalForward" }
 
             Cull Off
-            ZWrite Off
-            ZTest Always
+            ZWrite On
+            ZTest LEqual
             Blend SrcAlpha OneMinusSrcAlpha
+
+            // Clear terrain stencil bit 0 where this sprite draws, so that a subsequent
+            // sprite's depth-punch pass will NOT overwrite this sprite's depth —
+            // leaving the standard ZTest LEqual to handle sprite-vs-sprite ordering.
+            Stencil
+            {
+                WriteMask 1
+                Ref 0
+                Comp Always
+                Pass Replace
+            }
 
             HLSLPROGRAM
             #pragma vertex vert
@@ -139,7 +214,9 @@ Shader "OpenEmpires/Billboard"
                 UNITY_SETUP_INSTANCE_ID(input);
 
                 half4 col = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.uv) * _Color;
-                clip(col.a - 0.02); // discard fully transparent background
+                // Alpha-tested cutout: discard below cutoff so we can write depth cleanly
+                // (prevents soft-edge halo in depth buffer and gives proper occlusion with 3D units)
+                clip(col.a - _Cutoff);
 
                 // Cloud shadow
                 float cloud = sampleClouds(input.positionWS.xz);

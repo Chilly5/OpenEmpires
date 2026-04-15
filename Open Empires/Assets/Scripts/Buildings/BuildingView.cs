@@ -151,6 +151,23 @@ namespace OpenEmpires
         // Construction
         private Vector3 fullScale;
         private bool wasUnderConstruction;
+        private GameObject constructionScaffold;
+        private Renderer constructionScaffoldRenderer;
+        private int constructionStage = -1;
+        private static readonly Texture2D[] constructionStageTextures = new Texture2D[3];
+        private static bool constructionTexturesLoaded;
+
+        private static Texture2D GetConstructionStageTexture(int stage)
+        {
+            if (!constructionTexturesLoaded)
+            {
+                constructionStageTextures[0] = Resources.Load<Texture2D>("BuildingSprites/Construction/4x4lvl1");
+                constructionStageTextures[1] = Resources.Load<Texture2D>("BuildingSprites/Construction/4x4lvl2");
+                constructionStageTextures[2] = Resources.Load<Texture2D>("BuildingSprites/Construction/4x4lvl3");
+                constructionTexturesLoaded = true;
+            }
+            return constructionStageTextures[Mathf.Clamp(stage, 0, 2)];
+        }
 
         // Damage flash
         private int lastSeenDamageTick;
@@ -222,10 +239,16 @@ namespace OpenEmpires
             if (data.IsUnderConstruction)
             {
                 wasUnderConstruction = true;
-                transform.localScale = new Vector3(fullScale.x, fullScale.y * 0.1f, fullScale.z);
             }
 
             CacheRenderers();
+
+            if (wasUnderConstruction)
+            {
+                CreateConstructionScaffold();
+                SetBodyRenderersVisible(false);
+                UpdateConstructionStage(data.ConstructionProgress);
+            }
 
             // Cache reference to the billboard sprite renderer (if any)
             var spriteTransform = transform.Find("Sprite");
@@ -247,6 +270,75 @@ namespace OpenEmpires
             maxSpriteAge = maxAge;
             var sim = GameBootstrapper.Instance?.Simulation;
             lastKnownAge = sim != null ? Mathf.Clamp(sim.GetPlayerAge(PlayerId), 1, maxAge) : 1;
+        }
+
+        private void CreateConstructionScaffold()
+        {
+            if (constructionScaffold != null) return;
+
+            var tex = GetConstructionStageTexture(0);
+            if (tex == null) return;
+
+            var shader = Shader.Find("OpenEmpires/Billboard");
+            if (shader == null) shader = Shader.Find("Universal Render Pipeline/Unlit");
+            if (shader == null) shader = Shader.Find("Unlit/Transparent");
+            if (shader == null) return;
+
+            var mat = new Material(shader);
+            mat.SetTexture("_MainTex", tex);
+            if (mat.HasProperty("_Color")) mat.SetColor("_Color", Color.white);
+            if (mat.HasProperty("_Cutoff")) mat.SetFloat("_Cutoff", 0.5f);
+            mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry + 1;
+
+            constructionScaffold = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            constructionScaffold.name = "ConstructionScaffold";
+            constructionScaffold.layer = gameObject.layer;
+            var mc = constructionScaffold.GetComponent<MeshCollider>();
+            if (mc != null) Object.Destroy(mc);
+
+            constructionScaffold.transform.SetParent(transform);
+            float size = Mathf.Max(buildingData.TileFootprintWidth, buildingData.TileFootprintHeight);
+            if (size <= 0f) size = 2f;
+            float scale = size * 0.95f;
+            constructionScaffold.transform.localPosition = new Vector3(0f, 0f, 0f);
+            constructionScaffold.transform.localScale = new Vector3(scale, scale, 1f);
+
+            constructionScaffoldRenderer = constructionScaffold.GetComponent<MeshRenderer>();
+            constructionScaffoldRenderer.sharedMaterial = mat;
+        }
+
+        private void DestroyConstructionScaffold()
+        {
+            if (constructionScaffold != null)
+            {
+                Object.Destroy(constructionScaffold);
+                constructionScaffold = null;
+                constructionScaffoldRenderer = null;
+            }
+            constructionStage = -1;
+        }
+
+        private void UpdateConstructionStage(float progress)
+        {
+            if (constructionScaffoldRenderer == null) return;
+            int stage = Mathf.Clamp(Mathf.FloorToInt(Mathf.Clamp01(progress) * 3f), 0, 2);
+            if (stage == constructionStage) return;
+            var tex = GetConstructionStageTexture(stage);
+            if (tex != null)
+            {
+                constructionScaffoldRenderer.material.SetTexture("_MainTex", tex);
+                constructionStage = stage;
+            }
+        }
+
+        private void SetBodyRenderersVisible(bool visible)
+        {
+            if (bodyRenderers == null) return;
+            for (int i = 0; i < bodyRenderers.Length; i++)
+            {
+                if (bodyRenderers[i] != null)
+                    bodyRenderers[i].enabled = visible;
+            }
         }
 
         private void CreateRallyPointVisuals()
@@ -349,19 +441,18 @@ namespace OpenEmpires
             if (!wallConnectionsUpdated && (BuildingType == BuildingType.Wall || BuildingType == BuildingType.StoneWall || BuildingType == BuildingType.StoneGate || BuildingType == BuildingType.WoodGate))
                 UpdateWallConnections();
 
-            // Construction scale animation
+            // Construction scaffold progression (swaps through 4x4lvl1/2/3 stages)
             if (wasUnderConstruction)
             {
                 if (buildingData.IsUnderConstruction)
                 {
-                    float progress = buildingData.ConstructionProgress;
-                    float scaleY = Mathf.Lerp(0.1f, 1f, progress);
-                    transform.localScale = new Vector3(fullScale.x, fullScale.y * scaleY, fullScale.z);
+                    UpdateConstructionStage(buildingData.ConstructionProgress);
                 }
                 else
                 {
-                    transform.localScale = fullScale;
                     wasUnderConstruction = false;
+                    DestroyConstructionScaffold();
+                    SetBodyRenderersVisible(true);
                     SFXManager.Instance?.Play(SFXType.ConstructionComplete, transform.position, 0.7f);
 
                     if (influenceZone != null)

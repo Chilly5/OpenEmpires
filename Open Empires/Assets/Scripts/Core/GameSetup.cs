@@ -877,7 +877,7 @@ namespace OpenEmpires
             return mat;
         }
 
-        private GameObject CreateBuildingSpritePrefab(string name, string spriteName, int footprintW, int footprintH, float spriteScale = 5f)
+        private GameObject CreateBuildingSpritePrefab(string name, string spriteName, int footprintW, int footprintH, float spriteScale = 5f, float yOffsetMultiplier = 0f)
         {
             var mat = GetOrCreateBuildingSpriteMaterial(spriteName);
             if (mat == null)
@@ -894,7 +894,7 @@ namespace OpenEmpires
             if (mc != null) Object.Destroy(mc);
 
             spriteGo.transform.SetParent(building.transform);
-            spriteGo.transform.localPosition = new Vector3(0f, spriteScale * 0.3f, 0f);
+            spriteGo.transform.localPosition = new Vector3(0f, spriteScale * yOffsetMultiplier, 0f);
             spriteGo.transform.localScale = new Vector3(spriteScale, spriteScale, 1f);
             spriteGo.GetComponent<MeshRenderer>().sharedMaterial = mat;
 
@@ -1981,21 +1981,22 @@ namespace OpenEmpires
                 {
                     var simAge = GameBootstrapper.Instance?.Simulation;
                     int houseAge = simAge != null ? Mathf.Clamp(simAge.GetPlayerAge(buildingData.PlayerId), 1, 3) : 1;
-                    prefab = CreateBuildingSpritePrefab("House", $"HouseAge{houseAge}", 2, 2, 6f);
+                    prefab = CreateBuildingSpritePrefab("House", $"HouseAge{houseAge}", 2, 2, 6f, 1.54f / 6f);
                     if (prefab == null) prefab = CreateHousePrefab(buildingData.PlayerId);
                     break;
                 }
                 case BuildingType.Barracks:
                 {
                     var simAge = GameBootstrapper.Instance?.Simulation;
-                    int barracksAge = simAge != null ? Mathf.Clamp(simAge.GetPlayerAge(buildingData.PlayerId), 1, 2) : 1;
-                    prefab = CreateBuildingSpritePrefab("Barracks", $"BarracksAge{barracksAge}", 3, 3, 7.5f)
+                    int barracksAge = simAge != null ? Mathf.Clamp(simAge.GetPlayerAge(buildingData.PlayerId), 1, 3) : 1;
+                    prefab = CreateBuildingSpritePrefab("Barracks", $"BarracksAge{barracksAge}", 3, 3, 6f, 1.24f / 6f)
                           ?? CreateBarracksPrefab(buildingData.PlayerId);
                     break;
                 }
                     break;
                 case BuildingType.TownCenter:
-                    prefab = CreateTownCenterPrefab(buildingData.PlayerId);
+                    prefab = CreateBuildingSpritePrefab("TownCenter", "TownCenter", 4, 4, 8f, 0.85f / 8f)
+                          ?? CreateTownCenterPrefab(buildingData.PlayerId);
                     break;
                 case BuildingType.Wall:
                     prefab = CreateWallPrefab(buildingData.PlayerId);
@@ -2010,13 +2011,21 @@ namespace OpenEmpires
                     prefab = CreateMinePrefab(buildingData.PlayerId);
                     break;
                 case BuildingType.ArcheryRange:
-                    prefab = CreateBuildingSpritePrefab("ArcheryRange", "ArcheryRange", 3, 3, 5f)
+                {
+                    var simAge = GameBootstrapper.Instance?.Simulation;
+                    int archeryAge = simAge != null ? Mathf.Clamp(simAge.GetPlayerAge(buildingData.PlayerId), 1, 3) : 1;
+                    prefab = CreateBuildingSpritePrefab("ArcheryRange", $"ArcheryRangeAge{archeryAge}", 3, 3, 6f, 0.92f / 6f)
                           ?? CreateArcheryRangePrefab(buildingData.PlayerId);
                     break;
+                }
                 case BuildingType.Stables:
-                    prefab = CreateBuildingSpritePrefab("Stables", "Stables", 3, 3, 5f)
+                {
+                    var simAge = GameBootstrapper.Instance?.Simulation;
+                    int stablesAge = simAge != null ? Mathf.Clamp(simAge.GetPlayerAge(buildingData.PlayerId), 1, 3) : 1;
+                    prefab = CreateBuildingSpritePrefab("Stables", $"StablesAge{stablesAge}", 3, 3, 6f, 1.17f / 6f)
                           ?? CreateStablesPrefab(buildingData.PlayerId);
                     break;
+                }
                 case BuildingType.Farm:
                     prefab = CreateFarmPrefab(buildingData.PlayerId);
                     break;
@@ -2028,7 +2037,7 @@ namespace OpenEmpires
                     prefab = CreateMonasteryPrefab(buildingData.PlayerId);
                     break;
                 case BuildingType.Blacksmith:
-                    prefab = CreateBuildingSpritePrefab("Blacksmith", "Blacksmith", 3, 3, 5f)
+                    prefab = CreateBuildingSpritePrefab("Blacksmith", "Blacksmith", 3, 3, 6f, 1.02f / 6f)
                           ?? CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "Blacksmith");
                     break;
                 case BuildingType.Market:
@@ -2089,7 +2098,11 @@ namespace OpenEmpires
                 if (buildingData.Type == BuildingType.House)
                     view.SetAgeSpriteInfo("HouseAge", 3);
                 else if (buildingData.Type == BuildingType.Barracks)
-                    view.SetAgeSpriteInfo("BarracksAge", 2);
+                    view.SetAgeSpriteInfo("BarracksAge", 3);
+                else if (buildingData.Type == BuildingType.ArcheryRange)
+                    view.SetAgeSpriteInfo("ArcheryRangeAge", 3);
+                else if (buildingData.Type == BuildingType.Stables)
+                    view.SetAgeSpriteInfo("StablesAge", 3);
 
                 if (buildingData.IsGate)
                     view.SetGateVisual(true, buildingBodyMaterial);

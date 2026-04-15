@@ -38,6 +38,16 @@ Shader "OpenEmpires/Terrain_Splatmap"
             Name "ForwardLit"
             Tags { "LightMode"="UniversalForward" }
 
+            // Tag terrain pixels with stencil bit 0 so billboard sprites can punch
+            // through terrain depth (but still be occluded by units, which clear bit 0).
+            Stencil
+            {
+                Ref 1
+                WriteMask 1
+                Comp Always
+                Pass Replace
+            }
+
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag

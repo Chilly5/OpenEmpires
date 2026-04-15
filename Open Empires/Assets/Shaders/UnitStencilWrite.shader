@@ -12,7 +12,7 @@ Shader "Custom/UnitStencilWrite"
             Stencil
             {
                 Ref 64
-                WriteMask 64
+                WriteMask 65
                 Comp Always
                 Pass Replace
             }

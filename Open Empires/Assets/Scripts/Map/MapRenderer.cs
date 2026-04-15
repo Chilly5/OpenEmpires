@@ -19,7 +19,7 @@ namespace OpenEmpires
         private MapData cachedMapData;
 
         // Tree billboard data (loaded at runtime from Resources)
-        // Trees: Beech1, Beech2, Oak1, Birch1, Birch2 (indices 0-4)
+        // Trees: Beech1, Beech2, Oak1, Birch1, Birch2, Beech3, Pine1 (indices 0-4, 10-11)
         // Bushes: Bush1, Bush2, Bush3 (indices 5-7)
         // Meadow flowers: MeadowFlowers1, MeadowFlowers2 (indices 8-9)
         private static readonly string[] TreeSpriteNames = {
@@ -27,15 +27,19 @@ namespace OpenEmpires
             "TreeSprites/Oak1",                             // 2: oak (second most)
             "TreeSprites/Birch1", "TreeSprites/Birch2",   // 3-4: birch (third)
             "TreeSprites/Bush1", "TreeSprites/Bush2", "TreeSprites/Bush3", // 5-7: bushes (woodline edges)
-            "TreeSprites/MeadowFlowers1", "TreeSprites/MeadowFlowers2"     // 8-9: meadow flowers (grass decoration)
+            "TreeSprites/MeadowFlowers1", "TreeSprites/MeadowFlowers2",    // 8-9: meadow flowers (grass decoration)
+            "TreeSprites/Beech3test",                       // 10: beech variant
+            "TreeSprites/Pine1"                             // 11: pine
         };
-        // Weighted tree selection: beech ~40%, oak ~25%, birch ~20%, random mix ~15%
+        // Weighted tree selection: beech ~40%, oak ~20%, birch ~15%, pine ~15%, beech3 ~10%
         private static readonly int[] TreeWeightTable = {
             0, 0, 0, 0, 0, 0, 0, 0, // Beech1 x8
             1, 1, 1, 1, 1, 1, 1, 1, // Beech2 x8
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, // Oak1 x10
-            3, 3, 3, 3, 3, 3,       // Birch1 x6
-            4, 4, 4, 4, 4, 4,       // Birch2 x6
+            2, 2, 2, 2, 2, 2, 2, 2, // Oak1 x8
+            3, 3, 3, 3, 3,          // Birch1 x5
+            4, 4, 4, 4, 4,          // Birch2 x5
+            10, 10, 10, 10, 10, 10, // Beech3test x6
+            11, 11, 11, 11, 11, 11, 11, 11, // Pine1 x8
         };
         private Material[] treeMaterials;
         public Material[] TreeMaterials => treeMaterials;
