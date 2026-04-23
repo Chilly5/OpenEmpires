@@ -6,7 +6,11 @@
       "Read(/Users/coleshin/Downloads/Englishassets1/**)",
       "Bash(grep -n \"buildingLayer\\|building.*hit\\|hit.*building\" \"/Users/coleshin/Documents/GitHub/OpenEmpires/Open Empires/Assets/Scripts/Units/UnitSelectionManager.cs\")",
       "Bash(grep -n \"UpdateHover\\|hoveredResource\\|hoveredUnit\" \"/Users/coleshin/Documents/GitHub/OpenEmpires/Open Empires/Assets/Scripts/Units/UnitSelectionManager.cs\")",
-      "Bash(grep -n \"OnEscapePressed\\|Escape\" \"/Users/coleshin/Documents/GitHub/OpenEmpires/Open Empires/Assets/Scripts/Units/UnitSelectionManager.cs\")"
+      "Bash(grep -n \"OnEscapePressed\\|Escape\" \"/Users/coleshin/Documents/GitHub/OpenEmpires/Open Empires/Assets/Scripts/Units/UnitSelectionManager.cs\")",
+      "Bash(find \"/Users/coleshin/Documents/GitHub/OpenEmpires\" -type f ( -name \"*.html\" -o -name \"*.js\" -o -name \"*.cs\" ) -exec grep -l -i \"single.*player\\|multiplayer\\|discord\\|lobby\\|main.*menu\" {} ;)",
+      "Bash(grep -n \"Join Discord\\|civButtonImages\\|civilization.*button\" \"/Users/coleshin/Documents/GitHub/OpenEmpires/Open Empires/Assets/Scripts/Network/NetworkManager.cs\")",
+      "Bash(grep -B10 -A2 \"Single.*Player\\|Multiplayer.*button\" \"/Users/coleshin/Documents/GitHub/OpenEmpires/Open Empires/Assets/Scripts/Network/NetworkManager.cs\")",
+      "Bash(grep -n \"sortingOrder\\|Canvas\\|canvas\" \"/Users/coleshin/Documents/GitHub/OpenEmpires/Open Empires/Assets/Scripts/Network/NetworkManager.cs\")"
     ],
     "additionalDirectories": [
       "/Users/coleshin/Downloads/Englishassets1"

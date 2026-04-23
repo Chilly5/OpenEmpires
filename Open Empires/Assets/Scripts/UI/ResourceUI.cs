@@ -79,6 +79,9 @@ namespace OpenEmpires
         // Fullscreen button
         private GameObject fullscreenButtonGO;
 
+        // Settings button
+        private GameObject settingsButtonGO;
+
         // Reusable per-frame accumulators (avoid allocation)
         private readonly int[] prodCounts = new int[MaxProdRows];
         private readonly float[] prodProgressSum = new float[MaxProdRows];
@@ -220,6 +223,9 @@ namespace OpenEmpires
 
             // Fullscreen button (below timer)
             BuildFullscreenButton(canvasGO.transform);
+
+            // Settings button (top right)
+            BuildSettingsButton(canvasGO.transform);
 
             resourceCanvas = canvasGO;
             resourceCanvas.SetActive(false);
@@ -737,6 +743,53 @@ namespace OpenEmpires
             var tmp = textGO.AddComponent<TextMeshProUGUI>();
             tmp.text = "Return to Full Screen";
             tmp.fontSize = 12;
+            tmp.fontStyle = FontStyles.Bold;
+            tmp.color = Color.white;
+            tmp.alignment = TextAlignmentOptions.Center;
+            tmp.raycastTarget = false;
+        }
+
+        private void BuildSettingsButton(Transform parent)
+        {
+            const float BtnSize = 32f;
+
+            settingsButtonGO = new GameObject("SettingsButton");
+            settingsButtonGO.transform.SetParent(parent, false);
+            var btnRT = settingsButtonGO.AddComponent<RectTransform>();
+            btnRT.anchorMin = new Vector2(1f, 1f);
+            btnRT.anchorMax = new Vector2(1f, 1f);
+            btnRT.pivot = new Vector2(1f, 1f);
+            btnRT.anchoredPosition = new Vector2(-10f, -10f);
+            btnRT.sizeDelta = new Vector2(BtnSize, BtnSize);
+
+            var bgImg = settingsButtonGO.AddComponent<Image>();
+            bgImg.color = new Color(0, 0, 0, 0.8f);
+            var outline = settingsButtonGO.AddComponent<Outline>();
+            outline.effectColor = new Color(0.5f, 0.5f, 0.5f, 1f);
+            outline.effectDistance = new Vector2(2, -2);
+
+            var btn = settingsButtonGO.AddComponent<Button>();
+            var colors = btn.colors;
+            colors.normalColor = new Color(0f, 0f, 0f, 0.8f);
+            colors.highlightedColor = new Color(0.2f, 0.2f, 0.2f, 0.9f);
+            colors.pressedColor = new Color(0.1f, 0.1f, 0.1f, 0.9f);
+            btn.colors = colors;
+            btn.targetGraphic = bgImg;
+            btn.onClick.AddListener(() =>
+            {
+                SettingsMenuUI.Open();
+            });
+
+            var textGO = new GameObject("Text");
+            textGO.transform.SetParent(settingsButtonGO.transform, false);
+            var textRT = textGO.AddComponent<RectTransform>();
+            textRT.anchorMin = Vector2.zero;
+            textRT.anchorMax = Vector2.one;
+            textRT.offsetMin = Vector2.zero;
+            textRT.offsetMax = Vector2.zero;
+            var tmp = textGO.AddComponent<TextMeshProUGUI>();
+            tmp.text = "⋮";
+            tmp.fontSize = 20;
             tmp.fontStyle = FontStyles.Bold;
             tmp.color = Color.white;
             tmp.alignment = TextAlignmentOptions.Center;
