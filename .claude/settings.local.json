@@ -1,7 +1,16 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Read(/Users/coleshin/Downloads/**)",
+      "Read(/Users/coleshin/Downloads/Englishassets1/**)"
+    ],
+    "additionalDirectories": [
+      "/Users/coleshin/Downloads/Englishassets1"
     ]
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "mcp-for-unity-server"
+  ]
 }
