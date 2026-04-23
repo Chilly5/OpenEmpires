@@ -834,11 +834,13 @@ namespace OpenEmpires
             if (mc != null) Destroy(mc);
 
             spriteGo.transform.SetParent(billboardContainer);
-            spriteGo.transform.position = new Vector3(position.x, position.y + 1.5f, position.z);
-            spriteGo.transform.localScale = new Vector3(3f, 3f, 1f);
+            spriteGo.transform.position = new Vector3(position.x, position.y + 0.05f, position.z);
+            spriteGo.transform.localScale = new Vector3(2f, 2f, 1f);
 
             var renderer = spriteGo.GetComponent<MeshRenderer>();
+            // Use shared material like trees so fog of war works, but adjust sorting
             renderer.sharedMaterial = treeMaterials[variantIndex];
+            renderer.sortingOrder = -100; // Render behind other billboard objects
         }
 
         private void SpawnPerPlayerResources(MapData mapData, Vector2Int[] playerBases)
