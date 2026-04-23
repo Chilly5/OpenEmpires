@@ -171,6 +171,7 @@ namespace OpenEmpires
         // Hover tracking
         private UnitView hoveredUnit;
         private ResourceNode hoveredResource;
+        private BuildingView hoveredBuilding;
         private GameObject resourceCursorIcon;
         private Image resourceCursorImage;
         private GameObject attackCursorIcon;
@@ -186,6 +187,8 @@ namespace OpenEmpires
         private Image actionCursorImage;
         private GameObject healCursorIcon;
         private Image healCursorImage;
+        private GameObject repairCursorIcon;
+        private Image repairCursorImage;
 
         // Hold-to-delete
         private float deleteHoldTimer;
@@ -249,6 +252,11 @@ namespace OpenEmpires
             if (healCursorIcon != null)
             {
                 var canvas = healCursorIcon.transform.parent;
+                if (canvas != null) Object.Destroy(canvas.gameObject);
+            }
+            if (repairCursorIcon != null)
+            {
+                var canvas = repairCursorIcon.transform.parent;
                 if (canvas != null) Object.Destroy(canvas.gameObject);
             }
             if (instance == this) instance = null;
@@ -806,18 +814,21 @@ namespace OpenEmpires
             // Hover detection
             UpdateHover();
             UpdateResourceHover();
+            UpdateBuildingHover();
             UpdateAttackHover();
             UpdateGarrisonCursor();
             UpdatePatrolCursor();
             UpdateActionCursor();
             UpdateHealCursor();
+            UpdateRepairCursor();
 
             // Signal the global custom cursor to hide when a contextual cursor is active
             bool anyContextual = (attackCursorIcon != null && attackCursorIcon.activeSelf)
                               || (garrisonCursorIcon != null && garrisonCursorIcon.activeSelf)
                               || (patrolCursorIcon != null && patrolCursorIcon.activeSelf)
                               || (actionCursorIcon != null && actionCursorIcon.activeSelf)
-                              || (healCursorIcon != null && healCursorIcon.activeSelf);
+                              || (healCursorIcon != null && healCursorIcon.activeSelf)
+                              || (repairCursorIcon != null && repairCursorIcon.activeSelf);
             CustomCursor.SetContextualCursorActive(anyContextual);
         }
 
@@ -887,6 +898,56 @@ namespace OpenEmpires
             {
                 resourceCursorIcon.transform.position = new Vector3(currentMousePos.x + 20f, currentMousePos.y - 20f, 0f);
             }
+        }
+
+        private void UpdateBuildingHover()
+        {
+            BuildingView newHover = null;
+
+            if (!UIInputSuppressed && !isPlacingBuilding && !isPlacingWall && mainCamera != null)
+            {
+                Ray ray = mainCamera.ScreenPointToRay(currentMousePos);
+                if (Physics.Raycast(ray, out RaycastHit hit, 1000f, buildingLayer))
+                {
+                    var view = hit.collider.GetComponent<BuildingView>();
+                    if (view != null && !view.IsDestroyed)
+                    {
+                        // Check if this is a damaged allied building and we have villagers selected
+                        var sim = GameBootstrapper.Instance?.Simulation;
+                        if (sim != null)
+                        {
+                            var buildingData = sim.BuildingRegistry.GetBuilding(view.BuildingId);
+                            if (buildingData != null && 
+                                !buildingData.IsUnderConstruction &&
+                                buildingData.CurrentHealth < buildingData.MaxHealth &&
+                                sim.AreAllies(view.PlayerId, LocalPlayerId) &&
+                                HasSelectedVillagers())
+                            {
+                                newHover = view;
+                            }
+                        }
+                    }
+                }
+            }
+
+            hoveredBuilding = newHover;
+        }
+
+        private bool HasSelectedVillagers()
+        {
+            var sim = GameBootstrapper.Instance?.Simulation;
+            if (sim == null) return false;
+
+            for (int i = 0; i < selectedUnits.Count; i++)
+            {
+                if (selectedUnits[i].PlayerId == LocalPlayerId)
+                {
+                    var unitData = sim.UnitRegistry.GetUnit(selectedUnits[i].UnitId);
+                    if (unitData != null && unitData.IsVillager)
+                        return true;
+                }
+            }
+            return false;
         }
 
         private bool HasSelectedVillager()
@@ -1380,6 +1441,88 @@ namespace OpenEmpires
             {
                 healCursorIcon.SetActive(false);
             }
+        }
+
+        private void UpdateRepairCursor()
+        {
+            bool showRepair = false;
+
+            if (HasSelectedVillagers() && hoveredBuilding != null)
+            {
+                var sim = GameBootstrapper.Instance?.Simulation;
+                if (sim != null)
+                {
+                    var buildingData = sim.BuildingRegistry.GetBuilding(hoveredBuilding.BuildingId);
+                    if (buildingData != null && !buildingData.IsUnderConstruction &&
+                        buildingData.CurrentHealth < buildingData.MaxHealth &&
+                        sim.AreAllies(buildingData.PlayerId, LocalPlayerId))
+                    {
+                        showRepair = true;
+                    }
+                }
+            }
+
+            if (showRepair)
+            {
+                EnsureRepairCursorIcon();
+                repairCursorIcon.SetActive(true);
+                repairCursorIcon.transform.position = new Vector3(currentMousePos.x + 20f, currentMousePos.y - 20f, 0f);
+            }
+            else if (repairCursorIcon != null)
+            {
+                repairCursorIcon.SetActive(false);
+            }
+        }
+
+        private void EnsureRepairCursorIcon()
+        {
+            if (repairCursorIcon != null) return;
+
+            var canvasGO = new GameObject("RepairCursorCanvas");
+            var canvas = canvasGO.AddComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.sortingOrder = 1000;
+
+            repairCursorIcon = new GameObject("RepairCursorIcon");
+            repairCursorIcon.transform.SetParent(canvasGO.transform, false);
+
+            repairCursorImage = repairCursorIcon.AddComponent<Image>();
+            repairCursorImage.raycastTarget = false;
+
+            // Create a hammer texture procedurally
+            var tex = new Texture2D(32, 32);
+            for (int x = 0; x < 32; x++)
+            {
+                for (int y = 0; y < 32; y++)
+                {
+                    // Simple hammer shape: brown handle with gray head
+                    Color color = Color.clear;
+                    
+                    // Handle (vertical line from bottom to middle)
+                    if (x >= 14 && x <= 17 && y >= 2 && y <= 20)
+                        color = new Color(0.6f, 0.3f, 0.1f, 1f); // Brown
+                    
+                    // Hammer head (horizontal rectangle at top)
+                    if (x >= 8 && x <= 23 && y >= 18 && y <= 26)
+                        color = new Color(0.5f, 0.5f, 0.5f, 1f); // Gray
+                    
+                    // Handle grip (darker brown)
+                    if (x >= 15 && x <= 16 && y >= 4 && y <= 18)
+                        color = new Color(0.4f, 0.2f, 0.05f, 1f);
+
+                    tex.SetPixel(x, y, color);
+                }
+            }
+            tex.Apply();
+
+            repairCursorImage.sprite = Sprite.Create(tex, new Rect(0, 0, 32, 32), new Vector2(0.5f, 0.5f));
+
+            var rt = repairCursorIcon.GetComponent<RectTransform>();
+            rt.sizeDelta = new Vector2(40f, 40f);
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.zero;
+
+            repairCursorIcon.SetActive(false);
         }
 
         private void OnSelectCanceled(InputAction.CallbackContext ctx)
@@ -2148,6 +2291,35 @@ namespace OpenEmpires
                             SFXManager.Instance?.PlayUI(SFXType.CommandMove, 0.5f);
                             isRightDragging = false;
                             return;
+                        }
+                        // Own/allied building damaged: send villagers to repair
+                        else if (buildingData != null && !buildingData.IsUnderConstruction && 
+                                buildingData.CurrentHealth < buildingData.MaxHealth)
+                        {
+                            // Check if any selected units are villagers
+                            int[] unitIds = GetSelectedUnitIds();
+                            bool hasVillagers = false;
+                            for (int i = 0; i < unitIds.Length; i++)
+                            {
+                                var unit = sim.UnitRegistry.GetUnit(unitIds[i]);
+                                if (unit != null && unit.IsVillager)
+                                {
+                                    hasVillagers = true;
+                                    break;
+                                }
+                            }
+
+                            if (hasVillagers)
+                            {
+                                var repairCmd = new RepairBuildingCommand(
+                                    LocalPlayerId, unitIds, buildingView.BuildingId);
+                                repairCmd.IsQueued = multiSelectHeld;
+                                sim.CommandBuffer.EnqueueCommand(repairCmd);
+                                buildingView.FlashCommandConfirm();
+                                SFXManager.Instance?.PlayUI(SFXType.CommandMove, 0.5f);
+                                isRightDragging = false;
+                                return;
+                            }
                         }
                         else if (buildingData != null && GameSimulation.IsDropOffBuilding(buildingData.Type) && !buildingData.IsUnderConstruction)
                         {

@@ -35,7 +35,8 @@ namespace OpenEmpires
         LightningStorm,
         Tsunami,
         MarketTrade,
-        Research
+        Research,
+        RepairBuilding
     }
 
     public interface ICommand

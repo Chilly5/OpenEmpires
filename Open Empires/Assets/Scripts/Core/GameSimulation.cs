@@ -43,6 +43,7 @@ namespace OpenEmpires
         private FogOfWarSystem fogOfWarSystem;
         private BuildingTrainingSystem trainingSystem;
         private BuildingConstructionSystem constructionSystem;
+        private BuildingRepairSystem repairSystem;
         private TowerUpgradeSystem towerUpgradeSystem;
         private ProjectileSystem projectileSystem;
         private BuildingCombatSystem buildingCombatSystem;
@@ -546,6 +547,7 @@ namespace OpenEmpires
             fogOfWarSystem = new FogOfWarSystem();
             trainingSystem = new BuildingTrainingSystem();
             constructionSystem = new BuildingConstructionSystem();
+            repairSystem = new BuildingRepairSystem();
             towerUpgradeSystem = new TowerUpgradeSystem();
             ProjectileRegistry = new ProjectileRegistry();
             projectileSystem = new ProjectileSystem();
@@ -815,6 +817,9 @@ namespace OpenEmpires
                     EjectUnitsFromBuildingFootprint(startedBuilding);
                 }
             }
+
+            // Repair system
+            var repairedBuildingIds = repairSystem.Tick(UnitRegistry, BuildingRegistry, MapData, ResourceManager, config, currentTick, cachedTickDuration, out var idledRepairVillagers);
 
             for (int i = 0; i < completedBuildingIds.Count; i++)
             {
@@ -1414,6 +1419,9 @@ namespace OpenEmpires
                     break;
                 case ConstructBuildingCommand construct:
                     ProcessConstructBuildingCommand(construct);
+                    break;
+                case RepairBuildingCommand repair:
+                    ProcessRepairBuildingCommand(repair);
                     break;
                 case DropOffCommand dropOff:
                     ProcessDropOffCommand(dropOff);
@@ -4106,6 +4114,11 @@ namespace OpenEmpires
                     }
                 }
             }
+        }
+
+        private void ProcessRepairBuildingCommand(RepairBuildingCommand cmd)
+        {
+            repairSystem.ProcessRepairCommand(cmd, this);
         }
 
         private void ProcessDropOffCommand(DropOffCommand cmd)

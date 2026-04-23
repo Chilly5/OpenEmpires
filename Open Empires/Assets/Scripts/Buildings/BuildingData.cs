@@ -68,6 +68,14 @@ namespace OpenEmpires
         public float ConstructionProgress => ConstructionTicksTotal > 0
             ? 1f - (float)ConstructionTicksRemaining / ConstructionTicksTotal : 1f;
 
+        // Repair
+        public bool IsBeingRepaired;
+        public int RepairTicksRemaining;
+        public int RepairTicksTotal;
+        public int RepairStartHealth; // Health when repair started
+        public float RepairProgress => RepairTicksTotal > 0
+            ? 1f - (float)RepairTicksRemaining / RepairTicksTotal : 0f;
+
         // Tile footprint
         public int OriginTileX;
         public int OriginTileZ;
