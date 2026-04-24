@@ -2112,6 +2112,50 @@ namespace OpenEmpires
             // Set initial description
             UpdateCivDescription();
 
+            // Settings button (top-right corner)
+            var settingsButtonGO = new GameObject("SettingsButton");
+            settingsButtonGO.transform.SetParent(overlayGO.transform, false);
+            var settingsButtonRT = settingsButtonGO.AddComponent<RectTransform>();
+            settingsButtonRT.anchorMin = new Vector2(1f, 1f);
+            settingsButtonRT.anchorMax = new Vector2(1f, 1f);
+            settingsButtonRT.pivot = new Vector2(1f, 1f);
+            settingsButtonRT.anchoredPosition = new Vector2(-10f, -10f);
+            settingsButtonRT.sizeDelta = new Vector2(32f, 32f);
+
+            var settingsImg = settingsButtonGO.AddComponent<Image>();
+            settingsImg.color = Color.white;
+
+            var settingsOutline = settingsButtonGO.AddComponent<Outline>();
+            settingsOutline.effectColor = new Color(0.4f, 0.4f, 0.45f, 0.5f);
+            settingsOutline.effectDistance = new Vector2(1, -1);
+
+            var settingsBtn = settingsButtonGO.AddComponent<Button>();
+            var settingsColors = settingsBtn.colors;
+            settingsColors.normalColor = new Color(0.28f, 0.28f, 0.32f);
+            settingsColors.highlightedColor = new Color(0.38f, 0.38f, 0.42f);
+            settingsColors.pressedColor = new Color(0.20f, 0.20f, 0.23f);
+            settingsBtn.colors = settingsColors;
+            settingsBtn.onClick.AddListener(() =>
+            {
+                SFXManager.Instance?.PlayUI(SFXType.MenuClick, 0.5f);
+                SettingsMenuUI.Open();
+            });
+
+            // Settings icon text
+            var settingsTextGO = new GameObject("Text");
+            settingsTextGO.transform.SetParent(settingsButtonGO.transform, false);
+            var settingsTextRT = settingsTextGO.AddComponent<RectTransform>();
+            settingsTextRT.anchorMin = Vector2.zero;
+            settingsTextRT.anchorMax = Vector2.one;
+            settingsTextRT.offsetMin = Vector2.zero;
+            settingsTextRT.offsetMax = Vector2.zero;
+            var settingsText = settingsTextGO.AddComponent<TextMeshProUGUI>();
+            settingsText.text = "•••";
+            settingsText.fontSize = 18;
+            settingsText.alignment = TextAlignmentOptions.Center;
+            settingsText.color = Color.white;
+            settingsText.enableWordWrapping = false;
+
             // Civilization art — last child so it renders on top of everything
             var civArtGO = new GameObject("CivArt");
             civArtGO.transform.SetParent(overlayGO.transform, false);
