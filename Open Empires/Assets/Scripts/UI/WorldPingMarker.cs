@@ -7,9 +7,11 @@ namespace OpenEmpires
     // rises slightly, and fades out before self-destructing.
     public class WorldPingMarker : MonoBehaviour
     {
-        private const float Lifetime = 3f;
+        private const float Lifetime = 3.9f;
         private const float RiseDistance = 1.0f;
         private const float InitialScale = 1.6f;
+        private const int PulseCount = 3;
+        private const float PulseScaleAmplitude = 0.35f;
 
         private TMP_Text label;
         private Camera cam;
@@ -60,6 +62,12 @@ namespace OpenEmpires
 
             if (label != null)
             {
+                // Pulse the scale PulseCount times across the lifetime (each beat swells then settles).
+                float pulseBeat = t * PulseCount;
+                float pulsePhase = pulseBeat - Mathf.Floor(pulseBeat);
+                float pulseScale = 1f + PulseScaleAmplitude * Mathf.Sin(Mathf.PI * pulsePhase);
+                label.transform.localScale = Vector3.one * (InitialScale * pulseScale);
+
                 var c = label.color;
                 c.a = Mathf.SmoothStep(1f, 0f, t);
                 label.color = c;

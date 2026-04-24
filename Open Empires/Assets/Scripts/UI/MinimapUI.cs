@@ -70,7 +70,8 @@ namespace OpenEmpires
 
         // Notify-ping mode (user clicked the ping button and the next world click places a ping).
         private bool isPingMode;
-        private const float UserPingDuration = 1.3f;
+        private const float UserPingDuration = 3.9f; // 3 pulses × 1.3s each
+        private const int UserPingPulses = 3;
         private static readonly Color32 UserPingColor = new Color32(255, 210, 60, 255);
         private GameObject pingCursorIcon;
 
@@ -390,11 +391,11 @@ namespace OpenEmpires
 
             UnitSelectionManager.SetMinimapSuppressed(insideCircle);
 
-            // Keep the ping cursor icon pinned to the mouse while in ping mode.
+            // Keep the ping cursor icon pinned below-right of the system cursor while in ping mode.
             if (isPingMode && pingCursorIcon != null && pingCursorIcon.activeSelf)
             {
                 Vector2 p = VirtualCursor.Position;
-                pingCursorIcon.transform.position = new Vector3(p.x + 16f, p.y - 16f, 0f);
+                pingCursorIcon.transform.position = new Vector3(p.x + 24f, p.y - 40f, 0f);
             }
 
             // Ping mode: capture next world or minimap click to place a notify ping.
@@ -1189,15 +1190,18 @@ namespace OpenEmpires
 
                 if (ping.style == PingStyle.ExpandingWave)
                 {
-                    // Radius grows from 2 to 28 px. Alpha stays full for the first 60% of life,
-                    // then fades linearly to 0 — so the fade-out happens near the end.
-                    float norm = Mathf.Clamp01(elapsed / total);
-                    int radius = (int)Mathf.Lerp(2f, 28f, norm);
-                    float alphaNorm = Mathf.Clamp01((1f - norm) / 0.4f);
+                    // Pulse N times. Each pulse grows 2 → 28 px and fades back down over its window,
+                    // so three quick waves radiate out in sequence before the ping disappears.
+                    float pulseDuration = total / UserPingPulses;
+                    int pulseIndex = (int)(elapsed / pulseDuration);
+                    if (pulseIndex >= UserPingPulses) continue;
+                    float pulseNorm = (elapsed - pulseIndex * pulseDuration) / pulseDuration;
+                    int radius = (int)Mathf.Lerp(2f, 28f, pulseNorm);
+                    float alphaNorm = Mathf.Clamp01((1f - pulseNorm) / 0.4f);
                     byte alpha = (byte)(alphaNorm * 255f);
                     Color32 c = new Color32(ping.color.r, ping.color.g, ping.color.b, alpha);
                     DrawCircleSegments(cx, cy, radius, c);
-                    // Solid center dot to mark the origin (also fades near the end).
+                    // Solid center dot to mark the origin (fades in sync with the wave).
                     Color32 dot = new Color32(ping.color.r, ping.color.g, ping.color.b, alpha);
                     DrawCircleSegments(cx, cy, 2, dot);
                 }
