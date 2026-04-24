@@ -43,11 +43,8 @@ namespace OpenEmpires
                     .With("Down", "<Keyboard>/downArrow")
                     .With("Left", "<Keyboard>/leftArrow")
                     .With("Right", "<Keyboard>/rightArrow");
-                CameraPan.AddCompositeBinding("2DVector")
-                    .With("Up", "<Keyboard>/w")
-                    .With("Down", "<Keyboard>/s")
-                    .With("Left", "<Keyboard>/a")
-                    .With("Right", "<Keyboard>/d");
+                // WASD camera binding removed: those keys collide with building production
+                // hotkeys (Q/W/E/R/A/S/D/F for trains, N/B for queue management).
 
                 CameraMousePan = new InputAction("CameraMousePan", InputActionType.Value, "<Mouse>/delta");
 
