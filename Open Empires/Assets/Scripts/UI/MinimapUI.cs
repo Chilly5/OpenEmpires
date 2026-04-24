@@ -54,11 +54,25 @@ namespace OpenEmpires
         private const float PingFlashRate = 4f;
         private int lastAlertCheckTick;
 
+        private enum PingStyle
+        {
+            AttackFlash,   // existing under-attack pulsing ring
+            ExpandingWave, // user notify ping — grows outward from center
+        }
+
         private struct MinimapPing
         {
-            public float worldX, worldZ, timeRemaining;
+            public float worldX, worldZ, timeRemaining, totalDuration;
+            public Color32 color;
+            public PingStyle style;
         }
         private List<MinimapPing> activePings = new List<MinimapPing>();
+
+        // Notify-ping mode (user clicked the ping button and the next world click places a ping).
+        private bool isPingMode;
+        private const float UserPingDuration = 2.2f;
+        private static readonly Color32 UserPingColor = new Color32(255, 210, 60, 255);
+        private GameObject pingCursorIcon;
 
         // Cached viewport quad corners (world-space ground intersections)
         private Vector3[] viewportGroundCorners = new Vector3[4];
@@ -175,6 +189,7 @@ namespace OpenEmpires
             minimapCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
             minimapCanvas.sortingOrder = 10;
             var scaler = canvasGO.AddComponent<CanvasScaler>();
+            canvasGO.AddComponent<GraphicRaycaster>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1280f, 720f);
             scaler.matchWidthOrHeight = 0.5f;
@@ -225,6 +240,104 @@ namespace OpenEmpires
             var rawImg = mapGO.AddComponent<RawImage>();
             rawImg.texture = compositeTexture;
             rawImg.raycastTarget = false;
+
+            CreatePingButton(borderGO.transform);
+        }
+
+        private void CreatePingButton(Transform parent)
+        {
+            const float btnSize = 28f;
+            var btnGO = new GameObject("PingButton");
+            btnGO.transform.SetParent(parent, false);
+            var btnRT = btnGO.AddComponent<RectTransform>();
+            // Anchor to the border's bottom-right corner, outside the circular map area.
+            btnRT.anchorMin = new Vector2(1f, 0f);
+            btnRT.anchorMax = new Vector2(1f, 0f);
+            btnRT.pivot = new Vector2(1f, 0f);
+            btnRT.anchoredPosition = Vector2.zero;
+            btnRT.sizeDelta = new Vector2(btnSize, btnSize);
+
+            var bgImg = btnGO.AddComponent<Image>();
+            bgImg.color = new Color(0.18f, 0.18f, 0.18f, 0.9f);
+
+            var btn = btnGO.AddComponent<Button>();
+            var colors = btn.colors;
+            colors.normalColor = new Color(1f, 1f, 1f, 1f);
+            colors.highlightedColor = new Color(1f, 0.95f, 0.6f, 1f);
+            colors.pressedColor = new Color(0.7f, 0.55f, 0.15f, 1f);
+            btn.colors = colors;
+            btn.onClick.AddListener(EnterPingMode);
+
+            var labelGO = new GameObject("Label");
+            labelGO.transform.SetParent(btnGO.transform, false);
+            var labelRT = labelGO.AddComponent<RectTransform>();
+            labelRT.anchorMin = Vector2.zero;
+            labelRT.anchorMax = Vector2.one;
+            labelRT.offsetMin = Vector2.zero;
+            labelRT.offsetMax = Vector2.zero;
+            var labelText = labelGO.AddComponent<Text>();
+            labelText.text = "!";
+            labelText.alignment = TextAnchor.MiddleCenter;
+            labelText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            labelText.fontSize = 20;
+            labelText.fontStyle = FontStyle.Bold;
+            labelText.color = new Color(1f, 0.8f, 0.25f, 1f);
+            labelText.raycastTarget = false;
+        }
+
+        public void EnterPingMode()
+        {
+            isPingMode = true;
+            EnsurePingCursorIcon();
+            if (pingCursorIcon != null) pingCursorIcon.SetActive(true);
+        }
+
+        private void ExitPingMode()
+        {
+            isPingMode = false;
+            if (pingCursorIcon != null) pingCursorIcon.SetActive(false);
+        }
+
+        private void EnsurePingCursorIcon()
+        {
+            if (pingCursorIcon != null) return;
+
+            var canvasGO = new GameObject("PingCursorCanvas");
+            var canvas = canvasGO.AddComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.sortingOrder = 100;
+            canvasGO.AddComponent<CanvasScaler>();
+
+            pingCursorIcon = new GameObject("PingCursorIcon");
+            pingCursorIcon.transform.SetParent(canvasGO.transform, false);
+
+            var bg = pingCursorIcon.AddComponent<Image>();
+            bg.raycastTarget = false;
+            bg.color = new Color(0.12f, 0.12f, 0.12f, 0.85f);
+
+            var bgRT = pingCursorIcon.GetComponent<RectTransform>();
+            bgRT.sizeDelta = new Vector2(36f, 36f);
+            bgRT.anchorMin = Vector2.zero;
+            bgRT.anchorMax = Vector2.zero;
+            bgRT.pivot = new Vector2(0f, 1f);
+
+            var labelGO = new GameObject("Label");
+            labelGO.transform.SetParent(pingCursorIcon.transform, false);
+            var labelRT = labelGO.AddComponent<RectTransform>();
+            labelRT.anchorMin = Vector2.zero;
+            labelRT.anchorMax = Vector2.one;
+            labelRT.offsetMin = Vector2.zero;
+            labelRT.offsetMax = Vector2.zero;
+            var labelText = labelGO.AddComponent<Text>();
+            labelText.text = "!";
+            labelText.alignment = TextAnchor.MiddleCenter;
+            labelText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            labelText.fontSize = 26;
+            labelText.fontStyle = FontStyle.Bold;
+            labelText.color = new Color(1f, 0.8f, 0.25f, 1f);
+            labelText.raycastTarget = false;
+
+            pingCursorIcon.SetActive(false);
         }
 
         private static Sprite CreateCircleSprite(int size)
@@ -276,6 +389,17 @@ namespace OpenEmpires
             bool insideCircle = mdx * mdx + mdy * mdy <= circRadius * circRadius;
 
             UnitSelectionManager.SetMinimapSuppressed(insideCircle);
+
+            // Keep the ping cursor icon pinned to the mouse while in ping mode.
+            if (isPingMode && pingCursorIcon != null && pingCursorIcon.activeSelf)
+            {
+                Vector2 p = VirtualCursor.Position;
+                pingCursorIcon.transform.position = new Vector3(p.x + 16f, p.y - 16f, 0f);
+            }
+
+            // Ping mode: capture next world or minimap click to place a notify ping.
+            if (isPingMode && HandlePingClick(screenRect, insideCircle))
+                return;
 
             // Handle input
             HandleMinimapInput(screenRect, insideCircle);
@@ -759,6 +883,79 @@ namespace OpenEmpires
 
         // ---- Input ----
 
+        // Returns true if the click was consumed (ping placed or mode cancelled).
+        private bool HandlePingClick(Rect screenRect, bool insideCircle)
+        {
+            var mouse = Mouse.current;
+            var keyboard = Keyboard.current;
+
+            if (keyboard != null && keyboard.escapeKey.wasPressedThisFrame)
+            {
+                ExitPingMode();
+                return true;
+            }
+            if (mouse == null) return false;
+
+            if (mouse.rightButton.wasPressedThisFrame)
+            {
+                ExitPingMode();
+                return true;
+            }
+            if (!mouse.leftButton.wasPressedThisFrame) return false;
+
+            // Ignore clicks on UI (e.g. the ping button itself, other panels) except the minimap.
+            if (UnityEngine.EventSystems.EventSystem.current != null
+                && UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()
+                && !insideCircle)
+                return false;
+
+            Vector3 worldPos;
+            if (insideCircle)
+            {
+                worldPos = ScreenToMinimapWorld(VirtualCursor.Position, screenRect);
+            }
+            else if (mainCamera != null)
+            {
+                Ray ray = mainCamera.ScreenPointToRay(VirtualCursor.Position);
+                var hits = Physics.RaycastAll(ray, 1000f);
+                worldPos = Vector3.zero;
+                bool found = false;
+                for (int i = 0; i < hits.Length; i++)
+                {
+                    if (hits[i].collider != null && hits[i].collider.CompareTag("Ground"))
+                    {
+                        worldPos = hits[i].point;
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) return false;
+            }
+            else
+            {
+                return false;
+            }
+
+            PlaceUserPing(worldPos);
+            ExitPingMode();
+            return true;
+        }
+
+        private void PlaceUserPing(Vector3 worldPos)
+        {
+            activePings.Add(new MinimapPing
+            {
+                worldX = worldPos.x,
+                worldZ = worldPos.z,
+                timeRemaining = UserPingDuration,
+                totalDuration = UserPingDuration,
+                color = UserPingColor,
+                style = PingStyle.ExpandingWave,
+            });
+            WorldPingMarker.Spawn(worldPos);
+            SFXManager.Instance?.PlayUI(SFXType.NotifyPing, 0.7f);
+        }
+
         private void HandleMinimapInput(Rect screenRect, bool insideCircle)
         {
             var mouse = Mouse.current;
@@ -953,7 +1150,15 @@ namespace OpenEmpires
             if (found)
             {
                 lastAttackAlertTime = Time.time;
-                activePings.Add(new MinimapPing { worldX = alertX, worldZ = alertZ, timeRemaining = PingDuration });
+                activePings.Add(new MinimapPing
+                {
+                    worldX = alertX,
+                    worldZ = alertZ,
+                    timeRemaining = PingDuration,
+                    totalDuration = PingDuration,
+                    color = new Color32(255, 60, 30, 255),
+                    style = PingStyle.AttackFlash,
+                });
                 SFXManager.Instance?.PlayUI(SFXType.UnderAttack);
             }
         }
@@ -977,36 +1182,57 @@ namespace OpenEmpires
             for (int i = 0; i < activePings.Count; i++)
             {
                 var ping = activePings[i];
-
-                // Flash on/off at PingFlashRate Hz
-                float phase = Mathf.Sin(2f * Mathf.PI * PingFlashRate * (PingDuration - ping.timeRemaining));
-                if (phase <= 0f) continue;
+                float total = ping.totalDuration > 0f ? ping.totalDuration : PingDuration;
+                float elapsed = total - ping.timeRemaining;
 
                 WorldToPixel(ping.worldX, ping.worldZ, out int cx, out int cy);
 
-                // Pulsing radius 4..8 px
-                float pulse = 0.5f + 0.5f * Mathf.Sin(2f * Mathf.PI * 2f * (PingDuration - ping.timeRemaining));
-                int radius = (int)Mathf.Lerp(4f, 8f, pulse);
-
-                // Draw circle as line segments
-                Color32 pingColor = new Color32(255, 60, 30, 255);
-                const int segments = 16;
-                for (int s = 0; s < segments; s++)
+                if (ping.style == PingStyle.ExpandingWave)
                 {
-                    float a0 = 2f * Mathf.PI * s / segments;
-                    float a1 = 2f * Mathf.PI * (s + 1) / segments;
-                    int x0 = cx + (int)(Mathf.Cos(a0) * radius);
-                    int y0 = cy + (int)(Mathf.Sin(a0) * radius);
-                    int x1 = cx + (int)(Mathf.Cos(a1) * radius);
-                    int y1 = cy + (int)(Mathf.Sin(a1) * radius);
-                    DrawLineClipped(x0, y0, x1, y1, pingColor);
+                    // Radius grows from 2 to 14 px, fades to transparent near end of life.
+                    float norm = Mathf.Clamp01(elapsed / total);
+                    int radius = (int)Mathf.Lerp(2f, 14f, norm);
+                    byte alpha = (byte)(Mathf.Lerp(255f, 0f, norm));
+                    Color32 c = new Color32(ping.color.r, ping.color.g, ping.color.b, alpha);
+                    DrawCircleSegments(cx, cy, radius, c);
+                    // Also draw a small solid center dot to mark the origin.
+                    DrawCircleSegments(cx, cy, 2, ping.color);
                 }
+                else
+                {
+                    // AttackFlash: flash on/off at PingFlashRate Hz with a 4..8 px pulsing radius.
+                    float phase = Mathf.Sin(2f * Mathf.PI * PingFlashRate * elapsed);
+                    if (phase <= 0f) continue;
+                    float pulse = 0.5f + 0.5f * Mathf.Sin(2f * Mathf.PI * 2f * elapsed);
+                    int radius = (int)Mathf.Lerp(4f, 8f, pulse);
+                    DrawCircleSegments(cx, cy, radius, ping.color);
+                }
+            }
+        }
+
+        private void DrawCircleSegments(int cx, int cy, int radius, Color32 color)
+        {
+            const int segments = 16;
+            for (int s = 0; s < segments; s++)
+            {
+                float a0 = 2f * Mathf.PI * s / segments;
+                float a1 = 2f * Mathf.PI * (s + 1) / segments;
+                int x0 = cx + (int)(Mathf.Cos(a0) * radius);
+                int y0 = cy + (int)(Mathf.Sin(a0) * radius);
+                int x1 = cx + (int)(Mathf.Cos(a1) * radius);
+                int y1 = cy + (int)(Mathf.Sin(a1) * radius);
+                DrawLineClipped(x0, y0, x1, y1, color);
             }
         }
 
         private void OnDestroy()
         {
             if (compositeTexture != null) Destroy(compositeTexture);
+            if (pingCursorIcon != null)
+            {
+                var canvas = pingCursorIcon.transform.parent;
+                if (canvas != null) Destroy(canvas.gameObject);
+            }
         }
     }
 }

@@ -24,6 +24,7 @@ namespace OpenEmpires
         SheepConvert,
         UnderAttack,
         MenuClick,
+        NotifyPing,
     }
 
     public class SFXManager : MonoBehaviour
@@ -65,6 +66,7 @@ namespace OpenEmpires
             0.3f,   // SheepConvert
             5.0f,   // UnderAttack
             0.15f,  // MenuClick
+            0.2f,   // NotifyPing
         };
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -253,6 +255,35 @@ namespace OpenEmpires
             clips[(int)SFXType.LobbyJoin] = GenerateLobbyJoin();
             clips[(int)SFXType.SheepConvert] = GenerateSheepConvert();
             clips[(int)SFXType.UnderAttack] = GenerateUnderAttack();
+            clips[(int)SFXType.NotifyPing] = GenerateNotifyPing();
+        }
+
+        private AudioClip GenerateNotifyPing()
+        {
+            // Ascending two-note "ding": A5 -> C#6, with a soft envelope.
+            float duration = 0.35f;
+            int samples = (int)(SampleRate * duration);
+            float[] data = new float[samples];
+
+            for (int i = 0; i < samples; i++)
+            {
+                float t = (float)i / SampleRate;
+                float norm = (float)i / samples;
+
+                float freq = norm < 0.45f ? 880f : 1108.73f;
+                float notePhase = norm < 0.45f ? norm / 0.45f : (norm - 0.45f) / 0.55f;
+
+                // Fast attack, slow decay per note.
+                float envelope;
+                if (notePhase < 0.05f)
+                    envelope = notePhase / 0.05f;
+                else
+                    envelope = Mathf.Pow(1f - (notePhase - 0.05f) / 0.95f, 2f);
+
+                data[i] = Mathf.Sin(2f * Mathf.PI * freq * t) * 0.4f * envelope;
+            }
+
+            return CreateClip("NotifyPing", data);
         }
 
         private AudioClip GenerateArrowFire()
