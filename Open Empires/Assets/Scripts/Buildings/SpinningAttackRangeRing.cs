@@ -21,8 +21,10 @@ namespace OpenEmpires
 
         private void CreateSegmentedRing()
         {
-            // Create shared material for all segments
-            segmentMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+            // Custom overlay shader has ZTest Always baked in so the ring draws through everything.
+            var shader = Shader.Find("OpenEmpires/RangeOverlay");
+            if (shader == null) shader = Shader.Find("Universal Render Pipeline/Unlit");
+            segmentMaterial = new Material(shader);
             segmentMaterial.color = Color.white;
 
             // Create individual LineRenderer components for each segment
