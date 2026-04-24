@@ -511,9 +511,12 @@ namespace OpenEmpires
             bool canAttack = (buildingData != null && buildingData.AttackDamage > 0) || 
                            (isGhostMode && ghostModeAttackRange > 0);
             
-            // Only show attack range if selected by the local player or in ghost mode
+            // Only show attack range if selected by the local player or during a placement preview.
+            // isGhostMode is also set for fog-of-war "last-known" enemy buildings — those must NOT show a range ring,
+            // so distinguish placement ghosts (which set ghostModeAttackRange > 0) from fog ghosts (which don't).
             bool isLocalPlayerSelection = isSelected && PlayerId == GetLocalPlayerId();
-            bool showRange = canAttack && range > 0 && (isLocalPlayerSelection || isGhostMode);
+            bool isPlacementGhost = isGhostMode && ghostModeAttackRange > 0;
+            bool showRange = canAttack && range > 0 && (isLocalPlayerSelection || isPlacementGhost);
             
             if (rangeRing != null)
                 rangeRing.SetActive(showRange);
