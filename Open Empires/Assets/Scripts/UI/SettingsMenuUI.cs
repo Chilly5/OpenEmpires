@@ -382,10 +382,17 @@ namespace OpenEmpires
 
         private void BuildControlsContent(GameObject panelGO, float contentX, float startY)
         {
-            float y = startY;
-            
-            // Rows for each remappable action
-            float rowStartX = contentX - 160f;
+            // Scrollable region between the title and the sticky bottom buttons
+            float scrollTop = 220f;
+            float scrollBottom = -180f;
+            float scrollWidth = 480f;
+            var scrollContent = CreateScrollView(panelGO.transform, contentX, scrollTop, scrollBottom, scrollWidth);
+
+            // Items use anchor (0.5, 0.5) -> referenced from scroll content center.
+            // Build with y treated as "distance below content top" (negative going down);
+            // we resize content + shift children by H/2 once we know the final height.
+            float y = -10f;
+            float rowStartX = -160f;
             float actionLabelW = 160f;
             float keybindBtnW = 80f;
             float resetBtnW = 30f;
@@ -400,79 +407,193 @@ namespace OpenEmpires
                 string currentBinding = KeybindManager.GetBinding(actionName);
                 string keyText = KeybindManager.GetKeyDisplayName(currentBinding);
 
-                // Action label
-                MakeLabel(panelGO.transform, displayName, rowStartX, y, actionLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+                MakeLabel(scrollContent, displayName, rowStartX, y, actionLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
 
-                // Keybind button — capture locals for closure
                 string capturedAction = actionName;
                 float keybindX = rowStartX + actionLabelW + colGap;
 
                 TMP_Text keybindLabel;
-                var keybindBtnGO = CreateButtonWithLabel(panelGO.transform, "[" + keyText + "]", keybindX, y, keybindBtnW, 28f, out keybindLabel);
+                var keybindBtnGO = CreateButtonWithLabel(scrollContent, "[" + keyText + "]", keybindX, y, keybindBtnW, 28f, out keybindLabel);
                 keybindBtnGO.GetComponent<Button>().onClick.AddListener(() => {
                     StartRebind(capturedAction, keybindLabel);
                 });
 
-                // Reset button
                 float resetX = keybindX + keybindBtnW + colGap;
-                CreateButton(panelGO.transform, "R", resetX, y, resetBtnW, 28f, () => {
+                CreateButton(scrollContent, "R", resetX, y, resetBtnW, 28f, () => {
                     ResetRow(capturedAction, keybindLabel);
                 });
             }
 
             // Building Keybinds Section
             y -= 50f;
-            MakeLabel(panelGO.transform, "Building Keybinds", rowStartX, y, actionLabelW * 2, 28f, 18, FontStyles.Bold, TextAlignmentOptions.Left);
-            
-            // Loop through all building types to create keybinds
+            MakeLabel(scrollContent, "Building Keybinds", rowStartX, y, actionLabelW * 2, 28f, 18, FontStyles.Bold, TextAlignmentOptions.Left);
+
             var buildingTypes = System.Enum.GetValues(typeof(BuildingType));
             foreach (BuildingType buildingType in buildingTypes)
             {
                 string buildingName = buildingType.ToString();
-                
-                // Cycle building keybind
+
                 y -= 40f;
-                MakeLabel(panelGO.transform, $"Cycle {buildingName}", rowStartX, y, actionLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
-                
+                MakeLabel(scrollContent, $"Cycle {buildingName}", rowStartX, y, actionLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+
                 float cycleKeybindX = rowStartX + actionLabelW + colGap;
-                CreateButton(panelGO.transform, "[Unbound]", cycleKeybindX, y, keybindBtnW, 28f, () => {
+                CreateButton(scrollContent, "[Unbound]", cycleKeybindX, y, keybindBtnW, 28f, () => {
                     // TODO: Add keybind functionality
                 });
-                
+
                 float cycleResetX = cycleKeybindX + keybindBtnW + colGap;
-                CreateButton(panelGO.transform, "R", cycleResetX, y, resetBtnW, 28f, () => {
+                CreateButton(scrollContent, "R", cycleResetX, y, resetBtnW, 28f, () => {
                     // TODO: Add reset functionality
                 });
-                
-                // Select All building keybind
+
                 y -= 30f;
-                MakeLabel(panelGO.transform, $"Select All {buildingName}", rowStartX, y, actionLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
-                
+                MakeLabel(scrollContent, $"Select All {buildingName}", rowStartX, y, actionLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+
                 float selectAllKeybindX = rowStartX + actionLabelW + colGap;
-                CreateButton(panelGO.transform, "[Unbound]", selectAllKeybindX, y, keybindBtnW, 28f, () => {
-                    // TODO: Add keybind functionality  
+                CreateButton(scrollContent, "[Unbound]", selectAllKeybindX, y, keybindBtnW, 28f, () => {
+                    // TODO: Add keybind functionality
                 });
-                
+
                 float selectAllResetX = selectAllKeybindX + keybindBtnW + colGap;
-                CreateButton(panelGO.transform, "R", selectAllResetX, y, resetBtnW, 28f, () => {
+                CreateButton(scrollContent, "R", selectAllResetX, y, resetBtnW, 28f, () => {
                     // TODO: Add reset functionality
                 });
-                
-                y -= 10f; // Small gap between building types
+
+                y -= 10f;
             }
 
-            // Reset All button
-            y -= 44f;
-            CreateButton(panelGO.transform, "Reset All", contentX, y, 160f, 36f, () =>
+            FinalizeScrollContent(scrollContent, -y + 10f);
+
+            // Sticky bottom buttons (outside the scroll view, parented to contentArea)
+            float btnY = -210f;
+            CreateButton(panelGO.transform, "Reset All", contentX, btnY, 160f, 36f, () =>
             {
                 KeybindManager.ResetAll();
-                // Rebuild controls content to refresh all labels
                 ShowControls();
             });
 
-            // Back button
-            y -= 44f;
-            CreateButton(panelGO.transform, "Back to Settings", contentX, y, 160f, 36f, () => ShowMainSettings());
+            btnY -= 44f;
+            CreateButton(panelGO.transform, "Back to Settings", contentX, btnY, 160f, 36f, () => ShowMainSettings());
+        }
+
+        // Builds a vertically-scrolling region inside `parent`, occupying the rect
+        // bounded by [topY, bottomY] vertically (in parent local coords) and `width` wide,
+        // centered horizontally at `x`. Returns the content Transform that callers
+        // should parent items to. Caller must call FinalizeScrollContent when done.
+        private Transform CreateScrollView(Transform parent, float x, float topY, float bottomY, float width)
+        {
+            float h = topY - bottomY;
+            float centerY = (topY + bottomY) / 2f;
+            const float scrollbarW = 12f;
+
+            var scrollGO = new GameObject("ScrollView");
+            scrollGO.transform.SetParent(parent, false);
+            var scrollRT = scrollGO.AddComponent<RectTransform>();
+            scrollRT.anchorMin = new Vector2(0.5f, 0.5f);
+            scrollRT.anchorMax = new Vector2(0.5f, 0.5f);
+            scrollRT.pivot = new Vector2(0.5f, 0.5f);
+            scrollRT.anchoredPosition = new Vector2(x, centerY);
+            scrollRT.sizeDelta = new Vector2(width, h);
+
+            // Transparent backdrop with raycastTarget so wheel events over empty
+            // space (between buttons) still bubble up to the ScrollRect.
+            var scrollBg = scrollGO.AddComponent<Image>();
+            scrollBg.color = Color.clear;
+            scrollBg.raycastTarget = true;
+
+            var scrollRect = scrollGO.AddComponent<ScrollRect>();
+            scrollRect.horizontal = false;
+            scrollRect.vertical = true;
+            scrollRect.scrollSensitivity = 40f;
+            scrollRect.movementType = ScrollRect.MovementType.Clamped;
+            scrollRect.inertia = false;
+
+            // Viewport — leave room on the right for the scrollbar.
+            var viewportGO = new GameObject("Viewport");
+            viewportGO.transform.SetParent(scrollGO.transform, false);
+            var viewportRT = viewportGO.AddComponent<RectTransform>();
+            viewportRT.anchorMin = Vector2.zero;
+            viewportRT.anchorMax = Vector2.one;
+            viewportRT.offsetMin = Vector2.zero;
+            viewportRT.offsetMax = new Vector2(-scrollbarW, 0f);
+            viewportGO.AddComponent<RectMask2D>();
+            scrollRect.viewport = viewportRT;
+
+            var contentGO = new GameObject("Content");
+            contentGO.transform.SetParent(viewportGO.transform, false);
+            var contentRT = contentGO.AddComponent<RectTransform>();
+            contentRT.anchorMin = new Vector2(0f, 1f);
+            contentRT.anchorMax = new Vector2(1f, 1f);
+            contentRT.pivot = new Vector2(0.5f, 1f);
+            contentRT.anchoredPosition = Vector2.zero;
+            contentRT.sizeDelta = Vector2.zero;
+            scrollRect.content = contentRT;
+
+            // Vertical scrollbar pinned to the right of the scroll view.
+            var scrollbarGO = new GameObject("VerticalScrollbar");
+            scrollbarGO.transform.SetParent(scrollGO.transform, false);
+            var scrollbarRT = scrollbarGO.AddComponent<RectTransform>();
+            scrollbarRT.anchorMin = new Vector2(1f, 0f);
+            scrollbarRT.anchorMax = new Vector2(1f, 1f);
+            scrollbarRT.pivot = new Vector2(1f, 0.5f);
+            scrollbarRT.anchoredPosition = Vector2.zero;
+            scrollbarRT.sizeDelta = new Vector2(scrollbarW, 0f);
+
+            var scrollbarBg = scrollbarGO.AddComponent<Image>();
+            scrollbarBg.color = new Color(0.18f, 0.18f, 0.18f);
+
+            var scrollbar = scrollbarGO.AddComponent<Scrollbar>();
+            scrollbar.direction = Scrollbar.Direction.BottomToTop;
+
+            var slidingAreaGO = new GameObject("Sliding Area");
+            slidingAreaGO.transform.SetParent(scrollbarGO.transform, false);
+            var slidingAreaRT = slidingAreaGO.AddComponent<RectTransform>();
+            slidingAreaRT.anchorMin = Vector2.zero;
+            slidingAreaRT.anchorMax = Vector2.one;
+            slidingAreaRT.offsetMin = new Vector2(2f, 2f);
+            slidingAreaRT.offsetMax = new Vector2(-2f, -2f);
+
+            var handleGO = new GameObject("Handle");
+            handleGO.transform.SetParent(slidingAreaGO.transform, false);
+            var handleRT = handleGO.AddComponent<RectTransform>();
+            handleRT.anchorMin = Vector2.zero;
+            handleRT.anchorMax = Vector2.one;
+            handleRT.offsetMin = Vector2.zero;
+            handleRT.offsetMax = Vector2.zero;
+            var handleImg = handleGO.AddComponent<Image>();
+            handleImg.color = new Color(0.55f, 0.55f, 0.55f);
+
+            scrollbar.targetGraphic = handleImg;
+            scrollbar.handleRect = handleRT;
+            scrollbar.transition = Selectable.Transition.ColorTint;
+            var hc = scrollbar.colors;
+            hc.normalColor = new Color(0.55f, 0.55f, 0.55f);
+            hc.highlightedColor = new Color(0.7f, 0.7f, 0.7f);
+            hc.pressedColor = new Color(0.4f, 0.4f, 0.4f);
+            hc.selectedColor = new Color(0.55f, 0.55f, 0.55f);
+            scrollbar.colors = hc;
+
+            scrollRect.verticalScrollbar = scrollbar;
+            scrollRect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.Permanent;
+
+            return contentGO.transform;
+        }
+
+        // Sizes the scroll content to `height` and shifts every child's anchored-Y by
+        // height/2 so items built with "y = distance below content top" (negative going
+        // down) end up correctly placed once the parent has its real size.
+        private void FinalizeScrollContent(Transform content, float height)
+        {
+            var rt = content.GetComponent<RectTransform>();
+            rt.sizeDelta = new Vector2(rt.sizeDelta.x, height);
+
+            float shift = height / 2f;
+            for (int i = 0; i < content.childCount; i++)
+            {
+                var child = content.GetChild(i) as RectTransform;
+                if (child == null) continue;
+                child.anchoredPosition = new Vector2(child.anchoredPosition.x, child.anchoredPosition.y + shift);
+            }
         }
 
         private void BuildCameraContent(GameObject panelGO, float contentX, float startY)
