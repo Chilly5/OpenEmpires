@@ -24,6 +24,7 @@ namespace OpenEmpires
         CheatResource,
         CheatProduction,
         CheatVision,
+        CheatConstruction,
         DeleteUnits,
         DeleteBuilding,
         Surrender,

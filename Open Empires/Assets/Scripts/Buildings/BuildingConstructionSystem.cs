@@ -14,7 +14,7 @@ namespace OpenEmpires
         private static readonly Fixed32 TurnRate = Fixed32.FromFloat(0.3f);
         private static readonly Fixed32 FacingThreshold = Fixed32.FromFloat(0.9f); // cos(~26 deg)
 
-        public List<int> Tick(UnitRegistry unitRegistry, BuildingRegistry buildingRegistry, MapData mapData, int currentTick, Fixed32 tickDuration, out List<(int unitId, int buildingId)> idledVillagers, out List<int> startedBuildingIds)
+        public List<int> Tick(UnitRegistry unitRegistry, BuildingRegistry buildingRegistry, MapData mapData, int currentTick, Fixed32 tickDuration, out List<(int unitId, int buildingId)> idledVillagers, out List<int> startedBuildingIds, bool constructionCheatActive = false)
         {
             completedList.Clear();
             startedList.Clear();
@@ -134,7 +134,8 @@ namespace OpenEmpires
                 }
 
                 // In range and facing — do construction work
-                building.ConstructionTicksRemaining--;
+                building.ConstructionTicksRemaining -= constructionCheatActive ? 10 : 1;
+                if (building.ConstructionTicksRemaining < 0) building.ConstructionTicksRemaining = 0;
                 int ticksElapsed = building.ConstructionTicksTotal - building.ConstructionTicksRemaining;
                 int targetHealth = (int)((long)building.MaxHealth * ticksElapsed / building.ConstructionTicksTotal);
                 int prevTarget = (int)((long)building.MaxHealth * (ticksElapsed - 1) / building.ConstructionTicksTotal);

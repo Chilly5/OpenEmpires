@@ -275,6 +275,7 @@ namespace OpenEmpires
         }
 
         public bool ProductionCheatActive { get; private set; }
+        public bool ConstructionCheatActive { get; private set; }
 
         public int CurrentTick => currentTick;
         public SimulationConfig Config => config;
@@ -455,6 +456,7 @@ namespace OpenEmpires
 
             // Hash cheat state
             hash = hash * 31 + (ProductionCheatActive ? 1u : 0u);
+            hash = hash * 31 + (ConstructionCheatActive ? 1u : 0u);
 
             // Hash meteor state
             for (int i = 0; i < pendingMeteors.Count; i++)
@@ -804,7 +806,7 @@ namespace OpenEmpires
             if (hashSystems) lastSystemHashes[7] = ComputeQuickHash(); // after gathering
 
             // Construction system
-            var completedBuildingIds = constructionSystem.Tick(UnitRegistry, BuildingRegistry, MapData, currentTick, cachedTickDuration, out var idledVillagers, out var startedBuildingIds);
+            var completedBuildingIds = constructionSystem.Tick(UnitRegistry, BuildingRegistry, MapData, currentTick, cachedTickDuration, out var idledVillagers, out var startedBuildingIds, ConstructionCheatActive);
 
             // When construction first starts on a template, mark tiles non-walkable and eject units
             for (int i = 0; i < startedBuildingIds.Count; i++)
@@ -1455,6 +1457,9 @@ namespace OpenEmpires
                     break;
                 case CheatProductionCommand cheatProd:
                     ProcessCheatProductionCommand(cheatProd);
+                    break;
+                case CheatConstructionCommand cheatConstruct:
+                    ProcessCheatConstructionCommand(cheatConstruct);
                     break;
                 case CheatVisionCommand cheatVis:
                     ProcessCheatVisionCommand(cheatVis);
@@ -2538,6 +2543,11 @@ namespace OpenEmpires
         private void ProcessCheatProductionCommand(CheatProductionCommand cmd)
         {
             ProductionCheatActive = !ProductionCheatActive;
+        }
+
+        private void ProcessCheatConstructionCommand(CheatConstructionCommand cmd)
+        {
+            ConstructionCheatActive = !ConstructionCheatActive;
         }
 
         private void ProcessCheatVisionCommand(CheatVisionCommand cmd)

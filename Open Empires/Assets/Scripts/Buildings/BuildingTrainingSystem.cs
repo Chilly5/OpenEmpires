@@ -27,7 +27,7 @@ namespace OpenEmpires
                 if (building.IsDestroyed || !building.IsTraining)
                     continue;
 
-                building.TrainingTicksRemaining -= productionCheatActive ? 10 : 1;
+                building.TrainingTicksRemaining -= productionCheatActive ? 20 : 1;
                 if (building.TrainingTicksRemaining <= 0)
                 {
                     int pending = 0;

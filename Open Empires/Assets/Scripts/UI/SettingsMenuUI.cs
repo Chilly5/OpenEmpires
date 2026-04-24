@@ -67,7 +67,7 @@ namespace OpenEmpires
             if (productionCheatLabel == null) return;
             var sim = GameBootstrapper.Instance?.Simulation;
             bool active = sim != null && sim.ProductionCheatActive;
-            productionCheatLabel.text = active ? "Prod 10x: ON" : "Prod 10x: OFF";
+            productionCheatLabel.text = active ? "Prod 20x: ON" : "Prod 20x: OFF";
 
             if (visionCheatLabel != null && sim != null)
             {
@@ -1025,10 +1025,40 @@ namespace OpenEmpires
             revealToggle.SetIsOnWithoutNotify(FogOfWarRenderer.RevealUnexplored);
             revealToggle.onValueChanged.AddListener(value => FogOfWarRenderer.RevealUnexplored = value);
 
+            // 20x Production toggle — enqueues CheatProductionCommand which flips ProductionCheatActive
+            y -= 40f;
+            MakeLabel(panelGO.transform, "20x Production", rowX, y, fowLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+            var prod10xToggle = CreateToggle(panelGO.transform, rowX + fowLabelW + 5f, y, 24f);
+            var simForProd = GameBootstrapper.Instance?.Simulation;
+            prod10xToggle.SetIsOnWithoutNotify(simForProd != null && simForProd.ProductionCheatActive);
+            prod10xToggle.onValueChanged.AddListener(value =>
+            {
+                var sim = GameBootstrapper.Instance?.Simulation;
+                if (sim == null) return;
+                if (sim.ProductionCheatActive == value) return;
+                int pid = FindFirstObjectByType<UnitSelectionManager>()?.LocalPlayerId ?? 0;
+                sim.CommandBuffer.EnqueueCommand(new CheatProductionCommand(pid));
+            });
+
+            // 10x Construction toggle — enqueues CheatConstructionCommand which flips ConstructionCheatActive
+            y -= 40f;
+            MakeLabel(panelGO.transform, "10x Construction", rowX, y, fowLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+            var construct10xToggle = CreateToggle(panelGO.transform, rowX + fowLabelW + 5f, y, 24f);
+            var simForConstruct = GameBootstrapper.Instance?.Simulation;
+            construct10xToggle.SetIsOnWithoutNotify(simForConstruct != null && simForConstruct.ConstructionCheatActive);
+            construct10xToggle.onValueChanged.AddListener(value =>
+            {
+                var sim = GameBootstrapper.Instance?.Simulation;
+                if (sim == null) return;
+                if (sim.ConstructionCheatActive == value) return;
+                int pid = FindFirstObjectByType<UnitSelectionManager>()?.LocalPlayerId ?? 0;
+                sim.CommandBuffer.EnqueueCommand(new CheatConstructionCommand(pid));
+            });
+
             // Cheat buttons
             y -= 50f;
 
-            var resourcesBtnGO = CreateButtonWithLabel(panelGO.transform, "Resources", 0f, y, 160f, 36f, out _);
+            var resourcesBtnGO = CreateButtonWithLabel(panelGO.transform, "Resource Cheat", 0f, y, 160f, 36f, out _);
             var resourcesRT = resourcesBtnGO.GetComponent<RectTransform>();
             resourcesRT.pivot = new Vector2(0.5f, 0.5f);
             resourcesRT.anchoredPosition = new Vector2(contentX - 90f, y);

@@ -111,6 +111,7 @@ namespace OpenEmpires
                     break;
                 case CheatResourceCommand:
                 case CheatProductionCommand:
+                case CheatConstructionCommand:
                 case CheatVisionCommand:
                     payload = "{}";
                     break;
@@ -151,6 +152,7 @@ namespace OpenEmpires
                     "DeleteBuilding" => ParseDeleteBuildingCommand(payload, playerId),
                     "CheatResource" => new CheatResourceCommand { PlayerId = playerId },
                     "CheatProduction" => new CheatProductionCommand { PlayerId = playerId },
+                    "CheatConstruction" => new CheatConstructionCommand { PlayerId = playerId },
                     "CheatVision" => new CheatVisionCommand { PlayerId = playerId },
                     "Surrender" => ParseSurrenderCommand(payload, playerId),
                     "SlaughterSheep" => ParseSlaughterSheepCommand(payload, playerId),
@@ -1151,6 +1153,7 @@ namespace OpenEmpires
                             break;
                         case CheatResourceCommand:
                         case CheatProductionCommand:
+                        case CheatConstructionCommand:
                         case CheatVisionCommand:
                             break;
                     }
@@ -1322,6 +1325,9 @@ namespace OpenEmpires
                             break;
                         case CommandType.CheatProduction:
                             commands.Add(new CheatProductionCommand { PlayerId = playerId });
+                            break;
+                        case CommandType.CheatConstruction:
+                            commands.Add(new CheatConstructionCommand { PlayerId = playerId });
                             break;
                         case CommandType.CheatVision:
                             commands.Add(new CheatVisionCommand { PlayerId = playerId });
