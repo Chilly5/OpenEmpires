@@ -643,7 +643,7 @@ namespace OpenEmpires
                     mat.EnableKeyword("_ALPHABLEND_ON");
                     mat.renderQueue = 3000;
                     Color c = originalColors[i];
-                    c.a = 0.4f;
+                    c.a = 0.75f;
                     SetMaterialColor(mat, c);
                 }
                 var col = GetComponent<Collider>();
