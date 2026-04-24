@@ -434,30 +434,12 @@ namespace OpenEmpires
                 string buildingName = buildingType.ToString();
 
                 y -= 40f;
-                MakeLabel(scrollContent, $"Cycle {buildingName}", rowStartX, y, actionLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
-
-                float cycleKeybindX = rowStartX + actionLabelW + colGap;
-                CreateButton(scrollContent, "[Unbound]", cycleKeybindX, y, keybindBtnW, 28f, () => {
-                    // TODO: Add keybind functionality
-                });
-
-                float cycleResetX = cycleKeybindX + keybindBtnW + colGap;
-                CreateButton(scrollContent, "R", cycleResetX, y, resetBtnW, 28f, () => {
-                    // TODO: Add reset functionality
-                });
+                BuildBuildingKeybindRow(scrollContent, $"Cycle {buildingName}", buildingType, BuildingKeybindKind.Cycle,
+                    rowStartX, y, actionLabelW, keybindBtnW, resetBtnW, colGap);
 
                 y -= 30f;
-                MakeLabel(scrollContent, $"Select All {buildingName}", rowStartX, y, actionLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
-
-                float selectAllKeybindX = rowStartX + actionLabelW + colGap;
-                CreateButton(scrollContent, "[Unbound]", selectAllKeybindX, y, keybindBtnW, 28f, () => {
-                    // TODO: Add keybind functionality
-                });
-
-                float selectAllResetX = selectAllKeybindX + keybindBtnW + colGap;
-                CreateButton(scrollContent, "R", selectAllResetX, y, resetBtnW, 28f, () => {
-                    // TODO: Add reset functionality
-                });
+                BuildBuildingKeybindRow(scrollContent, $"Select All {buildingName}", buildingType, BuildingKeybindKind.SelectAll,
+                    rowStartX, y, actionLabelW, keybindBtnW, resetBtnW, colGap);
 
                 y -= 10f;
             }
@@ -469,11 +451,74 @@ namespace OpenEmpires
             CreateButton(panelGO.transform, "Reset All", contentX, btnY, 160f, 36f, () =>
             {
                 KeybindManager.ResetAll();
+                BuildingKeybindController.Instance?.RefreshBindings();
                 ShowControls();
             });
 
             btnY -= 44f;
             CreateButton(panelGO.transform, "Back to Settings", contentX, btnY, 160f, 36f, () => ShowMainSettings());
+        }
+
+        private void BuildBuildingKeybindRow(Transform parent, string label, BuildingType type, BuildingKeybindKind kind,
+            float rowStartX, float y, float actionLabelW, float keybindBtnW, float resetBtnW, float colGap)
+        {
+            MakeLabel(parent, label, rowStartX, y, actionLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+
+            string currentPath = KeybindManager.GetBuildingBinding(type, kind);
+            string keyText = string.IsNullOrEmpty(currentPath) ? "Unbound" : KeybindManager.GetKeyDisplayName(currentPath);
+
+            float keybindX = rowStartX + actionLabelW + colGap;
+            TMP_Text keybindLabel;
+            var keybindBtnGO = CreateButtonWithLabel(parent, "[" + keyText + "]", keybindX, y, keybindBtnW, 28f, out keybindLabel);
+            keybindBtnGO.GetComponent<Button>().onClick.AddListener(() => StartBuildingRebind(type, kind, keybindLabel));
+
+            float resetX = keybindX + keybindBtnW + colGap;
+            CreateButton(parent, "R", resetX, y, resetBtnW, 28f, () => ClearBuildingBinding(type, kind, keybindLabel));
+        }
+
+        private void StartBuildingRebind(BuildingType type, BuildingKeybindKind kind, TMP_Text keyLabel)
+        {
+            // Cancel any rebind already in flight (covers users who re-click while listening).
+            currentRebind?.Cancel();
+            currentRebind?.Dispose();
+            currentRebind = null;
+
+            string originalLabel = keyLabel.text;
+            keyLabel.text = "...";
+
+            // Throwaway action used only to drive PerformInteractiveRebinding — we just
+            // want the resolved binding path, not a long-lived InputAction.
+            var tempAction = new InputAction(name: "BuildingRebind_" + type + "_" + kind, type: InputActionType.Button);
+            tempAction.AddBinding("<Keyboard>/space");
+
+            currentRebind = tempAction.PerformInteractiveRebinding()
+                .WithControlsExcluding("<Mouse>")
+                .WithCancelingThrough("<Keyboard>/escape")
+                .OnComplete(op =>
+                {
+                    string path = tempAction.bindings[0].effectivePath;
+                    KeybindManager.SetBuildingBinding(type, kind, path);
+                    keyLabel.text = "[" + KeybindManager.GetKeyDisplayName(path) + "]";
+                    op.Dispose();
+                    tempAction.Dispose();
+                    currentRebind = null;
+                    BuildingKeybindController.Instance?.RefreshBindings();
+                })
+                .OnCancel(op =>
+                {
+                    keyLabel.text = originalLabel;
+                    op.Dispose();
+                    tempAction.Dispose();
+                    currentRebind = null;
+                })
+                .Start();
+        }
+
+        private void ClearBuildingBinding(BuildingType type, BuildingKeybindKind kind, TMP_Text keyLabel)
+        {
+            KeybindManager.ClearBuildingBinding(type, kind);
+            keyLabel.text = "[Unbound]";
+            BuildingKeybindController.Instance?.RefreshBindings();
         }
 
         // Builds a vertically-scrolling region inside `parent`, occupying the rect

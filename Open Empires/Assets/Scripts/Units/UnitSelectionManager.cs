@@ -14,6 +14,7 @@ namespace OpenEmpires
 #endif
 
         private static UnitSelectionManager instance;
+        public static UnitSelectionManager Instance => instance;
 
         private static bool minimapSuppressed;
         private static bool infoPanelSuppressed;
@@ -1790,6 +1791,61 @@ namespace OpenEmpires
                     view.SetSelected(true);
                     selectedBuildings.Add(view);
                 }
+            }
+        }
+
+        // Per-type cursor for the Cycle keybind so repeat presses round-robin through instances.
+        private readonly Dictionary<BuildingType, int> buildingCycleIndex = new Dictionary<BuildingType, int>();
+        private RTSCameraController cachedCameraController;
+
+        public void CycleSelectBuilding(BuildingType type)
+        {
+            // Collect every owned, non-destroyed building of this type, ordered by id for stable cycling.
+            var matches = new List<BuildingView>();
+            foreach (var kvp in buildingViews)
+            {
+                var view = kvp.Value;
+                if (view == null) continue;
+                if (view.BuildingType != type) continue;
+                if (view.PlayerId != LocalPlayerId) continue;
+                if (view.IsDestroyed) continue;
+                matches.Add(view);
+            }
+            if (matches.Count == 0) return;
+            matches.Sort((a, b) => a.BuildingId.CompareTo(b.BuildingId));
+
+            buildingCycleIndex.TryGetValue(type, out int idx);
+            idx %= matches.Count;
+            var target = matches[idx];
+            buildingCycleIndex[type] = (idx + 1) % matches.Count;
+
+            DeselectAll();
+            DeselectBuilding();
+            DeselectResourceNode();
+            target.SetSelected(true);
+            selectedBuildings.Add(target);
+
+            if (cachedCameraController == null) cachedCameraController = FindFirstObjectByType<RTSCameraController>();
+            if (cachedCameraController != null)
+                cachedCameraController.PivotPosition = target.transform.position;
+        }
+
+        public void SelectAllBuildings(BuildingType type)
+        {
+            DeselectAll();
+            DeselectBuilding();
+            DeselectResourceNode();
+
+            foreach (var kvp in buildingViews)
+            {
+                var view = kvp.Value;
+                if (view == null) continue;
+                if (view.BuildingType != type) continue;
+                if (view.PlayerId != LocalPlayerId) continue;
+                if (view.IsDestroyed) continue;
+
+                view.SetSelected(true);
+                selectedBuildings.Add(view);
             }
         }
 
