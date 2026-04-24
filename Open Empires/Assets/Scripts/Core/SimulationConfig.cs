@@ -420,7 +420,7 @@ namespace OpenEmpires
         // Building repair costs
         public int BaseRepairCost => 25;  // Base wood cost for repairing buildings
         public float RepairCostPerHealthPoint => 0.5f;  // Wood cost per health point to repair
-        public int RepairTicksPerHealthPoint => 30;  // Ticks required to repair 1 health point (1 second at 30 TPS)
+        public int RepairTicksPerHealthPoint => 10;  // Ticks required to repair 1 health point (3 HP/sec at 30 TPS)
 
         // Building construction time (ticks, 30 ticks = 1s)
         public int HouseConstructionTicks => 450;              // 15s
