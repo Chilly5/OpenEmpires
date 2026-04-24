@@ -28,15 +28,22 @@ namespace OpenEmpires
                 var building = buildingRegistry.GetBuilding(unit.ConstructionTargetBuildingId);
                 if (building == null || building.IsDestroyed)
                 {
+                    Debug.Log($"[Construct] Unit {unit.Id} -> Idle: target building {unit.ConstructionTargetBuildingId} {(building == null ? "not found" : "destroyed")}");
                     unit.State = UnitState.Idle;
                     unit.ConstructionTargetBuildingId = -1;
                     continue;
                 }
 
-                if (building.IsBeingRepaired) continue;
+                if (building.IsBeingRepaired)
+                {
+                    if (building.Type == BuildingType.Landmark)
+                        Debug.Log($"[Construct] Unit {unit.Id} skipped: landmark {building.Id} is marked IsBeingRepaired (this should not happen for under-construction buildings)");
+                    continue;
+                }
 
                 if (!building.IsUnderConstruction)
                 {
+                    Debug.Log($"[Construct] Unit {unit.Id} -> Idle: building {building.Id} (type {building.Type}) is not IsUnderConstruction");
                     int finishedBuildingId = unit.ConstructionTargetBuildingId;
                     unit.State = UnitState.Idle;
                     unit.ConstructionTargetBuildingId = -1;

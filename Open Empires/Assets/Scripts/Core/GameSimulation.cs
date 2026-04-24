@@ -3669,22 +3669,48 @@ namespace OpenEmpires
             // Landmark placement has special validation and cost
             if (cmd.BuildingType == BuildingType.Landmark)
             {
-                if (cmd.LandmarkIdValue < 0) return;
+                int villagerCount = cmd.VillagerUnitIds != null ? cmd.VillagerUnitIds.Length : 0;
+                if (cmd.LandmarkIdValue < 0)
+                {
+                    Debug.Log($"[Landmark] REJECTED: LandmarkIdValue={cmd.LandmarkIdValue} for player {cmd.PlayerId} (no landmark id set)");
+                    return;
+                }
                 var landmarkId = (LandmarkId)cmd.LandmarkIdValue;
                 var def = LandmarkDefinitions.Get(landmarkId);
 
                 // Validate: civ matches, correct age, not already aging up, can afford
-                if (def.Civ != GetPlayerCivilization(cmd.PlayerId)) return;
-                if (playerAges[cmd.PlayerId] != def.TargetAge - 1) return;
-                if (playerAgingUp[cmd.PlayerId]) return;
-                if (resources.Food < def.FoodCost || resources.Gold < def.GoldCost) return;
+                if (def.Civ != GetPlayerCivilization(cmd.PlayerId))
+                {
+                    Debug.Log($"[Landmark] REJECTED: civ mismatch (def.Civ={def.Civ}, player.Civ={GetPlayerCivilization(cmd.PlayerId)}) for player {cmd.PlayerId}");
+                    return;
+                }
+                if (playerAges[cmd.PlayerId] != def.TargetAge - 1)
+                {
+                    Debug.Log($"[Landmark] REJECTED: age mismatch (player.Age={playerAges[cmd.PlayerId]}, def.TargetAge={def.TargetAge}, expected previousAge={def.TargetAge - 1}) for player {cmd.PlayerId}");
+                    return;
+                }
+                if (playerAgingUp[cmd.PlayerId])
+                {
+                    Debug.Log($"[Landmark] REJECTED: player {cmd.PlayerId} already aging up (in-progress landmark id={playerAgingUpBuildingId[cmd.PlayerId]})");
+                    return;
+                }
+                if (resources.Food < def.FoodCost || resources.Gold < def.GoldCost)
+                {
+                    Debug.Log($"[Landmark] REJECTED: insufficient resources (have F={resources.Food}/G={resources.Gold}, need F={def.FoodCost}/G={def.GoldCost}) for player {cmd.PlayerId}");
+                    return;
+                }
 
                 int footprintW = def.FootprintWidth;
                 int footprintH = def.FootprintHeight;
                 int border = 1;
                 for (int x = cmd.TileX - border; x < cmd.TileX + footprintW + border; x++)
                     for (int z = cmd.TileZ - border; z < cmd.TileZ + footprintH + border; z++)
-                        if (!MapData.IsBuildable(x, z)) return;
+                        if (!MapData.IsBuildable(x, z))
+                        {
+                            Debug.Log($"[Landmark] REJECTED: tile ({x},{z}) not buildable (footprint origin={cmd.TileX},{cmd.TileZ}, size={footprintW}x{footprintH}+border{border}) for player {cmd.PlayerId}");
+                            return;
+                        }
+                Debug.Log($"[Landmark] Placing {landmarkId} at ({cmd.TileX},{cmd.TileZ}) for player {cmd.PlayerId} with {villagerCount} villager(s), queued={cmd.IsQueued}");
 
                 resources.Food -= def.FoodCost;
                 resources.Gold -= def.GoldCost;
@@ -3744,10 +3770,12 @@ namespace OpenEmpires
                                 villager.SetPath(path);
                                 villager.FinalDestination = MapData.TileToWorldFixed(adjTile.x, adjTile.y);
                                 villager.State = UnitState.MovingToBuild;
+                                Debug.Log($"[Landmark] Villager {villager.Id} assigned to landmark {building.Id}: MovingToBuild via path of {path.Count} tiles to ({adjTile.x},{adjTile.y})");
                             }
                             else
                             {
                                 villager.State = UnitState.Constructing;
+                                Debug.Log($"[Landmark] Villager {villager.Id} assigned to landmark {building.Id}: Constructing fallback (no path from {startTile.x},{startTile.y} to {adjTile.x},{adjTile.y})");
                             }
                         }
                     }
