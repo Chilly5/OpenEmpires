@@ -424,7 +424,7 @@ namespace OpenEmpires
             y -= 50f;
             MakeLabel(panelGO.transform, "Building Keybinds", rowStartX, y, actionLabelW * 2, 28f, 18, FontStyles.Bold, TextAlignmentOptions.Left);
             
-            // Get building types from enum
+            // Loop through all building types to create keybinds
             var buildingTypes = System.Enum.GetValues(typeof(BuildingType));
             foreach (BuildingType buildingType in buildingTypes)
             {
@@ -434,42 +434,28 @@ namespace OpenEmpires
                 y -= 40f;
                 MakeLabel(panelGO.transform, $"Cycle {buildingName}", rowStartX, y, actionLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
                 
-                string cycleAction = $"Cycle{buildingName}";
-                string cycleBinding = KeybindManager.GetBinding(cycleAction);
-                string cycleKeyText = KeybindManager.GetKeyDisplayName(cycleBinding);
-                
                 float cycleKeybindX = rowStartX + actionLabelW + colGap;
-                TMP_Text cycleKeybindLabel;
-                var cycleKeybindBtnGO = CreateButtonWithLabel(panelGO.transform, "[" + cycleKeyText + "]", cycleKeybindX, y, keybindBtnW, 28f, out cycleKeybindLabel);
-                string capturedCycleAction = cycleAction;
-                cycleKeybindBtnGO.GetComponent<Button>().onClick.AddListener(() => {
-                    StartRebind(capturedCycleAction, cycleKeybindLabel);
+                CreateButton(panelGO.transform, "[Unbound]", cycleKeybindX, y, keybindBtnW, 28f, () => {
+                    // TODO: Add keybind functionality
                 });
                 
                 float cycleResetX = cycleKeybindX + keybindBtnW + colGap;
                 CreateButton(panelGO.transform, "R", cycleResetX, y, resetBtnW, 28f, () => {
-                    ResetRow(capturedCycleAction, cycleKeybindLabel);
+                    // TODO: Add reset functionality
                 });
                 
                 // Select All building keybind
                 y -= 30f;
                 MakeLabel(panelGO.transform, $"Select All {buildingName}", rowStartX, y, actionLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
                 
-                string selectAllAction = $"SelectAll{buildingName}";
-                string selectAllBinding = KeybindManager.GetBinding(selectAllAction);
-                string selectAllKeyText = KeybindManager.GetKeyDisplayName(selectAllBinding);
-                
                 float selectAllKeybindX = rowStartX + actionLabelW + colGap;
-                TMP_Text selectAllKeybindLabel;
-                var selectAllKeybindBtnGO = CreateButtonWithLabel(panelGO.transform, "[" + selectAllKeyText + "]", selectAllKeybindX, y, keybindBtnW, 28f, out selectAllKeybindLabel);
-                string capturedSelectAllAction = selectAllAction;
-                selectAllKeybindBtnGO.GetComponent<Button>().onClick.AddListener(() => {
-                    StartRebind(capturedSelectAllAction, selectAllKeybindLabel);
+                CreateButton(panelGO.transform, "[Unbound]", selectAllKeybindX, y, keybindBtnW, 28f, () => {
+                    // TODO: Add keybind functionality  
                 });
                 
                 float selectAllResetX = selectAllKeybindX + keybindBtnW + colGap;
                 CreateButton(panelGO.transform, "R", selectAllResetX, y, resetBtnW, 28f, () => {
-                    ResetRow(capturedSelectAllAction, selectAllKeybindLabel);
+                    // TODO: Add reset functionality
                 });
                 
                 y -= 10f; // Small gap between building types
