@@ -79,10 +79,21 @@ namespace OpenEmpires
         private Vector3[] viewportGroundCorners = new Vector3[4];
         private bool viewportQuadValid;
 
+        private InputAction notifyPingAction;
+
         private void Start()
         {
             mainCamera = Camera.main;
             StartCoroutine(WaitAndInitialize());
+
+            // Bind the NotifyPing keybind (from player prefs via KeybindManager) to EnterPingMode.
+            string path = KeybindManager.GetBinding("NotifyPing");
+            if (!string.IsNullOrEmpty(path))
+            {
+                notifyPingAction = new InputAction("NotifyPing", InputActionType.Button, path);
+                notifyPingAction.performed += _ => EnterPingMode();
+                notifyPingAction.Enable();
+            }
         }
 
         private System.Collections.IEnumerator WaitAndInitialize()
@@ -1241,6 +1252,12 @@ namespace OpenEmpires
             {
                 var canvas = pingCursorIcon.transform.parent;
                 if (canvas != null) Destroy(canvas.gameObject);
+            }
+            if (notifyPingAction != null)
+            {
+                notifyPingAction.Disable();
+                notifyPingAction.Dispose();
+                notifyPingAction = null;
             }
         }
     }

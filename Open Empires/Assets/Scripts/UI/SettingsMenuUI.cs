@@ -530,8 +530,40 @@ namespace OpenEmpires
 
         private float BuildCommunicationSubTab(Transform scrollContent, float y)
         {
-            y -= 40f;
-            MakeLabel(scrollContent, "No communication keybinds yet.", -200f, y, 400f, 24f, 14, FontStyles.Italic, TextAlignmentOptions.Center);
+            float rowStartX = -160f;
+            float actionLabelW = 200f;
+            float keybindBtnW = 80f;
+            float resetBtnW = 30f;
+            float colGap = 8f;
+
+            string[] actionNames = KeybindManager.CommunicationActionNames;
+            if (actionNames.Length == 0)
+            {
+                y -= 40f;
+                MakeLabel(scrollContent, "No communication keybinds yet.", -200f, y, 400f, 24f, 14, FontStyles.Italic, TextAlignmentOptions.Center);
+                return y;
+            }
+
+            for (int i = 0; i < actionNames.Length; i++)
+            {
+                y -= 40f;
+                string actionName = actionNames[i];
+                string displayName = KeybindManager.GetDisplayName(actionName);
+                string currentBinding = KeybindManager.GetBinding(actionName);
+                string keyText = KeybindManager.GetKeyDisplayName(currentBinding);
+
+                MakeLabel(scrollContent, displayName, rowStartX, y, actionLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+
+                string capturedAction = actionName;
+                float keybindX = rowStartX + actionLabelW + colGap;
+
+                TMP_Text keybindLabel;
+                var keybindBtnGO = CreateButtonWithLabel(scrollContent, "[" + keyText + "]", keybindX, y, keybindBtnW, 28f, out keybindLabel);
+                keybindBtnGO.GetComponent<Button>().onClick.AddListener(() => StartRebind(capturedAction, keybindLabel));
+
+                float resetX = keybindX + keybindBtnW + colGap;
+                CreateButton(scrollContent, "R", resetX, y, resetBtnW, 28f, () => ResetRow(capturedAction, keybindLabel));
+            }
             return y;
         }
 
