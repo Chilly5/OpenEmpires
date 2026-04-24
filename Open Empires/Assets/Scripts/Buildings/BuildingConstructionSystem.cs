@@ -33,6 +33,8 @@ namespace OpenEmpires
                     continue;
                 }
 
+                if (building.IsBeingRepaired) continue;
+
                 if (!building.IsUnderConstruction)
                 {
                     int finishedBuildingId = unit.ConstructionTargetBuildingId;
