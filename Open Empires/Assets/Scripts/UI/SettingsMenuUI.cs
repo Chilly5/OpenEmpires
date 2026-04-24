@@ -1010,6 +1010,21 @@ namespace OpenEmpires
                 diagToggle.SetIsOnWithoutNotify(diag.IsVisible);
             diagToggle.onValueChanged.AddListener(OnDiagToggleChanged);
 
+            // Disable Fog of War (full reveal — same effect as the vision cheat, client-side only)
+            float fowLabelW = 150f;
+            y -= 40f;
+            MakeLabel(panelGO.transform, "Disable Fog of War", rowX, y, fowLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+            var noFowToggle = CreateToggle(panelGO.transform, rowX + fowLabelW + 5f, y, 24f);
+            noFowToggle.SetIsOnWithoutNotify(FogOfWarRenderer.DisableFogOfWar);
+            noFowToggle.onValueChanged.AddListener(value => FogOfWarRenderer.DisableFogOfWar = value);
+
+            // Reveal Terrain (soft — unexplored tiles render as explored, no live vision granted)
+            y -= 40f;
+            MakeLabel(panelGO.transform, "Reveal Terrain", rowX, y, fowLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+            var revealToggle = CreateToggle(panelGO.transform, rowX + fowLabelW + 5f, y, 24f);
+            revealToggle.SetIsOnWithoutNotify(FogOfWarRenderer.RevealUnexplored);
+            revealToggle.onValueChanged.AddListener(value => FogOfWarRenderer.RevealUnexplored = value);
+
             // Cheat buttons
             y -= 50f;
 

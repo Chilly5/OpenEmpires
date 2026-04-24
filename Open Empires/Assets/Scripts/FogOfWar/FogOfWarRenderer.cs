@@ -14,6 +14,11 @@ namespace OpenEmpires
         private Material terrainMaterial;
         private Material waterMaterial;
 
+        // Client-side render overrides (do not affect simulation visibility data).
+        // DisableFogOfWar wins if both are set.
+        public static bool DisableFogOfWar;
+        public static bool RevealUnexplored;
+
         private static readonly Color32 Unexplored = new Color32(0, 0, 0, 255);
         private static readonly Color32 Explored = new Color32(0, 0, 0, 160);
         private static readonly Color32 Visible = new Color32(0, 0, 0, 0);
@@ -64,12 +69,27 @@ namespace OpenEmpires
                 for (int x = 0; x < texWidth; x++)
                 {
                     var vis = fogData.GetVisibility(playerId, x, z);
-                    pixelBuffer[z * texWidth + x] = vis switch
+                    Color32 px;
+                    if (DisableFogOfWar)
                     {
-                        TileVisibility.Visible => Visible,
-                        TileVisibility.Explored => Explored,
-                        _ => Unexplored
-                    };
+                        px = Visible;
+                    }
+                    else if (RevealUnexplored && vis == TileVisibility.Unexplored)
+                    {
+                        // Treat black-fog tiles as already-explored: terrain shows through dimmed,
+                        // but live unit/building visibility is still gated by the simulation.
+                        px = Explored;
+                    }
+                    else
+                    {
+                        px = vis switch
+                        {
+                            TileVisibility.Visible => Visible,
+                            TileVisibility.Explored => Explored,
+                            _ => Unexplored
+                        };
+                    }
+                    pixelBuffer[z * texWidth + x] = px;
                 }
             }
 

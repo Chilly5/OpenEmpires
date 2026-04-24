@@ -547,10 +547,22 @@ namespace OpenEmpires
         private void DrawBuildingDots(GameSimulation sim, int localPlayerId)
         {
             var buildings = sim.BuildingRegistry.GetAllBuildings();
+            // In soft-fog mode the unexplored fog tiles render as "explored", which would
+            // otherwise let dimmed enemy building dots leak through in tiles the player has
+            // never seen. Filter against the underlying sim visibility (not the rendered fog)
+            // to keep the soft mode terrain-only. DisableFogOfWar bypasses the filter.
+            bool filterEnemyByExplored = !FogOfWarRenderer.DisableFogOfWar;
             for (int i = 0; i < buildings.Count; i++)
             {
                 var building = buildings[i];
                 if (building.IsDestroyed) continue;
+
+                if (filterEnemyByExplored && building.PlayerId != localPlayerId)
+                {
+                    Vector2Int tile = sim.MapData.WorldToTile(building.SimPosition);
+                    if (sim.FogOfWar.GetVisibility(localPlayerId, tile.x, tile.y) == TileVisibility.Unexplored)
+                        continue;
+                }
 
                 int size = building.Type == BuildingType.TownCenter ? 4 : 3;
                 WorldToPixel(building.SimPosition.x.ToFloat(), building.SimPosition.z.ToFloat(), out int px, out int py);
@@ -565,18 +577,34 @@ namespace OpenEmpires
         {
             var fogData = sim.FogOfWar;
 
-            // Update fog buffer
+            // Update fog buffer — mirrors FogOfWarRenderer's per-pixel logic so the
+            // minimap honours the same client-side overrides as the world fog.
+            bool disableAll = FogOfWarRenderer.DisableFogOfWar;
+            bool revealUnexplored = FogOfWarRenderer.RevealUnexplored;
             for (int z = 0; z < mapHeight; z++)
             {
                 for (int x = 0; x < mapWidth; x++)
                 {
                     var vis = fogData.GetVisibility(localPlayerId, x, z);
-                    fogPixelBuffer[z * mapWidth + x] = vis switch
+                    Color32 px;
+                    if (disableAll)
                     {
-                        TileVisibility.Visible => new Color32(0, 0, 0, 0),
-                        TileVisibility.Explored => new Color32(0, 0, 0, 160),
-                        _ => new Color32(0, 0, 0, 255)
-                    };
+                        px = new Color32(0, 0, 0, 0);
+                    }
+                    else if (revealUnexplored && vis == TileVisibility.Unexplored)
+                    {
+                        px = new Color32(0, 0, 0, 160);
+                    }
+                    else
+                    {
+                        px = vis switch
+                        {
+                            TileVisibility.Visible => new Color32(0, 0, 0, 0),
+                            TileVisibility.Explored => new Color32(0, 0, 0, 160),
+                            _ => new Color32(0, 0, 0, 255)
+                        };
+                    }
+                    fogPixelBuffer[z * mapWidth + x] = px;
                 }
             }
 
@@ -623,7 +651,7 @@ namespace OpenEmpires
                 if (unit.State == UnitState.Dead) continue;
                 if (unit.PlayerId < 0 || unit.PlayerId >= GameSetup.PlayerColors.Length) continue;
 
-                if (unit.PlayerId != localPlayerId)
+                if (unit.PlayerId != localPlayerId && !FogOfWarRenderer.DisableFogOfWar)
                 {
                     Vector2Int tile = sim.MapData.WorldToTile(unit.SimPosition);
                     if (sim.FogOfWar.GetVisibility(localPlayerId, tile.x, tile.y) != TileVisibility.Visible)
