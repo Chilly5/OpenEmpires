@@ -181,6 +181,41 @@ namespace OpenEmpires
             y -= 28f;
             MakeLabel(panelGO.transform, "Settings", -panelW / 2f, y, panelW, 28f, 22, FontStyles.Bold, TextAlignmentOptions.Center);
 
+            // Close button (X) in top-right corner
+            var closeButtonGO = new GameObject("CloseButton");
+            closeButtonGO.transform.SetParent(panelGO.transform, false);
+            var closeButtonRT = closeButtonGO.AddComponent<RectTransform>();
+            closeButtonRT.anchorMin = new Vector2(1f, 1f);
+            closeButtonRT.anchorMax = new Vector2(1f, 1f);
+            closeButtonRT.pivot = new Vector2(1f, 1f);
+            closeButtonRT.anchoredPosition = new Vector2(-10f, -10f);
+            closeButtonRT.sizeDelta = new Vector2(28f, 28f);
+
+            var closeImg = closeButtonGO.AddComponent<Image>();
+            closeImg.color = new Color(0.25f, 0.25f, 0.25f);
+
+            var closeBtn = closeButtonGO.AddComponent<Button>();
+            var closeColors = closeBtn.colors;
+            closeColors.normalColor = new Color(0.25f, 0.25f, 0.25f);
+            closeColors.highlightedColor = new Color(0.35f, 0.35f, 0.35f);
+            closeColors.pressedColor = new Color(0.15f, 0.15f, 0.15f);
+            closeBtn.colors = closeColors;
+            closeBtn.onClick.AddListener(() => Hide());
+
+            // X text
+            var closeTextGO = new GameObject("Text");
+            closeTextGO.transform.SetParent(closeButtonGO.transform, false);
+            var closeTextRT = closeTextGO.AddComponent<RectTransform>();
+            closeTextRT.anchorMin = Vector2.zero;
+            closeTextRT.anchorMax = Vector2.one;
+            closeTextRT.offsetMin = Vector2.zero;
+            closeTextRT.offsetMax = Vector2.zero;
+            var closeText = closeTextGO.AddComponent<TextMeshProUGUI>();
+            closeText.text = "×";
+            closeText.fontSize = 20;
+            closeText.alignment = TextAlignmentOptions.Center;
+            closeText.color = Color.white;
+
             // Music Volume row
             y -= 40f;
             float labelW = 120f;
@@ -312,6 +347,41 @@ namespace OpenEmpires
             y -= 10f;
             y -= 24f;
             MakeLabel(panelGO.transform, "Controls", -panelW / 2f, y, panelW, 28f, 20, FontStyles.Bold, TextAlignmentOptions.Center);
+
+            // Close button (X) in top-right corner
+            var closeButtonGO = new GameObject("CloseButton");
+            closeButtonGO.transform.SetParent(panelGO.transform, false);
+            var closeButtonRT = closeButtonGO.AddComponent<RectTransform>();
+            closeButtonRT.anchorMin = new Vector2(1f, 1f);
+            closeButtonRT.anchorMax = new Vector2(1f, 1f);
+            closeButtonRT.pivot = new Vector2(1f, 1f);
+            closeButtonRT.anchoredPosition = new Vector2(-10f, -10f);
+            closeButtonRT.sizeDelta = new Vector2(28f, 28f);
+
+            var closeImg = closeButtonGO.AddComponent<Image>();
+            closeImg.color = new Color(0.25f, 0.25f, 0.25f);
+
+            var closeBtn = closeButtonGO.AddComponent<Button>();
+            var closeColors = closeBtn.colors;
+            closeColors.normalColor = new Color(0.25f, 0.25f, 0.25f);
+            closeColors.highlightedColor = new Color(0.35f, 0.35f, 0.35f);
+            closeColors.pressedColor = new Color(0.15f, 0.15f, 0.15f);
+            closeBtn.colors = closeColors;
+            closeBtn.onClick.AddListener(() => Hide());
+
+            // X text
+            var closeTextGO = new GameObject("Text");
+            closeTextGO.transform.SetParent(closeButtonGO.transform, false);
+            var closeTextRT = closeTextGO.AddComponent<RectTransform>();
+            closeTextRT.anchorMin = Vector2.zero;
+            closeTextRT.anchorMax = Vector2.one;
+            closeTextRT.offsetMin = Vector2.zero;
+            closeTextRT.offsetMax = Vector2.zero;
+            var closeText = closeTextGO.AddComponent<TextMeshProUGUI>();
+            closeText.text = "×";
+            closeText.fontSize = 20;
+            closeText.alignment = TextAlignmentOptions.Center;
+            closeText.color = Color.white;
 
             // Rows for each remappable action
             float rowStartX = -panelW / 2f + 20f;
