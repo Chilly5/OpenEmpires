@@ -388,8 +388,15 @@ namespace OpenEmpires
 
                         if (closestEnemy.CurrentHealth <= 0)
                         {
-                            closestEnemy.State = UnitState.Dead;
-                            deadList.Add(closestEnemy.Id);
+                            if (closestEnemy.IsDummy)
+                            {
+                                closestEnemy.CurrentHealth = 1;
+                            }
+                            else
+                            {
+                                closestEnemy.State = UnitState.Dead;
+                                deadList.Add(closestEnemy.Id);
+                            }
                         }
                     }
                 }

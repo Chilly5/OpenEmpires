@@ -801,6 +801,7 @@ namespace OpenEmpires
 
             gatheringSystem.Tick(UnitRegistry, MapData, ResourceManager, BuildingRegistry, config, cachedTickDuration, currentTick, GetInfluenceBuildingType);
             healingSystem.Tick(UnitRegistry, config, spatialGrid, playerTeamIds, currentTick, MapData, BuildingRegistry);
+            TickDummyRegen(currentTick);
             if (hashSystems) lastSystemHashes[7] = ComputeQuickHash(); // after gathering
 
             // Construction system
@@ -1784,9 +1785,16 @@ namespace OpenEmpires
                         unit.CurrentHealth -= damage;
                         if (unit.CurrentHealth <= 0)
                         {
-                            UnitRegistry.RemoveUnit(unit.Id);
-                            OnUnitDied?.Invoke(unit.Id);
-                            continue;
+                            if (unit.IsDummy)
+                            {
+                                unit.CurrentHealth = 1;
+                            }
+                            else
+                            {
+                                UnitRegistry.RemoveUnit(unit.Id);
+                                OnUnitDied?.Invoke(unit.Id);
+                                continue;
+                            }
                         }
 
                         // Knockback away from bolt center
@@ -1910,9 +1918,16 @@ namespace OpenEmpires
 
                     if (unit.CurrentHealth <= 0)
                     {
-                        UnitRegistry.RemoveUnit(unit.Id);
-                        OnUnitDied?.Invoke(unit.Id);
-                        continue;
+                        if (unit.IsDummy)
+                        {
+                            unit.CurrentHealth = 1;
+                        }
+                        else
+                        {
+                            UnitRegistry.RemoveUnit(unit.Id);
+                            OnUnitDied?.Invoke(unit.Id);
+                            continue;
+                        }
                     }
 
                     // Push unit in wave direction
@@ -2304,9 +2319,16 @@ namespace OpenEmpires
 
                     if (unit.CurrentHealth <= 0)
                     {
-                        UnitRegistry.RemoveUnit(unit.Id);
-                        OnUnitDied?.Invoke(unit.Id);
-                        continue;
+                        if (unit.IsDummy)
+                        {
+                            unit.CurrentHealth = 1;
+                        }
+                        else
+                        {
+                            UnitRegistry.RemoveUnit(unit.Id);
+                            OnUnitDied?.Invoke(unit.Id);
+                            continue;
+                        }
                     }
 
                     // Knockback
@@ -5845,6 +5867,23 @@ namespace OpenEmpires
 
         // ---- Target Dummy support ----
 
+        // Heals dummies back toward MaxHealth after they've gone DummyRegenDelayTicks
+        // without taking damage. Skipped while combat is fresh so the player can see hits land.
+        private const int DummyRegenDelayTicks = 60; // 2s at 30 TPS
+        private const int DummyRegenAmountPerTick = 2;
+
+        private void TickDummyRegen(int currentTick)
+        {
+            for (int i = 0; i < dummyUnitIds.Count; i++)
+            {
+                var unit = UnitRegistry.GetUnit(dummyUnitIds[i]);
+                if (unit == null || unit.State == UnitState.Dead) continue;
+                if (unit.CurrentHealth >= unit.MaxHealth) continue;
+                if (unit.LastDamageTick > 0 && currentTick - unit.LastDamageTick < DummyRegenDelayTicks) continue;
+                unit.CurrentHealth = System.Math.Min(unit.MaxHealth, unit.CurrentHealth + DummyRegenAmountPerTick);
+            }
+        }
+
         public int CreateDummy(FixedVector3 position)
         {
             // Spawn as player 1 (enemy for player 0) so it can be attacked
@@ -5865,6 +5904,32 @@ namespace OpenEmpires
 
             dummyUnitIds.Add(unitData.Id);
             OnUnitTrained?.Invoke(unitData.Id, 1, dummyPlayerId); // type 1 = spearman visual
+            return unitData.Id;
+        }
+
+        // Spawns an archer dummy on the enemy team (player 1, mirroring CreateDummy) — its job
+        // is to shoot at the local player. Archer dummies are invincible and self-heal via the
+        // IsDummy flag, so the player can stand near them and tank arrows for testing.
+        public int CreateArcherDummy(FixedVector3 position)
+        {
+            int dummyPlayerId = 1;
+            var unitData = UnitRegistry.CreateUnit(dummyPlayerId, position,
+                Fixed32.Zero, // stationary
+                cachedUnitRadius,
+                Fixed32.One);
+            unitData.MaxHealth = config.ArcherMaxHealth;
+            unitData.CurrentHealth = unitData.MaxHealth;
+            unitData.AttackDamage = config.ArcherAttackDamage;
+            unitData.AttackRange = ConfigToFixed32(config.ArcherAttackRange);
+            unitData.AttackCooldownTicks = config.ArcherAttackCooldownTicks;
+            unitData.DetectionRange = ConfigToFixed32(config.ArcherDetectionRange);
+            unitData.MeleeArmor = 0;
+            unitData.RangedArmor = 0;
+            unitData.IsDummy = true;
+            unitData.PlayerCommanded = false; // ensures auto-aggro
+
+            dummyUnitIds.Add(unitData.Id);
+            OnUnitTrained?.Invoke(unitData.Id, 2, dummyPlayerId); // type 2 = archer visual
             return unitData.Id;
         }
 

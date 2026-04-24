@@ -117,8 +117,15 @@ namespace OpenEmpires
 
                     if (target.CurrentHealth <= 0)
                     {
-                        target.State = UnitState.Dead;
-                        deadUnitList.Add(target.Id);
+                        if (target.IsDummy)
+                        {
+                            target.CurrentHealth = 1; // dummies cannot die
+                        }
+                        else
+                        {
+                            target.State = UnitState.Dead;
+                            deadUnitList.Add(target.Id);
+                        }
                     }
 
                     proj.IsActive = false;

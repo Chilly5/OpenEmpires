@@ -10,6 +10,7 @@ namespace OpenEmpires
     {
         private static SettingsMenuUI instance;
         public static bool IsPlacingDummy { get; set; }
+        public static bool IsPlacingArcherDummy { get; set; }
         private TMP_Text productionCheatLabel;
         private TMP_Text visionCheatLabel;
         private TMP_Text godPowersCheatLabel;
@@ -1079,6 +1080,33 @@ namespace OpenEmpires
             {
                 bool newState = !GodPowerBarUI.IsCheatsEnabled;
                 GodPowerBarUI.SetCheatsEnabled(newState);
+            });
+
+            // Place Target Dummy: invincible non-shooting punching bag (enemy team).
+            y -= 44f;
+            CreateButton(panelGO.transform, "Place Target Dummy", contentX - 105f, y, 200f, 36f, () =>
+            {
+                IsPlacingDummy = true;
+                IsPlacingArcherDummy = false;
+                Hide();
+            });
+
+            // Place Archer Dummy: invincible enemy archer that auto-shoots the player.
+            CreateButton(panelGO.transform, "Place Archer Dummy", contentX + 105f, y, 200f, 36f, () =>
+            {
+                IsPlacingArcherDummy = true;
+                IsPlacingDummy = false;
+                Hide();
+            });
+
+            // Clear All Dummies: removes both target and archer dummies from the map.
+            y -= 44f;
+            CreateButton(panelGO.transform, "Clear All Dummies", contentX, y, 200f, 36f, () =>
+            {
+                IsPlacingDummy = false;
+                IsPlacingArcherDummy = false;
+                var sim = GameBootstrapper.Instance?.Simulation;
+                sim?.ClearAllDummies();
             });
 
             // Surrender button (red-tinted)

@@ -1135,8 +1135,6 @@ namespace OpenEmpires
 
         private void CheckForAttacks()
         {
-            if (Time.time - lastAttackAlertTime < AttackAlertCooldown) return;
-
             var sim = GameBootstrapper.Instance?.Simulation;
             if (sim == null) return;
 
@@ -1146,10 +1144,9 @@ namespace OpenEmpires
 
             ComputeViewportQuad();
 
-            float alertX = 0f, alertZ = 0f;
-            bool found = false;
+            bool offScreenAttack = false;
 
-            // Check units
+            // Damaged own units
             var units = sim.UnitRegistry.GetAllUnits();
             for (int i = 0; i < units.Count; i++)
             {
@@ -1160,54 +1157,58 @@ namespace OpenEmpires
 
                 float wx = unit.SimPosition.x.ToFloat();
                 float wz = unit.SimPosition.z.ToFloat();
-                if (!IsInsideViewport(wx, wz))
-                {
-                    alertX = wx;
-                    alertZ = wz;
-                    found = true;
-                    break;
-                }
+                TryPlaceAttackPing(wx, wz);
+                if (!IsInsideViewport(wx, wz)) offScreenAttack = true;
             }
 
-            // Check buildings
-            if (!found)
+            // Damaged own buildings
+            var buildings = sim.BuildingRegistry.GetAllBuildings();
+            for (int i = 0; i < buildings.Count; i++)
             {
-                var buildings = sim.BuildingRegistry.GetAllBuildings();
-                for (int i = 0; i < buildings.Count; i++)
-                {
-                    var building = buildings[i];
-                    if (building.PlayerId != localPlayerId) continue;
-                    if (building.IsDestroyed) continue;
-                    if (building.LastDamageTick <= lastAlertCheckTick || building.LastDamageTick <= 0) continue;
+                var building = buildings[i];
+                if (building.PlayerId != localPlayerId) continue;
+                if (building.IsDestroyed) continue;
+                if (building.LastDamageTick <= lastAlertCheckTick || building.LastDamageTick <= 0) continue;
 
-                    float wx = building.SimPosition.x.ToFloat();
-                    float wz = building.SimPosition.z.ToFloat();
-                    if (!IsInsideViewport(wx, wz))
-                    {
-                        alertX = wx;
-                        alertZ = wz;
-                        found = true;
-                        break;
-                    }
-                }
+                float wx = building.SimPosition.x.ToFloat();
+                float wz = building.SimPosition.z.ToFloat();
+                TryPlaceAttackPing(wx, wz);
+                if (!IsInsideViewport(wx, wz)) offScreenAttack = true;
             }
 
             lastAlertCheckTick = currentTick;
 
-            if (found)
+            // The loud "Under Attack" SFX still rate-limits to once per AttackAlertCooldown,
+            // and only plays for off-screen events so the player isn't deafened during a battle.
+            if (offScreenAttack && Time.time - lastAttackAlertTime >= AttackAlertCooldown)
             {
                 lastAttackAlertTime = Time.time;
-                activePings.Add(new MinimapPing
-                {
-                    worldX = alertX,
-                    worldZ = alertZ,
-                    timeRemaining = PingDuration,
-                    totalDuration = PingDuration,
-                    color = new Color32(255, 60, 30, 255),
-                    style = PingStyle.AttackFlash,
-                });
                 SFXManager.Instance?.PlayUI(SFXType.UnderAttack);
             }
+        }
+
+        // Adds a red AttackFlash ping at (wx, wz) unless an active one is already nearby —
+        // prevents spamming the minimap when one battle generates many damage events per tick.
+        private void TryPlaceAttackPing(float wx, float wz)
+        {
+            const float proximitySq = 6f * 6f;
+            for (int i = 0; i < activePings.Count; i++)
+            {
+                var p = activePings[i];
+                if (p.style != PingStyle.AttackFlash) continue;
+                float dx = p.worldX - wx;
+                float dz = p.worldZ - wz;
+                if (dx * dx + dz * dz < proximitySq) return;
+            }
+            activePings.Add(new MinimapPing
+            {
+                worldX = wx,
+                worldZ = wz,
+                timeRemaining = PingDuration,
+                totalDuration = PingDuration,
+                color = new Color32(255, 60, 30, 255),
+                style = PingStyle.AttackFlash,
+            });
         }
 
         private void UpdateAndDrawPings()
