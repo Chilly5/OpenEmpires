@@ -75,6 +75,14 @@ namespace OpenEmpires
         private static readonly Color32 UserPingColor = new Color32(255, 210, 60, 255);
         private GameObject pingCursorIcon;
 
+        // Spam cooldown: 4 pings placed within SpamWindow seconds triggers CooldownDuration seconds
+        // during which new pings are rejected with a local-only chat message.
+        private const int SpamThreshold = 4;
+        private const float SpamWindow = 5f;
+        private const float CooldownDuration = 3f;
+        private readonly Queue<float> recentPingTimes = new Queue<float>();
+        private float cooldownUntilTime = -1f;
+
         // Cached viewport quad corners (world-space ground intersections)
         private Vector3[] viewportGroundCorners = new Vector3[4];
         private bool viewportQuadValid;
@@ -299,9 +307,23 @@ namespace OpenEmpires
 
         public void EnterPingMode()
         {
+            if (IsOnPingCooldown())
+            {
+                ShowPingCooldownMessage();
+                return;
+            }
             isPingMode = true;
             EnsurePingCursorIcon();
             if (pingCursorIcon != null) pingCursorIcon.SetActive(true);
+        }
+
+        private bool IsOnPingCooldown() => Time.time < cooldownUntilTime;
+
+        private void ShowPingCooldownMessage()
+        {
+            int secs = Mathf.Max(1, Mathf.CeilToInt(cooldownUntilTime - Time.time));
+            string plural = secs == 1 ? "second" : "seconds";
+            ChatManager.AddSystemMessage($"You must wait {secs} {plural} before being able to ping again.");
         }
 
         private void ExitPingMode()
@@ -955,6 +977,12 @@ namespace OpenEmpires
 
         private void PlaceUserPing(Vector3 worldPos)
         {
+            float now = Time.time;
+            // Slide the window forward — drop timestamps older than SpamWindow.
+            while (recentPingTimes.Count > 0 && now - recentPingTimes.Peek() > SpamWindow)
+                recentPingTimes.Dequeue();
+            recentPingTimes.Enqueue(now);
+
             activePings.Add(new MinimapPing
             {
                 worldX = worldPos.x,
@@ -966,6 +994,13 @@ namespace OpenEmpires
             });
             WorldPingMarker.Spawn(worldPos);
             SFXManager.Instance?.PlayUI(SFXType.NotifyPing, 0.7f);
+
+            // Fourth (or more) ping within the window → start the cooldown.
+            if (recentPingTimes.Count >= SpamThreshold)
+            {
+                cooldownUntilTime = now + CooldownDuration;
+                recentPingTimes.Clear();
+            }
         }
 
         private void HandleMinimapInput(Rect screenRect, bool insideCircle)
