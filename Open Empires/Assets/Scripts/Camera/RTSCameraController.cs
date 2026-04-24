@@ -225,6 +225,7 @@ namespace OpenEmpires
 
         private void OnZoom(float scrollValue)
         {
+            if (UnitSelectionManager.UIInputSuppressed) return;
             targetZoom -= scrollValue * zoomSpeed;
             targetZoom = Mathf.Clamp(targetZoom, minZoomDistance, maxZoomDistance);
         }
