@@ -11,6 +11,7 @@ namespace OpenEmpires
         public int UnitId { get; private set; }
         public int UnitType { get; private set; }
         public bool IsDead { get; private set; }
+        public bool IsIdle => unitData != null && unitData.State == UnitState.Idle;
 
         [SerializeField] private GameObject selectionRing;
         [SerializeField] private float turnSmoothing = 12f;

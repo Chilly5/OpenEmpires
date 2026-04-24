@@ -1849,6 +1849,125 @@ namespace OpenEmpires
             }
         }
 
+        // Per-unit-type cursor mirroring buildingCycleIndex.
+        private readonly Dictionary<int, int> unitCycleIndex = new Dictionary<int, int>();
+
+        public void CycleSelectUnit(int unitType)
+        {
+            var matches = new List<UnitView>();
+            foreach (var kvp in unitViews)
+            {
+                var view = kvp.Value;
+                if (view == null) continue;
+                if (view.UnitType != unitType) continue;
+                if (view.PlayerId != LocalPlayerId) continue;
+                if (view.IsDead) continue;
+                matches.Add(view);
+            }
+            if (matches.Count == 0) return;
+            matches.Sort((a, b) => a.UnitId.CompareTo(b.UnitId));
+
+            unitCycleIndex.TryGetValue(unitType, out int idx);
+            idx %= matches.Count;
+            var target = matches[idx];
+            unitCycleIndex[unitType] = (idx + 1) % matches.Count;
+
+            DeselectAll();
+            DeselectBuilding();
+            DeselectResourceNode();
+            target.SetSelected(true);
+            selectedUnits.Add(target);
+
+            if (cachedCameraController == null) cachedCameraController = FindFirstObjectByType<RTSCameraController>();
+            if (cachedCameraController != null)
+                cachedCameraController.PivotPosition = target.transform.position;
+        }
+
+        public void SelectAllUnits(int unitType)
+        {
+            DeselectAll();
+            DeselectBuilding();
+            DeselectResourceNode();
+
+            foreach (var kvp in unitViews)
+            {
+                var view = kvp.Value;
+                if (view == null) continue;
+                if (view.UnitType != unitType) continue;
+                if (view.PlayerId != LocalPlayerId) continue;
+                if (view.IsDead) continue;
+
+                view.SetSelected(true);
+                selectedUnits.Add(view);
+            }
+        }
+
+        // "Military" = anything owned by the player that isn't a villager (0) or sheep (5).
+        private static bool IsMilitaryType(int unitType) => unitType != 0 && unitType != 5;
+
+        private int idleVillagerCycleIdx;
+        private int idleMilitaryCycleIdx;
+
+        private List<UnitView> CollectIdleOwned(System.Func<int, bool> typeFilter)
+        {
+            var matches = new List<UnitView>();
+            foreach (var kvp in unitViews)
+            {
+                var view = kvp.Value;
+                if (view == null) continue;
+                if (view.PlayerId != LocalPlayerId) continue;
+                if (view.IsDead) continue;
+                if (!typeFilter(view.UnitType)) continue;
+                if (!view.IsIdle) continue;
+                matches.Add(view);
+            }
+            matches.Sort((a, b) => a.UnitId.CompareTo(b.UnitId));
+            return matches;
+        }
+
+        private void CycleSelectFromList(List<UnitView> matches, ref int cursor)
+        {
+            if (matches.Count == 0) return;
+            cursor %= matches.Count;
+            var target = matches[cursor];
+            cursor = (cursor + 1) % matches.Count;
+
+            DeselectAll();
+            DeselectBuilding();
+            DeselectResourceNode();
+            target.SetSelected(true);
+            selectedUnits.Add(target);
+
+            if (cachedCameraController == null) cachedCameraController = FindFirstObjectByType<RTSCameraController>();
+            if (cachedCameraController != null)
+                cachedCameraController.PivotPosition = target.transform.position;
+        }
+
+        private void SelectAllFromList(List<UnitView> matches)
+        {
+            DeselectAll();
+            DeselectBuilding();
+            DeselectResourceNode();
+
+            for (int i = 0; i < matches.Count; i++)
+            {
+                matches[i].SetSelected(true);
+                selectedUnits.Add(matches[i]);
+            }
+        }
+
+        public void CycleSelectIdleVillager() =>
+            CycleSelectFromList(CollectIdleOwned(t => t == 0), ref idleVillagerCycleIdx);
+
+        public void SelectAllIdleVillagers() =>
+            SelectAllFromList(CollectIdleOwned(t => t == 0));
+
+        public void CycleSelectIdleMilitary() =>
+            CycleSelectFromList(CollectIdleOwned(IsMilitaryType), ref idleMilitaryCycleIdx);
+
+        public void SelectAllIdleMilitary() =>
+            SelectAllFromList(CollectIdleOwned(IsMilitaryType));
+
         private void BoxSelect()
         {
             if (!multiSelectHeld)
