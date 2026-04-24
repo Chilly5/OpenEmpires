@@ -299,7 +299,7 @@ namespace OpenEmpires
             constructionScaffold.transform.SetParent(transform);
             float size = Mathf.Max(buildingData.TileFootprintWidth, buildingData.TileFootprintHeight);
             if (size <= 0f) size = 2f;
-            float scale = size * 0.95f;
+            float scale = size * 1.5f;
             constructionScaffold.transform.localPosition = new Vector3(0f, 0f, 0f);
             constructionScaffold.transform.localScale = new Vector3(scale, scale, 1f);
 
