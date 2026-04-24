@@ -14,7 +14,7 @@ namespace OpenEmpires
         private bool edgePanWhileBoxSelecting = false;
         private float edgeScrollThreshold = 10f;
 
-        private float zoomSpeed = 5f;
+        private float zoomSpeed = 1.5f;
         private float minZoomDistance = 5f;
         private float maxZoomDistance = 40f;
         private float zoomSmoothing = 8f;
