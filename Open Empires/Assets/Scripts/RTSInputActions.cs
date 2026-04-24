@@ -20,6 +20,7 @@ namespace OpenEmpires
         public class RTSActions : System.IDisposable
         {
             public InputAction CameraPan { get; private set; }
+            public InputAction CameraMousePan { get; private set; }
             public InputAction CameraZoom { get; private set; }
             public InputAction CameraRotateEnable { get; private set; }
             public InputAction CameraRotateDelta { get; private set; }
@@ -42,6 +43,13 @@ namespace OpenEmpires
                     .With("Down", "<Keyboard>/downArrow")
                     .With("Left", "<Keyboard>/leftArrow")
                     .With("Right", "<Keyboard>/rightArrow");
+                CameraPan.AddCompositeBinding("2DVector")
+                    .With("Up", "<Keyboard>/w")
+                    .With("Down", "<Keyboard>/s")
+                    .With("Left", "<Keyboard>/a")
+                    .With("Right", "<Keyboard>/d");
+
+                CameraMousePan = new InputAction("CameraMousePan", InputActionType.Value, "<Mouse>/delta");
 
                 CameraZoom = new InputAction("CameraZoom", InputActionType.Value, "<Mouse>/scroll/y");
                 CameraRotateEnable = new InputAction("CameraRotateEnable", InputActionType.Button, "<Mouse>/middleButton");
@@ -65,6 +73,7 @@ namespace OpenEmpires
             public void Enable()
             {
                 CameraPan.Enable();
+                CameraMousePan.Enable();
                 CameraZoom.Enable();
                 CameraRotateEnable.Enable();
                 CameraRotateDelta.Enable();
@@ -82,6 +91,7 @@ namespace OpenEmpires
             public void Disable()
             {
                 CameraPan.Disable();
+                CameraMousePan.Disable();
                 CameraZoom.Disable();
                 CameraRotateEnable.Disable();
                 CameraRotateDelta.Disable();
@@ -99,6 +109,7 @@ namespace OpenEmpires
             public void Dispose()
             {
                 CameraPan?.Dispose();
+                CameraMousePan?.Dispose();
                 CameraZoom?.Dispose();
                 CameraRotateEnable?.Dispose();
                 CameraRotateDelta?.Dispose();

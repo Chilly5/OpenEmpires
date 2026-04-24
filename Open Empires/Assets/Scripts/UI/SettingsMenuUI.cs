@@ -442,52 +442,77 @@ namespace OpenEmpires
             float valueW = 50f;
             float rowX = contentX - 180f; // Adjusted for sidebar
             
+            var cameraController = FindObjectOfType<RTSCameraController>();
+            
             // Pan Acceleration toggle
             MakeLabel(panelGO.transform, "Pan Acceleration", rowX, y, labelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
             var panAccelToggle = CreateToggle(panelGO.transform, rowX + labelW + 5f, y, 24f);
-            panAccelToggle.isOn = true; // Default value
+            if (cameraController != null) panAccelToggle.isOn = cameraController.PanAcceleration;
+            panAccelToggle.onValueChanged.AddListener(value => {
+                if (cameraController != null) {
+                    cameraController.PanAcceleration = value;
+                    cameraController.SaveCameraSettings();
+                }
+            });
             
-            // Mouse Pan Speed slider
-            y -= 40f;
-            MakeLabel(panelGO.transform, "Mouse Pan Speed", rowX, y, labelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
-            var mousePanSlider = CreateSlider(panelGO.transform, rowX + labelW + 5f, y, sliderW, 20f);
-            mousePanSlider.GetComponent<Slider>().minValue = 0.5f;
-            mousePanSlider.GetComponent<Slider>().maxValue = 3.0f;
-            mousePanSlider.GetComponent<Slider>().value = 1.0f;
-            var mousePanValueText = MakeLabel(panelGO.transform, "1.0", rowX + labelW + 5f + sliderW + 10f, y, valueW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
-            mousePanSlider.GetComponent<Slider>().onValueChanged.AddListener(value => mousePanValueText.text = value.ToString("F1"));
             
             // Screen Edge Panning toggle
             y -= 40f;
             MakeLabel(panelGO.transform, "Screen Edge Panning", rowX, y, labelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
             var edgePanToggle = CreateToggle(panelGO.transform, rowX + labelW + 5f, y, 24f);
-            edgePanToggle.isOn = true; // Default value
+            if (cameraController != null) edgePanToggle.isOn = cameraController.EnableEdgeScroll;
+            edgePanToggle.onValueChanged.AddListener(value => {
+                if (cameraController != null) {
+                    cameraController.EnableEdgeScroll = value;
+                    cameraController.SaveCameraSettings();
+                }
+            });
             
             // Edge Pan While Box Selecting toggle
             y -= 40f;
             MakeLabel(panelGO.transform, "Edge Pan While Selecting", rowX, y, labelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
             var edgePanBoxToggle = CreateToggle(panelGO.transform, rowX + labelW + 5f, y, 24f);
-            edgePanBoxToggle.isOn = false; // Default value
+            if (cameraController != null) edgePanBoxToggle.isOn = cameraController.EdgePanWhileBoxSelecting;
+            edgePanBoxToggle.onValueChanged.AddListener(value => {
+                if (cameraController != null) {
+                    cameraController.EdgePanWhileBoxSelecting = value;
+                    cameraController.SaveCameraSettings();
+                }
+            });
             
             // Screen Edge Pan Speed slider
             y -= 40f;
             MakeLabel(panelGO.transform, "Edge Pan Speed", rowX, y, labelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
             var edgePanSlider = CreateSlider(panelGO.transform, rowX + labelW + 5f, y, sliderW, 20f);
-            edgePanSlider.GetComponent<Slider>().minValue = 0.5f;
-            edgePanSlider.GetComponent<Slider>().maxValue = 3.0f;
-            edgePanSlider.GetComponent<Slider>().value = 1.0f;
-            var edgePanValueText = MakeLabel(panelGO.transform, "1.0", rowX + labelW + 5f + sliderW + 10f, y, valueW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
-            edgePanSlider.GetComponent<Slider>().onValueChanged.AddListener(value => edgePanValueText.text = value.ToString("F1"));
+            var edgePanSliderComp = edgePanSlider.GetComponent<Slider>();
+            edgePanSliderComp.minValue = 0.5f;
+            edgePanSliderComp.maxValue = 3.0f;
+            if (cameraController != null) edgePanSliderComp.value = cameraController.EdgePanSpeed;
+            var edgePanValueText = MakeLabel(panelGO.transform, edgePanSliderComp.value.ToString("F1"), rowX + labelW + 5f + sliderW + 10f, y, valueW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+            edgePanSliderComp.onValueChanged.AddListener(value => {
+                edgePanValueText.text = value.ToString("F1");
+                if (cameraController != null) {
+                    cameraController.EdgePanSpeed = value;
+                    cameraController.SaveCameraSettings();
+                }
+            });
             
             // Keyboard Pan Speed slider
             y -= 40f;
             MakeLabel(panelGO.transform, "Keyboard Pan Speed", rowX, y, labelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
             var keyboardPanSlider = CreateSlider(panelGO.transform, rowX + labelW + 5f, y, sliderW, 20f);
-            keyboardPanSlider.GetComponent<Slider>().minValue = 0.5f;
-            keyboardPanSlider.GetComponent<Slider>().maxValue = 3.0f;
-            keyboardPanSlider.GetComponent<Slider>().value = 1.0f;
-            var keyboardPanValueText = MakeLabel(panelGO.transform, "1.0", rowX + labelW + 5f + sliderW + 10f, y, valueW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
-            keyboardPanSlider.GetComponent<Slider>().onValueChanged.AddListener(value => keyboardPanValueText.text = value.ToString("F1"));
+            var keyboardPanSliderComp = keyboardPanSlider.GetComponent<Slider>();
+            keyboardPanSliderComp.minValue = 0.5f;
+            keyboardPanSliderComp.maxValue = 3.0f;
+            if (cameraController != null) keyboardPanSliderComp.value = cameraController.KeyboardPanSpeed;
+            var keyboardPanValueText = MakeLabel(panelGO.transform, keyboardPanSliderComp.value.ToString("F1"), rowX + labelW + 5f + sliderW + 10f, y, valueW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+            keyboardPanSliderComp.onValueChanged.AddListener(value => {
+                keyboardPanValueText.text = value.ToString("F1");
+                if (cameraController != null) {
+                    cameraController.KeyboardPanSpeed = value;
+                    cameraController.SaveCameraSettings();
+                }
+            });
             
             // Back button
             y -= 80f;
