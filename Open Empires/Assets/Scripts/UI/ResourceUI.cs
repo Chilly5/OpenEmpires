@@ -788,11 +788,12 @@ namespace OpenEmpires
             textRT.offsetMin = Vector2.zero;
             textRT.offsetMax = Vector2.zero;
             var tmp = textGO.AddComponent<TextMeshProUGUI>();
-            tmp.text = "⋮";
-            tmp.fontSize = 20;
+            tmp.text = "•••";
+            tmp.fontSize = 18;
             tmp.fontStyle = FontStyles.Bold;
             tmp.color = Color.white;
             tmp.alignment = TextAlignmentOptions.Center;
+            tmp.enableWordWrapping = false;
             tmp.raycastTarget = false;
         }
 

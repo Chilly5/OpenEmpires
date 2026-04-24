@@ -23,6 +23,8 @@ namespace OpenEmpires
 
         private GameObject mainPanel;
         private GameObject controlsPanel;
+        private GameObject cameraPanel;
+        private GameObject soundPanel;
 
         private InputActionRebindingExtensions.RebindingOperation currentRebind;
         public static bool IsRebinding => instance?.currentRebind != null;
@@ -115,14 +117,34 @@ namespace OpenEmpires
 
         private void ShowControls()
         {
-            mainPanel.SetActive(false);
+            HideAllPanels();
             controlsPanel.SetActive(true);
+        }
+
+        private void ShowCamera()
+        {
+            HideAllPanels();
+            cameraPanel.SetActive(true);
+        }
+
+        private void ShowSound()
+        {
+            HideAllPanels();
+            soundPanel.SetActive(true);
         }
 
         private void ShowMainSettings()
         {
+            HideAllPanels();
+            mainPanel.SetActive(true);
+        }
+
+        private void HideAllPanels()
+        {
+            if (mainPanel != null) mainPanel.SetActive(false);
             if (controlsPanel != null) controlsPanel.SetActive(false);
-            if (mainPanel != null) mainPanel.SetActive(true);
+            if (cameraPanel != null) cameraPanel.SetActive(false);
+            if (soundPanel != null) soundPanel.SetActive(false);
         }
 
         private void BuildUI()
@@ -154,13 +176,17 @@ namespace OpenEmpires
 
             BuildMainPanel(canvasGO.transform);
             BuildControlsPanel(canvasGO.transform);
+            BuildCameraPanel(canvasGO.transform);
+            BuildSoundPanel(canvasGO.transform);
 
             controlsPanel.SetActive(false);
+            cameraPanel.SetActive(false);
+            soundPanel.SetActive(false);
         }
 
         private void BuildMainPanel(Transform canvasParent)
         {
-            float panelW = 400f;
+            float panelW = 600f; // Increased width to accommodate sidebar
             float panelH = 569f;
             var panelGO = new GameObject("Panel");
             panelGO.transform.SetParent(canvasParent, false);
@@ -174,12 +200,38 @@ namespace OpenEmpires
 
             mainPanel = panelGO;
 
+            // Left sidebar for section buttons
+            float sidebarW = 120f;
+            float sidebarX = -panelW / 2f + sidebarW / 2f;
+            
+            // Sidebar background
+            var sidebarGO = new GameObject("Sidebar");
+            sidebarGO.transform.SetParent(panelGO.transform, false);
+            var sidebarRT = sidebarGO.AddComponent<RectTransform>();
+            sidebarRT.anchorMin = new Vector2(0f, 0f);
+            sidebarRT.anchorMax = new Vector2(0f, 1f);
+            sidebarRT.pivot = new Vector2(0f, 0.5f);
+            sidebarRT.anchoredPosition = new Vector2(0f, 0f);
+            sidebarRT.sizeDelta = new Vector2(sidebarW, 0f);
+            var sidebarImg = sidebarGO.AddComponent<Image>();
+            sidebarImg.color = new Color(0.08f, 0.08f, 0.08f, 1f);
+
+            // Section buttons in sidebar
+            float sidebarY = panelH / 2f - 50f;
+            CreateButton(panelGO.transform, "Camera", sidebarX, sidebarY, sidebarW - 10f, 36f, ShowCamera);
+            sidebarY -= 45f;
+            CreateButton(panelGO.transform, "Controls", sidebarX, sidebarY, sidebarW - 10f, 36f, ShowControls);
+            sidebarY -= 45f;
+            CreateButton(panelGO.transform, "Sound", sidebarX, sidebarY, sidebarW - 10f, 36f, ShowSound);
+
+            // Main content area (right side)
+            float contentX = sidebarW / 2f; // Offset content to the right of sidebar
             float y = panelH / 2f;
 
             // Title
             y -= 10f;
             y -= 28f;
-            MakeLabel(panelGO.transform, "Settings", -panelW / 2f, y, panelW, 28f, 22, FontStyles.Bold, TextAlignmentOptions.Center);
+            MakeLabel(panelGO.transform, "Settings", contentX - (panelW - sidebarW) / 2f, y, panelW - sidebarW, 28f, 22, FontStyles.Bold, TextAlignmentOptions.Center);
 
             // Close button (X) in top-right corner
             var closeButtonGO = new GameObject("CloseButton");
@@ -216,12 +268,13 @@ namespace OpenEmpires
             closeText.alignment = TextAlignmentOptions.Center;
             closeText.color = Color.white;
 
+            // Original settings content (all the existing functionality)
             // Music Volume row
             y -= 40f;
             float labelW = 120f;
             float sliderW = 180f;
             float valueW = 50f;
-            float rowX = -panelW / 2f + 20f;
+            float rowX = contentX - 160f; // Adjusted for sidebar
 
             MakeLabel(panelGO.transform, "Music Volume", rowX, y, labelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
 
@@ -250,12 +303,12 @@ namespace OpenEmpires
 
             // Target Dummy buttons
             y -= 45f;
-            CreateButton(panelGO.transform, "Place Target Dummy", -90f, y, 170f, 36f, () =>
+            CreateButton(panelGO.transform, "Place Target Dummy", contentX - 90f, y, 170f, 36f, () =>
             {
                 IsPlacingDummy = true;
                 Hide();
             });
-            CreateButton(panelGO.transform, "Clear Dummies", 90f, y, 170f, 36f, () =>
+            CreateButton(panelGO.transform, "Clear Dummies", contentX + 90f, y, 170f, 36f, () =>
             {
                 var sim = GameBootstrapper.Instance?.Simulation;
                 sim?.ClearAllDummies();
@@ -263,7 +316,7 @@ namespace OpenEmpires
 
             // Cheat buttons
             y -= 45f;
-            CreateButton(panelGO.transform, "Resource Cheat", -90f, y, 170f, 36f, () =>
+            CreateButton(panelGO.transform, "Resource Cheat", contentX - 90f, y, 170f, 36f, () =>
             {
                 var sim = GameBootstrapper.Instance?.Simulation;
                 if (sim == null) return;
@@ -274,7 +327,7 @@ namespace OpenEmpires
             var prodBtnGO = CreateButtonWithLabel(panelGO.transform, "Prod 10x: OFF", 0f, y, 170f, 36f, out prodLabel);
             var prodRT = prodBtnGO.GetComponent<RectTransform>();
             prodRT.pivot = new Vector2(0.5f, 0.5f);
-            prodRT.anchoredPosition = new Vector2(90f, y);
+            prodRT.anchoredPosition = new Vector2(contentX + 90f, y);
             productionCheatLabel = prodLabel;
             prodBtnGO.GetComponent<Button>().onClick.AddListener(() =>
             {
@@ -290,7 +343,7 @@ namespace OpenEmpires
             var visBtnGO = CreateButtonWithLabel(panelGO.transform, "Vision: OFF", 0f, y, 170f, 36f, out visLabel);
             var visRT = visBtnGO.GetComponent<RectTransform>();
             visRT.pivot = new Vector2(0.5f, 0.5f);
-            visRT.anchoredPosition = new Vector2(-90f, y);
+            visRT.anchoredPosition = new Vector2(contentX - 90f, y);
             visionCheatLabel = visLabel;
             visBtnGO.GetComponent<Button>().onClick.AddListener(() =>
             {
@@ -304,7 +357,7 @@ namespace OpenEmpires
             var gpBtnGO = CreateButtonWithLabel(panelGO.transform, "God Powers: OFF", 0f, y, 170f, 36f, out gpLabel);
             var gpRT = gpBtnGO.GetComponent<RectTransform>();
             gpRT.pivot = new Vector2(0.5f, 0.5f);
-            gpRT.anchoredPosition = new Vector2(90f, y);
+            gpRT.anchoredPosition = new Vector2(contentX + 90f, y);
             godPowersCheatLabel = gpLabel;
             gpBtnGO.GetComponent<Button>().onClick.AddListener(() =>
             {
@@ -312,17 +365,13 @@ namespace OpenEmpires
                 GodPowerBarUI.SetCheatsEnabled(newState);
             });
 
-            // Controls button
-            y -= 50f;
-            CreateButton(panelGO.transform, "Controls", 0f, y, 160f, 36f, ShowControls);
-
             // Surrender button (red-tinted)
             y -= 44f;
-            CreateSurrenderButton(panelGO.transform, 0f, y, 160f, 36f);
+            CreateSurrenderButton(panelGO.transform, contentX, y, 160f, 36f);
 
             // Resume button
             y -= 44f;
-            CreateButton(panelGO.transform, "Resume Game", 0f, y, 160f, 36f, () => Hide());
+            CreateButton(panelGO.transform, "Resume Game", contentX, y, 160f, 36f, () => Hide());
         }
 
         private void BuildControlsPanel(Transform canvasParent)
@@ -760,6 +809,126 @@ namespace OpenEmpires
 
             labelText = tmp;
             return btnGO;
+        }
+
+        private void BuildCameraPanel(Transform canvasParent)
+        {
+            float panelW = 600f;
+            float panelH = 569f;
+            var panelGO = new GameObject("CameraPanel");
+            panelGO.transform.SetParent(canvasParent, false);
+            var panelRT = panelGO.AddComponent<RectTransform>();
+            panelRT.anchorMin = new Vector2(0.5f, 0.5f);
+            panelRT.anchorMax = new Vector2(0.5f, 0.5f);
+            panelRT.pivot = new Vector2(0.5f, 0.5f);
+            panelRT.sizeDelta = new Vector2(panelW, panelH);
+            var panelImg = panelGO.AddComponent<Image>();
+            panelImg.color = new Color(0.12f, 0.12f, 0.12f, 1f);
+
+            cameraPanel = panelGO;
+
+            // Reuse the same sidebar structure
+            BuildSidebar(panelGO, "Camera Settings");
+
+            float contentX = 60f; // Offset content to the right of sidebar
+            float y = panelH / 2f - 80f;
+
+            // Placeholder text
+            MakeLabel(panelGO.transform, "Camera settings will be added here", contentX - 200f, y, 400f, 24f, 14, FontStyles.Italic, TextAlignmentOptions.Center);
+        }
+
+        private void BuildSoundPanel(Transform canvasParent)
+        {
+            float panelW = 600f;
+            float panelH = 569f;
+            var panelGO = new GameObject("SoundPanel");
+            panelGO.transform.SetParent(canvasParent, false);
+            var panelRT = panelGO.AddComponent<RectTransform>();
+            panelRT.anchorMin = new Vector2(0.5f, 0.5f);
+            panelRT.anchorMax = new Vector2(0.5f, 0.5f);
+            panelRT.pivot = new Vector2(0.5f, 0.5f);
+            panelRT.sizeDelta = new Vector2(panelW, panelH);
+            var panelImg = panelGO.AddComponent<Image>();
+            panelImg.color = new Color(0.12f, 0.12f, 0.12f, 1f);
+
+            soundPanel = panelGO;
+
+            // Reuse the same sidebar structure
+            BuildSidebar(panelGO, "Sound Settings");
+
+            float contentX = 60f; // Offset content to the right of sidebar
+            float y = panelH / 2f - 80f;
+
+            // Placeholder text for future sound settings
+            MakeLabel(panelGO.transform, "Additional sound settings will be added here", contentX - 200f, y, 400f, 24f, 14, FontStyles.Italic, TextAlignmentOptions.Center);
+        }
+
+        private void BuildSidebar(GameObject panelGO, string title)
+        {
+            float panelW = 600f;
+            float panelH = 569f;
+            float sidebarW = 120f;
+            float sidebarX = -panelW / 2f + sidebarW / 2f;
+            
+            // Sidebar background
+            var sidebarGO = new GameObject("Sidebar");
+            sidebarGO.transform.SetParent(panelGO.transform, false);
+            var sidebarRT = sidebarGO.AddComponent<RectTransform>();
+            sidebarRT.anchorMin = new Vector2(0f, 0f);
+            sidebarRT.anchorMax = new Vector2(0f, 1f);
+            sidebarRT.pivot = new Vector2(0f, 0.5f);
+            sidebarRT.anchoredPosition = new Vector2(0f, 0f);
+            sidebarRT.sizeDelta = new Vector2(sidebarW, 0f);
+            var sidebarImg = sidebarGO.AddComponent<Image>();
+            sidebarImg.color = new Color(0.08f, 0.08f, 0.08f, 1f);
+
+            // Section buttons in sidebar
+            float sidebarY = panelH / 2f - 50f;
+            CreateButton(panelGO.transform, "Camera", sidebarX, sidebarY, sidebarW - 10f, 36f, ShowCamera);
+            sidebarY -= 45f;
+            CreateButton(panelGO.transform, "Controls", sidebarX, sidebarY, sidebarW - 10f, 36f, ShowControls);
+            sidebarY -= 45f;
+            CreateButton(panelGO.transform, "Sound", sidebarX, sidebarY, sidebarW - 10f, 36f, ShowSound);
+
+            // Title
+            float contentX = sidebarW / 2f;
+            float y = panelH / 2f - 38f;
+            MakeLabel(panelGO.transform, title, contentX - (panelW - sidebarW) / 2f, y, panelW - sidebarW, 28f, 22, FontStyles.Bold, TextAlignmentOptions.Center);
+
+            // Close button (X) in top-right corner
+            var closeButtonGO = new GameObject("CloseButton");
+            closeButtonGO.transform.SetParent(panelGO.transform, false);
+            var closeButtonRT = closeButtonGO.AddComponent<RectTransform>();
+            closeButtonRT.anchorMin = new Vector2(1f, 1f);
+            closeButtonRT.anchorMax = new Vector2(1f, 1f);
+            closeButtonRT.pivot = new Vector2(1f, 1f);
+            closeButtonRT.anchoredPosition = new Vector2(-10f, -10f);
+            closeButtonRT.sizeDelta = new Vector2(28f, 28f);
+
+            var closeImg = closeButtonGO.AddComponent<Image>();
+            closeImg.color = new Color(0.25f, 0.25f, 0.25f);
+
+            var closeBtn = closeButtonGO.AddComponent<Button>();
+            var closeColors = closeBtn.colors;
+            closeColors.normalColor = new Color(0.25f, 0.25f, 0.25f);
+            closeColors.highlightedColor = new Color(0.35f, 0.35f, 0.35f);
+            closeColors.pressedColor = new Color(0.15f, 0.15f, 0.15f);
+            closeBtn.colors = closeColors;
+            closeBtn.onClick.AddListener(() => Hide());
+
+            // X text
+            var closeTextGO = new GameObject("Text");
+            closeTextGO.transform.SetParent(closeButtonGO.transform, false);
+            var closeTextRT = closeTextGO.AddComponent<RectTransform>();
+            closeTextRT.anchorMin = Vector2.zero;
+            closeTextRT.anchorMax = Vector2.one;
+            closeTextRT.offsetMin = Vector2.zero;
+            closeTextRT.offsetMax = Vector2.zero;
+            var closeText = closeTextGO.AddComponent<TextMeshProUGUI>();
+            closeText.text = "×";
+            closeText.fontSize = 20;
+            closeText.alignment = TextAlignmentOptions.Center;
+            closeText.color = Color.white;
         }
     }
 }

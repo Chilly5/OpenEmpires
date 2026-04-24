@@ -2150,10 +2150,11 @@ namespace OpenEmpires
             settingsTextRT.offsetMin = Vector2.zero;
             settingsTextRT.offsetMax = Vector2.zero;
             var settingsText = settingsTextGO.AddComponent<TextMeshProUGUI>();
-            settingsText.text = "⋮";
-            settingsText.fontSize = 24;
+            settingsText.text = "•••";
+            settingsText.fontSize = 18;
             settingsText.alignment = TextAlignmentOptions.Center;
             settingsText.color = Color.white;
+            settingsText.enableWordWrapping = false;
 
             // Civilization art — last child so it renders on top of everything
             var civArtGO = new GameObject("CivArt");
