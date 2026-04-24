@@ -118,17 +118,17 @@ namespace OpenEmpires
 
         private void ShowControls()
         {
-            SwitchToContent("Controls", BuildControlsContent);
+            SwitchToContent("", BuildControlsContent);
         }
 
         private void ShowCamera()
         {
-            SwitchToContent("Camera", BuildCameraContent);
+            SwitchToContent("", BuildCameraContent);
         }
 
         private void ShowSound()
         {
-            SwitchToContent("Sound", BuildSoundContent);
+            SwitchToContent("", BuildSoundContent);
         }
 
         private void ShowMainSettings()
@@ -437,10 +437,60 @@ namespace OpenEmpires
         private void BuildCameraContent(GameObject panelGO, float contentX, float startY)
         {
             float y = startY;
+            float labelW = 180f;
+            float sliderW = 160f;
+            float valueW = 50f;
+            float rowX = contentX - 180f; // Adjusted for sidebar
             
+            // Pan Acceleration toggle
+            MakeLabel(panelGO.transform, "Pan Acceleration", rowX, y, labelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+            var panAccelToggle = CreateToggle(panelGO.transform, rowX + labelW + 5f, y, 24f);
+            panAccelToggle.isOn = true; // Default value
+            
+            // Mouse Pan Speed slider
+            y -= 40f;
+            MakeLabel(panelGO.transform, "Mouse Pan Speed", rowX, y, labelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+            var mousePanSlider = CreateSlider(panelGO.transform, rowX + labelW + 5f, y, sliderW, 20f);
+            mousePanSlider.GetComponent<Slider>().minValue = 0.5f;
+            mousePanSlider.GetComponent<Slider>().maxValue = 3.0f;
+            mousePanSlider.GetComponent<Slider>().value = 1.0f;
+            var mousePanValueText = MakeLabel(panelGO.transform, "1.0", rowX + labelW + 5f + sliderW + 10f, y, valueW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+            mousePanSlider.GetComponent<Slider>().onValueChanged.AddListener(value => mousePanValueText.text = value.ToString("F1"));
+            
+            // Screen Edge Panning toggle
+            y -= 40f;
+            MakeLabel(panelGO.transform, "Screen Edge Panning", rowX, y, labelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+            var edgePanToggle = CreateToggle(panelGO.transform, rowX + labelW + 5f, y, 24f);
+            edgePanToggle.isOn = true; // Default value
+            
+            // Edge Pan While Box Selecting toggle
+            y -= 40f;
+            MakeLabel(panelGO.transform, "Edge Pan While Selecting", rowX, y, labelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+            var edgePanBoxToggle = CreateToggle(panelGO.transform, rowX + labelW + 5f, y, 24f);
+            edgePanBoxToggle.isOn = false; // Default value
+            
+            // Screen Edge Pan Speed slider
+            y -= 40f;
+            MakeLabel(panelGO.transform, "Edge Pan Speed", rowX, y, labelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+            var edgePanSlider = CreateSlider(panelGO.transform, rowX + labelW + 5f, y, sliderW, 20f);
+            edgePanSlider.GetComponent<Slider>().minValue = 0.5f;
+            edgePanSlider.GetComponent<Slider>().maxValue = 3.0f;
+            edgePanSlider.GetComponent<Slider>().value = 1.0f;
+            var edgePanValueText = MakeLabel(panelGO.transform, "1.0", rowX + labelW + 5f + sliderW + 10f, y, valueW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+            edgePanSlider.GetComponent<Slider>().onValueChanged.AddListener(value => edgePanValueText.text = value.ToString("F1"));
+            
+            // Keyboard Pan Speed slider
+            y -= 40f;
+            MakeLabel(panelGO.transform, "Keyboard Pan Speed", rowX, y, labelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+            var keyboardPanSlider = CreateSlider(panelGO.transform, rowX + labelW + 5f, y, sliderW, 20f);
+            keyboardPanSlider.GetComponent<Slider>().minValue = 0.5f;
+            keyboardPanSlider.GetComponent<Slider>().maxValue = 3.0f;
+            keyboardPanSlider.GetComponent<Slider>().value = 1.0f;
+            var keyboardPanValueText = MakeLabel(panelGO.transform, "1.0", rowX + labelW + 5f + sliderW + 10f, y, valueW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+            keyboardPanSlider.GetComponent<Slider>().onValueChanged.AddListener(value => keyboardPanValueText.text = value.ToString("F1"));
             
             // Back button
-            y -= 100f;
+            y -= 80f;
             CreateButton(panelGO.transform, "Back to Settings", contentX, y, 160f, 36f, () => ShowMainSettings());
         }
 
