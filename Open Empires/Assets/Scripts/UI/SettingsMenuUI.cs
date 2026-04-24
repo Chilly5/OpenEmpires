@@ -785,7 +785,7 @@ namespace OpenEmpires
             var scrollRect = scrollGO.AddComponent<ScrollRect>();
             scrollRect.horizontal = false;
             scrollRect.vertical = true;
-            scrollRect.scrollSensitivity = 40f;
+            scrollRect.scrollSensitivity = 5f;
             scrollRect.movementType = ScrollRect.MovementType.Clamped;
             scrollRect.inertia = false;
 
