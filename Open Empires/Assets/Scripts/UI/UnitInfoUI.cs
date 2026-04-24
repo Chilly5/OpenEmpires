@@ -97,6 +97,14 @@ namespace OpenEmpires
             return false;
         }
 
+        // Shift-click multiplies unit production by 5x.
+        private static void QueueTraining(GameSimulation sim, int playerId, int buildingId, int unitType)
+        {
+            int count = (Keyboard.current != null && Keyboard.current.shiftKey.isPressed) ? 5 : 1;
+            for (int i = 0; i < count; i++)
+                sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(playerId, buildingId, unitType));
+        }
+
         private static Rect GetScreenRect(RectTransform rt)
         {
             Vector3[] corners = new Vector3[4];
@@ -2126,8 +2134,7 @@ namespace OpenEmpires
                         Enabled = resources.Food >= spearmanFood && resources.Wood >= spearmanWood,
                         Icon = UnitIcons.Get(spIcon),
                         Tooltip = $"<b>{spName}</b>\nMelee infantry unit.\nCost: {spearmanFood} <sprite name=\"food\"> {spearmanWood} <sprite name=\"wood\">",
-                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
-                            new TrainUnitCommand(building.PlayerId, building.Id, 1)) };
+                        OnClick = () => QueueTraining(sim, building.PlayerId, building.Id, 1) };
                     int maaFood = sim.Config.ManAtArmsFoodCost * (100 - discPct) / 100;
                     int maaGold = sim.Config.ManAtArmsGoldCost * (100 - discPct) / 100;
                     bool maaAgeOk = sim.GetPlayerAge(building.PlayerId) >= LandmarkDefinitions.GetUnitRequiredAge(6);
@@ -2136,8 +2143,7 @@ namespace OpenEmpires
                         Icon = UnitIcons.Get(6),
                         Tooltip = $"<b>Man-at-Arms</b>\nHeavy armored infantry.\nCost: {maaFood} <sprite name=\"food\"> {maaGold} <sprite name=\"gold\">"
                             + (maaAgeOk ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(3)}</color>"),
-                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
-                            new TrainUnitCommand(building.PlayerId, building.Id, 6)) };
+                        OnClick = () => QueueTraining(sim, building.PlayerId, building.Id, 6) };
                     hasAny = true;
                 }
                 else if (building.Type == BuildingType.ArcheryRange)
@@ -2153,8 +2159,7 @@ namespace OpenEmpires
                         Enabled = resources.Food >= archerFood && resources.Wood >= archerWood,
                         Icon = UnitIcons.Get(arIcon),
                         Tooltip = $"<b>{arName}</b>\nRanged infantry unit.\nCost: {archerFood} <sprite name=\"food\"> {archerWood} <sprite name=\"wood\">",
-                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
-                            new TrainUnitCommand(building.PlayerId, building.Id, 2)) };
+                        OnClick = () => QueueTraining(sim, building.PlayerId, building.Id, 2) };
                     int xbowFood = sim.Config.CrossbowmanFoodCost * (100 - discPct) / 100;
                     int xbowGold = sim.Config.CrossbowmanGoldCost * (100 - discPct) / 100;
                     bool xbowAgeOk = sim.GetPlayerAge(building.PlayerId) >= LandmarkDefinitions.GetUnitRequiredAge(8);
@@ -2163,8 +2168,7 @@ namespace OpenEmpires
                         Icon = UnitIcons.Get(8),
                         Tooltip = $"<b>Crossbowman</b>\nRanged anti-armor unit.\nCost: {xbowFood} <sprite name=\"food\"> {xbowGold} <sprite name=\"gold\">"
                             + (xbowAgeOk ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(3)}</color>"),
-                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
-                            new TrainUnitCommand(building.PlayerId, building.Id, 8)) };
+                        OnClick = () => QueueTraining(sim, building.PlayerId, building.Id, 8) };
                     hasAny = true;
                 }
                 else if (building.Type == BuildingType.Stables)
@@ -2180,8 +2184,7 @@ namespace OpenEmpires
                         Enabled = resources.Food >= horsemanFood && resources.Wood >= horsemanWood,
                         Icon = UnitIcons.Get(hrIcon),
                         Tooltip = $"<b>{hrName}</b>\nMounted melee unit.\nCost: {horsemanFood} <sprite name=\"food\"> {horsemanWood} <sprite name=\"wood\">",
-                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
-                            new TrainUnitCommand(building.PlayerId, building.Id, 3)) };
+                        OnClick = () => QueueTraining(sim, building.PlayerId, building.Id, 3) };
                     int knightFood = sim.Config.KnightFoodCost * (100 - discPct) / 100;
                     int knightGold = sim.Config.KnightGoldCost * (100 - discPct) / 100;
                     bool knightAgeOk = sim.GetPlayerAge(building.PlayerId) >= LandmarkDefinitions.GetUnitRequiredAge(7);
@@ -2190,15 +2193,13 @@ namespace OpenEmpires
                         Icon = UnitIcons.Get(7),
                         Tooltip = $"<b>Knight</b>\nHeavy armored cavalry.\nCost: {knightFood} <sprite name=\"food\"> {knightGold} <sprite name=\"gold\">"
                             + (knightAgeOk ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(3)}</color>"),
-                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
-                            new TrainUnitCommand(building.PlayerId, building.Id, 7)) };
+                        OnClick = () => QueueTraining(sim, building.PlayerId, building.Id, 7) };
                     int scoutFood = sim.Config.ScoutFoodCost * (100 - discPct) / 100;
                     slots[2] = new GridButton { Label = "Scout", Hotkey = "E",
                         Enabled = resources.Food >= scoutFood,
                         Icon = UnitIcons.Get(4),
                         Tooltip = $"<b>Scout</b>\nFast mounted unit with high vision.\nCost: {scoutFood} <sprite name=\"food\">",
-                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
-                            new TrainUnitCommand(building.PlayerId, building.Id, 4)) };
+                        OnClick = () => QueueTraining(sim, building.PlayerId, building.Id, 4) };
                     hasAny = true;
                 }
                 else if (building.Type == BuildingType.Monastery)
@@ -2211,8 +2212,7 @@ namespace OpenEmpires
                         Icon = UnitIcons.Get(9),
                         Tooltip = $"<b>Monk</b>\nHealer unit. Automatically heals nearby friendly units.\nCost: {monkFood} <sprite name=\"food\"> {monkGold} <sprite name=\"gold\">"
                             + (monkAgeOk ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(3)}</color>"),
-                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
-                            new TrainUnitCommand(building.PlayerId, building.Id, 9)) };
+                        OnClick = () => QueueTraining(sim, building.PlayerId, building.Id, 9) };
                     hasAny = true;
                 }
                 else if (building.Type == BuildingType.SiegeWorkshop)
@@ -2227,18 +2227,15 @@ namespace OpenEmpires
                     slots[0] = new GridButton { Label = "Ram", Hotkey = "Q",
                         Enabled = resources.Wood >= ramWood && resources.Gold >= ramGold,
                         Tooltip = $"<b>Battering Ram</b>\nSlow melee siege unit. Devastating vs buildings.\nCost: {ramWood} <sprite name=\"wood\"> {ramGold} <sprite name=\"gold\">",
-                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
-                            new TrainUnitCommand(building.PlayerId, building.Id, 13)) };
+                        OnClick = () => QueueTraining(sim, building.PlayerId, building.Id, 13) };
                     slots[1] = new GridButton { Label = "Mangonel", Hotkey = "W",
                         Enabled = resources.Wood >= mangWood && resources.Gold >= mangGold,
                         Tooltip = $"<b>Mangonel</b>\nRanged siege unit. Good vs groups and buildings.\nCost: {mangWood} <sprite name=\"wood\"> {mangGold} <sprite name=\"gold\">",
-                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
-                            new TrainUnitCommand(building.PlayerId, building.Id, 14)) };
+                        OnClick = () => QueueTraining(sim, building.PlayerId, building.Id, 14) };
                     slots[2] = new GridButton { Label = "Trebuchet", Hotkey = "E",
                         Enabled = resources.Wood >= trebWood && resources.Gold >= trebGold,
                         Tooltip = $"<b>Trebuchet</b>\nLong-range siege unit. Extremely powerful vs buildings.\nCost: {trebWood} <sprite name=\"wood\"> {trebGold} <sprite name=\"gold\">",
-                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
-                            new TrainUnitCommand(building.PlayerId, building.Id, 15)) };
+                        OnClick = () => QueueTraining(sim, building.PlayerId, building.Id, 15) };
                     hasAny = true;
                 }
                 else if (building.Type == BuildingType.TownCenter)
@@ -2248,15 +2245,13 @@ namespace OpenEmpires
                         Enabled = resources.Food >= villagerCost,
                         Icon = UnitIcons.Get(0),
                         Tooltip = $"<b>Villager</b>\nGathers resources and constructs buildings.\nCost: {villagerCost} <sprite name=\"food\">",
-                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
-                            new TrainUnitCommand(building.PlayerId, building.Id, 0)) };
+                        OnClick = () => QueueTraining(sim, building.PlayerId, building.Id, 0) };
                     int scoutFood = sim.Config.ScoutFoodCost * (100 - discPct) / 100;
                     slots[1] = new GridButton { Label = "Scout", Hotkey = "W",
                         Enabled = resources.Food >= scoutFood,
                         Icon = UnitIcons.Get(4),
                         Tooltip = $"<b>Scout</b>\nFast mounted unit with high vision.\nCost: {scoutFood} <sprite name=\"food\">",
-                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
-                            new TrainUnitCommand(building.PlayerId, building.Id, 4)) };
+                        OnClick = () => QueueTraining(sim, building.PlayerId, building.Id, 4) };
 
                     // Age Up button
                     int currentAge = sim.GetPlayerAge(building.PlayerId);
@@ -2702,8 +2697,7 @@ namespace OpenEmpires
                             Icon = UnitIcons.Get(spIcon),
                             Tooltip = $"<b>{spName}</b>\nMelee infantry unit.\nCost: {spearmanFood} <sprite name=\"food\"> {spearmanWood} <sprite name=\"wood\">",
                             OnClick = () => { for (int i = 0; i < ready.Count; i++)
-                                sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(
-                                    localPid, ready[i].BuildingId, 1));
+                                QueueTraining(sim, localPid, ready[i].BuildingId, 1);
                                 SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f); } };
                         int maaFood = sim.Config.ManAtArmsFoodCost;
                         int maaGold = sim.Config.ManAtArmsGoldCost;
@@ -2714,8 +2708,7 @@ namespace OpenEmpires
                             Tooltip = $"<b>Man-at-Arms</b>\nHeavy armored infantry.\nCost: {maaFood} <sprite name=\"food\"> {maaGold} <sprite name=\"gold\">"
                                 + (maaAgeOk2 ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(3)}</color>"),
                             OnClick = () => { for (int i = 0; i < ready.Count; i++)
-                                sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(
-                                    localPid, ready[i].BuildingId, 6));
+                                QueueTraining(sim, localPid, ready[i].BuildingId, 6);
                                 SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f); } };
                         hasAny = true;
                     }
@@ -2733,8 +2726,7 @@ namespace OpenEmpires
                             Icon = UnitIcons.Get(arIcon),
                             Tooltip = $"<b>{arName}</b>\nRanged infantry unit.\nCost: {archerFood} <sprite name=\"food\"> {archerWood} <sprite name=\"wood\">",
                             OnClick = () => { for (int i = 0; i < ready.Count; i++)
-                                sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(
-                                    localPid, ready[i].BuildingId, 2));
+                                QueueTraining(sim, localPid, ready[i].BuildingId, 2);
                                 SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f); } };
                         int xbowFood = sim.Config.CrossbowmanFoodCost;
                         int xbowGold = sim.Config.CrossbowmanGoldCost;
@@ -2745,8 +2737,7 @@ namespace OpenEmpires
                             Tooltip = $"<b>Crossbowman</b>\nRanged anti-armor unit.\nCost: {xbowFood} <sprite name=\"food\"> {xbowGold} <sprite name=\"gold\">"
                                 + (xbowAgeOk2 ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(3)}</color>"),
                             OnClick = () => { for (int i = 0; i < ready.Count; i++)
-                                sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(
-                                    localPid, ready[i].BuildingId, 8));
+                                QueueTraining(sim, localPid, ready[i].BuildingId, 8);
                                 SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f); } };
                         hasAny = true;
                     }
@@ -2764,8 +2755,7 @@ namespace OpenEmpires
                             Icon = UnitIcons.Get(hrIcon),
                             Tooltip = $"<b>{hrName}</b>\nMounted melee unit.\nCost: {horsemanFood} <sprite name=\"food\"> {horsemanWood} <sprite name=\"wood\">",
                             OnClick = () => { for (int i = 0; i < ready.Count; i++)
-                                sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(
-                                    localPid, ready[i].BuildingId, 3));
+                                QueueTraining(sim, localPid, ready[i].BuildingId, 3);
                                 SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f); } };
                         int knightFood = sim.Config.KnightFoodCost;
                         int knightGold = sim.Config.KnightGoldCost;
@@ -2776,8 +2766,7 @@ namespace OpenEmpires
                             Tooltip = $"<b>Knight</b>\nHeavy armored cavalry.\nCost: {knightFood} <sprite name=\"food\"> {knightGold} <sprite name=\"gold\">"
                                 + (knightAgeOk2 ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(3)}</color>"),
                             OnClick = () => { for (int i = 0; i < ready.Count; i++)
-                                sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(
-                                    localPid, ready[i].BuildingId, 7));
+                                QueueTraining(sim, localPid, ready[i].BuildingId, 7);
                                 SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f); } };
                         int scoutFood = sim.Config.ScoutFoodCost;
                         slots[2] = new GridButton { Label = "Scout", Hotkey = "E",
@@ -2785,8 +2774,7 @@ namespace OpenEmpires
                             Icon = UnitIcons.Get(4),
                             Tooltip = $"<b>Scout</b>\nFast mounted unit with high vision.\nCost: {scoutFood} <sprite name=\"food\">",
                             OnClick = () => { for (int i = 0; i < ready.Count; i++)
-                                sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(
-                                    localPid, ready[i].BuildingId, 4));
+                                QueueTraining(sim, localPid, ready[i].BuildingId, 4);
                                 SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f); } };
                         hasAny = true;
                     }
@@ -2801,8 +2789,7 @@ namespace OpenEmpires
                             Tooltip = $"<b>Monk</b>\nHealer unit. Automatically heals nearby friendly units.\nCost: {monkFood} <sprite name=\"food\"> {monkGold} <sprite name=\"gold\">"
                                 + (monkAgeOk2 ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(3)}</color>"),
                             OnClick = () => { for (int i = 0; i < ready.Count; i++)
-                                sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(
-                                    localPid, ready[i].BuildingId, 9));
+                                QueueTraining(sim, localPid, ready[i].BuildingId, 9);
                                 SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f); } };
                         hasAny = true;
                     }
@@ -2814,8 +2801,7 @@ namespace OpenEmpires
                             Icon = UnitIcons.Get(0),
                             Tooltip = $"<b>Villager</b>\nGathers resources and constructs buildings.\nCost: {villagerCost} <sprite name=\"food\">",
                             OnClick = () => { for (int i = 0; i < ready.Count; i++)
-                                sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(
-                                    localPid, ready[i].BuildingId, 0));
+                                QueueTraining(sim, localPid, ready[i].BuildingId, 0);
                                 SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f); } };
                         int scoutFood = sim.Config.ScoutFoodCost;
                         slots[1] = new GridButton { Label = "Scout", Hotkey = "W",
@@ -2823,8 +2809,7 @@ namespace OpenEmpires
                             Icon = UnitIcons.Get(4),
                             Tooltip = $"<b>Scout</b>\nFast mounted unit with high vision.\nCost: {scoutFood} <sprite name=\"food\">",
                             OnClick = () => { for (int i = 0; i < ready.Count; i++)
-                                sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(
-                                    localPid, ready[i].BuildingId, 4));
+                                QueueTraining(sim, localPid, ready[i].BuildingId, 4);
                                 SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f); } };
                         hasAny = true;
                     }
@@ -2933,7 +2918,7 @@ namespace OpenEmpires
                     for (int i = 0; i < buildings.Count; i++)
                     {
                         if (!IsReadyBuilding(buildings[i], BuildingType.TownCenter, localPid, sim)) continue;
-                        sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(localPid, buildings[i].BuildingId, 0));
+                        QueueTraining(sim, localPid, buildings[i].BuildingId, 0);
                     }
                     SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f);
                 }
@@ -2943,7 +2928,7 @@ namespace OpenEmpires
                     for (int i = 0; i < buildings.Count; i++)
                     {
                         if (!IsReadyBuilding(buildings[i], BuildingType.TownCenter, localPid, sim)) continue;
-                        sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(localPid, buildings[i].BuildingId, 4));
+                        QueueTraining(sim, localPid, buildings[i].BuildingId, 4);
                     }
                     SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f);
                 }
@@ -2971,7 +2956,7 @@ namespace OpenEmpires
                     for (int i = 0; i < buildings.Count; i++)
                     {
                         if (!IsReadyBuilding(buildings[i], BuildingType.Barracks, localPid, sim)) continue;
-                        sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(localPid, buildings[i].BuildingId, 1));
+                        QueueTraining(sim, localPid, buildings[i].BuildingId, 1);
                     }
                     SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f);
                 }
@@ -2981,7 +2966,7 @@ namespace OpenEmpires
                     for (int i = 0; i < buildings.Count; i++)
                     {
                         if (!IsReadyBuilding(buildings[i], BuildingType.Barracks, localPid, sim)) continue;
-                        sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(localPid, buildings[i].BuildingId, 6));
+                        QueueTraining(sim, localPid, buildings[i].BuildingId, 6);
                     }
                     SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f);
                 }
@@ -2994,7 +2979,7 @@ namespace OpenEmpires
                     for (int i = 0; i < buildings.Count; i++)
                     {
                         if (!IsReadyBuilding(buildings[i], BuildingType.ArcheryRange, localPid, sim)) continue;
-                        sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(localPid, buildings[i].BuildingId, 2));
+                        QueueTraining(sim, localPid, buildings[i].BuildingId, 2);
                     }
                     SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f);
                 }
@@ -3004,7 +2989,7 @@ namespace OpenEmpires
                     for (int i = 0; i < buildings.Count; i++)
                     {
                         if (!IsReadyBuilding(buildings[i], BuildingType.ArcheryRange, localPid, sim)) continue;
-                        sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(localPid, buildings[i].BuildingId, 8));
+                        QueueTraining(sim, localPid, buildings[i].BuildingId, 8);
                     }
                     SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f);
                 }
@@ -3017,7 +3002,7 @@ namespace OpenEmpires
                     for (int i = 0; i < buildings.Count; i++)
                     {
                         if (!IsReadyBuilding(buildings[i], BuildingType.Stables, localPid, sim)) continue;
-                        sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(localPid, buildings[i].BuildingId, 3));
+                        QueueTraining(sim, localPid, buildings[i].BuildingId, 3);
                     }
                     SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f);
                 }
@@ -3027,7 +3012,7 @@ namespace OpenEmpires
                     for (int i = 0; i < buildings.Count; i++)
                     {
                         if (!IsReadyBuilding(buildings[i], BuildingType.Stables, localPid, sim)) continue;
-                        sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(localPid, buildings[i].BuildingId, 7));
+                        QueueTraining(sim, localPid, buildings[i].BuildingId, 7);
                     }
                     SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f);
                 }
@@ -3037,7 +3022,7 @@ namespace OpenEmpires
                     for (int i = 0; i < buildings.Count; i++)
                     {
                         if (!IsReadyBuilding(buildings[i], BuildingType.Stables, localPid, sim)) continue;
-                        sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(localPid, buildings[i].BuildingId, 4));
+                        QueueTraining(sim, localPid, buildings[i].BuildingId, 4);
                     }
                     SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f);
                 }
@@ -3050,7 +3035,7 @@ namespace OpenEmpires
                     for (int i = 0; i < buildings.Count; i++)
                     {
                         if (!IsReadyBuilding(buildings[i], BuildingType.Monastery, localPid, sim)) continue;
-                        sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(localPid, buildings[i].BuildingId, 9));
+                        QueueTraining(sim, localPid, buildings[i].BuildingId, 9);
                     }
                     SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f);
                 }
@@ -3147,7 +3132,7 @@ namespace OpenEmpires
                     for (int i = 0; i < buildings.Count; i++)
                     {
                         if (!IsReadyBuilding(buildings[i], BuildingType.SiegeWorkshop, localPid, sim)) continue;
-                        sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(localPid, buildings[i].BuildingId, 13));
+                        QueueTraining(sim, localPid, buildings[i].BuildingId, 13);
                     }
                     SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f);
                 }
@@ -3157,7 +3142,7 @@ namespace OpenEmpires
                     for (int i = 0; i < buildings.Count; i++)
                     {
                         if (!IsReadyBuilding(buildings[i], BuildingType.SiegeWorkshop, localPid, sim)) continue;
-                        sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(localPid, buildings[i].BuildingId, 14));
+                        QueueTraining(sim, localPid, buildings[i].BuildingId, 14);
                     }
                     SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f);
                 }
@@ -3167,7 +3152,7 @@ namespace OpenEmpires
                     for (int i = 0; i < buildings.Count; i++)
                     {
                         if (!IsReadyBuilding(buildings[i], BuildingType.SiegeWorkshop, localPid, sim)) continue;
-                        sim.CommandBuffer.EnqueueCommand(new TrainUnitCommand(localPid, buildings[i].BuildingId, 15));
+                        QueueTraining(sim, localPid, buildings[i].BuildingId, 15);
                     }
                     SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f);
                 }
