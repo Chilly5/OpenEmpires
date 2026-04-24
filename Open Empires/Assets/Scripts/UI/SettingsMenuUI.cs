@@ -22,6 +22,7 @@ namespace OpenEmpires
         private Toggle diagToggle;
 
         private GameObject mainPanel;
+        private GameObject contentArea;
         private GameObject controlsPanel;
         private GameObject cameraPanel;
         private GameObject soundPanel;
@@ -117,46 +118,53 @@ namespace OpenEmpires
 
         private void ShowControls()
         {
-            RebuildMainPanelWithControls();
+            SwitchToContent("Controls", BuildControlsContent);
         }
 
         private void ShowCamera()
         {
-            RebuildMainPanelWithCamera();
+            SwitchToContent("Camera", BuildCameraContent);
         }
 
         private void ShowSound()
         {
-            RebuildMainPanelWithSound();
+            SwitchToContent("Sound", BuildSoundContent);
         }
 
         private void ShowMainSettings()
         {
-            RebuildMainPanelWithSettings();
+            SwitchToContent("", BuildMainSettingsContent);
         }
 
-        private void RebuildMainPanelWithSettings()
+        private void SwitchToContent(string title, System.Action<GameObject, float, float> buildContentAction)
         {
-            if (mainPanel != null) Object.Destroy(mainPanel);
-            BuildMainPanel(root.transform);
-        }
+            // Clear existing content area
+            if (contentArea != null)
+            {
+                Object.Destroy(contentArea);
+            }
 
-        private void RebuildMainPanelWithControls()
-        {
-            if (mainPanel != null) Object.Destroy(mainPanel);
-            BuildMainPanelWithContent(root.transform, "Controls", BuildControlsContent);
-        }
+            // Update title
+            var titleLabel = mainPanel.transform.Find("TitleLabel");
+            if (titleLabel != null)
+            {
+                var titleText = titleLabel.GetComponent<TextMeshProUGUI>();
+                if (titleText != null) titleText.text = title;
+            }
 
-        private void RebuildMainPanelWithCamera()
-        {
-            if (mainPanel != null) Object.Destroy(mainPanel);
-            BuildMainPanelWithContent(root.transform, "Camera", BuildCameraContent);
-        }
+            // Create new content area
+            contentArea = new GameObject("ContentArea");
+            contentArea.transform.SetParent(mainPanel.transform, false);
+            var contentRT = contentArea.AddComponent<RectTransform>();
+            contentRT.anchorMin = Vector2.zero;
+            contentRT.anchorMax = Vector2.one;
+            contentRT.offsetMin = Vector2.zero;
+            contentRT.offsetMax = Vector2.zero;
 
-        private void RebuildMainPanelWithSound()
-        {
-            if (mainPanel != null) Object.Destroy(mainPanel);
-            BuildMainPanelWithContent(root.transform, "Sound", BuildSoundContent);
+            // Build the content
+            float contentX = 60f; // 120px sidebar / 2
+            float startY = 250f;  // Start below title
+            buildContentAction(contentArea, contentX, startY);
         }
 
 
@@ -236,10 +244,11 @@ namespace OpenEmpires
             float contentX = sidebarW / 2f; // Offset content to the right of sidebar
             float y = panelH / 2f;
 
-            // Title
+            // Title  
             y -= 10f;
             y -= 28f;
-            MakeLabel(panelGO.transform, "Settings", contentX - (panelW - sidebarW) / 2f, y, panelW - sidebarW, 28f, 22, FontStyles.Bold, TextAlignmentOptions.Center);
+            var titleLabel = MakeLabel(panelGO.transform, "Settings", contentX - (panelW - sidebarW) / 2f, y, panelW - sidebarW, 28f, 22, FontStyles.Bold, TextAlignmentOptions.Center);
+            titleLabel.gameObject.name = "TitleLabel";
 
             // Close button (X) in top-right corner
             var closeButtonGO = new GameObject("CloseButton");
@@ -276,110 +285,9 @@ namespace OpenEmpires
             closeText.alignment = TextAlignmentOptions.Center;
             closeText.color = Color.white;
 
-            // Original settings content (all the existing functionality)
-            // Music Volume row
-            y -= 40f;
-            float labelW = 120f;
-            float sliderW = 180f;
-            float valueW = 50f;
-            float rowX = contentX - 160f; // Adjusted for sidebar
+            // Initialize with main settings content
+            SwitchToContent("", BuildMainSettingsContent);
 
-            MakeLabel(panelGO.transform, "Music Volume", rowX, y, labelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
-
-            // Slider
-            var sliderGO = CreateSlider(panelGO.transform, rowX + labelW + 5f, y, sliderW, 20f);
-            volumeSlider = sliderGO.GetComponent<Slider>();
-            volumeSlider.minValue = 0f;
-            volumeSlider.maxValue = 1f;
-            volumeSlider.value = 0.25f;
-            volumeSlider.onValueChanged.AddListener(OnVolumeChanged);
-
-            // Value text
-            volumeValueText = MakeLabel(panelGO.transform, "25", rowX + labelW + 5f + sliderW + 10f, y, valueW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
-
-            // Mute toggle row
-            y -= 40f;
-            MakeLabel(panelGO.transform, "Mute Music", rowX, y, labelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
-            muteToggle = CreateToggle(panelGO.transform, rowX + labelW + 5f, y, 24f);
-            muteToggle.onValueChanged.AddListener(OnMuteChanged);
-
-            // Net Diagnostics toggle row
-            y -= 40f;
-            MakeLabel(panelGO.transform, "Net Diagnostics", rowX, y, labelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
-            diagToggle = CreateToggle(panelGO.transform, rowX + labelW + 5f, y, 24f);
-            diagToggle.onValueChanged.AddListener(OnDiagToggleChanged);
-
-            // Target Dummy buttons
-            y -= 45f;
-            CreateButton(panelGO.transform, "Place Target Dummy", contentX - 90f, y, 170f, 36f, () =>
-            {
-                IsPlacingDummy = true;
-                Hide();
-            });
-            CreateButton(panelGO.transform, "Clear Dummies", contentX + 90f, y, 170f, 36f, () =>
-            {
-                var sim = GameBootstrapper.Instance?.Simulation;
-                sim?.ClearAllDummies();
-            });
-
-            // Cheat buttons
-            y -= 45f;
-            CreateButton(panelGO.transform, "Resource Cheat", contentX - 90f, y, 170f, 36f, () =>
-            {
-                var sim = GameBootstrapper.Instance?.Simulation;
-                if (sim == null) return;
-                int pid = FindFirstObjectByType<UnitSelectionManager>()?.LocalPlayerId ?? 0;
-                sim.CommandBuffer.EnqueueCommand(new CheatResourceCommand(pid));
-            });
-            TMP_Text prodLabel = null;
-            var prodBtnGO = CreateButtonWithLabel(panelGO.transform, "Prod 10x: OFF", 0f, y, 170f, 36f, out prodLabel);
-            var prodRT = prodBtnGO.GetComponent<RectTransform>();
-            prodRT.pivot = new Vector2(0.5f, 0.5f);
-            prodRT.anchoredPosition = new Vector2(contentX + 90f, y);
-            productionCheatLabel = prodLabel;
-            prodBtnGO.GetComponent<Button>().onClick.AddListener(() =>
-            {
-                var sim = GameBootstrapper.Instance?.Simulation;
-                if (sim == null) return;
-                int pid = FindFirstObjectByType<UnitSelectionManager>()?.LocalPlayerId ?? 0;
-                sim.CommandBuffer.EnqueueCommand(new CheatProductionCommand(pid));
-            });
-
-            // Vision cheat button + God powers cheat button
-            y -= 45f;
-            TMP_Text visLabel = null;
-            var visBtnGO = CreateButtonWithLabel(panelGO.transform, "Vision: OFF", 0f, y, 170f, 36f, out visLabel);
-            var visRT = visBtnGO.GetComponent<RectTransform>();
-            visRT.pivot = new Vector2(0.5f, 0.5f);
-            visRT.anchoredPosition = new Vector2(contentX - 90f, y);
-            visionCheatLabel = visLabel;
-            visBtnGO.GetComponent<Button>().onClick.AddListener(() =>
-            {
-                var sim = GameBootstrapper.Instance?.Simulation;
-                if (sim == null) return;
-                int pid = FindFirstObjectByType<UnitSelectionManager>()?.LocalPlayerId ?? 0;
-                sim.CommandBuffer.EnqueueCommand(new CheatVisionCommand(pid));
-            });
-
-            TMP_Text gpLabel = null;
-            var gpBtnGO = CreateButtonWithLabel(panelGO.transform, "God Powers: OFF", 0f, y, 170f, 36f, out gpLabel);
-            var gpRT = gpBtnGO.GetComponent<RectTransform>();
-            gpRT.pivot = new Vector2(0.5f, 0.5f);
-            gpRT.anchoredPosition = new Vector2(contentX + 90f, y);
-            godPowersCheatLabel = gpLabel;
-            gpBtnGO.GetComponent<Button>().onClick.AddListener(() =>
-            {
-                bool newState = !GodPowerBarUI.IsCheatsEnabled;
-                GodPowerBarUI.SetCheatsEnabled(newState);
-            });
-
-            // Surrender button (red-tinted)
-            y -= 44f;
-            CreateSurrenderButton(panelGO.transform, contentX, y, 160f, 36f);
-
-            // Resume button
-            y -= 44f;
-            CreateButton(panelGO.transform, "Resume Game", contentX, y, 160f, 36f, () => Hide());
         }
 
         private void BuildMainPanelWithContent(Transform canvasParent, string title, System.Action<GameObject, float, float> buildContentAction)
@@ -518,36 +426,118 @@ namespace OpenEmpires
             {
                 KeybindManager.ResetAll();
                 // Rebuild controls content to refresh all labels
-                RebuildMainPanelWithControls();
+                ShowControls();
             });
 
             // Back button
             y -= 44f;
-            CreateButton(panelGO.transform, "Back to Settings", contentX, y, 160f, 36f, () => RebuildMainPanelWithSettings());
+            CreateButton(panelGO.transform, "Back to Settings", contentX, y, 160f, 36f, () => ShowMainSettings());
         }
 
         private void BuildCameraContent(GameObject panelGO, float contentX, float startY)
         {
             float y = startY;
             
-            // Camera settings content from BuildCameraPanel
-            MakeLabel(panelGO.transform, "Camera settings coming soon...", contentX - 160f, y, 320f, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Center);
             
             // Back button
             y -= 100f;
-            CreateButton(panelGO.transform, "Back to Settings", contentX, y, 160f, 36f, () => RebuildMainPanelWithSettings());
+            CreateButton(panelGO.transform, "Back to Settings", contentX, y, 160f, 36f, () => ShowMainSettings());
         }
 
         private void BuildSoundContent(GameObject panelGO, float contentX, float startY)
         {
             float y = startY;
             
-            // Sound settings content from BuildSoundPanel  
-            MakeLabel(panelGO.transform, "Audio settings coming soon...", contentX - 160f, y, 320f, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Center);
             
             // Back button
             y -= 100f;
-            CreateButton(panelGO.transform, "Back to Settings", contentX, y, 160f, 36f, () => RebuildMainPanelWithSettings());
+            CreateButton(panelGO.transform, "Back to Settings", contentX, y, 160f, 36f, () => ShowMainSettings());
+        }
+
+        private void BuildMainSettingsContent(GameObject panelGO, float contentX, float startY)
+        {
+            float y = startY;
+            float labelW = 120f;
+            float sliderW = 180f;
+            float valueW = 50f;
+            float rowX = contentX - 160f; // Adjusted for sidebar
+
+            // Music Volume row
+            MakeLabel(panelGO.transform, "Music Volume", rowX, y, labelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+
+            // Slider
+            var sliderGO = CreateSlider(panelGO.transform, rowX + labelW + 5f, y, sliderW, 20f);
+            volumeSlider = sliderGO.GetComponent<Slider>();
+            volumeSlider.minValue = 0f;
+            volumeSlider.maxValue = 1f;
+            volumeSlider.value = 0.25f;
+            volumeSlider.onValueChanged.AddListener(OnVolumeChanged);
+
+            // Value text
+            volumeValueText = MakeLabel(panelGO.transform, "25", rowX + labelW + 5f + sliderW + 10f, y, valueW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+
+            // Mute toggle row
+            y -= 40f;
+            MakeLabel(panelGO.transform, "Mute Music", rowX, y, labelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+            muteToggle = CreateToggle(panelGO.transform, rowX + labelW + 5f, y, 24f);
+            muteToggle.onValueChanged.AddListener(OnMuteChanged);
+
+            // Net Diagnostics toggle row
+            y -= 40f;
+            MakeLabel(panelGO.transform, "Net Diagnostics", rowX, y, labelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+            diagToggle = CreateToggle(panelGO.transform, rowX + labelW + 5f, y, 24f);
+            // Set initial state based on NetworkDiagnosticsUI visibility
+            var diag = NetworkDiagnosticsUI.Instance;
+            if (diag != null)
+                diagToggle.SetIsOnWithoutNotify(diag.IsVisible);
+            diagToggle.onValueChanged.AddListener(OnDiagToggleChanged);
+
+            // Cheat buttons
+            y -= 50f;
+
+            var resourcesBtnGO = CreateButtonWithLabel(panelGO.transform, "Resources", 0f, y, 160f, 36f, out _);
+            var resourcesRT = resourcesBtnGO.GetComponent<RectTransform>();
+            resourcesRT.pivot = new Vector2(0.5f, 0.5f);
+            resourcesRT.anchoredPosition = new Vector2(contentX - 90f, y);
+            resourcesBtnGO.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                var sim = GameBootstrapper.Instance?.Simulation;
+                if (sim == null) return;
+                int pid = FindFirstObjectByType<UnitSelectionManager>()?.LocalPlayerId ?? 0;
+                sim.CommandBuffer.EnqueueCommand(new CheatResourceCommand(pid));
+            });
+
+            var visionBtnGO = CreateButtonWithLabel(panelGO.transform, "Vision", 0f, y, 160f, 36f, out _);
+            var visionRT = visionBtnGO.GetComponent<RectTransform>();
+            visionRT.pivot = new Vector2(0.5f, 0.5f);
+            visionRT.anchoredPosition = new Vector2(contentX + 90f, y);
+            visionBtnGO.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                var sim = GameBootstrapper.Instance?.Simulation;
+                if (sim == null) return;
+                int pid = FindFirstObjectByType<UnitSelectionManager>()?.LocalPlayerId ?? 0;
+                sim.CommandBuffer.EnqueueCommand(new CheatVisionCommand(pid));
+            });
+
+            TMP_Text gpLabel = null;
+            var gpBtnGO = CreateButtonWithLabel(panelGO.transform, "God Powers: OFF", 0f, y, 170f, 36f, out gpLabel);
+            var gpRT = gpBtnGO.GetComponent<RectTransform>();
+            gpRT.pivot = new Vector2(0.5f, 0.5f);
+            gpRT.anchoredPosition = new Vector2(contentX + 90f, y);
+            godPowersCheatLabel = gpLabel;
+            gpBtnGO.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                bool newState = !GodPowerBarUI.IsCheatsEnabled;
+                GodPowerBarUI.SetCheatsEnabled(newState);
+            });
+
+            // Surrender button (red-tinted)
+            y -= 44f;
+            CreateSurrenderButton(panelGO.transform, contentX, y, 160f, 36f);
+
+            // Resume button
+            y -= 44f;
+            CreateButton(panelGO.transform, "Resume Game", contentX, y, 160f, 36f, () => Hide());
         }
 
         private void BuildControlsPanel(Transform canvasParent)
