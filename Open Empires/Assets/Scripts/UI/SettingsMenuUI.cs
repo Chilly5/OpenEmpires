@@ -420,6 +420,61 @@ namespace OpenEmpires
                 });
             }
 
+            // Building Keybinds Section
+            y -= 50f;
+            MakeLabel(panelGO.transform, "Building Keybinds", rowStartX, y, actionLabelW * 2, 28f, 18, FontStyles.Bold, TextAlignmentOptions.Left);
+            
+            // Get building types from enum
+            var buildingTypes = System.Enum.GetValues(typeof(BuildingType));
+            foreach (BuildingType buildingType in buildingTypes)
+            {
+                string buildingName = buildingType.ToString();
+                
+                // Cycle building keybind
+                y -= 40f;
+                MakeLabel(panelGO.transform, $"Cycle {buildingName}", rowStartX, y, actionLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+                
+                string cycleAction = $"Cycle{buildingName}";
+                string cycleBinding = KeybindManager.GetBinding(cycleAction);
+                string cycleKeyText = KeybindManager.GetKeyDisplayName(cycleBinding);
+                
+                float cycleKeybindX = rowStartX + actionLabelW + colGap;
+                TMP_Text cycleKeybindLabel;
+                var cycleKeybindBtnGO = CreateButtonWithLabel(panelGO.transform, "[" + cycleKeyText + "]", cycleKeybindX, y, keybindBtnW, 28f, out cycleKeybindLabel);
+                string capturedCycleAction = cycleAction;
+                cycleKeybindBtnGO.GetComponent<Button>().onClick.AddListener(() => {
+                    StartRebind(capturedCycleAction, cycleKeybindLabel);
+                });
+                
+                float cycleResetX = cycleKeybindX + keybindBtnW + colGap;
+                CreateButton(panelGO.transform, "R", cycleResetX, y, resetBtnW, 28f, () => {
+                    ResetRow(capturedCycleAction, cycleKeybindLabel);
+                });
+                
+                // Select All building keybind
+                y -= 30f;
+                MakeLabel(panelGO.transform, $"Select All {buildingName}", rowStartX, y, actionLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+                
+                string selectAllAction = $"SelectAll{buildingName}";
+                string selectAllBinding = KeybindManager.GetBinding(selectAllAction);
+                string selectAllKeyText = KeybindManager.GetKeyDisplayName(selectAllBinding);
+                
+                float selectAllKeybindX = rowStartX + actionLabelW + colGap;
+                TMP_Text selectAllKeybindLabel;
+                var selectAllKeybindBtnGO = CreateButtonWithLabel(panelGO.transform, "[" + selectAllKeyText + "]", selectAllKeybindX, y, keybindBtnW, 28f, out selectAllKeybindLabel);
+                string capturedSelectAllAction = selectAllAction;
+                selectAllKeybindBtnGO.GetComponent<Button>().onClick.AddListener(() => {
+                    StartRebind(capturedSelectAllAction, selectAllKeybindLabel);
+                });
+                
+                float selectAllResetX = selectAllKeybindX + keybindBtnW + colGap;
+                CreateButton(panelGO.transform, "R", selectAllResetX, y, resetBtnW, 28f, () => {
+                    ResetRow(capturedSelectAllAction, selectAllKeybindLabel);
+                });
+                
+                y -= 10f; // Small gap between building types
+            }
+
             // Reset All button
             y -= 44f;
             CreateButton(panelGO.transform, "Reset All", contentX, y, 160f, 36f, () =>
