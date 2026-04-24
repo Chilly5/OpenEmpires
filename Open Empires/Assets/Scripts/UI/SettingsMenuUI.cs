@@ -117,35 +117,48 @@ namespace OpenEmpires
 
         private void ShowControls()
         {
-            HideAllPanels();
-            controlsPanel.SetActive(true);
+            RebuildMainPanelWithControls();
         }
 
         private void ShowCamera()
         {
-            HideAllPanels();
-            cameraPanel.SetActive(true);
+            RebuildMainPanelWithCamera();
         }
 
         private void ShowSound()
         {
-            HideAllPanels();
-            soundPanel.SetActive(true);
+            RebuildMainPanelWithSound();
         }
 
         private void ShowMainSettings()
         {
-            HideAllPanels();
-            mainPanel.SetActive(true);
+            RebuildMainPanelWithSettings();
         }
 
-        private void HideAllPanels()
+        private void RebuildMainPanelWithSettings()
         {
-            if (mainPanel != null) mainPanel.SetActive(false);
-            if (controlsPanel != null) controlsPanel.SetActive(false);
-            if (cameraPanel != null) cameraPanel.SetActive(false);
-            if (soundPanel != null) soundPanel.SetActive(false);
+            if (mainPanel != null) Object.Destroy(mainPanel);
+            BuildMainPanel(root.transform);
         }
+
+        private void RebuildMainPanelWithControls()
+        {
+            if (mainPanel != null) Object.Destroy(mainPanel);
+            BuildMainPanelWithContent(root.transform, "Controls", BuildControlsContent);
+        }
+
+        private void RebuildMainPanelWithCamera()
+        {
+            if (mainPanel != null) Object.Destroy(mainPanel);
+            BuildMainPanelWithContent(root.transform, "Camera", BuildCameraContent);
+        }
+
+        private void RebuildMainPanelWithSound()
+        {
+            if (mainPanel != null) Object.Destroy(mainPanel);
+            BuildMainPanelWithContent(root.transform, "Sound", BuildSoundContent);
+        }
+
 
         private void BuildUI()
         {
@@ -175,13 +188,6 @@ namespace OpenEmpires
             overlayImg.color = new Color(0f, 0f, 0f, 0.6f);
 
             BuildMainPanel(canvasGO.transform);
-            BuildControlsPanel(canvasGO.transform);
-            BuildCameraPanel(canvasGO.transform);
-            BuildSoundPanel(canvasGO.transform);
-
-            controlsPanel.SetActive(false);
-            cameraPanel.SetActive(false);
-            soundPanel.SetActive(false);
         }
 
         private void BuildMainPanel(Transform canvasParent)
@@ -216,8 +222,10 @@ namespace OpenEmpires
             var sidebarImg = sidebarGO.AddComponent<Image>();
             sidebarImg.color = new Color(0.08f, 0.08f, 0.08f, 1f);
 
-            // Section buttons in sidebar
+            // Section buttons in sidebar  
             float sidebarY = panelH / 2f - 50f;
+            CreateButton(panelGO.transform, "Settings", sidebarX, sidebarY, sidebarW - 10f, 36f, ShowMainSettings);
+            sidebarY -= 45f;
             CreateButton(panelGO.transform, "Camera", sidebarX, sidebarY, sidebarW - 10f, 36f, ShowCamera);
             sidebarY -= 45f;
             CreateButton(panelGO.transform, "Controls", sidebarX, sidebarY, sidebarW - 10f, 36f, ShowControls);
@@ -372,6 +380,174 @@ namespace OpenEmpires
             // Resume button
             y -= 44f;
             CreateButton(panelGO.transform, "Resume Game", contentX, y, 160f, 36f, () => Hide());
+        }
+
+        private void BuildMainPanelWithContent(Transform canvasParent, string title, System.Action<GameObject, float, float> buildContentAction)
+        {
+            float panelW = 600f; // Increased width to accommodate sidebar
+            float panelH = 569f;
+            var panelGO = new GameObject("Panel");
+            panelGO.transform.SetParent(canvasParent, false);
+            var panelRT = panelGO.AddComponent<RectTransform>();
+            panelRT.anchorMin = new Vector2(0.5f, 0.5f);
+            panelRT.anchorMax = new Vector2(0.5f, 0.5f);
+            panelRT.pivot = new Vector2(0.5f, 0.5f);
+            panelRT.sizeDelta = new Vector2(panelW, panelH);
+            var panelImg = panelGO.AddComponent<Image>();
+            panelImg.color = new Color(0.12f, 0.12f, 0.12f, 1f);
+
+            mainPanel = panelGO;
+
+            // Left sidebar for section buttons
+            float sidebarW = 120f;
+            float sidebarX = -panelW / 2f + sidebarW / 2f;
+            
+            // Sidebar background
+            var sidebarGO = new GameObject("Sidebar");
+            sidebarGO.transform.SetParent(panelGO.transform, false);
+            var sidebarRT = sidebarGO.AddComponent<RectTransform>();
+            sidebarRT.anchorMin = new Vector2(0f, 0f);
+            sidebarRT.anchorMax = new Vector2(0f, 1f);
+            sidebarRT.pivot = new Vector2(0f, 0.5f);
+            sidebarRT.anchoredPosition = new Vector2(0f, 0f);
+            sidebarRT.sizeDelta = new Vector2(sidebarW, 0f);
+            var sidebarImg = sidebarGO.AddComponent<Image>();
+            sidebarImg.color = new Color(0.08f, 0.08f, 0.08f, 1f);
+
+            // Section buttons in sidebar
+            float sidebarY = panelH / 2f - 50f;
+            CreateButton(panelGO.transform, "Settings", sidebarX, sidebarY, sidebarW - 10f, 36f, ShowMainSettings);
+            sidebarY -= 45f;
+            CreateButton(panelGO.transform, "Camera", sidebarX, sidebarY, sidebarW - 10f, 36f, ShowCamera);
+            sidebarY -= 45f;
+            CreateButton(panelGO.transform, "Controls", sidebarX, sidebarY, sidebarW - 10f, 36f, ShowControls);
+            sidebarY -= 45f;
+            CreateButton(panelGO.transform, "Sound", sidebarX, sidebarY, sidebarW - 10f, 36f, ShowSound);
+
+            // Main content area (right side)
+            float contentX = sidebarW / 2f; // Offset content to the right of sidebar
+            float y = panelH / 2f;
+
+            // Title
+            y -= 10f;
+            y -= 28f;
+            MakeLabel(panelGO.transform, title, contentX - (panelW - sidebarW) / 2f, y, panelW - sidebarW, 28f, 22, FontStyles.Bold, TextAlignmentOptions.Center);
+
+            // Close button (X) in top-right corner
+            var closeButtonGO = new GameObject("CloseButton");
+            closeButtonGO.transform.SetParent(panelGO.transform, false);
+            var closeButtonRT = closeButtonGO.AddComponent<RectTransform>();
+            closeButtonRT.anchorMin = new Vector2(1f, 1f);
+            closeButtonRT.anchorMax = new Vector2(1f, 1f);
+            closeButtonRT.pivot = new Vector2(1f, 1f);
+            closeButtonRT.anchoredPosition = new Vector2(-10f, -10f);
+            closeButtonRT.sizeDelta = new Vector2(28f, 28f);
+
+            var closeImg = closeButtonGO.AddComponent<Image>();
+            closeImg.color = new Color(0.25f, 0.25f, 0.25f);
+
+            var closeBtn = closeButtonGO.AddComponent<Button>();
+            var closeColors = closeBtn.colors;
+            closeColors.normalColor = new Color(0.25f, 0.25f, 0.25f);
+            closeColors.highlightedColor = new Color(0.35f, 0.35f, 0.35f);
+            closeColors.pressedColor = new Color(0.15f, 0.15f, 0.15f);
+            closeBtn.colors = closeColors;
+            closeBtn.onClick.AddListener(() => Hide());
+
+            // X text
+            var closeTextGO = new GameObject("Text");
+            closeTextGO.transform.SetParent(closeButtonGO.transform, false);
+            var closeTextRT = closeTextGO.AddComponent<RectTransform>();
+            closeTextRT.anchorMin = Vector2.zero;
+            closeTextRT.anchorMax = Vector2.one;
+            closeTextRT.offsetMin = Vector2.zero;
+            closeTextRT.offsetMax = Vector2.zero;
+            var closeText = closeTextGO.AddComponent<TextMeshProUGUI>();
+            closeText.text = "×";
+            closeText.fontSize = 20;
+            closeText.alignment = TextAlignmentOptions.Center;
+            closeText.color = Color.white;
+
+            // Build the specific content for this section
+            buildContentAction(panelGO, contentX, y - 40f);
+        }
+
+        private void BuildControlsContent(GameObject panelGO, float contentX, float startY)
+        {
+            float y = startY;
+            
+            // Rows for each remappable action
+            float rowStartX = contentX - 160f;
+            float actionLabelW = 160f;
+            float keybindBtnW = 80f;
+            float resetBtnW = 30f;
+            float colGap = 8f;
+
+            string[] actionNames = KeybindManager.ActionNames;
+            for (int i = 0; i < actionNames.Length; i++)
+            {
+                y -= 40f;
+                string actionName = actionNames[i];
+                string displayName = KeybindManager.GetDisplayName(actionName);
+                string currentBinding = KeybindManager.GetBinding(actionName);
+                string keyText = KeybindManager.GetKeyDisplayName(currentBinding);
+
+                // Action label
+                MakeLabel(panelGO.transform, displayName, rowStartX, y, actionLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+
+                // Keybind button — capture locals for closure
+                string capturedAction = actionName;
+                float keybindX = rowStartX + actionLabelW + colGap;
+
+                TMP_Text keybindLabel;
+                var keybindBtnGO = CreateButtonWithLabel(panelGO.transform, "[" + keyText + "]", keybindX, y, keybindBtnW, 28f, out keybindLabel);
+                keybindBtnGO.GetComponent<Button>().onClick.AddListener(() => {
+                    StartRebind(capturedAction, keybindLabel);
+                });
+
+                // Reset button
+                float resetX = keybindX + keybindBtnW + colGap;
+                CreateButton(panelGO.transform, "R", resetX, y, resetBtnW, 28f, () => {
+                    ResetRow(capturedAction, keybindLabel);
+                });
+            }
+
+            // Reset All button
+            y -= 44f;
+            CreateButton(panelGO.transform, "Reset All", contentX, y, 160f, 36f, () =>
+            {
+                KeybindManager.ResetAll();
+                // Rebuild controls content to refresh all labels
+                RebuildMainPanelWithControls();
+            });
+
+            // Back button
+            y -= 44f;
+            CreateButton(panelGO.transform, "Back to Settings", contentX, y, 160f, 36f, () => RebuildMainPanelWithSettings());
+        }
+
+        private void BuildCameraContent(GameObject panelGO, float contentX, float startY)
+        {
+            float y = startY;
+            
+            // Camera settings content from BuildCameraPanel
+            MakeLabel(panelGO.transform, "Camera settings coming soon...", contentX - 160f, y, 320f, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Center);
+            
+            // Back button
+            y -= 100f;
+            CreateButton(panelGO.transform, "Back to Settings", contentX, y, 160f, 36f, () => RebuildMainPanelWithSettings());
+        }
+
+        private void BuildSoundContent(GameObject panelGO, float contentX, float startY)
+        {
+            float y = startY;
+            
+            // Sound settings content from BuildSoundPanel  
+            MakeLabel(panelGO.transform, "Audio settings coming soon...", contentX - 160f, y, 320f, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Center);
+            
+            // Back button
+            y -= 100f;
+            CreateButton(panelGO.transform, "Back to Settings", contentX, y, 160f, 36f, () => RebuildMainPanelWithSettings());
         }
 
         private void BuildControlsPanel(Transform canvasParent)
