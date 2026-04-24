@@ -3,15 +3,19 @@ using UnityEngine;
 
 namespace OpenEmpires
 {
-    // Floating "!" marker placed on the ground where the player pinged. Billboards to the camera,
-    // rises slightly, and fades out before self-destructing.
+    // "!" marker placed on the ground where the player pinged. Billboards to the camera,
+    // bounces in place while the scale-pulse plays, and stays visible after the pulsing ends
+    // before a short fade-out at the very end.
     public class WorldPingMarker : MonoBehaviour
     {
-        private const float Lifetime = 3.9f;
-        private const float RiseDistance = 1.0f;
+        private const float Lifetime = 6f;
+        private const float SpawnHeightOffset = 2.5f; // lifts the text clear of the ground
         private const float InitialScale = 1.6f;
         private const int PulseCount = 3;
         private const float PulseScaleAmplitude = 0.35f;
+        private const float PulseWindow = 3.9f;       // scale-pulses play during this window
+        private const float FadeStartTime = 5f;       // full alpha until this time, then fade
+        private const float FadeOutDuration = 1f;     // fade over the final second
 
         private TMP_Text label;
         private Camera cam;
@@ -21,7 +25,7 @@ namespace OpenEmpires
         public static void Spawn(Vector3 worldPos)
         {
             var go = new GameObject("WorldPingMarker");
-            go.transform.position = worldPos + Vector3.up * 0.5f;
+            go.transform.position = worldPos + Vector3.up * SpawnHeightOffset;
             go.AddComponent<WorldPingMarker>();
         }
 
@@ -53,23 +57,33 @@ namespace OpenEmpires
         private void LateUpdate()
         {
             elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / Lifetime);
 
-            transform.position = startPos + Vector3.up * (RiseDistance * t);
+            // Stay anchored in place — no movement.
+            transform.position = startPos;
 
             if (cam != null)
                 transform.rotation = Quaternion.LookRotation(transform.position - cam.transform.position);
 
             if (label != null)
             {
-                // Pulse the scale PulseCount times across the lifetime (each beat swells then settles).
-                float pulseBeat = t * PulseCount;
-                float pulsePhase = pulseBeat - Mathf.Floor(pulseBeat);
-                float pulseScale = 1f + PulseScaleAmplitude * Mathf.Sin(Mathf.PI * pulsePhase);
+                // Scale pulse plays PulseCount times across PulseWindow, then locks to base scale.
+                float pulseScale = 1f;
+                if (elapsed < PulseWindow)
+                {
+                    float pulseT = elapsed / PulseWindow;
+                    float pulseBeat = pulseT * PulseCount;
+                    float pulsePhase = pulseBeat - Mathf.Floor(pulseBeat);
+                    pulseScale = 1f + PulseScaleAmplitude * Mathf.Sin(Mathf.PI * pulsePhase);
+                }
                 label.transform.localScale = Vector3.one * (InitialScale * pulseScale);
 
+                // Full opacity until FadeStartTime, then fade to 0 over FadeOutDuration.
+                float alpha = 1f;
+                if (elapsed > FadeStartTime)
+                    alpha = Mathf.Clamp01(1f - (elapsed - FadeStartTime) / FadeOutDuration);
+
                 var c = label.color;
-                c.a = Mathf.SmoothStep(1f, 0f, t);
+                c.a = alpha;
                 label.color = c;
             }
 

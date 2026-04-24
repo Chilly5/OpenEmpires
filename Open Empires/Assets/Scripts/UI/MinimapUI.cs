@@ -1190,15 +1190,17 @@ namespace OpenEmpires
 
                 if (ping.style == PingStyle.ExpandingWave)
                 {
-                    // Pulse N times. Each pulse grows 2 → 28 px and fades back down over its window,
-                    // so three quick waves radiate out in sequence before the ping disappears.
+                    // Pulse N times. Each pulse grows 2 → 28 px and fades back down. Later pulses
+                    // are progressively dimmer — first beat is strong, third is faint.
                     float pulseDuration = total / UserPingPulses;
                     int pulseIndex = (int)(elapsed / pulseDuration);
                     if (pulseIndex >= UserPingPulses) continue;
                     float pulseNorm = (elapsed - pulseIndex * pulseDuration) / pulseDuration;
                     int radius = (int)Mathf.Lerp(2f, 28f, pulseNorm);
                     float alphaNorm = Mathf.Clamp01((1f - pulseNorm) / 0.4f);
-                    byte alpha = (byte)(alphaNorm * 255f);
+                    // Strength falls off per pulse: 1.0, 0.67, 0.33 for a 3-pulse ping.
+                    float pulseStrength = 1f - (float)pulseIndex / UserPingPulses;
+                    byte alpha = (byte)(alphaNorm * pulseStrength * 255f);
                     Color32 c = new Color32(ping.color.r, ping.color.g, ping.color.b, alpha);
                     DrawCircleSegments(cx, cy, radius, c);
                     // Solid center dot to mark the origin (fades in sync with the wave).
