@@ -380,12 +380,74 @@ namespace OpenEmpires
             buildContentAction(panelGO, contentX, y - 40f);
         }
 
+        private enum ControlsSubTab { Units, Buildings, Communication }
+        private ControlsSubTab currentControlsSubTab = ControlsSubTab.Units;
+
         private void BuildControlsContent(GameObject panelGO, float contentX, float startY)
         {
-            float y = startY;
-            
-            // Rows for each remappable action
-            float rowStartX = contentX - 160f;
+            // Sub-tab nav row sits between the panel title and the scroll view.
+            float subTabY = 210f;
+            float subTabW = 110f;
+            float subTabH = 28f;
+            float subTabGap = 6f;
+            float groupW = subTabW * 3 + subTabGap * 2;
+            float firstSubTabX = contentX - groupW / 2f + subTabW / 2f;
+
+            CreateSubTabButton(panelGO.transform, "Units", firstSubTabX + 0 * (subTabW + subTabGap), subTabY, subTabW, subTabH,
+                currentControlsSubTab == ControlsSubTab.Units, () => SwitchControlsSubTab(ControlsSubTab.Units));
+            CreateSubTabButton(panelGO.transform, "Buildings", firstSubTabX + 1 * (subTabW + subTabGap), subTabY, subTabW, subTabH,
+                currentControlsSubTab == ControlsSubTab.Buildings, () => SwitchControlsSubTab(ControlsSubTab.Buildings));
+            CreateSubTabButton(panelGO.transform, "Communication", firstSubTabX + 2 * (subTabW + subTabGap), subTabY, subTabW, subTabH,
+                currentControlsSubTab == ControlsSubTab.Communication, () => SwitchControlsSubTab(ControlsSubTab.Communication));
+
+            // Scrollable region between the sub-tab nav and the sticky bottom buttons
+            float scrollTop = 180f;
+            float scrollBottom = -180f;
+            float scrollWidth = 480f;
+            var scrollContent = CreateScrollView(panelGO.transform, contentX, scrollTop, scrollBottom, scrollWidth);
+
+            // Items use anchor (0.5, 0.5) -> referenced from scroll content center.
+            // Build with y treated as "distance below content top" (negative going down);
+            // we resize content + shift children by H/2 once we know the final height.
+            float y = -10f;
+            switch (currentControlsSubTab)
+            {
+                case ControlsSubTab.Units:
+                    y = BuildUnitsSubTab(scrollContent, y);
+                    break;
+                case ControlsSubTab.Buildings:
+                    y = BuildBuildingsSubTab(scrollContent, y);
+                    break;
+                case ControlsSubTab.Communication:
+                    y = BuildCommunicationSubTab(scrollContent, y);
+                    break;
+            }
+
+            FinalizeScrollContent(scrollContent, -y + 10f);
+
+            // Sticky bottom buttons (outside the scroll view, parented to contentArea)
+            float btnY = -210f;
+            CreateButton(panelGO.transform, "Reset All", contentX, btnY, 160f, 36f, () =>
+            {
+                KeybindManager.ResetAll();
+                BuildingKeybindController.Instance?.RefreshBindings();
+                UnitKeybindController.Instance?.RefreshBindings();
+                ShowControls();
+            });
+
+            btnY -= 44f;
+            CreateButton(panelGO.transform, "Back to Settings", contentX, btnY, 160f, 36f, () => ShowMainSettings());
+        }
+
+        private void SwitchControlsSubTab(ControlsSubTab tab)
+        {
+            currentControlsSubTab = tab;
+            ShowControls();
+        }
+
+        private float BuildUnitsSubTab(Transform scrollContent, float y)
+        {
+            float rowStartX = -160f;
             float actionLabelW = 160f;
             float keybindBtnW = 80f;
             float resetBtnW = 30f;
@@ -400,38 +462,419 @@ namespace OpenEmpires
                 string currentBinding = KeybindManager.GetBinding(actionName);
                 string keyText = KeybindManager.GetKeyDisplayName(currentBinding);
 
-                // Action label
-                MakeLabel(panelGO.transform, displayName, rowStartX, y, actionLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+                MakeLabel(scrollContent, displayName, rowStartX, y, actionLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
 
-                // Keybind button — capture locals for closure
                 string capturedAction = actionName;
                 float keybindX = rowStartX + actionLabelW + colGap;
 
                 TMP_Text keybindLabel;
-                var keybindBtnGO = CreateButtonWithLabel(panelGO.transform, "[" + keyText + "]", keybindX, y, keybindBtnW, 28f, out keybindLabel);
-                keybindBtnGO.GetComponent<Button>().onClick.AddListener(() => {
-                    StartRebind(capturedAction, keybindLabel);
-                });
+                var keybindBtnGO = CreateButtonWithLabel(scrollContent, "[" + keyText + "]", keybindX, y, keybindBtnW, 28f, out keybindLabel);
+                keybindBtnGO.GetComponent<Button>().onClick.AddListener(() => StartRebind(capturedAction, keybindLabel));
 
-                // Reset button
                 float resetX = keybindX + keybindBtnW + colGap;
-                CreateButton(panelGO.transform, "R", resetX, y, resetBtnW, 28f, () => {
-                    ResetRow(capturedAction, keybindLabel);
-                });
+                CreateButton(scrollContent, "R", resetX, y, resetBtnW, 28f, () => ResetRow(capturedAction, keybindLabel));
             }
 
-            // Reset All button
-            y -= 44f;
-            CreateButton(panelGO.transform, "Reset All", contentX, y, 160f, 36f, () =>
+            // Idle-unit shortcuts (top of the per-unit-type rows so they're easy to find)
+            foreach (SpecialKeybind sk in System.Enum.GetValues(typeof(SpecialKeybind)))
             {
-                KeybindManager.ResetAll();
-                // Rebuild controls content to refresh all labels
-                ShowControls();
-            });
+                y -= 40f;
+                BuildSpecialKeybindRow(scrollContent, sk, rowStartX, y, actionLabelW, keybindBtnW, resetBtnW, colGap);
+            }
 
-            // Back button
-            y -= 44f;
-            CreateButton(panelGO.transform, "Back to Settings", contentX, y, 160f, 36f, () => ShowMainSettings());
+            // Per-unit-type Cycle / Select All rows
+            int[] unitTypes = KeybindManager.BindableUnitTypes;
+            for (int i = 0; i < unitTypes.Length; i++)
+            {
+                int unitType = unitTypes[i];
+                string unitName = KeybindManager.GetUnitTypeDisplayName(unitType);
+
+                y -= 40f;
+                BuildUnitKeybindRow(scrollContent, $"Cycle {unitName}", unitType, UnitKeybindKind.Cycle,
+                    rowStartX, y, actionLabelW, keybindBtnW, resetBtnW, colGap);
+
+                y -= 30f;
+                BuildUnitKeybindRow(scrollContent, $"Select All {unitName}", unitType, UnitKeybindKind.SelectAll,
+                    rowStartX, y, actionLabelW, keybindBtnW, resetBtnW, colGap);
+
+                y -= 10f;
+            }
+            return y;
+        }
+
+        private float BuildBuildingsSubTab(Transform scrollContent, float y)
+        {
+            float rowStartX = -160f;
+            float actionLabelW = 160f;
+            float keybindBtnW = 80f;
+            float resetBtnW = 30f;
+            float colGap = 8f;
+
+            var buildingTypes = System.Enum.GetValues(typeof(BuildingType));
+            foreach (BuildingType buildingType in buildingTypes)
+            {
+                string buildingName = buildingType.ToString();
+
+                y -= 40f;
+                BuildBuildingKeybindRow(scrollContent, $"Cycle {buildingName}", buildingType, BuildingKeybindKind.Cycle,
+                    rowStartX, y, actionLabelW, keybindBtnW, resetBtnW, colGap);
+
+                y -= 30f;
+                BuildBuildingKeybindRow(scrollContent, $"Select All {buildingName}", buildingType, BuildingKeybindKind.SelectAll,
+                    rowStartX, y, actionLabelW, keybindBtnW, resetBtnW, colGap);
+
+                y -= 10f;
+            }
+            return y;
+        }
+
+        private float BuildCommunicationSubTab(Transform scrollContent, float y)
+        {
+            y -= 40f;
+            MakeLabel(scrollContent, "No communication keybinds yet.", -200f, y, 400f, 24f, 14, FontStyles.Italic, TextAlignmentOptions.Center);
+            return y;
+        }
+
+        private void CreateSubTabButton(Transform parent, string label, float x, float y, float w, float h, bool isActive, System.Action onClick)
+        {
+            var btnGO = new GameObject("SubTabButton");
+            btnGO.transform.SetParent(parent, false);
+            var btnRT = btnGO.AddComponent<RectTransform>();
+            btnRT.anchorMin = new Vector2(0.5f, 0.5f);
+            btnRT.anchorMax = new Vector2(0.5f, 0.5f);
+            btnRT.pivot = new Vector2(0.5f, 0.5f);
+            btnRT.anchoredPosition = new Vector2(x, y);
+            btnRT.sizeDelta = new Vector2(w, h);
+
+            Color normal = isActive ? new Color(0.35f, 0.5f, 0.7f) : new Color(0.2f, 0.2f, 0.2f);
+            Color hover = isActive ? new Color(0.45f, 0.6f, 0.8f) : new Color(0.3f, 0.3f, 0.3f);
+            Color pressed = isActive ? new Color(0.25f, 0.4f, 0.6f) : new Color(0.15f, 0.15f, 0.15f);
+
+            var img = btnGO.AddComponent<Image>();
+            img.color = normal;
+
+            var btn = btnGO.AddComponent<Button>();
+            var colors = btn.colors;
+            colors.normalColor = normal;
+            colors.highlightedColor = hover;
+            colors.pressedColor = pressed;
+            colors.selectedColor = normal;
+            btn.colors = colors;
+            btn.onClick.AddListener(() => onClick?.Invoke());
+
+            var textGO = new GameObject("Text");
+            textGO.transform.SetParent(btnGO.transform, false);
+            var trt = textGO.AddComponent<RectTransform>();
+            trt.anchorMin = Vector2.zero;
+            trt.anchorMax = Vector2.one;
+            trt.offsetMin = Vector2.zero;
+            trt.offsetMax = Vector2.zero;
+            var tmp = textGO.AddComponent<TextMeshProUGUI>();
+            tmp.text = label;
+            tmp.fontSize = 14;
+            tmp.fontStyle = isActive ? FontStyles.Bold : FontStyles.Normal;
+            tmp.alignment = TextAlignmentOptions.Center;
+            tmp.color = Color.white;
+        }
+
+        private void BuildBuildingKeybindRow(Transform parent, string label, BuildingType type, BuildingKeybindKind kind,
+            float rowStartX, float y, float actionLabelW, float keybindBtnW, float resetBtnW, float colGap)
+        {
+            MakeLabel(parent, label, rowStartX, y, actionLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+
+            string currentPath = KeybindManager.GetBuildingBinding(type, kind);
+            string keyText = string.IsNullOrEmpty(currentPath) ? "Unbound" : KeybindManager.GetKeyDisplayName(currentPath);
+
+            float keybindX = rowStartX + actionLabelW + colGap;
+            TMP_Text keybindLabel;
+            var keybindBtnGO = CreateButtonWithLabel(parent, "[" + keyText + "]", keybindX, y, keybindBtnW, 28f, out keybindLabel);
+            keybindBtnGO.GetComponent<Button>().onClick.AddListener(() => StartBuildingRebind(type, kind, keybindLabel));
+
+            float resetX = keybindX + keybindBtnW + colGap;
+            CreateButton(parent, "R", resetX, y, resetBtnW, 28f, () => ClearBuildingBinding(type, kind, keybindLabel));
+        }
+
+        private void StartBuildingRebind(BuildingType type, BuildingKeybindKind kind, TMP_Text keyLabel)
+        {
+            // Cancel any rebind already in flight (covers users who re-click while listening).
+            currentRebind?.Cancel();
+            currentRebind?.Dispose();
+            currentRebind = null;
+
+            string originalLabel = keyLabel.text;
+            keyLabel.text = "...";
+
+            // Throwaway action used only to drive PerformInteractiveRebinding — we just
+            // want the resolved binding path, not a long-lived InputAction.
+            var tempAction = new InputAction(name: "BuildingRebind_" + type + "_" + kind, type: InputActionType.Button);
+            tempAction.AddBinding("<Keyboard>/space");
+
+            currentRebind = tempAction.PerformInteractiveRebinding()
+                .WithControlsExcluding("<Mouse>")
+                .WithCancelingThrough("<Keyboard>/escape")
+                .OnComplete(op =>
+                {
+                    string path = tempAction.bindings[0].effectivePath;
+                    KeybindManager.SetBuildingBinding(type, kind, path);
+                    keyLabel.text = "[" + KeybindManager.GetKeyDisplayName(path) + "]";
+                    op.Dispose();
+                    tempAction.Dispose();
+                    currentRebind = null;
+                    BuildingKeybindController.Instance?.RefreshBindings();
+                })
+                .OnCancel(op =>
+                {
+                    keyLabel.text = originalLabel;
+                    op.Dispose();
+                    tempAction.Dispose();
+                    currentRebind = null;
+                })
+                .Start();
+        }
+
+        private void ClearBuildingBinding(BuildingType type, BuildingKeybindKind kind, TMP_Text keyLabel)
+        {
+            KeybindManager.ClearBuildingBinding(type, kind);
+            keyLabel.text = "[Unbound]";
+            BuildingKeybindController.Instance?.RefreshBindings();
+        }
+
+        private void BuildUnitKeybindRow(Transform parent, string label, int unitType, UnitKeybindKind kind,
+            float rowStartX, float y, float actionLabelW, float keybindBtnW, float resetBtnW, float colGap)
+        {
+            MakeLabel(parent, label, rowStartX, y, actionLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+
+            string currentPath = KeybindManager.GetUnitBinding(unitType, kind);
+            string keyText = string.IsNullOrEmpty(currentPath) ? "Unbound" : KeybindManager.GetKeyDisplayName(currentPath);
+
+            float keybindX = rowStartX + actionLabelW + colGap;
+            TMP_Text keybindLabel;
+            var keybindBtnGO = CreateButtonWithLabel(parent, "[" + keyText + "]", keybindX, y, keybindBtnW, 28f, out keybindLabel);
+            keybindBtnGO.GetComponent<Button>().onClick.AddListener(() => StartUnitRebind(unitType, kind, keybindLabel));
+
+            float resetX = keybindX + keybindBtnW + colGap;
+            CreateButton(parent, "R", resetX, y, resetBtnW, 28f, () => ClearUnitBinding(unitType, kind, keybindLabel));
+        }
+
+        private void StartUnitRebind(int unitType, UnitKeybindKind kind, TMP_Text keyLabel)
+        {
+            currentRebind?.Cancel();
+            currentRebind?.Dispose();
+            currentRebind = null;
+
+            string originalLabel = keyLabel.text;
+            keyLabel.text = "...";
+
+            var tempAction = new InputAction(name: "UnitRebind_" + unitType + "_" + kind, type: InputActionType.Button);
+            tempAction.AddBinding("<Keyboard>/space");
+
+            currentRebind = tempAction.PerformInteractiveRebinding()
+                .WithControlsExcluding("<Mouse>")
+                .WithCancelingThrough("<Keyboard>/escape")
+                .OnComplete(op =>
+                {
+                    string path = tempAction.bindings[0].effectivePath;
+                    KeybindManager.SetUnitBinding(unitType, kind, path);
+                    keyLabel.text = "[" + KeybindManager.GetKeyDisplayName(path) + "]";
+                    op.Dispose();
+                    tempAction.Dispose();
+                    currentRebind = null;
+                    UnitKeybindController.Instance?.RefreshBindings();
+                })
+                .OnCancel(op =>
+                {
+                    keyLabel.text = originalLabel;
+                    op.Dispose();
+                    tempAction.Dispose();
+                    currentRebind = null;
+                })
+                .Start();
+        }
+
+        private void ClearUnitBinding(int unitType, UnitKeybindKind kind, TMP_Text keyLabel)
+        {
+            KeybindManager.ClearUnitBinding(unitType, kind);
+            keyLabel.text = "[Unbound]";
+            UnitKeybindController.Instance?.RefreshBindings();
+        }
+
+        private void BuildSpecialKeybindRow(Transform parent, SpecialKeybind action,
+            float rowStartX, float y, float actionLabelW, float keybindBtnW, float resetBtnW, float colGap)
+        {
+            MakeLabel(parent, KeybindManager.GetSpecialDisplayName(action), rowStartX, y, actionLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+
+            string currentPath = KeybindManager.GetSpecialBinding(action);
+            string keyText = string.IsNullOrEmpty(currentPath) ? "Unbound" : KeybindManager.GetKeyDisplayName(currentPath);
+
+            float keybindX = rowStartX + actionLabelW + colGap;
+            TMP_Text keybindLabel;
+            var keybindBtnGO = CreateButtonWithLabel(parent, "[" + keyText + "]", keybindX, y, keybindBtnW, 28f, out keybindLabel);
+            keybindBtnGO.GetComponent<Button>().onClick.AddListener(() => StartSpecialRebind(action, keybindLabel));
+
+            float resetX = keybindX + keybindBtnW + colGap;
+            CreateButton(parent, "R", resetX, y, resetBtnW, 28f, () => ClearSpecialBinding(action, keybindLabel));
+        }
+
+        private void StartSpecialRebind(SpecialKeybind action, TMP_Text keyLabel)
+        {
+            currentRebind?.Cancel();
+            currentRebind?.Dispose();
+            currentRebind = null;
+
+            string originalLabel = keyLabel.text;
+            keyLabel.text = "...";
+
+            var tempAction = new InputAction(name: "SpecialRebind_" + action, type: InputActionType.Button);
+            tempAction.AddBinding("<Keyboard>/space");
+
+            currentRebind = tempAction.PerformInteractiveRebinding()
+                .WithControlsExcluding("<Mouse>")
+                .WithCancelingThrough("<Keyboard>/escape")
+                .OnComplete(op =>
+                {
+                    string path = tempAction.bindings[0].effectivePath;
+                    KeybindManager.SetSpecialBinding(action, path);
+                    keyLabel.text = "[" + KeybindManager.GetKeyDisplayName(path) + "]";
+                    op.Dispose();
+                    tempAction.Dispose();
+                    currentRebind = null;
+                    UnitKeybindController.Instance?.RefreshBindings();
+                })
+                .OnCancel(op =>
+                {
+                    keyLabel.text = originalLabel;
+                    op.Dispose();
+                    tempAction.Dispose();
+                    currentRebind = null;
+                })
+                .Start();
+        }
+
+        private void ClearSpecialBinding(SpecialKeybind action, TMP_Text keyLabel)
+        {
+            KeybindManager.ClearSpecialBinding(action);
+            keyLabel.text = "[Unbound]";
+            UnitKeybindController.Instance?.RefreshBindings();
+        }
+
+        // Builds a vertically-scrolling region inside `parent`, occupying the rect
+        // bounded by [topY, bottomY] vertically (in parent local coords) and `width` wide,
+        // centered horizontally at `x`. Returns the content Transform that callers
+        // should parent items to. Caller must call FinalizeScrollContent when done.
+        private Transform CreateScrollView(Transform parent, float x, float topY, float bottomY, float width)
+        {
+            float h = topY - bottomY;
+            float centerY = (topY + bottomY) / 2f;
+            const float scrollbarW = 12f;
+
+            var scrollGO = new GameObject("ScrollView");
+            scrollGO.transform.SetParent(parent, false);
+            var scrollRT = scrollGO.AddComponent<RectTransform>();
+            scrollRT.anchorMin = new Vector2(0.5f, 0.5f);
+            scrollRT.anchorMax = new Vector2(0.5f, 0.5f);
+            scrollRT.pivot = new Vector2(0.5f, 0.5f);
+            scrollRT.anchoredPosition = new Vector2(x, centerY);
+            scrollRT.sizeDelta = new Vector2(width, h);
+
+            // Transparent backdrop with raycastTarget so wheel events over empty
+            // space (between buttons) still bubble up to the ScrollRect.
+            var scrollBg = scrollGO.AddComponent<Image>();
+            scrollBg.color = Color.clear;
+            scrollBg.raycastTarget = true;
+
+            var scrollRect = scrollGO.AddComponent<ScrollRect>();
+            scrollRect.horizontal = false;
+            scrollRect.vertical = true;
+            scrollRect.scrollSensitivity = 5f;
+            scrollRect.movementType = ScrollRect.MovementType.Clamped;
+            scrollRect.inertia = false;
+
+            // Viewport — leave room on the right for the scrollbar.
+            var viewportGO = new GameObject("Viewport");
+            viewportGO.transform.SetParent(scrollGO.transform, false);
+            var viewportRT = viewportGO.AddComponent<RectTransform>();
+            viewportRT.anchorMin = Vector2.zero;
+            viewportRT.anchorMax = Vector2.one;
+            viewportRT.offsetMin = Vector2.zero;
+            viewportRT.offsetMax = new Vector2(-scrollbarW, 0f);
+            viewportGO.AddComponent<RectMask2D>();
+            scrollRect.viewport = viewportRT;
+
+            var contentGO = new GameObject("Content");
+            contentGO.transform.SetParent(viewportGO.transform, false);
+            var contentRT = contentGO.AddComponent<RectTransform>();
+            contentRT.anchorMin = new Vector2(0f, 1f);
+            contentRT.anchorMax = new Vector2(1f, 1f);
+            contentRT.pivot = new Vector2(0.5f, 1f);
+            contentRT.anchoredPosition = Vector2.zero;
+            contentRT.sizeDelta = Vector2.zero;
+            scrollRect.content = contentRT;
+
+            // Vertical scrollbar pinned to the right of the scroll view.
+            var scrollbarGO = new GameObject("VerticalScrollbar");
+            scrollbarGO.transform.SetParent(scrollGO.transform, false);
+            var scrollbarRT = scrollbarGO.AddComponent<RectTransform>();
+            scrollbarRT.anchorMin = new Vector2(1f, 0f);
+            scrollbarRT.anchorMax = new Vector2(1f, 1f);
+            scrollbarRT.pivot = new Vector2(1f, 0.5f);
+            scrollbarRT.anchoredPosition = Vector2.zero;
+            scrollbarRT.sizeDelta = new Vector2(scrollbarW, 0f);
+
+            var scrollbarBg = scrollbarGO.AddComponent<Image>();
+            scrollbarBg.color = new Color(0.18f, 0.18f, 0.18f);
+
+            var scrollbar = scrollbarGO.AddComponent<Scrollbar>();
+            scrollbar.direction = Scrollbar.Direction.BottomToTop;
+
+            var slidingAreaGO = new GameObject("Sliding Area");
+            slidingAreaGO.transform.SetParent(scrollbarGO.transform, false);
+            var slidingAreaRT = slidingAreaGO.AddComponent<RectTransform>();
+            slidingAreaRT.anchorMin = Vector2.zero;
+            slidingAreaRT.anchorMax = Vector2.one;
+            slidingAreaRT.offsetMin = new Vector2(2f, 2f);
+            slidingAreaRT.offsetMax = new Vector2(-2f, -2f);
+
+            var handleGO = new GameObject("Handle");
+            handleGO.transform.SetParent(slidingAreaGO.transform, false);
+            var handleRT = handleGO.AddComponent<RectTransform>();
+            handleRT.anchorMin = Vector2.zero;
+            handleRT.anchorMax = Vector2.one;
+            handleRT.offsetMin = Vector2.zero;
+            handleRT.offsetMax = Vector2.zero;
+            var handleImg = handleGO.AddComponent<Image>();
+            handleImg.color = new Color(0.55f, 0.55f, 0.55f);
+
+            scrollbar.targetGraphic = handleImg;
+            scrollbar.handleRect = handleRT;
+            scrollbar.transition = Selectable.Transition.ColorTint;
+            var hc = scrollbar.colors;
+            hc.normalColor = new Color(0.55f, 0.55f, 0.55f);
+            hc.highlightedColor = new Color(0.7f, 0.7f, 0.7f);
+            hc.pressedColor = new Color(0.4f, 0.4f, 0.4f);
+            hc.selectedColor = new Color(0.55f, 0.55f, 0.55f);
+            scrollbar.colors = hc;
+
+            scrollRect.verticalScrollbar = scrollbar;
+            scrollRect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.Permanent;
+
+            return contentGO.transform;
+        }
+
+        // Sizes the scroll content to `height` and shifts every child's anchored-Y by
+        // height/2 so items built with "y = distance below content top" (negative going
+        // down) end up correctly placed once the parent has its real size.
+        private void FinalizeScrollContent(Transform content, float height)
+        {
+            var rt = content.GetComponent<RectTransform>();
+            rt.sizeDelta = new Vector2(rt.sizeDelta.x, height);
+
+            float shift = height / 2f;
+            for (int i = 0; i < content.childCount; i++)
+            {
+                var child = content.GetChild(i) as RectTransform;
+                if (child == null) continue;
+                child.anchoredPosition = new Vector2(child.anchoredPosition.x, child.anchoredPosition.y + shift);
+            }
         }
 
         private void BuildCameraContent(GameObject panelGO, float contentX, float startY)
