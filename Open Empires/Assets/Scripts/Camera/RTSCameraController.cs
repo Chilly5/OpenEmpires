@@ -173,13 +173,6 @@ namespace OpenEmpires
             if (panInput.sqrMagnitude > 0.001f)
             {
                 float effectivePanSpeed = basePanSpeed * keyboardPanSpeed;
-                
-                // Apply acceleration if enabled
-                if (!panAcceleration)
-                {
-                    effectivePanSpeed *= 0.7f; // Reduce speed when acceleration is disabled
-                }
-                
                 Vector3 keyboardMove = (forward * panInput.y + right * panInput.x) * effectivePanSpeed * zoomScale * Time.deltaTime;
                 totalMove += keyboardMove;
             }
@@ -188,12 +181,6 @@ namespace OpenEmpires
             if (mousePanEnabled && mousePanDelta.sqrMagnitude > 0.001f)
             {
                 float effectiveMousePanSpeed = basePanSpeed * 1.0f * 0.01f; // Fixed speed for mouse pan
-                
-                // Apply acceleration if enabled
-                if (!panAcceleration)
-                {
-                    effectiveMousePanSpeed *= 0.7f;
-                }
                 
                 // Invert Y for intuitive dragging (drag up = move up)
                 Vector3 mouseMove = (forward * (-mousePanDelta.y) + right * (-mousePanDelta.x)) * effectiveMousePanSpeed * zoomScale * Time.deltaTime;
@@ -270,7 +257,17 @@ namespace OpenEmpires
 
         private void SmoothPivotPosition()
         {
-            pivot.position = Vector3.SmoothDamp(pivot.position, targetPivotPos, ref pivotVelocity, panSmoothing);
+            if (panAcceleration)
+            {
+                // Smooth, accelerated movement
+                pivot.position = Vector3.SmoothDamp(pivot.position, targetPivotPos, ref pivotVelocity, panSmoothing);
+            }
+            else
+            {
+                // Snappy, immediate movement
+                pivot.position = targetPivotPos;
+                pivotVelocity = Vector3.zero; // Reset velocity for immediate stop
+            }
         }
 
         private void SmoothRotation()
