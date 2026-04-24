@@ -70,7 +70,7 @@ namespace OpenEmpires
 
         // Notify-ping mode (user clicked the ping button and the next world click places a ping).
         private bool isPingMode;
-        private const float UserPingDuration = 2.2f;
+        private const float UserPingDuration = 1.3f;
         private static readonly Color32 UserPingColor = new Color32(255, 210, 60, 255);
         private GameObject pingCursorIcon;
 
@@ -1189,14 +1189,17 @@ namespace OpenEmpires
 
                 if (ping.style == PingStyle.ExpandingWave)
                 {
-                    // Radius grows from 2 to 14 px, fades to transparent near end of life.
+                    // Radius grows from 2 to 28 px. Alpha stays full for the first 60% of life,
+                    // then fades linearly to 0 — so the fade-out happens near the end.
                     float norm = Mathf.Clamp01(elapsed / total);
-                    int radius = (int)Mathf.Lerp(2f, 14f, norm);
-                    byte alpha = (byte)(Mathf.Lerp(255f, 0f, norm));
+                    int radius = (int)Mathf.Lerp(2f, 28f, norm);
+                    float alphaNorm = Mathf.Clamp01((1f - norm) / 0.4f);
+                    byte alpha = (byte)(alphaNorm * 255f);
                     Color32 c = new Color32(ping.color.r, ping.color.g, ping.color.b, alpha);
                     DrawCircleSegments(cx, cy, radius, c);
-                    // Also draw a small solid center dot to mark the origin.
-                    DrawCircleSegments(cx, cy, 2, ping.color);
+                    // Solid center dot to mark the origin (also fades near the end).
+                    Color32 dot = new Color32(ping.color.r, ping.color.g, ping.color.b, alpha);
+                    DrawCircleSegments(cx, cy, 2, dot);
                 }
                 else
                 {
