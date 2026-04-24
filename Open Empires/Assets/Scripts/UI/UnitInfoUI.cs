@@ -2910,6 +2910,30 @@ namespace OpenEmpires
             // Collect only completed buildings of the dominant type
             var resources = sim.ResourceManager.GetPlayerResources(localPid);
 
+            // N: clear entire training queue for all selected buildings.
+            // B: cancel most recently queued unit for all selected buildings.
+            if (WasKeyPressed(Key.N))
+            {
+                for (int i = 0; i < buildings.Count; i++)
+                {
+                    if (buildings[i].PlayerId != localPid) continue;
+                    var bData = sim.BuildingRegistry.GetBuilding(buildings[i].BuildingId);
+                    if (bData == null || bData.TrainingQueue.Count == 0) continue;
+                    for (int q = bData.TrainingQueue.Count - 1; q >= 0; q--)
+                        sim.CommandBuffer.EnqueueCommand(new CancelTrainCommand(localPid, bData.Id, q));
+                }
+            }
+            if (WasKeyPressed(Key.B))
+            {
+                for (int i = 0; i < buildings.Count; i++)
+                {
+                    if (buildings[i].PlayerId != localPid) continue;
+                    var bData = sim.BuildingRegistry.GetBuilding(buildings[i].BuildingId);
+                    if (bData == null || bData.TrainingQueue.Count == 0) continue;
+                    sim.CommandBuffer.EnqueueCommand(new CancelTrainCommand(localPid, bData.Id, bData.TrainingQueue.Count - 1));
+                }
+            }
+
             if (dominantType == BuildingType.TownCenter)
             {
                 if (WasKeyPressed(Key.Q) && resources.Food >= sim.Config.VillagerFoodCost)
