@@ -5917,6 +5917,7 @@ namespace OpenEmpires
                 Fixed32.Zero, // stationary
                 cachedUnitRadius,
                 Fixed32.One);
+            unitData.UnitType = 2; // archer — required for correct attack routing and visuals
             unitData.MaxHealth = config.ArcherMaxHealth;
             unitData.CurrentHealth = unitData.MaxHealth;
             unitData.AttackDamage = config.ArcherAttackDamage;
@@ -5925,11 +5926,13 @@ namespace OpenEmpires
             unitData.DetectionRange = ConfigToFixed32(config.ArcherDetectionRange);
             unitData.MeleeArmor = 0;
             unitData.RangedArmor = 0;
+            unitData.IsRanged = true; // without this, combat takes the melee branch and no projectile is spawned
             unitData.IsDummy = true;
             unitData.PlayerCommanded = false; // ensures auto-aggro
 
             dummyUnitIds.Add(unitData.Id);
             OnUnitTrained?.Invoke(unitData.Id, 2, dummyPlayerId); // type 2 = archer visual
+            Debug.Log($"[ArcherDummy] spawned id={unitData.Id} player={dummyPlayerId} pos=({position.x.ToFloat():F1},{position.z.ToFloat():F1}) range={unitData.AttackRange.ToFloat():F1} ranged={unitData.IsRanged} hp={unitData.CurrentHealth}");
             return unitData.Id;
         }
 
