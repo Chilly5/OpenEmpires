@@ -133,6 +133,13 @@ namespace OpenEmpires
             BuildCanvas();
         }
 
+        private void HandleEntityDamaged(float wx, float wz, int ownerPlayerId)
+        {
+            int localPid = selectionManager != null ? selectionManager.LocalPlayerId : 0;
+            if (ownerPlayerId != localPid) return;
+            TryPlaceAttackPing(wx, wz);
+        }
+
         private void GenerateMapTexture(MapData mapData)
         {
             Color32 grass = new Color32(46, 107, 36, 255);

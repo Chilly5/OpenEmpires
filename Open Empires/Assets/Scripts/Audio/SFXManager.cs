@@ -149,8 +149,6 @@ namespace OpenEmpires
             source.clip = clips[idx];
             source.volume = SfxVolume * volumeScale;
             source.spatialBlend = 0f;
-            if (type == SFXType.MenuClick)
-                Debug.Log($"[SFXManager] PlayUI MenuClick clip={clips[idx]?.name} len={clips[idx]?.length}s vol={SfxVolume * volumeScale}");
             source.Play();
         }
 
@@ -199,8 +197,6 @@ namespace OpenEmpires
 
             if (clip == null) { Debug.LogWarning($"[SFXManager] PlayBuildingSelect: clip null for {buildingType}"); return; }
 
-            Debug.Log($"[SFXManager] PlayBuildingSelect {buildingType} clip={clip.name} len={clip.length}s samples={clip.samples} vol={SfxVolume * volumeScale}");
-
             var source = pool[poolIndex];
             poolIndex = (poolIndex + 1) % PoolSize;
 
@@ -224,8 +220,6 @@ namespace OpenEmpires
                 clip = buildingSelectFallback;
 
             if (clip == null) return;
-
-            Debug.Log($"[SFXManager] PlayBuildingPlace {buildingType} clip={clip.name} len={clip.length}s");
 
             var source = pool[poolIndex];
             poolIndex = (poolIndex + 1) % PoolSize;
