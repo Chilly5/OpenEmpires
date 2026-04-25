@@ -25,6 +25,7 @@ namespace OpenEmpires
         UnderAttack,
         MenuClick,
         NotifyPing,
+        AttackPing,
     }
 
     public class SFXManager : MonoBehaviour
@@ -67,6 +68,7 @@ namespace OpenEmpires
             5.0f,   // UnderAttack
             0.15f,  // MenuClick
             0.2f,   // NotifyPing
+            0.25f,  // AttackPing
         };
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -256,6 +258,35 @@ namespace OpenEmpires
             clips[(int)SFXType.SheepConvert] = GenerateSheepConvert();
             clips[(int)SFXType.UnderAttack] = GenerateUnderAttack();
             clips[(int)SFXType.NotifyPing] = GenerateNotifyPing();
+            clips[(int)SFXType.AttackPing] = GenerateAttackPing();
+        }
+
+        private AudioClip GenerateAttackPing()
+        {
+            // Short low-thump descending tone — alarm-y but not as loud as UnderAttack.
+            float duration = 0.25f;
+            int samples = (int)(SampleRate * duration);
+            float[] data = new float[samples];
+
+            for (int i = 0; i < samples; i++)
+            {
+                float t = (float)i / SampleRate;
+                float norm = (float)i / samples;
+
+                // Sweep from 600 Hz down to 240 Hz over the clip.
+                float freq = Mathf.Lerp(600f, 240f, norm);
+
+                // Fast attack, exponential decay.
+                float envelope;
+                if (norm < 0.05f)
+                    envelope = norm / 0.05f;
+                else
+                    envelope = Mathf.Pow(1f - (norm - 0.05f) / 0.95f, 2f);
+
+                data[i] = Mathf.Sin(2f * Mathf.PI * freq * t) * 0.5f * envelope;
+            }
+
+            return CreateClip("AttackPing", data);
         }
 
         private AudioClip GenerateNotifyPing()

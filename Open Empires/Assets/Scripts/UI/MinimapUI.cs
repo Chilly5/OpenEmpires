@@ -1197,6 +1197,7 @@ namespace OpenEmpires
 
         // Adds a red AttackFlash ping at (wx, wz) unless an active one is already nearby —
         // prevents spamming the minimap when one battle generates many damage events per tick.
+        // Plays a soft alert SFX only when a NEW ping is actually placed (not on dedup'd hits).
         private void TryPlaceAttackPing(float wx, float wz)
         {
             const float proximitySq = 6f * 6f;
@@ -1217,6 +1218,7 @@ namespace OpenEmpires
                 color = new Color32(255, 60, 30, 255),
                 style = PingStyle.AttackFlash,
             });
+            SFXManager.Instance?.PlayUI(SFXType.AttackPing, 0.5f);
         }
 
         private void UpdateAndDrawPings()
@@ -1264,12 +1266,21 @@ namespace OpenEmpires
                 }
                 else
                 {
-                    // AttackFlash: flash on/off at PingFlashRate Hz with a 4..8 px pulsing radius.
-                    float phase = Mathf.Sin(2f * Mathf.PI * PingFlashRate * elapsed);
-                    if (phase <= 0f) continue;
-                    float pulse = 0.5f + 0.5f * Mathf.Sin(2f * Mathf.PI * 2f * elapsed);
-                    int radius = (int)Mathf.Lerp(4f, 8f, pulse);
-                    DrawCircleSegments(cx, cy, radius, ping.color);
+                    // AttackFlash mirrors the user notify ping but inverted: 3 collapsing pulses
+                    // that start large and shrink, with each successive pulse dimmer than the last.
+                    const int AttackPulses = 3;
+                    float pulseDuration = total / AttackPulses;
+                    int pulseIndex = (int)(elapsed / pulseDuration);
+                    if (pulseIndex >= AttackPulses) continue;
+                    float pulseNorm = (elapsed - pulseIndex * pulseDuration) / pulseDuration;
+                    int radius = (int)Mathf.Lerp(28f, 2f, pulseNorm); // shrinks
+                    float alphaNorm = Mathf.Clamp01((1f - pulseNorm) / 0.4f);
+                    float pulseStrength = 1f - (float)pulseIndex / AttackPulses;
+                    byte alpha = (byte)(alphaNorm * pulseStrength * 255f);
+                    Color32 c = new Color32(ping.color.r, ping.color.g, ping.color.b, alpha);
+                    DrawCircleSegments(cx, cy, radius, c);
+                    Color32 dot = new Color32(ping.color.r, ping.color.g, ping.color.b, alpha);
+                    DrawCircleSegments(cx, cy, 2, dot);
                 }
             }
         }
