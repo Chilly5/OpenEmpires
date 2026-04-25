@@ -5932,7 +5932,6 @@ namespace OpenEmpires
 
             dummyUnitIds.Add(unitData.Id);
             OnUnitTrained?.Invoke(unitData.Id, 2, dummyPlayerId); // type 2 = archer visual
-            Debug.Log($"[ArcherDummy] spawned id={unitData.Id} player={dummyPlayerId} pos=({position.x.ToFloat():F1},{position.z.ToFloat():F1}) range={unitData.AttackRange.ToFloat():F1} ranged={unitData.IsRanged} hp={unitData.CurrentHealth}");
             return unitData.Id;
         }
 

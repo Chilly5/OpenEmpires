@@ -322,8 +322,6 @@ namespace OpenEmpires
 
                 // Attack if within range (requires facing), otherwise chase immediately
                 Fixed32 attackRangeSq = unit.AttackRange * unit.AttackRange;
-                if (unit.IsDummy && currentTick % 60 == 0)
-                    UnityEngine.Debug.Log($"[ArcherDummy] unit={unit.Id} tick={currentTick} target={closestEnemy.Id} distSq={closestDistSq.ToFloat():F2} rangeSq={attackRangeSq.ToFloat():F2} facing_dot={dot.ToFloat():F2} cd={unit.AttackCooldownRemaining}");
                 if (closestDistSq <= attackRangeSq)
                 {
                     if (dot < FacingThreshold) continue;
@@ -357,8 +355,6 @@ namespace OpenEmpires
                         bool isBolt = unit.UnitType == 8; // Crossbowman fires bolts (flat trajectory)
                         projectileRegistry.CreateProjectile(unit.Id, closestEnemy.Id,
                             unit.SimPosition, damage, projectileSpeed, isBolt);
-                        if (unit.IsDummy)
-                            UnityEngine.Debug.Log($"[ArcherDummy] unit={unit.Id} fired projectile at target={closestEnemy.Id} speed={projectileSpeed.ToFloat():F2}");
                     }
                     else
                     {

@@ -1146,6 +1146,12 @@ namespace OpenEmpires
 
             bool offScreenAttack = false;
 
+            // Use a recent-damage window instead of an "advancing watermark" tick filter:
+            // the latter loses events whose tick lands in the same frame the function runs,
+            // because Unity's script execution order isn't deterministic. The proximity check
+            // inside TryPlaceAttackPing dedupes — one ping per location per (ping lifetime).
+            const int RecentDamageWindowTicks = 90; // ~3s at 30 TPS
+
             // Damaged own units
             var units = sim.UnitRegistry.GetAllUnits();
             for (int i = 0; i < units.Count; i++)
@@ -1153,7 +1159,8 @@ namespace OpenEmpires
                 var unit = units[i];
                 if (unit.PlayerId != localPlayerId) continue;
                 if (unit.State == UnitState.Dead) continue;
-                if (unit.LastDamageTick <= lastAlertCheckTick || unit.LastDamageTick <= 0) continue;
+                if (unit.LastDamageTick <= 0) continue;
+                if (currentTick - unit.LastDamageTick > RecentDamageWindowTicks) continue;
 
                 float wx = unit.SimPosition.x.ToFloat();
                 float wz = unit.SimPosition.z.ToFloat();
@@ -1168,7 +1175,8 @@ namespace OpenEmpires
                 var building = buildings[i];
                 if (building.PlayerId != localPlayerId) continue;
                 if (building.IsDestroyed) continue;
-                if (building.LastDamageTick <= lastAlertCheckTick || building.LastDamageTick <= 0) continue;
+                if (building.LastDamageTick <= 0) continue;
+                if (currentTick - building.LastDamageTick > RecentDamageWindowTicks) continue;
 
                 float wx = building.SimPosition.x.ToFloat();
                 float wz = building.SimPosition.z.ToFloat();
