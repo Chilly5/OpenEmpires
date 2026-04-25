@@ -829,6 +829,7 @@ namespace OpenEmpires
             gatheringSystem.Tick(UnitRegistry, MapData, ResourceManager, BuildingRegistry, config, cachedTickDuration, currentTick, GetInfluenceBuildingType);
             healingSystem.Tick(UnitRegistry, config, spatialGrid, playerTeamIds, currentTick, MapData, BuildingRegistry);
             TickDummyRegen(currentTick);
+            TickScoutRegen(currentTick);
             if (hashSystems) lastSystemHashes[7] = ComputeQuickHash(); // after gathering
 
             // Construction system
@@ -5908,6 +5909,28 @@ namespace OpenEmpires
                 if (unit.CurrentHealth >= unit.MaxHealth) continue;
                 if (unit.LastDamageTick > 0 && currentTick - unit.LastDamageTick < DummyRegenDelayTicks) continue;
                 unit.CurrentHealth = System.Math.Min(unit.MaxHealth, unit.CurrentHealth + DummyRegenAmountPerTick);
+            }
+        }
+
+        // Scouts regenerate health while out of combat. Out-of-combat = no damage taken for at
+        // least ScoutRegenDelayTicks. The interval gate keeps the regen rate slow even though
+        // the function runs every tick.
+        private const int ScoutRegenDelayTicks = 150;     // 5s at 30 TPS
+        private const int ScoutRegenIntervalTicks = 6;    // tick every 6 sim ticks → 5/s
+        private const int ScoutRegenAmountPerInterval = 1;
+
+        private void TickScoutRegen(int currentTick)
+        {
+            if (currentTick % ScoutRegenIntervalTicks != 0) return;
+            var allUnits = UnitRegistry.GetAllUnits();
+            for (int i = 0; i < allUnits.Count; i++)
+            {
+                var unit = allUnits[i];
+                if (unit.UnitType != 4) continue; // Scout
+                if (unit.State == UnitState.Dead) continue;
+                if (unit.CurrentHealth >= unit.MaxHealth) continue;
+                if (unit.LastDamageTick > 0 && currentTick - unit.LastDamageTick < ScoutRegenDelayTicks) continue;
+                unit.CurrentHealth = System.Math.Min(unit.MaxHealth, unit.CurrentHealth + ScoutRegenAmountPerInterval);
             }
         }
 
