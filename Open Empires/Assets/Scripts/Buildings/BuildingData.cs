@@ -84,7 +84,8 @@ namespace OpenEmpires
         public int FoundationBorder;
 
         // Combat feedback (sim writes, view reads)
-        public int LastDamageTick;
+        public int LastDamageTick;       // real damage only — used by attack-ping system
+        public int LastStrikeTick;       // cosmetic visual strikes from repair/construction work
         public FixedVector3 LastDamageFromPos;
 
         // Training queue

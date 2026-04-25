@@ -14,6 +14,11 @@ namespace OpenEmpires
         public event Action<BuildingData> OnBuildingCreated;
         public event Action<int, int> OnUnitGarrisoned; // unitId, buildingId
         public event Action<int> OnUnitUngarrisoned; // unitId
+
+        // Fired when a unit or building takes real combat damage. Subscribers (e.g. MinimapUI's
+        // attack-ping system) get a position + owner id so they can decide whether to react.
+        // Not fired for repair "strikes", construction strikes, or resource gathering.
+        public event Action<float, float, int> OnEntityDamaged; // worldX, worldZ, ownerPlayerId
         public event Action<int, int> OnSheepConverted; // sheepId, newPlayerId
         public event Action<int, int> OnSheepSlaughtered; // sheepId, carcassNodeId
         public event Action<int, FixedVector3, int> OnMeteorWarning; // playerId, position, impactTick
@@ -794,6 +799,28 @@ namespace OpenEmpires
             for (int i = 0; i < deadBuildingIds.Count; i++)
                 CleanUpDestroyedBuilding(deadBuildingIds[i]);
             if (hashSystems) lastSystemHashes[6] = ComputeQuickHash(); // after projectile + death cleanup
+
+            // Emit OnEntityDamaged for any entity hit this tick. Done as a single post-tick scan
+            // (one pass over all units/buildings) rather than at every damage call-site, so we
+            // don't have to thread a callback through every system. Subscribers (e.g. MinimapUI's
+            // attack-ping handler) decide what to do with each event.
+            if (OnEntityDamaged != null)
+            {
+                var allUnits = UnitRegistry.GetAllUnits();
+                for (int i = 0; i < allUnits.Count; i++)
+                {
+                    var u = allUnits[i];
+                    if (u.LastDamageTick == currentTick && u.State != UnitState.Dead)
+                        OnEntityDamaged.Invoke(u.SimPosition.x.ToFloat(), u.SimPosition.z.ToFloat(), u.PlayerId);
+                }
+                var allBuildings = BuildingRegistry.GetAllBuildings();
+                for (int i = 0; i < allBuildings.Count; i++)
+                {
+                    var b = allBuildings[i];
+                    if (b.LastDamageTick == currentTick && !b.IsDestroyed)
+                        OnEntityDamaged.Invoke(b.SimPosition.x.ToFloat(), b.SimPosition.z.ToFloat(), b.PlayerId);
+                }
+            }
 
             CheckSurrenderVoteTimeout();
             CheckWinCondition();

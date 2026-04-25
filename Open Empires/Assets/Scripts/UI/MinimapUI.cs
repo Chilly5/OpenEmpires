@@ -126,6 +126,10 @@ namespace OpenEmpires
 
             fogPixelBuffer = new Color32[mapWidth * mapHeight];
 
+            // Event-driven attack pings: sim emits OnEntityDamaged once per damaged entity per tick.
+            // We filter to local-player-owned entities and let TryPlaceAttackPing dedupe by proximity.
+            sim.OnEntityDamaged += HandleEntityDamaged;
+
             BuildCanvas();
         }
 
@@ -445,8 +449,9 @@ namespace OpenEmpires
                 RenderComposite();
             }
 
-            // Check for off-screen attacks on local player's entities
-            CheckForAttacks();
+            // Attack-ping scan disabled — per-tick iteration was contributing to lag spikes.
+            // Re-enable by uncommenting; the function body is preserved below.
+            // CheckForAttacks();
 
             // Draw frustum every frame on top of cached composite
             DrawViewportOverlay();
@@ -1146,11 +1151,12 @@ namespace OpenEmpires
 
             bool offScreenAttack = false;
 
-            // Use a recent-damage window instead of an "advancing watermark" tick filter:
-            // the latter loses events whose tick lands in the same frame the function runs,
-            // because Unity's script execution order isn't deterministic. The proximity check
-            // inside TryPlaceAttackPing dedupes — one ping per location per (ping lifetime).
-            const int RecentDamageWindowTicks = 90; // ~3s at 30 TPS
+            // Process only entities damaged in the very recent past — keeps CPU bounded.
+            // 2 ticks is enough to absorb the script-execution-order race (MinimapUI.Update can
+            // run before GameSimulation.Tick advances the tick), while preventing the per-tick
+            // re-iteration of every unit that was hit in the last few seconds.
+            // The proximity check inside TryPlaceAttackPing handles "don't ping the same battle".
+            const int RecentDamageWindowTicks = 2;
 
             // Damaged own units
             var units = sim.UnitRegistry.GetAllUnits();
@@ -1314,6 +1320,8 @@ namespace OpenEmpires
                 notifyPingAction.Dispose();
                 notifyPingAction = null;
             }
+            var sim = GameBootstrapper.Instance?.Simulation;
+            if (sim != null) sim.OnEntityDamaged -= HandleEntityDamaged;
         }
     }
 }
