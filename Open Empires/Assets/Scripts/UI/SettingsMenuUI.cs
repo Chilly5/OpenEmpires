@@ -1043,6 +1043,25 @@ namespace OpenEmpires
                 diagToggle.SetIsOnWithoutNotify(diag.IsVisible);
             diagToggle.onValueChanged.AddListener(OnDiagToggleChanged);
 
+            // Attack Flash Level: scales the red edge vignette that fires on incoming damage.
+            // 0 disables the flash entirely while leaving the directional arrows intact.
+            y -= 40f;
+            float flashLabelW = 150f;
+            MakeLabel(panelGO.transform, "Attack Flash Level", rowX, y, flashLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+            var flashSliderGO = CreateSlider(panelGO.transform, rowX + flashLabelW + 5f, y, sliderW, 20f);
+            var flashSlider = flashSliderGO.GetComponent<Slider>();
+            flashSlider.minValue = 0f;
+            flashSlider.maxValue = 1f;
+            flashSlider.SetValueWithoutNotify(PeripheralAttackIndicators.FlashLevel);
+            var flashValueText = MakeLabel(panelGO.transform,
+                Mathf.RoundToInt(flashSlider.value * 100f).ToString(),
+                rowX + flashLabelW + 5f + sliderW + 10f, y, valueW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+            flashSlider.onValueChanged.AddListener(value =>
+            {
+                PeripheralAttackIndicators.FlashLevel = value;
+                flashValueText.text = Mathf.RoundToInt(value * 100f).ToString();
+            });
+
             // Disable Fog of War (full reveal — same effect as the vision cheat, client-side only)
             float fowLabelW = 150f;
             y -= 40f;

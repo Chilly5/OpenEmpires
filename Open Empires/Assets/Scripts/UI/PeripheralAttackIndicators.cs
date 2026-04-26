@@ -15,8 +15,31 @@ namespace OpenEmpires
         private const float PulseRate = 4f;         // matches MinimapUI.PingFlashRate
         private const float EdgeMargin = 60f;       // px from screen edge for the arrow ring
         private const float ArrowSize = 48f;        // px (canvas reference)
+        private const float FlashDuration = 0.8f;   // seconds — vignette decay after a hit
+        private const float FlashMaxAlpha = 0.55f;  // peak vignette opacity at FlashLevel = 1
+        private const string FlashLevelPrefKey = "peripheral_flash_level";
 
         private static readonly Color32 ArrowColor = new Color32(255, 60, 30, 255);
+        private static readonly Color FlashColor = new Color(1f, 0.15f, 0.1f, 1f);
+
+        // 0..1 user-facing scalar on the vignette intensity. Persisted via PlayerPrefs so the
+        // settings menu can write it directly without needing a reference to the live instance.
+        private static float flashLevel = -1f; // sentinel — lazy-loaded
+        public static float FlashLevel
+        {
+            get
+            {
+                if (flashLevel < 0f)
+                    flashLevel = Mathf.Clamp01(PlayerPrefs.GetFloat(FlashLevelPrefKey, 1f));
+                return flashLevel;
+            }
+            set
+            {
+                flashLevel = Mathf.Clamp01(value);
+                PlayerPrefs.SetFloat(FlashLevelPrefKey, flashLevel);
+                PlayerPrefs.Save();
+            }
+        }
 
         private struct Indicator
         {
@@ -32,6 +55,8 @@ namespace OpenEmpires
         private UnitSelectionManager selectionManager;
         private GameSimulation subscribedSim;
         private Sprite arrowSprite;
+        private Image vignetteImage;
+        private float flashIntensity; // 0..1, decays each frame
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Bootstrap()
@@ -82,11 +107,28 @@ namespace OpenEmpires
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1280f, 720f);
             scaler.matchWidthOrHeight = 0.5f;
+
+            // Vignette goes in first so it draws under the arrows. Stretches to fill the canvas.
+            var vignetteGO = new GameObject("EdgeFlashVignette");
+            vignetteGO.transform.SetParent(canvasGO.transform, false);
+            var vrt = vignetteGO.AddComponent<RectTransform>();
+            vrt.anchorMin = Vector2.zero;
+            vrt.anchorMax = Vector2.one;
+            vrt.offsetMin = Vector2.zero;
+            vrt.offsetMax = Vector2.zero;
+            vignetteImage = vignetteGO.AddComponent<Image>();
+            vignetteImage.sprite = BuildVignetteSprite();
+            vignetteImage.raycastTarget = false;
+            vignetteImage.color = new Color(FlashColor.r, FlashColor.g, FlashColor.b, 0f);
+            vignetteImage.enabled = false;
         }
 
         private void HandleEntityDamaged(float wx, float wz, int ownerPlayerId)
         {
             if (ownerPlayerId != ResolveLocalPlayerId()) return;
+
+            // Every hit re-triggers the flash, so sustained damage keeps the vignette visible.
+            flashIntensity = 1f;
 
             // Proximity dedup: if an indicator for this battle already exists, refresh its timer.
             for (int i = 0; i < indicators.Count; i++)
@@ -161,6 +203,8 @@ namespace OpenEmpires
 
         private void Update()
         {
+            UpdateVignette();
+
             if (mainCamera == null) mainCamera = Camera.main;
             if (mainCamera == null || indicators.Count == 0) return;
 
@@ -227,6 +271,52 @@ namespace OpenEmpires
 
                 indicators[i] = ind;
             }
+        }
+
+        private void UpdateVignette()
+        {
+            if (vignetteImage == null) return;
+            float effectiveAlpha = flashIntensity * FlashMaxAlpha * FlashLevel;
+            if (effectiveAlpha <= 0.001f)
+            {
+                if (vignetteImage.enabled) vignetteImage.enabled = false;
+                if (flashIntensity > 0f)
+                    flashIntensity = Mathf.Max(0f, flashIntensity - Time.deltaTime / FlashDuration);
+                return;
+            }
+            flashIntensity = Mathf.Max(0f, flashIntensity - Time.deltaTime / FlashDuration);
+            vignetteImage.enabled = true;
+            vignetteImage.color = new Color(FlashColor.r, FlashColor.g, FlashColor.b, effectiveAlpha);
+        }
+
+        // Radial gradient: clear in the center, ramps to opaque red at the corners. Stretching
+        // the square sprite across a 16:9 screen warps it into an oval, which still reads as a
+        // believable "edge tint" without needing a screen-space shader.
+        private static Sprite BuildVignetteSprite()
+        {
+            const int size = 256;
+            const float innerNorm = 0.45f; // start of the ramp (clear inside)
+            var tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
+            tex.filterMode = FilterMode.Bilinear;
+            tex.wrapMode = TextureWrapMode.Clamp;
+            var pixels = new Color32[size * size];
+            float center = size * 0.5f;
+            float maxDist = Mathf.Sqrt(2f) * center; // corner distance
+            for (int y = 0; y < size; y++)
+            {
+                for (int x = 0; x < size; x++)
+                {
+                    float dx = x + 0.5f - center;
+                    float dy = y + 0.5f - center;
+                    float distNorm = Mathf.Sqrt(dx * dx + dy * dy) / maxDist;
+                    float t = Mathf.Clamp01((distNorm - innerNorm) / (1f - innerNorm));
+                    byte a = (byte)(t * t * 255f); // squared for a softer ramp
+                    pixels[y * size + x] = new Color32(255, 255, 255, a);
+                }
+            }
+            tex.SetPixels32(pixels);
+            tex.Apply();
+            return Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f));
         }
 
         // Right-pointing isoceles triangle (tip at +X). RectTransform.localRotation around Z
