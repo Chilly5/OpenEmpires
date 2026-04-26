@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace OpenEmpires
@@ -7,6 +8,11 @@ namespace OpenEmpires
         public int ResourceNodeId { get; private set; }
         public bool IsSelected => isSelected;
         public bool IsGhostMode => isGhostMode;
+
+        public static readonly List<ResourceNode> All = new List<ResourceNode>();
+
+        private void Awake() { if (!All.Contains(this)) All.Add(this); }
+        private void OnDestroy() { All.Remove(this); }
 
         private ResourceNodeData nodeData;
         private bool isSelected;
@@ -40,6 +46,49 @@ namespace OpenEmpires
         public void SetBillboardSprite(GameObject sprite)
         {
             billboardSprite = sprite;
+        }
+
+        public Rect GetScreenBounds(Camera cam)
+        {
+            // Prefer the billboard sprite's renderer (for Gold/Stone/Food/Wood billboards),
+            // fall back to body renderers, then to the collider for legacy 3D resource nodes.
+            Bounds? worldBounds = null;
+            if (billboardSprite != null)
+            {
+                var r = billboardSprite.GetComponent<Renderer>();
+                if (r != null) worldBounds = r.bounds;
+            }
+            if (worldBounds == null && bodyRenderers != null && bodyRenderers.Length > 0)
+            {
+                Bounds b = bodyRenderers[0].bounds;
+                for (int i = 1; i < bodyRenderers.Length; i++)
+                    if (bodyRenderers[i] != null) b.Encapsulate(bodyRenderers[i].bounds);
+                worldBounds = b;
+            }
+            if (worldBounds == null)
+            {
+                var col = GetComponent<Collider>();
+                if (col != null) worldBounds = col.bounds;
+            }
+            if (worldBounds == null) return default;
+
+            Vector3 center = worldBounds.Value.center;
+            Vector3 ext = worldBounds.Value.extents;
+            float minX = float.MaxValue, minY = float.MaxValue;
+            float maxX = float.MinValue, maxY = float.MinValue;
+            for (int cx = -1; cx <= 1; cx += 2)
+            for (int cy = -1; cy <= 1; cy += 2)
+            for (int cz = -1; cz <= 1; cz += 2)
+            {
+                Vector3 corner = new Vector3(center.x + ext.x * cx, center.y + ext.y * cy, center.z + ext.z * cz);
+                Vector3 sp = cam.WorldToScreenPoint(corner);
+                if (sp.z < 0) return default;
+                if (sp.x < minX) minX = sp.x;
+                if (sp.x > maxX) maxX = sp.x;
+                if (sp.y < minY) minY = sp.y;
+                if (sp.y > maxY) maxY = sp.y;
+            }
+            return Rect.MinMaxRect(minX, minY, maxX, maxY);
         }
 
         private void FitColliderToFootprint()
