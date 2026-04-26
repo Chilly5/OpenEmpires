@@ -2777,7 +2777,8 @@ namespace OpenEmpires
                 {
                     if (view.IsDead) continue; // Don't deactivate while corpse fade coroutine is running
                     var tile = sim.MapData.WorldToTile(unitData.SimPosition);
-                    bool visible = fogData.GetVisibility(localPid, tile.x, tile.y) == TileVisibility.Visible;
+                    bool visible = FogOfWarRenderer.DisableFogOfWar
+                        || fogData.GetVisibility(localPid, tile.x, tile.y) == TileVisibility.Visible;
                     view.gameObject.SetActive(visible);
                 }
             }
@@ -2801,11 +2802,15 @@ namespace OpenEmpires
                 TileVisibility tileVis;
                 if (buildingData != null)
                 {
-                    tileVis = fogData.GetVisibility(localPid, buildingData.OriginTileX, buildingData.OriginTileZ);
+                    tileVis = FogOfWarRenderer.DisableFogOfWar
+                        ? TileVisibility.Visible
+                        : fogData.GetVisibility(localPid, buildingData.OriginTileX, buildingData.OriginTileZ);
                 }
                 else if (ghostBuildings.TryGetValue(kvp.Key, out var ghostTile))
                 {
-                    tileVis = fogData.GetVisibility(localPid, ghostTile.tileX, ghostTile.tileZ);
+                    tileVis = FogOfWarRenderer.DisableFogOfWar
+                        ? TileVisibility.Visible
+                        : fogData.GetVisibility(localPid, ghostTile.tileX, ghostTile.tileZ);
                 }
                 else
                 {
@@ -2877,7 +2882,9 @@ namespace OpenEmpires
                         continue;
                     }
 
-                    var tileVis = fogData.GetVisibility(localPid, nodeTileX, nodeTileZ);
+                    var tileVis = FogOfWarRenderer.DisableFogOfWar
+                        ? TileVisibility.Visible
+                        : fogData.GetVisibility(localPid, nodeTileX, nodeTileZ);
 
                     if (tileVis == TileVisibility.Visible)
                     {
