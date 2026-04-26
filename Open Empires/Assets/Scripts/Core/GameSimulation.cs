@@ -2015,29 +2015,12 @@ namespace OpenEmpires
 
                 switch (tech)
                 {
-                    case TechnologyType.MeleeAttack1:
-                        if (!unit.IsRanged) unit.AttackDamage += config.MeleeAttackBonus1;
+                    case TechnologyType.BlacksmithDamage:
+                        unit.AttackDamage += config.BlacksmithDamageBonus;
                         break;
-                    case TechnologyType.MeleeAttack2:
-                        if (!unit.IsRanged) unit.AttackDamage += config.MeleeAttackBonus2;
-                        break;
-                    case TechnologyType.RangedAttack1:
-                        if (unit.IsRanged) unit.AttackDamage += config.RangedAttackBonus1;
-                        break;
-                    case TechnologyType.RangedAttack2:
-                        if (unit.IsRanged) unit.AttackDamage += config.RangedAttackBonus2;
-                        break;
-                    case TechnologyType.MeleeArmor1:
-                        unit.MeleeArmor += config.MeleeArmorBonus1;
-                        break;
-                    case TechnologyType.MeleeArmor2:
-                        unit.MeleeArmor += config.MeleeArmorBonus2;
-                        break;
-                    case TechnologyType.RangedArmor1:
-                        unit.RangedArmor += config.RangedArmorBonus1;
-                        break;
-                    case TechnologyType.RangedArmor2:
-                        unit.RangedArmor += config.RangedArmorBonus2;
+                    case TechnologyType.BlacksmithDefense:
+                        unit.MeleeArmor += config.BlacksmithDefenseBonus;
+                        unit.RangedArmor += config.BlacksmithDefenseBonus;
                         break;
                     case TechnologyType.Chemistry:
                         if (unit.IsRanged) unit.AttackDamage += config.ChemistryRangedBonus;
@@ -2056,39 +2039,6 @@ namespace OpenEmpires
             return playerTechnologies[playerId].Contains(tech);
         }
 
-        public int GetMeleeAttackBonus(int playerId)
-        {
-            int bonus = 0;
-            if (HasTechnology(playerId, TechnologyType.MeleeAttack1)) bonus += config.MeleeAttackBonus1;
-            if (HasTechnology(playerId, TechnologyType.MeleeAttack2)) bonus += config.MeleeAttackBonus2;
-            return bonus;
-        }
-
-        public int GetRangedAttackBonus(int playerId)
-        {
-            int bonus = 0;
-            if (HasTechnology(playerId, TechnologyType.RangedAttack1)) bonus += config.RangedAttackBonus1;
-            if (HasTechnology(playerId, TechnologyType.RangedAttack2)) bonus += config.RangedAttackBonus2;
-            if (HasTechnology(playerId, TechnologyType.Chemistry)) bonus += config.ChemistryRangedBonus;
-            return bonus;
-        }
-
-        public int GetMeleeArmorBonus(int playerId)
-        {
-            int bonus = 0;
-            if (HasTechnology(playerId, TechnologyType.MeleeArmor1)) bonus += config.MeleeArmorBonus1;
-            if (HasTechnology(playerId, TechnologyType.MeleeArmor2)) bonus += config.MeleeArmorBonus2;
-            return bonus;
-        }
-
-        public int GetRangedArmorBonus(int playerId)
-        {
-            int bonus = 0;
-            if (HasTechnology(playerId, TechnologyType.RangedArmor1)) bonus += config.RangedArmorBonus1;
-            if (HasTechnology(playerId, TechnologyType.RangedArmor2)) bonus += config.RangedArmorBonus2;
-            return bonus;
-        }
-
         private void ProcessResearchCommand(ResearchCommand cmd)
         {
             if (cmd.PlayerId < 0 || cmd.PlayerId >= playerCount) return;
@@ -2099,22 +2049,14 @@ namespace OpenEmpires
 
             var tech = (TechnologyType)cmd.TechType;
 
-            // Already researched or queued
             if (playerTechnologies[cmd.PlayerId].Contains(tech)) return;
             if (building.ResearchQueue.Contains(tech)) return;
 
-            // Check building type matches tech
             bool validBuilding = false;
             switch (tech)
             {
-                case TechnologyType.MeleeAttack1:
-                case TechnologyType.MeleeArmor1:
-                case TechnologyType.RangedAttack1:
-                case TechnologyType.RangedArmor1:
-                case TechnologyType.MeleeAttack2:
-                case TechnologyType.MeleeArmor2:
-                case TechnologyType.RangedAttack2:
-                case TechnologyType.RangedArmor2:
+                case TechnologyType.BlacksmithDamage:
+                case TechnologyType.BlacksmithDefense:
                     validBuilding = building.Type == BuildingType.Blacksmith;
                     break;
                 case TechnologyType.Ballistics:
@@ -2126,17 +2068,9 @@ namespace OpenEmpires
             }
             if (!validBuilding) return;
 
-            // Age requirement: tier 2 techs need age 3
             int reqAge = GetRequiredAgeForTech(tech);
             if (playerAges[cmd.PlayerId] < reqAge) return;
 
-            // Prerequisite: tier 2 requires tier 1
-            if (tech == TechnologyType.MeleeAttack2 && !playerTechnologies[cmd.PlayerId].Contains(TechnologyType.MeleeAttack1)) return;
-            if (tech == TechnologyType.MeleeArmor2 && !playerTechnologies[cmd.PlayerId].Contains(TechnologyType.MeleeArmor1)) return;
-            if (tech == TechnologyType.RangedAttack2 && !playerTechnologies[cmd.PlayerId].Contains(TechnologyType.RangedAttack1)) return;
-            if (tech == TechnologyType.RangedArmor2 && !playerTechnologies[cmd.PlayerId].Contains(TechnologyType.RangedArmor1)) return;
-
-            // Check cost
             var resources = ResourceManager.GetPlayerResources(cmd.PlayerId);
             int foodCost, goldCost;
             GetResearchCost(tech, out foodCost, out goldCost);
@@ -2153,10 +2087,8 @@ namespace OpenEmpires
         {
             switch (tech)
             {
-                case TechnologyType.MeleeAttack1:
-                case TechnologyType.MeleeArmor1:
-                case TechnologyType.RangedAttack1:
-                case TechnologyType.RangedArmor1:
+                case TechnologyType.BlacksmithDamage:
+                case TechnologyType.BlacksmithDefense:
                     return 2;
                 default:
                     return 3;
@@ -2168,14 +2100,8 @@ namespace OpenEmpires
             food = 0;
             switch (tech)
             {
-                case TechnologyType.MeleeAttack1: gold = config.MeleeAttack1Cost; break;
-                case TechnologyType.MeleeArmor1: gold = config.MeleeArmor1Cost; break;
-                case TechnologyType.RangedAttack1: gold = config.RangedAttack1Cost; break;
-                case TechnologyType.RangedArmor1: gold = config.RangedArmor1Cost; break;
-                case TechnologyType.MeleeAttack2: gold = config.MeleeAttack2Cost; break;
-                case TechnologyType.MeleeArmor2: gold = config.MeleeArmor2Cost; break;
-                case TechnologyType.RangedAttack2: gold = config.RangedAttack2Cost; break;
-                case TechnologyType.RangedArmor2: gold = config.RangedArmor2Cost; break;
+                case TechnologyType.BlacksmithDamage: gold = config.BlacksmithDamageCost; break;
+                case TechnologyType.BlacksmithDefense: gold = config.BlacksmithDefenseCost; break;
                 case TechnologyType.Ballistics: food = config.BallisticsFoodCost; gold = config.BallisticsGoldCost; break;
                 case TechnologyType.SiegeEngineering: food = config.SiegeEngineeringFoodCost; gold = config.SiegeEngineeringGoldCost; break;
                 case TechnologyType.Chemistry: food = config.ChemistryFoodCost; gold = config.ChemistryGoldCost; break;
@@ -5192,18 +5118,12 @@ namespace OpenEmpires
                 {
                     switch (tech)
                     {
-                        case TechnologyType.MeleeAttack1:
-                            if (!unitData.IsRanged) unitData.AttackDamage += config.MeleeAttackBonus1; break;
-                        case TechnologyType.MeleeAttack2:
-                            if (!unitData.IsRanged) unitData.AttackDamage += config.MeleeAttackBonus2; break;
-                        case TechnologyType.RangedAttack1:
-                            if (unitData.IsRanged) unitData.AttackDamage += config.RangedAttackBonus1; break;
-                        case TechnologyType.RangedAttack2:
-                            if (unitData.IsRanged) unitData.AttackDamage += config.RangedAttackBonus2; break;
-                        case TechnologyType.MeleeArmor1: unitData.MeleeArmor += config.MeleeArmorBonus1; break;
-                        case TechnologyType.MeleeArmor2: unitData.MeleeArmor += config.MeleeArmorBonus2; break;
-                        case TechnologyType.RangedArmor1: unitData.RangedArmor += config.RangedArmorBonus1; break;
-                        case TechnologyType.RangedArmor2: unitData.RangedArmor += config.RangedArmorBonus2; break;
+                        case TechnologyType.BlacksmithDamage:
+                            unitData.AttackDamage += config.BlacksmithDamageBonus; break;
+                        case TechnologyType.BlacksmithDefense:
+                            unitData.MeleeArmor += config.BlacksmithDefenseBonus;
+                            unitData.RangedArmor += config.BlacksmithDefenseBonus;
+                            break;
                         case TechnologyType.Chemistry:
                             if (unitData.IsRanged) unitData.AttackDamage += config.ChemistryRangedBonus; break;
                         case TechnologyType.SiegeEngineering:
