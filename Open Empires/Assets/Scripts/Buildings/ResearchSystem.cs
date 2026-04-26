@@ -62,16 +62,9 @@ namespace OpenEmpires
         {
             switch (tech)
             {
-                case TechnologyType.MeleeAttack1:
-                case TechnologyType.MeleeArmor1:
-                case TechnologyType.RangedAttack1:
-                case TechnologyType.RangedArmor1:
-                    return config.ResearchTicks_Age2;
-                case TechnologyType.MeleeAttack2:
-                case TechnologyType.MeleeArmor2:
-                case TechnologyType.RangedAttack2:
-                case TechnologyType.RangedArmor2:
-                    return config.ResearchTicks_Age3;
+                case TechnologyType.BlacksmithDamage:
+                case TechnologyType.BlacksmithDefense:
+                    return config.ResearchTicks_Age3;       // longer than Age 2; tuned for the consolidated +2 bonus
                 case TechnologyType.Ballistics:
                 case TechnologyType.SiegeEngineering:
                 case TechnologyType.Chemistry:

@@ -1481,6 +1481,20 @@ namespace OpenEmpires
                     queueText.gameObject.SetActive(true);
                 }
             }
+            else if (building.IsResearching && building.PlayerId == selectionManager.LocalPlayerId)
+            {
+                showProgress = true;
+                float progress = building.ResearchProgress;
+                float secondsLeft = (float)building.ResearchTicksRemaining / sim.Config.TickRate;
+                SetBarFill(progressBarFill, progress, TrainingBarColor);
+                progressBarText.text = $"Researching {building.CurrentResearch}... {secondsLeft:F1}s";
+
+                if (building.ResearchQueue.Count > 1)
+                {
+                    queueText.text = $"Queue: {building.ResearchQueue.Count}";
+                    queueText.gameObject.SetActive(true);
+                }
+            }
             progressBarBgRT.gameObject.SetActive(showProgress);
         }
 
@@ -1910,18 +1924,18 @@ namespace OpenEmpires
             bool done = sim.HasTechnology(playerId, tech);
             bool canAfford = resources.Food >= foodCost && resources.Gold >= goldCost;
 
-            // Check prerequisites for tier 2
-            bool prereqMet = true;
-            switch (tech)
-            {
-                case TechnologyType.MeleeAttack2: prereqMet = sim.HasTechnology(playerId, TechnologyType.MeleeAttack1); break;
-                case TechnologyType.MeleeArmor2: prereqMet = sim.HasTechnology(playerId, TechnologyType.MeleeArmor1); break;
-                case TechnologyType.RangedAttack2: prereqMet = sim.HasTechnology(playerId, TechnologyType.RangedAttack1); break;
-                case TechnologyType.RangedArmor2: prereqMet = sim.HasTechnology(playerId, TechnologyType.RangedArmor1); break;
-            }
+            // Already-queued check: don't let the same tech be enqueued twice on this building
+            // (also gives the player visual "it's been taken" feedback the moment they click).
+            bool inQueue = false;
+            var bldg = sim.BuildingRegistry.GetBuilding(buildingId);
+            if (bldg != null && bldg.ResearchQueue != null)
+                inQueue = bldg.ResearchQueue.Contains(tech);
 
-            // Age check
-            int reqAge = tech <= TechnologyType.RangedArmor1 ? 2 : 3;
+            // No tier-prereqs: each tech is standalone now.
+            bool prereqMet = true;
+
+            // Age check (Blacksmith techs are Age 2; University techs are Age 3)
+            int reqAge = (tech == TechnologyType.BlacksmithDamage || tech == TechnologyType.BlacksmithDefense) ? 2 : 3;
             bool ageOk = sim.GetPlayerAge(playerId) >= reqAge;
 
             string costStr = "";
@@ -1930,6 +1944,7 @@ namespace OpenEmpires
 
             string tooltip = $"<b>{label.Replace("\n", " ")}</b>\n{desc}\nCost: {costStr}";
             if (done) tooltip += "\n<i>(Already researched)</i>";
+            else if (inQueue) tooltip += "\n<i>(In progress…)</i>";
             else if (!ageOk) tooltip += $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(reqAge)}</color>";
             else if (!prereqMet) tooltip += "\n<color=#FF6666>Requires previous tier</color>";
 
@@ -1938,7 +1953,7 @@ namespace OpenEmpires
                 Label = label,
                 Hotkey = hotkey,
                 Tooltip = tooltip,
-                Enabled = !done && canAfford && prereqMet && ageOk,
+                Enabled = !done && !inQueue && canAfford && prereqMet && ageOk,
                 OnClick = () => sim.CommandBuffer.EnqueueCommand(new ResearchCommand(playerId, buildingId, tech))
             };
         }
@@ -2372,25 +2387,33 @@ namespace OpenEmpires
                 }
                 else if (building.Type == BuildingType.Blacksmith)
                 {
-                    int pid = building.PlayerId;
-                    int bid = building.Id;
                     var cfg = sim.Config;
-                    slots[0] = MakeResearchButton(sim, pid, bid, TechnologyType.MeleeAttack1, "Melee\nAttack I", "Q",
-                        "Increases melee unit attack damage.", 0, cfg.MeleeAttack1Cost, resources);
-                    slots[1] = MakeResearchButton(sim, pid, bid, TechnologyType.MeleeArmor1, "Melee\nArmor I", "W",
-                        "Increases melee armor for all units.", 0, cfg.MeleeArmor1Cost, resources);
-                    slots[2] = MakeResearchButton(sim, pid, bid, TechnologyType.RangedAttack1, "Ranged\nAttack I", "E",
-                        "Increases ranged unit attack damage.", 0, cfg.RangedAttack1Cost, resources);
-                    slots[3] = MakeResearchButton(sim, pid, bid, TechnologyType.RangedArmor1, "Ranged\nArmor I", "R",
-                        "Increases ranged armor for all units.", 0, cfg.RangedArmor1Cost, resources);
-                    slots[4] = MakeResearchButton(sim, pid, bid, TechnologyType.MeleeAttack2, "Melee\nAttack II", "A",
-                        "Further increases melee attack damage.", 0, cfg.MeleeAttack2Cost, resources);
-                    slots[5] = MakeResearchButton(sim, pid, bid, TechnologyType.MeleeArmor2, "Melee\nArmor II", "S",
-                        "Further increases melee armor.", 0, cfg.MeleeArmor2Cost, resources);
-                    slots[6] = MakeResearchButton(sim, pid, bid, TechnologyType.RangedAttack2, "Ranged\nAttack II", "D",
-                        "Further increases ranged attack damage.", 0, cfg.RangedAttack2Cost, resources);
-                    slots[7] = MakeResearchButton(sim, pid, bid, TechnologyType.RangedArmor2, "Ranged\nArmor II", "F",
-                        "Further increases ranged armor.", 0, cfg.RangedArmor2Cost, resources);
+                    int damageCost = cfg.BlacksmithDamageCost;
+                    int defenseCost = cfg.BlacksmithDefenseCost;
+
+                    // Mirror the Tower upgrade pattern: a single bool that ORs "already researched"
+                    // with "currently in this building's queue" so the button greys out the moment
+                    // it's clicked.
+                    bool damageDone = sim.HasTechnology(building.PlayerId, TechnologyType.BlacksmithDamage)
+                                       || building.ResearchQueue.Contains(TechnologyType.BlacksmithDamage);
+                    bool defenseDone = sim.HasTechnology(building.PlayerId, TechnologyType.BlacksmithDefense)
+                                        || building.ResearchQueue.Contains(TechnologyType.BlacksmithDefense);
+
+                    slots[0] = new GridButton {
+                        Label = "Damage", Hotkey = "Q",
+                        Enabled = !damageDone && resources.Gold >= damageCost,
+                        Tooltip = $"<b>Damage</b>\nIncreases attack damage of all military units (+{cfg.BlacksmithDamageBonus} melee and ranged).\nCost: {damageCost} <sprite name=\"gold\">"
+                            + (damageDone ? "\n<i>(Already researched or queued)</i>" : ""),
+                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
+                            new ResearchCommand(building.PlayerId, building.Id, TechnologyType.BlacksmithDamage)) };
+
+                    slots[1] = new GridButton {
+                        Label = "Defense", Hotkey = "W",
+                        Enabled = !defenseDone && resources.Gold >= defenseCost,
+                        Tooltip = $"<b>Defense</b>\nIncreases armor of all military units (+{cfg.BlacksmithDefenseBonus} melee and ranged).\nCost: {defenseCost} <sprite name=\"gold\">"
+                            + (defenseDone ? "\n<i>(Already researched or queued)</i>" : ""),
+                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
+                            new ResearchCommand(building.PlayerId, building.Id, TechnologyType.BlacksmithDefense)) };
                     hasAny = true;
                 }
                 else if (building.Type == BuildingType.University)
@@ -3106,13 +3129,11 @@ namespace OpenEmpires
             else if (dominantType == BuildingType.Blacksmith)
             {
                 TechnologyType[] blacksmithTechs = {
-                    TechnologyType.MeleeAttack1, TechnologyType.MeleeArmor1,
-                    TechnologyType.RangedAttack1, TechnologyType.RangedArmor1,
-                    TechnologyType.MeleeAttack2, TechnologyType.MeleeArmor2,
-                    TechnologyType.RangedAttack2, TechnologyType.RangedArmor2
+                    TechnologyType.BlacksmithDamage,
+                    TechnologyType.BlacksmithDefense,
                 };
-                Key[] blacksmithKeys = { Key.Q, Key.W, Key.E, Key.R, Key.A, Key.S, Key.D, Key.F };
-                int[] blacksmithSlots = { 0, 1, 2, 3, 4, 5, 6, 7 };
+                Key[] blacksmithKeys = { Key.Q, Key.W };
+                int[] blacksmithSlots = { 0, 1 };
                 for (int t = 0; t < blacksmithTechs.Length; t++)
                 {
                     if (WasKeyPressed(blacksmithKeys[t]))

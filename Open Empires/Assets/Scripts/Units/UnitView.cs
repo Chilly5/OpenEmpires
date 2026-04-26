@@ -225,6 +225,7 @@ namespace OpenEmpires
             CreateDepositIndicatorPool();
             CreateHealIndicatorPool();
             CreateHealthBarWidget();
+            CreateUpgradeBadgesWidget();
             var col = GetComponent<Collider>();
             healthBarYOffset = col != null
                 ? col.bounds.max.y - transform.position.y + 0.1f
@@ -800,6 +801,135 @@ namespace OpenEmpires
         private void LateUpdate()
         {
             UpdateHealthBarUI();
+            UpdateUpgradeBadgesUI();
+        }
+
+        // --- Blacksmith upgrade badges (Damage / Defense) ---
+        private RectTransform upgradeBadgesRoot;
+        private GameObject damageBadgeGO;
+        private GameObject defenseBadgeGO;
+        private RectTransform damageBadgeRT;
+        private RectTransform defenseBadgeRT;
+        private static readonly Color DamageBadgeColor = new Color(0.85f, 0.25f, 0.15f);
+        private static readonly Color DefenseBadgeColor = new Color(0.20f, 0.45f, 0.85f);
+
+        private void CreateUpgradeBadgesWidget()
+        {
+            // Skip non-military units (villagers/sheep) — they don't get blacksmith upgrades.
+            if (unitData != null && (unitData.IsVillager || unitData.IsSheep)) return;
+
+            WorldOverlayCanvas.EnsureCreated();
+            var rootGO = new GameObject($"UpgradeBadges_{UnitId}");
+            rootGO.transform.SetParent(WorldOverlayCanvas.Instance.transform, false);
+            upgradeBadgesRoot = rootGO.AddComponent<RectTransform>();
+            upgradeBadgesRoot.sizeDelta = new Vector2(28f, 12f);
+
+            damageBadgeGO = CreateUpgradeBadge(rootGO.transform, "A", DamageBadgeColor);
+            damageBadgeRT = damageBadgeGO.GetComponent<RectTransform>();
+            defenseBadgeGO = CreateUpgradeBadge(rootGO.transform, "D", DefenseBadgeColor);
+            defenseBadgeRT = defenseBadgeGO.GetComponent<RectTransform>();
+
+            rootGO.SetActive(false);
+        }
+
+        private GameObject CreateUpgradeBadge(Transform parent, string letter, Color color)
+        {
+            var go = new GameObject(letter + "Badge");
+            go.transform.SetParent(parent, false);
+            var rt = go.AddComponent<RectTransform>();
+            rt.sizeDelta = new Vector2(12f, 12f);
+
+            var img = go.AddComponent<Image>();
+            img.color = color;
+            img.raycastTarget = false;
+            var outline = go.AddComponent<Outline>();
+            outline.effectColor = new Color(0f, 0f, 0f, 0.9f);
+            outline.effectDistance = new Vector2(1f, -1f);
+
+            var textGO = new GameObject("Text");
+            textGO.transform.SetParent(go.transform, false);
+            var textRT = textGO.AddComponent<RectTransform>();
+            textRT.anchorMin = Vector2.zero;
+            textRT.anchorMax = Vector2.one;
+            textRT.offsetMin = Vector2.zero;
+            textRT.offsetMax = Vector2.zero;
+            var text = textGO.AddComponent<TextMeshProUGUI>();
+            text.text = letter;
+            text.fontSize = 10f;
+            text.fontStyle = FontStyles.Bold;
+            text.color = Color.white;
+            text.alignment = TextAlignmentOptions.Center;
+            text.raycastTarget = false;
+
+            return go;
+        }
+
+        private void UpdateUpgradeBadgesUI()
+        {
+            if (upgradeBadgesRoot == null) return; // not a military unit
+            if (IsDead || unitData == null)
+            {
+                if (upgradeBadgesRoot.gameObject.activeSelf)
+                    upgradeBadgesRoot.gameObject.SetActive(false);
+                return;
+            }
+
+            var sim = GameBootstrapper.Instance?.Simulation;
+            if (sim == null) return;
+
+            bool hasDamage = sim.HasTechnology(unitData.PlayerId, TechnologyType.BlacksmithDamage);
+            bool hasDefense = sim.HasTechnology(unitData.PlayerId, TechnologyType.BlacksmithDefense);
+
+            if (!hasDamage && !hasDefense)
+            {
+                if (upgradeBadgesRoot.gameObject.activeSelf)
+                    upgradeBadgesRoot.gameObject.SetActive(false);
+                return;
+            }
+
+            Camera cam = UnitView.CachedMainCamera;
+            if (cam == null) return;
+
+            // Sit just above the health bar (which sits at headY + small lift).
+            Vector3 worldPos = transform.position + Vector3.up * (healthBarYOffset + 0.45f);
+            Vector3 screenPos = cam.WorldToScreenPoint(worldPos);
+            if (screenPos.z < 0f)
+            {
+                if (upgradeBadgesRoot.gameObject.activeSelf)
+                    upgradeBadgesRoot.gameObject.SetActive(false);
+                return;
+            }
+
+            if (!upgradeBadgesRoot.gameObject.activeSelf)
+                upgradeBadgesRoot.gameObject.SetActive(true);
+            upgradeBadgesRoot.position = new Vector3(screenPos.x, screenPos.y, 0f);
+
+            if (damageBadgeGO.activeSelf != hasDamage) damageBadgeGO.SetActive(hasDamage);
+            if (defenseBadgeGO.activeSelf != hasDefense) defenseBadgeGO.SetActive(hasDefense);
+
+            // Center the active badges horizontally (nudged so they sit side-by-side or solo).
+            if (hasDamage && hasDefense)
+            {
+                damageBadgeRT.anchoredPosition = new Vector2(-7f, 0f);
+                defenseBadgeRT.anchoredPosition = new Vector2(7f, 0f);
+            }
+            else if (hasDamage)
+            {
+                damageBadgeRT.anchoredPosition = Vector2.zero;
+            }
+            else
+            {
+                defenseBadgeRT.anchoredPosition = Vector2.zero;
+            }
+        }
+
+        private void DestroyUpgradeBadgesWidget()
+        {
+            if (upgradeBadgesRoot != null)
+            {
+                Destroy(upgradeBadgesRoot.gameObject);
+                upgradeBadgesRoot = null;
+            }
         }
 
         private Vector3 WaypointYAdjust(Vector3 pos)
@@ -1353,6 +1483,7 @@ namespace OpenEmpires
             DestroyHealIndicatorPool();
             if (healthBarRoot != null)
                 Destroy(healthBarRoot.gameObject);
+            DestroyUpgradeBadgesWidget();
         }
 
         public void HideHealthBar()
@@ -1371,6 +1502,7 @@ namespace OpenEmpires
                 Destroy(healthBarRoot.gameObject);
                 healthBarRoot = null;
             }
+            DestroyUpgradeBadgesWidget();
 
             SetSelected(false);
 

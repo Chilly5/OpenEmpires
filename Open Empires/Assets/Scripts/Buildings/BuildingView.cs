@@ -1186,7 +1186,10 @@ namespace OpenEmpires
 
             bool damaged = buildingData.CurrentHealth < buildingData.MaxHealth;
             bool training = buildingData.IsTraining;
-            bool upgrading = buildingData.Type == BuildingType.Tower && buildingData.IsUpgrading;
+            // Reuse the upgrade-bar widget for both Tower upgrades AND research progress
+            // (Blacksmith / University). Single visual, two underlying systems.
+            bool towerUpgrading = buildingData.Type == BuildingType.Tower && buildingData.IsUpgrading;
+            bool upgrading = towerUpgrading || buildingData.IsResearching;
 
             // Check influence periodically (not every frame)
             if (--influenceCheckCooldown <= 0)
@@ -1312,20 +1315,25 @@ namespace OpenEmpires
                     queueContainer.gameObject.SetActive(false);
             }
 
-            // Upgrade bar
+            // Upgrade bar — drives off whichever progress source is active.
             if (upgrading)
             {
                 if (!upgradeBarGO.activeSelf)
                     upgradeBarGO.SetActive(true);
 
-                float upgradeFraction = Mathf.Clamp01(buildingData.UpgradeProgress);
+                float upgradeFraction = towerUpgrading
+                    ? Mathf.Clamp01(buildingData.UpgradeProgress)
+                    : Mathf.Clamp01(buildingData.ResearchProgress);
                 upgradeFillRT.anchorMax = new Vector2(upgradeFraction, 1f);
 
-                bool showQueueCount = buildingData.UpgradeQueue.Count > 1;
+                int queueCount = towerUpgrading
+                    ? buildingData.UpgradeQueue.Count
+                    : buildingData.ResearchQueue.Count;
+                bool showQueueCount = queueCount > 1;
                 if (upgradeQueueText.gameObject.activeSelf != showQueueCount)
                     upgradeQueueText.gameObject.SetActive(showQueueCount);
                 if (showQueueCount)
-                    upgradeQueueText.text = $"Queue: {buildingData.UpgradeQueue.Count}";
+                    upgradeQueueText.text = $"Queue: {queueCount}";
             }
             else
             {
