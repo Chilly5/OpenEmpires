@@ -2038,14 +2038,16 @@ namespace OpenEmpires
                     break;
                 }
                 case BuildingType.Farm:
-                    prefab = CreateFarmPrefab(buildingData.PlayerId);
+                    prefab = CreateBuildingSpritePrefab("Farm", "Farm", 2, 2, 2.75f, 0.25f / 2.75f)
+                          ?? CreateFarmPrefab(buildingData.PlayerId);
                     break;
                 case BuildingType.Tower:
                     prefab = CreateBuildingSpritePrefab("Tower", "Tower", 1, 1, 5f)
                           ?? CreateTowerPrefab(buildingData.PlayerId);
                     break;
                 case BuildingType.Monastery:
-                    prefab = CreateMonasteryPrefab(buildingData.PlayerId);
+                    prefab = CreateBuildingSpritePrefab("Monastery", "Monastery", 3, 3, 6f, 1.02f / 6f)
+                          ?? CreateMonasteryPrefab(buildingData.PlayerId);
                     break;
                 case BuildingType.Blacksmith:
                     prefab = CreateBuildingSpritePrefab("Blacksmith", "Blacksmith", 3, 3, 6f, 1.02f / 6f)
@@ -2777,7 +2779,8 @@ namespace OpenEmpires
                 {
                     if (view.IsDead) continue; // Don't deactivate while corpse fade coroutine is running
                     var tile = sim.MapData.WorldToTile(unitData.SimPosition);
-                    bool visible = fogData.GetVisibility(localPid, tile.x, tile.y) == TileVisibility.Visible;
+                    bool visible = FogOfWarRenderer.DisableFogOfWar
+                        || fogData.GetVisibility(localPid, tile.x, tile.y) == TileVisibility.Visible;
                     view.gameObject.SetActive(visible);
                 }
             }
@@ -2801,11 +2804,15 @@ namespace OpenEmpires
                 TileVisibility tileVis;
                 if (buildingData != null)
                 {
-                    tileVis = fogData.GetVisibility(localPid, buildingData.OriginTileX, buildingData.OriginTileZ);
+                    tileVis = FogOfWarRenderer.DisableFogOfWar
+                        ? TileVisibility.Visible
+                        : fogData.GetVisibility(localPid, buildingData.OriginTileX, buildingData.OriginTileZ);
                 }
                 else if (ghostBuildings.TryGetValue(kvp.Key, out var ghostTile))
                 {
-                    tileVis = fogData.GetVisibility(localPid, ghostTile.tileX, ghostTile.tileZ);
+                    tileVis = FogOfWarRenderer.DisableFogOfWar
+                        ? TileVisibility.Visible
+                        : fogData.GetVisibility(localPid, ghostTile.tileX, ghostTile.tileZ);
                 }
                 else
                 {
@@ -2877,7 +2884,9 @@ namespace OpenEmpires
                         continue;
                     }
 
-                    var tileVis = fogData.GetVisibility(localPid, nodeTileX, nodeTileZ);
+                    var tileVis = FogOfWarRenderer.DisableFogOfWar
+                        ? TileVisibility.Visible
+                        : fogData.GetVisibility(localPid, nodeTileX, nodeTileZ);
 
                     if (tileVis == TileVisibility.Visible)
                     {

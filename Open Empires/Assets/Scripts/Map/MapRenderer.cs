@@ -866,22 +866,22 @@ namespace OpenEmpires
                     Debug.LogWarning($"[MapRenderer] Could not place berry patch for player {p} near ({bx + 14}, {bz + 10})");
                 }
 
-                // Gold cluster: target offset (-14, +10), spiral retry
+                // Gold deposit: single 2x2 block, target offset (-14, +10), spiral retry
                 Vector3 goldTarget = ClampToMap(bx - 14, bz + 10);
                 if (FindValidSpawnPosition(mapData, ResourceType.Gold, goldTarget, 15, out Vector3 goldPos))
                 {
-                    SpawnResourceCluster(mapData, ResourceType.Gold, goldPos, 3000, goldMinePrefab);
+                    SpawnResourceNode(mapData, ResourceType.Gold, goldPos, 3000, goldMinePrefab);
                 }
                 else
                 {
                     Debug.LogWarning($"[MapRenderer] Could not place gold mine for player {p} near ({bx - 14}, {bz + 10})");
                 }
 
-                // Stone cluster: target offset (+10, -14), spiral retry
+                // Stone deposit: single 2x2 block, target offset (+10, -14), spiral retry
                 Vector3 stoneTarget = ClampToMap(bx + 10, bz - 14);
                 if (FindValidSpawnPosition(mapData, ResourceType.Stone, stoneTarget, 15, out Vector3 stonePos))
                 {
-                    SpawnResourceCluster(mapData, ResourceType.Stone, stonePos, 3000, stoneMinePrefab);
+                    SpawnResourceNode(mapData, ResourceType.Stone, stonePos, 3000, stoneMinePrefab);
                 }
                 else
                 {
@@ -926,10 +926,7 @@ namespace OpenEmpires
                     Vector3 target = ClampToMap(x, z);
                     if (FindValidSpawnPosition(mapData, type, target, 10, out Vector3 pos))
                     {
-                        if (type == ResourceType.Gold || type == ResourceType.Stone)
-                            SpawnResourceCluster(mapData, type, pos, amount, prefab);
-                        else
-                            SpawnResourceNode(mapData, type, pos, amount, prefab);
+                        SpawnResourceNode(mapData, type, pos, amount, prefab);
                         break;
                     }
                 }
@@ -1003,7 +1000,8 @@ namespace OpenEmpires
             int footprintW = 1;
             int footprintH = 1;
 
-            if (type == ResourceType.Wood || type == ResourceType.Food)
+            if (type == ResourceType.Wood || type == ResourceType.Food
+                || type == ResourceType.Gold || type == ResourceType.Stone)
             {
                 // 2x2 footprint: snap position to center of 2x2 block
                 footprintW = 2;
@@ -1013,13 +1011,6 @@ namespace OpenEmpires
                 int originZ = Mathf.FloorToInt(position.z);
                 originZ = originZ & ~1; // round down to nearest even
                 position = new Vector3(originX + 1.0f, position.y, originZ + 1.0f);
-            }
-            else if (type == ResourceType.Gold || type == ResourceType.Stone)
-            {
-                // 1x1 footprint: snap position to tile center
-                int originX = Mathf.FloorToInt(position.x);
-                int originZ = Mathf.FloorToInt(position.z);
-                position = new Vector3(originX + 0.5f, position.y, originZ + 0.5f);
             }
 
             // Skip spawning if any footprint tile is water or already occupied
@@ -1059,14 +1050,25 @@ namespace OpenEmpires
                 if (type == ResourceType.Food)
                 {
                     go.transform.localScale *= 1.35f; // 1.5 * 1.35 ≈ 2.0 total, fills 2x2 tiles
-                    foreach (Transform child in go.transform)
-                        child.localPosition = Vector3.zero;
+                }
+
+                // Gold/Stone/Food now use billboarded sprites — extract the visual child
+                // out of the static-batched hierarchy so the billboard pivot survives.
+                if (type == ResourceType.Gold || type == ResourceType.Stone || type == ResourceType.Food)
+                {
+                    var renderer = go.GetComponentInChildren<MeshRenderer>();
+                    if (renderer != null && renderer.gameObject != go)
+                    {
+                        treeSprite = renderer.gameObject;
+                        treeSprite.transform.SetParent(billboardContainer, worldPositionStays: true);
+                    }
                 }
             }
 
             if (go != null)
             {
-                // Mark non-Wood nodes as static for batching (billboard sprites can't be static)
+                // Mark remaining (non-billboard) children of non-Wood nodes static for batching.
+                // The billboard sprite child has already been moved to billboardContainer above.
                 if (type != ResourceType.Wood)
                 {
                     foreach (var t in go.GetComponentsInChildren<Transform>(true))

@@ -160,7 +160,7 @@ namespace OpenEmpires
             if (!IsInBounds(x, z)) return false;
             if (IsOutsideCircle(x, z)) return false;
             var t = Tiles[x, z];
-            return t == TileType.Grass || t == TileType.Sand || t == TileType.Foundation || t == TileType.Farm;
+            return t == TileType.Grass || t == TileType.Sand || t == TileType.Foundation;
         }
 
         public bool IsWalkable(int x, int z, int playerId, BuildingRegistry buildingRegistry)

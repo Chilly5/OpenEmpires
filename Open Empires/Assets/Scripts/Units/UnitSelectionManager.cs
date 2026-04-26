@@ -2092,6 +2092,25 @@ namespace OpenEmpires
             {
                 SFXManager.Instance?.PlayUI(SFXType.UnitSelect, 0.5f);
             }
+
+            // Lowest priority: resource node — only if no units AND no buildings in box.
+            // ResourceNode supports single-select, so pick the first one whose screen rect overlaps.
+            if (selectedUnits.Count == 0 && selectedBuildings.Count == 0 && selectedResourceNode == null)
+            {
+                for (int i = 0; i < ResourceNode.All.Count; i++)
+                {
+                    var node = ResourceNode.All[i];
+                    if (node == null || !node.gameObject.activeInHierarchy || node.IsGhostMode) continue;
+
+                    Rect resRect = node.GetScreenBounds(mainCamera);
+                    if (resRect.width > 0 && selectionRect.Overlaps(resRect))
+                    {
+                        node.SetSelected(true);
+                        selectedResourceNode = node;
+                        break;
+                    }
+                }
+            }
         }
 
         private void UpdateDragPreview()
