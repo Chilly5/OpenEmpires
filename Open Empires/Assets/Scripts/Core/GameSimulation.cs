@@ -2016,7 +2016,6 @@ namespace OpenEmpires
                 switch (tech)
                 {
                     case TechnologyType.BlacksmithDamage:
-                        // Hits both melee and ranged units alike.
                         unit.AttackDamage += config.BlacksmithDamageBonus;
                         break;
                     case TechnologyType.BlacksmithDefense:
@@ -2050,11 +2049,9 @@ namespace OpenEmpires
 
             var tech = (TechnologyType)cmd.TechType;
 
-            // Already researched or queued
             if (playerTechnologies[cmd.PlayerId].Contains(tech)) return;
             if (building.ResearchQueue.Contains(tech)) return;
 
-            // Check building type matches tech
             bool validBuilding = false;
             switch (tech)
             {
@@ -2071,11 +2068,9 @@ namespace OpenEmpires
             }
             if (!validBuilding) return;
 
-            // Age requirement
             int reqAge = GetRequiredAgeForTech(tech);
             if (playerAges[cmd.PlayerId] < reqAge) return;
 
-            // Check cost
             var resources = ResourceManager.GetPlayerResources(cmd.PlayerId);
             int foodCost, goldCost;
             GetResearchCost(tech, out foodCost, out goldCost);

@@ -1481,6 +1481,20 @@ namespace OpenEmpires
                     queueText.gameObject.SetActive(true);
                 }
             }
+            else if (building.IsResearching && building.PlayerId == selectionManager.LocalPlayerId)
+            {
+                showProgress = true;
+                float progress = building.ResearchProgress;
+                float secondsLeft = (float)building.ResearchTicksRemaining / sim.Config.TickRate;
+                SetBarFill(progressBarFill, progress, TrainingBarColor);
+                progressBarText.text = $"Researching {building.CurrentResearch}... {secondsLeft:F1}s";
+
+                if (building.ResearchQueue.Count > 1)
+                {
+                    queueText.text = $"Queue: {building.ResearchQueue.Count}";
+                    queueText.gameObject.SetActive(true);
+                }
+            }
             progressBarBgRT.gameObject.SetActive(showProgress);
         }
 
@@ -1910,6 +1924,13 @@ namespace OpenEmpires
             bool done = sim.HasTechnology(playerId, tech);
             bool canAfford = resources.Food >= foodCost && resources.Gold >= goldCost;
 
+            // Already-queued check: don't let the same tech be enqueued twice on this building
+            // (also gives the player visual "it's been taken" feedback the moment they click).
+            bool inQueue = false;
+            var bldg = sim.BuildingRegistry.GetBuilding(buildingId);
+            if (bldg != null && bldg.ResearchQueue != null)
+                inQueue = bldg.ResearchQueue.Contains(tech);
+
             // No tier-prereqs: each tech is standalone now.
             bool prereqMet = true;
 
@@ -1923,6 +1944,7 @@ namespace OpenEmpires
 
             string tooltip = $"<b>{label.Replace("\n", " ")}</b>\n{desc}\nCost: {costStr}";
             if (done) tooltip += "\n<i>(Already researched)</i>";
+            else if (inQueue) tooltip += "\n<i>(In progress…)</i>";
             else if (!ageOk) tooltip += $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(reqAge)}</color>";
             else if (!prereqMet) tooltip += "\n<color=#FF6666>Requires previous tier</color>";
 
@@ -1931,7 +1953,7 @@ namespace OpenEmpires
                 Label = label,
                 Hotkey = hotkey,
                 Tooltip = tooltip,
-                Enabled = !done && canAfford && prereqMet && ageOk,
+                Enabled = !done && !inQueue && canAfford && prereqMet && ageOk,
                 OnClick = () => sim.CommandBuffer.EnqueueCommand(new ResearchCommand(playerId, buildingId, tech))
             };
         }
@@ -2365,13 +2387,33 @@ namespace OpenEmpires
                 }
                 else if (building.Type == BuildingType.Blacksmith)
                 {
-                    int pid = building.PlayerId;
-                    int bid = building.Id;
                     var cfg = sim.Config;
-                    slots[0] = MakeResearchButton(sim, pid, bid, TechnologyType.BlacksmithDamage, "Damage", "Q",
-                        $"Increases attack damage of all military units (+{cfg.BlacksmithDamageBonus} melee and ranged).", 0, cfg.BlacksmithDamageCost, resources);
-                    slots[1] = MakeResearchButton(sim, pid, bid, TechnologyType.BlacksmithDefense, "Defense", "W",
-                        $"Increases armor of all military units (+{cfg.BlacksmithDefenseBonus} melee and ranged).", 0, cfg.BlacksmithDefenseCost, resources);
+                    int damageCost = cfg.BlacksmithDamageCost;
+                    int defenseCost = cfg.BlacksmithDefenseCost;
+
+                    // Mirror the Tower upgrade pattern: a single bool that ORs "already researched"
+                    // with "currently in this building's queue" so the button greys out the moment
+                    // it's clicked.
+                    bool damageDone = sim.HasTechnology(building.PlayerId, TechnologyType.BlacksmithDamage)
+                                       || building.ResearchQueue.Contains(TechnologyType.BlacksmithDamage);
+                    bool defenseDone = sim.HasTechnology(building.PlayerId, TechnologyType.BlacksmithDefense)
+                                        || building.ResearchQueue.Contains(TechnologyType.BlacksmithDefense);
+
+                    slots[0] = new GridButton {
+                        Label = "Damage", Hotkey = "Q",
+                        Enabled = !damageDone && resources.Gold >= damageCost,
+                        Tooltip = $"<b>Damage</b>\nIncreases attack damage of all military units (+{cfg.BlacksmithDamageBonus} melee and ranged).\nCost: {damageCost} <sprite name=\"gold\">"
+                            + (damageDone ? "\n<i>(Already researched or queued)</i>" : ""),
+                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
+                            new ResearchCommand(building.PlayerId, building.Id, TechnologyType.BlacksmithDamage)) };
+
+                    slots[1] = new GridButton {
+                        Label = "Defense", Hotkey = "W",
+                        Enabled = !defenseDone && resources.Gold >= defenseCost,
+                        Tooltip = $"<b>Defense</b>\nIncreases armor of all military units (+{cfg.BlacksmithDefenseBonus} melee and ranged).\nCost: {defenseCost} <sprite name=\"gold\">"
+                            + (defenseDone ? "\n<i>(Already researched or queued)</i>" : ""),
+                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
+                            new ResearchCommand(building.PlayerId, building.Id, TechnologyType.BlacksmithDefense)) };
                     hasAny = true;
                 }
                 else if (building.Type == BuildingType.University)
