@@ -354,6 +354,23 @@ namespace OpenEmpires
                 return;
             }
 
+            // Archer dummy placement: left-click spawns an invincible auto-shooting archer.
+            if (SettingsMenuUI.IsPlacingArcherDummy)
+            {
+                Ray archerRay = mainCamera.ScreenPointToRay(currentMousePos);
+                if (Physics.Raycast(archerRay, out RaycastHit archerHit, 1000f, groundLayer))
+                {
+                    var sim = GameBootstrapper.Instance?.Simulation;
+                    if (sim != null)
+                    {
+                        FixedVector3 fixedPos = FixedVector3.FromVector3(archerHit.point);
+                        sim.CreateArcherDummy(fixedPos);
+                    }
+                }
+                placementConsumedClick = true;
+                return;
+            }
+
             // Meteor strike targeting: left-click to cast
             if (isMeteorTargeting)
             {
@@ -763,8 +780,8 @@ namespace OpenEmpires
                 }
             }
 
-            // Dummy placement ghost
-            if (SettingsMenuUI.IsPlacingDummy)
+            // Dummy placement ghost (shared between target dummy and archer dummy modes).
+            if (SettingsMenuUI.IsPlacingDummy || SettingsMenuUI.IsPlacingArcherDummy)
             {
                 if (dummyGhost == null)
                 {
@@ -2187,6 +2204,11 @@ namespace OpenEmpires
                 SettingsMenuUI.IsPlacingDummy = false;
                 return;
             }
+            if (SettingsMenuUI.IsPlacingArcherDummy)
+            {
+                SettingsMenuUI.IsPlacingArcherDummy = false;
+                return;
+            }
             if (isPlacingWall)
             {
                 CancelWallPlacement();
@@ -2804,6 +2826,11 @@ namespace OpenEmpires
             if (SettingsMenuUI.IsPlacingDummy)
             {
                 SettingsMenuUI.IsPlacingDummy = false;
+                return;
+            }
+            if (SettingsMenuUI.IsPlacingArcherDummy)
+            {
+                SettingsMenuUI.IsPlacingArcherDummy = false;
                 return;
             }
             if (isMeteorTargeting)

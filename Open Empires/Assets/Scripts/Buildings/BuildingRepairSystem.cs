@@ -15,7 +15,6 @@ namespace OpenEmpires
 
         public void ProcessRepairCommand(RepairBuildingCommand cmd, GameSimulation sim)
         {
-            Debug.Log($"[Repair] Processing repair command for building {cmd.TargetBuildingId} with {cmd.UnitIds.Length} units");
             var building = sim.BuildingRegistry.GetBuilding(cmd.TargetBuildingId);
             if (building == null || building.IsDestroyed) return;
             if (building.CurrentHealth >= building.MaxHealth) return; // Already at full health
@@ -29,7 +28,6 @@ namespace OpenEmpires
                 building.RepairTicksRemaining = CalculateRepairTicks(healthToRepair, sim.Config);
                 building.RepairTicksTotal = building.RepairTicksRemaining;
                 building.RepairStartHealth = building.CurrentHealth;
-                Debug.Log($"[Repair] Started repair on building {building.Id}, health {building.CurrentHealth}/{building.MaxHealth}, repair ticks: {building.RepairTicksRemaining}");
             }
 
             var occupiedTiles = new HashSet<Vector2Int>();
@@ -82,7 +80,6 @@ namespace OpenEmpires
                             unit.FinalDestination = sim.MapData.TileToWorldFixed(adjTile.x, adjTile.y);
                             unit.State = UnitState.MovingToBuild; // Use MovingToBuild state for repair pathfinding
                             assigned = true;
-                            Debug.Log($"[Repair] Unit {unit.Id} pathfinding to repair building {building.Id}");
                             break;
                         }
                         triedTiles.Add(adjTile);
@@ -91,7 +88,6 @@ namespace OpenEmpires
                     if (!assigned)
                     {
                         unit.State = UnitState.Constructing; // Fallback to direct repair if no path found
-                        Debug.Log($"[Repair] Unit {unit.Id} assigned directly to repair building {building.Id} (no path found)");
                     }
                 }
             }
@@ -108,12 +104,7 @@ namespace OpenEmpires
                     continue;
                     
                 var building = buildingRegistry.GetBuilding(unit.ConstructionTargetBuildingId);
-                
-                // Check if this unit might be doing repair
-                if (building != null && !building.IsUnderConstruction && building.IsBeingRepaired)
-                {
-                    Debug.Log($"[Repair] Found repair unit {unit.Id} working on building {building.Id}");
-                }
+
                 if (building == null || building.IsDestroyed)
                 {
                     unit.State = UnitState.Idle;
@@ -210,7 +201,6 @@ namespace OpenEmpires
                 }
 
                 // In range and facing — do repair work
-                Debug.Log($"[Repair] Villager {unit.Id} is repairing building {building.Id}, remaining ticks: {building.RepairTicksRemaining}");
                 building.RepairTicksRemaining--;
                 
                 // Gradual health restoration based on repair progress
@@ -248,11 +238,10 @@ namespace OpenEmpires
                 }
                 else
                 {
-                    Debug.Log($"[Repair] Villager {unit.Id} strike animation on building {building.Id} at tick {currentTick}");
                     unit.AttackCooldownRemaining = StrikeCooldownTicks;
                     unit.LastAttackTick = currentTick;
                     unit.LastAttackTargetPos = building.SimPosition;
-                    building.LastDamageTick = currentTick;
+                    building.LastStrikeTick = currentTick;
                     building.LastDamageFromPos = unit.SimPosition;
                 }
 

@@ -1970,6 +1970,17 @@ namespace OpenEmpires
             }
             SpawnUnit(prefab, unitData, spawnPos, unitType);
             SFXManager.Instance?.Play(SFXType.UnitTrained, spawnPos, 0.6f);
+
+            // Archer dummies show their attack range permanently so the player can see what
+            // they cover. Reuses the same SpinningAttackRangeRing used by towers/keeps.
+            if (unitData.IsDummy && unitData.AttackDamage > 0 && unitViews.TryGetValue(unitData.Id, out var dummyView))
+            {
+                var ringGO = new GameObject("ArcherDummyRangeRing");
+                ringGO.transform.SetParent(dummyView.transform);
+                ringGO.transform.localPosition = Vector3.zero;
+                var ring = ringGO.AddComponent<SpinningAttackRangeRing>();
+                ring.Initialize(unitData.AttackRange.ToFloat());
+            }
         }
 
         private void SpawnBuilding(BuildingData buildingData)

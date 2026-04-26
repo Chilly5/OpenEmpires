@@ -10,6 +10,7 @@ namespace OpenEmpires
     {
         private static SettingsMenuUI instance;
         public static bool IsPlacingDummy { get; set; }
+        public static bool IsPlacingArcherDummy { get; set; }
         private TMP_Text productionCheatLabel;
         private TMP_Text visionCheatLabel;
         private TMP_Text godPowersCheatLabel;
@@ -530,8 +531,40 @@ namespace OpenEmpires
 
         private float BuildCommunicationSubTab(Transform scrollContent, float y)
         {
-            y -= 40f;
-            MakeLabel(scrollContent, "No communication keybinds yet.", -200f, y, 400f, 24f, 14, FontStyles.Italic, TextAlignmentOptions.Center);
+            float rowStartX = -160f;
+            float actionLabelW = 200f;
+            float keybindBtnW = 80f;
+            float resetBtnW = 30f;
+            float colGap = 8f;
+
+            string[] actionNames = KeybindManager.CommunicationActionNames;
+            if (actionNames.Length == 0)
+            {
+                y -= 40f;
+                MakeLabel(scrollContent, "No communication keybinds yet.", -200f, y, 400f, 24f, 14, FontStyles.Italic, TextAlignmentOptions.Center);
+                return y;
+            }
+
+            for (int i = 0; i < actionNames.Length; i++)
+            {
+                y -= 40f;
+                string actionName = actionNames[i];
+                string displayName = KeybindManager.GetDisplayName(actionName);
+                string currentBinding = KeybindManager.GetBinding(actionName);
+                string keyText = KeybindManager.GetKeyDisplayName(currentBinding);
+
+                MakeLabel(scrollContent, displayName, rowStartX, y, actionLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+
+                string capturedAction = actionName;
+                float keybindX = rowStartX + actionLabelW + colGap;
+
+                TMP_Text keybindLabel;
+                var keybindBtnGO = CreateButtonWithLabel(scrollContent, "[" + keyText + "]", keybindX, y, keybindBtnW, 28f, out keybindLabel);
+                keybindBtnGO.GetComponent<Button>().onClick.AddListener(() => StartRebind(capturedAction, keybindLabel));
+
+                float resetX = keybindX + keybindBtnW + colGap;
+                CreateButton(scrollContent, "R", resetX, y, resetBtnW, 28f, () => ResetRow(capturedAction, keybindLabel));
+            }
             return y;
         }
 
@@ -1092,6 +1125,33 @@ namespace OpenEmpires
             {
                 bool newState = !GodPowerBarUI.IsCheatsEnabled;
                 GodPowerBarUI.SetCheatsEnabled(newState);
+            });
+
+            // Place Target Dummy: invincible non-shooting punching bag (enemy team).
+            y -= 44f;
+            CreateButton(panelGO.transform, "Place Target Dummy", contentX - 105f, y, 200f, 36f, () =>
+            {
+                IsPlacingDummy = true;
+                IsPlacingArcherDummy = false;
+                Hide();
+            });
+
+            // Place Archer Dummy: invincible enemy archer that auto-shoots the player.
+            CreateButton(panelGO.transform, "Place Archer Dummy", contentX + 105f, y, 200f, 36f, () =>
+            {
+                IsPlacingArcherDummy = true;
+                IsPlacingDummy = false;
+                Hide();
+            });
+
+            // Clear All Dummies: removes both target and archer dummies from the map.
+            y -= 44f;
+            CreateButton(panelGO.transform, "Clear All Dummies", contentX, y, 200f, 36f, () =>
+            {
+                IsPlacingDummy = false;
+                IsPlacingArcherDummy = false;
+                var sim = GameBootstrapper.Instance?.Simulation;
+                sim?.ClearAllDummies();
             });
 
             // Surrender button (red-tinted)

@@ -75,14 +75,33 @@ namespace OpenEmpires
         private static readonly Color32 UserPingColor = new Color32(255, 210, 60, 255);
         private GameObject pingCursorIcon;
 
+        // Spam cooldown: 4 pings placed within SpamWindow seconds triggers CooldownDuration seconds
+        // during which new pings are rejected with a local-only chat message.
+        private const int SpamThreshold = 4;
+        private const float SpamWindow = 5f;
+        private const float CooldownDuration = 3f;
+        private readonly Queue<float> recentPingTimes = new Queue<float>();
+        private float cooldownUntilTime = -1f;
+
         // Cached viewport quad corners (world-space ground intersections)
         private Vector3[] viewportGroundCorners = new Vector3[4];
         private bool viewportQuadValid;
+
+        private InputAction notifyPingAction;
 
         private void Start()
         {
             mainCamera = Camera.main;
             StartCoroutine(WaitAndInitialize());
+
+            // Bind the NotifyPing keybind (from player prefs via KeybindManager) to EnterPingMode.
+            string path = KeybindManager.GetBinding("NotifyPing");
+            if (!string.IsNullOrEmpty(path))
+            {
+                notifyPingAction = new InputAction("NotifyPing", InputActionType.Button, path);
+                notifyPingAction.performed += _ => EnterPingMode();
+                notifyPingAction.Enable();
+            }
         }
 
         private System.Collections.IEnumerator WaitAndInitialize()
@@ -107,7 +126,18 @@ namespace OpenEmpires
 
             fogPixelBuffer = new Color32[mapWidth * mapHeight];
 
+            // Event-driven attack pings: sim emits OnEntityDamaged once per damaged entity per tick.
+            // We filter to local-player-owned entities and let TryPlaceAttackPing dedupe by proximity.
+            sim.OnEntityDamaged += HandleEntityDamaged;
+
             BuildCanvas();
+        }
+
+        private void HandleEntityDamaged(float wx, float wz, int ownerPlayerId)
+        {
+            int localPid = selectionManager != null ? selectionManager.LocalPlayerId : 0;
+            if (ownerPlayerId != localPid) return;
+            TryPlaceAttackPing(wx, wz);
         }
 
         private void GenerateMapTexture(MapData mapData)
@@ -288,9 +318,23 @@ namespace OpenEmpires
 
         public void EnterPingMode()
         {
+            if (IsOnPingCooldown())
+            {
+                ShowPingCooldownMessage();
+                return;
+            }
             isPingMode = true;
             EnsurePingCursorIcon();
             if (pingCursorIcon != null) pingCursorIcon.SetActive(true);
+        }
+
+        private bool IsOnPingCooldown() => Time.time < cooldownUntilTime;
+
+        private void ShowPingCooldownMessage()
+        {
+            int secs = Mathf.Max(1, Mathf.CeilToInt(cooldownUntilTime - Time.time));
+            string plural = secs == 1 ? "second" : "seconds";
+            ChatManager.AddSystemMessage($"You must wait {secs} {plural} before being able to ping again.");
         }
 
         private void ExitPingMode()
@@ -412,8 +456,9 @@ namespace OpenEmpires
                 RenderComposite();
             }
 
-            // Check for off-screen attacks on local player's entities
-            CheckForAttacks();
+            // Attack-ping scan disabled — per-tick iteration was contributing to lag spikes.
+            // Re-enable by uncommenting; the function body is preserved below.
+            // CheckForAttacks();
 
             // Draw frustum every frame on top of cached composite
             DrawViewportOverlay();
@@ -972,6 +1017,12 @@ namespace OpenEmpires
 
         private void PlaceUserPing(Vector3 worldPos)
         {
+            float now = Time.time;
+            // Slide the window forward — drop timestamps older than SpamWindow.
+            while (recentPingTimes.Count > 0 && now - recentPingTimes.Peek() > SpamWindow)
+                recentPingTimes.Dequeue();
+            recentPingTimes.Enqueue(now);
+
             activePings.Add(new MinimapPing
             {
                 worldX = worldPos.x,
@@ -983,6 +1034,13 @@ namespace OpenEmpires
             });
             WorldPingMarker.Spawn(worldPos);
             SFXManager.Instance?.PlayUI(SFXType.NotifyPing, 0.7f);
+
+            // Fourth (or more) ping within the window → start the cooldown.
+            if (recentPingTimes.Count >= SpamThreshold)
+            {
+                cooldownUntilTime = now + CooldownDuration;
+                recentPingTimes.Clear();
+            }
         }
 
         private void HandleMinimapInput(Rect screenRect, bool insideCircle)
@@ -1117,8 +1175,6 @@ namespace OpenEmpires
 
         private void CheckForAttacks()
         {
-            if (Time.time - lastAttackAlertTime < AttackAlertCooldown) return;
-
             var sim = GameBootstrapper.Instance?.Simulation;
             if (sim == null) return;
 
@@ -1128,68 +1184,82 @@ namespace OpenEmpires
 
             ComputeViewportQuad();
 
-            float alertX = 0f, alertZ = 0f;
-            bool found = false;
+            bool offScreenAttack = false;
 
-            // Check units
+            // Process only entities damaged in the very recent past — keeps CPU bounded.
+            // 2 ticks is enough to absorb the script-execution-order race (MinimapUI.Update can
+            // run before GameSimulation.Tick advances the tick), while preventing the per-tick
+            // re-iteration of every unit that was hit in the last few seconds.
+            // The proximity check inside TryPlaceAttackPing handles "don't ping the same battle".
+            const int RecentDamageWindowTicks = 2;
+
+            // Damaged own units
             var units = sim.UnitRegistry.GetAllUnits();
             for (int i = 0; i < units.Count; i++)
             {
                 var unit = units[i];
                 if (unit.PlayerId != localPlayerId) continue;
                 if (unit.State == UnitState.Dead) continue;
-                if (unit.LastDamageTick <= lastAlertCheckTick || unit.LastDamageTick <= 0) continue;
+                if (unit.LastDamageTick <= 0) continue;
+                if (currentTick - unit.LastDamageTick > RecentDamageWindowTicks) continue;
 
                 float wx = unit.SimPosition.x.ToFloat();
                 float wz = unit.SimPosition.z.ToFloat();
-                if (!IsInsideViewport(wx, wz))
-                {
-                    alertX = wx;
-                    alertZ = wz;
-                    found = true;
-                    break;
-                }
+                TryPlaceAttackPing(wx, wz);
+                if (!IsInsideViewport(wx, wz)) offScreenAttack = true;
             }
 
-            // Check buildings
-            if (!found)
+            // Damaged own buildings
+            var buildings = sim.BuildingRegistry.GetAllBuildings();
+            for (int i = 0; i < buildings.Count; i++)
             {
-                var buildings = sim.BuildingRegistry.GetAllBuildings();
-                for (int i = 0; i < buildings.Count; i++)
-                {
-                    var building = buildings[i];
-                    if (building.PlayerId != localPlayerId) continue;
-                    if (building.IsDestroyed) continue;
-                    if (building.LastDamageTick <= lastAlertCheckTick || building.LastDamageTick <= 0) continue;
+                var building = buildings[i];
+                if (building.PlayerId != localPlayerId) continue;
+                if (building.IsDestroyed) continue;
+                if (building.LastDamageTick <= 0) continue;
+                if (currentTick - building.LastDamageTick > RecentDamageWindowTicks) continue;
 
-                    float wx = building.SimPosition.x.ToFloat();
-                    float wz = building.SimPosition.z.ToFloat();
-                    if (!IsInsideViewport(wx, wz))
-                    {
-                        alertX = wx;
-                        alertZ = wz;
-                        found = true;
-                        break;
-                    }
-                }
+                float wx = building.SimPosition.x.ToFloat();
+                float wz = building.SimPosition.z.ToFloat();
+                TryPlaceAttackPing(wx, wz);
+                if (!IsInsideViewport(wx, wz)) offScreenAttack = true;
             }
 
             lastAlertCheckTick = currentTick;
 
-            if (found)
+            // The loud "Under Attack" SFX still rate-limits to once per AttackAlertCooldown,
+            // and only plays for off-screen events so the player isn't deafened during a battle.
+            if (offScreenAttack && Time.time - lastAttackAlertTime >= AttackAlertCooldown)
             {
                 lastAttackAlertTime = Time.time;
-                activePings.Add(new MinimapPing
-                {
-                    worldX = alertX,
-                    worldZ = alertZ,
-                    timeRemaining = PingDuration,
-                    totalDuration = PingDuration,
-                    color = new Color32(255, 60, 30, 255),
-                    style = PingStyle.AttackFlash,
-                });
                 SFXManager.Instance?.PlayUI(SFXType.UnderAttack);
             }
+        }
+
+        // Adds a red AttackFlash ping at (wx, wz) unless an active one is already nearby —
+        // prevents spamming the minimap when one battle generates many damage events per tick.
+        // Plays a soft alert SFX only when a NEW ping is actually placed (not on dedup'd hits).
+        private void TryPlaceAttackPing(float wx, float wz)
+        {
+            const float proximitySq = 6f * 6f;
+            for (int i = 0; i < activePings.Count; i++)
+            {
+                var p = activePings[i];
+                if (p.style != PingStyle.AttackFlash) continue;
+                float dx = p.worldX - wx;
+                float dz = p.worldZ - wz;
+                if (dx * dx + dz * dz < proximitySq) return;
+            }
+            activePings.Add(new MinimapPing
+            {
+                worldX = wx,
+                worldZ = wz,
+                timeRemaining = PingDuration,
+                totalDuration = PingDuration,
+                color = new Color32(255, 60, 30, 255),
+                style = PingStyle.AttackFlash,
+            });
+            SFXManager.Instance?.PlayUI(SFXType.AttackPing, 0.5f);
         }
 
         private void UpdateAndDrawPings()
@@ -1237,12 +1307,21 @@ namespace OpenEmpires
                 }
                 else
                 {
-                    // AttackFlash: flash on/off at PingFlashRate Hz with a 4..8 px pulsing radius.
-                    float phase = Mathf.Sin(2f * Mathf.PI * PingFlashRate * elapsed);
-                    if (phase <= 0f) continue;
-                    float pulse = 0.5f + 0.5f * Mathf.Sin(2f * Mathf.PI * 2f * elapsed);
-                    int radius = (int)Mathf.Lerp(4f, 8f, pulse);
-                    DrawCircleSegments(cx, cy, radius, ping.color);
+                    // AttackFlash mirrors the user notify ping but inverted: 3 collapsing pulses
+                    // that start large and shrink, with each successive pulse dimmer than the last.
+                    const int AttackPulses = 3;
+                    float pulseDuration = total / AttackPulses;
+                    int pulseIndex = (int)(elapsed / pulseDuration);
+                    if (pulseIndex >= AttackPulses) continue;
+                    float pulseNorm = (elapsed - pulseIndex * pulseDuration) / pulseDuration;
+                    int radius = (int)Mathf.Lerp(28f, 2f, pulseNorm); // shrinks
+                    float alphaNorm = Mathf.Clamp01((1f - pulseNorm) / 0.4f);
+                    float pulseStrength = 1f - (float)pulseIndex / AttackPulses;
+                    byte alpha = (byte)(alphaNorm * pulseStrength * 255f);
+                    Color32 c = new Color32(ping.color.r, ping.color.g, ping.color.b, alpha);
+                    DrawCircleSegments(cx, cy, radius, c);
+                    Color32 dot = new Color32(ping.color.r, ping.color.g, ping.color.b, alpha);
+                    DrawCircleSegments(cx, cy, 2, dot);
                 }
             }
         }
@@ -1270,6 +1349,14 @@ namespace OpenEmpires
                 var canvas = pingCursorIcon.transform.parent;
                 if (canvas != null) Destroy(canvas.gameObject);
             }
+            if (notifyPingAction != null)
+            {
+                notifyPingAction.Disable();
+                notifyPingAction.Dispose();
+                notifyPingAction = null;
+            }
+            var sim = GameBootstrapper.Instance?.Simulation;
+            if (sim != null) sim.OnEntityDamaged -= HandleEntityDamaged;
         }
     }
 }

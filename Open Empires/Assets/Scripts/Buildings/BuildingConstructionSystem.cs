@@ -153,7 +153,7 @@ namespace OpenEmpires
                     unit.AttackCooldownRemaining = StrikeCooldownTicks;
                     unit.LastAttackTick = currentTick;
                     unit.LastAttackTargetPos = building.SimPosition;
-                    building.LastDamageTick = currentTick;
+                    building.LastStrikeTick = currentTick;
                     building.LastDamageFromPos = unit.SimPosition;
                 }
 

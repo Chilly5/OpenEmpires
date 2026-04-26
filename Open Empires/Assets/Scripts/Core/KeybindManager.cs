@@ -37,6 +37,13 @@ namespace OpenEmpires
             new ActionDef("AttackMove", "Attack Move", "<Keyboard>/a"),
         };
 
+        // Communication actions are remapped like the above, but grouped under a separate
+        // settings tab so unit-combat bindings don't mix with player-signaling bindings.
+        private static readonly ActionDef[] CommunicationActionDefs =
+        {
+            new ActionDef("NotifyPing", "Notification Ping", "<Keyboard>/leftAlt"),
+        };
+
         public static string[] ActionNames
         {
             get
@@ -48,9 +55,22 @@ namespace OpenEmpires
             }
         }
 
+        public static string[] CommunicationActionNames
+        {
+            get
+            {
+                var names = new string[CommunicationActionDefs.Length];
+                for (int i = 0; i < CommunicationActionDefs.Length; i++)
+                    names[i] = CommunicationActionDefs[i].actionName;
+                return names;
+            }
+        }
+
         public static string GetDisplayName(string actionName)
         {
             foreach (var def in RemappableActionDefs)
+                if (def.actionName == actionName) return def.displayName;
+            foreach (var def in CommunicationActionDefs)
                 if (def.actionName == actionName) return def.displayName;
             return actionName;
         }
@@ -58,6 +78,8 @@ namespace OpenEmpires
         private static string DefaultPath(string actionName)
         {
             foreach (var def in RemappableActionDefs)
+                if (def.actionName == actionName) return def.defaultPath;
+            foreach (var def in CommunicationActionDefs)
                 if (def.actionName == actionName) return def.defaultPath;
             return string.Empty;
         }
@@ -85,6 +107,8 @@ namespace OpenEmpires
         public static void ResetAll()
         {
             foreach (var def in RemappableActionDefs)
+                PlayerPrefs.DeleteKey("kb_" + def.actionName);
+            foreach (var def in CommunicationActionDefs)
                 PlayerPrefs.DeleteKey("kb_" + def.actionName);
 
             foreach (BuildingType type in System.Enum.GetValues(typeof(BuildingType)))

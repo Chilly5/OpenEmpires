@@ -484,10 +484,13 @@ namespace OpenEmpires
                 SetGateVisual(buildingData.IsGate, mat);
             }
 
-            // Detect new damage — apply flash
-            if (buildingData.LastDamageTick > lastSeenDamageTick && buildingData.LastDamageTick > 0)
+            // Detect new damage or work strike — apply flash. (LastStrikeTick is the cosmetic
+            // hammer-strike pulse from repair/construction; LastDamageTick is real combat damage.)
+            int latestTick = buildingData.LastDamageTick > buildingData.LastStrikeTick
+                ? buildingData.LastDamageTick : buildingData.LastStrikeTick;
+            if (latestTick > lastSeenDamageTick && latestTick > 0)
             {
-                lastSeenDamageTick = buildingData.LastDamageTick;
+                lastSeenDamageTick = latestTick;
                 damageFlashTimer = DamageFlashDuration;
                 SFXManager.Instance?.Play(SFXType.UnitHurt, transform.position, 0.4f);
             }
