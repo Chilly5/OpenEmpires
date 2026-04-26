@@ -508,14 +508,8 @@ namespace OpenEmpires
         public int ResearchTicks_Age3 => 900;       // 30s
         public int ResearchTicks_University => 750; // 25s
         // Blacksmith costs (gold)
-        public int MeleeAttack1Cost => 100;
-        public int MeleeArmor1Cost => 100;
-        public int RangedAttack1Cost => 100;
-        public int RangedArmor1Cost => 100;
-        public int MeleeAttack2Cost => 200;
-        public int MeleeArmor2Cost => 200;
-        public int RangedAttack2Cost => 200;
-        public int RangedArmor2Cost => 200;
+        public int BlacksmithDamageCost => 200;     // bumps both melee + ranged attack
+        public int BlacksmithDefenseCost => 200;    // bumps both melee + ranged armor
         // University costs (food + gold)
         public int BallisticsFoodCost => 200;
         public int BallisticsGoldCost => 200;
@@ -526,14 +520,8 @@ namespace OpenEmpires
         public int MurderHolesFoodCost => 100;
         public int MurderHolesGoldCost => 100;
         // Research bonuses
-        public int MeleeAttackBonus1 => 1;
-        public int MeleeAttackBonus2 => 2;
-        public int MeleeArmorBonus1 => 1;
-        public int MeleeArmorBonus2 => 2;
-        public int RangedAttackBonus1 => 1;
-        public int RangedAttackBonus2 => 2;
-        public int RangedArmorBonus1 => 1;
-        public int RangedArmorBonus2 => 2;
+        public int BlacksmithDamageBonus => 2;      // applied to both melee + ranged units
+        public int BlacksmithDefenseBonus => 2;     // applied to both melee + ranged armor on every military unit
         public int ChemistryRangedBonus => 1;
         public int SiegeEngineeringHPBonus => 40;
 

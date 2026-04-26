@@ -1910,18 +1910,11 @@ namespace OpenEmpires
             bool done = sim.HasTechnology(playerId, tech);
             bool canAfford = resources.Food >= foodCost && resources.Gold >= goldCost;
 
-            // Check prerequisites for tier 2
+            // No tier-prereqs: each tech is standalone now.
             bool prereqMet = true;
-            switch (tech)
-            {
-                case TechnologyType.MeleeAttack2: prereqMet = sim.HasTechnology(playerId, TechnologyType.MeleeAttack1); break;
-                case TechnologyType.MeleeArmor2: prereqMet = sim.HasTechnology(playerId, TechnologyType.MeleeArmor1); break;
-                case TechnologyType.RangedAttack2: prereqMet = sim.HasTechnology(playerId, TechnologyType.RangedAttack1); break;
-                case TechnologyType.RangedArmor2: prereqMet = sim.HasTechnology(playerId, TechnologyType.RangedArmor1); break;
-            }
 
-            // Age check
-            int reqAge = tech <= TechnologyType.RangedArmor1 ? 2 : 3;
+            // Age check (Blacksmith techs are Age 2; University techs are Age 3)
+            int reqAge = (tech == TechnologyType.BlacksmithDamage || tech == TechnologyType.BlacksmithDefense) ? 2 : 3;
             bool ageOk = sim.GetPlayerAge(playerId) >= reqAge;
 
             string costStr = "";
@@ -2375,22 +2368,10 @@ namespace OpenEmpires
                     int pid = building.PlayerId;
                     int bid = building.Id;
                     var cfg = sim.Config;
-                    slots[0] = MakeResearchButton(sim, pid, bid, TechnologyType.MeleeAttack1, "Melee\nAttack I", "Q",
-                        "Increases melee unit attack damage.", 0, cfg.MeleeAttack1Cost, resources);
-                    slots[1] = MakeResearchButton(sim, pid, bid, TechnologyType.MeleeArmor1, "Melee\nArmor I", "W",
-                        "Increases melee armor for all units.", 0, cfg.MeleeArmor1Cost, resources);
-                    slots[2] = MakeResearchButton(sim, pid, bid, TechnologyType.RangedAttack1, "Ranged\nAttack I", "E",
-                        "Increases ranged unit attack damage.", 0, cfg.RangedAttack1Cost, resources);
-                    slots[3] = MakeResearchButton(sim, pid, bid, TechnologyType.RangedArmor1, "Ranged\nArmor I", "R",
-                        "Increases ranged armor for all units.", 0, cfg.RangedArmor1Cost, resources);
-                    slots[4] = MakeResearchButton(sim, pid, bid, TechnologyType.MeleeAttack2, "Melee\nAttack II", "A",
-                        "Further increases melee attack damage.", 0, cfg.MeleeAttack2Cost, resources);
-                    slots[5] = MakeResearchButton(sim, pid, bid, TechnologyType.MeleeArmor2, "Melee\nArmor II", "S",
-                        "Further increases melee armor.", 0, cfg.MeleeArmor2Cost, resources);
-                    slots[6] = MakeResearchButton(sim, pid, bid, TechnologyType.RangedAttack2, "Ranged\nAttack II", "D",
-                        "Further increases ranged attack damage.", 0, cfg.RangedAttack2Cost, resources);
-                    slots[7] = MakeResearchButton(sim, pid, bid, TechnologyType.RangedArmor2, "Ranged\nArmor II", "F",
-                        "Further increases ranged armor.", 0, cfg.RangedArmor2Cost, resources);
+                    slots[0] = MakeResearchButton(sim, pid, bid, TechnologyType.BlacksmithDamage, "Damage", "Q",
+                        $"Increases attack damage of all military units (+{cfg.BlacksmithDamageBonus} melee and ranged).", 0, cfg.BlacksmithDamageCost, resources);
+                    slots[1] = MakeResearchButton(sim, pid, bid, TechnologyType.BlacksmithDefense, "Defense", "W",
+                        $"Increases armor of all military units (+{cfg.BlacksmithDefenseBonus} melee and ranged).", 0, cfg.BlacksmithDefenseCost, resources);
                     hasAny = true;
                 }
                 else if (building.Type == BuildingType.University)
@@ -3106,13 +3087,11 @@ namespace OpenEmpires
             else if (dominantType == BuildingType.Blacksmith)
             {
                 TechnologyType[] blacksmithTechs = {
-                    TechnologyType.MeleeAttack1, TechnologyType.MeleeArmor1,
-                    TechnologyType.RangedAttack1, TechnologyType.RangedArmor1,
-                    TechnologyType.MeleeAttack2, TechnologyType.MeleeArmor2,
-                    TechnologyType.RangedAttack2, TechnologyType.RangedArmor2
+                    TechnologyType.BlacksmithDamage,
+                    TechnologyType.BlacksmithDefense,
                 };
-                Key[] blacksmithKeys = { Key.Q, Key.W, Key.E, Key.R, Key.A, Key.S, Key.D, Key.F };
-                int[] blacksmithSlots = { 0, 1, 2, 3, 4, 5, 6, 7 };
+                Key[] blacksmithKeys = { Key.Q, Key.W };
+                int[] blacksmithSlots = { 0, 1 };
                 for (int t = 0; t < blacksmithTechs.Length; t++)
                 {
                     if (WasKeyPressed(blacksmithKeys[t]))

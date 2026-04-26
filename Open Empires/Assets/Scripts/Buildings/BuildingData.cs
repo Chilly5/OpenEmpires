@@ -30,16 +30,9 @@ namespace OpenEmpires
 
     public enum TechnologyType
     {
-        // Blacksmith (Age 2)
-        MeleeAttack1,       // +1 melee attack
-        MeleeArmor1,        // +1 melee armor
-        RangedAttack1,      // +1 ranged attack
-        RangedArmor1,       // +1 ranged armor
-        // Blacksmith (Age 3)
-        MeleeAttack2,       // +2 melee attack (cumulative)
-        MeleeArmor2,        // +2 melee armor
-        RangedAttack2,      // +2 ranged attack
-        RangedArmor2,       // +2 ranged armor
+        // Blacksmith
+        BlacksmithDamage,   // +N to both melee AND ranged attack
+        BlacksmithDefense,  // +N to both melee AND ranged armor
         // University (Age 3)
         Ballistics,         // Projectiles lead targets
         SiegeEngineering,   // +40 siege unit HP
