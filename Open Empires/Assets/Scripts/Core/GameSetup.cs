@@ -2038,14 +2038,16 @@ namespace OpenEmpires
                     break;
                 }
                 case BuildingType.Farm:
-                    prefab = CreateFarmPrefab(buildingData.PlayerId);
+                    prefab = CreateBuildingSpritePrefab("Farm", "Farm", 2, 2, 2f, 1f / 2f)
+                          ?? CreateFarmPrefab(buildingData.PlayerId);
                     break;
                 case BuildingType.Tower:
                     prefab = CreateBuildingSpritePrefab("Tower", "Tower", 1, 1, 5f)
                           ?? CreateTowerPrefab(buildingData.PlayerId);
                     break;
                 case BuildingType.Monastery:
-                    prefab = CreateMonasteryPrefab(buildingData.PlayerId);
+                    prefab = CreateBuildingSpritePrefab("Monastery", "Monastery", 3, 3, 6f, 1.02f / 6f)
+                          ?? CreateMonasteryPrefab(buildingData.PlayerId);
                     break;
                 case BuildingType.Blacksmith:
                     prefab = CreateBuildingSpritePrefab("Blacksmith", "Blacksmith", 3, 3, 6f, 1.02f / 6f)
