@@ -273,6 +273,13 @@ namespace OpenEmpires
                     if (mat != null) fogRenderer.SetFogTexture(mat);
             }
 
+            // Set fog of war texture on resource node billboard materials (berry/gold/stone)
+            if (mapRenderer != null)
+            {
+                foreach (var mat in mapRenderer.ResourceNodeMaterials)
+                    fogRenderer.SetFogTexture(mat);
+            }
+
             // Initialize resource UI with local player ID
             var resourceUI = Object.FindFirstObjectByType<ResourceUI>();
             if (resourceUI != null)
