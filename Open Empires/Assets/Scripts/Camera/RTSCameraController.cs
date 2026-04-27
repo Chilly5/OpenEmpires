@@ -51,8 +51,16 @@ namespace OpenEmpires
             get => pivot.position;
             set
             {
-                // Snap 70% instantly, let SmoothDamp handle the rest
-                pivot.position = Vector3.Lerp(pivot.position, value, 0.7f);
+                if (panAcceleration)
+                {
+                    // Snap 70% instantly, let SmoothDamp handle the rest.
+                    pivot.position = Vector3.Lerp(pivot.position, value, 0.7f);
+                }
+                else
+                {
+                    // Acceleration off — match the per-frame branch in SmoothPivotPosition and snap instantly.
+                    pivot.position = value;
+                }
                 targetPivotPos = value;
                 pivotVelocity = Vector3.zero;
             }
