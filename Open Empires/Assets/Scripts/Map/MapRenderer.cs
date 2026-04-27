@@ -58,6 +58,23 @@ namespace OpenEmpires
         public float HeightScale => heightScale;
         public Dictionary<int, ResourceNode> ResourceNodeViews => resourceNodeViews;
 
+        public IEnumerable<Material> ResourceNodeMaterials
+        {
+            get
+            {
+                var seen = new HashSet<Material>();
+                foreach (var prefab in new[] { goldMinePrefab, stoneMinePrefab, berryBushPrefab })
+                {
+                    if (prefab == null) continue;
+                    foreach (var r in prefab.GetComponentsInChildren<Renderer>(true))
+                    {
+                        if (r.sharedMaterial != null && seen.Add(r.sharedMaterial))
+                            yield return r.sharedMaterial;
+                    }
+                }
+            }
+        }
+
         public void Initialize(MapData mapData, Vector2Int[] playerBases, int seed = 42)
         {
             rng = new System.Random(seed);

@@ -52,6 +52,7 @@ namespace OpenEmpires
         private static bool s_buildPanelsVisible;
         private static RectTransform s_queuePanelRT;
         private static RectTransform s_tooltipPanelRT;
+        private static RectTransform s_landmarkPanelRT;
         private static Camera s_uiCamera; // null for overlay canvas
 
         // --- Build hotkey state machine ---
@@ -93,6 +94,9 @@ namespace OpenEmpires
                 return true;
             if (s_tooltipPanelRT != null && s_tooltipPanelRT.gameObject.activeInHierarchy &&
                 RectTransformUtility.RectangleContainsScreenPoint(s_tooltipPanelRT, screenPos, s_uiCamera))
+                return true;
+            if (s_landmarkPanelRT != null && s_landmarkPanelRT.gameObject.activeInHierarchy &&
+                RectTransformUtility.RectangleContainsScreenPoint(s_landmarkPanelRT, screenPos, s_uiCamera))
                 return true;
             return false;
         }
@@ -2478,6 +2482,7 @@ namespace OpenEmpires
             panelRT.anchorMax = new Vector2(0.5f, 0.5f);
             panelRT.pivot = new Vector2(0.5f, 0.5f);
             panelRT.sizeDelta = new Vector2(panelW, panelH);
+            s_landmarkPanelRT = panelRT;
             var panelImg = landmarkPanelGO.AddComponent<Image>();
             panelImg.color = new Color(0.05f, 0.05f, 0.05f, 0.95f);
             var panelOutline = landmarkPanelGO.AddComponent<Outline>();
@@ -2619,6 +2624,7 @@ namespace OpenEmpires
                 Destroy(landmarkPanelGO);
                 landmarkPanelGO = null;
             }
+            s_landmarkPanelRT = null;
             landmarkChoiceACallback = null;
             landmarkChoiceBCallback = null;
         }
