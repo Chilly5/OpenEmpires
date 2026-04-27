@@ -30,7 +30,7 @@ namespace OpenEmpires
             get
             {
                 if (flashLevel < 0f)
-                    flashLevel = Mathf.Clamp01(PlayerPrefs.GetFloat(FlashLevelPrefKey, 1f));
+                    flashLevel = Mathf.Clamp01(PlayerPrefs.GetFloat(FlashLevelPrefKey, 0.18f));
                 return flashLevel;
             }
             set
