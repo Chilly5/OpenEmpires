@@ -2093,6 +2093,28 @@ namespace OpenEmpires
                 SFXManager.Instance?.PlayUI(SFXType.UnitSelect, 0.5f);
             }
 
+            // Enemy/non-friendly unit fallback — only if nothing of ours was in the box.
+            // Mirrors the single-click enemy pattern at line 1675-1680: view-only, single-target,
+            // no SFX. Lets the player box-drag onto a dummy or enemy unit to inspect its stats
+            // without giving them commandable control over it.
+            if (selectedUnits.Count == 0 && selectedBuildings.Count == 0)
+            {
+                foreach (var kvp in unitViews)
+                {
+                    var view = kvp.Value;
+                    if (view.PlayerId == LocalPlayerId) continue;
+                    if (view.IsDead) continue;
+
+                    Rect unitRect = view.GetScreenBounds(mainCamera);
+                    if (unitRect.width > 0 && selectionRect.Overlaps(unitRect))
+                    {
+                        view.SetSelected(true);
+                        selectedUnits.Add(view);
+                        break;
+                    }
+                }
+            }
+
             // Lowest priority: resource node — only if no units AND no buildings in box.
             // ResourceNode supports single-select, so pick the first one whose screen rect overlaps.
             if (selectedUnits.Count == 0 && selectedBuildings.Count == 0 && selectedResourceNode == null)
