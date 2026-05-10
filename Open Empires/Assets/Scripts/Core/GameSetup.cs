@@ -1286,40 +1286,45 @@ namespace OpenEmpires
             var view = mill.AddComponent<BuildingView>();
             view.SetSelectionRing(ring);
 
+            AddMillInfluenceZone(mill, view, playerId);
+            return mill;
+        }
+
+        private void AddMillInfluenceZone(GameObject building, BuildingView view, int playerId)
+        {
             // Influence zone outline (visible during Mill construction) — only for civs that use Mill as influence source
             var simRef = GameBootstrapper.Instance?.Simulation;
-            if (simRef == null || simRef.GetInfluenceBuildingType(playerId) == BuildingType.Mill)
-            {
-                int influenceRadius = simRef?.Config?.MillInfluenceRadius ?? 6;
-                int footprintW = simRef?.Config?.MillFootprintWidth ?? 2;
-                int footprintH = simRef?.Config?.MillFootprintHeight ?? 2;
-                float halfX = (footprintW + 2 * influenceRadius) * 0.5f;
-                float halfZ = (footprintH + 2 * influenceRadius) * 0.5f;
+            if (simRef != null && simRef.GetInfluenceBuildingType(playerId) != BuildingType.Mill)
+                return;
 
-                var zone = new GameObject("InfluenceZone");
-                zone.transform.SetParent(mill.transform);
-                zone.transform.localPosition = new Vector3(0f, 0.03f, 0f);
-                zone.layer = 11;
-                var zoneLR = zone.AddComponent<LineRenderer>();
-                zoneLR.useWorldSpace = false;
-                zoneLR.loop = true;
-                zoneLR.positionCount = 4;
-                zoneLR.SetPosition(0, new Vector3(-halfX, 0f, -halfZ));
-                zoneLR.SetPosition(1, new Vector3(halfX, 0f, -halfZ));
-                zoneLR.SetPosition(2, new Vector3(halfX, 0f, halfZ));
-                zoneLR.SetPosition(3, new Vector3(-halfX, 0f, halfZ));
-                zoneLR.startWidth = 0.08f;
-                zoneLR.endWidth = 0.08f;
-                var zoneMat = new Material(cachedUnlitShader);
-                zoneMat.color = new Color(1f, 0.6f, 0f, 0.8f);
-                zoneMat.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
-                zoneMat.renderQueue = 3000;
-                zoneLR.material = zoneMat;
-                zoneLR.startColor = new Color(1f, 0.6f, 0f, 0.8f);
-                zoneLR.endColor = new Color(1f, 0.6f, 0f, 0.8f);
-                view.SetInfluenceZone(zone);
-            }
-            return mill;
+            int influenceRadius = simRef?.Config?.MillInfluenceRadius ?? 6;
+            int footprintW = simRef?.Config?.MillFootprintWidth ?? 2;
+            int footprintH = simRef?.Config?.MillFootprintHeight ?? 2;
+            float halfX = (footprintW + 2 * influenceRadius) * 0.5f;
+            float halfZ = (footprintH + 2 * influenceRadius) * 0.5f;
+
+            var zone = new GameObject("InfluenceZone");
+            zone.transform.SetParent(building.transform);
+            zone.transform.localPosition = new Vector3(0f, 0.03f, 0f);
+            zone.layer = 11;
+            var zoneLR = zone.AddComponent<LineRenderer>();
+            zoneLR.useWorldSpace = false;
+            zoneLR.loop = true;
+            zoneLR.positionCount = 4;
+            zoneLR.SetPosition(0, new Vector3(-halfX, 0f, -halfZ));
+            zoneLR.SetPosition(1, new Vector3(halfX, 0f, -halfZ));
+            zoneLR.SetPosition(2, new Vector3(halfX, 0f, halfZ));
+            zoneLR.SetPosition(3, new Vector3(-halfX, 0f, halfZ));
+            zoneLR.startWidth = 0.08f;
+            zoneLR.endWidth = 0.08f;
+            var zoneMat = new Material(cachedUnlitShader);
+            zoneMat.color = new Color(1f, 0.6f, 0f, 0.8f);
+            zoneMat.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
+            zoneMat.renderQueue = 3000;
+            zoneLR.material = zoneMat;
+            zoneLR.startColor = new Color(1f, 0.6f, 0f, 0.8f);
+            zoneLR.endColor = new Color(1f, 0.6f, 0f, 0.8f);
+            view.SetInfluenceZone(zone);
         }
 
         private GameObject CreateLumberYardPrefab(int playerId)
@@ -2020,13 +2025,26 @@ namespace OpenEmpires
                     prefab = CreateWallPrefab(buildingData.PlayerId);
                     break;
                 case BuildingType.Mill:
-                    prefab = CreateMillPrefab(buildingData.PlayerId);
+                {
+                    var spriteMill = CreateBuildingSpritePrefab("Mill", "EnglishMill", 2, 2, 6f, 1.54f / 6f);
+                    if (spriteMill != null)
+                    {
+                        AddMillInfluenceZone(spriteMill, spriteMill.GetComponent<BuildingView>(), buildingData.PlayerId);
+                        prefab = spriteMill;
+                    }
+                    else
+                    {
+                        prefab = CreateMillPrefab(buildingData.PlayerId);
+                    }
                     break;
+                }
                 case BuildingType.LumberYard:
-                    prefab = CreateLumberYardPrefab(buildingData.PlayerId);
+                    prefab = CreateBuildingSpritePrefab("LumberYard", "LumberCamp", 2, 2, 6f, 1.54f / 6f)
+                          ?? CreateLumberYardPrefab(buildingData.PlayerId);
                     break;
                 case BuildingType.Mine:
-                    prefab = CreateMinePrefab(buildingData.PlayerId);
+                    prefab = CreateBuildingSpritePrefab("Mine", "MiningCamp", 2, 2, 6f, 1.54f / 6f)
+                          ?? CreateMinePrefab(buildingData.PlayerId);
                     break;
                 case BuildingType.ArcheryRange:
                 {
