@@ -2067,7 +2067,7 @@ namespace OpenEmpires
                           ?? CreateFarmPrefab(buildingData.PlayerId);
                     break;
                 case BuildingType.Tower:
-                    prefab = CreateBuildingSpritePrefab("Tower", "Tower", 1, 1, 3.036f, 1.02f / 3.036f)
+                    prefab = CreateBuildingSpritePrefab("Tower", "EnglishStoneWatchtower", 1, 1, 4.25f, 1.02f / 4.25f)
                           ?? CreateTowerPrefab(buildingData.PlayerId);
                     break;
                 case BuildingType.Monastery:
