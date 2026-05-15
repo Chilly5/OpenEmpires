@@ -1738,6 +1738,12 @@ namespace OpenEmpires
                 if (stoneTex != null)
                 {
                     spriteRenderer.material.SetTexture("_MainTex", stoneTex);
+                    // Stone tower PNG has more transparent padding than the wood tower
+                    // PNG, so the silhouette renders smaller on the same quad. Scale up
+                    // the sprite quad to compensate.
+                    var sprT = spriteRenderer.transform;
+                    var s = sprT.localScale;
+                    sprT.localScale = new Vector3(s.x * 1.4f, s.y * 1.4f, s.z);
                     stoneVisual = new GameObject("StoneReinforcement"); // marker so we don't re-run
                     stoneVisual.transform.SetParent(transform, false);
                     return;
