@@ -1730,7 +1730,21 @@ namespace OpenEmpires
 
         private void CreateStoneVisual()
         {
-            // Add stone reinforcement to the tower
+            // Sprite-based tower: swap the billboard texture to the stone watchtower
+            // sprite instead of layering procedural geometry on top of the wood model.
+            if (spriteRenderer != null)
+            {
+                var stoneTex = Resources.Load<Texture2D>("BuildingSprites/EnglishStoneWatchtower");
+                if (stoneTex != null)
+                {
+                    spriteRenderer.material.SetTexture("_MainTex", stoneTex);
+                    stoneVisual = new GameObject("StoneReinforcement"); // marker so we don't re-run
+                    stoneVisual.transform.SetParent(transform, false);
+                    return;
+                }
+            }
+
+            // Procedural tower fallback: add stone reinforcement geometry.
             stoneVisual = new GameObject("StoneReinforcement");
             stoneVisual.transform.SetParent(transform, false);
             stoneVisual.transform.localPosition = Vector3.zero;
