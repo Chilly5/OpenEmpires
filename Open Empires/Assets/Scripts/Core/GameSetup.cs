@@ -2039,11 +2039,11 @@ namespace OpenEmpires
                     break;
                 }
                 case BuildingType.LumberYard:
-                    prefab = CreateBuildingSpritePrefab("LumberYard", "LumberCamp", 2, 2, 5.4f, 1.54f / 6f)
+                    prefab = CreateBuildingSpritePrefab("LumberYard", "LumberCamp", 2, 2, 4.374f, 1.54f / 6f)
                           ?? CreateLumberYardPrefab(buildingData.PlayerId);
                     break;
                 case BuildingType.Mine:
-                    prefab = CreateBuildingSpritePrefab("Mine", "MiningCamp", 2, 2, 5.4f, 1.54f / 6f)
+                    prefab = CreateBuildingSpritePrefab("Mine", "MiningCamp", 2, 2, 4.374f, 1.54f / 6f)
                           ?? CreateMinePrefab(buildingData.PlayerId);
                     break;
                 case BuildingType.ArcheryRange:
