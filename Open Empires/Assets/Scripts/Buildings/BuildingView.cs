@@ -192,6 +192,11 @@ namespace OpenEmpires
         private GameObject gateArch;
         private GameObject gateLeftCap;
         private GameObject gateRightCap;
+        private GameObject gateSpriteQuad;
+        private Renderer gateSpriteRenderer;
+        private string gateSpritePrefix;
+        private bool gateIsOpen;
+        private float gateLastRotation = float.NaN;
 
         // Command confirmation flash
         private float commandFlashTimer;
@@ -806,37 +811,38 @@ namespace OpenEmpires
         {
             if (isGate)
             {
+                // Auto-pick civ sprite prefix if not yet set (covers wall→gate conversions
+                // where the SpawnBuilding code path doesn't run)
+                if (string.IsNullOrEmpty(gateSpritePrefix))
+                {
+                    var sim = GameBootstrapper.Instance?.Simulation;
+                    if (sim != null && sim.GetPlayerCivilization(PlayerId) == Civilization.English)
+                        gateSpritePrefix = "Englishgate";
+                }
+
                 // Hide wall geometry container
                 if (wallGeometry != null) wallGeometry.gameObject.SetActive(false);
 
-                // Create gate container and geometry on first call
+                // Create gate container on first call
                 if (gateContainer == null)
                 {
                     gateContainer = new GameObject("GateContainer");
                     gateContainer.transform.SetParent(transform, false);
                     gateContainer.transform.localPosition = Vector3.zero;
-
-                    // Default orientation: opening along Z-axis, pillars on X-axis
-                    // Pillars: connect seamlessly to adjacent walls, full depth in Z
-                    gateLeftPillar = CreateGatePart("GatePillarLeft",
-                        new Vector3(-0.375f, 0.55f, 0f), new Vector3(0.25f, 1.1f, 1.0f), mat);
-                    gateRightPillar = CreateGatePart("GatePillarRight",
-                        new Vector3(0.375f, 0.55f, 0f), new Vector3(0.25f, 1.1f, 1.0f), mat);
-
-                    // Pillar caps: match pillar width for seamless connection
-                    gateLeftCap = CreateGatePart("GateCapLeft",
-                        new Vector3(-0.375f, 1.15f, 0f), new Vector3(0.25f, 0.1f, 1.0f), mat);
-                    gateRightCap = CreateGatePart("GateCapRight",
-                        new Vector3(0.375f, 1.15f, 0f), new Vector3(0.25f, 0.1f, 1.0f), mat);
-
-                    // Lintel: spans the full width between pillars
-                    gateArch = CreateGatePart("GateLintel",
-                        new Vector3(0f, 1.05f, 0f), new Vector3(1.0f, 0.12f, 1.0f), mat);
                 }
+
+                if (!string.IsNullOrEmpty(gateSpritePrefix))
+                    EnsureGateSpriteQuad();
+                else
+                    EnsureGateProceduralParts(mat);
 
                 // Orient opening toward the side without adjacent walls
                 float rotation = ComputeGateRotation();
                 gateContainer.transform.localRotation = Quaternion.Euler(0f, rotation, 0f);
+                gateLastRotation = rotation;
+
+                if (gateSpriteRenderer != null)
+                    UpdateGateTexture();
 
                 gateContainer.SetActive(true);
             }
@@ -851,6 +857,79 @@ namespace OpenEmpires
 
             wasGate = isGate;
             CacheRenderers();
+        }
+
+        private void EnsureGateProceduralParts(Material mat)
+        {
+            if (gateLeftPillar != null) return;
+
+            // Default orientation: opening along Z-axis, pillars on X-axis
+            gateLeftPillar = CreateGatePart("GatePillarLeft",
+                new Vector3(-0.375f, 0.55f, 0f), new Vector3(0.25f, 1.1f, 1.0f), mat);
+            gateRightPillar = CreateGatePart("GatePillarRight",
+                new Vector3(0.375f, 0.55f, 0f), new Vector3(0.25f, 1.1f, 1.0f), mat);
+            gateLeftCap = CreateGatePart("GateCapLeft",
+                new Vector3(-0.375f, 1.15f, 0f), new Vector3(0.25f, 0.1f, 1.0f), mat);
+            gateRightCap = CreateGatePart("GateCapRight",
+                new Vector3(0.375f, 1.15f, 0f), new Vector3(0.25f, 0.1f, 1.0f), mat);
+            gateArch = CreateGatePart("GateLintel",
+                new Vector3(0f, 1.05f, 0f), new Vector3(1.0f, 0.12f, 1.0f), mat);
+        }
+
+        private void EnsureGateSpriteQuad()
+        {
+            if (gateSpriteQuad != null) return;
+
+            var shader = Shader.Find("OpenEmpires/Billboard");
+            if (shader == null) shader = Shader.Find("Universal Render Pipeline/Unlit");
+            if (shader == null) return;
+
+            gateSpriteQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            gateSpriteQuad.name = "Sprite";
+            gateSpriteQuad.transform.SetParent(gateContainer.transform, false);
+            gateSpriteQuad.transform.localPosition = new Vector3(0f, 1.25f, 0f);
+            gateSpriteQuad.transform.localScale = new Vector3(2.5f, 2.5f, 1f);
+            gateSpriteQuad.layer = 11;
+            var mc = gateSpriteQuad.GetComponent<MeshCollider>();
+            if (mc != null) Object.Destroy(mc);
+
+            gateSpriteRenderer = gateSpriteQuad.GetComponent<Renderer>();
+            var spriteMat = new Material(shader);
+            spriteMat.SetColor("_Color", Color.white);
+            if (spriteMat.HasProperty("_Cutoff")) spriteMat.SetFloat("_Cutoff", 0.5f);
+            spriteMat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry + 1;
+            gateSpriteRenderer.sharedMaterial = spriteMat;
+        }
+
+        private void UpdateGateTexture()
+        {
+            if (gateSpriteRenderer == null || string.IsNullOrEmpty(gateSpritePrefix)) return;
+
+            // Map rotation → directional sprite. ComputeGateRotation currently returns
+            // 0° or 90° only; the _90d_A/_90d_B sprites are reserved for future use
+            // (e.g. diagonal-wall gate orientations).
+            bool sideways = gateLastRotation > 45f;
+            string state;
+            if (sideways)
+                state = gateIsOpen ? "_Side_Opened" : "_Side";
+            else
+                state = gateIsOpen ? "_front_opened" : "_front";
+
+            var tex = Resources.Load<Texture2D>($"BuildingSprites/{gateSpritePrefix}{state}");
+            if (tex != null)
+                gateSpriteRenderer.material.SetTexture("_MainTex", tex);
+        }
+
+        public void SetGateSpriteCiv(string prefix)
+        {
+            gateSpritePrefix = prefix;
+        }
+
+        public void SetGateOpen(bool open)
+        {
+            if (gateIsOpen == open) return;
+            gateIsOpen = open;
+            UpdateGateTexture();
         }
 
         private GameObject CreateGatePart(string partName, Vector3 localPos, Vector3 localScale, Material mat)
@@ -1651,7 +1730,27 @@ namespace OpenEmpires
 
         private void CreateStoneVisual()
         {
-            // Add stone reinforcement to the tower
+            // Sprite-based tower: swap the billboard texture to the stone watchtower
+            // sprite instead of layering procedural geometry on top of the wood model.
+            if (spriteRenderer != null)
+            {
+                var stoneTex = Resources.Load<Texture2D>("BuildingSprites/EnglishStoneWatchtower");
+                if (stoneTex != null)
+                {
+                    spriteRenderer.material.SetTexture("_MainTex", stoneTex);
+                    // Stone tower PNG has more transparent padding than the wood tower
+                    // PNG, so the silhouette renders smaller on the same quad. Scale up
+                    // the sprite quad to compensate.
+                    var sprT = spriteRenderer.transform;
+                    var s = sprT.localScale;
+                    sprT.localScale = new Vector3(s.x * 1.4f, s.y * 1.4f, s.z);
+                    stoneVisual = new GameObject("StoneReinforcement"); // marker so we don't re-run
+                    stoneVisual.transform.SetParent(transform, false);
+                    return;
+                }
+            }
+
+            // Procedural tower fallback: add stone reinforcement geometry.
             stoneVisual = new GameObject("StoneReinforcement");
             stoneVisual.transform.SetParent(transform, false);
             stoneVisual.transform.localPosition = Vector3.zero;
