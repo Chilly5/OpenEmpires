@@ -102,17 +102,17 @@ namespace OpenEmpires
                 // the lower portion of the canvas, so offset.y stays at 0 to keep the
                 // texture's bottom edge anchored to the quad's bottom.
                 { (BuildingType.Wall, WallSegmentKind.CardinalEW),
-                    new WallSpriteSelection("Palisadeside90",   false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.025f, 0f)) },
+                    new WallSpriteSelection("Palisadeside90",   false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f)) },
                 { (BuildingType.Wall, WallSegmentKind.CardinalNS),
-                    new WallSpriteSelection("Palisadeside90B",  false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.025f, 0f)) },
+                    new WallSpriteSelection("Palisadeside90B",  false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f)) },
                 { (BuildingType.Wall, WallSegmentKind.DiagonalNESW),
-                    new WallSpriteSelection("PalisadefrontB",   false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.025f, 0f)) },
+                    new WallSpriteSelection("PalisadefrontB",   false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f)) },
                 { (BuildingType.Wall, WallSegmentKind.DiagonalNWSE),
-                    new WallSpriteSelection("Palisadefront",    false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.025f, 0f)) },
+                    new WallSpriteSelection("Palisadefront",    false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f)) },
                 { (BuildingType.Wall, WallSegmentKind.Junction),
-                    new WallSpriteSelection("PalisadeTower",    false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.025f, 0f)) },
+                    new WallSpriteSelection("PalisadeTower",    false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f)) },
                 { (BuildingType.Wall, WallSegmentKind.Isolated),
-                    new WallSpriteSelection("PalisadeTower",    false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.025f, 0f)) },
+                    new WallSpriteSelection("PalisadeTower",    false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f)) },
             };
 
         private static readonly Dictionary<string, Texture2D> TextureCache = new Dictionary<string, Texture2D>();
