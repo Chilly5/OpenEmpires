@@ -2098,6 +2098,11 @@ namespace OpenEmpires
                         {
                             var s = spriteT.localScale;
                             spriteT.localScale = new Vector3(s.x, s.y * 0.7f, s.z);
+                            // Sprite has a baked drop shadow — lower the alpha cutoff so the
+                            // semi-transparent shadow pixels aren't clipped by the billboard shader.
+                            var sr = spriteT.GetComponent<Renderer>();
+                            if (sr != null && sr.sharedMaterial != null)
+                                sr.sharedMaterial.SetFloat("_Cutoff", 0.05f);
                         }
                     }
                     break;
