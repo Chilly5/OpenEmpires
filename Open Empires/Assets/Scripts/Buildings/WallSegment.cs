@@ -39,30 +39,24 @@ namespace OpenEmpires
     {
         public static WallSegmentKind Classify(WallNeighborMask m)
         {
-            bool hasN = (m & WallNeighborMask.N) != 0;
-            bool hasS = (m & WallNeighborMask.S) != 0;
-            bool hasE = (m & WallNeighborMask.E) != 0;
-            bool hasW = (m & WallNeighborMask.W) != 0;
-            bool hasNE = (m & WallNeighborMask.NE) != 0;
-            bool hasNW = (m & WallNeighborMask.NW) != 0;
-            bool hasSE = (m & WallNeighborMask.SE) != 0;
-            bool hasSW = (m & WallNeighborMask.SW) != 0;
-
-            bool anyEW = hasE || hasW;
-            bool anyNS = hasN || hasS;
+            bool anyEW   = (m & WallNeighborMask.CardinalEW)   != 0;
+            bool anyNS   = (m & WallNeighborMask.CardinalNS)   != 0;
+            bool anyNESW = (m & WallNeighborMask.DiagonalNESW) != 0;
+            bool anyNWSE = (m & WallNeighborMask.DiagonalNWSE) != 0;
             bool anyCard = anyEW || anyNS;
-            bool anyDiag = hasNE || hasNW || hasSE || hasSW;
-            bool anyNESW = hasNE || hasSW;
-            bool anyNWSE = hasNW || hasSE;
 
-            // Junction: cardinal on both axes, or cardinal mixed with any diagonal,
-            // or both diagonal axes present at once.
+            // True junctions: cardinals on both axes (L / T / cross), or both diagonal
+            // axes present at once. Cardinal + an incidental diagonal does NOT count —
+            // along a straight L turn, the tiles adjacent to the corner naturally have
+            // a diagonal neighbor (the wall on the other leg), and forcing them to
+            // Junction produces a chain of false towers.
             if (anyEW && anyNS) return WallSegmentKind.Junction;
-            if (anyCard && anyDiag) return WallSegmentKind.Junction;
-            if (anyNESW && anyNWSE) return WallSegmentKind.Junction;
+            if (anyNESW && anyNWSE && !anyCard) return WallSegmentKind.Junction;
 
-            if (anyEW)   return WallSegmentKind.CardinalEW;
-            if (anyNS)   return WallSegmentKind.CardinalNS;
+            // Cardinals dominate over incidental diagonals.
+            if (anyEW) return WallSegmentKind.CardinalEW;
+            if (anyNS) return WallSegmentKind.CardinalNS;
+
             if (anyNESW) return WallSegmentKind.DiagonalNESW;
             if (anyNWSE) return WallSegmentKind.DiagonalNWSE;
 
@@ -75,12 +69,23 @@ namespace OpenEmpires
         public readonly string ResourceName;
         public readonly bool FlipX;
         public readonly float RotationDegrees;
+        // UV crop — the palisade textures are 3000x3000 with the wall art occupying only
+        // ~25% of the canvas in the lower-middle, so we crop to that region to make the
+        // visible art larger relative to the quad. UvScale < 1 zooms in; UvOffset shifts
+        // the cropped window in texture space.
+        public readonly Vector2 UvScale;
+        public readonly Vector2 UvOffset;
 
         public WallSpriteSelection(string resourceName, bool flipX = false, float rotationDegrees = 0f)
+            : this(resourceName, flipX, rotationDegrees, new Vector2(1f, 1f), new Vector2(0f, 0f)) { }
+
+        public WallSpriteSelection(string resourceName, bool flipX, float rotationDegrees, Vector2 uvScale, Vector2 uvOffset)
         {
             ResourceName = resourceName;
             FlipX = flipX;
             RotationDegrees = rotationDegrees;
+            UvScale = uvScale;
+            UvOffset = uvOffset;
         }
     }
 
@@ -91,12 +96,23 @@ namespace OpenEmpires
         private static readonly Dictionary<(BuildingType, WallSegmentKind), WallSpriteSelection> Map =
             new Dictionary<(BuildingType, WallSegmentKind), WallSpriteSelection>
             {
-                { (BuildingType.Wall, WallSegmentKind.CardinalEW),   new WallSpriteSelection("Palisadeside90") },
-                { (BuildingType.Wall, WallSegmentKind.CardinalNS),   new WallSpriteSelection("Palisadeside90B") },
-                { (BuildingType.Wall, WallSegmentKind.DiagonalNESW), new WallSpriteSelection("PalisadefrontB") },
-                { (BuildingType.Wall, WallSegmentKind.DiagonalNWSE), new WallSpriteSelection("Palisadefront") },
-                { (BuildingType.Wall, WallSegmentKind.Junction),     new WallSpriteSelection("PalisadeTower") },
-                { (BuildingType.Wall, WallSegmentKind.Isolated),     new WallSpriteSelection("PalisadeTower") },
+                // Gentle UV crop: tiling (0.85, 0.85) zooms ~1.18x (vs 2x earlier),
+                // making the visible wall art just slightly wider so adjacent walls have
+                // a very small overlap and flow into each other. The wall art lives in
+                // the lower portion of the canvas, so offset.y stays at 0 to keep the
+                // texture's bottom edge anchored to the quad's bottom.
+                { (BuildingType.Wall, WallSegmentKind.CardinalEW),
+                    new WallSpriteSelection("Palisadeside90",   false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.025f, 0f)) },
+                { (BuildingType.Wall, WallSegmentKind.CardinalNS),
+                    new WallSpriteSelection("Palisadeside90B",  false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.025f, 0f)) },
+                { (BuildingType.Wall, WallSegmentKind.DiagonalNESW),
+                    new WallSpriteSelection("PalisadefrontB",   false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.025f, 0f)) },
+                { (BuildingType.Wall, WallSegmentKind.DiagonalNWSE),
+                    new WallSpriteSelection("Palisadefront",    false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.025f, 0f)) },
+                { (BuildingType.Wall, WallSegmentKind.Junction),
+                    new WallSpriteSelection("PalisadeTower",    false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.025f, 0f)) },
+                { (BuildingType.Wall, WallSegmentKind.Isolated),
+                    new WallSpriteSelection("PalisadeTower",    false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.025f, 0f)) },
             };
 
         private static readonly Dictionary<string, Texture2D> TextureCache = new Dictionary<string, Texture2D>();

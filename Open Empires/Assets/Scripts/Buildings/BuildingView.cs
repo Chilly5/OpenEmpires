@@ -1223,6 +1223,12 @@ namespace OpenEmpires
                 lastPalisadeSpriteName = sel.ResourceName;
             }
 
+            // UV crop — zoom in on the wall art so it fills more of the quad.
+            // Material instance is unique per BuildingView (created in EnsurePalisadeSprite),
+            // so we can safely write to .material without leaking changes across walls.
+            palisadeSpriteRenderer.material.mainTextureScale = sel.UvScale;
+            palisadeSpriteRenderer.material.mainTextureOffset = sel.UvOffset;
+
             // Apply optional flip / rotation. Currently unused by the palisade entries but
             // kept so the registry can reuse the same art with transforms later.
             if (palisadeSpriteQuad != null)
