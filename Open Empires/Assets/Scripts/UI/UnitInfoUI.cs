@@ -129,6 +129,9 @@ namespace OpenEmpires
             public bool Enabled;
             public System.Action OnClick;
             public Sprite Icon;
+            public string Badge;        // small overlay text (e.g. "ON" / "OFF")
+            public Color? BadgeColor;   // color of badge text
+            public Color? Tint;         // base color tint applied to the button background
         }
 
         // --- Canvas UI references ---
@@ -155,6 +158,7 @@ namespace OpenEmpires
         private Button[] actionButtons;
         private TMP_Text[] actionButtonTexts;
         private TMP_Text[] actionButtonHotkeys;
+        private TMP_Text[] actionButtonBadges;
         private Image[] actionButtonIcons;
         private Image[] actionButtonFills;
 
@@ -176,6 +180,10 @@ namespace OpenEmpires
         private static readonly Color ButtonPressedColor = new Color(0.55f, 0.55f, 0.55f);
         private static readonly Color ButtonNormalColor = new Color(0.25f, 0.25f, 0.25f);
         private static readonly Color IconPressedColor = new Color(0.6f, 0.6f, 0.6f);
+        private static readonly Color AutoProduceOnTint = new Color(0.22f, 0.55f, 0.25f);
+        private static readonly Color AutoProduceOffTint = new Color(0.55f, 0.22f, 0.22f);
+        private static readonly Color AutoProduceOnBadge = new Color(0.65f, 1f, 0.65f);
+        private static readonly Color AutoProduceOffBadge = new Color(1f, 0.65f, 0.65f);
 
         // Build panels (3 age panels, villagers only)
         private GameObject[] buildPanelGOs;
@@ -368,6 +376,7 @@ namespace OpenEmpires
             actionButtonTexts = new TMP_Text[12];
             actionButtonIcons = new Image[12];
             actionButtonHotkeys = new TMP_Text[12];
+            actionButtonBadges = new TMP_Text[12];
             actionButtonFills = new Image[12];
 
             for (int i = 0; i < 12; i++)
@@ -450,6 +459,25 @@ namespace OpenEmpires
                 hTmp.overflowMode = TextOverflowModes.Overflow;
                 hTmp.raycastTarget = false;
                 actionButtonHotkeys[i] = hTmp;
+
+                // Badge label (bottom-center, used for toggle "ON" / "OFF" or similar overlays)
+                var badgeGO = new GameObject("Badge");
+                badgeGO.transform.SetParent(btnGO.transform, false);
+                var brt = badgeGO.AddComponent<RectTransform>();
+                brt.anchorMin = new Vector2(0, 0);
+                brt.anchorMax = new Vector2(1, 0);
+                brt.pivot = new Vector2(0.5f, 0);
+                brt.anchoredPosition = new Vector2(0, 1);
+                brt.sizeDelta = new Vector2(0, 12);
+                var bTmp = badgeGO.AddComponent<TextMeshProUGUI>();
+                bTmp.fontSize = 9;
+                bTmp.fontStyle = FontStyles.Bold;
+                bTmp.alignment = TextAlignmentOptions.Bottom;
+                bTmp.color = Color.white;
+                bTmp.overflowMode = TextOverflowModes.Overflow;
+                bTmp.raycastTarget = false;
+                badgeGO.SetActive(false);
+                actionButtonBadges[i] = bTmp;
 
                 // Delete-hold fill overlay (red, grows bottom-to-top via anchorMax.y)
                 var fillGO = new GameObject("Fill");
@@ -1632,12 +1660,49 @@ namespace OpenEmpires
                         actionButtonTexts[i].fontSize = 10;
                         actionButtonTexts[i].alignment = TextAlignmentOptions.Center;
                     }
+
+                    // Apply color tint (reset to defaults if none requested)
+                    var cb = actionButtons[i].colors;
+                    if (btn.Tint.HasValue)
+                    {
+                        Color t = btn.Tint.Value;
+                        cb.normalColor = t;
+                        cb.highlightedColor = new Color(
+                            Mathf.Clamp01(t.r + 0.1f),
+                            Mathf.Clamp01(t.g + 0.1f),
+                            Mathf.Clamp01(t.b + 0.1f),
+                            t.a);
+                        cb.pressedColor = new Color(t.r * 0.7f, t.g * 0.7f, t.b * 0.7f, t.a);
+                        cb.disabledColor = new Color(t.r * 0.55f, t.g * 0.55f, t.b * 0.55f, t.a);
+                    }
+                    else
+                    {
+                        cb.normalColor = new Color(0.38f, 0.38f, 0.38f);
+                        cb.highlightedColor = new Color(0.48f, 0.48f, 0.48f);
+                        cb.pressedColor = new Color(0.25f, 0.25f, 0.25f);
+                        cb.disabledColor = new Color(0.2f, 0.2f, 0.2f);
+                    }
+                    actionButtons[i].colors = cb;
+
+                    // Badge overlay (e.g. "ON" / "OFF")
+                    if (!string.IsNullOrEmpty(btn.Badge))
+                    {
+                        actionButtonBadges[i].text = btn.Badge;
+                        actionButtonBadges[i].color = btn.BadgeColor ?? Color.white;
+                        actionButtonBadges[i].gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        actionButtonBadges[i].gameObject.SetActive(false);
+                    }
                 }
                 else
                 {
                     actionButtonGOs[i].SetActive(false);
                     actionCallbacks[i] = null;
                     actionTooltips[i] = null;
+                    if (actionButtonBadges != null && actionButtonBadges[i] != null)
+                        actionButtonBadges[i].gameObject.SetActive(false);
                 }
             }
         }
@@ -2260,25 +2325,22 @@ namespace OpenEmpires
                 else if (building.Type == BuildingType.TownCenter)
                 {
                     int villagerCost = sim.Config.VillagerFoodCost * (100 - discPct) / 100;
+                    bool autoOn = building.AutoProduceVillagers;
                     slots[0] = new GridButton { Label = "Villager", Hotkey = "Q",
-                        Enabled = resources.Food >= villagerCost,
+                        Enabled = true,
                         Icon = UnitIcons.Get(0),
-                        Tooltip = $"<b>Villager</b>\nGathers resources and constructs buildings.\nCost: {villagerCost} <sprite name=\"food\">",
-                        OnClick = () => QueueTraining(sim, building.PlayerId, building.Id, 0) };
+                        Tint = autoOn ? AutoProduceOnTint : AutoProduceOffTint,
+                        Badge = autoOn ? "ON" : "OFF",
+                        BadgeColor = autoOn ? AutoProduceOnBadge : AutoProduceOffBadge,
+                        Tooltip = $"<b>Auto-Produce Villagers</b>\nAutomatically queues villagers whenever this town center is idle and food is available.\nCost per villager: {villagerCost} <sprite name=\"food\">\nCurrently: {(autoOn ? "<color=#7CFF7C>ON</color>" : "<color=#FF7C7C>OFF</color>")}",
+                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
+                            new ToggleAutoProduceCommand(building.PlayerId, building.Id, !autoOn)) };
                     int scoutFood = sim.Config.ScoutFoodCost * (100 - discPct) / 100;
                     slots[1] = new GridButton { Label = "Scout", Hotkey = "W",
                         Enabled = resources.Food >= scoutFood,
                         Icon = UnitIcons.Get(4),
                         Tooltip = $"<b>Scout</b>\nFast mounted unit with high vision.\nCost: {scoutFood} <sprite name=\"food\">",
                         OnClick = () => QueueTraining(sim, building.PlayerId, building.Id, 4) };
-
-                    bool autoOn = building.AutoProduceVillagers;
-                    slots[2] = new GridButton { Label = autoOn ? "Auto Vill: ON" : "Auto Vill: OFF", Hotkey = "E",
-                        Enabled = true,
-                        Icon = UnitIcons.Get(0),
-                        Tooltip = $"<b>Auto-Produce Villagers</b>\nAutomatically queues villagers whenever this town center is idle and food is available.\nCurrently: {(autoOn ? "ON" : "OFF")}",
-                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
-                            new ToggleAutoProduceCommand(building.PlayerId, building.Id, !autoOn)) };
 
                     // Age Up button
                     int currentAge = sim.GetPlayerAge(building.PlayerId);
@@ -2833,13 +2895,23 @@ namespace OpenEmpires
                     else if (dominantType == BuildingType.TownCenter)
                     {
                         int villagerCost = sim.Config.VillagerFoodCost;
+                        bool anyAutoOn = false;
+                        for (int i = 0; i < ready.Count; i++)
+                        {
+                            var bd = sim.BuildingRegistry.GetBuilding(ready[i].BuildingId);
+                            if (bd != null && bd.AutoProduceVillagers) { anyAutoOn = true; break; }
+                        }
+                        bool turnOn = !anyAutoOn;
                         slots[0] = new GridButton { Label = "Villager", Hotkey = "Q",
-                            Enabled = resources.Food >= villagerCost,
+                            Enabled = true,
                             Icon = UnitIcons.Get(0),
-                            Tooltip = $"<b>Villager</b>\nGathers resources and constructs buildings.\nCost: {villagerCost} <sprite name=\"food\">",
+                            Tint = anyAutoOn ? AutoProduceOnTint : AutoProduceOffTint,
+                            Badge = anyAutoOn ? "ON" : "OFF",
+                            BadgeColor = anyAutoOn ? AutoProduceOnBadge : AutoProduceOffBadge,
+                            Tooltip = $"<b>Auto-Produce Villagers</b>\nAutomatically queues villagers whenever each town center is idle and food is available.\nCost per villager: {villagerCost} <sprite name=\"food\">\nCurrently: {(anyAutoOn ? "<color=#7CFF7C>ON</color> (click to turn OFF)" : "<color=#FF7C7C>OFF</color> (click to turn ON)")}",
                             OnClick = () => { for (int i = 0; i < ready.Count; i++)
-                                QueueTraining(sim, localPid, ready[i].BuildingId, 0);
-                                SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f); } };
+                                sim.CommandBuffer.EnqueueCommand(
+                                    new ToggleAutoProduceCommand(localPid, ready[i].BuildingId, turnOn)); } };
                         int scoutFood = sim.Config.ScoutFoodCost;
                         slots[1] = new GridButton { Label = "Scout", Hotkey = "W",
                             Enabled = resources.Food >= scoutFood,
@@ -2848,21 +2920,6 @@ namespace OpenEmpires
                             OnClick = () => { for (int i = 0; i < ready.Count; i++)
                                 QueueTraining(sim, localPid, ready[i].BuildingId, 4);
                                 SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f); } };
-
-                        bool anyAutoOn = false;
-                        for (int i = 0; i < ready.Count; i++)
-                        {
-                            var bd = sim.BuildingRegistry.GetBuilding(ready[i].BuildingId);
-                            if (bd != null && bd.AutoProduceVillagers) { anyAutoOn = true; break; }
-                        }
-                        bool turnOn = !anyAutoOn;
-                        slots[2] = new GridButton { Label = anyAutoOn ? "Auto Vill: ON" : "Auto Vill: OFF", Hotkey = "E",
-                            Enabled = true,
-                            Icon = UnitIcons.Get(0),
-                            Tooltip = $"<b>Auto-Produce Villagers</b>\nAutomatically queues villagers whenever each town center is idle and food is available.\nCurrently: {(anyAutoOn ? "ON (click to turn OFF)" : "OFF (click to turn ON)")}",
-                            OnClick = () => { for (int i = 0; i < ready.Count; i++)
-                                sim.CommandBuffer.EnqueueCommand(
-                                    new ToggleAutoProduceCommand(localPid, ready[i].BuildingId, turnOn)); } };
                         hasAny = true;
                     }
                 }
@@ -2988,29 +3045,9 @@ namespace OpenEmpires
 
             if (dominantType == BuildingType.TownCenter)
             {
-                if (WasKeyPressed(Key.Q) && resources.Food >= sim.Config.VillagerFoodCost)
+                if (WasKeyPressed(Key.Q))
                 {
                     FlashActionButton(0);
-                    for (int i = 0; i < buildings.Count; i++)
-                    {
-                        if (!IsReadyBuilding(buildings[i], BuildingType.TownCenter, localPid, sim)) continue;
-                        QueueTraining(sim, localPid, buildings[i].BuildingId, 0);
-                    }
-                    SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f);
-                }
-                else if (WasKeyPressed(Key.W) && resources.Food >= sim.Config.ScoutFoodCost)
-                {
-                    FlashActionButton(1);
-                    for (int i = 0; i < buildings.Count; i++)
-                    {
-                        if (!IsReadyBuilding(buildings[i], BuildingType.TownCenter, localPid, sim)) continue;
-                        QueueTraining(sim, localPid, buildings[i].BuildingId, 4);
-                    }
-                    SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f);
-                }
-                else if (WasKeyPressed(Key.E))
-                {
-                    FlashActionButton(2);
                     bool anyAutoOn = false;
                     for (int i = 0; i < buildings.Count; i++)
                     {
@@ -3025,6 +3062,16 @@ namespace OpenEmpires
                         sim.CommandBuffer.EnqueueCommand(
                             new ToggleAutoProduceCommand(localPid, buildings[i].BuildingId, turnOn));
                     }
+                }
+                else if (WasKeyPressed(Key.W) && resources.Food >= sim.Config.ScoutFoodCost)
+                {
+                    FlashActionButton(1);
+                    for (int i = 0; i < buildings.Count; i++)
+                    {
+                        if (!IsReadyBuilding(buildings[i], BuildingType.TownCenter, localPid, sim)) continue;
+                        QueueTraining(sim, localPid, buildings[i].BuildingId, 4);
+                    }
+                    SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f);
                 }
                 else if (WasKeyPressed(Key.A))
                 {
