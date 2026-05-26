@@ -2092,8 +2092,10 @@ namespace OpenEmpires
                         var spriteT = prefab.transform.Find("Sprite");
                         if (spriteT != null)
                         {
-                            spriteT.localScale = new Vector3(6.9f, 6.9f, spriteT.localScale.z);
-                            spriteT.localPosition = new Vector3(-0.5f, 2.5f, 0f);
+                            // Shrunk 15% → 5.865×5.865. Bottom edge raised from -0.95 to 0
+                            // (ground level, where the building collider sits): center Y = 5.865/2.
+                            spriteT.localScale = new Vector3(5.865f, 5.865f, spriteT.localScale.z);
+                            spriteT.localPosition = new Vector3(-0.5f, 2.0825f, 0f);
                         }
                     }
                     break;
@@ -2132,8 +2134,10 @@ namespace OpenEmpires
                         var spriteT = prefab.transform.Find("Sprite");
                         if (spriteT != null)
                         {
-                            var s = spriteT.localScale;
-                            spriteT.localScale = new Vector3(s.x, s.y * 0.7f, s.z);
+                            // Source PNG is 1083×726 (1.491:1). Aspect-matched quad at 6.262×4.2,
+                            // scaled 13% larger → 7.0761×4.746. Y raised by 1.1 (0.82 → 1.92).
+                            spriteT.localScale = new Vector3(7.0761f, 4.746f, spriteT.localScale.z);
+                            spriteT.localPosition = new Vector3(spriteT.localPosition.x, 1.17f, spriteT.localPosition.z);
                             // Sprite has a baked drop shadow — lower the alpha cutoff so the
                             // semi-transparent shadow pixels aren't clipped by the billboard shader.
                             var sr = spriteT.GetComponent<Renderer>();
