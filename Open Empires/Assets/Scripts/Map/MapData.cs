@@ -207,6 +207,19 @@ namespace OpenEmpires
             return null;
         }
 
+        // Returns true if the tile contains a wall-family building (Wall, StoneWall, gates).
+        // Under-construction walls count (visual continuity while building);
+        // destroyed-but-not-cleaned walls do not.
+        public bool IsWallTile(int x, int z, BuildingRegistry buildingRegistry)
+        {
+            var b = GetBuildingAt(x, z, buildingRegistry);
+            if (b == null) return false;
+            return b.Type == BuildingType.Wall
+                || b.Type == BuildingType.StoneWall
+                || b.Type == BuildingType.WoodGate
+                || b.Type == BuildingType.StoneGate;
+        }
+
         public void ApplyGenerationResult(TileType[,] tiles, float[,] heights, float[,] forestDensity)
         {
             for (int x = 0; x < Width; x++)

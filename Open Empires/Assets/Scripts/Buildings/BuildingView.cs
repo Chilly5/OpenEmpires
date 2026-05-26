@@ -7,6 +7,11 @@ namespace OpenEmpires
 {
     public class BuildingView : MonoBehaviour
     {
+        // Wall-family view registry — used to invalidate a neighbor wall's classification
+        // when this wall is placed, destroyed, or converted to/from a gate.
+        private static readonly System.Collections.Generic.Dictionary<int, BuildingView> wallViewsById
+            = new System.Collections.Generic.Dictionary<int, BuildingView>();
+
         // Shared rally material — created once, reused by all BuildingViews
         private static Material sharedRallyMaterial;
 
@@ -198,6 +203,11 @@ namespace OpenEmpires
         private bool gateIsOpen;
         private float gateLastRotation = float.NaN;
 
+        // Palisade (wood wall) sprite billboard — replaces procedural body cubes for BuildingType.Wall
+        private GameObject palisadeSpriteQuad;
+        private Renderer palisadeSpriteRenderer;
+        private string lastPalisadeSpriteName;
+
         // Command confirmation flash
         private float commandFlashTimer;
         private const float CommandFlashDuration = 0.18f;
@@ -263,6 +273,18 @@ namespace OpenEmpires
             if (data.Type == BuildingType.Wall || data.Type == BuildingType.StoneWall || data.Type == BuildingType.StoneGate || data.Type == BuildingType.WoodGate)
             {
                 wallGeometry = transform.Find("WallGeometry");
+            }
+
+            if (data.Type == BuildingType.Wall)
+            {
+                EnsurePalisadeSprite();
+                HideProceduralWallBody();
+            }
+
+            if (IsWallFamily(data.Type))
+            {
+                wallViewsById[buildingId] = this;
+                InvalidateNeighborWallViews(OriginTileX, OriginTileZ);
             }
 
             CreateRallyPointVisuals();
@@ -822,6 +844,7 @@ namespace OpenEmpires
 
                 // Hide wall geometry container
                 if (wallGeometry != null) wallGeometry.gameObject.SetActive(false);
+                if (palisadeSpriteQuad != null) palisadeSpriteQuad.SetActive(false);
 
                 // Create gate container on first call
                 if (gateContainer == null)
@@ -850,6 +873,8 @@ namespace OpenEmpires
             {
                 // Show wall geometry container
                 if (wallGeometry != null) wallGeometry.gameObject.SetActive(true);
+                if (palisadeSpriteQuad != null && BuildingType == BuildingType.Wall)
+                    palisadeSpriteQuad.SetActive(true);
 
                 // Hide gate
                 if (gateContainer != null) gateContainer.SetActive(false);
@@ -857,6 +882,12 @@ namespace OpenEmpires
 
             wasGate = isGate;
             CacheRenderers();
+
+            // Gate state change doesn't affect IsWallTile (gates count as walls regardless),
+            // but neighbors may still need to re-evaluate visuals (e.g. junction merlons).
+            // Also re-classify self in case any presentation depends on it.
+            InvalidateWallConnections();
+            InvalidateNeighborWallViews(OriginTileX, OriginTileZ);
         }
 
         private void EnsureGateProceduralParts(Material mat)
@@ -974,9 +1005,62 @@ namespace OpenEmpires
             return 0f;
         }
 
+        private static bool IsWallFamily(BuildingType t)
+        {
+            return t == BuildingType.Wall
+                || t == BuildingType.StoneWall
+                || t == BuildingType.StoneGate
+                || t == BuildingType.WoodGate;
+        }
+
+        private static WallNeighborMask SampleWallNeighbors(MapData map, BuildingRegistry reg, int tx, int tz)
+        {
+            WallNeighborMask m = WallNeighborMask.None;
+            if (map.IsWallTile(tx,     tz + 1, reg)) m |= WallNeighborMask.N;
+            if (map.IsWallTile(tx,     tz - 1, reg)) m |= WallNeighborMask.S;
+            if (map.IsWallTile(tx + 1, tz,     reg)) m |= WallNeighborMask.E;
+            if (map.IsWallTile(tx - 1, tz,     reg)) m |= WallNeighborMask.W;
+            if (map.IsWallTile(tx + 1, tz + 1, reg)) m |= WallNeighborMask.NE;
+            if (map.IsWallTile(tx - 1, tz + 1, reg)) m |= WallNeighborMask.NW;
+            if (map.IsWallTile(tx + 1, tz - 1, reg)) m |= WallNeighborMask.SE;
+            if (map.IsWallTile(tx - 1, tz - 1, reg)) m |= WallNeighborMask.SW;
+            return m;
+        }
+
+        // Resets the dirty flag so the next LateUpdate re-runs classification.
+        // Safe to call multiple times per frame — flag flip is idempotent.
+        public void InvalidateWallConnections()
+        {
+            wallConnectionsUpdated = false;
+        }
+
+        // Invalidate the 8 neighbors of a wall tile so they re-classify on the next frame.
+        // Call after a wall is placed, destroyed, or toggled to/from a gate.
+        public static void InvalidateNeighborWallViews(int tx, int tz)
+        {
+            var sim = GameBootstrapper.Instance?.Simulation;
+            if (sim == null) return;
+            var map = sim.MapData;
+            var reg = sim.BuildingRegistry;
+            if (map == null || reg == null) return;
+
+            for (int dz = -1; dz <= 1; dz++)
+            {
+                for (int dx = -1; dx <= 1; dx++)
+                {
+                    if (dx == 0 && dz == 0) continue;
+                    var nb = map.GetBuildingAt(tx + dx, tz + dz, reg);
+                    if (nb == null) continue;
+                    if (!IsWallFamily(nb.Type)) continue;
+                    if (wallViewsById.TryGetValue(nb.Id, out var view) && view != null)
+                        view.InvalidateWallConnections();
+                }
+            }
+        }
+
         private void UpdateWallConnections()
         {
-            if ((BuildingType != BuildingType.Wall && BuildingType != BuildingType.StoneWall && BuildingType != BuildingType.StoneGate && BuildingType != BuildingType.WoodGate) || wallGeometry == null) return;
+            if (!IsWallFamily(BuildingType) || wallGeometry == null) return;
             wallConnectionsUpdated = true;
 
             var sim = GameBootstrapper.Instance?.Simulation;
@@ -985,69 +1069,161 @@ namespace OpenEmpires
             int tx = OriginTileX;
             int tz = OriginTileZ;
             var map = sim.MapData;
+            var reg = sim.BuildingRegistry;
 
-            // Check all 8 neighbors for non-walkable tiles (walls/buildings)
-            bool nxWall = !map.IsWalkable(tx - 1, tz);
-            bool pxWall = !map.IsWalkable(tx + 1, tz);
-            bool nzWall = !map.IsWalkable(tx, tz - 1);
-            bool pzWall = !map.IsWalkable(tx, tz + 1);
-            bool nxnzWall = !map.IsWalkable(tx - 1, tz - 1);
-            bool pxnzWall = !map.IsWalkable(tx + 1, tz - 1);
-            bool nxpzWall = !map.IsWalkable(tx - 1, tz + 1);
-            bool pxpzWall = !map.IsWalkable(tx + 1, tz + 1);
+            WallNeighborMask mask = SampleWallNeighbors(map, reg, tx, tz);
+            WallSegmentKind kind = WallSegmentClassifier.Classify(mask);
 
-            // Hide merlons at corners that connect to any neighbor
+            bool hasN  = (mask & WallNeighborMask.N)  != 0;
+            bool hasS  = (mask & WallNeighborMask.S)  != 0;
+            bool hasE  = (mask & WallNeighborMask.E)  != 0;
+            bool hasW  = (mask & WallNeighborMask.W)  != 0;
+            bool hasNE = (mask & WallNeighborMask.NE) != 0;
+            bool hasNW = (mask & WallNeighborMask.NW) != 0;
+            bool hasSE = (mask & WallNeighborMask.SE) != 0;
+            bool hasSW = (mask & WallNeighborMask.SW) != 0;
+
+            // Hide merlons at corners that connect to any neighbor (stone walls only — palisade has merlons hidden up-front)
             Transform mNxNz = wallGeometry.Find("Merlon_NxNz");
             Transform mPxNz = wallGeometry.Find("Merlon_PxNz");
             Transform mNxPz = wallGeometry.Find("Merlon_NxPz");
             Transform mPxPz = wallGeometry.Find("Merlon_PxPz");
+            if (mNxNz != null) mNxNz.gameObject.SetActive(!(hasW || hasS || hasSW));
+            if (mPxNz != null) mPxNz.gameObject.SetActive(!(hasE || hasS || hasSE));
+            if (mNxPz != null) mNxPz.gameObject.SetActive(!(hasW || hasN || hasNW));
+            if (mPxPz != null) mPxPz.gameObject.SetActive(!(hasE || hasN || hasNE));
 
-            if (mNxNz != null) mNxNz.gameObject.SetActive(!(nxWall || nzWall || nxnzWall));
-            if (mPxNz != null) mPxNz.gameObject.SetActive(!(pxWall || nzWall || pxnzWall));
-            if (mNxPz != null) mNxPz.gameObject.SetActive(!(nxWall || pzWall || nxpzWall));
-            if (mPxPz != null) mPxPz.gameObject.SetActive(!(pxWall || pzWall || pxpzWall));
-
-            // Add diagonal body+ledge connectors where there's a pure diagonal connection
-            // (diagonal neighbor exists but no cardinal wall in between to fill the gap)
-            Material wallMat = bodyRenderers.Length > 0 && bodyRenderers[0] != null
-                ? bodyRenderers[0].sharedMaterial : null;
-
-            bool[] diagWalls = { pxpzWall, pxnzWall, nxpzWall, nxnzWall };
-            bool[] cardXArr  = { pxWall,   pxWall,   nxWall,   nxWall   };
-            bool[] cardZArr  = { pzWall,   nzWall,   pzWall,   nzWall   };
-            int[] dxArr = { 1, 1, -1, -1 };
-            int[] dzArr = { 1, -1, 1, -1 };
-
-            for (int d = 0; d < 4; d++)
+            // Procedural diagonal connectors — stone walls only. Palisade uses dedicated diagonal sprites.
+            if (BuildingType != BuildingType.Wall)
             {
-                if (!diagWalls[d]) continue;
-                if (cardXArr[d] || cardZArr[d]) continue;
+                Material wallMat = bodyRenderers.Length > 0 && bodyRenderers[0] != null
+                    ? bodyRenderers[0].sharedMaterial : null;
 
-                int dx = dxArr[d];
-                int dz = dzArr[d];
+                bool[] diagWalls = { hasNE, hasSE, hasNW, hasSW };
+                bool[] cardXArr  = { hasE,  hasE,  hasW,  hasW  };
+                bool[] cardZArr  = { hasN,  hasS,  hasN,  hasS  };
+                int[] dxArr = { 1, 1, -1, -1 };
+                int[] dzArr = { 1, -1, 1, -1 };
 
-                // Body connector at the corner, bridging the diagonal step
-                var body = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                body.name = "DiagBody";
-                body.transform.SetParent(wallGeometry);
-                body.transform.localPosition = new Vector3(dx * 0.5f, 0.375f, dz * 0.5f);
-                body.transform.localScale = new Vector3(0.5f, 0.75f, 0.5f);
-                body.layer = 11;
-                Object.Destroy(body.GetComponent<Collider>());
-                if (wallMat != null) body.GetComponent<Renderer>().sharedMaterial = wallMat;
+                // Clear any stale diagonal connectors from prior runs (re-invalidation can fire repeatedly)
+                for (int i = wallGeometry.childCount - 1; i >= 0; i--)
+                {
+                    var c = wallGeometry.GetChild(i);
+                    if (c.name == "DiagBody" || c.name == "DiagLedge")
+                        Object.Destroy(c.gameObject);
+                }
 
-                // Matching ledge connector
-                var ledge = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                ledge.name = "DiagLedge";
-                ledge.transform.SetParent(wallGeometry);
-                ledge.transform.localPosition = new Vector3(dx * 0.5f, 0.775f, dz * 0.5f);
-                ledge.transform.localScale = new Vector3(0.5f, 0.05f, 0.5f);
-                ledge.layer = 11;
-                Object.Destroy(ledge.GetComponent<Collider>());
-                if (wallMat != null) ledge.GetComponent<Renderer>().sharedMaterial = wallMat;
+                for (int d = 0; d < 4; d++)
+                {
+                    if (!diagWalls[d]) continue;
+                    if (cardXArr[d] || cardZArr[d]) continue;
+
+                    int dx = dxArr[d];
+                    int dz = dzArr[d];
+
+                    var body = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    body.name = "DiagBody";
+                    body.transform.SetParent(wallGeometry);
+                    body.transform.localPosition = new Vector3(dx * 0.5f, 0.375f, dz * 0.5f);
+                    body.transform.localScale = new Vector3(0.5f, 0.75f, 0.5f);
+                    body.layer = 11;
+                    Object.Destroy(body.GetComponent<Collider>());
+                    if (wallMat != null) body.GetComponent<Renderer>().sharedMaterial = wallMat;
+
+                    var ledge = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    ledge.name = "DiagLedge";
+                    ledge.transform.SetParent(wallGeometry);
+                    ledge.transform.localPosition = new Vector3(dx * 0.5f, 0.775f, dz * 0.5f);
+                    ledge.transform.localScale = new Vector3(0.5f, 0.05f, 0.5f);
+                    ledge.layer = 11;
+                    Object.Destroy(ledge.GetComponent<Collider>());
+                    if (wallMat != null) ledge.GetComponent<Renderer>().sharedMaterial = wallMat;
+                }
+            }
+
+            // Palisade sprite — registry lookup
+            if (BuildingType == BuildingType.Wall
+                && WallSpriteRegistry.TryLookup(BuildingType, kind, out var sel))
+            {
+                ApplyPalisadeSprite(sel);
             }
 
             CacheRenderers();
+        }
+
+        private void EnsurePalisadeSprite()
+        {
+            if (palisadeSpriteQuad != null) return;
+
+            var shader = Shader.Find("OpenEmpires/Billboard");
+            if (shader == null) shader = Shader.Find("Universal Render Pipeline/Unlit");
+            if (shader == null) return;
+
+            palisadeSpriteQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            palisadeSpriteQuad.name = "PalisadeSprite";
+            palisadeSpriteQuad.transform.SetParent(transform, false);
+            palisadeSpriteQuad.transform.localPosition = new Vector3(0f, 1.25f, 0f);
+            palisadeSpriteQuad.transform.localScale = new Vector3(2.5f, 2.5f, 1f);
+            palisadeSpriteQuad.layer = 11;
+            var mc = palisadeSpriteQuad.GetComponent<MeshCollider>();
+            if (mc != null) Object.Destroy(mc);
+
+            palisadeSpriteRenderer = palisadeSpriteQuad.GetComponent<Renderer>();
+            var spriteMat = new Material(shader);
+            spriteMat.SetColor("_Color", Color.white);
+            if (spriteMat.HasProperty("_Cutoff")) spriteMat.SetFloat("_Cutoff", 0.5f);
+            spriteMat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry + 1;
+            palisadeSpriteRenderer.sharedMaterial = spriteMat;
+
+            // Default texture (used until UpdateWallConnections runs and picks the right one)
+            var defaultTex = Resources.Load<Texture2D>("BuildingSprites/PalisadeTower");
+            if (defaultTex != null)
+            {
+                palisadeSpriteRenderer.material.SetTexture("_MainTex", defaultTex);
+                lastPalisadeSpriteName = "PalisadeTower";
+            }
+        }
+
+        private void HideProceduralWallBody()
+        {
+            if (wallGeometry == null) return;
+            var body = wallGeometry.Find("Body");
+            var ledge = wallGeometry.Find("Ledge");
+            if (body != null) body.gameObject.SetActive(false);
+            if (ledge != null) ledge.gameObject.SetActive(false);
+            for (int i = 0; i < wallGeometry.childCount; i++)
+            {
+                var c = wallGeometry.GetChild(i);
+                if (c.name.StartsWith("Merlon_"))
+                    c.gameObject.SetActive(false);
+            }
+        }
+
+        private void ApplyPalisadeSprite(WallSpriteSelection sel)
+        {
+            if (palisadeSpriteRenderer == null) return;
+
+            if (sel.ResourceName != lastPalisadeSpriteName)
+            {
+                var tex = WallSpriteRegistry.LoadTexture(sel.ResourceName);
+                if (tex == null) return;
+                palisadeSpriteRenderer.material.SetTexture("_MainTex", tex);
+                lastPalisadeSpriteName = sel.ResourceName;
+            }
+
+            // Apply optional flip / rotation. Currently unused by the palisade entries but
+            // kept so the registry can reuse the same art with transforms later.
+            if (palisadeSpriteQuad != null)
+            {
+                float sx = sel.FlipX ? -2.5f : 2.5f;
+                var s = palisadeSpriteQuad.transform.localScale;
+                if (!Mathf.Approximately(s.x, sx))
+                    palisadeSpriteQuad.transform.localScale = new Vector3(sx, 2.5f, 1f);
+
+                var r = palisadeSpriteQuad.transform.localEulerAngles;
+                if (!Mathf.Approximately(r.z, sel.RotationDegrees))
+                    palisadeSpriteQuad.transform.localEulerAngles = new Vector3(r.x, r.y, sel.RotationDegrees);
+            }
         }
 
         private void CreateOverlayWidgets()
@@ -1497,6 +1673,12 @@ namespace OpenEmpires
             if (IsDestroyed) return;
             IsDestroyed = true;
 
+            if (IsWallFamily(BuildingType))
+            {
+                wallViewsById.Remove(BuildingId);
+                InvalidateNeighborWallViews(OriginTileX, OriginTileZ);
+            }
+
             if (overlayRoot != null)
                 overlayRoot.gameObject.SetActive(false);
 
@@ -1594,6 +1776,10 @@ namespace OpenEmpires
         {
             if (overlayRoot != null)
                 Destroy(overlayRoot.gameObject);
+
+            // Prevent static registry from holding stale references across scene reloads.
+            if (wallViewsById.TryGetValue(BuildingId, out var registered) && registered == this)
+                wallViewsById.Remove(BuildingId);
         }
 
         private void UpdateTowerUpgradeVisuals()
