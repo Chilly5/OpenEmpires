@@ -261,6 +261,20 @@ namespace OpenEmpires
                 wasUnderConstruction = true;
             }
 
+            // Build/destroy wall-specific geometry BEFORE CacheRenderers so the palisade
+            // sprite is included in bodyRenderers and gets hidden/shown by the construction
+            // visibility path (SetBodyRenderersVisible).
+            if (data.Type == BuildingType.Wall || data.Type == BuildingType.StoneWall || data.Type == BuildingType.StoneGate || data.Type == BuildingType.WoodGate)
+            {
+                wallGeometry = transform.Find("WallGeometry");
+            }
+
+            if (data.Type == BuildingType.Wall)
+            {
+                EnsurePalisadeSprite();
+                HideProceduralWallBody();
+            }
+
             CacheRenderers();
 
             if (wasUnderConstruction)
@@ -274,17 +288,6 @@ namespace OpenEmpires
             var spriteTransform = transform.Find("Sprite");
             if (spriteTransform != null)
                 spriteRenderer = spriteTransform.GetComponent<Renderer>();
-
-            if (data.Type == BuildingType.Wall || data.Type == BuildingType.StoneWall || data.Type == BuildingType.StoneGate || data.Type == BuildingType.WoodGate)
-            {
-                wallGeometry = transform.Find("WallGeometry");
-            }
-
-            if (data.Type == BuildingType.Wall)
-            {
-                EnsurePalisadeSprite();
-                HideProceduralWallBody();
-            }
 
             if (IsWallFamily(data.Type))
             {
