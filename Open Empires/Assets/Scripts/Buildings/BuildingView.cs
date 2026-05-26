@@ -203,7 +203,12 @@ namespace OpenEmpires
         private bool gateIsOpen;
         private float gateLastRotation = float.NaN;
 
-        // Palisade (wood wall) sprite billboard — replaces procedural body cubes for BuildingType.Wall
+        // Palisade (wood wall) sprite billboard — replaces procedural body cubes for BuildingType.Wall.
+        // YOffsetRatio < 0.5 lowers the quad below the half-height position so the wall art
+        // (which sits in the lower portion of the canvas with transparent padding below) rests
+        // on the ground instead of floating.
+        private const float PalisadeSpriteScale = 6.61f;
+        private const float PalisadeSpriteYOffsetRatio = 0.27f;
         private GameObject palisadeSpriteQuad;
         private Renderer palisadeSpriteRenderer;
         private string lastPalisadeSpriteName;
@@ -1162,8 +1167,8 @@ namespace OpenEmpires
             palisadeSpriteQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
             palisadeSpriteQuad.name = "PalisadeSprite";
             palisadeSpriteQuad.transform.SetParent(transform, false);
-            palisadeSpriteQuad.transform.localPosition = new Vector3(0f, 1.25f, 0f);
-            palisadeSpriteQuad.transform.localScale = new Vector3(2.5f, 2.5f, 1f);
+            palisadeSpriteQuad.transform.localPosition = new Vector3(0f, PalisadeSpriteScale * PalisadeSpriteYOffsetRatio, 0f);
+            palisadeSpriteQuad.transform.localScale = new Vector3(PalisadeSpriteScale, PalisadeSpriteScale, 1f);
             palisadeSpriteQuad.layer = 11;
             var mc = palisadeSpriteQuad.GetComponent<MeshCollider>();
             if (mc != null) Object.Destroy(mc);
@@ -1187,15 +1192,19 @@ namespace OpenEmpires
         private void HideProceduralWallBody()
         {
             if (wallGeometry == null) return;
+
+            // Destroy (not just disable) the procedural cubes for palisade walls —
+            // the billboard sprite replaces them entirely, and we don't want stray
+            // collider/render geometry lingering in the scene.
             var body = wallGeometry.Find("Body");
             var ledge = wallGeometry.Find("Ledge");
-            if (body != null) body.gameObject.SetActive(false);
-            if (ledge != null) ledge.gameObject.SetActive(false);
-            for (int i = 0; i < wallGeometry.childCount; i++)
+            if (body != null) Destroy(body.gameObject);
+            if (ledge != null) Destroy(ledge.gameObject);
+            for (int i = wallGeometry.childCount - 1; i >= 0; i--)
             {
                 var c = wallGeometry.GetChild(i);
                 if (c.name.StartsWith("Merlon_"))
-                    c.gameObject.SetActive(false);
+                    Destroy(c.gameObject);
             }
         }
 
@@ -1215,10 +1224,10 @@ namespace OpenEmpires
             // kept so the registry can reuse the same art with transforms later.
             if (palisadeSpriteQuad != null)
             {
-                float sx = sel.FlipX ? -2.5f : 2.5f;
+                float sx = sel.FlipX ? -PalisadeSpriteScale : PalisadeSpriteScale;
                 var s = palisadeSpriteQuad.transform.localScale;
                 if (!Mathf.Approximately(s.x, sx))
-                    palisadeSpriteQuad.transform.localScale = new Vector3(sx, 2.5f, 1f);
+                    palisadeSpriteQuad.transform.localScale = new Vector3(sx, PalisadeSpriteScale, 1f);
 
                 var r = palisadeSpriteQuad.transform.localEulerAngles;
                 if (!Mathf.Approximately(r.z, sel.RotationDegrees))
