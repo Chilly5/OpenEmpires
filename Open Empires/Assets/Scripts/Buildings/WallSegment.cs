@@ -91,10 +91,10 @@ namespace OpenEmpires
         private static readonly Dictionary<(BuildingType, WallSegmentKind), WallSpriteSelection> Map =
             new Dictionary<(BuildingType, WallSegmentKind), WallSpriteSelection>
             {
-                { (BuildingType.Wall, WallSegmentKind.CardinalEW),   new WallSpriteSelection("Palisadefront") },
-                { (BuildingType.Wall, WallSegmentKind.CardinalNS),   new WallSpriteSelection("PalisadefrontB") },
-                { (BuildingType.Wall, WallSegmentKind.DiagonalNESW), new WallSpriteSelection("Palisadeside90") },
-                { (BuildingType.Wall, WallSegmentKind.DiagonalNWSE), new WallSpriteSelection("Palisadeside90B") },
+                { (BuildingType.Wall, WallSegmentKind.CardinalEW),   new WallSpriteSelection("Palisadeside90") },
+                { (BuildingType.Wall, WallSegmentKind.CardinalNS),   new WallSpriteSelection("Palisadeside90B") },
+                { (BuildingType.Wall, WallSegmentKind.DiagonalNESW), new WallSpriteSelection("PalisadefrontB") },
+                { (BuildingType.Wall, WallSegmentKind.DiagonalNWSE), new WallSpriteSelection("Palisadefront") },
                 { (BuildingType.Wall, WallSegmentKind.Junction),     new WallSpriteSelection("PalisadeTower") },
                 { (BuildingType.Wall, WallSegmentKind.Isolated),     new WallSpriteSelection("PalisadeTower") },
             };
