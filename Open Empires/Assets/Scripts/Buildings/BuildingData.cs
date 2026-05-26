@@ -110,6 +110,10 @@ namespace OpenEmpires
         // Main Town Center flag (for initial/starting town centers vs player-built ones)
         public bool IsMainTownCenter;
 
+        // Auto-produce villagers (town centers only). On by default; auto-enqueues
+        // a villager whenever the queue is empty and the player has enough food.
+        public bool AutoProduceVillagers = true;
+
         // Farm linkage to resource node
         public int LinkedResourceNodeId = -1;
 

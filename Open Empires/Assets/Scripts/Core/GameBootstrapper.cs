@@ -426,6 +426,10 @@ namespace OpenEmpires
                     cancelTrain.PlayerId = playerId;
                     cmd = cancelTrain;
                     break;
+                case ToggleAutoProduceCommand toggleAuto:
+                    toggleAuto.PlayerId = playerId;
+                    cmd = toggleAuto;
+                    break;
                 case UpgradeTowerCommand upgradeTower:
                     upgradeTower.PlayerId = playerId;
                     cmd = upgradeTower;

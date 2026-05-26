@@ -908,6 +908,10 @@ namespace OpenEmpires
                 }
             }
 
+            // Auto-produce villagers from any town center with the toggle on,
+            // an idle queue, and enough food.
+            AutoProduceVillagersTick();
+
             // Training system (units freeze at 99% when pop-capped)
             var completions = trainingSystem.Tick(BuildingRegistry, config,
                 (playerId, pending) => GetPopulation(playerId) + pending < GetPopulationCap(playerId),
@@ -1465,6 +1469,9 @@ namespace OpenEmpires
                     break;
                 case CancelTrainCommand cancelTrain:
                     ProcessCancelTrainCommand(cancelTrain);
+                    break;
+                case ToggleAutoProduceCommand toggleAuto:
+                    ProcessToggleAutoProduceCommand(toggleAuto);
                     break;
                 case UpgradeTowerCommand upgradeTower:
                     ProcessUpgradeTowerCommand(upgradeTower);
@@ -3528,6 +3535,44 @@ namespace OpenEmpires
                     building.TrainingTicksRemaining = 0;
                     building.TrainingTicksTotal = 0;
                 }
+            }
+        }
+
+        private void ProcessToggleAutoProduceCommand(ToggleAutoProduceCommand cmd)
+        {
+            var building = BuildingRegistry.GetBuilding(cmd.BuildingId);
+            if (building == null || building.IsDestroyed) return;
+            if (building.PlayerId != cmd.PlayerId) return;
+            if (building.Type != BuildingType.TownCenter) return;
+            building.AutoProduceVillagers = cmd.Enabled;
+        }
+
+        private void AutoProduceVillagersTick()
+        {
+            var buildings = BuildingRegistry.GetAllBuildings();
+            for (int i = 0; i < buildings.Count; i++)
+            {
+                var building = buildings[i];
+                if (building.IsDestroyed) continue;
+                if (building.Type != BuildingType.TownCenter) continue;
+                if (!building.AutoProduceVillagers) continue;
+                if (building.IsUnderConstruction) continue;
+                if (building.TrainingQueue.Count > 0) continue;
+
+                int resolvedUnitType = ResolveCivUnitType(building.PlayerId, 0);
+                int foodCost = config.VillagerFoodCost;
+                int trainTime = config.VillagerTrainTimeTicks;
+                if (IsBuildingInFrenchLandmarkInfluence(building))
+                {
+                    int discount = config.FrenchLandmarkTrainingDiscountPercent;
+                    foodCost = foodCost * (100 - discount) / 100;
+                }
+
+                var resources = ResourceManager.GetPlayerResources(building.PlayerId);
+                if (resources.Food < foodCost) continue;
+
+                resources.Food -= foodCost;
+                building.EnqueueTraining(resolvedUnitType, trainTime);
             }
         }
 

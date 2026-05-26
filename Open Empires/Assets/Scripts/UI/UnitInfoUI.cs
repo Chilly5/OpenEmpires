@@ -2272,6 +2272,14 @@ namespace OpenEmpires
                         Tooltip = $"<b>Scout</b>\nFast mounted unit with high vision.\nCost: {scoutFood} <sprite name=\"food\">",
                         OnClick = () => QueueTraining(sim, building.PlayerId, building.Id, 4) };
 
+                    bool autoOn = building.AutoProduceVillagers;
+                    slots[2] = new GridButton { Label = autoOn ? "Auto Vill: ON" : "Auto Vill: OFF", Hotkey = "E",
+                        Enabled = true,
+                        Icon = UnitIcons.Get(0),
+                        Tooltip = $"<b>Auto-Produce Villagers</b>\nAutomatically queues villagers whenever this town center is idle and food is available.\nCurrently: {(autoOn ? "ON" : "OFF")}",
+                        OnClick = () => sim.CommandBuffer.EnqueueCommand(
+                            new ToggleAutoProduceCommand(building.PlayerId, building.Id, !autoOn)) };
+
                     // Age Up button
                     int currentAge = sim.GetPlayerAge(building.PlayerId);
                     bool isAgingUp = sim.IsPlayerAgingUp(building.PlayerId);
@@ -2840,6 +2848,21 @@ namespace OpenEmpires
                             OnClick = () => { for (int i = 0; i < ready.Count; i++)
                                 QueueTraining(sim, localPid, ready[i].BuildingId, 4);
                                 SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f); } };
+
+                        bool anyAutoOn = false;
+                        for (int i = 0; i < ready.Count; i++)
+                        {
+                            var bd = sim.BuildingRegistry.GetBuilding(ready[i].BuildingId);
+                            if (bd != null && bd.AutoProduceVillagers) { anyAutoOn = true; break; }
+                        }
+                        bool turnOn = !anyAutoOn;
+                        slots[2] = new GridButton { Label = anyAutoOn ? "Auto Vill: ON" : "Auto Vill: OFF", Hotkey = "E",
+                            Enabled = true,
+                            Icon = UnitIcons.Get(0),
+                            Tooltip = $"<b>Auto-Produce Villagers</b>\nAutomatically queues villagers whenever each town center is idle and food is available.\nCurrently: {(anyAutoOn ? "ON (click to turn OFF)" : "OFF (click to turn ON)")}",
+                            OnClick = () => { for (int i = 0; i < ready.Count; i++)
+                                sim.CommandBuffer.EnqueueCommand(
+                                    new ToggleAutoProduceCommand(localPid, ready[i].BuildingId, turnOn)); } };
                         hasAny = true;
                     }
                 }
@@ -2984,6 +3007,24 @@ namespace OpenEmpires
                         QueueTraining(sim, localPid, buildings[i].BuildingId, 4);
                     }
                     SFXManager.Instance?.PlayUI(SFXType.QueueUnit, 0.5f);
+                }
+                else if (WasKeyPressed(Key.E))
+                {
+                    FlashActionButton(2);
+                    bool anyAutoOn = false;
+                    for (int i = 0; i < buildings.Count; i++)
+                    {
+                        if (!IsReadyBuilding(buildings[i], BuildingType.TownCenter, localPid, sim)) continue;
+                        var bd = sim.BuildingRegistry.GetBuilding(buildings[i].BuildingId);
+                        if (bd != null && bd.AutoProduceVillagers) { anyAutoOn = true; break; }
+                    }
+                    bool turnOn = !anyAutoOn;
+                    for (int i = 0; i < buildings.Count; i++)
+                    {
+                        if (!IsReadyBuilding(buildings[i], BuildingType.TownCenter, localPid, sim)) continue;
+                        sim.CommandBuffer.EnqueueCommand(
+                            new ToggleAutoProduceCommand(localPid, buildings[i].BuildingId, turnOn));
+                    }
                 }
                 else if (WasKeyPressed(Key.A))
                 {
