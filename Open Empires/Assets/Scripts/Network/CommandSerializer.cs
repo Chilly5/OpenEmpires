@@ -116,6 +116,7 @@ namespace OpenEmpires
                 case CheatProductionCommand:
                 case CheatConstructionCommand:
                 case CheatVisionCommand:
+                case CheatGodModeCommand:
                     payload = "{}";
                     break;
                 default:
@@ -158,6 +159,7 @@ namespace OpenEmpires
                     "CheatProduction" => new CheatProductionCommand { PlayerId = playerId },
                     "CheatConstruction" => new CheatConstructionCommand { PlayerId = playerId },
                     "CheatVision" => new CheatVisionCommand { PlayerId = playerId },
+                    "CheatGodMode" => new CheatGodModeCommand { PlayerId = playerId },
                     "Surrender" => ParseSurrenderCommand(payload, playerId),
                     "SlaughterSheep" => ParseSlaughterSheepCommand(payload, playerId),
                     "FollowUnit" => ParseFollowUnitCommand(payload, playerId),
@@ -1184,6 +1186,7 @@ namespace OpenEmpires
                         case CheatProductionCommand:
                         case CheatConstructionCommand:
                         case CheatVisionCommand:
+                        case CheatGodModeCommand:
                             break;
                     }
                 }
@@ -1365,6 +1368,9 @@ namespace OpenEmpires
                             break;
                         case CommandType.CheatVision:
                             commands.Add(new CheatVisionCommand { PlayerId = playerId });
+                            break;
+                        case CommandType.CheatGodMode:
+                            commands.Add(new CheatGodModeCommand { PlayerId = playerId });
                             break;
                         case CommandType.DeleteUnits:
                             int[] deleteUnitIds = ReadIntArray(r);

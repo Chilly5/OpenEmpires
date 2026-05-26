@@ -410,6 +410,10 @@ namespace OpenEmpires
                     cheatVis.PlayerId = playerId;
                     cmd = cheatVis;
                     break;
+                case CheatGodModeCommand cheatGod:
+                    cheatGod.PlayerId = playerId;
+                    cmd = cheatGod;
+                    break;
                 case AttackUnitCommand attackUnit:
                     attackUnit.PlayerId = playerId;
                     cmd = attackUnit;

@@ -281,6 +281,9 @@ namespace OpenEmpires
 
         public bool ProductionCheatActive { get; private set; }
         public bool ConstructionCheatActive { get; private set; }
+        private bool[] godModeActive; // indexed by playerId; null entries treated as false
+        public bool IsGodModeActive(int playerId) =>
+            godModeActive != null && playerId >= 0 && playerId < godModeActive.Length && godModeActive[playerId];
 
         public int CurrentTick => currentTick;
         public SimulationConfig Config => config;
@@ -585,6 +588,7 @@ namespace OpenEmpires
             playerAges = new int[playerCount];
             playerAgingUp = new bool[playerCount];
             playerAgingUpBuildingId = new int[playerCount];
+            godModeActive = new bool[playerCount];
             for (int i = 0; i < playerCount; i++)
             {
                 playerAges[i] = 1;
@@ -1499,6 +1503,9 @@ namespace OpenEmpires
                     break;
                 case CheatVisionCommand cheatVis:
                     ProcessCheatVisionCommand(cheatVis);
+                    break;
+                case CheatGodModeCommand cheatGod:
+                    ProcessCheatGodModeCommand(cheatGod);
                     break;
                 case DeleteUnitsCommand deleteUnits:
                     ProcessDeleteUnitsCommand(deleteUnits);
@@ -2537,6 +2544,13 @@ namespace OpenEmpires
         {
             bool current = FogOfWar.HasVisionCheat(cmd.PlayerId);
             FogOfWar.SetVisionCheat(cmd.PlayerId, !current);
+        }
+
+        private void ProcessCheatGodModeCommand(CheatGodModeCommand cmd)
+        {
+            if (godModeActive == null) return;
+            if (cmd.PlayerId < 0 || cmd.PlayerId >= godModeActive.Length) return;
+            godModeActive[cmd.PlayerId] = !godModeActive[cmd.PlayerId];
         }
 
         private void ProcessDeleteUnitsCommand(DeleteUnitsCommand cmd)
@@ -3814,14 +3828,16 @@ namespace OpenEmpires
                 return;
             }
 
-            // Age gate for non-landmark buildings
-            if (playerAges[cmd.PlayerId] < LandmarkDefinitions.GetBuildingRequiredAge(cmd.BuildingType)) return;
+            bool godMode = IsGodModeActive(cmd.PlayerId);
+
+            // Age gate for non-landmark buildings (bypassed under god mode)
+            if (!godMode && playerAges[cmd.PlayerId] < LandmarkDefinitions.GetBuildingRequiredAge(cmd.BuildingType)) return;
 
             int cost = GetBuildingWoodCost(cmd.BuildingType);
             int stoneCost = GetBuildingStoneCost(cmd.BuildingType);
             int foodCost = GetBuildingFoodCost(cmd.BuildingType);
             int goldCost = GetBuildingGoldCost(cmd.BuildingType);
-            if (resources.Wood < cost || resources.Stone < stoneCost || resources.Food < foodCost || resources.Gold < goldCost) return;
+            if (!godMode && (resources.Wood < cost || resources.Stone < stoneCost || resources.Food < foodCost || resources.Gold < goldCost)) return;
 
             bool hasVillagers2 = cmd.VillagerUnitIds != null && cmd.VillagerUnitIds.Length > 0;
 
@@ -3918,17 +3934,21 @@ namespace OpenEmpires
                 for (int z = cmd.TileZ - border2; z < cmd.TileZ + footprintH2 + border2; z++)
                     if (isFarm ? !MapData.IsBuildableForFarm(x, z) : !MapData.IsBuildable(x, z)) return;
 
-            resources.Wood -= cost;
-            resources.Stone -= stoneCost;
-            resources.Food -= foodCost;
-            resources.Gold -= goldCost;
-            var building2 = CreateBuilding(cmd.PlayerId, cmd.BuildingType, cmd.TileX, cmd.TileZ, underConstruction: hasVillagers2);
+            if (!godMode)
+            {
+                resources.Wood -= cost;
+                resources.Stone -= stoneCost;
+                resources.Food -= foodCost;
+                resources.Gold -= goldCost;
+            }
+            bool underConstruction2 = !godMode && hasVillagers2;
+            var building2 = CreateBuilding(cmd.PlayerId, cmd.BuildingType, cmd.TileX, cmd.TileZ, underConstruction: underConstruction2);
             OnBuildingCreated?.Invoke(building2);
-            if (!hasVillagers2)
+            if (!underConstruction2)
                 EjectUnitsFromBuildingFootprint(building2);
 
-            // Send all villagers to construct
-            if (hasVillagers2)
+            // Send all villagers to construct (skipped under god mode — building is already complete)
+            if (hasVillagers2 && !godMode)
             {
                 if (cmd.IsQueued)
                 {

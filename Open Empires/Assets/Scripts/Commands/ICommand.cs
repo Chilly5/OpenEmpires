@@ -38,7 +38,8 @@ namespace OpenEmpires
         MarketTrade,
         Research,
         RepairBuilding,
-        ToggleAutoProduce
+        ToggleAutoProduce,
+        CheatGodMode
     }
 
     public interface ICommand

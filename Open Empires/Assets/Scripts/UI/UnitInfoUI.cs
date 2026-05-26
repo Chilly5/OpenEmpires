@@ -1950,38 +1950,39 @@ namespace OpenEmpires
         {
             var resources = sim.ResourceManager.GetPlayerResources(selectionManager.LocalPlayerId);
             int playerAge = sim.GetPlayerAge(selectionManager.LocalPlayerId);
+            bool godMode = sim.IsGodModeActive(selectionManager.LocalPlayerId);
             var cfg = sim.Config;
 
             var slots = new GridButton?[TotalBuildButtons];
 
             // Age 1 (offset 0): Q=Mill, W=LumberYard, E=Mine, A=House, S=Farm, D=Barracks, Z=WoodWall, X=WoodGate
             int o = 0;
-            slots[o + 0] = MakeBuildSlot("Mill", "Q", "Drop-off point for food.", BuildingType.Mill, cfg.MillWoodCost, 0, 0, 0, resources, playerAge, false);
-            slots[o + 1] = MakeBuildSlot("Lumber\nYard", "W", "Drop-off point for wood.", BuildingType.LumberYard, cfg.LumberYardWoodCost, 0, 0, 0, resources, playerAge, false);
-            slots[o + 2] = MakeBuildSlot("Mine", "E", "Drop-off point for gold and stone.", BuildingType.Mine, cfg.MineWoodCost, 0, 0, 0, resources, playerAge, false);
-            slots[o + 3] = MakeBuildSlot("House", "A", "Increases population cap by 10.", BuildingType.House, cfg.HouseWoodCost, 0, 0, 0, resources, playerAge, false);
-            slots[o + 4] = MakeBuildSlot("Farm", "S", "Produces food.", BuildingType.Farm, cfg.FarmWoodCost, 0, 0, 0, resources, playerAge, false);
-            slots[o + 5] = MakeBuildSlot("Barracks", "D", "Trains spearmen.", BuildingType.Barracks, cfg.BarracksWoodCost, 0, 0, 0, resources, playerAge, false);
-            slots[o + 6] = MakeBuildSlot("Wood\nWall", "Z", "Defensive barrier. Can convert to gate.", BuildingType.Wall, cfg.WallWoodCost, 0, 0, 0, resources, playerAge, true);
-            slots[o + 7] = MakeBuildSlot("Wood\nGate", "X", "Gate that allows units to pass.", BuildingType.WoodGate, cfg.WoodGateWoodCost, 0, 0, 0, resources, playerAge, true, true);
+            slots[o + 0] = MakeBuildSlot("Mill", "Q", "Drop-off point for food.", BuildingType.Mill, cfg.MillWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 1] = MakeBuildSlot("Lumber\nYard", "W", "Drop-off point for wood.", BuildingType.LumberYard, cfg.LumberYardWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 2] = MakeBuildSlot("Mine", "E", "Drop-off point for gold and stone.", BuildingType.Mine, cfg.MineWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 3] = MakeBuildSlot("House", "A", "Increases population cap by 10.", BuildingType.House, cfg.HouseWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 4] = MakeBuildSlot("Farm", "S", "Produces food.", BuildingType.Farm, cfg.FarmWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 5] = MakeBuildSlot("Barracks", "D", "Trains spearmen.", BuildingType.Barracks, cfg.BarracksWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 6] = MakeBuildSlot("Wood\nWall", "Z", "Defensive barrier. Can convert to gate.", BuildingType.Wall, cfg.WallWoodCost, 0, 0, 0, resources, playerAge, true, false, godMode);
+            slots[o + 7] = MakeBuildSlot("Wood\nGate", "X", "Gate that allows units to pass.", BuildingType.WoodGate, cfg.WoodGateWoodCost, 0, 0, 0, resources, playerAge, true, true, godMode);
 
             // Age 2 (offset 8): Q=Blacksmith, W=Market, E=TownCenter, A=ArcheryRange, S=Stables, D=Tower
             o = BuildButtonsPerAge;
-            slots[o + 0] = MakeBuildSlot("Blacksmith", "Q", "Upgrades weapons and armor.", BuildingType.Blacksmith, cfg.BlacksmithWoodCost, 0, 0, 0, resources, playerAge, false);
-            slots[o + 1] = MakeBuildSlot("Market", "W", "Trade and buy/sell resources.", BuildingType.Market, cfg.MarketWoodCost, 0, 0, 0, resources, playerAge, false);
-            slots[o + 2] = MakeBuildSlot("Town\nCenter", "E", "Trains villagers, drop-off for all resources.", BuildingType.TownCenter, cfg.TownCenterWoodCost, cfg.TownCenterStoneCost, 0, 0, resources, playerAge, false);
-            slots[o + 3] = MakeBuildSlot("Archery", "A", "Trains archers.", BuildingType.ArcheryRange, cfg.ArcheryRangeWoodCost, 0, 0, 0, resources, playerAge, false);
-            slots[o + 4] = MakeBuildSlot("Stables", "S", "Trains horsemen and scouts.", BuildingType.Stables, cfg.StablesWoodCost, 0, 0, 0, resources, playerAge, false);
-            slots[o + 5] = MakeBuildSlot("Tower", "D", "Defensive tower. Can be upgraded.", BuildingType.Tower, cfg.TowerWoodCost, 0, 0, 0, resources, playerAge, false);
+            slots[o + 0] = MakeBuildSlot("Blacksmith", "Q", "Upgrades weapons and armor.", BuildingType.Blacksmith, cfg.BlacksmithWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 1] = MakeBuildSlot("Market", "W", "Trade and buy/sell resources.", BuildingType.Market, cfg.MarketWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 2] = MakeBuildSlot("Town\nCenter", "E", "Trains villagers, drop-off for all resources.", BuildingType.TownCenter, cfg.TownCenterWoodCost, cfg.TownCenterStoneCost, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 3] = MakeBuildSlot("Archery", "A", "Trains archers.", BuildingType.ArcheryRange, cfg.ArcheryRangeWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 4] = MakeBuildSlot("Stables", "S", "Trains horsemen and scouts.", BuildingType.Stables, cfg.StablesWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 5] = MakeBuildSlot("Tower", "D", "Defensive tower. Can be upgraded.", BuildingType.Tower, cfg.TowerWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
 
             // Age 3 (offset 16): Q=Monastery, W=University, E=SiegeWorkshop, A=Keep, S=StoneWall, D=StoneGate, Z=Wonder
             o = 2 * BuildButtonsPerAge;
-            slots[o + 0] = MakeBuildSlot("Monastery", "Q", "Trains monks (healers).", BuildingType.Monastery, cfg.MonasteryWoodCost, 0, 0, 0, resources, playerAge, false);
-            slots[o + 1] = MakeBuildSlot("University", "W", "Researches advanced technologies.", BuildingType.University, cfg.UniversityWoodCost, 0, 0, 0, resources, playerAge, false);
-            slots[o + 2] = MakeBuildSlot("Siege\nWorkshop", "E", "Builds siege engines.", BuildingType.SiegeWorkshop, cfg.SiegeWorkshopWoodCost, 0, 0, 0, resources, playerAge, false);
-            slots[o + 3] = MakeBuildSlot("Keep", "A", "Fortified defensive structure.", BuildingType.Keep, cfg.KeepWoodCost, cfg.KeepStoneCost, 0, 0, resources, playerAge, false);
-            slots[o + 4] = MakeBuildSlot("Stone\nWall", "S", "Strong defensive barrier.", BuildingType.StoneWall, 0, cfg.StoneWallStoneCost, 0, 0, resources, playerAge, true);
-            slots[o + 5] = MakeBuildSlot("Stone\nGate", "D", "Stone gate that allows units to pass.", BuildingType.StoneGate, 0, cfg.StoneGateStoneCost, 0, 0, resources, playerAge, true, true);
+            slots[o + 0] = MakeBuildSlot("Monastery", "Q", "Trains monks (healers).", BuildingType.Monastery, cfg.MonasteryWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 1] = MakeBuildSlot("University", "W", "Researches advanced technologies.", BuildingType.University, cfg.UniversityWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 2] = MakeBuildSlot("Siege\nWorkshop", "E", "Builds siege engines.", BuildingType.SiegeWorkshop, cfg.SiegeWorkshopWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 3] = MakeBuildSlot("Keep", "A", "Fortified defensive structure.", BuildingType.Keep, cfg.KeepWoodCost, cfg.KeepStoneCost, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 4] = MakeBuildSlot("Stone\nWall", "S", "Strong defensive barrier.", BuildingType.StoneWall, 0, cfg.StoneWallStoneCost, 0, 0, resources, playerAge, true, false, godMode);
+            slots[o + 5] = MakeBuildSlot("Stone\nGate", "D", "Stone gate that allows units to pass.", BuildingType.StoneGate, 0, cfg.StoneGateStoneCost, 0, 0, resources, playerAge, true, true, godMode);
 
             return slots;
         }
@@ -2029,12 +2030,12 @@ namespace OpenEmpires
 
         private GridButton MakeBuildSlot(string label, string hotkey, string desc, BuildingType type,
             int woodCost, int stoneCost, int foodCost, int goldCost,
-            PlayerResources resources, int playerAge, bool isWall, bool isGate = false)
+            PlayerResources resources, int playerAge, bool isWall, bool isGate = false, bool godMode = false)
         {
             int reqAge = LandmarkDefinitions.GetBuildingRequiredAge(type);
-            bool ageOk = playerAge >= reqAge;
-            bool canAfford = resources.Wood >= woodCost && resources.Stone >= stoneCost
-                          && resources.Food >= foodCost && resources.Gold >= goldCost;
+            bool ageOk = godMode || playerAge >= reqAge;
+            bool canAfford = godMode || (resources.Wood >= woodCost && resources.Stone >= stoneCost
+                          && resources.Food >= foodCost && resources.Gold >= goldCost);
 
             // Build cost string
             string costStr = "";
