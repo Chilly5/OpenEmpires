@@ -2079,11 +2079,29 @@ namespace OpenEmpires
                           ?? CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "Blacksmith");
                     break;
                 case BuildingType.Market:
-                    prefab = CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "Market");
+                {
+                    var simAge = GameBootstrapper.Instance?.Simulation;
+                    int marketAge = simAge != null ? Mathf.Clamp(simAge.GetPlayerAge(buildingData.PlayerId), 2, 3) : 2;
+                    string marketSprite = marketAge == 3 ? "EnglishCastleMarket" : "EnglishFeudalMarket";
+                    prefab = CreateBuildingSpritePrefab("Market", marketSprite, 3, 3, 6f, 0.92f / 6f)
+                          ?? CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "Market");
                     break;
+                }
                 case BuildingType.University:
-                    prefab = CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "University");
+                {
+                    prefab = CreateBuildingSpritePrefab("University", "universitywithshadow", 3, 3, 6f, 0.82f / 6f)
+                          ?? CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "University");
+                    if (prefab != null)
+                    {
+                        var spriteT = prefab.transform.Find("Sprite");
+                        if (spriteT != null)
+                        {
+                            var s = spriteT.localScale;
+                            spriteT.localScale = new Vector3(s.x, s.y * 0.7f, s.z);
+                        }
+                    }
                     break;
+                }
                 case BuildingType.SiegeWorkshop:
                     prefab = CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "SiegeWorkshop");
                     break;
@@ -2141,6 +2159,8 @@ namespace OpenEmpires
                     view.SetAgeSpriteInfo("ArcheryRangeAge", 3);
                 else if (buildingData.Type == BuildingType.Stables)
                     view.SetAgeSpriteInfo("StablesAge", 3);
+                else if (buildingData.Type == BuildingType.Market)
+                    view.SetAgeSpriteNames(new[] { null, null, "EnglishFeudalMarket", "EnglishCastleMarket" });
 
                 if (buildingData.IsGate)
                     view.SetGateVisual(true, buildingBodyMaterial);
