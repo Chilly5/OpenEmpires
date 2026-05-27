@@ -214,6 +214,7 @@ namespace OpenEmpires
         private int maxSpriteAge;
         private int lastKnownAge;
         private Renderer spriteRenderer;
+        private string[] ageSpriteNamesByAge; // optional explicit names indexed by age (1-based); overrides prefix
 
         // Tower upgrade visuals
         private GameObject arrowSlitsVisual;
@@ -272,9 +273,20 @@ namespace OpenEmpires
         public void SetAgeSpriteInfo(string prefix, int maxAge)
         {
             ageSpritePrefix = prefix;
+            ageSpriteNamesByAge = null;
             maxSpriteAge = maxAge;
             var sim = GameBootstrapper.Instance?.Simulation;
             lastKnownAge = sim != null ? Mathf.Clamp(sim.GetPlayerAge(PlayerId), 1, maxAge) : 1;
+        }
+
+        // namesByAge is indexed by age (1-based). Index 0 unused. Null/empty entries are skipped.
+        public void SetAgeSpriteNames(string[] namesByAge)
+        {
+            ageSpriteNamesByAge = namesByAge;
+            ageSpritePrefix = null;
+            maxSpriteAge = namesByAge != null ? namesByAge.Length - 1 : 0;
+            var sim = GameBootstrapper.Instance?.Simulation;
+            lastKnownAge = sim != null ? Mathf.Clamp(sim.GetPlayerAge(PlayerId), 1, maxSpriteAge) : 1;
         }
 
         private void CreateConstructionScaffold()
@@ -466,7 +478,7 @@ namespace OpenEmpires
             }
 
             // Age-based sprite swap
-            if (ageSpritePrefix != null && spriteRenderer != null)
+            if ((ageSpritePrefix != null || ageSpriteNamesByAge != null) && spriteRenderer != null)
             {
                 var sim = GameBootstrapper.Instance?.Simulation;
                 if (sim != null)
@@ -475,9 +487,16 @@ namespace OpenEmpires
                     if (currentAge != lastKnownAge)
                     {
                         lastKnownAge = currentAge;
-                        var tex = Resources.Load<Texture2D>($"BuildingSprites/{ageSpritePrefix}{currentAge}");
-                        if (tex != null)
-                            spriteRenderer.material.SetTexture("_MainTex", tex);
+                        string spriteName = ageSpriteNamesByAge != null
+                            && currentAge >= 0 && currentAge < ageSpriteNamesByAge.Length
+                            ? ageSpriteNamesByAge[currentAge]
+                            : $"{ageSpritePrefix}{currentAge}";
+                        if (!string.IsNullOrEmpty(spriteName))
+                        {
+                            var tex = Resources.Load<Texture2D>($"BuildingSprites/{spriteName}");
+                            if (tex != null)
+                                spriteRenderer.material.SetTexture("_MainTex", tex);
+                        }
                     }
                 }
             }

@@ -55,6 +55,9 @@ namespace OpenEmpires
                 case CancelTrainCommand cancelTrain:
                     payload = JsonUtility.ToJson(new CancelTrainPayload(cancelTrain));
                     break;
+                case ToggleAutoProduceCommand toggleAuto:
+                    payload = JsonUtility.ToJson(new ToggleAutoProducePayload(toggleAuto));
+                    break;
                 case GarrisonCommand garrison:
                     payload = JsonUtility.ToJson(new GarrisonPayload(garrison));
                     break;
@@ -113,6 +116,7 @@ namespace OpenEmpires
                 case CheatProductionCommand:
                 case CheatConstructionCommand:
                 case CheatVisionCommand:
+                case CheatGodModeCommand:
                     payload = "{}";
                     break;
                 default:
@@ -142,6 +146,7 @@ namespace OpenEmpires
                     "PlaceWall" => ParsePlaceWallCommand(payload, playerId),
                     "ConvertToGate" => ParseConvertToGateCommand(payload, playerId),
                     "CancelTrain" => ParseCancelTrainCommand(payload, playerId),
+                    "ToggleAutoProduce" => ParseToggleAutoProduceCommand(payload, playerId),
                     "Garrison" => ParseGarrisonCommand(payload, playerId),
                     "Ungarrison" => ParseUngarrisonCommand(payload, playerId),
                     "Noop" => ParseNoopCommand(payload, playerId),
@@ -154,6 +159,7 @@ namespace OpenEmpires
                     "CheatProduction" => new CheatProductionCommand { PlayerId = playerId },
                     "CheatConstruction" => new CheatConstructionCommand { PlayerId = playerId },
                     "CheatVision" => new CheatVisionCommand { PlayerId = playerId },
+                    "CheatGodMode" => new CheatGodModeCommand { PlayerId = playerId },
                     "Surrender" => ParseSurrenderCommand(payload, playerId),
                     "SlaughterSheep" => ParseSlaughterSheepCommand(payload, playerId),
                     "FollowUnit" => ParseFollowUnitCommand(payload, playerId),
@@ -314,6 +320,12 @@ namespace OpenEmpires
         {
             var data = JsonUtility.FromJson<CancelTrainPayload>(payload);
             return new CancelTrainCommand(playerId, data.buildingId, data.queueIndex);
+        }
+
+        private static ToggleAutoProduceCommand ParseToggleAutoProduceCommand(string payload, int playerId)
+        {
+            var data = JsonUtility.FromJson<ToggleAutoProducePayload>(payload);
+            return new ToggleAutoProduceCommand(playerId, data.buildingId, data.enabled);
         }
 
         private static UpgradeTowerCommand ParseUpgradeTowerCommand(string payload, int playerId)
@@ -646,6 +658,21 @@ namespace OpenEmpires
             {
                 buildingId = cmd.BuildingId;
                 queueIndex = cmd.QueueIndex;
+            }
+        }
+
+        [Serializable]
+        private class ToggleAutoProducePayload
+        {
+            public int buildingId;
+            public bool enabled;
+
+            public ToggleAutoProducePayload() { }
+
+            public ToggleAutoProducePayload(ToggleAutoProduceCommand cmd)
+            {
+                buildingId = cmd.BuildingId;
+                enabled = cmd.Enabled;
             }
         }
 
@@ -1086,6 +1113,10 @@ namespace OpenEmpires
                             w.Write(cancelTrain.BuildingId);
                             w.Write(cancelTrain.QueueIndex);
                             break;
+                        case ToggleAutoProduceCommand toggleAuto:
+                            w.Write(toggleAuto.BuildingId);
+                            w.Write(toggleAuto.Enabled);
+                            break;
                         case UpgradeTowerCommand upgradeTower:
                             w.Write(upgradeTower.BuildingId);
                             w.Write((int)upgradeTower.UpgradeType);
@@ -1155,6 +1186,7 @@ namespace OpenEmpires
                         case CheatProductionCommand:
                         case CheatConstructionCommand:
                         case CheatVisionCommand:
+                        case CheatGodModeCommand:
                             break;
                     }
                 }
@@ -1293,6 +1325,11 @@ namespace OpenEmpires
                             int cancelQueueIndex = r.ReadInt32();
                             commands.Add(new CancelTrainCommand(playerId, cancelBuildingId, cancelQueueIndex));
                             break;
+                        case CommandType.ToggleAutoProduce:
+                            int autoBuildingId = r.ReadInt32();
+                            bool autoEnabled = r.ReadBoolean();
+                            commands.Add(new ToggleAutoProduceCommand(playerId, autoBuildingId, autoEnabled));
+                            break;
                         case CommandType.UpgradeTower:
                             int upgradeBuildingId = r.ReadInt32();
                             int upgradeType = r.ReadInt32();
@@ -1331,6 +1368,9 @@ namespace OpenEmpires
                             break;
                         case CommandType.CheatVision:
                             commands.Add(new CheatVisionCommand { PlayerId = playerId });
+                            break;
+                        case CommandType.CheatGodMode:
+                            commands.Add(new CheatGodModeCommand { PlayerId = playerId });
                             break;
                         case CommandType.DeleteUnits:
                             int[] deleteUnitIds = ReadIntArray(r);

@@ -410,6 +410,10 @@ namespace OpenEmpires
                     cheatVis.PlayerId = playerId;
                     cmd = cheatVis;
                     break;
+                case CheatGodModeCommand cheatGod:
+                    cheatGod.PlayerId = playerId;
+                    cmd = cheatGod;
+                    break;
                 case AttackUnitCommand attackUnit:
                     attackUnit.PlayerId = playerId;
                     cmd = attackUnit;
@@ -425,6 +429,10 @@ namespace OpenEmpires
                 case CancelTrainCommand cancelTrain:
                     cancelTrain.PlayerId = playerId;
                     cmd = cancelTrain;
+                    break;
+                case ToggleAutoProduceCommand toggleAuto:
+                    toggleAuto.PlayerId = playerId;
+                    cmd = toggleAuto;
                     break;
                 case UpgradeTowerCommand upgradeTower:
                     upgradeTower.PlayerId = playerId;

@@ -1107,6 +1107,23 @@ namespace OpenEmpires
                 sim.CommandBuffer.EnqueueCommand(new CheatConstructionCommand(pid));
             });
 
+            // God Mode toggle — unlocks all buildings across ages and lets the local player
+            // place them instantly without resources or villager construction.
+            y -= 40f;
+            MakeLabel(panelGO.transform, "God Mode", rowX, y, fowLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+            var godModeToggle = CreateToggle(panelGO.transform, rowX + fowLabelW + 5f, y, 24f);
+            var simForGod = GameBootstrapper.Instance?.Simulation;
+            int initialGodPid = FindFirstObjectByType<UnitSelectionManager>()?.LocalPlayerId ?? 0;
+            godModeToggle.SetIsOnWithoutNotify(simForGod != null && simForGod.IsGodModeActive(initialGodPid));
+            godModeToggle.onValueChanged.AddListener(value =>
+            {
+                var sim = GameBootstrapper.Instance?.Simulation;
+                if (sim == null) return;
+                int pid = FindFirstObjectByType<UnitSelectionManager>()?.LocalPlayerId ?? 0;
+                if (sim.IsGodModeActive(pid) == value) return;
+                sim.CommandBuffer.EnqueueCommand(new CheatGodModeCommand(pid));
+            });
+
             // Cheat buttons
             y -= 50f;
 

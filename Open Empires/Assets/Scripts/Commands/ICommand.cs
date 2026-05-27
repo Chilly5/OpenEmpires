@@ -37,7 +37,9 @@ namespace OpenEmpires
         Tsunami,
         MarketTrade,
         Research,
-        RepairBuilding
+        RepairBuilding,
+        ToggleAutoProduce,
+        CheatGodMode
     }
 
     public interface ICommand

@@ -281,6 +281,9 @@ namespace OpenEmpires
 
         public bool ProductionCheatActive { get; private set; }
         public bool ConstructionCheatActive { get; private set; }
+        private bool[] godModeActive; // indexed by playerId; null entries treated as false
+        public bool IsGodModeActive(int playerId) =>
+            godModeActive != null && playerId >= 0 && playerId < godModeActive.Length && godModeActive[playerId];
 
         public int CurrentTick => currentTick;
         public SimulationConfig Config => config;
@@ -585,6 +588,7 @@ namespace OpenEmpires
             playerAges = new int[playerCount];
             playerAgingUp = new bool[playerCount];
             playerAgingUpBuildingId = new int[playerCount];
+            godModeActive = new bool[playerCount];
             for (int i = 0; i < playerCount; i++)
             {
                 playerAges[i] = 1;
@@ -907,6 +911,10 @@ namespace OpenEmpires
                     ApplyTechnologyToUnits(rc.PlayerId, rc.Tech);
                 }
             }
+
+            // Auto-produce villagers from any town center with the toggle on,
+            // an idle queue, and enough food.
+            AutoProduceVillagersTick();
 
             // Training system (units freeze at 99% when pop-capped)
             var completions = trainingSystem.Tick(BuildingRegistry, config,
@@ -1466,6 +1474,9 @@ namespace OpenEmpires
                 case CancelTrainCommand cancelTrain:
                     ProcessCancelTrainCommand(cancelTrain);
                     break;
+                case ToggleAutoProduceCommand toggleAuto:
+                    ProcessToggleAutoProduceCommand(toggleAuto);
+                    break;
                 case UpgradeTowerCommand upgradeTower:
                     ProcessUpgradeTowerCommand(upgradeTower);
                     break;
@@ -1492,6 +1503,9 @@ namespace OpenEmpires
                     break;
                 case CheatVisionCommand cheatVis:
                     ProcessCheatVisionCommand(cheatVis);
+                    break;
+                case CheatGodModeCommand cheatGod:
+                    ProcessCheatGodModeCommand(cheatGod);
                     break;
                 case DeleteUnitsCommand deleteUnits:
                     ProcessDeleteUnitsCommand(deleteUnits);
@@ -2532,6 +2546,13 @@ namespace OpenEmpires
             FogOfWar.SetVisionCheat(cmd.PlayerId, !current);
         }
 
+        private void ProcessCheatGodModeCommand(CheatGodModeCommand cmd)
+        {
+            if (godModeActive == null) return;
+            if (cmd.PlayerId < 0 || cmd.PlayerId >= godModeActive.Length) return;
+            godModeActive[cmd.PlayerId] = !godModeActive[cmd.PlayerId];
+        }
+
         private void ProcessDeleteUnitsCommand(DeleteUnitsCommand cmd)
         {
             for (int i = 0; i < cmd.UnitIds.Length; i++)
@@ -3531,6 +3552,44 @@ namespace OpenEmpires
             }
         }
 
+        private void ProcessToggleAutoProduceCommand(ToggleAutoProduceCommand cmd)
+        {
+            var building = BuildingRegistry.GetBuilding(cmd.BuildingId);
+            if (building == null || building.IsDestroyed) return;
+            if (building.PlayerId != cmd.PlayerId) return;
+            if (building.Type != BuildingType.TownCenter) return;
+            building.AutoProduceVillagers = cmd.Enabled;
+        }
+
+        private void AutoProduceVillagersTick()
+        {
+            var buildings = BuildingRegistry.GetAllBuildings();
+            for (int i = 0; i < buildings.Count; i++)
+            {
+                var building = buildings[i];
+                if (building.IsDestroyed) continue;
+                if (building.Type != BuildingType.TownCenter) continue;
+                if (!building.AutoProduceVillagers) continue;
+                if (building.IsUnderConstruction) continue;
+                if (building.TrainingQueue.Count > 0) continue;
+
+                int resolvedUnitType = ResolveCivUnitType(building.PlayerId, 0);
+                int foodCost = config.VillagerFoodCost;
+                int trainTime = config.VillagerTrainTimeTicks;
+                if (IsBuildingInFrenchLandmarkInfluence(building))
+                {
+                    int discount = config.FrenchLandmarkTrainingDiscountPercent;
+                    foodCost = foodCost * (100 - discount) / 100;
+                }
+
+                var resources = ResourceManager.GetPlayerResources(building.PlayerId);
+                if (resources.Food < foodCost) continue;
+
+                resources.Food -= foodCost;
+                building.EnqueueTraining(resolvedUnitType, trainTime);
+            }
+        }
+
         private void ProcessUpgradeTowerCommand(UpgradeTowerCommand cmd)
         {
             cmd.Execute(this);
@@ -3769,14 +3828,16 @@ namespace OpenEmpires
                 return;
             }
 
-            // Age gate for non-landmark buildings
-            if (playerAges[cmd.PlayerId] < LandmarkDefinitions.GetBuildingRequiredAge(cmd.BuildingType)) return;
+            bool godMode = IsGodModeActive(cmd.PlayerId);
+
+            // Age gate for non-landmark buildings (bypassed under god mode)
+            if (!godMode && playerAges[cmd.PlayerId] < LandmarkDefinitions.GetBuildingRequiredAge(cmd.BuildingType)) return;
 
             int cost = GetBuildingWoodCost(cmd.BuildingType);
             int stoneCost = GetBuildingStoneCost(cmd.BuildingType);
             int foodCost = GetBuildingFoodCost(cmd.BuildingType);
             int goldCost = GetBuildingGoldCost(cmd.BuildingType);
-            if (resources.Wood < cost || resources.Stone < stoneCost || resources.Food < foodCost || resources.Gold < goldCost) return;
+            if (!godMode && (resources.Wood < cost || resources.Stone < stoneCost || resources.Food < foodCost || resources.Gold < goldCost)) return;
 
             bool hasVillagers2 = cmd.VillagerUnitIds != null && cmd.VillagerUnitIds.Length > 0;
 
@@ -3873,17 +3934,21 @@ namespace OpenEmpires
                 for (int z = cmd.TileZ - border2; z < cmd.TileZ + footprintH2 + border2; z++)
                     if (isFarm ? !MapData.IsBuildableForFarm(x, z) : !MapData.IsBuildable(x, z)) return;
 
-            resources.Wood -= cost;
-            resources.Stone -= stoneCost;
-            resources.Food -= foodCost;
-            resources.Gold -= goldCost;
-            var building2 = CreateBuilding(cmd.PlayerId, cmd.BuildingType, cmd.TileX, cmd.TileZ, underConstruction: hasVillagers2);
+            if (!godMode)
+            {
+                resources.Wood -= cost;
+                resources.Stone -= stoneCost;
+                resources.Food -= foodCost;
+                resources.Gold -= goldCost;
+            }
+            bool underConstruction2 = !godMode && hasVillagers2;
+            var building2 = CreateBuilding(cmd.PlayerId, cmd.BuildingType, cmd.TileX, cmd.TileZ, underConstruction: underConstruction2);
             OnBuildingCreated?.Invoke(building2);
-            if (!hasVillagers2)
+            if (!underConstruction2)
                 EjectUnitsFromBuildingFootprint(building2);
 
-            // Send all villagers to construct
-            if (hasVillagers2)
+            // Send all villagers to construct (skipped under god mode — building is already complete)
+            if (hasVillagers2 && !godMode)
             {
                 if (cmd.IsQueued)
                 {

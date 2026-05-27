@@ -2063,34 +2063,115 @@ namespace OpenEmpires
                     break;
                 }
                 case BuildingType.Farm:
+                {
                     prefab = CreateBuildingSpritePrefab("Farm", "Farm", 2, 2, 2.75f, 0.25f / 2.75f)
                           ?? CreateFarmPrefab(buildingData.PlayerId);
+                    if (prefab != null)
+                    {
+                        // Farms are flat fields — shrink the click collider's Y so the
+                        // hit area matches the visually-grounded footprint, not a tall box.
+                        var col = prefab.GetComponent<BoxCollider>();
+                        if (col != null)
+                        {
+                            col.center = new Vector3(col.center.x, 0.2f, col.center.z);
+                            col.size = new Vector3(col.size.x, 0.4f, col.size.z);
+                        }
+                    }
                     break;
+                }
                 case BuildingType.Tower:
                     prefab = CreateBuildingSpritePrefab("Tower", "EnglishStoneWatchtower", 1, 1, 4.25f, 1.02f / 4.25f)
                           ?? CreateTowerPrefab(buildingData.PlayerId);
                     break;
                 case BuildingType.Monastery:
-                    prefab = CreateBuildingSpritePrefab("Monastery", "Monastery", 3, 3, 6f, 1.02f / 6f)
+                {
+                    prefab = CreateBuildingSpritePrefab("Monastery", "Monastery", 3, 3, 6f, 1.86f / 6f)
                           ?? CreateMonasteryPrefab(buildingData.PlayerId);
+                    if (prefab != null)
+                    {
+                        var spriteT = prefab.transform.Find("Sprite");
+                        if (spriteT != null)
+                        {
+                            // Shrunk 15% → 5.865×5.865. Bottom edge raised from -0.95 to 0
+                            // (ground level, where the building collider sits): center Y = 5.865/2.
+                            spriteT.localScale = new Vector3(5.865f, 5.865f, spriteT.localScale.z);
+                            spriteT.localPosition = new Vector3(-0.5f, 2.0825f, 0f);
+                        }
+                    }
                     break;
+                }
                 case BuildingType.Blacksmith:
                     prefab = CreateBuildingSpritePrefab("Blacksmith", "Blacksmith", 3, 3, 6f, 1.02f / 6f)
                           ?? CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "Blacksmith");
                     break;
                 case BuildingType.Market:
-                    prefab = CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "Market");
+                {
+                    var simAge = GameBootstrapper.Instance?.Simulation;
+                    int marketAge = simAge != null ? Mathf.Clamp(simAge.GetPlayerAge(buildingData.PlayerId), 2, 3) : 2;
+                    string marketSprite = marketAge == 3 ? "EnglishCastleMarket" : "EnglishFeudalMarket";
+                    prefab = CreateBuildingSpritePrefab("Market", marketSprite, 3, 3, 4.488f, 0.92f / 6f)
+                          ?? CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "Market");
+                    if (prefab != null)
+                    {
+                        var spriteT = prefab.transform.Find("Sprite");
+                        if (spriteT != null)
+                        {
+                            // Raised Y by 0.3: 4.488 × (0.92/6) ≈ 0.688 → 0.988.
+                            spriteT.localPosition = new Vector3(spriteT.localPosition.x, 0.988f, spriteT.localPosition.z);
+                            // Sprite has a baked drop shadow — lower the alpha cutoff so the
+                            // semi-transparent shadow pixels aren't clipped by the billboard shader.
+                            var sr = spriteT.GetComponent<Renderer>();
+                            if (sr != null && sr.sharedMaterial != null)
+                                sr.sharedMaterial.SetFloat("_Cutoff", 0.05f);
+                        }
+                    }
                     break;
+                }
                 case BuildingType.University:
-                    prefab = CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "University");
+                {
+                    prefab = CreateBuildingSpritePrefab("University", "universitywithshadow", 3, 3, 6f, 0.82f / 6f)
+                          ?? CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "University");
+                    if (prefab != null)
+                    {
+                        var spriteT = prefab.transform.Find("Sprite");
+                        if (spriteT != null)
+                        {
+                            // Source PNG is 1083×726 (1.491:1). Aspect-matched quad at 6.262×4.2,
+                            // scaled 13% larger → 7.0761×4.746. Y raised by 1.1 (0.82 → 1.92).
+                            spriteT.localScale = new Vector3(7.0761f, 4.746f, spriteT.localScale.z);
+                            spriteT.localPosition = new Vector3(spriteT.localPosition.x, 1.17f, spriteT.localPosition.z);
+                            // Sprite has a baked drop shadow — lower the alpha cutoff so the
+                            // semi-transparent shadow pixels aren't clipped by the billboard shader.
+                            var sr = spriteT.GetComponent<Renderer>();
+                            if (sr != null && sr.sharedMaterial != null)
+                                sr.sharedMaterial.SetFloat("_Cutoff", 0.05f);
+                        }
+                    }
                     break;
+                }
                 case BuildingType.SiegeWorkshop:
                     prefab = CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "SiegeWorkshop");
                     break;
                 case BuildingType.Keep:
-                    prefab = CreateBuildingSpritePrefab("Keep", "Keep", 3, 3, 8f)
-                          ?? CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "Keep");
+                {
+                    // 5000×5000 source (1:1). Footprint 4×4 (matches Town Center).
+                    // Quad scale 6, center Y = 1 → yOffsetMultiplier = 1/6.
+                    prefab = CreateBuildingSpritePrefab("Keep", "Keep", 4, 4, 6f, 1f / 6f)
+                          ?? CreateGenericBuildingPrefab(buildingData.PlayerId, 4, 4, "Keep");
+                    if (prefab != null)
+                    {
+                        var spriteT = prefab.transform.Find("Sprite");
+                        if (spriteT != null)
+                        {
+                            // 15% larger (6 → 6.9), shifted 0.5m screen-left (at yaw 45°:
+                            // ΔX = -0.5 × cos45 ≈ -0.3536, ΔZ = +0.5 × sin45 ≈ +0.3536), Y raised to 1.5.
+                            spriteT.localScale = new Vector3(6.9f, 6.9f, spriteT.localScale.z);
+                            var p = spriteT.localPosition;
+                            spriteT.localPosition = new Vector3(p.x - 0.3536f, 1.5f, p.z + 0.3536f);
+                        }
+                    }
                     break;
+                }
                 case BuildingType.StoneWall:
                 case BuildingType.StoneGate:
                 case BuildingType.WoodGate:
@@ -2141,6 +2222,8 @@ namespace OpenEmpires
                     view.SetAgeSpriteInfo("ArcheryRangeAge", 3);
                 else if (buildingData.Type == BuildingType.Stables)
                     view.SetAgeSpriteInfo("StablesAge", 3);
+                else if (buildingData.Type == BuildingType.Market)
+                    view.SetAgeSpriteNames(new[] { null, null, "EnglishFeudalMarket", "EnglishCastleMarket" });
 
                 if (buildingData.IsGate)
                     view.SetGateVisual(true, buildingBodyMaterial);

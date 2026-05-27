@@ -547,8 +547,8 @@ namespace OpenEmpires
         // Buildings - Keep
         public int KeepMaxHealth => 1000;
         public int KeepArmor => 5;
-        public int KeepFootprintWidth => 3;
-        public int KeepFootprintHeight => 3;
+        public int KeepFootprintWidth => 4;
+        public int KeepFootprintHeight => 4;
 
         // Buildings - Stone Wall
         public int StoneWallMaxHealth => 400;
