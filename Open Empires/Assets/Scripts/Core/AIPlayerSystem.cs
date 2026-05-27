@@ -8,6 +8,7 @@ namespace OpenEmpires
     public class AIPlayerSystem
     {
         private readonly int playerId;
+        public int PlayerId => playerId;
         private readonly GameSimulation sim;
         private readonly AIDifficulty difficulty;
 
@@ -52,6 +53,79 @@ namespace OpenEmpires
         // Known enemy base positions (discovered by scouting / combat)
         private readonly Dictionary<int, FixedVector3> knownEnemyBases = new Dictionary<int, FixedVector3>();
 
+        // ── Ally ping reactions ──────────────────────────────────────────
+        // Latest unprocessed ping ID watermark (RecentPings.Tick); we only react to entries past this.
+        private int lastProcessedPingTick = -1;
+        private FixedVector3 pingAttackTarget;
+        private int pingAttackUntilTick = -1;
+        private FixedVector3 pingDefendTarget;
+        private int pingDefendUntilTick = -1;
+        private const int PingDirectiveDurationTicks = 900; // ~30s @ 30 ticks/s
+
+        // Outbound ping rate-limit so we don't spam the team when a long attack drags on.
+        private int lastEmittedHelpPingTick = -1000;
+        private const int HelpPingCooldownTicks = 600; // ~20s
+
+        // ── LLM-driven intent overrides ─────────────────────────────────
+        // Set by ApplyIntent (called from GameSimulation.ProcessAiIntentCommand). All
+        // identically applied on every client, so determinism holds.
+        private int aggressionAttackOverride = -1;   // sentinel -1 = no override
+        private int aggressionRetreatOverride = -1;  // sentinel -1 = no override
+        private int aggressionOverrideUntilTick = -1;
+        private int resourceWeightFoodOverride;      // delta in tenths
+        private int resourceWeightWoodOverride;
+        private int resourceWeightGoldOverride;
+        private int resourceWeightStoneOverride;
+        private int resourceOverrideUntilTick = -1;
+        private int forceAgeUpTarget;                // 0 = none, 2/3 = push age
+        private int forceAgeUpUntilTick = -1;
+
+        public int EffectiveAttackThreshold(int currentTick)
+        {
+            if (currentTick < aggressionOverrideUntilTick && aggressionAttackOverride > 0)
+                return aggressionAttackOverride;
+            return attackThreshold;
+        }
+
+        public int EffectiveRetreatPercent(int currentTick)
+        {
+            if (currentTick < aggressionOverrideUntilTick && aggressionRetreatOverride > 0)
+                return aggressionRetreatOverride;
+            return retreatPercentInt;
+        }
+
+        // ── Unit-class filter for ping/intent-driven attacks (0 = all, 1 = archers, 2 = horsemen, 3 = spearmen)
+        private int pingAttackUnitClass;
+        private int pingDefendUnitClass;
+
+        // ── Pending directives that wait on a trigger condition before applying.
+        private struct PendingDirective
+        {
+            public int IntentKind;
+            public int ParamA, ParamB, ParamC, ParamD;
+            public int DurationTicks;
+            public int TriggerType;
+            public int TriggerMagnitude;
+            public int EnqueuedTick;
+            public int IssuerPlayerId;
+        }
+        private readonly List<PendingDirective> pendingDirectives = new List<PendingDirective>();
+        private const int MaxPendingDirectives = 8;
+        private const int PendingDirectiveTtlTicks = 30 * 60 * 30; // 30 min hard cap
+
+        // Track recent enemy aggression so on_enemy_attack triggers can fire.
+        private int lastEnemyAttackOnMeTick = -100000;
+
+        // Public state accessors used by the LLM prompt builder (read-only, non-deterministic context).
+        public string CombatStateName => combatState.ToString();
+        public int ArmySize => cachedCombatUnits.Count;
+        public int VillagerCount => cachedVillagers.Count;
+        public int KnownEnemyBaseCount => knownEnemyBases.Count;
+        public int CachedEnemySpearmen => cachedEnemySpearmen;
+        public int CachedEnemyArchers => cachedEnemyArchers;
+        public int CachedEnemyHorsemen => cachedEnemyHorsemen;
+        public int LastEnemyAttackOnMeTick => lastEnemyAttackOnMeTick;
+
         // ── Building placement tracking ────────────────────────────────
         private int pendingHouseTick;
         private int pendingBarracksTick;
@@ -78,6 +152,7 @@ namespace OpenEmpires
         private readonly List<UnitData> idleVillagersBuffer = new List<UnitData>();
         private readonly List<UnitData> tempCombatUnits = new List<UnitData>();
         private readonly List<UnitData> tempDefenders = new List<UnitData>();
+        private readonly List<UnitData> tempFilteredUnits = new List<UnitData>();
         private readonly List<int> tempUnitIds = new List<int>();
 
         // ── Per-tick caches (rebuilt once at start of Tick) ──────────
@@ -224,12 +299,75 @@ namespace OpenEmpires
             if (militaryToggle)
                 TickMilitary(currentTick);
 
+            TickAllyPings(currentTick);
             TickDefense(currentTick);
 
             TickCombat(currentTick);
+            TickPendingDirectives(currentTick);
 
             // Discover enemy buildings visible to our units
             DiscoverEnemyBases();
+        }
+
+        // Walks pendingDirectives and activates any whose trigger condition has fired.
+        // Runs identically on every client → deterministic activation.
+        private void TickPendingDirectives(int currentTick)
+        {
+            for (int i = pendingDirectives.Count - 1; i >= 0; i--)
+            {
+                var p = pendingDirectives[i];
+                if (currentTick - p.EnqueuedTick > PendingDirectiveTtlTicks)
+                {
+                    pendingDirectives.RemoveAt(i);
+                    continue;
+                }
+                bool fire = false;
+                switch (p.TriggerType)
+                {
+                    case 1: // delay (TriggerMagnitude = ticks)
+                        fire = currentTick >= p.EnqueuedTick + p.TriggerMagnitude;
+                        break;
+                    case 2: // on_age_up (TriggerMagnitude = target age)
+                        fire = sim.GetPlayerAge(playerId) >= p.TriggerMagnitude;
+                        break;
+                    case 3: // on_army_size (TriggerMagnitude = unit count)
+                        fire = cachedCombatUnits.Count >= p.TriggerMagnitude;
+                        break;
+                    case 4: // on_enemy_attack
+                        fire = (currentTick - lastEnemyAttackOnMeTick) < 300; // within 10s
+                        break;
+                }
+                if (fire)
+                {
+                    ApplyIntentImmediate(p.IntentKind, p.ParamA, p.ParamB, p.ParamC, p.ParamD,
+                        p.DurationTicks, currentTick);
+                    pendingDirectives.RemoveAt(i);
+                }
+            }
+        }
+
+        // Filter `source` combat units into `dest` keeping only those of the requested class.
+        // classFilter: 0=all, 1=archers (UnitType 2|10), 2=horsemen (UnitType 3|11), 3=spearmen (UnitType 1|12)
+        private static void FilterCombatUnitsByClass(List<UnitData> source, int classFilter, List<UnitData> dest)
+        {
+            dest.Clear();
+            if (classFilter <= 0)
+            {
+                dest.AddRange(source);
+                return;
+            }
+            for (int i = 0; i < source.Count; i++)
+            {
+                var u = source[i];
+                bool keep = false;
+                switch (classFilter)
+                {
+                    case 1: keep = u.UnitType == 2 || u.UnitType == 10; break;
+                    case 2: keep = u.UnitType == 3 || u.UnitType == 11; break;
+                    case 3: keep = u.UnitType == 1 || u.UnitType == 12; break;
+                }
+                if (keep) dest.Add(u);
+            }
         }
 
         // ── Initialization ─────────────────────────────────────────────
@@ -464,6 +602,19 @@ namespace OpenEmpires
                 targetWood += 3;
                 targetFood -= 2;
                 if (targetFood < 4) targetFood = 4;
+            }
+
+            // LLM intent override: apply per-resource weight deltas while window is active
+            if (currentTick < resourceOverrideUntilTick)
+            {
+                targetFood += resourceWeightFoodOverride;
+                targetWood += resourceWeightWoodOverride;
+                targetGold += resourceWeightGoldOverride;
+                targetStone += resourceWeightStoneOverride;
+                if (targetFood < 0) targetFood = 0;
+                if (targetWood < 0) targetWood = 0;
+                if (targetGold < 0) targetGold = 0;
+                if (targetStone < 0) targetStone = 0;
             }
 
             HashSet<int> claimedFarmIds = null; // lazy init
@@ -819,6 +970,9 @@ namespace OpenEmpires
                     requiredVillagers = targetAge == 2 ? 12 : targetAge == 3 ? 18 : 24;
                     break;
             }
+            // LLM intent override: when player asks to push for an age, halve the bar.
+            if (currentTick < forceAgeUpUntilTick && forceAgeUpTarget >= targetAge)
+                requiredVillagers = Mathf.Max(4, requiredVillagers / 2);
             if (vilCount < requiredVillagers) return;
 
             var civ = sim.GetPlayerCivilization(playerId);
@@ -1103,6 +1257,19 @@ namespace OpenEmpires
                 }
             }
 
+            // Record the most recent "enemy attacking me" tick so on_enemy_attack triggered
+            // directives can fire even if the alert ping is rate-limited away below.
+            if (threatCount > 0) lastEnemyAttackOnMeTick = currentTick;
+
+            // If our own base is under attack, broadcast a Help ping + chat line (rate-limited).
+            if (threatCount > 0 && currentTick - lastEmittedHelpPingTick >= HelpPingCooldownTicks)
+            {
+                lastEmittedHelpPingTick = currentTick;
+                var baseWorld = sim.MapData.TileToWorldFixed(baseTileX, baseTileZ);
+                Issue(new PingCommand(playerId, baseWorld.x.Raw, baseWorld.z.Raw, PingType.Help));
+                Issue(new AiChatCommand(playerId, AiChatLineType.UnderAttack));
+            }
+
             // Also check ally TCs for threats
             if (threatCount == 0)
             {
@@ -1361,6 +1528,186 @@ namespace OpenEmpires
 
         // ── Combat ─────────────────────────────────────────────────────
 
+        // Reads pings issued by allies and translates them into short-lived
+        // combat/defense overrides. Determinism is preserved because every client
+        // sees the same RecentPings list in the same order.
+        private void TickAllyPings(int currentTick)
+        {
+            var pings = sim.RecentPings;
+            int watermark = lastProcessedPingTick;
+            for (int i = 0; i < pings.Count; i++)
+            {
+                var p = pings[i];
+                if (p.Tick <= lastProcessedPingTick) continue;
+                if (p.PlayerId == playerId) continue;             // ignore self
+                if (!sim.AreAllies(p.PlayerId, playerId)) continue; // ally-only
+
+                var pos = new FixedVector3(
+                    Fixed32.FromFloat(p.WorldX),
+                    Fixed32.Zero,
+                    Fixed32.FromFloat(p.WorldZ));
+
+                switch (p.Type)
+                {
+                    case PingType.Attack:
+                        pingAttackTarget = pos;
+                        pingAttackUntilTick = currentTick + PingDirectiveDurationTicks;
+                        pingAttackUnitClass = 0; // human pings don't specify class
+                        // Nudge into Assembling if currently idle and we have any force at all.
+                        if (combatState == CombatState.Building)
+                            combatState = CombatState.Assembling;
+                        Issue(new AiChatCommand(playerId, AiChatLineType.OnTheWayAttack));
+                        break;
+                    case PingType.Defend:
+                    case PingType.Help:
+                        pingDefendTarget = pos;
+                        pingDefendUntilTick = currentTick + PingDirectiveDurationTicks;
+                        pingDefendUnitClass = 0; // human pings don't specify class
+                        DispatchDefendersToPing();
+                        Issue(new AiChatCommand(playerId, AiChatLineType.OnTheWayDefend));
+                        break;
+                }
+                if (p.Tick > watermark) watermark = p.Tick;
+            }
+            lastProcessedPingTick = watermark;
+        }
+
+        // Applied by GameSimulation.ProcessAiIntentCommand on every client. Deterministic
+        // by construction: pure switch over ints, mutates only AI override fields. No
+        // allocations on the hot path. DurationTicks is computed relative to currentTick
+        // so windows expire identically on all clients.
+        //
+        // When triggerType != 0 the directive is parked in pendingDirectives and applied
+        // later when its trigger condition fires. The trigger evaluation happens inside
+        // Tick (TickPendingDirectives) which runs identically on every client.
+        public void ApplyIntent(int intentKind, int paramA, int paramB, int paramC, int paramD,
+            int durationTicks, int currentTick, int triggerType = 0, int triggerMagnitude = 0)
+        {
+            if (triggerType != 0)
+            {
+                if (pendingDirectives.Count >= MaxPendingDirectives) return;
+                pendingDirectives.Add(new PendingDirective
+                {
+                    IntentKind = intentKind,
+                    ParamA = paramA, ParamB = paramB, ParamC = paramC, ParamD = paramD,
+                    DurationTicks = durationTicks,
+                    TriggerType = triggerType,
+                    TriggerMagnitude = triggerMagnitude,
+                    EnqueuedTick = currentTick,
+                });
+                return;
+            }
+
+            ApplyIntentImmediate(intentKind, paramA, paramB, paramC, paramD, durationTicks, currentTick);
+        }
+
+        private void ApplyIntentImmediate(int intentKind, int paramA, int paramB, int paramC, int paramD,
+            int durationTicks, int currentTick)
+        {
+            int until = currentTick + Mathf.Clamp(durationTicks, 30, 5400); // 1s..3min
+
+            switch ((AiIntentKind)intentKind)
+            {
+                case AiIntentKind.AttackAt:
+                {
+                    var pos = new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB));
+                    pingAttackTarget = pos;
+                    pingAttackUntilTick = until;
+                    pingAttackUnitClass = Mathf.Clamp(paramC, 0, 3);
+                    if (combatState == CombatState.Building)
+                        combatState = CombatState.Assembling;
+                    break;
+                }
+                case AiIntentKind.DefendAt:
+                {
+                    var pos = new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB));
+                    pingDefendTarget = pos;
+                    pingDefendUntilTick = until;
+                    pingDefendUnitClass = Mathf.Clamp(paramC, 0, 3);
+                    DispatchDefendersToPing();
+                    break;
+                }
+                case AiIntentKind.SetAggression:
+                    aggressionAttackOverride = Mathf.Clamp(paramA, 2, 32);
+                    aggressionRetreatOverride = Mathf.Clamp(paramB, 10, 80);
+                    aggressionOverrideUntilTick = until;
+                    break;
+                case AiIntentKind.PrioritizeResource:
+                {
+                    int delta = Mathf.Clamp(paramB, -5, 10);
+                    switch ((ResourceType)paramA)
+                    {
+                        case ResourceType.Food: resourceWeightFoodOverride = delta; break;
+                        case ResourceType.Wood: resourceWeightWoodOverride = delta; break;
+                        case ResourceType.Gold: resourceWeightGoldOverride = delta; break;
+                        case ResourceType.Stone: resourceWeightStoneOverride = delta; break;
+                    }
+                    resourceOverrideUntilTick = until;
+                    break;
+                }
+                case AiIntentKind.FocusEconomy:
+                {
+                    // Preset: more economy, less aggression.
+                    int strength = Mathf.Clamp(paramA, 0, 100);
+                    aggressionAttackOverride = Mathf.Clamp(attackThreshold + strength / 10, 2, 32);
+                    aggressionRetreatOverride = Mathf.Clamp(retreatPercentInt + strength / 4, 10, 80);
+                    aggressionOverrideUntilTick = until;
+                    resourceWeightFoodOverride = strength / 25;   // +0..+4
+                    resourceWeightWoodOverride = strength / 33;   // +0..+3
+                    resourceOverrideUntilTick = until;
+                    break;
+                }
+                case AiIntentKind.FocusMilitary:
+                {
+                    int strength = Mathf.Clamp(paramA, 0, 100);
+                    aggressionAttackOverride = Mathf.Clamp(attackThreshold - strength / 12, 2, 32);
+                    aggressionRetreatOverride = Mathf.Clamp(retreatPercentInt - strength / 5, 10, 80);
+                    aggressionOverrideUntilTick = until;
+                    resourceWeightGoldOverride = strength / 25;   // +0..+4
+                    resourceWeightFoodOverride = -strength / 50;  // -0..-2
+                    resourceOverrideUntilTick = until;
+                    break;
+                }
+                case AiIntentKind.PushAgeUp:
+                    forceAgeUpTarget = Mathf.Clamp(paramA, 2, 3);
+                    forceAgeUpUntilTick = until;
+                    break;
+                case AiIntentKind.Acknowledge:
+                case AiIntentKind.Decline:
+                    // chat-only, no behavior change
+                    break;
+            }
+        }
+
+        // Send units to a defend-ping location. If pingDefendUnitClass is set (non-zero),
+        // send 100% of that class; otherwise send roughly half of total combat units.
+        private void DispatchDefendersToPing()
+        {
+            GetMyCombatUnits(tempCombatUnits);
+            if (tempCombatUnits.Count == 0) return;
+
+            List<UnitData> dispatchSource;
+            int sendCount;
+            if (pingDefendUnitClass != 0)
+            {
+                FilterCombatUnitsByClass(tempCombatUnits, pingDefendUnitClass, tempFilteredUnits);
+                if (tempFilteredUnits.Count == 0) return;
+                dispatchSource = tempFilteredUnits;
+                sendCount = tempFilteredUnits.Count;
+            }
+            else
+            {
+                dispatchSource = tempCombatUnits;
+                sendCount = Mathf.Max(2, tempCombatUnits.Count / 2);
+                sendCount = Mathf.Min(sendCount, tempCombatUnits.Count);
+            }
+
+            tempUnitIds.Clear();
+            for (int i = 0; i < sendCount; i++)
+                tempUnitIds.Add(dispatchSource[i].Id);
+            Issue(new MoveCommand(playerId, tempUnitIds.ToArray(), pingDefendTarget));
+        }
+
         private void TickCombat(int currentTick)
         {
             // Don't override defense state
@@ -1375,12 +1722,13 @@ namespace OpenEmpires
                     if (firstMilitaryBuildingTick < 0 && (HasBuilding(BuildingType.Barracks) || HasBuilding(BuildingType.ArcheryRange) || HasBuilding(BuildingType.Stables)))
                         firstMilitaryBuildingTick = currentTick;
 
-                    if (armySize >= attackThreshold)
+                    int effectiveThreshold = EffectiveAttackThreshold(currentTick);
+                    if (armySize >= effectiveThreshold)
                     {
                         combatState = CombatState.Assembling;
                     }
                     else if (firstMilitaryBuildingTick > 0 && currentTick - firstMilitaryBuildingTick > 6000
-                             && armySize >= attackThreshold / 2 && armySize >= 4)
+                             && armySize >= effectiveThreshold / 2 && armySize >= 4)
                     {
                         combatState = CombatState.Assembling;
                     }
@@ -1391,9 +1739,27 @@ namespace OpenEmpires
                     break;
 
                 case CombatState.Assembling:
-                    var targetPos = GetEnemyTargetPosition();
+                {
+                    // Honor an in-flight ally Attack ping over the AI's own target pick.
+                    bool pingActive = currentTick < pingAttackUntilTick;
+                    FixedVector3? targetPos = pingActive
+                        ? pingAttackTarget
+                        : GetEnemyTargetPosition();
                     if (targetPos.HasValue)
                     {
+                        // Filter the dispatched units by class if the ping override specified one.
+                        List<UnitData> dispatchSource = tempCombatUnits;
+                        if (pingActive && pingAttackUnitClass != 0)
+                        {
+                            FilterCombatUnitsByClass(tempCombatUnits, pingAttackUnitClass, tempFilteredUnits);
+                            dispatchSource = tempFilteredUnits;
+                        }
+                        if (dispatchSource.Count == 0)
+                        {
+                            combatState = CombatState.Building;
+                            break;
+                        }
+
                         attackTargetPos = targetPos.Value;
                         // Compute staging point ~15 tiles from target, toward our base
                         int targetTileX = attackTargetPos.x.Raw >> Fixed32.FractionalBits;
@@ -1414,11 +1780,11 @@ namespace OpenEmpires
                         var stagingPos = sim.MapData.TileToWorldFixed(stagingX, stagingZ);
 
                         tempUnitIds.Clear();
-                        for (int i = 0; i < tempCombatUnits.Count; i++)
-                            tempUnitIds.Add(tempCombatUnits[i].Id);
+                        for (int i = 0; i < dispatchSource.Count; i++)
+                            tempUnitIds.Add(dispatchSource[i].Id);
                         Issue(new MoveCommand(playerId, tempUnitIds.ToArray(), stagingPos));
 
-                        attackStartArmySize = armySize;
+                        attackStartArmySize = dispatchSource.Count;
                         marchStartTick = currentTick;
                         combatState = CombatState.Marching;
                     }
@@ -1427,16 +1793,31 @@ namespace OpenEmpires
                         combatState = CombatState.Building;
                     }
                     break;
+                }
 
                 case CombatState.Marching:
+                {
+                    // March/attack-move only the subset matching the active ping class filter.
+                    bool pingActive = currentTick < pingAttackUntilTick && pingAttackUnitClass != 0;
+                    List<UnitData> activeUnits;
+                    if (pingActive)
+                    {
+                        FilterCombatUnitsByClass(tempCombatUnits, pingAttackUnitClass, tempFilteredUnits);
+                        activeUnits = tempFilteredUnits;
+                    }
+                    else
+                    {
+                        activeUnits = tempCombatUnits;
+                    }
+
                     // Check if any unit is within ~20 tiles of the target
                     int atkTileX = attackTargetPos.x.Raw >> Fixed32.FractionalBits;
                     int atkTileZ = attackTargetPos.z.Raw >> Fixed32.FractionalBits;
                     bool closeEnough = false;
-                    for (int i = 0; i < tempCombatUnits.Count; i++)
+                    for (int i = 0; i < activeUnits.Count; i++)
                     {
-                        int ux = tempCombatUnits[i].SimPosition.x.Raw >> Fixed32.FractionalBits;
-                        int uz = tempCombatUnits[i].SimPosition.z.Raw >> Fixed32.FractionalBits;
+                        int ux = activeUnits[i].SimPosition.x.Raw >> Fixed32.FractionalBits;
+                        int uz = activeUnits[i].SimPosition.z.Raw >> Fixed32.FractionalBits;
                         int udx = ux - atkTileX;
                         int udz = uz - atkTileZ;
                         if (udx * udx + udz * udz < 20 * 20)
@@ -1448,29 +1829,36 @@ namespace OpenEmpires
                     if (closeEnough)
                     {
                         tempUnitIds.Clear();
-                        for (int i = 0; i < tempCombatUnits.Count; i++)
-                            tempUnitIds.Add(tempCombatUnits[i].Id);
-                        var marchCmd = new MoveCommand(playerId, tempUnitIds.ToArray(), attackTargetPos);
-                        marchCmd.IsAttackMove = true;
-                        Issue(marchCmd);
+                        for (int i = 0; i < activeUnits.Count; i++)
+                            tempUnitIds.Add(activeUnits[i].Id);
+                        if (tempUnitIds.Count > 0)
+                        {
+                            var marchCmd = new MoveCommand(playerId, tempUnitIds.ToArray(), attackTargetPos);
+                            marchCmd.IsAttackMove = true;
+                            Issue(marchCmd);
+                        }
                         combatState = CombatState.Attacking;
                     }
                     else if (currentTick - marchStartTick > 300)
                     {
                         // Timeout — attack-move directly to target
                         tempUnitIds.Clear();
-                        for (int i = 0; i < tempCombatUnits.Count; i++)
-                            tempUnitIds.Add(tempCombatUnits[i].Id);
-                        var directCmd = new MoveCommand(playerId, tempUnitIds.ToArray(), attackTargetPos);
-                        directCmd.IsAttackMove = true;
-                        Issue(directCmd);
+                        for (int i = 0; i < activeUnits.Count; i++)
+                            tempUnitIds.Add(activeUnits[i].Id);
+                        if (tempUnitIds.Count > 0)
+                        {
+                            var directCmd = new MoveCommand(playerId, tempUnitIds.ToArray(), attackTargetPos);
+                            directCmd.IsAttackMove = true;
+                            Issue(directCmd);
+                        }
                         combatState = CombatState.Attacking;
                     }
                     break;
+                }
 
                 case CombatState.Attacking:
                     // Retreat when we've lost retreatPercentInt% of our army
-                    int retreatAt = Mathf.Max(1, attackStartArmySize * (100 - retreatPercentInt) / 100);
+                    int retreatAt = Mathf.Max(1, attackStartArmySize * (100 - EffectiveRetreatPercent(currentTick)) / 100);
                     if (armySize <= retreatAt)
                     {
                         if (armySize > 0)

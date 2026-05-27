@@ -434,6 +434,14 @@ namespace OpenEmpires
                     toggleAuto.PlayerId = playerId;
                     cmd = toggleAuto;
                     break;
+                case PingCommand ping:
+                    ping.PlayerId = playerId;
+                    cmd = ping;
+                    break;
+                case AiChatCommand aiChat:
+                    aiChat.PlayerId = playerId;
+                    cmd = aiChat;
+                    break;
                 case UpgradeTowerCommand upgradeTower:
                     upgradeTower.PlayerId = playerId;
                     cmd = upgradeTower;

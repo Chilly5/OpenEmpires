@@ -19,6 +19,8 @@ namespace OpenEmpires
         // attack-ping system) get a position + owner id so they can decide whether to react.
         // Not fired for repair "strikes", construction strikes, or resource gathering.
         public event Action<float, float, int> OnEntityDamaged; // worldX, worldZ, ownerPlayerId
+        public event Action<int, float, float, PingType> OnPingReceived; // playerId, worldX, worldZ, type
+        public event Action<int, AiChatLineType, int> OnAiChatEmitted;   // playerId, lineType, paramA
         public event Action<int, int> OnSheepConverted; // sheepId, newPlayerId
         public event Action<int, int> OnSheepSlaughtered; // sheepId, carcassNodeId
         public event Action<int, FixedVector3, int> OnMeteorWarning; // playerId, position, impactTick
@@ -1507,6 +1509,15 @@ namespace OpenEmpires
                 case CheatGodModeCommand cheatGod:
                     ProcessCheatGodModeCommand(cheatGod);
                     break;
+                case PingCommand pingCmd:
+                    ProcessPingCommand(pingCmd);
+                    break;
+                case AiChatCommand aiChatCmd:
+                    ProcessAiChatCommand(aiChatCmd);
+                    break;
+                case AiIntentCommand aiIntentCmd:
+                    ProcessAiIntentCommand(aiIntentCmd);
+                    break;
                 case DeleteUnitsCommand deleteUnits:
                     ProcessDeleteUnitsCommand(deleteUnits);
                     break;
@@ -2551,6 +2562,87 @@ namespace OpenEmpires
             if (godModeActive == null) return;
             if (cmd.PlayerId < 0 || cmd.PlayerId >= godModeActive.Length) return;
             godModeActive[cmd.PlayerId] = !godModeActive[cmd.PlayerId];
+        }
+
+        private void ProcessPingCommand(PingCommand cmd)
+        {
+            float wx = new Fixed32(cmd.WorldX).ToFloat();
+            float wz = new Fixed32(cmd.WorldZ).ToFloat();
+            recentPings.Add(new RecentPing
+            {
+                PlayerId = cmd.PlayerId,
+                WorldX = wx,
+                WorldZ = wz,
+                Type = (PingType)cmd.PingTypeValue,
+                Tick = currentTick,
+            });
+            OnPingReceived?.Invoke(cmd.PlayerId, wx, wz, (PingType)cmd.PingTypeValue);
+        }
+
+        private void ProcessAiChatCommand(AiChatCommand cmd)
+        {
+            OnAiChatEmitted?.Invoke(cmd.PlayerId, (AiChatLineType)cmd.LineType, cmd.ParamA);
+        }
+
+        // Applied on every client identically. The LLM that produced this command ran
+        // only on the sender's machine; everything from here on is deterministic.
+        private void ProcessAiIntentCommand(AiIntentCommand cmd)
+        {
+            // Issuer must be a same-team ally of the target AI (mirrors PingCommand semantics).
+            if (!AreAllies(cmd.IssuerPlayerId, cmd.PlayerId)) return;
+
+            for (int i = 0; i < aiPlayers.Count; i++)
+            {
+                if (aiPlayers[i].PlayerId == cmd.PlayerId)
+                {
+                    aiPlayers[i].ApplyIntent(cmd.IntentKind, cmd.ParamA, cmd.ParamB, cmd.ParamC, cmd.ParamD,
+                        cmd.DurationTicks, currentTick,
+                        cmd.TriggerType, cmd.TriggerMagnitude);
+                    return;
+                }
+            }
+        }
+
+        // Read-only roster of AI player IDs. Used by the LLM teammate controller (UI side,
+        // non-deterministic) to discover candidate AI teammates. Iteration order is the
+        // construction order in aiPlayers — deterministic, but UI code shouldn't depend
+        // on that for sim state.
+        public IEnumerable<int> AiPlayerIds
+        {
+            get
+            {
+                for (int i = 0; i < aiPlayers.Count; i++)
+                    yield return aiPlayers[i].PlayerId;
+            }
+        }
+
+        // UI-side accessor for the AIPlayerSystem owned by `playerId`. Returns null when
+        // the slot is human or unknown. Reserved for non-deterministic prompt construction;
+        // simulation code should keep mutating via commands, not via this handle.
+        public AIPlayerSystem GetAiPlayer(int playerId)
+        {
+            for (int i = 0; i < aiPlayers.Count; i++)
+                if (aiPlayers[i].PlayerId == playerId) return aiPlayers[i];
+            return null;
+        }
+
+        // Recent pings the AI can query (decays naturally — old entries are skipped by tick window).
+        public struct RecentPing
+        {
+            public int PlayerId;
+            public float WorldX;
+            public float WorldZ;
+            public PingType Type;
+            public int Tick;
+        }
+        private readonly List<RecentPing> recentPings = new List<RecentPing>();
+        public IReadOnlyList<RecentPing> RecentPings => recentPings;
+        public void PruneRecentPings(int ticksToKeep)
+        {
+            int cutoff = currentTick - ticksToKeep;
+            for (int i = recentPings.Count - 1; i >= 0; i--)
+                if (recentPings[i].Tick < cutoff)
+                    recentPings.RemoveAt(i);
         }
 
         private void ProcessDeleteUnitsCommand(DeleteUnitsCommand cmd)

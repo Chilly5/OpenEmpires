@@ -39,7 +39,10 @@ namespace OpenEmpires
         Research,
         RepairBuilding,
         ToggleAutoProduce,
-        CheatGodMode
+        CheatGodMode,
+        Ping,
+        AiChat,
+        AiIntent
     }
 
     public interface ICommand

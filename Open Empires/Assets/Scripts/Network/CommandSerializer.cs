@@ -58,6 +58,15 @@ namespace OpenEmpires
                 case ToggleAutoProduceCommand toggleAuto:
                     payload = JsonUtility.ToJson(new ToggleAutoProducePayload(toggleAuto));
                     break;
+                case PingCommand ping:
+                    payload = JsonUtility.ToJson(new PingPayload(ping));
+                    break;
+                case AiChatCommand aiChat:
+                    payload = JsonUtility.ToJson(new AiChatPayload(aiChat));
+                    break;
+                case AiIntentCommand aiIntent:
+                    payload = JsonUtility.ToJson(new AiIntentPayload(aiIntent));
+                    break;
                 case GarrisonCommand garrison:
                     payload = JsonUtility.ToJson(new GarrisonPayload(garrison));
                     break;
@@ -147,6 +156,9 @@ namespace OpenEmpires
                     "ConvertToGate" => ParseConvertToGateCommand(payload, playerId),
                     "CancelTrain" => ParseCancelTrainCommand(payload, playerId),
                     "ToggleAutoProduce" => ParseToggleAutoProduceCommand(payload, playerId),
+                    "Ping" => ParsePingCommand(payload, playerId),
+                    "AiChat" => ParseAiChatCommand(payload, playerId),
+                    "AiIntent" => ParseAiIntentCommand(payload, playerId),
                     "Garrison" => ParseGarrisonCommand(payload, playerId),
                     "Ungarrison" => ParseUngarrisonCommand(payload, playerId),
                     "Noop" => ParseNoopCommand(payload, playerId),
@@ -326,6 +338,30 @@ namespace OpenEmpires
         {
             var data = JsonUtility.FromJson<ToggleAutoProducePayload>(payload);
             return new ToggleAutoProduceCommand(playerId, data.buildingId, data.enabled);
+        }
+
+        private static PingCommand ParsePingCommand(string payload, int playerId)
+        {
+            var data = JsonUtility.FromJson<PingPayload>(payload);
+            return new PingCommand(playerId, data.worldX, data.worldZ, (PingType)data.pingType);
+        }
+
+        private static AiIntentCommand ParseAiIntentCommand(string payload, int playerId)
+        {
+            var data = JsonUtility.FromJson<AiIntentPayload>(payload);
+            return new AiIntentCommand(
+                playerId,
+                data.issuerPlayerId,
+                (AiIntentKind)data.intentKind,
+                data.paramA, data.paramB, data.paramC, data.paramD,
+                data.durationTicks,
+                data.triggerType, data.triggerMagnitude);
+        }
+
+        private static AiChatCommand ParseAiChatCommand(string payload, int playerId)
+        {
+            var data = JsonUtility.FromJson<AiChatPayload>(payload);
+            return new AiChatCommand(playerId, (AiChatLineType)data.lineType, data.paramA);
         }
 
         private static UpgradeTowerCommand ParseUpgradeTowerCommand(string payload, int playerId)
@@ -673,6 +709,67 @@ namespace OpenEmpires
             {
                 buildingId = cmd.BuildingId;
                 enabled = cmd.Enabled;
+            }
+        }
+
+        [Serializable]
+        private class PingPayload
+        {
+            public int worldX;
+            public int worldZ;
+            public int pingType;
+
+            public PingPayload() { }
+
+            public PingPayload(PingCommand cmd)
+            {
+                worldX = cmd.WorldX;
+                worldZ = cmd.WorldZ;
+                pingType = cmd.PingTypeValue;
+            }
+        }
+
+        [Serializable]
+        private class AiChatPayload
+        {
+            public int lineType;
+            public int paramA;
+
+            public AiChatPayload() { }
+
+            public AiChatPayload(AiChatCommand cmd)
+            {
+                lineType = cmd.LineType;
+                paramA = cmd.ParamA;
+            }
+        }
+
+        [Serializable]
+        private class AiIntentPayload
+        {
+            public int issuerPlayerId;
+            public int intentKind;
+            public int paramA;
+            public int paramB;
+            public int paramC;
+            public int paramD;
+            public int durationTicks;
+            public int triggerType;
+            public int triggerMagnitude;
+
+            public AiIntentPayload() { }
+
+            public AiIntentPayload(AiIntentCommand cmd)
+            {
+                issuerPlayerId = cmd.IssuerPlayerId;
+                intentKind = cmd.IntentKind;
+                paramA = cmd.ParamA;
+                paramB = cmd.ParamB;
+                paramC = cmd.ParamC;
+                paramD = cmd.ParamD;
+                durationTicks = cmd.DurationTicks;
+                triggerType = cmd.TriggerType;
+                triggerMagnitude = cmd.TriggerMagnitude;
             }
         }
 
@@ -1117,6 +1214,26 @@ namespace OpenEmpires
                             w.Write(toggleAuto.BuildingId);
                             w.Write(toggleAuto.Enabled);
                             break;
+                        case PingCommand ping:
+                            w.Write(ping.WorldX);
+                            w.Write(ping.WorldZ);
+                            w.Write(ping.PingTypeValue);
+                            break;
+                        case AiChatCommand aiChat:
+                            w.Write(aiChat.LineType);
+                            w.Write(aiChat.ParamA);
+                            break;
+                        case AiIntentCommand aiIntent:
+                            w.Write(aiIntent.IssuerPlayerId);
+                            w.Write(aiIntent.IntentKind);
+                            w.Write(aiIntent.ParamA);
+                            w.Write(aiIntent.ParamB);
+                            w.Write(aiIntent.ParamC);
+                            w.Write(aiIntent.ParamD);
+                            w.Write(aiIntent.DurationTicks);
+                            w.Write(aiIntent.TriggerType);
+                            w.Write(aiIntent.TriggerMagnitude);
+                            break;
                         case UpgradeTowerCommand upgradeTower:
                             w.Write(upgradeTower.BuildingId);
                             w.Write((int)upgradeTower.UpgradeType);
@@ -1329,6 +1446,32 @@ namespace OpenEmpires
                             int autoBuildingId = r.ReadInt32();
                             bool autoEnabled = r.ReadBoolean();
                             commands.Add(new ToggleAutoProduceCommand(playerId, autoBuildingId, autoEnabled));
+                            break;
+                        case CommandType.Ping:
+                            int pingX = r.ReadInt32();
+                            int pingZ = r.ReadInt32();
+                            int pingT = r.ReadInt32();
+                            commands.Add(new PingCommand(playerId, pingX, pingZ, (PingType)pingT));
+                            break;
+                        case CommandType.AiChat:
+                            int aiChatType = r.ReadInt32();
+                            int aiChatParam = r.ReadInt32();
+                            commands.Add(new AiChatCommand(playerId, (AiChatLineType)aiChatType, aiChatParam));
+                            break;
+                        case CommandType.AiIntent:
+                            int aiIntentIssuer = r.ReadInt32();
+                            int aiIntentKind = r.ReadInt32();
+                            int aiIntentA = r.ReadInt32();
+                            int aiIntentB = r.ReadInt32();
+                            int aiIntentC = r.ReadInt32();
+                            int aiIntentD = r.ReadInt32();
+                            int aiIntentDuration = r.ReadInt32();
+                            int aiIntentTriggerType = r.ReadInt32();
+                            int aiIntentTriggerMag = r.ReadInt32();
+                            commands.Add(new AiIntentCommand(playerId, aiIntentIssuer,
+                                (AiIntentKind)aiIntentKind, aiIntentA, aiIntentB, aiIntentC, aiIntentD,
+                                aiIntentDuration,
+                                aiIntentTriggerType, aiIntentTriggerMag));
                             break;
                         case CommandType.UpgradeTower:
                             int upgradeBuildingId = r.ReadInt32();

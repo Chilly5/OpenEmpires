@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 using TMPro;
 using UnityEngine;
@@ -49,10 +50,15 @@ namespace OpenEmpires
         public int LocalPlayerId { get; set; }
         public string LocalPlayerName { get; set; } = "Player";
 
+        private LlmTeammateController llmController;
+        private LlmAiInitiator llmInitiator;
+
         private void Awake()
         {
             BuildUI();
             canvasGO.SetActive(false);
+            llmController = GetComponent<LlmTeammateController>() ?? gameObject.AddComponent<LlmTeammateController>();
+            llmInitiator = GetComponent<LlmAiInitiator>() ?? gameObject.AddComponent<LlmAiInitiator>();
         }
 
         private void Start()
@@ -71,6 +77,7 @@ namespace OpenEmpires
             sim.OnPlayerSurrendered += OnPlayerSurrendered;
             sim.OnSurrenderVoteUpdated += OnSurrenderVoteUpdated;
             sim.OnPlayerAgedUp += OnPlayerAgedUp;
+            sim.OnAiChatEmitted += OnAiChatEmitted;
 
             gameStarted = true;
             canvasGO.SetActive(true);
@@ -91,6 +98,7 @@ namespace OpenEmpires
                 sim.OnPlayerSurrendered -= OnPlayerSurrendered;
                 sim.OnSurrenderVoteUpdated -= OnSurrenderVoteUpdated;
                 sim.OnPlayerAgedUp -= OnPlayerAgedUp;
+                sim.OnAiChatEmitted -= OnAiChatEmitted;
             }
         }
 
@@ -287,6 +295,17 @@ namespace OpenEmpires
 
             if (!string.IsNullOrEmpty(trimmed))
             {
+                // Team-channel free-form chat with the AI teammate. The controller runs the
+                // LLM locally (non-deterministic) and produces deterministic intent commands
+                // that all clients apply identically. Falls through to the legacy keyword
+                // path when the LLM is unavailable (no API key, throttled, or no AI ally).
+                bool llmHandled = false;
+                if (currentChannel == ChatChannel.Team && llmController != null)
+                    llmHandled = llmController.OnPlayerMessage(trimmed, LocalPlayerId);
+
+                if (currentChannel == ChatChannel.Team && !llmHandled)
+                    TryEmitChatPing(trimmed);
+
                 var mm = MatchmakingManager.Instance;
                 if (mm != null && mm.IsInMatch)
                 {
@@ -319,6 +338,90 @@ namespace OpenEmpires
             inputBarGO.SetActive(false);
         }
 
+        // Keyword-driven ping emission. Triggered by team-chat messages. The position
+        // depends on the intent: Help/Defend reference the player's own TC; Attack
+        // references the first known enemy TC. Position-resolution must be deterministic.
+        private void TryEmitChatPing(string text)
+        {
+            var sim = GameBootstrapper.Instance?.Simulation;
+            if (sim == null || sim.IsMatchOver) return;
+
+            string lower = text.ToLower();
+            PingType? intent = null;
+            if (lower.Contains("attack")) intent = PingType.Attack;
+            else if (lower.Contains("help")) intent = PingType.Help;
+            else if (lower.Contains("defend")) intent = PingType.Defend;
+            if (intent == null) return;
+
+            FixedVector3? pos = ResolveChatPingPosition(sim, intent.Value);
+            if (!pos.HasValue) return;
+            sim.CommandBuffer.EnqueueCommand(
+                new PingCommand(LocalPlayerId, pos.Value.x.Raw, pos.Value.z.Raw, intent.Value));
+        }
+
+        private FixedVector3? ResolveChatPingPosition(GameSimulation sim, PingType intent)
+        {
+            if (intent == PingType.Attack)
+            {
+                // Pick the first enemy TC we know of (deterministic order via sorted player IDs).
+                var keys = new List<int>(sim.FirstTownCenterIds.Keys);
+                keys.Sort();
+                for (int i = 0; i < keys.Count; i++)
+                {
+                    int pid = keys[i];
+                    if (pid == LocalPlayerId) continue;
+                    if (sim.AreAllies(LocalPlayerId, pid)) continue;
+                    var tc = sim.BuildingRegistry.GetBuilding(sim.FirstTownCenterIds[pid]);
+                    if (tc != null && !tc.IsDestroyed) return tc.SimPosition;
+                }
+                return null;
+            }
+            // Help / Defend → our own TC.
+            if (sim.FirstTownCenterIds.TryGetValue(LocalPlayerId, out int ownTcId))
+            {
+                var ownTc = sim.BuildingRegistry.GetBuilding(ownTcId);
+                if (ownTc != null && !ownTc.IsDestroyed) return ownTc.SimPosition;
+            }
+            return null;
+        }
+
+        // Render an AI-emitted chat line. The line type → string template happens here
+        // (locally on every client), keeping determinism on the sim/command side while
+        // the text itself stays cheap to broadcast.
+        private void OnAiChatEmitted(int playerId, AiChatLineType lineType, int paramA)
+        {
+            string text = lineType switch
+            {
+                AiChatLineType.UnderAttack    => "My base is under attack!",
+                AiChatLineType.NeedHelp       => "I need help!",
+                AiChatLineType.AgingUp        => $"Aging up to {AgeRoman(paramA)}.",
+                AiChatLineType.ArmyMoving     => "Army assembled, moving out!",
+                AiChatLineType.BaseLost       => "I've lost my base...",
+                AiChatLineType.Acknowledge    => "Got it.",
+                AiChatLineType.OnTheWayAttack => "On my way to attack!",
+                AiChatLineType.OnTheWayDefend => "On my way to defend!",
+                AiChatLineType.Acknowledging  => "Got it, on it.",
+                _ => string.Empty,
+            };
+            if (string.IsNullOrEmpty(text)) return;
+
+            string name = $"AI Player {playerId}";
+            Color color = playerId >= 0 && playerId < GameSetup.PlayerColors.Length
+                ? GameSetup.PlayerColors[playerId]
+                : Color.white;
+            ChatManager.AddMessage(new ChatMessage
+            {
+                SenderName = name,
+                SenderColor = color,
+                Text = text,
+                Channel = ChatChannel.Team,
+                IsSystem = false,
+                SenderPlayerId = playerId,
+            });
+        }
+
+        private static string AgeRoman(int age) => age switch { 2 => "II", 3 => "III", _ => age.ToString() };
+
         private void ToggleChannel()
         {
             currentChannel = currentChannel == ChatChannel.All ? ChatChannel.Team : ChatChannel.All;
@@ -329,6 +432,7 @@ namespace OpenEmpires
         {
             LocalPlayerId = playerId;
             LocalPlayerName = playerName;
+            if (llmInitiator != null) llmInitiator.LocalPlayerId = playerId;
         }
 
         private void OnMessageReceived(ChatMessage msg)

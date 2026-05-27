@@ -130,6 +130,9 @@ namespace OpenEmpires
             // We filter to local-player-owned entities and let TryPlaceAttackPing dedupe by proximity.
             sim.OnEntityDamaged += HandleEntityDamaged;
 
+            // Networked user pings: render any ping issued by the local player OR any ally.
+            sim.OnPingReceived += HandlePingReceived;
+
             BuildCanvas();
         }
 
@@ -138,6 +141,38 @@ namespace OpenEmpires
             int localPid = selectionManager != null ? selectionManager.LocalPlayerId : 0;
             if (ownerPlayerId != localPid) return;
             TryPlaceAttackPing(wx, wz);
+        }
+
+        private void HandlePingReceived(int playerId, float wx, float wz, PingType type)
+        {
+            var sim = GameBootstrapper.Instance?.Simulation;
+            if (sim == null || selectionManager == null) return;
+            int localPid = selectionManager.LocalPlayerId;
+            // Show local player's own pings and pings from any ally.
+            if (playerId != localPid && !sim.AreAllies(localPid, playerId)) return;
+            RenderIncomingPing(wx, wz, type);
+        }
+
+        private void RenderIncomingPing(float wx, float wz, PingType type)
+        {
+            Color color = type switch
+            {
+                PingType.Attack => new Color(1f, 0.2f, 0.2f, 1f),    // red
+                PingType.Defend => new Color(0.3f, 0.6f, 1f, 1f),    // blue
+                PingType.Help   => new Color(1f, 0.6f, 0.1f, 1f),    // orange
+                _               => UserPingColor,                     // yellow (Attention)
+            };
+            activePings.Add(new MinimapPing
+            {
+                worldX = wx,
+                worldZ = wz,
+                timeRemaining = UserPingDuration,
+                totalDuration = UserPingDuration,
+                color = color,
+                style = PingStyle.ExpandingWave,
+            });
+            WorldPingMarker.Spawn(new Vector3(wx, 0f, wz));
+            SFXManager.Instance?.PlayUI(SFXType.NotifyPing, 0.7f);
         }
 
         private void GenerateMapTexture(MapData mapData)
@@ -1023,17 +1058,16 @@ namespace OpenEmpires
                 recentPingTimes.Dequeue();
             recentPingTimes.Enqueue(now);
 
-            activePings.Add(new MinimapPing
+            // Dispatch as a deterministic networked command. Sim will fire OnPingReceived
+            // on every client, and HandlePingReceived renders it locally for self + allies.
+            var sim = GameBootstrapper.Instance?.Simulation;
+            if (sim != null && selectionManager != null)
             {
-                worldX = worldPos.x,
-                worldZ = worldPos.z,
-                timeRemaining = UserPingDuration,
-                totalDuration = UserPingDuration,
-                color = UserPingColor,
-                style = PingStyle.ExpandingWave,
-            });
-            WorldPingMarker.Spawn(worldPos);
-            SFXManager.Instance?.PlayUI(SFXType.NotifyPing, 0.7f);
+                int pid = selectionManager.LocalPlayerId;
+                int wxRaw = Fixed32.FromFloat(worldPos.x).Raw;
+                int wzRaw = Fixed32.FromFloat(worldPos.z).Raw;
+                sim.CommandBuffer.EnqueueCommand(new PingCommand(pid, wxRaw, wzRaw, PingType.Attention));
+            }
 
             // Fourth (or more) ping within the window → start the cooldown.
             if (recentPingTimes.Count >= SpamThreshold)
@@ -1356,7 +1390,11 @@ namespace OpenEmpires
                 notifyPingAction = null;
             }
             var sim = GameBootstrapper.Instance?.Simulation;
-            if (sim != null) sim.OnEntityDamaged -= HandleEntityDamaged;
+            if (sim != null)
+            {
+                sim.OnEntityDamaged -= HandleEntityDamaged;
+                sim.OnPingReceived -= HandlePingReceived;
+            }
         }
     }
 }
