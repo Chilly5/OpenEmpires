@@ -2247,11 +2247,13 @@ namespace OpenEmpires
             if (isPlacingWall)
             {
                 CancelWallPlacement();
+                UnitInfoUI.DeactivateBuildHotkeys();
                 return;
             }
             if (isPlacingBuilding)
             {
                 CancelBuildPlacement();
+                UnitInfoUI.DeactivateBuildHotkeys();
                 return;
             }
             if (attackMoveMode)
@@ -2850,6 +2852,10 @@ namespace OpenEmpires
             if (SettingsMenuUI.IsRebinding) return;
             if (UnitInfoUI.BuildHotkeysActive)
             {
+                // Build submenu is open. If a ghost is being placed (the submenu now stays
+                // open while cycling buildings), cancel it too, then close the submenu.
+                if (isPlacingWall) CancelWallPlacement();
+                else if (isPlacingBuilding) CancelBuildPlacement();
                 UnitInfoUI.DeactivateBuildHotkeys();
                 return;
             }
