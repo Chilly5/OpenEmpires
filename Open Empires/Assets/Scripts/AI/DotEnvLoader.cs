@@ -33,11 +33,12 @@ namespace OpenEmpires
             if (initialized) return;
             initialized = true;
 
-            string root;
-            try { root = Path.GetFullPath(Path.Combine(Application.dataPath, "..")); }
-            catch { return; }
-            string path = Path.Combine(root, ".env");
-            if (!File.Exists(path)) return;
+            string path = FindEnvFile();
+            if (path == null)
+            {
+                Debug.Log("[DotEnv] No .env found; LLM teammate features disabled unless GEMINI_API_KEY is set in env vars.");
+                return;
+            }
 
             values = new Dictionary<string, string>();
             try
@@ -55,11 +56,44 @@ namespace OpenEmpires
                         v = v.Substring(1, v.Length - 2);
                     values[k] = v;
                 }
+                Debug.Log($"[DotEnv] Loaded .env from {path}");
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"[DotEnvLoader] Failed to read .env: {e.Message}");
+                Debug.LogWarning($"[DotEnvLoader] Failed to read .env at {path}: {e.Message}");
             }
+        }
+
+        // Walks several candidate roots in priority order. The Unity-Editor-default
+        // (Application.dataPath/..) is only the Unity project folder, which can be one
+        // (or more) levels INSIDE the git repo when the Unity project lives in a subdir.
+        private static string FindEnvFile()
+        {
+            string dataPath;
+            try { dataPath = Application.dataPath; }
+            catch { return null; }
+            if (string.IsNullOrEmpty(dataPath)) return null;
+
+            // Walk Unity-relative roots first, then the build executable directory.
+            string[] candidates =
+            {
+                SafeCombine(dataPath, "..", ".env"),
+                SafeCombine(dataPath, "..", "..", ".env"),
+                SafeCombine(dataPath, "..", "..", "..", ".env"),
+                SafeCombine(dataPath, ".env"),
+                SafeCombine(AppDomain.CurrentDomain.BaseDirectory, ".env"),
+            };
+            for (int i = 0; i < candidates.Length; i++)
+            {
+                if (candidates[i] != null && File.Exists(candidates[i])) return candidates[i];
+            }
+            return null;
+        }
+
+        private static string SafeCombine(params string[] parts)
+        {
+            try { return Path.GetFullPath(Path.Combine(parts)); }
+            catch { return null; }
         }
     }
 }

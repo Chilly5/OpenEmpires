@@ -21,6 +21,11 @@ namespace OpenEmpires
         private float lastCallTimeRealtime = -100f;
         private bool callInFlight;
 
+        // One-shot diagnostic flags so we don't spam logs/chat on every keystroke.
+        private bool warnedNoApiKey;
+        private bool warnedNoAi;
+        private bool warnedSimMissing;
+
         // Returns true if this controller took ownership of the message (i.e. fired
         // an LLM call). Caller should skip the legacy keyword→ping path when true.
         public bool OnPlayerMessage(string text, int issuerPlayerId)
@@ -28,13 +33,25 @@ namespace OpenEmpires
             if (string.IsNullOrEmpty(text)) return false;
 
             string apiKey = DotEnvLoader.Get("GEMINI_API_KEY");
-            if (string.IsNullOrEmpty(apiKey)) return false;
+            if (string.IsNullOrEmpty(apiKey))
+            {
+                WarnOnce(ref warnedNoApiKey, "AI teammate unavailable: GEMINI_API_KEY not found in .env or env var.");
+                return false;
+            }
 
             var sim = GameBootstrapper.Instance?.Simulation;
-            if (sim == null || sim.IsMatchOver) return false;
+            if (sim == null || sim.IsMatchOver)
+            {
+                WarnOnce(ref warnedSimMissing, "AI teammate unavailable: game simulation not active.");
+                return false;
+            }
 
             int aiPlayerId = FindAllyAi(sim, issuerPlayerId);
-            if (aiPlayerId < 0) return false;
+            if (aiPlayerId < 0)
+            {
+                WarnOnce(ref warnedNoAi, "AI teammate unavailable: no ally AI on your team.");
+                return false;
+            }
 
             // Throttle: excess messages fall through to the legacy keyword path so the
             // player still gets *some* response.
@@ -121,6 +138,24 @@ namespace OpenEmpires
                 Channel = ChatChannel.Team,
                 IsSystem = isSystem,
                 SenderPlayerId = aiPlayerId,
+            });
+        }
+
+        // Logs once per session AND posts a one-time system chat line so the player
+        // sees *why* the AI isn't responding instead of just silence.
+        private void WarnOnce(ref bool flag, string message)
+        {
+            if (flag) return;
+            flag = true;
+            Debug.LogWarning("[LlmTeammate] " + message);
+            ChatManager.AddMessage(new ChatMessage
+            {
+                SenderName = "System",
+                SenderColor = Color.gray,
+                Text = message,
+                Channel = ChatChannel.Team,
+                IsSystem = true,
+                SenderPlayerId = -1,
             });
         }
 

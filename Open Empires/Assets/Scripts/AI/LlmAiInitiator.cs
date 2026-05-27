@@ -35,6 +35,7 @@ namespace OpenEmpires
         private readonly Dictionary<int, AiSnapshot> snapshots = new Dictionary<int, AiSnapshot>();
         private float nextPollRealtime;
         private bool callInFlight;
+        private bool warnedNoApiKey;
 
         private void Update()
         {
@@ -50,7 +51,15 @@ namespace OpenEmpires
             var sim = GameBootstrapper.Instance?.Simulation;
             if (sim == null || sim.IsMatchOver) return;
             string apiKey = DotEnvLoader.Get("GEMINI_API_KEY");
-            if (string.IsNullOrEmpty(apiKey)) return;
+            if (string.IsNullOrEmpty(apiKey))
+            {
+                if (!warnedNoApiKey)
+                {
+                    warnedNoApiKey = true;
+                    Debug.LogWarning("[LlmAiInitiator] AI-initiated chat disabled: GEMINI_API_KEY not found.");
+                }
+                return;
+            }
 
             foreach (int aiPid in sim.AiPlayerIds)
             {

@@ -13,7 +13,7 @@ namespace OpenEmpires
     public static class GeminiClient
     {
         private const string Endpoint =
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent";
         private const float TimeoutSeconds = 8f;
 
         public struct Turn
