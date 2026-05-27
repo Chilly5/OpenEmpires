@@ -39,19 +39,35 @@ namespace OpenEmpires
     {
         public static WallSegmentKind Classify(WallNeighborMask m)
         {
-            bool anyEW   = (m & WallNeighborMask.CardinalEW)   != 0;
-            bool anyNS   = (m & WallNeighborMask.CardinalNS)   != 0;
-            bool anyNESW = (m & WallNeighborMask.DiagonalNESW) != 0;
-            bool anyNWSE = (m & WallNeighborMask.DiagonalNWSE) != 0;
+            bool hasN  = (m & WallNeighborMask.N)  != 0;
+            bool hasS  = (m & WallNeighborMask.S)  != 0;
+            bool hasE  = (m & WallNeighborMask.E)  != 0;
+            bool hasW  = (m & WallNeighborMask.W)  != 0;
+            bool hasNE = (m & WallNeighborMask.NE) != 0;
+            bool hasNW = (m & WallNeighborMask.NW) != 0;
+            bool hasSE = (m & WallNeighborMask.SE) != 0;
+            bool hasSW = (m & WallNeighborMask.SW) != 0;
+
+            int cardCount = (hasN ? 1 : 0) + (hasS ? 1 : 0) + (hasE ? 1 : 0) + (hasW ? 1 : 0);
+            int diagCount = (hasNE ? 1 : 0) + (hasNW ? 1 : 0) + (hasSE ? 1 : 0) + (hasSW ? 1 : 0);
+
+            bool anyEW   = hasE || hasW;
+            bool anyNS   = hasN || hasS;
+            bool anyNESW = hasNE || hasSW;
+            bool anyNWSE = hasNW || hasSE;
             bool anyCard = anyEW || anyNS;
 
-            // True junctions: cardinals on both axes (L / T / cross), or both diagonal
-            // axes present at once. Cardinal + an incidental diagonal does NOT count —
-            // along a straight L turn, the tiles adjacent to the corner naturally have
-            // a diagonal neighbor (the wall on the other leg), and forcing them to
-            // Junction produces a chain of false towers.
+            // True junctions:
+            //   1) cardinals on both axes  (L / T / cross)
+            //   2) both diagonal axes present with no cardinal at all (diagonal X-cross)
+            //   3) cardinal-to-diagonal BEND: exactly one cardinal + any diagonal.
+            //      The cardinal-having tile becomes the post; the adjacent diagonal-only
+            //      tile stays as a clean diagonal-run sprite. Restricting to cardCount==1
+            //      avoids re-introducing the L-corner false-tower chain (those incidental
+            //      tiles have 2 cardinals on the same axis).
             if (anyEW && anyNS) return WallSegmentKind.Junction;
             if (anyNESW && anyNWSE && !anyCard) return WallSegmentKind.Junction;
+            if (cardCount == 1 && diagCount >= 1) return WallSegmentKind.Junction;
 
             // Cardinals dominate over incidental diagonals.
             if (anyEW) return WallSegmentKind.CardinalEW;
