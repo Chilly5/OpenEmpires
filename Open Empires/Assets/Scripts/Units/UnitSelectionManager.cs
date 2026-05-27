@@ -738,13 +738,29 @@ namespace OpenEmpires
 
                         var tiles = WallLineHelper.ComputeWallLine(wallStartTileX, wallStartTileZ, endTileX, endTileZ);
 
+                        // Per-segment cost (only valid/buildable tiles get billed in the sim).
+                        int woodPerSegment = sim.GetBuildingWoodCost(wallPlacementType);
+                        int stonePerSegment = sim.GetBuildingStoneCost(wallPlacementType);
+                        var wallResources = sim.ResourceManager.GetPlayerResources(LocalPlayerId);
+                        bool wallGodMode = sim.IsGodModeActive(LocalPlayerId);
+                        int validSoFar = 0;
+
                         // Show ghost quads for each tile
                         for (int i = 0; i < tiles.Count; i++)
                         {
                             var ghost = GetOrCreateWallGhost(i);
                             float wy = sim.MapData.SampleHeight(tiles[i].x + 0.5f, tiles[i].y + 0.5f) * sim.Config.TerrainHeightScale + 0.05f;
                             ghost.transform.position = new Vector3(tiles[i].x + 0.5f, wy, tiles[i].y + 0.5f);
-                            bool valid = sim.MapData.IsBuildable(tiles[i].x, tiles[i].y);
+                            bool buildable = sim.MapData.IsBuildable(tiles[i].x, tiles[i].y);
+                            bool affordable = true;
+                            if (buildable && !wallGodMode)
+                            {
+                                validSoFar++;
+                                long cumWood = (long)woodPerSegment * validSoFar;
+                                long cumStone = (long)stonePerSegment * validSoFar;
+                                affordable = wallResources.Wood >= cumWood && wallResources.Stone >= cumStone;
+                            }
+                            bool valid = buildable && affordable;
                             ghost.GetComponent<Renderer>().sharedMaterial = valid ? ghostValidMaterial : ghostInvalidMaterial;
                             ghost.SetActive(true);
                         }
@@ -4280,7 +4296,8 @@ namespace OpenEmpires
                         int totalWood = validCount * woodPerSeg;
                         int totalStone = validCount * stonePerSeg;
                         var resources = sim.ResourceManager.GetPlayerResources(LocalPlayerId);
-                        if (resources.Wood >= totalWood && resources.Stone >= totalStone)
+                        bool godModeWall = sim.IsGodModeActive(LocalPlayerId);
+                        if (godModeWall || (resources.Wood >= totalWood && resources.Stone >= totalStone))
                         {
                             var wallCmd = new PlaceWallCommand(LocalPlayerId,
                                 wallStartTileX, wallStartTileZ, endTileX, endTileZ, wallVillagerIds,
@@ -4337,6 +4354,9 @@ namespace OpenEmpires
 
         private bool CanAffordBuilding(GameSimulation sim)
         {
+            // God mode ignores resources entirely (sim also bypasses cost, but this UI
+            // gate would otherwise block the click before the command is dispatched).
+            if (sim.IsGodModeActive(LocalPlayerId)) return true;
             if (placementBuildingType == BuildingType.Landmark)
             {
                 var def = LandmarkDefinitions.Get(placementLandmarkId);
