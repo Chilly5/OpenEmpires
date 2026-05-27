@@ -270,7 +270,7 @@ namespace OpenEmpires
                 wallGeometry = transform.Find("WallGeometry");
             }
 
-            if (data.Type == BuildingType.Wall)
+            if (UsesSpriteWallBody(data.Type))
             {
                 EnsurePalisadeSprite();
                 HideProceduralWallBody();
@@ -908,7 +908,7 @@ namespace OpenEmpires
             {
                 // Show wall geometry container
                 if (wallGeometry != null) wallGeometry.gameObject.SetActive(true);
-                if (palisadeSpriteQuad != null && BuildingType == BuildingType.Wall)
+                if (palisadeSpriteQuad != null && UsesSpriteWallBody(BuildingType))
                     palisadeSpriteQuad.SetActive(true);
 
                 // Hide gate
@@ -1073,6 +1073,14 @@ namespace OpenEmpires
                 || t == BuildingType.WoodGate;
         }
 
+        // Wall types whose visual is a billboard sprite (rather than the procedural cubes).
+        // These types skip the procedural diagonal connectors and use ApplyPalisadeSprite
+        // (despite the legacy name) to render their wall art via WallSpriteRegistry.
+        private static bool UsesSpriteWallBody(BuildingType t)
+        {
+            return t == BuildingType.Wall || t == BuildingType.StoneWall;
+        }
+
         private static WallNeighborMask SampleWallNeighbors(MapData map, BuildingRegistry reg, int tx, int tz)
         {
             WallNeighborMask m = WallNeighborMask.None;
@@ -1153,8 +1161,10 @@ namespace OpenEmpires
             if (mNxPz != null) mNxPz.gameObject.SetActive(!(hasW || hasN || hasNW));
             if (mPxPz != null) mPxPz.gameObject.SetActive(!(hasE || hasN || hasNE));
 
-            // Procedural diagonal connectors — stone walls only. Palisade uses dedicated diagonal sprites.
-            if (BuildingType != BuildingType.Wall)
+            // Procedural diagonal connectors — only for wall types that still use the
+            // procedural cube body. Sprite-bodied walls (palisade, stonewall) use
+            // dedicated diagonal sprites from the registry instead.
+            if (!UsesSpriteWallBody(BuildingType))
             {
                 Material wallMat = bodyRenderers.Length > 0 && bodyRenderers[0] != null
                     ? bodyRenderers[0].sharedMaterial : null;
@@ -1202,9 +1212,9 @@ namespace OpenEmpires
             }
 
             // Palisade sprite — registry lookup. If this wall is currently a gate, the
-            // palisade sprite is hidden; refresh the gate sprite instead so it picks up
+            // sprite is hidden; refresh the gate sprite instead so it picks up
             // the orientation change.
-            if (BuildingType == BuildingType.Wall)
+            if (UsesSpriteWallBody(BuildingType))
             {
                 if (buildingData != null && buildingData.IsGate)
                 {
