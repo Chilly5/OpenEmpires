@@ -3452,45 +3452,24 @@ namespace OpenEmpires
             var col = ghostBuilding.GetComponent<Collider>();
             if (col != null) Object.Destroy(col);
 
-            // Create materials
+            // Create materials. The custom GhostQuad shader bakes in `ZTest Always`, so
+            // the ghost is guaranteed to render on top of terrain even on slopes/bumps
+            // where corners of the quad would otherwise clip below the ground mesh.
+            var ghostShader = Shader.Find("OpenEmpires/GhostQuad");
             if (ghostValidMaterial == null)
             {
-                ghostValidMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-                ghostValidMaterial.color = new Color(0f, 1f, 0f, 0.35f);
-                ghostValidMaterial.SetFloat("_Surface", 1);
-                ghostValidMaterial.SetOverrideTag("RenderType", "Transparent");
-                ghostValidMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-                ghostValidMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                ghostValidMaterial.SetInt("_ZWrite", 0);
-                ghostValidMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always); // Always — render on top of terrain
-                ghostValidMaterial.EnableKeyword("_ALPHABLEND_ON");
-                ghostValidMaterial.renderQueue = 3000;
+                ghostValidMaterial = new Material(ghostShader);
+                ghostValidMaterial.SetColor("_BaseColor", new Color(0f, 1f, 0f, 0.35f));
             }
             if (ghostInvalidMaterial == null)
             {
-                ghostInvalidMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-                ghostInvalidMaterial.color = new Color(1f, 0f, 0f, 0.35f);
-                ghostInvalidMaterial.SetFloat("_Surface", 1);
-                ghostInvalidMaterial.SetOverrideTag("RenderType", "Transparent");
-                ghostInvalidMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-                ghostInvalidMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                ghostInvalidMaterial.SetInt("_ZWrite", 0);
-                ghostInvalidMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
-                ghostInvalidMaterial.EnableKeyword("_ALPHABLEND_ON");
-                ghostInvalidMaterial.renderQueue = 3000;
+                ghostInvalidMaterial = new Material(ghostShader);
+                ghostInvalidMaterial.SetColor("_BaseColor", new Color(1f, 0f, 0f, 0.35f));
             }
             if (ghostInfluenceMaterial == null)
             {
-                ghostInfluenceMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-                ghostInfluenceMaterial.color = new Color(1f, 0.85f, 0f, 0.35f);
-                ghostInfluenceMaterial.SetFloat("_Surface", 1);
-                ghostInfluenceMaterial.SetOverrideTag("RenderType", "Transparent");
-                ghostInfluenceMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-                ghostInfluenceMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                ghostInfluenceMaterial.SetInt("_ZWrite", 0);
-                ghostInfluenceMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
-                ghostInfluenceMaterial.EnableKeyword("_ALPHABLEND_ON");
-                ghostInfluenceMaterial.renderQueue = 3000;
+                ghostInfluenceMaterial = new Material(ghostShader);
+                ghostInfluenceMaterial.SetColor("_BaseColor", new Color(1f, 0.85f, 0f, 0.35f));
             }
 
             ghostBuilding.GetComponent<Renderer>().sharedMaterial = ghostValidMaterial;
