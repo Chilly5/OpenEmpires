@@ -738,13 +738,29 @@ namespace OpenEmpires
 
                         var tiles = WallLineHelper.ComputeWallLine(wallStartTileX, wallStartTileZ, endTileX, endTileZ);
 
+                        // Per-segment cost (only valid/buildable tiles get billed in the sim).
+                        int woodPerSegment = sim.GetBuildingWoodCost(wallPlacementType);
+                        int stonePerSegment = sim.GetBuildingStoneCost(wallPlacementType);
+                        var wallResources = sim.ResourceManager.GetPlayerResources(LocalPlayerId);
+                        bool wallGodMode = sim.IsGodModeActive(LocalPlayerId);
+                        int validSoFar = 0;
+
                         // Show ghost quads for each tile
                         for (int i = 0; i < tiles.Count; i++)
                         {
                             var ghost = GetOrCreateWallGhost(i);
                             float wy = sim.MapData.SampleHeight(tiles[i].x + 0.5f, tiles[i].y + 0.5f) * sim.Config.TerrainHeightScale + 0.05f;
                             ghost.transform.position = new Vector3(tiles[i].x + 0.5f, wy, tiles[i].y + 0.5f);
-                            bool valid = sim.MapData.IsBuildable(tiles[i].x, tiles[i].y);
+                            bool buildable = sim.MapData.IsBuildable(tiles[i].x, tiles[i].y);
+                            bool affordable = true;
+                            if (buildable && !wallGodMode)
+                            {
+                                validSoFar++;
+                                long cumWood = (long)woodPerSegment * validSoFar;
+                                long cumStone = (long)stonePerSegment * validSoFar;
+                                affordable = wallResources.Wood >= cumWood && wallResources.Stone >= cumStone;
+                            }
+                            bool valid = buildable && affordable;
                             ghost.GetComponent<Renderer>().sharedMaterial = valid ? ghostValidMaterial : ghostInvalidMaterial;
                             ghost.SetActive(true);
                         }
@@ -3452,45 +3468,24 @@ namespace OpenEmpires
             var col = ghostBuilding.GetComponent<Collider>();
             if (col != null) Object.Destroy(col);
 
-            // Create materials
+            // Create materials. The custom GhostQuad shader bakes in `ZTest Always`, so
+            // the ghost is guaranteed to render on top of terrain even on slopes/bumps
+            // where corners of the quad would otherwise clip below the ground mesh.
+            var ghostShader = Shader.Find("OpenEmpires/GhostQuad");
             if (ghostValidMaterial == null)
             {
-                ghostValidMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-                ghostValidMaterial.color = new Color(0f, 1f, 0f, 0.35f);
-                ghostValidMaterial.SetFloat("_Surface", 1);
-                ghostValidMaterial.SetOverrideTag("RenderType", "Transparent");
-                ghostValidMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-                ghostValidMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                ghostValidMaterial.SetInt("_ZWrite", 0);
-                ghostValidMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always); // Always — render on top of terrain
-                ghostValidMaterial.EnableKeyword("_ALPHABLEND_ON");
-                ghostValidMaterial.renderQueue = 3000;
+                ghostValidMaterial = new Material(ghostShader);
+                ghostValidMaterial.SetColor("_BaseColor", new Color(0f, 1f, 0f, 0.35f));
             }
             if (ghostInvalidMaterial == null)
             {
-                ghostInvalidMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-                ghostInvalidMaterial.color = new Color(1f, 0f, 0f, 0.35f);
-                ghostInvalidMaterial.SetFloat("_Surface", 1);
-                ghostInvalidMaterial.SetOverrideTag("RenderType", "Transparent");
-                ghostInvalidMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-                ghostInvalidMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                ghostInvalidMaterial.SetInt("_ZWrite", 0);
-                ghostInvalidMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
-                ghostInvalidMaterial.EnableKeyword("_ALPHABLEND_ON");
-                ghostInvalidMaterial.renderQueue = 3000;
+                ghostInvalidMaterial = new Material(ghostShader);
+                ghostInvalidMaterial.SetColor("_BaseColor", new Color(1f, 0f, 0f, 0.35f));
             }
             if (ghostInfluenceMaterial == null)
             {
-                ghostInfluenceMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-                ghostInfluenceMaterial.color = new Color(1f, 0.85f, 0f, 0.35f);
-                ghostInfluenceMaterial.SetFloat("_Surface", 1);
-                ghostInfluenceMaterial.SetOverrideTag("RenderType", "Transparent");
-                ghostInfluenceMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-                ghostInfluenceMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                ghostInfluenceMaterial.SetInt("_ZWrite", 0);
-                ghostInfluenceMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
-                ghostInfluenceMaterial.EnableKeyword("_ALPHABLEND_ON");
-                ghostInfluenceMaterial.renderQueue = 3000;
+                ghostInfluenceMaterial = new Material(ghostShader);
+                ghostInfluenceMaterial.SetColor("_BaseColor", new Color(1f, 0.85f, 0f, 0.35f));
             }
 
             ghostBuilding.GetComponent<Renderer>().sharedMaterial = ghostValidMaterial;
@@ -4301,7 +4296,8 @@ namespace OpenEmpires
                         int totalWood = validCount * woodPerSeg;
                         int totalStone = validCount * stonePerSeg;
                         var resources = sim.ResourceManager.GetPlayerResources(LocalPlayerId);
-                        if (resources.Wood >= totalWood && resources.Stone >= totalStone)
+                        bool godModeWall = sim.IsGodModeActive(LocalPlayerId);
+                        if (godModeWall || (resources.Wood >= totalWood && resources.Stone >= totalStone))
                         {
                             var wallCmd = new PlaceWallCommand(LocalPlayerId,
                                 wallStartTileX, wallStartTileZ, endTileX, endTileZ, wallVillagerIds,
@@ -4358,6 +4354,9 @@ namespace OpenEmpires
 
         private bool CanAffordBuilding(GameSimulation sim)
         {
+            // God mode ignores resources entirely (sim also bypasses cost, but this UI
+            // gate would otherwise block the click before the command is dispatched).
+            if (sim.IsGodModeActive(LocalPlayerId)) return true;
             if (placementBuildingType == BuildingType.Landmark)
             {
                 var def = LandmarkDefinitions.Get(placementLandmarkId);
