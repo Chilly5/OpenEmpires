@@ -1290,18 +1290,25 @@ namespace OpenEmpires
             palisadeSpriteRenderer.material.mainTextureScale = sel.UvScale;
             palisadeSpriteRenderer.material.mainTextureOffset = sel.UvOffset;
 
-            // Apply optional flip / rotation. Currently unused by the palisade entries but
-            // kept so the registry can reuse the same art with transforms later.
+            // Apply optional flip / rotation / per-sprite scale. The registry can reuse
+            // the same art with transforms (mirroring, rotation, size variants).
             if (palisadeSpriteQuad != null)
             {
-                float sx = sel.FlipX ? -PalisadeSpriteScale : PalisadeSpriteScale;
+                float effectiveScale = PalisadeSpriteScale * sel.ScaleMultiplier;
+                float sx = sel.FlipX ? -effectiveScale : effectiveScale;
                 var s = palisadeSpriteQuad.transform.localScale;
-                if (!Mathf.Approximately(s.x, sx))
-                    palisadeSpriteQuad.transform.localScale = new Vector3(sx, PalisadeSpriteScale, 1f);
+                if (!Mathf.Approximately(s.x, sx) || !Mathf.Approximately(s.y, effectiveScale))
+                    palisadeSpriteQuad.transform.localScale = new Vector3(sx, effectiveScale, 1f);
 
                 var r = palisadeSpriteQuad.transform.localEulerAngles;
                 if (!Mathf.Approximately(r.z, sel.RotationDegrees))
                     palisadeSpriteQuad.transform.localEulerAngles = new Vector3(r.x, r.y, sel.RotationDegrees);
+
+                // Per-sprite vertical nudge on top of the shared Y offset.
+                float targetY = PalisadeSpriteScale * PalisadeSpriteYOffsetRatio + sel.WorldYOffset;
+                var p = palisadeSpriteQuad.transform.localPosition;
+                if (!Mathf.Approximately(p.y, targetY))
+                    palisadeSpriteQuad.transform.localPosition = new Vector3(p.x, targetY, p.z);
             }
         }
 

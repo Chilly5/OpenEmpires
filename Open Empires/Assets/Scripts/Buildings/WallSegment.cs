@@ -91,17 +91,33 @@ namespace OpenEmpires
         // the cropped window in texture space.
         public readonly Vector2 UvScale;
         public readonly Vector2 UvOffset;
+        // Optional per-sprite vertical nudge in world units, added on top of the shared
+        // PalisadeSpriteYOffsetRatio. Positive raises the sprite, negative lowers it.
+        // Use this to compensate for sprites whose art sits at a different canvas v than
+        // the others (e.g. diagonal "front" walls drawn lower in their canvas).
+        public readonly float WorldYOffset;
+        // Optional per-sprite scale multiplier applied to the quad's localScale.
+        // 1.0 = same size as PalisadeSpriteScale, 0.9 = 10% smaller, etc.
+        public readonly float ScaleMultiplier;
 
         public WallSpriteSelection(string resourceName, bool flipX = false, float rotationDegrees = 0f)
-            : this(resourceName, flipX, rotationDegrees, new Vector2(1f, 1f), new Vector2(0f, 0f)) { }
+            : this(resourceName, flipX, rotationDegrees, new Vector2(1f, 1f), new Vector2(0f, 0f), 0f, 1f) { }
 
         public WallSpriteSelection(string resourceName, bool flipX, float rotationDegrees, Vector2 uvScale, Vector2 uvOffset)
+            : this(resourceName, flipX, rotationDegrees, uvScale, uvOffset, 0f, 1f) { }
+
+        public WallSpriteSelection(string resourceName, bool flipX, float rotationDegrees, Vector2 uvScale, Vector2 uvOffset, float worldYOffset)
+            : this(resourceName, flipX, rotationDegrees, uvScale, uvOffset, worldYOffset, 1f) { }
+
+        public WallSpriteSelection(string resourceName, bool flipX, float rotationDegrees, Vector2 uvScale, Vector2 uvOffset, float worldYOffset, float scaleMultiplier)
         {
             ResourceName = resourceName;
             FlipX = flipX;
             RotationDegrees = rotationDegrees;
             UvScale = uvScale;
             UvOffset = uvOffset;
+            WorldYOffset = worldYOffset;
+            ScaleMultiplier = scaleMultiplier;
         }
     }
 
@@ -163,14 +179,19 @@ namespace OpenEmpires
                     new WallSpriteSelection("Palisadeside90",   false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f)) },
                 { (BuildingType.Wall, WallSegmentKind.CardinalNS),
                     new WallSpriteSelection("Palisadeside90B",  false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f)) },
+                // Front-facing diagonal sprites are drawn slightly lower in their canvas
+                // than the cardinal "side90" sprites, so we nudge them up a touch so the
+                // wall foot lines up with the cardinal walls.
                 { (BuildingType.Wall, WallSegmentKind.DiagonalNESW),
-                    new WallSpriteSelection("PalisadefrontB",   false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f)) },
+                    new WallSpriteSelection("PalisadefrontB",   false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f), 0.17f) },
                 { (BuildingType.Wall, WallSegmentKind.DiagonalNWSE),
-                    new WallSpriteSelection("Palisadefront",    false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f)) },
+                    new WallSpriteSelection("Palisadefront",    false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f), 0.17f) },
+                // Post/tower sprites scaled to 0.9 so they read as slightly smaller than
+                // a run wall — keeps the corner cap from dominating the wall it terminates.
                 { (BuildingType.Wall, WallSegmentKind.Junction),
-                    new WallSpriteSelection("PalisadeTower",    false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f)) },
+                    new WallSpriteSelection("PalisadeTower",    false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f), 0f, 0.9f) },
                 { (BuildingType.Wall, WallSegmentKind.Isolated),
-                    new WallSpriteSelection("PalisadeTower",    false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f)) },
+                    new WallSpriteSelection("PalisadeTower",    false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f), 0f, 0.9f) },
             };
 
         private static readonly Dictionary<string, Texture2D> TextureCache = new Dictionary<string, Texture2D>();
