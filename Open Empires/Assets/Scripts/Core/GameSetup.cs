@@ -2116,6 +2116,8 @@ namespace OpenEmpires
                         var spriteT = prefab.transform.Find("Sprite");
                         if (spriteT != null)
                         {
+                            // Raised Y by 0.3: 4.488 × (0.92/6) ≈ 0.688 → 0.988.
+                            spriteT.localPosition = new Vector3(spriteT.localPosition.x, 0.988f, spriteT.localPosition.z);
                             // Sprite has a baked drop shadow — lower the alpha cutoff so the
                             // semi-transparent shadow pixels aren't clipped by the billboard shader.
                             var sr = spriteT.GetComponent<Renderer>();
