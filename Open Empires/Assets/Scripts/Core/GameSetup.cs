@@ -2151,9 +2151,25 @@ namespace OpenEmpires
                     prefab = CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "SiegeWorkshop");
                     break;
                 case BuildingType.Keep:
-                    prefab = CreateBuildingSpritePrefab("Keep", "Keep", 3, 3, 8f)
-                          ?? CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "Keep");
+                {
+                    // 5000×5000 source (1:1). Footprint 4×4 (matches Town Center).
+                    // Quad scale 6, center Y = 1 → yOffsetMultiplier = 1/6.
+                    prefab = CreateBuildingSpritePrefab("Keep", "Keep", 4, 4, 6f, 1f / 6f)
+                          ?? CreateGenericBuildingPrefab(buildingData.PlayerId, 4, 4, "Keep");
+                    if (prefab != null)
+                    {
+                        var spriteT = prefab.transform.Find("Sprite");
+                        if (spriteT != null)
+                        {
+                            // 15% larger (6 → 6.9), shifted 0.5m screen-left (at yaw 45°:
+                            // ΔX = -0.5 × cos45 ≈ -0.3536, ΔZ = +0.5 × sin45 ≈ +0.3536), Y raised to 1.5.
+                            spriteT.localScale = new Vector3(6.9f, 6.9f, spriteT.localScale.z);
+                            var p = spriteT.localPosition;
+                            spriteT.localPosition = new Vector3(p.x - 0.3536f, 1.5f, p.z + 0.3536f);
+                        }
+                    }
                     break;
+                }
                 case BuildingType.StoneWall:
                 case BuildingType.StoneGate:
                 case BuildingType.WoodGate:
