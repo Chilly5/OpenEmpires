@@ -197,17 +197,19 @@ namespace OpenEmpires
                 // palisade convention: "90" sprites are cardinal axis, "45" are diagonal.
                 // Tower scaled to 0.9 like the palisade tower for the same reason.
                 { (BuildingType.StoneWall, WallSegmentKind.CardinalEW),
-                    new WallSpriteSelection("Stonewall90",     false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f)) },
+                    new WallSpriteSelection("Stonewall90",     false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f), -0.2f) },
                 { (BuildingType.StoneWall, WallSegmentKind.CardinalNS),
-                    new WallSpriteSelection("Stonewall90B",    false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f)) },
+                    new WallSpriteSelection("Stonewall90B",    false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f), -0.2f) },
+                // Stonewall45B uvOffset.x bumped 0.085 → 0.098 to shift the rendered art
+                // ~0.1 world units left in screen space.
                 { (BuildingType.StoneWall, WallSegmentKind.DiagonalNESW),
-                    new WallSpriteSelection("Stonewall45B",    false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f)) },
+                    new WallSpriteSelection("Stonewall45B",    false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.098f, 0f)) },
                 { (BuildingType.StoneWall, WallSegmentKind.DiagonalNWSE),
-                    new WallSpriteSelection("Stonewall45",     false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f)) },
+                    new WallSpriteSelection("Stonewall45",     false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f), -0.07f) },
                 { (BuildingType.StoneWall, WallSegmentKind.Junction),
-                    new WallSpriteSelection("StonewallTower",  false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f), 0f, 0.9f) },
+                    new WallSpriteSelection("StonewallTower",  false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f), -0.3f, 0.9f) },
                 { (BuildingType.StoneWall, WallSegmentKind.Isolated),
-                    new WallSpriteSelection("StonewallTower",  false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f), 0f, 0.9f) },
+                    new WallSpriteSelection("StonewallTower",  false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f), -0.3f, 0.9f) },
             };
 
         private static readonly Dictionary<string, Texture2D> TextureCache = new Dictionary<string, Texture2D>();
