@@ -4273,6 +4273,13 @@ namespace OpenEmpires
         {
             int endTileX = wallStartTileX;
             int endTileZ = wallStartTileZ;
+            // The snapped end is the last tile of the 8-direction-snapped line — i.e.,
+            // where the placed wall actually ends, which can differ from the raw cursor
+            // tile when the drag isn't perfectly along a cardinal/diagonal axis. Chain
+            // logic uses this so the next segment starts at the wall's true end, not
+            // wherever the cursor happened to be.
+            int snappedEndTileX = wallStartTileX;
+            int snappedEndTileZ = wallStartTileZ;
 
             var sim = GameBootstrapper.Instance?.Simulation;
             if (sim != null)
@@ -4284,6 +4291,12 @@ namespace OpenEmpires
                     endTileZ = Mathf.FloorToInt(wallHit.point.z);
 
                     var tiles = WallLineHelper.ComputeWallLine(wallStartTileX, wallStartTileZ, endTileX, endTileZ);
+                    if (tiles.Count > 0)
+                    {
+                        snappedEndTileX = tiles[tiles.Count - 1].x;
+                        snappedEndTileZ = tiles[tiles.Count - 1].y;
+                    }
+
                     int validCount = 0;
                     for (int i = 0; i < tiles.Count; i++)
                         if (sim.MapData.IsBuildable(tiles[i].x, tiles[i].y))
@@ -4311,9 +4324,11 @@ namespace OpenEmpires
 
             if (multiSelectHeld)
             {
-                // Chain: end point becomes next start point (AoE4-style)
-                wallStartTileX = endTileX;
-                wallStartTileZ = endTileZ;
+                // Chain: next start is the snapped end of THIS wall (where the placed
+                // tiles actually finish), so the new segment's first tile equals the
+                // previous segment's last tile — they share that tile.
+                wallStartTileX = snappedEndTileX;
+                wallStartTileZ = snappedEndTileZ;
             }
             else
             {
