@@ -105,6 +105,48 @@ namespace OpenEmpires
         }
     }
 
+    // Maps (BuildingType, WallSegmentKind, isOpen) -> gate sprite selection.
+    // Parallel to WallSpriteRegistry but for the open/closed gate states.
+    public static class WallGateSpriteRegistry
+    {
+        // Same UV crop as the palisade walls so gate art lines up with its tile.
+        private static readonly Vector2 PalisadeUvScale  = new Vector2(0.85f, 0.85f);
+        private static readonly Vector2 PalisadeUvOffset = new Vector2(0.085f, 0f);
+
+        private static readonly Dictionary<(BuildingType, WallSegmentKind, bool), WallSpriteSelection> Map =
+            new Dictionary<(BuildingType, WallSegmentKind, bool), WallSpriteSelection>
+            {
+                // Closed
+                { (BuildingType.Wall, WallSegmentKind.CardinalEW,    false),
+                    new WallSpriteSelection("Palisadegate90",       false, 0f, PalisadeUvScale, PalisadeUvOffset) },
+                { (BuildingType.Wall, WallSegmentKind.CardinalNS,    false),
+                    new WallSpriteSelection("Palisadegate90B",      false, 0f, PalisadeUvScale, PalisadeUvOffset) },
+                { (BuildingType.Wall, WallSegmentKind.DiagonalNESW,  false),
+                    new WallSpriteSelection("PalisadegateFrontB",   false, 0f, PalisadeUvScale, PalisadeUvOffset) },
+                { (BuildingType.Wall, WallSegmentKind.DiagonalNWSE,  false),
+                    new WallSpriteSelection("PalisadegateFront",    false, 0f, PalisadeUvScale, PalisadeUvOffset) },
+                // Open
+                { (BuildingType.Wall, WallSegmentKind.CardinalEW,    true),
+                    new WallSpriteSelection("Palisadegate90-open",       false, 0f, PalisadeUvScale, PalisadeUvOffset) },
+                { (BuildingType.Wall, WallSegmentKind.CardinalNS,    true),
+                    new WallSpriteSelection("Palisadegate90B-open",      false, 0f, PalisadeUvScale, PalisadeUvOffset) },
+                { (BuildingType.Wall, WallSegmentKind.DiagonalNESW,  true),
+                    new WallSpriteSelection("PalisadegateFrontB-open",   false, 0f, PalisadeUvScale, PalisadeUvOffset) },
+                { (BuildingType.Wall, WallSegmentKind.DiagonalNWSE,  true),
+                    new WallSpriteSelection("PalisadegateFront-open",    false, 0f, PalisadeUvScale, PalisadeUvOffset) },
+            };
+
+        public static bool TryLookup(BuildingType type, WallSegmentKind kind, bool isOpen, out WallSpriteSelection sel)
+        {
+            if (Map.TryGetValue((type, kind, isOpen), out sel)) return true;
+            // Junction/Isolated/etc. — fall back to CardinalEW so a gate at a weird
+            // neighbor position still renders a sensible orientation instead of nothing.
+            if (Map.TryGetValue((type, WallSegmentKind.CardinalEW, isOpen), out sel)) return true;
+            sel = default;
+            return false;
+        }
+    }
+
     // Maps (BuildingType, WallSegmentKind) -> sprite selection.
     // Extensible for future StoneWall, civ variants, alternate art.
     public static class WallSpriteRegistry
