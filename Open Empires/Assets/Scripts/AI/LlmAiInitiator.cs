@@ -19,12 +19,6 @@ namespace OpenEmpires
         [Tooltip("Seconds between state polls.")]
         public float PollInterval = 1f;
 
-        [Tooltip("Periodically have the AI narrate what it's currently doing/thinking in team chat.")]
-        public bool EnableStatusUpdates = true;
-
-        [Tooltip("Seconds between periodic AI status messages.")]
-        public float StatusUpdateInterval = 5f;
-
         [SerializeField] private bool logInitiator;
 
         public int LocalPlayerId { get; set; }
@@ -37,7 +31,6 @@ namespace OpenEmpires
             public int LastCombatStateHash;
             public int LastUnderAttackTick;
             public float LastInitiationRealtime;
-            public float LastStatusRealtime;
         }
         private readonly Dictionary<int, AiSnapshot> snapshots = new Dictionary<int, AiSnapshot>();
         private float nextPollRealtime;
@@ -76,26 +69,12 @@ namespace OpenEmpires
 
                 var snap = snapshots.TryGetValue(aiPid, out var existing) ? existing : default;
                 string trigger = DetectTrigger(sim, ai, ref snap);
-
-                bool fireStatus = false;
-                if (trigger == null && EnableStatusUpdates && snap.Initialized
-                    && Time.realtimeSinceStartup - snap.LastStatusRealtime >= StatusUpdateInterval)
-                {
-                    snap.LastStatusRealtime = Time.realtimeSinceStartup;
-                    fireStatus = true;
-                }
-
                 snapshots[aiPid] = snap;
 
                 if (trigger != null)
                 {
                     Initiate(sim, aiPid, trigger, apiKey);
                     return; // one initiation per poll
-                }
-                if (fireStatus)
-                {
-                    InitiateStatus(sim, aiPid, apiKey);
-                    return;
                 }
             }
         }
@@ -113,7 +92,6 @@ namespace OpenEmpires
                 snap.LastKnownEnemyBaseCount = enemies;
                 snap.LastCombatStateHash = stateHash;
                 snap.LastUnderAttackTick = underAttackTick;
-                snap.LastStatusRealtime = Time.realtimeSinceStartup;
                 snap.Initialized = true;
                 return null;
             }
@@ -234,37 +212,6 @@ namespace OpenEmpires
 
             if (string.IsNullOrEmpty(reply) && intentCount == 0)
                 RenderAiChatLocally(aiPid, "(AI had nothing to say)", isSystem: true);
-        }
-
-        // Routine status narration: single no-tools call so it stays pure chatter (no
-        // actions), and is not appended to conversation memory to keep the prompt cheap.
-        private void InitiateStatus(GameSimulation sim, int aiPid, string apiKey)
-        {
-            callInFlight = true;
-            string aiName = $"AI Player {aiPid}";
-            string systemPrompt = LlmTool.BuildSystemPrompt(aiName);
-            string stateLine = LlmStateExtractor.Build(sim, LocalPlayerId, aiPid);
-            string userMessage = "[Game state] " + stateLine
-                + "\n[Status check] In ONE short first-person sentence, tell your human teammate what you're"
-                + " focused on right now (economy, army, attacking, defending, aging up) and why."
-                + " This is routine chatter — take NO actions and call NO tools.";
-
-            var history = LlmConversationMemory.GetHistory(LocalPlayerId, aiPid);
-            var contents = LlmToolLoop.BuildInitialContents(history, userMessage);
-            if (logInitiator) Debug.Log($"[LlmAiInitiator] → AI{aiPid}: status check");
-
-            StartCoroutine(GeminiClient.Generate(apiKey, systemPrompt, contents, null,
-                onSuccess: resp =>
-                {
-                    callInFlight = false;
-                    if (resp != null && !string.IsNullOrEmpty(resp.Text))
-                        RenderAiChatLocally(aiPid, resp.Text);
-                },
-                onFailure: reason =>
-                {
-                    callInFlight = false;
-                    if (logInitiator) Debug.LogWarning($"[LlmAiInitiator] status call failed: {reason}");
-                }));
         }
 
         private void RenderAiChatLocally(int aiPlayerId, string text, bool isSystem = false)
