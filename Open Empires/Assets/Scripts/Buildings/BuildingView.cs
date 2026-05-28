@@ -270,7 +270,7 @@ namespace OpenEmpires
                 wallGeometry = transform.Find("WallGeometry");
             }
 
-            if (data.Type == BuildingType.Wall)
+            if (UsesSpriteWallBody(data.Type))
             {
                 EnsurePalisadeSprite();
                 HideProceduralWallBody();
@@ -860,13 +860,21 @@ namespace OpenEmpires
         {
             if (isGate)
             {
-                // Auto-pick civ sprite prefix if not yet set (covers wall→gate conversions
-                // where the SpawnBuilding code path doesn't run)
+                // Auto-pick sprite prefix if not yet set (covers wall→gate conversions
+                // where the SpawnBuilding code path doesn't run).
+                // Palisade gates are universal (no civ variation). Stone gates are civ-keyed.
                 if (string.IsNullOrEmpty(gateSpritePrefix))
                 {
-                    var sim = GameBootstrapper.Instance?.Simulation;
-                    if (sim != null && sim.GetPlayerCivilization(PlayerId) == Civilization.English)
-                        gateSpritePrefix = "Englishgate";
+                    if (BuildingType == BuildingType.Wall)
+                    {
+                        gateSpritePrefix = "Palisadegate";
+                    }
+                    else
+                    {
+                        var sim = GameBootstrapper.Instance?.Simulation;
+                        if (sim != null && sim.GetPlayerCivilization(PlayerId) == Civilization.English)
+                            gateSpritePrefix = "Englishgate";
+                    }
                 }
 
                 // Hide wall geometry container
@@ -900,7 +908,7 @@ namespace OpenEmpires
             {
                 // Show wall geometry container
                 if (wallGeometry != null) wallGeometry.gameObject.SetActive(true);
-                if (palisadeSpriteQuad != null && BuildingType == BuildingType.Wall)
+                if (palisadeSpriteQuad != null && UsesSpriteWallBody(BuildingType))
                     palisadeSpriteQuad.SetActive(true);
 
                 // Hide gate
@@ -945,8 +953,13 @@ namespace OpenEmpires
             gateSpriteQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
             gateSpriteQuad.name = "Sprite";
             gateSpriteQuad.transform.SetParent(gateContainer.transform, false);
-            gateSpriteQuad.transform.localPosition = new Vector3(0f, 1.25f, 0f);
-            gateSpriteQuad.transform.localScale = new Vector3(2.5f, 2.5f, 1f);
+            // Palisade gates use the same quad scale/Y-offset as palisade walls so the gate
+            // foot lines up with the wall foot on adjacent tiles. Civ gates (Englishgate)
+            // keep the original 2.5/1.25 sizing.
+            float gateScale = (BuildingType == BuildingType.Wall) ? PalisadeSpriteScale : 2.5f;
+            float gateY     = (BuildingType == BuildingType.Wall) ? PalisadeSpriteScale * PalisadeSpriteYOffsetRatio : 1.25f;
+            gateSpriteQuad.transform.localPosition = new Vector3(0f, gateY, 0f);
+            gateSpriteQuad.transform.localScale = new Vector3(gateScale, gateScale, 1f);
             gateSpriteQuad.layer = 11;
             var mc = gateSpriteQuad.GetComponent<MeshCollider>();
             if (mc != null) Object.Destroy(mc);
@@ -963,9 +976,29 @@ namespace OpenEmpires
         {
             if (gateSpriteRenderer == null || string.IsNullOrEmpty(gateSpritePrefix)) return;
 
-            // Map rotation → directional sprite. ComputeGateRotation currently returns
-            // 0° or 90° only; the _90d_A/_90d_B sprites are reserved for future use
-            // (e.g. diagonal-wall gate orientations).
+            // Palisade gates: pick the sprite from WallGateSpriteRegistry using the
+            // current neighbor-derived WallSegmentKind. Handles 4 orientations (2 cardinal
+            // axes + 2 diagonal axes) × open/closed, all with matching UV crop.
+            if (BuildingType == BuildingType.Wall)
+            {
+                var sim = GameBootstrapper.Instance?.Simulation;
+                if (sim == null) return;
+                var mask = SampleWallNeighbors(sim.MapData, sim.BuildingRegistry, OriginTileX, OriginTileZ);
+                var kind = WallSegmentClassifier.Classify(mask);
+                if (WallGateSpriteRegistry.TryLookup(BuildingType.Wall, kind, gateIsOpen, out var sel))
+                {
+                    var tex = WallSpriteRegistry.LoadTexture(sel.ResourceName);
+                    if (tex != null)
+                    {
+                        gateSpriteRenderer.material.SetTexture("_MainTex", tex);
+                        gateSpriteRenderer.material.mainTextureScale = sel.UvScale;
+                        gateSpriteRenderer.material.mainTextureOffset = sel.UvOffset;
+                    }
+                }
+                return;
+            }
+
+            // Civ gates (Englishgate, future stone gates): rotation-based 2-state mapping.
             bool sideways = gateLastRotation > 45f;
             string state;
             if (sideways)
@@ -973,9 +1006,9 @@ namespace OpenEmpires
             else
                 state = gateIsOpen ? "_front_opened" : "_front";
 
-            var tex = Resources.Load<Texture2D>($"BuildingSprites/{gateSpritePrefix}{state}");
-            if (tex != null)
-                gateSpriteRenderer.material.SetTexture("_MainTex", tex);
+            var civTex = Resources.Load<Texture2D>($"BuildingSprites/{gateSpritePrefix}{state}");
+            if (civTex != null)
+                gateSpriteRenderer.material.SetTexture("_MainTex", civTex);
         }
 
         public void SetGateSpriteCiv(string prefix)
@@ -1038,6 +1071,14 @@ namespace OpenEmpires
                 || t == BuildingType.StoneWall
                 || t == BuildingType.StoneGate
                 || t == BuildingType.WoodGate;
+        }
+
+        // Wall types whose visual is a billboard sprite (rather than the procedural cubes).
+        // These types skip the procedural diagonal connectors and use ApplyPalisadeSprite
+        // (despite the legacy name) to render their wall art via WallSpriteRegistry.
+        private static bool UsesSpriteWallBody(BuildingType t)
+        {
+            return t == BuildingType.Wall || t == BuildingType.StoneWall;
         }
 
         private static WallNeighborMask SampleWallNeighbors(MapData map, BuildingRegistry reg, int tx, int tz)
@@ -1120,8 +1161,10 @@ namespace OpenEmpires
             if (mNxPz != null) mNxPz.gameObject.SetActive(!(hasW || hasN || hasNW));
             if (mPxPz != null) mPxPz.gameObject.SetActive(!(hasE || hasN || hasNE));
 
-            // Procedural diagonal connectors — stone walls only. Palisade uses dedicated diagonal sprites.
-            if (BuildingType != BuildingType.Wall)
+            // Procedural diagonal connectors — only for wall types that still use the
+            // procedural cube body. Sprite-bodied walls (palisade, stonewall) use
+            // dedicated diagonal sprites from the registry instead.
+            if (!UsesSpriteWallBody(BuildingType))
             {
                 Material wallMat = bodyRenderers.Length > 0 && bodyRenderers[0] != null
                     ? bodyRenderers[0].sharedMaterial : null;
@@ -1168,11 +1211,20 @@ namespace OpenEmpires
                 }
             }
 
-            // Palisade sprite — registry lookup
-            if (BuildingType == BuildingType.Wall
-                && WallSpriteRegistry.TryLookup(BuildingType, kind, out var sel))
+            // Palisade sprite — registry lookup. If this wall is currently a gate, the
+            // sprite is hidden; refresh the gate sprite instead so it picks up
+            // the orientation change.
+            if (UsesSpriteWallBody(BuildingType))
             {
-                ApplyPalisadeSprite(sel);
+                if (buildingData != null && buildingData.IsGate)
+                {
+                    if (gateSpriteRenderer != null)
+                        UpdateGateTexture();
+                }
+                else if (WallSpriteRegistry.TryLookup(BuildingType, kind, out var sel))
+                {
+                    ApplyPalisadeSprite(sel);
+                }
             }
 
             CacheRenderers();
@@ -1248,18 +1300,25 @@ namespace OpenEmpires
             palisadeSpriteRenderer.material.mainTextureScale = sel.UvScale;
             palisadeSpriteRenderer.material.mainTextureOffset = sel.UvOffset;
 
-            // Apply optional flip / rotation. Currently unused by the palisade entries but
-            // kept so the registry can reuse the same art with transforms later.
+            // Apply optional flip / rotation / per-sprite scale. The registry can reuse
+            // the same art with transforms (mirroring, rotation, size variants).
             if (palisadeSpriteQuad != null)
             {
-                float sx = sel.FlipX ? -PalisadeSpriteScale : PalisadeSpriteScale;
+                float effectiveScale = PalisadeSpriteScale * sel.ScaleMultiplier;
+                float sx = sel.FlipX ? -effectiveScale : effectiveScale;
                 var s = palisadeSpriteQuad.transform.localScale;
-                if (!Mathf.Approximately(s.x, sx))
-                    palisadeSpriteQuad.transform.localScale = new Vector3(sx, PalisadeSpriteScale, 1f);
+                if (!Mathf.Approximately(s.x, sx) || !Mathf.Approximately(s.y, effectiveScale))
+                    palisadeSpriteQuad.transform.localScale = new Vector3(sx, effectiveScale, 1f);
 
                 var r = palisadeSpriteQuad.transform.localEulerAngles;
                 if (!Mathf.Approximately(r.z, sel.RotationDegrees))
                     palisadeSpriteQuad.transform.localEulerAngles = new Vector3(r.x, r.y, sel.RotationDegrees);
+
+                // Per-sprite vertical nudge on top of the shared Y offset.
+                float targetY = PalisadeSpriteScale * PalisadeSpriteYOffsetRatio + sel.WorldYOffset;
+                var p = palisadeSpriteQuad.transform.localPosition;
+                if (!Mathf.Approximately(p.y, targetY))
+                    palisadeSpriteQuad.transform.localPosition = new Vector3(p.x, targetY, p.z);
             }
         }
 

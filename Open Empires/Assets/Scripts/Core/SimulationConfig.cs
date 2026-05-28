@@ -550,6 +550,15 @@ namespace OpenEmpires
         public int KeepFootprintWidth => 4;
         public int KeepFootprintHeight => 4;
 
+        // Keep Combat — a stronger, longer-range defensive structure than the Tower
+        // (Tower: 15 dmg / 12 range / 15 detect / 60-tick cd / 1 base arrow / 5 garrison).
+        public int KeepAttackDamage => 18;
+        public float KeepAttackRange => 14f;
+        public float KeepDetectionRange => 14f;   // firing range for BuildingCombatSystem; kept == attack range so the ring matches
+        public int KeepAttackCooldownTicks => 45;   // 1.5s at 30 TPS (faster than tower's 2s)
+        public int KeepBaseArrowCount => 3;
+        public int KeepGarrisonCapacity => 10;
+
         // Buildings - Stone Wall
         public int StoneWallMaxHealth => 400;
         public int StoneWallArmor => 8;

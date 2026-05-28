@@ -3326,6 +3326,18 @@ namespace OpenEmpires
                 building.GarrisonCapacity = config.TownCenterGarrisonCapacity;
             }
 
+            // Keep combat — a stronger, longer-range defensive building than the Tower.
+            // Handled generically by BuildingCombatSystem (AttackDamage > 0), like the Town Center.
+            if (type == BuildingType.Keep)
+            {
+                building.AttackDamage = config.KeepAttackDamage;
+                building.AttackRange = ConfigToFixed32(config.KeepAttackRange);
+                building.DetectionRange = ConfigToFixed32(config.KeepDetectionRange);
+                building.AttackCooldownTicks = config.KeepAttackCooldownTicks;
+                building.BaseArrowCount = config.KeepBaseArrowCount;
+                building.GarrisonCapacity = config.KeepGarrisonCapacity;
+            }
+
             if (underConstruction)
             {
                 building.CurrentHealth = 1;

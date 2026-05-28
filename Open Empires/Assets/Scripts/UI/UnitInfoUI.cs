@@ -170,7 +170,7 @@ namespace OpenEmpires
         // Mouse hold-to-delete on action button
         private bool deleteMouseHolding;
         private float deleteMouseHoldTimer;
-        private const float DeleteHoldDuration = 2f;
+        private const float DeleteHoldDuration = 1f;
         private int deleteMouseHoldSlot = -1;
 
         // Button flash (hotkey press feedback)
@@ -1469,6 +1469,9 @@ namespace OpenEmpires
 
             int line = 0;
             SetStatLine(line++, $"Armor:   {building.Armor}");
+            // Garrison occupancy for any garrisonable building (Keep, Tower, Town Center, ...).
+            if (building.GarrisonCapacity > 0)
+                SetStatLine(line++, $"Garrison: {building.GarrisonCount} / {building.GarrisonCapacity}");
             for (int i = line; i < MaxStatLines; i++) statLines[i].gameObject.SetActive(false);
 
             bool showProgress = false;
@@ -1761,9 +1764,11 @@ namespace OpenEmpires
                 if (ownIds.Count > 0)
                     sim.CommandBuffer.EnqueueCommand(new DeleteUnitsCommand(localPid, ownIds.ToArray()));
             }
-            else if (buildings.Count > 0 && buildings[0].PlayerId == localPid)
+            else if (buildings.Count > 0)
             {
-                sim.CommandBuffer.EnqueueCommand(new DeleteBuildingCommand(localPid, buildings[0].BuildingId));
+                for (int i = 0; i < buildings.Count; i++)
+                    if (buildings[i].PlayerId == localPid)
+                        sim.CommandBuffer.EnqueueCommand(new DeleteBuildingCommand(localPid, buildings[i].BuildingId));
             }
         }
 
@@ -3396,22 +3401,28 @@ namespace OpenEmpires
         private bool TryBuildHotkey(GameSimulation sim, int localPid, BuildingType type, int btnIndex, bool isWall = false, bool isGate = false)
         {
             var resources = sim.ResourceManager.GetPlayerResources(localPid);
+            // God mode bypasses age + cost gates, matching the build-button path in MakeBuildSlot.
+            bool godMode = sim.IsGodModeActive(localPid);
             int playerAge = sim.GetPlayerAge(localPid);
             int reqAge = LandmarkDefinitions.GetBuildingRequiredAge(type);
-            if (playerAge < reqAge) return false;
+            if (!godMode && playerAge < reqAge) return false;
 
             int wood = sim.GetBuildingWoodCost(type);
             int stone = sim.GetBuildingStoneCost(type);
             int food = sim.GetBuildingFoodCost(type);
             int gold = sim.GetBuildingGoldCost(type);
-            if (resources.Wood < wood || resources.Stone < stone || resources.Food < food || resources.Gold < gold) return false;
+            if (!godMode && (resources.Wood < wood || resources.Stone < stone || resources.Food < food || resources.Gold < gold)) return false;
 
             FlashBuildButton(btnIndex);
             if (isWall)
                 selectionManager.EnterWallPlacement(type, isGate);
             else
                 selectionManager.EnterBuildPlacement(type);
-            buildMenuAge = 0;
+            // Keep buildMenuAge set so the submenu stays open: subsequent building keys keep
+            // routing through ProcessBuildMenuHotkeys and swap the ghost (cycle Blacksmith ->
+            // Market -> Town Center ...). EnterBuildPlacement/EnterWallPlacement cancel the
+            // prior ghost cleanly on re-entry. The submenu is closed on cancel (Escape /
+            // right-click), handled in UnitSelectionManager.
             return true;
         }
 
