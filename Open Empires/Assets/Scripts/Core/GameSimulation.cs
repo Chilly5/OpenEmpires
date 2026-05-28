@@ -3234,6 +3234,18 @@ namespace OpenEmpires
                 building.GarrisonCapacity = config.TownCenterGarrisonCapacity;
             }
 
+            // Keep combat — a stronger, longer-range defensive building than the Tower.
+            // Handled generically by BuildingCombatSystem (AttackDamage > 0), like the Town Center.
+            if (type == BuildingType.Keep)
+            {
+                building.AttackDamage = config.KeepAttackDamage;
+                building.AttackRange = ConfigToFixed32(config.KeepAttackRange);
+                building.DetectionRange = ConfigToFixed32(config.KeepDetectionRange);
+                building.AttackCooldownTicks = config.KeepAttackCooldownTicks;
+                building.BaseArrowCount = config.KeepBaseArrowCount;
+                building.GarrisonCapacity = config.KeepGarrisonCapacity;
+            }
+
             if (underConstruction)
             {
                 building.CurrentHealth = 1;
@@ -4022,36 +4034,42 @@ namespace OpenEmpires
             }
             if (validTiles.Count == 0) return;
 
-            // Validate total cost
+            bool godMode = IsGodModeActive(cmd.PlayerId);
+
+            // Validate total cost (bypassed under god mode)
             BuildingType wallType = cmd.WallBuildingType;
             int woodPerSegment = GetBuildingWoodCost(wallType);
             int stonePerSegment = GetBuildingStoneCost(wallType);
             int totalWood = woodPerSegment * validTiles.Count;
             int totalStone = stonePerSegment * validTiles.Count;
             var resources = ResourceManager.GetPlayerResources(cmd.PlayerId);
-            if (resources.Wood < totalWood || resources.Stone < totalStone) return;
+            if (!godMode && (resources.Wood < totalWood || resources.Stone < totalStone)) return;
 
-            resources.Wood -= totalWood;
-            resources.Stone -= totalStone;
+            if (!godMode)
+            {
+                resources.Wood -= totalWood;
+                resources.Stone -= totalStone;
+            }
             int wallGroupId = nextWallGroupId++;
             bool hasVillagers = cmd.VillagerUnitIds != null && cmd.VillagerUnitIds.Length > 0;
+            bool underConstructionWall = !godMode && hasVillagers;
 
             // Create wall segment buildings
             var createdBuildings = new List<BuildingData>();
             for (int i = 0; i < validTiles.Count; i++)
             {
                 var tile = validTiles[i];
-                var building = CreateBuilding(cmd.PlayerId, wallType, tile.x, tile.y, underConstruction: hasVillagers);
+                var building = CreateBuilding(cmd.PlayerId, wallType, tile.x, tile.y, underConstruction: underConstructionWall);
                 building.WallGroupId = wallGroupId;
                 if (cmd.IsGate) building.IsGate = true;
                 createdBuildings.Add(building);
                 OnBuildingCreated?.Invoke(building);
-                if (!hasVillagers)
+                if (!underConstructionWall)
                     EjectUnitsFromBuildingFootprint(building);
             }
 
-            // Assign villagers to build segments sequentially
-            if (hasVillagers && createdBuildings.Count > 0)
+            // Assign villagers to build segments sequentially (skipped under god mode — segments are already complete)
+            if (hasVillagers && createdBuildings.Count > 0 && !godMode)
             {
                 for (int v = 0; v < cmd.VillagerUnitIds.Length; v++)
                 {
