@@ -170,7 +170,7 @@ namespace OpenEmpires
         // Mouse hold-to-delete on action button
         private bool deleteMouseHolding;
         private float deleteMouseHoldTimer;
-        private const float DeleteHoldDuration = 2f;
+        private const float DeleteHoldDuration = 1f;
         private int deleteMouseHoldSlot = -1;
 
         // Button flash (hotkey press feedback)
@@ -1761,9 +1761,11 @@ namespace OpenEmpires
                 if (ownIds.Count > 0)
                     sim.CommandBuffer.EnqueueCommand(new DeleteUnitsCommand(localPid, ownIds.ToArray()));
             }
-            else if (buildings.Count > 0 && buildings[0].PlayerId == localPid)
+            else if (buildings.Count > 0)
             {
-                sim.CommandBuffer.EnqueueCommand(new DeleteBuildingCommand(localPid, buildings[0].BuildingId));
+                for (int i = 0; i < buildings.Count; i++)
+                    if (buildings[i].PlayerId == localPid)
+                        sim.CommandBuffer.EnqueueCommand(new DeleteBuildingCommand(localPid, buildings[i].BuildingId));
             }
         }
 

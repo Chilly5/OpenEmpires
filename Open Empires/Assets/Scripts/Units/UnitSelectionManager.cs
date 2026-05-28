@@ -194,7 +194,7 @@ namespace OpenEmpires
         // Hold-to-delete
         private float deleteHoldTimer;
         private bool deleteHolding;
-        private const float DeleteHoldDuration = 2f;
+        private const float DeleteHoldDuration = 1f;
 
         /// <summary>0-1 progress of the hold-to-delete timer. 0 when not holding.</summary>
         public float DeleteHoldProgress => deleteHolding ? Mathf.Clamp01(deleteHoldTimer / DeleteHoldDuration) : 0f;
@@ -1015,19 +1015,29 @@ namespace OpenEmpires
             bool hasSelection = selectedUnits.Count > 0 || selectedBuildings.Count > 0;
             bool xHeld = inputActions.RTS.DeleteEntity.IsPressed();
 
-            // Instant delete for buildings under construction (single press)
+            // Instant delete for buildings under construction (single press) — applies to all
+            // selected owned under-construction buildings.
             if (inputActions.RTS.DeleteEntity.WasPressedThisFrame() && hasSelection && !deleteHolding)
             {
-                if (selectedBuildings.Count > 0 && selectedBuildings[0].PlayerId == LocalPlayerId)
+                if (selectedBuildings.Count > 0)
                 {
                     var sim = GameBootstrapper.Instance?.Simulation;
-                    var bData = sim?.BuildingRegistry.GetBuilding(selectedBuildings[0].BuildingId);
-                    if (bData != null && bData.IsUnderConstruction)
+                    bool deletedAny = false;
+                    if (sim != null)
                     {
-                        sim.CommandBuffer.EnqueueCommand(
-                            new DeleteBuildingCommand(LocalPlayerId, selectedBuildings[0].BuildingId));
-                        return;
+                        for (int i = 0; i < selectedBuildings.Count; i++)
+                        {
+                            if (selectedBuildings[i].PlayerId != LocalPlayerId) continue;
+                            var bData = sim.BuildingRegistry.GetBuilding(selectedBuildings[i].BuildingId);
+                            if (bData != null && bData.IsUnderConstruction)
+                            {
+                                sim.CommandBuffer.EnqueueCommand(
+                                    new DeleteBuildingCommand(LocalPlayerId, selectedBuildings[i].BuildingId));
+                                deletedAny = true;
+                            }
+                        }
                     }
+                    if (deletedAny) return;
                 }
             }
 
@@ -1063,9 +1073,12 @@ namespace OpenEmpires
                                 if (ownIds.Count > 0)
                                     sim.CommandBuffer.EnqueueCommand(new DeleteUnitsCommand(LocalPlayerId, ownIds.ToArray()));
                             }
-                            else if (selectedBuildings.Count > 0 && selectedBuildings[0].PlayerId == LocalPlayerId)
+                            else if (selectedBuildings.Count > 0)
                             {
-                                sim.CommandBuffer.EnqueueCommand(new DeleteBuildingCommand(LocalPlayerId, selectedBuildings[0].BuildingId));
+                                for (int i = 0; i < selectedBuildings.Count; i++)
+                                    if (selectedBuildings[i].PlayerId == LocalPlayerId)
+                                        sim.CommandBuffer.EnqueueCommand(
+                                            new DeleteBuildingCommand(LocalPlayerId, selectedBuildings[i].BuildingId));
                             }
                         }
                         ResetDeleteHold();
@@ -3890,7 +3903,7 @@ namespace OpenEmpires
             if (gridTexture == null) return;
             int w = mapData.Width, h = mapData.Height;
             var pixels = gridTexture.GetPixels32();
-            Color32 buildable   = new Color32(0, 180, 0, 40);
+            Color32 buildable   = new Color32(0, 180, 0, 24);
             Color32 unbuildable = new Color32(200, 0, 0, 80);
             Color32 transparent = new Color32(0, 0, 0, 0);
             bool isFarm = buildingType == BuildingType.Farm;
@@ -3913,7 +3926,7 @@ namespace OpenEmpires
             gridTexture.wrapMode = TextureWrapMode.Clamp;
 
             var pixels = new Color32[w * h];
-            Color32 buildable   = new Color32(0, 180, 0, 40);
+            Color32 buildable   = new Color32(0, 180, 0, 24);
             Color32 unbuildable = new Color32(200, 0, 0, 80);
             Color32 transparent = new Color32(0, 0, 0, 0);
             var sim = GameBootstrapper.Instance?.Simulation;
@@ -3965,18 +3978,31 @@ namespace OpenEmpires
             mesh.uv = uvs;
             mesh.SetIndices(indices, MeshTopology.Triangles, 0);
 
-            // --- Material: URP/Unlit transparent ---
-            gridMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-            gridMaterial.mainTexture = gridTexture;
-            gridMaterial.SetFloat("_Surface", 1);
-            gridMaterial.SetOverrideTag("RenderType", "Transparent");
-            gridMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-            gridMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-            gridMaterial.SetInt("_ZWrite", 0);
-            gridMaterial.DisableKeyword("_ALPHATEST_ON");
-            gridMaterial.EnableKeyword("_ALPHABLEND_ON");
-            gridMaterial.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-            gridMaterial.renderQueue = 3000;
+            // --- Material: custom textured grid that renders ON TOP of buildings/units ---
+            // OpenEmpires/PlacementGrid bakes ZTest Always (like GhostQuad) so occupied
+            // (red) tiles stay visible under existing building sprites. Fall back to URP/Unlit
+            // transparent if the shader isn't found.
+            var gridShader = Shader.Find("OpenEmpires/PlacementGrid");
+            if (gridShader != null)
+            {
+                gridMaterial = new Material(gridShader);
+                gridMaterial.mainTexture = gridTexture;
+                gridMaterial.renderQueue = 3000;
+            }
+            else
+            {
+                gridMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+                gridMaterial.mainTexture = gridTexture;
+                gridMaterial.SetFloat("_Surface", 1);
+                gridMaterial.SetOverrideTag("RenderType", "Transparent");
+                gridMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                gridMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                gridMaterial.SetInt("_ZWrite", 0);
+                gridMaterial.DisableKeyword("_ALPHATEST_ON");
+                gridMaterial.EnableKeyword("_ALPHABLEND_ON");
+                gridMaterial.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+                gridMaterial.renderQueue = 3000;
+            }
 
             // --- GameObject ---
             gridOverlay = new GameObject("PlacementGrid");
