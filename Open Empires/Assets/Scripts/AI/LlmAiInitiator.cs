@@ -203,6 +203,9 @@ namespace OpenEmpires
                 for (int i = 0; i < intents.Count; i++)
                 {
                     var intent = intents[i];
+                    LlmDebug.Cmd($"queue AiIntent {intent.Kind} → AI{aiPid} (issuer {aiPid}/self) "
+                        + $"A={intent.ParamA} B={intent.ParamB} C={intent.ParamC} D={intent.ParamD} "
+                        + $"dur={intent.DurationTicks} trig={intent.TriggerType}/{intent.TriggerMagnitude}");
                     sim.CommandBuffer.EnqueueCommand(new AiIntentCommand(
                         aiPid, aiPid, intent.Kind,
                         intent.ParamA, intent.ParamB, intent.ParamC, intent.ParamD,

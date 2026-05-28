@@ -138,6 +138,9 @@ namespace OpenEmpires
         private static void EnqueueIntent(GameSimulation sim, int aiPlayerId, int issuerPlayerId,
             LlmIntentSchema.ParsedIntent intent)
         {
+            LlmDebug.Cmd($"queue AiIntent {intent.Kind} → AI{aiPlayerId} (issuer {issuerPlayerId}) "
+                + $"A={intent.ParamA} B={intent.ParamB} C={intent.ParamC} D={intent.ParamD} "
+                + $"dur={intent.DurationTicks} trig={intent.TriggerType}/{intent.TriggerMagnitude}");
             sim.CommandBuffer.EnqueueCommand(new AiIntentCommand(
                 aiPlayerId, issuerPlayerId, intent.Kind,
                 intent.ParamA, intent.ParamB, intent.ParamC, intent.ParamD,

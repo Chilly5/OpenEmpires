@@ -16,6 +16,12 @@ namespace OpenEmpires
             if (Verbose) Debug.Log("[LlmAI] " + message);
         }
 
+        // Command-level trace: when the teammate's decisions become game commands.
+        public static void Cmd(string message)
+        {
+            if (Verbose) Debug.Log("[LlmAI cmd] " + message);
+        }
+
         public static void Http(string message)
         {
             if (VerboseHttp) Debug.Log("[LlmAI/http] " + message);

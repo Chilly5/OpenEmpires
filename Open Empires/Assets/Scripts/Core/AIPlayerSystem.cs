@@ -1622,6 +1622,7 @@ namespace OpenEmpires
             int durationTicks, int currentTick)
         {
             int until = currentTick + Mathf.Clamp(durationTicks, 30, 5400); // 1s..3min
+            LlmDebug.Cmd($"AI{playerId} apply {(AiIntentKind)intentKind} A={paramA} B={paramB} C={paramC} D={paramD}");
 
             switch ((AiIntentKind)intentKind)
             {
@@ -2304,6 +2305,7 @@ namespace OpenEmpires
                     continue;
 
                 Issue(new TrainUnitCommand(playerId, building.Id, o.MenuType));
+                LlmDebug.Cmd($"AI{playerId} train unit {o.MenuType} from {bt} ({o.Remaining - 1} left)");
                 spentFood += food; spentWood += wood; spentGold += gold;
                 pop++; // reserve a slot so multiple orders this tick don't overcommit
                 o.Remaining--;
