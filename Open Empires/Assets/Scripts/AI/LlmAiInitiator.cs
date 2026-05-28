@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace OpenEmpires
 {
-    // Fires AI-initiated chat lines (with optional structured intents) when interesting
-    // events happen on an ally AI's side. Polls AIPlayerSystem state once per second;
-    // detects state transitions (age-up, first enemy spotted, army assembled, base attacked);
-    // on transitions, the OWNER client runs the Gemini call and pushes the resulting reply
-    // (locally rendered) + intents (deterministic command path).
+    // Fires AI-initiated chat (with optional tool-driven actions) when interesting events
+    // happen on an ally AI's side. Polls AIPlayerSystem state once per second; detects
+    // transitions (age-up, first enemy spotted, army assembled, base attacked); on a
+    // transition the OWNER client runs the function-calling loop and pushes the resulting
+    // reply (locally rendered) + intents (deterministic command path).
     //
     // Owner rule: lowest-pid human ally of the AI. Ensures exactly one client per AI runs
     // the LLM, regardless of how many humans are on the team.
@@ -77,8 +77,6 @@ namespace OpenEmpires
                 var snap = snapshots.TryGetValue(aiPid, out var existing) ? existing : default;
                 string trigger = DetectTrigger(sim, ai, ref snap);
 
-                // Periodic "what I'm doing now" status, independent of the event triggers
-                // and their cooldown. Only when no event fired this poll.
                 bool fireStatus = false;
                 if (trigger == null && EnableStatusUpdates && snap.Initialized
                     && Time.realtimeSinceStartup - snap.LastStatusRealtime >= StatusUpdateInterval)
@@ -97,7 +95,7 @@ namespace OpenEmpires
                 if (fireStatus)
                 {
                     InitiateStatus(sim, aiPid, apiKey);
-                    return; // one initiation per poll
+                    return;
                 }
             }
         }
@@ -109,19 +107,17 @@ namespace OpenEmpires
             int stateHash = ai.CombatStateName.GetHashCode();
             int underAttackTick = ai.LastEnemyAttackOnMeTick;
 
-            // Initialize on first poll without firing; we want to detect transitions only.
             if (!snap.Initialized)
             {
                 snap.LastAge = age;
                 snap.LastKnownEnemyBaseCount = enemies;
                 snap.LastCombatStateHash = stateHash;
                 snap.LastUnderAttackTick = underAttackTick;
-                snap.LastStatusRealtime = Time.realtimeSinceStartup; // first status fires ~StatusUpdateInterval later
+                snap.LastStatusRealtime = Time.realtimeSinceStartup;
                 snap.Initialized = true;
                 return null;
             }
 
-            // Per-AI cooldown so we don't spam.
             if (Time.realtimeSinceStartup - snap.LastInitiationRealtime < MinSecondsBetweenInitiations)
             {
                 snap.LastAge = age;
@@ -147,7 +143,7 @@ namespace OpenEmpires
             {
                 trigger = $"Your army of {ai.ArmySize} units is assembled at base. Coordinate with the human: push, hold, or wait?";
             }
-            else if (underAttackTick > snap.LastUnderAttackTick + 600 // new attack wave
+            else if (underAttackTick > snap.LastUnderAttackTick + 600
                   && underAttackTick > 0)
             {
                 trigger = "Your base just came under fresh attack. Ask the human for help or commit defenders yourself.";
@@ -181,98 +177,94 @@ namespace OpenEmpires
             return false;
         }
 
+        // Event-driven: the AI may call tools, then speaks. Intents are self-issued
+        // (issuer = the AI itself, which AreAllies treats as same-team).
         private void Initiate(GameSimulation sim, int aiPid, string trigger, string apiKey)
         {
             callInFlight = true;
             string aiName = $"AI Player {aiPid}";
-            string systemPrompt = LlmIntentSchema.BuildSystemPrompt(aiName, aiPid);
+            string systemPrompt = LlmTool.BuildSystemPrompt(aiName);
             string stateLine = LlmStateExtractor.Build(sim, LocalPlayerId, aiPid);
-            string userMessage = "[Game state] " + stateLine + "\n[AI internal event] " + trigger
-                + "\nYou are SPEAKING FIRST to the human teammate. Be brief and concrete.";
+            string userMessage = "[Game state] " + stateLine + "\n[Your internal event] " + trigger
+                + "\nYou are SPEAKING FIRST to your human teammate. If action is warranted, call the matching"
+                + " tools, then give a brief, concrete comms update.";
 
             var history = LlmConversationMemory.GetHistory(LocalPlayerId, aiPid);
+            var contents = LlmToolLoop.BuildInitialContents(history, userMessage);
             Debug.Log($"[LlmAiInitiator] → AI{aiPid}: event='{trigger}'");
 
-            StartCoroutine(GeminiClient.Send(apiKey, systemPrompt, history, userMessage,
-                onSuccess: json => HandleReply(json, aiPid),
+            StartCoroutine(LlmToolLoop.Run(apiKey, systemPrompt, contents, sim, aiPid, aiPid,
+                onComplete: (intents, reply) => HandleEventComplete(intents, reply, aiPid),
                 onFailure: reason =>
                 {
                     callInFlight = false;
-                    Debug.LogWarning($"[LlmAiInitiator] Gemini failed: {reason}");
+                    Debug.LogWarning($"[LlmAiInitiator] LLM turn failed: {reason}");
                 }));
         }
 
-        // Periodic status narration: renders the AI's reply only — does NOT apply intents
-        // or append to conversation memory. It's chatter, not strategy or dialogue, and at a
-        // ~5s cadence appending would bloat the prompt history (and cost). Shares the single
-        // in-flight guard, so the real cadence is "every StatusUpdateInterval seconds, or
-        // whenever the previous LLM call finishes, whichever is later."
-        private void InitiateStatus(GameSimulation sim, int aiPid, string apiKey)
-        {
-            callInFlight = true;
-            string aiName = $"AI Player {aiPid}";
-            string systemPrompt = LlmIntentSchema.BuildSystemPrompt(aiName, aiPid);
-            string stateLine = LlmStateExtractor.Build(sim, LocalPlayerId, aiPid);
-            string userMessage = "[Game state] " + stateLine
-                + "\n[Status check] In ONE short first-person sentence, tell your human teammate what you're focused on right now"
-                + " (economy, army, attacking, defending, aging up) and why. This is routine chatter — do NOT issue new orders.";
-
-            var history = LlmConversationMemory.GetHistory(LocalPlayerId, aiPid);
-            if (logInitiator) Debug.Log($"[LlmAiInitiator] → AI{aiPid}: status check");
-
-            StartCoroutine(GeminiClient.Send(apiKey, systemPrompt, history, userMessage,
-                onSuccess: json => HandleReply(json, aiPid, applyIntents: false, appendMemory: false),
-                onFailure: reason =>
-                {
-                    callInFlight = false;
-                    if (logInitiator) Debug.LogWarning($"[LlmAiInitiator] status Gemini failed: {reason}");
-                }));
-        }
-
-        private void HandleReply(string json, int aiPid, bool applyIntents = true, bool appendMemory = true)
+        private void HandleEventComplete(List<LlmIntentSchema.ParsedIntent> intents, string reply, int aiPid)
         {
             callInFlight = false;
             var sim = GameBootstrapper.Instance?.Simulation;
             if (sim == null) return;
 
-            var parsed = LlmIntentSchema.Parse(json, sim, aiPid, sim.CurrentTick);
-            parsed = LlmIntentSchema.ReconcileReplyAndIntents(parsed, sim, aiPid, sim.CurrentTick);
+            int intentCount = intents?.Count ?? 0;
+            Debug.Log($"[LlmAiInitiator] ← AI{aiPid}: reply='{reply}' intents={intentCount}");
 
-            int intentCount = parsed.Intents?.Count ?? 0;
-            // Event-driven messages always log; suppress the per-status log unless debugging.
-            if (appendMemory || logInitiator)
-                Debug.Log($"[LlmAiInitiator] ← AI{aiPid}: reply='{parsed.Reply}' intents={intentCount} applyIntents={applyIntents}");
-
-            if (!string.IsNullOrEmpty(parsed.Reply))
+            if (!string.IsNullOrEmpty(reply))
             {
-                if (appendMemory)
-                    LlmConversationMemory.Append(LocalPlayerId, aiPid, false, parsed.Reply);
-                RenderAiChatLocally(aiPid, parsed.Reply);
+                string trimmed = reply.Length > LlmIntentSchema.MaxReplyChars
+                    ? reply.Substring(0, LlmIntentSchema.MaxReplyChars)
+                    : reply;
+                LlmConversationMemory.Append(LocalPlayerId, aiPid, false, trimmed);
+                RenderAiChatLocally(aiPid, trimmed);
             }
 
-            if (applyIntents && parsed.Intents != null)
+            if (intents != null)
             {
-                for (int i = 0; i < parsed.Intents.Count; i++)
+                for (int i = 0; i < intents.Count; i++)
                 {
-                    var intent = parsed.Intents[i];
-                    // Issuer = aiPid: self-issued. TeamHelper.AreAllies(x,x) returns true,
-                    // so ProcessAiIntentCommand will accept it.
+                    var intent = intents[i];
                     sim.CommandBuffer.EnqueueCommand(new AiIntentCommand(
-                        aiPid,
-                        aiPid,
-                        intent.Kind,
+                        aiPid, aiPid, intent.Kind,
                         intent.ParamA, intent.ParamB, intent.ParamC, intent.ParamD,
-                        intent.DurationTicks,
-                        intent.TriggerType, intent.TriggerMagnitude));
+                        intent.DurationTicks, intent.TriggerType, intent.TriggerMagnitude));
                 }
             }
 
-            // Catch empty-from-Gemini and silent parse failures so the player isn't left wondering.
-            // Only for event-driven messages — routine status checks stay silent on empty.
-            if (appendMemory && string.IsNullOrEmpty(parsed.Reply) && intentCount == 0)
-            {
+            if (string.IsNullOrEmpty(reply) && intentCount == 0)
                 RenderAiChatLocally(aiPid, "(AI had nothing to say)", isSystem: true);
-            }
+        }
+
+        // Routine status narration: single no-tools call so it stays pure chatter (no
+        // actions), and is not appended to conversation memory to keep the prompt cheap.
+        private void InitiateStatus(GameSimulation sim, int aiPid, string apiKey)
+        {
+            callInFlight = true;
+            string aiName = $"AI Player {aiPid}";
+            string systemPrompt = LlmTool.BuildSystemPrompt(aiName);
+            string stateLine = LlmStateExtractor.Build(sim, LocalPlayerId, aiPid);
+            string userMessage = "[Game state] " + stateLine
+                + "\n[Status check] In ONE short first-person sentence, tell your human teammate what you're"
+                + " focused on right now (economy, army, attacking, defending, aging up) and why."
+                + " This is routine chatter — take NO actions and call NO tools.";
+
+            var history = LlmConversationMemory.GetHistory(LocalPlayerId, aiPid);
+            var contents = LlmToolLoop.BuildInitialContents(history, userMessage);
+            if (logInitiator) Debug.Log($"[LlmAiInitiator] → AI{aiPid}: status check");
+
+            StartCoroutine(GeminiClient.Generate(apiKey, systemPrompt, contents, null,
+                onSuccess: resp =>
+                {
+                    callInFlight = false;
+                    if (resp != null && !string.IsNullOrEmpty(resp.Text))
+                        RenderAiChatLocally(aiPid, resp.Text);
+                },
+                onFailure: reason =>
+                {
+                    callInFlight = false;
+                    if (logInitiator) Debug.LogWarning($"[LlmAiInitiator] status call failed: {reason}");
+                }));
         }
 
         private void RenderAiChatLocally(int aiPlayerId, string text, bool isSystem = false)

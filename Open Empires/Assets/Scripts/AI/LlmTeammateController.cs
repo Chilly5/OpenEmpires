@@ -1,38 +1,33 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace OpenEmpires
 {
-    // Orchestrates free-form chat between the local human and an ally AI teammate.
+    // Orchestrates free-form chat between the local human and an ally AI teammate using
+    // native LLM function calling.
     //
-    // Lives on the same GameObject as ChatUI. Only the typing client runs the LLM call;
-    // structured intents extracted from the response are enqueued as deterministic
-    // AiIntentCommands that replicate to every client through the existing command path.
-    // The AI's free-form reply text renders locally on the typing client only — other
-    // clients see the AI's behavior change but not the chat line. V2 can wire a
-    // server-side relay if cross-client visibility is needed.
+    // Lives on the same GameObject as ChatUI. Only the typing client runs the LLM loop;
+    // the action tools the model calls are collected as deterministic AiIntentCommands
+    // that replicate to every client through the existing command path. The AI's spoken
+    // reply renders locally on the typing client only — other clients see the AI's
+    // behavior change but not the chat line.
     public class LlmTeammateController : MonoBehaviour
     {
-        [Tooltip("Throttle: minimum seconds between LLM calls per local player.")]
+        [Tooltip("Throttle: minimum seconds between LLM turns per local player.")]
         public float MinSecondsBetweenCalls = 5f;
-
-        [Tooltip("Log when reply↔intent reconciliation synthesizes intents or replies.")]
-        [SerializeField] private bool logReconciliation;
 
         private float lastCallTimeRealtime = -100f;
         private bool callInFlight;
 
-        // One-shot diagnostic flags so we don't spam logs/chat on every keystroke.
         private bool warnedNoApiKey;
         private bool warnedNoAi;
         private bool warnedSimMissing;
 
-        // Rate-limit transient "AI busy" notices so a spam-typer doesn't fill chat
-        // with system lines. One notice per 2 seconds is enough to inform without spam.
         private float lastBusyNoticeRealtime = -100f;
         private const float BusyNoticeCooldown = 2f;
 
-        // Returns true if this controller took ownership of the message (i.e. fired
-        // an LLM call). Caller should skip the legacy keyword→ping path when true.
+        // Returns true if this controller took ownership of the message (i.e. fired an
+        // LLM turn). Caller should skip the legacy keyword→ping path when true.
         public bool OnPlayerMessage(string text, int issuerPlayerId)
         {
             if (string.IsNullOrEmpty(text)) return false;
@@ -58,8 +53,6 @@ namespace OpenEmpires
                 return false;
             }
 
-            // Throttle: excess messages fall through to the legacy keyword path so the
-            // player still gets *some* response. Surface why so it doesn't feel ignored.
             float now = Time.realtimeSinceStartup;
             if (callInFlight)
             {
@@ -76,80 +69,65 @@ namespace OpenEmpires
             callInFlight = true;
 
             string aiName = $"AI Player {aiPlayerId}";
-            string systemPrompt = LlmIntentSchema.BuildSystemPrompt(aiName, aiPlayerId);
+            string systemPrompt = LlmTool.BuildSystemPrompt(aiName);
             string stateLine = LlmStateExtractor.Build(sim, issuerPlayerId, aiPlayerId);
-            string userMessage = "[Game state] " + stateLine + "\n[Player says] " + text;
+            string userMessage = "[Game state] " + stateLine + "\n[Teammate says] " + text;
 
             var history = LlmConversationMemory.GetHistory(issuerPlayerId, aiPlayerId);
             LlmConversationMemory.Append(issuerPlayerId, aiPlayerId, true, text);
+            var contents = LlmToolLoop.BuildInitialContents(history, userMessage);
 
-            int tickAtSend = sim.CurrentTick;
             Debug.Log($"[LlmTeammate] → AI{aiPlayerId}: {text}");
-            StartCoroutine(GeminiClient.Send(apiKey, systemPrompt, history, userMessage,
-                onSuccess: json => HandleLlmReply(json, issuerPlayerId, aiPlayerId, tickAtSend),
-                onFailure: reason => HandleLlmFailure(reason, aiPlayerId)));
+            StartCoroutine(LlmToolLoop.Run(apiKey, systemPrompt, contents, sim, aiPlayerId, issuerPlayerId,
+                onComplete: (intents, reply) => HandleComplete(intents, reply, issuerPlayerId, aiPlayerId),
+                onFailure: reason => HandleFailure(reason, aiPlayerId)));
             return true;
         }
 
-        private void HandleLlmReply(string json, int issuerPlayerId, int aiPlayerId, int tickAtSend)
+        private void HandleComplete(List<LlmIntentSchema.ParsedIntent> intents, string reply,
+            int issuerPlayerId, int aiPlayerId)
         {
             callInFlight = false;
             var sim = GameBootstrapper.Instance?.Simulation;
             if (sim == null) return;
 
-            // TEMP DIAGNOSTIC — remove once empty-Result root cause is identified.
-            Debug.Log($"[LlmTeammate] raw response (first 800 chars): {(json == null ? "<null>" : json.Substring(0, System.Math.Min(800, json.Length)))}");
+            int intentCount = intents?.Count ?? 0;
+            Debug.Log($"[LlmTeammate] ← AI{aiPlayerId}: reply='{reply}' intents={intentCount}");
 
-            var parsed = LlmIntentSchema.Parse(json, sim, aiPlayerId, sim.CurrentTick);
-
-            int intentsBefore = parsed.Intents?.Count ?? 0;
-            string replyBefore = parsed.Reply ?? string.Empty;
-            parsed = LlmIntentSchema.ReconcileReplyAndIntents(parsed, sim, aiPlayerId, sim.CurrentTick);
-            if (logReconciliation)
+            if (!string.IsNullOrEmpty(reply))
             {
-                int intentsAfter = parsed.Intents?.Count ?? 0;
-                if (intentsAfter != intentsBefore || !ReferenceEquals(parsed.Reply, replyBefore))
-                {
-                    Debug.Log($"[LlmTeammate] Reconciled: intents {intentsBefore}→{intentsAfter}, reply='{parsed.Reply}'");
-                }
+                string trimmed = reply.Length > LlmIntentSchema.MaxReplyChars
+                    ? reply.Substring(0, LlmIntentSchema.MaxReplyChars)
+                    : reply;
+                LlmConversationMemory.Append(issuerPlayerId, aiPlayerId, false, trimmed);
+                RenderAiChatLocally(aiPlayerId, trimmed);
             }
 
-            int intentCount = parsed.Intents?.Count ?? 0;
-            Debug.Log($"[LlmTeammate] ← AI{aiPlayerId}: reply='{parsed.Reply}' intents={intentCount}");
-
-            if (!string.IsNullOrEmpty(parsed.Reply))
+            if (intents != null)
             {
-                LlmConversationMemory.Append(issuerPlayerId, aiPlayerId, false, parsed.Reply);
-                RenderAiChatLocally(aiPlayerId, parsed.Reply);
+                for (int i = 0; i < intents.Count; i++)
+                    EnqueueIntent(sim, aiPlayerId, issuerPlayerId, intents[i]);
             }
 
-            if (parsed.Intents != null)
-            {
-                for (int i = 0; i < parsed.Intents.Count; i++)
-                {
-                    var intent = parsed.Intents[i];
-                    sim.CommandBuffer.EnqueueCommand(new AiIntentCommand(
-                        aiPlayerId,
-                        issuerPlayerId,
-                        intent.Kind,
-                        intent.ParamA, intent.ParamB, intent.ParamC, intent.ParamD,
-                        intent.DurationTicks,
-                        intent.TriggerType, intent.TriggerMagnitude));
-                }
-            }
-
-            // Catch empty-from-Gemini and silent parse failures so the player isn't left wondering.
-            if (string.IsNullOrEmpty(parsed.Reply) && intentCount == 0)
-            {
+            if (string.IsNullOrEmpty(reply) && intentCount == 0)
                 RenderAiChatLocally(aiPlayerId, "(AI had nothing to say)", isSystem: true);
-            }
         }
 
-        private void HandleLlmFailure(string reason, int aiPlayerId)
+        private void HandleFailure(string reason, int aiPlayerId)
         {
             callInFlight = false;
-            Debug.LogWarning($"[LlmTeammate] Gemini call failed: {reason}");
+            Debug.LogWarning($"[LlmTeammate] LLM turn failed: {reason}");
             RenderAiChatLocally(aiPlayerId, "(AI didn't respond)", isSystem: true);
+        }
+
+        // issuerPlayerId = the human who asked; must be a same-team ally of the target AI.
+        private static void EnqueueIntent(GameSimulation sim, int aiPlayerId, int issuerPlayerId,
+            LlmIntentSchema.ParsedIntent intent)
+        {
+            sim.CommandBuffer.EnqueueCommand(new AiIntentCommand(
+                aiPlayerId, issuerPlayerId, intent.Kind,
+                intent.ParamA, intent.ParamB, intent.ParamC, intent.ParamD,
+                intent.DurationTicks, intent.TriggerType, intent.TriggerMagnitude));
         }
 
         private void RenderAiChatLocally(int aiPlayerId, string text, bool isSystem = false)
@@ -169,8 +147,6 @@ namespace OpenEmpires
             });
         }
 
-        // Logs once per session AND posts a one-time system chat line so the player
-        // sees *why* the AI isn't responding instead of just silence.
         private void WarnOnce(ref bool flag, string message)
         {
             if (flag) return;
@@ -187,9 +163,6 @@ namespace OpenEmpires
             });
         }
 
-        // Transient notice — rate-limited so spamming the input field can't spam the chat.
-        // Used for normal-but-opaque conditions (throttle, in-flight) so the player can see
-        // their typed message wasn't lost to a bug.
         private void PostBusyNotice(string message)
         {
             float now = Time.realtimeSinceStartup;

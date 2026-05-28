@@ -80,6 +80,17 @@ namespace OpenEmpires
         private int forceAgeUpTarget;                // 0 = none, 2/3 = push age
         private int forceAgeUpUntilTick = -1;
 
+        // ── Expanded LLM control surface (build/train/rally/mix). All set by ApplyIntent
+        //    and read deterministically inside the tick, so lockstep holds. ──
+        private int pendingLlmBuildTick;             // retry gate for BuildStructure intents
+        private bool prodMixActive;                  // SetProductionMix override active
+        private int prodMixArchers, prodMixCavalry, prodMixInfantry; // relative weights 0..100
+        private int prodMixUntilTick = -1;
+
+        private struct TrainOrder { public int MenuType; public int Remaining; public int ExpiryTick; }
+        private readonly List<TrainOrder> trainOrders = new List<TrainOrder>();
+        private const int MaxTrainOrders = 8;
+
         public int EffectiveAttackThreshold(int currentTick)
         {
             if (currentTick < aggressionOverrideUntilTick && aggressionAttackOverride > 0)
@@ -1038,7 +1049,13 @@ namespace OpenEmpires
 
             var resources = sim.ResourceManager.GetPlayerResources(playerId);
 
-            if (useCounterUnits && difficulty == AIDifficulty.Hard)
+            // Fulfill explicit train requests from the teammate first, then fall back to
+            // the AI's own production policy (a human-set production mix, counter mix, or default).
+            TickTrainOrders(resources, currentTick);
+
+            if (prodMixActive && currentTick < prodMixUntilTick)
+                TrainByMix(resources);
+            else if (useCounterUnits && difficulty == AIDifficulty.Hard)
                 TrainCounterUnits(resources);
             else
                 TrainDefaultMix(resources);
@@ -1672,6 +1689,45 @@ namespace OpenEmpires
                     forceAgeUpTarget = Mathf.Clamp(paramA, 2, 3);
                     forceAgeUpUntilTick = until;
                     break;
+                case AiIntentKind.BuildStructure:
+                {
+                    var btype = (BuildingType)paramA;
+                    int tileX = paramB >> Fixed32.FractionalBits;
+                    int tileZ = paramC >> Fixed32.FractionalBits;
+                    pendingLlmBuildTick = currentTick; // clear the retry gate for an immediate attempt
+                    TryPlaceBuilding(btype, tileX, tileZ, currentTick, ref pendingLlmBuildTick);
+                    break;
+                }
+                case AiIntentKind.TrainUnits:
+                    AddTrainOrder(paramA, Mathf.Clamp(paramB, 1, 30), until);
+                    break;
+                case AiIntentKind.SetProductionMix:
+                    prodMixArchers = Mathf.Clamp(paramA, 0, 100);
+                    prodMixCavalry = Mathf.Clamp(paramB, 0, 100);
+                    prodMixInfantry = Mathf.Clamp(paramC, 0, 100);
+                    prodMixActive = (prodMixArchers + prodMixCavalry + prodMixInfantry) > 0;
+                    prodMixUntilTick = until;
+                    break;
+                case AiIntentKind.SetArmyRally:
+                    SetAllMilitaryRally(new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB)));
+                    break;
+                case AiIntentKind.ScoutArea:
+                    SendScoutTo(new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB)), until);
+                    break;
+                case AiIntentKind.RegroupArmy:
+                    MoveAllCombatTo(new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB)));
+                    break;
+                case AiIntentKind.RetreatToBase:
+                    MoveAllCombatTo(new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB)));
+                    // Stand down and play passive so TickCombat doesn't immediately re-commit.
+                    combatState = CombatState.Building;
+                    aggressionAttackOverride = 32; // highest threshold = least likely to attack
+                    aggressionRetreatOverride = 70;
+                    aggressionOverrideUntilTick = until;
+                    break;
+                case AiIntentKind.Research:
+                    IssueResearch((TechnologyType)paramA);
+                    break;
                 case AiIntentKind.Acknowledge:
                 case AiIntentKind.Decline:
                     // chat-only, no behavior change
@@ -2197,6 +2253,188 @@ namespace OpenEmpires
                 }
             }
             return best;
+        }
+
+        // ── Expanded LLM control-surface helpers ────────────────────────
+        // All run inside the deterministic tick (via ApplyIntent) and only enqueue
+        // AI commands, so lockstep determinism holds across clients.
+
+        private void AddTrainOrder(int menuType, int count, int expiryTick)
+        {
+            for (int i = 0; i < trainOrders.Count; i++)
+            {
+                if (trainOrders[i].MenuType == menuType)
+                {
+                    var o = trainOrders[i];
+                    o.Remaining = Mathf.Min(60, o.Remaining + count);
+                    o.ExpiryTick = expiryTick;
+                    trainOrders[i] = o;
+                    return;
+                }
+            }
+            if (trainOrders.Count >= MaxTrainOrders) return;
+            trainOrders.Add(new TrainOrder { MenuType = menuType, Remaining = count, ExpiryTick = expiryTick });
+        }
+
+        // Drain outstanding train requests, one unit per order per military tick,
+        // respecting building availability, pop cap, queue depth and affordability.
+        // ProcessTrainUnitCommand re-validates, but we pre-check so we only decrement
+        // an order when the unit will actually be queued.
+        private void TickTrainOrders(PlayerResources resources, int currentTick)
+        {
+            if (trainOrders.Count == 0) return;
+            int spentFood = 0, spentWood = 0, spentGold = 0;
+            int pop = sim.GetPopulation(playerId);
+            int popCap = sim.GetPopulationCap(playerId);
+
+            for (int i = trainOrders.Count - 1; i >= 0; i--)
+            {
+                var o = trainOrders[i];
+                if (currentTick >= o.ExpiryTick || o.Remaining <= 0) { trainOrders.RemoveAt(i); continue; }
+                if (!TryGetTrainSpec(o.MenuType, out var bt, out int food, out int wood, out int gold))
+                {
+                    trainOrders.RemoveAt(i);
+                    continue;
+                }
+                var building = GetMyBuilding(bt);
+                if (building == null || building.IsUnderConstruction || building.IsDestroyed) continue;
+                if (building.TrainingQueue.Count >= 8) continue;
+                if (o.MenuType != 0 && pop >= popCap) continue;
+                if (resources.Food - spentFood < food || resources.Wood - spentWood < wood || resources.Gold - spentGold < gold)
+                    continue;
+
+                Issue(new TrainUnitCommand(playerId, building.Id, o.MenuType));
+                spentFood += food; spentWood += wood; spentGold += gold;
+                pop++; // reserve a slot so multiple orders this tick don't overcommit
+                o.Remaining--;
+                trainOrders[i] = o;
+            }
+        }
+
+        // Maps a menu unit type to its production building and resource cost.
+        private bool TryGetTrainSpec(int menuType, out BuildingType building, out int food, out int wood, out int gold)
+        {
+            food = 0; wood = 0; gold = 0; building = BuildingType.Barracks;
+            var cfg = sim.Config;
+            switch (menuType)
+            {
+                case 0: building = BuildingType.TownCenter; food = cfg.VillagerFoodCost; return true;
+                case 1: building = BuildingType.Barracks;     GetResolvedCosts(1, out _, out food, out wood, out gold); return true;
+                case 2: building = BuildingType.ArcheryRange; GetResolvedCosts(2, out _, out food, out wood, out gold); return true;
+                case 3: building = BuildingType.Stables;      GetResolvedCosts(3, out _, out food, out wood, out gold); return true;
+                case 4: building = BuildingType.Stables;      food = cfg.ScoutFoodCost; wood = cfg.ScoutWoodCost; return true;
+                case 6: building = BuildingType.Barracks;     food = cfg.ManAtArmsFoodCost;   gold = cfg.ManAtArmsGoldCost;   return true;
+                case 7: building = BuildingType.Stables;      food = cfg.KnightFoodCost;      gold = cfg.KnightGoldCost;      return true;
+                case 8: building = BuildingType.ArcheryRange; food = cfg.CrossbowmanFoodCost; gold = cfg.CrossbowmanGoldCost; return true;
+                case 9: building = BuildingType.Monastery;    food = cfg.MonkFoodCost;        gold = cfg.MonkGoldCost;        return true;
+            }
+            return false;
+        }
+
+        // Train toward a human-set production ratio: each tick train the single role
+        // furthest below its target share of the current army.
+        private void TrainByMix(PlayerResources resources)
+        {
+            int total = prodMixArchers + prodMixCavalry + prodMixInfantry;
+            if (total <= 0) { TrainDefaultMix(resources); return; }
+
+            int curA = 0, curC = 0, curI = 0;
+            for (int i = 0; i < cachedCombatUnits.Count; i++)
+            {
+                int ut = cachedCombatUnits[i].UnitType;
+                if (ut == 2 || ut == 10 || ut == 8) curA++;
+                else if (ut == 3 || ut == 11 || ut == 7) curC++;
+                else if (ut == 1 || ut == 12 || ut == 6) curI++;
+            }
+            int curTotal = Mathf.Max(1, curA + curC + curI);
+            // deficit > 0 means under target (cross-multiplied to stay integer).
+            int defA = prodMixArchers * curTotal - curA * total;
+            int defC = prodMixCavalry * curTotal - curC * total;
+            int defI = prodMixInfantry * curTotal - curI * total;
+
+            int role = 0, best = defA;
+            if (defC > best) { best = defC; role = 1; }
+            if (defI > best) { best = defI; role = 2; }
+            TrainRole(role, resources);
+        }
+
+        // role: 0 = archers, 1 = cavalry, 2 = infantry.
+        private void TrainRole(int role, PlayerResources resources)
+        {
+            bool age3 = sim.GetPlayerAge(playerId) >= 3;
+            switch (role)
+            {
+                case 0:
+                    GetResolvedCosts(2, out _, out int af, out int aw, out int ag);
+                    TrainFromBuilding(BuildingType.ArcheryRange, 2, af, aw, ag, resources);
+                    if (age3)
+                        TrainFromBuilding(BuildingType.ArcheryRange, 8, sim.Config.CrossbowmanFoodCost, 0, sim.Config.CrossbowmanGoldCost, resources);
+                    break;
+                case 1:
+                    if (HasBuilding(BuildingType.Stables))
+                    {
+                        GetResolvedCosts(3, out _, out int cf, out int cw, out int cg);
+                        TrainFromBuilding(BuildingType.Stables, 3, cf, cw, cg, resources);
+                        if (age3)
+                            TrainFromBuilding(BuildingType.Stables, 7, sim.Config.KnightFoodCost, 0, sim.Config.KnightGoldCost, resources);
+                    }
+                    break;
+                default:
+                    GetResolvedCosts(1, out _, out int sf, out int sw, out int sg);
+                    TrainFromBuilding(BuildingType.Barracks, 1, sf, sw, sg, resources);
+                    if (age3)
+                        TrainFromBuilding(BuildingType.Barracks, 6, sim.Config.ManAtArmsFoodCost, 0, sim.Config.ManAtArmsGoldCost, resources);
+                    break;
+            }
+        }
+
+        private void SetAllMilitaryRally(FixedVector3 pos)
+        {
+            for (int i = 0; i < cachedMyBuildings.Count; i++)
+            {
+                var b = cachedMyBuildings[i];
+                if (b.IsDestroyed || b.IsUnderConstruction) continue;
+                if (b.Type == BuildingType.Barracks || b.Type == BuildingType.ArcheryRange
+                    || b.Type == BuildingType.Stables || b.Type == BuildingType.Monastery)
+                    Issue(new SetRallyPointCommand(playerId, b.Id, pos, -1));
+            }
+        }
+
+        // Scouts (UnitType 4) are not part of the combat army, so a direct move sticks.
+        private void SendScoutTo(FixedVector3 pos, int untilTick)
+        {
+            for (int i = 0; i < cachedMyUnits.Count; i++)
+            {
+                var u = cachedMyUnits[i];
+                if (u.State == UnitState.Dead) continue;
+                if (u.UnitType == 4)
+                {
+                    Issue(new MoveCommand(playerId, new int[] { u.Id }, pos));
+                    return;
+                }
+            }
+            // No scout available — queue one so the AI can scout going forward.
+            AddTrainOrder(4, 1, untilTick);
+        }
+
+        private void MoveAllCombatTo(FixedVector3 pos)
+        {
+            GetMyCombatUnits(tempCombatUnits);
+            if (tempCombatUnits.Count == 0) return;
+            tempUnitIds.Clear();
+            for (int i = 0; i < tempCombatUnits.Count; i++)
+                tempUnitIds.Add(tempCombatUnits[i].Id);
+            Issue(new MoveCommand(playerId, tempUnitIds.ToArray(), pos));
+        }
+
+        private void IssueResearch(TechnologyType tech)
+        {
+            BuildingType bt = (tech == TechnologyType.BlacksmithDamage || tech == TechnologyType.BlacksmithDefense)
+                ? BuildingType.Blacksmith
+                : BuildingType.University;
+            var b = GetMyBuilding(bt);
+            if (b == null || b.IsDestroyed || b.IsUnderConstruction) return;
+            Issue(new ResearchCommand(playerId, b.Id, tech));
         }
 
         private void Issue(ICommand command)

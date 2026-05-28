@@ -18,6 +18,15 @@ namespace OpenEmpires
         PushAgeUp          = 6, // ParamA = target age (2 or 3)
         Acknowledge        = 7, // chat-only, no behavior change
         Decline            = 8, // chat-only, no behavior change
+        // ── Expanded "full control surface" intents (native function calling) ──
+        BuildStructure     = 9,  // ParamA = BuildingType, ParamB/C = Fixed32 raw worldX/worldZ (converted to tile)
+        TrainUnits         = 10, // ParamA = menu unit type, ParamB = count
+        SetProductionMix   = 11, // ParamA = archer weight, ParamB = cavalry weight, ParamC = infantry weight (0..100)
+        SetArmyRally       = 12, // ParamA/B = Fixed32 raw worldX/worldZ (rally for all military buildings)
+        ScoutArea          = 13, // ParamA/B = Fixed32 raw worldX/worldZ
+        RegroupArmy        = 14, // ParamA/B = Fixed32 raw worldX/worldZ (gather army)
+        RetreatToBase      = 15, // ParamA/B = Fixed32 raw worldX/worldZ (own TC)
+        Research           = 16, // ParamA = TechnologyType
     }
 
     public struct AiIntentCommand : ICommand

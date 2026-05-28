@@ -7,23 +7,86 @@ using UnityEngine.Networking;
 
 namespace OpenEmpires
 {
-    // Thin coroutine wrapper around Gemini's generateContent endpoint. Coroutines are
-    // required because UnityWebRequest is async-only; the controller (a MonoBehaviour)
-    // owns the coroutine lifetime.
+    // Transport layer for Gemini's generateContent endpoint with native function
+    // calling. One Generate() call is a single HTTP round-trip; the multi-turn tool
+    // loop (call -> functionResponse -> call -> final reply) lives in LlmToolLoop,
+    // which owns the growing contents list and re-invokes Generate per turn.
+    //
+    // Coroutines are required because UnityWebRequest is async-only; the calling
+    // MonoBehaviour owns the coroutine lifetime. Everything here is non-deterministic
+    // and local to the owner client — no sim state is ever read or written.
     public static class GeminiClient
     {
+        private const string Model = "gemini-3.5-flash";
         private const string Endpoint =
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent";
-        private const float TimeoutSeconds = 8f;
+            "https://generativelanguage.googleapis.com/v1beta/models/" + Model + ":generateContent";
+        private const float TimeoutSeconds = 30f; // thinking models can be slow; the loop, not the game, waits
 
+        // ── Stored conversation history (text only). Used by LlmConversationMemory. ──
         public struct Turn
         {
             public bool IsUser; // false = AI/model
             public string Text;
         }
 
-        public static IEnumerator Send(string apiKey, string systemPrompt, List<Turn> history,
-            string userMessage, Action<string> onSuccess, Action<string> onFailure)
+        // ── Live request content model. A turn's parts may mix text, functionCall
+        //    (echoed model calls), and functionResponse (our tool results). ──
+        public sealed class Content
+        {
+            public string Role;                 // "user" | "model"
+            public readonly List<Part> Parts = new List<Part>();
+
+            public Content(string role) { Role = role; }
+
+            public static Content UserText(string text)
+            {
+                var c = new Content("user");
+                c.Parts.Add(new Part { Text = text });
+                return c;
+            }
+
+            public static Content ModelText(string text)
+            {
+                var c = new Content("model");
+                c.Parts.Add(new Part { Text = text });
+                return c;
+            }
+        }
+
+        public sealed class Part
+        {
+            // Exactly one of these is populated.
+            public string Text;
+            public FunctionCall Call;
+            public FunctionResponse Response;
+        }
+
+        public sealed class FunctionCall
+        {
+            public string Name;
+            public JsonValue Args; // parsed args object (may be null / empty)
+        }
+
+        public sealed class FunctionResponse
+        {
+            public string Name;
+            public string ResultText;
+        }
+
+        // ── Parsed model response for one turn. ──
+        public sealed class Response
+        {
+            public string Text = string.Empty;
+            public readonly List<FunctionCall> Calls = new List<FunctionCall>();
+            public string FinishReason = string.Empty;
+            public bool HasCalls => Calls.Count > 0;
+        }
+
+        // Single round-trip. toolsJson is the inner tool object
+        // ({"functionDeclarations":[...]}) or null to disable tools for this call.
+        public static IEnumerator Generate(string apiKey, string systemPrompt,
+            List<Content> contents, string toolsJson,
+            Action<Response> onSuccess, Action<string> onFailure)
         {
             if (string.IsNullOrEmpty(apiKey))
             {
@@ -31,7 +94,7 @@ namespace OpenEmpires
                 yield break;
             }
 
-            string body = BuildRequestBody(systemPrompt, history, userMessage);
+            string body = BuildRequestBody(systemPrompt, contents, toolsJson);
             string url = Endpoint + "?key=" + UnityWebRequest.EscapeURL(apiKey);
 
             using (var req = new UnityWebRequest(url, "POST"))
@@ -57,141 +120,135 @@ namespace OpenEmpires
 
                 if (req.result != UnityWebRequest.Result.Success)
                 {
-                    onFailure?.Invoke($"http-{(int)req.responseCode}:{req.error}");
+                    string detail = req.downloadHandler != null ? req.downloadHandler.text : null;
+                    onFailure?.Invoke($"http-{(int)req.responseCode}:{req.error}:{Truncate(detail, 300)}");
                     yield break;
                 }
 
-                // TEMP DIAGNOSTIC — full HTTP body for one round-trip so we can inspect finishReason / thought parts.
-                string fullBody = req.downloadHandler.text ?? string.Empty;
-                UnityEngine.Debug.Log($"[GeminiClient] full HTTP response (first 1500 chars): {fullBody.Substring(0, System.Math.Min(1500, fullBody.Length))}");
-
-                string text = ExtractTextFromResponse(fullBody);
-                if (string.IsNullOrEmpty(text))
+                var parsed = ParseResponse(req.downloadHandler.text);
+                if (parsed == null)
                 {
-                    onFailure?.Invoke("empty-response");
+                    onFailure?.Invoke("unparseable-response");
                     yield break;
                 }
-                onSuccess?.Invoke(text);
+                onSuccess?.Invoke(parsed);
             }
         }
 
-        private static string BuildRequestBody(string systemPrompt, List<Turn> history, string userMessage)
+        private static string BuildRequestBody(string systemPrompt, List<Content> contents, string toolsJson)
         {
-            var sb = new StringBuilder(1024);
-            sb.Append("{");
+            var sb = new StringBuilder(2048);
+            sb.Append('{');
+
             sb.Append("\"system_instruction\":{\"parts\":[{\"text\":");
-            AppendJsonString(sb, systemPrompt ?? string.Empty);
+            JsonValue.AppendEscaped(sb, systemPrompt ?? string.Empty);
             sb.Append("}]},");
+
             sb.Append("\"contents\":[");
-            bool first = true;
-            if (history != null)
+            if (contents != null)
             {
-                for (int i = 0; i < history.Count; i++)
+                for (int i = 0; i < contents.Count; i++)
                 {
-                    if (!first) sb.Append(',');
-                    sb.Append("{\"role\":\"");
-                    sb.Append(history[i].IsUser ? "user" : "model");
-                    sb.Append("\",\"parts\":[{\"text\":");
-                    AppendJsonString(sb, history[i].Text ?? string.Empty);
-                    sb.Append("}]}");
-                    first = false;
+                    if (i > 0) sb.Append(',');
+                    AppendContent(sb, contents[i]);
                 }
             }
-            if (!first) sb.Append(',');
-            sb.Append("{\"role\":\"user\",\"parts\":[{\"text\":");
-            AppendJsonString(sb, userMessage ?? string.Empty);
-            sb.Append("}]}");
             sb.Append("],");
+
+            if (!string.IsNullOrEmpty(toolsJson))
+            {
+                sb.Append("\"tools\":[").Append(toolsJson).Append("],");
+                sb.Append("\"toolConfig\":{\"functionCallingConfig\":{\"mode\":\"AUTO\"}},");
+            }
+
             sb.Append("\"generationConfig\":{");
-            sb.Append("\"responseMimeType\":\"application/json\",");
             sb.Append("\"temperature\":0.7,");
-            // High output ceiling — gives thinking + visible reply plenty of room.
-            // UI-side caps (MaxReplyChars, MaxIntentsPerTurn in LlmIntentSchema) keep the
-            // rendered output sane regardless of how much the model produces.
             sb.Append("\"maxOutputTokens\":4096");
             sb.Append("}}");
             return sb.ToString();
         }
 
-        private static void AppendJsonString(StringBuilder sb, string s)
+        private static void AppendContent(StringBuilder sb, Content c)
         {
-            sb.Append('"');
-            for (int i = 0; i < s.Length; i++)
+            sb.Append("{\"role\":\"").Append(c.Role).Append("\",\"parts\":[");
+            for (int i = 0; i < c.Parts.Count; i++)
             {
-                char c = s[i];
-                switch (c)
-                {
-                    case '"':  sb.Append("\\\""); break;
-                    case '\\': sb.Append("\\\\"); break;
-                    case '\n': sb.Append("\\n");  break;
-                    case '\r': sb.Append("\\r");  break;
-                    case '\t': sb.Append("\\t");  break;
-                    case '\b': sb.Append("\\b");  break;
-                    case '\f': sb.Append("\\f");  break;
-                    default:
-                        if (c < 0x20) sb.AppendFormat("\\u{0:x4}", (int)c);
-                        else sb.Append(c);
-                        break;
-                }
+                if (i > 0) sb.Append(',');
+                AppendPart(sb, c.Parts[i]);
             }
-            sb.Append('"');
+            sb.Append("]}");
         }
 
-        // Pull candidates[0].content.parts[0].text out of the response without a full
-        // JSON parser. The shape is fixed by Gemini; this is fragile but cheap.
-        private static string ExtractTextFromResponse(string json)
+        private static void AppendPart(StringBuilder sb, Part p)
         {
-            if (string.IsNullOrEmpty(json)) return null;
-            int candIdx = json.IndexOf("\"candidates\"", StringComparison.Ordinal);
-            if (candIdx < 0) return null;
-            int textIdx = json.IndexOf("\"text\"", candIdx, StringComparison.Ordinal);
-            if (textIdx < 0) return null;
-            int colon = json.IndexOf(':', textIdx);
-            if (colon < 0) return null;
-            int i = colon + 1;
-            while (i < json.Length && (json[i] == ' ' || json[i] == '\t' || json[i] == '\n' || json[i] == '\r')) i++;
-            if (i >= json.Length || json[i] != '"') return null;
-            i++;
-            var sb = new StringBuilder(256);
-            while (i < json.Length)
+            if (p.Call != null)
             {
-                char c = json[i];
-                if (c == '\\' && i + 1 < json.Length)
-                {
-                    char n = json[i + 1];
-                    switch (n)
-                    {
-                        case '"':  sb.Append('"');  i += 2; continue;
-                        case '\\': sb.Append('\\'); i += 2; continue;
-                        case 'n':  sb.Append('\n'); i += 2; continue;
-                        case 'r':  sb.Append('\r'); i += 2; continue;
-                        case 't':  sb.Append('\t'); i += 2; continue;
-                        case '/':  sb.Append('/');  i += 2; continue;
-                        case 'b':  sb.Append('\b'); i += 2; continue;
-                        case 'f':  sb.Append('\f'); i += 2; continue;
-                        case 'u':
-                            if (i + 5 < json.Length && int.TryParse(json.Substring(i + 2, 4),
-                                System.Globalization.NumberStyles.HexNumber,
-                                System.Globalization.CultureInfo.InvariantCulture, out int code))
-                            {
-                                sb.Append((char)code);
-                                i += 6;
-                                continue;
-                            }
-                            break;
-                    }
-                    sb.Append(c); i++;
-                }
-                else if (c == '"')
-                {
-                    return sb.ToString();
-                }
-                else
-                {
-                    sb.Append(c); i++;
-                }
+                sb.Append("{\"functionCall\":{\"name\":");
+                JsonValue.AppendEscaped(sb, p.Call.Name);
+                sb.Append(",\"args\":");
+                if (p.Call.Args != null && p.Call.Args.IsObject) p.Call.Args.AppendTo(sb);
+                else sb.Append("{}");
+                sb.Append("}}");
             }
-            return null;
+            else if (p.Response != null)
+            {
+                sb.Append("{\"functionResponse\":{\"name\":");
+                JsonValue.AppendEscaped(sb, p.Response.Name);
+                sb.Append(",\"response\":{\"result\":");
+                JsonValue.AppendEscaped(sb, p.Response.ResultText ?? string.Empty);
+                sb.Append("}}}");
+            }
+            else
+            {
+                sb.Append("{\"text\":");
+                JsonValue.AppendEscaped(sb, p.Text ?? string.Empty);
+                sb.Append('}');
+            }
+        }
+
+        private static Response ParseResponse(string json)
+        {
+            var root = LlmJson.Parse(json);
+            if (root == null) return null;
+
+            var result = new Response();
+            var cand = root["candidates"][0];
+            result.FinishReason = cand["finishReason"].AsString();
+
+            var parts = cand["content"]["parts"];
+            if (parts.IsArray)
+            {
+                var sb = new StringBuilder(256);
+                for (int i = 0; i < parts.Count; i++)
+                {
+                    var part = parts[i];
+                    // Skip "thought" parts (Gemini thinking traces) — not the visible reply.
+                    if (part["thought"].AsBool()) continue;
+
+                    if (part.ContainsKey("functionCall"))
+                    {
+                        var fc = part["functionCall"];
+                        result.Calls.Add(new FunctionCall
+                        {
+                            Name = fc["name"].AsString(),
+                            Args = fc["args"],
+                        });
+                    }
+                    else if (part.ContainsKey("text"))
+                    {
+                        if (sb.Length > 0) sb.Append(' ');
+                        sb.Append(part["text"].AsString());
+                    }
+                }
+                result.Text = sb.ToString();
+            }
+            return result;
+        }
+
+        private static string Truncate(string s, int max)
+        {
+            if (string.IsNullOrEmpty(s)) return string.Empty;
+            return s.Length <= max ? s : s.Substring(0, max);
         }
     }
 }
