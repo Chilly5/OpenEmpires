@@ -200,10 +200,10 @@ namespace OpenEmpires
                     new WallSpriteSelection("Stonewall90",     false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f), -0.2f) },
                 { (BuildingType.StoneWall, WallSegmentKind.CardinalNS),
                     new WallSpriteSelection("Stonewall90B",    false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f), -0.2f) },
-                // Stonewall45B uvOffset.x bumped 0.085 → 0.098 to shift the rendered art
-                // ~0.1 world units left in screen space.
+                // Stonewall45B uvOffset.x set to 0.077 to shift the rendered art ~0.06 world
+                // units right in screen space (from the default 0.085 baseline).
                 { (BuildingType.StoneWall, WallSegmentKind.DiagonalNESW),
-                    new WallSpriteSelection("Stonewall45B",    false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.098f, 0f)) },
+                    new WallSpriteSelection("Stonewall45B",    false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.077f, 0f)) },
                 { (BuildingType.StoneWall, WallSegmentKind.DiagonalNWSE),
                     new WallSpriteSelection("Stonewall45",     false, 0f, new Vector2(0.85f, 0.85f), new Vector2(0.085f, 0f), -0.07f) },
                 { (BuildingType.StoneWall, WallSegmentKind.Junction),
