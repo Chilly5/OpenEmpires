@@ -57,7 +57,12 @@ namespace OpenEmpires
                 {
                     modelTurn.Parts.Add(new GeminiClient.Part
                     {
-                        Call = new GeminiClient.FunctionCall { Name = resp.Calls[i].Name, Args = resp.Calls[i].Args }
+                        Call = new GeminiClient.FunctionCall
+                        {
+                            Name = resp.Calls[i].Name,
+                            Args = resp.Calls[i].Args,
+                            ThoughtSignature = resp.Calls[i].ThoughtSignature,
+                        }
                     });
                 }
                 contents.Add(modelTurn);

@@ -64,7 +64,8 @@ namespace OpenEmpires
         public sealed class FunctionCall
         {
             public string Name;
-            public JsonValue Args; // parsed args object (may be null / empty)
+            public JsonValue Args;          // parsed args object (may be null / empty)
+            public string ThoughtSignature; // Gemini 3: opaque token that MUST be echoed back verbatim
         }
 
         public sealed class FunctionResponse
@@ -188,7 +189,14 @@ namespace OpenEmpires
                 sb.Append(",\"args\":");
                 if (p.Call.Args != null && p.Call.Args.IsObject) p.Call.Args.AppendTo(sb);
                 else sb.Append("{}");
-                sb.Append("}}");
+                sb.Append('}'); // close functionCall
+                // Gemini 3 requires the thought signature to ride back with the echoed call.
+                if (!string.IsNullOrEmpty(p.Call.ThoughtSignature))
+                {
+                    sb.Append(",\"thoughtSignature\":");
+                    JsonValue.AppendEscaped(sb, p.Call.ThoughtSignature);
+                }
+                sb.Append('}'); // close part
             }
             else if (p.Response != null)
             {
@@ -232,6 +240,7 @@ namespace OpenEmpires
                         {
                             Name = fc["name"].AsString(),
                             Args = fc["args"],
+                            ThoughtSignature = part["thoughtSignature"].AsString(),
                         });
                     }
                     else if (part.ContainsKey("text"))
