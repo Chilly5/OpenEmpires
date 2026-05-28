@@ -19,6 +19,12 @@ namespace OpenEmpires
         [Tooltip("Seconds between state polls.")]
         public float PollInterval = 1f;
 
+        [Tooltip("Periodically have the AI narrate what it's currently doing/thinking in team chat.")]
+        public bool EnableStatusUpdates = true;
+
+        [Tooltip("Seconds between periodic AI status messages.")]
+        public float StatusUpdateInterval = 5f;
+
         [SerializeField] private bool logInitiator;
 
         public int LocalPlayerId { get; set; }
@@ -31,6 +37,7 @@ namespace OpenEmpires
             public int LastCombatStateHash;
             public int LastUnderAttackTick;
             public float LastInitiationRealtime;
+            public float LastStatusRealtime;
         }
         private readonly Dictionary<int, AiSnapshot> snapshots = new Dictionary<int, AiSnapshot>();
         private float nextPollRealtime;
@@ -69,11 +76,27 @@ namespace OpenEmpires
 
                 var snap = snapshots.TryGetValue(aiPid, out var existing) ? existing : default;
                 string trigger = DetectTrigger(sim, ai, ref snap);
+
+                // Periodic "what I'm doing now" status, independent of the event triggers
+                // and their cooldown. Only when no event fired this poll.
+                bool fireStatus = false;
+                if (trigger == null && EnableStatusUpdates && snap.Initialized
+                    && Time.realtimeSinceStartup - snap.LastStatusRealtime >= StatusUpdateInterval)
+                {
+                    snap.LastStatusRealtime = Time.realtimeSinceStartup;
+                    fireStatus = true;
+                }
+
                 snapshots[aiPid] = snap;
 
                 if (trigger != null)
                 {
                     Initiate(sim, aiPid, trigger, apiKey);
+                    return; // one initiation per poll
+                }
+                if (fireStatus)
+                {
+                    InitiateStatus(sim, aiPid, apiKey);
                     return; // one initiation per poll
                 }
             }
@@ -93,6 +116,7 @@ namespace OpenEmpires
                 snap.LastKnownEnemyBaseCount = enemies;
                 snap.LastCombatStateHash = stateHash;
                 snap.LastUnderAttackTick = underAttackTick;
+                snap.LastStatusRealtime = Time.realtimeSinceStartup; // first status fires ~StatusUpdateInterval later
                 snap.Initialized = true;
                 return null;
             }
@@ -178,7 +202,34 @@ namespace OpenEmpires
                 }));
         }
 
-        private void HandleReply(string json, int aiPid)
+        // Periodic status narration: renders the AI's reply only — does NOT apply intents
+        // or append to conversation memory. It's chatter, not strategy or dialogue, and at a
+        // ~5s cadence appending would bloat the prompt history (and cost). Shares the single
+        // in-flight guard, so the real cadence is "every StatusUpdateInterval seconds, or
+        // whenever the previous LLM call finishes, whichever is later."
+        private void InitiateStatus(GameSimulation sim, int aiPid, string apiKey)
+        {
+            callInFlight = true;
+            string aiName = $"AI Player {aiPid}";
+            string systemPrompt = LlmIntentSchema.BuildSystemPrompt(aiName, aiPid);
+            string stateLine = LlmStateExtractor.Build(sim, LocalPlayerId, aiPid);
+            string userMessage = "[Game state] " + stateLine
+                + "\n[Status check] In ONE short first-person sentence, tell your human teammate what you're focused on right now"
+                + " (economy, army, attacking, defending, aging up) and why. This is routine chatter — do NOT issue new orders.";
+
+            var history = LlmConversationMemory.GetHistory(LocalPlayerId, aiPid);
+            if (logInitiator) Debug.Log($"[LlmAiInitiator] → AI{aiPid}: status check");
+
+            StartCoroutine(GeminiClient.Send(apiKey, systemPrompt, history, userMessage,
+                onSuccess: json => HandleReply(json, aiPid, applyIntents: false, appendMemory: false),
+                onFailure: reason =>
+                {
+                    callInFlight = false;
+                    if (logInitiator) Debug.LogWarning($"[LlmAiInitiator] status Gemini failed: {reason}");
+                }));
+        }
+
+        private void HandleReply(string json, int aiPid, bool applyIntents = true, bool appendMemory = true)
         {
             callInFlight = false;
             var sim = GameBootstrapper.Instance?.Simulation;
@@ -188,15 +239,18 @@ namespace OpenEmpires
             parsed = LlmIntentSchema.ReconcileReplyAndIntents(parsed, sim, aiPid, sim.CurrentTick);
 
             int intentCount = parsed.Intents?.Count ?? 0;
-            Debug.Log($"[LlmAiInitiator] ← AI{aiPid}: reply='{parsed.Reply}' intents={intentCount}");
+            // Event-driven messages always log; suppress the per-status log unless debugging.
+            if (appendMemory || logInitiator)
+                Debug.Log($"[LlmAiInitiator] ← AI{aiPid}: reply='{parsed.Reply}' intents={intentCount} applyIntents={applyIntents}");
 
             if (!string.IsNullOrEmpty(parsed.Reply))
             {
-                LlmConversationMemory.Append(LocalPlayerId, aiPid, false, parsed.Reply);
+                if (appendMemory)
+                    LlmConversationMemory.Append(LocalPlayerId, aiPid, false, parsed.Reply);
                 RenderAiChatLocally(aiPid, parsed.Reply);
             }
 
-            if (parsed.Intents != null)
+            if (applyIntents && parsed.Intents != null)
             {
                 for (int i = 0; i < parsed.Intents.Count; i++)
                 {
@@ -214,7 +268,8 @@ namespace OpenEmpires
             }
 
             // Catch empty-from-Gemini and silent parse failures so the player isn't left wondering.
-            if (string.IsNullOrEmpty(parsed.Reply) && intentCount == 0)
+            // Only for event-driven messages — routine status checks stay silent on empty.
+            if (appendMemory && string.IsNullOrEmpty(parsed.Reply) && intentCount == 0)
             {
                 RenderAiChatLocally(aiPid, "(AI had nothing to say)", isSystem: true);
             }
