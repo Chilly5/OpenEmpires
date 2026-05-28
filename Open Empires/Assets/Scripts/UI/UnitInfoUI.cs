@@ -1469,6 +1469,9 @@ namespace OpenEmpires
 
             int line = 0;
             SetStatLine(line++, $"Armor:   {building.Armor}");
+            // Garrison occupancy for any garrisonable building (Keep, Tower, Town Center, ...).
+            if (building.GarrisonCapacity > 0)
+                SetStatLine(line++, $"Garrison: {building.GarrisonCount} / {building.GarrisonCapacity}");
             for (int i = line; i < MaxStatLines; i++) statLines[i].gameObject.SetActive(false);
 
             bool showProgress = false;

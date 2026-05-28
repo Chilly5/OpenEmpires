@@ -3546,6 +3546,10 @@ namespace OpenEmpires
                 // For placement ghost mode, use subsequent TC range (player is building a new one)
                 attackRange = config.SubsequentTownCenterAttackRange;
             }
+            else if (buildingType == BuildingType.Keep)
+            {
+                attackRange = config.KeepAttackRange;
+            }
 
             if (attackRange <= 0) return;
 
