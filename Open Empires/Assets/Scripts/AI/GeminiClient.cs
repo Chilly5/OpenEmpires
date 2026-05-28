@@ -78,6 +78,7 @@ namespace OpenEmpires
         public sealed class Response
         {
             public string Text = string.Empty;
+            public string Thoughts = string.Empty; // Gemini thinking summary (debug only)
             public readonly List<FunctionCall> Calls = new List<FunctionCall>();
             public string FinishReason = string.Empty;
             public bool HasCalls => Calls.Count > 0;
@@ -96,6 +97,7 @@ namespace OpenEmpires
             }
 
             string body = BuildRequestBody(systemPrompt, contents, toolsJson);
+            LlmDebug.Http("request: " + body);
             string url = Endpoint + "?key=" + UnityWebRequest.EscapeURL(apiKey);
 
             using (var req = new UnityWebRequest(url, "POST"))
@@ -126,6 +128,7 @@ namespace OpenEmpires
                     yield break;
                 }
 
+                LlmDebug.Http("response: " + req.downloadHandler.text);
                 var parsed = ParseResponse(req.downloadHandler.text);
                 if (parsed == null)
                 {
@@ -164,7 +167,9 @@ namespace OpenEmpires
 
             sb.Append("\"generationConfig\":{");
             sb.Append("\"temperature\":0.7,");
-            sb.Append("\"maxOutputTokens\":4096");
+            sb.Append("\"maxOutputTokens\":4096,");
+            // Ask Gemini to return a summary of its reasoning so we can log it.
+            sb.Append("\"thinkingConfig\":{\"includeThoughts\":true}");
             sb.Append("}}");
             return sb.ToString();
         }
@@ -227,11 +232,21 @@ namespace OpenEmpires
             if (parts.IsArray)
             {
                 var sb = new StringBuilder(256);
+                var thoughtSb = new StringBuilder(256);
                 for (int i = 0; i < parts.Count; i++)
                 {
                     var part = parts[i];
-                    // Skip "thought" parts (Gemini thinking traces) — not the visible reply.
-                    if (part["thought"].AsBool()) continue;
+                    // "thought" parts are Gemini's reasoning summary — capture for debug
+                    // logging but keep them out of the visible reply.
+                    if (part["thought"].AsBool())
+                    {
+                        if (part.ContainsKey("text"))
+                        {
+                            if (thoughtSb.Length > 0) thoughtSb.Append(' ');
+                            thoughtSb.Append(part["text"].AsString());
+                        }
+                        continue;
+                    }
 
                     if (part.ContainsKey("functionCall"))
                     {
@@ -250,6 +265,7 @@ namespace OpenEmpires
                     }
                 }
                 result.Text = sb.ToString();
+                result.Thoughts = thoughtSb.ToString();
             }
             return result;
         }

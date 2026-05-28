@@ -42,10 +42,13 @@ namespace OpenEmpires
                 if (resp == null) { onFailure?.Invoke("null-response"); yield break; }
 
                 if (!string.IsNullOrEmpty(resp.Text)) fallbackText = resp.Text;
+                if (!string.IsNullOrEmpty(resp.Thoughts))
+                    LlmDebug.Log($"AI{aiPlayerId} thinking: {resp.Thoughts}");
 
                 if (!resp.HasCalls)
                 {
                     // Plain text turn → final spoken reply.
+                    LlmDebug.Log($"AI{aiPlayerId} reply: \"{resp.Text}\"");
                     onComplete?.Invoke(intents, resp.Text ?? string.Empty);
                     yield break;
                 }
@@ -72,6 +75,7 @@ namespace OpenEmpires
                 for (int i = 0; i < resp.Calls.Count; i++)
                 {
                     var call = resp.Calls[i];
+                    LlmDebug.Log($"AI{aiPlayerId} calls {call.Name}({(call.Args != null ? call.Args.ToJson() : "{}")})");
                     var result = LlmTool.Dispatch(call.Name, call.Args, sim, aiPlayerId, humanPlayerId);
 
                     string resultText = result.ResultText ?? string.Empty;
@@ -82,6 +86,7 @@ namespace OpenEmpires
                         else
                             resultText = "Action limit reached for this turn; not queued.";
                     }
+                    LlmDebug.Log($"AI{aiPlayerId}   ↳ {(result.HasIntent ? "[action] " : "[info] ")}{resultText}");
 
                     responseTurn.Parts.Add(new GeminiClient.Part
                     {
@@ -100,7 +105,10 @@ namespace OpenEmpires
                     r => resp = r, e => err = e);
                 if (err == null && resp != null && !string.IsNullOrEmpty(resp.Text))
                     fallbackText = resp.Text;
+                if (err == null && resp != null && !string.IsNullOrEmpty(resp.Thoughts))
+                    LlmDebug.Log($"AI{aiPlayerId} thinking: {resp.Thoughts}");
             }
+            LlmDebug.Log($"AI{aiPlayerId} reply (iteration cap): \"{fallbackText}\"");
             onComplete?.Invoke(intents, fallbackText);
         }
 

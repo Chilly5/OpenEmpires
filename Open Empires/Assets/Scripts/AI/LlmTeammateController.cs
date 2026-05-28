@@ -16,6 +16,20 @@ namespace OpenEmpires
         [Tooltip("Throttle: minimum seconds between LLM turns per local player.")]
         public float MinSecondsBetweenCalls = 5f;
 
+        [Tooltip("Log the AI teammate's reasoning, tool calls, and results to the console.")]
+        [SerializeField] private bool verboseLogging = true;
+
+        [Tooltip("Also dump raw Gemini HTTP request/response bodies (very noisy).")]
+        [SerializeField] private bool verboseHttpLogging;
+
+        private void Awake() => ApplyDebugFlags();
+        private void OnValidate() => ApplyDebugFlags();
+        private void ApplyDebugFlags()
+        {
+            LlmDebug.Verbose = verboseLogging;
+            LlmDebug.VerboseHttp = verboseHttpLogging;
+        }
+
         private float lastCallTimeRealtime = -100f;
         private bool callInFlight;
 
