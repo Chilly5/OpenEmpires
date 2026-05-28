@@ -26,6 +26,11 @@ namespace OpenEmpires
         private bool warnedNoAi;
         private bool warnedSimMissing;
 
+        // Rate-limit transient "AI busy" notices so a spam-typer doesn't fill chat
+        // with system lines. One notice per 2 seconds is enough to inform without spam.
+        private float lastBusyNoticeRealtime = -100f;
+        private const float BusyNoticeCooldown = 2f;
+
         // Returns true if this controller took ownership of the message (i.e. fired
         // an LLM call). Caller should skip the legacy keyword→ping path when true.
         public bool OnPlayerMessage(string text, int issuerPlayerId)
@@ -54,9 +59,19 @@ namespace OpenEmpires
             }
 
             // Throttle: excess messages fall through to the legacy keyword path so the
-            // player still gets *some* response.
+            // player still gets *some* response. Surface why so it doesn't feel ignored.
             float now = Time.realtimeSinceStartup;
-            if (callInFlight || (now - lastCallTimeRealtime) < MinSecondsBetweenCalls) return false;
+            if (callInFlight)
+            {
+                PostBusyNotice("AI is still thinking — message dropped.");
+                return false;
+            }
+            float cooldownRemaining = MinSecondsBetweenCalls - (now - lastCallTimeRealtime);
+            if (cooldownRemaining > 0f)
+            {
+                PostBusyNotice($"AI on cooldown ({cooldownRemaining:0.#}s) — message dropped.");
+                return false;
+            }
             lastCallTimeRealtime = now;
             callInFlight = true;
 
@@ -69,6 +84,7 @@ namespace OpenEmpires
             LlmConversationMemory.Append(issuerPlayerId, aiPlayerId, true, text);
 
             int tickAtSend = sim.CurrentTick;
+            Debug.Log($"[LlmTeammate] → AI{aiPlayerId}: {text}");
             StartCoroutine(GeminiClient.Send(apiKey, systemPrompt, history, userMessage,
                 onSuccess: json => HandleLlmReply(json, issuerPlayerId, aiPlayerId, tickAtSend),
                 onFailure: reason => HandleLlmFailure(reason, aiPlayerId)));
@@ -80,6 +96,9 @@ namespace OpenEmpires
             callInFlight = false;
             var sim = GameBootstrapper.Instance?.Simulation;
             if (sim == null) return;
+
+            // TEMP DIAGNOSTIC — remove once empty-Result root cause is identified.
+            Debug.Log($"[LlmTeammate] raw response (first 800 chars): {(json == null ? "<null>" : json.Substring(0, System.Math.Min(800, json.Length)))}");
 
             var parsed = LlmIntentSchema.Parse(json, sim, aiPlayerId, sim.CurrentTick);
 
@@ -94,6 +113,9 @@ namespace OpenEmpires
                     Debug.Log($"[LlmTeammate] Reconciled: intents {intentsBefore}→{intentsAfter}, reply='{parsed.Reply}'");
                 }
             }
+
+            int intentCount = parsed.Intents?.Count ?? 0;
+            Debug.Log($"[LlmTeammate] ← AI{aiPlayerId}: reply='{parsed.Reply}' intents={intentCount}");
 
             if (!string.IsNullOrEmpty(parsed.Reply))
             {
@@ -114,6 +136,12 @@ namespace OpenEmpires
                         intent.DurationTicks,
                         intent.TriggerType, intent.TriggerMagnitude));
                 }
+            }
+
+            // Catch empty-from-Gemini and silent parse failures so the player isn't left wondering.
+            if (string.IsNullOrEmpty(parsed.Reply) && intentCount == 0)
+            {
+                RenderAiChatLocally(aiPlayerId, "(AI had nothing to say)", isSystem: true);
             }
         }
 
@@ -148,6 +176,25 @@ namespace OpenEmpires
             if (flag) return;
             flag = true;
             Debug.LogWarning("[LlmTeammate] " + message);
+            ChatManager.AddMessage(new ChatMessage
+            {
+                SenderName = "System",
+                SenderColor = Color.gray,
+                Text = message,
+                Channel = ChatChannel.Team,
+                IsSystem = true,
+                SenderPlayerId = -1,
+            });
+        }
+
+        // Transient notice — rate-limited so spamming the input field can't spam the chat.
+        // Used for normal-but-opaque conditions (throttle, in-flight) so the player can see
+        // their typed message wasn't lost to a bug.
+        private void PostBusyNotice(string message)
+        {
+            float now = Time.realtimeSinceStartup;
+            if (now - lastBusyNoticeRealtime < BusyNoticeCooldown) return;
+            lastBusyNoticeRealtime = now;
             ChatManager.AddMessage(new ChatMessage
             {
                 SenderName = "System",

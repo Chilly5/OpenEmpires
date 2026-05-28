@@ -61,7 +61,11 @@ namespace OpenEmpires
                     yield break;
                 }
 
-                string text = ExtractTextFromResponse(req.downloadHandler.text);
+                // TEMP DIAGNOSTIC — full HTTP body for one round-trip so we can inspect finishReason / thought parts.
+                string fullBody = req.downloadHandler.text ?? string.Empty;
+                UnityEngine.Debug.Log($"[GeminiClient] full HTTP response (first 1500 chars): {fullBody.Substring(0, System.Math.Min(1500, fullBody.Length))}");
+
+                string text = ExtractTextFromResponse(fullBody);
                 if (string.IsNullOrEmpty(text))
                 {
                     onFailure?.Invoke("empty-response");
@@ -101,7 +105,10 @@ namespace OpenEmpires
             sb.Append("\"generationConfig\":{");
             sb.Append("\"responseMimeType\":\"application/json\",");
             sb.Append("\"temperature\":0.7,");
-            sb.Append("\"maxOutputTokens\":400");
+            // High output ceiling — gives thinking + visible reply plenty of room.
+            // UI-side caps (MaxReplyChars, MaxIntentsPerTurn in LlmIntentSchema) keep the
+            // rendered output sane regardless of how much the model produces.
+            sb.Append("\"maxOutputTokens\":4096");
             sb.Append("}}");
             return sb.ToString();
         }

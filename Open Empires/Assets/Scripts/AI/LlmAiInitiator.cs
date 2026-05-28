@@ -167,13 +167,14 @@ namespace OpenEmpires
                 + "\nYou are SPEAKING FIRST to the human teammate. Be brief and concrete.";
 
             var history = LlmConversationMemory.GetHistory(LocalPlayerId, aiPid);
+            Debug.Log($"[LlmAiInitiator] → AI{aiPid}: event='{trigger}'");
 
             StartCoroutine(GeminiClient.Send(apiKey, systemPrompt, history, userMessage,
                 onSuccess: json => HandleReply(json, aiPid),
                 onFailure: reason =>
                 {
                     callInFlight = false;
-                    if (logInitiator) Debug.LogWarning($"[LlmAiInitiator] Gemini failed: {reason}");
+                    Debug.LogWarning($"[LlmAiInitiator] Gemini failed: {reason}");
                 }));
         }
 
@@ -185,6 +186,9 @@ namespace OpenEmpires
 
             var parsed = LlmIntentSchema.Parse(json, sim, aiPid, sim.CurrentTick);
             parsed = LlmIntentSchema.ReconcileReplyAndIntents(parsed, sim, aiPid, sim.CurrentTick);
+
+            int intentCount = parsed.Intents?.Count ?? 0;
+            Debug.Log($"[LlmAiInitiator] ← AI{aiPid}: reply='{parsed.Reply}' intents={intentCount}");
 
             if (!string.IsNullOrEmpty(parsed.Reply))
             {
@@ -209,11 +213,14 @@ namespace OpenEmpires
                 }
             }
 
-            if (logInitiator)
-                Debug.Log($"[LlmAiInitiator] AI player {aiPid} said: {parsed.Reply}");
+            // Catch empty-from-Gemini and silent parse failures so the player isn't left wondering.
+            if (string.IsNullOrEmpty(parsed.Reply) && intentCount == 0)
+            {
+                RenderAiChatLocally(aiPid, "(AI had nothing to say)", isSystem: true);
+            }
         }
 
-        private void RenderAiChatLocally(int aiPlayerId, string text)
+        private void RenderAiChatLocally(int aiPlayerId, string text, bool isSystem = false)
         {
             string name = $"AI Player {aiPlayerId}";
             Color color = aiPlayerId >= 0 && aiPlayerId < GameSetup.PlayerColors.Length
@@ -225,7 +232,7 @@ namespace OpenEmpires
                 SenderColor = color,
                 Text = text,
                 Channel = ChatChannel.Team,
-                IsSystem = false,
+                IsSystem = isSystem,
                 SenderPlayerId = aiPlayerId,
             });
         }

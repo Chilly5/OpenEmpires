@@ -11,10 +11,10 @@ namespace OpenEmpires
     // numeric is clamped. Unknown intent kinds are rejected per-intent, not per-message.
     public static class LlmIntentSchema
     {
-        public const int MaxIntentsPerTurn = 4;
+        public const int MaxIntentsPerTurn = 8;
         public const int MinDurationTicks = 150;   // 5s
         public const int MaxDurationTicks = 5400;  // 3min
-        public const int MaxReplyChars = 200;
+        public const int MaxReplyChars = 400;
 
         public struct ParsedIntent
         {
