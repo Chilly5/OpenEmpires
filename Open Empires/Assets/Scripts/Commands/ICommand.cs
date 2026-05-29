@@ -39,7 +39,8 @@ namespace OpenEmpires
         Research,
         RepairBuilding,
         ToggleAutoProduce,
-        CheatGodMode
+        CheatGodMode,
+        Tribute
     }
 
     public interface ICommand

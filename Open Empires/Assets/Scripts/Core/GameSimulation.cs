@@ -1540,6 +1540,9 @@ namespace OpenEmpires
                 case MarketTradeCommand marketTrade:
                     ProcessMarketTradeCommand(marketTrade);
                     break;
+                case TributeCommand tribute:
+                    ProcessTributeCommand(tribute);
+                    break;
                 case ResearchCommand research:
                     ProcessResearchCommand(research);
                     break;
@@ -2165,6 +2168,38 @@ namespace OpenEmpires
                 resources.Gold += sellPrice;
                 SetMarketSellPrice(cmd.PlayerId, rt, System.Math.Max(sellPrice - priceStep, config.MarketMinPrice));
             }
+        }
+
+        private void ProcessTributeCommand(TributeCommand cmd)
+        {
+            if (cmd.PlayerId < 0 || cmd.PlayerId >= playerCount) return;
+            if (cmd.RecipientPlayerId < 0 || cmd.RecipientPlayerId >= playerCount) return;
+            if (cmd.PlayerId == cmd.RecipientPlayerId) return;
+            if (cmd.Amount != 100 && cmd.Amount != 500) return;
+            if (!TeamHelper.AreAllies(playerTeamIds, cmd.PlayerId, cmd.RecipientPlayerId)) return;
+
+            // Sender must own a completed Market
+            bool hasMarket = false;
+            var buildings = BuildingRegistry.GetAllBuildings();
+            for (int i = 0; i < buildings.Count; i++)
+            {
+                var b = buildings[i];
+                if (b.Type == BuildingType.Market && b.PlayerId == cmd.PlayerId
+                    && !b.IsDestroyed && !b.IsUnderConstruction)
+                { hasMarket = true; break; }
+            }
+            if (!hasMarket) return;
+
+            var senderRes = ResourceManager.GetPlayerResources(cmd.PlayerId);
+            var recipientRes = ResourceManager.GetPlayerResources(cmd.RecipientPlayerId);
+            var rt = (ResourceType)cmd.ResourceType;
+
+            if (GetResource(senderRes, rt) < cmd.Amount) return;
+
+            int received = cmd.Amount * 4 / 5; // 20% tax
+
+            AddResource(senderRes, rt, -cmd.Amount);
+            AddResource(recipientRes, rt, received);
         }
 
         public int GetMarketBuyPrice(int playerId, ResourceType type)
