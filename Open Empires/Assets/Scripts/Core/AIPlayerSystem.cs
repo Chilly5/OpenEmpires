@@ -83,6 +83,10 @@ namespace OpenEmpires
         // ── Expanded LLM control surface (build/train/rally/mix). All set by ApplyIntent
         //    and read deterministically inside the tick, so lockstep holds. ──
         private int pendingLlmBuildTick;             // retry gate for BuildStructure intents
+        // Explicit commander orders: while active, the routine combat/scout logic stands down
+        // and does NOT re-issue its own movement, so defend/regroup/retreat/scout actually stick.
+        private int combatHoldUntilTick = -1;
+        private int scoutOverrideUntilTick = -1;
         private bool prodMixActive;                  // SetProductionMix override active
         private int prodMixArchers, prodMixCavalry, prodMixInfantry; // relative weights 0..100
         private int prodMixUntilTick = -1;
@@ -1436,8 +1440,9 @@ namespace OpenEmpires
                 }
             }
 
-            // Send scout to random target when idle
-            if (scoutUnitId >= 0)
+            // Send scout to random target when idle — but not while an explicit scout_area
+            // order is in effect, so the commanded destination sticks.
+            if (scoutUnitId >= 0 && currentTick >= scoutOverrideUntilTick)
             {
                 var scout = sim.UnitRegistry.GetUnit(scoutUnitId);
                 if (scout != null && scout.State == UnitState.Idle)
@@ -1632,6 +1637,7 @@ namespace OpenEmpires
                     pingAttackTarget = pos;
                     pingAttackUntilTick = until;
                     pingAttackUnitClass = Mathf.Clamp(paramC, 0, 3);
+                    combatHoldUntilTick = -1; // an attack order overrides any defend/retreat hold
                     if (combatState == CombatState.Building)
                         combatState = CombatState.Assembling;
                     break;
@@ -1643,6 +1649,8 @@ namespace OpenEmpires
                     pingDefendUntilTick = until;
                     pingDefendUnitClass = Mathf.Clamp(paramC, 0, 3);
                     DispatchDefendersToPing();
+                    // Hold at the defend point — don't let the combat FSM pull these units into an attack.
+                    combatHoldUntilTick = until;
                     break;
                 }
                 case AiIntentKind.SetAggression:
@@ -1714,14 +1722,20 @@ namespace OpenEmpires
                     break;
                 case AiIntentKind.ScoutArea:
                     SendScoutTo(new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB)), until);
+                    // Keep the scout on the commanded spot — suppress routine random re-tasking.
+                    scoutOverrideUntilTick = until;
                     break;
                 case AiIntentKind.RegroupArmy:
                     MoveAllCombatTo(new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB)));
+                    // Gather and hold — don't let the FSM march them back out next tick.
+                    combatState = CombatState.Building;
+                    combatHoldUntilTick = until;
                     break;
                 case AiIntentKind.RetreatToBase:
                     MoveAllCombatTo(new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB)));
                     // Stand down and play passive so TickCombat doesn't immediately re-commit.
                     combatState = CombatState.Building;
+                    combatHoldUntilTick = until;
                     aggressionAttackOverride = 32; // highest threshold = least likely to attack
                     aggressionRetreatOverride = 70;
                     aggressionOverrideUntilTick = until;
@@ -1769,6 +1783,11 @@ namespace OpenEmpires
         {
             // Don't override defense state
             if (combatState == CombatState.Defending) return;
+
+            // Stand down while an explicit commander order (defend/regroup/retreat) is in effect:
+            // hold position and don't re-issue our own movement. This also suppresses the
+            // 5-minute forced-assembly path below for the duration of the order.
+            if (currentTick < combatHoldUntilTick) return;
 
             GetMyCombatUnits(tempCombatUnits);
             int armySize = tempCombatUnits.Count;
