@@ -1292,12 +1292,12 @@ namespace OpenEmpires
 
         private void AddMillInfluenceZone(GameObject building, BuildingView view, int playerId)
         {
-            // Influence zone outline (visible during Mill construction) — only for civs that use Mill as influence source
+            // Influence zone outline (visible during Mill construction) — skip for civs where Mill grants no influence
             var simRef = GameBootstrapper.Instance?.Simulation;
-            if (simRef != null && simRef.GetInfluenceBuildingType(playerId) != BuildingType.Mill)
+            if (simRef != null && !simRef.IsInfluenceBuildingType(playerId, BuildingType.Mill))
                 return;
 
-            int influenceRadius = simRef?.Config?.MillInfluenceRadius ?? 6;
+            int influenceRadius = simRef?.Config?.MillInfluenceRadius ?? 2;
             int footprintW = simRef?.Config?.MillFootprintWidth ?? 2;
             int footprintH = simRef?.Config?.MillFootprintHeight ?? 2;
             float halfX = (footprintW + 2 * influenceRadius) * 0.5f;
@@ -2030,6 +2030,15 @@ namespace OpenEmpires
                     if (spriteMill != null)
                     {
                         AddMillInfluenceZone(spriteMill, spriteMill.GetComponent<BuildingView>(), buildingData.PlayerId);
+                        // Sprite has a baked drop shadow — lower the alpha cutoff so the
+                        // semi-transparent shadow pixels aren't clipped by the billboard shader.
+                        var spriteT = spriteMill.transform.Find("Sprite");
+                        if (spriteT != null)
+                        {
+                            var sr = spriteT.GetComponent<Renderer>();
+                            if (sr != null && sr.sharedMaterial != null)
+                                sr.sharedMaterial.SetFloat("_Cutoff", 0.05f);
+                        }
                         prefab = spriteMill;
                     }
                     else
@@ -2039,9 +2048,27 @@ namespace OpenEmpires
                     break;
                 }
                 case BuildingType.LumberYard:
-                    prefab = CreateBuildingSpritePrefab("LumberYard", "LumberCamp", 2, 2, 4.374f, 1.54f / 6f)
-                          ?? CreateLumberYardPrefab(buildingData.PlayerId);
+                {
+                    var spriteLY = CreateBuildingSpritePrefab("LumberYard", "LumberCamp", 2, 2, 4.374f, 1.54f / 6f);
+                    if (spriteLY != null)
+                    {
+                        // Sprite has a baked drop shadow — lower the alpha cutoff so the
+                        // semi-transparent shadow pixels aren't clipped by the billboard shader.
+                        var spriteT = spriteLY.transform.Find("Sprite");
+                        if (spriteT != null)
+                        {
+                            var sr = spriteT.GetComponent<Renderer>();
+                            if (sr != null && sr.sharedMaterial != null)
+                                sr.sharedMaterial.SetFloat("_Cutoff", 0.05f);
+                        }
+                        prefab = spriteLY;
+                    }
+                    else
+                    {
+                        prefab = CreateLumberYardPrefab(buildingData.PlayerId);
+                    }
                     break;
+                }
                 case BuildingType.Mine:
                     prefab = CreateBuildingSpritePrefab("Mine", "MiningCamp", 2, 2, 4.374f, 1.54f / 6f)
                           ?? CreateMinePrefab(buildingData.PlayerId);

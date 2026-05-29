@@ -42,7 +42,8 @@ namespace OpenEmpires
         CheatGodMode,
         Ping,
         AiChat,
-        AiIntent
+        AiIntent,
+        Tribute
     }
 
     public interface ICommand

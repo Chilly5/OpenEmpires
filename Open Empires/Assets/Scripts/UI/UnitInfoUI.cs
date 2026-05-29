@@ -2470,6 +2470,45 @@ namespace OpenEmpires
                         Tooltip = $"<b>Sell Stone</b>\nSell {tradeAmt} stone.\nGain: {sellStone} <sprite name=\"gold\">",
                         OnClick = () => sim.CommandBuffer.EnqueueCommand(
                             new MarketTradeCommand(pid, (int)ResourceType.Stone, false)) };
+
+                    // Tribute (v1): one button per resource, 100 amount, targeting the first ally found.
+                    // Layout uses the bottom row's free slots (7, 8, 10, 11) and avoids the Delete slot (9).
+                    // Multi-ally and 500-amount support need a paged tribute UI — future work.
+                    int allyPid = -1;
+                    for (int p = 0; p < sim.PlayerCount; p++)
+                    {
+                        if (p == pid) continue;
+                        if (sim.AreAllies(pid, p)) { allyPid = p; break; }
+                    }
+                    if (allyPid >= 0)
+                    {
+                        int allyDisplay = allyPid + 1;
+                        const int tributeAmount = 100;
+                        const int tributeReceived = tributeAmount * 4 / 5; // 20% tax
+                        int allyPidCaptured = allyPid;
+
+                        slots[7] = new GridButton { Label = $"→P{allyDisplay}\nFood {tributeAmount}",
+                            Enabled = resources.Food >= tributeAmount,
+                            Tooltip = $"<b>Tribute Food to Player {allyDisplay}</b>\nSend {tributeAmount} food.\nAlly receives {tributeReceived} after 20% tax.",
+                            OnClick = () => sim.CommandBuffer.EnqueueCommand(
+                                new TributeCommand(pid, allyPidCaptured, (int)ResourceType.Food, tributeAmount)) };
+                        slots[8] = new GridButton { Label = $"→P{allyDisplay}\nWood {tributeAmount}",
+                            Enabled = resources.Wood >= tributeAmount,
+                            Tooltip = $"<b>Tribute Wood to Player {allyDisplay}</b>\nSend {tributeAmount} wood.\nAlly receives {tributeReceived} after 20% tax.",
+                            OnClick = () => sim.CommandBuffer.EnqueueCommand(
+                                new TributeCommand(pid, allyPidCaptured, (int)ResourceType.Wood, tributeAmount)) };
+                        slots[10] = new GridButton { Label = $"→P{allyDisplay}\nGold {tributeAmount}",
+                            Enabled = resources.Gold >= tributeAmount,
+                            Tooltip = $"<b>Tribute Gold to Player {allyDisplay}</b>\nSend {tributeAmount} gold.\nAlly receives {tributeReceived} after 20% tax.",
+                            OnClick = () => sim.CommandBuffer.EnqueueCommand(
+                                new TributeCommand(pid, allyPidCaptured, (int)ResourceType.Gold, tributeAmount)) };
+                        slots[11] = new GridButton { Label = $"→P{allyDisplay}\nStone {tributeAmount}",
+                            Enabled = resources.Stone >= tributeAmount,
+                            Tooltip = $"<b>Tribute Stone to Player {allyDisplay}</b>\nSend {tributeAmount} stone.\nAlly receives {tributeReceived} after 20% tax.",
+                            OnClick = () => sim.CommandBuffer.EnqueueCommand(
+                                new TributeCommand(pid, allyPidCaptured, (int)ResourceType.Stone, tributeAmount)) };
+                    }
+
                     hasAny = true;
                 }
                 else if (building.Type == BuildingType.Blacksmith)
