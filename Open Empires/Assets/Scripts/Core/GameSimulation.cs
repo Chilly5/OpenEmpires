@@ -348,6 +348,7 @@ namespace OpenEmpires
         public void SetTeamAssignments(int[] teamIds)
         {
             playerTeamIds = teamIds;
+            MapData?.SetTeamAssignments(teamIds); // keep gate walkability's team view in sync
         }
 
         /// <summary>
@@ -584,6 +585,7 @@ namespace OpenEmpires
                 for (int i = 0; i < playerCount; i++)
                     playerTeamIds[i] = i; // FFA: each player is own team
             }
+            MapData.SetTeamAssignments(playerTeamIds); // gate walkability needs team info for allies
             currentTick = 0;
             meteorCooldownTick = new int[playerCount];
             healingRainCooldownTick = new int[playerCount];

@@ -219,7 +219,7 @@ namespace OpenEmpires
         // plus the two collinear wall neighbors it absorbs — so the towers in the art should land
         // over those neighbor tiles. Roughly wall-scale (6.61) is the starting point; tune per
         // orientation via the WallGateSpriteRegistry knobs if towers don't sit on the neighbors.
-        private const float WoodGateSpriteScale = 6.61f;
+        private const float WoodGateSpriteScale = 5.82f;
         private const float StoneGateSpriteScale = 7.0f;
         private GameObject palisadeSpriteQuad;
         private Renderer palisadeSpriteRenderer;
@@ -968,7 +968,10 @@ namespace OpenEmpires
             gateSpriteRenderer = gateSpriteQuad.GetComponent<Renderer>();
             var spriteMat = new Material(shader);
             spriteMat.SetColor("_Color", Color.white);
-            if (spriteMat.HasProperty("_Cutoff")) spriteMat.SetFloat("_Cutoff", 0.5f);
+            // Low alpha cutoff so the sprites' baked semi-transparent drop shadows aren't clipped
+            // (a 0.5 cutoff erased soft shadows such as PalisadegateFrontB's). Matches the
+            // shadowed-building convention used in GameSetup.
+            if (spriteMat.HasProperty("_Cutoff")) spriteMat.SetFloat("_Cutoff", 0.05f);
             spriteMat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry + 1;
             gateSpriteRenderer.sharedMaterial = spriteMat;
         }
@@ -1007,9 +1010,9 @@ namespace OpenEmpires
             float sx = sel.FlipX ? -effectiveScale : effectiveScale;
             gateSpriteQuad.transform.localScale = new Vector3(sx, effectiveScale, 1f);
             gateSpriteQuad.transform.localEulerAngles = new Vector3(0f, 0f, sel.RotationDegrees);
+            // Per-sprite local position (towers tuned to land over the two absorbed neighbor tiles).
             float targetY = baseScale * PalisadeSpriteYOffsetRatio + sel.WorldYOffset;
-            var p = gateSpriteQuad.transform.localPosition;
-            gateSpriteQuad.transform.localPosition = new Vector3(p.x, targetY, p.z);
+            gateSpriteQuad.transform.localPosition = new Vector3(sel.LocalPosX, targetY, sel.LocalPosZ);
         }
 
         public void SetGateOpen(bool open)
@@ -1163,8 +1166,10 @@ namespace OpenEmpires
             wallConnectionsUpdated = false;
         }
 
-        // Invalidate the 8 neighbors of a wall tile so they re-classify on the next frame.
-        // Call after a wall is placed, destroyed, or toggled to/from a gate.
+        // Invalidate nearby wall tiles so they re-classify on the next frame. Call after a wall is
+        // placed, destroyed, or toggled to/from a gate. Radius is 2: crossing-aware classification
+        // makes a tile's sprite depend on whether a neighbor is a crossing center, which in turn
+        // depends on tiles two steps away — so a 1-ring refresh would leave hugging tiles stale.
         public static void InvalidateNeighborWallViews(int tx, int tz)
         {
             var sim = GameBootstrapper.Instance?.Simulation;
@@ -1173,9 +1178,9 @@ namespace OpenEmpires
             var reg = sim.BuildingRegistry;
             if (map == null || reg == null) return;
 
-            for (int dz = -1; dz <= 1; dz++)
+            for (int dz = -2; dz <= 2; dz++)
             {
-                for (int dx = -1; dx <= 1; dx++)
+                for (int dx = -2; dx <= 2; dx++)
                 {
                     if (dx == 0 && dz == 0) continue;
                     var nb = map.GetBuildingAt(tx + dx, tz + dz, reg);
@@ -1201,7 +1206,9 @@ namespace OpenEmpires
             var reg = sim.BuildingRegistry;
 
             WallNeighborMask mask = SampleWallNeighbors(map, reg, tx, tz);
-            WallSegmentKind kind = WallSegmentClassifier.Classify(mask);
+            // Crossing-aware: a straight-through X collapses to one central post, with the four
+            // hugging tiles rendering as their straight run. Other shapes use the per-tile rules.
+            WallSegmentKind kind = WallSegmentClassifier.ClassifyAt(map, reg, tx, tz);
 
             bool hasN  = (mask & WallNeighborMask.N)  != 0;
             bool hasS  = (mask & WallNeighborMask.S)  != 0;
@@ -1284,7 +1291,7 @@ namespace OpenEmpires
             else
             {
                 bool covered = UsesSpriteWallBody(BuildingType)
-                    && WallSegmentClassifier.IsAbsorbedByOwnerGate(map, reg, tx, tz, PlayerId);
+                    && WallSegmentClassifier.TryGetAbsorbingGate(map, reg, tx, tz, out _);
                 SetCovered(covered);
                 if (!covered && UsesSpriteWallBody(BuildingType)
                     && WallSpriteRegistry.TryLookup(BuildingType, kind, out var sel))
@@ -1316,7 +1323,9 @@ namespace OpenEmpires
             palisadeSpriteRenderer = palisadeSpriteQuad.GetComponent<Renderer>();
             var spriteMat = new Material(shader);
             spriteMat.SetColor("_Color", Color.white);
-            if (spriteMat.HasProperty("_Cutoff")) spriteMat.SetFloat("_Cutoff", 0.5f);
+            // Low alpha cutoff so the wall sprites' baked semi-transparent drop shadows aren't
+            // clipped (matches the gate sprites and the shadowed-building convention in GameSetup).
+            if (spriteMat.HasProperty("_Cutoff")) spriteMat.SetFloat("_Cutoff", 0.05f);
             spriteMat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry + 1;
             palisadeSpriteRenderer.sharedMaterial = spriteMat;
 

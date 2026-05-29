@@ -180,18 +180,32 @@ namespace OpenEmpires
             if (t == TileType.Building)
             {
                 var building = GetBuildingAt(x, z, buildingRegistry);
+                // Gates are passable to the owner and the owner's teammates.
                 if (building != null && building.IsGate)
-                    return building.PlayerId == playerId;
-                // A plain wall absorbed into an adjacent owner gate's 3-tile span is passable to
-                // that owner (the gate claims its two collinear wall neighbors). Enemies still see
-                // it as solid wall and fall through to the blocked return below.
+                    return CanPassGate(building.PlayerId, playerId);
+                // A plain wall absorbed into an adjacent gate's 3-tile span is passable to that
+                // gate's owner and their teammates (the gate claims its two collinear neighbors).
+                // Enemies still see it as solid wall and fall through to the blocked return below.
                 if (building != null && !building.IsGate
                     && (building.Type == BuildingType.Wall || building.Type == BuildingType.StoneWall)
-                    && WallSegmentClassifier.IsAbsorbedByOwnerGate(this, buildingRegistry, x, z, playerId))
+                    && WallSegmentClassifier.TryGetAbsorbingGate(this, buildingRegistry, x, z, out int gateOwner)
+                    && CanPassGate(gateOwner, playerId))
                     return true;
             }
 
             return false;
+        }
+
+        // Team assignments, mirrored from GameSimulation so gate walkability can allow allies.
+        // Null until set (then gates are owner-only). Shares the sim's array reference.
+        private int[] playerTeamIds;
+        public void SetTeamAssignments(int[] teamIds) { playerTeamIds = teamIds; }
+
+        // A unit of moverPlayerId may pass a gate owned by gateOwnerId if it's the owner or an ally.
+        private bool CanPassGate(int gateOwnerId, int moverPlayerId)
+        {
+            if (gateOwnerId == moverPlayerId) return true;
+            return playerTeamIds != null && TeamHelper.AreAllies(playerTeamIds, gateOwnerId, moverPlayerId);
         }
 
         public BuildingData GetBuildingAt(int x, int z, BuildingRegistry buildingRegistry)
