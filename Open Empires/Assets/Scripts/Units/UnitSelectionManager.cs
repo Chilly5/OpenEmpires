@@ -121,12 +121,14 @@ namespace OpenEmpires
         private int[] placementVillagerIds;
         private LandmarkId placementLandmarkId; // only meaningful when placementBuildingType == Landmark
         private GameObject ghostBuilding;
+        private GameObject ghostFootprintInner; // red overlay on the actual building tiles
         private GameObject ghostAttackRangeRing;
         private GameObject ghostInfluenceZone;       // follows ghost cursor (Mill placement)
         private List<GameObject> ghostInfluenceZones; // static at existing Mills (Farm placement)
         private Material ghostValidMaterial;
         private Material ghostInvalidMaterial;
         private Material ghostInfluenceMaterial;
+        private Material ghostFootprintInnerMaterial;
         private bool ghostIsValid;
         private bool ghostInInfluenceZone;
         private GameObject ghostInfluenceIcon; // the "+" overlay icon
@@ -136,6 +138,9 @@ namespace OpenEmpires
         private GameObject gridOverlay;
         private Material gridMaterial;
         private Texture2D gridTexture;
+        private GameObject gridLinesOverlay;
+        private Material gridLinesMaterial;
+        private Texture2D gridLinesVisTexture;
 
         // Wall placement mode
         private bool isPlacingWall;
@@ -671,6 +676,8 @@ namespace OpenEmpires
                         float ghostY = sim.MapData.SampleHeight(centerX, centerZ) * sim.Config.TerrainHeightScale + 0.05f;
                         Vector3 ghostPosition = new Vector3(centerX, ghostY, centerZ);
                         ghostBuilding.transform.position = ghostPosition;
+                        if (ghostFootprintInner != null)
+                            ghostFootprintInner.transform.position = ghostPosition;
 
                         // Update attack range ring position if it exists
                         if (ghostAttackRangeRing != null)
@@ -815,7 +822,7 @@ namespace OpenEmpires
                     if (ghostValidMaterial == null)
                     {
                         ghostValidMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-                        ghostValidMaterial.color = new Color(0f, 1f, 0f, 0.35f);
+                        ghostValidMaterial.color = new Color(0f, 1f, 0f, 0.15f);
                         ghostValidMaterial.SetFloat("_Surface", 1);
                         ghostValidMaterial.SetOverrideTag("RenderType", "Transparent");
                         ghostValidMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
@@ -3458,6 +3465,7 @@ namespace OpenEmpires
         public void EnterBuildPlacement(BuildingType type)
         {
             if (isPlacingBuilding) CancelBuildPlacement();
+            if (isPlacingWall) CancelWallPlacement();
 
             isPlacingBuilding = true;
             placementBuildingType = type;
@@ -3494,22 +3502,38 @@ namespace OpenEmpires
             if (ghostValidMaterial == null)
             {
                 ghostValidMaterial = new Material(ghostShader);
-                ghostValidMaterial.SetColor("_BaseColor", new Color(0f, 1f, 0f, 0.35f));
+                ghostValidMaterial.SetColor("_BaseColor", new Color(0f, 1f, 0f, 0.15f));
             }
             if (ghostInvalidMaterial == null)
             {
                 ghostInvalidMaterial = new Material(ghostShader);
-                ghostInvalidMaterial.SetColor("_BaseColor", new Color(1f, 0f, 0f, 0.35f));
+                ghostInvalidMaterial.SetColor("_BaseColor", new Color(1f, 0f, 0f, 0.15f));
             }
             if (ghostInfluenceMaterial == null)
             {
                 ghostInfluenceMaterial = new Material(ghostShader);
-                ghostInfluenceMaterial.SetColor("_BaseColor", new Color(1f, 0.85f, 0f, 0.35f));
+                ghostInfluenceMaterial.SetColor("_BaseColor", new Color(1f, 0.85f, 0f, 0.15f));
+            }
+            if (ghostFootprintInnerMaterial == null)
+            {
+                ghostFootprintInnerMaterial = new Material(ghostShader);
+                ghostFootprintInnerMaterial.SetColor("_BaseColor", new Color(1f, 0f, 0f, 0.20f));
+                ghostFootprintInnerMaterial.renderQueue = 3001; // draw after outer ghost so it shows on top
             }
 
             ghostBuilding.GetComponent<Renderer>().sharedMaterial = ghostValidMaterial;
             ghostIsValid = true;
             ghostInInfluenceZone = false;
+
+            // Inner red footprint overlay — covers only the actual building tiles,
+            // so the outer ghost color shows as a clearance-perimeter ring around it.
+            ghostFootprintInner = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            ghostFootprintInner.name = "BuildingGhostInner";
+            ghostFootprintInner.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
+            ghostFootprintInner.transform.localScale = new Vector3(w, h, 1f);
+            var innerCol = ghostFootprintInner.GetComponent<Collider>();
+            if (innerCol != null) Object.Destroy(innerCol);
+            ghostFootprintInner.GetComponent<Renderer>().sharedMaterial = ghostFootprintInnerMaterial;
 
             // Create attack range visualization for buildings that can attack
             CreateGhostAttackRangeRing(type, sim.Config);
@@ -3912,6 +3936,7 @@ namespace OpenEmpires
                         : transparent;
             gridTexture.SetPixels32(pixels);
             gridTexture.Apply();
+            FillGridLinesVisPixels(mapData);
         }
 
         private void CreateGridOverlay(MapData mapData, float heightScale)
@@ -4010,6 +4035,125 @@ namespace OpenEmpires
             mr.sharedMaterial = gridMaterial;
             mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             mr.receiveShadows = false;
+
+            // --- Thin gridline strips between tiles (light, full-coverage) ---
+            CreateGridLinesOverlay(mapData, heightScale, yOff, gridShader);
+        }
+
+        private void CreateGridLinesOverlay(MapData mapData, float heightScale, float yOff, Shader gridShader)
+        {
+            int w = mapData.Width, h = mapData.Height;
+            float halfWidth = 0.03f;
+
+            int vertCount = ((w + 1) * (h + 1)) * 2 * 2;
+            int triCount  = ((w + 1) * h + (h + 1) * w) * 6;
+            var verts   = new Vector3[vertCount];
+            var uvs     = new Vector2[vertCount];
+            var indices = new int[triCount];
+
+            int vi = 0, ii = 0;
+
+            // Vertical lines (at integer x, spanning z..z+1 segments)
+            for (int x = 0; x <= w; x++)
+            {
+                int baseV = vi;
+                int tx = Mathf.Clamp(x, 0, w - 1); // map boundary line shares neighbor tile
+                for (int z = 0; z <= h; z++)
+                {
+                    float y = mapData.SampleHeight(x, z) * heightScale + yOff;
+                    int tz = Mathf.Clamp(z, 0, h - 1);
+                    float u = (tx + 0.5f) / w;
+                    float v = (tz + 0.5f) / h;
+                    verts[vi] = new Vector3(x - halfWidth, y, z); uvs[vi++] = new Vector2(u, v);
+                    verts[vi] = new Vector3(x + halfWidth, y, z); uvs[vi++] = new Vector2(u, v);
+                }
+                for (int z = 0; z < h; z++)
+                {
+                    int a = baseV + z * 2;
+                    indices[ii++] = a;     indices[ii++] = a + 2; indices[ii++] = a + 1;
+                    indices[ii++] = a + 1; indices[ii++] = a + 2; indices[ii++] = a + 3;
+                }
+            }
+
+            // Horizontal lines (at integer z, spanning x..x+1 segments)
+            for (int z = 0; z <= h; z++)
+            {
+                int baseV = vi;
+                int tz = Mathf.Clamp(z, 0, h - 1);
+                for (int x = 0; x <= w; x++)
+                {
+                    float y = mapData.SampleHeight(x, z) * heightScale + yOff;
+                    int tx = Mathf.Clamp(x, 0, w - 1);
+                    float u = (tx + 0.5f) / w;
+                    float v = (tz + 0.5f) / h;
+                    verts[vi] = new Vector3(x, y, z - halfWidth); uvs[vi++] = new Vector2(u, v);
+                    verts[vi] = new Vector3(x, y, z + halfWidth); uvs[vi++] = new Vector2(u, v);
+                }
+                for (int x = 0; x < w; x++)
+                {
+                    int a = baseV + x * 2;
+                    indices[ii++] = a;     indices[ii++] = a + 2; indices[ii++] = a + 1;
+                    indices[ii++] = a + 1; indices[ii++] = a + 2; indices[ii++] = a + 3;
+                }
+            }
+
+            var mesh = new Mesh();
+            mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+            mesh.vertices = verts;
+            mesh.uv = uvs;
+            mesh.SetIndices(indices, MeshTopology.Triangles, 0);
+
+            // Per-tile visibility mask — white where explored, transparent in unexplored fog.
+            // Refreshed alongside gridTexture in RefreshGridTexture.
+            gridLinesVisTexture = new Texture2D(w, h, TextureFormat.RGBA32, false);
+            gridLinesVisTexture.filterMode = FilterMode.Point;
+            gridLinesVisTexture.wrapMode = TextureWrapMode.Clamp;
+            FillGridLinesVisPixels(mapData);
+
+            if (gridShader != null)
+            {
+                gridLinesMaterial = new Material(gridShader);
+                gridLinesMaterial.mainTexture = gridLinesVisTexture;
+                gridLinesMaterial.renderQueue = 3000;
+            }
+            else
+            {
+                gridLinesMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+                gridLinesMaterial.mainTexture = gridLinesVisTexture;
+                gridLinesMaterial.SetFloat("_Surface", 1);
+                gridLinesMaterial.SetOverrideTag("RenderType", "Transparent");
+                gridLinesMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                gridLinesMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                gridLinesMaterial.SetInt("_ZWrite", 0);
+                gridLinesMaterial.renderQueue = 3000;
+            }
+
+            gridLinesOverlay = new GameObject("PlacementGridLines");
+            var mf = gridLinesOverlay.AddComponent<MeshFilter>();
+            mf.mesh = mesh;
+            var mr = gridLinesOverlay.AddComponent<MeshRenderer>();
+            mr.sharedMaterial = gridLinesMaterial;
+            mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            mr.receiveShadows = false;
+        }
+
+        private void FillGridLinesVisPixels(MapData mapData)
+        {
+            if (gridLinesVisTexture == null) return;
+            int w = mapData.Width, h = mapData.Height;
+            var sim = GameBootstrapper.Instance?.Simulation;
+            var fogData = sim?.FogOfWar;
+            int playerId = LocalPlayerId;
+            var pixels = new Color32[w * h];
+            Color32 lineCol     = new Color32(255, 255, 255, 26); // alpha ~0.10
+            Color32 transparent = new Color32(0, 0, 0, 0);
+            for (int z = 0; z < h; z++)
+                for (int x = 0; x < w; x++)
+                    pixels[z * w + x] = (fogData != null && fogData.GetVisibility(playerId, x, z) != TileVisibility.Unexplored)
+                        ? lineCol
+                        : transparent;
+            gridLinesVisTexture.SetPixels32(pixels);
+            gridLinesVisTexture.Apply();
         }
 
         public void CancelBuildPlacement()
@@ -4027,6 +4171,11 @@ namespace OpenEmpires
             {
                 Object.Destroy(ghostBuilding);
                 ghostBuilding = null;
+            }
+            if (ghostFootprintInner != null)
+            {
+                Object.Destroy(ghostFootprintInner);
+                ghostFootprintInner = null;
             }
             if (ghostAttackRangeRing != null)
             {
@@ -4048,6 +4197,9 @@ namespace OpenEmpires
             if (gridOverlay != null) { Object.Destroy(gridOverlay); gridOverlay = null; }
             if (gridMaterial != null) { Object.Destroy(gridMaterial); gridMaterial = null; }
             if (gridTexture != null) { Object.Destroy(gridTexture); gridTexture = null; }
+            if (gridLinesOverlay != null) { Object.Destroy(gridLinesOverlay); gridLinesOverlay = null; }
+            if (gridLinesMaterial != null) { Object.Destroy(gridLinesMaterial); gridLinesMaterial = null; }
+            if (gridLinesVisTexture != null) { Object.Destroy(gridLinesVisTexture); gridLinesVisTexture = null; }
         }
 
         // Public methods for god power button clicks (from GodPowerBarUI)
@@ -4274,7 +4426,7 @@ namespace OpenEmpires
             if (ghostValidMaterial == null)
             {
                 ghostValidMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-                ghostValidMaterial.color = new Color(0f, 1f, 0f, 0.35f);
+                ghostValidMaterial.color = new Color(0f, 1f, 0f, 0.15f);
                 ghostValidMaterial.SetFloat("_Surface", 1);
                 ghostValidMaterial.SetOverrideTag("RenderType", "Transparent");
                 ghostValidMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
@@ -4287,7 +4439,7 @@ namespace OpenEmpires
             if (ghostInvalidMaterial == null)
             {
                 ghostInvalidMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-                ghostInvalidMaterial.color = new Color(1f, 0f, 0f, 0.35f);
+                ghostInvalidMaterial.color = new Color(1f, 0f, 0f, 0.15f);
                 ghostInvalidMaterial.SetFloat("_Surface", 1);
                 ghostInvalidMaterial.SetOverrideTag("RenderType", "Transparent");
                 ghostInvalidMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
