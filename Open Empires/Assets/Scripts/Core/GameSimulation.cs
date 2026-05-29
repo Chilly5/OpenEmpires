@@ -2200,6 +2200,8 @@ namespace OpenEmpires
 
             AddResource(senderRes, rt, -cmd.Amount);
             AddResource(recipientRes, rt, received);
+
+            Debug.Log($"[Tribute] Player {cmd.RecipientPlayerId + 1} received {received} {rt} from Player {cmd.PlayerId + 1} (sent {cmd.Amount}, 20% tax)");
         }
 
         public int GetMarketBuyPrice(int playerId, ResourceType type)
