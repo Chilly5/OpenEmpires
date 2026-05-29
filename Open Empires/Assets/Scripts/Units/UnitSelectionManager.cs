@@ -819,7 +819,7 @@ namespace OpenEmpires
                     if (ghostValidMaterial == null)
                     {
                         ghostValidMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-                        ghostValidMaterial.color = new Color(0f, 1f, 0f, 0.15f);
+                        ghostValidMaterial.color = new Color(0f, 1f, 0f, 0.28f);
                         ghostValidMaterial.SetFloat("_Surface", 1);
                         ghostValidMaterial.SetOverrideTag("RenderType", "Transparent");
                         ghostValidMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
@@ -3598,7 +3598,7 @@ namespace OpenEmpires
             if (ghostValidMaterial == null)
             {
                 ghostValidMaterial = new Material(ghostShader);
-                ghostValidMaterial.SetColor("_BaseColor", new Color(0f, 1f, 0f, 0.15f));
+                ghostValidMaterial.SetColor("_BaseColor", new Color(0f, 1f, 0f, 0.28f));
             }
             if (ghostInvalidMaterial == null)
             {
@@ -3613,7 +3613,7 @@ namespace OpenEmpires
             if (ghostFootprintInnerMaterial == null)
             {
                 ghostFootprintInnerMaterial = new Material(ghostShader);
-                ghostFootprintInnerMaterial.SetColor("_BaseColor", new Color(1f, 0f, 0f, 0.20f));
+                ghostFootprintInnerMaterial.SetColor("_BaseColor", new Color(1f, 0f, 0f, 0.33f));
                 ghostFootprintInnerMaterial.renderQueue = 3001; // draw after outer ghost so it shows on top
             }
 
@@ -4504,7 +4504,7 @@ namespace OpenEmpires
             if (ghostValidMaterial == null)
             {
                 ghostValidMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-                ghostValidMaterial.color = new Color(0f, 1f, 0f, 0.15f);
+                ghostValidMaterial.color = new Color(0f, 1f, 0f, 0.28f);
                 ghostValidMaterial.SetFloat("_Surface", 1);
                 ghostValidMaterial.SetOverrideTag("RenderType", "Transparent");
                 ghostValidMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
