@@ -3,24 +3,35 @@ using UnityEngine;
 
 namespace OpenEmpires
 {
-    // "!" marker placed on the ground where the player pinged. Billboards to the camera,
-    // bounces in place while the scale-pulse plays, and stays visible after the pulsing ends
-    // before a short fade-out at the very end.
+    // "!" marker placed where the player pinged. It flies down from the sky, lands at ground
+    // level with a recoil + shake that decays over time, holds, then fades out. Billboards to
+    // the camera throughout.
     public class WorldPingMarker : MonoBehaviour
     {
         private const float Lifetime = 6f;
-        private const float SpawnHeightOffset = 2.5f; // lifts the text clear of the ground
+        private const float SpawnHeightOffset = 2.5f; // resting height of the text above the ground
+
         private const float InitialScale = 1.6f;
-        private const int PulseCount = 3;
-        private const float PulseScaleAmplitude = 0.35f;
-        private const float PulseWindow = 3.9f;       // scale-pulses play during this window
-        private const float FadeStartTime = 5f;       // full alpha until this time, then fade
-        private const float FadeOutDuration = 1f;     // fade over the final second
+
+        // Fall-in
+        private const float FallHeight = 15f;     // starts this far above the landing point
+        private const float FallDuration = 0.35f; // time to drop to the ground
+
+        // Landing recoil / shake (damped). Amplitude decays as exp(-ShakeDecay * t).
+        private const float ShakeAmplitude = 0.35f; // world-space shake displacement at impact
+        private const float ShakeScaleAmp = 0.35f;  // scale "punch" recoil at impact
+        private const float ShakeDecay = 4.0f;       // higher = shaking settles faster
+        private const float ShakeFreqX = 38f;        // horizontal shake frequency
+        private const float ShakeFreqY = 47f;        // vertical shake frequency (different = chaotic)
+
+        // Fade-out
+        private const float FadeStartTime = 5f;   // full alpha until this time, then fade
+        private const float FadeOutDuration = 1f; // fade over the final second
 
         private TMP_Text label;
         private Camera cam;
         private float elapsed;
-        private Vector3 startPos;
+        private Vector3 landingPos;
 
         public static void Spawn(Vector3 worldPos)
         {
@@ -31,8 +42,10 @@ namespace OpenEmpires
 
         private void Awake()
         {
-            startPos = transform.position;
+            landingPos = transform.position;
             cam = Camera.main;
+            // Start up in the sky so the first frame doesn't flash at the landing spot.
+            transform.position = landingPos + Vector3.up * FallHeight;
 
             var textGO = new GameObject("Label");
             textGO.transform.SetParent(transform, false);
@@ -58,24 +71,39 @@ namespace OpenEmpires
         {
             elapsed += Time.deltaTime;
 
-            // Stay anchored in place — no movement.
-            transform.position = startPos;
+            Vector3 pos;
+            float scaleMul = 1f;
 
+            if (elapsed < FallDuration)
+            {
+                // Accelerating drop (ease-in, gravity-like) from FallHeight down to the ground.
+                float t = elapsed / FallDuration;
+                float fallen = t * t;
+                pos = landingPos + Vector3.up * (FallHeight * (1f - fallen));
+            }
+            else
+            {
+                // Landed: damped shake on both axes plus a scale-punch recoil, decaying over time.
+                float st = elapsed - FallDuration;
+                float decay = Mathf.Exp(-ShakeDecay * st);
+                Vector3 offset = Vector3.zero;
+                if (cam != null)
+                {
+                    offset = (cam.transform.right * Mathf.Sin(st * ShakeFreqX)
+                            + cam.transform.up    * Mathf.Sin(st * ShakeFreqY + 0.6f))
+                           * (ShakeAmplitude * decay);
+                }
+                pos = landingPos + offset;
+                scaleMul = 1f + ShakeScaleAmp * decay * Mathf.Sin(st * ShakeFreqX);
+            }
+
+            transform.position = pos;
             if (cam != null)
                 transform.rotation = Quaternion.LookRotation(transform.position - cam.transform.position);
 
             if (label != null)
             {
-                // Scale pulse plays PulseCount times across PulseWindow, then locks to base scale.
-                float pulseScale = 1f;
-                if (elapsed < PulseWindow)
-                {
-                    float pulseT = elapsed / PulseWindow;
-                    float pulseBeat = pulseT * PulseCount;
-                    float pulsePhase = pulseBeat - Mathf.Floor(pulseBeat);
-                    pulseScale = 1f + PulseScaleAmplitude * Mathf.Sin(Mathf.PI * pulsePhase);
-                }
-                label.transform.localScale = Vector3.one * (InitialScale * pulseScale);
+                label.transform.localScale = Vector3.one * (InitialScale * scaleMul);
 
                 // Full opacity until FadeStartTime, then fade to 0 over FadeOutDuration.
                 float alpha = 1f;
