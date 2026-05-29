@@ -138,9 +138,6 @@ namespace OpenEmpires
         private GameObject gridOverlay;
         private Material gridMaterial;
         private Texture2D gridTexture;
-        private GameObject gridLinesOverlay;
-        private Material gridLinesMaterial;
-        private Texture2D gridLinesVisTexture;
 
         // Wall placement mode
         private bool isPlacingWall;
@@ -2100,7 +2097,58 @@ namespace OpenEmpires
                 }
             }
 
-            // Only select buildings if no units were selected in the box
+            // Fourth pass — teammate units (any type), if no own units selected
+            if (selectedUnits.Count == 0)
+            {
+                var sim = GameBootstrapper.Instance?.Simulation;
+                var teamIds = sim?.PlayerTeamIds;
+                foreach (var kvp in unitViews)
+                {
+                    var view = kvp.Value;
+
+                    if (view.PlayerId == LocalPlayerId) continue;
+                    if (view.IsDead) continue;
+                    if (!TeamHelper.AreAllies(teamIds, view.PlayerId, LocalPlayerId)) continue;
+
+                    Rect unitRect = view.GetScreenBounds(mainCamera);
+                    if (unitRect.width > 0 && selectionRect.Overlaps(unitRect))
+                    {
+                        if (!view.IsSelected)
+                        {
+                            view.SetSelected(true);
+                            selectedUnits.Add(view);
+                        }
+                    }
+                }
+            }
+
+            // Fifth pass — enemy units (any type), if no own or teammate units selected
+            if (selectedUnits.Count == 0)
+            {
+                var sim = GameBootstrapper.Instance?.Simulation;
+                var teamIds = sim?.PlayerTeamIds;
+                foreach (var kvp in unitViews)
+                {
+                    var view = kvp.Value;
+
+                    if (view.PlayerId == LocalPlayerId) continue;
+                    if (view.IsDead) continue;
+                    if (TeamHelper.AreAllies(teamIds, view.PlayerId, LocalPlayerId)) continue;
+
+                    Rect unitRect = view.GetScreenBounds(mainCamera);
+                    if (unitRect.width > 0 && selectionRect.Overlaps(unitRect))
+                    {
+                        if (!view.IsSelected)
+                        {
+                            view.SetSelected(true);
+                            selectedUnits.Add(view);
+                        }
+                    }
+                }
+            }
+
+            // Only select buildings if no units were selected in the box.
+            // Priority: own > allied > enemy, each falling through if the previous found nothing.
             if (selectedUnits.Count == 0)
             {
                 foreach (var kvp in buildingViews)
@@ -2117,6 +2165,54 @@ namespace OpenEmpires
                         {
                             view.SetSelected(true);
                             selectedBuildings.Add(view);
+                        }
+                    }
+                }
+
+                if (selectedBuildings.Count == 0)
+                {
+                    var sim = GameBootstrapper.Instance?.Simulation;
+                    var teamIds = sim?.PlayerTeamIds;
+                    foreach (var kvp in buildingViews)
+                    {
+                        var view = kvp.Value;
+
+                        if (view.PlayerId == LocalPlayerId) continue;
+                        if (view.IsDestroyed) continue;
+                        if (!TeamHelper.AreAllies(teamIds, view.PlayerId, LocalPlayerId)) continue;
+
+                        Rect buildingRect = view.GetScreenBounds(mainCamera);
+                        if (buildingRect.width > 0 && selectionRect.Overlaps(buildingRect))
+                        {
+                            if (!view.IsSelected)
+                            {
+                                view.SetSelected(true);
+                                selectedBuildings.Add(view);
+                            }
+                        }
+                    }
+                }
+
+                if (selectedBuildings.Count == 0)
+                {
+                    var sim = GameBootstrapper.Instance?.Simulation;
+                    var teamIds = sim?.PlayerTeamIds;
+                    foreach (var kvp in buildingViews)
+                    {
+                        var view = kvp.Value;
+
+                        if (view.PlayerId == LocalPlayerId) continue;
+                        if (view.IsDestroyed) continue;
+                        if (TeamHelper.AreAllies(teamIds, view.PlayerId, LocalPlayerId)) continue;
+
+                        Rect buildingRect = view.GetScreenBounds(mainCamera);
+                        if (buildingRect.width > 0 && selectionRect.Overlaps(buildingRect))
+                        {
+                            if (!view.IsSelected)
+                            {
+                                view.SetSelected(true);
+                                selectedBuildings.Add(view);
+                            }
                         }
                     }
                 }
@@ -3920,23 +4016,126 @@ namespace OpenEmpires
             }
         }
 
+        // Gradient layout: a few tiles inside the explored region fade in,
+        // then continues to fade past the fog boundary. Total = inner + outer steps.
+        // We keep the outer reach where it was (don't push deeper into fog),
+        // and pick up the rest of the gradient on the explored side.
+        private const int GridFogOuterFade = 6;
+        private const int GridFogInnerFade = 2;
+        private const int GridFogTotalFade = GridFogOuterFade + GridFogInnerFade;
+
+        private byte[] cachedFadeStepsMap;
+        private int cachedFadeStepsW, cachedFadeStepsH;
+
+        // Returns per-tile fade step in [0, GridFogTotalFade+1].
+        // 0 = full alpha; GridFogTotalFade = nearly transparent; GridFogTotalFade+1 = fully transparent.
+        private byte[] BuildFadeStepsMap(MapData mapData, FogOfWarData fogData, int playerId)
+        {
+            int w = mapData.Width, h = mapData.Height;
+            int total = w * h;
+            if (cachedFadeStepsMap == null || cachedFadeStepsW != w || cachedFadeStepsH != h)
+            {
+                cachedFadeStepsMap = new byte[total];
+                cachedFadeStepsW = w;
+                cachedFadeStepsH = h;
+            }
+            var fade = cachedFadeStepsMap;
+
+            byte transparent = (byte)(GridFogTotalFade + 1);
+            // Initial: explored = 0 (full alpha), unexplored = transparent (placeholder until outer dilation).
+            for (int z = 0; z < h; z++)
+                for (int x = 0; x < w; x++)
+                    fade[z * w + x] = (fogData != null && fogData.GetVisibility(playerId, x, z) != TileVisibility.Unexplored) ? (byte)0 : transparent;
+
+            // --- Outer dilation: propagate fade into unexplored fog one ring at a time. ---
+            for (int k = 1; k <= GridFogOuterFade; k++)
+            {
+                byte target = (byte)(GridFogInnerFade + k);
+                byte prevTarget = (k == 1) ? (byte)0 : (byte)(GridFogInnerFade + k - 1);
+                for (int z = 0; z < h; z++)
+                {
+                    for (int x = 0; x < w; x++)
+                    {
+                        int idx = z * w + x;
+                        if (fade[idx] != transparent) continue;
+                        bool found = false;
+                        for (int dz = -1; dz <= 1 && !found; dz++)
+                        {
+                            for (int dx = -1; dx <= 1 && !found; dx++)
+                            {
+                                if (dx == 0 && dz == 0) continue;
+                                int nx = x + dx, nz = z + dz;
+                                if (nx < 0 || nx >= w || nz < 0 || nz >= h) continue;
+                                if (fade[nz * w + nx] == prevTarget) found = true;
+                            }
+                        }
+                        if (found) fade[idx] = target;
+                    }
+                }
+            }
+
+            // --- Inner dilation: explored tiles within GridFogInnerFade of the fog boundary fade out. ---
+            // Edge-most explored (adjacent to fog) → GridFogInnerFade; deeper → less; far interior stays 0.
+            // We need to know which explored tiles border fog. After outer dilation, the first ring
+            // of fog has fade = GridFogInnerFade + 1, so explored cells adjacent to it are the edge.
+            byte edgeFogValue = (byte)(GridFogInnerFade + 1);
+            for (int k = 1; k <= GridFogInnerFade; k++)
+            {
+                // Tiles at inner depth k get fade = GridFogInnerFade + 1 - k.
+                // Process from edge inward, so we look for neighbors at fade = (GridFogInnerFade + 1 - (k-1))
+                // i.e. one level "more faded" than what we're assigning.
+                byte target = (byte)(GridFogInnerFade + 1 - k);
+                byte prevTarget = (k == 1) ? edgeFogValue : (byte)(GridFogInnerFade + 1 - (k - 1));
+                for (int z = 0; z < h; z++)
+                {
+                    for (int x = 0; x < w; x++)
+                    {
+                        int idx = z * w + x;
+                        if (fade[idx] != 0) continue; // only consider explored, untouched
+                        bool found = false;
+                        for (int dz = -1; dz <= 1 && !found; dz++)
+                        {
+                            for (int dx = -1; dx <= 1 && !found; dx++)
+                            {
+                                if (dx == 0 && dz == 0) continue;
+                                int nx = x + dx, nz = z + dz;
+                                if (nx < 0 || nx >= w || nz < 0 || nz >= h) continue;
+                                if (fade[nz * w + nx] == prevTarget) found = true;
+                            }
+                        }
+                        if (found) fade[idx] = target;
+                    }
+                }
+            }
+            return fade;
+        }
+
         private void RefreshGridTexture(MapData mapData, FogOfWarData fogData, int playerId, BuildingType buildingType = BuildingType.House)
         {
             if (gridTexture == null) return;
             int w = mapData.Width, h = mapData.Height;
             var pixels = gridTexture.GetPixels32();
-            Color32 buildable   = new Color32(0, 180, 0, 24);
-            Color32 unbuildable = new Color32(200, 0, 0, 80);
-            Color32 transparent = new Color32(0, 0, 0, 0);
+            Color32 buildableBase   = new Color32(0, 180, 0, 24);
+            Color32 unbuildableBase = new Color32(200, 0, 0, 80);
+            Color32 transparent     = new Color32(0, 0, 0, 0);
             bool isFarm = buildingType == BuildingType.Farm;
+            var fadeMap = BuildFadeStepsMap(mapData, fogData, playerId);
+            byte sentinel = (byte)(GridFogTotalFade + 1);
+            float invSpan = 1f / (GridFogTotalFade + 1);
             for (int z = 0; z < h; z++)
+            {
                 for (int x = 0; x < w; x++)
-                    pixels[z * w + x] = fogData.GetVisibility(playerId, x, z) != TileVisibility.Unexplored
-                        ? ((isFarm ? mapData.IsBuildableForFarm(x, z) : mapData.IsBuildable(x, z)) ? buildable : unbuildable)
-                        : transparent;
+                {
+                    int idx = z * w + x;
+                    byte step = fadeMap[idx];
+                    if (step >= sentinel) { pixels[idx] = transparent; continue; }
+                    float fade = 1f - step * invSpan;
+                    var baseCol = (isFarm ? mapData.IsBuildableForFarm(x, z) : mapData.IsBuildable(x, z)) ? buildableBase : unbuildableBase;
+                    pixels[idx] = new Color32(baseCol.r, baseCol.g, baseCol.b, (byte)(baseCol.a * fade));
+                }
+            }
             gridTexture.SetPixels32(pixels);
             gridTexture.Apply();
-            FillGridLinesVisPixels(mapData);
         }
 
         private void CreateGridOverlay(MapData mapData, float heightScale)
@@ -4035,126 +4234,8 @@ namespace OpenEmpires
             mr.sharedMaterial = gridMaterial;
             mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             mr.receiveShadows = false;
-
-            // --- Thin gridline strips between tiles (light, full-coverage) ---
-            CreateGridLinesOverlay(mapData, heightScale, yOff, gridShader);
         }
 
-        private void CreateGridLinesOverlay(MapData mapData, float heightScale, float yOff, Shader gridShader)
-        {
-            int w = mapData.Width, h = mapData.Height;
-            float halfWidth = 0.03f;
-
-            int vertCount = ((w + 1) * (h + 1)) * 2 * 2;
-            int triCount  = ((w + 1) * h + (h + 1) * w) * 6;
-            var verts   = new Vector3[vertCount];
-            var uvs     = new Vector2[vertCount];
-            var indices = new int[triCount];
-
-            int vi = 0, ii = 0;
-
-            // Vertical lines (at integer x, spanning z..z+1 segments)
-            for (int x = 0; x <= w; x++)
-            {
-                int baseV = vi;
-                int tx = Mathf.Clamp(x, 0, w - 1); // map boundary line shares neighbor tile
-                for (int z = 0; z <= h; z++)
-                {
-                    float y = mapData.SampleHeight(x, z) * heightScale + yOff;
-                    int tz = Mathf.Clamp(z, 0, h - 1);
-                    float u = (tx + 0.5f) / w;
-                    float v = (tz + 0.5f) / h;
-                    verts[vi] = new Vector3(x - halfWidth, y, z); uvs[vi++] = new Vector2(u, v);
-                    verts[vi] = new Vector3(x + halfWidth, y, z); uvs[vi++] = new Vector2(u, v);
-                }
-                for (int z = 0; z < h; z++)
-                {
-                    int a = baseV + z * 2;
-                    indices[ii++] = a;     indices[ii++] = a + 2; indices[ii++] = a + 1;
-                    indices[ii++] = a + 1; indices[ii++] = a + 2; indices[ii++] = a + 3;
-                }
-            }
-
-            // Horizontal lines (at integer z, spanning x..x+1 segments)
-            for (int z = 0; z <= h; z++)
-            {
-                int baseV = vi;
-                int tz = Mathf.Clamp(z, 0, h - 1);
-                for (int x = 0; x <= w; x++)
-                {
-                    float y = mapData.SampleHeight(x, z) * heightScale + yOff;
-                    int tx = Mathf.Clamp(x, 0, w - 1);
-                    float u = (tx + 0.5f) / w;
-                    float v = (tz + 0.5f) / h;
-                    verts[vi] = new Vector3(x, y, z - halfWidth); uvs[vi++] = new Vector2(u, v);
-                    verts[vi] = new Vector3(x, y, z + halfWidth); uvs[vi++] = new Vector2(u, v);
-                }
-                for (int x = 0; x < w; x++)
-                {
-                    int a = baseV + x * 2;
-                    indices[ii++] = a;     indices[ii++] = a + 2; indices[ii++] = a + 1;
-                    indices[ii++] = a + 1; indices[ii++] = a + 2; indices[ii++] = a + 3;
-                }
-            }
-
-            var mesh = new Mesh();
-            mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-            mesh.vertices = verts;
-            mesh.uv = uvs;
-            mesh.SetIndices(indices, MeshTopology.Triangles, 0);
-
-            // Per-tile visibility mask — white where explored, transparent in unexplored fog.
-            // Refreshed alongside gridTexture in RefreshGridTexture.
-            gridLinesVisTexture = new Texture2D(w, h, TextureFormat.RGBA32, false);
-            gridLinesVisTexture.filterMode = FilterMode.Point;
-            gridLinesVisTexture.wrapMode = TextureWrapMode.Clamp;
-            FillGridLinesVisPixels(mapData);
-
-            if (gridShader != null)
-            {
-                gridLinesMaterial = new Material(gridShader);
-                gridLinesMaterial.mainTexture = gridLinesVisTexture;
-                gridLinesMaterial.renderQueue = 3000;
-            }
-            else
-            {
-                gridLinesMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-                gridLinesMaterial.mainTexture = gridLinesVisTexture;
-                gridLinesMaterial.SetFloat("_Surface", 1);
-                gridLinesMaterial.SetOverrideTag("RenderType", "Transparent");
-                gridLinesMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-                gridLinesMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                gridLinesMaterial.SetInt("_ZWrite", 0);
-                gridLinesMaterial.renderQueue = 3000;
-            }
-
-            gridLinesOverlay = new GameObject("PlacementGridLines");
-            var mf = gridLinesOverlay.AddComponent<MeshFilter>();
-            mf.mesh = mesh;
-            var mr = gridLinesOverlay.AddComponent<MeshRenderer>();
-            mr.sharedMaterial = gridLinesMaterial;
-            mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-            mr.receiveShadows = false;
-        }
-
-        private void FillGridLinesVisPixels(MapData mapData)
-        {
-            if (gridLinesVisTexture == null) return;
-            int w = mapData.Width, h = mapData.Height;
-            var sim = GameBootstrapper.Instance?.Simulation;
-            var fogData = sim?.FogOfWar;
-            int playerId = LocalPlayerId;
-            var pixels = new Color32[w * h];
-            Color32 lineCol     = new Color32(255, 255, 255, 26); // alpha ~0.10
-            Color32 transparent = new Color32(0, 0, 0, 0);
-            for (int z = 0; z < h; z++)
-                for (int x = 0; x < w; x++)
-                    pixels[z * w + x] = (fogData != null && fogData.GetVisibility(playerId, x, z) != TileVisibility.Unexplored)
-                        ? lineCol
-                        : transparent;
-            gridLinesVisTexture.SetPixels32(pixels);
-            gridLinesVisTexture.Apply();
-        }
 
         public void CancelBuildPlacement()
         {
@@ -4197,9 +4278,6 @@ namespace OpenEmpires
             if (gridOverlay != null) { Object.Destroy(gridOverlay); gridOverlay = null; }
             if (gridMaterial != null) { Object.Destroy(gridMaterial); gridMaterial = null; }
             if (gridTexture != null) { Object.Destroy(gridTexture); gridTexture = null; }
-            if (gridLinesOverlay != null) { Object.Destroy(gridLinesOverlay); gridLinesOverlay = null; }
-            if (gridLinesMaterial != null) { Object.Destroy(gridLinesMaterial); gridLinesMaterial = null; }
-            if (gridLinesVisTexture != null) { Object.Destroy(gridLinesVisTexture); gridLinesVisTexture = null; }
         }
 
         // Public methods for god power button clicks (from GodPowerBarUI)
