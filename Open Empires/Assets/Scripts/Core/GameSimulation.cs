@@ -1540,6 +1540,9 @@ namespace OpenEmpires
                 case MarketTradeCommand marketTrade:
                     ProcessMarketTradeCommand(marketTrade);
                     break;
+                case TributeCommand tribute:
+                    ProcessTributeCommand(tribute);
+                    break;
                 case ResearchCommand research:
                     ProcessResearchCommand(research);
                     break;
@@ -2165,6 +2168,40 @@ namespace OpenEmpires
                 resources.Gold += sellPrice;
                 SetMarketSellPrice(cmd.PlayerId, rt, System.Math.Max(sellPrice - priceStep, config.MarketMinPrice));
             }
+        }
+
+        private void ProcessTributeCommand(TributeCommand cmd)
+        {
+            if (cmd.PlayerId < 0 || cmd.PlayerId >= playerCount) return;
+            if (cmd.RecipientPlayerId < 0 || cmd.RecipientPlayerId >= playerCount) return;
+            if (cmd.PlayerId == cmd.RecipientPlayerId) return;
+            if (cmd.Amount != 100 && cmd.Amount != 500) return;
+            if (!TeamHelper.AreAllies(playerTeamIds, cmd.PlayerId, cmd.RecipientPlayerId)) return;
+
+            // Sender must own a completed Market
+            bool hasMarket = false;
+            var buildings = BuildingRegistry.GetAllBuildings();
+            for (int i = 0; i < buildings.Count; i++)
+            {
+                var b = buildings[i];
+                if (b.Type == BuildingType.Market && b.PlayerId == cmd.PlayerId
+                    && !b.IsDestroyed && !b.IsUnderConstruction)
+                { hasMarket = true; break; }
+            }
+            if (!hasMarket) return;
+
+            var senderRes = ResourceManager.GetPlayerResources(cmd.PlayerId);
+            var recipientRes = ResourceManager.GetPlayerResources(cmd.RecipientPlayerId);
+            var rt = (ResourceType)cmd.ResourceType;
+
+            if (GetResource(senderRes, rt) < cmd.Amount) return;
+
+            int received = cmd.Amount * 4 / 5; // 20% tax
+
+            AddResource(senderRes, rt, -cmd.Amount);
+            AddResource(recipientRes, rt, received);
+
+            Debug.Log($"[Tribute] Player {cmd.RecipientPlayerId + 1} received {received} {rt} from Player {cmd.PlayerId + 1} (sent {cmd.Amount}, 20% tax)");
         }
 
         public int GetMarketBuyPrice(int playerId, ResourceType type)
@@ -4017,7 +4054,80 @@ namespace OpenEmpires
                         }
                     }
                 }
+
+                // If this drop-off was placed next to a compatible resource, queue a Gather
+                // command for each builder — same behavior as if the player shift-clicked
+                // the villagers onto the resource right after issuing the build command.
+                // When construction completes, the villager goes Idle with the gather still
+                // queued; the queue-tick loop pops it on the next tick.
+                if (IsDropOffBuilding(cmd.BuildingType))
+                {
+                    var nearbyResource = FindNearestCompatibleResourceForDropOff(building2);
+                    if (nearbyResource != null)
+                    {
+                        for (int i = 0; i < cmd.VillagerUnitIds.Length; i++)
+                        {
+                            var villager = UnitRegistry.GetUnit(cmd.VillagerUnitIds[i]);
+                            if (villager == null || villager.State == UnitState.Dead || villager.PlayerId != cmd.PlayerId)
+                                continue;
+                            villager.CommandQueue.Add(QueuedCommand.GatherWaypoint(nearbyResource.Position, nearbyResource.Id));
+                        }
+                    }
+                }
             }
+        }
+
+        // Finds the nearest non-depleted resource node next to a drop-off building that the
+        // building accepts. Used to auto-queue a Gather command after a drop-off is built next
+        // to a compatible resource. Returns null if no such resource is within range.
+        private ResourceNodeData FindNearestCompatibleResourceForDropOff(BuildingData building)
+        {
+            // "Next to" tolerance — tiles from the building footprint edge.
+            const int searchBuffer = 4;
+
+            int minX = building.OriginTileX - searchBuffer;
+            int maxX = building.OriginTileX + building.TileFootprintWidth + searchBuffer;
+            int minZ = building.OriginTileZ - searchBuffer;
+            int maxZ = building.OriginTileZ + building.TileFootprintHeight + searchBuffer;
+
+            bool isTownCenter = building.Type == BuildingType.TownCenter;
+            FixedVector3 buildingCenter = building.SimPosition;
+
+            ResourceNodeData bestNode = null;
+            Fixed32 bestDistSq = default;
+            int bestPriority = int.MaxValue;
+
+            foreach (var node in MapData.GetAllResourceNodes())
+            {
+                if (node.IsDepleted) continue;
+                if (node.IsFarmNode) continue;
+                if (!AcceptsResourceType(building.Type, node.Type)) continue;
+
+                // AABB filter against the building+buffer search box
+                if (node.TileX + node.FootprintWidth - 1 < minX) continue;
+                if (node.TileX > maxX) continue;
+                if (node.TileZ + node.FootprintHeight - 1 < minZ) continue;
+                if (node.TileZ > maxZ) continue;
+
+                FixedVector3 diff = node.Position - buildingCenter;
+                Fixed32 distSq = diff.x * diff.x + diff.z * diff.z;
+                int priority = isTownCenter ? ResourcePriority(node.Type) : 0;
+
+                bool better;
+                if (bestNode == null) better = true;
+                else if (isTownCenter && priority != bestPriority) better = priority < bestPriority;
+                else if (distSq != bestDistSq) better = distSq < bestDistSq;
+                else better = node.Id < bestNode.Id;
+
+                if (better)
+                {
+                    bestNode = node;
+                    bestDistSq = distSq;
+                    bestPriority = priority;
+                }
+            }
+
+            return bestNode;
         }
 
         private void ProcessPlaceWallCommand(PlaceWallCommand cmd)
