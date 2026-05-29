@@ -100,7 +100,7 @@ namespace OpenEmpires
 
         public void Tick(UnitRegistry unitRegistry, MapData mapData, ResourceManager resourceManager,
             BuildingRegistry buildingRegistry, SimulationConfig config, Fixed32 tickDuration, int currentTick,
-            System.Func<int, BuildingType> getInfluenceBuildingType)
+            System.Func<int, BuildingType, bool> isInfluenceBuildingType)
         {
             BuildOccupancyLookups(unitRegistry, mapData);
 
@@ -254,8 +254,7 @@ namespace OpenEmpires
                 else
                 {
                     int cooldown = StrikeCooldownTicks;
-                    var influenceType = getInfluenceBuildingType(unit.PlayerId);
-                    if (node.IsFarmNode && IsFarmInfluencedByBuilding(node, unit.PlayerId, buildingRegistry, config.MillInfluenceRadius, influenceType))
+                    if (node.IsFarmNode && IsFarmInfluencedByBuilding(node, unit.PlayerId, buildingRegistry, config.MillInfluenceRadius, isInfluenceBuildingType))
                         cooldown = StrikeCooldownTicks * (100 - config.MillInfluenceGatherBonusPercent) / 100;
                     unit.AttackCooldownRemaining = cooldown;
                     unit.LastAttackTick = currentTick;
@@ -689,13 +688,14 @@ namespace OpenEmpires
         }
 
         private bool IsFarmInfluencedByBuilding(ResourceNodeData farm, int playerId,
-            BuildingRegistry buildingRegistry, int influenceRadius, BuildingType influenceSourceType)
+            BuildingRegistry buildingRegistry, int influenceRadius,
+            System.Func<int, BuildingType, bool> isInfluenceBuildingType)
         {
             var buildings = buildingRegistry.GetAllBuildings();
             for (int i = 0; i < buildings.Count; i++)
             {
                 var b = buildings[i];
-                if (b.Type != influenceSourceType) continue;
+                if (!isInfluenceBuildingType(playerId, b.Type)) continue;
                 if (b.PlayerId != playerId) continue;
                 if (b.IsDestroyed || b.IsUnderConstruction) continue;
 

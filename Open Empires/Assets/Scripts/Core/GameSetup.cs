@@ -1292,12 +1292,12 @@ namespace OpenEmpires
 
         private void AddMillInfluenceZone(GameObject building, BuildingView view, int playerId)
         {
-            // Influence zone outline (visible during Mill construction) — only for civs that use Mill as influence source
+            // Influence zone outline (visible during Mill construction) — skip for civs where Mill grants no influence
             var simRef = GameBootstrapper.Instance?.Simulation;
-            if (simRef != null && simRef.GetInfluenceBuildingType(playerId) != BuildingType.Mill)
+            if (simRef != null && !simRef.IsInfluenceBuildingType(playerId, BuildingType.Mill))
                 return;
 
-            int influenceRadius = simRef?.Config?.MillInfluenceRadius ?? 6;
+            int influenceRadius = simRef?.Config?.MillInfluenceRadius ?? 2;
             int footprintW = simRef?.Config?.MillFootprintWidth ?? 2;
             int footprintH = simRef?.Config?.MillFootprintHeight ?? 2;
             float halfX = (footprintW + 2 * influenceRadius) * 0.5f;

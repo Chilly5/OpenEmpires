@@ -101,6 +101,14 @@ namespace OpenEmpires
                 ? BuildingType.TownCenter
                 : BuildingType.Mill;
         }
+
+        // English: both Town Center AND Mill grant farm influence. Others: only Mill.
+        public bool IsInfluenceBuildingType(int playerId, BuildingType type)
+        {
+            if (GetPlayerCivilization(playerId) == Civilization.English)
+                return type == BuildingType.TownCenter || type == BuildingType.Mill;
+            return type == BuildingType.Mill;
+        }
         public int ResolveCivUnitType(int playerId, int baseUnitType)
         {
             var civ = GetPlayerCivilization(playerId);
@@ -832,7 +840,7 @@ namespace OpenEmpires
             CheckWinCondition();
             if (isMatchOver) return;
 
-            gatheringSystem.Tick(UnitRegistry, MapData, ResourceManager, BuildingRegistry, config, cachedTickDuration, currentTick, GetInfluenceBuildingType);
+            gatheringSystem.Tick(UnitRegistry, MapData, ResourceManager, BuildingRegistry, config, cachedTickDuration, currentTick, IsInfluenceBuildingType);
             healingSystem.Tick(UnitRegistry, config, spatialGrid, playerTeamIds, currentTick, MapData, BuildingRegistry);
             TickDummyRegen(currentTick);
             TickScoutRegen(currentTick);

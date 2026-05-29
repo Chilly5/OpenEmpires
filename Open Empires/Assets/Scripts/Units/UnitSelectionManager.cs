@@ -3601,12 +3601,11 @@ namespace OpenEmpires
                 return;
             }
 
-            BuildingType influenceBuildingType = sim != null ? sim.GetInfluenceBuildingType(LocalPlayerId) : BuildingType.Mill;
-            if (type != influenceBuildingType) return;
+            if (sim == null || !sim.IsInfluenceBuildingType(LocalPlayerId, type)) return;
 
             int influenceRadius = config.MillInfluenceRadius;
-            int footprintW = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintWidth : config.MillFootprintWidth;
-            int footprintH = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintHeight : config.MillFootprintHeight;
+            int footprintW = type == BuildingType.TownCenter ? config.TownCenterFootprintWidth : config.MillFootprintWidth;
+            int footprintH = type == BuildingType.TownCenter ? config.TownCenterFootprintHeight : config.MillFootprintHeight;
             float halfX = (footprintW + 2 * influenceRadius) * 0.5f;
             float halfZ = (footprintH + 2 * influenceRadius) * 0.5f;
 
@@ -3644,22 +3643,21 @@ namespace OpenEmpires
             var buildings = sim.BuildingRegistry.GetAllBuildings();
             bool isFrench = sim.GetPlayerCivilization(LocalPlayerId) == Civilization.French;
 
-            // Show mill/TC influence zones when placing farms
-            if (type == BuildingType.Farm)
+            // Show existing mill/TC influence zones during any building placement
             {
-                BuildingType influenceBuildingType = sim.GetInfluenceBuildingType(LocalPlayerId);
                 int influenceRadius = config.MillInfluenceRadius;
-                int footprintW = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintWidth : config.MillFootprintWidth;
-                int footprintH = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintHeight : config.MillFootprintHeight;
-                float halfX = (footprintW + 2 * influenceRadius) * 0.5f;
-                float halfZ = (footprintH + 2 * influenceRadius) * 0.5f;
 
                 for (int i = 0; i < buildings.Count; i++)
                 {
                     var b = buildings[i];
-                    if (b.Type != influenceBuildingType) continue;
+                    if (!sim.IsInfluenceBuildingType(LocalPlayerId, b.Type)) continue;
                     if (b.PlayerId != LocalPlayerId) continue;
                     if (b.IsDestroyed) continue;
+
+                    int footprintW = b.TileFootprintWidth;
+                    int footprintH = b.TileFootprintHeight;
+                    float halfX = (footprintW + 2 * influenceRadius) * 0.5f;
+                    float halfZ = (footprintH + 2 * influenceRadius) * 0.5f;
 
                     float centerX = b.OriginTileX + footprintW * 0.5f;
                     float centerZ = b.OriginTileZ + footprintH * 0.5f;
@@ -3738,21 +3736,18 @@ namespace OpenEmpires
         {
             var config = sim.Config;
             int influenceRadius = config.MillInfluenceRadius;
-            BuildingType influenceBuildingType = sim.GetInfluenceBuildingType(LocalPlayerId);
-            int millW = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintWidth : config.MillFootprintWidth;
-            int millH = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintHeight : config.MillFootprintHeight;
             var buildings = sim.BuildingRegistry.GetAllBuildings();
             for (int i = 0; i < buildings.Count; i++)
             {
                 var b = buildings[i];
-                if (b.Type != influenceBuildingType) continue;
+                if (!sim.IsInfluenceBuildingType(LocalPlayerId, b.Type)) continue;
                 if (b.PlayerId != LocalPlayerId) continue;
                 if (b.IsDestroyed) continue;
 
                 int zoneMinX = b.OriginTileX - influenceRadius;
-                int zoneMaxX = b.OriginTileX + millW + influenceRadius;
+                int zoneMaxX = b.OriginTileX + b.TileFootprintWidth + influenceRadius;
                 int zoneMinZ = b.OriginTileZ - influenceRadius;
-                int zoneMaxZ = b.OriginTileZ + millH + influenceRadius;
+                int zoneMaxZ = b.OriginTileZ + b.TileFootprintHeight + influenceRadius;
 
                 if (farmTileX + farmW > zoneMinX && farmTileX < zoneMaxX
                     && farmTileZ + farmH > zoneMinZ && farmTileZ < zoneMaxZ)
@@ -3851,12 +3846,11 @@ namespace OpenEmpires
             }
             else
             {
-                BuildingType influenceBuildingType = sim.GetInfluenceBuildingType(LocalPlayerId);
-                if (placementBuildingType != influenceBuildingType) return;
+                if (!sim.IsInfluenceBuildingType(LocalPlayerId, placementBuildingType)) return;
                 affectsFarms = true;
                 influenceRadius = config.MillInfluenceRadius;
-                footW = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintWidth : config.MillFootprintWidth;
-                footH = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintHeight : config.MillFootprintHeight;
+                footW = placementBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintWidth : config.MillFootprintWidth;
+                footH = placementBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintHeight : config.MillFootprintHeight;
             }
 
             // Compute influence zone AABB

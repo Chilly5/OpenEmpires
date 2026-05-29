@@ -832,12 +832,11 @@ namespace OpenEmpires
             var sim = GameBootstrapper.Instance?.Simulation;
             if (sim == null) return false;
             int radius = sim.Config.MillInfluenceRadius;
-            BuildingType influenceType = sim.GetInfluenceBuildingType(PlayerId);
             var buildings = sim.BuildingRegistry.GetAllBuildings();
             for (int i = 0; i < buildings.Count; i++)
             {
                 var b = buildings[i];
-                if (b.Type != influenceType) continue;
+                if (!sim.IsInfluenceBuildingType(PlayerId, b.Type)) continue;
                 if (b.PlayerId != PlayerId) continue;
                 if (b.IsDestroyed) continue;
                 int minX = b.OriginTileX - radius;
