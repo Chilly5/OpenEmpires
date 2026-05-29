@@ -171,7 +171,13 @@ namespace OpenEmpires
                 color = color,
                 style = PingStyle.ExpandingWave,
             });
-            WorldPingMarker.Spawn(new Vector3(wx, 0f, wz));
+            // Spawn relative to the terrain surface — flat ground is not at world Y=0 (the mesh
+            // sits at SampleHeight * TerrainHeightScale), so a hardcoded Y buries the marker.
+            var pingSim = GameBootstrapper.Instance?.Simulation;
+            float groundY = pingSim != null
+                ? pingSim.MapData.SampleHeight(wx, wz) * pingSim.Config.TerrainHeightScale
+                : 0f;
+            WorldPingMarker.Spawn(new Vector3(wx, groundY, wz));
             SFXManager.Instance?.PlayUI(SFXType.NotifyPing, 0.7f);
         }
 
