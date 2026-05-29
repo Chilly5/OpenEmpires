@@ -59,9 +59,16 @@ namespace OpenEmpires
             sb.Append("- If they are just chatting or asking a question, answer in text and call NO tools.\n\n");
 
             sb.Append("After your tool calls run, you receive their results, then you MUST reply with ONE or TWO short, ");
-            sb.Append("in-character sentences over comms describing what you just did or are about to do. ");
-            sb.Append("Keep it natural and concrete — reference real numbers or map features when useful. ");
-            sb.Append("Your spoken reply must match the actions you actually took.");
+            sb.Append("in-character comms sentences. Keep it natural and concrete — reference real numbers or map ");
+            sb.Append("features when useful.\n");
+            sb.Append("Your tools place ORDERS — the game carries them out over the next several seconds. ");
+            sb.Append("Buildings have construction time; units cost resources and train one at a time, only as ");
+            sb.Append("population space and the right building allow; and armies take time to march. ");
+            sb.Append("So talk about what you're STARTING or what's ON THE WAY, never what's already finished. ");
+            sb.Append("Say things like \"putting a barracks down now\" or \"I'm getting five spearmen going\" — ");
+            sb.Append("not \"the barracks is built\" or \"five spearmen are ready.\" ");
+            sb.Append("Don't claim units exist or a building is complete just because you ordered it. ");
+            sb.Append("Match what you say to the orders you actually gave.");
             return sb.ToString();
         }
 
