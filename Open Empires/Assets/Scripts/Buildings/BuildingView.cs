@@ -199,9 +199,14 @@ namespace OpenEmpires
         private GameObject gateRightCap;
         private GameObject gateSpriteQuad;
         private Renderer gateSpriteRenderer;
-        private string gateSpritePrefix;
         private bool gateIsOpen;
-        private float gateLastRotation = float.NaN;
+        // Gate opens while a unit is on its tile and stays open for this long after the last
+        // unit leaves; the timer is reset every frame a unit is still passing through.
+        private const float GateOpenHoldDuration = 0.75f;
+        private float gateOpenTimer;
+        // True while this wall is absorbed into an adjacent gate's 3-tile span — its own body
+        // sprite is hidden so the gate sprite covers it. Collider stays (still attackable).
+        private bool isCovered;
 
         // Palisade (wood wall) sprite billboard — replaces procedural body cubes for BuildingType.Wall.
         // YOffsetRatio < 0.5 lowers the quad below the half-height position so the wall art
@@ -209,6 +214,13 @@ namespace OpenEmpires
         // on the ground instead of floating.
         private const float PalisadeSpriteScale = 6.61f;
         private const float PalisadeSpriteYOffsetRatio = 0.27f;
+
+        // Gate billboard sizes (quad scale). Tunable. Gates now span THREE tiles — the gate tile
+        // plus the two collinear wall neighbors it absorbs — so the towers in the art should land
+        // over those neighbor tiles. Roughly wall-scale (6.61) is the starting point; tune per
+        // orientation via the WallGateSpriteRegistry knobs if towers don't sit on the neighbors.
+        private const float WoodGateSpriteScale = 6.61f;
+        private const float StoneGateSpriteScale = 7.0f;
         private GameObject palisadeSpriteQuad;
         private Renderer palisadeSpriteRenderer;
         private string lastPalisadeSpriteName;
@@ -538,6 +550,10 @@ namespace OpenEmpires
                 SetGateVisual(buildingData.IsGate, mat);
             }
 
+            // Open the gate while a unit is passing through (cosmetic, view-only).
+            if (buildingData.IsGate)
+                UpdateGateOpenState();
+
             // Detect new damage or work strike — apply flash. (LastStrikeTick is the cosmetic
             // hammer-strike pulse from repair/construction; LastDamageTick is real combat damage.)
             int latestTick = buildingData.LastDamageTick > buildingData.LastStrikeTick
@@ -860,23 +876,6 @@ namespace OpenEmpires
         {
             if (isGate)
             {
-                // Auto-pick sprite prefix if not yet set (covers wall→gate conversions
-                // where the SpawnBuilding code path doesn't run).
-                // Palisade gates are universal (no civ variation). Stone gates are civ-keyed.
-                if (string.IsNullOrEmpty(gateSpritePrefix))
-                {
-                    if (BuildingType == BuildingType.Wall)
-                    {
-                        gateSpritePrefix = "Palisadegate";
-                    }
-                    else
-                    {
-                        var sim = GameBootstrapper.Instance?.Simulation;
-                        if (sim != null && sim.GetPlayerCivilization(PlayerId) == Civilization.English)
-                            gateSpritePrefix = "Englishgate";
-                    }
-                }
-
                 // Hide wall geometry container
                 if (wallGeometry != null) wallGeometry.gameObject.SetActive(false);
                 if (palisadeSpriteQuad != null) palisadeSpriteQuad.SetActive(false);
@@ -889,15 +888,18 @@ namespace OpenEmpires
                     gateContainer.transform.localPosition = Vector3.zero;
                 }
 
-                if (!string.IsNullOrEmpty(gateSpritePrefix))
+                // All wall-family gates (wood + stone) render an orientation-aware billboard
+                // sprite from WallGateSpriteRegistry. Procedural cubes remain only as a
+                // fallback for any non-wall gate type that has no sprite art.
+                if (IsWoodGateFamily(BuildingType) || IsStoneGateFamily(BuildingType))
                     EnsureGateSpriteQuad();
                 else
                     EnsureGateProceduralParts(mat);
 
-                // Orient opening toward the side without adjacent walls
+                // Orient opening toward the side without adjacent walls (procedural parts only;
+                // the billboard sprite picks orientation per-sprite from the registry).
                 float rotation = ComputeGateRotation();
                 gateContainer.transform.localRotation = Quaternion.Euler(0f, rotation, 0f);
-                gateLastRotation = rotation;
 
                 if (gateSpriteRenderer != null)
                     UpdateGateTexture();
@@ -953,11 +955,10 @@ namespace OpenEmpires
             gateSpriteQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
             gateSpriteQuad.name = "Sprite";
             gateSpriteQuad.transform.SetParent(gateContainer.transform, false);
-            // Palisade gates use the same quad scale/Y-offset as palisade walls so the gate
-            // foot lines up with the wall foot on adjacent tiles. Civ gates (Englishgate)
-            // keep the original 2.5/1.25 sizing.
-            float gateScale = (BuildingType == BuildingType.Wall) ? PalisadeSpriteScale : 2.5f;
-            float gateY     = (BuildingType == BuildingType.Wall) ? PalisadeSpriteScale * PalisadeSpriteYOffsetRatio : 1.25f;
+            // Initial scale/Y from the gate's family base size; ApplyGateSprite refines it
+            // per-sprite (flip / scale multiplier / vertical nudge) once the texture loads.
+            float gateScale = GateBaseScale;
+            float gateY     = gateScale * PalisadeSpriteYOffsetRatio;
             gateSpriteQuad.transform.localPosition = new Vector3(0f, gateY, 0f);
             gateSpriteQuad.transform.localScale = new Vector3(gateScale, gateScale, 1f);
             gateSpriteQuad.layer = 11;
@@ -974,46 +975,41 @@ namespace OpenEmpires
 
         private void UpdateGateTexture()
         {
-            if (gateSpriteRenderer == null || string.IsNullOrEmpty(gateSpritePrefix)) return;
+            if (gateSpriteRenderer == null) return;
 
-            // Palisade gates: pick the sprite from WallGateSpriteRegistry using the
-            // current neighbor-derived WallSegmentKind. Handles 4 orientations (2 cardinal
-            // axes + 2 diagonal axes) × open/closed, all with matching UV crop.
-            if (BuildingType == BuildingType.Wall)
-            {
-                var sim = GameBootstrapper.Instance?.Simulation;
-                if (sim == null) return;
-                var mask = SampleWallNeighbors(sim.MapData, sim.BuildingRegistry, OriginTileX, OriginTileZ);
-                var kind = WallSegmentClassifier.Classify(mask);
-                if (WallGateSpriteRegistry.TryLookup(BuildingType.Wall, kind, gateIsOpen, out var sel))
-                {
-                    var tex = WallSpriteRegistry.LoadTexture(sel.ResourceName);
-                    if (tex != null)
-                    {
-                        gateSpriteRenderer.material.SetTexture("_MainTex", tex);
-                        gateSpriteRenderer.material.mainTextureScale = sel.UvScale;
-                        gateSpriteRenderer.material.mainTextureOffset = sel.UvOffset;
-                    }
-                }
-                return;
-            }
-
-            // Civ gates (Englishgate, future stone gates): rotation-based 2-state mapping.
-            bool sideways = gateLastRotation > 45f;
-            string state;
-            if (sideways)
-                state = gateIsOpen ? "_Side_Opened" : "_Side";
-            else
-                state = gateIsOpen ? "_front_opened" : "_front";
-
-            var civTex = Resources.Load<Texture2D>($"BuildingSprites/{gateSpritePrefix}{state}");
-            if (civTex != null)
-                gateSpriteRenderer.material.SetTexture("_MainTex", civTex);
+            // Every wall-family gate (wood + stone) picks its sprite from
+            // WallGateSpriteRegistry using the current neighbor-derived WallSegmentKind.
+            // Handles 4 orientations (2 cardinal axes + 2 diagonal axes) × open/closed.
+            var sim = GameBootstrapper.Instance?.Simulation;
+            if (sim == null) return;
+            var mask = SampleWallNeighbors(sim.MapData, sim.BuildingRegistry, OriginTileX, OriginTileZ);
+            var kind = WallSegmentClassifier.Classify(mask);
+            if (WallGateSpriteRegistry.TryLookup(BuildingType, kind, gateIsOpen, out var sel))
+                ApplyGateSprite(sel);
         }
 
-        public void SetGateSpriteCiv(string prefix)
+        // Applies a registry selection to the gate billboard quad — same transform handling
+        // as ApplyPalisadeSprite (UV crop, flip, rotation, per-sprite scale + Y nudge) but
+        // sized from the gate's family base scale instead of the wall-body scale.
+        private void ApplyGateSprite(WallSpriteSelection sel)
         {
-            gateSpritePrefix = prefix;
+            if (gateSpriteRenderer == null) return;
+
+            var tex = WallSpriteRegistry.LoadTexture(sel.ResourceName);
+            if (tex == null) return;
+            gateSpriteRenderer.material.SetTexture("_MainTex", tex);
+            gateSpriteRenderer.material.mainTextureScale = sel.UvScale;
+            gateSpriteRenderer.material.mainTextureOffset = sel.UvOffset;
+
+            if (gateSpriteQuad == null) return;
+            float baseScale = GateBaseScale;
+            float effectiveScale = baseScale * sel.ScaleMultiplier;
+            float sx = sel.FlipX ? -effectiveScale : effectiveScale;
+            gateSpriteQuad.transform.localScale = new Vector3(sx, effectiveScale, 1f);
+            gateSpriteQuad.transform.localEulerAngles = new Vector3(0f, 0f, sel.RotationDegrees);
+            float targetY = baseScale * PalisadeSpriteYOffsetRatio + sel.WorldYOffset;
+            var p = gateSpriteQuad.transform.localPosition;
+            gateSpriteQuad.transform.localPosition = new Vector3(p.x, targetY, p.z);
         }
 
         public void SetGateOpen(bool open)
@@ -1021,6 +1017,57 @@ namespace OpenEmpires
             if (gateIsOpen == open) return;
             gateIsOpen = open;
             UpdateGateTexture();
+        }
+
+        // Hide/show this wall's own body sprite when it's absorbed into an adjacent gate's
+        // 3-tile span. Driven from UpdateWallConnections (pull model) so it self-heals whenever
+        // a neighbor gate is placed, toggled, or destroyed.
+        public void SetCovered(bool covered)
+        {
+            if (isCovered == covered) return;
+            isCovered = covered;
+            if (palisadeSpriteQuad != null)
+                palisadeSpriteQuad.SetActive(!covered);
+        }
+
+        // Shows the open sprite while any unit stands on the gate's tile, then holds it open
+        // for GateOpenHoldDuration after the last unit leaves. The hold timer is refreshed
+        // every frame a unit is present, so it only counts down once the doorway is clear.
+        private void UpdateGateOpenState()
+        {
+            var sim = GameBootstrapper.Instance?.Simulation;
+            if (sim == null) return;
+
+            // The passage spans the gate tile plus the two collinear neighbors it absorbs, so a
+            // unit on any of the three opens the gate. Query a 2-tile radius to cover them.
+            bool hasPair = WallSegmentClassifier.TryGetCollinearWallPair(
+                sim.MapData, sim.BuildingRegistry, OriginTileX, OriginTileZ, PlayerId,
+                out var pairA, out var pairB);
+
+            bool unitOnTile = false;
+            var nearby = sim.GetUnitsNear(buildingData.SimPosition, Fixed32.FromInt(2));
+            for (int i = 0; i < nearby.Count; i++)
+            {
+                var u = nearby[i];
+                if (u.State == UnitState.Dead) continue;
+                var tile = sim.MapData.WorldToTile(u.SimPosition);
+                int rx = tile.x - OriginTileX;
+                int rz = tile.y - OriginTileZ;
+                bool onCenter = rx == 0 && rz == 0;
+                bool onPair = hasPair && ((rx == pairA.x && rz == pairA.y) || (rx == pairB.x && rz == pairB.y));
+                if (onCenter || onPair)
+                {
+                    unitOnTile = true;
+                    break;
+                }
+            }
+
+            if (unitOnTile)
+                gateOpenTimer = GateOpenHoldDuration; // reset on every pass-through
+            else if (gateOpenTimer > 0f)
+                gateOpenTimer -= Time.deltaTime;
+
+            SetGateOpen(gateOpenTimer > 0f);
         }
 
         private GameObject CreateGatePart(string partName, Vector3 localPos, Vector3 localScale, Material mat)
@@ -1080,6 +1127,20 @@ namespace OpenEmpires
         {
             return t == BuildingType.Wall || t == BuildingType.StoneWall;
         }
+
+        // Gate-art families: wood (palisade) gates vs stone (English) gates. The Wall/StoneWall
+        // types reach these when converted to a gate; WoodGate/StoneGate are the standalone
+        // gate building types. Both families render via WallGateSpriteRegistry.
+        private static bool IsWoodGateFamily(BuildingType t)
+            => t == BuildingType.Wall || t == BuildingType.WoodGate;
+        private static bool IsStoneGateFamily(BuildingType t)
+            => t == BuildingType.StoneWall || t == BuildingType.StoneGate;
+
+        // Base quad scale for this building's gate sprite, by family.
+        private float GateBaseScale
+            => IsWoodGateFamily(BuildingType) ? WoodGateSpriteScale
+             : IsStoneGateFamily(BuildingType) ? StoneGateSpriteScale
+             : 2.5f;
 
         private static WallNeighborMask SampleWallNeighbors(MapData map, BuildingRegistry reg, int tx, int tz)
         {
@@ -1211,17 +1272,22 @@ namespace OpenEmpires
                 }
             }
 
-            // Palisade sprite — registry lookup. If this wall is currently a gate, the
-            // sprite is hidden; refresh the gate sprite instead so it picks up
-            // the orientation change.
-            if (UsesSpriteWallBody(BuildingType))
+            // If this wall is currently a gate, the wall-body sprite is hidden; refresh the
+            // gate sprite instead so it picks up the orientation change. Otherwise: if this wall
+            // is absorbed into an adjacent owner gate's span, hide its body (the gate sprite
+            // covers it); else show + refresh the wall-body sprite (sprite-bodied wall types).
+            if (buildingData != null && buildingData.IsGate)
             {
-                if (buildingData != null && buildingData.IsGate)
-                {
-                    if (gateSpriteRenderer != null)
-                        UpdateGateTexture();
-                }
-                else if (WallSpriteRegistry.TryLookup(BuildingType, kind, out var sel))
+                if (gateSpriteRenderer != null)
+                    UpdateGateTexture();
+            }
+            else
+            {
+                bool covered = UsesSpriteWallBody(BuildingType)
+                    && WallSegmentClassifier.IsAbsorbedByOwnerGate(map, reg, tx, tz, PlayerId);
+                SetCovered(covered);
+                if (!covered && UsesSpriteWallBody(BuildingType)
+                    && WallSpriteRegistry.TryLookup(BuildingType, kind, out var sel))
                 {
                     ApplyPalisadeSprite(sel);
                 }

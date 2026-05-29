@@ -2198,9 +2198,16 @@ namespace OpenEmpires
 
             if (building.Type == BuildingType.Wall || building.Type == BuildingType.StoneWall || building.Type == BuildingType.StoneGate || building.Type == BuildingType.WoodGate)
             {
+                // A wall can only become a gate mid-run (walls on both sides); a gate can always
+                // revert. Mirrors the sim's eligibility check so the button never offers a no-op.
+                bool canConvert = building.IsGate
+                    || WallSegmentClassifier.TryGetCollinearWallPair(sim.MapData, sim.BuildingRegistry,
+                        building.OriginTileX, building.OriginTileZ, building.PlayerId, out _, out _);
                 string gateLabel = building.IsGate ? "To Wall" : "To Gate";
-                slots[0] = new GridButton { Label = gateLabel, Hotkey = "Q", Enabled = true,
-                    Tooltip = "<b>Toggle Gate</b>\nConvert between wall and gate.",
+                slots[0] = new GridButton { Label = gateLabel, Hotkey = "Q", Enabled = canConvert,
+                    Tooltip = canConvert
+                        ? "<b>Toggle Gate</b>\nConvert between wall and gate."
+                        : "<b>Toggle Gate</b>\nA wall can only become a gate when it has walls on both sides (a straight run).",
                     OnClick = () => sim.CommandBuffer.EnqueueCommand(
                         new ConvertToGateCommand(building.PlayerId, building.Id)) };
                 hasAny = true;

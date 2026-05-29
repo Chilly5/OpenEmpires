@@ -290,6 +290,12 @@ namespace OpenEmpires
         public int CurrentTick => currentTick;
         public SimulationConfig Config => config;
 
+        // Read-only spatial query for nearby units. Used by the view layer for cosmetic
+        // effects (e.g. gate open/close on unit pass-through). The returned list is the
+        // grid's shared buffer — consume it before the next query.
+        public System.Collections.Generic.List<UnitData> GetUnitsNear(FixedVector3 position, Fixed32 radius)
+            => spatialGrid.GetNearby(position, radius);
+
         public void LogStateBreakdown()
         {
             var units = UnitRegistry.GetAllUnits();
@@ -4224,6 +4230,14 @@ namespace OpenEmpires
             if (building == null || building.IsDestroyed) return;
             if (building.Type != BuildingType.Wall && building.Type != BuildingType.StoneWall && building.Type != BuildingType.StoneGate && building.Type != BuildingType.WoodGate) return;
             if (building.PlayerId != cmd.PlayerId) return;
+
+            // A wall may only become a gate when a straight wall run passes through it (two
+            // collinear same-player walls flank it), so every gate is a clean 3-tile span.
+            // Toggling a gate back to a wall is always allowed.
+            if (!building.IsGate
+                && !WallSegmentClassifier.TryGetCollinearWallPair(MapData, BuildingRegistry,
+                        building.OriginTileX, building.OriginTileZ, building.PlayerId, out _, out _))
+                return;
 
             building.IsGate = !building.IsGate;
 

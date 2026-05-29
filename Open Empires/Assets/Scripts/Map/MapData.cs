@@ -182,6 +182,13 @@ namespace OpenEmpires
                 var building = GetBuildingAt(x, z, buildingRegistry);
                 if (building != null && building.IsGate)
                     return building.PlayerId == playerId;
+                // A plain wall absorbed into an adjacent owner gate's 3-tile span is passable to
+                // that owner (the gate claims its two collinear wall neighbors). Enemies still see
+                // it as solid wall and fall through to the blocked return below.
+                if (building != null && !building.IsGate
+                    && (building.Type == BuildingType.Wall || building.Type == BuildingType.StoneWall)
+                    && WallSegmentClassifier.IsAbsorbedByOwnerGate(this, buildingRegistry, x, z, playerId))
+                    return true;
             }
 
             return false;
