@@ -1562,7 +1562,9 @@ namespace OpenEmpires
             }
 
             bool showInfluence = cachedInInfluence || externalInfluenceMark;
-            if (!isSelected && !damaged && !buildingData.IsUnderConstruction && !training && !upgrading && !showInfluence)
+            // Farms don't auto-show the HP bar from influence — the "+" buff icon already conveys it.
+            bool barShowInfluence = showInfluence && buildingData.Type != BuildingType.Farm;
+            if (!isSelected && !damaged && !buildingData.IsUnderConstruction && !training && !upgrading && !barShowInfluence)
             {
                 if (overlayRoot != null && overlayRoot.gameObject.activeSelf)
                     overlayRoot.gameObject.SetActive(false);
