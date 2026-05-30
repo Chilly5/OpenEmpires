@@ -1093,13 +1093,23 @@ namespace OpenEmpires
             return m;
         }
 
-        // True when (tx, tz) is impassable terrain or contains a non-wall building/resource.
+        // True when (tx, tz) is impassable terrain, contains a non-wall building/resource,
+        // or sits in the Foundation border around a non-wall building (1-tile clearance ring
+        // around TCs, Houses, Mills, etc. — walls placed adjacent to those buildings have
+        // this Foundation tile between them and the building's actual Building tile).
         // Walls don't count — they're handled by the wall-neighbor mask.
         // Out-of-bounds counts as obstacle so walls placed at the map edge get capped.
         private static bool IsObstacleNonWall(MapData map, BuildingRegistry reg, int tx, int tz)
         {
             if (tx < 0 || tx >= map.Width || tz < 0 || tz >= map.Height) return true;
             if (map.IsWallTile(tx, tz, reg)) return false;
+            // Direct building occupancy — catches Farms (walkable but a building) and
+            // any non-wall building tile.
+            var b = map.GetBuildingAt(tx, tz, reg);
+            if (b != null && !b.IsDestroyed && !IsWallFamily(b.Type)) return true;
+            // Foundation tiles only ever exist as a 1-tile border around non-wall buildings.
+            if (map.Tiles[tx, tz] == TileType.Foundation) return true;
+            // Impassable terrain (Rock, Cliff, Water, River, dense forest, holeMap, etc.).
             return !map.IsWalkable(tx, tz);
         }
 
