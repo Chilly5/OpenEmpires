@@ -291,10 +291,9 @@ namespace OpenEmpires
                 spriteRenderer = spriteTransform.GetComponent<Renderer>();
 
             if (IsWallFamily(data.Type))
-            {
                 wallViewsById[buildingId] = this;
-                InvalidateNeighborWallViews(OriginTileX, OriginTileZ);
-            }
+            // Any new building may turn an adjacent wall into a tower (obstacle-cap rule).
+            InvalidateNeighborWallViews(OriginTileX, OriginTileZ);
 
             CreateRallyPointVisuals();
             CreateOverlayWidgets();
@@ -1094,6 +1093,16 @@ namespace OpenEmpires
             return m;
         }
 
+        // True when (tx, tz) is impassable terrain or contains a non-wall building/resource.
+        // Walls don't count — they're handled by the wall-neighbor mask.
+        // Out-of-bounds counts as obstacle so walls placed at the map edge get capped.
+        private static bool IsObstacleNonWall(MapData map, BuildingRegistry reg, int tx, int tz)
+        {
+            if (tx < 0 || tx >= map.Width || tz < 0 || tz >= map.Height) return true;
+            if (map.IsWallTile(tx, tz, reg)) return false;
+            return !map.IsWalkable(tx, tz);
+        }
+
         // Resets the dirty flag so the next LateUpdate re-runs classification.
         // Safe to call multiple times per frame — flag flip is idempotent.
         public void InvalidateWallConnections()
@@ -1149,6 +1158,19 @@ namespace OpenEmpires
             bool hasNW = (mask & WallNeighborMask.NW) != 0;
             bool hasSE = (mask & WallNeighborMask.SE) != 0;
             bool hasSW = (mask & WallNeighborMask.SW) != 0;
+
+            // Any wall whose cardinal neighbor is impassable terrain or a non-wall building
+            // becomes a tower (Junction sprite). This is the wall tile that "makes contact"
+            // with the obstacle — caps tree lines, mountains, water, buildings, etc.
+            if (kind != WallSegmentKind.Junction && kind != WallSegmentKind.Isolated)
+            {
+                bool nObs = !hasN && IsObstacleNonWall(map, reg, tx,     tz + 1);
+                bool sObs = !hasS && IsObstacleNonWall(map, reg, tx,     tz - 1);
+                bool eObs = !hasE && IsObstacleNonWall(map, reg, tx + 1, tz);
+                bool wObs = !hasW && IsObstacleNonWall(map, reg, tx - 1, tz);
+                if (nObs || sObs || eObs || wObs)
+                    kind = WallSegmentKind.Junction;
+            }
 
             // Hide merlons at corners that connect to any neighbor (stone walls only — palisade has merlons hidden up-front)
             Transform mNxNz = wallGeometry.Find("Merlon_NxNz");
@@ -1771,10 +1793,9 @@ namespace OpenEmpires
             IsDestroyed = true;
 
             if (IsWallFamily(BuildingType))
-            {
                 wallViewsById.Remove(BuildingId);
-                InvalidateNeighborWallViews(OriginTileX, OriginTileZ);
-            }
+            // Any building destruction may un-cap adjacent walls (lose obstacle neighbor).
+            InvalidateNeighborWallViews(OriginTileX, OriginTileZ);
 
             if (overlayRoot != null)
                 overlayRoot.gameObject.SetActive(false);
