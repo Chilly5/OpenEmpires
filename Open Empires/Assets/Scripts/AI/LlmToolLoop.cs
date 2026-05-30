@@ -112,9 +112,10 @@ namespace OpenEmpires
             onComplete?.Invoke(intents, fallbackText);
         }
 
-        // Builds the initial contents list from stored history plus the new message.
+        // Builds the initial contents list from stored history plus the new message. When
+        // `media` is non-empty the final user turn also carries those image/audio parts.
         public static List<GeminiClient.Content> BuildInitialContents(
-            List<GeminiClient.Turn> history, string userMessage)
+            List<GeminiClient.Turn> history, string userMessage, List<GeminiClient.Blob> media = null)
         {
             var contents = new List<GeminiClient.Content>();
             if (history != null)
@@ -126,7 +127,9 @@ namespace OpenEmpires
                         : GeminiClient.Content.ModelText(history[i].Text));
                 }
             }
-            contents.Add(GeminiClient.Content.UserText(userMessage));
+            contents.Add(media != null && media.Count > 0
+                ? GeminiClient.Content.UserMultimodal(userMessage, media)
+                : GeminiClient.Content.UserText(userMessage));
             return contents;
         }
     }

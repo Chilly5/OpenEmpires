@@ -168,7 +168,11 @@ namespace OpenEmpires
                 + " tools, then give a brief, concrete comms update.";
 
             var history = LlmConversationMemory.GetHistory(LocalPlayerId, aiPid);
-            var contents = LlmToolLoop.BuildInitialContents(history, userMessage);
+            // Reuse the controller's capture + config (both live on this GameObject) so the
+            // same tactical snapshot / game audio rides AI-initiated turns too.
+            var controller = GetComponent<LlmTeammateController>();
+            var media = controller != null ? controller.CaptureMedia(sim, aiPid) : null;
+            var contents = LlmToolLoop.BuildInitialContents(history, userMessage, media);
             Debug.Log($"[LlmAiInitiator] → AI{aiPid}: event='{trigger}'");
 
             StartCoroutine(LlmToolLoop.Run(apiKey, systemPrompt, contents, sim, aiPid, aiPid,

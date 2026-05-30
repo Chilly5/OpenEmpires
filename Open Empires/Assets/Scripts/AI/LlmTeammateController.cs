@@ -16,6 +16,22 @@ namespace OpenEmpires
         [Tooltip("Throttle: minimum seconds between LLM turns per local player.")]
         public float MinSecondsBetweenCalls = 5f;
 
+        [Header("Multimodal context (owner-client input only; never affects the sim)")]
+        [Tooltip("Send an off-screen top-down tactical snapshot (PNG) with each LLM turn.")]
+        public bool SendTacticalSnapshot = true;
+
+        [Tooltip("Square pixel size of the tactical snapshot.")]
+        public int SnapshotResolution = 640;
+
+        [Tooltip("Orthographic half-size (world units) framed by the snapshot.")]
+        public float SnapshotWorldHalfSize = 40f;
+
+        [Tooltip("Send the last few seconds of game audio (WAV) with each LLM turn.")]
+        public bool SendGameAudio = true;
+
+        [Tooltip("Seconds of recent game audio to send.")]
+        public float AudioWindowSeconds = 8f;
+
         [Tooltip("Log the AI teammate's reasoning, tool calls, and results to the console.")]
         [SerializeField] private bool verboseLogging = true;
 
@@ -89,13 +105,49 @@ namespace OpenEmpires
 
             var history = LlmConversationMemory.GetHistory(issuerPlayerId, aiPlayerId);
             LlmConversationMemory.Append(issuerPlayerId, aiPlayerId, true, text);
-            var contents = LlmToolLoop.BuildInitialContents(history, userMessage);
+            var media = CaptureMedia(sim, aiPlayerId);
+            var contents = LlmToolLoop.BuildInitialContents(history, userMessage, media);
 
             Debug.Log($"[LlmTeammate] → AI{aiPlayerId}: {text}");
             StartCoroutine(LlmToolLoop.Run(apiKey, systemPrompt, contents, sim, aiPlayerId, issuerPlayerId,
                 onComplete: (intents, reply) => HandleComplete(intents, reply, issuerPlayerId, aiPlayerId),
                 onFailure: reason => HandleFailure(reason, aiPlayerId)));
             return true;
+        }
+
+        // Captures the configured multimodal inputs (tactical snapshot + game audio) for one
+        // LLM turn. Owner-client only and read-only on sim state. Returns null when both
+        // inputs are disabled or unavailable, so the caller falls back to text-only.
+        // Shared with LlmAiInitiator (same GameObject) so config lives in one place.
+        public List<GeminiClient.Blob> CaptureMedia(GameSimulation sim, int aiPlayerId)
+        {
+            List<GeminiClient.Blob> media = null;
+
+            if (SendTacticalSnapshot)
+            {
+                byte[] png = GameSnapshotCapture.Instance.CapturePng(
+                    sim, aiPlayerId, SnapshotResolution, SnapshotWorldHalfSize);
+                if (png != null && png.Length > 0)
+                {
+                    if (media == null) media = new List<GeminiClient.Blob>(2);
+                    media.Add(new GeminiClient.Blob(png, "image/png"));
+                }
+            }
+
+            if (SendGameAudio)
+            {
+                var audio = GameAudioCapture.Instance;
+                byte[] wav = audio != null ? audio.EncodeRecentWav(AudioWindowSeconds) : null;
+                if (wav != null && wav.Length > 0)
+                {
+                    if (media == null) media = new List<GeminiClient.Blob>(2);
+                    media.Add(new GeminiClient.Blob(wav, "audio/wav"));
+                }
+            }
+
+            if (media != null)
+                LlmDebug.Log($"AI{aiPlayerId} multimodal: {media.Count} part(s) attached.");
+            return media;
         }
 
         private void HandleComplete(List<LlmIntentSchema.ParsedIntent> intents, string reply,

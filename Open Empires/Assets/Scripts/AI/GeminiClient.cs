@@ -51,6 +51,25 @@ namespace OpenEmpires
                 c.Parts.Add(new Part { Text = text });
                 return c;
             }
+
+            // A user turn carrying media (image/audio inline_data) followed by the text
+            // prompt. Media goes first so the model is grounded before reading the order.
+            // Empty/null blobs are skipped, so callers can pass disabled inputs as null.
+            public static Content UserMultimodal(string text, List<Blob> media)
+            {
+                var c = new Content("user");
+                if (media != null)
+                {
+                    for (int i = 0; i < media.Count; i++)
+                    {
+                        var b = media[i];
+                        if (b != null && b.Data != null && b.Data.Length > 0)
+                            c.Parts.Add(new Part { Inline = b });
+                    }
+                }
+                c.Parts.Add(new Part { Text = text });
+                return c;
+            }
         }
 
         public sealed class Part
@@ -59,6 +78,16 @@ namespace OpenEmpires
             public string Text;
             public FunctionCall Call;
             public FunctionResponse Response;
+            public Blob Inline;
+        }
+
+        // Raw bytes sent to Gemini as an inline_data part (base64-encoded on serialize).
+        // Used for the tactical snapshot (image/png) and captured game audio (audio/wav).
+        public sealed class Blob
+        {
+            public byte[] Data;
+            public string MimeType;
+            public Blob(byte[] data, string mimeType) { Data = data; MimeType = mimeType; }
         }
 
         public sealed class FunctionCall
@@ -96,8 +125,12 @@ namespace OpenEmpires
                 yield break;
             }
 
-            string body = BuildRequestBody(systemPrompt, contents, toolsJson);
-            LlmDebug.Http("request: " + body);
+            string body = BuildRequestBody(systemPrompt, contents, toolsJson, redactInline: false);
+            // Inline media is megabytes of base64 — log a redacted body (sizes only) so the
+            // editor console stays usable. Guarded so the redacted copy isn't even built
+            // unless HTTP logging is on.
+            if (LlmDebug.VerboseHttp)
+                LlmDebug.Http("request: " + BuildRequestBody(systemPrompt, contents, toolsJson, redactInline: true));
             string url = Endpoint + "?key=" + UnityWebRequest.EscapeURL(apiKey);
 
             using (var req = new UnityWebRequest(url, "POST"))
@@ -139,7 +172,7 @@ namespace OpenEmpires
             }
         }
 
-        private static string BuildRequestBody(string systemPrompt, List<Content> contents, string toolsJson)
+        private static string BuildRequestBody(string systemPrompt, List<Content> contents, string toolsJson, bool redactInline)
         {
             var sb = new StringBuilder(2048);
             sb.Append('{');
@@ -154,7 +187,7 @@ namespace OpenEmpires
                 for (int i = 0; i < contents.Count; i++)
                 {
                     if (i > 0) sb.Append(',');
-                    AppendContent(sb, contents[i]);
+                    AppendContent(sb, contents[i], redactInline);
                 }
             }
             sb.Append("],");
@@ -174,20 +207,30 @@ namespace OpenEmpires
             return sb.ToString();
         }
 
-        private static void AppendContent(StringBuilder sb, Content c)
+        private static void AppendContent(StringBuilder sb, Content c, bool redactInline)
         {
             sb.Append("{\"role\":\"").Append(c.Role).Append("\",\"parts\":[");
             for (int i = 0; i < c.Parts.Count; i++)
             {
                 if (i > 0) sb.Append(',');
-                AppendPart(sb, c.Parts[i]);
+                AppendPart(sb, c.Parts[i], redactInline);
             }
             sb.Append("]}");
         }
 
-        private static void AppendPart(StringBuilder sb, Part p)
+        private static void AppendPart(StringBuilder sb, Part p, bool redactInline)
         {
-            if (p.Call != null)
+            if (p.Inline != null)
+            {
+                sb.Append("{\"inline_data\":{\"mime_type\":");
+                JsonValue.AppendEscaped(sb, p.Inline.MimeType);
+                sb.Append(",\"data\":\"");
+                // base64 is JSON-safe ([A-Za-z0-9+/=]) so it needs no escaping.
+                if (redactInline) sb.Append("<").Append(p.Inline.Data?.Length ?? 0).Append(" bytes>");
+                else sb.Append(Convert.ToBase64String(p.Inline.Data));
+                sb.Append("\"}}");
+            }
+            else if (p.Call != null)
             {
                 sb.Append("{\"functionCall\":{\"name\":");
                 JsonValue.AppendEscaped(sb, p.Call.Name);
