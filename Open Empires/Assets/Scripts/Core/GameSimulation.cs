@@ -4393,6 +4393,14 @@ namespace OpenEmpires
                 }
                 else
                 {
+                    // Bank any carried resources before switching to construction, so a villager
+                    // pulled off gathering to help build doesn't silently lose its load.
+                    if (unit.CarriedResourceAmount > 0)
+                    {
+                        ResourceManager.AddResource(unit.PlayerId, unit.CarriedResourceType, unit.CarriedResourceAmount);
+                        unit.CarriedResourceAmount = 0;
+                    }
+
                     unit.ClearCommandQueue();
                     unit.ClearSavedPath();
                     unit.ClearFormation();

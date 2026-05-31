@@ -268,6 +268,9 @@ namespace OpenEmpires
                     {
                         unit.CarriedResourceType = node.Type;
                         unit.CarriedResourceAmount += harvested;
+                        // Safety: never carry more than capacity.
+                        if (unit.CarriedResourceAmount > unit.CarryCapacity)
+                            unit.CarriedResourceAmount = unit.CarryCapacity;
                         unit.GatherTimer = Fixed32.Zero;
                     }
 

@@ -1478,7 +1478,7 @@ namespace OpenEmpires
                 if (protectIds.Count > 0)
                 {
                     autoProtectUntilTick = currentTick + 300; // ~10s; refreshed while the raid persists
-                    AddVillagerOrder(VillagerTask.Protect, protectIds, -1, threatCenter, tc.Id, autoProtectUntilTick);
+                    AddVillagerOrder(VillagerTask.Protect, protectIds, -1, threatCenter, tc.Id, autoProtectUntilTick, currentTick);
                     LlmDebug.Cmd($"AI{playerId} auto-protect: {protectIds.Count} villagers garrisoned from raid");
                 }
             }
@@ -1808,13 +1808,9 @@ namespace OpenEmpires
                 case AiIntentKind.GatherWith:
                 {
                     var pos = new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB));
-                    var resType = (ResourceType)paramC;
-                    // If the target resource is far from any deposit, put the proper drop-off
-                    // (Mill/Lumber Yard/Mine) next to it so villagers don't trek back to the TC.
-                    var node = FindNearestResourceNode(pos, resType);
-                    if (node != null) EnsureDropoffForGather(resType, node, currentTick);
                     var ids = ReserveVillagers(Mathf.Clamp(paramD, 1, 50), pos);
-                    AddVillagerOrder(VillagerTask.Gather, ids, paramC, pos, -1, until);
+                    // ServiceGatherOrder handles drop-off building / construction-help / gather.
+                    AddVillagerOrder(VillagerTask.Gather, ids, paramC, pos, -1, until, currentTick);
                     break;
                 }
                 case AiIntentKind.ProtectVillagers:
@@ -1824,7 +1820,7 @@ namespace OpenEmpires
                     var tc = GetMyBuilding(BuildingType.TownCenter);
                     int tcId = (tc != null && !tc.IsDestroyed) ? tc.Id : -1;
                     var ids = ReserveVillagers(count, pos);
-                    AddVillagerOrder(VillagerTask.Protect, ids, -1, pos, tcId, until);
+                    AddVillagerOrder(VillagerTask.Protect, ids, -1, pos, tcId, until, currentTick);
                     break;
                 }
                 case AiIntentKind.RepairBuilding:
@@ -1834,7 +1830,7 @@ namespace OpenEmpires
                     if (dmg != null)
                     {
                         var ids = ReserveVillagers(Mathf.Clamp(paramC, 1, 10), dmg.SimPosition);
-                        AddVillagerOrder(VillagerTask.Repair, ids, -1, dmg.SimPosition, dmg.Id, until);
+                        AddVillagerOrder(VillagerTask.Repair, ids, -1, dmg.SimPosition, dmg.Id, until, currentTick);
                     }
                     break;
                 }
@@ -2788,7 +2784,7 @@ namespace OpenEmpires
         }
 
         private void AddVillagerOrder(VillagerTask task, List<int> ids, int resourceType,
-            FixedVector3 target, int targetBuildingId, int untilTick)
+            FixedVector3 target, int targetBuildingId, int untilTick, int currentTick)
         {
             if (ids == null || ids.Count == 0) return;
             if (villagerOrders.Count >= MaxVillagerOrders)
@@ -2800,36 +2796,118 @@ namespace OpenEmpires
                 UntilTick = untilTick, LastIssuedTick = -100000,
             });
             for (int i = 0; i < ids.Count; i++) reservedVillagerIds.Add(ids[i]); // reserve now (same-tick exclusion)
-            IssueVillagerOrder(villagerOrders[villagerOrders.Count - 1]);
+            IssueVillagerOrder(villagerOrders[villagerOrders.Count - 1], currentTick);
         }
 
         // Emit the low-level command(s) that put a villager order's units on task.
-        private void IssueVillagerOrder(VillagerOrder o)
+        private void IssueVillagerOrder(VillagerOrder o, int currentTick)
         {
             if (o.UnitIds.Count == 0) return;
-            int[] ids = o.UnitIds.ToArray();
             switch (o.Task)
             {
                 case VillagerTask.Gather:
-                {
-                    var node = FindNearestResourceNode(o.Target, (ResourceType)o.ResourceType);
-                    if (node != null) Issue(new GatherCommand(playerId, ids, node.Id));
+                    ServiceGatherOrder(o, currentTick);
                     break;
-                }
                 case VillagerTask.Protect:
                 {
+                    int[] ids = o.UnitIds.ToArray();
                     if (o.TargetBuildingId >= 0) Issue(new GarrisonCommand(playerId, ids, o.TargetBuildingId));
                     else Issue(new MoveCommand(playerId, ids, o.Target));
                     break;
                 }
                 case VillagerTask.Repair:
+                {
+                    int[] ids = o.UnitIds.ToArray();
                     if (o.TargetBuildingId >= 0) Issue(new RepairBuildingCommand(playerId, ids, o.TargetBuildingId));
                     break;
+                }
                 case VillagerTask.Build:
                     // Build is kicked off once at order creation via the normal placement path;
                     // nothing to re-issue here (units stay reserved until the order expires).
                     break;
             }
+        }
+
+        // Drives a gather order without breaking the natural gather→deposit cycle:
+        //   1. If the proper drop-off is UNDER CONSTRUCTION within 5 tiles, finish it first.
+        //   2. Else ensure a deposit exists within 5 tiles (build one if missing).
+        //   3. (Re)assign only IDLE/off-task villagers to gather — never interrupt one that is
+        //      already gathering the right resource or carrying it back to deposit. That
+        //      interruption was the bug where commanded villagers never dropped off.
+        private void ServiceGatherOrder(VillagerOrder o, int currentTick)
+        {
+            var resType = (ResourceType)o.ResourceType;
+            BuildingType dropType = DepositTypeFor(resType);
+
+            var uc = FindDropoffUnderConstruction(dropType, o.Target, 5 * 5);
+            if (uc != null)
+            {
+                tempUnitIds.Clear();
+                for (int i = 0; i < o.UnitIds.Count; i++)
+                {
+                    var u = sim.UnitRegistry.GetUnit(o.UnitIds[i]);
+                    if (u == null || u.State == UnitState.Dead) continue;
+                    if (u.State == UnitState.Constructing && u.ConstructionTargetBuildingId == uc.Id) continue; // already on it
+                    tempUnitIds.Add(u.Id);
+                }
+                if (tempUnitIds.Count > 0)
+                    Issue(new ConstructBuildingCommand(playerId, tempUnitIds.ToArray(), uc.Id));
+                return; // hold gathering until the drop-off is up
+            }
+
+            var node = FindNearestResourceNode(o.Target, resType);
+            if (node != null) EnsureDropoffForGather(resType, node, currentTick);
+
+            for (int i = 0; i < o.UnitIds.Count; i++)
+            {
+                var u = sim.UnitRegistry.GetUnit(o.UnitIds[i]);
+                if (u == null || u.State == UnitState.Dead) continue;
+                if (IsOnGatherTask(u, resType)) continue; // cycling correctly — leave it alone
+                var n = FindNearestResourceNode(u.SimPosition, resType);
+                if (n != null) Issue(new GatherCommand(playerId, new int[] { u.Id }, n.Id));
+            }
+        }
+
+        private static BuildingType DepositTypeFor(ResourceType type)
+        {
+            switch (type)
+            {
+                case ResourceType.Food: return BuildingType.Mill;
+                case ResourceType.Wood: return BuildingType.LumberYard;
+                default: return BuildingType.Mine; // Gold / Stone
+            }
+        }
+
+        // A villager is "on task" (don't interrupt) if it's gathering/heading to the right
+        // resource, or carrying that resource back to a deposit.
+        private bool IsOnGatherTask(UnitData u, ResourceType resType)
+        {
+            if (u.State == UnitState.MovingToDropoff || u.State == UnitState.DroppingOff)
+                return u.CarriedResourceType == resType;
+            if (u.State == UnitState.Gathering || u.State == UnitState.MovingToGather)
+            {
+                var node = sim.MapData.GetResourceNode(u.TargetResourceNodeId);
+                return node != null && node.Type == resType;
+            }
+            return false;
+        }
+
+        private BuildingData FindDropoffUnderConstruction(BuildingType dropType, FixedVector3 target, int withinSq)
+        {
+            int px = target.x.Raw >> Fixed32.FractionalBits;
+            int pz = target.z.Raw >> Fixed32.FractionalBits;
+            BuildingData best = null; long bestD = long.MaxValue; int bestId = int.MaxValue;
+            for (int i = 0; i < cachedMyBuildings.Count; i++)
+            {
+                var b = cachedMyBuildings[i];
+                if (b.IsDestroyed || !b.IsUnderConstruction || b.Type != dropType) continue;
+                int dx = b.OriginTileX - px;
+                int dz = b.OriginTileZ - pz;
+                long d = (long)dx * dx + (long)dz * dz;
+                if (d > withinSq) continue;
+                if (d < bestD || (d == bestD && b.Id < bestId)) { bestD = d; bestId = b.Id; best = b; }
+            }
+            return best;
         }
 
         // Drop dead/finished orders, release their villagers, and re-issue live ones so the
@@ -2863,7 +2941,7 @@ namespace OpenEmpires
 
                 if (currentTick - o.LastIssuedTick >= VillagerReissueTicks)
                 {
-                    IssueVillagerOrder(o);
+                    IssueVillagerOrder(o, currentTick);
                     o.LastIssuedTick = currentTick;
                     villagerOrders[i] = o; // write back struct value field
                 }
