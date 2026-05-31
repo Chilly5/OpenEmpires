@@ -83,6 +83,8 @@ namespace OpenEmpires
                 if (ai.ActiveGroupCount > 0)
                     sb.Append("Detached-groups: ").Append(ai.ActiveGroupCount)
                       .Append(" out acting independently. ");
+                if (ai.VillagerOrderCount > 0)
+                    sb.Append("Villager-orders: ").Append(ai.VillagerOrderCount).Append(" active. ");
             }
         }
 

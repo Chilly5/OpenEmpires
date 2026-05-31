@@ -172,11 +172,18 @@ namespace OpenEmpires
                 return TryResolveBuildingPosition(sim, aiPlayerId, btype, mine, out rawX, out rawZ);
             }
 
-            if (target == "my_gold" || target == "their_gold")
+            // Resource-node keywords: my_<res> / their_<res> → nearest node of that type to
+            // our / the enemy town center. Used for villager gather targets.
+            if (target.StartsWith("my_", StringComparison.Ordinal) || target.StartsWith("their_", StringComparison.Ordinal))
             {
-                FixedVector3? anchor = target == "my_gold" ? ownTc : enemyTc;
-                if (!anchor.HasValue) return false;
-                return TryResolveNearestResourceNode(sim, ResourceType.Gold, anchor.Value, out rawX, out rawZ);
+                bool ours = target.StartsWith("my_", StringComparison.Ordinal);
+                string resWord = target.Substring(ours ? 3 : 6);
+                if (TryParseResource(resWord, out var resType))
+                {
+                    FixedVector3? anchor = ours ? ownTc : enemyTc;
+                    if (!anchor.HasValue) return false;
+                    return TryResolveNearestResourceNode(sim, resType, anchor.Value, out rawX, out rawZ);
+                }
             }
 
             return false;

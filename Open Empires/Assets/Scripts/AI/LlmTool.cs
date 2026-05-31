@@ -54,6 +54,10 @@ namespace OpenEmpires
             sb.Append("- To SPLIT your army (send units in different directions at once), call send_group ");
             sb.Append("multiple times in the SAME turn — each with its own army_subset/portion and target. ");
             sb.Append("Each group then attack-moves independently. Use attack_at only for an all-in, whole-army push.\n");
+            sb.Append("- You have fine villager control too: gather_villagers (put N villagers on a resource), ");
+            sb.Append("protect_villagers (hide them in the TC when raided), repair_building, and set_gather_targets ");
+            sb.Append("(exact gatherer counts). Use these for specific economy orders; prioritize_resource/focus_economy ");
+            sb.Append("are for vague leanings.\n");
             sb.Append("- If you are unsure of the current situation, call query_game_state first to read fresh numbers, ");
             sb.Append("then decide.\n");
             sb.Append("- For positions, pick from the provided keyword lists; never invent coordinates.\n");
@@ -98,6 +102,10 @@ namespace OpenEmpires
             "\"near_my_tc\",\"near_their_tc\",\"my_gold\",\"their_gold\"";
         private const string Subsets = "\"all\",\"archers\",\"cavalry\",\"infantry\"";
         private const string Portions = "\"all\",\"half\",\"third\",\"quarter\",\"two_thirds\",\"rest\"";
+        private const string GatherPositions =
+            "\"my_base\",\"my_wood\",\"my_food\",\"my_gold\",\"my_stone\"," +
+            "\"near_my_lumber_yard\",\"near_my_mill\",\"near_my_mine\",\"front_line\"," +
+            "\"north\",\"south\",\"east\",\"west\"";
         private const string Triggers =
             "\"immediate\",\"delay\",\"on_age_up\",\"on_army_size\",\"on_enemy_attack\"";
         private const string Resources = "\"Food\",\"Wood\",\"Gold\",\"Stone\"";
@@ -182,11 +190,47 @@ namespace OpenEmpires
                     "[\"age\"]"),
 
                 Decl("build_structure",
-                    "Have a villager construct a building on your side of the map.",
+                    "Have villager(s) construct a building on your side of the map.",
                     Props(
                         EnumProp("building", "What to build.", Buildables, true),
-                        EnumProp("location", "Roughly where (default my_base).", BuildPositions, false)),
+                        EnumProp("location", "Roughly where (default my_base).", BuildPositions, false),
+                        IntProp("villagers", "How many villagers to assign to build it (1-10, default 1).", false)),
                     "[\"building\"]"),
+
+                Decl("gather_villagers",
+                    "Send a specific number of villagers to gather a resource at/near a location. " +
+                    "Use when the teammate wants you to put villagers on a particular resource. " +
+                    "If the spot is far from a deposit, the proper drop-off (mill/lumber yard/mine) is built " +
+                    "automatically — you do NOT need a separate build_structure call for that.",
+                    Props(
+                        EnumProp("resource", "Which resource to gather.", Resources, true),
+                        IntProp("count", "How many villagers (1-50).", true),
+                        EnumProp("target", "Where to gather (default my_base — nearest node of that resource).", GatherPositions, false)),
+                    "[\"resource\",\"count\"]"),
+
+                Decl("protect_villagers",
+                    "Pull villagers to safety (garrison them in the Town Center). Use when the teammate's economy is being raided.",
+                    Props(
+                        IntProp("count", "How many villagers to protect (default all).", false),
+                        EnumProp("where", "Safe location to pull toward (default my_base).", DefendPositions, false)),
+                    "[]"),
+
+                Decl("repair_building",
+                    "Assign villagers to repair a damaged building (town center, walls, towers, etc.).",
+                    Props(
+                        EnumProp("target", "Where the damaged building is (default my_base).", DefendPositions, false),
+                        IntProp("count", "How many villagers to send (1-10, default 2).", false)),
+                    "[]"),
+
+                Decl("set_gather_targets",
+                    "Set the EXACT number of villagers gathering each resource. Use for precise economy balance. " +
+                    "Omit (or -1) a resource to leave it on autopilot.",
+                    Props(
+                        IntProp("food", "Target villagers on food (0-40, -1 = leave default).", false),
+                        IntProp("wood", "Target villagers on wood (0-40, -1 = leave default).", false),
+                        IntProp("gold", "Target villagers on gold (0-40, -1 = leave default).", false),
+                        IntProp("stone", "Target villagers on stone (0-40, -1 = leave default).", false)),
+                    "[]"),
 
                 Decl("train_units",
                     "Queue military or economic units from the appropriate building.",
@@ -260,6 +304,10 @@ namespace OpenEmpires
                 case "attack_at":           return DoPositional(args, sim, aiPlayerId, AiIntentKind.AttackAt, "my_base", "attack");
                 case "defend_at":           return DoPositional(args, sim, aiPlayerId, AiIntentKind.DefendAt, "my_base", "defend");
                 case "send_group":          return DoSendGroup(args, sim, aiPlayerId);
+                case "gather_villagers":    return DoGatherVillagers(args, sim, aiPlayerId);
+                case "protect_villagers":   return DoProtectVillagers(args, sim, aiPlayerId);
+                case "repair_building":     return DoRepairBuilding(args, sim, aiPlayerId);
+                case "set_gather_targets":  return DoSetGatherTargets(args);
                 case "set_aggression":      return DoAggression(args);
                 case "prioritize_resource": return DoPrioritizeResource(args);
                 case "focus_economy":       return DoFocus(args, AiIntentKind.FocusEconomy, 60, "booming the economy");
@@ -321,6 +369,89 @@ namespace OpenEmpires
             string portionWord = portion >= 100 ? "" : $"{portion}% of ";
             return ToolResult.Action(intent, $"Peeling off {portionWord}{SubsetWord(subset)} to push {target}.");
         }
+
+        private static ToolResult DoGatherVillagers(JsonValue args, GameSimulation sim, int aiPlayerId)
+        {
+            if (!LlmIntentSchema.TryParseResource(args["resource"].AsString(), out var res))
+                return ToolResult.Info("Unknown resource for gather_villagers.");
+            int count = Mathf.Clamp(args["count"].AsInt(1), 1, 50);
+            string target = args["target"].AsString("my_base");
+            if (string.IsNullOrEmpty(target)) target = "my_base";
+            if (!LlmIntentSchema.TryResolvePosition(target, sim, aiPlayerId, out int rawX, out int rawZ))
+            {
+                var ownTc = LlmIntentSchema.FindOwnTc(sim, aiPlayerId);
+                if (!ownTc.HasValue) return ToolResult.Info("Couldn't find where to gather.");
+                rawX = ownTc.Value.x.Raw; rawZ = ownTc.Value.z.Raw;
+            }
+            var intent = new LlmIntentSchema.ParsedIntent
+            {
+                Kind = AiIntentKind.GatherWith,
+                ParamA = rawX, ParamB = rawZ, ParamC = (int)res, ParamD = count,
+                DurationTicks = FocusDuration,
+            };
+            return ToolResult.Action(intent, $"Putting {count} villagers on {res}.");
+        }
+
+        private static ToolResult DoProtectVillagers(JsonValue args, GameSimulation sim, int aiPlayerId)
+        {
+            int count = args["count"].AsInt(0); // 0 = all
+            string where = args["where"].AsString("my_base");
+            if (string.IsNullOrEmpty(where)) where = "my_base";
+            int rawX = 0, rawZ = 0;
+            if (!LlmIntentSchema.TryResolvePosition(where, sim, aiPlayerId, out rawX, out rawZ))
+            {
+                var ownTc = LlmIntentSchema.FindOwnTc(sim, aiPlayerId);
+                if (ownTc.HasValue) { rawX = ownTc.Value.x.Raw; rawZ = ownTc.Value.z.Raw; }
+            }
+            var intent = new LlmIntentSchema.ParsedIntent
+            {
+                Kind = AiIntentKind.ProtectVillagers,
+                ParamA = rawX, ParamB = rawZ, ParamC = Mathf.Max(0, count),
+                DurationTicks = CombatDuration,
+            };
+            string howMany = count > 0 ? $"{count} villagers" : "the villagers";
+            return ToolResult.Action(intent, $"Pulling {howMany} into the town center for safety.");
+        }
+
+        private static ToolResult DoRepairBuilding(JsonValue args, GameSimulation sim, int aiPlayerId)
+        {
+            string target = args["target"].AsString("my_base");
+            if (string.IsNullOrEmpty(target)) target = "my_base";
+            int rawX = 0, rawZ = 0;
+            if (!LlmIntentSchema.TryResolvePosition(target, sim, aiPlayerId, out rawX, out rawZ))
+            {
+                var ownTc = LlmIntentSchema.FindOwnTc(sim, aiPlayerId);
+                if (ownTc.HasValue) { rawX = ownTc.Value.x.Raw; rawZ = ownTc.Value.z.Raw; }
+            }
+            int count = Mathf.Clamp(args["count"].AsInt(2), 1, 10);
+            var intent = new LlmIntentSchema.ParsedIntent
+            {
+                Kind = AiIntentKind.RepairBuilding,
+                ParamA = rawX, ParamB = rawZ, ParamC = count, ParamD = 0, // 0 = any damaged building
+                DurationTicks = CombatDuration,
+            };
+            return ToolResult.Action(intent, $"Sending {count} villagers to repair near {target}.");
+        }
+
+        private static ToolResult DoSetGatherTargets(JsonValue args)
+        {
+            int food = args["food"].AsInt(-1);
+            int wood = args["wood"].AsInt(-1);
+            int gold = args["gold"].AsInt(-1);
+            int stone = args["stone"].AsInt(-1);
+            if (food < 0 && wood < 0 && gold < 0 && stone < 0)
+                return ToolResult.Info("Give at least one resource target.");
+            var intent = new LlmIntentSchema.ParsedIntent
+            {
+                Kind = AiIntentKind.SetGatherTargets,
+                ParamA = food, ParamB = wood, ParamC = gold, ParamD = stone,
+                DurationTicks = RallyDuration,
+            };
+            return ToolResult.Action(intent,
+                $"Balancing villagers — food {GTW(food)}, wood {GTW(wood)}, gold {GTW(gold)}, stone {GTW(stone)}.");
+        }
+
+        private static string GTW(int v) => v < 0 ? "auto" : v.ToString();
 
         private static ToolResult DoSimplePositional(JsonValue args, GameSimulation sim, int aiPlayerId,
             AiIntentKind kind, string defaultTarget, string phrase, int duration)
@@ -413,13 +544,15 @@ namespace OpenEmpires
                 if (!ownTc.HasValue) return ToolResult.Info("Couldn't find a place to build.");
                 rawX = ownTc.Value.x.Raw; rawZ = ownTc.Value.z.Raw;
             }
+            int builders = Mathf.Clamp(args["villagers"].AsInt(0), 0, 10);
             var intent = new LlmIntentSchema.ParsedIntent
             {
                 Kind = AiIntentKind.BuildStructure,
-                ParamA = (int)btype, ParamB = rawX, ParamC = rawZ,
+                ParamA = (int)btype, ParamB = rawX, ParamC = rawZ, ParamD = builders,
                 DurationTicks = OneShotDuration,
             };
-            return ToolResult.Action(intent, $"Putting down a {Pretty(btype.ToString())} near {location}.");
+            string crew = builders > 1 ? $" with {builders} villagers" : "";
+            return ToolResult.Action(intent, $"Putting down a {Pretty(btype.ToString())} near {location}{crew}.");
         }
 
         private static ToolResult DoTrain(JsonValue args)

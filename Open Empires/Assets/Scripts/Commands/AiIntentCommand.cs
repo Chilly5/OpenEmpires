@@ -30,6 +30,11 @@ namespace OpenEmpires
         // Detach part of the army into an independent attack-moving group. Issuing several
         // in one turn splits forces in different directions (each takes DIFFERENT units).
         SendGroup          = 17, // ParamA/B = Fixed32 raw worldX/worldZ, ParamC = unit class (0=all,1=archers,2=horsemen,3=spearmen), ParamD = portion percent 1..100 (100 = all available of class)
+        // ── Fine-grained villager control (reserved villagers are excluded from the auto-economy) ──
+        GatherWith         = 18, // ParamA/B = Fixed32 raw worldX/worldZ (where), ParamC = ResourceType, ParamD = villager count
+        ProtectVillagers   = 19, // ParamA/B = Fixed32 raw safe pos, ParamC = count (0 = all), ParamD unused — garrison villagers in the TC (fallback: move to pos)
+        RepairBuilding     = 20, // ParamA/B = Fixed32 raw worldX/worldZ (near), ParamC = count, ParamD = BuildingType (0 = any damaged)
+        SetGatherTargets   = 21, // ParamA/B/C/D = absolute gatherer targets food/wood/gold/stone (-1 = leave to default)
     }
 
     public struct AiIntentCommand : ICommand

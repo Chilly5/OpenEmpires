@@ -727,7 +727,7 @@ namespace OpenEmpires
                 var mat = new Material(shader);
                 mat.SetTexture("_MainTex", tex);
                 mat.SetColor("_Color", Color.white);
-                mat.SetFloat("_Cutoff", 0.5f);
+                mat.SetFloat("_Cutoff", 0.05f);
                 mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
                 mat.enableInstancing = true;
                 treeMaterials[i] = mat;

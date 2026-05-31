@@ -346,7 +346,7 @@ namespace OpenEmpires
             var mat = new Material(shader);
             mat.SetTexture("_MainTex", tex);
             if (mat.HasProperty("_Color")) mat.SetColor("_Color", Color.white);
-            if (mat.HasProperty("_Cutoff")) mat.SetFloat("_Cutoff", 0.5f);
+            if (mat.HasProperty("_Cutoff")) mat.SetFloat("_Cutoff", 0.05f);
             mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry + 1;
 
             constructionScaffold = GameObject.CreatePrimitive(PrimitiveType.Quad);
