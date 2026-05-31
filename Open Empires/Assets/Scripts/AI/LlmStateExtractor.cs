@@ -80,6 +80,9 @@ namespace OpenEmpires
             if (ai != null)
             {
                 sb.Append("AI-state: ").Append(ai.CombatStateName).Append(". ");
+                if (ai.ActiveGroupCount > 0)
+                    sb.Append("Detached-groups: ").Append(ai.ActiveGroupCount)
+                      .Append(" out acting independently. ");
             }
         }
 

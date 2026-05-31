@@ -27,6 +27,9 @@ namespace OpenEmpires
         RegroupArmy        = 14, // ParamA/B = Fixed32 raw worldX/worldZ (gather army)
         RetreatToBase      = 15, // ParamA/B = Fixed32 raw worldX/worldZ (own TC)
         Research           = 16, // ParamA = TechnologyType
+        // Detach part of the army into an independent attack-moving group. Issuing several
+        // in one turn splits forces in different directions (each takes DIFFERENT units).
+        SendGroup          = 17, // ParamA/B = Fixed32 raw worldX/worldZ, ParamC = unit class (0=all,1=archers,2=horsemen,3=spearmen), ParamD = portion percent 1..100 (100 = all available of class)
     }
 
     public struct AiIntentCommand : ICommand

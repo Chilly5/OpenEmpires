@@ -51,6 +51,9 @@ namespace OpenEmpires
             sb.Append("- When the teammate asks you to do something (attack, defend, boom, build, train, age up, scout, etc.), ");
             sb.Append("call the matching tool(s) to actually do it. Do not merely promise — the tools are real.\n");
             sb.Append("- You may call several tools in one turn (e.g. train_units then attack_at).\n");
+            sb.Append("- To SPLIT your army (send units in different directions at once), call send_group ");
+            sb.Append("multiple times in the SAME turn — each with its own army_subset/portion and target. ");
+            sb.Append("Each group then attack-moves independently. Use attack_at only for an all-in, whole-army push.\n");
             sb.Append("- If you are unsure of the current situation, call query_game_state first to read fresh numbers, ");
             sb.Append("then decide.\n");
             sb.Append("- For positions, pick from the provided keyword lists; never invent coordinates.\n");
@@ -94,6 +97,7 @@ namespace OpenEmpires
             "\"enemy_base\",\"my_base\",\"front_line\",\"north\",\"south\",\"east\",\"west\"," +
             "\"near_my_tc\",\"near_their_tc\",\"my_gold\",\"their_gold\"";
         private const string Subsets = "\"all\",\"archers\",\"cavalry\",\"infantry\"";
+        private const string Portions = "\"all\",\"half\",\"third\",\"quarter\",\"two_thirds\",\"rest\"";
         private const string Triggers =
             "\"immediate\",\"delay\",\"on_age_up\",\"on_army_size\",\"on_enemy_attack\"";
         private const string Resources = "\"Food\",\"Wood\",\"Gold\",\"Stone\"";
@@ -133,6 +137,17 @@ namespace OpenEmpires
                         EnumProp("when", "When to act (default immediate).", Triggers, false),
                         IntProp("when_value", "delay seconds / army size / target age depending on when.", false)),
                     "[]"),
+
+                Decl("send_group",
+                    "Detach PART of your army and send it to attack-move toward a position, independently of your other groups. " +
+                    "Call this MULTIPLE times in one turn to SPLIT your forces in different directions — e.g. cavalry one way and " +
+                    "infantry another, or 'half' one way then 'rest' the other. Each call takes DIFFERENT units. " +
+                    "Use this (not attack_at) whenever the teammate asks you to split, divide, or send groups separately.",
+                    Props(
+                        EnumProp("target", "Where this group attack-moves to.", AttackPositions, true),
+                        EnumProp("army_subset", "Which unit class to draw from (default all).", Subsets, false),
+                        EnumProp("portion", "How much of that class to send (default all). Use 'half' then 'rest' to split evenly.", Portions, false)),
+                    "[\"target\"]"),
 
                 Decl("set_aggression",
                     "Set how aggressively you fight: higher level attacks sooner and retreats later.",
@@ -244,6 +259,7 @@ namespace OpenEmpires
             {
                 case "attack_at":           return DoPositional(args, sim, aiPlayerId, AiIntentKind.AttackAt, "my_base", "attack");
                 case "defend_at":           return DoPositional(args, sim, aiPlayerId, AiIntentKind.DefendAt, "my_base", "defend");
+                case "send_group":          return DoSendGroup(args, sim, aiPlayerId);
                 case "set_aggression":      return DoAggression(args);
                 case "prioritize_resource": return DoPrioritizeResource(args);
                 case "focus_economy":       return DoFocus(args, AiIntentKind.FocusEconomy, 60, "booming the economy");
@@ -283,6 +299,27 @@ namespace OpenEmpires
             };
             string subsetWord = subset == LlmIntentSchema.UnitClassAll ? "the army" : SubsetWord(subset);
             return ToolResult.Action(intent, $"Sending {subsetWord} to {verb} {target}{TriggerNote(trigType, trigMag)}.");
+        }
+
+        private static ToolResult DoSendGroup(JsonValue args, GameSimulation sim, int aiPlayerId)
+        {
+            string target = args["target"].AsString();
+            if (string.IsNullOrEmpty(target))
+                return ToolResult.Info("send_group needs a target.");
+            if (!LlmIntentSchema.TryResolvePosition(target, sim, aiPlayerId, out int rawX, out int rawZ))
+                return ToolResult.Info($"Couldn't locate '{target}' on the map — no group sent.");
+
+            int subset = LlmIntentSchema.ParseUnitSubset(args["army_subset"].AsString("all"));
+            int portion = LlmIntentSchema.ParsePortion(args["portion"].AsString("all"));
+
+            var intent = new LlmIntentSchema.ParsedIntent
+            {
+                Kind = AiIntentKind.SendGroup,
+                ParamA = rawX, ParamB = rawZ, ParamC = subset, ParamD = portion,
+                DurationTicks = CombatDuration,
+            };
+            string portionWord = portion >= 100 ? "" : $"{portion}% of ";
+            return ToolResult.Action(intent, $"Peeling off {portionWord}{SubsetWord(subset)} to push {target}.");
         }
 
         private static ToolResult DoSimplePositional(JsonValue args, GameSimulation sim, int aiPlayerId,

@@ -113,6 +113,30 @@ namespace OpenEmpires
         private int pingAttackUnitClass;
         private int pingDefendUnitClass;
 
+        // ── Detachments: independent army sub-groups that attack-move on their own, so the
+        //    teammate can split forces (e.g. "archers north, cavalry south"). Each detachment
+        //    snapshots a deterministic set of unit ids; the main combat FSM ignores any unit
+        //    that is currently detached (GetUndetachedCombatUnits) so it never re-merges them.
+        //    All selection is integer/id-deterministic → lockstep-safe.
+        private struct Detachment
+        {
+            public List<int> UnitIds;
+            public FixedVector3 Target;
+            public int UntilTick;
+            public int LastIssuedTick;
+        }
+        private readonly List<Detachment> detachments = new List<Detachment>();
+        private readonly HashSet<int> detachedUnitIds = new HashSet<int>();
+        private readonly List<UnitData> detachCandidates = new List<UnitData>();
+        private const int MaxDetachments = 4;
+        private const int DetachmentReissueTicks = 50; // re-issue attack-move ~1.6s to stay committed
+
+        // Autonomous splitting: let the AI peel off a raiding group on its own initiative.
+        // Plain field (this class is part of the deterministic sim — same on every client).
+        private bool enableAutonomousSplits = true;
+        private int lastAutoSplitTick = -100000;
+        private const int AutoSplitCooldownTicks = 60 * 30; // 60s
+
         // ── Pending directives that wait on a trigger condition before applying.
         private struct PendingDirective
         {
@@ -134,6 +158,7 @@ namespace OpenEmpires
         // Public state accessors used by the LLM prompt builder (read-only, non-deterministic context).
         public string CombatStateName => combatState.ToString();
         public int ArmySize => cachedCombatUnits.Count;
+        public int ActiveGroupCount => detachments.Count; // independent detachments currently out
         public int VillagerCount => cachedVillagers.Count;
         public int KnownEnemyBaseCount => knownEnemyBases.Count;
         public int CachedEnemySpearmen => cachedEnemySpearmen;
@@ -317,7 +342,9 @@ namespace OpenEmpires
             TickAllyPings(currentTick);
             TickDefense(currentTick);
 
+            PruneDetachments(currentTick); // keep split-off groups committed; rebuild the exclusion set
             TickCombat(currentTick);
+            TickAutonomousSplit(currentTick);
             TickPendingDirectives(currentTick);
 
             // Discover enemy buildings visible to our units
@@ -1631,9 +1658,16 @@ namespace OpenEmpires
 
             switch ((AiIntentKind)intentKind)
             {
+                case AiIntentKind.SendGroup:
+                {
+                    var pos = new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB));
+                    CreateDetachment(Mathf.Clamp(paramC, 0, 3), Mathf.Clamp(paramD, 1, 100), pos, until);
+                    break;
+                }
                 case AiIntentKind.AttackAt:
                 {
                     var pos = new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB));
+                    ClearDetachments(); // an all-in attack recalls any split-off groups
                     pingAttackTarget = pos;
                     pingAttackUntilTick = until;
                     pingAttackUnitClass = Mathf.Clamp(paramC, 0, 3);
@@ -1645,6 +1679,7 @@ namespace OpenEmpires
                 case AiIntentKind.DefendAt:
                 {
                     var pos = new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB));
+                    ClearDetachments(); // pull split-off groups back to defend
                     pingDefendTarget = pos;
                     pingDefendUntilTick = until;
                     pingDefendUnitClass = Mathf.Clamp(paramC, 0, 3);
@@ -1726,12 +1761,14 @@ namespace OpenEmpires
                     scoutOverrideUntilTick = until;
                     break;
                 case AiIntentKind.RegroupArmy:
+                    ClearDetachments(); // gather EVERYONE, including split-off groups
                     MoveAllCombatTo(new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB)));
                     // Gather and hold — don't let the FSM march them back out next tick.
                     combatState = CombatState.Building;
                     combatHoldUntilTick = until;
                     break;
                 case AiIntentKind.RetreatToBase:
+                    ClearDetachments(); // recall split-off groups to base
                     MoveAllCombatTo(new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB)));
                     // Stand down and play passive so TickCombat doesn't immediately re-commit.
                     combatState = CombatState.Building;
@@ -1754,7 +1791,7 @@ namespace OpenEmpires
         // send 100% of that class; otherwise send roughly half of total combat units.
         private void DispatchDefendersToPing()
         {
-            GetMyCombatUnits(tempCombatUnits);
+            GetUndetachedCombatUnits(tempCombatUnits);
             if (tempCombatUnits.Count == 0) return;
 
             List<UnitData> dispatchSource;
@@ -1784,12 +1821,15 @@ namespace OpenEmpires
             // Don't override defense state
             if (combatState == CombatState.Defending) return;
 
+            // (combat unit gathering below uses GetUndetachedCombatUnits so the main army
+            //  FSM never re-absorbs units that belong to an active detachment.)
+
             // Stand down while an explicit commander order (defend/regroup/retreat) is in effect:
             // hold position and don't re-issue our own movement. This also suppresses the
             // 5-minute forced-assembly path below for the duration of the order.
             if (currentTick < combatHoldUntilTick) return;
 
-            GetMyCombatUnits(tempCombatUnits);
+            GetUndetachedCombatUnits(tempCombatUnits);
             int armySize = tempCombatUnits.Count;
 
             switch (combatState)
@@ -2446,6 +2486,147 @@ namespace OpenEmpires
             for (int i = 0; i < tempCombatUnits.Count; i++)
                 tempUnitIds.Add(tempCombatUnits[i].Id);
             Issue(new MoveCommand(playerId, tempUnitIds.ToArray(), pos));
+        }
+
+        // ── Detachments (independent army sub-groups) ──────────────────────
+
+        // Combat units NOT currently assigned to a detachment — what the main combat FSM
+        // is allowed to command. detachedUnitIds is kept fresh by PruneDetachments each tick.
+        private void GetUndetachedCombatUnits(List<UnitData> result)
+        {
+            result.Clear();
+            for (int i = 0; i < cachedCombatUnits.Count; i++)
+            {
+                if (detachedUnitIds.Contains(cachedCombatUnits[i].Id)) continue;
+                result.Add(cachedCombatUnits[i]);
+            }
+        }
+
+        private static bool UnitMatchesClass(UnitData u, int classFilter)
+        {
+            switch (classFilter)
+            {
+                case 1: return u.UnitType == 2 || u.UnitType == 10; // archers
+                case 2: return u.UnitType == 3 || u.UnitType == 11; // horsemen
+                case 3: return u.UnitType == 1 || u.UnitType == 12; // spearmen
+                default: return true;                               // all
+            }
+        }
+
+        // Peel off a deterministic subset of the army into a new independent attack-moving
+        // group. classFilter 0..3; portionPct 1..100 of the AVAILABLE (not-already-detached)
+        // units of that class. Selection is by ascending unit id → identical on every client.
+        private void CreateDetachment(int classFilter, int portionPct, FixedVector3 target, int untilTick)
+        {
+            RebuildDetachedSet();
+            detachCandidates.Clear();
+            for (int i = 0; i < cachedCombatUnits.Count; i++)
+            {
+                var u = cachedCombatUnits[i];
+                if (detachedUnitIds.Contains(u.Id)) continue;
+                if (!UnitMatchesClass(u, classFilter)) continue;
+                detachCandidates.Add(u);
+            }
+            if (detachCandidates.Count == 0) return;
+
+            portionPct = Mathf.Clamp(portionPct, 1, 100);
+            int count = Mathf.Clamp(detachCandidates.Count * portionPct / 100, 1, detachCandidates.Count);
+
+            var ids = new List<int>(count);
+            tempUnitIds.Clear();
+            for (int i = 0; i < count; i++)
+            {
+                int id = detachCandidates[i].Id;
+                ids.Add(id);
+                detachedUnitIds.Add(id);
+                tempUnitIds.Add(id);
+            }
+
+            if (detachments.Count >= MaxDetachments)
+                detachments.RemoveAt(0); // drop the oldest to bound complexity / command volume
+            detachments.Add(new Detachment { UnitIds = ids, Target = target, UntilTick = untilTick, LastIssuedTick = -100000 });
+
+            var cmd = new MoveCommand(playerId, tempUnitIds.ToArray(), target);
+            cmd.IsAttackMove = true;
+            Issue(cmd);
+            LlmDebug.Cmd($"AI{playerId} detach {count} (class {classFilter}, {portionPct}%) → group, total groups {detachments.Count}");
+        }
+
+        // Drop dead/transferred units, expire finished groups (survivors rejoin the main army),
+        // and re-issue each live group's attack-move periodically so it stays committed.
+        private void PruneDetachments(int currentTick)
+        {
+            for (int i = detachments.Count - 1; i >= 0; i--)
+            {
+                var d = detachments[i];
+                for (int j = d.UnitIds.Count - 1; j >= 0; j--)
+                {
+                    var u = sim.UnitRegistry.GetUnit(d.UnitIds[j]);
+                    if (u == null || u.State == UnitState.Dead || u.PlayerId != playerId)
+                        d.UnitIds.RemoveAt(j);
+                }
+                if (d.UnitIds.Count == 0 || currentTick >= d.UntilTick)
+                {
+                    detachments.RemoveAt(i);
+                    continue;
+                }
+                if (currentTick - d.LastIssuedTick >= DetachmentReissueTicks)
+                {
+                    tempUnitIds.Clear();
+                    for (int j = 0; j < d.UnitIds.Count; j++) tempUnitIds.Add(d.UnitIds[j]);
+                    var cmd = new MoveCommand(playerId, tempUnitIds.ToArray(), d.Target);
+                    cmd.IsAttackMove = true;
+                    Issue(cmd);
+                    d.LastIssuedTick = currentTick;
+                    detachments[i] = d; // write back the struct's value field
+                }
+            }
+            RebuildDetachedSet();
+        }
+
+        private void RebuildDetachedSet()
+        {
+            detachedUnitIds.Clear();
+            for (int i = 0; i < detachments.Count; i++)
+            {
+                var ids = detachments[i].UnitIds;
+                for (int j = 0; j < ids.Count; j++)
+                    detachedUnitIds.Add(ids[j]);
+            }
+        }
+
+        private void ClearDetachments()
+        {
+            detachments.Clear();
+            detachedUnitIds.Clear();
+        }
+
+        // Autonomous initiative: when the AI has a strong army and no human combat order is
+        // in effect, peel off a cavalry third to harass the enemy while the main force keeps
+        // building up. Deterministic (currentTick-gated, id-ordered selection); no LLM.
+        private void TickAutonomousSplit(int currentTick)
+        {
+            if (!enableAutonomousSplits) return;
+            if (currentTick - lastAutoSplitTick < AutoSplitCooldownTicks) return;
+            if (currentTick < combatHoldUntilTick) return;             // human order active → don't interfere
+            if (currentTick < pingAttackUntilTick) return;             // committed to a commanded attack
+            if (detachments.Count > 0) return;                         // already have a group out
+            if (combatState != CombatState.Building && combatState != CombatState.Assembling) return;
+
+            int army = cachedCombatUnits.Count;
+            if (army < 2 * EffectiveAttackThreshold(currentTick)) return; // only when comfortably strong
+
+            int cavalry = 0;
+            for (int i = 0; i < cachedCombatUnits.Count; i++)
+                if (UnitMatchesClass(cachedCombatUnits[i], 2)) cavalry++;
+            if (cavalry < 3) return; // need a meaningful raiding party
+
+            var target = GetEnemyTargetPosition();
+            if (!target.HasValue) return;
+
+            CreateDetachment(2, 33, target.Value, currentTick + 45 * 30); // cavalry ~third, 45s raid
+            lastAutoSplitTick = currentTick;
+            LlmDebug.Cmd($"AI{playerId} autonomous raid: split cavalry to harass enemy");
         }
 
         private void IssueResearch(TechnologyType tech)

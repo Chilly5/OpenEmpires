@@ -56,6 +56,22 @@ namespace OpenEmpires
             return UnitClassAll;
         }
 
+        // Portion of the available units of a class to detach, as a percent 1..100.
+        // "rest"/"all" = 100 (everything still ungrouped), so "half" then "rest" halves cleanly.
+        public static int ParsePortion(string s)
+        {
+            switch ((s ?? string.Empty).ToLowerInvariant())
+            {
+                case "half":        return 50;
+                case "third":       return 33;
+                case "quarter":     return 25;
+                case "two_thirds":  return 67;
+                case "rest":        return 100;
+                case "all":         return 100;
+            }
+            return 100;
+        }
+
         public static bool TryParseResource(string s, out ResourceType resType)
         {
             switch ((s ?? string.Empty).ToLowerInvariant())
