@@ -34,7 +34,7 @@ namespace OpenEmpires
         }
         private readonly Dictionary<int, AiSnapshot> snapshots = new Dictionary<int, AiSnapshot>();
         private float nextPollRealtime;
-        private bool callInFlight;
+        private readonly HashSet<int> inFlightAis = new HashSet<int>(); // per-bot, so bots self-initiate concurrently
         private bool warnedNoApiKey;
 
         private void Update()
@@ -42,7 +42,6 @@ namespace OpenEmpires
             float now = Time.realtimeSinceStartup;
             if (now < nextPollRealtime) return;
             nextPollRealtime = now + PollInterval;
-            if (callInFlight) return;
             Poll();
         }
 
@@ -64,6 +63,7 @@ namespace OpenEmpires
             foreach (int aiPid in sim.AiPlayerIds)
             {
                 if (!IsOwnerOf(sim, aiPid)) continue;
+                if (inFlightAis.Contains(aiPid)) continue; // this bot is already speaking
                 var ai = sim.GetAiPlayer(aiPid);
                 if (ai == null) continue;
 
@@ -74,7 +74,7 @@ namespace OpenEmpires
                 if (trigger != null)
                 {
                     Initiate(sim, aiPid, trigger, apiKey);
-                    return; // one initiation per poll
+                    return; // one NEW initiation per poll; other bots can initiate on later polls
                 }
             }
         }
@@ -159,7 +159,7 @@ namespace OpenEmpires
         // (issuer = the AI itself, which AreAllies treats as same-team).
         private void Initiate(GameSimulation sim, int aiPid, string trigger, string apiKey)
         {
-            callInFlight = true;
+            inFlightAis.Add(aiPid);
             string aiName = $"AI Player {aiPid}";
             string systemPrompt = LlmTool.BuildSystemPrompt(aiName);
             string stateLine = LlmStateExtractor.Build(sim, LocalPlayerId, aiPid);
@@ -179,14 +179,14 @@ namespace OpenEmpires
                 onComplete: (intents, reply) => HandleEventComplete(intents, reply, aiPid),
                 onFailure: reason =>
                 {
-                    callInFlight = false;
+                    inFlightAis.Remove(aiPid);
                     Debug.LogWarning($"[LlmAiInitiator] LLM turn failed: {reason}");
                 }));
         }
 
         private void HandleEventComplete(List<LlmIntentSchema.ParsedIntent> intents, string reply, int aiPid)
         {
-            callInFlight = false;
+            inFlightAis.Remove(aiPid);
             var sim = GameBootstrapper.Instance?.Simulation;
             if (sim == null) return;
 

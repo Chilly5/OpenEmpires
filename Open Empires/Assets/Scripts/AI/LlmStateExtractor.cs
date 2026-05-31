@@ -22,6 +22,7 @@ namespace OpenEmpires
 
             AppendPlayerLine(sb, sim, localPlayerId, "Human");
             AppendAiLine(sb, sim, aiPlayerId);
+            AppendAllyAis(sb, sim, aiPlayerId);
 
             // Per-unit-class enemy composition from the AI's perspective (what its scouts/units have seen).
             var ai = sim.GetAiPlayer(aiPlayerId);
@@ -37,6 +38,24 @@ namespace OpenEmpires
             AppendEnemyBases(sb, sim, localPlayerId, aiPlayerId);
 
             return sb.ToString();
+        }
+
+        // Lists the OTHER ally AI teammates and their combat state, so a bot can coordinate /
+        // avoid duplicating a teammate when the human broadcasts an order to several bots.
+        private static void AppendAllyAis(StringBuilder sb, GameSimulation sim, int aiPlayerId)
+        {
+            bool any = false;
+            foreach (var pid in sim.AiPlayerIds)
+            {
+                if (pid == aiPlayerId) continue;
+                if (!sim.AreAllies(pid, aiPlayerId)) continue;
+                var other = sim.GetAiPlayer(pid);
+                if (other == null) continue;
+                sb.Append(any ? ", " : "Ally-AIs: ").Append("AI Player ").Append(pid)
+                  .Append('(').Append(other.CombatStateName).Append(')');
+                any = true;
+            }
+            if (any) sb.Append(". ");
         }
 
         private static void AppendPlayerLine(StringBuilder sb, GameSimulation sim, int playerId, string label)

@@ -41,7 +41,14 @@ namespace OpenEmpires
         // ──────────────────────────────────────────────────────────────────
         public static string BuildSystemPrompt(string aiName)
         {
-            var sb = new StringBuilder(1400);
+            return BuildSystemPrompt(aiName, null);
+        }
+
+        // allyTeammates: when the human has MORE THAN ONE ally AI, the comma-separated list of
+        // all their names (e.g. "AI Player 1, AI Player 2"). null/empty = single-bot team.
+        public static string BuildSystemPrompt(string aiName, string allyTeammates)
+        {
+            var sb = new StringBuilder(1600);
             sb.Append("You are ").Append(aiName)
               .Append(", an AI commander playing an Age-of-Empires-style RTS on the human player's team. ");
             sb.Append("You control your own economy and army. You talk to your human teammate over voice comms ");
@@ -76,6 +83,16 @@ namespace OpenEmpires
             sb.Append("not \"the barracks is built\" or \"five spearmen are ready.\" ");
             sb.Append("Don't claim units exist or a building is complete just because you ordered it. ");
             sb.Append("Match what you say to the orders you actually gave.");
+
+            if (!string.IsNullOrEmpty(allyTeammates))
+            {
+                sb.Append("\n\nYou are one of several AI teammates on this team (").Append(allyTeammates).Append("). ");
+                sb.Append("The human's messages are sent to ALL of you at once. Decide whether THIS message is meant ");
+                sb.Append("for YOU specifically — the human may address a particular teammate by name, number, color, or ");
+                sb.Append("area of the map (\"the one in the north\"). If the order is clearly for a different teammate, ");
+                sb.Append("or it's already being handled, take NO tools and reply with an EMPTY message (say nothing). ");
+                sb.Append("Only act and speak when it applies to you, and don't duplicate what a teammate is already doing.");
+            }
             return sb.ToString();
         }
 

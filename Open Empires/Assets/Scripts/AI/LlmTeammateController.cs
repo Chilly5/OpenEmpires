@@ -46,8 +46,10 @@ namespace OpenEmpires
             LlmDebug.VerboseHttp = verboseHttpLogging;
         }
 
-        private float lastCallTimeRealtime = -100f;
-        private bool callInFlight;
+        // Per-bot state so multiple ally AIs can think concurrently (one human, many bots).
+        private readonly Dictionary<int, float> lastCallByAi = new Dictionary<int, float>();
+        private readonly HashSet<int> inFlightAis = new HashSet<int>();
+        private readonly List<int> allyAiBuffer = new List<int>();
 
         private bool warnedNoApiKey;
         private bool warnedNoAi;
@@ -76,42 +78,51 @@ namespace OpenEmpires
                 return false;
             }
 
-            int aiPlayerId = FindAllyAi(sim, issuerPlayerId);
-            if (aiPlayerId < 0)
+            FindAllyAis(sim, issuerPlayerId, allyAiBuffer);
+            if (allyAiBuffer.Count == 0)
             {
                 WarnOnce(ref warnedNoAi, "AI teammate unavailable: no ally AI on your team.");
                 return false;
             }
 
+            // Smart routing: the message goes to EVERY ally bot; each decides if it's for them.
+            bool broadcast = allyAiBuffer.Count > 1;
+            string allyNames = BuildAllyNameList(allyAiBuffer);
+
             float now = Time.realtimeSinceStartup;
-            if (callInFlight)
+            int started = 0;
+            for (int i = 0; i < allyAiBuffer.Count; i++)
             {
-                PostBusyNotice("AI is still thinking — message dropped.");
+                int aiPlayerId = allyAiBuffer[i];
+                if (inFlightAis.Contains(aiPlayerId)) continue; // this bot is still thinking
+                float last = lastCallByAi.TryGetValue(aiPlayerId, out var t) ? t : -100f;
+                if (now - last < MinSecondsBetweenCalls) continue; // this bot is on cooldown
+                lastCallByAi[aiPlayerId] = now;
+                inFlightAis.Add(aiPlayerId);
+
+                string aiName = $"AI Player {aiPlayerId}";
+                string systemPrompt = LlmTool.BuildSystemPrompt(aiName, broadcast ? allyNames : null);
+                string stateLine = LlmStateExtractor.Build(sim, issuerPlayerId, aiPlayerId);
+                string userMessage = "[Game state] " + stateLine + "\n[Teammate says] " + text;
+
+                var history = LlmConversationMemory.GetHistory(issuerPlayerId, aiPlayerId);
+                LlmConversationMemory.Append(issuerPlayerId, aiPlayerId, true, text);
+                var media = CaptureMedia(sim, aiPlayerId);
+                var contents = LlmToolLoop.BuildInitialContents(history, userMessage, media);
+
+                Debug.Log($"[LlmTeammate] → AI{aiPlayerId}: {text}");
+                int targetAi = aiPlayerId; // capture for the closures
+                StartCoroutine(LlmToolLoop.Run(apiKey, systemPrompt, contents, sim, targetAi, issuerPlayerId,
+                    onComplete: (intents, reply) => HandleComplete(intents, reply, issuerPlayerId, targetAi, broadcast),
+                    onFailure: reason => HandleFailure(reason, targetAi)));
+                started++;
+            }
+
+            if (started == 0)
+            {
+                PostBusyNotice("Your AI teammate(s) are busy — message dropped.");
                 return false;
             }
-            float cooldownRemaining = MinSecondsBetweenCalls - (now - lastCallTimeRealtime);
-            if (cooldownRemaining > 0f)
-            {
-                PostBusyNotice($"AI on cooldown ({cooldownRemaining:0.#}s) — message dropped.");
-                return false;
-            }
-            lastCallTimeRealtime = now;
-            callInFlight = true;
-
-            string aiName = $"AI Player {aiPlayerId}";
-            string systemPrompt = LlmTool.BuildSystemPrompt(aiName);
-            string stateLine = LlmStateExtractor.Build(sim, issuerPlayerId, aiPlayerId);
-            string userMessage = "[Game state] " + stateLine + "\n[Teammate says] " + text;
-
-            var history = LlmConversationMemory.GetHistory(issuerPlayerId, aiPlayerId);
-            LlmConversationMemory.Append(issuerPlayerId, aiPlayerId, true, text);
-            var media = CaptureMedia(sim, aiPlayerId);
-            var contents = LlmToolLoop.BuildInitialContents(history, userMessage, media);
-
-            Debug.Log($"[LlmTeammate] → AI{aiPlayerId}: {text}");
-            StartCoroutine(LlmToolLoop.Run(apiKey, systemPrompt, contents, sim, aiPlayerId, issuerPlayerId,
-                onComplete: (intents, reply) => HandleComplete(intents, reply, issuerPlayerId, aiPlayerId),
-                onFailure: reason => HandleFailure(reason, aiPlayerId)));
             return true;
         }
 
@@ -151,9 +162,9 @@ namespace OpenEmpires
         }
 
         private void HandleComplete(List<LlmIntentSchema.ParsedIntent> intents, string reply,
-            int issuerPlayerId, int aiPlayerId)
+            int issuerPlayerId, int aiPlayerId, bool broadcast)
         {
-            callInFlight = false;
+            inFlightAis.Remove(aiPlayerId);
             var sim = GameBootstrapper.Instance?.Simulation;
             if (sim == null) return;
 
@@ -175,13 +186,15 @@ namespace OpenEmpires
                     EnqueueIntent(sim, aiPlayerId, issuerPlayerId, intents[i]);
             }
 
-            if (string.IsNullOrEmpty(reply) && intentCount == 0)
+            // When broadcasting to several bots, a silent bot just decided the order wasn't for
+            // it — don't print a "nothing to say" line for every un-addressed teammate.
+            if (string.IsNullOrEmpty(reply) && intentCount == 0 && !broadcast)
                 RenderAiChatLocally(aiPlayerId, "(AI had nothing to say)", isSystem: true);
         }
 
         private void HandleFailure(string reason, int aiPlayerId)
         {
-            callInFlight = false;
+            inFlightAis.Remove(aiPlayerId);
             Debug.LogWarning($"[LlmTeammate] LLM turn failed: {reason}");
             RenderAiChatLocally(aiPlayerId, "(AI didn't respond)", isSystem: true);
         }
@@ -248,18 +261,28 @@ namespace OpenEmpires
             });
         }
 
-        // Lowest-playerId ally AI on the human's team. Deterministic ordering so two
-        // human teammates pick the same target when chatting.
-        private static int FindAllyAi(GameSimulation sim, int humanPlayerId)
+        // All ally AIs on the human's team, ascending playerId (deterministic order).
+        private static void FindAllyAis(GameSimulation sim, int humanPlayerId, List<int> result)
         {
-            int best = -1;
+            result.Clear();
             foreach (var aiPid in sim.AiPlayerIds)
             {
                 if (aiPid == humanPlayerId) continue;
                 if (!sim.AreAllies(humanPlayerId, aiPid)) continue;
-                if (best < 0 || aiPid < best) best = aiPid;
+                result.Add(aiPid);
             }
-            return best;
+            result.Sort();
+        }
+
+        private static string BuildAllyNameList(List<int> aiIds)
+        {
+            var sb = new System.Text.StringBuilder();
+            for (int i = 0; i < aiIds.Count; i++)
+            {
+                if (i > 0) sb.Append(", ");
+                sb.Append("AI Player ").Append(aiIds[i]);
+            }
+            return sb.ToString();
         }
     }
 }
