@@ -654,6 +654,131 @@ namespace OpenEmpires
             return false;
         }
 
+        // Spiral search OUTWARD from the TC center for a 1x1 gold-mine origin in the ring
+        // [minDist, maxDist] from TC center.
+        //
+        // Pass 1 picks the first naturally-walkable tile in the ring.
+        // Pass 2 (fallback) picks the first in-bounds non-water/non-river tile in the ring and
+        // force-converts it to clear grass — matches the TC-footprint force-conversion pattern
+        // in GameSetup.SpawnPlayerBase. This makes the gold spawn a hard guarantee for every
+        // player as long as their TC isn't completely surrounded by water within the ring.
+        private bool FindValidGoldNearTC(MapData mapData, float tcCenterX, float tcCenterZ,
+            float minDistFromTc, float maxDistFromTc, out Vector3 result)
+        {
+            int cx = Mathf.FloorToInt(tcCenterX);
+            int cz = Mathf.FloorToInt(tcCenterZ);
+            float minSq = minDistFromTc * minDistFromTc;
+            float maxSq = maxDistFromTc * maxDistFromTc;
+            int maxR = Mathf.CeilToInt(maxDistFromTc) + 1;
+
+            // Pass 1: naturally walkable tile.
+            for (int r = 0; r <= maxR; r++)
+            {
+                for (int dx = -r; dx <= r; dx++)
+                {
+                    for (int dz = -r; dz <= r; dz++)
+                    {
+                        if (r > 0 && Mathf.Abs(dx) != r && Mathf.Abs(dz) != r) continue;
+
+                        int originX = cx + dx;
+                        int originZ = cz + dz;
+                        float ccx = originX + 0.5f;
+                        float ccz = originZ + 0.5f;
+                        float ex = ccx - tcCenterX;
+                        float ez = ccz - tcCenterZ;
+                        float dSq = ex * ex + ez * ez;
+                        if (dSq < minSq || dSq > maxSq) continue;
+
+                        if (IsFootprintValid(mapData, originX, originZ, 1, 1, ResourceType.Gold))
+                        {
+                            result = ClampToMap(ccx, ccz);
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            // Pass 2: ring is all forest/rock/cliff — clear a tile to grass.
+            for (int r = 0; r <= maxR; r++)
+            {
+                for (int dx = -r; dx <= r; dx++)
+                {
+                    for (int dz = -r; dz <= r; dz++)
+                    {
+                        if (r > 0 && Mathf.Abs(dx) != r && Mathf.Abs(dz) != r) continue;
+
+                        int originX = cx + dx;
+                        int originZ = cz + dz;
+                        float ccx = originX + 0.5f;
+                        float ccz = originZ + 0.5f;
+                        float ex = ccx - tcCenterX;
+                        float ez = ccz - tcCenterZ;
+                        float dSq = ex * ex + ez * ez;
+                        if (dSq < minSq || dSq > maxSq) continue;
+                        if (!mapData.IsInBounds(originX, originZ)) continue;
+
+                        var t = mapData.Tiles[originX, originZ];
+                        if (t == TileType.Water || t == TileType.River) continue;
+
+                        mapData.Tiles[originX, originZ] = TileType.Grass;
+                        mapData.ForestDensity[originX, originZ] = 0f;
+                        result = ClampToMap(ccx, ccz);
+                        return true;
+                    }
+                }
+            }
+
+            result = new Vector3(tcCenterX, 0f, tcCenterZ);
+            return false;
+        }
+
+        // Removes every Wood (tree) node whose 2x2 footprint center sits within (halfWidth + 1)
+        // tiles of the segment (fromX,fromZ)→(toX,toZ). The +1 accounts for the tree's own
+        // half-footprint, so halfWidth=1 carves a roughly 4-tile-wide clear corridor through
+        // any forest line that happens to fall between a main TC and its starting gold vein.
+        private void ClearTreeCorridor(MapData mapData, float fromX, float fromZ, float toX, float toZ, float halfWidth)
+        {
+            Vector2 a = new Vector2(fromX, fromZ);
+            Vector2 b = new Vector2(toX, toZ);
+            Vector2 ab = b - a;
+            float abLenSq = ab.sqrMagnitude;
+            if (abLenSq <= 0.0001f) return;
+
+            float clearRadius = halfWidth + 1f;
+            float clearRadiusSq = clearRadius * clearRadius;
+
+            List<int> toRemove = null;
+            foreach (var node in mapData.GetAllResourceNodes())
+            {
+                if (node.Type != ResourceType.Wood) continue;
+                float treeCx = node.TileX + node.FootprintWidth * 0.5f;
+                float treeCz = node.TileZ + node.FootprintHeight * 0.5f;
+                Vector2 p = new Vector2(treeCx, treeCz);
+                Vector2 ap = p - a;
+                float t = Mathf.Clamp01(Vector2.Dot(ap, ab) / abLenSq);
+                Vector2 closest = a + ab * t;
+                if ((p - closest).sqrMagnitude <= clearRadiusSq)
+                {
+                    (toRemove ??= new List<int>()).Add(node.Id);
+                }
+            }
+
+            if (toRemove == null) return;
+            foreach (int id in toRemove)
+            {
+                if (resourceNodeViews.TryGetValue(id, out var view))
+                {
+                    view.DestroyView();
+                    resourceNodeViews.Remove(id);
+                }
+                // ClearResourceTile (called before RemoveResourceNode so it can still look up
+                // the node) restores tile walkability and zeros ForestDensity in a 3x3 around
+                // each cleared footprint tile — so a single removal opens a generous gap.
+                mapData.ClearResourceTile(id);
+                mapData.RemoveResourceNode(id);
+            }
+        }
+
         private bool FindValidBerryRingCenter(MapData mapData, Vector3 target, int maxRadius, out int centerX, out int centerZ)
         {
             int startX = Mathf.FloorToInt(target.x) & ~1;
@@ -883,15 +1008,30 @@ namespace OpenEmpires
                     Debug.LogWarning($"[MapRenderer] Could not place berry patch for player {p} near ({bx + 14}, {bz + 10})");
                 }
 
-                // Gold deposit: single 2x2 block, target offset (-14, +10), spiral retry
-                Vector3 goldTarget = ClampToMap(bx - 14, bz + 10);
-                if (FindValidSpawnPosition(mapData, ResourceType.Gold, goldTarget, 15, out Vector3 goldPos))
+                // Gold deposit: guarantee placement inside the main TC's attack range so the
+                // TC can defend its starting gold vein. TC footprint is 4x4 → center at (bx+2, bz+2).
+                // Search outward FROM THE TC (not from a fixed offset) so the result is symmetric
+                // for every player regardless of which corner of the map their base sits in —
+                // a fixed offset like (bx-12, bz+8) gets clamped and fails for bases near map edges.
+                float tcCenterX = bx + 2f;
+                float tcCenterZ = bz + 2f;
+                float tcAttackRange = GameBootstrapper.Instance?.Simulation?.Config.MainTownCenterAttackRange ?? 20f;
+                // Place the vein 15–19 tiles from the TC: far enough to feel like a separate
+                // resource patch (not hugging the TC), close enough to stay inside the attack ring.
+                // Cap is attackRange − 1 so the 1x1 node footprint sits fully inside the circle.
+                float minGoldDistFromTc = 15f;
+                float maxGoldDistFromTc = tcAttackRange - 1f;
+                if (FindValidGoldNearTC(mapData, tcCenterX, tcCenterZ, minGoldDistFromTc, maxGoldDistFromTc, out Vector3 goldPos))
                 {
                     SpawnResourceNode(mapData, ResourceType.Gold, goldPos, 3000, goldMinePrefab);
+                    // Clear trees on the straight line between the TC and the new gold node so
+                    // villagers (and TC arrows) have a direct path/line-of-sight to the vein
+                    // even when a forest line happens to fall between them.
+                    ClearTreeCorridor(mapData, tcCenterX, tcCenterZ, goldPos.x, goldPos.z, halfWidth: 1f);
                 }
                 else
                 {
-                    Debug.LogWarning($"[MapRenderer] Could not place gold mine for player {p} near ({bx - 14}, {bz + 10})");
+                    Debug.LogWarning($"[MapRenderer] Could not place gold mine within TC attack range for player {p} (TC at {tcCenterX},{tcCenterZ})");
                 }
 
                 // Stone deposit: single 2x2 block, target offset (+10, -14), spiral retry

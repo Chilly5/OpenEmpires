@@ -48,6 +48,19 @@ namespace OpenEmpires
             billboardSprite = sprite;
         }
 
+        // Permanently destroys this view and its separately-parented billboard sprite (trees and
+        // billboarded resources reparent their sprite onto a shared container, so destroying the
+        // root alone leaves an orphan visible in the world).
+        public void DestroyView()
+        {
+            if (billboardSprite != null)
+            {
+                Destroy(billboardSprite);
+                billboardSprite = null;
+            }
+            Destroy(gameObject);
+        }
+
         public Rect GetScreenBounds(Camera cam)
         {
             // Prefer the billboard sprite's renderer (for Gold/Stone/Food/Wood billboards),
