@@ -159,19 +159,50 @@ namespace OpenEmpires
         private GameObject constructionScaffold;
         private Renderer constructionScaffoldRenderer;
         private int constructionStage = -1;
-        private static readonly Texture2D[] constructionStageTextures = new Texture2D[3];
-        private static bool constructionTexturesLoaded;
+        private static readonly System.Collections.Generic.Dictionary<BuildingType, Texture2D[]> constructionStagesByType
+            = new System.Collections.Generic.Dictionary<BuildingType, Texture2D[]>();
+        private static Texture2D[] defaultConstructionStages;
 
-        private static Texture2D GetConstructionStageTexture(int stage)
+        private static Texture2D[] GetDefaultConstructionStages()
         {
-            if (!constructionTexturesLoaded)
+            if (defaultConstructionStages == null)
             {
-                constructionStageTextures[0] = Resources.Load<Texture2D>("BuildingSprites/Construction/4x4lvl1");
-                constructionStageTextures[1] = Resources.Load<Texture2D>("BuildingSprites/Construction/4x4lvl2");
-                constructionStageTextures[2] = Resources.Load<Texture2D>("BuildingSprites/Construction/4x4lvl3");
-                constructionTexturesLoaded = true;
+                defaultConstructionStages = new[]
+                {
+                    Resources.Load<Texture2D>("BuildingSprites/Construction/4x4lvl1"),
+                    Resources.Load<Texture2D>("BuildingSprites/Construction/4x4lvl2"),
+                    Resources.Load<Texture2D>("BuildingSprites/Construction/4x4lvl3"),
+                };
             }
-            return constructionStageTextures[Mathf.Clamp(stage, 0, 2)];
+            return defaultConstructionStages;
+        }
+
+        // Per-type construction stage sprites. Returns null when the type uses the generic scaffold.
+        private static Texture2D[] LoadCustomConstructionStages(BuildingType type)
+        {
+            string[] names = type switch
+            {
+                BuildingType.Farm => new[] { "BuildingSprites/farm_00", "BuildingSprites/farm_01", "BuildingSprites/farm_02" },
+                _ => null,
+            };
+            if (names == null) return null;
+            var arr = new Texture2D[3];
+            for (int i = 0; i < 3; i++)
+            {
+                arr[i] = Resources.Load<Texture2D>(names[i]);
+                if (arr[i] == null) return null;
+            }
+            return arr;
+        }
+
+        private static Texture2D GetConstructionStageTexture(int stage, BuildingType type)
+        {
+            if (!constructionStagesByType.TryGetValue(type, out var arr))
+            {
+                arr = LoadCustomConstructionStages(type) ?? GetDefaultConstructionStages();
+                constructionStagesByType[type] = arr;
+            }
+            return arr[Mathf.Clamp(stage, 0, 2)];
         }
 
         // Damage flash
@@ -334,7 +365,7 @@ namespace OpenEmpires
         {
             if (constructionScaffold != null) return;
 
-            var tex = GetConstructionStageTexture(0);
+            var tex = GetConstructionStageTexture(0, buildingData.Type);
             if (tex == null) return;
 
             var shader = Shader.Find("OpenEmpires/Billboard");
@@ -358,7 +389,15 @@ namespace OpenEmpires
             float size = Mathf.Max(buildingData.TileFootprintWidth, buildingData.TileFootprintHeight);
             if (size <= 0f) size = 2f;
             float scale = size * 1.5f;
-            constructionScaffold.transform.localPosition = new Vector3(0f, 0f, 0f);
+            float yPos = 0f;
+            // Farms render their stages at the same scale/Y as the finished Farm.png
+            // (see GameSetup CreateBuildingSpritePrefab for Farm: scale 2.75, yRatio 0.25/2.75).
+            if (buildingData.Type == BuildingType.Farm)
+            {
+                scale = 2.75f;
+                yPos = 0.25f;
+            }
+            constructionScaffold.transform.localPosition = new Vector3(0f, yPos, 0f);
             constructionScaffold.transform.localScale = new Vector3(scale, scale, 1f);
 
             constructionScaffoldRenderer = constructionScaffold.GetComponent<MeshRenderer>();
@@ -381,7 +420,7 @@ namespace OpenEmpires
             if (constructionScaffoldRenderer == null) return;
             int stage = Mathf.Clamp(Mathf.FloorToInt(Mathf.Clamp01(progress) * 3f), 0, 2);
             if (stage == constructionStage) return;
-            var tex = GetConstructionStageTexture(stage);
+            var tex = GetConstructionStageTexture(stage, buildingData.Type);
             if (tex != null)
             {
                 constructionScaffoldRenderer.material.SetTexture("_MainTex", tex);
