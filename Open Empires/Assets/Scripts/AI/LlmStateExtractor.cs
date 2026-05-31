@@ -22,6 +22,7 @@ namespace OpenEmpires
 
             AppendPlayerLine(sb, sim, localPlayerId, "Human");
             AppendAiLine(sb, sim, aiPlayerId);
+            AppendGathererBreakdown(sb, sim, aiPlayerId);
 
             // Per-unit-class enemy composition from the AI's perspective (what its scouts/units have seen).
             var ai = sim.GetAiPlayer(aiPlayerId);
@@ -37,6 +38,54 @@ namespace OpenEmpires
             AppendEnemyBases(sb, sim, localPlayerId, aiPlayerId);
 
             return sb.ToString();
+        }
+
+        // The AI teammate's villager distribution by current activity, so the model can honor
+        // orders like "move your berry gatherers". Food is split into berries / farm / hunt.
+        private static void AppendGathererBreakdown(StringBuilder sb, GameSimulation sim, int aiPlayerId)
+        {
+            int food = 0, berries = 0, farm = 0, hunt = 0, wood = 0, gold = 0, stone = 0, idle = 0, other = 0;
+            var all = sim.UnitRegistry.GetAllUnits();
+            for (int i = 0; i < all.Count; i++)
+            {
+                var u = all[i];
+                if (u.PlayerId != aiPlayerId || u.State == UnitState.Dead) continue;
+                if (u.UnitType != 0) continue; // villagers only
+                if (u.State == UnitState.Idle) { idle++; continue; }
+
+                var node = u.TargetResourceNodeId >= 0 ? sim.MapData.GetResourceNode(u.TargetResourceNodeId) : null;
+                ResourceType rt;
+                if (node != null)
+                {
+                    rt = node.Type;
+                    if (rt == ResourceType.Food)
+                    {
+                        food++;
+                        if (node.IsFarmNode) farm++;
+                        else if (node.IsCarcass) hunt++;
+                        else berries++;
+                        continue;
+                    }
+                }
+                else if (u.CarriedResourceAmount > 0)
+                {
+                    rt = u.CarriedResourceType;
+                    if (rt == ResourceType.Food) { food++; berries++; continue; } // carry-only food → assume bush
+                }
+                else { other++; continue; }
+
+                if (rt == ResourceType.Wood) wood++;
+                else if (rt == ResourceType.Gold) gold++;
+                else if (rt == ResourceType.Stone) stone++;
+                else other++;
+            }
+
+            sb.Append("Gatherers: food=").Append(food)
+              .Append("(berries=").Append(berries).Append(",farm=").Append(farm).Append(",hunt=").Append(hunt).Append(')')
+              .Append(" wood=").Append(wood).Append(" gold=").Append(gold).Append(" stone=").Append(stone)
+              .Append(" idle=").Append(idle);
+            if (other > 0) sb.Append(" other=").Append(other);
+            sb.Append(". ");
         }
 
         private static void AppendPlayerLine(StringBuilder sb, GameSimulation sim, int playerId, string label)

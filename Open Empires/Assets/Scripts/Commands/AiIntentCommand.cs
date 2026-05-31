@@ -31,9 +31,13 @@ namespace OpenEmpires
         // in one turn splits forces in different directions (each takes DIFFERENT units).
         SendGroup          = 17, // ParamA/B = Fixed32 raw worldX/worldZ, ParamC = unit class (0=all,1=archers,2=horsemen,3=spearmen), ParamD = portion percent 1..100 (100 = all available of class)
         // ── Fine-grained villager control (reserved villagers are excluded from the auto-economy) ──
-        GatherWith         = 18, // ParamA/B = Fixed32 raw worldX/worldZ (where), ParamC = ResourceType, ParamD = villager count
-        ProtectVillagers   = 19, // ParamA/B = Fixed32 raw safe pos, ParamC = count (0 = all), ParamD unused — garrison villagers in the TC (fallback: move to pos)
-        RepairBuilding     = 20, // ParamA/B = Fixed32 raw worldX/worldZ (near), ParamC = count, ParamD = BuildingType (0 = any damaged)
+        // Villager-source packing: a "count" param holds source*1000 + count, where source is a
+        // current-activity filter (0=nearest-N, 1=idle, 2=food, 3=berries, 4=farm, 5=hunt,
+        // 6=wood, 7=gold, 8=stone) and count 0 = "all of that source". source 0 + plain count
+        // reproduces the old nearest-N behavior, so this is backward compatible.
+        GatherWith         = 18, // ParamA/B = Fixed32 raw worldX/worldZ (where), ParamC = ResourceType, ParamD = packed source*1000+count
+        ProtectVillagers   = 19, // ParamA/B = Fixed32 raw safe pos, ParamC = packed source*1000+count (count 0 = all) — garrison in TC (fallback: move to pos)
+        RepairBuilding     = 20, // ParamA/B = Fixed32 raw worldX/worldZ (near), ParamC = packed source*1000+count, ParamD = BuildingType (0 = any damaged)
         SetGatherTargets   = 21, // ParamA/B/C/D = absolute gatherer targets food/wood/gold/stone (-1 = leave to default)
     }
 

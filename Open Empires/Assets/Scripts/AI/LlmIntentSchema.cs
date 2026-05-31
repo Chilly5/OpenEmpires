@@ -56,6 +56,37 @@ namespace OpenEmpires
             return UnitClassAll;
         }
 
+        // Villager-activity source filter (matches AIPlayerSystem.VillagerMatchesActivity codes).
+        public const int VillagerSourceAny = 0, VillagerSourceIdle = 1, VillagerSourceFood = 2,
+            VillagerSourceBerries = 3, VillagerSourceFarm = 4, VillagerSourceHunt = 5,
+            VillagerSourceWood = 6, VillagerSourceGold = 7, VillagerSourceStone = 8;
+
+        // Returns the source code; "any" (or unknown) → 0 = nearest-N selection (no filter).
+        public static int ParseVillagerSource(string s)
+        {
+            switch ((s ?? string.Empty).ToLowerInvariant())
+            {
+                case "idle":                       return VillagerSourceIdle;
+                case "food":                       return VillagerSourceFood;
+                case "berries": case "berry": case "bush": return VillagerSourceBerries;
+                case "farm": case "farms":         return VillagerSourceFarm;
+                case "hunt": case "hunters": case "meat": return VillagerSourceHunt;
+                case "wood": case "lumber":        return VillagerSourceWood;
+                case "gold":                       return VillagerSourceGold;
+                case "stone":                      return VillagerSourceStone;
+            }
+            return VillagerSourceAny;
+        }
+
+        // Packs a current-activity source + count into one int for an AiIntentCommand param:
+        // source*1000 + count (count 0 = "all of that source").
+        public static int PackVillagerSelector(int sourceCode, int count)
+        {
+            if (count < 0) count = 0;
+            if (count > 999) count = 999;
+            return sourceCode * 1000 + count;
+        }
+
         // Portion of the available units of a class to detach, as a percent 1..100.
         // "rest"/"all" = 100 (everything still ungrouped), so "half" then "rest" halves cleanly.
         public static int ParsePortion(string s)

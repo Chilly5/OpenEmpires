@@ -13,6 +13,8 @@ namespace IngameDebugConsole
 		private SerializedProperty minimumWidth;
 		private SerializedProperty logWindowOpacity;
 		private SerializedProperty popupOpacity;
+		private SerializedProperty popupEdgePeekEnabled;
+		private SerializedProperty popupEdgePeekSize;
 		private SerializedProperty popupVisibility;
 		private SerializedProperty popupVisibilityLogFilter;
 		private SerializedProperty startMinimized;
@@ -56,6 +58,8 @@ namespace IngameDebugConsole
 			minimumWidth = serializedObject.FindProperty( "minimumWidth" );
 			logWindowOpacity = serializedObject.FindProperty( "logWindowOpacity" );
 			popupOpacity = serializedObject.FindProperty( "popupOpacity" );
+			popupEdgePeekEnabled = serializedObject.FindProperty( "popupEdgePeekEnabled" );
+			popupEdgePeekSize = serializedObject.FindProperty( "popupEdgePeekSize" );
 			popupVisibility = serializedObject.FindProperty( "popupVisibility" );
 			popupVisibilityLogFilter = serializedObject.FindProperty( "popupVisibilityLogFilter" );
 			startMinimized = serializedObject.FindProperty( "startMinimized" );
@@ -113,6 +117,9 @@ namespace IngameDebugConsole
 			EditorGUILayout.PropertyField( startMinimized );
 			EditorGUILayout.PropertyField( logWindowOpacity );
 			EditorGUILayout.PropertyField( popupOpacity );
+			EditorGUILayout.PropertyField( popupEdgePeekEnabled );
+			if( popupEdgePeekEnabled.boolValue )
+				DrawSubProperty( popupEdgePeekSize );
 
 			EditorGUILayout.PropertyField( popupVisibility );
 			if( popupVisibility.intValue == (int) PopupVisibility.WhenLogReceived )

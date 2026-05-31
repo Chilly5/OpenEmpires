@@ -1808,7 +1808,10 @@ namespace OpenEmpires
                 case AiIntentKind.GatherWith:
                 {
                     var pos = new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB));
-                    var ids = ReserveVillagers(Mathf.Clamp(paramD, 1, 50), pos);
+                    // ParamD packs source*1000 + count (source 0=nearest-N, >0=by current activity).
+                    int gSource = paramD / 1000, gCount = paramD % 1000;
+                    if (gSource == 0 && gCount <= 0) gCount = 4; // default size when neither given
+                    var ids = ReserveVillagers(gSource, gCount, pos);
                     // ServiceGatherOrder handles drop-off building / construction-help / gather.
                     AddVillagerOrder(VillagerTask.Gather, ids, paramC, pos, -1, until, currentTick);
                     break;
@@ -1816,10 +1819,10 @@ namespace OpenEmpires
                 case AiIntentKind.ProtectVillagers:
                 {
                     var pos = new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB));
-                    int count = paramC <= 0 ? cachedVillagers.Count : paramC;
+                    int pSource = paramC / 1000, pCount = paramC % 1000; // count 0 = all (of source)
                     var tc = GetMyBuilding(BuildingType.TownCenter);
                     int tcId = (tc != null && !tc.IsDestroyed) ? tc.Id : -1;
-                    var ids = ReserveVillagers(count, pos);
+                    var ids = ReserveVillagers(pSource, pCount, pos);
                     AddVillagerOrder(VillagerTask.Protect, ids, -1, pos, tcId, until, currentTick);
                     break;
                 }
@@ -1829,7 +1832,9 @@ namespace OpenEmpires
                     var dmg = FindNearestDamagedBuilding(pos, paramD);
                     if (dmg != null)
                     {
-                        var ids = ReserveVillagers(Mathf.Clamp(paramC, 1, 10), dmg.SimPosition);
+                        int rSource = paramC / 1000, rCount = paramC % 1000;
+                        if (rSource == 0 && rCount <= 0) rCount = 2; // default crew size
+                        var ids = ReserveVillagers(rSource, rCount, dmg.SimPosition);
                         AddVillagerOrder(VillagerTask.Repair, ids, -1, dmg.SimPosition, dmg.Id, until, currentTick);
                     }
                     break;
@@ -2742,10 +2747,51 @@ namespace OpenEmpires
 
         // ── Villager orders (commanded/auto villager tasks) ────────────────
 
-        // Deterministically reserve up to `count` villagers, preferring those nearest `nearPos`
-        // (integer tile-distance, ties by ascending id), skipping already-reserved ones.
-        // Returns the chosen id list (may be shorter than count, or empty).
+        // Villager-activity source codes (kept in sync with LlmIntentSchema.ParseVillagerSource).
+        // 0=any, 1=idle, 2=food(any), 3=berries, 4=farm, 5=hunt, 6=wood, 7=gold, 8=stone.
+        private bool VillagerMatchesActivity(UnitData v, int code)
+        {
+            if (code <= 0) return true;          // any
+            if (code == 1) return v.State == UnitState.Idle;
+
+            ResourceNodeData node = v.TargetResourceNodeId >= 0
+                ? sim.MapData.GetResourceNode(v.TargetResourceNodeId) : null;
+            if (node != null)
+            {
+                switch (code)
+                {
+                    case 2: return node.Type == ResourceType.Food;
+                    case 3: return node.Type == ResourceType.Food && !node.IsFarmNode && !node.IsCarcass; // berries
+                    case 4: return node.Type == ResourceType.Food && node.IsFarmNode;                    // farms
+                    case 5: return node.Type == ResourceType.Food && node.IsCarcass;                     // hunt
+                    case 6: return node.Type == ResourceType.Wood;
+                    case 7: return node.Type == ResourceType.Gold;
+                    case 8: return node.Type == ResourceType.Stone;
+                }
+                return false;
+            }
+            // No live node (e.g. depleted) — fall back to what they're carrying (broad types only).
+            if (v.CarriedResourceAmount > 0)
+            {
+                switch (code)
+                {
+                    case 2: return v.CarriedResourceType == ResourceType.Food;
+                    case 6: return v.CarriedResourceType == ResourceType.Wood;
+                    case 7: return v.CarriedResourceType == ResourceType.Gold;
+                    case 8: return v.CarriedResourceType == ResourceType.Stone;
+                }
+            }
+            return false;
+        }
+
+        // Deterministically reserve villagers, preferring those nearest `nearPos` (integer
+        // tile-distance, ties by ascending id), skipping already-reserved ones. When
+        // sourceCode>0, only villagers currently doing that activity are eligible; count<=0
+        // then means "all of them". Returns the chosen id list (may be empty).
         private List<int> ReserveVillagers(int count, FixedVector3 nearPos)
+            => ReserveVillagers(0, count, nearPos);
+
+        private List<int> ReserveVillagers(int sourceCode, int count, FixedVector3 nearPos)
         {
             RebuildReservedSet();
             villagerCandidates.Clear();
@@ -2753,6 +2799,7 @@ namespace OpenEmpires
             {
                 var v = cachedVillagers[i];
                 if (reservedVillagerIds.Contains(v.Id)) continue;
+                if (sourceCode > 0 && !VillagerMatchesActivity(v, sourceCode)) continue;
                 villagerCandidates.Add(v);
             }
             if (villagerCandidates.Count == 0) return null;
@@ -2772,9 +2819,9 @@ namespace OpenEmpires
                 return a.Id.CompareTo(b.Id); // deterministic tie-break
             });
 
-            count = Mathf.Clamp(count, 1, villagerCandidates.Count);
-            var ids = new List<int>(count);
-            for (int i = 0; i < count; i++)
+            int take = count <= 0 ? villagerCandidates.Count : Mathf.Min(count, villagerCandidates.Count);
+            var ids = new List<int>(take);
+            for (int i = 0; i < take; i++)
             {
                 int id = villagerCandidates[i].Id;
                 ids.Add(id);

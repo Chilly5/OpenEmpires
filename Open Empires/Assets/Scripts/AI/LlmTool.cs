@@ -58,6 +58,9 @@ namespace OpenEmpires
             sb.Append("protect_villagers (hide them in the TC when raided), repair_building, and set_gather_targets ");
             sb.Append("(exact gatherer counts). Use these for specific economy orders; prioritize_resource/focus_economy ");
             sb.Append("are for vague leanings.\n");
+            sb.Append("- You can target villagers by what they're CURRENTLY doing via `from` ");
+            sb.Append("(e.g. \"move your berry gatherers to wood\" → gather_villagers resource=Wood, from=berries). ");
+            sb.Append("Check the 'Gatherers:' line in the game state to see how many are on each resource.\n");
             sb.Append("- If you are unsure of the current situation, call query_game_state first to read fresh numbers, ");
             sb.Append("then decide.\n");
             sb.Append("- For positions, pick from the provided keyword lists; never invent coordinates.\n");
@@ -106,6 +109,9 @@ namespace OpenEmpires
             "\"my_base\",\"my_wood\",\"my_food\",\"my_gold\",\"my_stone\"," +
             "\"near_my_lumber_yard\",\"near_my_mill\",\"near_my_mine\",\"front_line\"," +
             "\"north\",\"south\",\"east\",\"west\"";
+        // Pick villagers by what they're CURRENTLY doing (vs. just the nearest ones).
+        private const string VillagerSources =
+            "\"any\",\"idle\",\"food\",\"berries\",\"farms\",\"hunt\",\"wood\",\"gold\",\"stone\"";
         private const string Triggers =
             "\"immediate\",\"delay\",\"on_age_up\",\"on_army_size\",\"on_enemy_attack\"";
         private const string Resources = "\"Food\",\"Wood\",\"Gold\",\"Stone\"";
@@ -198,20 +204,23 @@ namespace OpenEmpires
                     "[\"building\"]"),
 
                 Decl("gather_villagers",
-                    "Send a specific number of villagers to gather a resource at/near a location. " +
-                    "Use when the teammate wants you to put villagers on a particular resource. " +
+                    "Send villagers to gather a resource at/near a location. Use when the teammate wants you to " +
+                    "put villagers on a particular resource — including reassigning ones already working " +
+                    "(e.g. \"send your berry gatherers to chop wood\" → resource=Wood, from=berries). " +
                     "If the spot is far from a deposit, the proper drop-off (mill/lumber yard/mine) is built " +
                     "automatically — you do NOT need a separate build_structure call for that.",
                     Props(
                         EnumProp("resource", "Which resource to gather.", Resources, true),
-                        IntProp("count", "How many villagers (1-50).", true),
+                        EnumProp("from", "Pick villagers currently doing this (default any = nearest spare ones). Use 'berries'/'farms'/'hunt' for food sub-kinds.", VillagerSources, false),
+                        IntProp("count", "How many villagers (default: with 'from', all of them; else 4).", false),
                         EnumProp("target", "Where to gather (default my_base — nearest node of that resource).", GatherPositions, false)),
-                    "[\"resource\",\"count\"]"),
+                    "[\"resource\"]"),
 
                 Decl("protect_villagers",
                     "Pull villagers to safety (garrison them in the Town Center). Use when the teammate's economy is being raided.",
                     Props(
-                        IntProp("count", "How many villagers to protect (default all).", false),
+                        EnumProp("from", "Pick villagers currently doing this (default any). E.g. from='gold' to pull only gold miners.", VillagerSources, false),
+                        IntProp("count", "How many villagers to protect (default all of the selected group).", false),
                         EnumProp("where", "Safe location to pull toward (default my_base).", DefendPositions, false)),
                     "[]"),
 
@@ -219,6 +228,7 @@ namespace OpenEmpires
                     "Assign villagers to repair a damaged building (town center, walls, towers, etc.).",
                     Props(
                         EnumProp("target", "Where the damaged building is (default my_base).", DefendPositions, false),
+                        EnumProp("from", "Pick villagers currently doing this (default any nearest).", VillagerSources, false),
                         IntProp("count", "How many villagers to send (1-10, default 2).", false)),
                     "[]"),
 
@@ -374,7 +384,8 @@ namespace OpenEmpires
         {
             if (!LlmIntentSchema.TryParseResource(args["resource"].AsString(), out var res))
                 return ToolResult.Info("Unknown resource for gather_villagers.");
-            int count = Mathf.Clamp(args["count"].AsInt(1), 1, 50);
+            int source = LlmIntentSchema.ParseVillagerSource(args["from"].AsString("any"));
+            int count = Mathf.Clamp(args["count"].AsInt(0), 0, 50); // 0 = default/all (resolved in sim)
             string target = args["target"].AsString("my_base");
             if (string.IsNullOrEmpty(target)) target = "my_base";
             if (!LlmIntentSchema.TryResolvePosition(target, sim, aiPlayerId, out int rawX, out int rawZ))
@@ -386,15 +397,18 @@ namespace OpenEmpires
             var intent = new LlmIntentSchema.ParsedIntent
             {
                 Kind = AiIntentKind.GatherWith,
-                ParamA = rawX, ParamB = rawZ, ParamC = (int)res, ParamD = count,
+                ParamA = rawX, ParamB = rawZ, ParamC = (int)res,
+                ParamD = LlmIntentSchema.PackVillagerSelector(source, count),
                 DurationTicks = FocusDuration,
             };
-            return ToolResult.Action(intent, $"Putting {count} villagers on {res}.");
+            string who = source > 0 ? VillagerSourceWord(source) : (count > 0 ? $"{count} villagers" : "villagers");
+            return ToolResult.Action(intent, $"Putting {who} on {res}.");
         }
 
         private static ToolResult DoProtectVillagers(JsonValue args, GameSimulation sim, int aiPlayerId)
         {
-            int count = args["count"].AsInt(0); // 0 = all
+            int source = LlmIntentSchema.ParseVillagerSource(args["from"].AsString("any"));
+            int count = Mathf.Clamp(args["count"].AsInt(0), 0, 50); // 0 = all of the selected group
             string where = args["where"].AsString("my_base");
             if (string.IsNullOrEmpty(where)) where = "my_base";
             int rawX = 0, rawZ = 0;
@@ -406,11 +420,12 @@ namespace OpenEmpires
             var intent = new LlmIntentSchema.ParsedIntent
             {
                 Kind = AiIntentKind.ProtectVillagers,
-                ParamA = rawX, ParamB = rawZ, ParamC = Mathf.Max(0, count),
+                ParamA = rawX, ParamB = rawZ,
+                ParamC = LlmIntentSchema.PackVillagerSelector(source, count),
                 DurationTicks = CombatDuration,
             };
-            string howMany = count > 0 ? $"{count} villagers" : "the villagers";
-            return ToolResult.Action(intent, $"Pulling {howMany} into the town center for safety.");
+            string who = source > 0 ? VillagerSourceWord(source) : (count > 0 ? $"{count} villagers" : "the villagers");
+            return ToolResult.Action(intent, $"Pulling {who} into the town center for safety.");
         }
 
         private static ToolResult DoRepairBuilding(JsonValue args, GameSimulation sim, int aiPlayerId)
@@ -423,14 +438,34 @@ namespace OpenEmpires
                 var ownTc = LlmIntentSchema.FindOwnTc(sim, aiPlayerId);
                 if (ownTc.HasValue) { rawX = ownTc.Value.x.Raw; rawZ = ownTc.Value.z.Raw; }
             }
-            int count = Mathf.Clamp(args["count"].AsInt(2), 1, 10);
+            int source = LlmIntentSchema.ParseVillagerSource(args["from"].AsString("any"));
+            int count = Mathf.Clamp(args["count"].AsInt(0), 0, 10); // 0 = default crew (resolved in sim)
             var intent = new LlmIntentSchema.ParsedIntent
             {
                 Kind = AiIntentKind.RepairBuilding,
-                ParamA = rawX, ParamB = rawZ, ParamC = count, ParamD = 0, // 0 = any damaged building
+                ParamA = rawX, ParamB = rawZ,
+                ParamC = LlmIntentSchema.PackVillagerSelector(source, count),
+                ParamD = 0, // 0 = any damaged building
                 DurationTicks = CombatDuration,
             };
-            return ToolResult.Action(intent, $"Sending {count} villagers to repair near {target}.");
+            string who = source > 0 ? VillagerSourceWord(source) : "villagers";
+            return ToolResult.Action(intent, $"Sending {who} to repair near {target}.");
+        }
+
+        private static string VillagerSourceWord(int source)
+        {
+            switch (source)
+            {
+                case LlmIntentSchema.VillagerSourceIdle:    return "idle villagers";
+                case LlmIntentSchema.VillagerSourceFood:    return "food gatherers";
+                case LlmIntentSchema.VillagerSourceBerries: return "berry gatherers";
+                case LlmIntentSchema.VillagerSourceFarm:    return "farmers";
+                case LlmIntentSchema.VillagerSourceHunt:    return "hunters";
+                case LlmIntentSchema.VillagerSourceWood:    return "wood cutters";
+                case LlmIntentSchema.VillagerSourceGold:    return "gold miners";
+                case LlmIntentSchema.VillagerSourceStone:   return "stone miners";
+                default: return "villagers";
+            }
         }
 
         private static ToolResult DoSetGatherTargets(JsonValue args)

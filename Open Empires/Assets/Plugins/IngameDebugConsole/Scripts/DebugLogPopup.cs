@@ -239,28 +239,60 @@ namespace IngameDebugConsole
 			float vertDistance = Mathf.Min( distToBottom, distToTop );
 
 			// Find the nearest edge's safe area coordinates
+			bool snappedToHorizontalEdge;
+			bool snappedToMinimumEdge;
 			if( horDistance < vertDistance )
 			{
 				if( distToLeft < distToRight )
+				{
 					pos = new Vector2( halfSize.x, pos.y );
+					snappedToMinimumEdge = true;
+				}
 				else
+				{
 					pos = new Vector2( canvasWidth - halfSize.x, pos.y );
+					snappedToMinimumEdge = false;
+				}
 
 				pos.y = Mathf.Clamp( pos.y, halfSize.y, canvasHeight - halfSize.y );
+				snappedToHorizontalEdge = true;
 			}
 			else
 			{
 				if( distToBottom < distToTop )
+				{
 					pos = new Vector2( pos.x, halfSize.y );
+					snappedToMinimumEdge = true;
+				}
 				else
+				{
 					pos = new Vector2( pos.x, canvasHeight - halfSize.y );
+					snappedToMinimumEdge = false;
+				}
 
 				pos.x = Mathf.Clamp( pos.x, halfSize.x, canvasWidth - halfSize.x );
+				snappedToHorizontalEdge = false;
+			}
+
+			Vector2 edgeSnappedPos = pos;
+			Vector2 normalizedEdgePos = edgeSnappedPos - canvasRawSize * 0.5f;
+			normalizedPosition.Set( normalizedEdgePos.x / canvasWidth, normalizedEdgePos.y / canvasHeight );
+
+			if( debugManager.popupEdgePeekEnabled )
+			{
+				if( snappedToHorizontalEdge )
+				{
+					float visibleSize = Mathf.Clamp( debugManager.popupEdgePeekSize, 1f, halfSize.x * 2f );
+					pos.x = snappedToMinimumEdge ? visibleSize - halfSize.x : canvasWidth + halfSize.x - visibleSize;
+				}
+				else
+				{
+					float visibleSize = Mathf.Clamp( debugManager.popupEdgePeekSize, 1f, halfSize.y * 2f );
+					pos.y = snappedToMinimumEdge ? visibleSize - halfSize.y : canvasHeight + halfSize.y - visibleSize;
+				}
 			}
 
 			pos -= canvasRawSize * 0.5f;
-
-			normalizedPosition.Set( pos.x / canvasWidth, pos.y / canvasHeight );
 
 			// Safe area's bottom left coordinates are added to pos only after normalizedPosition's value
 			// is set because normalizedPosition is in range [-canvasWidth / 2, canvasWidth / 2]

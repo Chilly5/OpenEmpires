@@ -87,6 +87,16 @@ namespace IngameDebugConsole
 
 		[SerializeField]
 		[HideInInspector]
+		[Tooltip( "If enabled, the minimized popup tucks mostly offscreen and leaves only a clickable strip visible" )]
+		internal bool popupEdgePeekEnabled = true;
+
+		[SerializeField]
+		[HideInInspector]
+		[Tooltip( "Visible size of the tucked popup strip in canvas pixels" )]
+		internal float popupEdgePeekSize = 18f;
+
+		[SerializeField]
+		[HideInInspector]
 		[Tooltip( "Determines when the popup will show up (after the console window is closed)" )]
 		private PopupVisibility popupVisibility = PopupVisibility.Always;
 
