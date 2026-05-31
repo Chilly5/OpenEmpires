@@ -59,7 +59,10 @@ namespace OpenEmpires
 
         private void Update()
         {
-            if (selectionManager == null || !selectionManager.IsDragging)
+            bool unitDrag = selectionManager != null && selectionManager.IsDragging;
+            bool wallDrag = selectionManager != null && selectionManager.IsWallBoxDragging;
+
+            if (!unitDrag && !wallDrag)
             {
                 if (boxRoot.activeSelf) boxRoot.SetActive(false);
                 return;
@@ -68,8 +71,8 @@ namespace OpenEmpires
             if (!boxRoot.activeSelf) boxRoot.SetActive(true);
 
             // DragStart/DragEnd are in screen coords (Y-up), which matches ScreenSpaceOverlay
-            Vector2 start = selectionManager.DragStart;
-            Vector2 end = selectionManager.DragEnd;
+            Vector2 start = unitDrag ? selectionManager.DragStart : selectionManager.WallBoxDragStartScreen;
+            Vector2 end = unitDrag ? selectionManager.DragEnd : selectionManager.WallBoxDragEndScreen;
 
             float x = Mathf.Min(start.x, end.x);
             float y = Mathf.Min(start.y, end.y);

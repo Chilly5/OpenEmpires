@@ -303,10 +303,9 @@ namespace OpenEmpires
                 spriteRenderer = spriteTransform.GetComponent<Renderer>();
 
             if (IsWallFamily(data.Type))
-            {
                 wallViewsById[buildingId] = this;
-                InvalidateNeighborWallViews(OriginTileX, OriginTileZ);
-            }
+            // Any new building may turn an adjacent wall into a tower (obstacle-cap rule).
+            InvalidateNeighborWallViews(OriginTileX, OriginTileZ);
 
             CreateRallyPointVisuals();
             CreateOverlayWidgets();
@@ -1158,6 +1157,26 @@ namespace OpenEmpires
             return m;
         }
 
+        // True when (tx, tz) is impassable terrain, contains a non-wall building/resource,
+        // or sits in the Foundation border around a non-wall building (1-tile clearance ring
+        // around TCs, Houses, Mills, etc. — walls placed adjacent to those buildings have
+        // this Foundation tile between them and the building's actual Building tile).
+        // Walls don't count — they're handled by the wall-neighbor mask.
+        // Out-of-bounds counts as obstacle so walls placed at the map edge get capped.
+        private static bool IsObstacleNonWall(MapData map, BuildingRegistry reg, int tx, int tz)
+        {
+            if (tx < 0 || tx >= map.Width || tz < 0 || tz >= map.Height) return true;
+            if (map.IsWallTile(tx, tz, reg)) return false;
+            // Direct building occupancy — catches Farms (walkable but a building) and
+            // any non-wall building tile.
+            var b = map.GetBuildingAt(tx, tz, reg);
+            if (b != null && !b.IsDestroyed && !IsWallFamily(b.Type)) return true;
+            // Foundation tiles only ever exist as a 1-tile border around non-wall buildings.
+            if (map.Tiles[tx, tz] == TileType.Foundation) return true;
+            // Impassable terrain (Rock, Cliff, Water, River, dense forest, holeMap, etc.).
+            return !map.IsWalkable(tx, tz);
+        }
+
         // Resets the dirty flag so the next LateUpdate re-runs classification.
         // Safe to call multiple times per frame — flag flip is idempotent.
         public void InvalidateWallConnections()
@@ -1217,6 +1236,19 @@ namespace OpenEmpires
             bool hasNW = (mask & WallNeighborMask.NW) != 0;
             bool hasSE = (mask & WallNeighborMask.SE) != 0;
             bool hasSW = (mask & WallNeighborMask.SW) != 0;
+
+            // Any wall whose cardinal neighbor is impassable terrain or a non-wall building
+            // becomes a tower (Junction sprite). This is the wall tile that "makes contact"
+            // with the obstacle — caps tree lines, mountains, water, buildings, etc.
+            if (kind != WallSegmentKind.Junction && kind != WallSegmentKind.Isolated)
+            {
+                bool nObs = !hasN && IsObstacleNonWall(map, reg, tx,     tz + 1);
+                bool sObs = !hasS && IsObstacleNonWall(map, reg, tx,     tz - 1);
+                bool eObs = !hasE && IsObstacleNonWall(map, reg, tx + 1, tz);
+                bool wObs = !hasW && IsObstacleNonWall(map, reg, tx - 1, tz);
+                if (nObs || sObs || eObs || wObs)
+                    kind = WallSegmentKind.Junction;
+            }
 
             // Hide merlons at corners that connect to any neighbor (stone walls only — palisade has merlons hidden up-front)
             Transform mNxNz = wallGeometry.Find("Merlon_NxNz");
@@ -1637,7 +1669,9 @@ namespace OpenEmpires
             }
 
             bool showInfluence = cachedInInfluence || externalInfluenceMark;
-            if (!isSelected && !damaged && !buildingData.IsUnderConstruction && !training && !upgrading && !showInfluence)
+            // Farms don't auto-show the HP bar from influence — the "+" buff icon already conveys it.
+            bool barShowInfluence = showInfluence && buildingData.Type != BuildingType.Farm;
+            if (!isSelected && !damaged && !buildingData.IsUnderConstruction && !training && !upgrading && !barShowInfluence)
             {
                 if (overlayRoot != null && overlayRoot.gameObject.activeSelf)
                     overlayRoot.gameObject.SetActive(false);
@@ -1844,10 +1878,9 @@ namespace OpenEmpires
             IsDestroyed = true;
 
             if (IsWallFamily(BuildingType))
-            {
                 wallViewsById.Remove(BuildingId);
-                InvalidateNeighborWallViews(OriginTileX, OriginTileZ);
-            }
+            // Any building destruction may un-cap adjacent walls (lose obstacle neighbor).
+            InvalidateNeighborWallViews(OriginTileX, OriginTileZ);
 
             if (overlayRoot != null)
                 overlayRoot.gameObject.SetActive(false);

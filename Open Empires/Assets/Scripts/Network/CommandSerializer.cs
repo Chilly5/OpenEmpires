@@ -317,7 +317,7 @@ namespace OpenEmpires
             var data = JsonUtility.FromJson<PlaceWallPayload>(payload);
             var cmd = new PlaceWallCommand(playerId, data.startTileX, data.startTileZ,
                 data.endTileX, data.endTileZ, data.villagerUnitIds,
-                (BuildingType)data.wallBuildingType, data.isGate);
+                (BuildingType)data.wallBuildingType, data.isGate, data.isBox);
             cmd.IsQueued = data.isQueued;
             return cmd;
         }
@@ -653,6 +653,7 @@ namespace OpenEmpires
             public bool isQueued;
             public int wallBuildingType;
             public bool isGate;
+            public bool isBox;
 
             public PlaceWallPayload() { }
 
@@ -666,6 +667,7 @@ namespace OpenEmpires
                 isQueued = cmd.IsQueued;
                 wallBuildingType = (int)cmd.WallBuildingType;
                 isGate = cmd.IsGate;
+                isBox = cmd.IsBox;
             }
         }
 
@@ -1202,6 +1204,7 @@ namespace OpenEmpires
                             w.Write(placeWall.IsQueued);
                             w.Write((int)placeWall.WallBuildingType);
                             w.Write(placeWall.IsGate);
+                            w.Write(placeWall.IsBox);
                             break;
                         case ConvertToGateCommand convertToGate:
                             w.Write(convertToGate.BuildingId);
@@ -1427,9 +1430,10 @@ namespace OpenEmpires
                             bool isWallQueued = r.ReadBoolean();
                             var wallBType = (BuildingType)r.ReadInt32();
                             bool wallIsGate = r.ReadBoolean();
+                            bool wallIsBox = r.ReadBoolean();
                             var wallCmd = new PlaceWallCommand(playerId, wallStartX, wallStartZ,
                                 wallEndX, wallEndZ, wallVIds.Length > 0 ? wallVIds : null,
-                                wallBType, wallIsGate);
+                                wallBType, wallIsGate, wallIsBox);
                             wallCmd.IsQueued = isWallQueued;
                             commands.Add(wallCmd);
                             break;
