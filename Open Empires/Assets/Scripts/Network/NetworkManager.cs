@@ -159,6 +159,9 @@ namespace OpenEmpires
         private GameObject matchFoundPanel;
         private GameObject matchStartingPanel;
         private GameObject hwAccelWarningPanel;
+        // Sub-areas inside the disconnected panel — swap between main actions and SP mode picker.
+        private GameObject mainMenuActionGroup;
+        private GameObject singlePlayerModePanel;
         private TMP_Text statusLabel;
 
         // Dynamic text references
@@ -995,6 +998,39 @@ namespace OpenEmpires
                     return name;
             }
             return GetRandomName() + " II";
+        }
+
+        // Swap the main-menu action buttons for the single-player mode picker (and back).
+        private void ShowSinglePlayerModePanel()
+        {
+            if (mainMenuActionGroup != null) mainMenuActionGroup.SetActive(false);
+            if (singlePlayerModePanel != null) singlePlayerModePanel.SetActive(true);
+        }
+
+        private void HideSinglePlayerModePanel()
+        {
+            if (singlePlayerModePanel != null) singlePlayerModePanel.SetActive(false);
+            if (mainMenuActionGroup != null) mainMenuActionGroup.SetActive(true);
+        }
+
+        // Launch a local game with the player + AI bots filling the chosen mode's slots.
+        // Reuses the multiplayer queue's AI-fill path (StartAIFilledGame) — just seeds its
+        // inputs first so it doesn't need to be re-implemented.
+        private void StartSinglePlayerWithBots(GameMode mode)
+        {
+            username = nameInputField.text;
+
+            // Reset picker visibility so returning to the main menu shows the action buttons.
+            HideSinglePlayerModePanel();
+
+            int playerCount = GetPlayerCountForMode(mode);
+            aiFillNames.Clear();
+            aiFillNames.Add(username);
+            while (aiFillNames.Count < playerCount)
+                aiFillNames.Add(GenerateUniqueAIName());
+            aiFillTargetCount = playerCount;
+
+            StartAIFilledGame();
         }
 
         private void StartAIFilledGame()
@@ -1875,36 +1911,27 @@ namespace OpenEmpires
             y -= (regionBtnH + regionGapY) * 2f; // skip past 2 rows
             UpdateRegionButtonVisuals();
 
-            // Action buttons
+            // Action buttons (Single Player / Multiplayer / Join Discord).
+            // Wrapped in a group so we can swap it out for the Single Player mode picker.
+            var actionGroupGO = new GameObject("MainMenuActionGroup");
+            actionGroupGO.transform.SetParent(cardGO.transform, false);
+            var actionGroupRT = actionGroupGO.AddComponent<RectTransform>();
+            actionGroupRT.anchorMin = Vector2.zero;
+            actionGroupRT.anchorMax = Vector2.one;
+            actionGroupRT.offsetMin = Vector2.zero;
+            actionGroupRT.offsetMax = Vector2.zero;
+            mainMenuActionGroup = actionGroupGO;
+
             y -= 18f;
-            CreateButton(cardGO.transform, "Single Player", leftX, y, 250f, 34f, () =>
+            CreateButton(actionGroupGO.transform, "Single Player", leftX, y, 250f, 34f, () =>
             {
-                username = nameInputField.text;
-                LocalPlayerId = 0;
-                IsMultiplayer = false;
-
-                if (int.TryParse(seedInputField.text, out int seed))
-                {
-                    var cfg = GameBootstrapper.Instance?.Config;
-                    if (cfg != null) cfg.MapSeed = seed;
-                }
-
-                GameBootstrapper.Instance?.SetPlayerCount(2);
-
-                playerCivilizations = new Civilization[2];
-                playerCivilizations[0] = selectedCivilization;
-                playerCivilizations[1] = (Civilization)UnityEngine.Random.Range(0, 3);
-                GameBootstrapper.Instance?.SetCivilizations(playerCivilizations);
-
-                if (dashboardPollCoroutine != null) { StopCoroutine(dashboardPollCoroutine); dashboardPollCoroutine = null; }
-                GameStarted = true;
-                FullscreenManager.Instance?.EnterFullscreen();
+                ShowSinglePlayerModePanel();
             });
 
             // Multiplayer button — taller to include players online text inside
             y -= 48f;
             var mpBtnGO = new GameObject("MultiplayerButton");
-            mpBtnGO.transform.SetParent(cardGO.transform, false);
+            mpBtnGO.transform.SetParent(actionGroupGO.transform, false);
             var mpBtnRT = mpBtnGO.AddComponent<RectTransform>();
             mpBtnRT.anchorMin = new Vector2(0.5f, 0.5f);
             mpBtnRT.anchorMax = new Vector2(0.5f, 0.5f);
@@ -1972,10 +1999,44 @@ namespace OpenEmpires
             playersOnlineLabel = mpSubTmp;
 
             y -= 48f;
-            CreateButton(cardGO.transform, "Join Discord", leftX, y, 250f, 34f, () =>
+            CreateButton(actionGroupGO.transform, "Join Discord", leftX, y, 250f, 34f, () =>
             {
                 Application.OpenURL("https://discord.gg/htUt9qv6Vk");
             });
+
+            // Single Player mode picker — shown when "Single Player" is clicked above.
+            // Clicking a mode instantly starts a local game with bot fill.
+            var spPanelGO = new GameObject("SinglePlayerModePanel");
+            spPanelGO.transform.SetParent(cardGO.transform, false);
+            var spPanelRT = spPanelGO.AddComponent<RectTransform>();
+            spPanelRT.anchorMin = Vector2.zero;
+            spPanelRT.anchorMax = Vector2.one;
+            spPanelRT.offsetMin = Vector2.zero;
+            spPanelRT.offsetMax = Vector2.zero;
+            singlePlayerModePanel = spPanelGO;
+
+            // Lay out picker contents starting at the same y as the original Single Player button.
+            // y currently points at the Discord row; rewind to where SP started.
+            float spY = y + 96f; // 48 (Discord→MP gap) + 48 (MP→SP gap)
+            MakeLabel(spPanelGO.transform, "Select Game Mode", leftX, spY + 24f, 250f, 24f, 14, FontStyles.Bold, TextAlignmentOptions.Center, true);
+
+            GameMode[] singlePlayerModes = { GameMode.OneVsOne, GameMode.TwoVsTwo, GameMode.ThreeVsThree, GameMode.FourVsFour };
+            string[] singlePlayerModeLabels = { "1v1", "2v2", "3v3", "4v4" };
+            for (int i = 0; i < singlePlayerModes.Length; i++)
+            {
+                GameMode modeCapture = singlePlayerModes[i];
+                CreateButton(spPanelGO.transform, singlePlayerModeLabels[i], leftX, spY - i * 42f, 250f, 34f, () =>
+                {
+                    StartSinglePlayerWithBots(modeCapture);
+                });
+            }
+
+            CreateButton(spPanelGO.transform, "Back", leftX, spY - singlePlayerModes.Length * 42f - 12f, 250f, 30f, () =>
+            {
+                HideSinglePlayerModePanel();
+            });
+
+            spPanelGO.SetActive(false);
 
             // =====================
             //  RIGHT SIDE — Civilization Picker + Description
