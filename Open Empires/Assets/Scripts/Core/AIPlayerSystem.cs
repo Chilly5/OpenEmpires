@@ -497,9 +497,11 @@ namespace OpenEmpires
             int pop = sim.GetPopulation(playerId);
             int popCap = sim.GetPopulationCap(playerId);
 
-            // 1. House building — maintain pop headroom
-            if (popCap - pop <= 3 && popCap < sim.Config.MaxPopulation)
+            // 1. House building — maintain pop headroom (build BEFORE capping; don't stack houses)
+            if (ShouldBuildHouse(pop, popCap))
                 TryPlaceBuilding(BuildingType.House, baseTileX, baseTileZ, currentTick, ref pendingHouseTick);
+            else if (pop >= popCap && popCap < sim.Config.MaxPopulation)
+                HelpFinishCappedHouse(currentTick); // already capped — rush the in-progress house
 
             // 2. Train villagers from TC
             if (pop < popCap && GetVillagerCount() < maxVillagers)
@@ -536,7 +538,7 @@ namespace OpenEmpires
             int popCap = sim.GetPopulationCap(playerId);
 
             // Always keep training villagers and building houses during opening
-            if (popCap - pop <= 3 && popCap < sim.Config.MaxPopulation)
+            if (ShouldBuildHouse(pop, popCap))
                 TryPlaceBuilding(BuildingType.House, baseTileX, baseTileZ, currentTick, ref pendingHouseTick);
 
             if (pop < popCap && GetVillagerCount() < maxVillagers)
@@ -2238,6 +2240,65 @@ namespace OpenEmpires
         }
 
         // ── Building Placement ─────────────────────────────────────────
+
+        // Build a house only if, even after the houses ALREADY under construction finish, we'd
+        // still be within 3 of the cap. This builds ~3 pop early (so we don't stall at the cap)
+        // without stacking multiple redundant houses while one is mid-construction.
+        private bool ShouldBuildHouse(int pop, int popCap)
+        {
+            if (popCap >= sim.Config.MaxPopulation) return false;
+            int inProgress = 0;
+            for (int i = 0; i < cachedMyBuildings.Count; i++)
+            {
+                var b = cachedMyBuildings[i];
+                if (b.Type == BuildingType.House && b.IsUnderConstruction && !b.IsDestroyed) inProgress++;
+            }
+            int futureCap = Mathf.Min(sim.Config.MaxPopulation, popCap + inProgress * sim.Config.HousePopulation);
+            return futureCap - pop <= 3;
+        }
+
+        // When we're already pop-capped, rush the in-progress house: pull up to 3 nearby spare
+        // villagers (within 10 tiles, not reserved, not already building it) to help finish it.
+        // They go idle and rejoin the economy automatically once the house completes.
+        private void HelpFinishCappedHouse(int currentTick)
+        {
+            BuildingData house = null;
+            for (int i = 0; i < cachedMyBuildings.Count; i++)
+            {
+                var b = cachedMyBuildings[i];
+                if (b.Type == BuildingType.House && b.IsUnderConstruction && !b.IsDestroyed) { house = b; break; }
+            }
+            if (house == null) return;
+
+            // Cap total builders at 4 (the original builder + up to 3 helpers). Count by
+            // ConstructionTargetBuildingId — set the instant a construct order is issued — so
+            // villagers still WALKING to the house (MovingToBuild) count too. Counting only the
+            // Constructing state would re-pull 4 more every tick until they arrive.
+            const int maxBuilders = 4;
+            int alreadyOnIt = 0;
+            for (int i = 0; i < cachedVillagers.Count; i++)
+            {
+                if (cachedVillagers[i].ConstructionTargetBuildingId == house.Id) alreadyOnIt++;
+            }
+            int need = maxBuilders - alreadyOnIt;
+            if (need <= 0) return;
+
+            const int radiusSq = 10 * 10;
+            tempUnitIds.Clear();
+            for (int i = 0; i < cachedVillagers.Count && tempUnitIds.Count < need; i++)
+            {
+                var v = cachedVillagers[i];
+                if (reservedVillagerIds.Contains(v.Id)) continue;        // don't poach commanded villagers
+                if (v.ConstructionTargetBuildingId == house.Id) continue; // already assigned to this house (counted above)
+                if (v.State == UnitState.Constructing || v.State == UnitState.MovingToBuild) continue; // busy building/heading to another build
+                int dx = (v.SimPosition.x.Raw >> Fixed32.FractionalBits) - house.OriginTileX;
+                int dz = (v.SimPosition.z.Raw >> Fixed32.FractionalBits) - house.OriginTileZ;
+                if (dx * dx + dz * dz > radiusSq) continue;               // must be within 10 tiles
+                tempUnitIds.Add(v.Id);
+            }
+            if (tempUnitIds.Count > 0)
+                Issue(new ConstructBuildingCommand(playerId, tempUnitIds.ToArray(), house.Id));
+        }
 
         private void TryPlaceBuilding(BuildingType type, int centerX, int centerZ, int currentTick, ref int pendingTick, int builderCount = 1)
         {
