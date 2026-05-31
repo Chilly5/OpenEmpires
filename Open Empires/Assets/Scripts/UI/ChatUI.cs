@@ -212,6 +212,23 @@ namespace OpenEmpires
             return $"Player {gamePlayerId + 1}";
         }
 
+        public static string FormatAiSpeakerName(int aiPlayerId)
+        {
+            string name = ResolvePlayerName(aiPlayerId);
+            int botIndex = 0;
+            var sim = GameBootstrapper.Instance?.Simulation;
+            if (sim != null)
+            {
+                int idx = 1;
+                foreach (int pid in sim.AiPlayerIds)
+                {
+                    if (pid == aiPlayerId) { botIndex = idx; break; }
+                    idx++;
+                }
+            }
+            return botIndex > 0 ? $"{name} (Bot {botIndex})" : name;
+        }
+
         private void Update()
         {
             if (!gameStarted) return;
@@ -405,7 +422,7 @@ namespace OpenEmpires
             };
             if (string.IsNullOrEmpty(text)) return;
 
-            string name = $"AI Player {playerId}";
+            string name = FormatAiSpeakerName(playerId);
             Color color = playerId >= 0 && playerId < GameSetup.PlayerColors.Length
                 ? GameSetup.PlayerColors[playerId]
                 : Color.white;

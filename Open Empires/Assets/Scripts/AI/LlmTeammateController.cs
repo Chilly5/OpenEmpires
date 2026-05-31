@@ -214,7 +214,7 @@ namespace OpenEmpires
 
         private void RenderAiChatLocally(int aiPlayerId, string text, bool isSystem = false)
         {
-            string name = $"AI Player {aiPlayerId}";
+            string name = ChatUI.FormatAiSpeakerName(aiPlayerId);
             Color color = aiPlayerId >= 0 && aiPlayerId < GameSetup.PlayerColors.Length
                 ? GameSetup.PlayerColors[aiPlayerId]
                 : Color.white;
