@@ -872,7 +872,7 @@ namespace OpenEmpires
             var mat = new Material(shader);
             mat.SetTexture("_MainTex", tex);
             mat.SetColor("_Color", Color.white);
-            mat.SetFloat("_Cutoff", 0.5f);
+            mat.SetFloat("_Cutoff", spriteName == "EnglishHouseDarkAge2" ? 0.05f : 0.5f);
             mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry + 1;
             mat.enableInstancing = true;
             buildingSpriteMaterials[spriteName] = mat;
@@ -928,6 +928,14 @@ namespace OpenEmpires
             view.SetSelectionRing(ring);
 
             return building;
+        }
+
+        // Age-1 houses alternate between two thatched-house looks so a village isn't all
+        // identical. Chosen by building Id so it's stable and identical on every client
+        // (purely visual — BuildingView never touches the deterministic sim).
+        private static string HouseAge1SpriteName(BuildingData buildingData)
+        {
+            return (buildingData.Id & 1) == 0 ? "HouseAge1" : "EnglishHouseDarkAge2";
         }
 
         private GameObject CreateHousePrefab(int playerId)
@@ -2004,7 +2012,8 @@ namespace OpenEmpires
                 {
                     var simAge = GameBootstrapper.Instance?.Simulation;
                     int houseAge = simAge != null ? Mathf.Clamp(simAge.GetPlayerAge(buildingData.PlayerId), 1, 3) : 1;
-                    prefab = CreateBuildingSpritePrefab("House", $"HouseAge{houseAge}", 2, 2, 6f, 1.54f / 6f);
+                    string houseSprite = houseAge == 1 ? HouseAge1SpriteName(buildingData) : $"HouseAge{houseAge}";
+                    prefab = CreateBuildingSpritePrefab("House", houseSprite, 2, 2, 6f, 1.54f / 6f);
                     if (prefab == null) prefab = CreateHousePrefab(buildingData.PlayerId);
                     break;
                 }
@@ -2242,7 +2251,9 @@ namespace OpenEmpires
                 view.Initialize(buildingData.Id, worldPos, buildingData, mapData, hs);
 
                 if (buildingData.Type == BuildingType.House)
-                    view.SetAgeSpriteInfo("HouseAge", 3);
+                    // Age 1 picks one of two thatched-house looks (per-building, stable across
+                    // clients); ages 2–3 use the standard HouseAge2/HouseAge3 art.
+                    view.SetAgeSpriteNames(new[] { null, HouseAge1SpriteName(buildingData), "HouseAge2", "HouseAge3" });
                 else if (buildingData.Type == BuildingType.Barracks)
                     view.SetAgeSpriteInfo("BarracksAge", 3);
                 else if (buildingData.Type == BuildingType.ArcheryRange)
