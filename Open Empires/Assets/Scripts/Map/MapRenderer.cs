@@ -689,7 +689,8 @@ namespace OpenEmpires
                         float dSq = ex * ex + ez * ez;
                         if (dSq < minSq || dSq > maxSq) continue;
 
-                        if (IsFootprintValid(mapData, originX, originZ, 1, 1, ResourceType.Gold))
+                        if (IsFootprintValid(mapData, originX, originZ, 1, 1, ResourceType.Gold)
+                            && !IsTooCloseToBerry(mapData, originX, originZ, 1, 1, GoldBerryClearance))
                         {
                             result = ClampToMap(ccx, ccz);
                             return true;
@@ -719,6 +720,10 @@ namespace OpenEmpires
 
                         var t = mapData.Tiles[originX, originZ];
                         if (t == TileType.Water || t == TileType.River) continue;
+                        // Berry buffer still applies to force-converted tiles — otherwise gold
+                        // could land on the rare candidate that happened to be a berry-adjacent
+                        // forest tile.
+                        if (IsTooCloseToBerry(mapData, originX, originZ, 1, 1, GoldBerryClearance)) continue;
 
                         mapData.Tiles[originX, originZ] = TileType.Grass;
                         mapData.ForestDensity[originX, originZ] = 0f;
@@ -729,6 +734,31 @@ namespace OpenEmpires
             }
 
             result = new Vector3(tcCenterX, 0f, tcCenterZ);
+            return false;
+        }
+
+        // Required tile gap between a gold node and the nearest berry-bush footprint.
+        private const int GoldBerryClearance = 2;
+
+        // True when any Food (berry) resource node's footprint sits within `buffer` tiles
+        // (Chebyshev) of the proposed gold-node footprint. Used to keep gold from spawning on
+        // top of or right next to berry rings, which would crowd the gathering area.
+        private bool IsTooCloseToBerry(MapData mapData, int originX, int originZ, int footprintW, int footprintH, int buffer)
+        {
+            int gx0 = originX - buffer;
+            int gx1 = originX + footprintW - 1 + buffer;
+            int gz0 = originZ - buffer;
+            int gz1 = originZ + footprintH - 1 + buffer;
+
+            foreach (var node in mapData.GetAllResourceNodes())
+            {
+                if (node.Type != ResourceType.Food) continue;
+                int bx0 = node.TileX;
+                int bx1 = node.TileX + node.FootprintWidth - 1;
+                int bz0 = node.TileZ;
+                int bz1 = node.TileZ + node.FootprintHeight - 1;
+                if (gx0 <= bx1 && gx1 >= bx0 && gz0 <= bz1 && gz1 >= bz0) return true;
+            }
             return false;
         }
 
@@ -1083,6 +1113,17 @@ namespace OpenEmpires
                     Vector3 target = ClampToMap(x, z);
                     if (FindValidSpawnPosition(mapData, type, target, 10, out Vector3 pos))
                     {
+                        // Gold-specific: don't crowd berry patches. Other scattered types
+                        // (Stone) are unaffected.
+                        if (type == ResourceType.Gold)
+                        {
+                            // FindValidSpawnPosition returns the cell center; recover the origin
+                            // tile for the 1x1 footprint.
+                            int posOriginX = Mathf.FloorToInt(pos.x - 0.5f);
+                            int posOriginZ = Mathf.FloorToInt(pos.z - 0.5f);
+                            if (IsTooCloseToBerry(mapData, posOriginX, posOriginZ, 1, 1, GoldBerryClearance))
+                                continue;
+                        }
                         SpawnResourceNode(mapData, type, pos, amount, prefab);
                         break;
                     }
