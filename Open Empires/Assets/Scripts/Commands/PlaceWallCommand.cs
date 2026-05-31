@@ -12,8 +12,9 @@ namespace OpenEmpires
         public bool IsQueued;
         public BuildingType WallBuildingType;
         public bool IsGate;
+        public bool IsBox;
 
-        public PlaceWallCommand(int playerId, int startTileX, int startTileZ, int endTileX, int endTileZ, int[] villagerUnitIds = null, BuildingType wallBuildingType = BuildingType.Wall, bool isGate = false)
+        public PlaceWallCommand(int playerId, int startTileX, int startTileZ, int endTileX, int endTileZ, int[] villagerUnitIds = null, BuildingType wallBuildingType = BuildingType.Wall, bool isGate = false, bool isBox = false)
         {
             PlayerId = playerId;
             StartTileX = startTileX;
@@ -24,6 +25,7 @@ namespace OpenEmpires
             IsQueued = false;
             WallBuildingType = wallBuildingType;
             IsGate = isGate;
+            IsBox = isBox;
         }
     }
 }

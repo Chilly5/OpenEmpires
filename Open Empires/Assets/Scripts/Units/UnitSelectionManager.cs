@@ -206,6 +206,22 @@ namespace OpenEmpires
         public Vector2 DragStart => dragStartScreen;
         public Vector2 DragEnd => currentMousePos;
 
+        public bool IsWallBoxDragging => isPlacingWall && wallDragging;
+        public Vector2 WallBoxDragStartScreen
+        {
+            get
+            {
+                if (!IsWallBoxDragging || mainCamera == null) return Vector2.zero;
+                var sim = GameBootstrapper.Instance?.Simulation;
+                float y = 0f;
+                if (sim != null)
+                    y = sim.MapData.SampleHeight(wallStartTileX + 0.5f, wallStartTileZ + 0.5f) * sim.Config.TerrainHeightScale;
+                Vector3 sp = mainCamera.WorldToScreenPoint(new Vector3(wallStartTileX + 0.5f, y, wallStartTileZ + 0.5f));
+                return new Vector2(sp.x, sp.y);
+            }
+        }
+        public Vector2 WallBoxDragEndScreen => currentMousePos;
+
         public IReadOnlyList<UnitView> SelectedUnits => selectedUnits;
         public UnitView HoveredUnit => hoveredUnit;
 
@@ -740,7 +756,7 @@ namespace OpenEmpires
                         int endTileX = Mathf.FloorToInt(wallHit.point.x);
                         int endTileZ = Mathf.FloorToInt(wallHit.point.z);
 
-                        var tiles = WallLineHelper.ComputeWallLine(wallStartTileX, wallStartTileZ, endTileX, endTileZ);
+                        var tiles = WallLineHelper.ComputeWallBoxCenterPath(wallStartTileX, wallStartTileZ, endTileX, endTileZ);
 
                         // Per-segment cost (only valid/buildable tiles get billed in the sim).
                         int woodPerSegment = sim.GetBuildingWoodCost(wallPlacementType);
@@ -4533,13 +4549,6 @@ namespace OpenEmpires
         {
             int endTileX = wallStartTileX;
             int endTileZ = wallStartTileZ;
-            // The snapped end is the last tile of the 8-direction-snapped line — i.e.,
-            // where the placed wall actually ends, which can differ from the raw cursor
-            // tile when the drag isn't perfectly along a cardinal/diagonal axis. Chain
-            // logic uses this so the next segment starts at the wall's true end, not
-            // wherever the cursor happened to be.
-            int snappedEndTileX = wallStartTileX;
-            int snappedEndTileZ = wallStartTileZ;
 
             var sim = GameBootstrapper.Instance?.Simulation;
             if (sim != null)
@@ -4550,12 +4559,7 @@ namespace OpenEmpires
                     endTileX = Mathf.FloorToInt(wallHit.point.x);
                     endTileZ = Mathf.FloorToInt(wallHit.point.z);
 
-                    var tiles = WallLineHelper.ComputeWallLine(wallStartTileX, wallStartTileZ, endTileX, endTileZ);
-                    if (tiles.Count > 0)
-                    {
-                        snappedEndTileX = tiles[tiles.Count - 1].x;
-                        snappedEndTileZ = tiles[tiles.Count - 1].y;
-                    }
+                    var tiles = WallLineHelper.ComputeWallBoxCenterPath(wallStartTileX, wallStartTileZ, endTileX, endTileZ);
 
                     int validCount = 0;
                     for (int i = 0; i < tiles.Count; i++)
@@ -4574,7 +4578,7 @@ namespace OpenEmpires
                         {
                             var wallCmd = new PlaceWallCommand(LocalPlayerId,
                                 wallStartTileX, wallStartTileZ, endTileX, endTileZ, wallVillagerIds,
-                                wallPlacementType, wallPlacementIsGate);
+                                wallPlacementType, wallPlacementIsGate, isBox: true);
                             wallCmd.IsQueued = multiSelectHeld;
                             sim.CommandBuffer.EnqueueCommand(wallCmd);
                         }
@@ -4584,11 +4588,9 @@ namespace OpenEmpires
 
             if (multiSelectHeld)
             {
-                // Chain: next start is the snapped end of THIS wall (where the placed
-                // tiles actually finish), so the new segment's first tile equals the
-                // previous segment's last tile — they share that tile.
-                wallStartTileX = snappedEndTileX;
-                wallStartTileZ = snappedEndTileZ;
+                // Chain: next box starts at the corner we just placed at.
+                wallStartTileX = endTileX;
+                wallStartTileZ = endTileZ;
             }
             else
             {

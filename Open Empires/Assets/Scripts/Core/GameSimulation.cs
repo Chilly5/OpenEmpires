@@ -4140,8 +4140,9 @@ namespace OpenEmpires
 
         private void ProcessPlaceWallCommand(PlaceWallCommand cmd)
         {
-            // Compute tile line using Bresenham's algorithm
-            var tiles = WallLineHelper.ComputeWallLine(cmd.StartTileX, cmd.StartTileZ, cmd.EndTileX, cmd.EndTileZ);
+            var tiles = cmd.IsBox
+                ? WallLineHelper.ComputeWallBoxCenterPath(cmd.StartTileX, cmd.StartTileZ, cmd.EndTileX, cmd.EndTileZ)
+                : WallLineHelper.ComputeWallLine(cmd.StartTileX, cmd.StartTileZ, cmd.EndTileX, cmd.EndTileZ);
 
             // Filter to buildable tiles only (no existing buildings or templates)
             var validTiles = new List<Vector2Int>();

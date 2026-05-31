@@ -66,5 +66,50 @@ namespace OpenEmpires
 
             return tiles;
         }
+
+        /// <summary>
+        /// Returns a corner-to-corner path through the interior of the box bounded by
+        /// (x0,z0) and (x1,z1). The path takes diagonal steps until the shorter axis
+        /// is exhausted, then continues cardinally along the longer axis to reach the
+        /// opposite corner. Always starts at (x0,z0) and ends at (x1,z1) so the
+        /// preview matches the user's drag direction.
+        /// </summary>
+        public static List<Vector2Int> ComputeWallBoxCenterPath(int x0, int z0, int x1, int z1)
+        {
+            var tiles = new List<Vector2Int>();
+
+            int dx = x1 - x0;
+            int dz = z1 - z0;
+            int absDx = dx < 0 ? -dx : dx;
+            int absDz = dz < 0 ? -dz : dz;
+
+            int sx = dx > 0 ? 1 : (dx < 0 ? -1 : 0);
+            int sz = dz > 0 ? 1 : (dz < 0 ? -1 : 0);
+
+            int diagSteps = absDx < absDz ? absDx : absDz;
+            int cardSteps = (absDx > absDz ? absDx : absDz) - diagSteps;
+
+            int x = x0;
+            int z = z0;
+            tiles.Add(new Vector2Int(x, z));
+
+            for (int i = 0; i < diagSteps; i++)
+            {
+                x += sx;
+                z += sz;
+                tiles.Add(new Vector2Int(x, z));
+            }
+
+            int stepX = absDx >= absDz ? sx : 0;
+            int stepZ = absDz > absDx ? sz : 0;
+            for (int i = 0; i < cardSteps; i++)
+            {
+                x += stepX;
+                z += stepZ;
+                tiles.Add(new Vector2Int(x, z));
+            }
+
+            return tiles;
+        }
     }
 }
