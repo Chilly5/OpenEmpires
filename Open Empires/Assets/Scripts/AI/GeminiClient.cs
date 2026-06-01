@@ -17,7 +17,7 @@ namespace OpenEmpires
     // and local to the owner client — no sim state is ever read or written.
     public static class GeminiClient
     {
-        private const string Model = "gemini-3.5-flash";
+        private const string Model = "gemini-3.1-flash-lite";
         private const string Endpoint =
             "https://generativelanguage.googleapis.com/v1beta/models/" + Model + ":generateContent";
         private const float TimeoutSeconds = 30f; // thinking models can be slow; the loop, not the game, waits

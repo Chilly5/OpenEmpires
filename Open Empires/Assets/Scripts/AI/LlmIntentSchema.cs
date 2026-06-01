@@ -56,6 +56,17 @@ namespace OpenEmpires
             return UnitClassAll;
         }
 
+        // Production scope for stop_production: 0=all, 1=military, 2=villagers.
+        public static int ParseProductionScope(string s)
+        {
+            switch ((s ?? string.Empty).ToLowerInvariant())
+            {
+                case "military": case "army": case "units": return 1;
+                case "villagers": case "villager": case "economy": case "vills": return 2;
+            }
+            return 0; // all
+        }
+
         // Villager-activity source filter (matches AIPlayerSystem.VillagerMatchesActivity codes).
         public const int VillagerSourceAny = 0, VillagerSourceIdle = 1, VillagerSourceFood = 2,
             VillagerSourceBerries = 3, VillagerSourceFarm = 4, VillagerSourceHunt = 5,

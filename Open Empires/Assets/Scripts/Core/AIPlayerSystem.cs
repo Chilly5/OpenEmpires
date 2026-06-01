@@ -91,6 +91,10 @@ namespace OpenEmpires
         private int prodMixArchers, prodMixCavalry, prodMixInfantry; // relative weights 0..100
         private int prodMixUntilTick = -1;
 
+        // Production pause ("stop production"): while active, no new military/villager production.
+        private int militaryPausedUntilTick = -1;
+        private int villagerPausedUntilTick = -1;
+
         private struct TrainOrder { public int MenuType; public int Remaining; public int ExpiryTick; }
         private readonly List<TrainOrder> trainOrders = new List<TrainOrder>();
         private const int MaxTrainOrders = 8;
@@ -136,6 +140,16 @@ namespace OpenEmpires
         private bool enableAutonomousSplits = true;
         private int lastAutoSplitTick = -100000;
         private const int AutoSplitCooldownTicks = 60 * 30; // 60s
+
+        // Reactive combat: respond when the army is engaged (taking fire) in the field, choosing
+        // to fight or retreat by unit counters + numbers, and biasing production to counters.
+        private enum ReactiveMode { None, Fighting, Retreating }
+        private ReactiveMode reactiveMode = ReactiveMode.None;
+        private int reactiveCounterUntilTick = -1;     // produce counter units while engaged
+        private int commandedAttackUntilTick = -1;     // a human/LLM attack order is active → don't override
+        private const int ReactiveEngageRadiusSq = 14 * 14;
+        private const int ReactiveWindowTicks = 45 * 30;    // ~45s directive window
+        private const int ReactiveCounterWindowTicks = 60 * 30; // ~60s counter-production window
 
         // ── Villager orders: human/AI-commanded villager tasks (gather here, hide in the TC,
         //    repair this, build that). Mirrors the military detachment registry: reserved
@@ -197,6 +211,46 @@ namespace OpenEmpires
         public int CachedEnemyHorsemen => cachedEnemyHorsemen;
         public int LastEnemyAttackOnMeTick => lastEnemyAttackOnMeTick;
 
+        // Current battle status, for the LLM prompt.
+        public string EngagementStatus =>
+            reactiveMode == ReactiveMode.Fighting ? "engaged-fighting"
+            : reactiveMode == ReactiveMode.Retreating ? "engaged-retreating"
+            : "clear";
+
+        // ── Recent-events log (salient "what just happened" for the LLM prompt). Recorded
+        //    identically on every client (deterministic sim state); only the owner reads it. ──
+        public struct AiEvent { public int Code; public int Mag; public int Tick; }
+        public const int EvAgedUp = 1, EvLostUnits = 2, EvLostBuilding = 3, EvEnemySpotted = 4, EvRaided = 5, EvEngaged = 6, EvRetreating = 7;
+        private readonly List<AiEvent> recentEvents = new List<AiEvent>();
+        private const int MaxRecentEvents = 6;
+        public IReadOnlyList<AiEvent> RecentEvents => recentEvents;
+
+        private int prevArmyCount = -1, prevBuildingCount = -1, prevAge = -1, prevKnownEnemyCount = -1;
+        private int lastRaidedEventTick = -100000;
+
+        private void RecordEvent(int code, int mag, int currentTick)
+        {
+            recentEvents.Add(new AiEvent { Code = code, Mag = mag, Tick = currentTick });
+            if (recentEvents.Count > MaxRecentEvents) recentEvents.RemoveAt(0);
+        }
+
+        // Detect aged-up / lost-units / lost-building / enemy-spotted by comparing to last tick.
+        private void DetectAndRecordEvents(int currentTick)
+        {
+            int army = cachedCombatUnits.Count;
+            int buildings = cachedMyBuildings.Count;
+            int age = sim.GetPlayerAge(playerId);
+            int enemies = knownEnemyBases.Count;
+            if (prevArmyCount >= 0)
+            {
+                if (age > prevAge) RecordEvent(EvAgedUp, age, currentTick);
+                if (prevArmyCount - army >= 2) RecordEvent(EvLostUnits, prevArmyCount - army, currentTick);
+                if (buildings < prevBuildingCount) RecordEvent(EvLostBuilding, prevBuildingCount - buildings, currentTick);
+                if (enemies > prevKnownEnemyCount) RecordEvent(EvEnemySpotted, enemies, currentTick);
+            }
+            prevArmyCount = army; prevBuildingCount = buildings; prevAge = age; prevKnownEnemyCount = enemies;
+        }
+
         // ── Building placement tracking ────────────────────────────────
         private int pendingHouseTick;
         private int pendingBarracksTick;
@@ -236,8 +290,6 @@ namespace OpenEmpires
         private int discoverEnemyCounter;
 
         // ── TC queue variation ──────────────────────────────────────
-        private int tcQueueLimit;
-        private int tcQueueLimitNextChange;
 
         public AIPlayerSystem(int playerId, GameSimulation sim, AIDifficulty difficulty = AIDifficulty.Medium)
         {
@@ -280,8 +332,6 @@ namespace OpenEmpires
             }
 
             rngState = (uint)(playerId * 31337 + 1); // xorshift needs non-zero seed
-            tcQueueLimit = NextRandom(1, 12); // 1-11
-            tcQueueLimitNextChange = NextRandom(300, 901); // change after 10-30s
         }
 
         private int NextRandom(int maxExclusive)
@@ -351,12 +401,7 @@ namespace OpenEmpires
 
             assignedBuilderIds.Clear();
             RefreshCaches();
-
-            if (currentTick >= tcQueueLimitNextChange)
-            {
-                tcQueueLimit = NextRandom(1, 12);
-                tcQueueLimitNextChange = currentTick + NextRandom(300, 901);
-            }
+            DetectAndRecordEvents(currentTick);
 
             if (!baseInitialized)
                 InitializeBase();
@@ -375,6 +420,7 @@ namespace OpenEmpires
             TickDefense(currentTick);
 
             PruneDetachments(currentTick); // keep split-off groups committed; rebuild the exclusion set
+            TickReactiveCombat(currentTick); // react to the army being engaged before TickCombat acts
             TickCombat(currentTick);
             TickAutonomousSplit(currentTick);
             TickPendingDirectives(currentTick);
@@ -503,16 +549,13 @@ namespace OpenEmpires
             else if (pop >= popCap && popCap < sim.Config.MaxPopulation)
                 HelpFinishCappedHouse(currentTick); // already capped — rush the in-progress house
 
-            // 2. Train villagers from TC
-            if (pop < popCap && GetVillagerCount() < maxVillagers)
-            {
-                var tc = GetMyBuilding(BuildingType.TownCenter);
-                if (tc != null && !tc.IsUnderConstruction && !tc.IsDestroyed && tc.TrainingQueue.Count < tcQueueLimit)
-                {
-                    if (resources.Food >= sim.Config.VillagerFoodCost)
-                        Issue(new TrainUnitCommand(playerId, tc.Id, 0));
-                }
-            }
+            // 2. Villager production via the TC auto-produce toggle (it auto-queues a villager
+            //    whenever the queue is empty and food allows — no manual train spam).
+            ManageVillagerAutoProduce(pop, popCap);
+
+            // 2b. Resume any building that's under construction but has no worker (a builder
+            //     died or got pulled away) — otherwise it sits unfinished forever.
+            ResumeUnfinishedBuildings();
 
             // 3. Assign idle villagers every think tick
             AssignIdleVillagers(currentTick);
@@ -537,19 +580,11 @@ namespace OpenEmpires
             int pop = sim.GetPopulation(playerId);
             int popCap = sim.GetPopulationCap(playerId);
 
-            // Always keep training villagers and building houses during opening
+            // Always keep producing villagers (via the auto-produce toggle) and building houses.
             if (ShouldBuildHouse(pop, popCap))
                 TryPlaceBuilding(BuildingType.House, baseTileX, baseTileZ, currentTick, ref pendingHouseTick);
 
-            if (pop < popCap && GetVillagerCount() < maxVillagers)
-            {
-                var tc = GetMyBuilding(BuildingType.TownCenter);
-                if (tc != null && !tc.IsUnderConstruction && !tc.IsDestroyed && tc.TrainingQueue.Count < tcQueueLimit)
-                {
-                    if (resources.Food >= sim.Config.VillagerFoodCost)
-                        Issue(new TrainUnitCommand(playerId, tc.Id, 0));
-                }
-            }
+            ManageVillagerAutoProduce(pop, popCap);
 
             switch (openingStep)
             {
@@ -735,7 +770,25 @@ namespace OpenEmpires
                     foodGatherers++;
                 }
 
-                var node = FindNearestResourceNode(v.SimPosition, targetType, claimedFarmIds: claimedFarmIds);
+                // Pick a node that minimizes walking (prefers nodes near an appropriate drop-off).
+                // WOOD is special: never gather it unless a lumber yard / TC is within 5 tiles.
+                int dropCap = targetType == ResourceType.Wood ? 5 : 0; // 0 = no hard cap
+                var node = FindGatherNode(targetType, v.SimPosition, dropCap, claimedFarmIds);
+
+                if (node == null && targetType == ResourceType.Wood)
+                {
+                    // No wood near a deposit — get a lumber yard going near the wood, and put this
+                    // villager on food meanwhile instead of leaving it idle.
+                    EnsureWoodDropoff(currentTick);
+                    targetType = ResourceType.Food;
+                    node = FindGatherNode(ResourceType.Food, v.SimPosition, 0, claimedFarmIds)
+                         ?? FindNearestResourceNode(v.SimPosition, ResourceType.Food, claimedFarmIds: claimedFarmIds);
+                }
+                else if (node == null)
+                {
+                    node = FindNearestResourceNode(v.SimPosition, targetType, claimedFarmIds: claimedFarmIds);
+                }
+
                 if (node != null)
                 {
                     Issue(new GatherCommand(playerId, new int[] { v.Id }, node.Id));
@@ -1130,10 +1183,13 @@ namespace OpenEmpires
             // the AI's own production policy (a human-set production mix, counter mix, or default).
             TickTrainOrders(resources, currentTick);
 
+            if (currentTick < militaryPausedUntilTick) return; // production halted by a stop_production order
+
             if (prodMixActive && currentTick < prodMixUntilTick)
-                TrainByMix(resources);
-            else if (useCounterUnits && difficulty == AIDifficulty.Hard)
-                TrainCounterUnits(resources);
+                TrainByMix(resources);                               // human-set mix wins
+            else if (currentTick < reactiveCounterUntilTick
+                  || (useCounterUnits && difficulty == AIDifficulty.Hard))
+                TrainCounterUnits(resources);                        // reactive counters (any difficulty when engaged), or Hard default
             else
                 TrainDefaultMix(resources);
         }
@@ -1353,7 +1409,15 @@ namespace OpenEmpires
 
             // Record the most recent "enemy attacking me" tick so on_enemy_attack triggered
             // directives can fire even if the alert ping is rate-limited away below.
-            if (threatCount > 0) lastEnemyAttackOnMeTick = currentTick;
+            if (threatCount > 0)
+            {
+                lastEnemyAttackOnMeTick = currentTick;
+                if (currentTick - lastRaidedEventTick > 300) // ~10s: one event per raid wave
+                {
+                    RecordEvent(EvRaided, threatCount, currentTick);
+                    lastRaidedEventTick = currentTick;
+                }
+            }
 
             // If our own base is under attack, broadcast a Help ping + chat line (rate-limited).
             if (threatCount > 0 && currentTick - lastEmittedHelpPingTick >= HelpPingCooldownTicks)
@@ -1665,6 +1729,8 @@ namespace OpenEmpires
                     case PingType.Attack:
                         pingAttackTarget = pos;
                         pingAttackUntilTick = currentTick + PingDirectiveDurationTicks;
+                        commandedAttackUntilTick = pingAttackUntilTick; // human ping order — reactive must not override
+                        reactiveMode = ReactiveMode.None;
                         pingAttackUnitClass = 0; // human pings don't specify class
                         // Nudge into Assembling if currently idle and we have any force at all.
                         if (combatState == CombatState.Building)
@@ -1735,6 +1801,8 @@ namespace OpenEmpires
                     pingAttackTarget = pos;
                     pingAttackUntilTick = until;
                     pingAttackUnitClass = Mathf.Clamp(paramC, 0, 3);
+                    commandedAttackUntilTick = until; // explicit order — reactive combat must not override
+                    reactiveMode = ReactiveMode.None;
                     combatHoldUntilTick = -1; // an attack order overrides any defend/retreat hold
                     if (combatState == CombatState.Building)
                         combatState = CombatState.Assembling;
@@ -1772,6 +1840,7 @@ namespace OpenEmpires
                 }
                 case AiIntentKind.FocusEconomy:
                 {
+                    villagerPausedUntilTick = -1; // booming → resume villager production
                     // Preset: more economy, less aggression.
                     int strength = Mathf.Clamp(paramA, 0, 100);
                     aggressionAttackOverride = Mathf.Clamp(attackThreshold + strength / 10, 2, 32);
@@ -1784,6 +1853,7 @@ namespace OpenEmpires
                 }
                 case AiIntentKind.FocusMilitary:
                 {
+                    militaryPausedUntilTick = -1; // resume military production
                     int strength = Mathf.Clamp(paramA, 0, 100);
                     aggressionAttackOverride = Mathf.Clamp(attackThreshold - strength / 12, 2, 32);
                     aggressionRetreatOverride = Mathf.Clamp(retreatPercentInt - strength / 5, 10, 80);
@@ -1849,15 +1919,23 @@ namespace OpenEmpires
                     villagerTargetUntilTick = until;
                     break;
                 case AiIntentKind.TrainUnits:
+                    militaryPausedUntilTick = -1; villagerPausedUntilTick = -1; // an explicit train order lifts any stop
                     AddTrainOrder(paramA, Mathf.Clamp(paramB, 1, 30), until);
                     break;
                 case AiIntentKind.SetProductionMix:
+                    militaryPausedUntilTick = -1; // resume military production
                     prodMixArchers = Mathf.Clamp(paramA, 0, 100);
                     prodMixCavalry = Mathf.Clamp(paramB, 0, 100);
                     prodMixInfantry = Mathf.Clamp(paramC, 0, 100);
                     prodMixActive = (prodMixArchers + prodMixCavalry + prodMixInfantry) > 0;
                     prodMixUntilTick = until;
                     break;
+                case AiIntentKind.StopProduction:
+                {
+                    int scope = Mathf.Clamp(paramA, 0, 2); // 0=all, 1=military, 2=villagers
+                    StopProduction(scope, until);
+                    break;
+                }
                 case AiIntentKind.SetArmyRally:
                     SetAllMilitaryRally(new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB)));
                     break;
@@ -2241,6 +2319,97 @@ namespace OpenEmpires
 
         // ── Building Placement ─────────────────────────────────────────
 
+        // Drive villager production through each Town Center's auto-produce toggle instead of
+        // issuing manual train commands. ON while we still want more villagers (under pop cap and
+        // below our villager target); OFF otherwise so it stops queueing/spending food. The sim's
+        // AutoProduceVillagersTick then enqueues one villager at a time as food allows.
+        private void ManageVillagerAutoProduce(int pop, int popCap)
+        {
+            // A stop_production order forces the toggle off until it expires.
+            bool wantMore = pop < popCap && GetVillagerCount() < maxVillagers
+                            && sim.CurrentTick >= villagerPausedUntilTick;
+            for (int i = 0; i < cachedMyBuildings.Count; i++)
+            {
+                var b = cachedMyBuildings[i];
+                if (b.Type != BuildingType.TownCenter || b.IsDestroyed || b.IsUnderConstruction) continue;
+                if (b.AutoProduceVillagers != wantMore)
+                    Issue(new ToggleAutoProduceCommand(playerId, b.Id, wantMore));
+            }
+        }
+
+        // Find own buildings still under construction with NO villager working them (or heading
+        // to) and assign the nearest spare villager to finish each — the safety net that stops
+        // buildings from being abandoned when a builder dies or is pulled away.
+        private void ResumeUnfinishedBuildings()
+        {
+            for (int i = 0; i < cachedMyBuildings.Count; i++)
+            {
+                var b = cachedMyBuildings[i];
+                if (b.IsDestroyed || !b.IsUnderConstruction) continue;
+
+                bool hasWorker = false;
+                for (int j = 0; j < cachedVillagers.Count; j++)
+                {
+                    if (cachedVillagers[j].ConstructionTargetBuildingId == b.Id) { hasWorker = true; break; }
+                }
+                if (hasWorker) continue;
+
+                // Pick the nearest available villager (not reserved, not already building/garrisoning/fighting).
+                int bestId = -1;
+                long bestDist = long.MaxValue;
+                for (int j = 0; j < cachedVillagers.Count; j++)
+                {
+                    var v = cachedVillagers[j];
+                    if (reservedVillagerIds.Contains(v.Id)) continue;
+                    if (v.State == UnitState.Constructing || v.State == UnitState.MovingToBuild
+                        || v.State == UnitState.MovingToGarrison || v.State == UnitState.InCombat) continue;
+                    int dx = (v.SimPosition.x.Raw >> Fixed32.FractionalBits) - b.OriginTileX;
+                    int dz = (v.SimPosition.z.Raw >> Fixed32.FractionalBits) - b.OriginTileZ;
+                    long d = (long)dx * dx + (long)dz * dz;
+                    if (d < bestDist || (d == bestDist && (bestId < 0 || v.Id < bestId))) { bestDist = d; bestId = v.Id; }
+                }
+                if (bestId >= 0)
+                {
+                    tempUnitIds.Clear();
+                    tempUnitIds.Add(bestId);
+                    Issue(new ConstructBuildingCommand(playerId, tempUnitIds.ToArray(), b.Id));
+                }
+            }
+        }
+
+        // "Stop production": clear matching training queues now (refunding their cost) and pause
+        // new production for `untilTick`. scope 0=all, 1=military buildings, 2=Town Centers/villagers.
+        private void StopProduction(int scope, int untilTick)
+        {
+            bool doMilitary = scope == 0 || scope == 1;
+            bool doVillagers = scope == 0 || scope == 2;
+
+            for (int i = 0; i < cachedMyBuildings.Count; i++)
+            {
+                var b = cachedMyBuildings[i];
+                if (b.IsDestroyed) continue;
+                bool isTc = b.Type == BuildingType.TownCenter;
+                bool isMil = b.Type == BuildingType.Barracks || b.Type == BuildingType.ArcheryRange
+                          || b.Type == BuildingType.Stables || b.Type == BuildingType.Monastery
+                          || b.Type == BuildingType.SiegeWorkshop;
+                if (isTc && !doVillagers) continue;
+                if (isMil && !doMilitary) continue;
+                if (!isTc && !isMil) continue;
+
+                // Cancel every queued item (back-to-front so indices stay valid as the sim processes them).
+                for (int j = b.TrainingQueue.Count - 1; j >= 0; j--)
+                    Issue(new CancelTrainCommand(playerId, b.Id, j));
+
+                // Turn off TC auto-produce so it doesn't immediately re-queue a villager.
+                if (isTc && doVillagers && b.AutoProduceVillagers)
+                    Issue(new ToggleAutoProduceCommand(playerId, b.Id, false));
+            }
+
+            if (doMilitary) militaryPausedUntilTick = untilTick;
+            if (doVillagers) villagerPausedUntilTick = untilTick;
+            LlmDebug.Cmd($"AI{playerId} stop production (scope {scope}) until tick {untilTick}");
+        }
+
         // Build a house only if, even after the houses ALREADY under construction finish, we'd
         // still be within 3 of the cap. This builds ~3 pop early (so we don't stall at the cap)
         // without stacking multiple redundant houses while one is mid-construction.
@@ -2443,6 +2612,94 @@ namespace OpenEmpires
                     return cachedMyBuildings[i];
             }
             return null;
+        }
+
+        private static BuildingType ResourceDropoffType(ResourceType type)
+        {
+            switch (type)
+            {
+                case ResourceType.Food: return BuildingType.Mill;
+                case ResourceType.Wood: return BuildingType.LumberYard;
+                default: return BuildingType.Mine; // Gold / Stone
+            }
+        }
+
+        // Tile-distance² from a node to the nearest COMPLETE deposit for the resource (its
+        // dedicated drop-off OR a Town Center). int.MaxValue if none — i.e. nowhere to deposit.
+        private int NodeToDropoffDistSq(int nodeTileX, int nodeTileZ, BuildingType dropType)
+        {
+            int best = int.MaxValue;
+            for (int i = 0; i < cachedMyBuildings.Count; i++)
+            {
+                var b = cachedMyBuildings[i];
+                if (b.IsDestroyed || b.IsUnderConstruction) continue;
+                if (b.Type != dropType && b.Type != BuildingType.TownCenter) continue;
+                int dx = b.OriginTileX - nodeTileX;
+                int dz = b.OriginTileZ - nodeTileZ;
+                int dSq = dx * dx + dz * dz;
+                if (dSq < best) best = dSq;
+            }
+            return best;
+        }
+
+        // Pick a resource node that minimizes walking: starting walk (villager→node) plus the
+        // repeated deposit trip (node→drop-off), the latter weighted heavily since it happens
+        // every carry. maxDropoffTiles>0 hard-rejects nodes with no drop-off within that range
+        // (used to forbid far-from-lumber-yard wood). Returns null if nothing qualifies.
+        private ResourceNodeData FindGatherNode(ResourceType type, FixedVector3 villagerPos, int maxDropoffTiles, HashSet<int> claimedFarmIds)
+        {
+            int ox = villagerPos.x.Raw >> Fixed32.FractionalBits;
+            int oz = villagerPos.z.Raw >> Fixed32.FractionalBits;
+            BuildingType dropType = ResourceDropoffType(type);
+            int maxDropSq = maxDropoffTiles > 0 ? maxDropoffTiles * maxDropoffTiles : int.MaxValue;
+            const int maxSearchSq = 80 * 80;
+
+            ResourceNodeData best = null;
+            long bestScore = long.MaxValue;
+            var nodes = sim.MapData.GetAllResourceNodes();
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                var n = nodes[i];
+                if (n.Type != type || n.IsDepleted) continue;
+                if (n.IsFarmNode)
+                {
+                    if (claimedFarmIds != null && claimedFarmIds.Contains(n.Id)) continue;
+                    if (sim.IsFarmNodeOccupiedByAny(n.Id)) continue;
+                }
+                int vdx = n.TileX - ox, vdz = n.TileZ - oz;
+                int vDistSq = vdx * vdx + vdz * vdz;
+                if (vDistSq > maxSearchSq) continue;
+
+                int dropSq = NodeToDropoffDistSq(n.TileX, n.TileZ, dropType);
+                if (maxDropoffTiles > 0 && dropSq > maxDropSq) continue; // hard rule (wood)
+
+                long depositPenalty = dropSq == int.MaxValue ? 1_000_000 : dropSq;
+                long score = vDistSq + 4L * depositPenalty; // deposit trips repeat → weight them more
+                if (score < bestScore) { bestScore = score; best = n; }
+            }
+            return best;
+        }
+
+        // When the bot wants wood but none is within reach of a deposit, place a lumber yard next
+        // to the nearest wood so wood becomes gatherable (and doesn't permanently stall).
+        private void EnsureWoodDropoff(int currentTick)
+        {
+            var resources = sim.ResourceManager.GetPlayerResources(playerId);
+            if (resources.Wood < sim.Config.LumberYardWoodCost) return;
+
+            var woodNode = FindNearestResourceNode(sim.MapData.TileToWorldFixed(baseTileX, baseTileZ), ResourceType.Wood);
+            if (woodNode == null) return;
+
+            // Already have (or are building) a lumber yard / TC within 5 tiles of that wood? Then wait.
+            for (int i = 0; i < cachedMyBuildings.Count; i++)
+            {
+                var b = cachedMyBuildings[i];
+                if (b.IsDestroyed) continue;
+                if (b.Type != BuildingType.LumberYard && b.Type != BuildingType.TownCenter) continue;
+                int dx = b.OriginTileX - woodNode.TileX, dz = b.OriginTileZ - woodNode.TileZ;
+                if (dx * dx + dz * dz <= 5 * 5) return;
+            }
+            TryPlaceBuilding(BuildingType.LumberYard, woodNode.TileX, woodNode.TileZ, currentTick, ref pendingLumberYardTick);
         }
 
         private ResourceNodeData FindNearestResourceNode(FixedVector3 pos, ResourceType type, bool excludeFarms = false, HashSet<int> claimedFarmIds = null)
@@ -2794,6 +3051,105 @@ namespace OpenEmpires
             CreateDetachment(2, 33, target.Value, currentTick + 45 * 30); // cavalry ~third, 45s raid
             lastAutoSplitTick = currentTick;
             LlmDebug.Cmd($"AI{playerId} autonomous raid: split cavalry to harass enemy");
+        }
+
+        // Counter-class of a unit for reactive assessment: 1=archer-line, 2=cavalry-line,
+        // 3=spear-line (each includes its Age-3/civ upgrade), 0=non-counter (scout/monk/etc).
+        private static int ReactiveClassOf(UnitData u)
+        {
+            switch (u.UnitType)
+            {
+                case 1: case 6: case 12: return 3; // spearman, man-at-arms, landsknecht
+                case 2: case 8: case 10: return 1; // archer, crossbowman, longbowman
+                case 3: case 7: case 11: return 2; // horseman, knight, gendarme
+                default: return 0;
+            }
+        }
+
+        // When the army is engaged in the field, decide fight-or-retreat by unit counters and
+        // numbers, and flag counter-production. Reuses the self-"ping" attack pipeline (Fight) and
+        // the retreat path. Deterministic; respects explicit human/LLM orders.
+        private void TickReactiveCombat(int currentTick)
+        {
+            if (combatState == CombatState.Defending) return;       // base defense already owns it
+            if (currentTick < combatHoldUntilTick) return;          // defend/regroup/retreat hold (human or our own)
+            if (currentTick < commandedAttackUntilTick) return;     // explicit attack order in effect
+
+            GetUndetachedCombatUnits(tempCombatUnits);
+            int myCount = tempCombatUnits.Count;
+            if (myCount == 0) { reactiveMode = ReactiveMode.None; return; }
+
+            long msx = 0, msz = 0;
+            int mArcher = 0, mCav = 0, mSpear = 0;
+            for (int i = 0; i < tempCombatUnits.Count; i++)
+            {
+                var u = tempCombatUnits[i];
+                msx += u.SimPosition.x.Raw >> Fixed32.FractionalBits;
+                msz += u.SimPosition.z.Raw >> Fixed32.FractionalBits;
+                switch (ReactiveClassOf(u)) { case 1: mArcher++; break; case 2: mCav++; break; case 3: mSpear++; break; }
+            }
+            int cx = (int)(msx / myCount), cz = (int)(msz / myCount);
+
+            long esx = 0, esz = 0;
+            int eArcher = 0, eCav = 0, eSpear = 0, eCount = 0;
+            var all = sim.UnitRegistry.GetAllUnits();
+            for (int i = 0; i < all.Count; i++)
+            {
+                var u = all[i];
+                if (u.State == UnitState.Dead) continue;
+                if (u.PlayerId == playerId || sim.AreAllies(u.PlayerId, playerId)) continue;
+                if (u.UnitType == 0 || u.UnitType == 4 || u.IsSheep) continue; // skip villagers/scouts/sheep
+                int dx = (u.SimPosition.x.Raw >> Fixed32.FractionalBits) - cx;
+                int dz = (u.SimPosition.z.Raw >> Fixed32.FractionalBits) - cz;
+                if (dx * dx + dz * dz > ReactiveEngageRadiusSq) continue;
+                eCount++;
+                esx += u.SimPosition.x.Raw >> Fixed32.FractionalBits;
+                esz += u.SimPosition.z.Raw >> Fixed32.FractionalBits;
+                switch (ReactiveClassOf(u)) { case 1: eArcher++; break; case 2: eCav++; break; case 3: eSpear++; break; }
+            }
+
+            if (eCount == 0) { reactiveMode = ReactiveMode.None; return; } // not engaged
+
+            // Engaged → produce counters (all difficulties) while this window lasts.
+            reactiveCounterUntilTick = currentTick + ReactiveCounterWindowTicks;
+
+            // Enemy dominant counter class (1=archer, 2=cav, 3=spear) and my counter-weighted strength.
+            int d = (eCav >= eArcher && eCav >= eSpear) ? 2 : (eArcher >= eSpear ? 1 : 3);
+            int strong, weak;
+            switch (d)
+            {
+                case 1: strong = mCav;    weak = mSpear;  break; // enemy archers → my cavalry strong, spears weak
+                case 2: strong = mSpear;  weak = mArcher; break; // enemy cavalry → my spears strong, archers weak
+                default: strong = mArcher; weak = mCav;   break; // enemy spears → my archers strong, cav weak
+            }
+            int myEff = myCount * 10 + strong * 5 - weak * 5;
+            int enEff = eCount * 10;
+
+            bool fight;
+            if (myEff >= enEff) fight = true;
+            else if (enEff * 10 > myEff * 12) fight = false;          // outmatched by >20% → retreat
+            else fight = reactiveMode != ReactiveMode.Retreating;     // hysteresis: don't flip-flop
+
+            if (fight)
+            {
+                int ecx = (int)(esx / eCount), ecz = (int)(esz / eCount);
+                if (reactiveMode != ReactiveMode.Fighting) { ClearDetachments(); RecordEvent(EvEngaged, eCount, currentTick); } // consolidate + log on first commit
+                pingAttackTarget = sim.MapData.TileToWorldFixed(ecx, ecz);
+                pingAttackUntilTick = currentTick + ReactiveWindowTicks;
+                pingAttackUnitClass = 0; // whole army
+                if (combatState == CombatState.Building) combatState = CombatState.Assembling;
+                reactiveMode = ReactiveMode.Fighting;
+            }
+            else if (reactiveMode != ReactiveMode.Retreating)
+            {
+                MoveAllCombatTo(sim.MapData.TileToWorldFixed(baseTileX, baseTileZ));
+                combatState = CombatState.Retreating;
+                retreatCooldownEnd = currentTick + retreatCooldownTicks;
+                combatHoldUntilTick = currentTick + ReactiveWindowTicks; // hold at base while reinforcing
+                reactiveMode = ReactiveMode.Retreating;
+                RecordEvent(EvRetreating, eCount, currentTick);
+                LlmDebug.Cmd($"AI{playerId} reactive retreat: outmatched (my {myCount} vs enemy {eCount}, enemy class {d})");
+            }
         }
 
         private void IssueResearch(TechnologyType tech)

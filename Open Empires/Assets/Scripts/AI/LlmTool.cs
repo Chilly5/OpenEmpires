@@ -61,6 +61,8 @@ namespace OpenEmpires
             sb.Append("- You can target villagers by what they're CURRENTLY doing via `from` ");
             sb.Append("(e.g. \"move your berry gatherers to wood\" → gather_villagers resource=Wood, from=berries). ");
             sb.Append("Check the 'Gatherers:' line in the game state to see how many are on each resource.\n");
+            sb.Append("- The 'Queues:' line shows what you currently have in production. If the teammate asks you to ");
+            sb.Append("stop/halt/clear production, call stop_production (it cancels the queue and pauses making units).\n");
             sb.Append("- If you are unsure of the current situation, call query_game_state first to read fresh numbers, ");
             sb.Append("then decide.\n");
             sb.Append("- For positions, pick from the provided keyword lists; never invent coordinates.\n");
@@ -232,6 +234,14 @@ namespace OpenEmpires
                         IntProp("count", "How many villagers to send (1-10, default 2).", false)),
                     "[]"),
 
+                Decl("stop_production",
+                    "Clear training queues and STOP producing units. Use when the teammate says stop/halt/cancel " +
+                    "production or 'stop making units/villagers'. Refunds queued units. Production stays paused until " +
+                    "you give a new production order (train_units, set_production_mix, focus_economy/military).",
+                    Props(
+                        EnumProp("what", "Which production to stop (default all).", "\"all\",\"military\",\"villagers\"", false)),
+                    "[]"),
+
                 Decl("set_gather_targets",
                     "Set the EXACT number of villagers gathering each resource. Use for precise economy balance. " +
                     "Omit (or -1) a resource to leave it on autopilot.",
@@ -318,6 +328,7 @@ namespace OpenEmpires
                 case "protect_villagers":   return DoProtectVillagers(args, sim, aiPlayerId);
                 case "repair_building":     return DoRepairBuilding(args, sim, aiPlayerId);
                 case "set_gather_targets":  return DoSetGatherTargets(args);
+                case "stop_production":     return DoStopProduction(args);
                 case "set_aggression":      return DoAggression(args);
                 case "prioritize_resource": return DoPrioritizeResource(args);
                 case "focus_economy":       return DoFocus(args, AiIntentKind.FocusEconomy, 60, "booming the economy");
@@ -466,6 +477,19 @@ namespace OpenEmpires
                 case LlmIntentSchema.VillagerSourceStone:   return "stone miners";
                 default: return "villagers";
             }
+        }
+
+        private static ToolResult DoStopProduction(JsonValue args)
+        {
+            int scope = LlmIntentSchema.ParseProductionScope(args["what"].AsString("all"));
+            var intent = new LlmIntentSchema.ParsedIntent
+            {
+                Kind = AiIntentKind.StopProduction,
+                ParamA = scope,
+                DurationTicks = LlmIntentSchema.MaxDurationTicks, // pause until a new production order
+            };
+            string what = scope == 1 ? "military production" : scope == 2 ? "villager production" : "all production";
+            return ToolResult.Action(intent, $"Halting {what} and clearing the queue.");
         }
 
         private static ToolResult DoSetGatherTargets(JsonValue args)

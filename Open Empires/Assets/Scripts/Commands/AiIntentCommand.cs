@@ -39,6 +39,7 @@ namespace OpenEmpires
         ProtectVillagers   = 19, // ParamA/B = Fixed32 raw safe pos, ParamC = packed source*1000+count (count 0 = all) — garrison in TC (fallback: move to pos)
         RepairBuilding     = 20, // ParamA/B = Fixed32 raw worldX/worldZ (near), ParamC = packed source*1000+count, ParamD = BuildingType (0 = any damaged)
         SetGatherTargets   = 21, // ParamA/B/C/D = absolute gatherer targets food/wood/gold/stone (-1 = leave to default)
+        StopProduction     = 22, // ParamA = scope (0=all, 1=military, 2=villagers) — clears matching training queues and pauses new production for DurationTicks
     }
 
     public struct AiIntentCommand : ICommand
