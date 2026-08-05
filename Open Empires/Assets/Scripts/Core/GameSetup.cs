@@ -725,6 +725,77 @@ namespace OpenEmpires
             return positions;
         }
 
+        /// <summary>
+        /// Builds a grouped formation centered on a locked destination and oriented toward facingDirection.
+        /// Earlier groups occupy the front rows; later groups are placed behind them.
+        /// </summary>
+        public static List<Vector3> ComputeGroupedFacingFormation(
+            Vector3 center, Vector3 facingDirection, int[] groupSizes,
+            float columnSpacing = 1.0f, float rowSpacing = 1.2f)
+        {
+            int totalUnits = 0;
+            int maxGroupSize = 0;
+            for (int g = 0; g < groupSizes.Length; g++)
+            {
+                totalUnits += groupSizes[g];
+                if (groupSizes[g] > maxGroupSize) maxGroupSize = groupSizes[g];
+            }
+
+            var positions = new List<Vector3>(totalUnits);
+            if (totalUnits <= 0) return positions;
+
+            facingDirection.y = 0f;
+            if (facingDirection.sqrMagnitude < 0.001f)
+                facingDirection = Vector3.forward;
+            else
+                facingDirection.Normalize();
+
+            if (totalUnits == 1)
+            {
+                positions.Add(center);
+                return positions;
+            }
+
+            Vector3 rightDirection = new Vector3(facingDirection.z, 0f, -facingDirection.x);
+            int numCols = Mathf.Max(1,
+                Mathf.Min(maxGroupSize, Mathf.CeilToInt(Mathf.Sqrt(totalUnits))));
+
+            int currentRow = 0;
+            for (int g = 0; g < groupSizes.Length; g++)
+            {
+                int groupCount = groupSizes[g];
+                if (groupCount <= 0) continue;
+
+                int groupRows = Mathf.CeilToInt((float)groupCount / numCols);
+                for (int i = 0; i < groupCount; i++)
+                {
+                    int col = i % numCols;
+                    int localRow = i / numCols;
+                    int rowStart = localRow * numCols;
+                    int rowUnits = Mathf.Min(numCols, groupCount - rowStart);
+                    float lateralOffset = (col - (rowUnits - 1) * 0.5f) * columnSpacing;
+                    float depthOffset = -(currentRow + localRow) * rowSpacing;
+                    positions.Add(center
+                        + rightDirection * lateralOffset
+                        + facingDirection * depthOffset);
+                }
+
+                currentRow += groupRows;
+            }
+
+            // Keep the requested destination at the formation centroid, regardless of row count.
+            Vector3 centroid = Vector3.zero;
+            for (int i = 0; i < positions.Count; i++)
+                centroid += positions[i];
+            centroid /= positions.Count;
+
+            Vector3 centerCorrection = center - centroid;
+            for (int i = 0; i < positions.Count; i++)
+                positions[i] += centerCorrection;
+
+            return positions;
+        }
+
         public static List<Vector3> ComputeLineFormation(Vector3 lineStart, Vector3 lineEnd, int unitCount, float rowSpacing = 1.2f)
         {
             var positions = new List<Vector3>(unitCount);
@@ -839,6 +910,15 @@ namespace OpenEmpires
             for (int i = 0; i < positions.Count; i++)
                 center += positions[i];
             center /= positions.Count;
+
+            ScaleFormationByRadius(positions, groupSizes, groupRadii, standardRadius, center);
+        }
+
+        public static void ScaleFormationByRadius(
+            List<Vector3> positions, int[] groupSizes, float[] groupRadii,
+            float standardRadius, Vector3 center)
+        {
+            if (positions.Count == 0) return;
 
             int posIdx = 0;
             for (int g = 0; g < groupSizes.Length; g++)

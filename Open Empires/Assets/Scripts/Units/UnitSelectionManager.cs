@@ -618,23 +618,19 @@ namespace OpenEmpires
                     if (Physics.Raycast(ray, out RaycastHit hit, 1000f, groundLayer))
                     {
                         var groupSizes = GetFormationGroupSizes();
-                        var sim = GameBootstrapper.Instance?.Simulation;
-                        Vector3 snappedHit = sim != null ? GameSetup.SnapClickToNearestWalkable(sim.MapData, hit.point) : hit.point;
-                        var positions = GameSetup.ComputeGroupedLineFormation(
-                            rightDragStartWorld, snappedHit, groupSizes);
-                        if (sim != null) GameSetup.SnapToWalkable(sim.MapData, positions);
-                        GameSetup.ScaleFormationByRadius(positions, groupSizes, GetFormationGroupRadii(), sim != null ? sim.Config.UnitRadius : 0.4f);
-                        gameSetup.PreviewMarkers(positions);
-
-                        // Show facing direction arrow
-                        Vector3 dragDir = hit.point - rightDragStartWorld;
-                        dragDir.y = 0f;
-                        if (dragDir.sqrMagnitude > 0.001f)
+                        if (TryComputeRightDragFormation(hit.point, groupSizes,
+                            out var positions, out Vector3 facingDir))
                         {
-                            dragDir.Normalize();
-                            Vector3 facingDir = new Vector3(-dragDir.z, 0f, dragDir.x);
-                            Vector3 center = (rightDragStartWorld + hit.point) * 0.5f;
-                            gameSetup.ShowFacingArrow(center, facingDir);
+                            var sim = GameBootstrapper.Instance?.Simulation;
+                            if (sim != null)
+                            {
+                                GameSetup.SnapToWalkable(sim.MapData, positions);
+                                GameSetup.ScaleFormationByRadius(
+                                    positions, groupSizes, GetFormationGroupRadii(),
+                                    sim.Config.UnitRadius, rightDragStartWorld);
+                            }
+                            gameSetup.PreviewMarkers(positions);
+                            gameSetup.ShowFacingArrow(rightDragStartWorld, facingDir);
                         }
                     }
                 }
@@ -2412,7 +2408,12 @@ namespace OpenEmpires
             // Record the world position where right-click started
             Ray ray = mainCamera.ScreenPointToRay(currentMousePos);
             if (Physics.Raycast(ray, out RaycastHit hit, 1000f, groundLayer))
-                rightDragStartWorld = hit.point;
+            {
+                var sim = GameBootstrapper.Instance?.Simulation;
+                rightDragStartWorld = sim != null
+                    ? GameSetup.SnapClickToNearestWalkable(sim.MapData, hit.point)
+                    : hit.point;
+            }
         }
 
         private void OnCommandReleased(InputAction.CallbackContext ctx)
@@ -2833,36 +2834,23 @@ namespace OpenEmpires
 
             if (isRightDragging)
             {
-                // Formation drag — use grouped line formation (each type gets own rows)
+                // Formation drag — keep the press position fixed and use the drag to choose facing.
                 if (Physics.Raycast(ray, out RaycastHit groundHit, 1000f, groundLayer))
                 {
                     int[] unitIds = GetFormationSortedUnitIds(out int[] groupSizes);
-                    Vector3 snappedHit = GameSetup.SnapClickToNearestWalkable(sim.MapData, groundHit.point);
-                    var positions = GameSetup.ComputeGroupedLineFormation(
-                        rightDragStartWorld, snappedHit, groupSizes);
-                    GameSetup.SnapToWalkable(sim.MapData, positions);
-                    Vector3 center = (rightDragStartWorld + groundHit.point) * 0.5f;
-                    // Convert float positions to FixedVector3 at the command boundary
-                    FixedVector3 fixedCenter = FixedVector3.FromVector3(center);
-                    FixedVector3[] fixedPositions = ConvertToFixed(positions);
-                    // Compute facing direction perpendicular to drag vector
-                    Vector3 dragDir = groundHit.point - rightDragStartWorld;
-                    dragDir.y = 0f;
-                    MoveCommand dragCmd;
-                    if (dragDir.sqrMagnitude > 0.001f)
+                    if (TryComputeRightDragFormation(groundHit.point, groupSizes,
+                        out var positions, out Vector3 facingDir))
                     {
-                        dragDir.Normalize();
-                        Vector3 facingDir = new Vector3(-dragDir.z, 0f, dragDir.x);
+                        GameSetup.SnapToWalkable(sim.MapData, positions);
+                        FixedVector3 fixedCenter = FixedVector3.FromVector3(rightDragStartWorld);
+                        FixedVector3[] fixedPositions = ConvertToFixed(positions);
                         FixedVector3 fixedFacing = FixedVector3.FromVector3(facingDir);
-                        dragCmd = new MoveCommand(LocalPlayerId, unitIds, fixedCenter, fixedPositions, fixedFacing);
+                        var dragCmd = new MoveCommand(
+                            LocalPlayerId, unitIds, fixedCenter, fixedPositions, fixedFacing);
+                        dragCmd.IsQueued = multiSelectHeld;
+                        sim.CommandBuffer.EnqueueCommand(dragCmd);
+                        SFXManager.Instance?.PlayUI(SFXType.CommandMove, 0.5f);
                     }
-                    else
-                    {
-                        dragCmd = new MoveCommand(LocalPlayerId, unitIds, fixedCenter, fixedPositions);
-                    }
-                    dragCmd.IsQueued = multiSelectHeld;
-                    sim.CommandBuffer.EnqueueCommand(dragCmd);
-                    SFXManager.Instance?.PlayUI(SFXType.CommandMove, 0.5f);
                 }
 
                 // Transition preview markers to fading and hide arrow
@@ -3501,6 +3489,24 @@ namespace OpenEmpires
                 case 2: return 3; // Archer — back
                 default: return 2;
             }
+        }
+
+        private bool TryComputeRightDragFormation(
+            Vector3 cursorWorld, int[] groupSizes,
+            out List<Vector3> positions, out Vector3 facingDirection)
+        {
+            facingDirection = cursorWorld - rightDragStartWorld;
+            facingDirection.y = 0f;
+            if (facingDirection.sqrMagnitude < 0.001f)
+            {
+                positions = null;
+                return false;
+            }
+
+            facingDirection.Normalize();
+            positions = GameSetup.ComputeGroupedFacingFormation(
+                rightDragStartWorld, facingDirection, groupSizes);
+            return true;
         }
 
         private Vector3 GetSelectedUnitCenter()
