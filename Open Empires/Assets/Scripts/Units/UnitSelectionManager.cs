@@ -33,6 +33,7 @@ namespace OpenEmpires
         [SerializeField] private LayerMask buildingLayer;
         [SerializeField] private GameSetup gameSetup;
         [SerializeField] private float dragThreshold = 100f;
+        [SerializeField] private float rightDragThreshold = 12f;
 
         private RTSInputActions inputActions;
         private Camera mainCamera;
@@ -79,7 +80,6 @@ namespace OpenEmpires
         private bool isRightDragging;
         private Vector2 rightDragStartScreen;
         private Vector3 rightDragStartWorld;
-        private float rightClickDownTime;
 
         // Attack-move mode
         private bool attackMoveMode;
@@ -607,8 +607,7 @@ namespace OpenEmpires
             {
                 if (!isRightDragging)
                 {
-                    float holdTime = Time.unscaledTime - rightClickDownTime;
-                    if (holdTime > 0.18f && Vector2.Distance(rightDragStartScreen, currentMousePos) > dragThreshold)
+                    if (Vector2.Distance(rightDragStartScreen, currentMousePos) > rightDragThreshold)
                         isRightDragging = true;
                 }
 
@@ -2403,7 +2402,6 @@ namespace OpenEmpires
             commandHeld = true;
             isRightDragging = false;
             rightDragStartScreen = currentMousePos;
-            rightClickDownTime = Time.unscaledTime;
 
             // Record the world position where right-click started
             Ray ray = mainCamera.ScreenPointToRay(currentMousePos);
