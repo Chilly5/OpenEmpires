@@ -66,6 +66,7 @@ namespace OpenEmpires
         private Vector3 attackDashDir;
         private const float AttackDashDuration = 0.18f;
         private const float AttackDashDistance = 0.05f;
+        private UnitAttackVisualAnimator attackVisualAnimator;
 
         // Damage flinch
         private int lastSeenDamageTick;
@@ -220,6 +221,8 @@ namespace OpenEmpires
             if (facing.sqrMagnitude > 0.0001f)
                 transform.rotation = Quaternion.LookRotation(facing);
 
+            attackVisualAnimator = new UnitAttackVisualAnimator(transform, selectionRing, UnitType, unitData);
+
             CreateWaypointLine();
             CreateIdleZzzEffect();
             CreateDepositIndicatorPool();
@@ -235,8 +238,8 @@ namespace OpenEmpires
             if (UnitType == 9) // Monk — match standard unit height
             {
                 healthBarYOffset = HealthBarYOffset;
-                leftArm = transform.Find("LeftArm");
-                rightArm = transform.Find("RightArm");
+                leftArm = attackVisualAnimator.FindVisual("LeftArm");
+                rightArm = attackVisualAnimator.FindVisual("RightArm");
                 if (leftArm != null) leftArmRestRotation = leftArm.localRotation;
                 if (rightArm != null) rightArmRestRotation = rightArm.localRotation;
             }
@@ -319,7 +322,7 @@ namespace OpenEmpires
         {
             var containerObj = new GameObject("ResourceStack");
             resourceStackContainer = containerObj.transform;
-            resourceStackContainer.SetParent(transform, false);
+            resourceStackContainer.SetParent(attackVisualAnimator?.AttachmentRoot ?? transform, false);
             resourceStackContainer.localPosition = new Vector3(0f, 0.45f, -0.25f);
 
             resourceStackItems = new GameObject[ResourceStackMaxItems];
@@ -1059,11 +1062,14 @@ namespace OpenEmpires
             if (cachedMapData != null)
                 smoothedBasePos.y = cachedMapData.SampleHeight(smoothedBasePos.x, smoothedBasePos.z) * cachedHeightScale;
 
-            // Detect new attack — apply dash
+            // Detect new attack and trigger the matching view animation.
             if (unitData.LastAttackTick > lastSeenAttackTick && unitData.LastAttackTick > 0)
             {
                 lastSeenAttackTick = unitData.LastAttackTick;
-                attackDashTimer = AttackDashDuration;
+                if (attackVisualAnimator.HasAttackMotion)
+                    attackVisualAnimator.PlayAttack(attackVisualAnimator.WasCharging);
+                else
+                    attackDashTimer = AttackDashDuration;
                 Vector3 toTarget = unitData.LastAttackTargetPos.ToVector3() - smoothedBasePos;
                 toTarget.y = 0f;
                 attackDashDir = toTarget.sqrMagnitude > 0.001f ? toTarget.normalized : transform.forward;
@@ -1209,6 +1215,8 @@ namespace OpenEmpires
                     }
                 }
             }
+
+            attackVisualAnimator.UpdateAnimation(unitData, Time.deltaTime);
 
             UpdateWaypointLine();
             UpdateIdleEffect();
@@ -1496,6 +1504,7 @@ namespace OpenEmpires
         {
             if (IsDead) return;
             IsDead = true;
+            attackVisualAnimator?.ResetPose();
 
             if (healthBarRoot != null)
             {
