@@ -76,8 +76,8 @@ namespace OpenEmpires
         private void OnFullscreenEntered(string unused)
         {
             IsFullscreen = true;
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
 
         // Called from jslib via SendMessage
@@ -92,8 +92,8 @@ namespace OpenEmpires
             if (state == "1")
             {
                 IsFullscreen = true;
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
             }
             else
             {
@@ -104,15 +104,6 @@ namespace OpenEmpires
             }
         }
 
-        private void Update()
-        {
-            // Detect pointer lock loss (user pressed Escape once).
-            if (IsFullscreen && Cursor.lockState != CursorLockMode.Locked)
-            {
-                IsFullscreen = false;
-                Cursor.visible = true;
-            }
-        }
 #else
         private void Update()
         {

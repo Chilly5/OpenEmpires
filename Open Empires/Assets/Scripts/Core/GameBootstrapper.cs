@@ -136,14 +136,6 @@ namespace OpenEmpires
                     Simulation.OnMatchEnded += HandleSinglePlayerMatchEnded;
                 }
 
-#if UNITY_WEBGL && !UNITY_EDITOR
-                // If we're already fullscreen (e.g. multiplayer queue), engage pointer lock now
-                if (FullscreenManager.Instance != null && FullscreenManager.Instance.IsFullscreen)
-                {
-                    Cursor.lockState = CursorLockMode.Locked;
-                    Cursor.visible = false;
-                }
-#endif
             }
 
             if (!teamsApplied && networkManager != null && networkManager.IsMultiplayer
