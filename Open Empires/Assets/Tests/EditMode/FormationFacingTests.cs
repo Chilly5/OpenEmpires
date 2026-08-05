@@ -72,5 +72,62 @@ namespace OpenEmpires.Tests
             Assert.That(unit.SimFacing.x.Raw, Is.EqualTo(0));
             Assert.That(unit.SimFacing.z.ToFloat(), Is.EqualTo(-1f).Within(0.0001f));
         }
+
+        [Test]
+        public void SingleUnitFacingMove_UsesUnitSpeedAndAdvances()
+        {
+            SimulationConfig config = ScriptableObject.CreateInstance<SimulationConfig>();
+            try
+            {
+                var simulation = new GameSimulation(
+                    config, 2, new[] { 0, 1 }, new int[0]);
+                FindAdjacentWalkableTiles(simulation.MapData,
+                    out Vector2Int startTile, out Vector2Int targetTile);
+
+                FixedVector3 start = simulation.MapData.TileToWorldFixed(startTile.x, startTile.y);
+                FixedVector3 target = simulation.MapData.TileToWorldFixed(targetTile.x, targetTile.y);
+                UnitData unit = simulation.UnitRegistry.CreateUnit(
+                    0, start, Fixed32.FromFloat(2f), Fixed32.FromFloat(0.4f), Fixed32.One);
+                unit.MaxHealth = 1;
+                unit.CurrentHealth = 1;
+
+                var command = new MoveCommand(
+                    0,
+                    new[] { unit.Id },
+                    target,
+                    new[] { target },
+                    new FixedVector3(Fixed32.One, Fixed32.Zero, Fixed32.Zero));
+
+                simulation.Tick(new List<ICommand> { command });
+
+                Assert.That(unit.FormationMoveSpeed, Is.EqualTo(unit.MoveSpeed));
+                Assert.That(unit.SimPosition, Is.Not.EqualTo(start));
+            }
+            finally
+            {
+                Object.DestroyImmediate(config);
+            }
+        }
+
+        private static void FindAdjacentWalkableTiles(
+            MapData map, out Vector2Int start, out Vector2Int target)
+        {
+            for (int z = 0; z < map.Height; z++)
+            {
+                for (int x = 0; x < map.Width - 1; x++)
+                {
+                    if (map.IsWalkable(x, z) && map.IsWalkable(x + 1, z))
+                    {
+                        start = new Vector2Int(x, z);
+                        target = new Vector2Int(x + 1, z);
+                        return;
+                    }
+                }
+            }
+
+            Assert.Fail("Generated map did not contain adjacent walkable tiles.");
+            start = default;
+            target = default;
+        }
     }
 }

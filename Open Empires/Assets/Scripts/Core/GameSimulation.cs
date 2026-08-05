@@ -2817,7 +2817,7 @@ namespace OpenEmpires
             bool isFormationMove = (cmd.FormationPositions != null && cmd.HasFacing && !cmd.IsQueued)
                                 || cmd.PreserveFormation;
             int unitCount = cmd.UnitIds.Length;
-            if (isFormationMove && unitCount > 1)
+            if (isFormationMove && unitCount > 0)
             {
                 bool first = true;
                 for (int i = 0; i < unitCount; i++)
