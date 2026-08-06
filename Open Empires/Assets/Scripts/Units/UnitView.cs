@@ -950,8 +950,10 @@ namespace OpenEmpires
 
             bool hasQueue = unitData.HasQueuedCommands;
             bool hasPath = unitData.HasPath;
+            var selectionManager = UnitSelectionManager.Instance;
+            bool shouldShowForSelection = selectionManager == null || selectionManager.ShouldShowWaypointFor(this);
 
-            if (!isSelected || (!hasQueue && !hasPath))
+            if (!isSelected || !shouldShowForSelection || (!hasQueue && !hasPath))
             {
                 if (waypointLine.gameObject.activeSelf)
                     waypointLine.gameObject.SetActive(false);

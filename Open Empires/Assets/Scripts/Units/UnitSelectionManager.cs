@@ -44,6 +44,10 @@ namespace OpenEmpires
 
         private List<UnitView> selectedUnits = new List<UnitView>();
         private Dictionary<int, UnitView> unitViews = new Dictionary<int, UnitView>();
+        private int waypointRepresentativeFrame = -1;
+        private int waypointSelectionSignature;
+        private int waypointSelectionCount = -1;
+        private UnitView waypointRepresentative;
 
         private List<BuildingView> selectedBuildings = new List<BuildingView>();
         private Dictionary<int, BuildingView> buildingViews = new Dictionary<int, BuildingView>();
@@ -224,6 +228,68 @@ namespace OpenEmpires
 
         public IReadOnlyList<UnitView> SelectedUnits => selectedUnits;
         public UnitView HoveredUnit => hoveredUnit;
+
+        internal bool ShouldShowWaypointFor(UnitView view)
+        {
+            if (view == null || !view.IsSelected) return false;
+
+            RefreshWaypointRepresentative();
+            return waypointRepresentative == view;
+        }
+
+        private void RefreshWaypointRepresentative()
+        {
+            if (waypointRepresentativeFrame == Time.frameCount) return;
+
+            waypointRepresentativeFrame = Time.frameCount;
+
+            Vector3 centroid = Vector3.zero;
+            int selectedCount = 0;
+            int selectionSignature = 17;
+            for (int i = 0; i < selectedUnits.Count; i++)
+            {
+                UnitView unit = selectedUnits[i];
+                if (unit == null || unit.IsDead || !unit.IsSelected) continue;
+
+                centroid += unit.transform.position;
+                selectedCount++;
+                unchecked
+                {
+                    selectionSignature = selectionSignature * 31 + unit.UnitId;
+                }
+            }
+
+            bool representativeIsValid = waypointRepresentative != null &&
+                !waypointRepresentative.IsDead && waypointRepresentative.IsSelected;
+            if (representativeIsValid && selectedCount == waypointSelectionCount &&
+                selectionSignature == waypointSelectionSignature)
+                return;
+
+            waypointSelectionCount = selectedCount;
+            waypointSelectionSignature = selectionSignature;
+            waypointRepresentative = null;
+
+            if (selectedCount == 0) return;
+            centroid /= selectedCount;
+
+            float bestDistance = float.MaxValue;
+            int bestUnitId = int.MaxValue;
+            for (int i = 0; i < selectedUnits.Count; i++)
+            {
+                UnitView unit = selectedUnits[i];
+                if (unit == null || unit.IsDead || !unit.IsSelected) continue;
+
+                Vector3 offset = unit.transform.position - centroid;
+                float distance = offset.x * offset.x + offset.z * offset.z;
+                if (distance < bestDistance ||
+                    (Mathf.Approximately(distance, bestDistance) && unit.UnitId < bestUnitId))
+                {
+                    bestDistance = distance;
+                    bestUnitId = unit.UnitId;
+                    waypointRepresentative = unit;
+                }
+            }
+        }
 
         private void Awake()
         {
