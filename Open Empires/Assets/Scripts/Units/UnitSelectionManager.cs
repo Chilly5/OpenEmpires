@@ -199,6 +199,7 @@ namespace OpenEmpires
         private Image repairCursorImage;
         private static readonly Vector2 ContextCursorOffset = new Vector2(14f, -14f);
         private const float ResourceCursorSize = 64f;
+        private const float AttackCursorSize = 76f;
         private const float ActionCursorSize = 76f;
 
         // Hold-to-delete
@@ -1239,7 +1240,7 @@ namespace OpenEmpires
             {
                 EnsureAttackCursorIcon();
                 attackCursorIcon.SetActive(true);
-                attackCursorIcon.transform.position = new Vector3(currentMousePos.x + 20f, currentMousePos.y - 20f, 0f);
+                attackCursorIcon.transform.position = GetContextCursorPosition();
             }
             else if (attackCursorIcon != null)
             {
@@ -1380,10 +1381,10 @@ namespace OpenEmpires
             attackCursorImage.sprite = attackIconSprite;
 
             var rt = attackCursorIcon.GetComponent<RectTransform>();
-            rt.sizeDelta = new Vector2(40f, 40f);
+            rt.sizeDelta = new Vector2(AttackCursorSize, AttackCursorSize);
             rt.anchorMin = Vector2.zero;
             rt.anchorMax = Vector2.zero;
-            rt.pivot = new Vector2(0f, 1f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
 
             attackCursorIcon.SetActive(false);
         }
@@ -2535,7 +2536,6 @@ namespace OpenEmpires
                                     LocalPlayerId, selectedBuildings[i].BuildingId, fixedPos,
                                     -1, rallyUnitView.UnitId));
                             }
-                            gameSetup?.ShowRallyCommandFlag(fixedPos.ToVector3());
                             isRightDragging = false;
                             return;
                         }
@@ -2553,7 +2553,6 @@ namespace OpenEmpires
                                 rallySim.CommandBuffer.EnqueueCommand(new SetRallyPointCommand(
                                     LocalPlayerId, selectedBuildings[i].BuildingId, fixedPos, resNode.ResourceNodeId));
                             }
-                            gameSetup?.ShowRallyCommandFlag(fixedPos.ToVector3());
                             isRightDragging = false;
                             return;
                         }
@@ -2577,7 +2576,6 @@ namespace OpenEmpires
                                         rallySim.CommandBuffer.EnqueueCommand(new SetRallyPointCommand(
                                             LocalPlayerId, selectedBuildings[i].BuildingId, fixedPos, -1, -1, rallyBuildingData.Id));
                                     }
-                                    gameSetup?.ShowRallyCommandFlag(fixedPos.ToVector3());
                                     isRightDragging = false;
                                     return;
                                 }
@@ -2592,7 +2590,6 @@ namespace OpenEmpires
                                         rallySim.CommandBuffer.EnqueueCommand(new SetRallyPointCommand(
                                             LocalPlayerId, selectedBuildings[i].BuildingId, fixedPos, rallyBuildingData.LinkedResourceNodeId));
                                     }
-                                    gameSetup?.ShowRallyCommandFlag(fixedPos.ToVector3());
                                     isRightDragging = false;
                                     return;
                                 }
@@ -2608,7 +2605,6 @@ namespace OpenEmpires
                             rallySim.CommandBuffer.EnqueueCommand(new SetRallyPointCommand(
                                 LocalPlayerId, selectedBuildings[i].BuildingId, fixedPos));
                         }
-                        gameSetup?.ShowRallyCommandFlag(fixedPos.ToVector3());
                     }
                 }
                 isRightDragging = false;

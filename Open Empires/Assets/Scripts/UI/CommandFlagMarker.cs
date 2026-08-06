@@ -12,11 +12,18 @@ namespace OpenEmpires
 
     public class CommandFlagMarker : MonoBehaviour
     {
-        private const float FallHeight = 8f;
+        private const float FallHeight = 12f;
         private const float FallDuration = 0.28f;
-        private const float FadeStartTime = 0.9f;
-        private const float Lifetime = 1.45f;
+        private const float FadeStartTime = 1.15f;
+        private const float Lifetime = 2f;
         private const int PulseSegments = 40;
+        private const float BannerWaveSpeed = 9.5f;
+        private const float BannerWaveSpacing = 7.5f;
+        private const float BannerWaveAmplitude = 0.045f;
+        private const float RippleRadiusScale = 1.5f;
+        private const float ImpactBounceDecay = 14f;
+        private const float ImpactRootDecay = 9f;
+        private const float ImpactClothDecay = 8f;
 
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int ColorId = Shader.PropertyToID("_Color");
@@ -31,8 +38,12 @@ namespace OpenEmpires
         private Material poleMaterial;
         private Material bannerMaterial;
         private Material pulseMaterial;
+        private Transform flagRoot;
         private MeshRenderer poleRenderer;
         private MeshRenderer bannerRenderer;
+        private Mesh bannerMesh;
+        private Vector3[] bannerBaseVertices;
+        private Vector3[] bannerAnimatedVertices;
         private LineRenderer pulseRing;
         private LineRenderer echoRing;
         private TextMeshPro glyph;
@@ -128,9 +139,12 @@ namespace OpenEmpires
             bannerMaterial = CreateTransparentMaterial(Color.white);
             pulseMaterial = CreateTransparentMaterial(Color.white, true);
 
+            flagRoot = new GameObject("FlagVisuals").transform;
+            flagRoot.SetParent(transform, false);
+
             var pole = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
             pole.name = "Pole";
-            pole.transform.SetParent(transform, false);
+            pole.transform.SetParent(flagRoot, false);
             pole.transform.localPosition = new Vector3(0f, 0.52f, 0f);
             pole.transform.localScale = new Vector3(0.035f, 0.52f, 0.035f);
             DestroyCollider(pole);
@@ -140,9 +154,12 @@ namespace OpenEmpires
             poleRenderer.receiveShadows = false;
 
             var banner = new GameObject("Banner");
-            banner.transform.SetParent(transform, false);
-            banner.transform.localPosition = new Vector3(0.04f, 1.06f, 0f);
-            banner.AddComponent<MeshFilter>().sharedMesh = CreateBannerMesh();
+            banner.transform.SetParent(flagRoot, false);
+            banner.transform.localPosition = new Vector3(0.015f, 0.76f, 0f);
+            bannerMesh = CreateBannerMesh();
+            bannerBaseVertices = bannerMesh.vertices;
+            bannerAnimatedVertices = new Vector3[bannerBaseVertices.Length];
+            banner.AddComponent<MeshFilter>().sharedMesh = bannerMesh;
             bannerRenderer = banner.AddComponent<MeshRenderer>();
             bannerRenderer.sharedMaterial = bannerMaterial;
             bannerRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
@@ -158,8 +175,8 @@ namespace OpenEmpires
         private void CreateGlyph(string text, Color color)
         {
             var glyphGO = new GameObject("Glyph");
-            glyphGO.transform.SetParent(transform, false);
-            glyphGO.transform.localPosition = new Vector3(0.35f, 1.06f, 0.02f);
+            glyphGO.transform.SetParent(flagRoot != null ? flagRoot : transform, false);
+            glyphGO.transform.localPosition = new Vector3(0.325f, 0.76f, 0.02f);
             glyphGO.transform.localScale = Vector3.one * 0.08f;
 
             glyph = glyphGO.AddComponent<TextMeshPro>();
@@ -183,6 +200,8 @@ namespace OpenEmpires
                 alpha = Mathf.Clamp01(1f - (elapsed - FadeStartTime) / (Lifetime - FadeStartTime));
 
             UpdateDropMotion();
+            UpdateFlagRootMotion();
+            UpdateBannerWave();
             UpdatePulse(alpha);
             ApplyAlpha(alpha);
             FaceCamera();
@@ -203,11 +222,74 @@ namespace OpenEmpires
             }
 
             float settledTime = elapsed - FallDuration;
-            float decay = Mathf.Exp(-8f * settledTime);
+            float decay = Mathf.Exp(-ImpactBounceDecay * settledTime);
             float bounce = Mathf.Max(0f, Mathf.Sin(settledTime * 22f) * 0.18f * decay);
             float scalePunch = 1f + Mathf.Sin(settledTime * 26f) * 0.08f * decay;
             transform.position = landingPosition + Vector3.up * bounce;
             transform.localScale = Vector3.one * scalePunch;
+        }
+
+        private void UpdateFlagRootMotion()
+        {
+            if (flagRoot == null) return;
+
+            if (persistent)
+            {
+                float idleLean = Mathf.Sin(Time.time * 1.7f) * 1.4f;
+                flagRoot.localRotation = Quaternion.Euler(0f, 0f, idleLean);
+                flagRoot.localScale = Vector3.one;
+                return;
+            }
+
+            float fallT = Mathf.Clamp01(elapsed / FallDuration);
+            float fallLean = elapsed < FallDuration ? Mathf.Lerp(-11f, -2f, fallT) : 0f;
+            float impactAge = elapsed - FallDuration;
+            float impactLean = 0f;
+            float squash = 0f;
+
+            if (impactAge >= 0f)
+            {
+                float decay = Mathf.Exp(-ImpactRootDecay * impactAge);
+                impactLean = Mathf.Sin(impactAge * 26f) * 12f * decay;
+                squash = Mathf.Sin(impactAge * 31f) * 0.045f * decay;
+            }
+
+            flagRoot.localRotation = Quaternion.Euler(0f, 0f, fallLean + impactLean);
+            flagRoot.localScale = new Vector3(1f + squash, 1f - squash * 0.6f, 1f);
+        }
+
+        private void UpdateBannerWave()
+        {
+            if (bannerMesh == null || bannerBaseVertices == null || bannerAnimatedVertices == null) return;
+
+            float fallT = Mathf.Clamp01(elapsed / FallDuration);
+            float fallLag = !persistent && elapsed < FallDuration
+                ? Mathf.Pow(1f - fallT, 0.7f)
+                : 0f;
+            float impactAge = elapsed - FallDuration;
+            float impactDecay = !persistent && impactAge >= 0f ? Mathf.Exp(-ImpactClothDecay * impactAge) : 0f;
+            float impactSnap = Mathf.Sin(impactAge * 28f) * impactDecay;
+            float impactCurl = Mathf.Cos(impactAge * 21f) * impactDecay;
+
+            float time = (Time.time + landingPosition.x * 0.13f + landingPosition.z * 0.07f) * BannerWaveSpeed;
+            float windRise = Mathf.Sin(Time.time * 2.1f) * 0.01f;
+
+            for (int i = 0; i < bannerBaseVertices.Length; i++)
+            {
+                Vector3 vertex = bannerBaseVertices[i];
+                float tether = Mathf.Clamp01(vertex.x / 0.68f);
+                float freeEdge = tether * tether;
+                float waveAmplitude = BannerWaveAmplitude + fallLag * 0.08f + Mathf.Abs(impactSnap) * 0.07f;
+                float wave = Mathf.Sin(time - tether * BannerWaveSpacing) * waveAmplitude * freeEdge;
+
+                vertex.z += wave - fallLag * 0.12f * freeEdge + impactCurl * 0.08f * freeEdge;
+                vertex.y += windRise * tether + fallLag * 0.12f * freeEdge - impactSnap * 0.14f * freeEdge;
+                bannerAnimatedVertices[i] = vertex;
+            }
+
+            bannerMesh.vertices = bannerAnimatedVertices;
+            bannerMesh.RecalculateNormals();
+            bannerMesh.RecalculateBounds();
         }
 
         private void UpdatePulse(float alpha)
@@ -230,7 +312,8 @@ namespace OpenEmpires
             float easedRadius = 1f - Mathf.Pow(1f - t, 3f);
             float ringAlpha = 0.68f * Mathf.Pow(1f - t, 2f) * alpha;
             float ringWidth = Mathf.Lerp(0.095f, 0.012f, t);
-            UpdatePulseRing(pulseRing, Mathf.Lerp(0.18f, 1.18f, easedRadius), ringAlpha, ringWidth);
+            UpdatePulseRing(pulseRing, Mathf.Lerp(0.18f, 1.18f, easedRadius) * RippleRadiusScale,
+                ringAlpha, ringWidth);
 
             if (echoRing == null) return;
 
@@ -242,7 +325,7 @@ namespace OpenEmpires
             }
 
             float echoT = Mathf.Clamp01(echoAge / 0.72f);
-            float echoRadius = Mathf.SmoothStep(0.28f, 1.35f, echoT);
+            float echoRadius = Mathf.SmoothStep(0.28f, 1.35f, echoT) * RippleRadiusScale;
             float echoAlpha = 0.26f * Mathf.Pow(1f - echoT, 2.4f) * alpha;
             float echoWidth = Mathf.Lerp(0.05f, 0.008f, echoT);
             UpdatePulseRing(echoRing, echoRadius, echoAlpha, echoWidth);
@@ -312,23 +395,57 @@ namespace OpenEmpires
         {
             var mesh = new Mesh();
             mesh.name = "CommandFlagBanner";
-            mesh.vertices = new[]
+            const int columns = 6;
+            var vertices = new Vector3[columns * 3];
+
+            for (int c = 0; c < columns; c++)
             {
-                new Vector3(0f, 0.2f, 0f),
-                new Vector3(0.68f, 0.2f, 0f),
-                new Vector3(0.52f, 0f, 0f),
-                new Vector3(0.68f, -0.2f, 0f),
-                new Vector3(0f, -0.2f, 0f),
-            };
-            mesh.triangles = new[]
+                float t = c / (float)(columns - 1);
+                float x = 0.68f * t;
+                float sag = Mathf.Sin(t * Mathf.PI);
+                int index = c * 3;
+
+                vertices[index] = new Vector3(x, Mathf.Lerp(0.2f, 0.15f, t) - sag * 0.015f, 0f);
+                vertices[index + 1] = new Vector3(c == columns - 1 ? 0.52f : x, Mathf.Lerp(-0.01f, -0.05f, t), 0f);
+                vertices[index + 2] = new Vector3(x, Mathf.Lerp(-0.22f, -0.26f, t) - sag * 0.025f, 0f);
+            }
+
+            var triangles = new int[(columns - 1) * 24];
+            int tri = 0;
+            for (int c = 0; c < columns - 1; c++)
             {
-                0, 1, 2,
-                0, 2, 4,
-                4, 2, 3,
-                2, 1, 0,
-                4, 2, 0,
-                3, 2, 4,
-            };
+                int aTop = c * 3;
+                int aMid = aTop + 1;
+                int aBottom = aTop + 2;
+                int bTop = (c + 1) * 3;
+                int bMid = bTop + 1;
+                int bBottom = bTop + 2;
+
+                triangles[tri++] = aTop;
+                triangles[tri++] = bTop;
+                triangles[tri++] = bMid;
+                triangles[tri++] = aTop;
+                triangles[tri++] = bMid;
+                triangles[tri++] = aMid;
+
+                triangles[tri++] = aMid;
+                triangles[tri++] = bMid;
+                triangles[tri++] = bBottom;
+                triangles[tri++] = aMid;
+                triangles[tri++] = bBottom;
+                triangles[tri++] = aBottom;
+            }
+
+            int frontIndexCount = tri;
+            for (int i = 0; i < frontIndexCount; i += 3)
+            {
+                triangles[tri++] = triangles[i + 2];
+                triangles[tri++] = triangles[i + 1];
+                triangles[tri++] = triangles[i];
+            }
+
+            mesh.vertices = vertices;
+            mesh.triangles = triangles;
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
             return mesh;
@@ -396,6 +513,7 @@ namespace OpenEmpires
             DestroyRuntimeMaterial(poleMaterial);
             DestroyRuntimeMaterial(bannerMaterial);
             DestroyRuntimeMaterial(pulseMaterial);
+            DestroyRuntimeObject(bannerMesh);
         }
 
         private static void DestroyRuntimeMaterial(Material mat)
@@ -403,6 +521,13 @@ namespace OpenEmpires
             if (mat == null) return;
             if (Application.isPlaying) Destroy(mat);
             else DestroyImmediate(mat);
+        }
+
+        private static void DestroyRuntimeObject(Object obj)
+        {
+            if (obj == null) return;
+            if (Application.isPlaying) Destroy(obj);
+            else DestroyImmediate(obj);
         }
     }
 }
