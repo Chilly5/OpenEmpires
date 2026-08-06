@@ -5,6 +5,7 @@ Shader "Custom/SelectionRing"
         _Color ("Color", Color) = (1, 1, 1, 0.45)
         _InnerRadius ("Inner Radius", Range(0, 1)) = 0.92
         _Softness ("Edge Softness", Range(0, 0.2)) = 0.02
+        _SquareOutline ("Square Outline", Float) = 0
     }
 
     SubShader
@@ -37,6 +38,7 @@ Shader "Custom/SelectionRing"
                 half4 _Color;
                 half _InnerRadius;
                 half _Softness;
+                half _SquareOutline;
             CBUFFER_END
 
             struct Attributes
@@ -67,7 +69,10 @@ Shader "Custom/SelectionRing"
             {
                 UNITY_SETUP_INSTANCE_ID(input);
 
-                half dist = length(input.objectXZ) * 2.0;
+                half2 normalizedXZ = abs(input.objectXZ) * 2.0;
+                half dist = _SquareOutline > 0.5
+                    ? max(normalizedXZ.x, normalizedXZ.y)
+                    : length(input.objectXZ) * 2.0;
 
                 half outer = 1.0 - smoothstep(1.0 - _Softness, 1.0, dist);
                 half inner = smoothstep(_InnerRadius - _Softness, _InnerRadius, dist);

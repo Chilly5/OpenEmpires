@@ -14,6 +14,7 @@ namespace OpenEmpires
 
         // Shared rally material — created once, reused by all BuildingViews
         private static Material sharedRallyMaterial;
+        private static Material sharedBuildingSelectionMaterial;
 
         private static Material GetSharedRallyMaterial()
         {
@@ -27,6 +28,26 @@ namespace OpenEmpires
                 SetMaterialColor(sharedRallyMaterial, Color.white);
             }
             return sharedRallyMaterial;
+        }
+
+        private static Material GetSharedBuildingSelectionMaterial()
+        {
+            if (sharedBuildingSelectionMaterial == null)
+            {
+                var shader = Shader.Find("Custom/SelectionRing");
+                if (shader == null) return null;
+
+                sharedBuildingSelectionMaterial = new Material(shader);
+                SetMaterialColor(sharedBuildingSelectionMaterial, new Color(1f, 1f, 1f, 0.65f));
+                if (sharedBuildingSelectionMaterial.HasProperty(SquareOutlineId))
+                    sharedBuildingSelectionMaterial.SetFloat(SquareOutlineId, 1f);
+                if (sharedBuildingSelectionMaterial.HasProperty(InnerRadiusId))
+                    sharedBuildingSelectionMaterial.SetFloat(InnerRadiusId, 0.88f);
+                if (sharedBuildingSelectionMaterial.HasProperty(SoftnessId))
+                    sharedBuildingSelectionMaterial.SetFloat(SoftnessId, 0.015f);
+            }
+
+            return sharedBuildingSelectionMaterial;
         }
 
         public int BuildingId { get; private set; }
@@ -118,6 +139,7 @@ namespace OpenEmpires
 
         // Canvas overlay widgets
         private RectTransform overlayRoot;
+        private GameObject healthBarBackgroundGO;
         private Image healthBarFill;
         private RectTransform healthBarFillRT;
         private RectTransform queueContainer;
@@ -134,6 +156,9 @@ namespace OpenEmpires
         // Shader-safe color access (RGBRecolor shader uses _BaseColor instead of _Color)
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int ColorId = Shader.PropertyToID("_Color");
+        private static readonly int InnerRadiusId = Shader.PropertyToID("_InnerRadius");
+        private static readonly int SoftnessId = Shader.PropertyToID("_Softness");
+        private static readonly int SquareOutlineId = Shader.PropertyToID("_SquareOutline");
 
         private static Color GetMaterialColor(Material mat)
         {
@@ -270,8 +295,14 @@ namespace OpenEmpires
 
         // Rally point visualization
         private LineRenderer rallyLine;
-        private GameObject rallyDot;
         private CommandFlagMarker rallyFlag;
+        private bool hasLastRallyFlagTarget;
+        private FixedVector3 lastRallyFlagPoint;
+        private int lastRallyFlagUnitId = -1;
+        private bool lastRallyFlagOnResource;
+        private ResourceType lastRallyFlagResourceType;
+        private bool lastRallyFlagOnConstruction;
+        private int lastRallyFlagConstructionBuildingId = -1;
 
         // Age-based sprite swap
         private string ageSpritePrefix;
@@ -459,23 +490,16 @@ namespace OpenEmpires
             rallyLine.endColor = Color.white;
             lineGO.SetActive(false);
 
-            // White dot at rally point
-            rallyDot = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            rallyDot.name = "RallyDot";
-            rallyDot.transform.SetParent(transform);
-            rallyDot.transform.localScale = new Vector3(0.35f, 0.35f, 0.35f);
-            var dotCollider = rallyDot.GetComponent<Collider>();
-            if (dotCollider != null) Object.Destroy(dotCollider);
-            var dotRenderer = rallyDot.GetComponent<Renderer>();
-            dotRenderer.sharedMaterial = GetSharedRallyMaterial();
-            rallyDot.SetActive(false);
-
             rallyFlag = CommandFlagMarker.CreatePersistent(transform, CommandFlagKind.Rally);
         }
 
         public void SetSelectionRing(GameObject ring)
         {
             selectionRing = ring;
+            var selectionRenderer = selectionRing != null ? selectionRing.GetComponentInChildren<Renderer>() : null;
+            var selectionMaterial = GetSharedBuildingSelectionMaterial();
+            if (selectionRenderer != null && selectionMaterial != null)
+                selectionRenderer.sharedMaterial = selectionMaterial;
             if (selectionRing != null)
                 selectionRing.SetActive(false);
         }
@@ -680,7 +704,7 @@ namespace OpenEmpires
 
             // Resolve rally target position and color once
             Vector3 rallyPos = buildingData.RallyPoint.ToVector3();
-            bool isGreen = buildingData.RallyPointOnResource || buildingData.RallyPointOnConstruction;
+            bool isResourceRally = buildingData.RallyPointOnResource || buildingData.RallyPointOnConstruction;
             if (showRally && buildingData.RallyPointUnitId >= 0)
             {
                 var sim = GameBootstrapper.Instance?.Simulation;
@@ -690,11 +714,11 @@ namespace OpenEmpires
                     if (targetUnit != null && targetUnit.State != UnitState.Dead)
                     {
                         rallyPos = targetUnit.SimPosition.ToVector3();
-                        if (targetUnit.IsSheep) isGreen = true;
+                        if (targetUnit.IsSheep) isResourceRally = true;
                     }
                 }
             }
-            Color rallyColor = GetRallyVisualColor(isGreen);
+            Color rallyColor = isResourceRally ? new Color(0.2f, 0.65f, 1f) : Color.white;
             Vector3 groundRallyPos = rallyPos;
             if (cachedMapData != null)
                 groundRallyPos.y = cachedMapData.SampleHeight(groundRallyPos.x, groundRallyPos.z) * cachedHeightScale + 0.04f;
@@ -717,39 +741,43 @@ namespace OpenEmpires
                 }
             }
 
-            if (rallyDot != null)
-            {
-                rallyDot.SetActive(showRally);
-                if (showRally)
-                {
-                    SetMaterialColor(rallyDot.GetComponent<Renderer>().material, rallyColor);
-                    rallyDot.transform.position = groundRallyPos + Vector3.up * 0.16f;
-                }
-            }
-
             if (rallyFlag != null)
             {
-                rallyFlag.SetLandingPosition(groundRallyPos, false);
-                rallyFlag.SetMarkerColor(rallyColor);
+                if (showRally)
+                {
+                    bool replayDrop = RallyFlagTargetChanged();
+                    rallyFlag.SetLandingPosition(groundRallyPos, replayDrop);
+                    rallyFlag.SetMarkerColor(rallyColor);
+                }
                 rallyFlag.SetPersistentVisible(showRally);
             }
+
+            if (showRally)
+                RememberRallyFlagTarget();
+            else if (!buildingData.HasRallyPoint)
+                hasLastRallyFlagTarget = false;
         }
 
-        private Color GetRallyVisualColor(bool isResourceLike)
+        private bool RallyFlagTargetChanged()
         {
-            Color color = Color.white;
-            if (GameSetup.PlayerColors != null
-                && PlayerId >= 0
-                && PlayerId < GameSetup.PlayerColors.Length)
-            {
-                color = GameSetup.PlayerColors[PlayerId];
-            }
+            return !hasLastRallyFlagTarget
+                || lastRallyFlagPoint != buildingData.RallyPoint
+                || lastRallyFlagUnitId != buildingData.RallyPointUnitId
+                || lastRallyFlagOnResource != buildingData.RallyPointOnResource
+                || lastRallyFlagResourceType != buildingData.RallyPointResourceType
+                || lastRallyFlagOnConstruction != buildingData.RallyPointOnConstruction
+                || lastRallyFlagConstructionBuildingId != buildingData.RallyPointConstructionBuildingId;
+        }
 
-            if (isResourceLike)
-                color = Color.Lerp(color, new Color(0.1f, 1f, 0.35f), 0.45f);
-
-            color.a = 0.82f;
-            return color;
+        private void RememberRallyFlagTarget()
+        {
+            hasLastRallyFlagTarget = true;
+            lastRallyFlagPoint = buildingData.RallyPoint;
+            lastRallyFlagUnitId = buildingData.RallyPointUnitId;
+            lastRallyFlagOnResource = buildingData.RallyPointOnResource;
+            lastRallyFlagResourceType = buildingData.RallyPointResourceType;
+            lastRallyFlagOnConstruction = buildingData.RallyPointOnConstruction;
+            lastRallyFlagConstructionBuildingId = buildingData.RallyPointConstructionBuildingId;
         }
 
         public void FlashCommandConfirm()
@@ -1517,6 +1545,7 @@ namespace OpenEmpires
 
             // Health bar background
             var bgGO = new GameObject("Background");
+            healthBarBackgroundGO = bgGO;
             bgGO.transform.SetParent(rootGO.transform, false);
             var bgRT = bgGO.AddComponent<RectTransform>();
             bgRT.anchorMin = Vector2.zero;
@@ -1749,9 +1778,12 @@ namespace OpenEmpires
             }
 
             bool showInfluence = cachedInInfluence || externalInfluenceMark;
-            // Farms don't auto-show the HP bar from influence — the "+" buff icon already conveys it.
-            bool barShowInfluence = showInfluence && buildingData.Type != BuildingType.Farm;
-            if (!isHovered && !recentlyDamaged && !buildingData.IsUnderConstruction && !training && !upgrading && !barShowInfluence)
+            bool showHealthBar = isHovered || recentlyDamaged || buildingData.IsUnderConstruction;
+            // Farms keep their existing tint/hover behavior; producers can show the "+" buff icon
+            // without forcing their HP strip to stay on-screen.
+            bool showInfluenceOverlay = showInfluence && buildingData.Type != BuildingType.Farm;
+            bool showOverlay = showHealthBar || training || upgrading || showInfluenceOverlay;
+            if (!showOverlay)
             {
                 if (overlayRoot != null && overlayRoot.gameObject.activeSelf)
                     overlayRoot.gameObject.SetActive(false);
@@ -1775,12 +1807,19 @@ namespace OpenEmpires
 
             overlayRoot.position = new Vector3(screenPos.x, screenPos.y, 0f);
 
-            // Health fill
-            float fraction = buildingData.IsUnderConstruction
-                ? Mathf.Clamp01(buildingData.ConstructionProgress)
-                : Mathf.Clamp01((float)buildingData.CurrentHealth / buildingData.MaxHealth);
-            healthBarFillRT.anchorMax = new Vector2(fraction, 1f);
-            healthBarFill.color = Color.Lerp(HealthColorEmpty, HealthColorFull, fraction);
+            if (healthBarBackgroundGO != null && healthBarBackgroundGO.activeSelf != showHealthBar)
+                healthBarBackgroundGO.SetActive(showHealthBar);
+            if (healthBarFill != null && healthBarFill.gameObject.activeSelf != showHealthBar)
+                healthBarFill.gameObject.SetActive(showHealthBar);
+
+            if (showHealthBar)
+            {
+                float fraction = buildingData.IsUnderConstruction
+                    ? Mathf.Clamp01(buildingData.ConstructionProgress)
+                    : Mathf.Clamp01((float)buildingData.CurrentHealth / buildingData.MaxHealth);
+                healthBarFillRT.anchorMax = new Vector2(fraction, 1f);
+                healthBarFill.color = Color.Lerp(HealthColorEmpty, HealthColorFull, fraction);
+            }
 
             // Training queue
             if (training)

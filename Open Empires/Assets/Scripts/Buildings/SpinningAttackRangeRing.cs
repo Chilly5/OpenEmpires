@@ -7,9 +7,9 @@ namespace OpenEmpires
     {
         private float range;
         private List<LineRenderer> lineSegments = new List<LineRenderer>();
-        private float rotationSpeed = 15f; // degrees per second - reduced from 30f for slower rotation
-        private int segmentCount = 36; // Number of separate line segments
-        private float segmentLength = 0.8f; // Length of each segment relative to available arc
+        private float rotationSpeed = 2f; // degrees per second
+        private int segmentCount = 40; // Number of separate line segments
+        private float segmentLength = 0.18f; // Length of each segment relative to available arc
         private float currentRotation = 0f;
         private Material segmentMaterial;
 
@@ -36,8 +36,9 @@ namespace OpenEmpires
 
                 LineRenderer lineRenderer = segmentObj.AddComponent<LineRenderer>();
                 lineRenderer.useWorldSpace = false;
-                lineRenderer.startWidth = 0.08f;
-                lineRenderer.endWidth = 0.08f;
+                lineRenderer.startWidth = 0.055f;
+                lineRenderer.endWidth = 0.055f;
+                lineRenderer.numCapVertices = 4;
                 lineRenderer.positionCount = 2; // Each segment has start and end points
                 lineRenderer.material = segmentMaterial;
 

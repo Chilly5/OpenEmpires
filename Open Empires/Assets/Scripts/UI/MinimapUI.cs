@@ -833,7 +833,7 @@ namespace OpenEmpires
                 // Resolve rally target position
                 float targetX = buildingData.RallyPoint.x.ToFloat();
                 float targetZ = buildingData.RallyPoint.z.ToFloat();
-                bool isGreen = buildingData.RallyPointOnResource;
+                bool isResourceRally = buildingData.RallyPointOnResource;
 
                 if (buildingData.RallyPointUnitId >= 0)
                 {
@@ -842,12 +842,12 @@ namespace OpenEmpires
                     {
                         targetX = targetUnit.SimPosition.x.ToFloat();
                         targetZ = targetUnit.SimPosition.z.ToFloat();
-                        if (targetUnit.IsSheep) isGreen = true;
+                        if (targetUnit.IsSheep) isResourceRally = true;
                     }
                 }
 
-                Color32 lineColor = isGreen
-                    ? new Color32(0, 255, 0, 255)
+                Color32 lineColor = isResourceRally
+                    ? new Color32(51, 166, 255, 255)
                     : new Color32(255, 255, 255, 255);
 
                 WorldToPixel(buildingData.SimPosition.x.ToFloat(), buildingData.SimPosition.z.ToFloat(), out int fromX, out int fromY);

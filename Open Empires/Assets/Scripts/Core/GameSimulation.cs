@@ -826,22 +826,22 @@ namespace OpenEmpires
 
             // Emit OnEntityDamaged for any entity hit this tick. Done as a single post-tick scan
             // (one pass over all units/buildings) rather than at every damage call-site, so we
-            // don't have to thread a callback through every system. Subscribers (e.g. MinimapUI's
-            // attack-ping handler) decide what to do with each event.
+            // don't have to thread a callback through every system.
             if (OnEntityDamaged != null)
             {
+                // LastDamageTick defaults to 0 ("never damaged"), and currentTick also starts at 0.
                 var allUnits = UnitRegistry.GetAllUnits();
                 for (int i = 0; i < allUnits.Count; i++)
                 {
                     var u = allUnits[i];
-                    if (u.LastDamageTick == currentTick && u.State != UnitState.Dead)
+                    if (u.LastDamageTick > 0 && u.LastDamageTick == currentTick && u.State != UnitState.Dead)
                         OnEntityDamaged.Invoke(u.SimPosition.x.ToFloat(), u.SimPosition.z.ToFloat(), u.PlayerId);
                 }
                 var allBuildings = BuildingRegistry.GetAllBuildings();
                 for (int i = 0; i < allBuildings.Count; i++)
                 {
                     var b = allBuildings[i];
-                    if (b.LastDamageTick == currentTick && !b.IsDestroyed)
+                    if (b.LastDamageTick > 0 && b.LastDamageTick == currentTick && !b.IsDestroyed)
                         OnEntityDamaged.Invoke(b.SimPosition.x.ToFloat(), b.SimPosition.z.ToFloat(), b.PlayerId);
                 }
             }

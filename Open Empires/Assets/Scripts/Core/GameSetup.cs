@@ -226,7 +226,7 @@ namespace OpenEmpires
             cachedUnlitShader = Shader.Find("Universal Render Pipeline/Unlit");
             if (cachedUnlitShader == null) cachedUnlitShader = Shader.Find("Unlit/Color");
             sharedSelectionRingMat = new Material(cachedSelectionRingShader);
-            sharedSelectionRingMat.SetColor("_Color", new Color(0f, 1f, 0f, 0.5f));
+            sharedSelectionRingMat.SetColor("_Color", new Color(1f, 1f, 1f, 0.55f));
 
             // Use computed base positions from map generation (falls back to hardcoded if unavailable)
             var basePositions = sim.MapData.BasePositions ?? GetFallbackBasePositions(sim.MapData.Width, sim.MapData.Height);
@@ -1800,8 +1800,8 @@ namespace OpenEmpires
             col.radius = 0.7f;
             col.height = 3.4f;
 
-            // Selection reticle (circular for tower)
-            var ring = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            // Selection reticle (square for buildings)
+            var ring = GameObject.CreatePrimitive(PrimitiveType.Cube);
             ring.name = "SelectionRing";
             ring.transform.SetParent(tower.transform);
             ring.transform.localPosition = new Vector3(0f, 0.02f, 0f);
@@ -1811,7 +1811,6 @@ namespace OpenEmpires
             var ringCollider = ring.GetComponent<Collider>();
             if (ringCollider != null) Object.Destroy(ringCollider);
 
-            // Create transparent green selection ring material
             ring.GetComponent<Renderer>().sharedMaterial = sharedSelectionRingMat;
 
             var view = tower.AddComponent<BuildingView>();

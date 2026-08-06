@@ -14,22 +14,27 @@ namespace OpenEmpires
     {
         private const float FallHeight = 12f;
         private const float FallDuration = 0.28f;
-        private const float FadeStartTime = 1.15f;
-        private const float Lifetime = 2f;
         private const int PulseSegments = 40;
         private const float BannerWaveSpeed = 9.5f;
         private const float BannerWaveSpacing = 7.5f;
         private const float BannerWaveAmplitude = 0.045f;
         private const float RippleRadiusScale = 1.5f;
+        private const float RippleEchoDelay = 0.11f;
+        private const float RippleDuration = 0.68f;
+        private const float EchoRippleDuration = 0.72f;
+        private const float Lifetime = FallDuration + RippleEchoDelay + EchoRippleDuration;
+        private const float FadeStartTime = FallDuration + 0.35f;
         private const float ImpactBounceDecay = 14f;
         private const float ImpactRootDecay = 9f;
         private const float ImpactClothDecay = 8f;
+        private const float PersistentRippleDuration = RippleEchoDelay + EchoRippleDuration;
 
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int ColorId = Shader.PropertyToID("_Color");
 
         private CommandFlagKind kind;
         private bool persistent;
+        private bool persistentDropPulseActive;
         private bool initialized;
         private float elapsed;
         private Vector3 landingPosition;
@@ -78,9 +83,10 @@ namespace OpenEmpires
             if (replayDrop)
             {
                 elapsed = 0f;
+                persistentDropPulseActive = persistent;
                 transform.position = landingPosition + Vector3.up * FallHeight;
             }
-            else if (persistent || elapsed >= FallDuration)
+            else if (!persistent || !persistentDropPulseActive || elapsed >= FallDuration)
             {
                 transform.position = landingPosition;
             }
@@ -107,12 +113,17 @@ namespace OpenEmpires
 
             if (visible && !gameObject.activeSelf)
             {
-                elapsed = FallDuration;
-                transform.position = landingPosition;
+                if (!persistentDropPulseActive || elapsed >= FallDuration)
+                {
+                    elapsed = FallDuration;
+                    transform.position = landingPosition;
+                }
                 gameObject.SetActive(true);
             }
             else if (!visible && gameObject.activeSelf)
             {
+                persistentDropPulseActive = false;
+                HidePulseRings();
                 gameObject.SetActive(false);
             }
         }
@@ -168,8 +179,11 @@ namespace OpenEmpires
             if (kind == CommandFlagKind.AttackMove)
                 CreateGlyph("A", new Color(0.18f, 0.03f, 0.02f, 0.95f));
 
-            pulseRing = CreatePulseRing("Pulse", 0.055f);
-            echoRing = CreatePulseRing("EchoPulse", 0.035f);
+            if (!(persistent && kind == CommandFlagKind.Rally))
+            {
+                pulseRing = CreatePulseRing("Pulse", 0.055f);
+                echoRing = CreatePulseRing("EchoPulse", 0.035f);
+            }
         }
 
         private void CreateGlyph(string text, Color color)
@@ -202,7 +216,7 @@ namespace OpenEmpires
             UpdateDropMotion();
             UpdateFlagRootMotion();
             UpdateBannerWave();
-            UpdatePulse(alpha);
+            UpdatePulse();
             ApplyAlpha(alpha);
             FaceCamera();
 
@@ -292,43 +306,53 @@ namespace OpenEmpires
             bannerMesh.RecalculateBounds();
         }
 
-        private void UpdatePulse(float alpha)
+        private void UpdatePulse()
         {
             if (pulseRing == null) return;
 
-            if (persistent)
+            if (persistent && !persistentDropPulseActive)
             {
-                float radius = 0.52f + Mathf.Sin(Time.time * 2.4f) * 0.04f;
-                float pulseAlpha = 0.22f + Mathf.Sin(Time.time * 2.4f) * 0.04f;
-                UpdatePulseRing(pulseRing, radius, pulseAlpha * alpha, 0.045f);
-
-                if (echoRing != null)
-                    echoRing.enabled = false;
+                HidePulseRings();
                 return;
             }
 
             float pulseAge = elapsed - FallDuration;
-            float t = Mathf.Clamp01(pulseAge / 0.68f);
+            if (persistent && pulseAge > PersistentRippleDuration)
+            {
+                persistentDropPulseActive = false;
+                HidePulseRings();
+                return;
+            }
+
+            float t = Mathf.Clamp01(pulseAge / RippleDuration);
             float easedRadius = 1f - Mathf.Pow(1f - t, 3f);
-            float ringAlpha = 0.68f * Mathf.Pow(1f - t, 2f) * alpha;
+            float ringAlpha = 0.68f * (1f - t);
             float ringWidth = Mathf.Lerp(0.095f, 0.012f, t);
             UpdatePulseRing(pulseRing, Mathf.Lerp(0.18f, 1.18f, easedRadius) * RippleRadiusScale,
                 ringAlpha, ringWidth);
 
             if (echoRing == null) return;
 
-            float echoAge = pulseAge - 0.11f;
+            float echoAge = pulseAge - RippleEchoDelay;
             if (echoAge < 0f)
             {
                 echoRing.enabled = false;
                 return;
             }
 
-            float echoT = Mathf.Clamp01(echoAge / 0.72f);
+            float echoT = Mathf.Clamp01(echoAge / EchoRippleDuration);
             float echoRadius = Mathf.SmoothStep(0.28f, 1.35f, echoT) * RippleRadiusScale;
-            float echoAlpha = 0.26f * Mathf.Pow(1f - echoT, 2.4f) * alpha;
+            float echoAlpha = 0.26f * (1f - echoT);
             float echoWidth = Mathf.Lerp(0.05f, 0.008f, echoT);
             UpdatePulseRing(echoRing, echoRadius, echoAlpha, echoWidth);
+        }
+
+        private void HidePulseRings()
+        {
+            if (pulseRing != null)
+                pulseRing.enabled = false;
+            if (echoRing != null)
+                echoRing.enabled = false;
         }
 
         private LineRenderer CreatePulseRing(string ringName, float width)
