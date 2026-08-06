@@ -2,8 +2,8 @@ Shader "Custom/SelectionRing"
 {
     Properties
     {
-        _Color ("Color", Color) = (0, 1, 0, 0.5)
-        _InnerRadius ("Inner Radius", Range(0, 1)) = 0.85
+        _Color ("Color", Color) = (1, 1, 1, 0.45)
+        _InnerRadius ("Inner Radius", Range(0, 1)) = 0.92
         _Softness ("Edge Softness", Range(0, 0.2)) = 0.02
     }
 
@@ -21,7 +21,7 @@ Shader "Custom/SelectionRing"
             Name "SelectionRing"
             Tags { "LightMode" = "SRPDefaultUnlit" }
 
-            Blend One One
+            Blend SrcAlpha OneMinusSrcAlpha
             ZWrite Off
             ZTest LEqual
             Cull Off
@@ -75,8 +75,7 @@ Shader "Custom/SelectionRing"
 
                 clip(ring - 0.01);
 
-                half3 col = _Color.rgb * _Color.a * ring;
-                return half4(col, 0.0);
+                return half4(_Color.rgb, _Color.a * ring);
             }
             ENDHLSL
         }
