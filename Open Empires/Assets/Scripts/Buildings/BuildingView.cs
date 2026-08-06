@@ -271,6 +271,7 @@ namespace OpenEmpires
         // Rally point visualization
         private LineRenderer rallyLine;
         private GameObject rallyDot;
+        private CommandFlagMarker rallyFlag;
 
         // Age-based sprite swap
         private string ageSpritePrefix;
@@ -468,6 +469,8 @@ namespace OpenEmpires
             var dotRenderer = rallyDot.GetComponent<Renderer>();
             dotRenderer.sharedMaterial = GetSharedRallyMaterial();
             rallyDot.SetActive(false);
+
+            rallyFlag = CommandFlagMarker.CreatePersistent(transform, CommandFlagKind.Rally);
         }
 
         public void SetSelectionRing(GameObject ring)
@@ -691,7 +694,12 @@ namespace OpenEmpires
                     }
                 }
             }
-            Color rallyColor = isGreen ? Color.green : Color.white;
+            Color rallyColor = GetRallyVisualColor(isGreen);
+            Vector3 groundRallyPos = rallyPos;
+            if (cachedMapData != null)
+                groundRallyPos.y = cachedMapData.SampleHeight(groundRallyPos.x, groundRallyPos.z) * cachedHeightScale + 0.04f;
+            else
+                groundRallyPos.y = 0.04f;
 
             if (rallyLine != null)
             {
@@ -703,11 +711,7 @@ namespace OpenEmpires
                     SetMaterialColor(rallyLine.material, rallyColor);
 
                     Vector3 buildingPos = transform.position + Vector3.up * 0.5f;
-                    Vector3 lineEnd = rallyPos;
-                    if (cachedMapData != null)
-                        lineEnd.y = cachedMapData.SampleHeight(lineEnd.x, lineEnd.z) * cachedHeightScale + 0.1f;
-                    else
-                        lineEnd.y = 0.1f;
+                    Vector3 lineEnd = groundRallyPos + Vector3.up * 0.06f;
                     rallyLine.SetPosition(0, buildingPos);
                     rallyLine.SetPosition(1, lineEnd);
                 }
@@ -719,14 +723,33 @@ namespace OpenEmpires
                 if (showRally)
                 {
                     SetMaterialColor(rallyDot.GetComponent<Renderer>().material, rallyColor);
-                    Vector3 dotPos = rallyPos;
-                    if (cachedMapData != null)
-                        dotPos.y = cachedMapData.SampleHeight(dotPos.x, dotPos.z) * cachedHeightScale + 0.2f;
-                    else
-                        dotPos.y = 0.2f;
-                    rallyDot.transform.position = dotPos;
+                    rallyDot.transform.position = groundRallyPos + Vector3.up * 0.16f;
                 }
             }
+
+            if (rallyFlag != null)
+            {
+                rallyFlag.SetLandingPosition(groundRallyPos, false);
+                rallyFlag.SetMarkerColor(rallyColor);
+                rallyFlag.SetPersistentVisible(showRally);
+            }
+        }
+
+        private Color GetRallyVisualColor(bool isResourceLike)
+        {
+            Color color = Color.white;
+            if (GameSetup.PlayerColors != null
+                && PlayerId >= 0
+                && PlayerId < GameSetup.PlayerColors.Length)
+            {
+                color = GameSetup.PlayerColors[PlayerId];
+            }
+
+            if (isResourceLike)
+                color = Color.Lerp(color, new Color(0.1f, 1f, 0.35f), 0.45f);
+
+            color.a = 0.82f;
+            return color;
         }
 
         public void FlashCommandConfirm()

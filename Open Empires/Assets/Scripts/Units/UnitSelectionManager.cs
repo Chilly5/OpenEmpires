@@ -197,6 +197,9 @@ namespace OpenEmpires
         private Image healCursorImage;
         private GameObject repairCursorIcon;
         private Image repairCursorImage;
+        private static readonly Vector2 ContextCursorOffset = new Vector2(14f, -14f);
+        private const float ResourceCursorSize = 64f;
+        private const float ActionCursorSize = 76f;
 
         // Hold-to-delete
         private float deleteHoldTimer;
@@ -939,7 +942,8 @@ namespace OpenEmpires
             UpdateRepairCursor();
 
             // Signal the global custom cursor to hide when a contextual cursor is active
-            bool anyContextual = (attackCursorIcon != null && attackCursorIcon.activeSelf)
+            bool anyContextual = (resourceCursorIcon != null && resourceCursorIcon.activeSelf)
+                              || (attackCursorIcon != null && attackCursorIcon.activeSelf)
                               || (garrisonCursorIcon != null && garrisonCursorIcon.activeSelf)
                               || (patrolCursorIcon != null && patrolCursorIcon.activeSelf)
                               || (actionCursorIcon != null && actionCursorIcon.activeSelf)
@@ -1012,7 +1016,7 @@ namespace OpenEmpires
 
             if (hoveredResource != null && resourceCursorIcon != null)
             {
-                resourceCursorIcon.transform.position = new Vector3(currentMousePos.x + 20f, currentMousePos.y - 20f, 0f);
+                resourceCursorIcon.transform.position = GetContextCursorPosition();
             }
         }
 
@@ -1403,10 +1407,10 @@ namespace OpenEmpires
             resourceCursorImage.raycastTarget = false;
 
             var rt = resourceCursorIcon.GetComponent<RectTransform>();
-            rt.sizeDelta = new Vector2(40f, 40f);
+            rt.sizeDelta = new Vector2(ResourceCursorSize, ResourceCursorSize);
             rt.anchorMin = Vector2.zero;
             rt.anchorMax = Vector2.zero;
-            rt.pivot = new Vector2(0f, 1f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
 
             resourceCursorIcon.SetActive(false);
         }
@@ -1430,7 +1434,7 @@ namespace OpenEmpires
             actionCursorImage.raycastTarget = false;
 
             var rt = actionCursorIcon.GetComponent<RectTransform>();
-            rt.sizeDelta = new Vector2(60f, 60f);
+            rt.sizeDelta = new Vector2(ActionCursorSize, ActionCursorSize);
             rt.anchorMin = Vector2.zero;
             rt.anchorMax = Vector2.zero;
             rt.pivot = new Vector2(0.5f, 0.5f);
@@ -1487,14 +1491,24 @@ namespace OpenEmpires
             if (actionSprite != null)
             {
                 EnsureActionCursorIcon();
+                if (resourceCursorIcon != null)
+                    resourceCursorIcon.SetActive(false);
                 actionCursorImage.sprite = actionSprite;
                 actionCursorIcon.SetActive(true);
-                actionCursorIcon.transform.position = new Vector3(currentMousePos.x + 12f, currentMousePos.y - 12f, 0f);
+                actionCursorIcon.transform.position = GetContextCursorPosition();
             }
             else if (actionCursorIcon != null)
             {
                 actionCursorIcon.SetActive(false);
             }
+        }
+
+        private Vector3 GetContextCursorPosition()
+        {
+            return new Vector3(
+                currentMousePos.x + ContextCursorOffset.x,
+                currentMousePos.y + ContextCursorOffset.y,
+                0f);
         }
 
         private bool HasSelectedOwnMonk()
@@ -2521,6 +2535,7 @@ namespace OpenEmpires
                                     LocalPlayerId, selectedBuildings[i].BuildingId, fixedPos,
                                     -1, rallyUnitView.UnitId));
                             }
+                            gameSetup?.ShowRallyCommandFlag(fixedPos.ToVector3());
                             isRightDragging = false;
                             return;
                         }
@@ -2538,6 +2553,7 @@ namespace OpenEmpires
                                 rallySim.CommandBuffer.EnqueueCommand(new SetRallyPointCommand(
                                     LocalPlayerId, selectedBuildings[i].BuildingId, fixedPos, resNode.ResourceNodeId));
                             }
+                            gameSetup?.ShowRallyCommandFlag(fixedPos.ToVector3());
                             isRightDragging = false;
                             return;
                         }
@@ -2561,6 +2577,7 @@ namespace OpenEmpires
                                         rallySim.CommandBuffer.EnqueueCommand(new SetRallyPointCommand(
                                             LocalPlayerId, selectedBuildings[i].BuildingId, fixedPos, -1, -1, rallyBuildingData.Id));
                                     }
+                                    gameSetup?.ShowRallyCommandFlag(fixedPos.ToVector3());
                                     isRightDragging = false;
                                     return;
                                 }
@@ -2575,6 +2592,7 @@ namespace OpenEmpires
                                         rallySim.CommandBuffer.EnqueueCommand(new SetRallyPointCommand(
                                             LocalPlayerId, selectedBuildings[i].BuildingId, fixedPos, rallyBuildingData.LinkedResourceNodeId));
                                     }
+                                    gameSetup?.ShowRallyCommandFlag(fixedPos.ToVector3());
                                     isRightDragging = false;
                                     return;
                                 }
@@ -2590,6 +2608,7 @@ namespace OpenEmpires
                             rallySim.CommandBuffer.EnqueueCommand(new SetRallyPointCommand(
                                 LocalPlayerId, selectedBuildings[i].BuildingId, fixedPos));
                         }
+                        gameSetup?.ShowRallyCommandFlag(fixedPos.ToVector3());
                     }
                 }
                 isRightDragging = false;
@@ -2901,6 +2920,8 @@ namespace OpenEmpires
                         var moveCmd = new MoveCommand(LocalPlayerId, milIds, fixedTarget, fixedPositions);
                         moveCmd.IsQueued = multiSelectHeld;
                         sim.CommandBuffer.EnqueueCommand(moveCmd);
+                        if (gameSetup != null)
+                            gameSetup.ShowMarkers(positions);
                     }
 
                     SFXManager.Instance?.PlayUI(SFXType.CommandMove, 0.5f);
@@ -3407,7 +3428,7 @@ namespace OpenEmpires
 
                 if (gameSetup != null)
                 {
-                    gameSetup.CommitMarkers();
+                    gameSetup.CommitMarkers(CommandFlagKind.AttackMove);
                     gameSetup.HideFacingArrow();
                 }
             }
@@ -3463,7 +3484,7 @@ namespace OpenEmpires
                             var positions = new List<Vector3>(selectedUnits.Count);
                             for (int i = 0; i < selectedUnits.Count; i++)
                                 positions.Add((fixedTarget + selectedUnits[i].FormationOffset).ToVector3());
-                            gameSetup.ShowMarkers(positions);
+                            gameSetup.ShowMarkers(positions, CommandFlagKind.AttackMove);
                         }
                     }
                     else
@@ -3478,7 +3499,7 @@ namespace OpenEmpires
                         sim.CommandBuffer.EnqueueCommand(cmd);
 
                         if (gameSetup != null)
-                            gameSetup.ShowMarkers(positions);
+                            gameSetup.ShowMarkers(positions, CommandFlagKind.AttackMove);
                     }
                 }
             }

@@ -582,7 +582,7 @@ namespace OpenEmpires
                 facingArrow.SetActive(false);
         }
 
-        public void ShowMarkers(List<Vector3> positions)
+        public void ShowMarkers(List<Vector3> positions, CommandFlagKind flagKind = CommandFlagKind.Move)
         {
             int count = Mathf.Min(positions.Count, MarkerPoolSize);
             for (int i = 0; i < count; i++)
@@ -593,6 +593,9 @@ namespace OpenEmpires
                 marker.SetActive(false);
                 marker.SetActive(true);
             }
+
+            if (count > 0)
+                ShowCommandFlag(GetMarkerCenter(positions, count), flagKind);
         }
 
         public void PreviewMarkers(List<Vector3> positions)
@@ -626,11 +629,46 @@ namespace OpenEmpires
             activePreviewCount = 0;
         }
 
-        public void CommitMarkers()
+        public void CommitMarkers(CommandFlagKind flagKind = CommandFlagKind.Move)
         {
+            if (activePreviewCount > 0)
+            {
+                Vector3 center = Vector3.zero;
+                for (int i = 0; i < activePreviewCount; i++)
+                    center += markerPool[i].transform.position;
+                ShowCommandFlag(center / activePreviewCount, flagKind);
+            }
+
             for (int i = 0; i < activePreviewCount; i++)
                 markerFaders[i].Preview = false;
             activePreviewCount = 0;
+        }
+
+        public void ShowCommandFlag(Vector3 position, CommandFlagKind flagKind)
+        {
+            CommandFlagMarker.Spawn(GetCommandFlagGroundPosition(position), flagKind);
+        }
+
+        public void ShowRallyCommandFlag(Vector3 position)
+        {
+            CommandFlagMarker.Spawn(GetCommandFlagGroundPosition(position), CommandFlagKind.Rally,
+                new Color(1f, 0.82f, 0.18f, 0.86f));
+        }
+
+        private Vector3 GetCommandFlagGroundPosition(Vector3 position)
+        {
+            var sim = GameBootstrapper.Instance?.Simulation;
+            if (sim != null && sim.MapData != null)
+                position.y = sim.MapData.SampleHeight(position.x, position.z) * sim.Config.TerrainHeightScale + 0.03f;
+            return position;
+        }
+
+        private static Vector3 GetMarkerCenter(List<Vector3> positions, int count)
+        {
+            Vector3 center = Vector3.zero;
+            for (int i = 0; i < count; i++)
+                center += positions[i];
+            return center / count;
         }
 
         public static Vector3 SnapClickToNearestWalkable(MapData map, Vector3 clickPoint)
