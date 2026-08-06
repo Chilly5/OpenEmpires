@@ -59,6 +59,8 @@ namespace OpenEmpires
         private Image healthBarFill;
         private RectTransform healthBarFillRT;
         private TextMeshProUGUI groupLabelTMP;
+        private float healthBarDamageTimer;
+        private const float HealthBarDamageVisibleDuration = 1.2f;
 
         // Attack dash
         private int lastSeenAttackTick;
@@ -764,8 +766,11 @@ namespace OpenEmpires
                 return;
             }
 
-            bool damaged = unitData.CurrentHealth < unitData.MaxHealth;
-            if (!isSelected && !isHovered && !damaged)
+            bool recentlyDamaged = healthBarDamageTimer > 0f;
+            if (healthBarDamageTimer > 0f)
+                healthBarDamageTimer -= Time.deltaTime;
+
+            if (!isHovered && !recentlyDamaged)
             {
                 if (healthBarRoot != null && healthBarRoot.gameObject.activeSelf)
                     healthBarRoot.gameObject.SetActive(false);
@@ -1088,6 +1093,7 @@ namespace OpenEmpires
                 lastSeenDamageTick = unitData.LastDamageTick;
                 damageFlinchTimer = DamageFlinchDuration;
                 damageFlashTimer = DamageFlashDuration;
+                healthBarDamageTimer = HealthBarDamageVisibleDuration;
                 Vector3 fromAttacker = unitData.LastDamageFromPos.ToVector3() - smoothedBasePos;
                 fromAttacker.y = 0f;
                 damageFlinchDir = fromAttacker.sqrMagnitude > 0.001f ? -fromAttacker.normalized : -transform.forward;
