@@ -179,6 +179,7 @@ namespace OpenEmpires
         private UnitView hoveredUnit;
         private ResourceNode hoveredResource;
         private BuildingView hoveredBuilding;
+        private BuildingView hoveredOverlayBuilding;
         private GameObject resourceCursorIcon;
         private Image resourceCursorImage;
         private GameObject attackCursorIcon;
@@ -1018,6 +1019,7 @@ namespace OpenEmpires
         private void UpdateBuildingHover()
         {
             BuildingView newHover = null;
+            BuildingView newOverlayHover = null;
 
             if (!UIInputSuppressed && !isPlacingBuilding && !isPlacingWall && mainCamera != null)
             {
@@ -1027,6 +1029,8 @@ namespace OpenEmpires
                     var view = hit.collider.GetComponent<BuildingView>();
                     if (view != null && !view.IsDestroyed)
                     {
+                        newOverlayHover = view;
+
                         // Check if this is a damaged allied building and we have villagers selected
                         var sim = GameBootstrapper.Instance?.Simulation;
                         if (sim != null)
@@ -1043,6 +1047,15 @@ namespace OpenEmpires
                         }
                     }
                 }
+            }
+
+            if (newOverlayHover != hoveredOverlayBuilding)
+            {
+                if (hoveredOverlayBuilding != null)
+                    hoveredOverlayBuilding.SetHovered(false);
+                hoveredOverlayBuilding = newOverlayHover;
+                if (hoveredOverlayBuilding != null)
+                    hoveredOverlayBuilding.SetHovered(true);
             }
 
             hoveredBuilding = newHover;
@@ -4903,6 +4916,14 @@ namespace OpenEmpires
 
         public void OnBuildingDestroyed(int buildingId)
         {
+            if (hoveredOverlayBuilding != null && hoveredOverlayBuilding.BuildingId == buildingId)
+            {
+                hoveredOverlayBuilding.SetHovered(false);
+                hoveredOverlayBuilding = null;
+            }
+            if (hoveredBuilding != null && hoveredBuilding.BuildingId == buildingId)
+                hoveredBuilding = null;
+
             for (int i = selectedBuildings.Count - 1; i >= 0; i--)
             {
                 if (selectedBuildings[i].BuildingId == buildingId)

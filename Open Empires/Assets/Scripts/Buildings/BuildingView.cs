@@ -34,6 +34,7 @@ namespace OpenEmpires
         public BuildingType BuildingType { get; private set; }
         public bool IsDestroyed { get; private set; }
         public bool IsSelected => isSelected;
+        public bool IsHovered => isHovered;
 
         public Rect GetScreenBounds(Camera cam)
         {
@@ -81,6 +82,7 @@ namespace OpenEmpires
         private float cachedHeightScale;
         private bool isSelected;
         private bool isPreselected;
+        private bool isHovered;
         private bool isGhostMode;
         private int controlGroupLabel = -1;
         private TextMeshProUGUI controlGroupLabelTMP;
@@ -207,8 +209,11 @@ namespace OpenEmpires
 
         // Damage flash
         private int lastSeenDamageTick;
+        private int lastSeenHealthBarDamageTick;
         private float damageFlashTimer;
+        private float healthBarDamageTimer;
         private const float DamageFlashDuration = 0.18f;
+        private const float HealthBarDamageVisibleDuration = 1.2f;
         private Renderer[] bodyRenderers;
         private Color[] originalColors;
         private bool flashActive;
@@ -601,6 +606,11 @@ namespace OpenEmpires
                 lastSeenDamageTick = latestTick;
                 damageFlashTimer = DamageFlashDuration;
                 SFXManager.Instance?.Play(SFXType.UnitHurt, transform.position, 0.4f);
+            }
+            if (buildingData.LastDamageTick > lastSeenHealthBarDamageTick && buildingData.LastDamageTick > 0)
+            {
+                lastSeenHealthBarDamageTick = buildingData.LastDamageTick;
+                healthBarDamageTimer = HealthBarDamageVisibleDuration;
             }
 
             UpdateFlash();
@@ -1685,7 +1695,10 @@ namespace OpenEmpires
                 return;
             }
 
-            bool damaged = buildingData.CurrentHealth < buildingData.MaxHealth;
+            bool recentlyDamaged = healthBarDamageTimer > 0f;
+            if (healthBarDamageTimer > 0f)
+                healthBarDamageTimer -= Time.deltaTime;
+
             bool training = buildingData.IsTraining;
             // Reuse the upgrade-bar widget for both Tower upgrades AND research progress
             // (Blacksmith / University). Single visual, two underlying systems.
@@ -1715,7 +1728,7 @@ namespace OpenEmpires
             bool showInfluence = cachedInInfluence || externalInfluenceMark;
             // Farms don't auto-show the HP bar from influence — the "+" buff icon already conveys it.
             bool barShowInfluence = showInfluence && buildingData.Type != BuildingType.Farm;
-            if (!isSelected && !damaged && !buildingData.IsUnderConstruction && !training && !upgrading && !barShowInfluence)
+            if (!isHovered && !recentlyDamaged && !buildingData.IsUnderConstruction && !training && !upgrading && !barShowInfluence)
             {
                 if (overlayRoot != null && overlayRoot.gameObject.activeSelf)
                     overlayRoot.gameObject.SetActive(false);
@@ -1914,6 +1927,11 @@ namespace OpenEmpires
             isPreselected = preselected;
             if (selectionRing != null && !isSelected)
                 selectionRing.SetActive(preselected);
+        }
+
+        public void SetHovered(bool hovered)
+        {
+            isHovered = hovered;
         }
 
         public void OnDestroyed()
