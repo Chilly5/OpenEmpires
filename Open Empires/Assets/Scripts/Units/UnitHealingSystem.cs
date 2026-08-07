@@ -22,11 +22,11 @@ namespace OpenEmpires
                 }
                 if (!unit.IsHealer) continue;
 
-                Fixed32 healRange = Fixed32.FromFloat(isKing ? config.KingHealRange : config.MonkHealRange);
+                Fixed32 healRange = Fixed32.FromFloat(config.MonkHealRange);
                 Fixed32 healRangeSq = healRange * healRange;
-                Fixed32 detectionRange = Fixed32.FromFloat(isKing ? config.KingHealRange : config.MonkDetectionRange);
+                Fixed32 detectionRange = Fixed32.FromFloat(config.MonkDetectionRange);
                 Fixed32 detectionRangeSq = detectionRange * detectionRange;
-                int healAmount = isKing ? config.KingHealAmount : config.MonkHealAmount;
+                int healAmount = config.MonkHealAmount;
 
                 // Tick cooldown
                 if (unit.AttackCooldownRemaining > 0)
@@ -159,8 +159,7 @@ namespace OpenEmpires
             {
                 var unit = allUnits[i];
                 if (unit.State == UnitState.Dead) continue;
-                if (unit.State == UnitState.InCombat) continue;
-                if (unit.Id == king.Id) continue;
+                // Heals through combat, and sustains the King himself.
                 if (!TeamHelper.AreAllies(playerTeamIds, unit.PlayerId, king.PlayerId)) continue;
                 if (unit.CurrentHealth >= unit.MaxHealth) continue;
 
@@ -210,7 +209,7 @@ namespace OpenEmpires
                 {
                     var unit = allUnits[i];
                     if (unit.State == UnitState.Dead) continue;
-                    if (unit.State == UnitState.InCombat) continue;
+                    // Heals through combat — this is battlefield sustain, not out-of-combat regen.
                     if (!TeamHelper.AreAllies(playerTeamIds, unit.PlayerId, building.PlayerId)) continue;
                     if (unit.CurrentHealth >= unit.MaxHealth) continue;
 

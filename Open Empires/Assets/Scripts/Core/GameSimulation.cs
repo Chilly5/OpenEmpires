@@ -146,6 +146,15 @@ namespace OpenEmpires
             return IsEnglishLandmark(building, LandmarkId.English_Age2_B);
         }
 
+        private bool IsFreeLandmarkRewardTraining(BuildingData building, int unitType)
+        {
+            if (building == null || building.Type != BuildingType.Landmark) return false;
+            if (unitType != UnitData.KingUnitType) return false;
+
+            var def = LandmarkDefinitions.Get(building.LandmarkId);
+            return def.SpawnsKingOnCompletion;
+        }
+
         private void ApplyLandmarkCapabilities(BuildingData building)
         {
             if (building == null || building.Type != BuildingType.Landmark) return;
@@ -288,8 +297,12 @@ namespace OpenEmpires
         {
             ApplyLandmarkCapabilities(building);
 
-            if (def.SpawnsKingOnCompletion && GetPopulation(building.PlayerId) < GetPopulationCap(building.PlayerId))
-                SpawnTrainedUnit(building, UnitData.KingUnitType, building.PlayerId);
+            // Queue the King rather than spawning him outright. The training system's
+            // pop-cap gate holds a finished unit at 1 tick until space opens, so a player
+            // who completes the Abbey while capped still gets their King later.
+            if (def.SpawnsKingOnCompletion)
+                building.EnqueueTraining(UnitData.KingUnitType,
+                    GetAdjustedTrainTime(building, UnitData.KingUnitType));
         }
 
         private int currentTick;
@@ -3760,10 +3773,13 @@ namespace OpenEmpires
             GetUnitTrainingCostsAndTime(unitType, out foodCost, out woodCost, out goldCost, out trainTime);
             ApplyTrainingDiscounts(building, unitType, ref foodCost, ref woodCost, ref goldCost);
 
-            var resources = ResourceManager.GetPlayerResources(cmd.PlayerId);
-            resources.Food += foodCost;
-            resources.Wood += woodCost;
-            resources.Gold += goldCost;
+            if (!IsFreeLandmarkRewardTraining(building, unitType))
+            {
+                var resources = ResourceManager.GetPlayerResources(cmd.PlayerId);
+                resources.Food += foodCost;
+                resources.Wood += woodCost;
+                resources.Gold += goldCost;
+            }
 
             building.TrainingQueue.RemoveAt(cmd.QueueIndex);
 
