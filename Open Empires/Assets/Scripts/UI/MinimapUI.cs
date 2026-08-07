@@ -755,12 +755,18 @@ namespace OpenEmpires
         {
             if (selectionManager == null) return;
 
-            int[] unitIds = selectionManager.GetSelectedUnitIds();
-            if (unitIds.Length == 0) return;
+            var selectedUnits = selectionManager.SelectedUnits;
+            if (selectedUnits.Count == 0) return;
 
-            for (int u = 0; u < unitIds.Length; u++)
+            int localPlayerId = selectionManager.LocalPlayerId;
+            for (int u = 0; u < selectedUnits.Count; u++)
             {
-                var unit = sim.UnitRegistry.GetUnit(unitIds[u]);
+                UnitView unitView = selectedUnits[u];
+                if (unitView == null || unitView.PlayerId != localPlayerId ||
+                    !selectionManager.ShouldShowWaypointFor(unitView))
+                    continue;
+
+                var unit = sim.UnitRegistry.GetUnit(unitView.UnitId);
                 if (unit == null || unit.State == UnitState.Dead) continue;
 
                 bool hasQueue = unit.HasQueuedCommands;
