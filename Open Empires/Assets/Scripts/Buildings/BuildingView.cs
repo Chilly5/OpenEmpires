@@ -364,6 +364,12 @@ namespace OpenEmpires
                 SetBodyRenderersVisible(false);
                 UpdateConstructionStage(data.ConstructionProgress);
             }
+            else
+            {
+                // Already complete on spawn (map setup, cheats, rejoin) — the completion
+                // branch in the update loop will never fire for these.
+                CreateHealAuraVisual();
+            }
 
             // Cache reference to the billboard sprite renderer (if any)
             var spriteTransform = transform.Find("Sprite");
@@ -583,6 +589,7 @@ namespace OpenEmpires
                     DestroyConstructionScaffold();
                     SetBodyRenderersVisible(true);
                     SFXManager.Instance?.Play(SFXType.ConstructionComplete, transform.position, 0.7f);
+                    CreateHealAuraVisual();
 
                     if (influenceZone != null)
                         influenceZone.SetActive(isSelected && PlayerId == GetLocalPlayerId());
@@ -793,6 +800,24 @@ namespace OpenEmpires
         }
 
         public void ClearBuildingData() { buildingData = null; }
+
+        /// <summary>
+        /// Landmarks with a healing aura (the Abbey of Kings) get a golden dust ring at the
+        /// edge of their heal radius once construction finishes. Cosmetic only — the heal
+        /// itself is driven by UnitHealingSystem.
+        /// </summary>
+        private void CreateHealAuraVisual()
+        {
+            if (buildingData == null || IsDestroyed) return;
+            if (buildingData.IsUnderConstruction) return;
+            if (buildingData.Type != BuildingType.Landmark) return;
+            if (!LandmarkDefinitions.Get(buildingData.LandmarkId).HasHealingAura) return;
+
+            var config = GameBootstrapper.Instance?.Simulation?.Config;
+            if (config == null) return;
+
+            HealAuraVisual.Attach(transform, config.AbbeyOfKingsHealRange, new Color(1f, 0.84f, 0.38f));
+        }
 
         public void SetGhostMode(bool ghost)
         {

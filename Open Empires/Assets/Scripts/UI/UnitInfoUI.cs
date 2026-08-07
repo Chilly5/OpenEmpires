@@ -132,6 +132,9 @@ namespace OpenEmpires
             public string Badge;        // small overlay text (e.g. "ON" / "OFF")
             public Color? BadgeColor;   // color of badge text
             public Color? Tint;         // base color tint applied to the button background
+            public Transform RangePreviewTarget;
+            public float RangePreviewRadius;
+            public Color? RangePreviewColor;
         }
 
         // --- Canvas UI references ---
@@ -219,7 +222,13 @@ namespace OpenEmpires
         private RectTransform tooltipPanelRT;
         private TMP_Text tooltipText;
         private string[] actionTooltips;
+        private Transform[] actionRangePreviewTargets;
+        private float[] actionRangePreviewRadii;
+        private Color[] actionRangePreviewColors;
         private int hoveredActionIndex = -1;
+        private GameObject activeRangePreviewGO;
+        private Transform activeRangePreviewTarget;
+        private float activeRangePreviewRadius;
 
         private struct QueueEntry
         {
@@ -256,10 +265,20 @@ namespace OpenEmpires
             BuildUI();
             actionCallbacks = new System.Action[12];
             actionTooltips = new string[12];
+            actionRangePreviewTargets = new Transform[12];
+            actionRangePreviewRadii = new float[12];
+            actionRangePreviewColors = new Color[12];
             buildCallbacks = new System.Action[TotalBuildButtons];
             buildTooltips = new string[TotalBuildButtons];
             actionFlashTimers = new float[12];
             buildFlashTimers = new float[TotalBuildButtons];
+        }
+
+        private void OnDestroy()
+        {
+            HideHealingRangePreview();
+            if (s_instance == this)
+                s_instance = null;
         }
 
         // =============================================================
@@ -1140,11 +1159,13 @@ namespace OpenEmpires
         private void Update()
         {
             UpdateButtonFlashTimers();
+            UpdateHealingRangePreview();
 
             if (selectionManager == null)
             {
                 UnitSelectionManager.SetInfoPanelSuppressed(false);
                 deleteMouseHolding = false;
+                HideHealingRangePreview();
                 return;
             }
 
@@ -1155,6 +1176,7 @@ namespace OpenEmpires
             {
                 UnitSelectionManager.SetInfoPanelSuppressed(false);
                 deleteMouseHolding = false;
+                HideHealingRangePreview();
                 return;
             }
 
@@ -1271,6 +1293,7 @@ namespace OpenEmpires
                 hoveredActionIndex = -1;
                 tooltipPanelGO.SetActive(false);
                 s_tooltipPanelRT = null;
+                HideHealingRangePreview();
             }
 
             // Show/hide build panels (3 age panels)
@@ -1647,6 +1670,9 @@ namespace OpenEmpires
                     actionButtons[i].interactable = btn.Enabled;
                     actionCallbacks[i] = btn.OnClick;
                     actionTooltips[i] = btn.Tooltip;
+                    actionRangePreviewTargets[i] = btn.RangePreviewTarget;
+                    actionRangePreviewRadii[i] = btn.RangePreviewRadius;
+                    actionRangePreviewColors[i] = btn.RangePreviewColor ?? new Color(1f, 0.78f, 0.22f, 0.72f);
 
                     actionButtonHotkeys[i].text = btn.Hotkey ?? "";
 
@@ -1704,9 +1730,19 @@ namespace OpenEmpires
                     actionButtonGOs[i].SetActive(false);
                     actionCallbacks[i] = null;
                     actionTooltips[i] = null;
+                    actionRangePreviewTargets[i] = null;
+                    actionRangePreviewRadii[i] = 0f;
                     if (actionButtonBadges != null && actionButtonBadges[i] != null)
                         actionButtonBadges[i].gameObject.SetActive(false);
                 }
+            }
+
+            if (hoveredActionIndex >= 0
+                && (!actionButtonGOs[hoveredActionIndex].activeSelf
+                    || actionRangePreviewTargets[hoveredActionIndex] != activeRangePreviewTarget
+                    || !Mathf.Approximately(actionRangePreviewRadii[hoveredActionIndex], activeRangePreviewRadius)))
+            {
+                HideHealingRangePreview();
             }
         }
 
@@ -1842,6 +1878,23 @@ namespace OpenEmpires
         //  Action slot builders
         // =============================================================
 
+        private GridButton MakeHealingAuraButton(string label, string title, string body, Transform target,
+            float radius, int healAmount, int cooldownTicks, int tickRate)
+        {
+            float seconds = tickRate > 0 ? cooldownTicks / (float)tickRate : cooldownTicks;
+            return new GridButton
+            {
+                Label = label,
+                Enabled = true,
+                Icon = UnitIcons.Get(9),
+                Tint = new Color(0.48f, 0.38f, 0.16f),
+                Tooltip = $"<b>{title}</b>\n{body}\nHeal: {healAmount} HP every {seconds:0.#}s\nRange: {radius:0.#}",
+                RangePreviewTarget = target,
+                RangePreviewRadius = radius,
+                RangePreviewColor = new Color(1f, 0.78f, 0.22f, 0.72f)
+            };
+        }
+
         private GridButton?[] GetUnitActionSlots(UnitView view, GameSimulation sim)
         {
             var unitData = sim.UnitRegistry.GetUnit(view.UnitId);
@@ -1943,6 +1996,14 @@ namespace OpenEmpires
                 Tooltip = "<b>Garrison</b>\nClick on a building to garrison selected units.",
                 Enabled = true,
                 OnClick = () => selectionManager.EnterGarrisonMode() };
+
+            if (view.UnitType == UnitData.KingUnitType)
+            {
+                slots[8] = MakeHealingAuraButton("Heal\nAura", "King's Healing Aura",
+                    "Passive battlefield sustain. Hover to preview exact range.",
+                    view.transform, sim.Config.KingHealRange, sim.Config.KingHealAmount,
+                    sim.Config.KingHealCooldownTicks, sim.Config.TickRate);
+            }
 
             // X = Delete (hold to confirm)
             slots[9] = new GridButton { Label = "Delete", Hotkey = "X",
@@ -2181,6 +2242,16 @@ namespace OpenEmpires
                 Enabled = true,
                 OnClick = () => selectionManager.EnterGarrisonMode() };
 
+            for (int i = 0; i < selected.Count; i++)
+            {
+                if (selected[i].UnitType != UnitData.KingUnitType) continue;
+                slots[8] = MakeHealingAuraButton("Heal\nAura", "King's Healing Aura",
+                    "Passive battlefield sustain. Hover to preview exact range.",
+                    selected[i].transform, sim.Config.KingHealRange, sim.Config.KingHealAmount,
+                    sim.Config.KingHealCooldownTicks, sim.Config.TickRate);
+                break;
+            }
+
             // X = Delete (hold to confirm)
             slots[9] = new GridButton { Label = "Delete", Hotkey = "X",
                 Tooltip = "<b>Delete</b>\nHold to destroy selected units.",
@@ -2220,6 +2291,16 @@ namespace OpenEmpires
                 bool hasLandmarkDiscount = sim.IsBuildingInFrenchLandmarkInfluence(building);
                 int discPct = hasLandmarkDiscount ? sim.Config.FrenchLandmarkTrainingDiscountPercent : 0;
                 BuildingType effectiveType = sim.GetEffectiveBuildingType(building);
+
+                if (building.Type == BuildingType.Landmark
+                    && LandmarkDefinitions.Get(building.LandmarkId).HasHealingAura)
+                {
+                    slots[0] = MakeHealingAuraButton("Heal\nAura", "Abbey Healing Aura",
+                        "Passive battlefield sustain from the Abbey of Kings. Hover to preview exact range.",
+                        view.transform, sim.Config.AbbeyOfKingsHealRange, sim.Config.AbbeyOfKingsHealAmount,
+                        sim.Config.AbbeyOfKingsHealCooldownTicks, sim.Config.TickRate);
+                    hasAny = true;
+                }
 
                 if (effectiveType == BuildingType.Barracks)
                 {
@@ -2932,6 +3013,20 @@ namespace OpenEmpires
                 if (ready.Count > 0)
                 {
                     var resources = sim.ResourceManager.GetPlayerResources(localPid);
+
+                    for (int i = 0; i < ready.Count; i++)
+                    {
+                        var bData = sim.BuildingRegistry.GetBuilding(ready[i].BuildingId);
+                        if (bData == null || bData.Type != BuildingType.Landmark) continue;
+                        if (!LandmarkDefinitions.Get(bData.LandmarkId).HasHealingAura) continue;
+
+                        slots[0] = MakeHealingAuraButton("Heal\nAura", "Abbey Healing Aura",
+                            "Passive battlefield sustain from the Abbey of Kings. Hover to preview exact range.",
+                            ready[i].transform, sim.Config.AbbeyOfKingsHealRange, sim.Config.AbbeyOfKingsHealAmount,
+                            sim.Config.AbbeyOfKingsHealCooldownTicks, sim.Config.TickRate);
+                        hasAny = true;
+                        break;
+                    }
 
                     if (dominantType == BuildingType.Barracks)
                     {
@@ -3701,6 +3796,169 @@ namespace OpenEmpires
         //  Tooltip helpers
         // =============================================================
 
+        private void ShowHealingRangePreview(int index)
+        {
+            if (index < 0 || index >= actionRangePreviewTargets.Length) return;
+            var target = actionRangePreviewTargets[index];
+            float radius = actionRangePreviewRadii[index];
+            if (target == null || radius <= 0f)
+            {
+                HideHealingRangePreview();
+                return;
+            }
+
+            Color color = actionRangePreviewColors[index];
+            if (activeRangePreviewGO != null
+                && activeRangePreviewTarget == target
+                && Mathf.Approximately(activeRangePreviewRadius, radius))
+            {
+                UpdateHealingRangePreview();
+                return;
+            }
+
+            HideHealingRangePreview();
+
+            activeRangePreviewTarget = target;
+            activeRangePreviewRadius = radius;
+
+            activeRangePreviewGO = new GameObject("HealingRangePreview");
+            activeRangePreviewGO.layer = target.gameObject.layer;
+            activeRangePreviewGO.transform.position = target.position;
+
+            CreateHealingRangeLine(activeRangePreviewGO.transform, radius, color);
+            CreateHealingRangeMist(activeRangePreviewGO.transform, radius, color);
+        }
+
+        private void UpdateHealingRangePreview()
+        {
+            if (activeRangePreviewGO == null) return;
+            if (activeRangePreviewTarget == null)
+            {
+                HideHealingRangePreview();
+                return;
+            }
+
+            activeRangePreviewGO.transform.position = activeRangePreviewTarget.position;
+        }
+
+        private void HideHealingRangePreview()
+        {
+            if (activeRangePreviewGO != null)
+            {
+                var lineRenderers = activeRangePreviewGO.GetComponentsInChildren<LineRenderer>();
+                for (int i = 0; i < lineRenderers.Length; i++)
+                {
+                    var mat = lineRenderers[i].sharedMaterial;
+                    if (mat != null) Destroy(mat);
+                }
+
+                var particleRenderers = activeRangePreviewGO.GetComponentsInChildren<ParticleSystemRenderer>();
+                for (int i = 0; i < particleRenderers.Length; i++)
+                {
+                    var mat = particleRenderers[i].sharedMaterial;
+                    if (mat != null) Destroy(mat);
+                }
+
+                Destroy(activeRangePreviewGO);
+            }
+            activeRangePreviewGO = null;
+            activeRangePreviewTarget = null;
+            activeRangePreviewRadius = 0f;
+        }
+
+        private Material CreateHealingRangeMaterial(Color color)
+        {
+            var shader = Shader.Find("OpenEmpires/RangeOverlay");
+            if (shader == null) shader = Shader.Find("Universal Render Pipeline/Unlit");
+            if (shader == null) shader = Shader.Find("Unlit/Color");
+            var mat = new Material(shader);
+            mat.color = color;
+            if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", color);
+            if (mat.HasProperty("_Color")) mat.SetColor("_Color", color);
+            mat.renderQueue = 3000;
+            return mat;
+        }
+
+        private void CreateHealingRangeLine(Transform parent, float radius, Color color)
+        {
+            const int segments = 128;
+            var lineGO = new GameObject("HealingRangeLine");
+            lineGO.transform.SetParent(parent, false);
+            lineGO.transform.localPosition = Vector3.zero;
+
+            var lr = lineGO.AddComponent<LineRenderer>();
+            lr.useWorldSpace = false;
+            lr.loop = true;
+            lr.positionCount = segments;
+            lr.startWidth = 0.075f;
+            lr.endWidth = 0.075f;
+            lr.numCapVertices = 4;
+            lr.startColor = color;
+            lr.endColor = color;
+            lr.material = CreateHealingRangeMaterial(color);
+
+            for (int i = 0; i < segments; i++)
+            {
+                float angle = (i / (float)segments) * Mathf.PI * 2f;
+                lr.SetPosition(i, new Vector3(Mathf.Cos(angle) * radius, 0.09f, Mathf.Sin(angle) * radius));
+            }
+        }
+
+        private void CreateHealingRangeMist(Transform parent, float radius, Color color)
+        {
+            var mistGO = new GameObject("HealingRangeGoldMist");
+            mistGO.transform.SetParent(parent, false);
+            mistGO.transform.localPosition = Vector3.zero;
+
+            var particles = mistGO.AddComponent<ParticleSystem>();
+            var main = particles.main;
+            main.loop = true;
+            main.duration = 2f;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(1.2f, 2.2f);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(0.03f, 0.12f);
+            main.startSize = new ParticleSystem.MinMaxCurve(0.07f, 0.16f);
+            main.startColor = new ParticleSystem.MinMaxGradient(
+                new Color(color.r, color.g, color.b, 0.18f),
+                new Color(1f, 0.94f, 0.62f, 0.36f));
+            main.simulationSpace = ParticleSystemSimulationSpace.Local;
+            main.maxParticles = 180;
+
+            var emission = particles.emission;
+            emission.rateOverTime = 44f;
+
+            var shape = particles.shape;
+            shape.enabled = true;
+            shape.shapeType = ParticleSystemShapeType.Circle;
+            shape.radius = radius;
+            shape.radiusThickness = 0.02f;
+
+            var velocity = particles.velocityOverLifetime;
+            velocity.enabled = true;
+            velocity.space = ParticleSystemSimulationSpace.Local;
+            velocity.y = new ParticleSystem.MinMaxCurve(0.03f, 0.16f);
+
+            var colorOverLifetime = particles.colorOverLifetime;
+            colorOverLifetime.enabled = true;
+            var gradient = new Gradient();
+            gradient.SetKeys(
+                new[]
+                {
+                    new GradientColorKey(new Color(color.r, color.g, color.b), 0f),
+                    new GradientColorKey(new Color(1f, 0.94f, 0.62f), 1f)
+                },
+                new[]
+                {
+                    new GradientAlphaKey(0f, 0f),
+                    new GradientAlphaKey(0.32f, 0.2f),
+                    new GradientAlphaKey(0f, 1f)
+                });
+            colorOverLifetime.color = gradient;
+
+            var renderer = particles.GetComponent<ParticleSystemRenderer>();
+            renderer.material = CreateHealingRangeMaterial(new Color(color.r, color.g, color.b, 0.45f));
+            renderer.renderMode = ParticleSystemRenderMode.Billboard;
+        }
+
         private static bool IsWallType(BuildingType type)
         {
             return type == BuildingType.Wall || type == BuildingType.StoneWall || type == BuildingType.StoneGate || type == BuildingType.WoodGate;
@@ -3711,6 +3969,7 @@ namespace OpenEmpires
             if (actionTooltips[index] == null) return;
             hoveredActionIndex = index;
             tooltipText.text = actionTooltips[index];
+            ShowHealingRangePreview(index);
 
             // Position above the hovered button
             var btnRT = actionButtonGOs[index].GetComponent<RectTransform>();
@@ -3738,6 +3997,7 @@ namespace OpenEmpires
                 hoveredActionIndex = -1;
                 tooltipPanelGO.SetActive(false);
                 s_tooltipPanelRT = null;
+                HideHealingRangePreview();
             }
         }
 

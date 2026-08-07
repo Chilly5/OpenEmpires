@@ -447,9 +447,6 @@ namespace OpenEmpires
                     unitStencilMat, playerSilhouetteMaterials[unitData.PlayerId]);
                 unitViews[unitData.Id] = unitView;
 
-                if (unitType == UnitData.KingUnitType)
-                    CreateKingHealingAura(go.transform, sim?.Config.KingHealRange ?? 9f);
-
                 if (selectionManager != null)
                     selectionManager.RegisterUnitView(unitView);
             }
@@ -2278,8 +2275,6 @@ namespace OpenEmpires
             CreateLandmarkPiece(root, "LandmarkDark_WindowRight", PrimitiveType.Cube, new Vector3(1.13f, 1.0f, -0.35f), new Vector3(0.08f, 0.45f, 0.28f));
 
             AddLandmarkBanner(root, new Vector3(1.45f, 1.05f, -1.15f), 1.8f, new Vector3(0f, 0.45f, 0.3f), new Vector3(0.12f, 0.48f, 0.55f));
-            float auraRadius = GameBootstrapper.Instance?.Simulation?.Config.AbbeyOfKingsHealRange ?? 12f;
-            AddLandmarkGroundLine(root, "AbbeyHealingAura", auraRadius, new Color(0.45f, 1f, 0.55f, 0.55f));
         }
 
         private void BuildCouncilHallVisual(Transform root)
@@ -3160,35 +3155,10 @@ namespace OpenEmpires
                 unitStencilMat, playerSilhouetteMaterials[unitData.PlayerId]);
             unitViews[unitData.Id] = unitView;
 
-            CreateKingHealingAura(go.transform, sim?.Config.KingHealRange ?? 4.5f);
-
             if (selectionManager != null)
                 selectionManager.RegisterUnitView(unitView);
 
             SFXManager.Instance?.Play(SFXType.UnitTrained, spawnPos, 0.6f);
-        }
-
-        private void CreateKingHealingAura(Transform parent, float radius)
-        {
-            var aura = new GameObject("KingHealingAura");
-            aura.layer = parent.gameObject.layer;
-            aura.transform.SetParent(parent);
-            aura.transform.localPosition = new Vector3(0f, 0.04f, 0f);
-
-            var lr = aura.AddComponent<LineRenderer>();
-            lr.useWorldSpace = false;
-            lr.loop = true;
-            lr.positionCount = 64;
-            lr.widthMultiplier = 0.035f;
-            lr.material = new Material(cachedUnlitShader);
-            lr.startColor = new Color(1f, 0.78f, 0.2f, 0.45f);
-            lr.endColor = new Color(1f, 0.78f, 0.2f, 0.45f);
-
-            for (int i = 0; i < lr.positionCount; i++)
-            {
-                float angle = (float)i / lr.positionCount * Mathf.PI * 2f;
-                lr.SetPosition(i, new Vector3(Mathf.Cos(angle) * radius, 0f, Mathf.Sin(angle) * radius));
-            }
         }
 
         private void SpawnProceduralMonk(UnitData unitData, Vector3 spawnPos)

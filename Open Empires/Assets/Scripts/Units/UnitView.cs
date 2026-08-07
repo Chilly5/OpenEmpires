@@ -231,6 +231,7 @@ namespace OpenEmpires
             CreateHealIndicatorPool();
             CreateHealthBarWidget();
             CreateUpgradeBadgesWidget();
+            CreateHealAuraVisual();
             var col = GetComponent<Collider>();
             healthBarYOffset = col != null
                 ? col.bounds.max.y - transform.position.y + 0.1f
@@ -1651,6 +1652,20 @@ namespace OpenEmpires
         }
 
         public void SetSelectionRing(GameObject ring) { selectionRing = ring; }
+
+        /// <summary>
+        /// The King carries a golden dust ring marking the edge of his healing aura.
+        /// Cosmetic only — the heal itself is driven by UnitHealingSystem.
+        /// </summary>
+        private void CreateHealAuraVisual()
+        {
+            if (UnitType != UnitData.KingUnitType) return;
+
+            var config = GameBootstrapper.Instance?.Simulation?.Config;
+            if (config == null) return;
+
+            HealAuraVisual.Attach(transform, config.KingHealRange, new Color(1f, 0.82f, 0.32f));
+        }
 
         public Rect GetScreenBounds(Camera cam)
         {
