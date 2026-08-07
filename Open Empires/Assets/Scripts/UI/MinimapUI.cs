@@ -525,7 +525,7 @@ namespace OpenEmpires
             int localPlayerId = selectionManager != null ? selectionManager.LocalPlayerId : 0;
 
             // 2. Resource dots (below fog)
-            DrawResourceDots(sim);
+            DrawResourceDots(sim, localPlayerId);
 
             // 3. Building dots (below fog)
             DrawBuildingDots(sim, localPlayerId);
@@ -610,11 +610,16 @@ namespace OpenEmpires
             }
         }
 
-        private void DrawResourceDots(GameSimulation sim)
+        private void DrawResourceDots(GameSimulation sim, int localPlayerId)
         {
             foreach (var node in sim.MapData.GetAllResourceNodes())
             {
                 if (node.IsDepleted) continue;
+                if (!FogOfWarRenderer.DisableFogOfWar &&
+                    sim.FogOfWar.GetVisibility(localPlayerId, node.TileX, node.TileZ) == TileVisibility.Unexplored)
+                {
+                    continue;
+                }
 
                 Color32 color = node.Type switch
                 {
