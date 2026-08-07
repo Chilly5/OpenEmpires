@@ -447,6 +447,9 @@ namespace OpenEmpires
                     unitStencilMat, playerSilhouetteMaterials[unitData.PlayerId]);
                 unitViews[unitData.Id] = unitView;
 
+                if (unitType == UnitData.KingUnitType)
+                    CreateKingHealingAura(go.transform, sim?.Config.KingHealRange ?? 9f);
+
                 if (selectionManager != null)
                     selectionManager.RegisterUnitView(unitView);
             }
@@ -2275,7 +2278,8 @@ namespace OpenEmpires
             CreateLandmarkPiece(root, "LandmarkDark_WindowRight", PrimitiveType.Cube, new Vector3(1.13f, 1.0f, -0.35f), new Vector3(0.08f, 0.45f, 0.28f));
 
             AddLandmarkBanner(root, new Vector3(1.45f, 1.05f, -1.15f), 1.8f, new Vector3(0f, 0.45f, 0.3f), new Vector3(0.12f, 0.48f, 0.55f));
-            AddLandmarkGroundLine(root, "AbbeyHealingAura", 2.7f, new Color(0.45f, 1f, 0.55f, 0.55f));
+            float auraRadius = GameBootstrapper.Instance?.Simulation?.Config.AbbeyOfKingsHealRange ?? 12f;
+            AddLandmarkGroundLine(root, "AbbeyHealingAura", auraRadius, new Color(0.45f, 1f, 0.55f, 0.55f));
         }
 
         private void BuildCouncilHallVisual(Transform root)

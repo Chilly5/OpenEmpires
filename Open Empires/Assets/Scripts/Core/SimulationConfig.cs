@@ -181,12 +181,12 @@ namespace OpenEmpires
         public float KingMass => 5f;
         public float KingMoveSpeed => 3.5f;
         public int KingHealAmount => 3;
-        public float KingHealRange => 4.5f;
+        public float KingHealRange => 9f;
         public int KingHealCooldownTicks => 30;
 
         // English Abbey of Kings landmark aura
         public int AbbeyOfKingsHealAmount => 6;
-        public float AbbeyOfKingsHealRange => 6f;
+        public float AbbeyOfKingsHealRange => 12f;
         public int AbbeyOfKingsHealCooldownTicks => 30;
 
         // Combat - Longbowman (English unique — Archer with greater range)
