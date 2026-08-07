@@ -24,6 +24,7 @@ namespace OpenEmpires
         [SerializeField] private GameObject longbowmanPrefab;
         [SerializeField] private GameObject gendarmePrefab;
         [SerializeField] private GameObject landsknechtPrefab;
+        [SerializeField] private GameObject kingPrefab;
 
         [Header("Markers")]
         [SerializeField] private Material markerMaterial;
@@ -2086,8 +2087,12 @@ namespace OpenEmpires
             }
             if (unitType == UnitData.KingUnitType)
             {
-                SpawnProceduralKing(unitData, spawnPos);
-                return;
+                // King — create procedural view if no prefab assigned
+                if (kingPrefab == null)
+                {
+                    SpawnProceduralKing(unitData, spawnPos);
+                    return;
+                }
             }
             if (unitType >= 13 && unitType <= 15)
             {
@@ -2098,6 +2103,7 @@ namespace OpenEmpires
             switch (unitType)
             {
                 case 9: prefab = monkPrefab; break;
+                case UnitData.KingUnitType: prefab = kingPrefab; break;
                 case 8: prefab = crossbowmanPrefab; break;
                 case 7: prefab = knightPrefab; break;
                 case 6: prefab = manAtArmsPrefab; break;
