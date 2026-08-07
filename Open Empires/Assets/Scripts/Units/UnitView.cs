@@ -1694,7 +1694,7 @@ namespace OpenEmpires
 
         public bool IsSelected => isSelected;
         public bool IsHovered => isHovered;
-        public bool IsElite => UnitType == 1 || UnitType == 3 || UnitType == 6 || UnitType == 7 || UnitType == 8 || UnitType == 12;
+        public bool IsElite => UnitType == 1 || UnitType == 3 || UnitType == 6 || UnitType == 7 || UnitType == 8 || UnitType == 12 || UnitType == UnitData.KingUnitType;
         public bool InFormation => unitData != null && unitData.InFormation;
         public FixedVector3 FormationOffset => unitData != null ? unitData.FormationOffset : default;
         public int FormationGroupId => unitData != null ? unitData.FormationGroupId : 0;

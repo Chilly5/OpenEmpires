@@ -15,7 +15,8 @@ namespace OpenEmpires
         private List<TrainingCompletion> completions = new List<TrainingCompletion>();
 
         public List<TrainingCompletion> Tick(BuildingRegistry registry, SimulationConfig config,
-            Func<int, int, bool> canSpawn, bool productionCheatActive = false)
+            Func<int, int, bool> canSpawn, bool productionCheatActive = false,
+            Func<BuildingData, int, int> getTrainTime = null)
         {
             completions.Clear();
             Dictionary<int, int> pendingSpawns = null;
@@ -56,7 +57,10 @@ namespace OpenEmpires
                     // Start next item in queue if any
                     if (building.IsTraining)
                     {
-                        building.TrainingTicksRemaining = GetTrainTime(config, building.TrainingQueue[0]);
+                        int nextUnitType = building.TrainingQueue[0];
+                        building.TrainingTicksRemaining = getTrainTime != null
+                            ? getTrainTime(building, nextUnitType)
+                            : GetTrainTime(config, nextUnitType);
                         building.TrainingTicksTotal = building.TrainingTicksRemaining;
                     }
                 }
@@ -70,6 +74,7 @@ namespace OpenEmpires
             switch (unitType)
             {
                 case 9: return config.MonkTrainTimeTicks;
+                case UnitData.KingUnitType: return config.KingTrainTimeTicks;
                 case 8: return config.CrossbowmanTrainTimeTicks;
                 case 7: return config.KnightTrainTimeTicks;
                 case 6: return config.ManAtArmsTrainTimeTicks;

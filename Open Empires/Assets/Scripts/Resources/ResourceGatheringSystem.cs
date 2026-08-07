@@ -440,8 +440,8 @@ namespace OpenEmpires
                 var b = buildings[i];
                 if (b.PlayerId != unit.PlayerId) continue;
                 if (b.IsDestroyed || b.IsUnderConstruction) continue;
-                if (!GameSimulation.IsDropOffBuilding(b.Type)) continue;
-                if (!GameSimulation.AcceptsResourceType(b.Type, unit.CarriedResourceType)) continue;
+                if (!LandmarkDefinitions.IsDropOffBuilding(b)) continue;
+                if (!LandmarkDefinitions.AcceptsResourceType(b, unit.CarriedResourceType)) continue;
 
                 FixedVector3 diff = b.SimPosition - unit.SimPosition;
                 Fixed32 absDx = Fixed32.Abs(diff.x);
@@ -529,7 +529,7 @@ namespace OpenEmpires
                 {
                     var b = buildings[i];
                     if (b.PlayerId != unit.PlayerId || b.IsDestroyed || b.IsUnderConstruction) continue;
-                    if (!GameSimulation.AcceptsResourceType(b.Type, ResourceType.Wood)) continue;
+                    if (!LandmarkDefinitions.AcceptsResourceType(b, ResourceType.Wood)) continue;
                     FixedVector3 diff = b.SimPosition - searchPos;
                     Fixed32 dist = Fixed32.Abs(diff.x) > Fixed32.Abs(diff.z) ? Fixed32.Abs(diff.x) : Fixed32.Abs(diff.z);
                     if (dist < bestDropDist)
@@ -698,7 +698,7 @@ namespace OpenEmpires
             for (int i = 0; i < buildings.Count; i++)
             {
                 var b = buildings[i];
-                if (!isInfluenceBuildingType(playerId, b.Type)) continue;
+                if (!isInfluenceBuildingType(playerId, LandmarkDefinitions.GetEffectiveBuildingType(b))) continue;
                 if (b.PlayerId != playerId) continue;
                 if (b.IsDestroyed || b.IsUnderConstruction) continue;
 

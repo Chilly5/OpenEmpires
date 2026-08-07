@@ -12,7 +12,7 @@ namespace OpenEmpires
             if (loaded) return;
             loaded = true;
 
-            int count = 13;
+            int count = 17;
             sprites = new Sprite[count];
 
             var names = new string[]
@@ -29,7 +29,11 @@ namespace OpenEmpires
                 "monkicon",          // Monk = 9
                 "archericon",        // Longbowman = 10 (reuses archer icon)
                 "horsemanicon",      // Gendarme = 11 (reuses horseman icon)
-                "spearmanicon"       // Landsknecht = 12 (reuses spearman icon)
+                "spearmanicon",      // Landsknecht = 12 (reuses spearman icon)
+                null,                // Battering Ram = 13 (no icon)
+                null,                // Mangonel = 14 (no icon)
+                null,                // Trebuchet = 15 (no icon)
+                "horsemanicon"       // King = 16 (reuses cavalry icon)
             };
 
             for (int i = 0; i < count; i++)

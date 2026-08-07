@@ -154,7 +154,7 @@ namespace OpenEmpires
 
         // Unit type ids that can have keybinds. Sheep (5) is excluded — it isn't user-controlled.
         // Mirrors the integer encoding used throughout the codebase (see UnitData.cs:79).
-        public static readonly int[] BindableUnitTypes = { 0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+        public static readonly int[] BindableUnitTypes = { 0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, UnitData.KingUnitType };
 
         // Indexed by unit type id. Mirrors UnitInfoUI.UnitTypeNames so the keybind UI can label rows
         // without taking a dependency on the info-panel script.
@@ -163,7 +163,7 @@ namespace OpenEmpires
             "Villager", "Spearman", "Archer", "Horseman", "Scout", "Sheep",
             "Man-at-Arms", "Knight", "Crossbowman", "Monk",
             "Longbowman", "Gendarme", "Landsknecht",
-            "Battering Ram", "Mangonel", "Trebuchet",
+            "Battering Ram", "Mangonel", "Trebuchet", "King",
         };
 
         public static string GetUnitTypeDisplayName(int unitType)

@@ -76,7 +76,9 @@ namespace OpenEmpires
         public int FormationLeaderId = -1;  // -1 = no leader (is leader or not in formation)
 
         // Unit type
-        public int UnitType; // 0=Villager, 1=Spearman, 2=Archer, 3=Horseman, 4=Scout, 5=Sheep, 6=ManAtArms, 7=Knight, 8=Crossbowman, 9=Monk
+        public const int KingUnitType = 16;
+
+        public int UnitType; // 0=Villager, 1=Spearman, 2=Archer, 3=Horseman, 4=Scout, 5=Sheep, 6=ManAtArms, 7=Knight, 8=Crossbowman, 9=Monk, 16=King
         public bool IsVillager;
         public bool IsDummy;
         public bool IsSheep;

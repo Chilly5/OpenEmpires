@@ -307,7 +307,8 @@ namespace OpenEmpires
                 case 10: return MotionStyle.BowShot;
                 case 3:
                 case 7:
-                case 11: return MotionStyle.MountedLance;
+                case 11:
+                case UnitData.KingUnitType: return MotionStyle.MountedLance;
                 case 4: return MotionStyle.ScoutStrike;
                 case 6: return MotionStyle.SwordSlash;
                 case 8: return MotionStyle.CrossbowShot;
@@ -358,6 +359,7 @@ namespace OpenEmpires
                 case 3:
                 case 7:
                 case 11:
+                case UnitData.KingUnitType:
                     return WrapTransforms(root, WeaponPivotName, FindMountedWeapon(root));
 
                 case 8:

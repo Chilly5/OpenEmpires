@@ -1035,9 +1035,11 @@ namespace OpenEmpires
         {
             if (sim.IsPlayerAgingUp(playerId)) return;
             int currentAge = sim.GetPlayerAge(playerId);
-            if (currentAge >= 3) return;
 
             int targetAge = currentAge + 1;
+            var civ = sim.GetPlayerCivilization(playerId);
+            if (!LandmarkDefinitions.HasChoices(civ, targetAge)) return;
+
             int vilCount = GetVillagerCount();
 
             // Difficulty-based villager thresholds for aging up
@@ -1059,7 +1061,6 @@ namespace OpenEmpires
                 requiredVillagers = Mathf.Max(4, requiredVillagers / 2);
             if (vilCount < requiredVillagers) return;
 
-            var civ = sim.GetPlayerCivilization(playerId);
             var (choiceA, choiceB) = LandmarkDefinitions.GetChoices(civ, targetAge);
             var landmarkId = NextRandom(2) == 0 ? choiceA : choiceB;
             var def = LandmarkDefinitions.Get(landmarkId);

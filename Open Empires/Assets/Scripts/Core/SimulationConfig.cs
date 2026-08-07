@@ -170,6 +170,25 @@ namespace OpenEmpires
         public float MonkHealRange => 4f;
         public int MonkHealCooldownTicks => 30; // 1s at 30 TPS
 
+        // Combat - King (English Abbey hero cavalry with healing aura)
+        public int KingMaxHealth => 180;
+        public int KingAttackDamage => 14;
+        public float KingAttackRange => 1.0f;
+        public float KingDetectionRange => 10f;
+        public int KingAttackCooldownTicks => 30;
+        public int KingMeleeArmor => 2;
+        public int KingRangedArmor => 2;
+        public float KingMass => 5f;
+        public float KingMoveSpeed => 3.5f;
+        public int KingHealAmount => 3;
+        public float KingHealRange => 4.5f;
+        public int KingHealCooldownTicks => 30;
+
+        // English Abbey of Kings landmark aura
+        public int AbbeyOfKingsHealAmount => 6;
+        public float AbbeyOfKingsHealRange => 6f;
+        public int AbbeyOfKingsHealCooldownTicks => 30;
+
         // Combat - Longbowman (English unique — Archer with greater range)
         public int LongbowmanMaxHealth => 70;
         public int LongbowmanAttackDamage => 5;
@@ -255,6 +274,9 @@ namespace OpenEmpires
         public int MonkTrainTimeTicks => 500;
         public int MonkFoodCost => 0;
         public int MonkGoldCost => 100;
+        public int KingTrainTimeTicks => 500;
+        public int KingFoodCost => 150;
+        public int KingGoldCost => 150;
 
         // Combat - Battering Ram (siege, anti-building melee)
         public int BatteringRamMaxHealth => 200;

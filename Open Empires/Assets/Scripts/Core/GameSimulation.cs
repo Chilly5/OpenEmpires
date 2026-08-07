@@ -122,6 +122,176 @@ namespace OpenEmpires
                 _ => baseUnitType,
             };
         }
+
+        public BuildingType GetEffectiveBuildingType(BuildingData building)
+        {
+            return LandmarkDefinitions.GetEffectiveBuildingType(building);
+        }
+
+        public bool IsEnglishLandmark(BuildingData building, LandmarkId landmarkId)
+        {
+            return building != null
+                && building.Type == BuildingType.Landmark
+                && building.LandmarkId == landmarkId
+                && LandmarkDefinitions.Get(building.LandmarkId).Civ == Civilization.English;
+        }
+
+        private bool IsTheWhiteTower(BuildingData building)
+        {
+            return IsEnglishLandmark(building, LandmarkId.English_Age3_B);
+        }
+
+        private bool IsCouncilHall(BuildingData building)
+        {
+            return IsEnglishLandmark(building, LandmarkId.English_Age2_B);
+        }
+
+        private void ApplyLandmarkCapabilities(BuildingData building)
+        {
+            if (building == null || building.Type != BuildingType.Landmark) return;
+
+            var def = LandmarkDefinitions.Get(building.LandmarkId);
+            building.MaxHealth = def.MaxHealth;
+            building.Armor = def.Armor;
+
+            BuildingType effectiveType = LandmarkDefinitions.GetEffectiveBuildingType(building);
+            if (effectiveType == BuildingType.TownCenter)
+            {
+                building.AttackDamage = config.TownCenterArrowDamage;
+                building.AttackRange = ConfigToFixed32(config.SubsequentTownCenterAttackRange);
+                building.DetectionRange = ConfigToFixed32(config.SubsequentTownCenterAttackRange);
+                building.AttackCooldownTicks = config.TownCenterAttackCooldownTicks;
+                building.GarrisonCapacity = config.TownCenterGarrisonCapacity;
+            }
+            else if (effectiveType == BuildingType.Keep)
+            {
+                building.AttackDamage = def.AttackDamage > 0 ? def.AttackDamage : config.KeepAttackDamage;
+                building.AttackRange = ConfigToFixed32(def.AttackRange > 0f ? def.AttackRange : config.KeepAttackRange);
+                building.DetectionRange = ConfigToFixed32(def.AttackRange > 0f ? def.AttackRange : config.KeepDetectionRange);
+                building.AttackCooldownTicks = def.AttackCooldownTicks > 0 ? def.AttackCooldownTicks : config.KeepAttackCooldownTicks;
+                building.BaseArrowCount = def.BaseArrowCount > 0 ? def.BaseArrowCount : config.KeepBaseArrowCount;
+                building.GarrisonCapacity = def.GarrisonCapacity > 0 ? def.GarrisonCapacity : config.KeepGarrisonCapacity;
+            }
+        }
+
+        private int GetAdjustedTrainTime(BuildingData building, int unitType)
+        {
+            int baseTime = BuildingTrainingSystem.GetTrainTime(config, unitType);
+            float multiplier = 1f;
+
+            if (building != null && building.Type == BuildingType.Landmark)
+            {
+                var def = LandmarkDefinitions.Get(building.LandmarkId);
+                if (unitType == 0 && def.VillagerProductionSpeedMultiplier > 0f)
+                    multiplier = def.VillagerProductionSpeedMultiplier;
+                else if (def.ProductionSpeedMultiplier > 0f)
+                    multiplier = def.ProductionSpeedMultiplier;
+            }
+
+            if (multiplier <= 1f) return baseTime;
+            return Mathf.Max(1, Mathf.CeilToInt(baseTime / multiplier));
+        }
+
+        private bool CanBuildingTrainUnit(BuildingData building, int requestedUnitType, int resolvedUnitType)
+        {
+            if (building == null) return false;
+            BuildingType effectiveType = LandmarkDefinitions.GetEffectiveBuildingType(building);
+            int unitType = requestedUnitType;
+
+            switch (effectiveType)
+            {
+                case BuildingType.Barracks:
+                    return unitType == 1 || unitType == 6 || resolvedUnitType == 12;
+                case BuildingType.TownCenter:
+                    return unitType == 0 || unitType == 4;
+                case BuildingType.ArcheryRange:
+                    return unitType == 2 || unitType == 8 || resolvedUnitType == 10;
+                case BuildingType.Stables:
+                    return unitType == 3 || unitType == 7 || unitType == 4 || resolvedUnitType == 11;
+                case BuildingType.Monastery:
+                    return unitType == 9;
+                case BuildingType.SiegeWorkshop:
+                    return unitType >= 13 && unitType <= 15;
+                case BuildingType.Keep:
+                    if (!IsTheWhiteTower(building)) return false;
+                    return unitType == 1 || unitType == 2 || unitType == 3 || unitType == 4
+                        || unitType == 6 || unitType == 7 || unitType == 8
+                        || unitType == 13 || unitType == 14 || unitType == 15
+                        || resolvedUnitType == 10 || resolvedUnitType == 11 || resolvedUnitType == 12;
+                default:
+                    return false;
+            }
+        }
+
+        private void GetUnitTrainingCostsAndTime(int unitType, out int foodCost, out int woodCost, out int goldCost, out int trainTime)
+        {
+            switch (unitType)
+            {
+                case 9:
+                    foodCost = config.MonkFoodCost; woodCost = 0; goldCost = config.MonkGoldCost; trainTime = config.MonkTrainTimeTicks; break;
+                case 8:
+                    foodCost = config.CrossbowmanFoodCost; woodCost = 0; goldCost = config.CrossbowmanGoldCost; trainTime = config.CrossbowmanTrainTimeTicks; break;
+                case 7:
+                    foodCost = config.KnightFoodCost; woodCost = 0; goldCost = config.KnightGoldCost; trainTime = config.KnightTrainTimeTicks; break;
+                case 6:
+                    foodCost = config.ManAtArmsFoodCost; woodCost = 0; goldCost = config.ManAtArmsGoldCost; trainTime = config.ManAtArmsTrainTimeTicks; break;
+                case 10:
+                    foodCost = config.LongbowmanFoodCost; woodCost = config.LongbowmanWoodCost; goldCost = 0; trainTime = config.LongbowmanTrainTimeTicks; break;
+                case 11:
+                    foodCost = config.GendarmeFoodCost; woodCost = config.GendarmeWoodCost; goldCost = 0; trainTime = config.GendarmeTrainTimeTicks; break;
+                case 12:
+                    foodCost = config.LandsknechtFoodCost; woodCost = config.LandsknechtWoodCost; goldCost = 0; trainTime = config.LandsknechtTrainTimeTicks; break;
+                case 13:
+                    foodCost = 0; woodCost = config.BatteringRamWoodCost; goldCost = config.BatteringRamGoldCost; trainTime = config.BatteringRamTrainTimeTicks; break;
+                case 14:
+                    foodCost = 0; woodCost = config.MangonelWoodCost; goldCost = config.MangonelGoldCost; trainTime = config.MangonelTrainTimeTicks; break;
+                case 15:
+                    foodCost = 0; woodCost = config.TrebuchetWoodCost; goldCost = config.TrebuchetGoldCost; trainTime = config.TrebuchetTrainTimeTicks; break;
+                case UnitData.KingUnitType:
+                    foodCost = config.KingFoodCost; woodCost = 0; goldCost = config.KingGoldCost; trainTime = config.KingTrainTimeTicks; break;
+                case 4:
+                    foodCost = config.ScoutFoodCost; woodCost = config.ScoutWoodCost; goldCost = 0; trainTime = config.ScoutTrainTimeTicks; break;
+                case 3:
+                    foodCost = config.HorsemanFoodCost; woodCost = config.HorsemanWoodCost; goldCost = 0; trainTime = config.HorsemanTrainTimeTicks; break;
+                case 2:
+                    foodCost = config.ArcherFoodCost; woodCost = config.ArcherWoodCost; goldCost = 0; trainTime = config.ArcherTrainTimeTicks; break;
+                case 0:
+                    foodCost = config.VillagerFoodCost; woodCost = 0; goldCost = 0; trainTime = config.VillagerTrainTimeTicks; break;
+                default:
+                    foodCost = config.SpearmanFoodCost; woodCost = config.SpearmanWoodCost; goldCost = 0; trainTime = config.SpearmanTrainTimeTicks; break;
+            }
+        }
+
+        private void ApplyTrainingDiscounts(BuildingData building, int unitType, ref int foodCost, ref int woodCost, ref int goldCost)
+        {
+            if (IsBuildingInFrenchLandmarkInfluence(building))
+            {
+                int discount = config.FrenchLandmarkTrainingDiscountPercent;
+                foodCost = foodCost * (100 - discount) / 100;
+                woodCost = woodCost * (100 - discount) / 100;
+                goldCost = goldCost * (100 - discount) / 100;
+            }
+
+            if (IsCouncilHall(building) && unitType == 10)
+            {
+                int discount = LandmarkDefinitions.Get(building.LandmarkId).LongbowDiscountPercent;
+                if (discount > 0)
+                {
+                    foodCost = foodCost * (100 - discount) / 100;
+                    woodCost = woodCost * (100 - discount) / 100;
+                    goldCost = goldCost * (100 - discount) / 100;
+                }
+            }
+        }
+
+        private void ApplyLandmarkCompletionEffects(BuildingData building, LandmarkDefinition def)
+        {
+            ApplyLandmarkCapabilities(building);
+
+            if (def.SpawnsKingOnCompletion && GetPopulation(building.PlayerId) < GetPopulationCap(building.PlayerId))
+                SpawnTrainedUnit(building, UnitData.KingUnitType, building.PlayerId);
+        }
+
         private int currentTick;
         private int nextFormationGroupId = 1;
         private int nextWallGroupId = 1;
@@ -905,6 +1075,7 @@ namespace OpenEmpires
                     playerAgingUp[pid] = false;
                     playerAgingUpBuildingId[pid] = -1;
                     OnPlayerAgedUp?.Invoke(pid, def.TargetAge);
+                    ApplyLandmarkCompletionEffects(completedBuilding, def);
                 }
 
                 // Eject any units that ended up on the building footprint during construction
@@ -937,7 +1108,8 @@ namespace OpenEmpires
             // Training system (units freeze at 99% when pop-capped)
             var completions = trainingSystem.Tick(BuildingRegistry, config,
                 (playerId, pending) => GetPopulation(playerId) + pending < GetPopulationCap(playerId),
-                ProductionCheatActive);
+                ProductionCheatActive,
+                GetAdjustedTrainTime);
             for (int i = 0; i < completions.Count; i++)
             {
                 var c = completions[i];
@@ -1323,7 +1495,7 @@ namespace OpenEmpires
                     var building = BuildingRegistry.GetBuilding(qc.BuildingId);
                     if (building == null || building.IsDestroyed || building.IsUnderConstruction)
                         continue; // skip destroyed/incomplete, try next
-                    if (!IsDropOffBuilding(building.Type))
+                    if (!LandmarkDefinitions.IsDropOffBuilding(building))
                         continue;
 
                     if (unit.CarriedResourceAmount <= 0)
@@ -3552,102 +3724,19 @@ namespace OpenEmpires
             if (building == null || building.IsDestroyed) return;
             if (building.PlayerId != cmd.PlayerId) return;
             if (building.IsUnderConstruction) return;
-            if (building.Type != BuildingType.Barracks &&
-                building.Type != BuildingType.TownCenter &&
-                building.Type != BuildingType.ArcheryRange &&
-                building.Type != BuildingType.Stables &&
-                building.Type != BuildingType.Monastery) return;
-
-            // Age gate for units
-            if (playerAges[cmd.PlayerId] < LandmarkDefinitions.GetUnitRequiredAge(cmd.UnitType)) return;
 
             // Resolve civilization-unique unit substitution
             int resolvedUnitType = ResolveCivUnitType(cmd.PlayerId, cmd.UnitType);
+            if (!CanBuildingTrainUnit(building, cmd.UnitType, resolvedUnitType)) return;
+
+            // Age gate for units
+            if (playerAges[cmd.PlayerId] < LandmarkDefinitions.GetUnitRequiredAge(resolvedUnitType)) return;
 
             // Check resource cost
             int foodCost, woodCost, goldCost, trainTime;
-            switch (resolvedUnitType)
-            {
-                case 9: // Monk
-                    foodCost = config.MonkFoodCost;
-                    woodCost = 0;
-                    goldCost = config.MonkGoldCost;
-                    trainTime = config.MonkTrainTimeTicks;
-                    break;
-                case 8: // Crossbowman
-                    foodCost = config.CrossbowmanFoodCost;
-                    woodCost = 0;
-                    goldCost = config.CrossbowmanGoldCost;
-                    trainTime = config.CrossbowmanTrainTimeTicks;
-                    break;
-                case 7: // Knight
-                    foodCost = config.KnightFoodCost;
-                    woodCost = 0;
-                    goldCost = config.KnightGoldCost;
-                    trainTime = config.KnightTrainTimeTicks;
-                    break;
-                case 6: // Man-at-Arms
-                    foodCost = config.ManAtArmsFoodCost;
-                    woodCost = 0;
-                    goldCost = config.ManAtArmsGoldCost;
-                    trainTime = config.ManAtArmsTrainTimeTicks;
-                    break;
-                case 10: // Longbowman
-                    foodCost = config.LongbowmanFoodCost;
-                    woodCost = config.LongbowmanWoodCost;
-                    goldCost = 0;
-                    trainTime = config.LongbowmanTrainTimeTicks;
-                    break;
-                case 11: // Gendarme
-                    foodCost = config.GendarmeFoodCost;
-                    woodCost = config.GendarmeWoodCost;
-                    goldCost = 0;
-                    trainTime = config.GendarmeTrainTimeTicks;
-                    break;
-                case 12: // Landsknecht
-                    foodCost = config.LandsknechtFoodCost;
-                    woodCost = config.LandsknechtWoodCost;
-                    goldCost = 0;
-                    trainTime = config.LandsknechtTrainTimeTicks;
-                    break;
-                case 4:
-                    foodCost = config.ScoutFoodCost;
-                    woodCost = config.ScoutWoodCost;
-                    goldCost = 0;
-                    trainTime = config.ScoutTrainTimeTicks;
-                    break;
-                case 3:
-                    foodCost = config.HorsemanFoodCost;
-                    woodCost = config.HorsemanWoodCost;
-                    goldCost = 0;
-                    trainTime = config.HorsemanTrainTimeTicks;
-                    break;
-                case 2:
-                    foodCost = config.ArcherFoodCost;
-                    woodCost = config.ArcherWoodCost;
-                    goldCost = 0;
-                    trainTime = config.ArcherTrainTimeTicks;
-                    break;
-                case 0:
-                    foodCost = config.VillagerFoodCost;
-                    woodCost = 0;
-                    goldCost = 0;
-                    trainTime = config.VillagerTrainTimeTicks;
-                    break;
-                default: // 1 = spearman
-                    foodCost = config.SpearmanFoodCost;
-                    woodCost = config.SpearmanWoodCost;
-                    goldCost = 0;
-                    trainTime = config.SpearmanTrainTimeTicks;
-                    break;
-            }
-            if (IsBuildingInFrenchLandmarkInfluence(building))
-            {
-                int discount = config.FrenchLandmarkTrainingDiscountPercent;
-                foodCost = foodCost * (100 - discount) / 100;
-                woodCost = woodCost * (100 - discount) / 100;
-                goldCost = goldCost * (100 - discount) / 100;
-            }
+            GetUnitTrainingCostsAndTime(resolvedUnitType, out foodCost, out woodCost, out goldCost, out trainTime);
+            ApplyTrainingDiscounts(building, resolvedUnitType, ref foodCost, ref woodCost, ref goldCost);
+            trainTime = GetAdjustedTrainTime(building, resolvedUnitType);
 
             var resources = ResourceManager.GetPlayerResources(cmd.PlayerId);
             if (resources.Food < foodCost || resources.Wood < woodCost || resources.Gold < goldCost) return;
@@ -3667,25 +3756,9 @@ namespace OpenEmpires
             if (cmd.QueueIndex < 0 || cmd.QueueIndex >= building.TrainingQueue.Count) return;
 
             int unitType = building.TrainingQueue[cmd.QueueIndex];
-            int foodCost, woodCost, goldCost;
-            switch (unitType)
-            {
-                case 9: foodCost = config.MonkFoodCost; woodCost = 0; goldCost = config.MonkGoldCost; break;
-                case 8: foodCost = config.CrossbowmanFoodCost; woodCost = 0; goldCost = config.CrossbowmanGoldCost; break;
-                case 7: foodCost = config.KnightFoodCost; woodCost = 0; goldCost = config.KnightGoldCost; break;
-                case 6: foodCost = config.ManAtArmsFoodCost; woodCost = 0; goldCost = config.ManAtArmsGoldCost; break;
-                case 10: foodCost = config.LongbowmanFoodCost; woodCost = config.LongbowmanWoodCost; goldCost = 0; break;
-                case 11: foodCost = config.GendarmeFoodCost; woodCost = config.GendarmeWoodCost; goldCost = 0; break;
-                case 12: foodCost = config.LandsknechtFoodCost; woodCost = config.LandsknechtWoodCost; goldCost = 0; break;
-                case 13: foodCost = 0; woodCost = config.BatteringRamWoodCost; goldCost = config.BatteringRamGoldCost; break;
-                case 14: foodCost = 0; woodCost = config.MangonelWoodCost; goldCost = config.MangonelGoldCost; break;
-                case 15: foodCost = 0; woodCost = config.TrebuchetWoodCost; goldCost = config.TrebuchetGoldCost; break;
-                case 4: foodCost = config.ScoutFoodCost; woodCost = config.ScoutWoodCost; goldCost = 0; break;
-                case 3: foodCost = config.HorsemanFoodCost; woodCost = config.HorsemanWoodCost; goldCost = 0; break;
-                case 2: foodCost = config.ArcherFoodCost; woodCost = config.ArcherWoodCost; goldCost = 0; break;
-                case 0: foodCost = config.VillagerFoodCost; woodCost = 0; goldCost = 0; break;
-                default: foodCost = config.SpearmanFoodCost; woodCost = config.SpearmanWoodCost; goldCost = 0; break;
-            }
+            int foodCost, woodCost, goldCost, trainTime;
+            GetUnitTrainingCostsAndTime(unitType, out foodCost, out woodCost, out goldCost, out trainTime);
+            ApplyTrainingDiscounts(building, unitType, ref foodCost, ref woodCost, ref goldCost);
 
             var resources = ResourceManager.GetPlayerResources(cmd.PlayerId);
             resources.Food += foodCost;
@@ -3698,7 +3771,7 @@ namespace OpenEmpires
             {
                 if (building.IsTraining)
                 {
-                    building.TrainingTicksRemaining = BuildingTrainingSystem.GetTrainTime(config, building.TrainingQueue[0]);
+                    building.TrainingTicksRemaining = GetAdjustedTrainTime(building, building.TrainingQueue[0]);
                     building.TrainingTicksTotal = building.TrainingTicksRemaining;
                 }
                 else
@@ -3714,7 +3787,7 @@ namespace OpenEmpires
             var building = BuildingRegistry.GetBuilding(cmd.BuildingId);
             if (building == null || building.IsDestroyed) return;
             if (building.PlayerId != cmd.PlayerId) return;
-            if (building.Type != BuildingType.TownCenter) return;
+            if (LandmarkDefinitions.GetEffectiveBuildingType(building) != BuildingType.TownCenter) return;
             building.AutoProduceVillagers = cmd.Enabled;
         }
 
@@ -3725,7 +3798,7 @@ namespace OpenEmpires
             {
                 var building = buildings[i];
                 if (building.IsDestroyed) continue;
-                if (building.Type != BuildingType.TownCenter) continue;
+                if (LandmarkDefinitions.GetEffectiveBuildingType(building) != BuildingType.TownCenter) continue;
                 if (!building.AutoProduceVillagers) continue;
                 if (building.IsUnderConstruction) continue;
                 if (building.TrainingQueue.Count > 0) continue;
@@ -3743,6 +3816,7 @@ namespace OpenEmpires
                 if (resources.Food < foodCost) continue;
 
                 resources.Food -= foodCost;
+                trainTime = GetAdjustedTrainTime(building, resolvedUnitType);
                 building.EnqueueTraining(resolvedUnitType, trainTime);
             }
         }
@@ -3924,6 +3998,7 @@ namespace OpenEmpires
                 building.Armor = def.Armor;
                 building.ConstructionTicksTotal = def.ConstructionTicks;
                 building.ConstructionTicksRemaining = def.ConstructionTicks;
+                ApplyLandmarkCapabilities(building);
                 playerAgingUp[cmd.PlayerId] = true;
                 playerAgingUpBuildingId[cmd.PlayerId] = building.Id;
                 OnBuildingCreated?.Invoke(building);
@@ -4198,7 +4273,7 @@ namespace OpenEmpires
             int minZ = building.OriginTileZ - searchBuffer;
             int maxZ = building.OriginTileZ + building.TileFootprintHeight + searchBuffer;
 
-            bool isTownCenter = building.Type == BuildingType.TownCenter;
+            bool isTownCenter = LandmarkDefinitions.GetEffectiveBuildingType(building) == BuildingType.TownCenter;
             FixedVector3 buildingCenter = building.SimPosition;
 
             ResourceNodeData bestNode = null;
@@ -4209,7 +4284,7 @@ namespace OpenEmpires
             {
                 if (node.IsDepleted) continue;
                 if (node.IsFarmNode) continue;
-                if (!AcceptsResourceType(building.Type, node.Type)) continue;
+                if (!LandmarkDefinitions.AcceptsResourceType(building, node.Type)) continue;
 
                 // AABB filter against the building+buffer search box
                 if (node.TileX + node.FootprintWidth - 1 < minX) continue;
@@ -4459,7 +4534,7 @@ namespace OpenEmpires
             if (building == null || building.IsDestroyed) return;
             if (building.PlayerId != cmd.PlayerId) return;
             if (building.IsUnderConstruction) return;
-            if (!IsDropOffBuilding(building.Type)) return;
+            if (!LandmarkDefinitions.IsDropOffBuilding(building)) return;
 
             for (int i = 0; i < cmd.UnitIds.Length; i++)
             {
@@ -4554,7 +4629,7 @@ namespace OpenEmpires
                 var building = BuildingRegistry.GetBuilding(idledVillagerPairs[i].buildingId);
                 if (building == null) continue;
                 bool builtFarm = building.Type == BuildingType.Farm;
-                bool builtFoodDropOff = AcceptsResourceType(building.Type, ResourceType.Food);
+                bool builtFoodDropOff = LandmarkDefinitions.AcceptsResourceType(building, ResourceType.Food);
                 if (!builtFarm && !builtFoodDropOff) continue;
 
                 // Try the farm they just built first
@@ -4701,19 +4776,19 @@ namespace OpenEmpires
                 if (unit.HasQueuedCommands) continue;
 
                 var building = BuildingRegistry.GetBuilding(idledVillagerPairs[i].buildingId);
-                if (building == null || !IsDropOffBuilding(building.Type)) continue;
+                if (building == null || !LandmarkDefinitions.IsDropOffBuilding(building)) continue;
 
                 Fixed32 visionRange = unit.DetectionRange;
                 Fixed32 visionRangeSq = visionRange * visionRange;
                 Fixed32 bestDistSq = visionRangeSq;
                 int bestNodeId = -1;
                 int bestPriority = int.MaxValue;
-                bool isTownCenter = building.Type == BuildingType.TownCenter;
+                bool isTownCenter = LandmarkDefinitions.GetEffectiveBuildingType(building) == BuildingType.TownCenter;
 
                 foreach (var node in MapData.GetAllResourceNodes())
                 {
                     if (node.IsDepleted) continue;
-                    if (!AcceptsResourceType(building.Type, node.Type)) continue;
+                    if (!LandmarkDefinitions.AcceptsResourceType(building, node.Type)) continue;
                     if (node.IsFarmNode && IsFarmNodeOccupied(node.Id, unit)) continue;
 
                     FixedVector3 diff = node.Position - unit.SimPosition;
@@ -5189,6 +5264,20 @@ namespace OpenEmpires
 
             switch (unitType)
             {
+                case UnitData.KingUnitType: // King
+                    unitData = UnitRegistry.CreateUnit(playerId, spawnPos,
+                        ConfigToFixed32(config.KingMoveSpeed),
+                        ConfigToFixed32(config.CavalryRadius),
+                        ConfigToFixed32(config.KingMass));
+                    unitData.UnitType = UnitData.KingUnitType;
+                    unitData.MaxHealth = config.KingMaxHealth;
+                    unitData.AttackDamage = config.KingAttackDamage;
+                    unitData.AttackRange = ConfigToFixed32(config.KingAttackRange);
+                    unitData.AttackCooldownTicks = config.KingAttackCooldownTicks;
+                    unitData.MeleeArmor = config.KingMeleeArmor;
+                    unitData.RangedArmor = config.KingRangedArmor;
+                    unitData.DetectionRange = ConfigToFixed32(config.KingDetectionRange);
+                    break;
                 case 9: // Monk
                     unitData = UnitRegistry.CreateUnit(playerId, spawnPos,
                         ConfigToFixed32(config.MonkMoveSpeed),
@@ -6293,7 +6382,7 @@ namespace OpenEmpires
                     continue;
                 if (b.Type == BuildingType.House)
                     cap += config.HousePopulation;
-                else if (b.Type == BuildingType.TownCenter)
+                else if (LandmarkDefinitions.GetEffectiveBuildingType(b) == BuildingType.TownCenter)
                     cap += config.TownCenterPopulation;
             }
             return Mathf.Min(cap, config.MaxPopulation);

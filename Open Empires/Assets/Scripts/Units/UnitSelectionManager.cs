@@ -2780,10 +2780,10 @@ namespace OpenEmpires
                                 return;
                             }
                         }
-                        else if (buildingData != null && GameSimulation.IsDropOffBuilding(buildingData.Type) && !buildingData.IsUnderConstruction)
+                        else if (buildingData != null && LandmarkDefinitions.IsDropOffBuilding(buildingData) && !buildingData.IsUnderConstruction)
                         {
                             // Sheep right-clicked on food drop-off (TC/Mill): move at boosted speed
-                            bool isFoodDropOff = buildingData.Type == BuildingType.TownCenter || buildingData.Type == BuildingType.Mill;
+                            bool isFoodDropOff = LandmarkDefinitions.AcceptsResourceType(buildingData, ResourceType.Food);
                             int[] allIds = GetSelectedUnitIds();
 
                             if (isFoodDropOff)
