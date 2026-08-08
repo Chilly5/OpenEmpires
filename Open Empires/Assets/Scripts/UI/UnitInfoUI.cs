@@ -2022,14 +2022,14 @@ namespace OpenEmpires
 
             var slots = new GridButton?[TotalBuildButtons];
 
-            // Age 1 (offset 0): Q=Mill, W=LumberYard, E=Mine, A=House, S=Farm, D=Barracks, Z=WoodWall, X=WoodGate
+            // Age 1 (offset 0): Q=House, W=Mill, E=LumberYard, R=Mine, A=Farm, S=Barracks, Z=WoodWall, X=WoodGate
             int o = 0;
-            slots[o + 0] = MakeBuildSlot("Mill", "Q", "Drop-off point for food.", BuildingType.Mill, cfg.MillWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
-            slots[o + 1] = MakeBuildSlot("Lumber\nYard", "W", "Drop-off point for wood.", BuildingType.LumberYard, cfg.LumberYardWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
-            slots[o + 2] = MakeBuildSlot("Mine", "E", "Drop-off point for gold and stone.", BuildingType.Mine, cfg.MineWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
-            slots[o + 3] = MakeBuildSlot("House", "A", "Increases population cap by 10.", BuildingType.House, cfg.HouseWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
-            slots[o + 4] = MakeBuildSlot("Farm", "S", "Produces food.", BuildingType.Farm, cfg.FarmWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
-            slots[o + 5] = MakeBuildSlot("Barracks", "D", "Trains spearmen.", BuildingType.Barracks, cfg.BarracksWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 0] = MakeBuildSlot("House", "Q", "Increases population cap by 10.", BuildingType.House, cfg.HouseWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 1] = MakeBuildSlot("Mill", "W", "Drop-off point for food.", BuildingType.Mill, cfg.MillWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 2] = MakeBuildSlot("Lumber\nYard", "E", "Drop-off point for wood.", BuildingType.LumberYard, cfg.LumberYardWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 3] = MakeBuildSlot("Farm", "A", "Produces food.", BuildingType.Farm, cfg.FarmWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 4] = MakeBuildSlot("Barracks", "S", "Trains spearmen.", BuildingType.Barracks, cfg.BarracksWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 5] = MakeBuildSlot("Mine", "R", "Drop-off point for gold and stone.", BuildingType.Mine, cfg.MineWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
             slots[o + 6] = MakeBuildSlot("Wood\nWall", "Z", "Defensive barrier. Can convert to gate.", BuildingType.Wall, cfg.WallWoodCost, 0, 0, 0, resources, playerAge, true, false, godMode);
             slots[o + 7] = MakeBuildSlot("Wood\nGate", "X", "Gate that allows units to pass.", BuildingType.WoodGate, cfg.WoodGateWoodCost, 0, 0, 0, resources, playerAge, true, true, godMode);
 
@@ -3676,12 +3676,12 @@ namespace OpenEmpires
             switch (buildMenuAge)
             {
                 case 1:
-                    if (WasKeyPressed(Key.Q)) TryBuildHotkey(sim, localPid, BuildingType.Mill, o + 0);
-                    else if (WasKeyPressed(Key.W)) TryBuildHotkey(sim, localPid, BuildingType.LumberYard, o + 1);
-                    else if (WasKeyPressed(Key.E)) TryBuildHotkey(sim, localPid, BuildingType.Mine, o + 2);
-                    else if (WasKeyPressed(Key.A)) TryBuildHotkey(sim, localPid, BuildingType.House, o + 3);
-                    else if (WasKeyPressed(Key.S)) TryBuildHotkey(sim, localPid, BuildingType.Farm, o + 4);
-                    else if (WasKeyPressed(Key.D)) TryBuildHotkey(sim, localPid, BuildingType.Barracks, o + 5);
+                    if (WasKeyPressed(Key.Q)) TryBuildHotkey(sim, localPid, BuildingType.House, o + 0);
+                    else if (WasKeyPressed(Key.W)) TryBuildHotkey(sim, localPid, BuildingType.Mill, o + 1);
+                    else if (WasKeyPressed(Key.E)) TryBuildHotkey(sim, localPid, BuildingType.LumberYard, o + 2);
+                    else if (WasKeyPressed(Key.R)) TryBuildHotkey(sim, localPid, BuildingType.Mine, o + 5);
+                    else if (WasKeyPressed(Key.A)) TryBuildHotkey(sim, localPid, BuildingType.Farm, o + 3);
+                    else if (WasKeyPressed(Key.S)) TryBuildHotkey(sim, localPid, BuildingType.Barracks, o + 4);
                     else if (WasKeyPressed(Key.Z)) TryBuildHotkey(sim, localPid, BuildingType.Wall, o + 6, isWall: true);
                     else if (WasKeyPressed(Key.X)) TryBuildHotkey(sim, localPid, BuildingType.WoodGate, o + 7, isWall: true, isGate: true);
                     break;
