@@ -37,6 +37,7 @@ namespace OpenEmpires
 
         private RTSInputActions inputActions;
         private Camera mainCamera;
+        private SelectedUnitOcclusionFader selectedUnitOcclusionFader;
 
         private Dictionary<string, InputAction> remappableActions;
         public static IReadOnlyDictionary<string, InputAction> RemappableActions => instance?.remappableActions;
@@ -301,6 +302,7 @@ namespace OpenEmpires
             instance = this;
             inputActions = new RTSInputActions();
             mainCamera = UnityEngine.Camera.main;
+            selectedUnitOcclusionFader = new SelectedUnitOcclusionFader();
 
 #if UNITY_WEBGL && !UNITY_EDITOR
             RegisterKeyboardOverrides();
@@ -349,6 +351,7 @@ namespace OpenEmpires
                 var canvas = repairCursorIcon.transform.parent;
                 if (canvas != null) Object.Destroy(canvas.gameObject);
             }
+            selectedUnitOcclusionFader?.Clear();
             if (instance == this) instance = null;
         }
 
@@ -376,6 +379,7 @@ namespace OpenEmpires
         private void OnDisable()
         {
             inputActions.RTS.Disable();
+            selectedUnitOcclusionFader?.Clear();
         }
 
         public void RegisterUnitView(UnitView view)
@@ -809,6 +813,8 @@ namespace OpenEmpires
                     }
                 }
             }
+
+            selectedUnitOcclusionFader?.Tick(mainCamera, selectedUnits, buildingLayer.value | resourceLayer.value);
 
             // Wall placement ghost update (drag preview)
             if (isPlacingWall && wallDragging)

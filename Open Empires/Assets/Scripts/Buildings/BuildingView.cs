@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -566,6 +567,29 @@ namespace OpenEmpires
                 var mats = bodyRenderers[0].sharedMaterials;
                 if (mats.Length > 1) silhouetteMaterial = mats[1];
             }
+        }
+
+        public void GetOcclusionFadeRenderers(Vector3 hitPoint, List<Renderer> results)
+        {
+            if (results == null || bodyRenderers == null) return;
+
+            Renderer closest = null;
+            float closestDistance = float.MaxValue;
+            for (int i = 0; i < bodyRenderers.Length; i++)
+            {
+                Renderer renderer = bodyRenderers[i];
+                if (renderer == null || !renderer.enabled) continue;
+
+                float distance = renderer.bounds.SqrDistance(hitPoint);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closest = renderer;
+                }
+            }
+
+            if (closest != null)
+                results.Add(closest);
         }
 
         private void Update()
