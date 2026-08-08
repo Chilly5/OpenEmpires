@@ -26,6 +26,7 @@ namespace OpenEmpires
         MenuClick,
         NotifyPing,
         AttackPing,
+        Hoofbeat,
     }
 
     public class SFXManager : MonoBehaviour
@@ -69,6 +70,7 @@ namespace OpenEmpires
             0.15f,  // MenuClick
             0.2f,   // NotifyPing
             0.25f,  // AttackPing
+            0.05f,  // Hoofbeat — global, so a big cavalry group thins to a patter not a roar
         };
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -117,7 +119,11 @@ namespace OpenEmpires
             }
         }
 
-        public void Play(SFXType type, Vector3 worldPos, float volumeScale = 1f)
+        /// <param name="pitch">
+        /// Playback rate. Lets one generated clip serve heavier and lighter variants of the same
+        /// sound — a barded warhorse lands lower than a scout pony.
+        /// </param>
+        public void Play(SFXType type, Vector3 worldPos, float volumeScale = 1f, float pitch = 1f)
         {
             int idx = (int)type;
             if (Time.time - lastPlayTime[idx] < Cooldowns[idx])
@@ -130,6 +136,7 @@ namespace OpenEmpires
             source.transform.position = worldPos;
             source.clip = clips[idx];
             source.volume = SfxVolume * volumeScale;
+            source.pitch = pitch;
             source.spatialBlend = 1f;
             source.Play();
         }
@@ -148,6 +155,7 @@ namespace OpenEmpires
             source.transform.position = Vector3.zero;
             source.clip = clips[idx];
             source.volume = SfxVolume * volumeScale;
+            source.pitch = 1f;
             source.spatialBlend = 0f;
             source.Play();
         }
@@ -203,6 +211,7 @@ namespace OpenEmpires
             source.transform.position = Vector3.zero;
             source.clip = clip;
             source.volume = SfxVolume * volumeScale;
+            source.pitch = 1f;
             source.spatialBlend = 0f;
             source.Play();
         }
@@ -227,6 +236,7 @@ namespace OpenEmpires
             source.transform.position = worldPos;
             source.clip = clip;
             source.volume = SfxVolume * volumeScale;
+            source.pitch = 1f;
             source.spatialBlend = 1f;
             source.Play();
         }
@@ -253,6 +263,7 @@ namespace OpenEmpires
             clips[(int)SFXType.UnderAttack] = GenerateUnderAttack();
             clips[(int)SFXType.NotifyPing] = GenerateNotifyPing();
             clips[(int)SFXType.AttackPing] = GenerateAttackPing();
+            clips[(int)SFXType.Hoofbeat] = GenerateHoofbeat();
         }
 
         private AudioClip GenerateAttackPing()
@@ -644,6 +655,37 @@ namespace OpenEmpires
             }
 
             return CreateClip("ConstructionComplete", data);
+        }
+
+        private AudioClip GenerateHoofbeat()
+        {
+            // Muffled hoof on turf: a short low knock with a gritty scuff on top.
+            float duration = 0.09f;
+            int samples = (int)(SampleRate * duration);
+            float[] data = new float[samples];
+            uint noiseState = 77777;
+
+            for (int i = 0; i < samples; i++)
+            {
+                float t = (float)i / SampleRate;
+                float norm = (float)i / samples;
+
+                float envelope = 1f - norm;
+                envelope = envelope * envelope * envelope;
+
+                // Body of the strike — drops in pitch as it decays, which reads as "packed earth".
+                float pitch = Mathf.Lerp(120f, 78f, norm);
+                float knock = Mathf.Sin(2f * Mathf.PI * pitch * t) * 0.5f;
+
+                // Scuff of grit, gone almost immediately.
+                noiseState = XorShift(noiseState);
+                float scuffEnv = Mathf.Max(0f, 1f - norm * 5f);
+                float scuff = ((noiseState & 0xFFFF) / 32768f - 1f) * 0.2f * scuffEnv;
+
+                data[i] = (knock + scuff) * envelope;
+            }
+
+            return CreateClip("Hoofbeat", data);
         }
 
         private AudioClip GenerateGatherStrike()

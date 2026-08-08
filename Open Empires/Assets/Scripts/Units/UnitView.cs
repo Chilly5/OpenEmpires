@@ -225,8 +225,8 @@ namespace OpenEmpires
                 transform.rotation = Quaternion.LookRotation(facing);
 
             attackVisualAnimator = new UnitAttackVisualAnimator(transform, selectionRing, UnitType, unitData);
-            if (UnitType == 3) // Horseman — procedural gallop while moving
-                gallopVisualAnimator = new UnitGallopVisualAnimator(attackVisualAnimator.AttachmentRoot);
+            if (UnitGallopVisualAnimator.IsMounted(UnitType))
+                gallopVisualAnimator = new UnitGallopVisualAnimator(attackVisualAnimator.AttachmentRoot, UnitType, unitId);
 
             CreateWaypointLine();
             CreateIdleZzzEffect();
@@ -1233,9 +1233,14 @@ namespace OpenEmpires
             // Gallop layers on top of the attack pose, so it has to run after it.
             if (gallopVisualAnimator != null)
             {
-                float speedPerTick = unitData.MoveSpeed.ToFloat() * GameBootstrapper.Instance.Config.SecondsPerTick;
-                float normalizedSpeed = speedPerTick > 0.0001f ? (curr - prev).magnitude / speedPerTick : 0f;
-                gallopVisualAnimator.UpdateGallop(normalizedSpeed, unitData.IsCharging, Time.deltaTime);
+                float secondsPerTick = GameBootstrapper.Instance.Config.SecondsPerTick;
+                float groundSpeed = secondsPerTick > 0f ? (curr - prev).magnitude / secondsPerTick : 0f;
+
+                float topSpeed = unitData.MoveSpeed.ToFloat();
+                float normalizedSpeed = topSpeed > 0.0001f ? groundSpeed / topSpeed : 0f;
+
+                gallopVisualAnimator.UpdateGallop(normalizedSpeed, groundSpeed, unitData.IsCharging,
+                    smoothedBasePos, Time.deltaTime);
             }
 
             UpdateWaypointLine();
