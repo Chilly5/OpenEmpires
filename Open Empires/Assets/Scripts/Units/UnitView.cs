@@ -69,6 +69,7 @@ namespace OpenEmpires
         private const float AttackDashDuration = 0.18f;
         private const float AttackDashDistance = 0.05f;
         private UnitAttackVisualAnimator attackVisualAnimator;
+        private UnitGallopVisualAnimator gallopVisualAnimator;
 
         // Damage flinch
         private int lastSeenDamageTick;
@@ -224,6 +225,8 @@ namespace OpenEmpires
                 transform.rotation = Quaternion.LookRotation(facing);
 
             attackVisualAnimator = new UnitAttackVisualAnimator(transform, selectionRing, UnitType, unitData);
+            if (UnitType == 3) // Horseman — procedural gallop while moving
+                gallopVisualAnimator = new UnitGallopVisualAnimator(attackVisualAnimator.AttachmentRoot);
 
             CreateWaypointLine();
             CreateIdleZzzEffect();
@@ -1227,6 +1230,14 @@ namespace OpenEmpires
 
             attackVisualAnimator.UpdateAnimation(unitData, Time.deltaTime);
 
+            // Gallop layers on top of the attack pose, so it has to run after it.
+            if (gallopVisualAnimator != null)
+            {
+                float speedPerTick = unitData.MoveSpeed.ToFloat() * GameBootstrapper.Instance.Config.SecondsPerTick;
+                float normalizedSpeed = speedPerTick > 0.0001f ? (curr - prev).magnitude / speedPerTick : 0f;
+                gallopVisualAnimator.UpdateGallop(normalizedSpeed, unitData.IsCharging, Time.deltaTime);
+            }
+
             UpdateWaypointLine();
             UpdateIdleEffect();
             UpdateDepositIndicators();
@@ -1514,6 +1525,7 @@ namespace OpenEmpires
             if (IsDead) return;
             IsDead = true;
             attackVisualAnimator?.ResetPose();
+            gallopVisualAnimator?.ResetPose();
 
             if (healthBarRoot != null)
             {
