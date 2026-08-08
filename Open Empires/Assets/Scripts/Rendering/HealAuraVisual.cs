@@ -3,8 +3,8 @@ using UnityEngine;
 namespace OpenEmpires
 {
     /// <summary>
-    /// Golden dust hanging at the boundary of a healing aura — motes drifting up and
-    /// slowly orbiting the rim rather than a drawn circle.
+    /// Golden dust at the boundary of a healing aura. It is dormant by default and only
+    /// emits a short pulse when the aura actually heals.
     ///
     /// Purely cosmetic. Lives entirely in the view layer and never feeds back into the
     /// simulation, so it cannot affect determinism.
@@ -17,6 +17,7 @@ namespace OpenEmpires
         // Motes per world-unit of circumference. Keeps density even whether the ring is
         // the King's 9 or the Abbey's 12.
         private const float MotesPerUnit = 3.2f;
+        private const float PulseMoteScale = 0.55f;
 
         private static Texture2D dustTexture;
         private static Material dustMaterial;
@@ -25,7 +26,7 @@ namespace OpenEmpires
         private float radius;
 
         /// <summary>
-        /// Attaches (or re-targets) a dust ring on <paramref name="parent"/>.
+        /// Attaches (or re-targets) a dormant dust ring on <paramref name="parent"/>.
         /// Radius is in world units and stays correct even if the parent is scaled.
         /// </summary>
         public static HealAuraVisual Attach(Transform parent, float radius, Color tint)
@@ -74,13 +75,28 @@ namespace OpenEmpires
             var shape = dust.shape;
             shape.radius = radius;
 
-            var emission = dust.emission;
-            emission.rateOverTime = EmissionFor(radius);
+            var main = dust.main;
+            main.maxParticles = MaxParticlesFor(radius);
         }
 
-        private static float EmissionFor(float r)
+        public void Pulse()
         {
-            return Mathf.Clamp(2f * Mathf.PI * r * MotesPerUnit, 24f, 420f);
+            if (dust == null) return;
+
+            if (!dust.isPlaying)
+                dust.Play();
+
+            dust.Emit(PulseCountFor(radius));
+        }
+
+        private static int PulseCountFor(float r)
+        {
+            return Mathf.RoundToInt(Mathf.Clamp(2f * Mathf.PI * r * MotesPerUnit * PulseMoteScale, 24f, 180f));
+        }
+
+        private static int MaxParticlesFor(float r)
+        {
+            return Mathf.RoundToInt(Mathf.Clamp(2f * Mathf.PI * r * MotesPerUnit * 2.5f, 120f, 900f));
         }
 
         private void Build(float r, Color tint)
@@ -90,8 +106,9 @@ namespace OpenEmpires
             dust.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
 
             var main = dust.main;
-            main.loop = true;
-            main.playOnAwake = true;
+            main.loop = false;
+            main.playOnAwake = false;
+            main.duration = 1.8f;
             main.simulationSpace = ParticleSystemSimulationSpace.Local;
             main.scalingMode = ParticleSystemScalingMode.Hierarchy;
             main.startLifetime = new ParticleSystem.MinMaxCurve(1.3f, 2.4f);
@@ -100,11 +117,11 @@ namespace OpenEmpires
             main.startRotation = new ParticleSystem.MinMaxCurve(0f, Mathf.PI * 2f);
             main.startColor = tint;
             main.gravityModifier = -0.015f; // motes rise instead of fall
-            main.maxParticles = 900;
+            main.maxParticles = MaxParticlesFor(radius);
 
             var emission = dust.emission;
             emission.enabled = true;
-            emission.rateOverTime = EmissionFor(radius);
+            emission.rateOverTime = 0f;
 
             // A thin annulus, not a filled disc — this is what makes it read as an edge.
             var shape = dust.shape;
@@ -163,7 +180,7 @@ namespace OpenEmpires
             psr.receiveShadows = false;
             psr.lightProbeUsage = UnityEngine.Rendering.LightProbeUsage.Off;
 
-            dust.Play();
+            dust.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         }
 
         private static Material GetDustMaterial()

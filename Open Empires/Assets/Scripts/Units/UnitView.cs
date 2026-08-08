@@ -1666,7 +1666,7 @@ namespace OpenEmpires
         public void SetSelectionRing(GameObject ring) { selectionRing = ring; }
 
         /// <summary>
-        /// The King carries a golden dust ring marking the edge of his healing aura.
+        /// The King carries a dormant golden dust ring that pulses when his healing aura lands.
         /// Cosmetic only — the heal itself is driven by UnitHealingSystem.
         /// </summary>
         private void CreateHealAuraVisual()
@@ -1677,6 +1677,13 @@ namespace OpenEmpires
             if (config == null) return;
 
             HealAuraVisual.Attach(transform, config.KingHealRange, new Color(1f, 0.82f, 0.32f));
+        }
+
+        public void PulseHealAuraVisual(float radius)
+        {
+            if (UnitType != UnitData.KingUnitType) return;
+            var visual = HealAuraVisual.Attach(transform, radius, new Color(1f, 0.82f, 0.32f));
+            visual?.Pulse();
         }
 
         public Rect GetScreenBounds(Camera cam)

@@ -376,6 +376,8 @@ namespace OpenEmpires
             sim.OnUnitUngarrisoned += HandleUnitUngarrisoned;
             sim.OnSheepConverted += HandleSheepConverted;
             sim.OnSheepSlaughtered += HandleSheepSlaughtered;
+            sim.OnKingHealingAuraPulse += HandleKingHealingAuraPulse;
+            sim.OnBuildingHealingAuraPulse += HandleBuildingHealingAuraPulse;
 
             // Meteor visual manager
             var meteorGO = new GameObject("MeteorVisualManager");
@@ -2815,6 +2817,18 @@ namespace OpenEmpires
             }
         }
 
+        private void HandleKingHealingAuraPulse(int unitId, float radius)
+        {
+            if (unitViews.TryGetValue(unitId, out var view))
+                view.PulseHealAuraVisual(radius);
+        }
+
+        private void HandleBuildingHealingAuraPulse(int buildingId, float radius)
+        {
+            if (buildingViews.TryGetValue(buildingId, out var view))
+                view.PulseHealAuraVisual(radius);
+        }
+
         private void HandleUnitGarrisoned(int unitId, int buildingId)
         {
             if (unitViews.TryGetValue(unitId, out var view))
@@ -3539,6 +3553,8 @@ namespace OpenEmpires
                 sim.OnUnitUngarrisoned -= HandleUnitUngarrisoned;
                 sim.OnSheepConverted -= HandleSheepConverted;
                 sim.OnSheepSlaughtered -= HandleSheepSlaughtered;
+                sim.OnKingHealingAuraPulse -= HandleKingHealingAuraPulse;
+                sim.OnBuildingHealingAuraPulse -= HandleBuildingHealingAuraPulse;
                 if (meteorVisualManager != null)
                 {
                     sim.OnMeteorWarning -= meteorVisualManager.HandleMeteorWarning;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,7 +6,10 @@ namespace OpenEmpires
 {
     public class UnitHealingSystem
     {
-        public void Tick(UnitRegistry registry, SimulationConfig config, SpatialGrid spatialGrid, int[] playerTeamIds, int currentTick, MapData mapData = null, BuildingRegistry buildingRegistry = null)
+        public void Tick(UnitRegistry registry, SimulationConfig config, SpatialGrid spatialGrid, int[] playerTeamIds, int currentTick,
+            MapData mapData = null, BuildingRegistry buildingRegistry = null,
+            Action<UnitData, float> onKingHealingAuraPulse = null,
+            Action<BuildingData, float> onBuildingHealingAuraPulse = null)
         {
             var allUnits = registry.GetAllUnits();
             int count = allUnits.Count;
@@ -17,7 +21,7 @@ namespace OpenEmpires
                 bool isKing = unit.UnitType == UnitData.KingUnitType;
                 if (isKing)
                 {
-                    TickKingHealingAura(unit, allUnits, count, config, playerTeamIds, currentTick);
+                    TickKingHealingAura(unit, allUnits, count, config, playerTeamIds, currentTick, onKingHealingAuraPulse);
                     continue;
                 }
                 if (!unit.IsHealer) continue;
@@ -142,11 +146,12 @@ namespace OpenEmpires
                 }
             }
 
-            TickBuildingHealingAuras(allUnits, count, config, playerTeamIds, currentTick, buildingRegistry);
+            TickBuildingHealingAuras(allUnits, count, config, playerTeamIds, currentTick, buildingRegistry, onBuildingHealingAuraPulse);
         }
 
         private void TickKingHealingAura(UnitData king, List<UnitData> allUnits, int unitCount,
-            SimulationConfig config, int[] playerTeamIds, int currentTick)
+            SimulationConfig config, int[] playerTeamIds, int currentTick,
+            Action<UnitData, float> onHealingAuraPulse)
         {
             if (king.AttackCooldownRemaining > 0)
                 return;
@@ -177,11 +182,15 @@ namespace OpenEmpires
             }
 
             if (healedAny)
+            {
                 king.AttackCooldownRemaining = config.KingHealCooldownTicks;
+                onHealingAuraPulse?.Invoke(king, config.KingHealRange);
+            }
         }
 
         private void TickBuildingHealingAuras(List<UnitData> allUnits, int unitCount, SimulationConfig config,
-            int[] playerTeamIds, int currentTick, BuildingRegistry buildingRegistry)
+            int[] playerTeamIds, int currentTick, BuildingRegistry buildingRegistry,
+            Action<BuildingData, float> onHealingAuraPulse)
         {
             if (buildingRegistry == null) return;
 
@@ -227,7 +236,10 @@ namespace OpenEmpires
                 }
 
                 if (healedAny)
+                {
                     building.AttackCooldownRemaining = config.AbbeyOfKingsHealCooldownTicks;
+                    onHealingAuraPulse?.Invoke(building, config.AbbeyOfKingsHealRange);
+                }
             }
         }
     }

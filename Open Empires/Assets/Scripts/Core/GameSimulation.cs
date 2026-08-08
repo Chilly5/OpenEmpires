@@ -27,6 +27,8 @@ namespace OpenEmpires
         public event Action<FixedVector3, List<int>> OnMeteorImpact; // position, knockedUnitIds
         public event Action<int, FixedVector3, int, int> OnHealingRainWarning; // playerId, position, startTick, endTick
         public event Action<FixedVector3> OnHealingRainEnd; // position
+        public event Action<int, float> OnKingHealingAuraPulse; // unitId, radius
+        public event Action<int, float> OnBuildingHealingAuraPulse; // buildingId, radius
         public event Action<int, FixedVector3> OnLightningStormWarning; // playerId, position
         public event Action<FixedVector3, List<int>> OnLightningBolt; // boltPosition, knockedUnitIds
         public event Action<FixedVector3> OnLightningStormEnd; // position
@@ -1034,7 +1036,8 @@ namespace OpenEmpires
             if (isMatchOver) return;
 
             gatheringSystem.Tick(UnitRegistry, MapData, ResourceManager, BuildingRegistry, config, cachedTickDuration, currentTick, IsInfluenceBuildingType);
-            healingSystem.Tick(UnitRegistry, config, spatialGrid, playerTeamIds, currentTick, MapData, BuildingRegistry);
+            healingSystem.Tick(UnitRegistry, config, spatialGrid, playerTeamIds, currentTick, MapData, BuildingRegistry,
+                HandleKingHealingAuraPulse, HandleBuildingHealingAuraPulse);
             TickDummyRegen(currentTick);
             TickScoutRegen(currentTick);
             if (hashSystems) lastSystemHashes[7] = ComputeQuickHash(); // after gathering
@@ -6291,6 +6294,18 @@ namespace OpenEmpires
                 if (unit.LastDamageTick > 0 && currentTick - unit.LastDamageTick < DummyRegenDelayTicks) continue;
                 unit.CurrentHealth = System.Math.Min(unit.MaxHealth, unit.CurrentHealth + DummyRegenAmountPerTick);
             }
+        }
+
+        private void HandleKingHealingAuraPulse(UnitData king, float radius)
+        {
+            if (king == null || king.State == UnitState.Dead) return;
+            OnKingHealingAuraPulse?.Invoke(king.Id, radius);
+        }
+
+        private void HandleBuildingHealingAuraPulse(BuildingData building, float radius)
+        {
+            if (building == null || building.IsDestroyed) return;
+            OnBuildingHealingAuraPulse?.Invoke(building.Id, radius);
         }
 
         // Scouts regenerate health while out of combat. Out-of-combat = no damage taken for at

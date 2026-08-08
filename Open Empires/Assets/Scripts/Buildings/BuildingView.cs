@@ -802,9 +802,9 @@ namespace OpenEmpires
         public void ClearBuildingData() { buildingData = null; }
 
         /// <summary>
-        /// Landmarks with a healing aura (the Abbey of Kings) get a golden dust ring at the
-        /// edge of their heal radius once construction finishes. Cosmetic only — the heal
-        /// itself is driven by UnitHealingSystem.
+        /// Landmarks with a healing aura (the Abbey of Kings) get a dormant golden dust ring
+        /// that pulses when their heal actually lands. Cosmetic only — the heal itself is
+        /// driven by UnitHealingSystem.
         /// </summary>
         private void CreateHealAuraVisual()
         {
@@ -817,6 +817,17 @@ namespace OpenEmpires
             if (config == null) return;
 
             HealAuraVisual.Attach(transform, config.AbbeyOfKingsHealRange, new Color(1f, 0.84f, 0.38f));
+        }
+
+        public void PulseHealAuraVisual(float radius)
+        {
+            if (buildingData == null || IsDestroyed) return;
+            if (buildingData.IsUnderConstruction) return;
+            if (buildingData.Type != BuildingType.Landmark) return;
+            if (!LandmarkDefinitions.Get(buildingData.LandmarkId).HasHealingAura) return;
+
+            var visual = HealAuraVisual.Attach(transform, radius, new Color(1f, 0.84f, 0.38f));
+            visual?.Pulse();
         }
 
         public void SetGhostMode(bool ghost)
