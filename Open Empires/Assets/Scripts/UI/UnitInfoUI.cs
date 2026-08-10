@@ -226,6 +226,8 @@ namespace OpenEmpires
         private float[] actionRangePreviewRadii;
         private Color[] actionRangePreviewColors;
         private int hoveredActionIndex = -1;
+        private static Texture2D healingDustTexture;
+
         private GameObject activeRangePreviewGO;
         private Transform activeRangePreviewTarget;
         private float activeRangePreviewRadius;
@@ -3825,7 +3827,6 @@ namespace OpenEmpires
             activeRangePreviewGO.layer = target.gameObject.layer;
             activeRangePreviewGO.transform.position = target.position;
 
-            CreateHealingRangeLine(activeRangePreviewGO.transform, radius, color);
             CreateHealingRangeMist(activeRangePreviewGO.transform, radius, color);
         }
 
@@ -3845,13 +3846,6 @@ namespace OpenEmpires
         {
             if (activeRangePreviewGO != null)
             {
-                var lineRenderers = activeRangePreviewGO.GetComponentsInChildren<LineRenderer>();
-                for (int i = 0; i < lineRenderers.Length; i++)
-                {
-                    var mat = lineRenderers[i].sharedMaterial;
-                    if (mat != null) Destroy(mat);
-                }
-
                 var particleRenderers = activeRangePreviewGO.GetComponentsInChildren<ParticleSystemRenderer>();
                 for (int i = 0; i < particleRenderers.Length; i++)
                 {
@@ -3866,42 +3860,79 @@ namespace OpenEmpires
             activeRangePreviewRadius = 0f;
         }
 
-        private Material CreateHealingRangeMaterial(Color color)
+        /// <summary>
+        /// A fresh soft-mote material for one range preview. The RangeOverlay shader used for flat
+        /// overlays has no texture and ignores depth, so motes drawn with it come out as hard
+        /// squares stacked into a solid band — the opposite of dust. This is a soft round mote that
+        /// glows and fades, matching the aura ring the healer itself emits.
+        ///
+        /// Returned per preview rather than shared, because HideHealingRangePreview destroys the
+        /// materials it finds when the preview goes away.
+        /// </summary>
+        private Material CreateHealingDustMaterial()
         {
-            var shader = Shader.Find("OpenEmpires/RangeOverlay");
-            if (shader == null) shader = Shader.Find("Universal Render Pipeline/Unlit");
-            if (shader == null) shader = Shader.Find("Unlit/Color");
-            var mat = new Material(shader);
-            mat.color = color;
-            if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", color);
-            if (mat.HasProperty("_Color")) mat.SetColor("_Color", color);
-            mat.renderQueue = 3000;
+            var shader = Shader.Find("Universal Render Pipeline/Particles/Unlit")
+                      ?? Shader.Find("Universal Render Pipeline/Unlit")
+                      ?? Shader.Find("Sprites/Default");
+
+            var mat = new Material(shader) { name = "M_HealRangeDust" };
+
+            Texture2D tex = GetHealingDustTexture();
+            if (mat.HasProperty("_BaseMap")) mat.SetTexture("_BaseMap", tex);
+            if (mat.HasProperty("_MainTex")) mat.SetTexture("_MainTex", tex);
+            if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", Color.white);
+            if (mat.HasProperty("_Color")) mat.SetColor("_Color", Color.white);
+
+            // Additive with depth write off, so motes glow and never punch holes in the scene.
+            if (mat.HasProperty("_Surface")) mat.SetFloat("_Surface", 1f);
+            if (mat.HasProperty("_Blend")) mat.SetFloat("_Blend", 1f);
+            if (mat.HasProperty("_SrcBlend"))
+                mat.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
+            if (mat.HasProperty("_DstBlend"))
+                mat.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.One);
+            if (mat.HasProperty("_ZWrite")) mat.SetFloat("_ZWrite", 0f);
+            if (mat.HasProperty("_Cull"))
+                mat.SetFloat("_Cull", (float)UnityEngine.Rendering.CullMode.Off);
+
+            mat.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+            mat.DisableKeyword("_ALPHATEST_ON");
+            mat.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+            mat.renderQueue = 3100;
+
             return mat;
         }
 
-        private void CreateHealingRangeLine(Transform parent, float radius, Color color)
+        /// <summary>A soft round blob, so each mote reads as a speck of dust rather than a square.</summary>
+        private static Texture2D GetHealingDustTexture()
         {
-            const int segments = 128;
-            var lineGO = new GameObject("HealingRangeLine");
-            lineGO.transform.SetParent(parent, false);
-            lineGO.transform.localPosition = Vector3.zero;
+            if (healingDustTexture != null) return healingDustTexture;
 
-            var lr = lineGO.AddComponent<LineRenderer>();
-            lr.useWorldSpace = false;
-            lr.loop = true;
-            lr.positionCount = segments;
-            lr.startWidth = 0.075f;
-            lr.endWidth = 0.075f;
-            lr.numCapVertices = 4;
-            lr.startColor = color;
-            lr.endColor = color;
-            lr.material = CreateHealingRangeMaterial(color);
-
-            for (int i = 0; i < segments; i++)
+            const int size = 32;
+            healingDustTexture = new Texture2D(size, size, TextureFormat.RGBA32, false)
             {
-                float angle = (i / (float)segments) * Mathf.PI * 2f;
-                lr.SetPosition(i, new Vector3(Mathf.Cos(angle) * radius, 0.09f, Mathf.Sin(angle) * radius));
+                name = "T_HealRangeDust",
+                wrapMode = TextureWrapMode.Clamp,
+                filterMode = FilterMode.Bilinear
+            };
+
+            const float center = (size - 1) * 0.5f;
+            var pixels = new Color32[size * size];
+
+            for (int y = 0; y < size; y++)
+            {
+                for (int x = 0; x < size; x++)
+                {
+                    float dx = (x - center) / center;
+                    float dy = (y - center) / center;
+                    float falloff = Mathf.Clamp01(1f - Mathf.Sqrt(dx * dx + dy * dy));
+                    falloff *= falloff;
+                    pixels[y * size + x] = new Color32(255, 255, 255, (byte)(falloff * 255f));
+                }
             }
+
+            healingDustTexture.SetPixels32(pixels);
+            healingDustTexture.Apply();
+            return healingDustTexture;
         }
 
         private void CreateHealingRangeMist(Transform parent, float radius, Color color)
@@ -3955,8 +3986,11 @@ namespace OpenEmpires
             colorOverLifetime.color = gradient;
 
             var renderer = particles.GetComponent<ParticleSystemRenderer>();
-            renderer.material = CreateHealingRangeMaterial(new Color(color.r, color.g, color.b, 0.45f));
+            renderer.material = CreateHealingDustMaterial();
             renderer.renderMode = ParticleSystemRenderMode.Billboard;
+            renderer.alignment = ParticleSystemRenderSpace.View;
+            renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
         }
 
         private static bool IsWallType(BuildingType type)
