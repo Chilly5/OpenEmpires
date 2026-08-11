@@ -2,6 +2,13 @@ using UnityEngine;
 
 namespace OpenEmpires
 {
+    public enum MapType
+    {
+        AlbionLowlands = 0,
+        HedgeBunker = 1,
+        Hideout = 2
+    }
+
     [CreateAssetMenu(fileName = "SimulationConfig", menuName = "OpenEmpires/Simulation Config")]
     public class SimulationConfig : ScriptableObject
     {
@@ -475,7 +482,19 @@ namespace OpenEmpires
 
         // Terrain generation
         [SerializeField] private int mapSeed = 42;
+        [SerializeField] private MapType mapType = MapType.AlbionLowlands;
         public int MapSeed { get => mapSeed; set => mapSeed = value; }
+        public MapType MapType { get => mapType; set => mapType = value; }
+        public string MapDisplayName => GetMapDisplayName(mapType);
+        public static string GetMapDisplayName(MapType type)
+        {
+            return type switch
+            {
+                MapType.HedgeBunker => "Hedge Bunker",
+                MapType.Hideout => "Hideout",
+                _ => "Albion Lowlands",
+            };
+        }
         public float TerrainHeightScale => 8f;
         public float WaterThreshold => 0.30f;
 

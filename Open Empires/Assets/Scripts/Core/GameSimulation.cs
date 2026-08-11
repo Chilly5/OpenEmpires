@@ -745,7 +745,8 @@ namespace OpenEmpires
             BuildingRegistry = new BuildingRegistry();
             ResourceManager = new ResourceManager();
             MapData = new MapData(mapSize, mapSize);
-            var (tiles, heights, basePositions, forestDensity) = MapGenerator.Generate(mapSize, mapSize, config.MapSeed, config.WaterThreshold, playerCount, teamAssignments);
+            var (tiles, heights, basePositions, forestDensity) = MapGenerator.Generate(mapSize, mapSize,
+                config.MapSeed, config.WaterThreshold, playerCount, teamAssignments, config.MapType);
             MapData.ApplyGenerationResult(tiles, heights, forestDensity);
             MapData.BasePositions = basePositions;
             CommandBuffer = new CommandBuffer();

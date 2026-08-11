@@ -123,6 +123,8 @@ namespace OpenEmpires
         private string username = "Player";
         private string statusText = "";
         private GameMode selectedGameMode = GameMode.OneVsOne;
+        private MapType selectedMapType = MapType.AlbionLowlands;
+        private Image[] mapButtonImages;
 
         // Civilization selection
         private Civilization selectedCivilization = Civilization.English;
@@ -204,6 +206,9 @@ namespace OpenEmpires
         private void Awake()
         {
             username = GetRandomName();
+            var cfg = GameBootstrapper.Instance?.Config;
+            selectedMapType = cfg != null ? cfg.MapType : MapType.AlbionLowlands;
+            selectedMapType = (MapType)Mathf.Clamp(PlayerPrefs.GetInt("SelectedMapType", (int)selectedMapType), 0, 2);
 
             if (matchmakingManager == null)
             {
@@ -436,6 +441,7 @@ namespace OpenEmpires
             var cfg = GameBootstrapper.Instance?.Config;
             if (cfg != null && matchmakingManager?.MatchId != null)
             {
+                cfg.MapType = MapType.AlbionLowlands;
                 cfg.MapSeed = DeterministicStringHash(matchmakingManager.MatchId);
                 Debug.Log($"[SyncCheck] MatchId=\"{matchmakingManager.MatchId}\" -> MapSeed={cfg.MapSeed}");
             }
@@ -1043,11 +1049,12 @@ namespace OpenEmpires
             LocalPlayerId = 0;
 
             // Set map seed
+            var cfg = GameBootstrapper.Instance?.Config;
             if (int.TryParse(seedInputField.text, out int seed))
             {
-                var cfg = GameBootstrapper.Instance?.Config;
                 if (cfg != null) cfg.MapSeed = seed;
             }
+            if (cfg != null) cfg.MapType = selectedMapType;
 
             int playerCount = aiFillTargetCount;
             int halfCount = playerCount / 2;
@@ -1427,6 +1434,36 @@ namespace OpenEmpires
                         ? new Color(0.25f, 0.4f, 0.7f)
                         : new Color(0.22f, 0.22f, 0.25f);
             }
+        }
+
+        private void SelectMapType(MapType mapType)
+        {
+            SFXManager.Instance?.PlayUI(SFXType.MenuClick, 0.5f);
+            selectedMapType = mapType;
+            PlayerPrefs.SetInt("SelectedMapType", (int)mapType);
+            UpdateMapButtonVisuals();
+        }
+
+        private void UpdateMapButtonVisuals()
+        {
+            if (mapButtonImages == null) return;
+            for (int i = 0; i < mapButtonImages.Length; i++)
+            {
+                if (mapButtonImages[i] != null)
+                    mapButtonImages[i].color = i == (int)selectedMapType
+                        ? new Color(0.25f, 0.4f, 0.7f)
+                        : new Color(0.22f, 0.22f, 0.25f);
+            }
+        }
+
+        private static string GetMapButtonLabel(MapType mapType)
+        {
+            return mapType switch
+            {
+                MapType.HedgeBunker => "Hedge\nBunker",
+                MapType.Hideout => "Hideout",
+                _ => "Albion",
+            };
         }
 
         // ---- Civilization Selection ----
@@ -1859,6 +1896,49 @@ namespace OpenEmpires
             seedInputField = CreateInputField(cardGO.transform, defaultSeed.ToString(), leftX, y, 240f, 32f);
             seedInputField.contentType = TMP_InputField.ContentType.IntegerNumber;
 
+            // Map Type
+            y -= 30f;
+            MakeLabel(cardGO.transform, "Map", leftX, y, 300f, 18f, 12, FontStyles.Normal, TextAlignmentOptions.Center, true, new Color(0.6f, 0.6f, 0.65f));
+            y -= 24f;
+            MapType[] mapTypes = { MapType.AlbionLowlands, MapType.HedgeBunker, MapType.Hideout };
+            mapButtonImages = new Image[mapTypes.Length];
+            float mapBtnW = 78f;
+            float mapGap = 5f;
+            for (int i = 0; i < mapTypes.Length; i++)
+            {
+                MapType mapTypeCapture = mapTypes[i];
+                float mapX = leftX - (mapBtnW + mapGap) + i * (mapBtnW + mapGap);
+                var btnGO = new GameObject($"Map{mapTypeCapture}");
+                btnGO.transform.SetParent(cardGO.transform, false);
+                var btnRT = btnGO.AddComponent<RectTransform>();
+                btnRT.anchorMin = new Vector2(0.5f, 0.5f);
+                btnRT.anchorMax = new Vector2(0.5f, 0.5f);
+                btnRT.pivot = new Vector2(0.5f, 0.5f);
+                btnRT.anchoredPosition = new Vector2(mapX, y);
+                btnRT.sizeDelta = new Vector2(mapBtnW, 30f);
+
+                var img = btnGO.AddComponent<Image>();
+                img.color = new Color(0.22f, 0.22f, 0.25f);
+                mapButtonImages[i] = img;
+
+                var btn = btnGO.AddComponent<Button>();
+                btn.onClick.AddListener(() => SelectMapType(mapTypeCapture));
+
+                var txtGO = new GameObject("Text");
+                txtGO.transform.SetParent(btnGO.transform, false);
+                var trt = txtGO.AddComponent<RectTransform>();
+                trt.anchorMin = Vector2.zero;
+                trt.anchorMax = Vector2.one;
+                trt.offsetMin = Vector2.zero;
+                trt.offsetMax = Vector2.zero;
+                var tmp = txtGO.AddComponent<TextMeshProUGUI>();
+                tmp.text = GetMapButtonLabel(mapTypeCapture);
+                tmp.fontSize = 10.5f;
+                tmp.alignment = TextAlignmentOptions.Center;
+                tmp.color = Color.white;
+            }
+            UpdateMapButtonVisuals();
+
             // Server Region — extra gap before new section
             y -= 30f;
             MakeLabel(cardGO.transform, "Server Region", leftX, y, 300f, 18f, 12, FontStyles.Normal, TextAlignmentOptions.Center, true, new Color(0.6f, 0.6f, 0.65f));
@@ -1923,6 +2003,7 @@ namespace OpenEmpires
             mainMenuActionGroup = actionGroupGO;
 
             y -= 18f;
+            float singlePlayerButtonY = y;
             CreateButton(actionGroupGO.transform, "Single Player", leftX, y, 250f, 34f, () =>
             {
                 ShowSinglePlayerModePanel();
@@ -2016,8 +2097,7 @@ namespace OpenEmpires
             singlePlayerModePanel = spPanelGO;
 
             // Lay out picker contents starting at the same y as the original Single Player button.
-            // y currently points at the Discord row; rewind to where SP started.
-            float spY = y + 96f; // 48 (Discord→MP gap) + 48 (MP→SP gap)
+            float spY = Mathf.Max(singlePlayerButtonY, -56f);
             MakeLabel(spPanelGO.transform, "Select Game Mode", leftX, spY + 24f, 250f, 24f, 14, FontStyles.Bold, TextAlignmentOptions.Center, true);
 
             GameMode[] singlePlayerModes = { GameMode.OneVsOne, GameMode.TwoVsTwo, GameMode.ThreeVsThree, GameMode.FourVsFour };

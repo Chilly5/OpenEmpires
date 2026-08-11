@@ -121,7 +121,7 @@ namespace OpenEmpires
                 if (gameSetup != null)
                     gameSetup.InitializeGame();
 
-                Debug.LogWarning($"[SyncCheck] MapSeed={config.MapSeed} Players={playerCount} " +
+                Debug.LogWarning($"[SyncCheck] Map={config.MapDisplayName} MapSeed={config.MapSeed} Players={playerCount} " +
                     $"Teams=[{string.Join(",", teams ?? new int[0])}] " +
                     $"AI=[{string.Join(",", aiPlayerIds ?? new int[0])}]");
                 uint initHash = Simulation.ComputeStateChecksum();
