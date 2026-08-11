@@ -187,9 +187,13 @@ namespace OpenEmpires
         {
             if (dustMaterial != null) return dustMaterial;
 
-            var shader = Shader.Find("Universal Render Pipeline/Particles/Unlit")
-                      ?? Shader.Find("Universal Render Pipeline/Unlit")
-                      ?? Shader.Find("Sprites/Default");
+            // Sprites/Default multiplies the texture by each particle's own colour, which is what
+            // carries the gold. The URP particle shader was tried first and ignored colour entirely
+            // in this project — every mote rendered flat white, and tinting the material made no
+            // difference on screen.
+            var shader = Shader.Find("Sprites/Default")
+                      ?? Shader.Find("Universal Render Pipeline/Particles/Unlit")
+                      ?? Shader.Find("Universal Render Pipeline/Unlit");
 
             dustMaterial = new Material(shader) { name = "M_HealAuraDust" };
 

@@ -145,18 +145,11 @@ namespace OpenEmpires
 
         public bool HasGallop => hips != null;
 
-        /// <summary>
-        /// True for the mounted unit types this animator drives.
-        ///
-        /// The King is deliberately excluded for now. His model is built in code rather than from
-        /// a prefab and is proportioned differently from the others — a very wide barrel with short
-        /// legs tucked well underneath it — and his legs never read convincingly at any gait we
-        /// tried. His <see cref="King"/> profile below is kept ready for when that is revisited;
-        /// adding UnitData.KingUnitType back here is all it takes to turn him on again.
-        /// </summary>
+        /// <summary>True for the mounted unit types this animator drives.</summary>
         public static bool IsMounted(int unitType)
         {
-            return unitType == 3 || unitType == 4 || unitType == 7 || unitType == 11;
+            return unitType == 3 || unitType == 4 || unitType == 7 || unitType == 11
+                || unitType == UnitData.KingUnitType;
         }
 
         /// <param name="unitId">
@@ -175,8 +168,10 @@ namespace OpenEmpires
 
             var horseParts = new List<Transform>();
             var riderParts = new List<Transform>();
+            var neckParts = new List<Transform>();
+            var hoofParts = new List<Transform>();
             var legParts = new Transform[LegCount];
-            Classify(visualRoot, horseParts, riderParts, legParts);
+            Classify(visualRoot, horseParts, riderParts, neckParts, hoofParts, legParts);
 
             // Build the rider group before inserting any pivots, so new pivots are never mistaken
             // for parts of the model.
@@ -187,7 +182,7 @@ namespace OpenEmpires
                 riderRestRotation = riderPivot.localRotation;
             }
 
-            neckPivot = CreateNeckPivot(visualRoot, horseParts);
+            neckPivot = CreateNeckPivot(visualRoot, neckParts, horseParts);
             if (neckPivot != null)
                 neckRestRotation = neckPivot.localRotation;
 
@@ -206,9 +201,52 @@ namespace OpenEmpires
 
             if (!anyLeg) return;
 
+            AttachHooves(visualRoot, hoofParts, foundHips, legParts);
+
             legs = legParts;
             hips = foundHips;
             hipRestRotations = foundRest;
+        }
+
+        /// <summary>
+        /// Some models carry hooves as separate pieces sitting under the legs. They have to ride
+        /// inside the hip pivot, or the leg swings out from under a hoof left standing on the spot.
+        /// Each hoof joins whichever leg it sits closest to on the ground plane.
+        /// </summary>
+        private static void AttachHooves(Transform space, List<Transform> hoofParts,
+            Transform[] hipPivots, Transform[] legParts)
+        {
+            for (int h = 0; h < hoofParts.Count; h++)
+            {
+                Transform hoof = hoofParts[h];
+
+                // Measured in the model's own space. The legs have already been reparented into
+                // their hip pivots by this point, so their localPosition is relative to the pivot
+                // and no longer comparable — every leg would look like it sat at the origin.
+                Vector3 hoofPos = space.InverseTransformPoint(hoof.position);
+
+                int best = -1;
+                float bestDistance = float.MaxValue;
+
+                for (int i = 0; i < LegCount; i++)
+                {
+                    if (legParts[i] == null || hipPivots[i] == null) continue;
+
+                    Vector3 legPos = space.InverseTransformPoint(legParts[i].position);
+                    float dx = legPos.x - hoofPos.x;
+                    float dz = legPos.z - hoofPos.z;
+                    float distance = dx * dx + dz * dz;
+
+                    if (distance < bestDistance)
+                    {
+                        bestDistance = distance;
+                        best = i;
+                    }
+                }
+
+                if (best >= 0)
+                    hoof.SetParent(hipPivots[best], true);
+            }
         }
 
         /// <param name="normalizedSpeed">Distance covered last tick as a fraction of top speed.</param>
@@ -457,7 +495,8 @@ namespace OpenEmpires
         /// cover "LegFrontLeft", "LegFrontLeft (1)" and "HorseLeg0" alike.
         /// </summary>
         private static void Classify(Transform visualRoot, List<Transform> horseParts,
-            List<Transform> riderParts, Transform[] legParts)
+            List<Transform> riderParts, List<Transform> neckParts, List<Transform> hoofParts,
+            Transform[] legParts)
         {
             for (int i = 0; i < visualRoot.childCount; i++)
             {
@@ -467,6 +506,19 @@ namespace OpenEmpires
                 // The attack animator owns the weapon pivots; never move them.
                 if (child.name.StartsWith("Attack", StringComparison.Ordinal)) continue;
                 if (name == "SelectionRing") continue;
+
+                // Anything explicitly named for the rider is theirs, whatever else it looks like.
+                if (name.StartsWith("Rider", StringComparison.Ordinal))
+                {
+                    riderParts.Add(child);
+                    continue;
+                }
+
+                if (name.IndexOf("Hoof", StringComparison.Ordinal) >= 0)
+                {
+                    hoofParts.Add(child);
+                    continue;
+                }
 
                 if (name.IndexOf("Leg", StringComparison.Ordinal) >= 0)
                 {
@@ -479,6 +531,13 @@ namespace OpenEmpires
                     continue;
                 }
 
+                // Head first: a piece can look like both (HorseHead), and the head group wins.
+                if (IsHeadPart(name))
+                {
+                    neckParts.Add(child);
+                    continue;
+                }
+
                 if (IsHorsePart(name))
                     horseParts.Add(child);
                 else
@@ -487,12 +546,32 @@ namespace OpenEmpires
         }
 
         /// <summary>
-        /// Horse parts are named for the horse, plus the chanfron — the plate over a barded
-        /// warhorse's face, which belongs to the head rather than the rider wearing the armour.
+        /// Everything carried on the horse's head and neck — including the muzzle, mane and ears
+        /// that some models build as separate pieces, and the chanfron, the plate over a barded
+        /// warhorse's face. All of it has to nod with the head; left on the body it visibly
+        /// detaches the moment the head moves.
+        /// </summary>
+        private static bool IsHeadPart(string baseName)
+        {
+            return baseName.IndexOf("Head", StringComparison.Ordinal) >= 0
+                || baseName.IndexOf("Muzzle", StringComparison.Ordinal) >= 0
+                || baseName.IndexOf("Mane", StringComparison.Ordinal) >= 0
+                || baseName.IndexOf("Ear", StringComparison.Ordinal) >= 0
+                || baseName.IndexOf("Forelock", StringComparison.Ordinal) >= 0
+                || baseName.IndexOf("Chanfron", StringComparison.Ordinal) >= 0;
+        }
+
+        /// <summary>
+        /// The horse's body and the barding worn over it — the caparison cloth, crupper and flank
+        /// plates belong to the horse even though they are the rider's colours.
         /// </summary>
         private static bool IsHorsePart(string baseName)
         {
-            return baseName.StartsWith("Horse", StringComparison.Ordinal) || baseName == "Chanfron";
+            return baseName.StartsWith("Horse", StringComparison.Ordinal)
+                || baseName.IndexOf("Caparison", StringComparison.Ordinal) >= 0
+                || baseName.IndexOf("Crupper", StringComparison.Ordinal) >= 0
+                || baseName.IndexOf("Barding", StringComparison.Ordinal) >= 0
+                || baseName.IndexOf("Saddle", StringComparison.Ordinal) >= 0;
         }
 
         /// <summary>
@@ -529,27 +608,24 @@ namespace OpenEmpires
         /// nod together about the shoulder. The neck is found as the body segment sitting forward of
         /// the barrel, since only some of these models have one at all.
         /// </summary>
-        private static Transform CreateNeckPivot(Transform visualRoot, List<Transform> horseParts)
+        private static Transform CreateNeckPivot(Transform visualRoot, List<Transform> neckParts,
+            List<Transform> horseParts)
         {
             Transform barrel = LargestPart(horseParts);
-            var parts = new List<Transform>();
+            var parts = new List<Transform>(neckParts);
 
             for (int i = 0; i < horseParts.Count; i++)
             {
                 Transform part = horseParts[i];
-                string name = BaseName(part.name);
-
-                bool isHead = name.IndexOf("Head", StringComparison.Ordinal) >= 0;
-                bool isFaceArmour = name == "Chanfron";
+                if (part == barrel || barrel == null) continue;
 
                 // A neck segment shares the barrel's family name but sits ahead of it. Testing the
                 // family keeps barding (chest plate, crupper, flank plates) out of the group.
-                bool isNeck = barrel != null && part != barrel
-                    && name == BaseName(barrel.name)
-                    && part.localPosition.z > barrel.localPosition.z;
-
-                if (isHead || isFaceArmour || isNeck)
+                if (BaseName(part.name) == BaseName(barrel.name)
+                    && part.localPosition.z > barrel.localPosition.z)
+                {
                     parts.Add(part);
+                }
             }
 
             if (parts.Count == 0) return null;

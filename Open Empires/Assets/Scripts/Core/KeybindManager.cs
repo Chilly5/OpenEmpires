@@ -163,7 +163,7 @@ namespace OpenEmpires
             "Villager", "Spearman", "Archer", "Horseman", "Scout", "Sheep",
             "Man-at-Arms", "Knight", "Crossbowman", "Monk",
             "Longbowman", "Gendarme", "Landsknecht",
-            "Battering Ram", "Mangonel", "Trebuchet", "King",
+            "Battering Ram", "Mangonel", "Trebuchet", "English King",
         };
 
         public static string GetUnitTypeDisplayName(int unitType)

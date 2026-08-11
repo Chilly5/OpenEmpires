@@ -2445,14 +2445,13 @@ namespace OpenEmpires
                     return;
                 }
             }
-            if (unitType == UnitData.KingUnitType)
+            if (unitType == UnitData.KingUnitType && kingPrefab == null)
             {
-                // King — create procedural view if no prefab assigned
-                if (kingPrefab == null)
-                {
-                    SpawnProceduralKing(unitData, spawnPos);
-                    return;
-                }
+                // There is deliberately no code-built fallback. One used to live here, and because
+                // it only ran when the prefab was missing it sat unused while still looking like
+                // the real King to anyone reading the code. Fail loudly instead.
+                Debug.LogError("[GameSetup] No English King prefab assigned; the King cannot be spawned.");
+                return;
             }
             if (unitType >= 13 && unitType <= 15)
             {
@@ -3000,179 +2999,6 @@ namespace OpenEmpires
                 if (selectionManager != null)
                     selectionManager.RegisterUnitView(unitView);
             }
-        }
-
-        private void SpawnProceduralKing(UnitData unitData, Vector3 spawnPos)
-        {
-            var sim = GameBootstrapper.Instance?.Simulation;
-            if (sim != null)
-                spawnPos.y = sim.MapData.SampleHeight(spawnPos.x, spawnPos.z) * sim.Config.TerrainHeightScale;
-
-            int unitLayer = LayerMask.NameToLayer("Unit");
-            if (unitLayer < 0) unitLayer = 8;
-
-            var go = new GameObject("King");
-            go.layer = unitLayer;
-
-            var shader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
-            var horseMat = new Material(shader);
-            SetMaterialColor(horseMat, new Color(0.34f, 0.20f, 0.11f));
-            var leatherMat = new Material(shader);
-            SetMaterialColor(leatherMat, new Color(0.18f, 0.10f, 0.05f));
-            var goldMat = new Material(shader);
-            SetMaterialColor(goldMat, new Color(1f, 0.74f, 0.18f));
-
-            var horseBody = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-            horseBody.name = "HorseBody";
-            horseBody.transform.SetParent(go.transform);
-            horseBody.transform.localPosition = new Vector3(0f, 0.55f, 0f);
-            horseBody.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
-            horseBody.transform.localScale = new Vector3(0.35f, 0.72f, 0.35f);
-            horseBody.layer = unitLayer;
-            horseBody.GetComponent<Renderer>().sharedMaterial = horseMat;
-
-            var horseHead = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-            horseHead.name = "HorseHead";
-            horseHead.transform.SetParent(go.transform);
-            horseHead.transform.localPosition = new Vector3(0f, 0.75f, 0.55f);
-            horseHead.transform.localRotation = Quaternion.Euler(25f, 0f, 0f);
-            horseHead.transform.localScale = new Vector3(0.18f, 0.28f, 0.18f);
-            horseHead.layer = unitLayer;
-            horseHead.GetComponent<Renderer>().sharedMaterial = horseMat;
-
-            Vector3[] legPositions = {
-                new Vector3(-0.2f, 0.24f, 0.28f),
-                new Vector3(0.2f, 0.24f, 0.28f),
-                new Vector3(-0.2f, 0.24f, -0.28f),
-                new Vector3(0.2f, 0.24f, -0.28f)
-            };
-            for (int i = 0; i < legPositions.Length; i++)
-            {
-                var leg = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-                leg.name = "HorseLeg" + i;
-                leg.transform.SetParent(go.transform);
-                leg.transform.localPosition = legPositions[i];
-                leg.transform.localScale = new Vector3(0.055f, 0.22f, 0.055f);
-                leg.layer = unitLayer;
-                leg.GetComponent<Renderer>().sharedMaterial = leatherMat;
-            }
-
-            var riderBody = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-            riderBody.name = "RiderBody";
-            riderBody.transform.SetParent(go.transform);
-            riderBody.transform.localPosition = new Vector3(0f, 1.12f, -0.05f);
-            riderBody.transform.localScale = new Vector3(0.22f, 0.34f, 0.22f);
-            riderBody.layer = unitLayer;
-
-            var riderHead = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            riderHead.name = "RiderHead";
-            riderHead.transform.SetParent(go.transform);
-            riderHead.transform.localPosition = new Vector3(0f, 1.58f, -0.02f);
-            riderHead.transform.localScale = new Vector3(0.18f, 0.18f, 0.18f);
-            riderHead.layer = unitLayer;
-
-            var crown = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-            crown.name = "Crown";
-            crown.transform.SetParent(go.transform);
-            crown.transform.localPosition = new Vector3(0f, 1.76f, -0.02f);
-            crown.transform.localScale = new Vector3(0.2f, 0.04f, 0.2f);
-            crown.layer = unitLayer;
-            crown.GetComponent<Renderer>().sharedMaterial = goldMat;
-
-            for (int i = 0; i < 4; i++)
-            {
-                var point = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                point.name = "CrownPoint" + i;
-                point.transform.SetParent(go.transform);
-                float angle = i * Mathf.PI * 0.5f;
-                point.transform.localPosition = new Vector3(Mathf.Cos(angle) * 0.13f, 1.83f, -0.02f + Mathf.Sin(angle) * 0.13f);
-                point.transform.localScale = new Vector3(0.05f, 0.1f, 0.05f);
-                point.layer = unitLayer;
-                point.GetComponent<Renderer>().sharedMaterial = goldMat;
-            }
-
-            var cloak = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            cloak.name = "Cloak";
-            cloak.transform.SetParent(go.transform);
-            cloak.transform.localPosition = new Vector3(0f, 1.04f, -0.31f);
-            cloak.transform.localRotation = Quaternion.Euler(-18f, 0f, 0f);
-            cloak.transform.localScale = new Vector3(0.44f, 0.06f, 0.5f);
-            cloak.layer = unitLayer;
-
-            var lanceGroup = new GameObject("RoyalLance");
-            lanceGroup.layer = unitLayer;
-            lanceGroup.transform.SetParent(go.transform);
-            lanceGroup.transform.localPosition = new Vector3(0.28f, 1.2f, 0.28f);
-            lanceGroup.transform.localRotation = Quaternion.Euler(55f, 0f, -12f);
-
-            var lance = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-            lance.name = "Cylinder";
-            lance.transform.SetParent(lanceGroup.transform);
-            lance.transform.localPosition = new Vector3(0f, 0.34f, 0f);
-            lance.transform.localScale = new Vector3(0.035f, 0.58f, 0.035f);
-            lance.layer = unitLayer;
-            lance.GetComponent<Renderer>().sharedMaterial = leatherMat;
-
-            var spearTip = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            spearTip.name = "Speartip (1)";
-            spearTip.transform.SetParent(lanceGroup.transform);
-            spearTip.transform.localPosition = new Vector3(0f, 0.94f, 0f);
-            spearTip.transform.localScale = new Vector3(0.1f, 0.16f, 0.1f);
-            spearTip.layer = unitLayer;
-            spearTip.GetComponent<Renderer>().sharedMaterial = goldMat;
-
-            var banner = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            banner.name = "Banner";
-            banner.transform.SetParent(lanceGroup.transform);
-            banner.transform.localPosition = new Vector3(0.12f, 0.63f, 0f);
-            banner.transform.localScale = new Vector3(0.18f, 0.12f, 0.02f);
-            banner.layer = unitLayer;
-
-            foreach (var c in go.GetComponentsInChildren<Collider>())
-                Destroy(c);
-
-            var col = go.AddComponent<CapsuleCollider>();
-            col.center = new Vector3(0f, 0.8f, 0f);
-            col.radius = 0.55f;
-            col.height = 1.65f;
-
-            var ring = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-            ring.name = "SelectionRing";
-            ring.transform.SetParent(go.transform);
-            ring.transform.localPosition = new Vector3(0f, 0.02f, 0f);
-            ring.transform.localScale = new Vector3(1.15f, 0.01f, 1.15f);
-            ring.layer = unitLayer;
-            var ringCol = ring.GetComponent<Collider>();
-            if (ringCol != null) Destroy(ringCol);
-            ring.GetComponent<Renderer>().sharedMaterial = sharedSelectionRingMat;
-
-            go.transform.position = spawnPos;
-            go.SetActive(true);
-
-            var playerMat = playerMaterials[unitData.PlayerId];
-            var silMat = playerSilhouetteMaterials[unitData.PlayerId];
-            foreach (var r in go.GetComponentsInChildren<Renderer>())
-            {
-                string partName = r.gameObject.name;
-                if (partName == "SelectionRing") continue;
-                bool teamColored = partName == "RiderBody" || partName == "Cloak" || partName == "Banner";
-                var primaryMat = teamColored ? playerMat : r.sharedMaterial;
-                r.sharedMaterials = new Material[] { primaryMat, unitStencilMat, silMat };
-            }
-
-            var unitView = go.AddComponent<UnitView>();
-            unitView.SetSelectionRing(ring);
-
-            var mapData = sim?.MapData;
-            float hs = sim?.Config.TerrainHeightScale ?? 0f;
-            unitView.Initialize(unitData.Id, spawnPos, unitData, UnitData.KingUnitType, mapData, hs,
-                unitStencilMat, playerSilhouetteMaterials[unitData.PlayerId]);
-            unitViews[unitData.Id] = unitView;
-
-            if (selectionManager != null)
-                selectionManager.RegisterUnitView(unitView);
-
-            SFXManager.Instance?.Play(SFXType.UnitTrained, spawnPos, 0.6f);
         }
 
         private void SpawnProceduralMonk(UnitData unitData, Vector3 spawnPos)

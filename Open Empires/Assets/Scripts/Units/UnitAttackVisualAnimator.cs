@@ -437,13 +437,31 @@ namespace OpenEmpires
             return hasBounds ? bounds.center : positionSum / parts.Count;
         }
 
+        /// <summary>
+        /// Finds the lance a mounted unit carries. Matched on the tip by prefix rather than on an
+        /// exact "Speartip (1)": the King's lance names its tip plainly "Speartip", and an exact
+        /// match quietly found nothing, leaving him to attack by shoving his horse forward.
+        /// </summary>
         private static Transform FindMountedWeapon(Transform root)
         {
             for (int i = 0; i < root.childCount; i++)
             {
                 Transform child = root.GetChild(i);
-                if (FindDescendant(child, "Speartip (1)") != null)
+                if (FindDescendantWithPrefix(child, "Speartip") != null)
                     return child;
+            }
+            return null;
+        }
+
+        private static Transform FindDescendantWithPrefix(Transform root, string prefix)
+        {
+            if (root == null) return null;
+            if (root.name.StartsWith(prefix, System.StringComparison.Ordinal)) return root;
+
+            for (int i = 0; i < root.childCount; i++)
+            {
+                Transform match = FindDescendantWithPrefix(root.GetChild(i), prefix);
+                if (match != null) return match;
             }
             return null;
         }

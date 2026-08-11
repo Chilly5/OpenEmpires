@@ -252,7 +252,7 @@ namespace OpenEmpires
         private static readonly Color PanelBgColor = new Color(0, 0, 0, 1f);
         private static readonly Color BarBgColor = new Color(0.1f, 0.1f, 0.1f);
 
-        private static readonly string[] UnitTypeNames = { "Villager", "Spearman", "Archer", "Horseman", "Scout", "Sheep", "Man-at-Arms", "Knight", "Crossbowman", "Monk", "Longbowman", "Gendarme", "Landsknecht", "Battering Ram", "Mangonel", "Trebuchet", "King" };
+        private static readonly string[] UnitTypeNames = { "Villager", "Spearman", "Archer", "Horseman", "Scout", "Sheep", "Man-at-Arms", "Knight", "Crossbowman", "Monk", "Longbowman", "Gendarme", "Landsknecht", "Battering Ram", "Mangonel", "Trebuchet", "English King" };
         private static readonly string[] UnitTypePlurals = { "Villagers", "Spearmen", "Archers", "Horsemen", "Scouts", "Sheep", "Men-at-Arms", "Knights", "Crossbowmen", "Monks", "Longbowmen", "Gendarmes", "Landsknechte", "Battering Rams", "Mangonels", "Trebuchets", "Kings" };
         private static readonly string[] BuildingTypeNames = { "House", "Barracks", "Town Center", "Wood Wall", "Mill", "Lumber Yard", "Mine", "Archery Range", "Stables", "Farm", "Tower", "Monastery", "Landmark", "Blacksmith", "Market", "University", "Siege Workshop", "Keep", "Stone Wall", "Stone Gate", "Wood Gate", "Wonder" };
         private static readonly string[] BuildingTypePlurals = { "Houses", "Barracks", "Town Centers", "Wood Walls", "Mills", "Lumber Yards", "Mines", "Archery Ranges", "Stables", "Farms", "Towers", "Monasteries", "Landmarks", "Blacksmiths", "Markets", "Universities", "Siege Workshops", "Keeps", "Stone Walls", "Stone Gates", "Wood Gates", "Wonders" };
@@ -3869,36 +3869,30 @@ namespace OpenEmpires
         /// Returned per preview rather than shared, because HideHealingRangePreview destroys the
         /// materials it finds when the preview goes away.
         /// </summary>
-        private Material CreateHealingDustMaterial()
+        private Material CreateHealingDustMaterial(Color tint)
         {
-            var shader = Shader.Find("Universal Render Pipeline/Particles/Unlit")
-                      ?? Shader.Find("Universal Render Pipeline/Unlit")
-                      ?? Shader.Find("Sprites/Default");
+            // Sprites/Default multiplies the texture by the material colour and by each particle's
+            // own colour, and needs none of URP's surface-type plumbing to do it.
+            //
+            // The URP particle shader was tried first and ignored colour entirely here: motes came
+            // out flat white however they were tinted, and forcing the material red changed nothing
+            // on screen. Tinting the material directly, rather than relying on the particle colour
+            // reaching the shader, is what makes the ring read as gold.
+            var shader = Shader.Find("Sprites/Default")
+                      ?? Shader.Find("Universal Render Pipeline/Particles/Unlit")
+                      ?? Shader.Find("Universal Render Pipeline/Unlit");
 
             var mat = new Material(shader) { name = "M_HealRangeDust" };
 
             Texture2D tex = GetHealingDustTexture();
-            if (mat.HasProperty("_BaseMap")) mat.SetTexture("_BaseMap", tex);
             if (mat.HasProperty("_MainTex")) mat.SetTexture("_MainTex", tex);
-            if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", Color.white);
-            if (mat.HasProperty("_Color")) mat.SetColor("_Color", Color.white);
+            if (mat.HasProperty("_BaseMap")) mat.SetTexture("_BaseMap", tex);
 
-            // Additive with depth write off, so motes glow and never punch holes in the scene.
-            if (mat.HasProperty("_Surface")) mat.SetFloat("_Surface", 1f);
-            if (mat.HasProperty("_Blend")) mat.SetFloat("_Blend", 1f);
-            if (mat.HasProperty("_SrcBlend"))
-                mat.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
-            if (mat.HasProperty("_DstBlend"))
-                mat.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.One);
-            if (mat.HasProperty("_ZWrite")) mat.SetFloat("_ZWrite", 0f);
-            if (mat.HasProperty("_Cull"))
-                mat.SetFloat("_Cull", (float)UnityEngine.Rendering.CullMode.Off);
+            var solid = new Color(tint.r, tint.g, tint.b, 1f);
+            if (mat.HasProperty("_Color")) mat.SetColor("_Color", solid);
+            if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", solid);
 
-            mat.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
-            mat.DisableKeyword("_ALPHATEST_ON");
-            mat.DisableKeyword("_ALPHAPREMULTIPLY_ON");
             mat.renderQueue = 3100;
-
             return mat;
         }
 
@@ -3947,21 +3941,35 @@ namespace OpenEmpires
             main.duration = 2f;
             main.startLifetime = new ParticleSystem.MinMaxCurve(1.2f, 2.2f);
             main.startSpeed = new ParticleSystem.MinMaxCurve(0.03f, 0.12f);
-            main.startSize = new ParticleSystem.MinMaxCurve(0.07f, 0.16f);
+            main.startSize = new ParticleSystem.MinMaxCurve(0.11f, 0.24f);
+            // Kept well below full alpha on purpose: the motes are additive, so overlapping ones
+            // stack. Push these up and the ring saturates to white and loses its gold entirely.
             main.startColor = new ParticleSystem.MinMaxGradient(
-                new Color(color.r, color.g, color.b, 0.18f),
-                new Color(1f, 0.94f, 0.62f, 0.36f));
+                new Color(color.r, color.g, color.b, 0.55f),
+                new Color(1f, 0.94f, 0.62f, 0.90f));
             main.simulationSpace = ParticleSystemSimulationSpace.Local;
-            main.maxParticles = 180;
+
+            // Keep the ring's density even whether it is the King's 9 or the Abbey's 12: a fixed
+            // rate spread round a bigger circle just thins out until there is nothing to see.
+            // About three motes per unit of rim — pack them tighter and the additive blending
+            // stacks overlapping motes until the ring burns out to white and the gold is lost.
+            const float motesPerUnit = 3f;
+            const float averageLifetime = 1.7f;
+            float circumference = 2f * Mathf.PI * radius;
+
+            main.maxParticles = Mathf.Clamp(Mathf.RoundToInt(circumference * motesPerUnit * 1.6f), 80, 400);
 
             var emission = particles.emission;
-            emission.rateOverTime = 44f;
+            emission.rateOverTime = Mathf.Clamp(circumference * motesPerUnit / averageLifetime, 20f, 140f);
 
             var shape = particles.shape;
             shape.enabled = true;
             shape.shapeType = ParticleSystemShapeType.Circle;
             shape.radius = radius;
-            shape.radiusThickness = 0.02f;
+            shape.radiusThickness = 0.10f;
+            shape.arc = 360f;
+            shape.arcMode = ParticleSystemShapeMultiModeValue.Random;
+            shape.rotation = new Vector3(90f, 0f, 0f); // lay the circle flat on the ground
 
             var velocity = particles.velocityOverLifetime;
             velocity.enabled = true;
@@ -3980,13 +3988,14 @@ namespace OpenEmpires
                 new[]
                 {
                     new GradientAlphaKey(0f, 0f),
-                    new GradientAlphaKey(0.32f, 0.2f),
+                    new GradientAlphaKey(1f, 0.22f),
+                    new GradientAlphaKey(0.7f, 0.65f),
                     new GradientAlphaKey(0f, 1f)
                 });
             colorOverLifetime.color = gradient;
 
             var renderer = particles.GetComponent<ParticleSystemRenderer>();
-            renderer.material = CreateHealingDustMaterial();
+            renderer.material = CreateHealingDustMaterial(color);
             renderer.renderMode = ParticleSystemRenderMode.Billboard;
             renderer.alignment = ParticleSystemRenderSpace.View;
             renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
