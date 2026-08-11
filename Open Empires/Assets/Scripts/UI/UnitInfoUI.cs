@@ -1884,13 +1884,26 @@ namespace OpenEmpires
             float radius, int healAmount, int cooldownTicks, int tickRate)
         {
             float seconds = tickRate > 0 ? cooldownTicks / (float)tickRate : cooldownTicks;
+            float perSecond = seconds > 0f ? healAmount / seconds : 0f;
+
+            var stats = new System.Text.StringBuilder();
+            stats.Append("<b>").Append(title).Append("</b>\n");
+            stats.Append(body).Append('\n');
+            stats.Append('\n');
+            stats.Append("Heals <b>").Append(healAmount).Append(" HP</b> every <b>")
+                 .Append(seconds.ToString("0.#")).Append("s</b>  (").Append(perSecond.ToString("0.#"))
+                 .Append(" HP/s)\n");
+            stats.Append("Range: <b>").Append(radius.ToString("0.#")).Append("</b> tiles\n");
+            stats.Append("Affects: friendly units in range\n");
+            stats.Append("<i>Passive — always active, no need to trigger.</i>");
+
             return new GridButton
             {
                 Label = label,
                 Enabled = true,
                 Icon = UnitIcons.Get(9),
                 Tint = new Color(0.48f, 0.38f, 0.16f),
-                Tooltip = $"<b>{title}</b>\n{body}\nHeal: {healAmount} HP every {seconds:0.#}s\nRange: {radius:0.#}",
+                Tooltip = stats.ToString(),
                 RangePreviewTarget = target,
                 RangePreviewRadius = radius,
                 RangePreviewColor = new Color(1f, 0.78f, 0.22f, 0.72f)
@@ -3869,7 +3882,7 @@ namespace OpenEmpires
         /// Returned per preview rather than shared, because HideHealingRangePreview destroys the
         /// materials it finds when the preview goes away.
         /// </summary>
-        private Material CreateHealingDustMaterial(Color tint)
+        private Material CreateHealingDustMaterial()
         {
             // Sprites/Default multiplies the texture by the material colour and by each particle's
             // own colour, and needs none of URP's surface-type plumbing to do it.
@@ -3878,9 +3891,9 @@ namespace OpenEmpires
             // out flat white however they were tinted, and forcing the material red changed nothing
             // on screen. Tinting the material directly, rather than relying on the particle colour
             // reaching the shader, is what makes the ring read as gold.
-            var shader = Shader.Find("Sprites/Default")
-                      ?? Shader.Find("Universal Render Pipeline/Particles/Unlit")
-                      ?? Shader.Find("Universal Render Pipeline/Unlit");
+            var shader = Shader.Find("OpenEmpires/RangeOverlay")
+                      ?? Shader.Find("Sprites/Default")
+                      ?? Shader.Find("Universal Render Pipeline/Particles/Unlit");
 
             var mat = new Material(shader) { name = "M_HealRangeDust" };
 
@@ -3888,11 +3901,11 @@ namespace OpenEmpires
             if (mat.HasProperty("_MainTex")) mat.SetTexture("_MainTex", tex);
             if (mat.HasProperty("_BaseMap")) mat.SetTexture("_BaseMap", tex);
 
-            var solid = new Color(tint.r, tint.g, tint.b, 1f);
-            if (mat.HasProperty("_Color")) mat.SetColor("_Color", solid);
-            if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", solid);
+            // Left white on purpose. The shader multiplies material colour by each particle's own
+            // colour, so tinting here as well would square the gold and turn the ring orange-red.
+            if (mat.HasProperty("_Color")) mat.SetColor("_Color", Color.white);
+            if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", Color.white);
 
-            mat.renderQueue = 3100;
             return mat;
         }
 
@@ -3938,15 +3951,18 @@ namespace OpenEmpires
             var particles = mistGO.AddComponent<ParticleSystem>();
             var main = particles.main;
             main.loop = true;
+            main.playOnAwake = false;
             main.duration = 2f;
             main.startLifetime = new ParticleSystem.MinMaxCurve(1.2f, 2.2f);
             main.startSpeed = new ParticleSystem.MinMaxCurve(0.03f, 0.12f);
-            main.startSize = new ParticleSystem.MinMaxCurve(0.11f, 0.24f);
+            main.startSize = new ParticleSystem.MinMaxCurve(0.16f, 0.32f);
             // Kept well below full alpha on purpose: the motes are additive, so overlapping ones
             // stack. Push these up and the ring saturates to white and loses its gold entirely.
+            // Both ends stay firmly gold. Letting the lighter end drift toward white washed the
+            // ring out to cream at a distance.
             main.startColor = new ParticleSystem.MinMaxGradient(
-                new Color(color.r, color.g, color.b, 0.55f),
-                new Color(1f, 0.94f, 0.62f, 0.90f));
+                new Color(color.r, color.g, color.b, 0.85f),
+                new Color(1f, 0.88f, 0.45f, 1f));
             main.simulationSpace = ParticleSystemSimulationSpace.Local;
 
             // Keep the ring's density even whether it is the King's 9 or the Abbey's 12: a fixed
@@ -3982,24 +3998,29 @@ namespace OpenEmpires
             gradient.SetKeys(
                 new[]
                 {
-                    new GradientColorKey(new Color(color.r, color.g, color.b), 0f),
-                    new GradientColorKey(new Color(1f, 0.94f, 0.62f), 1f)
+                    new GradientColorKey(Color.white, 0f),
+                    new GradientColorKey(Color.white, 1f)
                 },
                 new[]
                 {
                     new GradientAlphaKey(0f, 0f),
-                    new GradientAlphaKey(1f, 0.22f),
-                    new GradientAlphaKey(0.7f, 0.65f),
+                    new GradientAlphaKey(1f, 0.2f),
+                    new GradientAlphaKey(0.85f, 0.7f),
                     new GradientAlphaKey(0f, 1f)
                 });
             colorOverLifetime.color = gradient;
 
             var renderer = particles.GetComponent<ParticleSystemRenderer>();
-            renderer.material = CreateHealingDustMaterial(color);
+            renderer.material = CreateHealingDustMaterial();
             renderer.renderMode = ParticleSystemRenderMode.Billboard;
             renderer.alignment = ParticleSystemRenderSpace.View;
             renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             renderer.receiveShadows = false;
+
+            // A ParticleSystem added by AddComponent has already missed its own Awake, so
+            // playOnAwake never fires and it sits stopped. Without this the preview built a
+            // perfectly configured system on every hover that emitted absolutely nothing.
+            particles.Play();
         }
 
         private static bool IsWallType(BuildingType type)
