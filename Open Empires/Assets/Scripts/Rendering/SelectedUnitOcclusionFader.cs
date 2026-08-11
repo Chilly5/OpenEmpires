@@ -5,8 +5,8 @@ using UnityEngine.Rendering;
 namespace OpenEmpires
 {
     /// <summary>
-    /// View-only camera occlusion aid for selected units. It fades world renderers that sit
-    /// between the camera and selected units, then restores them when they stop blocking.
+    /// View-only camera occlusion aid for selected units. Building readability is handled by
+    /// selected-unit rings and silhouettes; this fader remains as a fallback for resource props.
     /// </summary>
     public sealed class SelectedUnitOcclusionFader
     {
@@ -94,7 +94,7 @@ namespace OpenEmpires
                     QueryTriggerInteraction.Ignore);
 
                 for (int h = 0; h < hitCount; h++)
-                    AddOcclusionRenderers(hitBuffer[h].collider, hitBuffer[h].point);
+                    AddOcclusionRenderers(hitBuffer[h].collider);
 
                 sampled++;
             }
@@ -104,16 +104,16 @@ namespace OpenEmpires
                 currentOccluders.Add(renderer);
         }
 
-        private void AddOcclusionRenderers(Collider collider, Vector3 hitPoint)
+        private void AddOcclusionRenderers(Collider collider)
         {
             if (collider == null) return;
 
             rendererBuffer.Clear();
 
             var building = collider.GetComponentInParent<BuildingView>();
-            if (building != null && !building.IsDestroyed)
+            if (building != null)
             {
-                building.GetOcclusionFadeRenderers(hitPoint, rendererBuffer);
+                return;
             }
             else
             {

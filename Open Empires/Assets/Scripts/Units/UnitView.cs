@@ -26,6 +26,7 @@ namespace OpenEmpires
         // Stencil + silhouette materials for resource stack rendering
         private Material cachedStencilMat;
         private Material cachedSilhouetteMat;
+        private Material selectedSilhouetteMat;
 
         // Control group badge
         private int controlGroupLabel = -1;
@@ -131,6 +132,7 @@ namespace OpenEmpires
         private float attackRingTimer;
         private const float AttackRingDuration = 0.5f;
         private static readonly Color AttackRingColor = new Color(1f, 0.15f, 0.15f);
+        private static Material selectedUnitRingMaterial;
         private Renderer selectionRingRenderer;
         private MaterialPropertyBlock ringPropBlock;
         private Color originalRingColor = Color.white;
@@ -138,6 +140,8 @@ namespace OpenEmpires
         // Shader-safe color access (RGBRecolor shader uses _BaseColor instead of _Color)
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int ColorId = Shader.PropertyToID("_Color");
+        private static readonly int SilhouetteColorId = Shader.PropertyToID("_SilhouetteColor");
+        private static readonly int ZTestId = Shader.PropertyToID("_ZTest");
 
         private static Color GetMaterialColor(Material mat)
         {
@@ -235,6 +239,7 @@ namespace OpenEmpires
             CreateHealthBarWidget();
             CreateUpgradeBadgesWidget();
             CreateHealAuraVisual();
+            ConfigureSelectionRingMaterial();
             var col = GetComponent<Collider>();
             healthBarYOffset = col != null
                 ? col.bounds.max.y - transform.position.y + 0.1f
@@ -377,7 +382,7 @@ namespace OpenEmpires
                         resourceStackItems[i].transform.localScale = scale;
                         var r = resourceStackItems[i].GetComponent<Renderer>();
                         if (cachedStencilMat != null && cachedSilhouetteMat != null)
-                            r.sharedMaterials = new Material[] { mat, cachedStencilMat, cachedSilhouetteMat };
+                            r.sharedMaterials = new Material[] { mat, cachedStencilMat, GetCurrentSilhouetteMaterial() };
                         else
                             r.sharedMaterial = mat;
                     }
@@ -1517,6 +1522,8 @@ namespace OpenEmpires
             if (healthBarRoot != null)
                 Destroy(healthBarRoot.gameObject);
             DestroyUpgradeBadgesWidget();
+            if (selectedSilhouetteMat != null)
+                Destroy(selectedSilhouetteMat);
         }
 
         public void HideHealthBar()
@@ -1641,6 +1648,7 @@ namespace OpenEmpires
         {
             isSelected = selected;
             isPreselected = false;
+            ApplySelectionSilhouette();
             if (selectionRing != null)
             {
                 // Keep ring active while attack pulsation is playing, even if deselected
@@ -1668,7 +1676,118 @@ namespace OpenEmpires
             isHovered = hovered;
         }
 
-        public void SetSelectionRing(GameObject ring) { selectionRing = ring; }
+        public void SetSelectionRing(GameObject ring)
+        {
+            selectionRing = ring;
+            ConfigureSelectionRingMaterial();
+        }
+
+        private void ConfigureSelectionRingMaterial()
+        {
+            if (selectionRing == null) return;
+
+            var renderer = selectionRing.GetComponentInChildren<Renderer>(true);
+            if (renderer == null || renderer.sharedMaterial == null) return;
+
+            Material alwaysOnTop = GetSelectedUnitRingMaterial(renderer.sharedMaterial);
+            if (alwaysOnTop != null)
+                renderer.sharedMaterial = alwaysOnTop;
+        }
+
+        private static Material GetSelectedUnitRingMaterial(Material source)
+        {
+            if (source == null) return null;
+
+            if (selectedUnitRingMaterial == null || selectedUnitRingMaterial.shader != source.shader)
+            {
+                selectedUnitRingMaterial = new Material(source)
+                {
+                    name = "M_Selected_Unit_Ring_AlwaysOnTop",
+                    renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent + 120
+                };
+            }
+
+            if (selectedUnitRingMaterial.HasProperty(ZTestId))
+                selectedUnitRingMaterial.SetFloat(ZTestId, (float)UnityEngine.Rendering.CompareFunction.Always);
+
+            return selectedUnitRingMaterial;
+        }
+
+        private Material GetCurrentSilhouetteMaterial()
+        {
+            return isSelected ? GetSelectedSilhouetteMaterial() : cachedSilhouetteMat;
+        }
+
+        private Material GetSelectedSilhouetteMaterial()
+        {
+            if (cachedSilhouetteMat == null) return null;
+            if (selectedSilhouetteMat != null) return selectedSilhouetteMat;
+
+            selectedSilhouetteMat = new Material(cachedSilhouetteMat)
+            {
+                name = $"{cachedSilhouetteMat.name}_Selected_{UnitId}",
+                renderQueue = Mathf.Max(cachedSilhouetteMat.renderQueue + 1, 2452)
+            };
+
+            if (selectedSilhouetteMat.HasProperty(SilhouetteColorId))
+            {
+                Color color = cachedSilhouetteMat.HasProperty(SilhouetteColorId)
+                    ? cachedSilhouetteMat.GetColor(SilhouetteColorId)
+                    : Color.white;
+                color = Color.Lerp(color, Color.white, 0.35f);
+                color.a = Mathf.Max(color.a, 0.82f);
+                selectedSilhouetteMat.SetColor(SilhouetteColorId, color);
+            }
+
+            return selectedSilhouetteMat;
+        }
+
+        private void ApplySelectionSilhouette()
+        {
+            Material target = GetCurrentSilhouetteMaterial();
+            if (target == null) return;
+
+            if (bodyRenderers != null)
+            {
+                for (int i = 0; i < bodyRenderers.Length; i++)
+                    ApplySilhouetteMaterial(bodyRenderers[i], target);
+            }
+
+            if (resourceStackItems != null)
+            {
+                for (int i = 0; i < resourceStackItems.Length; i++)
+                {
+                    if (resourceStackItems[i] == null) continue;
+                    ApplySilhouetteMaterial(resourceStackItems[i].GetComponent<Renderer>(), target);
+                }
+            }
+        }
+
+        private void ApplySilhouetteMaterial(Renderer renderer, Material target)
+        {
+            if (renderer == null || target == null) return;
+
+            Material[] materials = renderer.sharedMaterials;
+            bool changed = false;
+            for (int i = 0; i < materials.Length; i++)
+            {
+                if (materials[i] == cachedSilhouetteMat ||
+                    materials[i] == selectedSilhouetteMat ||
+                    IsSilhouetteMaterial(materials[i]))
+                {
+                    materials[i] = target;
+                    changed = true;
+                }
+            }
+
+            if (changed)
+                renderer.sharedMaterials = materials;
+        }
+
+        private static bool IsSilhouetteMaterial(Material material)
+        {
+            return material != null && material.shader != null && material.shader.name == "Custom/Silhouette";
+        }
 
         /// <summary>
         /// The King carries a dormant golden dust ring that pulses when his healing aura lands.

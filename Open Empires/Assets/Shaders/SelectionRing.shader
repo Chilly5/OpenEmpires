@@ -6,6 +6,7 @@ Shader "Custom/SelectionRing"
         _InnerRadius ("Inner Radius", Range(0, 1)) = 0.92
         _Softness ("Edge Softness", Range(0, 0.2)) = 0.02
         _SquareOutline ("Square Outline", Float) = 0
+        [Enum(UnityEngine.Rendering.CompareFunction)] _ZTest ("Depth Test", Float) = 4
     }
 
     SubShader
@@ -24,7 +25,7 @@ Shader "Custom/SelectionRing"
 
             Blend SrcAlpha OneMinusSrcAlpha
             ZWrite Off
-            ZTest LEqual
+            ZTest [_ZTest]
             Cull Off
 
             HLSLPROGRAM
