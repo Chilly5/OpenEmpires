@@ -122,9 +122,12 @@ namespace OpenEmpires
         public int BonusDamageAmount2;
         public int BonusDamageVsBuildings; // extra damage when attacking buildings
 
-        // Charge
+        // Charge. Stamina is a sprint meter, not a cooldown: it drains while charging and
+        // refills when not, so a charge can be started again on a partial meter for a shorter run.
         public bool IsCharging;
-        public int ChargeCooldownRemaining;
+        public int ChargeStamina;
+        // Ticks spent sprinting in the current charge. Drives how much momentum the hit carries.
+        public int ChargeMomentum;
         public int ChargeStunRemaining;
         public int CombatTargetId = -1;
         public int CombatTargetBuildingId = -1;
@@ -173,6 +176,7 @@ namespace OpenEmpires
             CurrentPathIndex = 0;
             CommandQueue = new List<QueuedCommand>();
             PatrolWaypoints = new List<FixedVector3>();
+            ChargeStamina = UnitCombatSystem.ChargeStaminaMax; // units spawn ready to charge
         }
 
         public bool HasPath => Path != null && CurrentPathIndex < Path.Count;

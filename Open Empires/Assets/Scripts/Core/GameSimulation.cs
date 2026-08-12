@@ -580,7 +580,8 @@ namespace OpenEmpires
                 hash = hash * 31 + (uint)unit.DropOffBuildingId;
                 hash = hash * 31 + (uint)unit.TargetGarrisonBuildingId;
                 hash = hash * 31 + (unit.IsCharging ? 1u : 0u);
-                hash = hash * 31 + (uint)unit.ChargeCooldownRemaining;
+                hash = hash * 31 + (uint)unit.ChargeStamina;
+                hash = hash * 31 + (uint)unit.ChargeMomentum;
                 hash = hash * 31 + (uint)unit.ChargeStunRemaining;
                 hash = hash * 31 + (unit.IsPatrolling ? 1u : 0u);
                 hash = hash * 31 + (uint)unit.PatrolCurrentIndex;
