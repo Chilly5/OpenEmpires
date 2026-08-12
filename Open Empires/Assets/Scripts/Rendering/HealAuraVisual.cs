@@ -136,9 +136,15 @@ namespace OpenEmpires
             var vol = dust.velocityOverLifetime;
             vol.enabled = true;
             vol.space = ParticleSystemSimulationSpace.Local;
+            // Every axis in a set must share a curve mode, so the unused ones are given explicit
+            // ranges rather than left as plain constants — mixing the two makes Unity reject it.
+            vol.orbitalX = new ParticleSystem.MinMaxCurve(0f, 0f);
             vol.orbitalY = new ParticleSystem.MinMaxCurve(0.18f, 0.42f); // slow drift around the rim
+            vol.orbitalZ = new ParticleSystem.MinMaxCurve(0f, 0f);
             vol.radial = new ParticleSystem.MinMaxCurve(-0.05f, 0.06f);  // subtle breathing
+            vol.x = new ParticleSystem.MinMaxCurve(0f, 0f);
             vol.y = new ParticleSystem.MinMaxCurve(0.10f, 0.30f);        // lift
+            vol.z = new ParticleSystem.MinMaxCurve(0f, 0f);
 
             var col = dust.colorOverLifetime;
             col.enabled = true;

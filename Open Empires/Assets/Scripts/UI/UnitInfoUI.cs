@@ -3990,7 +3990,11 @@ namespace OpenEmpires
             var velocity = particles.velocityOverLifetime;
             velocity.enabled = true;
             velocity.space = ParticleSystemSimulationSpace.Local;
+            // All three axes must share a curve mode, so x and z are given explicit ranges rather
+            // than left as plain constants — mixing the two makes Unity reject the module.
+            velocity.x = new ParticleSystem.MinMaxCurve(0f, 0f);
             velocity.y = new ParticleSystem.MinMaxCurve(0.03f, 0.16f);
+            velocity.z = new ParticleSystem.MinMaxCurve(0f, 0f);
 
             var colorOverLifetime = particles.colorOverLifetime;
             colorOverLifetime.enabled = true;

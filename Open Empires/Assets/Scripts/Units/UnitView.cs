@@ -63,6 +63,18 @@ namespace OpenEmpires
         private float healthBarDamageTimer;
         private const float HealthBarDamageVisibleDuration = 1.2f;
 
+        // Charge meter — sits just under where the health bar draws, and stays readable on its own
+        // because the health bar only appears on hover or after damage.
+        private const float ChargeBarWidth = 34f;
+        private const float ChargeBarHeight = 3f;
+        private const float ChargeBarGap = 2f;
+        private static readonly Color ChargeColorReady = new Color(1f, 0.82f, 0.28f);
+        private static readonly Color ChargeColorRecharging = new Color(0.62f, 0.45f, 0.14f);
+        private static readonly Color ChargeColorSpending = new Color(1f, 0.96f, 0.72f);
+        private RectTransform chargeBarRoot;
+        private RectTransform chargeBarFillRT;
+        private Image chargeBarFill;
+
         // Attack dash
         private int lastSeenAttackTick;
         private float attackDashTimer;
@@ -237,6 +249,7 @@ namespace OpenEmpires
             CreateDepositIndicatorPool();
             CreateHealIndicatorPool();
             CreateHealthBarWidget();
+            CreateChargeBarWidget();
             CreateUpgradeBadgesWidget();
             CreateHealAuraVisual();
             ConfigureSelectionRingMaterial();
@@ -261,40 +274,48 @@ namespace OpenEmpires
 
         private void CacheRenderers()
         {
-            // Cache body renderers (exclude selection ring)
+            // The unit's actual model. Effects are excluded: they are not part of its silhouette,
+            // must not be tinted by the damage flash, and must keep their own render queue.
             var allRenderers = GetComponentsInChildren<Renderer>(true);
+
             int count = 0;
             for (int i = 0; i < allRenderers.Length; i++)
-            {
-                if (selectionRing != null && allRenderers[i].transform.IsChildOf(selectionRing.transform))
-                    continue;
-                if (waypointLine != null && allRenderers[i] == waypointLine)
-                    continue;
-                if (idleZzzContainer != null && allRenderers[i].transform.IsChildOf(idleZzzContainer.transform))
-                    continue;
-                if (resourceStackContainer != null && allRenderers[i].transform.IsChildOf(resourceStackContainer))
-                    continue;
-                count++;
-            }
+                if (IsBodyRenderer(allRenderers[i])) count++;
+
             bodyRenderers = new Renderer[count];
             originalColors = new Color[count];
             int idx = 0;
             for (int i = 0; i < allRenderers.Length; i++)
             {
-                if (selectionRing != null && allRenderers[i].transform.IsChildOf(selectionRing.transform))
-                    continue;
-                if (waypointLine != null && allRenderers[i] == waypointLine)
-                    continue;
-                if (idleZzzContainer != null && allRenderers[i].transform.IsChildOf(idleZzzContainer.transform))
-                    continue;
-                if (resourceStackContainer != null && allRenderers[i].transform.IsChildOf(resourceStackContainer))
-                    continue;
+                if (!IsBodyRenderer(allRenderers[i])) continue;
+
                 bodyRenderers[idx] = allRenderers[i];
                 originalColors[idx] = GetMaterialColor(allRenderers[i].sharedMaterial);
                 // Render after tree billboard sprites (Geometry+1)
                 bodyRenderers[idx].material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry + 2;
                 idx++;
             }
+        }
+
+        /// <summary>
+        /// One rule for what counts as the unit's body, shared by both passes above so the two
+        /// cannot drift apart.
+        /// </summary>
+        private bool IsBodyRenderer(Renderer r)
+        {
+            if (r == null) return false;
+
+            // Particle effects are not body. The King carries a healing aura nine tiles across, and
+            // counting it stretched his drag-selection box to the full width of the aura. It would
+            // also have been tinted white by his damage flash and forced into the opaque queue.
+            if (r is ParticleSystemRenderer) return false;
+
+            if (selectionRing != null && r.transform.IsChildOf(selectionRing.transform)) return false;
+            if (waypointLine != null && r == waypointLine) return false;
+            if (idleZzzContainer != null && r.transform.IsChildOf(idleZzzContainer.transform)) return false;
+            if (resourceStackContainer != null && r.transform.IsChildOf(resourceStackContainer)) return false;
+
+            return true;
         }
 
         private static void EnsureResourceMaterials()
@@ -766,6 +787,104 @@ namespace OpenEmpires
             rootGO.SetActive(false);
         }
 
+        /// <summary>
+        /// A slim meter under the health bar showing the unit's charge. Full and bright while a
+        /// charge is running, then refilling while it recharges. Every unit that can fight is able
+        /// to charge, so this is what makes an otherwise invisible mechanic readable.
+        /// </summary>
+        private void CreateChargeBarWidget()
+        {
+            WorldOverlayCanvas.EnsureCreated();
+
+            var rootGO = new GameObject($"ChargeBar_{UnitId}");
+            rootGO.transform.SetParent(WorldOverlayCanvas.Instance.transform, false);
+            chargeBarRoot = rootGO.AddComponent<RectTransform>();
+            chargeBarRoot.sizeDelta = new Vector2(ChargeBarWidth, ChargeBarHeight);
+
+            var bgGO = new GameObject("Background");
+            bgGO.transform.SetParent(rootGO.transform, false);
+            var bgRT = bgGO.AddComponent<RectTransform>();
+            bgRT.anchorMin = Vector2.zero;
+            bgRT.anchorMax = Vector2.one;
+            bgRT.offsetMin = Vector2.zero;
+            bgRT.offsetMax = Vector2.zero;
+            var bgImg = bgGO.AddComponent<Image>();
+            bgImg.color = new Color(0.08f, 0.07f, 0.05f, 0.9f);
+            bgImg.raycastTarget = false;
+            var bgOutline = bgGO.AddComponent<Outline>();
+            bgOutline.effectColor = new Color(0f, 0f, 0f, 0.8f);
+            bgOutline.effectDistance = new Vector2(1, -1);
+
+            var fillGO = new GameObject("Fill");
+            fillGO.transform.SetParent(rootGO.transform, false);
+            chargeBarFillRT = fillGO.AddComponent<RectTransform>();
+            chargeBarFillRT.anchorMin = Vector2.zero;
+            chargeBarFillRT.anchorMax = Vector2.one;
+            chargeBarFillRT.offsetMin = Vector2.zero;
+            chargeBarFillRT.offsetMax = Vector2.zero;
+            chargeBarFill = fillGO.AddComponent<Image>();
+            chargeBarFill.color = ChargeColorReady;
+            chargeBarFill.raycastTarget = false;
+
+            rootGO.SetActive(false);
+        }
+
+        private void UpdateChargeBarUI()
+        {
+            if (chargeBarRoot == null) return;
+
+            // Sheep and other non-combatants never charge, so they never carry the meter.
+            if (IsDead || unitData == null || unitData.CurrentHealth <= 0 || unitData.AttackDamage <= 0)
+            {
+                HideChargeBar();
+                return;
+            }
+
+            // Shown while the meter is being spent and while it refills. A full meter carries no
+            // information — the charge is simply available — so it disappears once topped up, and
+            // the bar's presence alone means "not at full sprint".
+            if (!unitData.IsCharging && unitData.ChargeStamina >= UnitCombatSystem.ChargeStaminaMax)
+            {
+                HideChargeBar();
+                return;
+            }
+
+            Camera cam = UnitView.CachedMainCamera;
+            if (cam == null) return;
+
+            Vector3 worldPos = transform.position + Vector3.up * healthBarYOffset;
+            Vector3 screenPos = cam.WorldToScreenPoint(worldPos);
+            if (screenPos.z < 0f)
+            {
+                HideChargeBar();
+                return;
+            }
+
+            if (!chargeBarRoot.gameObject.activeSelf)
+                chargeBarRoot.gameObject.SetActive(true);
+
+            float dropBelowHealthBar = HealthBarHeight * 0.5f + ChargeBarGap + ChargeBarHeight * 0.5f;
+            chargeBarRoot.position = new Vector3(screenPos.x, screenPos.y - dropBelowHealthBar, 0f);
+
+            float fraction = Mathf.Clamp01(
+                unitData.ChargeStamina / (float)UnitCombatSystem.ChargeStaminaMax);
+
+            chargeBarFillRT.anchorMax = new Vector2(fraction, 1f);
+
+            // Warms from dull amber to gold as it fills, so readiness reads at a glance without
+            // having to judge the bar's length. Brightens while actively being spent.
+            Color color = Color.Lerp(ChargeColorRecharging, ChargeColorReady, fraction);
+            if (unitData.IsCharging)
+                color = Color.Lerp(color, ChargeColorSpending, 0.6f);
+            chargeBarFill.color = color;
+        }
+
+        private void HideChargeBar()
+        {
+            if (chargeBarRoot != null && chargeBarRoot.gameObject.activeSelf)
+                chargeBarRoot.gameObject.SetActive(false);
+        }
+
         private void UpdateHealthBarUI()
         {
             if (IsDead || unitData == null || unitData.MaxHealth <= 0 || unitData.CurrentHealth <= 0)
@@ -818,6 +937,7 @@ namespace OpenEmpires
         private void LateUpdate()
         {
             UpdateHealthBarUI();
+            UpdateChargeBarUI();
             UpdateUpgradeBadgesUI();
         }
 
@@ -1521,6 +1641,8 @@ namespace OpenEmpires
             DestroyHealIndicatorPool();
             if (healthBarRoot != null)
                 Destroy(healthBarRoot.gameObject);
+            if (chargeBarRoot != null)
+                Destroy(chargeBarRoot.gameObject);
             DestroyUpgradeBadgesWidget();
             if (selectedSilhouetteMat != null)
                 Destroy(selectedSilhouetteMat);
@@ -1530,6 +1652,9 @@ namespace OpenEmpires
         {
             if (healthBarRoot != null && healthBarRoot.gameObject.activeSelf)
                 healthBarRoot.gameObject.SetActive(false);
+
+            // Garrisoned units are hidden, so their meter must go with the health bar.
+            HideChargeBar();
         }
 
         public void OnDeath()
@@ -1543,6 +1668,11 @@ namespace OpenEmpires
             {
                 Destroy(healthBarRoot.gameObject);
                 healthBarRoot = null;
+            }
+            if (chargeBarRoot != null)
+            {
+                Destroy(chargeBarRoot.gameObject);
+                chargeBarRoot = null;
             }
             DestroyUpgradeBadgesWidget();
 
@@ -1689,9 +1819,9 @@ namespace OpenEmpires
             var renderer = selectionRing.GetComponentInChildren<Renderer>(true);
             if (renderer == null || renderer.sharedMaterial == null) return;
 
-            Material alwaysOnTop = GetSelectedUnitRingMaterial(renderer.sharedMaterial);
-            if (alwaysOnTop != null)
-                renderer.sharedMaterial = alwaysOnTop;
+            Material depthTested = GetSelectedUnitRingMaterial(renderer.sharedMaterial);
+            if (depthTested != null)
+                renderer.sharedMaterial = depthTested;
         }
 
         private static Material GetSelectedUnitRingMaterial(Material source)
@@ -1702,13 +1832,13 @@ namespace OpenEmpires
             {
                 selectedUnitRingMaterial = new Material(source)
                 {
-                    name = "M_Selected_Unit_Ring_AlwaysOnTop",
+                    name = "M_Selected_Unit_Ring_DepthTested",
                     renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent + 120
                 };
             }
 
             if (selectedUnitRingMaterial.HasProperty(ZTestId))
-                selectedUnitRingMaterial.SetFloat(ZTestId, (float)UnityEngine.Rendering.CompareFunction.Always);
+                selectedUnitRingMaterial.SetFloat(ZTestId, (float)UnityEngine.Rendering.CompareFunction.LEqual);
 
             return selectedUnitRingMaterial;
         }
