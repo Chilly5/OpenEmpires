@@ -112,6 +112,12 @@ namespace OpenEmpires
             var meshRenderer = terrainGO.AddComponent<MeshRenderer>();
             var meshCollider = terrainGO.AddComponent<MeshCollider>();
 
+            // The ground receives shadows but never casts one. Shadows are wanted from units and
+            // buildings; terrain casting onto itself only produced hillsides shadowing their own
+            // slopes, which read as crawling stripes on the mountains as the camera moved.
+            meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            meshRenderer.receiveShadows = true;
+
             int subdivisions = 256;
             int vertsPerSide = subdivisions + 1;
             float w = mapData.Width;

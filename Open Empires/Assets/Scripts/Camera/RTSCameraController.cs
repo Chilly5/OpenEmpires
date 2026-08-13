@@ -325,7 +325,12 @@ namespace OpenEmpires
             pivot.rotation = Quaternion.Euler(0f, currentYaw, 0f);
             arm.localRotation = Quaternion.Euler(pitch, 0f, 0f);
             arm.localPosition = Vector3.zero;
-            transform.localPosition = new Vector3(0f, 0f, -100f);
+            // Orthographic, so this distance does not change the picture at all — it only decides
+            // how far the world sits from the camera. It was 100, which put everything twice as far
+            // away as shadows are drawn, and spread what shadow detail there was over a huge range.
+            // 55 keeps the camera well clear of the tallest terrain (8 units) at this 30 degree
+            // pitch while roughly halving the shadow range needed.
+            transform.localPosition = new Vector3(0f, 0f, -55f);
         }
     }
 }

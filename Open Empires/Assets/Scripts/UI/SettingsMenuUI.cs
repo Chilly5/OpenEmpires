@@ -1062,6 +1062,14 @@ namespace OpenEmpires
                 flashValueText.text = Mathf.RoundToInt(value * 100f).ToString();
             });
 
+            // Shadows on/off. Cosmetic only — the simulation never reads it, so two players in the
+            // same match can hold different settings without any risk to sync.
+            y -= 40f;
+            MakeLabel(panelGO.transform, "Shadows", rowX, y, flashLabelW, 24f, 16, FontStyles.Normal, TextAlignmentOptions.Left);
+            var shadowsToggle = CreateToggle(panelGO.transform, rowX + flashLabelW + 5f, y, 24f);
+            shadowsToggle.SetIsOnWithoutNotify(ShadowSettings.Enabled);
+            shadowsToggle.onValueChanged.AddListener(value => ShadowSettings.Enabled = value);
+
             // Disable Fog of War (full reveal — same effect as the vision cheat, client-side only)
             float fowLabelW = 150f;
             y -= 40f;

@@ -51,12 +51,22 @@ Shader "OpenEmpires/Terrain_Splatmap"
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             #pragma multi_compile _ _SHADOWS_SOFT
             #pragma multi_compile_fog
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+
+            // How far along the normal the terrain samples its shadow, in world units. Kept small:
+            // the ground no longer casts onto itself, so this only has to take the edge off
+            // shadows cast by units and buildings. Too large and their shadows detach from them.
+            #define TERRAIN_SHADOW_OFFSET_MAX 0.10
+            #define TERRAIN_SHADOW_OFFSET_MIN 0.02
+
+            // How much ambient light survives inside a shadow. 1.0 = shadows barely visible,
+            // lower = deeper and more contrasty. This is the dial for how strong shadows look.
+            #define TERRAIN_SHADOW_AMBIENT 0.55
 
             struct Attributes
             {
@@ -214,19 +224,36 @@ Shader "OpenEmpires/Terrain_Splatmap"
                 float detail = d1 * 0.6 + d2 * 0.4;
                 albedo *= 1.0 + (detail - 0.5) * _DetailStrength * 2.0;
 
-                // Simple Lambert lighting
-                Light mainLight = GetMainLight();
+                // Simple Lambert lighting, with real shadows from the main light.
+                // GetMainLight() on its own returns no shadow attenuation, so the terrain lit
+                // itself as though nothing in the world cast a shadow: units and buildings were
+                // casting correctly and there was simply no surface willing to receive it.
                 half3 normal = normalize(input.normalWS);
-                half NdotL = saturate(dot(normal, mainLight.direction));
-                half3 diffuse = mainLight.color * NdotL;
+                half3 lightDirWS = normalize(_MainLightPosition.xyz);
+                half NdotL = saturate(dot(normal, lightDirWS));
+
+                // Sample the shadow map slightly along the surface normal. Terrain is one huge
+                // mesh, and where the sun grazes a slope the depth comparison goes marginal and
+                // the ground shadows itself in stripes that crawl as the camera moves — which is
+                // what made the mountains look glitchy. The offset is largest at grazing angles,
+                // where the error is worst, and nearly nothing where the sun is overhead.
+                float normalOffset = lerp(TERRAIN_SHADOW_OFFSET_MAX, TERRAIN_SHADOW_OFFSET_MIN, NdotL);
+                float4 shadowCoord = TransformWorldToShadowCoord(input.positionWS + normal * normalOffset);
+
+                Light mainLight = GetMainLight(shadowCoord);
+                half shadow = mainLight.shadowAttenuation;
+                half3 diffuse = mainLight.color * NdotL * shadow;
 
                 // Cloud shadows
                 float cloud = sampleClouds(input.positionWS.xz);
                 float cloudShadow = 1.0 - cloud * _CloudParams.z;
                 diffuse *= cloudShadow;
 
-                // Ambient
-                half3 ambient = SampleSH(normal);
+                // Ambient. Shadowed ground keeps most of it but not all: with full ambient a
+                // shadow only removes the sun's contribution, which on bright terrain is barely
+                // a smudge. Holding a little back is what makes a shadow actually read as one,
+                // without darkening the lit ground at all.
+                half3 ambient = SampleSH(normal) * lerp(TERRAIN_SHADOW_AMBIENT, 1.0, shadow);
 
                 half3 color = albedo * (diffuse + ambient);
                 color = MixFog(color, input.fogFactor);
