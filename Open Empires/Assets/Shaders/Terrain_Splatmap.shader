@@ -64,9 +64,13 @@ Shader "OpenEmpires/Terrain_Splatmap"
             #define TERRAIN_SHADOW_OFFSET_MAX 0.10
             #define TERRAIN_SHADOW_OFFSET_MIN 0.02
 
-            // How much ambient light survives inside a shadow. 1.0 = shadows barely visible,
-            // lower = deeper and more contrasty. This is the dial for how strong shadows look.
-            #define TERRAIN_SHADOW_AMBIENT 0.55
+            // How much ambient light survives inside a shadow. Left neutral, because it turns out
+            // to be a weak lever here: the sun contributes about 1.8 against roughly 0.23 of
+            // ambient, so a shadow removes ~89% of the light simply by blocking the sun, and
+            // pulling ambient down only moves that to ~94%. Shadow darkness is controlled by the
+            // sun's shadowStrength instead. This stays as a fine-tune for gloomier scenes where
+            // ambient carries more of the load.
+            #define TERRAIN_SHADOW_AMBIENT 1.0
 
             struct Attributes
             {
