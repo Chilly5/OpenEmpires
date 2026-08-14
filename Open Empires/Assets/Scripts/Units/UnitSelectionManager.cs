@@ -33,7 +33,12 @@ namespace OpenEmpires
         [SerializeField] private LayerMask buildingLayer;
         [SerializeField] private GameSetup gameSetup;
         [SerializeField] private float dragThreshold = 100f;
-        [SerializeField] private float rightDragThreshold = 12f;
+        [Tooltip("Screen pixels the command cursor must move before unit positioning drag can begin. Values below the minimum are clamped at runtime.")]
+        [SerializeField] private float rightDragThreshold = 32f;
+        [Tooltip("Seconds the command button must be held before unit positioning drag can begin. Values below the minimum are clamped at runtime.")]
+        [SerializeField] private float rightDragIntentDelay = 0.12f;
+        private const float MinimumRightDragThreshold = 32f;
+        private const float MinimumRightDragIntentDelay = 0.08f;
 
         private RTSInputActions inputActions;
         private Camera mainCamera;
@@ -85,6 +90,8 @@ namespace OpenEmpires
         private bool isRightDragging;
         private Vector2 rightDragStartScreen;
         private Vector3 rightDragStartWorld;
+        private float commandStartTime;
+        private int commandStartOwnUnitCount;
 
         // Attack-move mode
         private bool attackMoveMode;
@@ -678,11 +685,11 @@ namespace OpenEmpires
                 UpdateDragPreview();
 
             // Right-click drag: detect threshold and update formation preview
-            if (commandHeld && selectedUnits.Count > 0)
+            if (commandHeld && commandStartOwnUnitCount > 0)
             {
                 if (!isRightDragging)
                 {
-                    if (Vector2.Distance(rightDragStartScreen, currentMousePos) > rightDragThreshold)
+                    if (HasRightDragIntent())
                         isRightDragging = true;
                 }
 
@@ -1107,6 +1114,28 @@ namespace OpenEmpires
                     return true;
             }
             return false;
+        }
+
+        private int CountSelectedOwnUnits()
+        {
+            int count = 0;
+            for (int i = 0; i < selectedUnits.Count; i++)
+            {
+                if (selectedUnits[i].PlayerId == LocalPlayerId)
+                    count++;
+            }
+            return count;
+        }
+
+        private bool HasRightDragIntent()
+        {
+            float holdTime = Time.unscaledTime - commandStartTime;
+            if (holdTime < Mathf.Max(rightDragIntentDelay, MinimumRightDragIntentDelay))
+                return false;
+
+            float threshold = Mathf.Max(rightDragThreshold, MinimumRightDragThreshold);
+            Vector2 dragDelta = currentMousePos - rightDragStartScreen;
+            return dragDelta.sqrMagnitude > threshold * threshold;
         }
 
         private void UpdateDeleteHold()
@@ -2502,6 +2531,8 @@ namespace OpenEmpires
             commandHeld = true;
             isRightDragging = false;
             rightDragStartScreen = currentMousePos;
+            commandStartTime = Time.unscaledTime;
+            commandStartOwnUnitCount = CountSelectedOwnUnits();
 
             // Record the world position where right-click started
             Ray ray = mainCamera.ScreenPointToRay(currentMousePos);

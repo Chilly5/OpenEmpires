@@ -3,19 +3,21 @@ using UnityEngine;
 namespace OpenEmpires
 {
     /// <summary>
-    /// Ground dust kicked up by hoof strikes. A single world-space particle system serves every
-    /// galloping unit on the map, so extra cavalry costs emissions rather than components.
+    /// Ground dust kicked up by hooves and boots. A single world-space particle system serves
+    /// every moving unit on the map, so a bigger army costs emissions rather than components.
     ///
     /// Purely cosmetic. Lives entirely in the view layer and never feeds back into the
     /// simulation, so it cannot affect determinism.
     /// </summary>
     [DisallowMultipleComponent]
-    public sealed class HoofDustVisual : MonoBehaviour
+    public sealed class GroundDustVisual : MonoBehaviour
     {
-        private const int MaxParticles = 512;
+        // Sized for a whole army on the move, not just the cavalry: every unit on foot now
+        // contributes puffs, and running dry would silently starve the hoof dust as well.
+        private const int MaxParticles = 1536;
         private const int TextureSize = 32;
 
-        private static HoofDustVisual instance;
+        private static GroundDustVisual instance;
         private static Texture2D dustTexture;
         private static Material dustMaterial;
 
@@ -30,17 +32,17 @@ namespace OpenEmpires
         {
             if (strength <= 0f) return;
 
-            HoofDustVisual visual = Ensure();
+            GroundDustVisual visual = Ensure();
             if (visual != null)
                 visual.EmitBurst(groundPosition, Mathf.Clamp01(strength));
         }
 
-        private static HoofDustVisual Ensure()
+        private static GroundDustVisual Ensure()
         {
             if (instance != null) return instance;
 
-            var go = new GameObject("HoofDust");
-            instance = go.AddComponent<HoofDustVisual>();
+            var go = new GameObject("GroundDust");
+            instance = go.AddComponent<GroundDustVisual>();
             return instance;
         }
 
@@ -143,7 +145,7 @@ namespace OpenEmpires
                       ?? Shader.Find("Universal Render Pipeline/Unlit")
                       ?? Shader.Find("Sprites/Default");
 
-            dustMaterial = new Material(shader) { name = "M_HoofDust" };
+            dustMaterial = new Material(shader) { name = "M_GroundDust" };
 
             Texture2D tex = GetDustTexture();
             if (dustMaterial.HasProperty("_BaseMap")) dustMaterial.SetTexture("_BaseMap", tex);
@@ -177,7 +179,7 @@ namespace OpenEmpires
 
             dustTexture = new Texture2D(TextureSize, TextureSize, TextureFormat.RGBA32, false)
             {
-                name = "T_HoofDust",
+                name = "T_GroundDust",
                 wrapMode = TextureWrapMode.Clamp,
                 filterMode = FilterMode.Bilinear
             };

@@ -83,6 +83,7 @@ namespace OpenEmpires
         private const float AttackDashDistance = 0.05f;
         private UnitAttackVisualAnimator attackVisualAnimator;
         private UnitGallopVisualAnimator gallopVisualAnimator;
+        private UnitFootDustVisual footDustVisual;
 
         // Damage flinch
         private int lastSeenDamageTick;
@@ -243,6 +244,8 @@ namespace OpenEmpires
             attackVisualAnimator = new UnitAttackVisualAnimator(transform, selectionRing, UnitType, unitData);
             if (UnitGallopVisualAnimator.IsMounted(UnitType))
                 gallopVisualAnimator = new UnitGallopVisualAnimator(attackVisualAnimator.AttachmentRoot, UnitType, unitId);
+            else
+                footDustVisual = new UnitFootDustVisual(UnitType, unitId); // hooves already kick their own
 
             CreateWaypointLine();
             CreateIdleZzzEffect();
@@ -1355,8 +1358,7 @@ namespace OpenEmpires
 
             attackVisualAnimator.UpdateAnimation(unitData, Time.deltaTime);
 
-            // Gallop layers on top of the attack pose, so it has to run after it.
-            if (gallopVisualAnimator != null)
+            if (gallopVisualAnimator != null || footDustVisual != null)
             {
                 float secondsPerTick = GameBootstrapper.Instance.Config.SecondsPerTick;
                 float groundSpeed = secondsPerTick > 0f ? (curr - prev).magnitude / secondsPerTick : 0f;
@@ -1364,8 +1366,11 @@ namespace OpenEmpires
                 float topSpeed = unitData.MoveSpeed.ToFloat();
                 float normalizedSpeed = topSpeed > 0.0001f ? groundSpeed / topSpeed : 0f;
 
-                gallopVisualAnimator.UpdateGallop(normalizedSpeed, groundSpeed, unitData.IsCharging,
+                // Gallop layers on top of the attack pose, so it has to run after it.
+                gallopVisualAnimator?.UpdateGallop(normalizedSpeed, groundSpeed, unitData.IsCharging,
                     smoothedBasePos, Time.deltaTime);
+
+                footDustVisual?.UpdateFootDust(normalizedSpeed, smoothedBasePos, transform.forward);
             }
 
             UpdateWaypointLine();
@@ -1663,6 +1668,7 @@ namespace OpenEmpires
             IsDead = true;
             attackVisualAnimator?.ResetPose();
             gallopVisualAnimator?.ResetPose();
+            footDustVisual = null; // a corpse sliding into its death pose should not scuff the ground
 
             if (healthBarRoot != null)
             {
@@ -1838,7 +1844,7 @@ namespace OpenEmpires
             }
 
             if (selectedUnitRingMaterial.HasProperty(ZTestId))
-                selectedUnitRingMaterial.SetFloat(ZTestId, (float)UnityEngine.Rendering.CompareFunction.LEqual);
+                selectedUnitRingMaterial.SetFloat(ZTestId, (float)UnityEngine.Rendering.CompareFunction.LessEqual);
 
             return selectedUnitRingMaterial;
         }

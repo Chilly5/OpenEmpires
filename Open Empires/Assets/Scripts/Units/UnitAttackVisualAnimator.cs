@@ -444,6 +444,16 @@ namespace OpenEmpires
         /// </summary>
         private static Transform FindMountedWeapon(Transform root)
         {
+            // Preferred: the model says which group is the weapon.
+            for (int i = 0; i < root.childCount; i++)
+            {
+                Transform child = root.GetChild(i);
+                if (child.name.StartsWith("Weapon_", System.StringComparison.Ordinal))
+                    return child;
+            }
+
+            // Fallback for models not yet using the naming convention: find the group holding
+            // something that looks like a spear tip.
             for (int i = 0; i < root.childCount; i++)
             {
                 Transform child = root.GetChild(i);

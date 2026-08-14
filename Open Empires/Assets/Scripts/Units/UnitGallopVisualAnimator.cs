@@ -440,7 +440,7 @@ namespace OpenEmpires
                 hoof.y = groundPosition.y;
 
                 float strength = Mathf.InverseLerp(DustMinSpeed, 1f, normalizedSpeed) * profile.DustScale;
-                HoofDustVisual.Burst(hoof, Mathf.Clamp01(strength));
+                GroundDustVisual.Burst(hoof, Mathf.Clamp01(strength));
             }
 
             if (normalizedSpeed >= HoofbeatMinSpeed)
@@ -554,6 +554,7 @@ namespace OpenEmpires
         private static bool IsHeadPart(string baseName)
         {
             return baseName.IndexOf("Head", StringComparison.Ordinal) >= 0
+                || baseName.IndexOf("Neck", StringComparison.Ordinal) >= 0
                 || baseName.IndexOf("Muzzle", StringComparison.Ordinal) >= 0
                 || baseName.IndexOf("Mane", StringComparison.Ordinal) >= 0
                 || baseName.IndexOf("Ear", StringComparison.Ordinal) >= 0

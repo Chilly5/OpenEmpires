@@ -435,7 +435,11 @@ namespace OpenEmpires
                 var partName = r.gameObject.name;
                 if (partName == "SelectionRing") continue;
 
-                bool isTeamColored = partName.StartsWith("Body") || partName.StartsWith("Sphere");
+                // A "_Team" suffix marks a part as taking the player's colour. The older models
+                // signal the same thing by starting with "Body" or "Sphere" — a naming rule that
+                // reads like leftover primitive names but is load bearing — so both are honoured
+                // while models are converted one at a time.
+                bool isTeamColored = IsTeamColoredPart(partName);
                 var primaryMat = isTeamColored ? mat : r.sharedMaterial;
                 r.sharedMaterials = new Material[] { primaryMat, unitStencilMat, silMat };
             }
@@ -2490,6 +2494,20 @@ namespace OpenEmpires
             }
         }
 
+        /// <summary>
+        /// Whether a model part should be painted in its owner's colour.
+        ///
+        /// New models mark this explicitly with a "_Team" suffix. Older ones rely on the part
+        /// being named "Body..." or "Sphere...", which looks like an unrenamed primitive but
+        /// actually drives team colouring — renaming those without this rule turns a unit grey.
+        /// </summary>
+        private static bool IsTeamColoredPart(string partName)
+        {
+            return partName.EndsWith("_Team", System.StringComparison.Ordinal)
+                || partName.StartsWith("Body", System.StringComparison.Ordinal)
+                || partName.StartsWith("Sphere", System.StringComparison.Ordinal);
+        }
+
         private void SpawnBuilding(BuildingData buildingData)
         {
             GameObject prefab;
@@ -2971,7 +2989,7 @@ namespace OpenEmpires
                 var partName = r.gameObject.name;
                 if (partName == "SelectionRing") continue;
 
-                bool isBodyPart = partName.StartsWith("Body") || partName.StartsWith("Sphere");
+                bool isBodyPart = IsTeamColoredPart(partName);
                 if (isBodyPart)
                 {
                     if (silMat != null)
