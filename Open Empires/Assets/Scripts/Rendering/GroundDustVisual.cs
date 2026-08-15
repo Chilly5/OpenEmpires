@@ -61,7 +61,7 @@ namespace OpenEmpires
         {
             if (dust == null) return;
 
-            int count = Mathf.Max(2, Mathf.RoundToInt(Mathf.Lerp(2f, 7f, strength)));
+            int count = Mathf.Max(1, Mathf.RoundToInt(Mathf.Lerp(1f, 5f, strength)));
 
             // Lifted clear of the ground: a billboard centred exactly on the terrain surface has
             // half of itself buried, which cost most of the puff before it was ever drawn.
@@ -69,8 +69,8 @@ namespace OpenEmpires
 
             emitParams.position = groundPosition;
             emitParams.applyShapeToPosition = true;
-            emitParams.startSize = Mathf.Lerp(0.28f, 0.60f, strength);
-            emitParams.startLifetime = Mathf.Lerp(0.75f, 1.35f, strength);
+            emitParams.startSize = Mathf.Lerp(0.24f, 0.48f, strength);
+            emitParams.startLifetime = Mathf.Lerp(0.65f, 1.10f, strength);
 
             dust.Emit(emitParams, count);
         }
@@ -88,11 +88,12 @@ namespace OpenEmpires
             main.simulationSpace = ParticleSystemSimulationSpace.World;
             // Sized to read from an RTS camera some fifteen-plus units up, not from a close
             // third-person view: motes that looked right up close vanished entirely at play distance.
-            main.startSpeed = new ParticleSystem.MinMaxCurve(0.25f, 0.75f);
-            main.startSize = new ParticleSystem.MinMaxCurve(0.28f, 0.60f);
-            main.startLifetime = new ParticleSystem.MinMaxCurve(0.80f, 1.40f);
+            // Kept low and quick, though — dust that climbs reads as smoke rather than scuffed ground.
+            main.startSpeed = new ParticleSystem.MinMaxCurve(0.16f, 0.45f);
+            main.startSize = new ParticleSystem.MinMaxCurve(0.24f, 0.48f);
+            main.startLifetime = new ParticleSystem.MinMaxCurve(0.70f, 1.15f);
             main.startRotation = new ParticleSystem.MinMaxCurve(0f, Mathf.PI * 2f);
-            main.gravityModifier = 0.05f; // grit settles back down, but hangs long enough to be seen
+            main.gravityModifier = 0.09f; // grit settles back down promptly, hugging the ground
             main.maxParticles = MaxParticles;
 
             var emission = dust.emission;
@@ -119,8 +120,8 @@ namespace OpenEmpires
                 new[]
                 {
                     new GradientAlphaKey(0.00f, 0.00f),
-                    new GradientAlphaKey(0.80f, 0.18f),
-                    new GradientAlphaKey(0.45f, 0.60f),
+                    new GradientAlphaKey(0.62f, 0.18f),
+                    new GradientAlphaKey(0.32f, 0.60f),
                     new GradientAlphaKey(0.00f, 1.00f)
                 });
             col.color = new ParticleSystem.MinMaxGradient(grad);
@@ -129,7 +130,7 @@ namespace OpenEmpires
             sol.enabled = true;
             var curve = new AnimationCurve();
             curve.AddKey(0.00f, 0.50f);
-            curve.AddKey(1.00f, 1.80f); // puffs bloom outward as they fade
+            curve.AddKey(1.00f, 1.50f); // puffs bloom outward as they fade
             sol.size = new ParticleSystem.MinMaxCurve(1f, curve);
 
             var psr = GetComponent<ParticleSystemRenderer>();

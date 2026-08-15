@@ -245,7 +245,13 @@ namespace OpenEmpires
             if (UnitGallopVisualAnimator.IsMounted(UnitType))
                 gallopVisualAnimator = new UnitGallopVisualAnimator(attackVisualAnimator.AttachmentRoot, UnitType, unitId);
             else
-                footDustVisual = new UnitFootDustVisual(UnitType, unitId); // hooves already kick their own
+            {
+                // Sized from the body doing the walking, so the dust follows the model rather than
+                // a hand-set number. Hooves already kick their own from real footfall positions.
+                var body = GetComponent<Collider>();
+                float bodyHeight = body != null ? body.bounds.size.y : UnitFootDustVisual.ReferenceBodyHeight;
+                footDustVisual = new UnitFootDustVisual(UnitType, unitId, bodyHeight);
+            }
 
             CreateWaypointLine();
             CreateIdleZzzEffect();

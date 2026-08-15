@@ -19,6 +19,10 @@ namespace OpenEmpires
         private const float BannerWaveSpacing = 7.5f;
         private const float BannerWaveAmplitude = 0.045f;
         private const float RippleRadiusScale = 1.5f;
+
+        // Movement orders show rings only — no flag — at half size, so a stream of move orders
+        // does not wash over the battlefield.
+        private const float MoveRippleScale = 0.5f;
         private const float RippleEchoDelay = 0.11f;
         private const float RippleDuration = 0.68f;
         private const float EchoRippleDuration = 0.72f;
@@ -49,6 +53,10 @@ namespace OpenEmpires
         private Mesh bannerMesh;
         private Vector3[] bannerBaseVertices;
         private Vector3[] bannerAnimatedVertices;
+        private ParticleSystem impactDust;
+        private bool impactDustFired;
+        private static Texture2D dustTexture;
+
         private LineRenderer pulseRing;
         private LineRenderer echoRing;
         private TextMeshPro glyph;
@@ -138,7 +146,9 @@ namespace OpenEmpires
             SetMarkerColor(color);
             SetLandingPosition(worldPosition, replayDrop);
 
-            if (!replayDrop)
+            // The fall exists so a flag can drop and land. With no flag there is nothing to drop,
+            // so the rings start straight away instead of after a beat of nothing.
+            if (!replayDrop || kind != CommandFlagKind.Rally)
                 elapsed = FallDuration;
 
             initialized = true;
@@ -146,9 +156,19 @@ namespace OpenEmpires
 
         private void BuildVisuals()
         {
+            pulseMaterial = CreateTransparentMaterial(Color.white, true);
+
+            // Only a building's rally point plants a flag. Movement orders are transient and get
+            // rings alone, so the map is not littered with banners every time units are told to go
+            // somewhere.
+            if (kind != CommandFlagKind.Rally)
+            {
+                BuildRingsOnly();
+                return;
+            }
+
             poleMaterial = CreateTransparentMaterial(Color.white);
             bannerMaterial = CreateTransparentMaterial(Color.white);
-            pulseMaterial = CreateTransparentMaterial(Color.white, true);
 
             flagRoot = new GameObject("FlagVisuals").transform;
             flagRoot.SetParent(transform, false);
@@ -183,6 +203,27 @@ namespace OpenEmpires
             {
                 pulseRing = CreatePulseRing("Pulse", 0.055f);
                 echoRing = CreatePulseRing("EchoPulse", 0.035f);
+            }
+
+            impactDust = CreateImpactDust();
+        }
+
+        /// <summary>Rings alone, for movement orders. An attack-move keeps its marker laid flat.</summary>
+        private void BuildRingsOnly()
+        {
+            pulseRing = CreatePulseRing("Pulse", 0.055f);
+            echoRing = CreatePulseRing("EchoPulse", 0.035f);
+
+            if (kind == CommandFlagKind.AttackMove)
+            {
+                CreateGlyph("A", new Color(1f, 0.35f, 0.18f, 0.95f));
+                if (glyph != null)
+                {
+                    // Flat on the ground in the middle of the rings, since there is no pole to hang it on.
+                    glyph.transform.localPosition = new Vector3(0f, 0.05f, 0f);
+                    glyph.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+                    glyph.transform.localScale = Vector3.one * 0.06f;
+                }
             }
         }
 
@@ -236,6 +277,14 @@ namespace OpenEmpires
             }
 
             float settledTime = elapsed - FallDuration;
+
+            // The flag has just struck the ground: throw up a puff of dirt in its own colour.
+            if (!impactDustFired && settledTime >= 0f)
+            {
+                impactDustFired = true;
+                FireImpactDust();
+            }
+
             float decay = Mathf.Exp(-ImpactBounceDecay * settledTime);
             float bounce = Mathf.Max(0f, Mathf.Sin(settledTime * 22f) * 0.18f * decay);
             float scalePunch = 1f + Mathf.Sin(settledTime * 26f) * 0.08f * decay;
@@ -328,7 +377,11 @@ namespace OpenEmpires
             float easedRadius = 1f - Mathf.Pow(1f - t, 3f);
             float ringAlpha = 0.68f * (1f - t);
             float ringWidth = Mathf.Lerp(0.095f, 0.012f, t);
-            UpdatePulseRing(pulseRing, Mathf.Lerp(0.18f, 1.18f, easedRadius) * RippleRadiusScale,
+
+            // Movement markers use the same outward ripple as the flag, just at half size.
+            float sizeScale = RippleRadiusScale * (kind == CommandFlagKind.Rally ? 1f : MoveRippleScale);
+
+            UpdatePulseRing(pulseRing, Mathf.Lerp(0.18f, 1.18f, easedRadius) * sizeScale,
                 ringAlpha, ringWidth);
 
             if (echoRing == null) return;
@@ -341,10 +394,139 @@ namespace OpenEmpires
             }
 
             float echoT = Mathf.Clamp01(echoAge / EchoRippleDuration);
-            float echoRadius = Mathf.SmoothStep(0.28f, 1.35f, echoT) * RippleRadiusScale;
+            float echoRadius = Mathf.SmoothStep(0.28f, 1.35f, echoT) * sizeScale;
             float echoAlpha = 0.26f * (1f - echoT);
             float echoWidth = Mathf.Lerp(0.05f, 0.008f, echoT);
             UpdatePulseRing(echoRing, echoRadius, echoAlpha, echoWidth);
+        }
+
+        /// <summary>
+        /// A one-shot puff thrown up where the pole bites into the ground. Tinted to the flag so a
+        /// rally point kicks up gold, which is what turns the landing from a movement into an event.
+        /// </summary>
+        private ParticleSystem CreateImpactDust()
+        {
+            var dustGO = new GameObject("ImpactDust");
+            dustGO.transform.SetParent(transform, false);
+            dustGO.transform.localPosition = Vector3.zero;
+
+            var ps = dustGO.AddComponent<ParticleSystem>();
+            ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+
+            var main = ps.main;
+            main.loop = false;
+            main.playOnAwake = false;
+            main.duration = 0.8f;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(0.28f, 0.62f);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(0.5f, 1.9f);
+            main.startSize = new ParticleSystem.MinMaxCurve(0.05f, 0.15f);
+            main.startRotation = new ParticleSystem.MinMaxCurve(0f, Mathf.PI * 2f);
+            main.gravityModifier = 0.55f;   // thrown up, then falls back
+            main.simulationSpace = ParticleSystemSimulationSpace.World;
+            main.maxParticles = 60;
+
+            var emission = ps.emission;
+            emission.enabled = true;
+            emission.rateOverTime = 0f;     // burst only
+
+            var shape = ps.shape;
+            shape.enabled = true;
+            shape.shapeType = ParticleSystemShapeType.Cone;
+            shape.angle = 74f;              // sprays outward and low
+            shape.radius = 0.06f;
+            shape.rotation = new Vector3(-90f, 0f, 0f);
+
+            var sol = ps.sizeOverLifetime;
+            sol.enabled = true;
+            var curve = new AnimationCurve();
+            curve.AddKey(0f, 0.5f);
+            curve.AddKey(0.3f, 1f);
+            curve.AddKey(1f, 0.2f);
+            sol.size = new ParticleSystem.MinMaxCurve(1f, curve);
+
+            var col = ps.colorOverLifetime;
+            col.enabled = true;
+            var grad = new Gradient();
+            grad.SetKeys(
+                new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
+                new[]
+                {
+                    new GradientAlphaKey(0f, 0f),
+                    new GradientAlphaKey(1f, 0.12f),
+                    new GradientAlphaKey(0.65f, 0.55f),
+                    new GradientAlphaKey(0f, 1f)
+                });
+            col.color = new ParticleSystem.MinMaxGradient(grad);
+
+            var psr = dustGO.GetComponent<ParticleSystemRenderer>();
+            psr.renderMode = ParticleSystemRenderMode.Billboard;
+            psr.alignment = ParticleSystemRenderSpace.View;
+            psr.sharedMaterial = CreateDustMaterial();
+            psr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            psr.receiveShadows = false;
+
+            return ps;
+        }
+
+        private void FireImpactDust()
+        {
+            if (impactDust == null) return;
+
+            // Particles carry the colour, so the material stays white; tinting both would square it.
+            var main = impactDust.main;
+            main.startColor = new ParticleSystem.MinMaxGradient(
+                new Color(pulseColor.r, pulseColor.g, pulseColor.b, 0.95f),
+                Color.Lerp(new Color(pulseColor.r, pulseColor.g, pulseColor.b, 1f), Color.white, 0.45f));
+
+            impactDust.transform.position = landingPosition;
+            impactDust.Play();
+            impactDust.Emit(28);
+        }
+
+        private static Material CreateDustMaterial()
+        {
+            // Sprites/Default honours the per-particle colour; the URP particle shader does not
+            // pick it up in this project and renders every mote flat white.
+            var shader = Shader.Find("Sprites/Default")
+                      ?? Shader.Find("Universal Render Pipeline/Particles/Unlit");
+            var mat = new Material(shader) { name = "M_CommandFlagDust" };
+
+            var tex = GetDustTexture();
+            if (mat.HasProperty("_MainTex")) mat.SetTexture("_MainTex", tex);
+            if (mat.HasProperty("_BaseMap")) mat.SetTexture("_BaseMap", tex);
+            mat.renderQueue = 3100;
+            return mat;
+        }
+
+        /// <summary>A soft round blob, so each mote is a speck rather than a square.</summary>
+        private static Texture2D GetDustTexture()
+        {
+            if (dustTexture != null) return dustTexture;
+
+            const int size = 32;
+            dustTexture = new Texture2D(size, size, TextureFormat.RGBA32, false)
+            {
+                name = "T_CommandFlagDust",
+                wrapMode = TextureWrapMode.Clamp,
+                filterMode = FilterMode.Bilinear
+            };
+
+            const float centre = (size - 1) * 0.5f;
+            var pixels = new Color32[size * size];
+            for (int y = 0; y < size; y++)
+            {
+                for (int x = 0; x < size; x++)
+                {
+                    float dx = (x - centre) / centre;
+                    float dy = (y - centre) / centre;
+                    float falloff = Mathf.Clamp01(1f - Mathf.Sqrt(dx * dx + dy * dy));
+                    falloff *= falloff;
+                    pixels[y * size + x] = new Color32(255, 255, 255, (byte)(falloff * 255f));
+                }
+            }
+            dustTexture.SetPixels32(pixels);
+            dustTexture.Apply();
+            return dustTexture;
         }
 
         private void HidePulseRings()
@@ -484,7 +666,9 @@ namespace OpenEmpires
                 case CommandFlagKind.Rally:
                     return new Color(1f, 0.78f, 0.18f, 0.82f);
                 default:
-                    return new Color(1f, 0.74f, 0.16f, 0.76f);
+                    // Plain move: white, so it reads as a neutral "go here" rather than competing
+                    // with the gold that now means a rally point.
+                    return new Color(1f, 1f, 1f, 0.85f);
             }
         }
 

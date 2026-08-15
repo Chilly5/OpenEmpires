@@ -7,7 +7,7 @@ namespace OpenEmpires
     {
         [SerializeField] private UnitSelectionManager selectionManager;
         [SerializeField] private Color boxColor = Color.white;
-        [SerializeField] private Color borderColor = new Color(1f, 1f, 1f, 0.95f);
+        [SerializeField] private Color borderColor = new Color(1f, 1f, 1f, 0.65f);
 
         private GameObject boxRoot;
         private RectTransform fillRT;
@@ -15,9 +15,9 @@ namespace OpenEmpires
 
         private const float BorderWidth = 2f;
         private const int EdgeSpriteSize = 32;
-        private const int EdgeSpriteBorder = 8;
-        private const float EdgeAlpha = 0.72f;
-        private const float CenterAlpha = 0.08f;
+        private const int EdgeSpriteBorder = 6;
+        private const float EdgeAlpha = 0.28f;
+        private const float CenterAlpha = 0.03f;
 
         private static Sprite edgeGradientSprite;
 
