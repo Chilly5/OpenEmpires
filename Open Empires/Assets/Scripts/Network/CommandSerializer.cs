@@ -103,6 +103,9 @@ namespace OpenEmpires
                 case HealUnitCommand heal:
                     payload = JsonUtility.ToJson(new HealUnitPayload(heal));
                     break;
+                case CheatSpawnUnitCommand spawn:
+                    payload = JsonUtility.ToJson(new CheatSpawnUnitPayload(spawn));
+                    break;
                 case MeteorStrikeCommand meteor:
                     payload = JsonUtility.ToJson(new MeteorStrikePayload(meteor));
                     break;
@@ -176,6 +179,7 @@ namespace OpenEmpires
                     "SlaughterSheep" => ParseSlaughterSheepCommand(payload, playerId),
                     "FollowUnit" => ParseFollowUnitCommand(payload, playerId),
                     "HealUnit" => ParseHealUnitCommand(payload, playerId),
+                    "CheatSpawnUnit" => ParseCheatSpawnUnitCommand(payload, playerId),
                     "MeteorStrike" => ParseMeteorStrikeCommand(payload, playerId),
                     "HealingRain" => ParseHealingRainCommand(payload, playerId),
                     "LightningStorm" => ParseLightningStormCommand(payload, playerId),
@@ -978,6 +982,35 @@ namespace OpenEmpires
         }
 
         [System.Serializable]
+        private class CheatSpawnUnitPayload
+        {
+            public int unitType;
+            public int posX;
+            public int posZ;
+            public int count;
+            public int owner;
+
+            public CheatSpawnUnitPayload() { }
+
+            public CheatSpawnUnitPayload(CheatSpawnUnitCommand cmd)
+            {
+                unitType = cmd.UnitType;
+                // Raw fixed-point, so the position survives the trip without rounding drift.
+                posX = cmd.Position.x.Raw;
+                posZ = cmd.Position.z.Raw;
+                count = cmd.Count;
+                owner = cmd.OwnerPlayerId;
+            }
+        }
+
+        private static CheatSpawnUnitCommand ParseCheatSpawnUnitCommand(string payload, int playerId)
+        {
+            var data = JsonUtility.FromJson<CheatSpawnUnitPayload>(payload);
+            var pos = new FixedVector3(new Fixed32(data.posX), Fixed32.Zero, new Fixed32(data.posZ));
+            return new CheatSpawnUnitCommand(playerId, data.unitType, pos, data.count, data.owner);
+        }
+
+        [System.Serializable]
         private class MeteorStrikePayload
         {
             public int tileX;
@@ -1302,6 +1335,13 @@ namespace OpenEmpires
                             w.Write(research.BuildingId);
                             w.Write(research.TechType);
                             break;
+                        case CheatSpawnUnitCommand spawnCheat:
+                            w.Write(spawnCheat.UnitType);
+                            w.Write(spawnCheat.Position.x.Raw);
+                            w.Write(spawnCheat.Position.z.Raw);
+                            w.Write(spawnCheat.Count);
+                            w.Write(spawnCheat.OwnerPlayerId);
+                            break;
                         case CheatResourceCommand:
                         case CheatProductionCommand:
                         case CheatConstructionCommand:
@@ -1519,6 +1559,18 @@ namespace OpenEmpires
                         case CommandType.CheatGodMode:
                             commands.Add(new CheatGodModeCommand { PlayerId = playerId });
                             break;
+                        case CommandType.CheatSpawnUnit:
+                        {
+                            int spawnType = r.ReadInt32();
+                            int spawnX = r.ReadInt32();
+                            int spawnZ = r.ReadInt32();
+                            int spawnCount = r.ReadInt32();
+                            int spawnOwner = r.ReadInt32();
+                            commands.Add(new CheatSpawnUnitCommand(playerId, spawnType,
+                                new FixedVector3(new Fixed32(spawnX), Fixed32.Zero, new Fixed32(spawnZ)),
+                                spawnCount, spawnOwner));
+                            break;
+                        }
                         case CommandType.DeleteUnits:
                             int[] deleteUnitIds = ReadIntArray(r);
                             commands.Add(new DeleteUnitsCommand(playerId, deleteUnitIds));

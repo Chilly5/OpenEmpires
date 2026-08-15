@@ -10,6 +10,15 @@ namespace OpenEmpires
     {
         private static SettingsMenuUI instance;
         public static bool IsPlacingDummy { get; set; }
+
+        // Debug unit spawning. When SpawnUnitType is set, the next left click on the ground drops
+        // that unit there. Kept as placement state rather than spawning at once so units land where
+        // you are looking, which is the whole point when checking a model or an animation.
+        public static int SpawnUnitType { get; set; } = -1;
+        public static int SpawnUnitCount { get; set; } = 1;
+        public static bool SpawnAsEnemy { get; set; }
+        public static bool IsPlacingSpawn => SpawnUnitType >= 0;
+        public static void CancelSpawnPlacement() { SpawnUnitType = -1; }
         public static bool IsPlacingArcherDummy { get; set; }
         private TMP_Text productionCheatLabel;
         private TMP_Text visionCheatLabel;
@@ -137,6 +146,11 @@ namespace OpenEmpires
             SwitchToContent("", BuildMainSettingsContent);
         }
 
+        private void ShowSpawn()
+        {
+            SwitchToContent("", BuildSpawnContent);
+        }
+
         private void SwitchToContent(string title, System.Action<GameObject, float, float> buildContentAction)
         {
             // Clear existing content area
@@ -240,6 +254,8 @@ namespace OpenEmpires
             CreateButton(panelGO.transform, "Controls", sidebarX, sidebarY, sidebarW - 10f, 36f, ShowControls);
             sidebarY -= 45f;
             CreateButton(panelGO.transform, "Sound", sidebarX, sidebarY, sidebarW - 10f, 36f, ShowSound);
+            sidebarY -= 45f;
+            CreateButton(panelGO.transform, "Spawn", sidebarX, sidebarY, sidebarW - 10f, 36f, ShowSpawn);
 
             // Main content area (right side)
             float contentX = sidebarW / 2f; // Offset content to the right of sidebar
@@ -332,6 +348,8 @@ namespace OpenEmpires
             CreateButton(panelGO.transform, "Controls", sidebarX, sidebarY, sidebarW - 10f, 36f, ShowControls);
             sidebarY -= 45f;
             CreateButton(panelGO.transform, "Sound", sidebarX, sidebarY, sidebarW - 10f, 36f, ShowSound);
+            sidebarY -= 45f;
+            CreateButton(panelGO.transform, "Spawn", sidebarX, sidebarY, sidebarW - 10f, 36f, ShowSpawn);
 
             // Main content area (right side)
             float contentX = sidebarW / 2f; // Offset content to the right of sidebar
@@ -993,6 +1011,69 @@ namespace OpenEmpires
             // Back button
             y -= 80f;
             CreateButton(panelGO.transform, "Back to Settings", contentX, y, 160f, 36f, () => ShowMainSettings());
+        }
+
+        private void BuildSpawnContent(GameObject panelGO, float contentX, float startY)
+        {
+            float y = startY;
+
+            // ---- Debug unit spawning ----
+            // Click a unit, then click the ground to drop it there. Skips buildings, cost, age and
+            // civilisation requirements entirely; it exists to get a model on screen quickly.
+            MakeLabel(panelGO.transform, "Pick a unit, then click the ground to place it.",
+                contentX - 200f, y, 400f, 22f, 14, FontStyles.Normal, TextAlignmentOptions.Left);
+
+            y -= 28f;
+            MakeLabel(panelGO.transform, "Count", contentX - 200f, y, 60f, 24f, 13, FontStyles.Normal, TextAlignmentOptions.Left);
+            TMP_Text countLabel = null;
+            var countBtn = CreateButtonWithLabel(panelGO.transform, "x1", 0f, y, 54f, 26f, out countLabel);
+            var countRT = countBtn.GetComponent<RectTransform>();
+            countRT.pivot = new Vector2(0.5f, 0.5f);
+            countRT.anchoredPosition = new Vector2(contentX - 132f, y);
+            countBtn.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                SpawnUnitCount = SpawnUnitCount >= 8 ? 1 : SpawnUnitCount * 2; // 1, 2, 4, 8
+                if (countLabel != null) countLabel.text = "x" + SpawnUnitCount;
+            });
+
+            TMP_Text sideLabel = null;
+            var sideBtn = CreateButtonWithLabel(panelGO.transform, "Mine", 0f, y, 80f, 26f, out sideLabel);
+            var sideRT = sideBtn.GetComponent<RectTransform>();
+            sideRT.pivot = new Vector2(0.5f, 0.5f);
+            sideRT.anchoredPosition = new Vector2(contentX - 58f, y);
+            sideBtn.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                SpawnAsEnemy = !SpawnAsEnemy;
+                if (sideLabel != null) sideLabel.text = SpawnAsEnemy ? "Enemy" : "Mine";
+            });
+
+            // Every unit type, so nothing has to be unlocked to look at it.
+            var spawnable = new (string label, int type)[]
+            {
+                ("Villager", 0), ("Spearman", 1), ("Archer", 2), ("Horseman", 3),
+                ("Scout", 4), ("Sheep", 5), ("Man-at-Arms", 6), ("Knight", 7),
+                ("Crossbow", 8), ("Monk", 9), ("Longbow", 10), ("Gendarme", 11),
+                ("Landsknecht", 12), ("Ram", 13), ("Mangonel", 14), ("Trebuchet", 15),
+                ("English King", UnitData.KingUnitType),
+            };
+
+            const int perRow = 4;
+            const float cellW = 104f;
+            const float cellH = 26f;
+            for (int i = 0; i < spawnable.Length; i++)
+            {
+                if (i % perRow == 0) y -= 30f;
+                float bx = contentX - 200f + (i % perRow) * cellW + cellW * 0.5f;
+                int unitType = spawnable[i].type;
+                CreateButton(panelGO.transform, spawnable[i].label, bx, y, cellW - 6f, cellH, () =>
+                {
+                    SpawnUnitType = unitType;
+                    IsPlacingDummy = false;
+                    IsPlacingArcherDummy = false;
+                    Hide();
+                });
+            }
+
         }
 
         private void BuildSoundContent(GameObject panelGO, float contentX, float startY)

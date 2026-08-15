@@ -6,14 +6,20 @@ namespace OpenEmpires
     public class SelectionBoxUI : MonoBehaviour
     {
         [SerializeField] private UnitSelectionManager selectionManager;
-        [SerializeField] private Color boxColor = new Color(0.2f, 0.8f, 0.2f, 0.25f);
-        [SerializeField] private Color borderColor = new Color(0.2f, 0.8f, 0.2f, 0.8f);
+        [SerializeField] private Color boxColor = Color.white;
+        [SerializeField] private Color borderColor = new Color(1f, 1f, 1f, 0.95f);
 
         private GameObject boxRoot;
         private RectTransform fillRT;
         private RectTransform borderTop, borderBottom, borderLeft, borderRight;
 
         private const float BorderWidth = 2f;
+        private const int EdgeSpriteSize = 32;
+        private const int EdgeSpriteBorder = 8;
+        private const float EdgeAlpha = 0.72f;
+        private const float CenterAlpha = 0.08f;
+
+        private static Sprite edgeGradientSprite;
 
         private void Awake()
         {
@@ -33,6 +39,8 @@ namespace OpenEmpires
             fillRT = fillGO.AddComponent<RectTransform>();
             fillRT.pivot = new Vector2(0f, 0f);
             var fillImg = fillGO.AddComponent<Image>();
+            fillImg.sprite = GetEdgeGradientSprite();
+            fillImg.type = Image.Type.Sliced;
             fillImg.color = boxColor;
             fillImg.raycastTarget = false;
 
@@ -55,6 +63,55 @@ namespace OpenEmpires
             img.color = borderColor;
             img.raycastTarget = false;
             return rt;
+        }
+
+        private static Sprite GetEdgeGradientSprite()
+        {
+            if (edgeGradientSprite != null) return edgeGradientSprite;
+
+            var texture = new Texture2D(EdgeSpriteSize, EdgeSpriteSize, TextureFormat.RGBA32, false)
+            {
+                name = "SelectionBox_EdgeGradient",
+                filterMode = FilterMode.Bilinear,
+                wrapMode = TextureWrapMode.Clamp,
+                hideFlags = HideFlags.HideAndDontSave
+            };
+
+            var pixels = new Color[EdgeSpriteSize * EdgeSpriteSize];
+            for (int y = 0; y < EdgeSpriteSize; y++)
+            {
+                for (int x = 0; x < EdgeSpriteSize; x++)
+                {
+                    int edgeDistance = Mathf.Min(
+                        Mathf.Min(x, y),
+                        Mathf.Min(EdgeSpriteSize - 1 - x, EdgeSpriteSize - 1 - y));
+
+                    float alpha = CenterAlpha;
+                    if (edgeDistance < EdgeSpriteBorder)
+                    {
+                        float t = edgeDistance / (float)(EdgeSpriteBorder - 1);
+                        alpha = Mathf.Lerp(EdgeAlpha, CenterAlpha, Mathf.SmoothStep(0f, 1f, t));
+                    }
+
+                    pixels[y * EdgeSpriteSize + x] = new Color(1f, 1f, 1f, alpha);
+                }
+            }
+
+            texture.SetPixels(pixels);
+            texture.Apply(false, true);
+
+            edgeGradientSprite = Sprite.Create(
+                texture,
+                new Rect(0f, 0f, EdgeSpriteSize, EdgeSpriteSize),
+                new Vector2(0.5f, 0.5f),
+                100f,
+                0,
+                SpriteMeshType.FullRect,
+                new Vector4(EdgeSpriteBorder, EdgeSpriteBorder, EdgeSpriteBorder, EdgeSpriteBorder));
+            edgeGradientSprite.name = "SelectionBox_EdgeGradient";
+            edgeGradientSprite.hideFlags = HideFlags.HideAndDontSave;
+
+            return edgeGradientSprite;
         }
 
         private void Update()

@@ -2508,6 +2508,32 @@ namespace OpenEmpires
                 || partName.StartsWith("Sphere", System.StringComparison.Ordinal);
         }
 
+        /// <summary>
+        /// The model used for a unit type, so the spawn cursor can show what it is about to place.
+        /// Returns null for the types built in code rather than from a prefab (siege, and anything
+        /// whose prefab slot is empty) — callers should fall back to a plain shape.
+        /// </summary>
+        public GameObject GetUnitPrefabForType(int unitType)
+        {
+            switch (unitType)
+            {
+                case 0: return villagerPrefab;
+                case 1: return spearmanPrefab;
+                case 2: return archerPrefab;
+                case 3: return horsemanPrefab;
+                case 4: return scoutPrefab;
+                case 6: return manAtArmsPrefab;
+                case 7: return knightPrefab;
+                case 8: return crossbowmanPrefab;
+                case 9: return monkPrefab;
+                case 10: return longbowmanPrefab;
+                case 11: return gendarmePrefab;
+                case 12: return landsknechtPrefab;
+                case UnitData.KingUnitType: return kingPrefab;
+                default: return null;
+            }
+        }
+
         private void SpawnBuilding(BuildingData buildingData)
         {
             GameObject prefab;

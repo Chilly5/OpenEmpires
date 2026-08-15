@@ -538,6 +538,14 @@ namespace OpenEmpires
             return TeamHelper.AreAllies(playerTeamIds, playerA, playerB);
         }
 
+        public bool HasUnfinishedWallGroupConstruction(BuildingData wallSegment, int playerId)
+        {
+            if (!IsWallSegment(wallSegment) || wallSegment.WallGroupId <= 0)
+                return false;
+
+            return GetUnfinishedWallGroupSegments(wallSegment.WallGroupId, playerId).Count > 0;
+        }
+
         public void SetTeamAssignments(int[] teamIds)
         {
             playerTeamIds = teamIds;
@@ -1425,45 +1433,20 @@ namespace OpenEmpires
 
                 if (qc.Type == QueuedCommandType.Construct)
                 {
-                    var building = BuildingRegistry.GetBuilding(qc.BuildingId);
-                    if (building == null || building.IsDestroyed || !building.IsUnderConstruction)
-                        continue; // skip finished/destroyed, try next
+                    var requestedBuilding = BuildingRegistry.GetBuilding(qc.BuildingId);
+                    if (requestedBuilding == null || requestedBuilding.IsDestroyed)
+                        continue; // skip destroyed, try next
 
-                    unit.ClearSavedPath();
-                    unit.ClearFormation();
-                    unit.CombatTargetId = -1;
-                    unit.CombatTargetBuildingId = -1;
-                    unit.TargetResourceNodeId = -1;
-                    unit.ConstructionTargetBuildingId = building.Id;
-                    unit.GatherTimer = Fixed32.Zero;
-                    unit.PlayerCommanded = true;
-                    unit.IsAttackMoving = false;
+                    var occupiedTilesByBuildingId = new Dictionary<int, HashSet<Vector2Int>>();
+                    var assignedBuilderCounts = new Dictionary<int, int>();
+                    BuildConstructionAssignmentLookups(occupiedTilesByBuildingId, assignedBuilderCounts, unit.Id);
 
-                    // Build occupiedTiles from other units already heading to this building
-                    var occupiedTiles = new HashSet<Vector2Int>();
-                    var allUnits = UnitRegistry.GetAllUnits();
-                    for (int u = 0; u < allUnits.Count; u++)
-                    {
-                        var other = allUnits[u];
-                        if (other == unit || other.State == UnitState.Dead) continue;
-                        if (other.ConstructionTargetBuildingId != building.Id) continue;
-                        if (other.State == UnitState.MovingToBuild || other.State == UnitState.Constructing)
-                            occupiedTiles.Add(MapData.WorldToTile(other.FinalDestination));
-                    }
+                    var building = ResolveConstructionTargetForUnit(unit, requestedBuilding, assignedBuilderCounts);
+                    if (building == null)
+                        continue; // skip finished wall groups/non-walls, try next
 
-                    Vector2Int adjTile = FindNearestWalkableAdjacentTile(building, unit.SimPosition, occupiedTiles);
-                    Vector2Int startTile = MapData.WorldToTile(unit.SimPosition);
-                    var path = GridPathfinder.FindPath(MapData, startTile, adjTile, unit.PlayerId, BuildingRegistry);
-                    if (path.Count > 0)
-                    {
-                        unit.SetPath(path);
-                        unit.FinalDestination = MapData.TileToWorldFixed(adjTile.x, adjTile.y);
-                        unit.State = UnitState.MovingToBuild;
-                    }
-                    else
-                    {
-                        unit.State = UnitState.Constructing;
-                    }
+                    AssignUnitToConstructionTarget(unit, building, occupiedTilesByBuildingId,
+                        bankCarriedResources: true);
                     return;
                 }
                 else if (qc.Type == QueuedCommandType.Gather)
@@ -1713,6 +1696,9 @@ namespace OpenEmpires
                     break;
                 case CheatVisionCommand cheatVis:
                     ProcessCheatVisionCommand(cheatVis);
+                    break;
+                case CheatSpawnUnitCommand cheatSpawn:
+                    ProcessCheatSpawnUnitCommand(cheatSpawn);
                     break;
                 case CheatGodModeCommand cheatGod:
                     ProcessCheatGodModeCommand(cheatGod);
@@ -2800,6 +2786,56 @@ namespace OpenEmpires
         {
             bool current = FogOfWar.HasVisionCheat(cmd.PlayerId);
             FogOfWar.SetVisionCheat(cmd.PlayerId, !current);
+        }
+
+        /// <summary>
+        /// Debug spawn. Builds the unit through the same path a stable would, so a spawned unit is
+        /// indistinguishable from a trained one — same stats, same behaviour, same view event.
+        /// Requirements are deliberately skipped: no building, no cost, no age or civ gate.
+        /// </summary>
+        private void ProcessCheatSpawnUnitCommand(CheatSpawnUnitCommand cmd)
+        {
+            int owner = cmd.OwnerPlayerId >= 0 ? cmd.OwnerPlayerId : cmd.PlayerId;
+            int count = Mathf.Clamp(cmd.Count, 1, 20);
+
+            Vector2Int centre = MapData.WorldToTile(cmd.Position);
+
+            for (int i = 0; i < count; i++)
+            {
+                // Spread them over nearby walkable tiles in a widening ring so they do not stack.
+                Vector2Int tile = FindFreeSpawnTile(centre, i);
+                FixedVector3 spawnPos = MapData.TileToWorldFixed(tile.x, tile.y);
+
+                var unitData = CreateTrainedUnit(owner, cmd.UnitType, spawnPos);
+                if (unitData == null) continue;
+
+                OnUnitTrained?.Invoke(unitData.Id, cmd.UnitType, owner);
+            }
+        }
+
+        /// <summary>Walks outward from a tile until a walkable one is found.</summary>
+        private Vector2Int FindFreeSpawnTile(Vector2Int centre, int index)
+        {
+            if (index == 0 && MapData.IsWalkable(centre.x, centre.y))
+                return centre;
+
+            for (int radius = 1; radius <= 6; radius++)
+            {
+                for (int dx = -radius; dx <= radius; dx++)
+                {
+                    for (int dz = -radius; dz <= radius; dz++)
+                    {
+                        if (Mathf.Abs(dx) != radius && Mathf.Abs(dz) != radius) continue;
+
+                        int tx = centre.x + dx;
+                        int tz = centre.y + dz;
+                        if (!MapData.IsWalkable(tx, tz)) continue;
+
+                        if (index-- <= 0) return new Vector2Int(tx, tz);
+                    }
+                }
+            }
+            return centre;
         }
 
         private void ProcessCheatGodModeCommand(CheatGodModeCommand cmd)
@@ -4394,22 +4430,40 @@ namespace OpenEmpires
 
         private void AssignWallBuildersToSegments(PlaceWallCommand cmd, List<BuildingData> wallSegments)
         {
-            var builders = GetValidWallBuilders(cmd.VillagerUnitIds, cmd.PlayerId);
-            if (builders.Count == 0) return;
+            AssignWallBuildersToSegments(cmd.PlayerId, cmd.VillagerUnitIds, wallSegments, cmd.IsQueued,
+                excludeBuilderCurrentAssignments: !cmd.IsQueued);
+        }
+
+        private bool AssignWallBuildersToSegments(int playerId, int[] unitIds, List<BuildingData> wallSegments,
+            bool isQueued, bool excludeBuilderCurrentAssignments)
+        {
+            if (wallSegments == null || wallSegments.Count == 0) return false;
+
+            var builders = GetValidWallBuilders(unitIds, playerId);
+            if (builders.Count == 0) return false;
 
             SortWallBuildersAlongSegments(builders, wallSegments);
 
             var occupiedTilesByBuildingId = new Dictionary<int, HashSet<Vector2Int>>();
+            var assignedBuilderCounts = new Dictionary<int, int>();
+            HashSet<int> excludedUnitIds = excludeBuilderCurrentAssignments ? GetUnitIdSet(builders) : null;
+            BuildConstructionAssignmentLookups(occupiedTilesByBuildingId, assignedBuilderCounts, excludedUnitIds);
+
             for (int i = 0; i < builders.Count; i++)
             {
                 var villager = builders[i];
                 GetWallBuilderSegmentRange(i, builders.Count, wallSegments.Count,
                     out int startIdx, out int endIdx);
 
-                if (cmd.IsQueued)
+                var assignedSegments = AssignWallSegmentPlan(villager, wallSegments,
+                    assignedBuilderCounts, Mathf.Max(1, endIdx - startIdx));
+                if (assignedSegments.Count == 0)
+                    continue;
+
+                if (isQueued)
                 {
-                    for (int s = startIdx; s < endIdx; s++)
-                        villager.CommandQueue.Add(QueuedCommand.ConstructWaypoint(wallSegments[s].Id));
+                    for (int s = 0; s < assignedSegments.Count; s++)
+                        villager.CommandQueue.Add(QueuedCommand.ConstructWaypoint(assignedSegments[s].Id));
 
                     if (villager.State == UnitState.Idle)
                         PopAndExecuteNextQueuedCommand(villager);
@@ -4417,12 +4471,66 @@ namespace OpenEmpires
                     continue;
                 }
 
-                AssignUnitToConstructionTarget(villager, wallSegments[startIdx],
-                    occupiedTilesByBuildingId, clearQueuedCommands: true);
+                AssignUnitToConstructionTarget(villager, assignedSegments[0],
+                    occupiedTilesByBuildingId, clearQueuedCommands: true,
+                    bankCarriedResources: true);
 
-                for (int s = startIdx + 1; s < endIdx; s++)
-                    villager.CommandQueue.Add(QueuedCommand.ConstructWaypoint(wallSegments[s].Id));
+                for (int s = 1; s < assignedSegments.Count; s++)
+                    villager.CommandQueue.Add(QueuedCommand.ConstructWaypoint(assignedSegments[s].Id));
             }
+
+            return true;
+        }
+
+        private List<BuildingData> AssignWallSegmentPlan(UnitData builder, List<BuildingData> wallSegments,
+            Dictionary<int, int> assignedBuilderCounts, int assignmentCount)
+        {
+            var assignedSegments = new List<BuildingData>();
+            for (int i = 0; i < assignmentCount; i++)
+            {
+                var target = FindBestWallConstructionTarget(builder, wallSegments, assignedBuilderCounts);
+                if (target == null)
+                    break;
+
+                assignedSegments.Add(target);
+                assignedBuilderCounts.TryGetValue(target.Id, out int assignedCount);
+                assignedBuilderCounts[target.Id] = assignedCount + 1;
+            }
+
+            return assignedSegments;
+        }
+
+        private BuildingData FindBestWallConstructionTarget(UnitData unit, List<BuildingData> wallSegments,
+            Dictionary<int, int> assignedBuilderCounts)
+        {
+            BuildingData best = null;
+            int bestAssignedCount = int.MaxValue;
+            Fixed32 bestDistSq = default;
+
+            for (int i = 0; i < wallSegments.Count; i++)
+            {
+                var building = wallSegments[i];
+                if (building == null || building.IsDestroyed || !building.IsUnderConstruction)
+                    continue;
+
+                assignedBuilderCounts.TryGetValue(building.Id, out int assignedCount);
+                FixedVector3 diff = building.SimPosition - unit.SimPosition;
+                Fixed32 distSq = diff.x * diff.x + diff.z * diff.z;
+
+                bool better = best == null
+                    || assignedCount < bestAssignedCount
+                    || (assignedCount == bestAssignedCount && distSq < bestDistSq)
+                    || (assignedCount == bestAssignedCount && distSq == bestDistSq && building.Id < best.Id);
+
+                if (better)
+                {
+                    best = building;
+                    bestAssignedCount = assignedCount;
+                    bestDistSq = distSq;
+                }
+            }
+
+            return best;
         }
 
         private List<UnitData> GetValidWallBuilders(int[] unitIds, int playerId)
@@ -4443,6 +4551,14 @@ namespace OpenEmpires
             }
 
             return builders;
+        }
+
+        private static HashSet<int> GetUnitIdSet(List<UnitData> units)
+        {
+            var unitIds = new HashSet<int>();
+            for (int i = 0; i < units.Count; i++)
+                unitIds.Add(units[i].Id);
+            return unitIds;
         }
 
         private void SortWallBuildersAlongSegments(List<UnitData> builders, List<BuildingData> wallSegments)
@@ -4502,8 +4618,12 @@ namespace OpenEmpires
 
         private void AssignUnitToConstructionTarget(UnitData unit, BuildingData building,
             Dictionary<int, HashSet<Vector2Int>> occupiedTilesByBuildingId = null,
-            bool clearQueuedCommands = false)
+            bool clearQueuedCommands = false,
+            bool bankCarriedResources = false)
         {
+            if (bankCarriedResources)
+                BankCarriedResources(unit);
+
             if (clearQueuedCommands)
                 unit.ClearCommandQueue();
 
@@ -4515,6 +4635,7 @@ namespace OpenEmpires
             unit.ConstructionTargetBuildingId = building.Id;
             unit.GatherTimer = Fixed32.Zero;
             unit.PlayerCommanded = true;
+            unit.IsAttackMoving = false;
             unit.DropOffBuildingId = -1;
             unit.TargetGarrisonBuildingId = -1;
             unit.ClearPatrol();
@@ -4559,6 +4680,15 @@ namespace OpenEmpires
             unit.State = UnitState.Constructing;
         }
 
+        private void BankCarriedResources(UnitData unit)
+        {
+            if (unit.CarriedResourceAmount <= 0)
+                return;
+
+            ResourceManager.AddResource(unit.PlayerId, unit.CarriedResourceType, unit.CarriedResourceAmount);
+            unit.CarriedResourceAmount = 0;
+        }
+
         private void ProcessConvertToGateCommand(ConvertToGateCommand cmd)
         {
             var building = BuildingRegistry.GetBuilding(cmd.BuildingId);
@@ -4588,10 +4718,15 @@ namespace OpenEmpires
         {
             var building = BuildingRegistry.GetBuilding(cmd.TargetBuildingId);
             if (building == null || building.IsDestroyed) return;
-            if (!building.IsUnderConstruction) return;
             if (!AreAllies(building.PlayerId, cmd.PlayerId)) return;
+            if (!building.IsUnderConstruction && !HasUnfinishedWallGroupConstruction(building, cmd.PlayerId)) return;
 
-            var occupiedTiles = new HashSet<Vector2Int>();
+            if (TryAssignWallGroupConstructionCommand(cmd, building))
+                return;
+
+            if (!building.IsUnderConstruction) return;
+
+            var occupiedTilesByBuildingId = new Dictionary<int, HashSet<Vector2Int>>();
             for (int i = 0; i < cmd.UnitIds.Length; i++)
             {
                 var unit = UnitRegistry.GetUnit(cmd.UnitIds[i]);
@@ -4608,58 +4743,35 @@ namespace OpenEmpires
                 }
                 else
                 {
-                    // Bank any carried resources before switching to construction, so a villager
-                    // pulled off gathering to help build doesn't silently lose its load.
-                    if (unit.CarriedResourceAmount > 0)
-                    {
-                        ResourceManager.AddResource(unit.PlayerId, unit.CarriedResourceType, unit.CarriedResourceAmount);
-                        unit.CarriedResourceAmount = 0;
-                    }
-
-                    unit.ClearCommandQueue();
-                    unit.ClearSavedPath();
-                    unit.ClearFormation();
-                    unit.CombatTargetId = -1;
-                    unit.CombatTargetBuildingId = -1;
-                    unit.TargetResourceNodeId = -1;
-                    unit.ConstructionTargetBuildingId = cmd.TargetBuildingId;
-                    unit.GatherTimer = Fixed32.Zero;
-                    unit.PlayerCommanded = true;
-                    unit.DropOffBuildingId = -1;
-                    unit.TargetGarrisonBuildingId = -1;
-
-                    unit.ClearPatrol();
-
-                    var triedTiles = new HashSet<Vector2Int>(occupiedTiles);
-                    Vector2Int startTile = MapData.WorldToTile(unit.SimPosition);
-                    bool assigned = false;
-                    int constructAttempts = 0;
-
-                    while (true)
-                    {
-                        if (++constructAttempts > 4) break; // Cap retry attempts
-                        Vector2Int adjTile = FindNearestWalkableAdjacentTile(building, unit.SimPosition, triedTiles);
-                        if (triedTiles.Contains(adjTile)) break; // All tiles exhausted
-
-                        var path = GridPathfinder.FindPath(MapData, startTile, adjTile, unit.PlayerId, BuildingRegistry);
-                        if (path.Count > 0)
-                        {
-                            occupiedTiles.Add(adjTile);
-                            unit.SetPath(path);
-                            unit.FinalDestination = MapData.TileToWorldFixed(adjTile.x, adjTile.y);
-                            unit.State = UnitState.MovingToBuild;
-                            assigned = true;
-                            break;
-                        }
-                        triedTiles.Add(adjTile);
-                    }
-
-                    if (!assigned)
-                    {
-                        unit.State = UnitState.Constructing;
-                    }
+                    AssignUnitToConstructionTarget(unit, building, occupiedTilesByBuildingId,
+                        clearQueuedCommands: true, bankCarriedResources: true);
                 }
             }
+        }
+
+        private bool TryAssignWallGroupConstructionCommand(ConstructBuildingCommand cmd, BuildingData requestedBuilding)
+        {
+            if (!IsWallSegment(requestedBuilding) || requestedBuilding.WallGroupId <= 0)
+                return false;
+
+            var wallSegments = GetUnfinishedWallGroupSegments(requestedBuilding.WallGroupId, cmd.PlayerId);
+            if (wallSegments.Count == 0)
+                return false;
+
+            return AssignWallBuildersToSegments(cmd.PlayerId, cmd.UnitIds, wallSegments, cmd.IsQueued,
+                excludeBuilderCurrentAssignments: !cmd.IsQueued);
+        }
+
+        private BuildingData ResolveConstructionTargetForUnit(UnitData unit, BuildingData requestedBuilding,
+            Dictionary<int, int> assignedBuilderCounts)
+        {
+            if (requestedBuilding == null || requestedBuilding.IsDestroyed)
+                return null;
+
+            if (IsWallSegment(requestedBuilding) && requestedBuilding.WallGroupId > 0)
+                return FindBestWallGroupConstructionTarget(unit, requestedBuilding.WallGroupId, assignedBuilderCounts);
+
+            return requestedBuilding.IsUnderConstruction ? requestedBuilding : null;
         }
 
         private void ProcessRepairBuildingCommand(RepairBuildingCommand cmd)
@@ -4780,12 +4892,14 @@ namespace OpenEmpires
 
         private void BuildConstructionAssignmentLookups(
             Dictionary<int, HashSet<Vector2Int>> occupiedTilesByBuildingId,
-            Dictionary<int, int> assignedBuilderCounts)
+            Dictionary<int, int> assignedBuilderCounts,
+            HashSet<int> excludedUnitIds = null)
         {
             var allUnits = UnitRegistry.GetAllUnits();
             for (int u = 0; u < allUnits.Count; u++)
             {
                 var other = allUnits[u];
+                if (excludedUnitIds != null && excludedUnitIds.Contains(other.Id)) continue;
                 if (other.State == UnitState.Dead) continue;
                 if (other.ConstructionTargetBuildingId < 0) continue;
                 if (other.State != UnitState.MovingToBuild && other.State != UnitState.Constructing) continue;
@@ -4805,6 +4919,15 @@ namespace OpenEmpires
                     : other.SimPosition;
                 occupiedTiles.Add(MapData.WorldToTile(occupiedPos));
             }
+        }
+
+        private void BuildConstructionAssignmentLookups(
+            Dictionary<int, HashSet<Vector2Int>> occupiedTilesByBuildingId,
+            Dictionary<int, int> assignedBuilderCounts,
+            int excludedUnitId)
+        {
+            var excludedUnitIds = new HashSet<int> { excludedUnitId };
+            BuildConstructionAssignmentLookups(occupiedTilesByBuildingId, assignedBuilderCounts, excludedUnitIds);
         }
 
         private BuildingData FindBestWallGroupConstructionTarget(UnitData unit, int wallGroupId,
@@ -4840,6 +4963,27 @@ namespace OpenEmpires
             }
 
             return best;
+        }
+
+        private List<BuildingData> GetUnfinishedWallGroupSegments(int wallGroupId, int playerId)
+        {
+            var wallSegments = new List<BuildingData>();
+            if (wallGroupId <= 0) return wallSegments;
+
+            var buildings = BuildingRegistry.GetAllBuildings();
+            for (int i = 0; i < buildings.Count; i++)
+            {
+                var building = buildings[i];
+                if (building.WallGroupId != wallGroupId) continue;
+                if (!building.IsUnderConstruction || building.IsDestroyed) continue;
+                if (!AreAllies(building.PlayerId, playerId)) continue;
+                if (!IsWallSegment(building)) continue;
+
+                wallSegments.Add(building);
+            }
+
+            wallSegments.Sort((a, b) => a.Id.CompareTo(b.Id));
+            return wallSegments;
         }
 
         private static bool IsWallSegment(BuildingData building)

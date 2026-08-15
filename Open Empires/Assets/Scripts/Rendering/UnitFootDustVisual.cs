@@ -21,12 +21,14 @@ namespace OpenEmpires
         // smoulder with dust.
         private const float MinNormalizedSpeed = 0.35f;
 
-        private const float StrideLength = 0.85f;   // metres between footfalls
+        private const float StrideLength = 0.70f;   // metres between footfalls
         private const float StepWidth = 0.13f;      // sideways offset, so prints alternate feet
         private const float TrailOffset = 0.14f;    // puffs land just behind the unit, not under it
 
-        private const float MinStrength = 0.10f;
-        private const float MaxStrength = 0.40f;
+        // Weighted for legibility from the RTS camera. The first pass ran at 0.10..0.40 and was
+        // technically emitting the whole time — it simply could not be seen from play distance.
+        private const float MinStrength = 0.35f;
+        private const float MaxStrength = 0.85f;
 
         // A frame that moves a unit further than this is a teleport — a respawn, a knockback
         // landing, a camera-cut re-anchor — not a stride, so the trail restarts instead of
@@ -109,9 +111,9 @@ namespace OpenEmpires
         {
             switch (unitType)
             {
-                case 0: return 0.75f;  // Villager — working clothes, unhurried
-                case 5: return 0.35f;  // Sheep — small and light
-                case 9: return 0.55f;  // Monk — robes sweep rather than stamp
+                case 0: return 0.90f;  // Villager — working clothes, unhurried
+                case 5: return 0.45f;  // Sheep — small and light
+                case 9: return 0.70f;  // Monk — robes sweep rather than stamp
                 default: return 1f;    // Soldiery in boots
             }
         }

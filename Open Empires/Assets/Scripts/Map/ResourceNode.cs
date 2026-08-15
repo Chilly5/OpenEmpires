@@ -37,6 +37,7 @@ namespace OpenEmpires
         private float commandFlashTimer;
         private const float CommandFlashDuration = 0.09f;
         private static readonly Color CommandFlashColor = Color.white;
+        private static readonly Color SelectionRingColor = new Color(1f, 1f, 1f, 0.65f);
 
         public void Initialize(int nodeId, ResourceNodeData data)
         {
@@ -144,7 +145,7 @@ namespace OpenEmpires
             if (ringCollider != null) Object.Destroy(ringCollider);
 
             var ringMat = new Material(Shader.Find("Custom/SelectionRing"));
-            ringMat.SetColor("_Color", new Color(0f, 1f, 0f, 0.5f));
+            ringMat.SetColor("_Color", SelectionRingColor);
             selectionRing.GetComponent<Renderer>().sharedMaterial = ringMat;
 
             selectionRing.SetActive(false);

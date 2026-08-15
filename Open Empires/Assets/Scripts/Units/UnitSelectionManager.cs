@@ -183,6 +183,12 @@ namespace OpenEmpires
         // Dummy placement ghost
         private GameObject dummyGhost;
 
+        // Spawn placement ghost: the actual unit model, made translucent, following the cursor so
+        // it is obvious which unit is armed and exactly where it will land.
+        private GameObject spawnGhost;
+        private int spawnGhostUnitType = -1;
+        private Material spawnGhostMaterial;
+
         // Hover tracking
         private UnitView hoveredUnit;
         private ResourceNode hoveredResource;
@@ -437,6 +443,37 @@ namespace OpenEmpires
                 return;
             }
 
+            // Debug spawn: left-click the ground to drop the unit chosen in settings.
+            if (SettingsMenuUI.IsPlacingSpawn)
+            {
+                Ray spawnRay = mainCamera.ScreenPointToRay(currentMousePos);
+                if (Physics.Raycast(spawnRay, out RaycastHit spawnHit, 1000f, groundLayer))
+                {
+                    var sim = GameBootstrapper.Instance?.Simulation;
+                    if (sim != null)
+                    {
+                        int owner = LocalPlayerId;
+                        if (SettingsMenuUI.SpawnAsEnemy)
+                        {
+                            // Anyone not on our team will do; falls back to us if the game is solo.
+                            for (int p = 0; p < GameBootstrapper.Instance.PlayerCount; p++)
+                            {
+                                if (!TeamHelper.AreAllies(sim.PlayerTeamIds, p, LocalPlayerId)) { owner = p; break; }
+                            }
+                        }
+
+                        sim.CommandBuffer.EnqueueCommand(new CheatSpawnUnitCommand(
+                            LocalPlayerId,
+                            SettingsMenuUI.SpawnUnitType,
+                            FixedVector3.FromVector3(spawnHit.point),
+                            SettingsMenuUI.SpawnUnitCount,
+                            owner));
+                    }
+                }
+                placementConsumedClick = true;
+                return; // stays armed, so several can be placed in a row
+            }
+
             // Dummy placement: left-click to spawn target dummy
             if (SettingsMenuUI.IsPlacingDummy)
             {
@@ -588,6 +625,78 @@ namespace OpenEmpires
                 if (Physics.Raycast(ray, out RaycastHit hit, 1000f, groundLayer))
                     rightDragStartWorld = hit.point;
             }
+        }
+
+        /// <summary>
+        /// Builds the translucent preview for a unit type. Uses the real prefab where one exists so
+        /// the cursor shows the actual model, falling back to a plain capsule for the units built
+        /// in code. Everything that could act — scripts, colliders, the selection ring — is stripped,
+        /// leaving nothing but geometry.
+        /// </summary>
+        private GameObject BuildSpawnGhost(int unitType)
+        {
+            if (spawnGhostMaterial == null)
+            {
+                spawnGhostMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+                spawnGhostMaterial.color = new Color(0.45f, 1f, 0.55f, 0.35f);
+                spawnGhostMaterial.SetFloat("_Surface", 1);
+                spawnGhostMaterial.SetOverrideTag("RenderType", "Transparent");
+                spawnGhostMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                spawnGhostMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                spawnGhostMaterial.SetInt("_ZWrite", 0);
+                spawnGhostMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
+                spawnGhostMaterial.EnableKeyword("_ALPHABLEND_ON");
+                spawnGhostMaterial.renderQueue = 3000;
+            }
+
+            GameObject ghost = null;
+            var setup = FindFirstObjectByType<GameSetup>();
+            var prefab = setup != null ? setup.GetUnitPrefabForType(unitType) : null;
+
+            if (prefab != null)
+            {
+                ghost = Object.Instantiate(prefab);
+
+                // A preview must not behave like a unit. Disabling takes effect at once, whereas
+                // Destroy is deferred to the end of the frame — long enough for a copied UnitView
+                // to tick once with no simulation data behind it.
+                foreach (var mb in ghost.GetComponentsInChildren<MonoBehaviour>(true))
+                {
+                    mb.enabled = false;
+                    Object.Destroy(mb);
+                }
+                foreach (var col in ghost.GetComponentsInChildren<Collider>(true))
+                {
+                    col.enabled = false;
+                    Object.Destroy(col);
+                }
+
+                var ring = ghost.transform.Find("SelectionRing");
+                if (ring != null) Object.DestroyImmediate(ring.gameObject);
+            }
+            else
+            {
+                // Built in code rather than from a prefab; a capsule stands in for it.
+                ghost = new GameObject("SpawnGhost");
+                var body = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                body.transform.SetParent(ghost.transform, false);
+                body.transform.localPosition = new Vector3(0f, 0.5f, 0f);
+                body.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                Object.Destroy(body.GetComponent<Collider>());
+            }
+
+            ghost.name = "SpawnGhost";
+            foreach (var r in ghost.GetComponentsInChildren<Renderer>(true))
+            {
+                var mats = new Material[r.sharedMaterials.Length];
+                for (int i = 0; i < mats.Length; i++) mats[i] = spawnGhostMaterial;
+                r.sharedMaterials = mats;
+                r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                r.receiveShadows = false;
+            }
+
+            ghost.SetActive(false);
+            return ghost;
         }
 
         private void Update()
@@ -893,6 +1002,41 @@ namespace OpenEmpires
                         wallGhostActiveCount = 1;
                     }
                 }
+            }
+
+            // Spawn placement ghost — rebuilt whenever a different unit is chosen.
+            if (SettingsMenuUI.IsPlacingSpawn)
+            {
+                if (spawnGhost == null || spawnGhostUnitType != SettingsMenuUI.SpawnUnitType)
+                {
+                    if (spawnGhost != null) Object.Destroy(spawnGhost);
+                    spawnGhostUnitType = SettingsMenuUI.SpawnUnitType;
+                    spawnGhost = BuildSpawnGhost(spawnGhostUnitType);
+                }
+
+                if (spawnGhost != null)
+                {
+                    Ray spawnRay = mainCamera.ScreenPointToRay(currentMousePos);
+                    if (Physics.Raycast(spawnRay, out RaycastHit spawnHit, 1000f, groundLayer))
+                    {
+                        var sim = GameBootstrapper.Instance?.Simulation;
+                        float ghostY = spawnHit.point.y;
+                        if (sim != null)
+                            ghostY = sim.MapData.SampleHeight(spawnHit.point.x, spawnHit.point.z) * sim.Config.TerrainHeightScale;
+                        spawnGhost.transform.position = new Vector3(spawnHit.point.x, ghostY, spawnHit.point.z);
+                        spawnGhost.SetActive(true);
+                    }
+                    else
+                    {
+                        spawnGhost.SetActive(false);
+                    }
+                }
+            }
+            else if (spawnGhost != null)
+            {
+                Object.Destroy(spawnGhost);
+                spawnGhost = null;
+                spawnGhostUnitType = -1;
             }
 
             // Dummy placement ghost (shared between target dummy and archer dummy modes).
@@ -2490,6 +2634,11 @@ namespace OpenEmpires
                 DestroyTsunamiTargetingPreview();
                 return;
             }
+            if (SettingsMenuUI.IsPlacingSpawn)
+            {
+                SettingsMenuUI.CancelSpawnPlacement();
+                return;
+            }
             if (SettingsMenuUI.IsPlacingDummy)
             {
                 SettingsMenuUI.IsPlacingDummy = false;
@@ -2776,7 +2925,9 @@ namespace OpenEmpires
                     {
                         // Own/allied building under construction: send villagers to help build
                         var buildingData = sim.BuildingRegistry.GetBuilding(buildingView.BuildingId);
-                        if (buildingData != null && buildingData.IsUnderConstruction)
+                        if (buildingData != null
+                            && (buildingData.IsUnderConstruction
+                                || sim.HasUnfinishedWallGroupConstruction(buildingData, LocalPlayerId)))
                         {
                             int[] unitIds = GetSelectedUnitIds();
                             var constructCmd = new ConstructBuildingCommand(
@@ -3113,6 +3264,11 @@ namespace OpenEmpires
             if (settingsMenuOpen)
             {
                 SettingsMenuUI.Close();
+                return;
+            }
+            if (SettingsMenuUI.IsPlacingSpawn)
+            {
+                SettingsMenuUI.CancelSpawnPlacement();
                 return;
             }
             if (SettingsMenuUI.IsPlacingDummy)
