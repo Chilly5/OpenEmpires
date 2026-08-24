@@ -45,6 +45,9 @@ namespace OpenEmpires
         private Vector2 rotateDelta;
         private bool rotateEnabled;
         private bool mousePanEnabled;
+        private bool ownsPointerLock;
+        private CursorLockMode cursorLockBeforeMouseControl;
+        private Vector2 cursorPositionBeforeMouseControl;
 
         public Vector3 PivotPosition
         {
@@ -140,8 +143,8 @@ namespace OpenEmpires
             inputActions.RTS.CameraMousePan.performed += ctx => mousePanDelta = ctx.ReadValue<Vector2>();
             inputActions.RTS.CameraMousePan.canceled += ctx => mousePanDelta = Vector2.zero;
             inputActions.RTS.CameraZoom.performed += ctx => OnZoom(ctx.ReadValue<float>());
-            inputActions.RTS.CameraRotateEnable.performed += ctx => { rotateEnabled = true; mousePanEnabled = true; };
-            inputActions.RTS.CameraRotateEnable.canceled += ctx => { rotateEnabled = false; mousePanEnabled = false; };
+            inputActions.RTS.CameraRotateEnable.performed += BeginMouseControl;
+            inputActions.RTS.CameraRotateEnable.canceled += EndMouseControl;
             inputActions.RTS.CameraRotateDelta.performed += ctx => rotateDelta = ctx.ReadValue<Vector2>();
             inputActions.RTS.CameraRotateDelta.canceled += ctx => rotateDelta = Vector2.zero;
             // mousePosition is now read from VirtualCursor in Update
@@ -149,7 +152,39 @@ namespace OpenEmpires
 
         private void OnDisable()
         {
+            EndMouseControl(default);
             inputActions.RTS.Disable();
+        }
+
+        private void BeginMouseControl(InputAction.CallbackContext context)
+        {
+            rotateEnabled = true;
+            mousePanEnabled = true;
+
+#if !UNITY_WEBGL || UNITY_EDITOR
+            if (Cursor.lockState != CursorLockMode.Locked)
+            {
+                cursorLockBeforeMouseControl = Cursor.lockState;
+                cursorPositionBeforeMouseControl = Mouse.current != null
+                    ? Mouse.current.position.ReadValue()
+                    : VirtualCursor.Position;
+                ownsPointerLock = true;
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+#endif
+        }
+
+        private void EndMouseControl(InputAction.CallbackContext context)
+        {
+            rotateEnabled = false;
+            mousePanEnabled = false;
+
+            if (!ownsPointerLock) return;
+
+            Cursor.lockState = cursorLockBeforeMouseControl;
+            VirtualCursor.RestorePosition(cursorPositionBeforeMouseControl);
+            ownsPointerLock = false;
         }
 
         private void Update()
@@ -204,6 +239,7 @@ namespace OpenEmpires
         private void HandleEdgeScroll()
         {
             if (!enableEdgeScroll) return;
+            if (mousePanEnabled) return;
             if (UnitSelectionManager.UIInputSuppressed) return;
             
             // Check if box selecting and edge pan while box selecting is disabled
@@ -289,7 +325,12 @@ namespace OpenEmpires
             pivot.rotation = Quaternion.Euler(0f, currentYaw, 0f);
             arm.localRotation = Quaternion.Euler(pitch, 0f, 0f);
             arm.localPosition = Vector3.zero;
-            transform.localPosition = new Vector3(0f, 0f, -100f);
+            // Orthographic, so this distance does not change the picture at all — it only decides
+            // how far the world sits from the camera. It was 100, which put everything twice as far
+            // away as shadows are drawn, and spread what shadow detail there was over a huge range.
+            // 55 keeps the camera well clear of the tallest terrain (8 units) at this 30 degree
+            // pitch while roughly halving the shadow range needed.
+            transform.localPosition = new Vector3(0f, 0f, -55f);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,21 +6,31 @@ namespace OpenEmpires
 {
     public class UnitHealingSystem
     {
-        public void Tick(UnitRegistry registry, SimulationConfig config, SpatialGrid spatialGrid, int[] playerTeamIds, int currentTick, MapData mapData = null, BuildingRegistry buildingRegistry = null)
+        public void Tick(UnitRegistry registry, SimulationConfig config, SpatialGrid spatialGrid, int[] playerTeamIds, int currentTick,
+            MapData mapData = null, BuildingRegistry buildingRegistry = null,
+            Action<UnitData, float> onKingHealingAuraPulse = null,
+            Action<BuildingData, float> onBuildingHealingAuraPulse = null)
         {
             var allUnits = registry.GetAllUnits();
             int count = allUnits.Count;
-            Fixed32 healRange = Fixed32.FromFloat(config.MonkHealRange);
-            Fixed32 healRangeSq = healRange * healRange;
-            Fixed32 detectionRange = Fixed32.FromFloat(config.MonkDetectionRange);
-            Fixed32 detectionRangeSq = detectionRange * detectionRange;
-            int healAmount = config.MonkHealAmount;
 
             for (int i = 0; i < count; i++)
             {
                 var unit = allUnits[i];
                 if (unit.State == UnitState.Dead) continue;
+                bool isKing = unit.UnitType == UnitData.KingUnitType;
+                if (isKing)
+                {
+                    TickKingHealingAura(unit, allUnits, count, config, playerTeamIds, currentTick, onKingHealingAuraPulse);
+                    continue;
+                }
                 if (!unit.IsHealer) continue;
+
+                Fixed32 healRange = Fixed32.FromFloat(config.MonkHealRange);
+                Fixed32 healRangeSq = healRange * healRange;
+                Fixed32 detectionRange = Fixed32.FromFloat(config.MonkDetectionRange);
+                Fixed32 detectionRangeSq = detectionRange * detectionRange;
+                int healAmount = config.MonkHealAmount;
 
                 // Tick cooldown
                 if (unit.AttackCooldownRemaining > 0)
@@ -132,6 +143,102 @@ namespace OpenEmpires
                     unit.HealTargetId = -1;
                     if (unit.State == UnitState.InCombat)
                         unit.State = UnitState.Idle;
+                }
+            }
+
+            TickBuildingHealingAuras(allUnits, count, config, playerTeamIds, currentTick, buildingRegistry, onBuildingHealingAuraPulse);
+        }
+
+        private void TickKingHealingAura(UnitData king, List<UnitData> allUnits, int unitCount,
+            SimulationConfig config, int[] playerTeamIds, int currentTick,
+            Action<UnitData, float> onHealingAuraPulse)
+        {
+            if (king.AttackCooldownRemaining > 0)
+                return;
+
+            Fixed32 healRange = Fixed32.FromFloat(config.KingHealRange);
+            Fixed32 healRangeSq = healRange * healRange;
+            bool healedAny = false;
+
+            for (int i = 0; i < unitCount; i++)
+            {
+                var unit = allUnits[i];
+                if (unit.State == UnitState.Dead) continue;
+                // Heals through combat, and sustains the King himself.
+                if (!TeamHelper.AreAllies(playerTeamIds, unit.PlayerId, king.PlayerId)) continue;
+                if (unit.CurrentHealth >= unit.MaxHealth) continue;
+
+                Fixed32 dx = unit.SimPosition.x - king.SimPosition.x;
+                Fixed32 dz = unit.SimPosition.z - king.SimPosition.z;
+                Fixed32 distSq = dx * dx + dz * dz;
+                if (distSq > healRangeSq) continue;
+
+                unit.CurrentHealth += config.KingHealAmount;
+                if (unit.CurrentHealth > unit.MaxHealth)
+                    unit.CurrentHealth = unit.MaxHealth;
+                unit.LastHealTick = currentTick;
+                unit.LastHealAmount = config.KingHealAmount;
+                healedAny = true;
+            }
+
+            if (healedAny)
+            {
+                king.AttackCooldownRemaining = config.KingHealCooldownTicks;
+                onHealingAuraPulse?.Invoke(king, config.KingHealRange);
+            }
+        }
+
+        private void TickBuildingHealingAuras(List<UnitData> allUnits, int unitCount, SimulationConfig config,
+            int[] playerTeamIds, int currentTick, BuildingRegistry buildingRegistry,
+            Action<BuildingData, float> onHealingAuraPulse)
+        {
+            if (buildingRegistry == null) return;
+
+            Fixed32 healRange = Fixed32.FromFloat(config.AbbeyOfKingsHealRange);
+            Fixed32 healRangeSq = healRange * healRange;
+
+            var buildings = buildingRegistry.GetAllBuildings();
+            for (int b = 0; b < buildings.Count; b++)
+            {
+                var building = buildings[b];
+                if (building.IsDestroyed || building.IsUnderConstruction) continue;
+                if (building.Type != BuildingType.Landmark) continue;
+
+                var def = LandmarkDefinitions.Get(building.LandmarkId);
+                if (!def.HasHealingAura) continue;
+
+                if (building.AttackCooldownRemaining > 0)
+                {
+                    building.AttackCooldownRemaining--;
+                    continue;
+                }
+
+                bool healedAny = false;
+                for (int i = 0; i < unitCount; i++)
+                {
+                    var unit = allUnits[i];
+                    if (unit.State == UnitState.Dead) continue;
+                    // Heals through combat — this is battlefield sustain, not out-of-combat regen.
+                    if (!TeamHelper.AreAllies(playerTeamIds, unit.PlayerId, building.PlayerId)) continue;
+                    if (unit.CurrentHealth >= unit.MaxHealth) continue;
+
+                    Fixed32 dx = unit.SimPosition.x - building.SimPosition.x;
+                    Fixed32 dz = unit.SimPosition.z - building.SimPosition.z;
+                    Fixed32 distSq = dx * dx + dz * dz;
+                    if (distSq > healRangeSq) continue;
+
+                    unit.CurrentHealth += config.AbbeyOfKingsHealAmount;
+                    if (unit.CurrentHealth > unit.MaxHealth)
+                        unit.CurrentHealth = unit.MaxHealth;
+                    unit.LastHealTick = currentTick;
+                    unit.LastHealAmount = config.AbbeyOfKingsHealAmount;
+                    healedAny = true;
+                }
+
+                if (healedAny)
+                {
+                    building.AttackCooldownRemaining = config.AbbeyOfKingsHealCooldownTicks;
+                    onHealingAuraPulse?.Invoke(building, config.AbbeyOfKingsHealRange);
                 }
             }
         }

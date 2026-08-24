@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,7 @@ namespace OpenEmpires
 
         // Shared rally material — created once, reused by all BuildingViews
         private static Material sharedRallyMaterial;
+        private static Material sharedBuildingSelectionMaterial;
 
         private static Material GetSharedRallyMaterial()
         {
@@ -29,11 +31,32 @@ namespace OpenEmpires
             return sharedRallyMaterial;
         }
 
+        private static Material GetSharedBuildingSelectionMaterial()
+        {
+            if (sharedBuildingSelectionMaterial == null)
+            {
+                var shader = Shader.Find("Custom/SelectionRing");
+                if (shader == null) return null;
+
+                sharedBuildingSelectionMaterial = new Material(shader);
+                SetMaterialColor(sharedBuildingSelectionMaterial, new Color(1f, 1f, 1f, 0.65f));
+                if (sharedBuildingSelectionMaterial.HasProperty(SquareOutlineId))
+                    sharedBuildingSelectionMaterial.SetFloat(SquareOutlineId, 1f);
+                if (sharedBuildingSelectionMaterial.HasProperty(InnerRadiusId))
+                    sharedBuildingSelectionMaterial.SetFloat(InnerRadiusId, 0.88f);
+                if (sharedBuildingSelectionMaterial.HasProperty(SoftnessId))
+                    sharedBuildingSelectionMaterial.SetFloat(SoftnessId, 0.015f);
+            }
+
+            return sharedBuildingSelectionMaterial;
+        }
+
         public int BuildingId { get; private set; }
         public int PlayerId { get; private set; }
         public BuildingType BuildingType { get; private set; }
         public bool IsDestroyed { get; private set; }
         public bool IsSelected => isSelected;
+        public bool IsHovered => isHovered;
 
         public Rect GetScreenBounds(Camera cam)
         {
@@ -81,6 +104,7 @@ namespace OpenEmpires
         private float cachedHeightScale;
         private bool isSelected;
         private bool isPreselected;
+        private bool isHovered;
         private bool isGhostMode;
         private int controlGroupLabel = -1;
         private TextMeshProUGUI controlGroupLabelTMP;
@@ -116,6 +140,7 @@ namespace OpenEmpires
 
         // Canvas overlay widgets
         private RectTransform overlayRoot;
+        private GameObject healthBarBackgroundGO;
         private Image healthBarFill;
         private RectTransform healthBarFillRT;
         private RectTransform queueContainer;
@@ -132,6 +157,9 @@ namespace OpenEmpires
         // Shader-safe color access (RGBRecolor shader uses _BaseColor instead of _Color)
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int ColorId = Shader.PropertyToID("_Color");
+        private static readonly int InnerRadiusId = Shader.PropertyToID("_InnerRadius");
+        private static readonly int SoftnessId = Shader.PropertyToID("_Softness");
+        private static readonly int SquareOutlineId = Shader.PropertyToID("_SquareOutline");
 
         private static Color GetMaterialColor(Material mat)
         {
@@ -159,25 +187,59 @@ namespace OpenEmpires
         private GameObject constructionScaffold;
         private Renderer constructionScaffoldRenderer;
         private int constructionStage = -1;
-        private static readonly Texture2D[] constructionStageTextures = new Texture2D[3];
-        private static bool constructionTexturesLoaded;
+        private static readonly System.Collections.Generic.Dictionary<BuildingType, Texture2D[]> constructionStagesByType
+            = new System.Collections.Generic.Dictionary<BuildingType, Texture2D[]>();
+        private static Texture2D[] defaultConstructionStages;
 
-        private static Texture2D GetConstructionStageTexture(int stage)
+        private static Texture2D[] GetDefaultConstructionStages()
         {
-            if (!constructionTexturesLoaded)
+            if (defaultConstructionStages == null)
             {
-                constructionStageTextures[0] = Resources.Load<Texture2D>("BuildingSprites/Construction/4x4lvl1");
-                constructionStageTextures[1] = Resources.Load<Texture2D>("BuildingSprites/Construction/4x4lvl2");
-                constructionStageTextures[2] = Resources.Load<Texture2D>("BuildingSprites/Construction/4x4lvl3");
-                constructionTexturesLoaded = true;
+                defaultConstructionStages = new[]
+                {
+                    Resources.Load<Texture2D>("BuildingSprites/Construction/4x4lvl1"),
+                    Resources.Load<Texture2D>("BuildingSprites/Construction/4x4lvl2"),
+                    Resources.Load<Texture2D>("BuildingSprites/Construction/4x4lvl3"),
+                };
             }
-            return constructionStageTextures[Mathf.Clamp(stage, 0, 2)];
+            return defaultConstructionStages;
+        }
+
+        // Per-type construction stage sprites. Returns null when the type uses the generic scaffold.
+        private static Texture2D[] LoadCustomConstructionStages(BuildingType type)
+        {
+            string[] names = type switch
+            {
+                BuildingType.Farm => new[] { "BuildingSprites/farm_00", "BuildingSprites/farm_01", "BuildingSprites/farm_02" },
+                _ => null,
+            };
+            if (names == null) return null;
+            var arr = new Texture2D[3];
+            for (int i = 0; i < 3; i++)
+            {
+                arr[i] = Resources.Load<Texture2D>(names[i]);
+                if (arr[i] == null) return null;
+            }
+            return arr;
+        }
+
+        private static Texture2D GetConstructionStageTexture(int stage, BuildingType type)
+        {
+            if (!constructionStagesByType.TryGetValue(type, out var arr))
+            {
+                arr = LoadCustomConstructionStages(type) ?? GetDefaultConstructionStages();
+                constructionStagesByType[type] = arr;
+            }
+            return arr[Mathf.Clamp(stage, 0, 2)];
         }
 
         // Damage flash
         private int lastSeenDamageTick;
+        private int lastSeenHealthBarDamageTick;
         private float damageFlashTimer;
+        private float healthBarDamageTimer;
         private const float DamageFlashDuration = 0.18f;
+        private const float HealthBarDamageVisibleDuration = 1.2f;
         private Renderer[] bodyRenderers;
         private Color[] originalColors;
         private bool flashActive;
@@ -199,9 +261,14 @@ namespace OpenEmpires
         private GameObject gateRightCap;
         private GameObject gateSpriteQuad;
         private Renderer gateSpriteRenderer;
-        private string gateSpritePrefix;
         private bool gateIsOpen;
-        private float gateLastRotation = float.NaN;
+        // Gate opens while a unit is on its tile and stays open for this long after the last
+        // unit leaves; the timer is reset every frame a unit is still passing through.
+        private const float GateOpenHoldDuration = 0.75f;
+        private float gateOpenTimer;
+        // True while this wall is absorbed into an adjacent gate's 3-tile span — its own body
+        // sprite is hidden so the gate sprite covers it. Collider stays (still attackable).
+        private bool isCovered;
 
         // Palisade (wood wall) sprite billboard — replaces procedural body cubes for BuildingType.Wall.
         // YOffsetRatio < 0.5 lowers the quad below the half-height position so the wall art
@@ -209,6 +276,13 @@ namespace OpenEmpires
         // on the ground instead of floating.
         private const float PalisadeSpriteScale = 6.61f;
         private const float PalisadeSpriteYOffsetRatio = 0.27f;
+
+        // Gate billboard sizes (quad scale). Tunable. Gates now span THREE tiles — the gate tile
+        // plus the two collinear wall neighbors it absorbs — so the towers in the art should land
+        // over those neighbor tiles. Roughly wall-scale (6.61) is the starting point; tune per
+        // orientation via the WallGateSpriteRegistry knobs if towers don't sit on the neighbors.
+        private const float WoodGateSpriteScale = 5.82f;
+        private const float StoneGateSpriteScale = 7.0f;
         private GameObject palisadeSpriteQuad;
         private Renderer palisadeSpriteRenderer;
         private string lastPalisadeSpriteName;
@@ -222,7 +296,14 @@ namespace OpenEmpires
 
         // Rally point visualization
         private LineRenderer rallyLine;
-        private GameObject rallyDot;
+        private CommandFlagMarker rallyFlag;
+        private bool hasLastRallyFlagTarget;
+        private FixedVector3 lastRallyFlagPoint;
+        private int lastRallyFlagUnitId = -1;
+        private bool lastRallyFlagOnResource;
+        private ResourceType lastRallyFlagResourceType;
+        private bool lastRallyFlagOnConstruction;
+        private int lastRallyFlagConstructionBuildingId = -1;
 
         // Age-based sprite swap
         private string ageSpritePrefix;
@@ -284,6 +365,12 @@ namespace OpenEmpires
                 SetBodyRenderersVisible(false);
                 UpdateConstructionStage(data.ConstructionProgress);
             }
+            else
+            {
+                // Already complete on spawn (map setup, cheats, rejoin) — the completion
+                // branch in the update loop will never fire for these.
+                CreateHealAuraVisual();
+            }
 
             // Cache reference to the billboard sprite renderer (if any)
             var spriteTransform = transform.Find("Sprite");
@@ -291,10 +378,9 @@ namespace OpenEmpires
                 spriteRenderer = spriteTransform.GetComponent<Renderer>();
 
             if (IsWallFamily(data.Type))
-            {
                 wallViewsById[buildingId] = this;
-                InvalidateNeighborWallViews(OriginTileX, OriginTileZ);
-            }
+            // Any new building may turn an adjacent wall into a tower (obstacle-cap rule).
+            InvalidateNeighborWallViews(OriginTileX, OriginTileZ);
 
             CreateRallyPointVisuals();
             CreateOverlayWidgets();
@@ -323,7 +409,7 @@ namespace OpenEmpires
         {
             if (constructionScaffold != null) return;
 
-            var tex = GetConstructionStageTexture(0);
+            var tex = GetConstructionStageTexture(0, buildingData.Type);
             if (tex == null) return;
 
             var shader = Shader.Find("OpenEmpires/Billboard");
@@ -334,7 +420,7 @@ namespace OpenEmpires
             var mat = new Material(shader);
             mat.SetTexture("_MainTex", tex);
             if (mat.HasProperty("_Color")) mat.SetColor("_Color", Color.white);
-            if (mat.HasProperty("_Cutoff")) mat.SetFloat("_Cutoff", 0.5f);
+            if (mat.HasProperty("_Cutoff")) mat.SetFloat("_Cutoff", 0.05f);
             mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry + 1;
 
             constructionScaffold = GameObject.CreatePrimitive(PrimitiveType.Quad);
@@ -347,7 +433,15 @@ namespace OpenEmpires
             float size = Mathf.Max(buildingData.TileFootprintWidth, buildingData.TileFootprintHeight);
             if (size <= 0f) size = 2f;
             float scale = size * 1.5f;
-            constructionScaffold.transform.localPosition = new Vector3(0f, 0f, 0f);
+            float yPos = 0f;
+            // Farms render their stages at the same scale/Y as the finished Farm.png
+            // (see GameSetup CreateBuildingSpritePrefab for Farm: scale 2.75, yRatio 0.25/2.75).
+            if (buildingData.Type == BuildingType.Farm)
+            {
+                scale = 2.75f;
+                yPos = 0.25f;
+            }
+            constructionScaffold.transform.localPosition = new Vector3(0f, yPos, 0f);
             constructionScaffold.transform.localScale = new Vector3(scale, scale, 1f);
 
             constructionScaffoldRenderer = constructionScaffold.GetComponent<MeshRenderer>();
@@ -370,7 +464,7 @@ namespace OpenEmpires
             if (constructionScaffoldRenderer == null) return;
             int stage = Mathf.Clamp(Mathf.FloorToInt(Mathf.Clamp01(progress) * 3f), 0, 2);
             if (stage == constructionStage) return;
-            var tex = GetConstructionStageTexture(stage);
+            var tex = GetConstructionStageTexture(stage, buildingData.Type);
             if (tex != null)
             {
                 constructionScaffoldRenderer.material.SetTexture("_MainTex", tex);
@@ -403,21 +497,16 @@ namespace OpenEmpires
             rallyLine.endColor = Color.white;
             lineGO.SetActive(false);
 
-            // White dot at rally point
-            rallyDot = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            rallyDot.name = "RallyDot";
-            rallyDot.transform.SetParent(transform);
-            rallyDot.transform.localScale = new Vector3(0.35f, 0.35f, 0.35f);
-            var dotCollider = rallyDot.GetComponent<Collider>();
-            if (dotCollider != null) Object.Destroy(dotCollider);
-            var dotRenderer = rallyDot.GetComponent<Renderer>();
-            dotRenderer.sharedMaterial = GetSharedRallyMaterial();
-            rallyDot.SetActive(false);
+            rallyFlag = CommandFlagMarker.CreatePersistent(transform, CommandFlagKind.Rally);
         }
 
         public void SetSelectionRing(GameObject ring)
         {
             selectionRing = ring;
+            var selectionRenderer = selectionRing != null ? selectionRing.GetComponentInChildren<Renderer>() : null;
+            var selectionMaterial = GetSharedBuildingSelectionMaterial();
+            if (selectionRenderer != null && selectionMaterial != null)
+                selectionRenderer.sharedMaterial = selectionMaterial;
             if (selectionRing != null)
                 selectionRing.SetActive(false);
         }
@@ -480,6 +569,29 @@ namespace OpenEmpires
             }
         }
 
+        public void GetOcclusionFadeRenderers(Vector3 hitPoint, List<Renderer> results)
+        {
+            if (results == null || bodyRenderers == null) return;
+
+            Renderer closest = null;
+            float closestDistance = float.MaxValue;
+            for (int i = 0; i < bodyRenderers.Length; i++)
+            {
+                Renderer renderer = bodyRenderers[i];
+                if (renderer == null || !renderer.enabled) continue;
+
+                float distance = renderer.bounds.SqrDistance(hitPoint);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closest = renderer;
+                }
+            }
+
+            if (closest != null)
+                results.Add(closest);
+        }
+
         private void Update()
         {
             if (IsDestroyed || buildingData == null) return;
@@ -501,6 +613,7 @@ namespace OpenEmpires
                     DestroyConstructionScaffold();
                     SetBodyRenderersVisible(true);
                     SFXManager.Instance?.Play(SFXType.ConstructionComplete, transform.position, 0.7f);
+                    CreateHealAuraVisual();
 
                     if (influenceZone != null)
                         influenceZone.SetActive(isSelected && PlayerId == GetLocalPlayerId());
@@ -538,6 +651,10 @@ namespace OpenEmpires
                 SetGateVisual(buildingData.IsGate, mat);
             }
 
+            // Open the gate while a unit is passing through (cosmetic, view-only).
+            if (buildingData.IsGate)
+                UpdateGateOpenState();
+
             // Detect new damage or work strike — apply flash. (LastStrikeTick is the cosmetic
             // hammer-strike pulse from repair/construction; LastDamageTick is real combat damage.)
             int latestTick = buildingData.LastDamageTick > buildingData.LastStrikeTick
@@ -547,6 +664,11 @@ namespace OpenEmpires
                 lastSeenDamageTick = latestTick;
                 damageFlashTimer = DamageFlashDuration;
                 SFXManager.Instance?.Play(SFXType.UnitHurt, transform.position, 0.4f);
+            }
+            if (buildingData.LastDamageTick > lastSeenHealthBarDamageTick && buildingData.LastDamageTick > 0)
+            {
+                lastSeenHealthBarDamageTick = buildingData.LastDamageTick;
+                healthBarDamageTimer = HealthBarDamageVisibleDuration;
             }
 
             UpdateFlash();
@@ -565,16 +687,21 @@ namespace OpenEmpires
         private void UpdateAttackRangeDisplay()
         {
             float range = GetCurrentAttackRange();
-            bool canAttack = (buildingData != null && buildingData.AttackDamage > 0) || 
+            bool canAttack = (buildingData != null && buildingData.AttackDamage > 0) ||
                            (isGhostMode && ghostModeAttackRange > 0);
-            
-            // Only show attack range if selected by the local player or during a placement preview.
-            // isGhostMode is also set for fog-of-war "last-known" enemy buildings — those must NOT show a range ring,
-            // so distinguish placement ghosts (which set ghostModeAttackRange > 0) from fog ghosts (which don't).
-            bool isLocalPlayerSelection = isSelected && PlayerId == GetLocalPlayerId();
+
+            // Show the attack ring whenever a shooter building is selected — including when the
+            // local player clicks an enemy tower/keep/TC to inspect it. Selection state is local
+            // to each client (UnitSelectionManager doesn't sync `isSelected` across the network),
+            // so the ring is inherently visible only to the player making the selection.
+            //
+            // Carve out fog-of-war "last-known" enemy buildings: isGhostMode is also set for
+            // those, and they should not flash a range ring. Placement ghosts opt in by setting
+            // ghostModeAttackRange > 0, which lets us distinguish the two cases.
             bool isPlacementGhost = isGhostMode && ghostModeAttackRange > 0;
-            bool showRange = canAttack && range > 0 && (isLocalPlayerSelection || isPlacementGhost);
-            
+            bool isFogGhost = isGhostMode && !isPlacementGhost;
+            bool showRange = canAttack && range > 0 && !isFogGhost && (isSelected || isPlacementGhost);
+
             if (rangeRing != null)
                 rangeRing.SetActive(showRange);
             else if (showRange)
@@ -608,7 +735,7 @@ namespace OpenEmpires
 
             // Resolve rally target position and color once
             Vector3 rallyPos = buildingData.RallyPoint.ToVector3();
-            bool isGreen = buildingData.RallyPointOnResource || buildingData.RallyPointOnConstruction;
+            bool isResourceRally = buildingData.RallyPointOnResource || buildingData.RallyPointOnConstruction;
             if (showRally && buildingData.RallyPointUnitId >= 0)
             {
                 var sim = GameBootstrapper.Instance?.Simulation;
@@ -618,11 +745,16 @@ namespace OpenEmpires
                     if (targetUnit != null && targetUnit.State != UnitState.Dead)
                     {
                         rallyPos = targetUnit.SimPosition.ToVector3();
-                        if (targetUnit.IsSheep) isGreen = true;
+                        if (targetUnit.IsSheep) isResourceRally = true;
                     }
                 }
             }
-            Color rallyColor = isGreen ? Color.green : Color.white;
+            Color rallyColor = isResourceRally ? new Color(0.2f, 0.65f, 1f) : Color.white;
+            Vector3 groundRallyPos = rallyPos;
+            if (cachedMapData != null)
+                groundRallyPos.y = cachedMapData.SampleHeight(groundRallyPos.x, groundRallyPos.z) * cachedHeightScale + 0.04f;
+            else
+                groundRallyPos.y = 0.04f;
 
             if (rallyLine != null)
             {
@@ -634,30 +766,49 @@ namespace OpenEmpires
                     SetMaterialColor(rallyLine.material, rallyColor);
 
                     Vector3 buildingPos = transform.position + Vector3.up * 0.5f;
-                    Vector3 lineEnd = rallyPos;
-                    if (cachedMapData != null)
-                        lineEnd.y = cachedMapData.SampleHeight(lineEnd.x, lineEnd.z) * cachedHeightScale + 0.1f;
-                    else
-                        lineEnd.y = 0.1f;
+                    Vector3 lineEnd = groundRallyPos + Vector3.up * 0.06f;
                     rallyLine.SetPosition(0, buildingPos);
                     rallyLine.SetPosition(1, lineEnd);
                 }
             }
 
-            if (rallyDot != null)
+            if (rallyFlag != null)
             {
-                rallyDot.SetActive(showRally);
                 if (showRally)
                 {
-                    SetMaterialColor(rallyDot.GetComponent<Renderer>().material, rallyColor);
-                    Vector3 dotPos = rallyPos;
-                    if (cachedMapData != null)
-                        dotPos.y = cachedMapData.SampleHeight(dotPos.x, dotPos.z) * cachedHeightScale + 0.2f;
-                    else
-                        dotPos.y = 0.2f;
-                    rallyDot.transform.position = dotPos;
+                    bool replayDrop = RallyFlagTargetChanged();
+                    rallyFlag.SetLandingPosition(groundRallyPos, replayDrop);
+                    rallyFlag.SetMarkerColor(rallyColor);
                 }
+                rallyFlag.SetPersistentVisible(showRally);
             }
+
+            if (showRally)
+                RememberRallyFlagTarget();
+            else if (!buildingData.HasRallyPoint)
+                hasLastRallyFlagTarget = false;
+        }
+
+        private bool RallyFlagTargetChanged()
+        {
+            return !hasLastRallyFlagTarget
+                || lastRallyFlagPoint != buildingData.RallyPoint
+                || lastRallyFlagUnitId != buildingData.RallyPointUnitId
+                || lastRallyFlagOnResource != buildingData.RallyPointOnResource
+                || lastRallyFlagResourceType != buildingData.RallyPointResourceType
+                || lastRallyFlagOnConstruction != buildingData.RallyPointOnConstruction
+                || lastRallyFlagConstructionBuildingId != buildingData.RallyPointConstructionBuildingId;
+        }
+
+        private void RememberRallyFlagTarget()
+        {
+            hasLastRallyFlagTarget = true;
+            lastRallyFlagPoint = buildingData.RallyPoint;
+            lastRallyFlagUnitId = buildingData.RallyPointUnitId;
+            lastRallyFlagOnResource = buildingData.RallyPointOnResource;
+            lastRallyFlagResourceType = buildingData.RallyPointResourceType;
+            lastRallyFlagOnConstruction = buildingData.RallyPointOnConstruction;
+            lastRallyFlagConstructionBuildingId = buildingData.RallyPointConstructionBuildingId;
         }
 
         public void FlashCommandConfirm()
@@ -673,6 +824,35 @@ namespace OpenEmpires
         }
 
         public void ClearBuildingData() { buildingData = null; }
+
+        /// <summary>
+        /// Landmarks with a healing aura (the Abbey of Kings) get a dormant golden dust ring
+        /// that pulses when their heal actually lands. Cosmetic only — the heal itself is
+        /// driven by UnitHealingSystem.
+        /// </summary>
+        private void CreateHealAuraVisual()
+        {
+            if (buildingData == null || IsDestroyed) return;
+            if (buildingData.IsUnderConstruction) return;
+            if (buildingData.Type != BuildingType.Landmark) return;
+            if (!LandmarkDefinitions.Get(buildingData.LandmarkId).HasHealingAura) return;
+
+            var config = GameBootstrapper.Instance?.Simulation?.Config;
+            if (config == null) return;
+
+            HealAuraVisual.Attach(transform, config.AbbeyOfKingsHealRange, new Color(1f, 0.84f, 0.38f));
+        }
+
+        public void PulseHealAuraVisual(float radius)
+        {
+            if (buildingData == null || IsDestroyed) return;
+            if (buildingData.IsUnderConstruction) return;
+            if (buildingData.Type != BuildingType.Landmark) return;
+            if (!LandmarkDefinitions.Get(buildingData.LandmarkId).HasHealingAura) return;
+
+            var visual = HealAuraVisual.Attach(transform, radius, new Color(1f, 0.84f, 0.38f));
+            visual?.Pulse();
+        }
 
         public void SetGhostMode(bool ghost)
         {
@@ -832,12 +1012,11 @@ namespace OpenEmpires
             var sim = GameBootstrapper.Instance?.Simulation;
             if (sim == null) return false;
             int radius = sim.Config.MillInfluenceRadius;
-            BuildingType influenceType = sim.GetInfluenceBuildingType(PlayerId);
             var buildings = sim.BuildingRegistry.GetAllBuildings();
             for (int i = 0; i < buildings.Count; i++)
             {
                 var b = buildings[i];
-                if (b.Type != influenceType) continue;
+                if (!sim.IsInfluenceBuildingType(PlayerId, b.Type)) continue;
                 if (b.PlayerId != PlayerId) continue;
                 if (b.IsDestroyed) continue;
                 int minX = b.OriginTileX - radius;
@@ -860,23 +1039,6 @@ namespace OpenEmpires
         {
             if (isGate)
             {
-                // Auto-pick sprite prefix if not yet set (covers wall→gate conversions
-                // where the SpawnBuilding code path doesn't run).
-                // Palisade gates are universal (no civ variation). Stone gates are civ-keyed.
-                if (string.IsNullOrEmpty(gateSpritePrefix))
-                {
-                    if (BuildingType == BuildingType.Wall)
-                    {
-                        gateSpritePrefix = "Palisadegate";
-                    }
-                    else
-                    {
-                        var sim = GameBootstrapper.Instance?.Simulation;
-                        if (sim != null && sim.GetPlayerCivilization(PlayerId) == Civilization.English)
-                            gateSpritePrefix = "Englishgate";
-                    }
-                }
-
                 // Hide wall geometry container
                 if (wallGeometry != null) wallGeometry.gameObject.SetActive(false);
                 if (palisadeSpriteQuad != null) palisadeSpriteQuad.SetActive(false);
@@ -889,15 +1051,18 @@ namespace OpenEmpires
                     gateContainer.transform.localPosition = Vector3.zero;
                 }
 
-                if (!string.IsNullOrEmpty(gateSpritePrefix))
+                // All wall-family gates (wood + stone) render an orientation-aware billboard
+                // sprite from WallGateSpriteRegistry. Procedural cubes remain only as a
+                // fallback for any non-wall gate type that has no sprite art.
+                if (IsWoodGateFamily(BuildingType) || IsStoneGateFamily(BuildingType))
                     EnsureGateSpriteQuad();
                 else
                     EnsureGateProceduralParts(mat);
 
-                // Orient opening toward the side without adjacent walls
+                // Orient opening toward the side without adjacent walls (procedural parts only;
+                // the billboard sprite picks orientation per-sprite from the registry).
                 float rotation = ComputeGateRotation();
                 gateContainer.transform.localRotation = Quaternion.Euler(0f, rotation, 0f);
-                gateLastRotation = rotation;
 
                 if (gateSpriteRenderer != null)
                     UpdateGateTexture();
@@ -953,11 +1118,10 @@ namespace OpenEmpires
             gateSpriteQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
             gateSpriteQuad.name = "Sprite";
             gateSpriteQuad.transform.SetParent(gateContainer.transform, false);
-            // Palisade gates use the same quad scale/Y-offset as palisade walls so the gate
-            // foot lines up with the wall foot on adjacent tiles. Civ gates (Englishgate)
-            // keep the original 2.5/1.25 sizing.
-            float gateScale = (BuildingType == BuildingType.Wall) ? PalisadeSpriteScale : 2.5f;
-            float gateY     = (BuildingType == BuildingType.Wall) ? PalisadeSpriteScale * PalisadeSpriteYOffsetRatio : 1.25f;
+            // Initial scale/Y from the gate's family base size; ApplyGateSprite refines it
+            // per-sprite (flip / scale multiplier / vertical nudge) once the texture loads.
+            float gateScale = GateBaseScale;
+            float gateY     = gateScale * PalisadeSpriteYOffsetRatio;
             gateSpriteQuad.transform.localPosition = new Vector3(0f, gateY, 0f);
             gateSpriteQuad.transform.localScale = new Vector3(gateScale, gateScale, 1f);
             gateSpriteQuad.layer = 11;
@@ -967,53 +1131,51 @@ namespace OpenEmpires
             gateSpriteRenderer = gateSpriteQuad.GetComponent<Renderer>();
             var spriteMat = new Material(shader);
             spriteMat.SetColor("_Color", Color.white);
-            if (spriteMat.HasProperty("_Cutoff")) spriteMat.SetFloat("_Cutoff", 0.5f);
+            // Low alpha cutoff so the sprites' baked semi-transparent drop shadows aren't clipped
+            // (a 0.5 cutoff erased soft shadows such as PalisadegateFrontB's). Matches the
+            // shadowed-building convention used in GameSetup.
+            if (spriteMat.HasProperty("_Cutoff")) spriteMat.SetFloat("_Cutoff", 0.05f);
             spriteMat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry + 1;
             gateSpriteRenderer.sharedMaterial = spriteMat;
         }
 
         private void UpdateGateTexture()
         {
-            if (gateSpriteRenderer == null || string.IsNullOrEmpty(gateSpritePrefix)) return;
+            if (gateSpriteRenderer == null) return;
 
-            // Palisade gates: pick the sprite from WallGateSpriteRegistry using the
-            // current neighbor-derived WallSegmentKind. Handles 4 orientations (2 cardinal
-            // axes + 2 diagonal axes) × open/closed, all with matching UV crop.
-            if (BuildingType == BuildingType.Wall)
-            {
-                var sim = GameBootstrapper.Instance?.Simulation;
-                if (sim == null) return;
-                var mask = SampleWallNeighbors(sim.MapData, sim.BuildingRegistry, OriginTileX, OriginTileZ);
-                var kind = WallSegmentClassifier.Classify(mask);
-                if (WallGateSpriteRegistry.TryLookup(BuildingType.Wall, kind, gateIsOpen, out var sel))
-                {
-                    var tex = WallSpriteRegistry.LoadTexture(sel.ResourceName);
-                    if (tex != null)
-                    {
-                        gateSpriteRenderer.material.SetTexture("_MainTex", tex);
-                        gateSpriteRenderer.material.mainTextureScale = sel.UvScale;
-                        gateSpriteRenderer.material.mainTextureOffset = sel.UvOffset;
-                    }
-                }
-                return;
-            }
-
-            // Civ gates (Englishgate, future stone gates): rotation-based 2-state mapping.
-            bool sideways = gateLastRotation > 45f;
-            string state;
-            if (sideways)
-                state = gateIsOpen ? "_Side_Opened" : "_Side";
-            else
-                state = gateIsOpen ? "_front_opened" : "_front";
-
-            var civTex = Resources.Load<Texture2D>($"BuildingSprites/{gateSpritePrefix}{state}");
-            if (civTex != null)
-                gateSpriteRenderer.material.SetTexture("_MainTex", civTex);
+            // Every wall-family gate (wood + stone) picks its sprite from
+            // WallGateSpriteRegistry using the current neighbor-derived WallSegmentKind.
+            // Handles 4 orientations (2 cardinal axes + 2 diagonal axes) × open/closed.
+            var sim = GameBootstrapper.Instance?.Simulation;
+            if (sim == null) return;
+            var mask = SampleWallNeighbors(sim.MapData, sim.BuildingRegistry, OriginTileX, OriginTileZ);
+            var kind = WallSegmentClassifier.Classify(mask);
+            if (WallGateSpriteRegistry.TryLookup(BuildingType, kind, gateIsOpen, out var sel))
+                ApplyGateSprite(sel);
         }
 
-        public void SetGateSpriteCiv(string prefix)
+        // Applies a registry selection to the gate billboard quad — same transform handling
+        // as ApplyPalisadeSprite (UV crop, flip, rotation, per-sprite scale + Y nudge) but
+        // sized from the gate's family base scale instead of the wall-body scale.
+        private void ApplyGateSprite(WallSpriteSelection sel)
         {
-            gateSpritePrefix = prefix;
+            if (gateSpriteRenderer == null) return;
+
+            var tex = WallSpriteRegistry.LoadTexture(sel.ResourceName);
+            if (tex == null) return;
+            gateSpriteRenderer.material.SetTexture("_MainTex", tex);
+            gateSpriteRenderer.material.mainTextureScale = sel.UvScale;
+            gateSpriteRenderer.material.mainTextureOffset = sel.UvOffset;
+
+            if (gateSpriteQuad == null) return;
+            float baseScale = GateBaseScale;
+            float effectiveScale = baseScale * sel.ScaleMultiplier;
+            float sx = sel.FlipX ? -effectiveScale : effectiveScale;
+            gateSpriteQuad.transform.localScale = new Vector3(sx, effectiveScale, 1f);
+            gateSpriteQuad.transform.localEulerAngles = new Vector3(0f, 0f, sel.RotationDegrees);
+            // Per-sprite local position (towers tuned to land over the two absorbed neighbor tiles).
+            float targetY = baseScale * PalisadeSpriteYOffsetRatio + sel.WorldYOffset;
+            gateSpriteQuad.transform.localPosition = new Vector3(sel.LocalPosX, targetY, sel.LocalPosZ);
         }
 
         public void SetGateOpen(bool open)
@@ -1021,6 +1183,57 @@ namespace OpenEmpires
             if (gateIsOpen == open) return;
             gateIsOpen = open;
             UpdateGateTexture();
+        }
+
+        // Hide/show this wall's own body sprite when it's absorbed into an adjacent gate's
+        // 3-tile span. Driven from UpdateWallConnections (pull model) so it self-heals whenever
+        // a neighbor gate is placed, toggled, or destroyed.
+        public void SetCovered(bool covered)
+        {
+            if (isCovered == covered) return;
+            isCovered = covered;
+            if (palisadeSpriteQuad != null)
+                palisadeSpriteQuad.SetActive(!covered);
+        }
+
+        // Shows the open sprite while any unit stands on the gate's tile, then holds it open
+        // for GateOpenHoldDuration after the last unit leaves. The hold timer is refreshed
+        // every frame a unit is present, so it only counts down once the doorway is clear.
+        private void UpdateGateOpenState()
+        {
+            var sim = GameBootstrapper.Instance?.Simulation;
+            if (sim == null) return;
+
+            // The passage spans the gate tile plus the two collinear neighbors it absorbs, so a
+            // unit on any of the three opens the gate. Query a 2-tile radius to cover them.
+            bool hasPair = WallSegmentClassifier.TryGetCollinearWallPair(
+                sim.MapData, sim.BuildingRegistry, OriginTileX, OriginTileZ, PlayerId,
+                out var pairA, out var pairB);
+
+            bool unitOnTile = false;
+            var nearby = sim.GetUnitsNear(buildingData.SimPosition, Fixed32.FromInt(2));
+            for (int i = 0; i < nearby.Count; i++)
+            {
+                var u = nearby[i];
+                if (u.State == UnitState.Dead) continue;
+                var tile = sim.MapData.WorldToTile(u.SimPosition);
+                int rx = tile.x - OriginTileX;
+                int rz = tile.y - OriginTileZ;
+                bool onCenter = rx == 0 && rz == 0;
+                bool onPair = hasPair && ((rx == pairA.x && rz == pairA.y) || (rx == pairB.x && rz == pairB.y));
+                if (onCenter || onPair)
+                {
+                    unitOnTile = true;
+                    break;
+                }
+            }
+
+            if (unitOnTile)
+                gateOpenTimer = GateOpenHoldDuration; // reset on every pass-through
+            else if (gateOpenTimer > 0f)
+                gateOpenTimer -= Time.deltaTime;
+
+            SetGateOpen(gateOpenTimer > 0f);
         }
 
         private GameObject CreateGatePart(string partName, Vector3 localPos, Vector3 localScale, Material mat)
@@ -1081,6 +1294,20 @@ namespace OpenEmpires
             return t == BuildingType.Wall || t == BuildingType.StoneWall;
         }
 
+        // Gate-art families: wood (palisade) gates vs stone (English) gates. The Wall/StoneWall
+        // types reach these when converted to a gate; WoodGate/StoneGate are the standalone
+        // gate building types. Both families render via WallGateSpriteRegistry.
+        private static bool IsWoodGateFamily(BuildingType t)
+            => t == BuildingType.Wall || t == BuildingType.WoodGate;
+        private static bool IsStoneGateFamily(BuildingType t)
+            => t == BuildingType.StoneWall || t == BuildingType.StoneGate;
+
+        // Base quad scale for this building's gate sprite, by family.
+        private float GateBaseScale
+            => IsWoodGateFamily(BuildingType) ? WoodGateSpriteScale
+             : IsStoneGateFamily(BuildingType) ? StoneGateSpriteScale
+             : 2.5f;
+
         private static WallNeighborMask SampleWallNeighbors(MapData map, BuildingRegistry reg, int tx, int tz)
         {
             WallNeighborMask m = WallNeighborMask.None;
@@ -1095,6 +1322,26 @@ namespace OpenEmpires
             return m;
         }
 
+        // True when (tx, tz) is impassable terrain, contains a non-wall building/resource,
+        // or sits in the Foundation border around a non-wall building (1-tile clearance ring
+        // around TCs, Houses, Mills, etc. — walls placed adjacent to those buildings have
+        // this Foundation tile between them and the building's actual Building tile).
+        // Walls don't count — they're handled by the wall-neighbor mask.
+        // Out-of-bounds counts as obstacle so walls placed at the map edge get capped.
+        private static bool IsObstacleNonWall(MapData map, BuildingRegistry reg, int tx, int tz)
+        {
+            if (tx < 0 || tx >= map.Width || tz < 0 || tz >= map.Height) return true;
+            if (map.IsWallTile(tx, tz, reg)) return false;
+            // Direct building occupancy — catches Farms (walkable but a building) and
+            // any non-wall building tile.
+            var b = map.GetBuildingAt(tx, tz, reg);
+            if (b != null && !b.IsDestroyed && !IsWallFamily(b.Type)) return true;
+            // Foundation tiles only ever exist as a 1-tile border around non-wall buildings.
+            if (map.Tiles[tx, tz] == TileType.Foundation) return true;
+            // Impassable terrain (Rock, Cliff, Water, River, dense forest, holeMap, etc.).
+            return !map.IsWalkable(tx, tz);
+        }
+
         // Resets the dirty flag so the next LateUpdate re-runs classification.
         // Safe to call multiple times per frame — flag flip is idempotent.
         public void InvalidateWallConnections()
@@ -1102,8 +1349,10 @@ namespace OpenEmpires
             wallConnectionsUpdated = false;
         }
 
-        // Invalidate the 8 neighbors of a wall tile so they re-classify on the next frame.
-        // Call after a wall is placed, destroyed, or toggled to/from a gate.
+        // Invalidate nearby wall tiles so they re-classify on the next frame. Call after a wall is
+        // placed, destroyed, or toggled to/from a gate. Radius is 2: crossing-aware classification
+        // makes a tile's sprite depend on whether a neighbor is a crossing center, which in turn
+        // depends on tiles two steps away — so a 1-ring refresh would leave hugging tiles stale.
         public static void InvalidateNeighborWallViews(int tx, int tz)
         {
             var sim = GameBootstrapper.Instance?.Simulation;
@@ -1112,9 +1361,9 @@ namespace OpenEmpires
             var reg = sim.BuildingRegistry;
             if (map == null || reg == null) return;
 
-            for (int dz = -1; dz <= 1; dz++)
+            for (int dz = -2; dz <= 2; dz++)
             {
-                for (int dx = -1; dx <= 1; dx++)
+                for (int dx = -2; dx <= 2; dx++)
                 {
                     if (dx == 0 && dz == 0) continue;
                     var nb = map.GetBuildingAt(tx + dx, tz + dz, reg);
@@ -1140,7 +1389,9 @@ namespace OpenEmpires
             var reg = sim.BuildingRegistry;
 
             WallNeighborMask mask = SampleWallNeighbors(map, reg, tx, tz);
-            WallSegmentKind kind = WallSegmentClassifier.Classify(mask);
+            // Crossing-aware: a straight-through X collapses to one central post, with the four
+            // hugging tiles rendering as their straight run. Other shapes use the per-tile rules.
+            WallSegmentKind kind = WallSegmentClassifier.ClassifyAt(map, reg, tx, tz);
 
             bool hasN  = (mask & WallNeighborMask.N)  != 0;
             bool hasS  = (mask & WallNeighborMask.S)  != 0;
@@ -1150,6 +1401,19 @@ namespace OpenEmpires
             bool hasNW = (mask & WallNeighborMask.NW) != 0;
             bool hasSE = (mask & WallNeighborMask.SE) != 0;
             bool hasSW = (mask & WallNeighborMask.SW) != 0;
+
+            // Any wall whose cardinal neighbor is impassable terrain or a non-wall building
+            // becomes a tower (Junction sprite). This is the wall tile that "makes contact"
+            // with the obstacle — caps tree lines, mountains, water, buildings, etc.
+            if (kind != WallSegmentKind.Junction && kind != WallSegmentKind.Isolated)
+            {
+                bool nObs = !hasN && IsObstacleNonWall(map, reg, tx,     tz + 1);
+                bool sObs = !hasS && IsObstacleNonWall(map, reg, tx,     tz - 1);
+                bool eObs = !hasE && IsObstacleNonWall(map, reg, tx + 1, tz);
+                bool wObs = !hasW && IsObstacleNonWall(map, reg, tx - 1, tz);
+                if (nObs || sObs || eObs || wObs)
+                    kind = WallSegmentKind.Junction;
+            }
 
             // Hide merlons at corners that connect to any neighbor (stone walls only — palisade has merlons hidden up-front)
             Transform mNxNz = wallGeometry.Find("Merlon_NxNz");
@@ -1211,17 +1475,22 @@ namespace OpenEmpires
                 }
             }
 
-            // Palisade sprite — registry lookup. If this wall is currently a gate, the
-            // sprite is hidden; refresh the gate sprite instead so it picks up
-            // the orientation change.
-            if (UsesSpriteWallBody(BuildingType))
+            // If this wall is currently a gate, the wall-body sprite is hidden; refresh the
+            // gate sprite instead so it picks up the orientation change. Otherwise: if this wall
+            // is absorbed into an adjacent owner gate's span, hide its body (the gate sprite
+            // covers it); else show + refresh the wall-body sprite (sprite-bodied wall types).
+            if (buildingData != null && buildingData.IsGate)
             {
-                if (buildingData != null && buildingData.IsGate)
-                {
-                    if (gateSpriteRenderer != null)
-                        UpdateGateTexture();
-                }
-                else if (WallSpriteRegistry.TryLookup(BuildingType, kind, out var sel))
+                if (gateSpriteRenderer != null)
+                    UpdateGateTexture();
+            }
+            else
+            {
+                bool covered = UsesSpriteWallBody(BuildingType)
+                    && WallSegmentClassifier.TryGetAbsorbingGate(map, reg, tx, tz, out _);
+                SetCovered(covered);
+                if (!covered && UsesSpriteWallBody(BuildingType)
+                    && WallSpriteRegistry.TryLookup(BuildingType, kind, out var sel))
                 {
                     ApplyPalisadeSprite(sel);
                 }
@@ -1250,7 +1519,9 @@ namespace OpenEmpires
             palisadeSpriteRenderer = palisadeSpriteQuad.GetComponent<Renderer>();
             var spriteMat = new Material(shader);
             spriteMat.SetColor("_Color", Color.white);
-            if (spriteMat.HasProperty("_Cutoff")) spriteMat.SetFloat("_Cutoff", 0.5f);
+            // Low alpha cutoff so the wall sprites' baked semi-transparent drop shadows aren't
+            // clipped (matches the gate sprites and the shadowed-building convention in GameSetup).
+            if (spriteMat.HasProperty("_Cutoff")) spriteMat.SetFloat("_Cutoff", 0.05f);
             spriteMat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry + 1;
             palisadeSpriteRenderer.sharedMaterial = spriteMat;
 
@@ -1334,6 +1605,7 @@ namespace OpenEmpires
 
             // Health bar background
             var bgGO = new GameObject("Background");
+            healthBarBackgroundGO = bgGO;
             bgGO.transform.SetParent(rootGO.transform, false);
             var bgRT = bgGO.AddComponent<RectTransform>();
             bgRT.anchorMin = Vector2.zero;
@@ -1535,7 +1807,10 @@ namespace OpenEmpires
                 return;
             }
 
-            bool damaged = buildingData.CurrentHealth < buildingData.MaxHealth;
+            bool recentlyDamaged = healthBarDamageTimer > 0f;
+            if (healthBarDamageTimer > 0f)
+                healthBarDamageTimer -= Time.deltaTime;
+
             bool training = buildingData.IsTraining;
             // Reuse the upgrade-bar widget for both Tower upgrades AND research progress
             // (Blacksmith / University). Single visual, two underlying systems.
@@ -1563,7 +1838,12 @@ namespace OpenEmpires
             }
 
             bool showInfluence = cachedInInfluence || externalInfluenceMark;
-            if (!isSelected && !damaged && !buildingData.IsUnderConstruction && !training && !upgrading && !showInfluence)
+            bool showHealthBar = isHovered || recentlyDamaged || buildingData.IsUnderConstruction;
+            // Farms keep their existing tint/hover behavior; producers can show the "+" buff icon
+            // without forcing their HP strip to stay on-screen.
+            bool showInfluenceOverlay = showInfluence && buildingData.Type != BuildingType.Farm;
+            bool showOverlay = showHealthBar || training || upgrading || showInfluenceOverlay;
+            if (!showOverlay)
             {
                 if (overlayRoot != null && overlayRoot.gameObject.activeSelf)
                     overlayRoot.gameObject.SetActive(false);
@@ -1587,12 +1867,19 @@ namespace OpenEmpires
 
             overlayRoot.position = new Vector3(screenPos.x, screenPos.y, 0f);
 
-            // Health fill
-            float fraction = buildingData.IsUnderConstruction
-                ? Mathf.Clamp01(buildingData.ConstructionProgress)
-                : Mathf.Clamp01((float)buildingData.CurrentHealth / buildingData.MaxHealth);
-            healthBarFillRT.anchorMax = new Vector2(fraction, 1f);
-            healthBarFill.color = Color.Lerp(HealthColorEmpty, HealthColorFull, fraction);
+            if (healthBarBackgroundGO != null && healthBarBackgroundGO.activeSelf != showHealthBar)
+                healthBarBackgroundGO.SetActive(showHealthBar);
+            if (healthBarFill != null && healthBarFill.gameObject.activeSelf != showHealthBar)
+                healthBarFill.gameObject.SetActive(showHealthBar);
+
+            if (showHealthBar)
+            {
+                float fraction = buildingData.IsUnderConstruction
+                    ? Mathf.Clamp01(buildingData.ConstructionProgress)
+                    : Mathf.Clamp01((float)buildingData.CurrentHealth / buildingData.MaxHealth);
+                healthBarFillRT.anchorMax = new Vector2(fraction, 1f);
+                healthBarFill.color = Color.Lerp(HealthColorEmpty, HealthColorFull, fraction);
+            }
 
             // Training queue
             if (training)
@@ -1764,16 +2051,20 @@ namespace OpenEmpires
                 selectionRing.SetActive(preselected);
         }
 
+        public void SetHovered(bool hovered)
+        {
+            isHovered = hovered;
+        }
+
         public void OnDestroyed()
         {
             if (IsDestroyed) return;
             IsDestroyed = true;
 
             if (IsWallFamily(BuildingType))
-            {
                 wallViewsById.Remove(BuildingId);
-                InvalidateNeighborWallViews(OriginTileX, OriginTileZ);
-            }
+            // Any building destruction may un-cap adjacent walls (lose obstacle neighbor).
+            InvalidateNeighborWallViews(OriginTileX, OriginTileZ);
 
             if (overlayRoot != null)
                 overlayRoot.gameObject.SetActive(false);

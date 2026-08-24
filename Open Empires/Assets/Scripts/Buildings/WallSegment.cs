@@ -78,6 +78,177 @@ namespace OpenEmpires
 
             return WallSegmentKind.Isolated;
         }
+
+        // ----- Junction hubs (crossings AND touch-junctions) ---------------------------------
+        // Where straight wall runs of two or more orientations MEET at a tile — whether they pass
+        // straight through (an X) or one merely touches the side of another (a T / Y / branch) —
+        // that tile becomes a single post (hub) and the tiles hugging it render as their straight
+        // run instead of each growing a post. ClassifyAt() applies this; Classify() is the
+        // fallback for ordinary shapes.
+
+        public static WallNeighborMask SampleNeighbors(MapData map, BuildingRegistry reg, int tx, int tz)
+        {
+            WallNeighborMask m = WallNeighborMask.None;
+            if (map.IsWallTile(tx,     tz + 1, reg)) m |= WallNeighborMask.N;
+            if (map.IsWallTile(tx,     tz - 1, reg)) m |= WallNeighborMask.S;
+            if (map.IsWallTile(tx + 1, tz,     reg)) m |= WallNeighborMask.E;
+            if (map.IsWallTile(tx - 1, tz,     reg)) m |= WallNeighborMask.W;
+            if (map.IsWallTile(tx + 1, tz + 1, reg)) m |= WallNeighborMask.NE;
+            if (map.IsWallTile(tx - 1, tz + 1, reg)) m |= WallNeighborMask.NW;
+            if (map.IsWallTile(tx + 1, tz - 1, reg)) m |= WallNeighborMask.SE;
+            if (map.IsWallTile(tx - 1, tz - 1, reg)) m |= WallNeighborMask.SW;
+            return m;
+        }
+
+        // The run orientation a neighbor offset lies on.
+        private static WallSegmentKind AxisOfDir(int dx, int dz)
+        {
+            if (dx == 0) return WallSegmentKind.CardinalNS;       // (0,±1)
+            if (dz == 0) return WallSegmentKind.CardinalEW;       // (±1,0)
+            if (dx == dz) return WallSegmentKind.DiagonalNESW;    // (1,1)/(-1,-1)
+            return WallSegmentKind.DiagonalNWSE;                  // (1,-1)/(-1,1)
+        }
+
+        // Is a straight run of the given orientation connected to tile (cx,cz)? True when the wall
+        // passes straight through (opposite neighbors) OR a genuine arm of that orientation leaves
+        // the tile — a neighbor whose own run continues one step further out (so it's a real run,
+        // not an incidental diagonal touch).
+        private static bool RunConnected(MapData map, BuildingRegistry reg, int cx, int cz,
+            WallNeighborMask m, WallSegmentKind axis)
+        {
+            switch (axis)
+            {
+                case WallSegmentKind.CardinalNS:
+                    return ((m & WallNeighborMask.N) != 0 && (m & WallNeighborMask.S) != 0)
+                        || ((m & WallNeighborMask.N) != 0 && map.IsWallTile(cx, cz + 2, reg))
+                        || ((m & WallNeighborMask.S) != 0 && map.IsWallTile(cx, cz - 2, reg));
+                case WallSegmentKind.CardinalEW:
+                    return ((m & WallNeighborMask.E) != 0 && (m & WallNeighborMask.W) != 0)
+                        || ((m & WallNeighborMask.E) != 0 && map.IsWallTile(cx + 2, cz, reg))
+                        || ((m & WallNeighborMask.W) != 0 && map.IsWallTile(cx - 2, cz, reg));
+                case WallSegmentKind.DiagonalNESW:
+                    return ((m & WallNeighborMask.NE) != 0 && (m & WallNeighborMask.SW) != 0)
+                        || ((m & WallNeighborMask.NE) != 0 && map.IsWallTile(cx + 2, cz + 2, reg))
+                        || ((m & WallNeighborMask.SW) != 0 && map.IsWallTile(cx - 2, cz - 2, reg));
+                case WallSegmentKind.DiagonalNWSE:
+                    return ((m & WallNeighborMask.NW) != 0 && (m & WallNeighborMask.SE) != 0)
+                        || ((m & WallNeighborMask.NW) != 0 && map.IsWallTile(cx - 2, cz + 2, reg))
+                        || ((m & WallNeighborMask.SE) != 0 && map.IsWallTile(cx + 2, cz - 2, reg));
+                default: return false;
+            }
+        }
+
+        // A hub is a tile where straight runs of two or more distinct orientations meet.
+        public static bool IsHub(MapData map, BuildingRegistry reg, int cx, int cz)
+        {
+            var m = SampleNeighbors(map, reg, cx, cz);
+            int axes = 0;
+            if (RunConnected(map, reg, cx, cz, m, WallSegmentKind.CardinalNS))   axes++;
+            if (RunConnected(map, reg, cx, cz, m, WallSegmentKind.CardinalEW))   axes++;
+            if (RunConnected(map, reg, cx, cz, m, WallSegmentKind.DiagonalNESW)) axes++;
+            if (RunConnected(map, reg, cx, cz, m, WallSegmentKind.DiagonalNWSE)) axes++;
+            return axes >= 2;
+        }
+
+        private static readonly (int dx, int dz)[] EightDirs =
+        {
+            (0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (-1, -1), (-1, 1), (1, -1),
+        };
+
+        // Hub-aware classification: a hub collapses to one post; a tile hugging a hub along one of
+        // that hub's runs renders as that run; everything else uses the per-tile Classify().
+        public static WallSegmentKind ClassifyAt(MapData map, BuildingRegistry reg, int tx, int tz)
+        {
+            var mask = SampleNeighbors(map, reg, tx, tz);
+            if (IsHub(map, reg, tx, tz)) return WallSegmentKind.Junction;
+
+            for (int i = 0; i < EightDirs.Length; i++)
+            {
+                int dx = EightDirs[i].dx, dz = EightDirs[i].dz;   // offset from this tile to the hub
+                int cx = tx + dx, cz = tz + dz;
+                if (!map.IsWallTile(cx, cz, reg)) continue;
+                if (!IsHub(map, reg, cx, cz)) continue;
+                // This tile lies on the run leaving the hub in the (-dx,-dz) direction; render it
+                // as that run only if the hub is actually connected along it.
+                var axis = AxisOfDir(-dx, -dz);
+                var hubMask = SampleNeighbors(map, reg, cx, cz);
+                if (RunConnected(map, reg, cx, cz, hubMask, axis))
+                    return axis;
+            }
+            return Classify(mask);
+        }
+
+        // Straight-run axes in priority order, each as the two opposite tile offsets:
+        // E/W, N/S, NE/SW, NW/SE. Convention matches WallNeighborMask (E=+x, N=+z).
+        private static readonly Vector2Int[] PairOffsetsA =
+            { new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(1, 1), new Vector2Int(-1, 1) };
+        private static readonly Vector2Int[] PairOffsetsB =
+            { new Vector2Int(-1, 0), new Vector2Int(0, -1), new Vector2Int(-1, -1), new Vector2Int(1, -1) };
+
+        // A wall-family tile owned by playerId that is NOT currently a gate — i.e. a plain wall
+        // segment a neighboring gate can absorb into its 3-tile span.
+        private static bool IsOwnerPlainWall(MapData map, BuildingRegistry reg, int x, int z, int playerId)
+        {
+            var b = map.GetBuildingAt(x, z, reg);
+            return b != null && !b.IsGate && b.PlayerId == playerId
+                && (b.Type == BuildingType.Wall || b.Type == BuildingType.StoneWall
+                    || b.Type == BuildingType.WoodGate || b.Type == BuildingType.StoneGate);
+        }
+
+        // True if (tx,tz) has owner plain-wall neighbors on BOTH ends of one straight axis,
+        // outputting that axis's two tile offsets. This is the gate-eligibility test (a wall may
+        // become a gate only mid-run) and defines the two tiles a gate absorbs. When several axes
+        // qualify (junction/cross), the priority order above picks one.
+        public static bool TryGetCollinearWallPair(MapData map, BuildingRegistry reg,
+            int tx, int tz, int playerId, out Vector2Int offsetA, out Vector2Int offsetB)
+        {
+            for (int i = 0; i < PairOffsetsA.Length; i++)
+            {
+                var a = PairOffsetsA[i];
+                var b = PairOffsetsB[i];
+                if (IsOwnerPlainWall(map, reg, tx + a.x, tz + a.y, playerId)
+                 && IsOwnerPlainWall(map, reg, tx + b.x, tz + b.y, playerId))
+                {
+                    offsetA = a; offsetB = b;
+                    return true;
+                }
+            }
+            offsetA = default; offsetB = default;
+            return false;
+        }
+
+        // True if the plain-wall tile (x,z) is one of the two collinear neighbors absorbed by an
+        // adjacent gate owned by the SAME player (a gate only claims its own walls). Outputs that
+        // gate's owner so callers can apply owner-or-ally passability. Pure function of building
+        // data, so both the walkability check and the view can call it.
+        public static bool TryGetAbsorbingGate(MapData map, BuildingRegistry reg,
+            int x, int z, out int gateOwner)
+        {
+            gateOwner = -1;
+            var wall = map.GetBuildingAt(x, z, reg);
+            if (wall == null || wall.IsGate) return false;
+            if (wall.Type != BuildingType.Wall && wall.Type != BuildingType.StoneWall
+                && wall.Type != BuildingType.WoodGate && wall.Type != BuildingType.StoneGate) return false;
+
+            for (int dz = -1; dz <= 1; dz++)
+            for (int dx = -1; dx <= 1; dx++)
+            {
+                if (dx == 0 && dz == 0) continue;
+                var g = map.GetBuildingAt(x + dx, z + dz, reg);
+                if (g == null || !g.IsGate || g.PlayerId != wall.PlayerId) continue;
+                if (TryGetCollinearWallPair(map, reg, g.OriginTileX, g.OriginTileZ, g.PlayerId,
+                        out var a, out var b))
+                {
+                    if ((g.OriginTileX + a.x == x && g.OriginTileZ + a.y == z)
+                     || (g.OriginTileX + b.x == x && g.OriginTileZ + b.y == z))
+                    {
+                        gateOwner = g.PlayerId;
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
     }
 
     public readonly struct WallSpriteSelection
@@ -99,17 +270,25 @@ namespace OpenEmpires
         // Optional per-sprite scale multiplier applied to the quad's localScale.
         // 1.0 = same size as PalisadeSpriteScale, 0.9 = 10% smaller, etc.
         public readonly float ScaleMultiplier;
+        // Optional per-sprite local X/Z position of the gate billboard quad (relative to the gate
+        // container). Used by gates only (ApplyGateSprite) to nudge the art so its towers line up
+        // over the two absorbed neighbor tiles. Wall bodies ignore these.
+        public readonly float LocalPosX;
+        public readonly float LocalPosZ;
 
         public WallSpriteSelection(string resourceName, bool flipX = false, float rotationDegrees = 0f)
-            : this(resourceName, flipX, rotationDegrees, new Vector2(1f, 1f), new Vector2(0f, 0f), 0f, 1f) { }
+            : this(resourceName, flipX, rotationDegrees, new Vector2(1f, 1f), new Vector2(0f, 0f), 0f, 1f, 0f, 0f) { }
 
         public WallSpriteSelection(string resourceName, bool flipX, float rotationDegrees, Vector2 uvScale, Vector2 uvOffset)
-            : this(resourceName, flipX, rotationDegrees, uvScale, uvOffset, 0f, 1f) { }
+            : this(resourceName, flipX, rotationDegrees, uvScale, uvOffset, 0f, 1f, 0f, 0f) { }
 
         public WallSpriteSelection(string resourceName, bool flipX, float rotationDegrees, Vector2 uvScale, Vector2 uvOffset, float worldYOffset)
-            : this(resourceName, flipX, rotationDegrees, uvScale, uvOffset, worldYOffset, 1f) { }
+            : this(resourceName, flipX, rotationDegrees, uvScale, uvOffset, worldYOffset, 1f, 0f, 0f) { }
 
         public WallSpriteSelection(string resourceName, bool flipX, float rotationDegrees, Vector2 uvScale, Vector2 uvOffset, float worldYOffset, float scaleMultiplier)
+            : this(resourceName, flipX, rotationDegrees, uvScale, uvOffset, worldYOffset, scaleMultiplier, 0f, 0f) { }
+
+        public WallSpriteSelection(string resourceName, bool flipX, float rotationDegrees, Vector2 uvScale, Vector2 uvOffset, float worldYOffset, float scaleMultiplier, float localPosX, float localPosZ)
         {
             ResourceName = resourceName;
             FlipX = flipX;
@@ -118,6 +297,8 @@ namespace OpenEmpires
             UvOffset = uvOffset;
             WorldYOffset = worldYOffset;
             ScaleMultiplier = scaleMultiplier;
+            LocalPosX = localPosX;
+            LocalPosZ = localPosZ;
         }
     }
 
@@ -132,32 +313,69 @@ namespace OpenEmpires
         private static readonly Dictionary<(BuildingType, WallSegmentKind, bool), WallSpriteSelection> Map =
             new Dictionary<(BuildingType, WallSegmentKind, bool), WallSpriteSelection>
             {
+                // Per-orientation scale/position hand-tuned in-editor so each sprite's towers
+                // sit over the two absorbed neighbor tiles. Args after UV are:
+                // worldYOffset, scaleMultiplier (× WoodGateSpriteScale 5.82), localPosX, localPosZ.
+                // Open and closed share the same transform per orientation.
                 // Closed
                 { (BuildingType.Wall, WallSegmentKind.CardinalEW,    false),
-                    new WallSpriteSelection("Palisadegate90",       false, 0f, PalisadeUvScale, PalisadeUvOffset) },
+                    new WallSpriteSelection("Palisadegate90",       false, 0f, PalisadeUvScale, PalisadeUvOffset, 0f,       0.9469f, 0.02f,  -0.19f) },
                 { (BuildingType.Wall, WallSegmentKind.CardinalNS,    false),
-                    new WallSpriteSelection("Palisadegate90B",      false, 0f, PalisadeUvScale, PalisadeUvOffset) },
+                    new WallSpriteSelection("Palisadegate90B",      false, 0f, PalisadeUvScale, PalisadeUvOffset, -0.6214f, 0.8575f, -0.32f, -0.52f) },
                 { (BuildingType.Wall, WallSegmentKind.DiagonalNESW,  false),
-                    new WallSpriteSelection("PalisadegateFrontB",   false, 0f, PalisadeUvScale, PalisadeUvOffset) },
+                    new WallSpriteSelection("PalisadegateFrontB",   false, 0f, PalisadeUvScale, PalisadeUvOffset, 0f,       0.6970f, 0f,     0f) },
                 { (BuildingType.Wall, WallSegmentKind.DiagonalNWSE,  false),
-                    new WallSpriteSelection("PalisadegateFront",    false, 0f, PalisadeUvScale, PalisadeUvOffset) },
+                    new WallSpriteSelection("PalisadegateFront",    false, 0f, PalisadeUvScale, PalisadeUvOffset, -0.4514f, 0.7080f, -0.39f, -0.38f) },
                 // Open
                 { (BuildingType.Wall, WallSegmentKind.CardinalEW,    true),
-                    new WallSpriteSelection("Palisadegate90-open",       false, 0f, PalisadeUvScale, PalisadeUvOffset) },
+                    new WallSpriteSelection("Palisadegate90-open",       false, 0f, PalisadeUvScale, PalisadeUvOffset, 0f,       0.9469f, 0.02f,  -0.19f) },
                 { (BuildingType.Wall, WallSegmentKind.CardinalNS,    true),
-                    new WallSpriteSelection("Palisadegate90B-open",      false, 0f, PalisadeUvScale, PalisadeUvOffset) },
+                    new WallSpriteSelection("Palisadegate90B-open",      false, 0f, PalisadeUvScale, PalisadeUvOffset, -0.6214f, 0.8575f, -0.32f, -0.52f) },
                 { (BuildingType.Wall, WallSegmentKind.DiagonalNESW,  true),
-                    new WallSpriteSelection("PalisadegateFrontB-open",   false, 0f, PalisadeUvScale, PalisadeUvOffset) },
+                    new WallSpriteSelection("PalisadegateFrontB-open",   false, 0f, PalisadeUvScale, PalisadeUvOffset, 0f,       0.6970f, 0f,     0f) },
                 { (BuildingType.Wall, WallSegmentKind.DiagonalNWSE,  true),
-                    new WallSpriteSelection("PalisadegateFront-open",    false, 0f, PalisadeUvScale, PalisadeUvOffset) },
+                    new WallSpriteSelection("PalisadegateFront-open",    false, 0f, PalisadeUvScale, PalisadeUvOffset, -0.4514f, 0.7080f, -0.39f, -0.38f) },
+
+                // Stone (English) gates. Same orientation convention as the palisade gates:
+                // grid-cardinal walls read as the isometric "90d" views, grid-diagonal walls
+                // read as the flat "front"/"Side" views. Full-art UVs (no crop) for now —
+                // the English art has wide transparent margins, so cropping it like the
+                // palisade sprites would clip the tower tops. Tune later if overlap is wanted.
+                //
+                // The two cardinal axes map to the two isometric "90d" views: 90d_A runs along
+                // the "/" screen diagonal (= Palisadegate90 / CardinalEW), 90d_B runs along the
+                // "\" diagonal (= Palisadegate90B / CardinalNS).
+                // Closed
+                { (BuildingType.StoneWall, WallSegmentKind.CardinalEW,   false),
+                    new WallSpriteSelection("Englishgate_90d_A") },
+                { (BuildingType.StoneWall, WallSegmentKind.CardinalNS,   false),
+                    new WallSpriteSelection("Englishgate_90d_B") },
+                { (BuildingType.StoneWall, WallSegmentKind.DiagonalNWSE, false),
+                    new WallSpriteSelection("Englishgate_front") },
+                { (BuildingType.StoneWall, WallSegmentKind.DiagonalNESW, false),
+                    new WallSpriteSelection("Englishgate_Side") },
+                // Open
+                { (BuildingType.StoneWall, WallSegmentKind.CardinalEW,   true),
+                    new WallSpriteSelection("Englishgate_90d_A_Opened") },
+                { (BuildingType.StoneWall, WallSegmentKind.CardinalNS,   true),
+                    new WallSpriteSelection("Englishgate_90d_B_Opened") },
+                { (BuildingType.StoneWall, WallSegmentKind.DiagonalNWSE, true),
+                    new WallSpriteSelection("Englishgate_front_opened") },
+                { (BuildingType.StoneWall, WallSegmentKind.DiagonalNESW, true),
+                    new WallSpriteSelection("Englishgate_Side_Opened") },
             };
 
         public static bool TryLookup(BuildingType type, WallSegmentKind kind, bool isOpen, out WallSpriteSelection sel)
         {
-            if (Map.TryGetValue((type, kind, isOpen), out sel)) return true;
+            // The standalone WoodGate / StoneGate building types share gate art with their
+            // wall counterparts (Wall / StoneWall), so normalize before lookup.
+            BuildingType key = type == BuildingType.WoodGate ? BuildingType.Wall
+                             : type == BuildingType.StoneGate ? BuildingType.StoneWall
+                             : type;
+            if (Map.TryGetValue((key, kind, isOpen), out sel)) return true;
             // Junction/Isolated/etc. — fall back to CardinalEW so a gate at a weird
             // neighbor position still renders a sensible orientation instead of nothing.
-            if (Map.TryGetValue((type, WallSegmentKind.CardinalEW, isOpen), out sel)) return true;
+            if (Map.TryGetValue((key, WallSegmentKind.CardinalEW, isOpen), out sel)) return true;
             sel = default;
             return false;
         }

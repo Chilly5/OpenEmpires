@@ -8,6 +8,7 @@ namespace OpenEmpires
     public class AIPlayerSystem
     {
         private readonly int playerId;
+        public int PlayerId => playerId;
         private readonly GameSimulation sim;
         private readonly AIDifficulty difficulty;
 
@@ -52,6 +53,150 @@ namespace OpenEmpires
         // Known enemy base positions (discovered by scouting / combat)
         private readonly Dictionary<int, FixedVector3> knownEnemyBases = new Dictionary<int, FixedVector3>();
 
+        // ── Ally ping reactions ──────────────────────────────────────────
+        // Latest unprocessed ping ID watermark (RecentPings.Tick); we only react to entries past this.
+        private int lastProcessedPingTick = -1;
+        private FixedVector3 pingAttackTarget;
+        private int pingAttackUntilTick = -1;
+        private FixedVector3 pingDefendTarget;
+        private int pingDefendUntilTick = -1;
+        private const int PingDirectiveDurationTicks = 900; // ~30s @ 30 ticks/s
+
+        // Outbound ping rate-limit so we don't spam the team when a long attack drags on.
+        private int lastEmittedHelpPingTick = -1000;
+        private const int HelpPingCooldownTicks = 600; // ~20s
+
+        // ── LLM-driven intent overrides ─────────────────────────────────
+        // Set by ApplyIntent (called from GameSimulation.ProcessAiIntentCommand). All
+        // identically applied on every client, so determinism holds.
+        private int aggressionAttackOverride = -1;   // sentinel -1 = no override
+        private int aggressionRetreatOverride = -1;  // sentinel -1 = no override
+        private int aggressionOverrideUntilTick = -1;
+        private int resourceWeightFoodOverride;      // delta in tenths
+        private int resourceWeightWoodOverride;
+        private int resourceWeightGoldOverride;
+        private int resourceWeightStoneOverride;
+        private int resourceOverrideUntilTick = -1;
+        private int forceAgeUpTarget;                // 0 = none, 2/3 = push age
+        private int forceAgeUpUntilTick = -1;
+
+        // ── Expanded LLM control surface (build/train/rally/mix). All set by ApplyIntent
+        //    and read deterministically inside the tick, so lockstep holds. ──
+        private int pendingLlmBuildTick;             // retry gate for BuildStructure intents
+        // Explicit commander orders: while active, the routine combat/scout logic stands down
+        // and does NOT re-issue its own movement, so defend/regroup/retreat/scout actually stick.
+        private int combatHoldUntilTick = -1;
+        private int scoutOverrideUntilTick = -1;
+        private bool prodMixActive;                  // SetProductionMix override active
+        private int prodMixArchers, prodMixCavalry, prodMixInfantry; // relative weights 0..100
+        private int prodMixUntilTick = -1;
+
+        private struct TrainOrder { public int MenuType; public int Remaining; public int ExpiryTick; }
+        private readonly List<TrainOrder> trainOrders = new List<TrainOrder>();
+        private const int MaxTrainOrders = 8;
+
+        public int EffectiveAttackThreshold(int currentTick)
+        {
+            if (currentTick < aggressionOverrideUntilTick && aggressionAttackOverride > 0)
+                return aggressionAttackOverride;
+            return attackThreshold;
+        }
+
+        public int EffectiveRetreatPercent(int currentTick)
+        {
+            if (currentTick < aggressionOverrideUntilTick && aggressionRetreatOverride > 0)
+                return aggressionRetreatOverride;
+            return retreatPercentInt;
+        }
+
+        // ── Unit-class filter for ping/intent-driven attacks (0 = all, 1 = archers, 2 = horsemen, 3 = spearmen)
+        private int pingAttackUnitClass;
+        private int pingDefendUnitClass;
+
+        // ── Detachments: independent army sub-groups that attack-move on their own, so the
+        //    teammate can split forces (e.g. "archers north, cavalry south"). Each detachment
+        //    snapshots a deterministic set of unit ids; the main combat FSM ignores any unit
+        //    that is currently detached (GetUndetachedCombatUnits) so it never re-merges them.
+        //    All selection is integer/id-deterministic → lockstep-safe.
+        private struct Detachment
+        {
+            public List<int> UnitIds;
+            public FixedVector3 Target;
+            public int UntilTick;
+            public int LastIssuedTick;
+        }
+        private readonly List<Detachment> detachments = new List<Detachment>();
+        private readonly HashSet<int> detachedUnitIds = new HashSet<int>();
+        private readonly List<UnitData> detachCandidates = new List<UnitData>();
+        private const int MaxDetachments = 4;
+        private const int DetachmentReissueTicks = 50; // re-issue attack-move ~1.6s to stay committed
+
+        // Autonomous splitting: let the AI peel off a raiding group on its own initiative.
+        // Plain field (this class is part of the deterministic sim — same on every client).
+        private bool enableAutonomousSplits = true;
+        private int lastAutoSplitTick = -100000;
+        private const int AutoSplitCooldownTicks = 60 * 30; // 60s
+
+        // ── Villager orders: human/AI-commanded villager tasks (gather here, hide in the TC,
+        //    repair this, build that). Mirrors the military detachment registry: reserved
+        //    villagers are EXCLUDED from the auto-economy (AssignIdleVillagers) for the order's
+        //    duration, so the economy brain never re-tasks a commanded villager. Deterministic:
+        //    id-ordered selection, integer-only, registry lives in the lockstep sim.
+        private enum VillagerTask { Gather, Protect, Build, Repair }
+        private struct VillagerOrder
+        {
+            public VillagerTask Task;
+            public List<int> UnitIds;
+            public int ResourceType;       // Gather: which resource
+            public FixedVector3 Target;     // Gather location / Protect fallback destination
+            public int TargetBuildingId;    // Protect (garrison TC) / Repair / Build target
+            public int UntilTick;
+            public int LastIssuedTick;
+        }
+        private readonly List<VillagerOrder> villagerOrders = new List<VillagerOrder>();
+        private readonly HashSet<int> reservedVillagerIds = new HashSet<int>();
+        private readonly List<UnitData> villagerCandidates = new List<UnitData>();
+        private const int MaxVillagerOrders = 6;
+        private const int VillagerReissueTicks = 50;
+
+        // Absolute gatherer-count override ("balance to exactly N/N/N/N"). Active while within
+        // villagerTargetUntilTick; -1 entries fall back to the computed phase/age target.
+        private int villagerTargetFood = -1, villagerTargetWood = -1, villagerTargetGold = -1, villagerTargetStone = -1;
+        private int villagerTargetUntilTick = -1;
+
+        // Autonomous villager care (auto-protect during raids). Same determinism rules as splits.
+        private bool enableAutonomousVillagerCare = true;
+
+        // ── Pending directives that wait on a trigger condition before applying.
+        private struct PendingDirective
+        {
+            public int IntentKind;
+            public int ParamA, ParamB, ParamC, ParamD;
+            public int DurationTicks;
+            public int TriggerType;
+            public int TriggerMagnitude;
+            public int EnqueuedTick;
+            public int IssuerPlayerId;
+        }
+        private readonly List<PendingDirective> pendingDirectives = new List<PendingDirective>();
+        private const int MaxPendingDirectives = 8;
+        private const int PendingDirectiveTtlTicks = 30 * 60 * 30; // 30 min hard cap
+
+        // Track recent enemy aggression so on_enemy_attack triggers can fire.
+        private int lastEnemyAttackOnMeTick = -100000;
+
+        // Public state accessors used by the LLM prompt builder (read-only, non-deterministic context).
+        public string CombatStateName => combatState.ToString();
+        public int ArmySize => cachedCombatUnits.Count;
+        public int ActiveGroupCount => detachments.Count; // independent detachments currently out
+        public int VillagerOrderCount => villagerOrders.Count; // commanded villager tasks active
+        public int VillagerCount => cachedVillagers.Count;
+        public int KnownEnemyBaseCount => knownEnemyBases.Count;
+        public int CachedEnemySpearmen => cachedEnemySpearmen;
+        public int CachedEnemyArchers => cachedEnemyArchers;
+        public int CachedEnemyHorsemen => cachedEnemyHorsemen;
+        public int LastEnemyAttackOnMeTick => lastEnemyAttackOnMeTick;
+
         // ── Building placement tracking ────────────────────────────────
         private int pendingHouseTick;
         private int pendingBarracksTick;
@@ -78,6 +223,7 @@ namespace OpenEmpires
         private readonly List<UnitData> idleVillagersBuffer = new List<UnitData>();
         private readonly List<UnitData> tempCombatUnits = new List<UnitData>();
         private readonly List<UnitData> tempDefenders = new List<UnitData>();
+        private readonly List<UnitData> tempFilteredUnits = new List<UnitData>();
         private readonly List<int> tempUnitIds = new List<int>();
 
         // ── Per-tick caches (rebuilt once at start of Tick) ──────────
@@ -215,6 +361,7 @@ namespace OpenEmpires
             if (!baseInitialized)
                 InitializeBase();
 
+            PruneVillagerOrders(currentTick); // keep commanded villagers on task; refresh the reservation set
             TickEconomy(currentTick);
 
             if (useScouts)
@@ -224,12 +371,77 @@ namespace OpenEmpires
             if (militaryToggle)
                 TickMilitary(currentTick);
 
+            TickAllyPings(currentTick);
             TickDefense(currentTick);
 
+            PruneDetachments(currentTick); // keep split-off groups committed; rebuild the exclusion set
             TickCombat(currentTick);
+            TickAutonomousSplit(currentTick);
+            TickPendingDirectives(currentTick);
 
             // Discover enemy buildings visible to our units
             DiscoverEnemyBases();
+        }
+
+        // Walks pendingDirectives and activates any whose trigger condition has fired.
+        // Runs identically on every client → deterministic activation.
+        private void TickPendingDirectives(int currentTick)
+        {
+            for (int i = pendingDirectives.Count - 1; i >= 0; i--)
+            {
+                var p = pendingDirectives[i];
+                if (currentTick - p.EnqueuedTick > PendingDirectiveTtlTicks)
+                {
+                    pendingDirectives.RemoveAt(i);
+                    continue;
+                }
+                bool fire = false;
+                switch (p.TriggerType)
+                {
+                    case 1: // delay (TriggerMagnitude = ticks)
+                        fire = currentTick >= p.EnqueuedTick + p.TriggerMagnitude;
+                        break;
+                    case 2: // on_age_up (TriggerMagnitude = target age)
+                        fire = sim.GetPlayerAge(playerId) >= p.TriggerMagnitude;
+                        break;
+                    case 3: // on_army_size (TriggerMagnitude = unit count)
+                        fire = cachedCombatUnits.Count >= p.TriggerMagnitude;
+                        break;
+                    case 4: // on_enemy_attack
+                        fire = (currentTick - lastEnemyAttackOnMeTick) < 300; // within 10s
+                        break;
+                }
+                if (fire)
+                {
+                    ApplyIntentImmediate(p.IntentKind, p.ParamA, p.ParamB, p.ParamC, p.ParamD,
+                        p.DurationTicks, currentTick);
+                    pendingDirectives.RemoveAt(i);
+                }
+            }
+        }
+
+        // Filter `source` combat units into `dest` keeping only those of the requested class.
+        // classFilter: 0=all, 1=archers (UnitType 2|10), 2=horsemen (UnitType 3|11), 3=spearmen (UnitType 1|12)
+        private static void FilterCombatUnitsByClass(List<UnitData> source, int classFilter, List<UnitData> dest)
+        {
+            dest.Clear();
+            if (classFilter <= 0)
+            {
+                dest.AddRange(source);
+                return;
+            }
+            for (int i = 0; i < source.Count; i++)
+            {
+                var u = source[i];
+                bool keep = false;
+                switch (classFilter)
+                {
+                    case 1: keep = u.UnitType == 2 || u.UnitType == 10; break;
+                    case 2: keep = u.UnitType == 3 || u.UnitType == 11; break;
+                    case 3: keep = u.UnitType == 1 || u.UnitType == 12; break;
+                }
+                if (keep) dest.Add(u);
+            }
         }
 
         // ── Initialization ─────────────────────────────────────────────
@@ -411,6 +623,7 @@ namespace OpenEmpires
             for (int i = 0; i < tempVillagers.Count; i++)
             {
                 var v = tempVillagers[i];
+                if (reservedVillagerIds.Contains(v.Id)) continue; // under a manual/auto order — hands off
                 if (v.State == UnitState.Idle && !assignedBuilderIds.Contains(v.Id))
                 {
                     if (v.IdleTimer < Fixed32.One) continue; // wait 1s before re-tasking
@@ -464,6 +677,28 @@ namespace OpenEmpires
                 targetWood += 3;
                 targetFood -= 2;
                 if (targetFood < 4) targetFood = 4;
+            }
+
+            // LLM intent override: apply per-resource weight deltas while window is active
+            if (currentTick < resourceOverrideUntilTick)
+            {
+                targetFood += resourceWeightFoodOverride;
+                targetWood += resourceWeightWoodOverride;
+                targetGold += resourceWeightGoldOverride;
+                targetStone += resourceWeightStoneOverride;
+                if (targetFood < 0) targetFood = 0;
+                if (targetWood < 0) targetWood = 0;
+                if (targetGold < 0) targetGold = 0;
+                if (targetStone < 0) targetStone = 0;
+            }
+
+            // Absolute gatherer-count override ("balance to exactly N/N/N/N") takes precedence.
+            if (currentTick < villagerTargetUntilTick)
+            {
+                if (villagerTargetFood >= 0) targetFood = villagerTargetFood;
+                if (villagerTargetWood >= 0) targetWood = villagerTargetWood;
+                if (villagerTargetGold >= 0) targetGold = villagerTargetGold;
+                if (villagerTargetStone >= 0) targetStone = villagerTargetStone;
             }
 
             HashSet<int> claimedFarmIds = null; // lazy init
@@ -800,9 +1035,11 @@ namespace OpenEmpires
         {
             if (sim.IsPlayerAgingUp(playerId)) return;
             int currentAge = sim.GetPlayerAge(playerId);
-            if (currentAge >= 3) return;
 
             int targetAge = currentAge + 1;
+            var civ = sim.GetPlayerCivilization(playerId);
+            if (!LandmarkDefinitions.HasChoices(civ, targetAge)) return;
+
             int vilCount = GetVillagerCount();
 
             // Difficulty-based villager thresholds for aging up
@@ -819,9 +1056,11 @@ namespace OpenEmpires
                     requiredVillagers = targetAge == 2 ? 12 : targetAge == 3 ? 18 : 24;
                     break;
             }
+            // LLM intent override: when player asks to push for an age, halve the bar.
+            if (currentTick < forceAgeUpUntilTick && forceAgeUpTarget >= targetAge)
+                requiredVillagers = Mathf.Max(4, requiredVillagers / 2);
             if (vilCount < requiredVillagers) return;
 
-            var civ = sim.GetPlayerCivilization(playerId);
             var (choiceA, choiceB) = LandmarkDefinitions.GetChoices(civ, targetAge);
             var landmarkId = NextRandom(2) == 0 ? choiceA : choiceB;
             var def = LandmarkDefinitions.Get(landmarkId);
@@ -862,12 +1101,14 @@ namespace OpenEmpires
             // First pass: idle villagers
             for (int i = 0; i < tempVillagers.Count && tempUnitIds.Count < count; i++)
             {
+                if (reservedVillagerIds.Contains(tempVillagers[i].Id)) continue; // don't poach commanded villagers
                 if (tempVillagers[i].State == UnitState.Idle && !assignedBuilderIds.Contains(tempVillagers[i].Id))
                     tempUnitIds.Add(tempVillagers[i].Id);
             }
             // Second pass: gathering villagers to fill remaining slots
             for (int i = 0; i < tempVillagers.Count && tempUnitIds.Count < count; i++)
             {
+                if (reservedVillagerIds.Contains(tempVillagers[i].Id)) continue;
                 if (tempUnitIds.Contains(tempVillagers[i].Id)) continue;
                 var state = tempVillagers[i].State;
                 if (state == UnitState.Gathering || state == UnitState.MovingToGather || state == UnitState.MovingToDropoff)
@@ -884,7 +1125,13 @@ namespace OpenEmpires
 
             var resources = sim.ResourceManager.GetPlayerResources(playerId);
 
-            if (useCounterUnits && difficulty == AIDifficulty.Hard)
+            // Fulfill explicit train requests from the teammate first, then fall back to
+            // the AI's own production policy (a human-set production mix, counter mix, or default).
+            TickTrainOrders(resources, currentTick);
+
+            if (prodMixActive && currentTick < prodMixUntilTick)
+                TrainByMix(resources);
+            else if (useCounterUnits && difficulty == AIDifficulty.Hard)
                 TrainCounterUnits(resources);
             else
                 TrainDefaultMix(resources);
@@ -1103,6 +1350,19 @@ namespace OpenEmpires
                 }
             }
 
+            // Record the most recent "enemy attacking me" tick so on_enemy_attack triggered
+            // directives can fire even if the alert ping is rate-limited away below.
+            if (threatCount > 0) lastEnemyAttackOnMeTick = currentTick;
+
+            // If our own base is under attack, broadcast a Help ping + chat line (rate-limited).
+            if (threatCount > 0 && currentTick - lastEmittedHelpPingTick >= HelpPingCooldownTicks)
+            {
+                lastEmittedHelpPingTick = currentTick;
+                var baseWorld = sim.MapData.TileToWorldFixed(baseTileX, baseTileZ);
+                Issue(new PingCommand(playerId, baseWorld.x.Raw, baseWorld.z.Raw, PingType.Help));
+                Issue(new AiChatCommand(playerId, AiChatLineType.UnderAttack));
+            }
+
             // Also check ally TCs for threats
             if (threatCount == 0)
             {
@@ -1205,9 +1465,27 @@ namespace OpenEmpires
                     tempUnitIds.Add(v.Id);
             }
 
-            if (tempUnitIds.Count > 0)
-                Issue(new GarrisonCommand(playerId, tempUnitIds.ToArray(), tc.Id));
+            if (tempUnitIds.Count == 0) return;
+            Issue(new GarrisonCommand(playerId, tempUnitIds.ToArray(), tc.Id));
+
+            // Autonomous care: register a short Protect order for the endangered villagers so
+            // the auto-economy doesn't immediately march them back into the raid. They release
+            // automatically when the order expires (PruneVillagerOrders) and rejoin gathering.
+            if (enableAutonomousVillagerCare && currentTick >= autoProtectUntilTick)
+            {
+                var protectIds = new List<int>();
+                for (int i = 0; i < tempUnitIds.Count; i++)
+                    if (!reservedVillagerIds.Contains(tempUnitIds[i])) protectIds.Add(tempUnitIds[i]);
+                if (protectIds.Count > 0)
+                {
+                    autoProtectUntilTick = currentTick + 300; // ~10s; refreshed while the raid persists
+                    AddVillagerOrder(VillagerTask.Protect, protectIds, -1, threatCenter, tc.Id, autoProtectUntilTick, currentTick);
+                    LlmDebug.Cmd($"AI{playerId} auto-protect: {protectIds.Count} villagers garrisoned from raid");
+                }
+            }
         }
+
+        private int autoProtectUntilTick = -1;
 
         // ── Scouting ───────────────────────────────────────────────────
 
@@ -1252,8 +1530,9 @@ namespace OpenEmpires
                 }
             }
 
-            // Send scout to random target when idle
-            if (scoutUnitId >= 0)
+            // Send scout to random target when idle — but not while an explicit scout_area
+            // order is in effect, so the commanded destination sticks.
+            if (scoutUnitId >= 0 && currentTick >= scoutOverrideUntilTick)
             {
                 var scout = sim.UnitRegistry.GetUnit(scoutUnitId);
                 if (scout != null && scout.State == UnitState.Idle)
@@ -1361,12 +1640,296 @@ namespace OpenEmpires
 
         // ── Combat ─────────────────────────────────────────────────────
 
+        // Reads pings issued by allies and translates them into short-lived
+        // combat/defense overrides. Determinism is preserved because every client
+        // sees the same RecentPings list in the same order.
+        private void TickAllyPings(int currentTick)
+        {
+            var pings = sim.RecentPings;
+            int watermark = lastProcessedPingTick;
+            for (int i = 0; i < pings.Count; i++)
+            {
+                var p = pings[i];
+                if (p.Tick <= lastProcessedPingTick) continue;
+                if (p.PlayerId == playerId) continue;             // ignore self
+                if (!sim.AreAllies(p.PlayerId, playerId)) continue; // ally-only
+
+                var pos = new FixedVector3(
+                    Fixed32.FromFloat(p.WorldX),
+                    Fixed32.Zero,
+                    Fixed32.FromFloat(p.WorldZ));
+
+                switch (p.Type)
+                {
+                    case PingType.Attack:
+                        pingAttackTarget = pos;
+                        pingAttackUntilTick = currentTick + PingDirectiveDurationTicks;
+                        pingAttackUnitClass = 0; // human pings don't specify class
+                        // Nudge into Assembling if currently idle and we have any force at all.
+                        if (combatState == CombatState.Building)
+                            combatState = CombatState.Assembling;
+                        Issue(new AiChatCommand(playerId, AiChatLineType.OnTheWayAttack));
+                        break;
+                    case PingType.Defend:
+                    case PingType.Help:
+                        pingDefendTarget = pos;
+                        pingDefendUntilTick = currentTick + PingDirectiveDurationTicks;
+                        pingDefendUnitClass = 0; // human pings don't specify class
+                        DispatchDefendersToPing();
+                        Issue(new AiChatCommand(playerId, AiChatLineType.OnTheWayDefend));
+                        break;
+                }
+                if (p.Tick > watermark) watermark = p.Tick;
+            }
+            lastProcessedPingTick = watermark;
+        }
+
+        // Applied by GameSimulation.ProcessAiIntentCommand on every client. Deterministic
+        // by construction: pure switch over ints, mutates only AI override fields. No
+        // allocations on the hot path. DurationTicks is computed relative to currentTick
+        // so windows expire identically on all clients.
+        //
+        // When triggerType != 0 the directive is parked in pendingDirectives and applied
+        // later when its trigger condition fires. The trigger evaluation happens inside
+        // Tick (TickPendingDirectives) which runs identically on every client.
+        public void ApplyIntent(int intentKind, int paramA, int paramB, int paramC, int paramD,
+            int durationTicks, int currentTick, int triggerType = 0, int triggerMagnitude = 0)
+        {
+            if (triggerType != 0)
+            {
+                if (pendingDirectives.Count >= MaxPendingDirectives) return;
+                pendingDirectives.Add(new PendingDirective
+                {
+                    IntentKind = intentKind,
+                    ParamA = paramA, ParamB = paramB, ParamC = paramC, ParamD = paramD,
+                    DurationTicks = durationTicks,
+                    TriggerType = triggerType,
+                    TriggerMagnitude = triggerMagnitude,
+                    EnqueuedTick = currentTick,
+                });
+                return;
+            }
+
+            ApplyIntentImmediate(intentKind, paramA, paramB, paramC, paramD, durationTicks, currentTick);
+        }
+
+        private void ApplyIntentImmediate(int intentKind, int paramA, int paramB, int paramC, int paramD,
+            int durationTicks, int currentTick)
+        {
+            int until = currentTick + Mathf.Clamp(durationTicks, 30, 5400); // 1s..3min
+            LlmDebug.Cmd($"AI{playerId} apply {(AiIntentKind)intentKind} A={paramA} B={paramB} C={paramC} D={paramD}");
+
+            switch ((AiIntentKind)intentKind)
+            {
+                case AiIntentKind.SendGroup:
+                {
+                    var pos = new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB));
+                    CreateDetachment(Mathf.Clamp(paramC, 0, 3), Mathf.Clamp(paramD, 1, 100), pos, until);
+                    break;
+                }
+                case AiIntentKind.AttackAt:
+                {
+                    var pos = new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB));
+                    ClearDetachments(); // an all-in attack recalls any split-off groups
+                    pingAttackTarget = pos;
+                    pingAttackUntilTick = until;
+                    pingAttackUnitClass = Mathf.Clamp(paramC, 0, 3);
+                    combatHoldUntilTick = -1; // an attack order overrides any defend/retreat hold
+                    if (combatState == CombatState.Building)
+                        combatState = CombatState.Assembling;
+                    break;
+                }
+                case AiIntentKind.DefendAt:
+                {
+                    var pos = new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB));
+                    ClearDetachments(); // pull split-off groups back to defend
+                    pingDefendTarget = pos;
+                    pingDefendUntilTick = until;
+                    pingDefendUnitClass = Mathf.Clamp(paramC, 0, 3);
+                    DispatchDefendersToPing();
+                    // Hold at the defend point — don't let the combat FSM pull these units into an attack.
+                    combatHoldUntilTick = until;
+                    break;
+                }
+                case AiIntentKind.SetAggression:
+                    aggressionAttackOverride = Mathf.Clamp(paramA, 2, 32);
+                    aggressionRetreatOverride = Mathf.Clamp(paramB, 10, 80);
+                    aggressionOverrideUntilTick = until;
+                    break;
+                case AiIntentKind.PrioritizeResource:
+                {
+                    int delta = Mathf.Clamp(paramB, -5, 10);
+                    switch ((ResourceType)paramA)
+                    {
+                        case ResourceType.Food: resourceWeightFoodOverride = delta; break;
+                        case ResourceType.Wood: resourceWeightWoodOverride = delta; break;
+                        case ResourceType.Gold: resourceWeightGoldOverride = delta; break;
+                        case ResourceType.Stone: resourceWeightStoneOverride = delta; break;
+                    }
+                    resourceOverrideUntilTick = until;
+                    break;
+                }
+                case AiIntentKind.FocusEconomy:
+                {
+                    // Preset: more economy, less aggression.
+                    int strength = Mathf.Clamp(paramA, 0, 100);
+                    aggressionAttackOverride = Mathf.Clamp(attackThreshold + strength / 10, 2, 32);
+                    aggressionRetreatOverride = Mathf.Clamp(retreatPercentInt + strength / 4, 10, 80);
+                    aggressionOverrideUntilTick = until;
+                    resourceWeightFoodOverride = strength / 25;   // +0..+4
+                    resourceWeightWoodOverride = strength / 33;   // +0..+3
+                    resourceOverrideUntilTick = until;
+                    break;
+                }
+                case AiIntentKind.FocusMilitary:
+                {
+                    int strength = Mathf.Clamp(paramA, 0, 100);
+                    aggressionAttackOverride = Mathf.Clamp(attackThreshold - strength / 12, 2, 32);
+                    aggressionRetreatOverride = Mathf.Clamp(retreatPercentInt - strength / 5, 10, 80);
+                    aggressionOverrideUntilTick = until;
+                    resourceWeightGoldOverride = strength / 25;   // +0..+4
+                    resourceWeightFoodOverride = -strength / 50;  // -0..-2
+                    resourceOverrideUntilTick = until;
+                    break;
+                }
+                case AiIntentKind.PushAgeUp:
+                    forceAgeUpTarget = Mathf.Clamp(paramA, 2, 3);
+                    forceAgeUpUntilTick = until;
+                    break;
+                case AiIntentKind.BuildStructure:
+                {
+                    var btype = (BuildingType)paramA;
+                    int tileX = paramB >> Fixed32.FractionalBits;
+                    int tileZ = paramC >> Fixed32.FractionalBits;
+                    int builders = paramD > 0 ? Mathf.Clamp(paramD, 1, 10) : 1;
+                    pendingLlmBuildTick = currentTick; // clear the retry gate for an immediate attempt
+                    TryPlaceBuilding(btype, tileX, tileZ, currentTick, ref pendingLlmBuildTick, builders);
+                    break;
+                }
+                case AiIntentKind.GatherWith:
+                {
+                    var pos = new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB));
+                    var ids = ReserveVillagers(Mathf.Clamp(paramD, 1, 50), pos);
+                    // ServiceGatherOrder handles drop-off building / construction-help / gather.
+                    AddVillagerOrder(VillagerTask.Gather, ids, paramC, pos, -1, until, currentTick);
+                    break;
+                }
+                case AiIntentKind.ProtectVillagers:
+                {
+                    var pos = new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB));
+                    int count = paramC <= 0 ? cachedVillagers.Count : paramC;
+                    var tc = GetMyBuilding(BuildingType.TownCenter);
+                    int tcId = (tc != null && !tc.IsDestroyed) ? tc.Id : -1;
+                    var ids = ReserveVillagers(count, pos);
+                    AddVillagerOrder(VillagerTask.Protect, ids, -1, pos, tcId, until, currentTick);
+                    break;
+                }
+                case AiIntentKind.RepairBuilding:
+                {
+                    var pos = new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB));
+                    var dmg = FindNearestDamagedBuilding(pos, paramD);
+                    if (dmg != null)
+                    {
+                        var ids = ReserveVillagers(Mathf.Clamp(paramC, 1, 10), dmg.SimPosition);
+                        AddVillagerOrder(VillagerTask.Repair, ids, -1, dmg.SimPosition, dmg.Id, until, currentTick);
+                    }
+                    break;
+                }
+                case AiIntentKind.SetGatherTargets:
+                    villagerTargetFood = Mathf.Clamp(paramA, -1, 60);
+                    villagerTargetWood = Mathf.Clamp(paramB, -1, 60);
+                    villagerTargetGold = Mathf.Clamp(paramC, -1, 60);
+                    villagerTargetStone = Mathf.Clamp(paramD, -1, 60);
+                    villagerTargetUntilTick = until;
+                    break;
+                case AiIntentKind.TrainUnits:
+                    AddTrainOrder(paramA, Mathf.Clamp(paramB, 1, 30), until);
+                    break;
+                case AiIntentKind.SetProductionMix:
+                    prodMixArchers = Mathf.Clamp(paramA, 0, 100);
+                    prodMixCavalry = Mathf.Clamp(paramB, 0, 100);
+                    prodMixInfantry = Mathf.Clamp(paramC, 0, 100);
+                    prodMixActive = (prodMixArchers + prodMixCavalry + prodMixInfantry) > 0;
+                    prodMixUntilTick = until;
+                    break;
+                case AiIntentKind.SetArmyRally:
+                    SetAllMilitaryRally(new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB)));
+                    break;
+                case AiIntentKind.ScoutArea:
+                    SendScoutTo(new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB)), until);
+                    // Keep the scout on the commanded spot — suppress routine random re-tasking.
+                    scoutOverrideUntilTick = until;
+                    break;
+                case AiIntentKind.RegroupArmy:
+                    ClearDetachments(); // gather EVERYONE, including split-off groups
+                    MoveAllCombatTo(new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB)));
+                    // Gather and hold — don't let the FSM march them back out next tick.
+                    combatState = CombatState.Building;
+                    combatHoldUntilTick = until;
+                    break;
+                case AiIntentKind.RetreatToBase:
+                    ClearDetachments(); // recall split-off groups to base
+                    MoveAllCombatTo(new FixedVector3(new Fixed32(paramA), Fixed32.Zero, new Fixed32(paramB)));
+                    // Stand down and play passive so TickCombat doesn't immediately re-commit.
+                    combatState = CombatState.Building;
+                    combatHoldUntilTick = until;
+                    aggressionAttackOverride = 32; // highest threshold = least likely to attack
+                    aggressionRetreatOverride = 70;
+                    aggressionOverrideUntilTick = until;
+                    break;
+                case AiIntentKind.Research:
+                    IssueResearch((TechnologyType)paramA);
+                    break;
+                case AiIntentKind.Acknowledge:
+                case AiIntentKind.Decline:
+                    // chat-only, no behavior change
+                    break;
+            }
+        }
+
+        // Send units to a defend-ping location. If pingDefendUnitClass is set (non-zero),
+        // send 100% of that class; otherwise send roughly half of total combat units.
+        private void DispatchDefendersToPing()
+        {
+            GetUndetachedCombatUnits(tempCombatUnits);
+            if (tempCombatUnits.Count == 0) return;
+
+            List<UnitData> dispatchSource;
+            int sendCount;
+            if (pingDefendUnitClass != 0)
+            {
+                FilterCombatUnitsByClass(tempCombatUnits, pingDefendUnitClass, tempFilteredUnits);
+                if (tempFilteredUnits.Count == 0) return;
+                dispatchSource = tempFilteredUnits;
+                sendCount = tempFilteredUnits.Count;
+            }
+            else
+            {
+                dispatchSource = tempCombatUnits;
+                sendCount = Mathf.Max(2, tempCombatUnits.Count / 2);
+                sendCount = Mathf.Min(sendCount, tempCombatUnits.Count);
+            }
+
+            tempUnitIds.Clear();
+            for (int i = 0; i < sendCount; i++)
+                tempUnitIds.Add(dispatchSource[i].Id);
+            Issue(new MoveCommand(playerId, tempUnitIds.ToArray(), pingDefendTarget));
+        }
+
         private void TickCombat(int currentTick)
         {
             // Don't override defense state
             if (combatState == CombatState.Defending) return;
 
-            GetMyCombatUnits(tempCombatUnits);
+            // (combat unit gathering below uses GetUndetachedCombatUnits so the main army
+            //  FSM never re-absorbs units that belong to an active detachment.)
+
+            // Stand down while an explicit commander order (defend/regroup/retreat) is in effect:
+            // hold position and don't re-issue our own movement. This also suppresses the
+            // 5-minute forced-assembly path below for the duration of the order.
+            if (currentTick < combatHoldUntilTick) return;
+
+            GetUndetachedCombatUnits(tempCombatUnits);
             int armySize = tempCombatUnits.Count;
 
             switch (combatState)
@@ -1375,12 +1938,13 @@ namespace OpenEmpires
                     if (firstMilitaryBuildingTick < 0 && (HasBuilding(BuildingType.Barracks) || HasBuilding(BuildingType.ArcheryRange) || HasBuilding(BuildingType.Stables)))
                         firstMilitaryBuildingTick = currentTick;
 
-                    if (armySize >= attackThreshold)
+                    int effectiveThreshold = EffectiveAttackThreshold(currentTick);
+                    if (armySize >= effectiveThreshold)
                     {
                         combatState = CombatState.Assembling;
                     }
                     else if (firstMilitaryBuildingTick > 0 && currentTick - firstMilitaryBuildingTick > 6000
-                             && armySize >= attackThreshold / 2 && armySize >= 4)
+                             && armySize >= effectiveThreshold / 2 && armySize >= 4)
                     {
                         combatState = CombatState.Assembling;
                     }
@@ -1391,9 +1955,27 @@ namespace OpenEmpires
                     break;
 
                 case CombatState.Assembling:
-                    var targetPos = GetEnemyTargetPosition();
+                {
+                    // Honor an in-flight ally Attack ping over the AI's own target pick.
+                    bool pingActive = currentTick < pingAttackUntilTick;
+                    FixedVector3? targetPos = pingActive
+                        ? pingAttackTarget
+                        : GetEnemyTargetPosition();
                     if (targetPos.HasValue)
                     {
+                        // Filter the dispatched units by class if the ping override specified one.
+                        List<UnitData> dispatchSource = tempCombatUnits;
+                        if (pingActive && pingAttackUnitClass != 0)
+                        {
+                            FilterCombatUnitsByClass(tempCombatUnits, pingAttackUnitClass, tempFilteredUnits);
+                            dispatchSource = tempFilteredUnits;
+                        }
+                        if (dispatchSource.Count == 0)
+                        {
+                            combatState = CombatState.Building;
+                            break;
+                        }
+
                         attackTargetPos = targetPos.Value;
                         // Compute staging point ~15 tiles from target, toward our base
                         int targetTileX = attackTargetPos.x.Raw >> Fixed32.FractionalBits;
@@ -1414,11 +1996,11 @@ namespace OpenEmpires
                         var stagingPos = sim.MapData.TileToWorldFixed(stagingX, stagingZ);
 
                         tempUnitIds.Clear();
-                        for (int i = 0; i < tempCombatUnits.Count; i++)
-                            tempUnitIds.Add(tempCombatUnits[i].Id);
+                        for (int i = 0; i < dispatchSource.Count; i++)
+                            tempUnitIds.Add(dispatchSource[i].Id);
                         Issue(new MoveCommand(playerId, tempUnitIds.ToArray(), stagingPos));
 
-                        attackStartArmySize = armySize;
+                        attackStartArmySize = dispatchSource.Count;
                         marchStartTick = currentTick;
                         combatState = CombatState.Marching;
                     }
@@ -1427,16 +2009,31 @@ namespace OpenEmpires
                         combatState = CombatState.Building;
                     }
                     break;
+                }
 
                 case CombatState.Marching:
+                {
+                    // March/attack-move only the subset matching the active ping class filter.
+                    bool pingActive = currentTick < pingAttackUntilTick && pingAttackUnitClass != 0;
+                    List<UnitData> activeUnits;
+                    if (pingActive)
+                    {
+                        FilterCombatUnitsByClass(tempCombatUnits, pingAttackUnitClass, tempFilteredUnits);
+                        activeUnits = tempFilteredUnits;
+                    }
+                    else
+                    {
+                        activeUnits = tempCombatUnits;
+                    }
+
                     // Check if any unit is within ~20 tiles of the target
                     int atkTileX = attackTargetPos.x.Raw >> Fixed32.FractionalBits;
                     int atkTileZ = attackTargetPos.z.Raw >> Fixed32.FractionalBits;
                     bool closeEnough = false;
-                    for (int i = 0; i < tempCombatUnits.Count; i++)
+                    for (int i = 0; i < activeUnits.Count; i++)
                     {
-                        int ux = tempCombatUnits[i].SimPosition.x.Raw >> Fixed32.FractionalBits;
-                        int uz = tempCombatUnits[i].SimPosition.z.Raw >> Fixed32.FractionalBits;
+                        int ux = activeUnits[i].SimPosition.x.Raw >> Fixed32.FractionalBits;
+                        int uz = activeUnits[i].SimPosition.z.Raw >> Fixed32.FractionalBits;
                         int udx = ux - atkTileX;
                         int udz = uz - atkTileZ;
                         if (udx * udx + udz * udz < 20 * 20)
@@ -1448,29 +2045,36 @@ namespace OpenEmpires
                     if (closeEnough)
                     {
                         tempUnitIds.Clear();
-                        for (int i = 0; i < tempCombatUnits.Count; i++)
-                            tempUnitIds.Add(tempCombatUnits[i].Id);
-                        var marchCmd = new MoveCommand(playerId, tempUnitIds.ToArray(), attackTargetPos);
-                        marchCmd.IsAttackMove = true;
-                        Issue(marchCmd);
+                        for (int i = 0; i < activeUnits.Count; i++)
+                            tempUnitIds.Add(activeUnits[i].Id);
+                        if (tempUnitIds.Count > 0)
+                        {
+                            var marchCmd = new MoveCommand(playerId, tempUnitIds.ToArray(), attackTargetPos);
+                            marchCmd.IsAttackMove = true;
+                            Issue(marchCmd);
+                        }
                         combatState = CombatState.Attacking;
                     }
                     else if (currentTick - marchStartTick > 300)
                     {
                         // Timeout — attack-move directly to target
                         tempUnitIds.Clear();
-                        for (int i = 0; i < tempCombatUnits.Count; i++)
-                            tempUnitIds.Add(tempCombatUnits[i].Id);
-                        var directCmd = new MoveCommand(playerId, tempUnitIds.ToArray(), attackTargetPos);
-                        directCmd.IsAttackMove = true;
-                        Issue(directCmd);
+                        for (int i = 0; i < activeUnits.Count; i++)
+                            tempUnitIds.Add(activeUnits[i].Id);
+                        if (tempUnitIds.Count > 0)
+                        {
+                            var directCmd = new MoveCommand(playerId, tempUnitIds.ToArray(), attackTargetPos);
+                            directCmd.IsAttackMove = true;
+                            Issue(directCmd);
+                        }
                         combatState = CombatState.Attacking;
                     }
                     break;
+                }
 
                 case CombatState.Attacking:
                     // Retreat when we've lost retreatPercentInt% of our army
-                    int retreatAt = Mathf.Max(1, attackStartArmySize * (100 - retreatPercentInt) / 100);
+                    int retreatAt = Mathf.Max(1, attackStartArmySize * (100 - EffectiveRetreatPercent(currentTick)) / 100);
                     if (armySize <= retreatAt)
                     {
                         if (armySize > 0)
@@ -1631,12 +2235,12 @@ namespace OpenEmpires
 
         // ── Building Placement ─────────────────────────────────────────
 
-        private void TryPlaceBuilding(BuildingType type, int centerX, int centerZ, int currentTick, ref int pendingTick)
+        private void TryPlaceBuilding(BuildingType type, int centerX, int centerZ, int currentTick, ref int pendingTick, int builderCount = 1)
         {
             if (currentTick < pendingTick) return;
 
-            // Must have an idle villager to construct
-            int[] villagerIds = FindIdleVillager();
+            // Must have villager(s) to construct. builderCount>1 commits a whole crew.
+            int[] villagerIds = builderCount > 1 ? FindMultipleVillagers(builderCount) : FindIdleVillager();
             if (villagerIds == null)
             {
                 pendingTick = currentTick + BuildRetryDelay;
@@ -1665,12 +2269,14 @@ namespace OpenEmpires
             // First pass: prefer idle villagers
             for (int i = 0; i < tempVillagers.Count; i++)
             {
+                if (reservedVillagerIds.Contains(tempVillagers[i].Id)) continue; // don't poach commanded villagers
                 if (tempVillagers[i].State == UnitState.Idle && !assignedBuilderIds.Contains(tempVillagers[i].Id))
                     return new int[] { tempVillagers[i].Id };
             }
             // Second pass: pull a gathering villager if no idle ones
             for (int i = 0; i < tempVillagers.Count; i++)
             {
+                if (reservedVillagerIds.Contains(tempVillagers[i].Id)) continue;
                 var state = tempVillagers[i].State;
                 if (state == UnitState.Gathering || state == UnitState.MovingToGather
                     || state == UnitState.MovingToDropoff)
@@ -1806,6 +2412,626 @@ namespace OpenEmpires
                 {
                     bestDistSq = distSq;
                     best = n;
+                }
+            }
+            return best;
+        }
+
+        // ── Expanded LLM control-surface helpers ────────────────────────
+        // All run inside the deterministic tick (via ApplyIntent) and only enqueue
+        // AI commands, so lockstep determinism holds across clients.
+
+        private void AddTrainOrder(int menuType, int count, int expiryTick)
+        {
+            for (int i = 0; i < trainOrders.Count; i++)
+            {
+                if (trainOrders[i].MenuType == menuType)
+                {
+                    var o = trainOrders[i];
+                    o.Remaining = Mathf.Min(60, o.Remaining + count);
+                    o.ExpiryTick = expiryTick;
+                    trainOrders[i] = o;
+                    return;
+                }
+            }
+            if (trainOrders.Count >= MaxTrainOrders) return;
+            trainOrders.Add(new TrainOrder { MenuType = menuType, Remaining = count, ExpiryTick = expiryTick });
+        }
+
+        // Drain outstanding train requests, one unit per order per military tick,
+        // respecting building availability, pop cap, queue depth and affordability.
+        // ProcessTrainUnitCommand re-validates, but we pre-check so we only decrement
+        // an order when the unit will actually be queued.
+        private void TickTrainOrders(PlayerResources resources, int currentTick)
+        {
+            if (trainOrders.Count == 0) return;
+            int spentFood = 0, spentWood = 0, spentGold = 0;
+            int pop = sim.GetPopulation(playerId);
+            int popCap = sim.GetPopulationCap(playerId);
+
+            for (int i = trainOrders.Count - 1; i >= 0; i--)
+            {
+                var o = trainOrders[i];
+                if (currentTick >= o.ExpiryTick || o.Remaining <= 0) { trainOrders.RemoveAt(i); continue; }
+                if (!TryGetTrainSpec(o.MenuType, out var bt, out int food, out int wood, out int gold))
+                {
+                    trainOrders.RemoveAt(i);
+                    continue;
+                }
+                var building = GetMyBuilding(bt);
+                if (building == null || building.IsUnderConstruction || building.IsDestroyed) continue;
+                if (building.TrainingQueue.Count >= 8) continue;
+                if (o.MenuType != 0 && pop >= popCap) continue;
+                if (resources.Food - spentFood < food || resources.Wood - spentWood < wood || resources.Gold - spentGold < gold)
+                    continue;
+
+                Issue(new TrainUnitCommand(playerId, building.Id, o.MenuType));
+                LlmDebug.Cmd($"AI{playerId} train unit {o.MenuType} from {bt} ({o.Remaining - 1} left)");
+                spentFood += food; spentWood += wood; spentGold += gold;
+                pop++; // reserve a slot so multiple orders this tick don't overcommit
+                o.Remaining--;
+                trainOrders[i] = o;
+            }
+        }
+
+        // Maps a menu unit type to its production building and resource cost.
+        private bool TryGetTrainSpec(int menuType, out BuildingType building, out int food, out int wood, out int gold)
+        {
+            food = 0; wood = 0; gold = 0; building = BuildingType.Barracks;
+            var cfg = sim.Config;
+            switch (menuType)
+            {
+                case 0: building = BuildingType.TownCenter; food = cfg.VillagerFoodCost; return true;
+                case 1: building = BuildingType.Barracks;     GetResolvedCosts(1, out _, out food, out wood, out gold); return true;
+                case 2: building = BuildingType.ArcheryRange; GetResolvedCosts(2, out _, out food, out wood, out gold); return true;
+                case 3: building = BuildingType.Stables;      GetResolvedCosts(3, out _, out food, out wood, out gold); return true;
+                case 4: building = BuildingType.Stables;      food = cfg.ScoutFoodCost; wood = cfg.ScoutWoodCost; return true;
+                case 6: building = BuildingType.Barracks;     food = cfg.ManAtArmsFoodCost;   gold = cfg.ManAtArmsGoldCost;   return true;
+                case 7: building = BuildingType.Stables;      food = cfg.KnightFoodCost;      gold = cfg.KnightGoldCost;      return true;
+                case 8: building = BuildingType.ArcheryRange; food = cfg.CrossbowmanFoodCost; gold = cfg.CrossbowmanGoldCost; return true;
+                case 9: building = BuildingType.Monastery;    food = cfg.MonkFoodCost;        gold = cfg.MonkGoldCost;        return true;
+            }
+            return false;
+        }
+
+        // Train toward a human-set production ratio: each tick train the single role
+        // furthest below its target share of the current army.
+        private void TrainByMix(PlayerResources resources)
+        {
+            int total = prodMixArchers + prodMixCavalry + prodMixInfantry;
+            if (total <= 0) { TrainDefaultMix(resources); return; }
+
+            int curA = 0, curC = 0, curI = 0;
+            for (int i = 0; i < cachedCombatUnits.Count; i++)
+            {
+                int ut = cachedCombatUnits[i].UnitType;
+                if (ut == 2 || ut == 10 || ut == 8) curA++;
+                else if (ut == 3 || ut == 11 || ut == 7) curC++;
+                else if (ut == 1 || ut == 12 || ut == 6) curI++;
+            }
+            int curTotal = Mathf.Max(1, curA + curC + curI);
+            // deficit > 0 means under target (cross-multiplied to stay integer).
+            int defA = prodMixArchers * curTotal - curA * total;
+            int defC = prodMixCavalry * curTotal - curC * total;
+            int defI = prodMixInfantry * curTotal - curI * total;
+
+            int role = 0, best = defA;
+            if (defC > best) { best = defC; role = 1; }
+            if (defI > best) { best = defI; role = 2; }
+            TrainRole(role, resources);
+        }
+
+        // role: 0 = archers, 1 = cavalry, 2 = infantry.
+        private void TrainRole(int role, PlayerResources resources)
+        {
+            bool age3 = sim.GetPlayerAge(playerId) >= 3;
+            switch (role)
+            {
+                case 0:
+                    GetResolvedCosts(2, out _, out int af, out int aw, out int ag);
+                    TrainFromBuilding(BuildingType.ArcheryRange, 2, af, aw, ag, resources);
+                    if (age3)
+                        TrainFromBuilding(BuildingType.ArcheryRange, 8, sim.Config.CrossbowmanFoodCost, 0, sim.Config.CrossbowmanGoldCost, resources);
+                    break;
+                case 1:
+                    if (HasBuilding(BuildingType.Stables))
+                    {
+                        GetResolvedCosts(3, out _, out int cf, out int cw, out int cg);
+                        TrainFromBuilding(BuildingType.Stables, 3, cf, cw, cg, resources);
+                        if (age3)
+                            TrainFromBuilding(BuildingType.Stables, 7, sim.Config.KnightFoodCost, 0, sim.Config.KnightGoldCost, resources);
+                    }
+                    break;
+                default:
+                    GetResolvedCosts(1, out _, out int sf, out int sw, out int sg);
+                    TrainFromBuilding(BuildingType.Barracks, 1, sf, sw, sg, resources);
+                    if (age3)
+                        TrainFromBuilding(BuildingType.Barracks, 6, sim.Config.ManAtArmsFoodCost, 0, sim.Config.ManAtArmsGoldCost, resources);
+                    break;
+            }
+        }
+
+        private void SetAllMilitaryRally(FixedVector3 pos)
+        {
+            for (int i = 0; i < cachedMyBuildings.Count; i++)
+            {
+                var b = cachedMyBuildings[i];
+                if (b.IsDestroyed || b.IsUnderConstruction) continue;
+                if (b.Type == BuildingType.Barracks || b.Type == BuildingType.ArcheryRange
+                    || b.Type == BuildingType.Stables || b.Type == BuildingType.Monastery)
+                    Issue(new SetRallyPointCommand(playerId, b.Id, pos, -1));
+            }
+        }
+
+        // Scouts (UnitType 4) are not part of the combat army, so a direct move sticks.
+        private void SendScoutTo(FixedVector3 pos, int untilTick)
+        {
+            for (int i = 0; i < cachedMyUnits.Count; i++)
+            {
+                var u = cachedMyUnits[i];
+                if (u.State == UnitState.Dead) continue;
+                if (u.UnitType == 4)
+                {
+                    Issue(new MoveCommand(playerId, new int[] { u.Id }, pos));
+                    return;
+                }
+            }
+            // No scout available — queue one so the AI can scout going forward.
+            AddTrainOrder(4, 1, untilTick);
+        }
+
+        private void MoveAllCombatTo(FixedVector3 pos)
+        {
+            GetMyCombatUnits(tempCombatUnits);
+            if (tempCombatUnits.Count == 0) return;
+            tempUnitIds.Clear();
+            for (int i = 0; i < tempCombatUnits.Count; i++)
+                tempUnitIds.Add(tempCombatUnits[i].Id);
+            Issue(new MoveCommand(playerId, tempUnitIds.ToArray(), pos));
+        }
+
+        // ── Detachments (independent army sub-groups) ──────────────────────
+
+        // Combat units NOT currently assigned to a detachment — what the main combat FSM
+        // is allowed to command. detachedUnitIds is kept fresh by PruneDetachments each tick.
+        private void GetUndetachedCombatUnits(List<UnitData> result)
+        {
+            result.Clear();
+            for (int i = 0; i < cachedCombatUnits.Count; i++)
+            {
+                if (detachedUnitIds.Contains(cachedCombatUnits[i].Id)) continue;
+                result.Add(cachedCombatUnits[i]);
+            }
+        }
+
+        private static bool UnitMatchesClass(UnitData u, int classFilter)
+        {
+            switch (classFilter)
+            {
+                case 1: return u.UnitType == 2 || u.UnitType == 10; // archers
+                case 2: return u.UnitType == 3 || u.UnitType == 11; // horsemen
+                case 3: return u.UnitType == 1 || u.UnitType == 12; // spearmen
+                default: return true;                               // all
+            }
+        }
+
+        // Peel off a deterministic subset of the army into a new independent attack-moving
+        // group. classFilter 0..3; portionPct 1..100 of the AVAILABLE (not-already-detached)
+        // units of that class. Selection is by ascending unit id → identical on every client.
+        private void CreateDetachment(int classFilter, int portionPct, FixedVector3 target, int untilTick)
+        {
+            RebuildDetachedSet();
+            detachCandidates.Clear();
+            for (int i = 0; i < cachedCombatUnits.Count; i++)
+            {
+                var u = cachedCombatUnits[i];
+                if (detachedUnitIds.Contains(u.Id)) continue;
+                if (!UnitMatchesClass(u, classFilter)) continue;
+                detachCandidates.Add(u);
+            }
+            if (detachCandidates.Count == 0) return;
+
+            portionPct = Mathf.Clamp(portionPct, 1, 100);
+            int count = Mathf.Clamp(detachCandidates.Count * portionPct / 100, 1, detachCandidates.Count);
+
+            var ids = new List<int>(count);
+            tempUnitIds.Clear();
+            for (int i = 0; i < count; i++)
+            {
+                int id = detachCandidates[i].Id;
+                ids.Add(id);
+                detachedUnitIds.Add(id);
+                tempUnitIds.Add(id);
+            }
+
+            if (detachments.Count >= MaxDetachments)
+                detachments.RemoveAt(0); // drop the oldest to bound complexity / command volume
+            detachments.Add(new Detachment { UnitIds = ids, Target = target, UntilTick = untilTick, LastIssuedTick = -100000 });
+
+            var cmd = new MoveCommand(playerId, tempUnitIds.ToArray(), target);
+            cmd.IsAttackMove = true;
+            Issue(cmd);
+            LlmDebug.Cmd($"AI{playerId} detach {count} (class {classFilter}, {portionPct}%) → group, total groups {detachments.Count}");
+        }
+
+        // Drop dead/transferred units, expire finished groups (survivors rejoin the main army),
+        // and re-issue each live group's attack-move periodically so it stays committed.
+        private void PruneDetachments(int currentTick)
+        {
+            for (int i = detachments.Count - 1; i >= 0; i--)
+            {
+                var d = detachments[i];
+                for (int j = d.UnitIds.Count - 1; j >= 0; j--)
+                {
+                    var u = sim.UnitRegistry.GetUnit(d.UnitIds[j]);
+                    if (u == null || u.State == UnitState.Dead || u.PlayerId != playerId)
+                        d.UnitIds.RemoveAt(j);
+                }
+                if (d.UnitIds.Count == 0 || currentTick >= d.UntilTick)
+                {
+                    detachments.RemoveAt(i);
+                    continue;
+                }
+                if (currentTick - d.LastIssuedTick >= DetachmentReissueTicks)
+                {
+                    tempUnitIds.Clear();
+                    for (int j = 0; j < d.UnitIds.Count; j++) tempUnitIds.Add(d.UnitIds[j]);
+                    var cmd = new MoveCommand(playerId, tempUnitIds.ToArray(), d.Target);
+                    cmd.IsAttackMove = true;
+                    Issue(cmd);
+                    d.LastIssuedTick = currentTick;
+                    detachments[i] = d; // write back the struct's value field
+                }
+            }
+            RebuildDetachedSet();
+        }
+
+        private void RebuildDetachedSet()
+        {
+            detachedUnitIds.Clear();
+            for (int i = 0; i < detachments.Count; i++)
+            {
+                var ids = detachments[i].UnitIds;
+                for (int j = 0; j < ids.Count; j++)
+                    detachedUnitIds.Add(ids[j]);
+            }
+        }
+
+        private void ClearDetachments()
+        {
+            detachments.Clear();
+            detachedUnitIds.Clear();
+        }
+
+        // Autonomous initiative: when the AI has a strong army and no human combat order is
+        // in effect, peel off a cavalry third to harass the enemy while the main force keeps
+        // building up. Deterministic (currentTick-gated, id-ordered selection); no LLM.
+        private void TickAutonomousSplit(int currentTick)
+        {
+            if (!enableAutonomousSplits) return;
+            if (currentTick - lastAutoSplitTick < AutoSplitCooldownTicks) return;
+            if (currentTick < combatHoldUntilTick) return;             // human order active → don't interfere
+            if (currentTick < pingAttackUntilTick) return;             // committed to a commanded attack
+            if (detachments.Count > 0) return;                         // already have a group out
+            if (combatState != CombatState.Building && combatState != CombatState.Assembling) return;
+
+            int army = cachedCombatUnits.Count;
+            if (army < 2 * EffectiveAttackThreshold(currentTick)) return; // only when comfortably strong
+
+            int cavalry = 0;
+            for (int i = 0; i < cachedCombatUnits.Count; i++)
+                if (UnitMatchesClass(cachedCombatUnits[i], 2)) cavalry++;
+            if (cavalry < 3) return; // need a meaningful raiding party
+
+            var target = GetEnemyTargetPosition();
+            if (!target.HasValue) return;
+
+            CreateDetachment(2, 33, target.Value, currentTick + 45 * 30); // cavalry ~third, 45s raid
+            lastAutoSplitTick = currentTick;
+            LlmDebug.Cmd($"AI{playerId} autonomous raid: split cavalry to harass enemy");
+        }
+
+        private void IssueResearch(TechnologyType tech)
+        {
+            BuildingType bt = (tech == TechnologyType.BlacksmithDamage || tech == TechnologyType.BlacksmithDefense)
+                ? BuildingType.Blacksmith
+                : BuildingType.University;
+            var b = GetMyBuilding(bt);
+            if (b == null || b.IsDestroyed || b.IsUnderConstruction) return;
+            Issue(new ResearchCommand(playerId, b.Id, tech));
+        }
+
+        // ── Villager orders (commanded/auto villager tasks) ────────────────
+
+        // Deterministically reserve up to `count` villagers, preferring those nearest `nearPos`
+        // (integer tile-distance, ties by ascending id), skipping already-reserved ones.
+        // Returns the chosen id list (may be shorter than count, or empty).
+        private List<int> ReserveVillagers(int count, FixedVector3 nearPos)
+        {
+            RebuildReservedSet();
+            villagerCandidates.Clear();
+            for (int i = 0; i < cachedVillagers.Count; i++)
+            {
+                var v = cachedVillagers[i];
+                if (reservedVillagerIds.Contains(v.Id)) continue;
+                villagerCandidates.Add(v);
+            }
+            if (villagerCandidates.Count == 0) return null;
+
+            int anchorX = nearPos.x.Raw >> Fixed32.FractionalBits;
+            int anchorZ = nearPos.z.Raw >> Fixed32.FractionalBits;
+            // Stable insertion sort by (distSq, id) — deterministic, small lists.
+            villagerCandidates.Sort((a, b) =>
+            {
+                int adx = (a.SimPosition.x.Raw >> Fixed32.FractionalBits) - anchorX;
+                int adz = (a.SimPosition.z.Raw >> Fixed32.FractionalBits) - anchorZ;
+                int bdx = (b.SimPosition.x.Raw >> Fixed32.FractionalBits) - anchorX;
+                int bdz = (b.SimPosition.z.Raw >> Fixed32.FractionalBits) - anchorZ;
+                long ad = (long)adx * adx + (long)adz * adz;
+                long bd = (long)bdx * bdx + (long)bdz * bdz;
+                if (ad != bd) return ad < bd ? -1 : 1;
+                return a.Id.CompareTo(b.Id); // deterministic tie-break
+            });
+
+            count = Mathf.Clamp(count, 1, villagerCandidates.Count);
+            var ids = new List<int>(count);
+            for (int i = 0; i < count; i++)
+            {
+                int id = villagerCandidates[i].Id;
+                ids.Add(id);
+                reservedVillagerIds.Add(id);
+            }
+            return ids;
+        }
+
+        private void AddVillagerOrder(VillagerTask task, List<int> ids, int resourceType,
+            FixedVector3 target, int targetBuildingId, int untilTick, int currentTick)
+        {
+            if (ids == null || ids.Count == 0) return;
+            if (villagerOrders.Count >= MaxVillagerOrders)
+                villagerOrders.RemoveAt(0); // drop oldest
+            villagerOrders.Add(new VillagerOrder
+            {
+                Task = task, UnitIds = ids, ResourceType = resourceType,
+                Target = target, TargetBuildingId = targetBuildingId,
+                UntilTick = untilTick, LastIssuedTick = -100000,
+            });
+            for (int i = 0; i < ids.Count; i++) reservedVillagerIds.Add(ids[i]); // reserve now (same-tick exclusion)
+            IssueVillagerOrder(villagerOrders[villagerOrders.Count - 1], currentTick);
+        }
+
+        // Emit the low-level command(s) that put a villager order's units on task.
+        private void IssueVillagerOrder(VillagerOrder o, int currentTick)
+        {
+            if (o.UnitIds.Count == 0) return;
+            switch (o.Task)
+            {
+                case VillagerTask.Gather:
+                    ServiceGatherOrder(o, currentTick);
+                    break;
+                case VillagerTask.Protect:
+                {
+                    int[] ids = o.UnitIds.ToArray();
+                    if (o.TargetBuildingId >= 0) Issue(new GarrisonCommand(playerId, ids, o.TargetBuildingId));
+                    else Issue(new MoveCommand(playerId, ids, o.Target));
+                    break;
+                }
+                case VillagerTask.Repair:
+                {
+                    int[] ids = o.UnitIds.ToArray();
+                    if (o.TargetBuildingId >= 0) Issue(new RepairBuildingCommand(playerId, ids, o.TargetBuildingId));
+                    break;
+                }
+                case VillagerTask.Build:
+                    // Build is kicked off once at order creation via the normal placement path;
+                    // nothing to re-issue here (units stay reserved until the order expires).
+                    break;
+            }
+        }
+
+        // Drives a gather order without breaking the natural gather→deposit cycle:
+        //   1. If the proper drop-off is UNDER CONSTRUCTION within 5 tiles, finish it first.
+        //   2. Else ensure a deposit exists within 5 tiles (build one if missing).
+        //   3. (Re)assign only IDLE/off-task villagers to gather — never interrupt one that is
+        //      already gathering the right resource or carrying it back to deposit. That
+        //      interruption was the bug where commanded villagers never dropped off.
+        private void ServiceGatherOrder(VillagerOrder o, int currentTick)
+        {
+            var resType = (ResourceType)o.ResourceType;
+            BuildingType dropType = DepositTypeFor(resType);
+
+            var uc = FindDropoffUnderConstruction(dropType, o.Target, 5 * 5);
+            if (uc != null)
+            {
+                tempUnitIds.Clear();
+                for (int i = 0; i < o.UnitIds.Count; i++)
+                {
+                    var u = sim.UnitRegistry.GetUnit(o.UnitIds[i]);
+                    if (u == null || u.State == UnitState.Dead) continue;
+                    if (u.State == UnitState.Constructing && u.ConstructionTargetBuildingId == uc.Id) continue; // already on it
+                    tempUnitIds.Add(u.Id);
+                }
+                if (tempUnitIds.Count > 0)
+                    Issue(new ConstructBuildingCommand(playerId, tempUnitIds.ToArray(), uc.Id));
+                return; // hold gathering until the drop-off is up
+            }
+
+            var node = FindNearestResourceNode(o.Target, resType);
+            if (node != null) EnsureDropoffForGather(resType, node, currentTick);
+
+            for (int i = 0; i < o.UnitIds.Count; i++)
+            {
+                var u = sim.UnitRegistry.GetUnit(o.UnitIds[i]);
+                if (u == null || u.State == UnitState.Dead) continue;
+                if (IsOnGatherTask(u, resType)) continue; // cycling correctly — leave it alone
+                var n = FindNearestResourceNode(u.SimPosition, resType);
+                if (n != null) Issue(new GatherCommand(playerId, new int[] { u.Id }, n.Id));
+            }
+        }
+
+        private static BuildingType DepositTypeFor(ResourceType type)
+        {
+            switch (type)
+            {
+                case ResourceType.Food: return BuildingType.Mill;
+                case ResourceType.Wood: return BuildingType.LumberYard;
+                default: return BuildingType.Mine; // Gold / Stone
+            }
+        }
+
+        // A villager is "on task" (don't interrupt) if it's gathering/heading to the right
+        // resource, or carrying that resource back to a deposit.
+        private bool IsOnGatherTask(UnitData u, ResourceType resType)
+        {
+            if (u.State == UnitState.MovingToDropoff || u.State == UnitState.DroppingOff)
+                return u.CarriedResourceType == resType;
+            if (u.State == UnitState.Gathering || u.State == UnitState.MovingToGather)
+            {
+                var node = sim.MapData.GetResourceNode(u.TargetResourceNodeId);
+                return node != null && node.Type == resType;
+            }
+            return false;
+        }
+
+        private BuildingData FindDropoffUnderConstruction(BuildingType dropType, FixedVector3 target, int withinSq)
+        {
+            int px = target.x.Raw >> Fixed32.FractionalBits;
+            int pz = target.z.Raw >> Fixed32.FractionalBits;
+            BuildingData best = null; long bestD = long.MaxValue; int bestId = int.MaxValue;
+            for (int i = 0; i < cachedMyBuildings.Count; i++)
+            {
+                var b = cachedMyBuildings[i];
+                if (b.IsDestroyed || !b.IsUnderConstruction || b.Type != dropType) continue;
+                int dx = b.OriginTileX - px;
+                int dz = b.OriginTileZ - pz;
+                long d = (long)dx * dx + (long)dz * dz;
+                if (d > withinSq) continue;
+                if (d < bestD || (d == bestD && b.Id < bestId)) { bestD = d; bestId = b.Id; best = b; }
+            }
+            return best;
+        }
+
+        // Drop dead/finished orders, release their villagers, and re-issue live ones so the
+        // auto-economy never reclaims them mid-task. Runs each think-tick before TickEconomy.
+        private void PruneVillagerOrders(int currentTick)
+        {
+            for (int i = villagerOrders.Count - 1; i >= 0; i--)
+            {
+                var o = villagerOrders[i];
+                for (int j = o.UnitIds.Count - 1; j >= 0; j--)
+                {
+                    var u = sim.UnitRegistry.GetUnit(o.UnitIds[j]);
+                    if (u == null || u.State == UnitState.Dead || u.PlayerId != playerId || u.UnitType != 0)
+                        o.UnitIds.RemoveAt(j);
+                }
+
+                bool done = o.UnitIds.Count == 0 || currentTick >= o.UntilTick;
+                if (!done && (o.Task == VillagerTask.Repair || o.Task == VillagerTask.Build) && o.TargetBuildingId >= 0)
+                {
+                    var b = sim.BuildingRegistry.GetBuilding(o.TargetBuildingId);
+                    if (b == null || b.IsDestroyed) done = true;
+                    else if (o.Task == VillagerTask.Repair && !b.IsUnderConstruction && b.CurrentHealth >= b.MaxHealth) done = true;
+                    else if (o.Task == VillagerTask.Build && !b.IsUnderConstruction) done = true;
+                }
+
+                if (done)
+                {
+                    villagerOrders.RemoveAt(i);
+                    continue;
+                }
+
+                if (currentTick - o.LastIssuedTick >= VillagerReissueTicks)
+                {
+                    IssueVillagerOrder(o, currentTick);
+                    o.LastIssuedTick = currentTick;
+                    villagerOrders[i] = o; // write back struct value field
+                }
+            }
+            RebuildReservedSet();
+        }
+
+        private void RebuildReservedSet()
+        {
+            reservedVillagerIds.Clear();
+            for (int i = 0; i < villagerOrders.Count; i++)
+            {
+                var ids = villagerOrders[i].UnitIds;
+                for (int j = 0; j < ids.Count; j++)
+                    reservedVillagerIds.Add(ids[j]);
+            }
+        }
+
+        private void ClearVillagerOrders()
+        {
+            villagerOrders.Clear();
+            reservedVillagerIds.Clear();
+        }
+
+        // When a commanded gather targets a resource far from any deposit, place the proper
+        // drop-off building (Mill for food, Lumber Yard for wood, Mine for gold/stone) next to
+        // the node so villagers can deposit locally instead of walking back to the TC.
+        private void EnsureDropoffForGather(ResourceType type, ResourceNodeData node, int currentTick)
+        {
+            BuildingType dropType;
+            int cost;
+            switch (type)
+            {
+                case ResourceType.Food: dropType = BuildingType.Mill; cost = sim.Config.MillWoodCost; break;
+                case ResourceType.Wood: dropType = BuildingType.LumberYard; cost = sim.Config.LumberYardWoodCost; break;
+                case ResourceType.Gold:
+                case ResourceType.Stone: dropType = BuildingType.Mine; cost = sim.Config.MineWoodCost; break;
+                default: return;
+            }
+
+            var resources = sim.ResourceManager.GetPlayerResources(playerId);
+            if (resources.Wood < cost) return; // can't afford it — leave them depositing at the TC
+
+            // Distance to the nearest existing deposit for this resource (that drop-off or a TC).
+            int nearestSq = int.MaxValue;
+            for (int i = 0; i < cachedMyBuildings.Count; i++)
+            {
+                var b = cachedMyBuildings[i];
+                if (b.IsDestroyed) continue;
+                if (b.Type != dropType && b.Type != BuildingType.TownCenter) continue;
+                int dx = node.TileX - b.OriginTileX;
+                int dz = node.TileZ - b.OriginTileZ;
+                int dSq = dx * dx + dz * dz;
+                if (dSq < nearestSq) nearestSq = dSq;
+            }
+
+            const int needDropWithinSq = 5 * 5; // already-close-enough deposit → don't build
+            if (nearestSq <= needDropWithinSq) return;
+
+            switch (dropType)
+            {
+                case BuildingType.Mill:       TryPlaceBuilding(BuildingType.Mill, node.TileX, node.TileZ, currentTick, ref pendingMillTick); break;
+                case BuildingType.LumberYard: TryPlaceBuilding(BuildingType.LumberYard, node.TileX, node.TileZ, currentTick, ref pendingLumberYardTick); break;
+                case BuildingType.Mine:       TryPlaceBuilding(BuildingType.Mine, node.TileX, node.TileZ, currentTick, ref pendingMineTick); break;
+            }
+            LlmDebug.Cmd($"AI{playerId} gather: placing {dropType} drop-off near commanded {type} node");
+        }
+
+        // Nearest damaged own building to `pos`; optional type filter (0 = any). Deterministic
+        // (integer tile distance, ties by ascending id).
+        private BuildingData FindNearestDamagedBuilding(FixedVector3 pos, int buildingType)
+        {
+            int px = pos.x.Raw >> Fixed32.FractionalBits;
+            int pz = pos.z.Raw >> Fixed32.FractionalBits;
+            BuildingData best = null;
+            long bestDist = long.MaxValue;
+            int bestId = int.MaxValue;
+            for (int i = 0; i < cachedMyBuildings.Count; i++)
+            {
+                var b = cachedMyBuildings[i];
+                if (b.IsDestroyed) continue;
+                if (b.CurrentHealth >= b.MaxHealth) continue;
+                if (buildingType != 0 && (int)b.Type != buildingType) continue;
+                int dx = (b.SimPosition.x.Raw >> Fixed32.FractionalBits) - px;
+                int dz = (b.SimPosition.z.Raw >> Fixed32.FractionalBits) - pz;
+                long d = (long)dx * dx + (long)dz * dz;
+                if (d < bestDist || (d == bestDist && b.Id < bestId))
+                {
+                    bestDist = d; bestId = b.Id; best = b;
                 }
             }
             return best;

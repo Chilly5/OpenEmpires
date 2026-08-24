@@ -24,6 +24,7 @@ namespace OpenEmpires
         [SerializeField] private GameObject longbowmanPrefab;
         [SerializeField] private GameObject gendarmePrefab;
         [SerializeField] private GameObject landsknechtPrefab;
+        [SerializeField] private GameObject kingPrefab;
 
         [Header("Markers")]
         [SerializeField] private Material markerMaterial;
@@ -124,6 +125,13 @@ namespace OpenEmpires
         private Material[] playerMaterials;
         private Material[] playerSilhouetteMaterials;
         private Material buildingBodyMaterial;
+        private Material landmarkWhiteStoneMaterial;
+        private Material landmarkDarkStoneMaterial;
+        private Material landmarkWoodMaterial;
+        private Material landmarkGoldMaterial;
+        private Material landmarkDarkAccentMaterial;
+        private Material landmarkTargetRedMaterial;
+        private Material landmarkFireMaterial;
         private Material unitStencilMat;
 
         // Cached shaders and shared materials to avoid per-building Shader.Find / new Material
@@ -177,6 +185,58 @@ namespace OpenEmpires
         {
             if (mat.HasProperty("_Color1")) mat.SetColor("_Color1", color);
             else if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", color);
+            else if (mat.HasProperty("_Color")) mat.SetColor("_Color", color);
+            else mat.color = color;
+        }
+
+        private Material GetOrCreateTintedBuildingMaterial(ref Material cache, Color color)
+        {
+            if (cache != null) return cache;
+
+            Material source = buildingBodyMaterial;
+            if (source == null && playerMaterials != null && playerMaterials.Length > 0)
+                source = playerMaterials[0];
+
+            if (source != null)
+            {
+                cache = new Material(source);
+            }
+            else
+            {
+                Shader fallbackShader = Shader.Find("Universal Render Pipeline/Lit");
+                if (fallbackShader == null) fallbackShader = cachedUnlitShader;
+                if (fallbackShader == null) fallbackShader = Shader.Find("Standard");
+                cache = new Material(fallbackShader);
+            }
+            SetMaterialColor(cache, color);
+            return cache;
+        }
+
+        private Material GetBuildingRendererMaterial(Renderer renderer, BuildingData buildingData, Material teamMat)
+        {
+            string partName = renderer.gameObject.name;
+
+            if (buildingData.Type == BuildingType.Landmark)
+            {
+                if (partName == "Roof" || partName.StartsWith("Roof_") || partName.StartsWith("LandmarkTeam"))
+                    return teamMat;
+                if (partName.StartsWith("LandmarkWhiteStone"))
+                    return GetOrCreateTintedBuildingMaterial(ref landmarkWhiteStoneMaterial, new Color(0.88f, 0.86f, 0.76f));
+                if (partName.StartsWith("LandmarkDarkStone"))
+                    return GetOrCreateTintedBuildingMaterial(ref landmarkDarkStoneMaterial, new Color(0.42f, 0.40f, 0.36f));
+                if (partName.StartsWith("LandmarkWood"))
+                    return GetOrCreateTintedBuildingMaterial(ref landmarkWoodMaterial, new Color(0.34f, 0.20f, 0.11f));
+                if (partName.StartsWith("LandmarkGold"))
+                    return GetOrCreateTintedBuildingMaterial(ref landmarkGoldMaterial, new Color(1f, 0.74f, 0.18f));
+                if (partName.StartsWith("LandmarkDark"))
+                    return GetOrCreateTintedBuildingMaterial(ref landmarkDarkAccentMaterial, new Color(0.08f, 0.07f, 0.06f));
+                if (partName.StartsWith("LandmarkTargetRed"))
+                    return GetOrCreateTintedBuildingMaterial(ref landmarkTargetRedMaterial, new Color(0.8f, 0.12f, 0.08f));
+                if (partName.StartsWith("LandmarkFire"))
+                    return GetOrCreateTintedBuildingMaterial(ref landmarkFireMaterial, new Color(1f, 0.45f, 0.08f));
+            }
+
+            return (partName == "Roof" || partName.StartsWith("Roof_")) ? teamMat : buildingBodyMaterial;
         }
 
         public void InitializeGame()
@@ -226,7 +286,7 @@ namespace OpenEmpires
             cachedUnlitShader = Shader.Find("Universal Render Pipeline/Unlit");
             if (cachedUnlitShader == null) cachedUnlitShader = Shader.Find("Unlit/Color");
             sharedSelectionRingMat = new Material(cachedSelectionRingShader);
-            sharedSelectionRingMat.SetColor("_Color", new Color(0f, 1f, 0f, 0.5f));
+            sharedSelectionRingMat.SetColor("_Color", new Color(1f, 1f, 1f, 0.55f));
 
             // Use computed base positions from map generation (falls back to hardcoded if unavailable)
             var basePositions = sim.MapData.BasePositions ?? GetFallbackBasePositions(sim.MapData.Width, sim.MapData.Height);
@@ -316,6 +376,8 @@ namespace OpenEmpires
             sim.OnUnitUngarrisoned += HandleUnitUngarrisoned;
             sim.OnSheepConverted += HandleSheepConverted;
             sim.OnSheepSlaughtered += HandleSheepSlaughtered;
+            sim.OnKingHealingAuraPulse += HandleKingHealingAuraPulse;
+            sim.OnBuildingHealingAuraPulse += HandleBuildingHealingAuraPulse;
 
             // Meteor visual manager
             var meteorGO = new GameObject("MeteorVisualManager");
@@ -373,7 +435,11 @@ namespace OpenEmpires
                 var partName = r.gameObject.name;
                 if (partName == "SelectionRing") continue;
 
-                bool isTeamColored = partName.StartsWith("Body") || partName.StartsWith("Sphere");
+                // A "_Team" suffix marks a part as taking the player's colour. The older models
+                // signal the same thing by starting with "Body" or "Sphere" — a naming rule that
+                // reads like leftover primitive names but is load bearing — so both are honoured
+                // while models are converted one at a time.
+                bool isTeamColored = IsTeamColoredPart(partName);
                 var primaryMat = isTeamColored ? mat : r.sharedMaterial;
                 r.sharedMaterials = new Material[] { primaryMat, unitStencilMat, silMat };
             }
@@ -582,7 +648,7 @@ namespace OpenEmpires
                 facingArrow.SetActive(false);
         }
 
-        public void ShowMarkers(List<Vector3> positions)
+        public void ShowMarkers(List<Vector3> positions, CommandFlagKind flagKind = CommandFlagKind.Move)
         {
             int count = Mathf.Min(positions.Count, MarkerPoolSize);
             for (int i = 0; i < count; i++)
@@ -593,6 +659,9 @@ namespace OpenEmpires
                 marker.SetActive(false);
                 marker.SetActive(true);
             }
+
+            if (count > 0)
+                ShowCommandFlag(GetMarkerCenter(positions, count), flagKind);
         }
 
         public void PreviewMarkers(List<Vector3> positions)
@@ -626,11 +695,46 @@ namespace OpenEmpires
             activePreviewCount = 0;
         }
 
-        public void CommitMarkers()
+        public void CommitMarkers(CommandFlagKind flagKind = CommandFlagKind.Move)
         {
+            if (activePreviewCount > 0)
+            {
+                Vector3 center = Vector3.zero;
+                for (int i = 0; i < activePreviewCount; i++)
+                    center += markerPool[i].transform.position;
+                ShowCommandFlag(center / activePreviewCount, flagKind);
+            }
+
             for (int i = 0; i < activePreviewCount; i++)
                 markerFaders[i].Preview = false;
             activePreviewCount = 0;
+        }
+
+        public void ShowCommandFlag(Vector3 position, CommandFlagKind flagKind)
+        {
+            CommandFlagMarker.Spawn(GetCommandFlagGroundPosition(position), flagKind);
+        }
+
+        public void ShowRallyCommandFlag(Vector3 position)
+        {
+            CommandFlagMarker.Spawn(GetCommandFlagGroundPosition(position), CommandFlagKind.Rally,
+                new Color(1f, 0.82f, 0.18f, 0.86f));
+        }
+
+        private Vector3 GetCommandFlagGroundPosition(Vector3 position)
+        {
+            var sim = GameBootstrapper.Instance?.Simulation;
+            if (sim != null && sim.MapData != null)
+                position.y = sim.MapData.SampleHeight(position.x, position.z) * sim.Config.TerrainHeightScale + 0.03f;
+            return position;
+        }
+
+        private static Vector3 GetMarkerCenter(List<Vector3> positions, int count)
+        {
+            Vector3 center = Vector3.zero;
+            for (int i = 0; i < count; i++)
+                center += positions[i];
+            return center / count;
         }
 
         public static Vector3 SnapClickToNearestWalkable(MapData map, Vector3 clickPoint)
@@ -721,6 +825,77 @@ namespace OpenEmpires
                 Vector3 pos = center + new Vector3(col * spacing - offsetX, 0f, row * spacing - offsetZ);
                 positions.Add(pos);
             }
+
+            return positions;
+        }
+
+        /// <summary>
+        /// Builds a grouped formation centered on a locked destination and oriented toward facingDirection.
+        /// Earlier groups occupy the front rows; later groups are placed behind them.
+        /// </summary>
+        public static List<Vector3> ComputeGroupedFacingFormation(
+            Vector3 center, Vector3 facingDirection, int[] groupSizes,
+            float columnSpacing = 1.0f, float rowSpacing = 1.2f)
+        {
+            int totalUnits = 0;
+            int maxGroupSize = 0;
+            for (int g = 0; g < groupSizes.Length; g++)
+            {
+                totalUnits += groupSizes[g];
+                if (groupSizes[g] > maxGroupSize) maxGroupSize = groupSizes[g];
+            }
+
+            var positions = new List<Vector3>(totalUnits);
+            if (totalUnits <= 0) return positions;
+
+            facingDirection.y = 0f;
+            if (facingDirection.sqrMagnitude < 0.001f)
+                facingDirection = Vector3.forward;
+            else
+                facingDirection.Normalize();
+
+            if (totalUnits == 1)
+            {
+                positions.Add(center);
+                return positions;
+            }
+
+            Vector3 rightDirection = new Vector3(facingDirection.z, 0f, -facingDirection.x);
+            int numCols = Mathf.Max(1,
+                Mathf.Min(maxGroupSize, Mathf.CeilToInt(Mathf.Sqrt(totalUnits))));
+
+            int currentRow = 0;
+            for (int g = 0; g < groupSizes.Length; g++)
+            {
+                int groupCount = groupSizes[g];
+                if (groupCount <= 0) continue;
+
+                int groupRows = Mathf.CeilToInt((float)groupCount / numCols);
+                for (int i = 0; i < groupCount; i++)
+                {
+                    int col = i % numCols;
+                    int localRow = i / numCols;
+                    int rowStart = localRow * numCols;
+                    int rowUnits = Mathf.Min(numCols, groupCount - rowStart);
+                    float lateralOffset = (col - (rowUnits - 1) * 0.5f) * columnSpacing;
+                    float depthOffset = -(currentRow + localRow) * rowSpacing;
+                    positions.Add(center
+                        + rightDirection * lateralOffset
+                        + facingDirection * depthOffset);
+                }
+
+                currentRow += groupRows;
+            }
+
+            // Keep the requested destination at the formation centroid, regardless of row count.
+            Vector3 centroid = Vector3.zero;
+            for (int i = 0; i < positions.Count; i++)
+                centroid += positions[i];
+            centroid /= positions.Count;
+
+            Vector3 centerCorrection = center - centroid;
+            for (int i = 0; i < positions.Count; i++)
+                positions[i] += centerCorrection;
 
             return positions;
         }
@@ -840,6 +1015,15 @@ namespace OpenEmpires
                 center += positions[i];
             center /= positions.Count;
 
+            ScaleFormationByRadius(positions, groupSizes, groupRadii, standardRadius, center);
+        }
+
+        public static void ScaleFormationByRadius(
+            List<Vector3> positions, int[] groupSizes, float[] groupRadii,
+            float standardRadius, Vector3 center)
+        {
+            if (positions.Count == 0) return;
+
             int posIdx = 0;
             for (int g = 0; g < groupSizes.Length; g++)
             {
@@ -872,7 +1056,7 @@ namespace OpenEmpires
             var mat = new Material(shader);
             mat.SetTexture("_MainTex", tex);
             mat.SetColor("_Color", Color.white);
-            mat.SetFloat("_Cutoff", 0.5f);
+            mat.SetFloat("_Cutoff", 0.05f);
             mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry + 1;
             mat.enableInstancing = true;
             buildingSpriteMaterials[spriteName] = mat;
@@ -928,6 +1112,14 @@ namespace OpenEmpires
             view.SetSelectionRing(ring);
 
             return building;
+        }
+
+        // Age-1 houses alternate between two thatched-house looks so a village isn't all
+        // identical. Chosen by building Id so it's stable and identical on every client
+        // (purely visual — BuildingView never touches the deterministic sim).
+        private static string HouseAge1SpriteName(BuildingData buildingData)
+        {
+            return (buildingData.Id & 1) == 0 ? "HouseAge1" : "EnglishHouseDarkAge2";
         }
 
         private GameObject CreateHousePrefab(int playerId)
@@ -1292,12 +1484,12 @@ namespace OpenEmpires
 
         private void AddMillInfluenceZone(GameObject building, BuildingView view, int playerId)
         {
-            // Influence zone outline (visible during Mill construction) — only for civs that use Mill as influence source
+            // Influence zone outline (visible during Mill construction) — skip for civs where Mill grants no influence
             var simRef = GameBootstrapper.Instance?.Simulation;
-            if (simRef != null && simRef.GetInfluenceBuildingType(playerId) != BuildingType.Mill)
+            if (simRef != null && !simRef.IsInfluenceBuildingType(playerId, BuildingType.Mill))
                 return;
 
-            int influenceRadius = simRef?.Config?.MillInfluenceRadius ?? 6;
+            int influenceRadius = simRef?.Config?.MillInfluenceRadius ?? 2;
             int footprintW = simRef?.Config?.MillFootprintWidth ?? 2;
             int footprintH = simRef?.Config?.MillFootprintHeight ?? 2;
             float halfX = (footprintW + 2 * influenceRadius) * 0.5f;
@@ -1674,8 +1866,8 @@ namespace OpenEmpires
             col.radius = 0.7f;
             col.height = 3.4f;
 
-            // Selection reticle (circular for tower)
-            var ring = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            // Selection reticle (square for buildings)
+            var ring = GameObject.CreatePrimitive(PrimitiveType.Cube);
             ring.name = "SelectionRing";
             ring.transform.SetParent(tower.transform);
             ring.transform.localPosition = new Vector3(0f, 0.02f, 0f);
@@ -1685,7 +1877,6 @@ namespace OpenEmpires
             var ringCollider = ring.GetComponent<Collider>();
             if (ringCollider != null) Object.Destroy(ringCollider);
 
-            // Create transparent green selection ring material
             ring.GetComponent<Renderer>().sharedMaterial = sharedSelectionRingMat;
 
             var view = tower.AddComponent<BuildingView>();
@@ -1824,6 +2015,9 @@ namespace OpenEmpires
         private GameObject CreateLandmarkPrefab(int playerId, LandmarkId landmarkId)
         {
             var def = LandmarkDefinitions.Get(landmarkId);
+            if (def.Civ == Civilization.English)
+                return CreateEnglishLandmarkPrefab(def);
+
             var landmark = new GameObject($"Landmark_{def.Name}");
             landmark.layer = 11;
 
@@ -1924,6 +2118,302 @@ namespace OpenEmpires
             return landmark;
         }
 
+        private GameObject CreateEnglishLandmarkPrefab(LandmarkDefinition def)
+        {
+            var landmark = new GameObject($"Landmark_{def.Name}");
+            landmark.layer = 11;
+
+            Vector3 colliderCenter = new Vector3(0f, 1.8f, 0f);
+            Vector3 colliderSize = new Vector3(4.2f, 3.6f, 4.2f);
+
+            switch (def.Id)
+            {
+                case LandmarkId.English_Age2_A:
+                    BuildAbbeyOfKingsVisual(landmark.transform);
+                    colliderCenter = new Vector3(0f, 1.65f, 0f);
+                    colliderSize = new Vector3(4.0f, 3.3f, 4.0f);
+                    break;
+                case LandmarkId.English_Age2_B:
+                    BuildCouncilHallVisual(landmark.transform);
+                    colliderCenter = new Vector3(0f, 1.15f, 0f);
+                    colliderSize = new Vector3(4.2f, 2.3f, 3.6f);
+                    break;
+                case LandmarkId.English_Age3_A:
+                    BuildKingsPalaceVisual(landmark.transform);
+                    colliderCenter = new Vector3(0f, 1.75f, 0f);
+                    colliderSize = new Vector3(4.3f, 3.5f, 4.1f);
+                    break;
+                case LandmarkId.English_Age3_B:
+                    BuildWhiteTowerVisual(landmark.transform);
+                    colliderCenter = new Vector3(0f, 1.9f, 0f);
+                    colliderSize = new Vector3(4.0f, 3.8f, 4.0f);
+                    break;
+                case LandmarkId.English_Age4_A:
+                    BuildWynguardPalaceVisual(landmark.transform);
+                    colliderCenter = new Vector3(0f, 1.55f, 0f);
+                    colliderSize = new Vector3(4.4f, 3.1f, 4.2f);
+                    break;
+                case LandmarkId.English_Age4_B:
+                    BuildBerkshirePalaceVisual(landmark.transform);
+                    colliderCenter = new Vector3(0f, 2.1f, 0f);
+                    colliderSize = new Vector3(4.4f, 4.2f, 4.4f);
+                    break;
+                default:
+                    BuildKingsPalaceVisual(landmark.transform);
+                    break;
+            }
+
+            AddLandmarkColliderAndSelection(landmark, def, colliderCenter, colliderSize);
+            return landmark;
+        }
+
+        private GameObject CreateLandmarkPiece(Transform parent, string name, PrimitiveType type, Vector3 localPosition, Vector3 localScale)
+        {
+            return CreateLandmarkPiece(parent, name, type, localPosition, localScale, Vector3.zero);
+        }
+
+        private GameObject CreateLandmarkPiece(Transform parent, string name, PrimitiveType type, Vector3 localPosition, Vector3 localScale, Vector3 localEulerAngles)
+        {
+            var piece = GameObject.CreatePrimitive(type);
+            piece.name = name;
+            piece.transform.SetParent(parent);
+            piece.transform.localPosition = localPosition;
+            piece.transform.localRotation = Quaternion.Euler(localEulerAngles);
+            piece.transform.localScale = localScale;
+            piece.layer = 11;
+
+            var collider = piece.GetComponent<Collider>();
+            if (collider != null) Object.Destroy(collider);
+
+            return piece;
+        }
+
+        private BuildingView AddLandmarkColliderAndSelection(GameObject landmark, LandmarkDefinition def, Vector3 colliderCenter, Vector3 colliderSize)
+        {
+            var col = landmark.AddComponent<BoxCollider>();
+            col.center = colliderCenter;
+            col.size = colliderSize;
+
+            float ringSize = Mathf.Max(def.FootprintWidth, def.FootprintHeight) + 0.7f;
+            var ring = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            ring.name = "SelectionRing";
+            ring.transform.SetParent(landmark.transform);
+            ring.transform.localPosition = new Vector3(0f, 0.02f, 0f);
+            ring.transform.localScale = new Vector3(ringSize, 0.01f, ringSize);
+            ring.layer = 11;
+
+            var ringCollider = ring.GetComponent<Collider>();
+            if (ringCollider != null) Object.Destroy(ringCollider);
+
+            ring.GetComponent<Renderer>().sharedMaterial = sharedSelectionRingMat;
+
+            var view = landmark.AddComponent<BuildingView>();
+            view.SetSelectionRing(ring);
+            return view;
+        }
+
+        private void AddLandmarkGroundLine(Transform parent, string name, float radius, Color color)
+        {
+            const int segments = 64;
+            var ring = new GameObject(name);
+            ring.transform.SetParent(parent);
+            ring.transform.localPosition = new Vector3(0f, 0.04f, 0f);
+            ring.layer = 11;
+
+            var lr = ring.AddComponent<LineRenderer>();
+            lr.useWorldSpace = false;
+            lr.loop = true;
+            lr.positionCount = segments;
+            for (int i = 0; i < segments; i++)
+            {
+                float angle = (i / (float)segments) * Mathf.PI * 2f;
+                lr.SetPosition(i, new Vector3(Mathf.Cos(angle) * radius, 0f, Mathf.Sin(angle) * radius));
+            }
+
+            lr.startWidth = 0.06f;
+            lr.endWidth = 0.06f;
+            lr.startColor = color;
+            lr.endColor = color;
+
+            var mat = new Material(cachedUnlitShader);
+            SetMaterialColor(mat, color);
+            if (mat.HasProperty("_ZTest"))
+                mat.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
+            mat.renderQueue = 3000;
+            lr.material = mat;
+        }
+
+        private void AddLandmarkBanner(Transform parent, Vector3 poleCenter, float poleHeight, Vector3 bannerOffset, Vector3 bannerScale)
+        {
+            CreateLandmarkPiece(parent, "LandmarkWood_BannerPole", PrimitiveType.Cube, poleCenter, new Vector3(0.08f, poleHeight, 0.08f));
+            CreateLandmarkPiece(parent, "LandmarkTeam_Banner", PrimitiveType.Cube, poleCenter + bannerOffset, bannerScale);
+        }
+
+        private void AddLandmarkBattlements(Transform parent, string materialPrefix, float y, float halfX, float halfZ, int countPerSide, Vector3 merlonScale)
+        {
+            for (int i = 0; i < countPerSide; i++)
+            {
+                float t = countPerSide <= 1 ? 0.5f : i / (float)(countPerSide - 1);
+                float x = Mathf.Lerp(-halfX, halfX, t);
+                float z = Mathf.Lerp(-halfZ, halfZ, t);
+
+                CreateLandmarkPiece(parent, $"{materialPrefix}_MerlonFront_{i}", PrimitiveType.Cube, new Vector3(x, y, -halfZ), merlonScale);
+                CreateLandmarkPiece(parent, $"{materialPrefix}_MerlonBack_{i}", PrimitiveType.Cube, new Vector3(x, y, halfZ), merlonScale);
+                CreateLandmarkPiece(parent, $"{materialPrefix}_MerlonLeft_{i}", PrimitiveType.Cube, new Vector3(-halfX, y, z), merlonScale);
+                CreateLandmarkPiece(parent, $"{materialPrefix}_MerlonRight_{i}", PrimitiveType.Cube, new Vector3(halfX, y, z), merlonScale);
+            }
+        }
+
+        private void BuildAbbeyOfKingsVisual(Transform root)
+        {
+            CreateLandmarkPiece(root, "LandmarkStone_Nave", PrimitiveType.Cube, new Vector3(0f, 0.75f, 0f), new Vector3(2.2f, 1.5f, 3.2f));
+            CreateLandmarkPiece(root, "LandmarkStone_Transept", PrimitiveType.Cube, new Vector3(0f, 0.68f, 0.1f), new Vector3(3.25f, 1.35f, 1.05f));
+            CreateLandmarkPiece(root, "Roof_Nave", PrimitiveType.Cube, new Vector3(0f, 1.75f, 0f), new Vector3(1.65f, 1.65f, 3.45f), new Vector3(0f, 0f, 45f));
+            CreateLandmarkPiece(root, "Roof_Transept", PrimitiveType.Cube, new Vector3(0f, 1.55f, 0.1f), new Vector3(2.35f, 1.05f, 1.2f), new Vector3(0f, 0f, 45f));
+
+            CreateLandmarkPiece(root, "LandmarkWhiteStone_BellTower", PrimitiveType.Cube, new Vector3(-0.75f, 2.0f, -0.9f), new Vector3(0.85f, 2.3f, 0.85f));
+            CreateLandmarkPiece(root, "Roof_Spire", PrimitiveType.Cube, new Vector3(-0.75f, 3.35f, -0.9f), new Vector3(0.9f, 0.9f, 0.9f), new Vector3(0f, 45f, 0f));
+            CreateLandmarkPiece(root, "LandmarkGold_CrossVertical", PrimitiveType.Cube, new Vector3(-0.75f, 4.05f, -0.9f), new Vector3(0.12f, 0.7f, 0.12f));
+            CreateLandmarkPiece(root, "LandmarkGold_CrossHorizontal", PrimitiveType.Cube, new Vector3(-0.75f, 4.08f, -0.9f), new Vector3(0.55f, 0.1f, 0.1f));
+
+            CreateLandmarkPiece(root, "LandmarkDark_Door", PrimitiveType.Cube, new Vector3(0f, 0.55f, -1.63f), new Vector3(0.55f, 0.9f, 0.08f));
+            CreateLandmarkPiece(root, "LandmarkDark_WindowLeft", PrimitiveType.Cube, new Vector3(-1.13f, 1.0f, -0.35f), new Vector3(0.08f, 0.45f, 0.28f));
+            CreateLandmarkPiece(root, "LandmarkDark_WindowRight", PrimitiveType.Cube, new Vector3(1.13f, 1.0f, -0.35f), new Vector3(0.08f, 0.45f, 0.28f));
+
+            AddLandmarkBanner(root, new Vector3(1.45f, 1.05f, -1.15f), 1.8f, new Vector3(0f, 0.45f, 0.3f), new Vector3(0.12f, 0.48f, 0.55f));
+        }
+
+        private void BuildCouncilHallVisual(Transform root)
+        {
+            CreateLandmarkPiece(root, "LandmarkStone_Foundation", PrimitiveType.Cube, new Vector3(0f, 0.1f, 0f), new Vector3(3.85f, 0.2f, 2.65f));
+            CreateLandmarkPiece(root, "LandmarkWood_LongHall", PrimitiveType.Cube, new Vector3(0f, 0.75f, 0f), new Vector3(3.35f, 1.5f, 2.2f));
+            CreateLandmarkPiece(root, "Roof_LongHall", PrimitiveType.Cube, new Vector3(0f, 1.65f, 0f), new Vector3(2.6f, 1.25f, 2.55f), new Vector3(0f, 0f, 45f));
+            CreateLandmarkPiece(root, "LandmarkWood_Entry", PrimitiveType.Cube, new Vector3(0f, 0.55f, -1.35f), new Vector3(1.05f, 1.1f, 0.65f));
+            CreateLandmarkPiece(root, "Roof_Entry", PrimitiveType.Cube, new Vector3(0f, 1.22f, -1.35f), new Vector3(1.25f, 0.28f, 0.82f));
+
+            CreateLandmarkPiece(root, "LandmarkDark_Door", PrimitiveType.Cube, new Vector3(0f, 0.52f, -1.72f), new Vector3(0.48f, 0.85f, 0.08f));
+            AddLandmarkBanner(root, new Vector3(-1.62f, 1.12f, -0.95f), 1.9f, new Vector3(0.32f, 0.45f, 0f), new Vector3(0.55f, 0.4f, 0.07f));
+            AddLandmarkBanner(root, new Vector3(1.62f, 1.12f, -0.95f), 1.9f, new Vector3(-0.32f, 0.45f, 0f), new Vector3(0.55f, 0.4f, 0.07f));
+
+            for (int i = 0; i < 2; i++)
+            {
+                float z = 0.45f + i * 0.75f;
+                CreateLandmarkPiece(root, $"LandmarkWood_TargetPost_{i}", PrimitiveType.Cube, new Vector3(1.82f, 0.7f, z), new Vector3(0.1f, 1.25f, 0.1f));
+                CreateLandmarkPiece(root, $"LandmarkWhiteStone_TargetBoard_{i}", PrimitiveType.Cylinder, new Vector3(1.9f, 1.28f, z), new Vector3(0.42f, 0.05f, 0.42f), new Vector3(0f, 0f, 90f));
+                CreateLandmarkPiece(root, $"LandmarkTargetRed_TargetCenter_{i}", PrimitiveType.Cylinder, new Vector3(1.96f, 1.28f, z), new Vector3(0.16f, 0.035f, 0.16f), new Vector3(0f, 0f, 90f));
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                float x = -1.25f + i * 0.35f;
+                CreateLandmarkPiece(root, $"LandmarkWood_LongbowRack_{i}", PrimitiveType.Cube, new Vector3(x, 0.78f, 1.35f), new Vector3(0.08f, 1.1f, 0.08f), new Vector3(0f, 0f, -22f));
+            }
+        }
+
+        private void BuildKingsPalaceVisual(Transform root)
+        {
+            CreateLandmarkPiece(root, "LandmarkStone_GreatHall", PrimitiveType.Cube, new Vector3(0f, 0.85f, 0.15f), new Vector3(3.35f, 1.7f, 2.75f));
+            CreateLandmarkPiece(root, "Roof_GreatHall", PrimitiveType.Cube, new Vector3(0f, 1.92f, 0.15f), new Vector3(2.45f, 1.25f, 3.05f), new Vector3(0f, 0f, 45f));
+            CreateLandmarkPiece(root, "LandmarkWhiteStone_RoyalKeep", PrimitiveType.Cube, new Vector3(0f, 1.8f, -0.55f), new Vector3(1.35f, 2.55f, 1.35f));
+            CreateLandmarkPiece(root, "Roof_RoyalKeep", PrimitiveType.Cube, new Vector3(0f, 3.18f, -0.55f), new Vector3(1.25f, 0.45f, 1.25f), new Vector3(0f, 45f, 0f));
+            CreateLandmarkPiece(root, "LandmarkGold_CrownBand", PrimitiveType.Cube, new Vector3(0f, 2.75f, -0.55f), new Vector3(1.48f, 0.12f, 1.48f));
+
+            CreateLandmarkPiece(root, "LandmarkStone_LeftWing", PrimitiveType.Cube, new Vector3(-1.45f, 0.7f, 0.35f), new Vector3(0.75f, 1.35f, 2.2f));
+            CreateLandmarkPiece(root, "LandmarkStone_RightWing", PrimitiveType.Cube, new Vector3(1.45f, 0.7f, 0.35f), new Vector3(0.75f, 1.35f, 2.2f));
+            CreateLandmarkPiece(root, "LandmarkDark_Door", PrimitiveType.Cube, new Vector3(0f, 0.55f, -1.42f), new Vector3(0.62f, 0.9f, 0.08f));
+
+            CreateLandmarkPiece(root, "LandmarkGold_Crown", PrimitiveType.Cylinder, new Vector3(0f, 3.63f, -0.55f), new Vector3(0.42f, 0.12f, 0.42f));
+            for (int i = 0; i < 4; i++)
+            {
+                float angle = i * 90f * Mathf.Deg2Rad;
+                CreateLandmarkPiece(root, $"LandmarkGold_CrownPoint_{i}", PrimitiveType.Cube,
+                    new Vector3(Mathf.Cos(angle) * 0.34f, 3.83f, -0.55f + Mathf.Sin(angle) * 0.34f),
+                    new Vector3(0.13f, 0.34f, 0.13f));
+            }
+
+            AddLandmarkBanner(root, new Vector3(-1.85f, 1.2f, -1.05f), 2.0f, new Vector3(0.33f, 0.52f, 0f), new Vector3(0.55f, 0.45f, 0.07f));
+            AddLandmarkBanner(root, new Vector3(1.85f, 1.2f, -1.05f), 2.0f, new Vector3(-0.33f, 0.52f, 0f), new Vector3(0.55f, 0.45f, 0.07f));
+        }
+
+        private void BuildWhiteTowerVisual(Transform root)
+        {
+            CreateLandmarkPiece(root, "LandmarkWhiteStone_KeepBody", PrimitiveType.Cube, new Vector3(0f, 1.45f, 0f), new Vector3(3.1f, 2.9f, 3.1f));
+            CreateLandmarkPiece(root, "LandmarkDarkStone_RoofWalk", PrimitiveType.Cube, new Vector3(0f, 3.02f, 0f), new Vector3(3.25f, 0.24f, 3.25f));
+
+            float towerOffset = 1.45f;
+            for (int x = -1; x <= 1; x += 2)
+            {
+                for (int z = -1; z <= 1; z += 2)
+                {
+                    CreateLandmarkPiece(root, $"LandmarkWhiteStone_CornerTower_{x}_{z}", PrimitiveType.Cube,
+                        new Vector3(x * towerOffset, 1.65f, z * towerOffset), new Vector3(0.72f, 3.3f, 0.72f));
+                }
+            }
+
+            AddLandmarkBattlements(root, "LandmarkWhiteStone", 3.35f, 1.55f, 1.55f, 4, new Vector3(0.32f, 0.48f, 0.32f));
+
+            for (int i = 0; i < 3; i++)
+            {
+                float x = -0.78f + i * 0.78f;
+                CreateLandmarkPiece(root, $"LandmarkDark_ArrowSlitFront_{i}", PrimitiveType.Cube, new Vector3(x, 1.55f, -1.58f), new Vector3(0.12f, 0.55f, 0.06f));
+                CreateLandmarkPiece(root, $"LandmarkDark_ArrowSlitBack_{i}", PrimitiveType.Cube, new Vector3(x, 1.55f, 1.58f), new Vector3(0.12f, 0.55f, 0.06f));
+                CreateLandmarkPiece(root, $"LandmarkDark_ArrowSlitHigh_{i}", PrimitiveType.Cube, new Vector3(x, 2.35f, -1.58f), new Vector3(0.1f, 0.45f, 0.06f));
+            }
+
+            AddLandmarkBanner(root, new Vector3(0f, 3.75f, -1.35f), 1.2f, new Vector3(0.42f, 0.28f, 0f), new Vector3(0.7f, 0.38f, 0.08f));
+        }
+
+        private void BuildWynguardPalaceVisual(Transform root)
+        {
+            CreateLandmarkPiece(root, "LandmarkStone_MainHall", PrimitiveType.Cube, new Vector3(0f, 0.8f, 0f), new Vector3(3.6f, 1.6f, 2.45f));
+            CreateLandmarkPiece(root, "Roof_MainHall", PrimitiveType.Cube, new Vector3(0f, 1.75f, 0f), new Vector3(2.75f, 1.25f, 2.8f), new Vector3(0f, 0f, 45f));
+            CreateLandmarkPiece(root, "LandmarkWood_TrainingYard", PrimitiveType.Cube, new Vector3(0f, 0.2f, 1.55f), new Vector3(3.6f, 0.18f, 0.85f));
+
+            CreateLandmarkPiece(root, "LandmarkWhiteStone_LeftTower", PrimitiveType.Cube, new Vector3(-1.55f, 1.45f, -0.9f), new Vector3(0.75f, 2.6f, 0.75f));
+            CreateLandmarkPiece(root, "LandmarkWhiteStone_RightTower", PrimitiveType.Cube, new Vector3(1.55f, 1.45f, -0.9f), new Vector3(0.75f, 2.6f, 0.75f));
+            AddLandmarkBattlements(root, "LandmarkWhiteStone", 2.85f, 1.55f, 0.9f, 3, new Vector3(0.28f, 0.38f, 0.28f));
+
+            for (int i = 0; i < 4; i++)
+            {
+                float x = -1.25f + i * 0.82f;
+                CreateLandmarkPiece(root, $"LandmarkWood_WeaponRackPost_{i}", PrimitiveType.Cube, new Vector3(x, 0.75f, 1.5f), new Vector3(0.08f, 1.1f, 0.08f));
+                CreateLandmarkPiece(root, $"LandmarkDark_SpearHead_{i}", PrimitiveType.Cube, new Vector3(x, 1.38f, 1.5f), new Vector3(0.18f, 0.28f, 0.18f), new Vector3(0f, 45f, 0f));
+            }
+
+            AddLandmarkBanner(root, new Vector3(0f, 2.65f, -1.1f), 1.6f, new Vector3(0.45f, 0.38f, 0f), new Vector3(0.75f, 0.45f, 0.08f));
+        }
+
+        private void BuildBerkshirePalaceVisual(Transform root)
+        {
+            CreateLandmarkPiece(root, "LandmarkDarkStone_HeavyBase", PrimitiveType.Cube, new Vector3(0f, 0.35f, 0f), new Vector3(3.85f, 0.7f, 3.85f));
+            CreateLandmarkPiece(root, "LandmarkWhiteStone_KeepBody", PrimitiveType.Cube, new Vector3(0f, 1.8f, 0f), new Vector3(3.45f, 3.1f, 3.45f));
+            CreateLandmarkPiece(root, "LandmarkDarkStone_RoofWalk", PrimitiveType.Cube, new Vector3(0f, 3.48f, 0f), new Vector3(3.65f, 0.25f, 3.65f));
+
+            float towerOffset = 1.7f;
+            for (int x = -1; x <= 1; x += 2)
+            {
+                for (int z = -1; z <= 1; z += 2)
+                {
+                    CreateLandmarkPiece(root, $"LandmarkWhiteStone_GuardTower_{x}_{z}", PrimitiveType.Cube,
+                        new Vector3(x * towerOffset, 1.95f, z * towerOffset), new Vector3(0.8f, 3.45f, 0.8f));
+                    CreateLandmarkPiece(root, $"LandmarkFire_Brazier_{x}_{z}", PrimitiveType.Sphere,
+                        new Vector3(x * towerOffset, 3.82f, z * towerOffset), new Vector3(0.22f, 0.22f, 0.22f));
+                }
+            }
+
+            AddLandmarkBattlements(root, "LandmarkWhiteStone", 3.85f, 1.75f, 1.75f, 5, new Vector3(0.3f, 0.45f, 0.3f));
+
+            for (int i = 0; i < 4; i++)
+            {
+                float x = -1.1f + i * 0.73f;
+                CreateLandmarkPiece(root, $"LandmarkDark_DeepArrowSlit_{i}", PrimitiveType.Cube, new Vector3(x, 2.0f, -1.78f), new Vector3(0.1f, 0.62f, 0.07f));
+                CreateLandmarkPiece(root, $"LandmarkDark_DeepArrowSlitHigh_{i}", PrimitiveType.Cube, new Vector3(x, 2.85f, -1.78f), new Vector3(0.1f, 0.48f, 0.07f));
+            }
+
+            AddLandmarkBanner(root, new Vector3(0f, 4.15f, -1.45f), 1.35f, new Vector3(0.48f, 0.32f, 0f), new Vector3(0.82f, 0.42f, 0.08f));
+            AddLandmarkGroundLine(root, "BerkshireThreatRing", 3.25f, new Color(1f, 0.42f, 0.08f, 0.5f));
+        }
+
         private GameObject CreateWallMerlon(Transform parent, Vector3 localPos, Vector3 localScale)
         {
             var merlon = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -1959,6 +2449,14 @@ namespace OpenEmpires
                     return;
                 }
             }
+            if (unitType == UnitData.KingUnitType && kingPrefab == null)
+            {
+                // There is deliberately no code-built fallback. One used to live here, and because
+                // it only ran when the prefab was missing it sat unused while still looking like
+                // the real King to anyone reading the code. Fail loudly instead.
+                Debug.LogError("[GameSetup] No English King prefab assigned; the King cannot be spawned.");
+                return;
+            }
             if (unitType >= 13 && unitType <= 15)
             {
                 SpawnProceduralSiege(unitData, spawnPos, unitType);
@@ -1968,6 +2466,7 @@ namespace OpenEmpires
             switch (unitType)
             {
                 case 9: prefab = monkPrefab; break;
+                case UnitData.KingUnitType: prefab = kingPrefab; break;
                 case 8: prefab = crossbowmanPrefab; break;
                 case 7: prefab = knightPrefab; break;
                 case 6: prefab = manAtArmsPrefab; break;
@@ -1995,6 +2494,46 @@ namespace OpenEmpires
             }
         }
 
+        /// <summary>
+        /// Whether a model part should be painted in its owner's colour.
+        ///
+        /// New models mark this explicitly with a "_Team" suffix. Older ones rely on the part
+        /// being named "Body..." or "Sphere...", which looks like an unrenamed primitive but
+        /// actually drives team colouring — renaming those without this rule turns a unit grey.
+        /// </summary>
+        private static bool IsTeamColoredPart(string partName)
+        {
+            return partName.EndsWith("_Team", System.StringComparison.Ordinal)
+                || partName.StartsWith("Body", System.StringComparison.Ordinal)
+                || partName.StartsWith("Sphere", System.StringComparison.Ordinal);
+        }
+
+        /// <summary>
+        /// The model used for a unit type, so the spawn cursor can show what it is about to place.
+        /// Returns null for the types built in code rather than from a prefab (siege, and anything
+        /// whose prefab slot is empty) — callers should fall back to a plain shape.
+        /// </summary>
+        public GameObject GetUnitPrefabForType(int unitType)
+        {
+            switch (unitType)
+            {
+                case 0: return villagerPrefab;
+                case 1: return spearmanPrefab;
+                case 2: return archerPrefab;
+                case 3: return horsemanPrefab;
+                case 4: return scoutPrefab;
+                case 6: return manAtArmsPrefab;
+                case 7: return knightPrefab;
+                case 8: return crossbowmanPrefab;
+                case 9: return monkPrefab;
+                case 10: return longbowmanPrefab;
+                case 11: return gendarmePrefab;
+                case 12: return landsknechtPrefab;
+                case UnitData.KingUnitType: return kingPrefab;
+                default: return null;
+            }
+        }
+
         private void SpawnBuilding(BuildingData buildingData)
         {
             GameObject prefab;
@@ -2004,7 +2543,8 @@ namespace OpenEmpires
                 {
                     var simAge = GameBootstrapper.Instance?.Simulation;
                     int houseAge = simAge != null ? Mathf.Clamp(simAge.GetPlayerAge(buildingData.PlayerId), 1, 3) : 1;
-                    prefab = CreateBuildingSpritePrefab("House", $"HouseAge{houseAge}", 2, 2, 6f, 1.54f / 6f);
+                    string houseSprite = houseAge == 1 ? HouseAge1SpriteName(buildingData) : $"HouseAge{houseAge}";
+                    prefab = CreateBuildingSpritePrefab("House", houseSprite, 2, 2, 6f, 1.54f / 6f);
                     if (prefab == null) prefab = CreateHousePrefab(buildingData.PlayerId);
                     break;
                 }
@@ -2016,7 +2556,6 @@ namespace OpenEmpires
                           ?? CreateBarracksPrefab(buildingData.PlayerId);
                     break;
                 }
-                    break;
                 case BuildingType.TownCenter:
                     prefab = CreateBuildingSpritePrefab("TownCenter", "TownCenter", 4, 4, 8f, 0.85f / 8f)
                           ?? CreateTownCenterPrefab(buildingData.PlayerId);
@@ -2232,8 +2771,8 @@ namespace OpenEmpires
                 if (r.gameObject.name == "SelectionRing") continue;
                 if (r.gameObject.name == "RangeRing") continue;
                 if (r.gameObject.name == "Sprite") continue; // Billboard sprite — keep its material
-                var mat = r.gameObject.name == "Roof" ? roofMat : buildingBodyMaterial;
-                r.sharedMaterial = mat;
+                if (r is LineRenderer) continue;
+                r.sharedMaterial = GetBuildingRendererMaterial(r, buildingData, roofMat);
             }
 
             var view = prefab.GetComponent<BuildingView>();
@@ -2242,7 +2781,9 @@ namespace OpenEmpires
                 view.Initialize(buildingData.Id, worldPos, buildingData, mapData, hs);
 
                 if (buildingData.Type == BuildingType.House)
-                    view.SetAgeSpriteInfo("HouseAge", 3);
+                    // Age 1 picks one of two thatched-house looks (per-building, stable across
+                    // clients); ages 2–3 use the standard HouseAge2/HouseAge3 art.
+                    view.SetAgeSpriteNames(new[] { null, HouseAge1SpriteName(buildingData), "HouseAge2", "HouseAge3" });
                 else if (buildingData.Type == BuildingType.Barracks)
                     view.SetAgeSpriteInfo("BarracksAge", 3);
                 else if (buildingData.Type == BuildingType.ArcheryRange)
@@ -2317,6 +2858,18 @@ namespace OpenEmpires
                 selectionManager?.UnregisterUnitView(unitId);
                 unitViews.Remove(unitId);
             }
+        }
+
+        private void HandleKingHealingAuraPulse(int unitId, float radius)
+        {
+            if (unitViews.TryGetValue(unitId, out var view))
+                view.PulseHealAuraVisual(radius);
+        }
+
+        private void HandleBuildingHealingAuraPulse(int buildingId, float radius)
+        {
+            if (buildingViews.TryGetValue(buildingId, out var view))
+                view.PulseHealAuraVisual(radius);
         }
 
         private void HandleUnitGarrisoned(int unitId, int buildingId)
@@ -2462,7 +3015,7 @@ namespace OpenEmpires
                 var partName = r.gameObject.name;
                 if (partName == "SelectionRing") continue;
 
-                bool isBodyPart = partName.StartsWith("Body") || partName.StartsWith("Sphere");
+                bool isBodyPart = IsTeamColoredPart(partName);
                 if (isBodyPart)
                 {
                     if (silMat != null)
@@ -2870,6 +3423,8 @@ namespace OpenEmpires
                 sim.OnUnitUngarrisoned -= HandleUnitUngarrisoned;
                 sim.OnSheepConverted -= HandleSheepConverted;
                 sim.OnSheepSlaughtered -= HandleSheepSlaughtered;
+                sim.OnKingHealingAuraPulse -= HandleKingHealingAuraPulse;
+                sim.OnBuildingHealingAuraPulse -= HandleBuildingHealingAuraPulse;
                 if (meteorVisualManager != null)
                 {
                     sim.OnMeteorWarning -= meteorVisualManager.HandleMeteorWarning;

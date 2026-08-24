@@ -33,9 +33,16 @@ namespace OpenEmpires
         [SerializeField] private LayerMask buildingLayer;
         [SerializeField] private GameSetup gameSetup;
         [SerializeField] private float dragThreshold = 100f;
+        [Tooltip("Screen pixels the command cursor must move before unit positioning drag can begin. Values below the minimum are clamped at runtime.")]
+        [SerializeField] private float rightDragThreshold = 32f;
+        [Tooltip("Seconds the command button must be held before unit positioning drag can begin. Values below the minimum are clamped at runtime.")]
+        [SerializeField] private float rightDragIntentDelay = 0.12f;
+        private const float MinimumRightDragThreshold = 32f;
+        private const float MinimumRightDragIntentDelay = 0.08f;
 
         private RTSInputActions inputActions;
         private Camera mainCamera;
+        private SelectedUnitOcclusionFader selectedUnitOcclusionFader;
 
         private Dictionary<string, InputAction> remappableActions;
         public static IReadOnlyDictionary<string, InputAction> RemappableActions => instance?.remappableActions;
@@ -43,6 +50,10 @@ namespace OpenEmpires
 
         private List<UnitView> selectedUnits = new List<UnitView>();
         private Dictionary<int, UnitView> unitViews = new Dictionary<int, UnitView>();
+        private int waypointRepresentativeFrame = -1;
+        private int waypointSelectionSignature;
+        private int waypointSelectionCount = -1;
+        private UnitView waypointRepresentative;
 
         private List<BuildingView> selectedBuildings = new List<BuildingView>();
         private Dictionary<int, BuildingView> buildingViews = new Dictionary<int, BuildingView>();
@@ -79,7 +90,8 @@ namespace OpenEmpires
         private bool isRightDragging;
         private Vector2 rightDragStartScreen;
         private Vector3 rightDragStartWorld;
-        private float rightClickDownTime;
+        private float commandStartTime;
+        private int commandStartOwnUnitCount;
 
         // Attack-move mode
         private bool attackMoveMode;
@@ -121,12 +133,14 @@ namespace OpenEmpires
         private int[] placementVillagerIds;
         private LandmarkId placementLandmarkId; // only meaningful when placementBuildingType == Landmark
         private GameObject ghostBuilding;
+        private GameObject ghostFootprintInner; // red overlay on the actual building tiles
         private GameObject ghostAttackRangeRing;
         private GameObject ghostInfluenceZone;       // follows ghost cursor (Mill placement)
         private List<GameObject> ghostInfluenceZones; // static at existing Mills (Farm placement)
         private Material ghostValidMaterial;
         private Material ghostInvalidMaterial;
         private Material ghostInfluenceMaterial;
+        private Material ghostFootprintInnerMaterial;
         private bool ghostIsValid;
         private bool ghostInInfluenceZone;
         private GameObject ghostInfluenceIcon; // the "+" overlay icon
@@ -169,10 +183,17 @@ namespace OpenEmpires
         // Dummy placement ghost
         private GameObject dummyGhost;
 
+        // Spawn placement ghost: the actual unit model, made translucent, following the cursor so
+        // it is obvious which unit is armed and exactly where it will land.
+        private GameObject spawnGhost;
+        private int spawnGhostUnitType = -1;
+        private Material spawnGhostMaterial;
+
         // Hover tracking
         private UnitView hoveredUnit;
         private ResourceNode hoveredResource;
         private BuildingView hoveredBuilding;
+        private BuildingView hoveredOverlayBuilding;
         private GameObject resourceCursorIcon;
         private Image resourceCursorImage;
         private GameObject attackCursorIcon;
@@ -190,6 +211,10 @@ namespace OpenEmpires
         private Image healCursorImage;
         private GameObject repairCursorIcon;
         private Image repairCursorImage;
+        private static readonly Vector2 ContextCursorOffset = new Vector2(14f, -14f);
+        private const float ResourceCursorSize = 64f;
+        private const float AttackCursorSize = 76f;
+        private const float ActionCursorSize = 76f;
 
         // Hold-to-delete
         private float deleteHoldTimer;
@@ -204,14 +229,93 @@ namespace OpenEmpires
         public Vector2 DragStart => dragStartScreen;
         public Vector2 DragEnd => currentMousePos;
 
+        public bool IsWallBoxDragging => isPlacingWall && wallDragging;
+        public Vector2 WallBoxDragStartScreen
+        {
+            get
+            {
+                if (!IsWallBoxDragging || mainCamera == null) return Vector2.zero;
+                var sim = GameBootstrapper.Instance?.Simulation;
+                float y = 0f;
+                if (sim != null)
+                    y = sim.MapData.SampleHeight(wallStartTileX + 0.5f, wallStartTileZ + 0.5f) * sim.Config.TerrainHeightScale;
+                Vector3 sp = mainCamera.WorldToScreenPoint(new Vector3(wallStartTileX + 0.5f, y, wallStartTileZ + 0.5f));
+                return new Vector2(sp.x, sp.y);
+            }
+        }
+        public Vector2 WallBoxDragEndScreen => currentMousePos;
+
         public IReadOnlyList<UnitView> SelectedUnits => selectedUnits;
         public UnitView HoveredUnit => hoveredUnit;
+
+        internal bool ShouldShowWaypointFor(UnitView view)
+        {
+            if (view == null || !view.IsSelected) return false;
+
+            RefreshWaypointRepresentative();
+            return waypointRepresentative == view;
+        }
+
+        private void RefreshWaypointRepresentative()
+        {
+            if (waypointRepresentativeFrame == Time.frameCount) return;
+
+            waypointRepresentativeFrame = Time.frameCount;
+
+            Vector3 centroid = Vector3.zero;
+            int selectedCount = 0;
+            int selectionSignature = 17;
+            for (int i = 0; i < selectedUnits.Count; i++)
+            {
+                UnitView unit = selectedUnits[i];
+                if (unit == null || unit.IsDead || !unit.IsSelected) continue;
+
+                centroid += unit.transform.position;
+                selectedCount++;
+                unchecked
+                {
+                    selectionSignature = selectionSignature * 31 + unit.UnitId;
+                }
+            }
+
+            bool representativeIsValid = waypointRepresentative != null &&
+                !waypointRepresentative.IsDead && waypointRepresentative.IsSelected;
+            if (representativeIsValid && selectedCount == waypointSelectionCount &&
+                selectionSignature == waypointSelectionSignature)
+                return;
+
+            waypointSelectionCount = selectedCount;
+            waypointSelectionSignature = selectionSignature;
+            waypointRepresentative = null;
+
+            if (selectedCount == 0) return;
+            centroid /= selectedCount;
+
+            float bestDistance = float.MaxValue;
+            int bestUnitId = int.MaxValue;
+            for (int i = 0; i < selectedUnits.Count; i++)
+            {
+                UnitView unit = selectedUnits[i];
+                if (unit == null || unit.IsDead || !unit.IsSelected) continue;
+
+                Vector3 offset = unit.transform.position - centroid;
+                float distance = offset.x * offset.x + offset.z * offset.z;
+                if (distance < bestDistance ||
+                    (Mathf.Approximately(distance, bestDistance) && unit.UnitId < bestUnitId))
+                {
+                    bestDistance = distance;
+                    bestUnitId = unit.UnitId;
+                    waypointRepresentative = unit;
+                }
+            }
+        }
 
         private void Awake()
         {
             instance = this;
             inputActions = new RTSInputActions();
             mainCamera = UnityEngine.Camera.main;
+            selectedUnitOcclusionFader = new SelectedUnitOcclusionFader();
 
 #if UNITY_WEBGL && !UNITY_EDITOR
             RegisterKeyboardOverrides();
@@ -260,6 +364,7 @@ namespace OpenEmpires
                 var canvas = repairCursorIcon.transform.parent;
                 if (canvas != null) Object.Destroy(canvas.gameObject);
             }
+            selectedUnitOcclusionFader?.Clear();
             if (instance == this) instance = null;
         }
 
@@ -287,6 +392,7 @@ namespace OpenEmpires
         private void OnDisable()
         {
             inputActions.RTS.Disable();
+            selectedUnitOcclusionFader?.Clear();
         }
 
         public void RegisterUnitView(UnitView view)
@@ -335,6 +441,37 @@ namespace OpenEmpires
                     ConfirmWallPlacement();
                 }
                 return;
+            }
+
+            // Debug spawn: left-click the ground to drop the unit chosen in settings.
+            if (SettingsMenuUI.IsPlacingSpawn)
+            {
+                Ray spawnRay = mainCamera.ScreenPointToRay(currentMousePos);
+                if (Physics.Raycast(spawnRay, out RaycastHit spawnHit, 1000f, groundLayer))
+                {
+                    var sim = GameBootstrapper.Instance?.Simulation;
+                    if (sim != null)
+                    {
+                        int owner = LocalPlayerId;
+                        if (SettingsMenuUI.SpawnAsEnemy)
+                        {
+                            // Anyone not on our team will do; falls back to us if the game is solo.
+                            for (int p = 0; p < GameBootstrapper.Instance.PlayerCount; p++)
+                            {
+                                if (!TeamHelper.AreAllies(sim.PlayerTeamIds, p, LocalPlayerId)) { owner = p; break; }
+                            }
+                        }
+
+                        sim.CommandBuffer.EnqueueCommand(new CheatSpawnUnitCommand(
+                            LocalPlayerId,
+                            SettingsMenuUI.SpawnUnitType,
+                            FixedVector3.FromVector3(spawnHit.point),
+                            SettingsMenuUI.SpawnUnitCount,
+                            owner));
+                    }
+                }
+                placementConsumedClick = true;
+                return; // stays armed, so several can be placed in a row
             }
 
             // Dummy placement: left-click to spawn target dummy
@@ -490,6 +627,78 @@ namespace OpenEmpires
             }
         }
 
+        /// <summary>
+        /// Builds the translucent preview for a unit type. Uses the real prefab where one exists so
+        /// the cursor shows the actual model, falling back to a plain capsule for the units built
+        /// in code. Everything that could act — scripts, colliders, the selection ring — is stripped,
+        /// leaving nothing but geometry.
+        /// </summary>
+        private GameObject BuildSpawnGhost(int unitType)
+        {
+            if (spawnGhostMaterial == null)
+            {
+                spawnGhostMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+                spawnGhostMaterial.color = new Color(0.45f, 1f, 0.55f, 0.35f);
+                spawnGhostMaterial.SetFloat("_Surface", 1);
+                spawnGhostMaterial.SetOverrideTag("RenderType", "Transparent");
+                spawnGhostMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                spawnGhostMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                spawnGhostMaterial.SetInt("_ZWrite", 0);
+                spawnGhostMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
+                spawnGhostMaterial.EnableKeyword("_ALPHABLEND_ON");
+                spawnGhostMaterial.renderQueue = 3000;
+            }
+
+            GameObject ghost = null;
+            var setup = FindFirstObjectByType<GameSetup>();
+            var prefab = setup != null ? setup.GetUnitPrefabForType(unitType) : null;
+
+            if (prefab != null)
+            {
+                ghost = Object.Instantiate(prefab);
+
+                // A preview must not behave like a unit. Disabling takes effect at once, whereas
+                // Destroy is deferred to the end of the frame — long enough for a copied UnitView
+                // to tick once with no simulation data behind it.
+                foreach (var mb in ghost.GetComponentsInChildren<MonoBehaviour>(true))
+                {
+                    mb.enabled = false;
+                    Object.Destroy(mb);
+                }
+                foreach (var col in ghost.GetComponentsInChildren<Collider>(true))
+                {
+                    col.enabled = false;
+                    Object.Destroy(col);
+                }
+
+                var ring = ghost.transform.Find("SelectionRing");
+                if (ring != null) Object.DestroyImmediate(ring.gameObject);
+            }
+            else
+            {
+                // Built in code rather than from a prefab; a capsule stands in for it.
+                ghost = new GameObject("SpawnGhost");
+                var body = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                body.transform.SetParent(ghost.transform, false);
+                body.transform.localPosition = new Vector3(0f, 0.5f, 0f);
+                body.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                Object.Destroy(body.GetComponent<Collider>());
+            }
+
+            ghost.name = "SpawnGhost";
+            foreach (var r in ghost.GetComponentsInChildren<Renderer>(true))
+            {
+                var mats = new Material[r.sharedMaterials.Length];
+                for (int i = 0; i < mats.Length; i++) mats[i] = spawnGhostMaterial;
+                r.sharedMaterials = mats;
+                r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                r.receiveShadows = false;
+            }
+
+            ghost.SetActive(false);
+            return ghost;
+        }
+
         private void Update()
         {
             currentMousePos = VirtualCursor.Position;
@@ -585,12 +794,11 @@ namespace OpenEmpires
                 UpdateDragPreview();
 
             // Right-click drag: detect threshold and update formation preview
-            if (commandHeld && selectedUnits.Count > 0)
+            if (commandHeld && commandStartOwnUnitCount > 0)
             {
                 if (!isRightDragging)
                 {
-                    float holdTime = Time.unscaledTime - rightClickDownTime;
-                    if (holdTime > 0.18f && Vector2.Distance(rightDragStartScreen, currentMousePos) > dragThreshold)
+                    if (HasRightDragIntent())
                         isRightDragging = true;
                 }
 
@@ -600,23 +808,19 @@ namespace OpenEmpires
                     if (Physics.Raycast(ray, out RaycastHit hit, 1000f, groundLayer))
                     {
                         var groupSizes = GetFormationGroupSizes();
-                        var sim = GameBootstrapper.Instance?.Simulation;
-                        Vector3 snappedHit = sim != null ? GameSetup.SnapClickToNearestWalkable(sim.MapData, hit.point) : hit.point;
-                        var positions = GameSetup.ComputeGroupedLineFormation(
-                            rightDragStartWorld, snappedHit, groupSizes);
-                        if (sim != null) GameSetup.SnapToWalkable(sim.MapData, positions);
-                        GameSetup.ScaleFormationByRadius(positions, groupSizes, GetFormationGroupRadii(), sim != null ? sim.Config.UnitRadius : 0.4f);
-                        gameSetup.PreviewMarkers(positions);
-
-                        // Show facing direction arrow
-                        Vector3 dragDir = hit.point - rightDragStartWorld;
-                        dragDir.y = 0f;
-                        if (dragDir.sqrMagnitude > 0.001f)
+                        if (TryComputeRightDragFormation(hit.point, groupSizes,
+                            out var positions, out Vector3 facingDir))
                         {
-                            dragDir.Normalize();
-                            Vector3 facingDir = new Vector3(-dragDir.z, 0f, dragDir.x);
-                            Vector3 center = (rightDragStartWorld + hit.point) * 0.5f;
-                            gameSetup.ShowFacingArrow(center, facingDir);
+                            var sim = GameBootstrapper.Instance?.Simulation;
+                            if (sim != null)
+                            {
+                                GameSetup.SnapToWalkable(sim.MapData, positions);
+                                GameSetup.ScaleFormationByRadius(
+                                    positions, groupSizes, GetFormationGroupRadii(),
+                                    sim.Config.UnitRadius, rightDragStartWorld);
+                            }
+                            gameSetup.PreviewMarkers(positions);
+                            gameSetup.ShowFacingArrow(rightDragStartWorld, facingDir);
                         }
                     }
                 }
@@ -671,6 +875,8 @@ namespace OpenEmpires
                         float ghostY = sim.MapData.SampleHeight(centerX, centerZ) * sim.Config.TerrainHeightScale + 0.05f;
                         Vector3 ghostPosition = new Vector3(centerX, ghostY, centerZ);
                         ghostBuilding.transform.position = ghostPosition;
+                        if (ghostFootprintInner != null)
+                            ghostFootprintInner.transform.position = ghostPosition;
 
                         // Update attack range ring position if it exists
                         if (ghostAttackRangeRing != null)
@@ -724,6 +930,8 @@ namespace OpenEmpires
                 }
             }
 
+            selectedUnitOcclusionFader?.Tick(mainCamera, selectedUnits, buildingLayer.value | resourceLayer.value);
+
             // Wall placement ghost update (drag preview)
             if (isPlacingWall && wallDragging)
             {
@@ -736,7 +944,7 @@ namespace OpenEmpires
                         int endTileX = Mathf.FloorToInt(wallHit.point.x);
                         int endTileZ = Mathf.FloorToInt(wallHit.point.z);
 
-                        var tiles = WallLineHelper.ComputeWallLine(wallStartTileX, wallStartTileZ, endTileX, endTileZ);
+                        var tiles = WallLineHelper.ComputeWallBoxCenterPath(wallStartTileX, wallStartTileZ, endTileX, endTileZ);
 
                         // Per-segment cost (only valid/buildable tiles get billed in the sim).
                         int woodPerSegment = sim.GetBuildingWoodCost(wallPlacementType);
@@ -796,6 +1004,41 @@ namespace OpenEmpires
                 }
             }
 
+            // Spawn placement ghost — rebuilt whenever a different unit is chosen.
+            if (SettingsMenuUI.IsPlacingSpawn)
+            {
+                if (spawnGhost == null || spawnGhostUnitType != SettingsMenuUI.SpawnUnitType)
+                {
+                    if (spawnGhost != null) Object.Destroy(spawnGhost);
+                    spawnGhostUnitType = SettingsMenuUI.SpawnUnitType;
+                    spawnGhost = BuildSpawnGhost(spawnGhostUnitType);
+                }
+
+                if (spawnGhost != null)
+                {
+                    Ray spawnRay = mainCamera.ScreenPointToRay(currentMousePos);
+                    if (Physics.Raycast(spawnRay, out RaycastHit spawnHit, 1000f, groundLayer))
+                    {
+                        var sim = GameBootstrapper.Instance?.Simulation;
+                        float ghostY = spawnHit.point.y;
+                        if (sim != null)
+                            ghostY = sim.MapData.SampleHeight(spawnHit.point.x, spawnHit.point.z) * sim.Config.TerrainHeightScale;
+                        spawnGhost.transform.position = new Vector3(spawnHit.point.x, ghostY, spawnHit.point.z);
+                        spawnGhost.SetActive(true);
+                    }
+                    else
+                    {
+                        spawnGhost.SetActive(false);
+                    }
+                }
+            }
+            else if (spawnGhost != null)
+            {
+                Object.Destroy(spawnGhost);
+                spawnGhost = null;
+                spawnGhostUnitType = -1;
+            }
+
             // Dummy placement ghost (shared between target dummy and archer dummy modes).
             if (SettingsMenuUI.IsPlacingDummy || SettingsMenuUI.IsPlacingArcherDummy)
             {
@@ -815,7 +1058,7 @@ namespace OpenEmpires
                     if (ghostValidMaterial == null)
                     {
                         ghostValidMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-                        ghostValidMaterial.color = new Color(0f, 1f, 0f, 0.35f);
+                        ghostValidMaterial.color = new Color(0f, 1f, 0f, 0.28f);
                         ghostValidMaterial.SetFloat("_Surface", 1);
                         ghostValidMaterial.SetOverrideTag("RenderType", "Transparent");
                         ghostValidMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
@@ -857,7 +1100,8 @@ namespace OpenEmpires
             UpdateRepairCursor();
 
             // Signal the global custom cursor to hide when a contextual cursor is active
-            bool anyContextual = (attackCursorIcon != null && attackCursorIcon.activeSelf)
+            bool anyContextual = (resourceCursorIcon != null && resourceCursorIcon.activeSelf)
+                              || (attackCursorIcon != null && attackCursorIcon.activeSelf)
                               || (garrisonCursorIcon != null && garrisonCursorIcon.activeSelf)
                               || (patrolCursorIcon != null && patrolCursorIcon.activeSelf)
                               || (actionCursorIcon != null && actionCursorIcon.activeSelf)
@@ -930,13 +1174,14 @@ namespace OpenEmpires
 
             if (hoveredResource != null && resourceCursorIcon != null)
             {
-                resourceCursorIcon.transform.position = new Vector3(currentMousePos.x + 20f, currentMousePos.y - 20f, 0f);
+                resourceCursorIcon.transform.position = GetContextCursorPosition();
             }
         }
 
         private void UpdateBuildingHover()
         {
             BuildingView newHover = null;
+            BuildingView newOverlayHover = null;
 
             if (!UIInputSuppressed && !isPlacingBuilding && !isPlacingWall && mainCamera != null)
             {
@@ -946,6 +1191,8 @@ namespace OpenEmpires
                     var view = hit.collider.GetComponent<BuildingView>();
                     if (view != null && !view.IsDestroyed)
                     {
+                        newOverlayHover = view;
+
                         // Check if this is a damaged allied building and we have villagers selected
                         var sim = GameBootstrapper.Instance?.Simulation;
                         if (sim != null)
@@ -962,6 +1209,15 @@ namespace OpenEmpires
                         }
                     }
                 }
+            }
+
+            if (newOverlayHover != hoveredOverlayBuilding)
+            {
+                if (hoveredOverlayBuilding != null)
+                    hoveredOverlayBuilding.SetHovered(false);
+                hoveredOverlayBuilding = newOverlayHover;
+                if (hoveredOverlayBuilding != null)
+                    hoveredOverlayBuilding.SetHovered(true);
             }
 
             hoveredBuilding = newHover;
@@ -1002,6 +1258,28 @@ namespace OpenEmpires
                     return true;
             }
             return false;
+        }
+
+        private int CountSelectedOwnUnits()
+        {
+            int count = 0;
+            for (int i = 0; i < selectedUnits.Count; i++)
+            {
+                if (selectedUnits[i].PlayerId == LocalPlayerId)
+                    count++;
+            }
+            return count;
+        }
+
+        private bool HasRightDragIntent()
+        {
+            float holdTime = Time.unscaledTime - commandStartTime;
+            if (holdTime < Mathf.Max(rightDragIntentDelay, MinimumRightDragIntentDelay))
+                return false;
+
+            float threshold = Mathf.Max(rightDragThreshold, MinimumRightDragThreshold);
+            Vector2 dragDelta = currentMousePos - rightDragStartScreen;
+            return dragDelta.sqrMagnitude > threshold * threshold;
         }
 
         private void UpdateDeleteHold()
@@ -1141,7 +1419,7 @@ namespace OpenEmpires
             {
                 EnsureAttackCursorIcon();
                 attackCursorIcon.SetActive(true);
-                attackCursorIcon.transform.position = new Vector3(currentMousePos.x + 20f, currentMousePos.y - 20f, 0f);
+                attackCursorIcon.transform.position = GetContextCursorPosition();
             }
             else if (attackCursorIcon != null)
             {
@@ -1282,10 +1560,10 @@ namespace OpenEmpires
             attackCursorImage.sprite = attackIconSprite;
 
             var rt = attackCursorIcon.GetComponent<RectTransform>();
-            rt.sizeDelta = new Vector2(40f, 40f);
+            rt.sizeDelta = new Vector2(AttackCursorSize, AttackCursorSize);
             rt.anchorMin = Vector2.zero;
             rt.anchorMax = Vector2.zero;
-            rt.pivot = new Vector2(0f, 1f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
 
             attackCursorIcon.SetActive(false);
         }
@@ -1309,10 +1587,10 @@ namespace OpenEmpires
             resourceCursorImage.raycastTarget = false;
 
             var rt = resourceCursorIcon.GetComponent<RectTransform>();
-            rt.sizeDelta = new Vector2(40f, 40f);
+            rt.sizeDelta = new Vector2(ResourceCursorSize, ResourceCursorSize);
             rt.anchorMin = Vector2.zero;
             rt.anchorMax = Vector2.zero;
-            rt.pivot = new Vector2(0f, 1f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
 
             resourceCursorIcon.SetActive(false);
         }
@@ -1336,7 +1614,7 @@ namespace OpenEmpires
             actionCursorImage.raycastTarget = false;
 
             var rt = actionCursorIcon.GetComponent<RectTransform>();
-            rt.sizeDelta = new Vector2(60f, 60f);
+            rt.sizeDelta = new Vector2(ActionCursorSize, ActionCursorSize);
             rt.anchorMin = Vector2.zero;
             rt.anchorMax = Vector2.zero;
             rt.pivot = new Vector2(0.5f, 0.5f);
@@ -1393,14 +1671,24 @@ namespace OpenEmpires
             if (actionSprite != null)
             {
                 EnsureActionCursorIcon();
+                if (resourceCursorIcon != null)
+                    resourceCursorIcon.SetActive(false);
                 actionCursorImage.sprite = actionSprite;
                 actionCursorIcon.SetActive(true);
-                actionCursorIcon.transform.position = new Vector3(currentMousePos.x + 12f, currentMousePos.y - 12f, 0f);
+                actionCursorIcon.transform.position = GetContextCursorPosition();
             }
             else if (actionCursorIcon != null)
             {
                 actionCursorIcon.SetActive(false);
             }
+        }
+
+        private Vector3 GetContextCursorPosition()
+        {
+            return new Vector3(
+                currentMousePos.x + ContextCursorOffset.x,
+                currentMousePos.y + ContextCursorOffset.y,
+                0f);
         }
 
         private bool HasSelectedOwnMonk()
@@ -2093,7 +2381,58 @@ namespace OpenEmpires
                 }
             }
 
-            // Only select buildings if no units were selected in the box
+            // Fourth pass — teammate units (any type), if no own units selected
+            if (selectedUnits.Count == 0)
+            {
+                var sim = GameBootstrapper.Instance?.Simulation;
+                var teamIds = sim?.PlayerTeamIds;
+                foreach (var kvp in unitViews)
+                {
+                    var view = kvp.Value;
+
+                    if (view.PlayerId == LocalPlayerId) continue;
+                    if (view.IsDead) continue;
+                    if (!TeamHelper.AreAllies(teamIds, view.PlayerId, LocalPlayerId)) continue;
+
+                    Rect unitRect = view.GetScreenBounds(mainCamera);
+                    if (unitRect.width > 0 && selectionRect.Overlaps(unitRect))
+                    {
+                        if (!view.IsSelected)
+                        {
+                            view.SetSelected(true);
+                            selectedUnits.Add(view);
+                        }
+                    }
+                }
+            }
+
+            // Fifth pass — enemy units (any type), if no own or teammate units selected
+            if (selectedUnits.Count == 0)
+            {
+                var sim = GameBootstrapper.Instance?.Simulation;
+                var teamIds = sim?.PlayerTeamIds;
+                foreach (var kvp in unitViews)
+                {
+                    var view = kvp.Value;
+
+                    if (view.PlayerId == LocalPlayerId) continue;
+                    if (view.IsDead) continue;
+                    if (TeamHelper.AreAllies(teamIds, view.PlayerId, LocalPlayerId)) continue;
+
+                    Rect unitRect = view.GetScreenBounds(mainCamera);
+                    if (unitRect.width > 0 && selectionRect.Overlaps(unitRect))
+                    {
+                        if (!view.IsSelected)
+                        {
+                            view.SetSelected(true);
+                            selectedUnits.Add(view);
+                        }
+                    }
+                }
+            }
+
+            // Only select buildings if no units were selected in the box.
+            // Priority: own > allied > enemy, each falling through if the previous found nothing.
             if (selectedUnits.Count == 0)
             {
                 foreach (var kvp in buildingViews)
@@ -2110,6 +2449,54 @@ namespace OpenEmpires
                         {
                             view.SetSelected(true);
                             selectedBuildings.Add(view);
+                        }
+                    }
+                }
+
+                if (selectedBuildings.Count == 0)
+                {
+                    var sim = GameBootstrapper.Instance?.Simulation;
+                    var teamIds = sim?.PlayerTeamIds;
+                    foreach (var kvp in buildingViews)
+                    {
+                        var view = kvp.Value;
+
+                        if (view.PlayerId == LocalPlayerId) continue;
+                        if (view.IsDestroyed) continue;
+                        if (!TeamHelper.AreAllies(teamIds, view.PlayerId, LocalPlayerId)) continue;
+
+                        Rect buildingRect = view.GetScreenBounds(mainCamera);
+                        if (buildingRect.width > 0 && selectionRect.Overlaps(buildingRect))
+                        {
+                            if (!view.IsSelected)
+                            {
+                                view.SetSelected(true);
+                                selectedBuildings.Add(view);
+                            }
+                        }
+                    }
+                }
+
+                if (selectedBuildings.Count == 0)
+                {
+                    var sim = GameBootstrapper.Instance?.Simulation;
+                    var teamIds = sim?.PlayerTeamIds;
+                    foreach (var kvp in buildingViews)
+                    {
+                        var view = kvp.Value;
+
+                        if (view.PlayerId == LocalPlayerId) continue;
+                        if (view.IsDestroyed) continue;
+                        if (TeamHelper.AreAllies(teamIds, view.PlayerId, LocalPlayerId)) continue;
+
+                        Rect buildingRect = view.GetScreenBounds(mainCamera);
+                        if (buildingRect.width > 0 && selectionRect.Overlaps(buildingRect))
+                        {
+                            if (!view.IsSelected)
+                            {
+                                view.SetSelected(true);
+                                selectedBuildings.Add(view);
+                            }
                         }
                     }
                 }
@@ -2247,6 +2634,11 @@ namespace OpenEmpires
                 DestroyTsunamiTargetingPreview();
                 return;
             }
+            if (SettingsMenuUI.IsPlacingSpawn)
+            {
+                SettingsMenuUI.CancelSpawnPlacement();
+                return;
+            }
             if (SettingsMenuUI.IsPlacingDummy)
             {
                 SettingsMenuUI.IsPlacingDummy = false;
@@ -2288,12 +2680,18 @@ namespace OpenEmpires
             commandHeld = true;
             isRightDragging = false;
             rightDragStartScreen = currentMousePos;
-            rightClickDownTime = Time.unscaledTime;
+            commandStartTime = Time.unscaledTime;
+            commandStartOwnUnitCount = CountSelectedOwnUnits();
 
             // Record the world position where right-click started
             Ray ray = mainCamera.ScreenPointToRay(currentMousePos);
             if (Physics.Raycast(ray, out RaycastHit hit, 1000f, groundLayer))
-                rightDragStartWorld = hit.point;
+            {
+                var sim = GameBootstrapper.Instance?.Simulation;
+                rightDragStartWorld = sim != null
+                    ? GameSetup.SnapClickToNearestWalkable(sim.MapData, hit.point)
+                    : hit.point;
+            }
         }
 
         private void OnCommandReleased(InputAction.CallbackContext ctx)
@@ -2527,7 +2925,9 @@ namespace OpenEmpires
                     {
                         // Own/allied building under construction: send villagers to help build
                         var buildingData = sim.BuildingRegistry.GetBuilding(buildingView.BuildingId);
-                        if (buildingData != null && buildingData.IsUnderConstruction)
+                        if (buildingData != null
+                            && (buildingData.IsUnderConstruction
+                                || sim.HasUnfinishedWallGroupConstruction(buildingData, LocalPlayerId)))
                         {
                             int[] unitIds = GetSelectedUnitIds();
                             var constructCmd = new ConstructBuildingCommand(
@@ -2568,10 +2968,10 @@ namespace OpenEmpires
                                 return;
                             }
                         }
-                        else if (buildingData != null && GameSimulation.IsDropOffBuilding(buildingData.Type) && !buildingData.IsUnderConstruction)
+                        else if (buildingData != null && LandmarkDefinitions.IsDropOffBuilding(buildingData) && !buildingData.IsUnderConstruction)
                         {
                             // Sheep right-clicked on food drop-off (TC/Mill): move at boosted speed
-                            bool isFoodDropOff = buildingData.Type == BuildingType.TownCenter || buildingData.Type == BuildingType.Mill;
+                            bool isFoodDropOff = LandmarkDefinitions.AcceptsResourceType(buildingData, ResourceType.Food);
                             int[] allIds = GetSelectedUnitIds();
 
                             if (isFoodDropOff)
@@ -2704,6 +3104,8 @@ namespace OpenEmpires
                         var moveCmd = new MoveCommand(LocalPlayerId, milIds, fixedTarget, fixedPositions);
                         moveCmd.IsQueued = multiSelectHeld;
                         sim.CommandBuffer.EnqueueCommand(moveCmd);
+                        if (gameSetup != null)
+                            gameSetup.ShowMarkers(positions);
                     }
 
                     SFXManager.Instance?.PlayUI(SFXType.CommandMove, 0.5f);
@@ -2714,36 +3116,23 @@ namespace OpenEmpires
 
             if (isRightDragging)
             {
-                // Formation drag — use grouped line formation (each type gets own rows)
+                // Formation drag — keep the press position fixed and use the drag to choose facing.
                 if (Physics.Raycast(ray, out RaycastHit groundHit, 1000f, groundLayer))
                 {
                     int[] unitIds = GetFormationSortedUnitIds(out int[] groupSizes);
-                    Vector3 snappedHit = GameSetup.SnapClickToNearestWalkable(sim.MapData, groundHit.point);
-                    var positions = GameSetup.ComputeGroupedLineFormation(
-                        rightDragStartWorld, snappedHit, groupSizes);
-                    GameSetup.SnapToWalkable(sim.MapData, positions);
-                    Vector3 center = (rightDragStartWorld + groundHit.point) * 0.5f;
-                    // Convert float positions to FixedVector3 at the command boundary
-                    FixedVector3 fixedCenter = FixedVector3.FromVector3(center);
-                    FixedVector3[] fixedPositions = ConvertToFixed(positions);
-                    // Compute facing direction perpendicular to drag vector
-                    Vector3 dragDir = groundHit.point - rightDragStartWorld;
-                    dragDir.y = 0f;
-                    MoveCommand dragCmd;
-                    if (dragDir.sqrMagnitude > 0.001f)
+                    if (TryComputeRightDragFormation(groundHit.point, groupSizes,
+                        out var positions, out Vector3 facingDir))
                     {
-                        dragDir.Normalize();
-                        Vector3 facingDir = new Vector3(-dragDir.z, 0f, dragDir.x);
+                        GameSetup.SnapToWalkable(sim.MapData, positions);
+                        FixedVector3 fixedCenter = FixedVector3.FromVector3(rightDragStartWorld);
+                        FixedVector3[] fixedPositions = ConvertToFixed(positions);
                         FixedVector3 fixedFacing = FixedVector3.FromVector3(facingDir);
-                        dragCmd = new MoveCommand(LocalPlayerId, unitIds, fixedCenter, fixedPositions, fixedFacing);
+                        var dragCmd = new MoveCommand(
+                            LocalPlayerId, unitIds, fixedCenter, fixedPositions, fixedFacing);
+                        dragCmd.IsQueued = multiSelectHeld;
+                        sim.CommandBuffer.EnqueueCommand(dragCmd);
+                        SFXManager.Instance?.PlayUI(SFXType.CommandMove, 0.5f);
                     }
-                    else
-                    {
-                        dragCmd = new MoveCommand(LocalPlayerId, unitIds, fixedCenter, fixedPositions);
-                    }
-                    dragCmd.IsQueued = multiSelectHeld;
-                    sim.CommandBuffer.EnqueueCommand(dragCmd);
-                    SFXManager.Instance?.PlayUI(SFXType.CommandMove, 0.5f);
                 }
 
                 // Transition preview markers to fading and hide arrow
@@ -2875,6 +3264,11 @@ namespace OpenEmpires
             if (settingsMenuOpen)
             {
                 SettingsMenuUI.Close();
+                return;
+            }
+            if (SettingsMenuUI.IsPlacingSpawn)
+            {
+                SettingsMenuUI.CancelSpawnPlacement();
                 return;
             }
             if (SettingsMenuUI.IsPlacingDummy)
@@ -3223,7 +3617,7 @@ namespace OpenEmpires
 
                 if (gameSetup != null)
                 {
-                    gameSetup.CommitMarkers();
+                    gameSetup.CommitMarkers(CommandFlagKind.AttackMove);
                     gameSetup.HideFacingArrow();
                 }
             }
@@ -3279,7 +3673,7 @@ namespace OpenEmpires
                             var positions = new List<Vector3>(selectedUnits.Count);
                             for (int i = 0; i < selectedUnits.Count; i++)
                                 positions.Add((fixedTarget + selectedUnits[i].FormationOffset).ToVector3());
-                            gameSetup.ShowMarkers(positions);
+                            gameSetup.ShowMarkers(positions, CommandFlagKind.AttackMove);
                         }
                     }
                     else
@@ -3294,7 +3688,7 @@ namespace OpenEmpires
                         sim.CommandBuffer.EnqueueCommand(cmd);
 
                         if (gameSetup != null)
-                            gameSetup.ShowMarkers(positions);
+                            gameSetup.ShowMarkers(positions, CommandFlagKind.AttackMove);
                     }
                 }
             }
@@ -3384,6 +3778,24 @@ namespace OpenEmpires
             }
         }
 
+        private bool TryComputeRightDragFormation(
+            Vector3 cursorWorld, int[] groupSizes,
+            out List<Vector3> positions, out Vector3 facingDirection)
+        {
+            facingDirection = cursorWorld - rightDragStartWorld;
+            facingDirection.y = 0f;
+            if (facingDirection.sqrMagnitude < 0.001f)
+            {
+                positions = null;
+                return false;
+            }
+
+            facingDirection.Normalize();
+            positions = GameSetup.ComputeGroupedFacingFormation(
+                rightDragStartWorld, facingDirection, groupSizes);
+            return true;
+        }
+
         private Vector3 GetSelectedUnitCenter()
         {
             Vector3 sum = Vector3.zero;
@@ -3458,6 +3870,7 @@ namespace OpenEmpires
         public void EnterBuildPlacement(BuildingType type)
         {
             if (isPlacingBuilding) CancelBuildPlacement();
+            if (isPlacingWall) CancelWallPlacement();
 
             isPlacingBuilding = true;
             placementBuildingType = type;
@@ -3494,22 +3907,38 @@ namespace OpenEmpires
             if (ghostValidMaterial == null)
             {
                 ghostValidMaterial = new Material(ghostShader);
-                ghostValidMaterial.SetColor("_BaseColor", new Color(0f, 1f, 0f, 0.35f));
+                ghostValidMaterial.SetColor("_BaseColor", new Color(0f, 1f, 0f, 0.28f));
             }
             if (ghostInvalidMaterial == null)
             {
                 ghostInvalidMaterial = new Material(ghostShader);
-                ghostInvalidMaterial.SetColor("_BaseColor", new Color(1f, 0f, 0f, 0.35f));
+                ghostInvalidMaterial.SetColor("_BaseColor", new Color(1f, 0f, 0f, 0.15f));
             }
             if (ghostInfluenceMaterial == null)
             {
                 ghostInfluenceMaterial = new Material(ghostShader);
-                ghostInfluenceMaterial.SetColor("_BaseColor", new Color(1f, 0.85f, 0f, 0.35f));
+                ghostInfluenceMaterial.SetColor("_BaseColor", new Color(1f, 0.85f, 0f, 0.15f));
+            }
+            if (ghostFootprintInnerMaterial == null)
+            {
+                ghostFootprintInnerMaterial = new Material(ghostShader);
+                ghostFootprintInnerMaterial.SetColor("_BaseColor", new Color(1f, 0f, 0f, 0.33f));
+                ghostFootprintInnerMaterial.renderQueue = 3001; // draw after outer ghost so it shows on top
             }
 
             ghostBuilding.GetComponent<Renderer>().sharedMaterial = ghostValidMaterial;
             ghostIsValid = true;
             ghostInInfluenceZone = false;
+
+            // Inner red footprint overlay — covers only the actual building tiles,
+            // so the outer ghost color shows as a clearance-perimeter ring around it.
+            ghostFootprintInner = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            ghostFootprintInner.name = "BuildingGhostInner";
+            ghostFootprintInner.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
+            ghostFootprintInner.transform.localScale = new Vector3(w, h, 1f);
+            var innerCol = ghostFootprintInner.GetComponent<Collider>();
+            if (innerCol != null) Object.Destroy(innerCol);
+            ghostFootprintInner.GetComponent<Renderer>().sharedMaterial = ghostFootprintInnerMaterial;
 
             // Create attack range visualization for buildings that can attack
             CreateGhostAttackRangeRing(type, sim.Config);
@@ -3601,12 +4030,11 @@ namespace OpenEmpires
                 return;
             }
 
-            BuildingType influenceBuildingType = sim != null ? sim.GetInfluenceBuildingType(LocalPlayerId) : BuildingType.Mill;
-            if (type != influenceBuildingType) return;
+            if (sim == null || !sim.IsInfluenceBuildingType(LocalPlayerId, type)) return;
 
             int influenceRadius = config.MillInfluenceRadius;
-            int footprintW = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintWidth : config.MillFootprintWidth;
-            int footprintH = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintHeight : config.MillFootprintHeight;
+            int footprintW = type == BuildingType.TownCenter ? config.TownCenterFootprintWidth : config.MillFootprintWidth;
+            int footprintH = type == BuildingType.TownCenter ? config.TownCenterFootprintHeight : config.MillFootprintHeight;
             float halfX = (footprintW + 2 * influenceRadius) * 0.5f;
             float halfZ = (footprintH + 2 * influenceRadius) * 0.5f;
 
@@ -3644,22 +4072,21 @@ namespace OpenEmpires
             var buildings = sim.BuildingRegistry.GetAllBuildings();
             bool isFrench = sim.GetPlayerCivilization(LocalPlayerId) == Civilization.French;
 
-            // Show mill/TC influence zones when placing farms
-            if (type == BuildingType.Farm)
+            // Show existing mill/TC influence zones during any building placement
             {
-                BuildingType influenceBuildingType = sim.GetInfluenceBuildingType(LocalPlayerId);
                 int influenceRadius = config.MillInfluenceRadius;
-                int footprintW = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintWidth : config.MillFootprintWidth;
-                int footprintH = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintHeight : config.MillFootprintHeight;
-                float halfX = (footprintW + 2 * influenceRadius) * 0.5f;
-                float halfZ = (footprintH + 2 * influenceRadius) * 0.5f;
 
                 for (int i = 0; i < buildings.Count; i++)
                 {
                     var b = buildings[i];
-                    if (b.Type != influenceBuildingType) continue;
+                    if (!sim.IsInfluenceBuildingType(LocalPlayerId, b.Type)) continue;
                     if (b.PlayerId != LocalPlayerId) continue;
                     if (b.IsDestroyed) continue;
+
+                    int footprintW = b.TileFootprintWidth;
+                    int footprintH = b.TileFootprintHeight;
+                    float halfX = (footprintW + 2 * influenceRadius) * 0.5f;
+                    float halfZ = (footprintH + 2 * influenceRadius) * 0.5f;
 
                     float centerX = b.OriginTileX + footprintW * 0.5f;
                     float centerZ = b.OriginTileZ + footprintH * 0.5f;
@@ -3738,21 +4165,18 @@ namespace OpenEmpires
         {
             var config = sim.Config;
             int influenceRadius = config.MillInfluenceRadius;
-            BuildingType influenceBuildingType = sim.GetInfluenceBuildingType(LocalPlayerId);
-            int millW = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintWidth : config.MillFootprintWidth;
-            int millH = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintHeight : config.MillFootprintHeight;
             var buildings = sim.BuildingRegistry.GetAllBuildings();
             for (int i = 0; i < buildings.Count; i++)
             {
                 var b = buildings[i];
-                if (b.Type != influenceBuildingType) continue;
+                if (!sim.IsInfluenceBuildingType(LocalPlayerId, b.Type)) continue;
                 if (b.PlayerId != LocalPlayerId) continue;
                 if (b.IsDestroyed) continue;
 
                 int zoneMinX = b.OriginTileX - influenceRadius;
-                int zoneMaxX = b.OriginTileX + millW + influenceRadius;
+                int zoneMaxX = b.OriginTileX + b.TileFootprintWidth + influenceRadius;
                 int zoneMinZ = b.OriginTileZ - influenceRadius;
-                int zoneMaxZ = b.OriginTileZ + millH + influenceRadius;
+                int zoneMaxZ = b.OriginTileZ + b.TileFootprintHeight + influenceRadius;
 
                 if (farmTileX + farmW > zoneMinX && farmTileX < zoneMaxX
                     && farmTileZ + farmH > zoneMinZ && farmTileZ < zoneMaxZ)
@@ -3851,12 +4275,11 @@ namespace OpenEmpires
             }
             else
             {
-                BuildingType influenceBuildingType = sim.GetInfluenceBuildingType(LocalPlayerId);
-                if (placementBuildingType != influenceBuildingType) return;
+                if (!sim.IsInfluenceBuildingType(LocalPlayerId, placementBuildingType)) return;
                 affectsFarms = true;
                 influenceRadius = config.MillInfluenceRadius;
-                footW = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintWidth : config.MillFootprintWidth;
-                footH = influenceBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintHeight : config.MillFootprintHeight;
+                footW = placementBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintWidth : config.MillFootprintWidth;
+                footH = placementBuildingType == BuildingType.TownCenter ? config.TownCenterFootprintHeight : config.MillFootprintHeight;
             }
 
             // Compute influence zone AABB
@@ -3902,20 +4325,124 @@ namespace OpenEmpires
             }
         }
 
+        // Gradient layout: a few tiles inside the explored region fade in,
+        // then continues to fade past the fog boundary. Total = inner + outer steps.
+        // We keep the outer reach where it was (don't push deeper into fog),
+        // and pick up the rest of the gradient on the explored side.
+        private const int GridFogOuterFade = 6;
+        private const int GridFogInnerFade = 2;
+        private const int GridFogTotalFade = GridFogOuterFade + GridFogInnerFade;
+
+        private byte[] cachedFadeStepsMap;
+        private int cachedFadeStepsW, cachedFadeStepsH;
+
+        // Returns per-tile fade step in [0, GridFogTotalFade+1].
+        // 0 = full alpha; GridFogTotalFade = nearly transparent; GridFogTotalFade+1 = fully transparent.
+        private byte[] BuildFadeStepsMap(MapData mapData, FogOfWarData fogData, int playerId)
+        {
+            int w = mapData.Width, h = mapData.Height;
+            int total = w * h;
+            if (cachedFadeStepsMap == null || cachedFadeStepsW != w || cachedFadeStepsH != h)
+            {
+                cachedFadeStepsMap = new byte[total];
+                cachedFadeStepsW = w;
+                cachedFadeStepsH = h;
+            }
+            var fade = cachedFadeStepsMap;
+
+            byte transparent = (byte)(GridFogTotalFade + 1);
+            // Initial: explored = 0 (full alpha), unexplored = transparent (placeholder until outer dilation).
+            for (int z = 0; z < h; z++)
+                for (int x = 0; x < w; x++)
+                    fade[z * w + x] = (fogData != null && fogData.GetVisibility(playerId, x, z) != TileVisibility.Unexplored) ? (byte)0 : transparent;
+
+            // --- Outer dilation: propagate fade into unexplored fog one ring at a time. ---
+            for (int k = 1; k <= GridFogOuterFade; k++)
+            {
+                byte target = (byte)(GridFogInnerFade + k);
+                byte prevTarget = (k == 1) ? (byte)0 : (byte)(GridFogInnerFade + k - 1);
+                for (int z = 0; z < h; z++)
+                {
+                    for (int x = 0; x < w; x++)
+                    {
+                        int idx = z * w + x;
+                        if (fade[idx] != transparent) continue;
+                        bool found = false;
+                        for (int dz = -1; dz <= 1 && !found; dz++)
+                        {
+                            for (int dx = -1; dx <= 1 && !found; dx++)
+                            {
+                                if (dx == 0 && dz == 0) continue;
+                                int nx = x + dx, nz = z + dz;
+                                if (nx < 0 || nx >= w || nz < 0 || nz >= h) continue;
+                                if (fade[nz * w + nx] == prevTarget) found = true;
+                            }
+                        }
+                        if (found) fade[idx] = target;
+                    }
+                }
+            }
+
+            // --- Inner dilation: explored tiles within GridFogInnerFade of the fog boundary fade out. ---
+            // Edge-most explored (adjacent to fog) → GridFogInnerFade; deeper → less; far interior stays 0.
+            // We need to know which explored tiles border fog. After outer dilation, the first ring
+            // of fog has fade = GridFogInnerFade + 1, so explored cells adjacent to it are the edge.
+            byte edgeFogValue = (byte)(GridFogInnerFade + 1);
+            for (int k = 1; k <= GridFogInnerFade; k++)
+            {
+                // Tiles at inner depth k get fade = GridFogInnerFade + 1 - k.
+                // Process from edge inward, so we look for neighbors at fade = (GridFogInnerFade + 1 - (k-1))
+                // i.e. one level "more faded" than what we're assigning.
+                byte target = (byte)(GridFogInnerFade + 1 - k);
+                byte prevTarget = (k == 1) ? edgeFogValue : (byte)(GridFogInnerFade + 1 - (k - 1));
+                for (int z = 0; z < h; z++)
+                {
+                    for (int x = 0; x < w; x++)
+                    {
+                        int idx = z * w + x;
+                        if (fade[idx] != 0) continue; // only consider explored, untouched
+                        bool found = false;
+                        for (int dz = -1; dz <= 1 && !found; dz++)
+                        {
+                            for (int dx = -1; dx <= 1 && !found; dx++)
+                            {
+                                if (dx == 0 && dz == 0) continue;
+                                int nx = x + dx, nz = z + dz;
+                                if (nx < 0 || nx >= w || nz < 0 || nz >= h) continue;
+                                if (fade[nz * w + nx] == prevTarget) found = true;
+                            }
+                        }
+                        if (found) fade[idx] = target;
+                    }
+                }
+            }
+            return fade;
+        }
+
         private void RefreshGridTexture(MapData mapData, FogOfWarData fogData, int playerId, BuildingType buildingType = BuildingType.House)
         {
             if (gridTexture == null) return;
             int w = mapData.Width, h = mapData.Height;
             var pixels = gridTexture.GetPixels32();
-            Color32 buildable   = new Color32(0, 180, 0, 24);
-            Color32 unbuildable = new Color32(200, 0, 0, 80);
-            Color32 transparent = new Color32(0, 0, 0, 0);
+            Color32 buildableBase   = new Color32(0, 180, 0, 24);
+            Color32 unbuildableBase = new Color32(200, 0, 0, 80);
+            Color32 transparent     = new Color32(0, 0, 0, 0);
             bool isFarm = buildingType == BuildingType.Farm;
+            var fadeMap = BuildFadeStepsMap(mapData, fogData, playerId);
+            byte sentinel = (byte)(GridFogTotalFade + 1);
+            float invSpan = 1f / (GridFogTotalFade + 1);
             for (int z = 0; z < h; z++)
+            {
                 for (int x = 0; x < w; x++)
-                    pixels[z * w + x] = fogData.GetVisibility(playerId, x, z) != TileVisibility.Unexplored
-                        ? ((isFarm ? mapData.IsBuildableForFarm(x, z) : mapData.IsBuildable(x, z)) ? buildable : unbuildable)
-                        : transparent;
+                {
+                    int idx = z * w + x;
+                    byte step = fadeMap[idx];
+                    if (step >= sentinel) { pixels[idx] = transparent; continue; }
+                    float fade = 1f - step * invSpan;
+                    var baseCol = (isFarm ? mapData.IsBuildableForFarm(x, z) : mapData.IsBuildable(x, z)) ? buildableBase : unbuildableBase;
+                    pixels[idx] = new Color32(baseCol.r, baseCol.g, baseCol.b, (byte)(baseCol.a * fade));
+                }
+            }
             gridTexture.SetPixels32(pixels);
             gridTexture.Apply();
         }
@@ -4018,6 +4545,7 @@ namespace OpenEmpires
             mr.receiveShadows = false;
         }
 
+
         public void CancelBuildPlacement()
         {
             isPlacingBuilding = false;
@@ -4033,6 +4561,11 @@ namespace OpenEmpires
             {
                 Object.Destroy(ghostBuilding);
                 ghostBuilding = null;
+            }
+            if (ghostFootprintInner != null)
+            {
+                Object.Destroy(ghostFootprintInner);
+                ghostFootprintInner = null;
             }
             if (ghostAttackRangeRing != null)
             {
@@ -4280,7 +4813,7 @@ namespace OpenEmpires
             if (ghostValidMaterial == null)
             {
                 ghostValidMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-                ghostValidMaterial.color = new Color(0f, 1f, 0f, 0.35f);
+                ghostValidMaterial.color = new Color(0f, 1f, 0f, 0.28f);
                 ghostValidMaterial.SetFloat("_Surface", 1);
                 ghostValidMaterial.SetOverrideTag("RenderType", "Transparent");
                 ghostValidMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
@@ -4293,7 +4826,7 @@ namespace OpenEmpires
             if (ghostInvalidMaterial == null)
             {
                 ghostInvalidMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-                ghostInvalidMaterial.color = new Color(1f, 0f, 0f, 0.35f);
+                ghostInvalidMaterial.color = new Color(1f, 0f, 0f, 0.15f);
                 ghostInvalidMaterial.SetFloat("_Surface", 1);
                 ghostInvalidMaterial.SetOverrideTag("RenderType", "Transparent");
                 ghostInvalidMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
@@ -4309,13 +4842,6 @@ namespace OpenEmpires
         {
             int endTileX = wallStartTileX;
             int endTileZ = wallStartTileZ;
-            // The snapped end is the last tile of the 8-direction-snapped line — i.e.,
-            // where the placed wall actually ends, which can differ from the raw cursor
-            // tile when the drag isn't perfectly along a cardinal/diagonal axis. Chain
-            // logic uses this so the next segment starts at the wall's true end, not
-            // wherever the cursor happened to be.
-            int snappedEndTileX = wallStartTileX;
-            int snappedEndTileZ = wallStartTileZ;
 
             var sim = GameBootstrapper.Instance?.Simulation;
             if (sim != null)
@@ -4326,12 +4852,7 @@ namespace OpenEmpires
                     endTileX = Mathf.FloorToInt(wallHit.point.x);
                     endTileZ = Mathf.FloorToInt(wallHit.point.z);
 
-                    var tiles = WallLineHelper.ComputeWallLine(wallStartTileX, wallStartTileZ, endTileX, endTileZ);
-                    if (tiles.Count > 0)
-                    {
-                        snappedEndTileX = tiles[tiles.Count - 1].x;
-                        snappedEndTileZ = tiles[tiles.Count - 1].y;
-                    }
+                    var tiles = WallLineHelper.ComputeWallBoxCenterPath(wallStartTileX, wallStartTileZ, endTileX, endTileZ);
 
                     int validCount = 0;
                     for (int i = 0; i < tiles.Count; i++)
@@ -4350,7 +4871,7 @@ namespace OpenEmpires
                         {
                             var wallCmd = new PlaceWallCommand(LocalPlayerId,
                                 wallStartTileX, wallStartTileZ, endTileX, endTileZ, wallVillagerIds,
-                                wallPlacementType, wallPlacementIsGate);
+                                wallPlacementType, wallPlacementIsGate, isBox: true);
                             wallCmd.IsQueued = multiSelectHeld;
                             sim.CommandBuffer.EnqueueCommand(wallCmd);
                         }
@@ -4360,11 +4881,9 @@ namespace OpenEmpires
 
             if (multiSelectHeld)
             {
-                // Chain: next start is the snapped end of THIS wall (where the placed
-                // tiles actually finish), so the new segment's first tile equals the
-                // previous segment's last tile — they share that tile.
-                wallStartTileX = snappedEndTileX;
-                wallStartTileZ = snappedEndTileZ;
+                // Chain: next box starts at the corner we just placed at.
+                wallStartTileX = endTileX;
+                wallStartTileZ = endTileZ;
             }
             else
             {
@@ -4607,6 +5126,14 @@ namespace OpenEmpires
 
         public void OnBuildingDestroyed(int buildingId)
         {
+            if (hoveredOverlayBuilding != null && hoveredOverlayBuilding.BuildingId == buildingId)
+            {
+                hoveredOverlayBuilding.SetHovered(false);
+                hoveredOverlayBuilding = null;
+            }
+            if (hoveredBuilding != null && hoveredBuilding.BuildingId == buildingId)
+                hoveredBuilding = null;
+
             for (int i = selectedBuildings.Count - 1; i >= 0; i--)
             {
                 if (selectedBuildings[i].BuildingId == buildingId)

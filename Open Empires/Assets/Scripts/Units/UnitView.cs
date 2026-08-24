@@ -26,6 +26,7 @@ namespace OpenEmpires
         // Stencil + silhouette materials for resource stack rendering
         private Material cachedStencilMat;
         private Material cachedSilhouetteMat;
+        private Material selectedSilhouetteMat;
 
         // Control group badge
         private int controlGroupLabel = -1;
@@ -59,6 +60,20 @@ namespace OpenEmpires
         private Image healthBarFill;
         private RectTransform healthBarFillRT;
         private TextMeshProUGUI groupLabelTMP;
+        private float healthBarDamageTimer;
+        private const float HealthBarDamageVisibleDuration = 1.2f;
+
+        // Charge meter — sits just under where the health bar draws, and stays readable on its own
+        // because the health bar only appears on hover or after damage.
+        private const float ChargeBarWidth = 34f;
+        private const float ChargeBarHeight = 3f;
+        private const float ChargeBarGap = 2f;
+        private static readonly Color ChargeColorReady = new Color(1f, 0.82f, 0.28f);
+        private static readonly Color ChargeColorRecharging = new Color(0.62f, 0.45f, 0.14f);
+        private static readonly Color ChargeColorSpending = new Color(1f, 0.96f, 0.72f);
+        private RectTransform chargeBarRoot;
+        private RectTransform chargeBarFillRT;
+        private Image chargeBarFill;
 
         // Attack dash
         private int lastSeenAttackTick;
@@ -66,6 +81,9 @@ namespace OpenEmpires
         private Vector3 attackDashDir;
         private const float AttackDashDuration = 0.18f;
         private const float AttackDashDistance = 0.05f;
+        private UnitAttackVisualAnimator attackVisualAnimator;
+        private UnitGallopVisualAnimator gallopVisualAnimator;
+        private UnitFootDustVisual footDustVisual;
 
         // Damage flinch
         private int lastSeenDamageTick;
@@ -127,6 +145,7 @@ namespace OpenEmpires
         private float attackRingTimer;
         private const float AttackRingDuration = 0.5f;
         private static readonly Color AttackRingColor = new Color(1f, 0.15f, 0.15f);
+        private static Material selectedUnitRingMaterial;
         private Renderer selectionRingRenderer;
         private MaterialPropertyBlock ringPropBlock;
         private Color originalRingColor = Color.white;
@@ -134,6 +153,8 @@ namespace OpenEmpires
         // Shader-safe color access (RGBRecolor shader uses _BaseColor instead of _Color)
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int ColorId = Shader.PropertyToID("_Color");
+        private static readonly int SilhouetteColorId = Shader.PropertyToID("_SilhouetteColor");
+        private static readonly int ZTestId = Shader.PropertyToID("_ZTest");
 
         private static Color GetMaterialColor(Material mat)
         {
@@ -220,12 +241,27 @@ namespace OpenEmpires
             if (facing.sqrMagnitude > 0.0001f)
                 transform.rotation = Quaternion.LookRotation(facing);
 
+            attackVisualAnimator = new UnitAttackVisualAnimator(transform, selectionRing, UnitType, unitData);
+            if (UnitGallopVisualAnimator.IsMounted(UnitType))
+                gallopVisualAnimator = new UnitGallopVisualAnimator(attackVisualAnimator.AttachmentRoot, UnitType, unitId);
+            else
+            {
+                // Sized from the body doing the walking, so the dust follows the model rather than
+                // a hand-set number. Hooves already kick their own from real footfall positions.
+                var body = GetComponent<Collider>();
+                float bodyHeight = body != null ? body.bounds.size.y : UnitFootDustVisual.ReferenceBodyHeight;
+                footDustVisual = new UnitFootDustVisual(UnitType, unitId, bodyHeight);
+            }
+
             CreateWaypointLine();
             CreateIdleZzzEffect();
             CreateDepositIndicatorPool();
             CreateHealIndicatorPool();
             CreateHealthBarWidget();
+            CreateChargeBarWidget();
             CreateUpgradeBadgesWidget();
+            CreateHealAuraVisual();
+            ConfigureSelectionRingMaterial();
             var col = GetComponent<Collider>();
             healthBarYOffset = col != null
                 ? col.bounds.max.y - transform.position.y + 0.1f
@@ -235,8 +271,8 @@ namespace OpenEmpires
             if (UnitType == 9) // Monk — match standard unit height
             {
                 healthBarYOffset = HealthBarYOffset;
-                leftArm = transform.Find("LeftArm");
-                rightArm = transform.Find("RightArm");
+                leftArm = attackVisualAnimator.FindVisual("LeftArm");
+                rightArm = attackVisualAnimator.FindVisual("RightArm");
                 if (leftArm != null) leftArmRestRotation = leftArm.localRotation;
                 if (rightArm != null) rightArmRestRotation = rightArm.localRotation;
             }
@@ -247,40 +283,48 @@ namespace OpenEmpires
 
         private void CacheRenderers()
         {
-            // Cache body renderers (exclude selection ring)
+            // The unit's actual model. Effects are excluded: they are not part of its silhouette,
+            // must not be tinted by the damage flash, and must keep their own render queue.
             var allRenderers = GetComponentsInChildren<Renderer>(true);
+
             int count = 0;
             for (int i = 0; i < allRenderers.Length; i++)
-            {
-                if (selectionRing != null && allRenderers[i].transform.IsChildOf(selectionRing.transform))
-                    continue;
-                if (waypointLine != null && allRenderers[i] == waypointLine)
-                    continue;
-                if (idleZzzContainer != null && allRenderers[i].transform.IsChildOf(idleZzzContainer.transform))
-                    continue;
-                if (resourceStackContainer != null && allRenderers[i].transform.IsChildOf(resourceStackContainer))
-                    continue;
-                count++;
-            }
+                if (IsBodyRenderer(allRenderers[i])) count++;
+
             bodyRenderers = new Renderer[count];
             originalColors = new Color[count];
             int idx = 0;
             for (int i = 0; i < allRenderers.Length; i++)
             {
-                if (selectionRing != null && allRenderers[i].transform.IsChildOf(selectionRing.transform))
-                    continue;
-                if (waypointLine != null && allRenderers[i] == waypointLine)
-                    continue;
-                if (idleZzzContainer != null && allRenderers[i].transform.IsChildOf(idleZzzContainer.transform))
-                    continue;
-                if (resourceStackContainer != null && allRenderers[i].transform.IsChildOf(resourceStackContainer))
-                    continue;
+                if (!IsBodyRenderer(allRenderers[i])) continue;
+
                 bodyRenderers[idx] = allRenderers[i];
                 originalColors[idx] = GetMaterialColor(allRenderers[i].sharedMaterial);
                 // Render after tree billboard sprites (Geometry+1)
                 bodyRenderers[idx].material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry + 2;
                 idx++;
             }
+        }
+
+        /// <summary>
+        /// One rule for what counts as the unit's body, shared by both passes above so the two
+        /// cannot drift apart.
+        /// </summary>
+        private bool IsBodyRenderer(Renderer r)
+        {
+            if (r == null) return false;
+
+            // Particle effects are not body. The King carries a healing aura nine tiles across, and
+            // counting it stretched his drag-selection box to the full width of the aura. It would
+            // also have been tinted white by his damage flash and forced into the opaque queue.
+            if (r is ParticleSystemRenderer) return false;
+
+            if (selectionRing != null && r.transform.IsChildOf(selectionRing.transform)) return false;
+            if (waypointLine != null && r == waypointLine) return false;
+            if (idleZzzContainer != null && r.transform.IsChildOf(idleZzzContainer.transform)) return false;
+            if (resourceStackContainer != null && r.transform.IsChildOf(resourceStackContainer)) return false;
+
+            return true;
         }
 
         private static void EnsureResourceMaterials()
@@ -319,7 +363,7 @@ namespace OpenEmpires
         {
             var containerObj = new GameObject("ResourceStack");
             resourceStackContainer = containerObj.transform;
-            resourceStackContainer.SetParent(transform, false);
+            resourceStackContainer.SetParent(attackVisualAnimator?.AttachmentRoot ?? transform, false);
             resourceStackContainer.localPosition = new Vector3(0f, 0.45f, -0.25f);
 
             resourceStackItems = new GameObject[ResourceStackMaxItems];
@@ -368,7 +412,7 @@ namespace OpenEmpires
                         resourceStackItems[i].transform.localScale = scale;
                         var r = resourceStackItems[i].GetComponent<Renderer>();
                         if (cachedStencilMat != null && cachedSilhouetteMat != null)
-                            r.sharedMaterials = new Material[] { mat, cachedStencilMat, cachedSilhouetteMat };
+                            r.sharedMaterials = new Material[] { mat, cachedStencilMat, GetCurrentSilhouetteMaterial() };
                         else
                             r.sharedMaterial = mat;
                     }
@@ -752,6 +796,104 @@ namespace OpenEmpires
             rootGO.SetActive(false);
         }
 
+        /// <summary>
+        /// A slim meter under the health bar showing the unit's charge. Full and bright while a
+        /// charge is running, then refilling while it recharges. Every unit that can fight is able
+        /// to charge, so this is what makes an otherwise invisible mechanic readable.
+        /// </summary>
+        private void CreateChargeBarWidget()
+        {
+            WorldOverlayCanvas.EnsureCreated();
+
+            var rootGO = new GameObject($"ChargeBar_{UnitId}");
+            rootGO.transform.SetParent(WorldOverlayCanvas.Instance.transform, false);
+            chargeBarRoot = rootGO.AddComponent<RectTransform>();
+            chargeBarRoot.sizeDelta = new Vector2(ChargeBarWidth, ChargeBarHeight);
+
+            var bgGO = new GameObject("Background");
+            bgGO.transform.SetParent(rootGO.transform, false);
+            var bgRT = bgGO.AddComponent<RectTransform>();
+            bgRT.anchorMin = Vector2.zero;
+            bgRT.anchorMax = Vector2.one;
+            bgRT.offsetMin = Vector2.zero;
+            bgRT.offsetMax = Vector2.zero;
+            var bgImg = bgGO.AddComponent<Image>();
+            bgImg.color = new Color(0.08f, 0.07f, 0.05f, 0.9f);
+            bgImg.raycastTarget = false;
+            var bgOutline = bgGO.AddComponent<Outline>();
+            bgOutline.effectColor = new Color(0f, 0f, 0f, 0.8f);
+            bgOutline.effectDistance = new Vector2(1, -1);
+
+            var fillGO = new GameObject("Fill");
+            fillGO.transform.SetParent(rootGO.transform, false);
+            chargeBarFillRT = fillGO.AddComponent<RectTransform>();
+            chargeBarFillRT.anchorMin = Vector2.zero;
+            chargeBarFillRT.anchorMax = Vector2.one;
+            chargeBarFillRT.offsetMin = Vector2.zero;
+            chargeBarFillRT.offsetMax = Vector2.zero;
+            chargeBarFill = fillGO.AddComponent<Image>();
+            chargeBarFill.color = ChargeColorReady;
+            chargeBarFill.raycastTarget = false;
+
+            rootGO.SetActive(false);
+        }
+
+        private void UpdateChargeBarUI()
+        {
+            if (chargeBarRoot == null) return;
+
+            // Sheep and other non-combatants never charge, so they never carry the meter.
+            if (IsDead || unitData == null || unitData.CurrentHealth <= 0 || unitData.AttackDamage <= 0)
+            {
+                HideChargeBar();
+                return;
+            }
+
+            // Shown while the meter is being spent and while it refills. A full meter carries no
+            // information — the charge is simply available — so it disappears once topped up, and
+            // the bar's presence alone means "not at full sprint".
+            if (!unitData.IsCharging && unitData.ChargeStamina >= UnitCombatSystem.ChargeStaminaMax)
+            {
+                HideChargeBar();
+                return;
+            }
+
+            Camera cam = UnitView.CachedMainCamera;
+            if (cam == null) return;
+
+            Vector3 worldPos = transform.position + Vector3.up * healthBarYOffset;
+            Vector3 screenPos = cam.WorldToScreenPoint(worldPos);
+            if (screenPos.z < 0f)
+            {
+                HideChargeBar();
+                return;
+            }
+
+            if (!chargeBarRoot.gameObject.activeSelf)
+                chargeBarRoot.gameObject.SetActive(true);
+
+            float dropBelowHealthBar = HealthBarHeight * 0.5f + ChargeBarGap + ChargeBarHeight * 0.5f;
+            chargeBarRoot.position = new Vector3(screenPos.x, screenPos.y - dropBelowHealthBar, 0f);
+
+            float fraction = Mathf.Clamp01(
+                unitData.ChargeStamina / (float)UnitCombatSystem.ChargeStaminaMax);
+
+            chargeBarFillRT.anchorMax = new Vector2(fraction, 1f);
+
+            // Warms from dull amber to gold as it fills, so readiness reads at a glance without
+            // having to judge the bar's length. Brightens while actively being spent.
+            Color color = Color.Lerp(ChargeColorRecharging, ChargeColorReady, fraction);
+            if (unitData.IsCharging)
+                color = Color.Lerp(color, ChargeColorSpending, 0.6f);
+            chargeBarFill.color = color;
+        }
+
+        private void HideChargeBar()
+        {
+            if (chargeBarRoot != null && chargeBarRoot.gameObject.activeSelf)
+                chargeBarRoot.gameObject.SetActive(false);
+        }
+
         private void UpdateHealthBarUI()
         {
             if (IsDead || unitData == null || unitData.MaxHealth <= 0 || unitData.CurrentHealth <= 0)
@@ -761,8 +903,11 @@ namespace OpenEmpires
                 return;
             }
 
-            bool damaged = unitData.CurrentHealth < unitData.MaxHealth;
-            if (!isSelected && !isHovered && !damaged)
+            bool recentlyDamaged = healthBarDamageTimer > 0f;
+            if (healthBarDamageTimer > 0f)
+                healthBarDamageTimer -= Time.deltaTime;
+
+            if (!isHovered && !recentlyDamaged)
             {
                 if (healthBarRoot != null && healthBarRoot.gameObject.activeSelf)
                     healthBarRoot.gameObject.SetActive(false);
@@ -801,6 +946,7 @@ namespace OpenEmpires
         private void LateUpdate()
         {
             UpdateHealthBarUI();
+            UpdateChargeBarUI();
             UpdateUpgradeBadgesUI();
         }
 
@@ -947,8 +1093,10 @@ namespace OpenEmpires
 
             bool hasQueue = unitData.HasQueuedCommands;
             bool hasPath = unitData.HasPath;
+            var selectionManager = UnitSelectionManager.Instance;
+            bool shouldShowForSelection = selectionManager == null || selectionManager.ShouldShowWaypointFor(this);
 
-            if (!isSelected || (!hasQueue && !hasPath))
+            if (!isSelected || !shouldShowForSelection || (!hasQueue && !hasPath))
             {
                 if (waypointLine.gameObject.activeSelf)
                     waypointLine.gameObject.SetActive(false);
@@ -1059,11 +1207,14 @@ namespace OpenEmpires
             if (cachedMapData != null)
                 smoothedBasePos.y = cachedMapData.SampleHeight(smoothedBasePos.x, smoothedBasePos.z) * cachedHeightScale;
 
-            // Detect new attack — apply dash
+            // Detect new attack and trigger the matching view animation.
             if (unitData.LastAttackTick > lastSeenAttackTick && unitData.LastAttackTick > 0)
             {
                 lastSeenAttackTick = unitData.LastAttackTick;
-                attackDashTimer = AttackDashDuration;
+                if (attackVisualAnimator.HasAttackMotion)
+                    attackVisualAnimator.PlayAttack(attackVisualAnimator.WasCharging);
+                else
+                    attackDashTimer = AttackDashDuration;
                 Vector3 toTarget = unitData.LastAttackTargetPos.ToVector3() - smoothedBasePos;
                 toTarget.y = 0f;
                 attackDashDir = toTarget.sqrMagnitude > 0.001f ? toTarget.normalized : transform.forward;
@@ -1080,6 +1231,7 @@ namespace OpenEmpires
                 lastSeenDamageTick = unitData.LastDamageTick;
                 damageFlinchTimer = DamageFlinchDuration;
                 damageFlashTimer = DamageFlashDuration;
+                healthBarDamageTimer = HealthBarDamageVisibleDuration;
                 Vector3 fromAttacker = unitData.LastDamageFromPos.ToVector3() - smoothedBasePos;
                 fromAttacker.y = 0f;
                 damageFlinchDir = fromAttacker.sqrMagnitude > 0.001f ? -fromAttacker.normalized : -transform.forward;
@@ -1208,6 +1360,23 @@ namespace OpenEmpires
                         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * turnSmoothing);
                     }
                 }
+            }
+
+            attackVisualAnimator.UpdateAnimation(unitData, Time.deltaTime);
+
+            if (gallopVisualAnimator != null || footDustVisual != null)
+            {
+                float secondsPerTick = GameBootstrapper.Instance.Config.SecondsPerTick;
+                float groundSpeed = secondsPerTick > 0f ? (curr - prev).magnitude / secondsPerTick : 0f;
+
+                float topSpeed = unitData.MoveSpeed.ToFloat();
+                float normalizedSpeed = topSpeed > 0.0001f ? groundSpeed / topSpeed : 0f;
+
+                // Gallop layers on top of the attack pose, so it has to run after it.
+                gallopVisualAnimator?.UpdateGallop(normalizedSpeed, groundSpeed, unitData.IsCharging,
+                    smoothedBasePos, Time.deltaTime);
+
+                footDustVisual?.UpdateFootDust(normalizedSpeed, smoothedBasePos, transform.forward);
             }
 
             UpdateWaypointLine();
@@ -1483,24 +1652,39 @@ namespace OpenEmpires
             DestroyHealIndicatorPool();
             if (healthBarRoot != null)
                 Destroy(healthBarRoot.gameObject);
+            if (chargeBarRoot != null)
+                Destroy(chargeBarRoot.gameObject);
             DestroyUpgradeBadgesWidget();
+            if (selectedSilhouetteMat != null)
+                Destroy(selectedSilhouetteMat);
         }
 
         public void HideHealthBar()
         {
             if (healthBarRoot != null && healthBarRoot.gameObject.activeSelf)
                 healthBarRoot.gameObject.SetActive(false);
+
+            // Garrisoned units are hidden, so their meter must go with the health bar.
+            HideChargeBar();
         }
 
         public void OnDeath()
         {
             if (IsDead) return;
             IsDead = true;
+            attackVisualAnimator?.ResetPose();
+            gallopVisualAnimator?.ResetPose();
+            footDustVisual = null; // a corpse sliding into its death pose should not scuff the ground
 
             if (healthBarRoot != null)
             {
                 Destroy(healthBarRoot.gameObject);
                 healthBarRoot = null;
+            }
+            if (chargeBarRoot != null)
+            {
+                Destroy(chargeBarRoot.gameObject);
+                chargeBarRoot = null;
             }
             DestroyUpgradeBadgesWidget();
 
@@ -1606,6 +1790,7 @@ namespace OpenEmpires
         {
             isSelected = selected;
             isPreselected = false;
+            ApplySelectionSilhouette();
             if (selectionRing != null)
             {
                 // Keep ring active while attack pulsation is playing, even if deselected
@@ -1633,7 +1818,139 @@ namespace OpenEmpires
             isHovered = hovered;
         }
 
-        public void SetSelectionRing(GameObject ring) { selectionRing = ring; }
+        public void SetSelectionRing(GameObject ring)
+        {
+            selectionRing = ring;
+            ConfigureSelectionRingMaterial();
+        }
+
+        private void ConfigureSelectionRingMaterial()
+        {
+            if (selectionRing == null) return;
+
+            var renderer = selectionRing.GetComponentInChildren<Renderer>(true);
+            if (renderer == null || renderer.sharedMaterial == null) return;
+
+            Material depthTested = GetSelectedUnitRingMaterial(renderer.sharedMaterial);
+            if (depthTested != null)
+                renderer.sharedMaterial = depthTested;
+        }
+
+        private static Material GetSelectedUnitRingMaterial(Material source)
+        {
+            if (source == null) return null;
+
+            if (selectedUnitRingMaterial == null || selectedUnitRingMaterial.shader != source.shader)
+            {
+                selectedUnitRingMaterial = new Material(source)
+                {
+                    name = "M_Selected_Unit_Ring_DepthTested",
+                    renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent + 120
+                };
+            }
+
+            if (selectedUnitRingMaterial.HasProperty(ZTestId))
+                selectedUnitRingMaterial.SetFloat(ZTestId, (float)UnityEngine.Rendering.CompareFunction.LessEqual);
+
+            return selectedUnitRingMaterial;
+        }
+
+        private Material GetCurrentSilhouetteMaterial()
+        {
+            return isSelected ? GetSelectedSilhouetteMaterial() : cachedSilhouetteMat;
+        }
+
+        private Material GetSelectedSilhouetteMaterial()
+        {
+            if (cachedSilhouetteMat == null) return null;
+            if (selectedSilhouetteMat != null) return selectedSilhouetteMat;
+
+            selectedSilhouetteMat = new Material(cachedSilhouetteMat)
+            {
+                name = $"{cachedSilhouetteMat.name}_Selected_{UnitId}",
+                renderQueue = Mathf.Max(cachedSilhouetteMat.renderQueue + 1, 2452)
+            };
+
+            if (selectedSilhouetteMat.HasProperty(SilhouetteColorId))
+            {
+                Color color = cachedSilhouetteMat.HasProperty(SilhouetteColorId)
+                    ? cachedSilhouetteMat.GetColor(SilhouetteColorId)
+                    : Color.white;
+                color = Color.Lerp(color, Color.white, 0.35f);
+                color.a = Mathf.Max(color.a, 0.82f);
+                selectedSilhouetteMat.SetColor(SilhouetteColorId, color);
+            }
+
+            return selectedSilhouetteMat;
+        }
+
+        private void ApplySelectionSilhouette()
+        {
+            Material target = GetCurrentSilhouetteMaterial();
+            if (target == null) return;
+
+            if (bodyRenderers != null)
+            {
+                for (int i = 0; i < bodyRenderers.Length; i++)
+                    ApplySilhouetteMaterial(bodyRenderers[i], target);
+            }
+
+            if (resourceStackItems != null)
+            {
+                for (int i = 0; i < resourceStackItems.Length; i++)
+                {
+                    if (resourceStackItems[i] == null) continue;
+                    ApplySilhouetteMaterial(resourceStackItems[i].GetComponent<Renderer>(), target);
+                }
+            }
+        }
+
+        private void ApplySilhouetteMaterial(Renderer renderer, Material target)
+        {
+            if (renderer == null || target == null) return;
+
+            Material[] materials = renderer.sharedMaterials;
+            bool changed = false;
+            for (int i = 0; i < materials.Length; i++)
+            {
+                if (materials[i] == cachedSilhouetteMat ||
+                    materials[i] == selectedSilhouetteMat ||
+                    IsSilhouetteMaterial(materials[i]))
+                {
+                    materials[i] = target;
+                    changed = true;
+                }
+            }
+
+            if (changed)
+                renderer.sharedMaterials = materials;
+        }
+
+        private static bool IsSilhouetteMaterial(Material material)
+        {
+            return material != null && material.shader != null && material.shader.name == "Custom/Silhouette";
+        }
+
+        /// <summary>
+        /// The King carries a dormant golden dust ring that pulses when his healing aura lands.
+        /// Cosmetic only — the heal itself is driven by UnitHealingSystem.
+        /// </summary>
+        private void CreateHealAuraVisual()
+        {
+            if (UnitType != UnitData.KingUnitType) return;
+
+            var config = GameBootstrapper.Instance?.Simulation?.Config;
+            if (config == null) return;
+
+            HealAuraVisual.Attach(transform, config.KingHealRange, new Color(1f, 0.82f, 0.32f));
+        }
+
+        public void PulseHealAuraVisual(float radius)
+        {
+            if (UnitType != UnitData.KingUnitType) return;
+            var visual = HealAuraVisual.Attach(transform, radius, new Color(1f, 0.82f, 0.32f));
+            visual?.Pulse();
+        }
 
         public Rect GetScreenBounds(Camera cam)
         {
@@ -1677,7 +1994,7 @@ namespace OpenEmpires
 
         public bool IsSelected => isSelected;
         public bool IsHovered => isHovered;
-        public bool IsElite => UnitType == 1 || UnitType == 3 || UnitType == 6 || UnitType == 7 || UnitType == 8 || UnitType == 12;
+        public bool IsElite => UnitType == 1 || UnitType == 3 || UnitType == 6 || UnitType == 7 || UnitType == 8 || UnitType == 12 || UnitType == UnitData.KingUnitType;
         public bool InFormation => unitData != null && unitData.InFormation;
         public FixedVector3 FormationOffset => unitData != null ? unitData.FormationOffset : default;
         public int FormationGroupId => unitData != null ? unitData.FormationGroupId : 0;

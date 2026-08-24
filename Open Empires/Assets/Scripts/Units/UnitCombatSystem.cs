@@ -9,19 +9,82 @@ namespace OpenEmpires
         private static readonly Fixed32 FacingThreshold = Fixed32.FromFloat(0.9f); // cos(~26 deg)
         private const int RecentHitWindow = 40; // ticks (~2 sec at 20 TPS) — 360° awareness after being struck
         private static readonly Fixed32 LeashRange = Fixed32.FromFloat(12f);
-        private static readonly Fixed32 LeashRangeSq = LeashRange * LeashRange;
+
+        // A unit has to be able to reach anything it is willing to aggro onto. Leashing everyone at
+        // a flat 12 tiles while a Scout detects at 20 pulled it back before it ever arrived; it then
+        // re-acquired the same target and set off again, yo-yoing forever and never closing to
+        // charge range. The leash therefore never sits tighter than the unit's own detection range.
+        private static readonly Fixed32 LeashReachMargin = Fixed32.FromFloat(3f);
+
+        private static Fixed32 LeashRangeFor(UnitData unit)
+        {
+            Fixed32 reach = unit.DetectionRange + LeashReachMargin;
+            return reach > LeashRange ? reach : LeashRange;
+        }
 
         // Charge
         private static readonly Fixed32 ChargeSpeedMultiplier = Fixed32.FromFloat(1.5f);
-        private static readonly Fixed32 ChargeMinDistance = Fixed32.FromFloat(4f);
-        private static readonly Fixed32 ChargeMinDistanceSq = ChargeMinDistance * ChargeMinDistance;
+        // A charge fires when the enemy is spotted within this distance, rather than beyond it.
+        // The unit does not need a run-up: closing from five tiles or from arm's length both
+        // qualify, so most engagements open with a charge whenever the cooldown is clear.
+        private static readonly Fixed32 ChargeMaxDistance = Fixed32.FromFloat(5f);
+        private static readonly Fixed32 ChargeMaxDistanceSq = ChargeMaxDistance * ChargeMaxDistance;
         private static readonly Fixed32 ChargeFacingThreshold = Fixed32.FromFloat(0.7f);
         private static readonly Fixed32 NegChargeFacingThreshold = new Fixed32(-45875); // -0.7f * 65536
         private static readonly Fixed32 BuildingReach = Fixed32.FromInt(2);
-        private const int ChargeDamageMultiplier = 2;
-        private const int ChargeCooldownTicks = 200; // 10 sec at 20 TPS
-        private static readonly Fixed32 ChargeKnockbackDist = Fixed32.FromFloat(1.5f);
-        private const int ChargeStunTicks = 15; // 0.75 sec at 20 TPS
+        // A charge's payoff scales with the momentum behind it: every hit gets a baseline bonus,
+        // and a unit that has been sprinting longer hits proportionally harder. All of it is
+        // integer or fixed-point arithmetic so the simulation stays deterministic in lockstep.
+        // Reached after a second of sprinting. The meter holds two seconds, but a charge that
+        // begins inside five tiles rarely runs that long, so the ramp has to fit the window.
+        private const int ChargeMomentumFullTicks = 30;
+
+        // Damage: 1.25x from a standing start, rising to 2.5x at full momentum.
+        private const int ChargeDamageBasePercent = 125;
+        private const int ChargeDamageMomentumPercent = 125;
+
+        // Charge stamina behaves like a sprint meter. It is counted in thirds of a tick so both
+        // the drain and the regen stay whole numbers, which keeps the simulation deterministic.
+        // Full meter = 2s of sprinting; empty to full = 6s.
+        /// <summary>
+        /// Full charge meter. Public so the view can draw it as a fraction; the simulation remains
+        /// the only thing that changes it.
+        /// </summary>
+        public const int ChargeStaminaMax = 180;
+        private const int ChargeStaminaDrainPerTick = 3;
+        private const int ChargeStaminaRegenPerTick = 1;
+
+        // Enough meter left to be worth committing to, so a charge cannot flicker on for a frame.
+        private const int ChargeStaminaMinToStart = 45;
+        private static readonly Fixed32 ChargeKnockbackBase = Fixed32.FromFloat(0.5f);
+        private static readonly Fixed32 ChargeKnockbackMomentum = Fixed32.FromFloat(1.3f);
+        private const int ChargeStunBaseTicks = 5;      // ~0.17s at 30 TPS
+        private const int ChargeStunMomentumTicks = 13; // up to ~0.6s total
+
+
+        /// <summary>
+        /// Starts a charge if the unit is in a position to make one. Called every tick while
+        /// closing on a target rather than only at the moment of spotting one: units detect enemies
+        /// from 8 to 20 tiles away but can only charge inside <see cref="ChargeMaxDistance"/>, so a
+        /// single test on contact almost always failed and the charge never fired at all.
+        /// </summary>
+        private static void TryBeginCharge(UnitData unit, UnitData enemy, Fixed32 distSq)
+        {
+            if (unit.IsCharging) return;
+            if (unit.ChargeStamina < ChargeStaminaMinToStart) return;
+            if (distSq > ChargeMaxDistanceSq) return;
+
+            Fixed32 dist = Fixed32.Sqrt(distSq);
+            if (dist.Raw <= 0) return;
+
+            Fixed32 dx = enemy.SimPosition.x - unit.SimPosition.x;
+            Fixed32 dz = enemy.SimPosition.z - unit.SimPosition.z;
+            Fixed32 facingDot = (unit.SimFacing.x * dx + unit.SimFacing.z * dz) / dist;
+            if (facingDot <= ChargeFacingThreshold) return;
+
+            unit.IsCharging = true;
+            unit.ChargeMomentum = 0; // a fresh run builds its own momentum
+        }
 
         private List<int> deadList = new List<int>();
         private List<int> deadBuildingList = new List<int>();
@@ -43,8 +106,23 @@ namespace OpenEmpires
                 // Always tick cooldowns so units reload while moving
                 if (unit.AttackCooldownRemaining > 0 && unit.CombatTargetBuildingId < 0)
                     unit.AttackCooldownRemaining--;
-                if (unit.ChargeCooldownRemaining > 0)
-                    unit.ChargeCooldownRemaining--;
+                // Sprint meter: spend it while charging, recover it the rest of the time.
+                if (unit.IsCharging)
+                {
+                    unit.ChargeStamina -= ChargeStaminaDrainPerTick;
+                    unit.ChargeMomentum++;
+                    if (unit.ChargeStamina <= 0)
+                    {
+                        unit.ChargeStamina = 0;
+                        unit.IsCharging = false; // ran out of puff mid-run
+                    }
+                }
+                else if (unit.ChargeStamina < ChargeStaminaMax)
+                {
+                    unit.ChargeStamina += ChargeStaminaRegenPerTick;
+                    if (unit.ChargeStamina > ChargeStaminaMax)
+                        unit.ChargeStamina = ChargeStaminaMax;
+                }
                 if (unit.ChargeStunRemaining > 0)
                 {
                     unit.ChargeStunRemaining--;
@@ -208,7 +286,9 @@ namespace OpenEmpires
                 {
                     Fixed32 lx = unit.SimPosition.x - unit.LeashOrigin.x;
                     Fixed32 lz = unit.SimPosition.z - unit.LeashOrigin.z;
-                    if (Fixed32.Abs(lx) > LeashRange || Fixed32.Abs(lz) > LeashRange || lx * lx + lz * lz > LeashRangeSq)
+                    Fixed32 leash = LeashRangeFor(unit);
+                    Fixed32 leashSq = leash * leash;
+                    if (Fixed32.Abs(lx) > leash || Fixed32.Abs(lz) > leash || lx * lx + lz * lz > leashSq)
                         closestEnemy = null;
                 }
 
@@ -248,19 +328,7 @@ namespace OpenEmpires
                         unit.SavePathForCombat();
                     unit.ClearPath();
                     unit.State = UnitState.InCombat;
-                    // Check charge eligibility
-                    if (unit.ChargeCooldownRemaining == 0 && closestDistSq > ChargeMinDistanceSq)
-                    {
-                        Fixed32 eDx = closestEnemy.SimPosition.x - unit.SimPosition.x;
-                        Fixed32 eDz = closestEnemy.SimPosition.z - unit.SimPosition.z;
-                        Fixed32 eDist = Fixed32.Sqrt(closestDistSq);
-                        if (eDist.Raw > 0)
-                        {
-                            Fixed32 chargeDot = (unit.SimFacing.x * eDx + unit.SimFacing.z * eDz) / eDist;
-                            if (chargeDot > ChargeFacingThreshold)
-                                unit.IsCharging = true;
-                        }
-                    }
+                    TryBeginCharge(unit, closestEnemy, closestDistSq);
                 }
                 else if (unit.State == UnitState.Idle || unit.State == UnitState.Gathering || unit.State == UnitState.Constructing)
                 {
@@ -271,19 +339,7 @@ namespace OpenEmpires
                         unit.HasLeash = true;
                     }
                     unit.State = UnitState.InCombat;
-                    // Check charge eligibility
-                    if (unit.ChargeCooldownRemaining == 0 && closestDistSq > ChargeMinDistanceSq)
-                    {
-                        Fixed32 eDx = closestEnemy.SimPosition.x - unit.SimPosition.x;
-                        Fixed32 eDz = closestEnemy.SimPosition.z - unit.SimPosition.z;
-                        Fixed32 eDist = Fixed32.Sqrt(closestDistSq);
-                        if (eDist.Raw > 0)
-                        {
-                            Fixed32 chargeDot = (unit.SimFacing.x * eDx + unit.SimFacing.z * eDz) / eDist;
-                            if (chargeDot > ChargeFacingThreshold)
-                                unit.IsCharging = true;
-                        }
-                    }
+                    TryBeginCharge(unit, closestEnemy, closestDistSq);
                 }
 
                 // Compute direction to enemy
@@ -330,11 +386,18 @@ namespace OpenEmpires
                     // Attack
                     int damage = unit.AttackDamage;
                     bool wasCharging = unit.IsCharging;
+                    // How much of a full-length sprint this charge managed, 0 at a standing start.
+                    int chargeMomentum = wasCharging
+                        ? (unit.ChargeMomentum < ChargeMomentumFullTicks ? unit.ChargeMomentum : ChargeMomentumFullTicks)
+                        : 0;
                     if (unit.IsCharging)
                     {
-                        damage = unit.AttackDamage * ChargeDamageMultiplier;
+                        int percent = ChargeDamageBasePercent
+                            + (ChargeDamageMomentumPercent * chargeMomentum) / ChargeMomentumFullTicks;
+                        damage = (unit.AttackDamage * percent) / 100;
+                        // The run is over, but nothing extra is confiscated: the meter has already
+                        // paid for exactly the time spent sprinting.
                         unit.IsCharging = false;
-                        unit.ChargeCooldownRemaining = ChargeCooldownTicks;
                     }
 
                     // Bonus damage (rock-paper-scissors)
@@ -372,14 +435,17 @@ namespace OpenEmpires
                         {
                             closestEnemy.LastChargeHitTick = currentTick;
                             closestEnemy.LastChargeHitFromPos = unit.SimPosition;
-                            closestEnemy.ChargeStunRemaining = ChargeStunTicks;
+                            closestEnemy.ChargeStunRemaining = ChargeStunBaseTicks
+                                + (ChargeStunMomentumTicks * chargeMomentum) / ChargeMomentumFullTicks;
 
-                            // Knockback displacement
+                            // Knockback displacement, also scaled by the momentum behind the hit.
+                            Fixed32 knockDist = ChargeKnockbackBase + ChargeKnockbackMomentum
+                                * Fixed32.FromInt(chargeMomentum) / Fixed32.FromInt(ChargeMomentumFullTicks);
                             var knockDir = targetDir;
                             var displacement = new FixedVector3(
-                                knockDir.x * ChargeKnockbackDist,
+                                knockDir.x * knockDist,
                                 Fixed32.Zero,
-                                knockDir.z * ChargeKnockbackDist);
+                                knockDir.z * knockDist);
                             var newPos = closestEnemy.SimPosition + displacement;
                             Vector2Int newTile = mapData.WorldToTile(newPos);
                             if (mapData.IsWalkable(newTile.x, newTile.y))
@@ -402,6 +468,10 @@ namespace OpenEmpires
                 }
                 else if (unit.AttackCooldownRemaining <= 0)
                 {
+                    // Re-checked on the way in, so a unit that spotted its target from beyond
+                    // charge range still breaks into a run as it crosses the threshold.
+                    TryBeginCharge(unit, closestEnemy, closestDistSq);
+
                     // Chase immediately — turns while running
                     Fixed32 step = unit.MoveSpeed * tickDuration;
                     if (unit.IsCharging)

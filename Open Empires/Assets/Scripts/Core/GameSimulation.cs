@@ -19,12 +19,16 @@ namespace OpenEmpires
         // attack-ping system) get a position + owner id so they can decide whether to react.
         // Not fired for repair "strikes", construction strikes, or resource gathering.
         public event Action<float, float, int> OnEntityDamaged; // worldX, worldZ, ownerPlayerId
+        public event Action<int, float, float, PingType> OnPingReceived; // playerId, worldX, worldZ, type
+        public event Action<int, AiChatLineType, int> OnAiChatEmitted;   // playerId, lineType, paramA
         public event Action<int, int> OnSheepConverted; // sheepId, newPlayerId
         public event Action<int, int> OnSheepSlaughtered; // sheepId, carcassNodeId
         public event Action<int, FixedVector3, int> OnMeteorWarning; // playerId, position, impactTick
         public event Action<FixedVector3, List<int>> OnMeteorImpact; // position, knockedUnitIds
         public event Action<int, FixedVector3, int, int> OnHealingRainWarning; // playerId, position, startTick, endTick
         public event Action<FixedVector3> OnHealingRainEnd; // position
+        public event Action<int, float> OnKingHealingAuraPulse; // unitId, radius
+        public event Action<int, float> OnBuildingHealingAuraPulse; // buildingId, radius
         public event Action<int, FixedVector3> OnLightningStormWarning; // playerId, position
         public event Action<FixedVector3, List<int>> OnLightningBolt; // boltPosition, knockedUnitIds
         public event Action<FixedVector3> OnLightningStormEnd; // position
@@ -101,6 +105,14 @@ namespace OpenEmpires
                 ? BuildingType.TownCenter
                 : BuildingType.Mill;
         }
+
+        // English: both Town Center AND Mill grant farm influence. Others: only Mill.
+        public bool IsInfluenceBuildingType(int playerId, BuildingType type)
+        {
+            if (GetPlayerCivilization(playerId) == Civilization.English)
+                return type == BuildingType.TownCenter || type == BuildingType.Mill;
+            return type == BuildingType.Mill;
+        }
         public int ResolveCivUnitType(int playerId, int baseUnitType)
         {
             var civ = GetPlayerCivilization(playerId);
@@ -112,6 +124,189 @@ namespace OpenEmpires
                 _ => baseUnitType,
             };
         }
+
+        public BuildingType GetEffectiveBuildingType(BuildingData building)
+        {
+            return LandmarkDefinitions.GetEffectiveBuildingType(building);
+        }
+
+        public bool IsEnglishLandmark(BuildingData building, LandmarkId landmarkId)
+        {
+            return building != null
+                && building.Type == BuildingType.Landmark
+                && building.LandmarkId == landmarkId
+                && LandmarkDefinitions.Get(building.LandmarkId).Civ == Civilization.English;
+        }
+
+        private bool IsTheWhiteTower(BuildingData building)
+        {
+            return IsEnglishLandmark(building, LandmarkId.English_Age3_B);
+        }
+
+        private bool IsCouncilHall(BuildingData building)
+        {
+            return IsEnglishLandmark(building, LandmarkId.English_Age2_B);
+        }
+
+        private bool IsFreeLandmarkRewardTraining(BuildingData building, int unitType)
+        {
+            if (building == null || building.Type != BuildingType.Landmark) return false;
+            if (unitType != UnitData.KingUnitType) return false;
+
+            var def = LandmarkDefinitions.Get(building.LandmarkId);
+            return def.SpawnsKingOnCompletion;
+        }
+
+        private void ApplyLandmarkCapabilities(BuildingData building)
+        {
+            if (building == null || building.Type != BuildingType.Landmark) return;
+
+            var def = LandmarkDefinitions.Get(building.LandmarkId);
+            building.MaxHealth = def.MaxHealth;
+            building.Armor = def.Armor;
+
+            BuildingType effectiveType = LandmarkDefinitions.GetEffectiveBuildingType(building);
+            if (effectiveType == BuildingType.TownCenter)
+            {
+                building.AttackDamage = config.TownCenterArrowDamage;
+                building.AttackRange = ConfigToFixed32(config.SubsequentTownCenterAttackRange);
+                building.DetectionRange = ConfigToFixed32(config.SubsequentTownCenterAttackRange);
+                building.AttackCooldownTicks = config.TownCenterAttackCooldownTicks;
+                building.GarrisonCapacity = config.TownCenterGarrisonCapacity;
+            }
+            else if (effectiveType == BuildingType.Keep)
+            {
+                building.AttackDamage = def.AttackDamage > 0 ? def.AttackDamage : config.KeepAttackDamage;
+                building.AttackRange = ConfigToFixed32(def.AttackRange > 0f ? def.AttackRange : config.KeepAttackRange);
+                building.DetectionRange = ConfigToFixed32(def.AttackRange > 0f ? def.AttackRange : config.KeepDetectionRange);
+                building.AttackCooldownTicks = def.AttackCooldownTicks > 0 ? def.AttackCooldownTicks : config.KeepAttackCooldownTicks;
+                building.BaseArrowCount = def.BaseArrowCount > 0 ? def.BaseArrowCount : config.KeepBaseArrowCount;
+                building.GarrisonCapacity = def.GarrisonCapacity > 0 ? def.GarrisonCapacity : config.KeepGarrisonCapacity;
+            }
+        }
+
+        private int GetAdjustedTrainTime(BuildingData building, int unitType)
+        {
+            int baseTime = BuildingTrainingSystem.GetTrainTime(config, unitType);
+            float multiplier = 1f;
+
+            if (building != null && building.Type == BuildingType.Landmark)
+            {
+                var def = LandmarkDefinitions.Get(building.LandmarkId);
+                if (unitType == 0 && def.VillagerProductionSpeedMultiplier > 0f)
+                    multiplier = def.VillagerProductionSpeedMultiplier;
+                else if (def.ProductionSpeedMultiplier > 0f)
+                    multiplier = def.ProductionSpeedMultiplier;
+            }
+
+            if (multiplier <= 1f) return baseTime;
+            return Mathf.Max(1, Mathf.CeilToInt(baseTime / multiplier));
+        }
+
+        private bool CanBuildingTrainUnit(BuildingData building, int requestedUnitType, int resolvedUnitType)
+        {
+            if (building == null) return false;
+            BuildingType effectiveType = LandmarkDefinitions.GetEffectiveBuildingType(building);
+            int unitType = requestedUnitType;
+
+            switch (effectiveType)
+            {
+                case BuildingType.Barracks:
+                    return unitType == 1 || unitType == 6 || resolvedUnitType == 12;
+                case BuildingType.TownCenter:
+                    return unitType == 0 || unitType == 4;
+                case BuildingType.ArcheryRange:
+                    return unitType == 2 || unitType == 8 || resolvedUnitType == 10;
+                case BuildingType.Stables:
+                    return unitType == 3 || unitType == 7 || unitType == 4 || resolvedUnitType == 11;
+                case BuildingType.Monastery:
+                    return unitType == 9;
+                case BuildingType.SiegeWorkshop:
+                    return unitType >= 13 && unitType <= 15;
+                case BuildingType.Keep:
+                    if (!IsTheWhiteTower(building)) return false;
+                    return unitType == 1 || unitType == 2 || unitType == 3 || unitType == 4
+                        || unitType == 6 || unitType == 7 || unitType == 8
+                        || unitType == 13 || unitType == 14 || unitType == 15
+                        || resolvedUnitType == 10 || resolvedUnitType == 11 || resolvedUnitType == 12;
+                default:
+                    return false;
+            }
+        }
+
+        private void GetUnitTrainingCostsAndTime(int unitType, out int foodCost, out int woodCost, out int goldCost, out int trainTime)
+        {
+            switch (unitType)
+            {
+                case 9:
+                    foodCost = config.MonkFoodCost; woodCost = 0; goldCost = config.MonkGoldCost; trainTime = config.MonkTrainTimeTicks; break;
+                case 8:
+                    foodCost = config.CrossbowmanFoodCost; woodCost = 0; goldCost = config.CrossbowmanGoldCost; trainTime = config.CrossbowmanTrainTimeTicks; break;
+                case 7:
+                    foodCost = config.KnightFoodCost; woodCost = 0; goldCost = config.KnightGoldCost; trainTime = config.KnightTrainTimeTicks; break;
+                case 6:
+                    foodCost = config.ManAtArmsFoodCost; woodCost = 0; goldCost = config.ManAtArmsGoldCost; trainTime = config.ManAtArmsTrainTimeTicks; break;
+                case 10:
+                    foodCost = config.LongbowmanFoodCost; woodCost = config.LongbowmanWoodCost; goldCost = 0; trainTime = config.LongbowmanTrainTimeTicks; break;
+                case 11:
+                    foodCost = config.GendarmeFoodCost; woodCost = config.GendarmeWoodCost; goldCost = 0; trainTime = config.GendarmeTrainTimeTicks; break;
+                case 12:
+                    foodCost = config.LandsknechtFoodCost; woodCost = config.LandsknechtWoodCost; goldCost = 0; trainTime = config.LandsknechtTrainTimeTicks; break;
+                case 13:
+                    foodCost = 0; woodCost = config.BatteringRamWoodCost; goldCost = config.BatteringRamGoldCost; trainTime = config.BatteringRamTrainTimeTicks; break;
+                case 14:
+                    foodCost = 0; woodCost = config.MangonelWoodCost; goldCost = config.MangonelGoldCost; trainTime = config.MangonelTrainTimeTicks; break;
+                case 15:
+                    foodCost = 0; woodCost = config.TrebuchetWoodCost; goldCost = config.TrebuchetGoldCost; trainTime = config.TrebuchetTrainTimeTicks; break;
+                case UnitData.KingUnitType:
+                    foodCost = config.KingFoodCost; woodCost = 0; goldCost = config.KingGoldCost; trainTime = config.KingTrainTimeTicks; break;
+                case 4:
+                    foodCost = config.ScoutFoodCost; woodCost = config.ScoutWoodCost; goldCost = 0; trainTime = config.ScoutTrainTimeTicks; break;
+                case 3:
+                    foodCost = config.HorsemanFoodCost; woodCost = config.HorsemanWoodCost; goldCost = 0; trainTime = config.HorsemanTrainTimeTicks; break;
+                case 2:
+                    foodCost = config.ArcherFoodCost; woodCost = config.ArcherWoodCost; goldCost = 0; trainTime = config.ArcherTrainTimeTicks; break;
+                case 0:
+                    foodCost = config.VillagerFoodCost; woodCost = 0; goldCost = 0; trainTime = config.VillagerTrainTimeTicks; break;
+                default:
+                    foodCost = config.SpearmanFoodCost; woodCost = config.SpearmanWoodCost; goldCost = 0; trainTime = config.SpearmanTrainTimeTicks; break;
+            }
+        }
+
+        private void ApplyTrainingDiscounts(BuildingData building, int unitType, ref int foodCost, ref int woodCost, ref int goldCost)
+        {
+            if (IsBuildingInFrenchLandmarkInfluence(building))
+            {
+                int discount = config.FrenchLandmarkTrainingDiscountPercent;
+                foodCost = foodCost * (100 - discount) / 100;
+                woodCost = woodCost * (100 - discount) / 100;
+                goldCost = goldCost * (100 - discount) / 100;
+            }
+
+            if (IsCouncilHall(building) && unitType == 10)
+            {
+                int discount = LandmarkDefinitions.Get(building.LandmarkId).LongbowDiscountPercent;
+                if (discount > 0)
+                {
+                    foodCost = foodCost * (100 - discount) / 100;
+                    woodCost = woodCost * (100 - discount) / 100;
+                    goldCost = goldCost * (100 - discount) / 100;
+                }
+            }
+        }
+
+        private void ApplyLandmarkCompletionEffects(BuildingData building, LandmarkDefinition def)
+        {
+            ApplyLandmarkCapabilities(building);
+
+            // Queue the King rather than spawning him outright. The training system's
+            // pop-cap gate holds a finished unit at 1 tick until space opens, so a player
+            // who completes the Abbey while capped still gets their King later.
+            if (def.SpawnsKingOnCompletion)
+                building.EnqueueTraining(UnitData.KingUnitType,
+                    GetAdjustedTrainTime(building, UnitData.KingUnitType));
+        }
+
         private int currentTick;
         private int nextFormationGroupId = 1;
         private int nextWallGroupId = 1;
@@ -288,6 +483,12 @@ namespace OpenEmpires
         public int CurrentTick => currentTick;
         public SimulationConfig Config => config;
 
+        // Read-only spatial query for nearby units. Used by the view layer for cosmetic
+        // effects (e.g. gate open/close on unit pass-through). The returned list is the
+        // grid's shared buffer — consume it before the next query.
+        public System.Collections.Generic.List<UnitData> GetUnitsNear(FixedVector3 position, Fixed32 radius)
+            => spatialGrid.GetNearby(position, radius);
+
         public void LogStateBreakdown()
         {
             var units = UnitRegistry.GetAllUnits();
@@ -337,9 +538,18 @@ namespace OpenEmpires
             return TeamHelper.AreAllies(playerTeamIds, playerA, playerB);
         }
 
+        public bool HasUnfinishedWallGroupConstruction(BuildingData wallSegment, int playerId)
+        {
+            if (!IsWallSegment(wallSegment) || wallSegment.WallGroupId <= 0)
+                return false;
+
+            return GetUnfinishedWallGroupSegments(wallSegment.WallGroupId, playerId).Count > 0;
+        }
+
         public void SetTeamAssignments(int[] teamIds)
         {
             playerTeamIds = teamIds;
+            MapData?.SetTeamAssignments(teamIds); // keep gate walkability's team view in sync
         }
 
         /// <summary>
@@ -378,7 +588,8 @@ namespace OpenEmpires
                 hash = hash * 31 + (uint)unit.DropOffBuildingId;
                 hash = hash * 31 + (uint)unit.TargetGarrisonBuildingId;
                 hash = hash * 31 + (unit.IsCharging ? 1u : 0u);
-                hash = hash * 31 + (uint)unit.ChargeCooldownRemaining;
+                hash = hash * 31 + (uint)unit.ChargeStamina;
+                hash = hash * 31 + (uint)unit.ChargeMomentum;
                 hash = hash * 31 + (uint)unit.ChargeStunRemaining;
                 hash = hash * 31 + (unit.IsPatrolling ? 1u : 0u);
                 hash = hash * 31 + (uint)unit.PatrolCurrentIndex;
@@ -401,6 +612,7 @@ namespace OpenEmpires
                 hash = hash * 31 + (building.IsDestroyed ? 1u : 0u);
                 hash = hash * 31 + (building.IsUnderConstruction ? 1u : 0u);
                 hash = hash * 31 + (building.IsGate ? 1u : 0u);
+                hash = hash * 31 + (uint)building.WallGroupId;
                 hash = hash * 31 + (uint)building.ConstructionTicksRemaining;
                 hash = hash * 31 + (uint)building.TrainingTicksRemaining;
                 hash = hash * 31 + (uint)building.TrainingQueue.Count;
@@ -543,7 +755,8 @@ namespace OpenEmpires
             BuildingRegistry = new BuildingRegistry();
             ResourceManager = new ResourceManager();
             MapData = new MapData(mapSize, mapSize);
-            var (tiles, heights, basePositions, forestDensity) = MapGenerator.Generate(mapSize, mapSize, config.MapSeed, config.WaterThreshold, playerCount, teamAssignments);
+            var (tiles, heights, basePositions, forestDensity) = MapGenerator.Generate(mapSize, mapSize,
+                config.MapSeed, config.WaterThreshold, playerCount, teamAssignments, config.MapType);
             MapData.ApplyGenerationResult(tiles, heights, forestDensity);
             MapData.BasePositions = basePositions;
             CommandBuffer = new CommandBuffer();
@@ -576,6 +789,7 @@ namespace OpenEmpires
                 for (int i = 0; i < playerCount; i++)
                     playerTeamIds[i] = i; // FFA: each player is own team
             }
+            MapData.SetTeamAssignments(playerTeamIds); // gate walkability needs team info for allies
             currentTick = 0;
             meteorCooldownTick = new int[playerCount];
             healingRainCooldownTick = new int[playerCount];
@@ -808,22 +1022,22 @@ namespace OpenEmpires
 
             // Emit OnEntityDamaged for any entity hit this tick. Done as a single post-tick scan
             // (one pass over all units/buildings) rather than at every damage call-site, so we
-            // don't have to thread a callback through every system. Subscribers (e.g. MinimapUI's
-            // attack-ping handler) decide what to do with each event.
+            // don't have to thread a callback through every system.
             if (OnEntityDamaged != null)
             {
+                // LastDamageTick defaults to 0 ("never damaged"), and currentTick also starts at 0.
                 var allUnits = UnitRegistry.GetAllUnits();
                 for (int i = 0; i < allUnits.Count; i++)
                 {
                     var u = allUnits[i];
-                    if (u.LastDamageTick == currentTick && u.State != UnitState.Dead)
+                    if (u.LastDamageTick > 0 && u.LastDamageTick == currentTick && u.State != UnitState.Dead)
                         OnEntityDamaged.Invoke(u.SimPosition.x.ToFloat(), u.SimPosition.z.ToFloat(), u.PlayerId);
                 }
                 var allBuildings = BuildingRegistry.GetAllBuildings();
                 for (int i = 0; i < allBuildings.Count; i++)
                 {
                     var b = allBuildings[i];
-                    if (b.LastDamageTick == currentTick && !b.IsDestroyed)
+                    if (b.LastDamageTick > 0 && b.LastDamageTick == currentTick && !b.IsDestroyed)
                         OnEntityDamaged.Invoke(b.SimPosition.x.ToFloat(), b.SimPosition.z.ToFloat(), b.PlayerId);
                 }
             }
@@ -832,8 +1046,9 @@ namespace OpenEmpires
             CheckWinCondition();
             if (isMatchOver) return;
 
-            gatheringSystem.Tick(UnitRegistry, MapData, ResourceManager, BuildingRegistry, config, cachedTickDuration, currentTick, GetInfluenceBuildingType);
-            healingSystem.Tick(UnitRegistry, config, spatialGrid, playerTeamIds, currentTick, MapData, BuildingRegistry);
+            gatheringSystem.Tick(UnitRegistry, MapData, ResourceManager, BuildingRegistry, config, cachedTickDuration, currentTick, IsInfluenceBuildingType);
+            healingSystem.Tick(UnitRegistry, config, spatialGrid, playerTeamIds, currentTick, MapData, BuildingRegistry,
+                HandleKingHealingAuraPulse, HandleBuildingHealingAuraPulse);
             TickDummyRegen(currentTick);
             TickScoutRegen(currentTick);
             if (hashSystems) lastSystemHashes[7] = ComputeQuickHash(); // after gathering
@@ -887,12 +1102,14 @@ namespace OpenEmpires
                     playerAgingUp[pid] = false;
                     playerAgingUpBuildingId[pid] = -1;
                     OnPlayerAgedUp?.Invoke(pid, def.TargetAge);
+                    ApplyLandmarkCompletionEffects(completedBuilding, def);
                 }
 
                 // Eject any units that ended up on the building footprint during construction
                 // (the construction chase logic can move villagers onto non-walkable tiles)
                 EjectUnitsFromBuildingFootprint(completedBuilding);
             }
+            AutoSeekSameWallGroupConstruction(idledVillagers);
             AutoTaskFarmBuilders(idledVillagers);
             AutoSeekNearbyGathering(idledVillagers);
             AutoSeekNearbyConstruction(idledVillagers);
@@ -919,7 +1136,8 @@ namespace OpenEmpires
             // Training system (units freeze at 99% when pop-capped)
             var completions = trainingSystem.Tick(BuildingRegistry, config,
                 (playerId, pending) => GetPopulation(playerId) + pending < GetPopulationCap(playerId),
-                ProductionCheatActive);
+                ProductionCheatActive,
+                GetAdjustedTrainTime);
             for (int i = 0; i < completions.Count; i++)
             {
                 var c = completions[i];
@@ -1215,45 +1433,20 @@ namespace OpenEmpires
 
                 if (qc.Type == QueuedCommandType.Construct)
                 {
-                    var building = BuildingRegistry.GetBuilding(qc.BuildingId);
-                    if (building == null || building.IsDestroyed || !building.IsUnderConstruction)
-                        continue; // skip finished/destroyed, try next
+                    var requestedBuilding = BuildingRegistry.GetBuilding(qc.BuildingId);
+                    if (requestedBuilding == null || requestedBuilding.IsDestroyed)
+                        continue; // skip destroyed, try next
 
-                    unit.ClearSavedPath();
-                    unit.ClearFormation();
-                    unit.CombatTargetId = -1;
-                    unit.CombatTargetBuildingId = -1;
-                    unit.TargetResourceNodeId = -1;
-                    unit.ConstructionTargetBuildingId = building.Id;
-                    unit.GatherTimer = Fixed32.Zero;
-                    unit.PlayerCommanded = true;
-                    unit.IsAttackMoving = false;
+                    var occupiedTilesByBuildingId = new Dictionary<int, HashSet<Vector2Int>>();
+                    var assignedBuilderCounts = new Dictionary<int, int>();
+                    BuildConstructionAssignmentLookups(occupiedTilesByBuildingId, assignedBuilderCounts, unit.Id);
 
-                    // Build occupiedTiles from other units already heading to this building
-                    var occupiedTiles = new HashSet<Vector2Int>();
-                    var allUnits = UnitRegistry.GetAllUnits();
-                    for (int u = 0; u < allUnits.Count; u++)
-                    {
-                        var other = allUnits[u];
-                        if (other == unit || other.State == UnitState.Dead) continue;
-                        if (other.ConstructionTargetBuildingId != building.Id) continue;
-                        if (other.State == UnitState.MovingToBuild || other.State == UnitState.Constructing)
-                            occupiedTiles.Add(MapData.WorldToTile(other.FinalDestination));
-                    }
+                    var building = ResolveConstructionTargetForUnit(unit, requestedBuilding, assignedBuilderCounts);
+                    if (building == null)
+                        continue; // skip finished wall groups/non-walls, try next
 
-                    Vector2Int adjTile = FindNearestWalkableAdjacentTile(building, unit.SimPosition, occupiedTiles);
-                    Vector2Int startTile = MapData.WorldToTile(unit.SimPosition);
-                    var path = GridPathfinder.FindPath(MapData, startTile, adjTile, unit.PlayerId, BuildingRegistry);
-                    if (path.Count > 0)
-                    {
-                        unit.SetPath(path);
-                        unit.FinalDestination = MapData.TileToWorldFixed(adjTile.x, adjTile.y);
-                        unit.State = UnitState.MovingToBuild;
-                    }
-                    else
-                    {
-                        unit.State = UnitState.Constructing;
-                    }
+                    AssignUnitToConstructionTarget(unit, building, occupiedTilesByBuildingId,
+                        bankCarriedResources: true);
                     return;
                 }
                 else if (qc.Type == QueuedCommandType.Gather)
@@ -1305,7 +1498,7 @@ namespace OpenEmpires
                     var building = BuildingRegistry.GetBuilding(qc.BuildingId);
                     if (building == null || building.IsDestroyed || building.IsUnderConstruction)
                         continue; // skip destroyed/incomplete, try next
-                    if (!IsDropOffBuilding(building.Type))
+                    if (!LandmarkDefinitions.IsDropOffBuilding(building))
                         continue;
 
                     if (unit.CarriedResourceAmount <= 0)
@@ -1504,8 +1697,20 @@ namespace OpenEmpires
                 case CheatVisionCommand cheatVis:
                     ProcessCheatVisionCommand(cheatVis);
                     break;
+                case CheatSpawnUnitCommand cheatSpawn:
+                    ProcessCheatSpawnUnitCommand(cheatSpawn);
+                    break;
                 case CheatGodModeCommand cheatGod:
                     ProcessCheatGodModeCommand(cheatGod);
+                    break;
+                case PingCommand pingCmd:
+                    ProcessPingCommand(pingCmd);
+                    break;
+                case AiChatCommand aiChatCmd:
+                    ProcessAiChatCommand(aiChatCmd);
+                    break;
+                case AiIntentCommand aiIntentCmd:
+                    ProcessAiIntentCommand(aiIntentCmd);
                     break;
                 case DeleteUnitsCommand deleteUnits:
                     ProcessDeleteUnitsCommand(deleteUnits);
@@ -2583,11 +2788,142 @@ namespace OpenEmpires
             FogOfWar.SetVisionCheat(cmd.PlayerId, !current);
         }
 
+        /// <summary>
+        /// Debug spawn. Builds the unit through the same path a stable would, so a spawned unit is
+        /// indistinguishable from a trained one — same stats, same behaviour, same view event.
+        /// Requirements are deliberately skipped: no building, no cost, no age or civ gate.
+        /// </summary>
+        private void ProcessCheatSpawnUnitCommand(CheatSpawnUnitCommand cmd)
+        {
+            int owner = cmd.OwnerPlayerId >= 0 ? cmd.OwnerPlayerId : cmd.PlayerId;
+            int count = Mathf.Clamp(cmd.Count, 1, 20);
+
+            Vector2Int centre = MapData.WorldToTile(cmd.Position);
+
+            for (int i = 0; i < count; i++)
+            {
+                // Spread them over nearby walkable tiles in a widening ring so they do not stack.
+                Vector2Int tile = FindFreeSpawnTile(centre, i);
+                FixedVector3 spawnPos = MapData.TileToWorldFixed(tile.x, tile.y);
+
+                var unitData = CreateTrainedUnit(owner, cmd.UnitType, spawnPos);
+                if (unitData == null) continue;
+
+                OnUnitTrained?.Invoke(unitData.Id, cmd.UnitType, owner);
+            }
+        }
+
+        /// <summary>Walks outward from a tile until a walkable one is found.</summary>
+        private Vector2Int FindFreeSpawnTile(Vector2Int centre, int index)
+        {
+            if (index == 0 && MapData.IsWalkable(centre.x, centre.y))
+                return centre;
+
+            for (int radius = 1; radius <= 6; radius++)
+            {
+                for (int dx = -radius; dx <= radius; dx++)
+                {
+                    for (int dz = -radius; dz <= radius; dz++)
+                    {
+                        if (Mathf.Abs(dx) != radius && Mathf.Abs(dz) != radius) continue;
+
+                        int tx = centre.x + dx;
+                        int tz = centre.y + dz;
+                        if (!MapData.IsWalkable(tx, tz)) continue;
+
+                        if (index-- <= 0) return new Vector2Int(tx, tz);
+                    }
+                }
+            }
+            return centre;
+        }
+
         private void ProcessCheatGodModeCommand(CheatGodModeCommand cmd)
         {
             if (godModeActive == null) return;
             if (cmd.PlayerId < 0 || cmd.PlayerId >= godModeActive.Length) return;
             godModeActive[cmd.PlayerId] = !godModeActive[cmd.PlayerId];
+        }
+
+        private void ProcessPingCommand(PingCommand cmd)
+        {
+            float wx = new Fixed32(cmd.WorldX).ToFloat();
+            float wz = new Fixed32(cmd.WorldZ).ToFloat();
+            recentPings.Add(new RecentPing
+            {
+                PlayerId = cmd.PlayerId,
+                WorldX = wx,
+                WorldZ = wz,
+                Type = (PingType)cmd.PingTypeValue,
+                Tick = currentTick,
+            });
+            OnPingReceived?.Invoke(cmd.PlayerId, wx, wz, (PingType)cmd.PingTypeValue);
+        }
+
+        private void ProcessAiChatCommand(AiChatCommand cmd)
+        {
+            OnAiChatEmitted?.Invoke(cmd.PlayerId, (AiChatLineType)cmd.LineType, cmd.ParamA);
+        }
+
+        // Applied on every client identically. The LLM that produced this command ran
+        // only on the sender's machine; everything from here on is deterministic.
+        private void ProcessAiIntentCommand(AiIntentCommand cmd)
+        {
+            // Issuer must be a same-team ally of the target AI (mirrors PingCommand semantics).
+            if (!AreAllies(cmd.IssuerPlayerId, cmd.PlayerId)) return;
+
+            for (int i = 0; i < aiPlayers.Count; i++)
+            {
+                if (aiPlayers[i].PlayerId == cmd.PlayerId)
+                {
+                    aiPlayers[i].ApplyIntent(cmd.IntentKind, cmd.ParamA, cmd.ParamB, cmd.ParamC, cmd.ParamD,
+                        cmd.DurationTicks, currentTick,
+                        cmd.TriggerType, cmd.TriggerMagnitude);
+                    return;
+                }
+            }
+        }
+
+        // Read-only roster of AI player IDs. Used by the LLM teammate controller (UI side,
+        // non-deterministic) to discover candidate AI teammates. Iteration order is the
+        // construction order in aiPlayers — deterministic, but UI code shouldn't depend
+        // on that for sim state.
+        public IEnumerable<int> AiPlayerIds
+        {
+            get
+            {
+                for (int i = 0; i < aiPlayers.Count; i++)
+                    yield return aiPlayers[i].PlayerId;
+            }
+        }
+
+        // UI-side accessor for the AIPlayerSystem owned by `playerId`. Returns null when
+        // the slot is human or unknown. Reserved for non-deterministic prompt construction;
+        // simulation code should keep mutating via commands, not via this handle.
+        public AIPlayerSystem GetAiPlayer(int playerId)
+        {
+            for (int i = 0; i < aiPlayers.Count; i++)
+                if (aiPlayers[i].PlayerId == playerId) return aiPlayers[i];
+            return null;
+        }
+
+        // Recent pings the AI can query (decays naturally — old entries are skipped by tick window).
+        public struct RecentPing
+        {
+            public int PlayerId;
+            public float WorldX;
+            public float WorldZ;
+            public PingType Type;
+            public int Tick;
+        }
+        private readonly List<RecentPing> recentPings = new List<RecentPing>();
+        public IReadOnlyList<RecentPing> RecentPings => recentPings;
+        public void PruneRecentPings(int ticksToKeep)
+        {
+            int cutoff = currentTick - ticksToKeep;
+            for (int i = recentPings.Count - 1; i >= 0; i--)
+                if (recentPings[i].Tick < cutoff)
+                    recentPings.RemoveAt(i);
         }
 
         private void ProcessDeleteUnitsCommand(DeleteUnitsCommand cmd)
@@ -2709,7 +3045,7 @@ namespace OpenEmpires
             bool isFormationMove = (cmd.FormationPositions != null && cmd.HasFacing && !cmd.IsQueued)
                                 || cmd.PreserveFormation;
             int unitCount = cmd.UnitIds.Length;
-            if (isFormationMove && unitCount > 1)
+            if (isFormationMove && unitCount > 0)
             {
                 bool first = true;
                 for (int i = 0; i < unitCount; i++)
@@ -3444,102 +3780,19 @@ namespace OpenEmpires
             if (building == null || building.IsDestroyed) return;
             if (building.PlayerId != cmd.PlayerId) return;
             if (building.IsUnderConstruction) return;
-            if (building.Type != BuildingType.Barracks &&
-                building.Type != BuildingType.TownCenter &&
-                building.Type != BuildingType.ArcheryRange &&
-                building.Type != BuildingType.Stables &&
-                building.Type != BuildingType.Monastery) return;
-
-            // Age gate for units
-            if (playerAges[cmd.PlayerId] < LandmarkDefinitions.GetUnitRequiredAge(cmd.UnitType)) return;
 
             // Resolve civilization-unique unit substitution
             int resolvedUnitType = ResolveCivUnitType(cmd.PlayerId, cmd.UnitType);
+            if (!CanBuildingTrainUnit(building, cmd.UnitType, resolvedUnitType)) return;
+
+            // Age gate for units
+            if (playerAges[cmd.PlayerId] < LandmarkDefinitions.GetUnitRequiredAge(resolvedUnitType)) return;
 
             // Check resource cost
             int foodCost, woodCost, goldCost, trainTime;
-            switch (resolvedUnitType)
-            {
-                case 9: // Monk
-                    foodCost = config.MonkFoodCost;
-                    woodCost = 0;
-                    goldCost = config.MonkGoldCost;
-                    trainTime = config.MonkTrainTimeTicks;
-                    break;
-                case 8: // Crossbowman
-                    foodCost = config.CrossbowmanFoodCost;
-                    woodCost = 0;
-                    goldCost = config.CrossbowmanGoldCost;
-                    trainTime = config.CrossbowmanTrainTimeTicks;
-                    break;
-                case 7: // Knight
-                    foodCost = config.KnightFoodCost;
-                    woodCost = 0;
-                    goldCost = config.KnightGoldCost;
-                    trainTime = config.KnightTrainTimeTicks;
-                    break;
-                case 6: // Man-at-Arms
-                    foodCost = config.ManAtArmsFoodCost;
-                    woodCost = 0;
-                    goldCost = config.ManAtArmsGoldCost;
-                    trainTime = config.ManAtArmsTrainTimeTicks;
-                    break;
-                case 10: // Longbowman
-                    foodCost = config.LongbowmanFoodCost;
-                    woodCost = config.LongbowmanWoodCost;
-                    goldCost = 0;
-                    trainTime = config.LongbowmanTrainTimeTicks;
-                    break;
-                case 11: // Gendarme
-                    foodCost = config.GendarmeFoodCost;
-                    woodCost = config.GendarmeWoodCost;
-                    goldCost = 0;
-                    trainTime = config.GendarmeTrainTimeTicks;
-                    break;
-                case 12: // Landsknecht
-                    foodCost = config.LandsknechtFoodCost;
-                    woodCost = config.LandsknechtWoodCost;
-                    goldCost = 0;
-                    trainTime = config.LandsknechtTrainTimeTicks;
-                    break;
-                case 4:
-                    foodCost = config.ScoutFoodCost;
-                    woodCost = config.ScoutWoodCost;
-                    goldCost = 0;
-                    trainTime = config.ScoutTrainTimeTicks;
-                    break;
-                case 3:
-                    foodCost = config.HorsemanFoodCost;
-                    woodCost = config.HorsemanWoodCost;
-                    goldCost = 0;
-                    trainTime = config.HorsemanTrainTimeTicks;
-                    break;
-                case 2:
-                    foodCost = config.ArcherFoodCost;
-                    woodCost = config.ArcherWoodCost;
-                    goldCost = 0;
-                    trainTime = config.ArcherTrainTimeTicks;
-                    break;
-                case 0:
-                    foodCost = config.VillagerFoodCost;
-                    woodCost = 0;
-                    goldCost = 0;
-                    trainTime = config.VillagerTrainTimeTicks;
-                    break;
-                default: // 1 = spearman
-                    foodCost = config.SpearmanFoodCost;
-                    woodCost = config.SpearmanWoodCost;
-                    goldCost = 0;
-                    trainTime = config.SpearmanTrainTimeTicks;
-                    break;
-            }
-            if (IsBuildingInFrenchLandmarkInfluence(building))
-            {
-                int discount = config.FrenchLandmarkTrainingDiscountPercent;
-                foodCost = foodCost * (100 - discount) / 100;
-                woodCost = woodCost * (100 - discount) / 100;
-                goldCost = goldCost * (100 - discount) / 100;
-            }
+            GetUnitTrainingCostsAndTime(resolvedUnitType, out foodCost, out woodCost, out goldCost, out trainTime);
+            ApplyTrainingDiscounts(building, resolvedUnitType, ref foodCost, ref woodCost, ref goldCost);
+            trainTime = GetAdjustedTrainTime(building, resolvedUnitType);
 
             var resources = ResourceManager.GetPlayerResources(cmd.PlayerId);
             if (resources.Food < foodCost || resources.Wood < woodCost || resources.Gold < goldCost) return;
@@ -3559,30 +3812,17 @@ namespace OpenEmpires
             if (cmd.QueueIndex < 0 || cmd.QueueIndex >= building.TrainingQueue.Count) return;
 
             int unitType = building.TrainingQueue[cmd.QueueIndex];
-            int foodCost, woodCost, goldCost;
-            switch (unitType)
-            {
-                case 9: foodCost = config.MonkFoodCost; woodCost = 0; goldCost = config.MonkGoldCost; break;
-                case 8: foodCost = config.CrossbowmanFoodCost; woodCost = 0; goldCost = config.CrossbowmanGoldCost; break;
-                case 7: foodCost = config.KnightFoodCost; woodCost = 0; goldCost = config.KnightGoldCost; break;
-                case 6: foodCost = config.ManAtArmsFoodCost; woodCost = 0; goldCost = config.ManAtArmsGoldCost; break;
-                case 10: foodCost = config.LongbowmanFoodCost; woodCost = config.LongbowmanWoodCost; goldCost = 0; break;
-                case 11: foodCost = config.GendarmeFoodCost; woodCost = config.GendarmeWoodCost; goldCost = 0; break;
-                case 12: foodCost = config.LandsknechtFoodCost; woodCost = config.LandsknechtWoodCost; goldCost = 0; break;
-                case 13: foodCost = 0; woodCost = config.BatteringRamWoodCost; goldCost = config.BatteringRamGoldCost; break;
-                case 14: foodCost = 0; woodCost = config.MangonelWoodCost; goldCost = config.MangonelGoldCost; break;
-                case 15: foodCost = 0; woodCost = config.TrebuchetWoodCost; goldCost = config.TrebuchetGoldCost; break;
-                case 4: foodCost = config.ScoutFoodCost; woodCost = config.ScoutWoodCost; goldCost = 0; break;
-                case 3: foodCost = config.HorsemanFoodCost; woodCost = config.HorsemanWoodCost; goldCost = 0; break;
-                case 2: foodCost = config.ArcherFoodCost; woodCost = config.ArcherWoodCost; goldCost = 0; break;
-                case 0: foodCost = config.VillagerFoodCost; woodCost = 0; goldCost = 0; break;
-                default: foodCost = config.SpearmanFoodCost; woodCost = config.SpearmanWoodCost; goldCost = 0; break;
-            }
+            int foodCost, woodCost, goldCost, trainTime;
+            GetUnitTrainingCostsAndTime(unitType, out foodCost, out woodCost, out goldCost, out trainTime);
+            ApplyTrainingDiscounts(building, unitType, ref foodCost, ref woodCost, ref goldCost);
 
-            var resources = ResourceManager.GetPlayerResources(cmd.PlayerId);
-            resources.Food += foodCost;
-            resources.Wood += woodCost;
-            resources.Gold += goldCost;
+            if (!IsFreeLandmarkRewardTraining(building, unitType))
+            {
+                var resources = ResourceManager.GetPlayerResources(cmd.PlayerId);
+                resources.Food += foodCost;
+                resources.Wood += woodCost;
+                resources.Gold += goldCost;
+            }
 
             building.TrainingQueue.RemoveAt(cmd.QueueIndex);
 
@@ -3590,7 +3830,7 @@ namespace OpenEmpires
             {
                 if (building.IsTraining)
                 {
-                    building.TrainingTicksRemaining = BuildingTrainingSystem.GetTrainTime(config, building.TrainingQueue[0]);
+                    building.TrainingTicksRemaining = GetAdjustedTrainTime(building, building.TrainingQueue[0]);
                     building.TrainingTicksTotal = building.TrainingTicksRemaining;
                 }
                 else
@@ -3606,7 +3846,7 @@ namespace OpenEmpires
             var building = BuildingRegistry.GetBuilding(cmd.BuildingId);
             if (building == null || building.IsDestroyed) return;
             if (building.PlayerId != cmd.PlayerId) return;
-            if (building.Type != BuildingType.TownCenter) return;
+            if (LandmarkDefinitions.GetEffectiveBuildingType(building) != BuildingType.TownCenter) return;
             building.AutoProduceVillagers = cmd.Enabled;
         }
 
@@ -3617,7 +3857,7 @@ namespace OpenEmpires
             {
                 var building = buildings[i];
                 if (building.IsDestroyed) continue;
-                if (building.Type != BuildingType.TownCenter) continue;
+                if (LandmarkDefinitions.GetEffectiveBuildingType(building) != BuildingType.TownCenter) continue;
                 if (!building.AutoProduceVillagers) continue;
                 if (building.IsUnderConstruction) continue;
                 if (building.TrainingQueue.Count > 0) continue;
@@ -3635,6 +3875,7 @@ namespace OpenEmpires
                 if (resources.Food < foodCost) continue;
 
                 resources.Food -= foodCost;
+                trainTime = GetAdjustedTrainTime(building, resolvedUnitType);
                 building.EnqueueTraining(resolvedUnitType, trainTime);
             }
         }
@@ -3816,6 +4057,7 @@ namespace OpenEmpires
                 building.Armor = def.Armor;
                 building.ConstructionTicksTotal = def.ConstructionTicks;
                 building.ConstructionTicksRemaining = def.ConstructionTicks;
+                ApplyLandmarkCapabilities(building);
                 playerAgingUp[cmd.PlayerId] = true;
                 playerAgingUpBuildingId[cmd.PlayerId] = building.Id;
                 OnBuildingCreated?.Invoke(building);
@@ -4090,7 +4332,7 @@ namespace OpenEmpires
             int minZ = building.OriginTileZ - searchBuffer;
             int maxZ = building.OriginTileZ + building.TileFootprintHeight + searchBuffer;
 
-            bool isTownCenter = building.Type == BuildingType.TownCenter;
+            bool isTownCenter = LandmarkDefinitions.GetEffectiveBuildingType(building) == BuildingType.TownCenter;
             FixedVector3 buildingCenter = building.SimPosition;
 
             ResourceNodeData bestNode = null;
@@ -4101,7 +4343,7 @@ namespace OpenEmpires
             {
                 if (node.IsDepleted) continue;
                 if (node.IsFarmNode) continue;
-                if (!AcceptsResourceType(building.Type, node.Type)) continue;
+                if (!LandmarkDefinitions.AcceptsResourceType(building, node.Type)) continue;
 
                 // AABB filter against the building+buffer search box
                 if (node.TileX + node.FootprintWidth - 1 < minX) continue;
@@ -4132,8 +4374,9 @@ namespace OpenEmpires
 
         private void ProcessPlaceWallCommand(PlaceWallCommand cmd)
         {
-            // Compute tile line using Bresenham's algorithm
-            var tiles = WallLineHelper.ComputeWallLine(cmd.StartTileX, cmd.StartTileZ, cmd.EndTileX, cmd.EndTileZ);
+            var tiles = cmd.IsBox
+                ? WallLineHelper.ComputeWallBoxCenterPath(cmd.StartTileX, cmd.StartTileZ, cmd.EndTileX, cmd.EndTileZ)
+                : WallLineHelper.ComputeWallLine(cmd.StartTileX, cmd.StartTileZ, cmd.EndTileX, cmd.EndTileZ);
 
             // Filter to buildable tiles only (no existing buildings or templates)
             var validTiles = new List<Vector2Int>();
@@ -4178,62 +4421,272 @@ namespace OpenEmpires
                     EjectUnitsFromBuildingFootprint(building);
             }
 
-            // Assign villagers to build segments sequentially (skipped under god mode — segments are already complete)
+            // Split wall segments across builders (skipped under god mode — segments are already complete)
             if (hasVillagers && createdBuildings.Count > 0 && !godMode)
             {
-                for (int v = 0; v < cmd.VillagerUnitIds.Length; v++)
+                AssignWallBuildersToSegments(cmd, createdBuildings);
+            }
+        }
+
+        private void AssignWallBuildersToSegments(PlaceWallCommand cmd, List<BuildingData> wallSegments)
+        {
+            AssignWallBuildersToSegments(cmd.PlayerId, cmd.VillagerUnitIds, wallSegments, cmd.IsQueued,
+                excludeBuilderCurrentAssignments: !cmd.IsQueued);
+        }
+
+        private bool AssignWallBuildersToSegments(int playerId, int[] unitIds, List<BuildingData> wallSegments,
+            bool isQueued, bool excludeBuilderCurrentAssignments)
+        {
+            if (wallSegments == null || wallSegments.Count == 0) return false;
+
+            var builders = GetValidWallBuilders(unitIds, playerId);
+            if (builders.Count == 0) return false;
+
+            SortWallBuildersAlongSegments(builders, wallSegments);
+
+            var occupiedTilesByBuildingId = new Dictionary<int, HashSet<Vector2Int>>();
+            var assignedBuilderCounts = new Dictionary<int, int>();
+            HashSet<int> excludedUnitIds = excludeBuilderCurrentAssignments ? GetUnitIdSet(builders) : null;
+            BuildConstructionAssignmentLookups(occupiedTilesByBuildingId, assignedBuilderCounts, excludedUnitIds);
+
+            for (int i = 0; i < builders.Count; i++)
+            {
+                var villager = builders[i];
+                GetWallBuilderSegmentRange(i, builders.Count, wallSegments.Count,
+                    out int startIdx, out int endIdx);
+
+                var assignedSegments = AssignWallSegmentPlan(villager, wallSegments,
+                    assignedBuilderCounts, Mathf.Max(1, endIdx - startIdx));
+                if (assignedSegments.Count == 0)
+                    continue;
+
+                if (isQueued)
                 {
-                    var villager = UnitRegistry.GetUnit(cmd.VillagerUnitIds[v]);
-                    if (villager == null || villager.State == UnitState.Dead || villager.PlayerId != cmd.PlayerId)
-                        continue;
+                    for (int s = 0; s < assignedSegments.Count; s++)
+                        villager.CommandQueue.Add(QueuedCommand.ConstructWaypoint(assignedSegments[s].Id));
 
-                    if (!cmd.IsQueued)
-                        villager.ClearCommandQueue();
-
-                    // Assign first segment as immediate target, rest as queued
-                    int startIdx = 0;
-                    if (!cmd.IsQueued)
-                    {
-                        var firstBuilding = createdBuildings[startIdx];
-                        startIdx = 1;
-
-                        villager.ClearSavedPath();
-                        villager.ClearFormation();
-                        villager.CombatTargetId = -1;
-                        villager.CombatTargetBuildingId = -1;
-                        villager.TargetResourceNodeId = -1;
-                        villager.ConstructionTargetBuildingId = firstBuilding.Id;
-                        villager.GatherTimer = Fixed32.Zero;
-                        villager.PlayerCommanded = true;
-                        villager.DropOffBuildingId = -1;
-                        villager.TargetGarrisonBuildingId = -1;
-
-                        villager.ClearPatrol();
-
-                        Vector2Int adjTile = FindNearestWalkableAdjacentTile(firstBuilding, villager.SimPosition);
-                        Vector2Int startTile = MapData.WorldToTile(villager.SimPosition);
-                        var path = GridPathfinder.FindPath(MapData, startTile, adjTile, villager.PlayerId, BuildingRegistry);
-                        if (path.Count > 0)
-                        {
-                            villager.SetPath(path);
-                            villager.FinalDestination = MapData.TileToWorldFixed(adjTile.x, adjTile.y);
-                            villager.State = UnitState.MovingToBuild;
-                        }
-                        else
-                        {
-                            villager.State = UnitState.Constructing;
-                        }
-                    }
-
-                    // Queue remaining segments
-                    for (int s = startIdx; s < createdBuildings.Count; s++)
-                        villager.CommandQueue.Add(QueuedCommand.ConstructWaypoint(createdBuildings[s].Id));
-
-                    // If we queued and villager is idle, pop first queued command
-                    if (cmd.IsQueued && villager.State == UnitState.Idle)
+                    if (villager.State == UnitState.Idle)
                         PopAndExecuteNextQueuedCommand(villager);
+
+                    continue;
+                }
+
+                AssignUnitToConstructionTarget(villager, assignedSegments[0],
+                    occupiedTilesByBuildingId, clearQueuedCommands: true,
+                    bankCarriedResources: true);
+
+                for (int s = 1; s < assignedSegments.Count; s++)
+                    villager.CommandQueue.Add(QueuedCommand.ConstructWaypoint(assignedSegments[s].Id));
+            }
+
+            return true;
+        }
+
+        private List<BuildingData> AssignWallSegmentPlan(UnitData builder, List<BuildingData> wallSegments,
+            Dictionary<int, int> assignedBuilderCounts, int assignmentCount)
+        {
+            var assignedSegments = new List<BuildingData>();
+            for (int i = 0; i < assignmentCount; i++)
+            {
+                var target = FindBestWallConstructionTarget(builder, wallSegments, assignedBuilderCounts);
+                if (target == null)
+                    break;
+
+                assignedSegments.Add(target);
+                assignedBuilderCounts.TryGetValue(target.Id, out int assignedCount);
+                assignedBuilderCounts[target.Id] = assignedCount + 1;
+            }
+
+            return assignedSegments;
+        }
+
+        private BuildingData FindBestWallConstructionTarget(UnitData unit, List<BuildingData> wallSegments,
+            Dictionary<int, int> assignedBuilderCounts)
+        {
+            BuildingData best = null;
+            int bestAssignedCount = int.MaxValue;
+            Fixed32 bestDistSq = default;
+
+            for (int i = 0; i < wallSegments.Count; i++)
+            {
+                var building = wallSegments[i];
+                if (building == null || building.IsDestroyed || !building.IsUnderConstruction)
+                    continue;
+
+                assignedBuilderCounts.TryGetValue(building.Id, out int assignedCount);
+                FixedVector3 diff = building.SimPosition - unit.SimPosition;
+                Fixed32 distSq = diff.x * diff.x + diff.z * diff.z;
+
+                bool better = best == null
+                    || assignedCount < bestAssignedCount
+                    || (assignedCount == bestAssignedCount && distSq < bestDistSq)
+                    || (assignedCount == bestAssignedCount && distSq == bestDistSq && building.Id < best.Id);
+
+                if (better)
+                {
+                    best = building;
+                    bestAssignedCount = assignedCount;
+                    bestDistSq = distSq;
                 }
             }
+
+            return best;
+        }
+
+        private List<UnitData> GetValidWallBuilders(int[] unitIds, int playerId)
+        {
+            var builders = new List<UnitData>();
+            if (unitIds == null) return builders;
+
+            var seenUnitIds = new HashSet<int>();
+            for (int i = 0; i < unitIds.Length; i++)
+            {
+                if (!seenUnitIds.Add(unitIds[i])) continue;
+
+                var villager = UnitRegistry.GetUnit(unitIds[i]);
+                if (villager == null || villager.State == UnitState.Dead || villager.PlayerId != playerId)
+                    continue;
+
+                builders.Add(villager);
+            }
+
+            return builders;
+        }
+
+        private static HashSet<int> GetUnitIdSet(List<UnitData> units)
+        {
+            var unitIds = new HashSet<int>();
+            for (int i = 0; i < units.Count; i++)
+                unitIds.Add(units[i].Id);
+            return unitIds;
+        }
+
+        private void SortWallBuildersAlongSegments(List<UnitData> builders, List<BuildingData> wallSegments)
+        {
+            if (builders.Count <= 1) return;
+
+            if (wallSegments.Count <= 1)
+            {
+                builders.Sort((a, b) => a.Id.CompareTo(b.Id));
+                return;
+            }
+
+            var first = wallSegments[0];
+            var last = wallSegments[wallSegments.Count - 1];
+            int originX = first.OriginTileX;
+            int originZ = first.OriginTileZ;
+            int dirX = last.OriginTileX - originX;
+            int dirZ = last.OriginTileZ - originZ;
+
+            builders.Sort((a, b) =>
+            {
+                int projectionA = GetWallProjection(a, originX, originZ, dirX, dirZ);
+                int projectionB = GetWallProjection(b, originX, originZ, dirX, dirZ);
+                int cmp = projectionA.CompareTo(projectionB);
+                return cmp != 0 ? cmp : a.Id.CompareTo(b.Id);
+            });
+        }
+
+        private int GetWallProjection(UnitData unit, int originX, int originZ, int dirX, int dirZ)
+        {
+            Vector2Int tile = MapData.WorldToTile(unit.SimPosition);
+            return (tile.x - originX) * dirX + (tile.y - originZ) * dirZ;
+        }
+
+        private static void GetWallBuilderSegmentRange(int builderIndex, int builderCount, int segmentCount,
+            out int startIdx, out int endIdx)
+        {
+            if (segmentCount <= 0 || builderCount <= 0)
+            {
+                startIdx = 0;
+                endIdx = 0;
+                return;
+            }
+
+            if (builderCount <= segmentCount)
+            {
+                startIdx = builderIndex * segmentCount / builderCount;
+                endIdx = (builderIndex + 1) * segmentCount / builderCount;
+                if (endIdx <= startIdx)
+                    endIdx = startIdx + 1;
+                return;
+            }
+
+            startIdx = builderIndex % segmentCount;
+            endIdx = startIdx + 1;
+        }
+
+        private void AssignUnitToConstructionTarget(UnitData unit, BuildingData building,
+            Dictionary<int, HashSet<Vector2Int>> occupiedTilesByBuildingId = null,
+            bool clearQueuedCommands = false,
+            bool bankCarriedResources = false)
+        {
+            if (bankCarriedResources)
+                BankCarriedResources(unit);
+
+            if (clearQueuedCommands)
+                unit.ClearCommandQueue();
+
+            unit.ClearSavedPath();
+            unit.ClearFormation();
+            unit.CombatTargetId = -1;
+            unit.CombatTargetBuildingId = -1;
+            unit.TargetResourceNodeId = -1;
+            unit.ConstructionTargetBuildingId = building.Id;
+            unit.GatherTimer = Fixed32.Zero;
+            unit.PlayerCommanded = true;
+            unit.IsAttackMoving = false;
+            unit.DropOffBuildingId = -1;
+            unit.TargetGarrisonBuildingId = -1;
+            unit.ClearPatrol();
+
+            HashSet<Vector2Int> occupiedTiles = null;
+            if (occupiedTilesByBuildingId != null)
+            {
+                if (!occupiedTilesByBuildingId.TryGetValue(building.Id, out occupiedTiles))
+                {
+                    occupiedTiles = new HashSet<Vector2Int>();
+                    occupiedTilesByBuildingId[building.Id] = occupiedTiles;
+                }
+            }
+
+            var triedTiles = occupiedTiles != null
+                ? new HashSet<Vector2Int>(occupiedTiles)
+                : new HashSet<Vector2Int>();
+
+            Vector2Int startTile = MapData.WorldToTile(unit.SimPosition);
+            int constructAttempts = 0;
+
+            while (true)
+            {
+                if (++constructAttempts > 4) break;
+
+                Vector2Int adjTile = FindNearestWalkableAdjacentTile(building, unit.SimPosition, triedTiles);
+                if (triedTiles.Contains(adjTile)) break;
+
+                var path = GridPathfinder.FindPath(MapData, startTile, adjTile, unit.PlayerId, BuildingRegistry);
+                if (path.Count > 0)
+                {
+                    occupiedTiles?.Add(adjTile);
+                    unit.SetPath(path);
+                    unit.FinalDestination = MapData.TileToWorldFixed(adjTile.x, adjTile.y);
+                    unit.State = UnitState.MovingToBuild;
+                    return;
+                }
+
+                triedTiles.Add(adjTile);
+            }
+
+            unit.State = UnitState.Constructing;
+        }
+
+        private void BankCarriedResources(UnitData unit)
+        {
+            if (unit.CarriedResourceAmount <= 0)
+                return;
+
+            ResourceManager.AddResource(unit.PlayerId, unit.CarriedResourceType, unit.CarriedResourceAmount);
+            unit.CarriedResourceAmount = 0;
         }
 
         private void ProcessConvertToGateCommand(ConvertToGateCommand cmd)
@@ -4242,6 +4695,14 @@ namespace OpenEmpires
             if (building == null || building.IsDestroyed) return;
             if (building.Type != BuildingType.Wall && building.Type != BuildingType.StoneWall && building.Type != BuildingType.StoneGate && building.Type != BuildingType.WoodGate) return;
             if (building.PlayerId != cmd.PlayerId) return;
+
+            // A wall may only become a gate when a straight wall run passes through it (two
+            // collinear same-player walls flank it), so every gate is a clean 3-tile span.
+            // Toggling a gate back to a wall is always allowed.
+            if (!building.IsGate
+                && !WallSegmentClassifier.TryGetCollinearWallPair(MapData, BuildingRegistry,
+                        building.OriginTileX, building.OriginTileZ, building.PlayerId, out _, out _))
+                return;
 
             building.IsGate = !building.IsGate;
 
@@ -4257,10 +4718,15 @@ namespace OpenEmpires
         {
             var building = BuildingRegistry.GetBuilding(cmd.TargetBuildingId);
             if (building == null || building.IsDestroyed) return;
-            if (!building.IsUnderConstruction) return;
             if (!AreAllies(building.PlayerId, cmd.PlayerId)) return;
+            if (!building.IsUnderConstruction && !HasUnfinishedWallGroupConstruction(building, cmd.PlayerId)) return;
 
-            var occupiedTiles = new HashSet<Vector2Int>();
+            if (TryAssignWallGroupConstructionCommand(cmd, building))
+                return;
+
+            if (!building.IsUnderConstruction) return;
+
+            var occupiedTilesByBuildingId = new Dictionary<int, HashSet<Vector2Int>>();
             for (int i = 0; i < cmd.UnitIds.Length; i++)
             {
                 var unit = UnitRegistry.GetUnit(cmd.UnitIds[i]);
@@ -4277,50 +4743,35 @@ namespace OpenEmpires
                 }
                 else
                 {
-                    unit.ClearCommandQueue();
-                    unit.ClearSavedPath();
-                    unit.ClearFormation();
-                    unit.CombatTargetId = -1;
-                    unit.CombatTargetBuildingId = -1;
-                    unit.TargetResourceNodeId = -1;
-                    unit.ConstructionTargetBuildingId = cmd.TargetBuildingId;
-                    unit.GatherTimer = Fixed32.Zero;
-                    unit.PlayerCommanded = true;
-                    unit.DropOffBuildingId = -1;
-                    unit.TargetGarrisonBuildingId = -1;
-
-                    unit.ClearPatrol();
-
-                    var triedTiles = new HashSet<Vector2Int>(occupiedTiles);
-                    Vector2Int startTile = MapData.WorldToTile(unit.SimPosition);
-                    bool assigned = false;
-                    int constructAttempts = 0;
-
-                    while (true)
-                    {
-                        if (++constructAttempts > 4) break; // Cap retry attempts
-                        Vector2Int adjTile = FindNearestWalkableAdjacentTile(building, unit.SimPosition, triedTiles);
-                        if (triedTiles.Contains(adjTile)) break; // All tiles exhausted
-
-                        var path = GridPathfinder.FindPath(MapData, startTile, adjTile, unit.PlayerId, BuildingRegistry);
-                        if (path.Count > 0)
-                        {
-                            occupiedTiles.Add(adjTile);
-                            unit.SetPath(path);
-                            unit.FinalDestination = MapData.TileToWorldFixed(adjTile.x, adjTile.y);
-                            unit.State = UnitState.MovingToBuild;
-                            assigned = true;
-                            break;
-                        }
-                        triedTiles.Add(adjTile);
-                    }
-
-                    if (!assigned)
-                    {
-                        unit.State = UnitState.Constructing;
-                    }
+                    AssignUnitToConstructionTarget(unit, building, occupiedTilesByBuildingId,
+                        clearQueuedCommands: true, bankCarriedResources: true);
                 }
             }
+        }
+
+        private bool TryAssignWallGroupConstructionCommand(ConstructBuildingCommand cmd, BuildingData requestedBuilding)
+        {
+            if (!IsWallSegment(requestedBuilding) || requestedBuilding.WallGroupId <= 0)
+                return false;
+
+            var wallSegments = GetUnfinishedWallGroupSegments(requestedBuilding.WallGroupId, cmd.PlayerId);
+            if (wallSegments.Count == 0)
+                return false;
+
+            return AssignWallBuildersToSegments(cmd.PlayerId, cmd.UnitIds, wallSegments, cmd.IsQueued,
+                excludeBuilderCurrentAssignments: !cmd.IsQueued);
+        }
+
+        private BuildingData ResolveConstructionTargetForUnit(UnitData unit, BuildingData requestedBuilding,
+            Dictionary<int, int> assignedBuilderCounts)
+        {
+            if (requestedBuilding == null || requestedBuilding.IsDestroyed)
+                return null;
+
+            if (IsWallSegment(requestedBuilding) && requestedBuilding.WallGroupId > 0)
+                return FindBestWallGroupConstructionTarget(unit, requestedBuilding.WallGroupId, assignedBuilderCounts);
+
+            return requestedBuilding.IsUnderConstruction ? requestedBuilding : null;
         }
 
         private void ProcessRepairBuildingCommand(RepairBuildingCommand cmd)
@@ -4334,7 +4785,7 @@ namespace OpenEmpires
             if (building == null || building.IsDestroyed) return;
             if (building.PlayerId != cmd.PlayerId) return;
             if (building.IsUnderConstruction) return;
-            if (!IsDropOffBuilding(building.Type)) return;
+            if (!LandmarkDefinitions.IsDropOffBuilding(building)) return;
 
             for (int i = 0; i < cmd.UnitIds.Length; i++)
             {
@@ -4414,6 +4865,138 @@ namespace OpenEmpires
             OnBuildingDestroyed?.Invoke(buildingId);
         }
 
+        private void AutoSeekSameWallGroupConstruction(List<(int unitId, int buildingId)> idledVillagerPairs)
+        {
+            if (idledVillagerPairs.Count == 0) return;
+
+            var occupiedTilesByBuildingId = new Dictionary<int, HashSet<Vector2Int>>();
+            var assignedBuilderCounts = new Dictionary<int, int>();
+            BuildConstructionAssignmentLookups(occupiedTilesByBuildingId, assignedBuilderCounts);
+
+            for (int i = 0; i < idledVillagerPairs.Count; i++)
+            {
+                var unit = UnitRegistry.GetUnit(idledVillagerPairs[i].unitId);
+                if (unit == null || unit.State != UnitState.Idle || unit.HasQueuedCommands) continue;
+
+                var completedWall = BuildingRegistry.GetBuilding(idledVillagerPairs[i].buildingId);
+                if (!IsWallSegment(completedWall) || completedWall.WallGroupId <= 0) continue;
+
+                var target = FindBestWallGroupConstructionTarget(unit, completedWall.WallGroupId, assignedBuilderCounts);
+                if (target == null) continue;
+
+                AssignUnitToConstructionTarget(unit, target, occupiedTilesByBuildingId);
+                assignedBuilderCounts.TryGetValue(target.Id, out int assignedCount);
+                assignedBuilderCounts[target.Id] = assignedCount + 1;
+            }
+        }
+
+        private void BuildConstructionAssignmentLookups(
+            Dictionary<int, HashSet<Vector2Int>> occupiedTilesByBuildingId,
+            Dictionary<int, int> assignedBuilderCounts,
+            HashSet<int> excludedUnitIds = null)
+        {
+            var allUnits = UnitRegistry.GetAllUnits();
+            for (int u = 0; u < allUnits.Count; u++)
+            {
+                var other = allUnits[u];
+                if (excludedUnitIds != null && excludedUnitIds.Contains(other.Id)) continue;
+                if (other.State == UnitState.Dead) continue;
+                if (other.ConstructionTargetBuildingId < 0) continue;
+                if (other.State != UnitState.MovingToBuild && other.State != UnitState.Constructing) continue;
+
+                int buildingId = other.ConstructionTargetBuildingId;
+                assignedBuilderCounts.TryGetValue(buildingId, out int count);
+                assignedBuilderCounts[buildingId] = count + 1;
+
+                if (!occupiedTilesByBuildingId.TryGetValue(buildingId, out var occupiedTiles))
+                {
+                    occupiedTiles = new HashSet<Vector2Int>();
+                    occupiedTilesByBuildingId[buildingId] = occupiedTiles;
+                }
+
+                FixedVector3 occupiedPos = other.State == UnitState.MovingToBuild
+                    ? other.FinalDestination
+                    : other.SimPosition;
+                occupiedTiles.Add(MapData.WorldToTile(occupiedPos));
+            }
+        }
+
+        private void BuildConstructionAssignmentLookups(
+            Dictionary<int, HashSet<Vector2Int>> occupiedTilesByBuildingId,
+            Dictionary<int, int> assignedBuilderCounts,
+            int excludedUnitId)
+        {
+            var excludedUnitIds = new HashSet<int> { excludedUnitId };
+            BuildConstructionAssignmentLookups(occupiedTilesByBuildingId, assignedBuilderCounts, excludedUnitIds);
+        }
+
+        private BuildingData FindBestWallGroupConstructionTarget(UnitData unit, int wallGroupId,
+            Dictionary<int, int> assignedBuilderCounts)
+        {
+            BuildingData best = null;
+            int bestAssignedCount = int.MaxValue;
+            Fixed32 bestDistSq = default;
+
+            var buildings = BuildingRegistry.GetAllBuildings();
+            for (int b = 0; b < buildings.Count; b++)
+            {
+                var building = buildings[b];
+                if (building.WallGroupId != wallGroupId) continue;
+                if (!building.IsUnderConstruction || building.IsDestroyed) continue;
+                if (!AreAllies(building.PlayerId, unit.PlayerId)) continue;
+
+                assignedBuilderCounts.TryGetValue(building.Id, out int assignedCount);
+                FixedVector3 diff = building.SimPosition - unit.SimPosition;
+                Fixed32 distSq = diff.x * diff.x + diff.z * diff.z;
+
+                bool better = best == null
+                    || assignedCount < bestAssignedCount
+                    || (assignedCount == bestAssignedCount && distSq < bestDistSq)
+                    || (assignedCount == bestAssignedCount && distSq == bestDistSq && building.Id < best.Id);
+
+                if (better)
+                {
+                    best = building;
+                    bestAssignedCount = assignedCount;
+                    bestDistSq = distSq;
+                }
+            }
+
+            return best;
+        }
+
+        private List<BuildingData> GetUnfinishedWallGroupSegments(int wallGroupId, int playerId)
+        {
+            var wallSegments = new List<BuildingData>();
+            if (wallGroupId <= 0) return wallSegments;
+
+            var buildings = BuildingRegistry.GetAllBuildings();
+            for (int i = 0; i < buildings.Count; i++)
+            {
+                var building = buildings[i];
+                if (building.WallGroupId != wallGroupId) continue;
+                if (!building.IsUnderConstruction || building.IsDestroyed) continue;
+                if (!AreAllies(building.PlayerId, playerId)) continue;
+                if (!IsWallSegment(building)) continue;
+
+                wallSegments.Add(building);
+            }
+
+            wallSegments.Sort((a, b) => a.Id.CompareTo(b.Id));
+            return wallSegments;
+        }
+
+        private static bool IsWallSegment(BuildingData building)
+        {
+            if (building == null) return false;
+
+            return building.Type == BuildingType.Wall
+                || building.Type == BuildingType.StoneWall
+                || building.Type == BuildingType.WoodGate
+                || building.Type == BuildingType.StoneGate
+                || building.IsGate;
+        }
+
         private void AutoTaskFarmBuilders(List<(int unitId, int buildingId)> idledVillagerPairs)
         {
             if (idledVillagerPairs.Count == 0) return;
@@ -4429,7 +5012,7 @@ namespace OpenEmpires
                 var building = BuildingRegistry.GetBuilding(idledVillagerPairs[i].buildingId);
                 if (building == null) continue;
                 bool builtFarm = building.Type == BuildingType.Farm;
-                bool builtFoodDropOff = AcceptsResourceType(building.Type, ResourceType.Food);
+                bool builtFoodDropOff = LandmarkDefinitions.AcceptsResourceType(building, ResourceType.Food);
                 if (!builtFarm && !builtFoodDropOff) continue;
 
                 // Try the farm they just built first
@@ -4576,19 +5159,19 @@ namespace OpenEmpires
                 if (unit.HasQueuedCommands) continue;
 
                 var building = BuildingRegistry.GetBuilding(idledVillagerPairs[i].buildingId);
-                if (building == null || !IsDropOffBuilding(building.Type)) continue;
+                if (building == null || !LandmarkDefinitions.IsDropOffBuilding(building)) continue;
 
                 Fixed32 visionRange = unit.DetectionRange;
                 Fixed32 visionRangeSq = visionRange * visionRange;
                 Fixed32 bestDistSq = visionRangeSq;
                 int bestNodeId = -1;
                 int bestPriority = int.MaxValue;
-                bool isTownCenter = building.Type == BuildingType.TownCenter;
+                bool isTownCenter = LandmarkDefinitions.GetEffectiveBuildingType(building) == BuildingType.TownCenter;
 
                 foreach (var node in MapData.GetAllResourceNodes())
                 {
                     if (node.IsDepleted) continue;
-                    if (!AcceptsResourceType(building.Type, node.Type)) continue;
+                    if (!LandmarkDefinitions.AcceptsResourceType(building, node.Type)) continue;
                     if (node.IsFarmNode && IsFarmNodeOccupied(node.Id, unit)) continue;
 
                     FixedVector3 diff = node.Position - unit.SimPosition;
@@ -5064,6 +5647,20 @@ namespace OpenEmpires
 
             switch (unitType)
             {
+                case UnitData.KingUnitType: // King
+                    unitData = UnitRegistry.CreateUnit(playerId, spawnPos,
+                        ConfigToFixed32(config.KingMoveSpeed),
+                        ConfigToFixed32(config.CavalryRadius),
+                        ConfigToFixed32(config.KingMass));
+                    unitData.UnitType = UnitData.KingUnitType;
+                    unitData.MaxHealth = config.KingMaxHealth;
+                    unitData.AttackDamage = config.KingAttackDamage;
+                    unitData.AttackRange = ConfigToFixed32(config.KingAttackRange);
+                    unitData.AttackCooldownTicks = config.KingAttackCooldownTicks;
+                    unitData.MeleeArmor = config.KingMeleeArmor;
+                    unitData.RangedArmor = config.KingRangedArmor;
+                    unitData.DetectionRange = ConfigToFixed32(config.KingDetectionRange);
+                    break;
                 case 9: // Monk
                     unitData = UnitRegistry.CreateUnit(playerId, spawnPos,
                         ConfigToFixed32(config.MonkMoveSpeed),
@@ -6063,6 +6660,18 @@ namespace OpenEmpires
             }
         }
 
+        private void HandleKingHealingAuraPulse(UnitData king, float radius)
+        {
+            if (king == null || king.State == UnitState.Dead) return;
+            OnKingHealingAuraPulse?.Invoke(king.Id, radius);
+        }
+
+        private void HandleBuildingHealingAuraPulse(BuildingData building, float radius)
+        {
+            if (building == null || building.IsDestroyed) return;
+            OnBuildingHealingAuraPulse?.Invoke(building.Id, radius);
+        }
+
         // Scouts regenerate health while out of combat. Out-of-combat = no damage taken for at
         // least ScoutRegenDelayTicks. The interval gate keeps the regen rate slow even though
         // the function runs every tick.
@@ -6168,7 +6777,7 @@ namespace OpenEmpires
                     continue;
                 if (b.Type == BuildingType.House)
                     cap += config.HousePopulation;
-                else if (b.Type == BuildingType.TownCenter)
+                else if (LandmarkDefinitions.GetEffectiveBuildingType(b) == BuildingType.TownCenter)
                     cap += config.TownCenterPopulation;
             }
             return Mathf.Min(cap, config.MaxPopulation);

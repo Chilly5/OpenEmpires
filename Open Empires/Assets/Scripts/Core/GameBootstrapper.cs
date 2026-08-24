@@ -121,7 +121,7 @@ namespace OpenEmpires
                 if (gameSetup != null)
                     gameSetup.InitializeGame();
 
-                Debug.LogWarning($"[SyncCheck] MapSeed={config.MapSeed} Players={playerCount} " +
+                Debug.LogWarning($"[SyncCheck] Map={config.MapDisplayName} MapSeed={config.MapSeed} Players={playerCount} " +
                     $"Teams=[{string.Join(",", teams ?? new int[0])}] " +
                     $"AI=[{string.Join(",", aiPlayerIds ?? new int[0])}]");
                 uint initHash = Simulation.ComputeStateChecksum();
@@ -136,14 +136,6 @@ namespace OpenEmpires
                     Simulation.OnMatchEnded += HandleSinglePlayerMatchEnded;
                 }
 
-#if UNITY_WEBGL && !UNITY_EDITOR
-                // If we're already fullscreen (e.g. multiplayer queue), engage pointer lock now
-                if (FullscreenManager.Instance != null && FullscreenManager.Instance.IsFullscreen)
-                {
-                    Cursor.lockState = CursorLockMode.Locked;
-                    Cursor.visible = false;
-                }
-#endif
             }
 
             if (!teamsApplied && networkManager != null && networkManager.IsMultiplayer
@@ -414,6 +406,10 @@ namespace OpenEmpires
                     cheatGod.PlayerId = playerId;
                     cmd = cheatGod;
                     break;
+                case CheatSpawnUnitCommand cheatSpawn:
+                    cheatSpawn.PlayerId = playerId;
+                    cmd = cheatSpawn;
+                    break;
                 case AttackUnitCommand attackUnit:
                     attackUnit.PlayerId = playerId;
                     cmd = attackUnit;
@@ -433,6 +429,14 @@ namespace OpenEmpires
                 case ToggleAutoProduceCommand toggleAuto:
                     toggleAuto.PlayerId = playerId;
                     cmd = toggleAuto;
+                    break;
+                case PingCommand ping:
+                    ping.PlayerId = playerId;
+                    cmd = ping;
+                    break;
+                case AiChatCommand aiChat:
+                    aiChat.PlayerId = playerId;
+                    cmd = aiChat;
                     break;
                 case UpgradeTowerCommand upgradeTower:
                     upgradeTower.PlayerId = playerId;

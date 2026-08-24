@@ -40,6 +40,10 @@ namespace OpenEmpires
         RepairBuilding,
         ToggleAutoProduce,
         CheatGodMode,
+        CheatSpawnUnit,
+        Ping,
+        AiChat,
+        AiIntent,
         Tribute
     }
 

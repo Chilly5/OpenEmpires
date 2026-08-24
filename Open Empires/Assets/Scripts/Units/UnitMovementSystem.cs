@@ -26,6 +26,7 @@ namespace OpenEmpires
                         }
                         else
                         {
+                            CommitTargetFacing(unit);
                             unit.State = UnitState.Idle;
                             if (!unit.IsVillager)
                                 unit.PlayerCommanded = false;
@@ -177,6 +178,7 @@ namespace OpenEmpires
                         }
                         else
                         {
+                            CommitTargetFacing(unit);
                             unit.State = UnitState.Idle;
                             if (!unit.IsVillager)
                                 unit.PlayerCommanded = false;
@@ -210,6 +212,17 @@ namespace OpenEmpires
                     }
                 }
             }
+        }
+
+        private static void CommitTargetFacing(UnitData unit)
+        {
+            if (!unit.HasTargetFacing) return;
+
+            FixedVector3 facing = new FixedVector3(
+                unit.TargetFacing.x, Fixed32.Zero, unit.TargetFacing.z);
+            Fixed32 magnitude = facing.Magnitude();
+            if (magnitude.Raw > 0)
+                unit.SimFacing = facing / magnitude;
         }
     }
 }

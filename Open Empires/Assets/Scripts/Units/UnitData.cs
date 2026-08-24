@@ -76,7 +76,9 @@ namespace OpenEmpires
         public int FormationLeaderId = -1;  // -1 = no leader (is leader or not in formation)
 
         // Unit type
-        public int UnitType; // 0=Villager, 1=Spearman, 2=Archer, 3=Horseman, 4=Scout, 5=Sheep, 6=ManAtArms, 7=Knight, 8=Crossbowman, 9=Monk
+        public const int KingUnitType = 16;
+
+        public int UnitType; // 0=Villager, 1=Spearman, 2=Archer, 3=Horseman, 4=Scout, 5=Sheep, 6=ManAtArms, 7=Knight, 8=Crossbowman, 9=Monk, 16=King
         public bool IsVillager;
         public bool IsDummy;
         public bool IsSheep;
@@ -120,9 +122,12 @@ namespace OpenEmpires
         public int BonusDamageAmount2;
         public int BonusDamageVsBuildings; // extra damage when attacking buildings
 
-        // Charge
+        // Charge. Stamina is a sprint meter, not a cooldown: it drains while charging and
+        // refills when not, so a charge can be started again on a partial meter for a shorter run.
         public bool IsCharging;
-        public int ChargeCooldownRemaining;
+        public int ChargeStamina;
+        // Ticks spent sprinting in the current charge. Drives how much momentum the hit carries.
+        public int ChargeMomentum;
         public int ChargeStunRemaining;
         public int CombatTargetId = -1;
         public int CombatTargetBuildingId = -1;
@@ -171,6 +176,7 @@ namespace OpenEmpires
             CurrentPathIndex = 0;
             CommandQueue = new List<QueuedCommand>();
             PatrolWaypoints = new List<FixedVector3>();
+            ChargeStamina = UnitCombatSystem.ChargeStaminaMax; // units spawn ready to charge
         }
 
         public bool HasPath => Path != null && CurrentPathIndex < Path.Count;

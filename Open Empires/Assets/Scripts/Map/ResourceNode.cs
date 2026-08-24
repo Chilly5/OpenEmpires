@@ -25,14 +25,19 @@ namespace OpenEmpires
         private Color[] originalColors;
         private bool flashActive;
         private MaterialPropertyBlock propBlock;
+        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
+        private static readonly int ColorId = Shader.PropertyToID("_Color");
+        private static readonly int FlashColorId = Shader.PropertyToID("_FlashColor");
+        private static readonly int FlashAmountId = Shader.PropertyToID("_FlashAmount");
 
         private int lastSeenDamageTick;
         private float damageFlashTimer;
         private const float DamageFlashDuration = 0.18f;
 
         private float commandFlashTimer;
-        private const float CommandFlashDuration = 0.18f;
-        private static readonly Color FlashColor = new Color(0.2f, 1f, 0.2f);
+        private const float CommandFlashDuration = 0.09f;
+        private static readonly Color CommandFlashColor = Color.white;
+        private static readonly Color SelectionRingColor = new Color(1f, 1f, 1f, 0.65f);
 
         public void Initialize(int nodeId, ResourceNodeData data)
         {
@@ -46,6 +51,20 @@ namespace OpenEmpires
         public void SetBillboardSprite(GameObject sprite)
         {
             billboardSprite = sprite;
+            CacheRenderers();
+        }
+
+        // Permanently destroys this view and its separately-parented billboard sprite (trees and
+        // billboarded resources reparent their sprite onto a shared container, so destroying the
+        // root alone leaves an orphan visible in the world).
+        public void DestroyView()
+        {
+            if (billboardSprite != null)
+            {
+                Destroy(billboardSprite);
+                billboardSprite = null;
+            }
+            Destroy(gameObject);
         }
 
         public Rect GetScreenBounds(Camera cam)
@@ -126,7 +145,7 @@ namespace OpenEmpires
             if (ringCollider != null) Object.Destroy(ringCollider);
 
             var ringMat = new Material(Shader.Find("Custom/SelectionRing"));
-            ringMat.SetColor("_Color", new Color(0f, 1f, 0f, 0.5f));
+            ringMat.SetColor("_Color", SelectionRingColor);
             selectionRing.GetComponent<Renderer>().sharedMaterial = ringMat;
 
             selectionRing.SetActive(false);
@@ -134,13 +153,16 @@ namespace OpenEmpires
 
         private void CacheRenderers()
         {
-            bodyRenderers = GetComponentsInChildren<Renderer>(true);
+            var renderers = new List<Renderer>();
+            AddRenderers(GetComponentsInChildren<Renderer>(true), renderers);
+            if (billboardSprite != null)
+                AddRenderers(billboardSprite.GetComponentsInChildren<Renderer>(true), renderers);
+
+            bodyRenderers = renderers.ToArray();
             originalColors = new Color[bodyRenderers.Length];
             for (int i = 0; i < bodyRenderers.Length; i++)
             {
-                originalColors[i] = bodyRenderers[i].sharedMaterial != null
-                    ? bodyRenderers[i].sharedMaterial.color
-                    : Color.white;
+                originalColors[i] = GetMaterialColor(bodyRenderers[i].sharedMaterial);
 
                 // Disable shadows and probes for performance
                 bodyRenderers[i].shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
@@ -152,6 +174,34 @@ namespace OpenEmpires
             propBlock = new MaterialPropertyBlock();
         }
 
+        private void AddRenderers(Renderer[] source, List<Renderer> renderers)
+        {
+            if (source == null) return;
+
+            for (int i = 0; i < source.Length; i++)
+            {
+                var renderer = source[i];
+                if (renderer == null || renderers.Contains(renderer)) continue;
+                if (selectionRing != null && renderer.transform.IsChildOf(selectionRing.transform)) continue;
+                renderers.Add(renderer);
+            }
+        }
+
+        private static Color GetMaterialColor(Material mat)
+        {
+            if (mat == null) return Color.white;
+            if (mat.HasProperty(BaseColorId)) return mat.GetColor(BaseColorId);
+            if (mat.HasProperty(ColorId)) return mat.GetColor(ColorId);
+            return Color.white;
+        }
+
+        private static void SetMaterialColor(Material mat, Color color)
+        {
+            if (mat == null) return;
+            if (mat.HasProperty(BaseColorId)) mat.SetColor(BaseColorId, color);
+            else if (mat.HasProperty(ColorId)) mat.SetColor(ColorId, color);
+        }
+
         public void SetSelected(bool selected)
         {
             isSelected = selected;
@@ -159,6 +209,8 @@ namespace OpenEmpires
                 CreateSelectionRing();
             if (selectionRing != null)
                 selectionRing.SetActive(selected);
+            if (selected)
+                FlashCommandConfirm();
         }
 
         public ResourceNodeData GetNodeData()
@@ -168,6 +220,8 @@ namespace OpenEmpires
 
         public void FlashCommandConfirm()
         {
+            if (bodyRenderers == null || bodyRenderers.Length == 0)
+                CacheRenderers();
             commandFlashTimer = CommandFlashDuration;
             enabled = true;
         }
@@ -193,7 +247,7 @@ namespace OpenEmpires
                     mat.renderQueue = 3000;
                     Color c = originalColors[i];
                     c.a = 0.4f;
-                    mat.color = c;
+                    SetMaterialColor(mat, c);
                 }
                 var col = GetComponent<Collider>();
                 if (col != null) col.enabled = false;
@@ -211,7 +265,7 @@ namespace OpenEmpires
                     mat.SetInt("_ZWrite", 1);
                     mat.DisableKeyword("_ALPHABLEND_ON");
                     mat.renderQueue = -1;
-                    mat.color = originalColors[i];
+                    SetMaterialColor(mat, originalColors[i]);
                 }
                 var col = GetComponent<Collider>();
                 if (col != null) col.enabled = true;
@@ -226,18 +280,13 @@ namespace OpenEmpires
 
         private void UpdateFlash()
         {
-            // Command flash takes priority over gather flash
+            // Command flash takes priority over gather-hit flash.
             if (commandFlashTimer > 0f)
             {
                 if (!flashActive)
                 {
                     flashActive = true;
-                    propBlock.SetColor("_BaseColor", FlashColor);
-                    for (int i = 0; i < bodyRenderers.Length; i++)
-                    {
-                        if (bodyRenderers[i] != null)
-                            bodyRenderers[i].SetPropertyBlock(propBlock);
-                    }
+                    SetFlashColor(CommandFlashColor);
                 }
                 commandFlashTimer -= Time.deltaTime;
             }
@@ -246,24 +295,41 @@ namespace OpenEmpires
                 if (!flashActive)
                 {
                     flashActive = true;
-                    propBlock.SetColor("_BaseColor", Color.white);
-                    for (int i = 0; i < bodyRenderers.Length; i++)
-                    {
-                        if (bodyRenderers[i] != null)
-                            bodyRenderers[i].SetPropertyBlock(propBlock);
-                    }
+                    SetFlashColor(Color.white);
                 }
                 damageFlashTimer -= Time.deltaTime;
             }
             else if (flashActive)
             {
                 flashActive = false;
-                for (int i = 0; i < bodyRenderers.Length; i++)
-                {
-                    if (bodyRenderers[i] != null)
-                        bodyRenderers[i].SetPropertyBlock(null);
-                }
+                ClearFlashColor();
                 enabled = false;
+            }
+        }
+
+        private void SetFlashColor(Color color)
+        {
+            if (propBlock == null)
+                propBlock = new MaterialPropertyBlock();
+
+            propBlock.Clear();
+            propBlock.SetColor(BaseColorId, color);
+            propBlock.SetColor(ColorId, color);
+            propBlock.SetColor(FlashColorId, color);
+            propBlock.SetFloat(FlashAmountId, 1f);
+            for (int i = 0; i < bodyRenderers.Length; i++)
+            {
+                if (bodyRenderers[i] != null)
+                    bodyRenderers[i].SetPropertyBlock(propBlock);
+            }
+        }
+
+        private void ClearFlashColor()
+        {
+            for (int i = 0; i < bodyRenderers.Length; i++)
+            {
+                if (bodyRenderers[i] != null)
+                    bodyRenderers[i].SetPropertyBlock(null);
             }
         }
 

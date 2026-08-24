@@ -132,6 +132,9 @@ namespace OpenEmpires
             public string Badge;        // small overlay text (e.g. "ON" / "OFF")
             public Color? BadgeColor;   // color of badge text
             public Color? Tint;         // base color tint applied to the button background
+            public Transform RangePreviewTarget;
+            public float RangePreviewRadius;
+            public Color? RangePreviewColor;
         }
 
         // --- Canvas UI references ---
@@ -219,7 +222,15 @@ namespace OpenEmpires
         private RectTransform tooltipPanelRT;
         private TMP_Text tooltipText;
         private string[] actionTooltips;
+        private Transform[] actionRangePreviewTargets;
+        private float[] actionRangePreviewRadii;
+        private Color[] actionRangePreviewColors;
         private int hoveredActionIndex = -1;
+        private static Texture2D healingDustTexture;
+
+        private GameObject activeRangePreviewGO;
+        private Transform activeRangePreviewTarget;
+        private float activeRangePreviewRadius;
 
         private struct QueueEntry
         {
@@ -241,8 +252,8 @@ namespace OpenEmpires
         private static readonly Color PanelBgColor = new Color(0, 0, 0, 1f);
         private static readonly Color BarBgColor = new Color(0.1f, 0.1f, 0.1f);
 
-        private static readonly string[] UnitTypeNames = { "Villager", "Spearman", "Archer", "Horseman", "Scout", "Sheep", "Man-at-Arms", "Knight", "Crossbowman", "Monk", "Longbowman", "Gendarme", "Landsknecht", "Battering Ram", "Mangonel", "Trebuchet" };
-        private static readonly string[] UnitTypePlurals = { "Villagers", "Spearmen", "Archers", "Horsemen", "Scouts", "Sheep", "Men-at-Arms", "Knights", "Crossbowmen", "Monks", "Longbowmen", "Gendarmes", "Landsknechte", "Battering Rams", "Mangonels", "Trebuchets" };
+        private static readonly string[] UnitTypeNames = { "Villager", "Spearman", "Archer", "Horseman", "Scout", "Sheep", "Man-at-Arms", "Knight", "Crossbowman", "Monk", "Longbowman", "Gendarme", "Landsknecht", "Battering Ram", "Mangonel", "Trebuchet", "English King" };
+        private static readonly string[] UnitTypePlurals = { "Villagers", "Spearmen", "Archers", "Horsemen", "Scouts", "Sheep", "Men-at-Arms", "Knights", "Crossbowmen", "Monks", "Longbowmen", "Gendarmes", "Landsknechte", "Battering Rams", "Mangonels", "Trebuchets", "Kings" };
         private static readonly string[] BuildingTypeNames = { "House", "Barracks", "Town Center", "Wood Wall", "Mill", "Lumber Yard", "Mine", "Archery Range", "Stables", "Farm", "Tower", "Monastery", "Landmark", "Blacksmith", "Market", "University", "Siege Workshop", "Keep", "Stone Wall", "Stone Gate", "Wood Gate", "Wonder" };
         private static readonly string[] BuildingTypePlurals = { "Houses", "Barracks", "Town Centers", "Wood Walls", "Mills", "Lumber Yards", "Mines", "Archery Ranges", "Stables", "Farms", "Towers", "Monasteries", "Landmarks", "Blacksmiths", "Markets", "Universities", "Siege Workshops", "Keeps", "Stone Walls", "Stone Gates", "Wood Gates", "Wonders" };
         private static readonly string[] ResourceNodeNames = { "Berry Bush", "Tree", "Gold Mine", "Stone Mine" };
@@ -256,10 +267,20 @@ namespace OpenEmpires
             BuildUI();
             actionCallbacks = new System.Action[12];
             actionTooltips = new string[12];
+            actionRangePreviewTargets = new Transform[12];
+            actionRangePreviewRadii = new float[12];
+            actionRangePreviewColors = new Color[12];
             buildCallbacks = new System.Action[TotalBuildButtons];
             buildTooltips = new string[TotalBuildButtons];
             actionFlashTimers = new float[12];
             buildFlashTimers = new float[TotalBuildButtons];
+        }
+
+        private void OnDestroy()
+        {
+            HideHealingRangePreview();
+            if (s_instance == this)
+                s_instance = null;
         }
 
         // =============================================================
@@ -1140,11 +1161,13 @@ namespace OpenEmpires
         private void Update()
         {
             UpdateButtonFlashTimers();
+            UpdateHealingRangePreview();
 
             if (selectionManager == null)
             {
                 UnitSelectionManager.SetInfoPanelSuppressed(false);
                 deleteMouseHolding = false;
+                HideHealingRangePreview();
                 return;
             }
 
@@ -1155,6 +1178,7 @@ namespace OpenEmpires
             {
                 UnitSelectionManager.SetInfoPanelSuppressed(false);
                 deleteMouseHolding = false;
+                HideHealingRangePreview();
                 return;
             }
 
@@ -1271,6 +1295,7 @@ namespace OpenEmpires
                 hoveredActionIndex = -1;
                 tooltipPanelGO.SetActive(false);
                 s_tooltipPanelRT = null;
+                HideHealingRangePreview();
             }
 
             // Show/hide build panels (3 age panels)
@@ -1647,6 +1672,9 @@ namespace OpenEmpires
                     actionButtons[i].interactable = btn.Enabled;
                     actionCallbacks[i] = btn.OnClick;
                     actionTooltips[i] = btn.Tooltip;
+                    actionRangePreviewTargets[i] = btn.RangePreviewTarget;
+                    actionRangePreviewRadii[i] = btn.RangePreviewRadius;
+                    actionRangePreviewColors[i] = btn.RangePreviewColor ?? new Color(1f, 0.78f, 0.22f, 0.72f);
 
                     actionButtonHotkeys[i].text = btn.Hotkey ?? "";
 
@@ -1704,9 +1732,19 @@ namespace OpenEmpires
                     actionButtonGOs[i].SetActive(false);
                     actionCallbacks[i] = null;
                     actionTooltips[i] = null;
+                    actionRangePreviewTargets[i] = null;
+                    actionRangePreviewRadii[i] = 0f;
                     if (actionButtonBadges != null && actionButtonBadges[i] != null)
                         actionButtonBadges[i].gameObject.SetActive(false);
                 }
+            }
+
+            if (hoveredActionIndex >= 0
+                && (!actionButtonGOs[hoveredActionIndex].activeSelf
+                    || actionRangePreviewTargets[hoveredActionIndex] != activeRangePreviewTarget
+                    || !Mathf.Approximately(actionRangePreviewRadii[hoveredActionIndex], activeRangePreviewRadius)))
+            {
+                HideHealingRangePreview();
             }
         }
 
@@ -1842,6 +1880,36 @@ namespace OpenEmpires
         //  Action slot builders
         // =============================================================
 
+        private GridButton MakeHealingAuraButton(string label, string title, string body, Transform target,
+            float radius, int healAmount, int cooldownTicks, int tickRate)
+        {
+            float seconds = tickRate > 0 ? cooldownTicks / (float)tickRate : cooldownTicks;
+            float perSecond = seconds > 0f ? healAmount / seconds : 0f;
+
+            var stats = new System.Text.StringBuilder();
+            stats.Append("<b>").Append(title).Append("</b>\n");
+            stats.Append(body).Append('\n');
+            stats.Append('\n');
+            stats.Append("Heals <b>").Append(healAmount).Append(" HP</b> every <b>")
+                 .Append(seconds.ToString("0.#")).Append("s</b>  (").Append(perSecond.ToString("0.#"))
+                 .Append(" HP/s)\n");
+            stats.Append("Range: <b>").Append(radius.ToString("0.#")).Append("</b> tiles\n");
+            stats.Append("Affects: friendly units in range\n");
+            stats.Append("<i>Passive — always active, no need to trigger.</i>");
+
+            return new GridButton
+            {
+                Label = label,
+                Enabled = true,
+                Icon = UnitIcons.Get(9),
+                Tint = new Color(0.48f, 0.38f, 0.16f),
+                Tooltip = stats.ToString(),
+                RangePreviewTarget = target,
+                RangePreviewRadius = radius,
+                RangePreviewColor = new Color(1f, 0.78f, 0.22f, 0.72f)
+            };
+        }
+
         private GridButton?[] GetUnitActionSlots(UnitView view, GameSimulation sim)
         {
             var unitData = sim.UnitRegistry.GetUnit(view.UnitId);
@@ -1871,10 +1939,11 @@ namespace OpenEmpires
                 // R = Age Up (villagers only)
                 int currentAge = sim.GetPlayerAge(view.PlayerId);
                 bool isAgingUp = sim.IsPlayerAgingUp(view.PlayerId);
-                if (currentAge < 3 && !isAgingUp)
+                int nextAge = currentAge + 1;
+                var civ = sim.GetPlayerCivilization(view.PlayerId);
+                if (!isAgingUp && LandmarkDefinitions.HasChoices(civ, nextAge))
                 {
-                    int targetAge = currentAge + 1;
-                    var civ = sim.GetPlayerCivilization(view.PlayerId);
+                    int targetAge = nextAge;
                     var (choiceA, choiceB) = LandmarkDefinitions.GetChoices(civ, targetAge);
                     var defA = LandmarkDefinitions.Get(choiceA);
                     var defB = LandmarkDefinitions.Get(choiceB);
@@ -1943,6 +2012,14 @@ namespace OpenEmpires
                 Enabled = true,
                 OnClick = () => selectionManager.EnterGarrisonMode() };
 
+            if (view.UnitType == UnitData.KingUnitType)
+            {
+                slots[8] = MakeHealingAuraButton("Heal\nAura", "King's Healing Aura",
+                    "Passive battlefield sustain. Hover to preview exact range.",
+                    view.transform, sim.Config.KingHealRange, sim.Config.KingHealAmount,
+                    sim.Config.KingHealCooldownTicks, sim.Config.TickRate);
+            }
+
             // X = Delete (hold to confirm)
             slots[9] = new GridButton { Label = "Delete", Hotkey = "X",
                 Tooltip = "<b>Delete</b>\nHold to destroy selected unit.",
@@ -1960,14 +2037,14 @@ namespace OpenEmpires
 
             var slots = new GridButton?[TotalBuildButtons];
 
-            // Age 1 (offset 0): Q=Mill, W=LumberYard, E=Mine, A=House, S=Farm, D=Barracks, Z=WoodWall, X=WoodGate
+            // Age 1 (offset 0): Q=House, W=Mill, E=LumberYard, R=Mine, A=Farm, S=Barracks, Z=WoodWall, X=WoodGate
             int o = 0;
-            slots[o + 0] = MakeBuildSlot("Mill", "Q", "Drop-off point for food.", BuildingType.Mill, cfg.MillWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
-            slots[o + 1] = MakeBuildSlot("Lumber\nYard", "W", "Drop-off point for wood.", BuildingType.LumberYard, cfg.LumberYardWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
-            slots[o + 2] = MakeBuildSlot("Mine", "E", "Drop-off point for gold and stone.", BuildingType.Mine, cfg.MineWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
-            slots[o + 3] = MakeBuildSlot("House", "A", "Increases population cap by 10.", BuildingType.House, cfg.HouseWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
-            slots[o + 4] = MakeBuildSlot("Farm", "S", "Produces food.", BuildingType.Farm, cfg.FarmWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
-            slots[o + 5] = MakeBuildSlot("Barracks", "D", "Trains spearmen.", BuildingType.Barracks, cfg.BarracksWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 0] = MakeBuildSlot("House", "Q", "Increases population cap by 10.", BuildingType.House, cfg.HouseWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 1] = MakeBuildSlot("Mill", "W", "Drop-off point for food.", BuildingType.Mill, cfg.MillWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 2] = MakeBuildSlot("Lumber\nYard", "E", "Drop-off point for wood.", BuildingType.LumberYard, cfg.LumberYardWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 3] = MakeBuildSlot("Farm", "A", "Produces food.", BuildingType.Farm, cfg.FarmWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 4] = MakeBuildSlot("Barracks", "S", "Trains spearmen.", BuildingType.Barracks, cfg.BarracksWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
+            slots[o + 5] = MakeBuildSlot("Mine", "R", "Drop-off point for gold and stone.", BuildingType.Mine, cfg.MineWoodCost, 0, 0, 0, resources, playerAge, false, false, godMode);
             slots[o + 6] = MakeBuildSlot("Wood\nWall", "Z", "Defensive barrier. Can convert to gate.", BuildingType.Wall, cfg.WallWoodCost, 0, 0, 0, resources, playerAge, true, false, godMode);
             slots[o + 7] = MakeBuildSlot("Wood\nGate", "X", "Gate that allows units to pass.", BuildingType.WoodGate, cfg.WoodGateWoodCost, 0, 0, 0, resources, playerAge, true, true, godMode);
 
@@ -2107,10 +2184,11 @@ namespace OpenEmpires
                 int localPid = selectionManager.LocalPlayerId;
                 int currentAge = sim.GetPlayerAge(localPid);
                 bool isAgingUp = sim.IsPlayerAgingUp(localPid);
-                if (currentAge < 3 && !isAgingUp)
+                int nextAge = currentAge + 1;
+                var civ = sim.GetPlayerCivilization(localPid);
+                if (!isAgingUp && LandmarkDefinitions.HasChoices(civ, nextAge))
                 {
-                    int targetAge = currentAge + 1;
-                    var civ = sim.GetPlayerCivilization(localPid);
+                    int targetAge = nextAge;
                     var (choiceA, choiceB) = LandmarkDefinitions.GetChoices(civ, targetAge);
                     var defA = LandmarkDefinitions.Get(choiceA);
                     var defB = LandmarkDefinitions.Get(choiceB);
@@ -2179,6 +2257,16 @@ namespace OpenEmpires
                 Enabled = true,
                 OnClick = () => selectionManager.EnterGarrisonMode() };
 
+            for (int i = 0; i < selected.Count; i++)
+            {
+                if (selected[i].UnitType != UnitData.KingUnitType) continue;
+                slots[8] = MakeHealingAuraButton("Heal\nAura", "King's Healing Aura",
+                    "Passive battlefield sustain. Hover to preview exact range.",
+                    selected[i].transform, sim.Config.KingHealRange, sim.Config.KingHealAmount,
+                    sim.Config.KingHealCooldownTicks, sim.Config.TickRate);
+                break;
+            }
+
             // X = Delete (hold to confirm)
             slots[9] = new GridButton { Label = "Delete", Hotkey = "X",
                 Tooltip = "<b>Delete</b>\nHold to destroy selected units.",
@@ -2198,9 +2286,16 @@ namespace OpenEmpires
 
             if (building.Type == BuildingType.Wall || building.Type == BuildingType.StoneWall || building.Type == BuildingType.StoneGate || building.Type == BuildingType.WoodGate)
             {
+                // A wall can only become a gate mid-run (walls on both sides); a gate can always
+                // revert. Mirrors the sim's eligibility check so the button never offers a no-op.
+                bool canConvert = building.IsGate
+                    || WallSegmentClassifier.TryGetCollinearWallPair(sim.MapData, sim.BuildingRegistry,
+                        building.OriginTileX, building.OriginTileZ, building.PlayerId, out _, out _);
                 string gateLabel = building.IsGate ? "To Wall" : "To Gate";
-                slots[0] = new GridButton { Label = gateLabel, Hotkey = "Q", Enabled = true,
-                    Tooltip = "<b>Toggle Gate</b>\nConvert between wall and gate.",
+                slots[0] = new GridButton { Label = gateLabel, Hotkey = "Q", Enabled = canConvert,
+                    Tooltip = canConvert
+                        ? "<b>Toggle Gate</b>\nConvert between wall and gate."
+                        : "<b>Toggle Gate</b>\nA wall can only become a gate when it has walls on both sides (a straight run).",
                     OnClick = () => sim.CommandBuffer.EnqueueCommand(
                         new ConvertToGateCommand(building.PlayerId, building.Id)) };
                 hasAny = true;
@@ -2210,8 +2305,19 @@ namespace OpenEmpires
                 var resources = sim.ResourceManager.GetPlayerResources(building.PlayerId);
                 bool hasLandmarkDiscount = sim.IsBuildingInFrenchLandmarkInfluence(building);
                 int discPct = hasLandmarkDiscount ? sim.Config.FrenchLandmarkTrainingDiscountPercent : 0;
+                BuildingType effectiveType = sim.GetEffectiveBuildingType(building);
 
-                if (building.Type == BuildingType.Barracks)
+                if (building.Type == BuildingType.Landmark
+                    && LandmarkDefinitions.Get(building.LandmarkId).HasHealingAura)
+                {
+                    slots[0] = MakeHealingAuraButton("Heal\nAura", "Abbey Healing Aura",
+                        "Passive battlefield sustain from the Abbey of Kings. Hover to preview exact range.",
+                        view.transform, sim.Config.AbbeyOfKingsHealRange, sim.Config.AbbeyOfKingsHealAmount,
+                        sim.Config.AbbeyOfKingsHealCooldownTicks, sim.Config.TickRate);
+                    hasAny = true;
+                }
+
+                if (effectiveType == BuildingType.Barracks)
                 {
                     var civ = sim.GetPlayerCivilization(building.PlayerId);
                     bool isLandsknecht = civ == Civilization.HolyRomanEmpire;
@@ -2236,15 +2342,21 @@ namespace OpenEmpires
                         OnClick = () => QueueTraining(sim, building.PlayerId, building.Id, 6) };
                     hasAny = true;
                 }
-                else if (building.Type == BuildingType.ArcheryRange)
+                else if (effectiveType == BuildingType.ArcheryRange)
                 {
                     var civ = sim.GetPlayerCivilization(building.PlayerId);
                     bool isLongbow = civ == Civilization.English;
                     string arLabel = isLongbow ? "Longbow" : "Archer";
                     string arName = isLongbow ? "Longbowman" : "Archer";
-                    int arIcon = isLongbow ? 6 : 2;
+                    int arIcon = isLongbow ? 10 : 2;
                     int archerFood = (isLongbow ? sim.Config.LongbowmanFoodCost : sim.Config.ArcherFoodCost) * (100 - discPct) / 100;
                     int archerWood = (isLongbow ? sim.Config.LongbowmanWoodCost : sim.Config.ArcherWoodCost) * (100 - discPct) / 100;
+                    if (sim.IsEnglishLandmark(building, LandmarkId.English_Age2_B) && isLongbow)
+                    {
+                        int longbowDiscount = LandmarkDefinitions.Get(building.LandmarkId).LongbowDiscountPercent;
+                        archerFood = archerFood * (100 - longbowDiscount) / 100;
+                        archerWood = archerWood * (100 - longbowDiscount) / 100;
+                    }
                     slots[0] = new GridButton { Label = arLabel, Hotkey = "Q",
                         Enabled = resources.Food >= archerFood && resources.Wood >= archerWood,
                         Icon = UnitIcons.Get(arIcon),
@@ -2261,7 +2373,7 @@ namespace OpenEmpires
                         OnClick = () => QueueTraining(sim, building.PlayerId, building.Id, 8) };
                     hasAny = true;
                 }
-                else if (building.Type == BuildingType.Stables)
+                else if (effectiveType == BuildingType.Stables)
                 {
                     var civ = sim.GetPlayerCivilization(building.PlayerId);
                     bool isGendarme = civ == Civilization.French;
@@ -2292,7 +2404,7 @@ namespace OpenEmpires
                         OnClick = () => QueueTraining(sim, building.PlayerId, building.Id, 4) };
                     hasAny = true;
                 }
-                else if (building.Type == BuildingType.Monastery)
+                else if (effectiveType == BuildingType.Monastery)
                 {
                     int monkFood = sim.Config.MonkFoodCost * (100 - discPct) / 100;
                     int monkGold = sim.Config.MonkGoldCost * (100 - discPct) / 100;
@@ -2305,7 +2417,7 @@ namespace OpenEmpires
                         OnClick = () => QueueTraining(sim, building.PlayerId, building.Id, 9) };
                     hasAny = true;
                 }
-                else if (building.Type == BuildingType.SiegeWorkshop)
+                else if (effectiveType == BuildingType.SiegeWorkshop)
                 {
                     int ramWood = sim.Config.BatteringRamWoodCost;
                     int ramGold = sim.Config.BatteringRamGoldCost;
@@ -2328,7 +2440,7 @@ namespace OpenEmpires
                         OnClick = () => QueueTraining(sim, building.PlayerId, building.Id, 15) };
                     hasAny = true;
                 }
-                else if (building.Type == BuildingType.TownCenter)
+                else if (effectiveType == BuildingType.TownCenter)
                 {
                     int villagerCost = sim.Config.VillagerFoodCost * (100 - discPct) / 100;
                     bool autoOn = building.AutoProduceVillagers;
@@ -2351,10 +2463,12 @@ namespace OpenEmpires
                     // Age Up button
                     int currentAge = sim.GetPlayerAge(building.PlayerId);
                     bool isAgingUp = sim.IsPlayerAgingUp(building.PlayerId);
-                    if (currentAge < 3 && !isAgingUp)
+                    int nextAge = currentAge + 1;
+                    var ageUpCiv = sim.GetPlayerCivilization(building.PlayerId);
+                    if (!isAgingUp && LandmarkDefinitions.HasChoices(ageUpCiv, nextAge))
                     {
-                        int targetAge = currentAge + 1;
-                        var civ = sim.GetPlayerCivilization(building.PlayerId);
+                        int targetAge = nextAge;
+                        var civ = ageUpCiv;
                         var (choiceA, choiceB) = LandmarkDefinitions.GetChoices(civ, targetAge);
                         var defA = LandmarkDefinitions.Get(choiceA);
                         var defB = LandmarkDefinitions.Get(choiceB);
@@ -2386,6 +2500,11 @@ namespace OpenEmpires
                             Tooltip = $"<b>Wonder</b>\nBuild to achieve a wonder victory.\nCost: {costStr}",
                             OnClick = () => selectionManager.EnterBuildPlacement(BuildingType.Wonder) };
                     }
+                    hasAny = true;
+                }
+                else if (sim.IsEnglishLandmark(building, LandmarkId.English_Age3_B))
+                {
+                    AddWhiteTowerActionSlots(slots, sim, building, resources);
                     hasAny = true;
                 }
                 else if (building.Type == BuildingType.Tower)
@@ -2575,11 +2694,87 @@ namespace OpenEmpires
             return hasAny ? slots : null;
         }
 
+        private void AddWhiteTowerActionSlots(GridButton?[] slots, GameSimulation sim, BuildingData building, PlayerResources resources)
+        {
+            int pid = building.PlayerId;
+
+            slots[0] = new GridButton { Label = "Spear", Hotkey = "Q",
+                Enabled = resources.Food >= sim.Config.SpearmanFoodCost && resources.Wood >= sim.Config.SpearmanWoodCost,
+                Icon = UnitIcons.Get(1),
+                Tooltip = $"<b>Spearman</b>\nMelee infantry unit.\nCost: {sim.Config.SpearmanFoodCost} <sprite name=\"food\"> {sim.Config.SpearmanWoodCost} <sprite name=\"wood\">",
+                OnClick = () => QueueTraining(sim, pid, building.Id, 1) };
+
+            bool maaAgeOk = sim.GetPlayerAge(pid) >= LandmarkDefinitions.GetUnitRequiredAge(6);
+            slots[1] = new GridButton { Label = "MAA", Hotkey = "W",
+                Enabled = maaAgeOk && resources.Food >= sim.Config.ManAtArmsFoodCost && resources.Gold >= sim.Config.ManAtArmsGoldCost,
+                Icon = UnitIcons.Get(6),
+                Tooltip = $"<b>Man-at-Arms</b>\nHeavy armored infantry.\nCost: {sim.Config.ManAtArmsFoodCost} <sprite name=\"food\"> {sim.Config.ManAtArmsGoldCost} <sprite name=\"gold\">"
+                    + (maaAgeOk ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(3)}</color>"),
+                OnClick = () => QueueTraining(sim, pid, building.Id, 6) };
+
+            bool isEnglish = sim.GetPlayerCivilization(pid) == Civilization.English;
+            int archerType = isEnglish ? 10 : 2;
+            string archerName = isEnglish ? "Longbowman" : "Archer";
+            int archerFood = isEnglish ? sim.Config.LongbowmanFoodCost : sim.Config.ArcherFoodCost;
+            int archerWood = isEnglish ? sim.Config.LongbowmanWoodCost : sim.Config.ArcherWoodCost;
+            slots[2] = new GridButton { Label = isEnglish ? "Longbow" : "Archer", Hotkey = "E",
+                Enabled = resources.Food >= archerFood && resources.Wood >= archerWood,
+                Icon = UnitIcons.Get(archerType),
+                Tooltip = $"<b>{archerName}</b>\nRanged infantry unit.\nCost: {archerFood} <sprite name=\"food\"> {archerWood} <sprite name=\"wood\">",
+                OnClick = () => QueueTraining(sim, pid, building.Id, 2) };
+
+            bool xbowAgeOk = sim.GetPlayerAge(pid) >= LandmarkDefinitions.GetUnitRequiredAge(8);
+            slots[3] = new GridButton { Label = "Xbow", Hotkey = "R",
+                Enabled = xbowAgeOk && resources.Food >= sim.Config.CrossbowmanFoodCost && resources.Gold >= sim.Config.CrossbowmanGoldCost,
+                Icon = UnitIcons.Get(8),
+                Tooltip = $"<b>Crossbowman</b>\nRanged anti-armor unit.\nCost: {sim.Config.CrossbowmanFoodCost} <sprite name=\"food\"> {sim.Config.CrossbowmanGoldCost} <sprite name=\"gold\">"
+                    + (xbowAgeOk ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(3)}</color>"),
+                OnClick = () => QueueTraining(sim, pid, building.Id, 8) };
+
+            slots[4] = new GridButton { Label = "Horse", Hotkey = "A",
+                Enabled = resources.Food >= sim.Config.HorsemanFoodCost && resources.Wood >= sim.Config.HorsemanWoodCost,
+                Icon = UnitIcons.Get(3),
+                Tooltip = $"<b>Horseman</b>\nMounted melee unit.\nCost: {sim.Config.HorsemanFoodCost} <sprite name=\"food\"> {sim.Config.HorsemanWoodCost} <sprite name=\"wood\">",
+                OnClick = () => QueueTraining(sim, pid, building.Id, 3) };
+
+            bool knightAgeOk = sim.GetPlayerAge(pid) >= LandmarkDefinitions.GetUnitRequiredAge(7);
+            slots[5] = new GridButton { Label = "Knight", Hotkey = "S",
+                Enabled = knightAgeOk && resources.Food >= sim.Config.KnightFoodCost && resources.Gold >= sim.Config.KnightGoldCost,
+                Icon = UnitIcons.Get(7),
+                Tooltip = $"<b>Knight</b>\nHeavy armored cavalry.\nCost: {sim.Config.KnightFoodCost} <sprite name=\"food\"> {sim.Config.KnightGoldCost} <sprite name=\"gold\">"
+                    + (knightAgeOk ? "" : $"\n<color=#FF6666>Requires Age {LandmarkDefinitions.AgeToRoman(3)}</color>"),
+                OnClick = () => QueueTraining(sim, pid, building.Id, 7) };
+
+            slots[6] = new GridButton { Label = "Scout", Hotkey = "D",
+                Enabled = resources.Food >= sim.Config.ScoutFoodCost,
+                Icon = UnitIcons.Get(4),
+                Tooltip = $"<b>Scout</b>\nFast mounted unit with high vision.\nCost: {sim.Config.ScoutFoodCost} <sprite name=\"food\">",
+                OnClick = () => QueueTraining(sim, pid, building.Id, 4) };
+
+            slots[8] = new GridButton { Label = "Ram",
+                Enabled = resources.Wood >= sim.Config.BatteringRamWoodCost && resources.Gold >= sim.Config.BatteringRamGoldCost,
+                Tooltip = $"<b>Battering Ram</b>\nSlow melee siege unit. Devastating vs buildings.\nCost: {sim.Config.BatteringRamWoodCost} <sprite name=\"wood\"> {sim.Config.BatteringRamGoldCost} <sprite name=\"gold\">",
+                OnClick = () => QueueTraining(sim, pid, building.Id, 13) };
+
+            slots[10] = new GridButton { Label = "Mangonel",
+                Enabled = resources.Wood >= sim.Config.MangonelWoodCost && resources.Gold >= sim.Config.MangonelGoldCost,
+                Tooltip = $"<b>Mangonel</b>\nRanged siege unit. Good vs groups and buildings.\nCost: {sim.Config.MangonelWoodCost} <sprite name=\"wood\"> {sim.Config.MangonelGoldCost} <sprite name=\"gold\">",
+                OnClick = () => QueueTraining(sim, pid, building.Id, 14) };
+
+            slots[11] = new GridButton { Label = "Treb",
+                Enabled = resources.Wood >= sim.Config.TrebuchetWoodCost && resources.Gold >= sim.Config.TrebuchetGoldCost,
+                Tooltip = $"<b>Trebuchet</b>\nLong-range siege unit. Extremely powerful vs buildings.\nCost: {sim.Config.TrebuchetWoodCost} <sprite name=\"wood\"> {sim.Config.TrebuchetGoldCost} <sprite name=\"gold\">",
+                OnClick = () => QueueTraining(sim, pid, building.Id, 15) };
+        }
+
         private void ShowLandmarkChoicePanel(GameSimulation sim, int playerId, int targetAge)
         {
             CloseLandmarkChoicePanel();
 
             var civ = sim.GetPlayerCivilization(playerId);
+            if (!LandmarkDefinitions.HasChoices(civ, targetAge))
+                return;
+
             var (choiceA, choiceB) = LandmarkDefinitions.GetChoices(civ, targetAge);
             var defA = LandmarkDefinitions.Get(choiceA);
             var defB = LandmarkDefinitions.Get(choiceB);
@@ -2746,20 +2941,25 @@ namespace OpenEmpires
 
         private BuildingType? GetEffectiveBuildingType(IReadOnlyList<BuildingView> buildings, int localPid)
         {
+            var sim = GameBootstrapper.Instance?.Simulation;
             var tabType = selectionManager.ActiveTabBuildingType;
             if (tabType != null)
             {
                 // Verify that type still exists in the selection
                 for (int i = 0; i < buildings.Count; i++)
-                    if (buildings[i].PlayerId == localPid && buildings[i].BuildingType == tabType && !buildings[i].IsDestroyed)
-                        return tabType;
+                {
+                    if (buildings[i].PlayerId != localPid || buildings[i].IsDestroyed) continue;
+                    var bData = sim?.BuildingRegistry.GetBuilding(buildings[i].BuildingId);
+                    var effectiveType = bData != null ? sim.GetEffectiveBuildingType(bData) : buildings[i].BuildingType;
+                    if (effectiveType == tabType) return tabType;
+                }
                 // Tab type gone; fall back to dominant and clear the stale override
                 selectionManager.SetActiveTabBuildingType(null);
             }
-            return FindDominantBuildingType(buildings, localPid);
+            return FindDominantBuildingType(buildings, localPid, sim);
         }
 
-        private BuildingType? FindDominantBuildingType(IReadOnlyList<BuildingView> buildings, int localPid)
+        private BuildingType? FindDominantBuildingType(IReadOnlyList<BuildingView> buildings, int localPid, GameSimulation sim = null)
         {
             // Count owned buildings per type, pick the most common
             int bestCount = 0;
@@ -2770,7 +2970,8 @@ namespace OpenEmpires
             for (int i = 0; i < buildings.Count; i++)
             {
                 if (buildings[i].PlayerId != localPid) continue;
-                var t = buildings[i].BuildingType;
+                var bData = sim?.BuildingRegistry.GetBuilding(buildings[i].BuildingId);
+                var t = bData != null ? sim.GetEffectiveBuildingType(bData) : buildings[i].BuildingType;
                 if (counts.ContainsKey(t)) counts[t]++;
                 else counts[t] = 1;
             }
@@ -2817,8 +3018,9 @@ namespace OpenEmpires
                 for (int i = 0; i < buildings.Count; i++)
                 {
                     if (buildings[i].PlayerId != localPid) continue;
-                    if (buildings[i].BuildingType != dominantType) continue;
                     var bData = sim.BuildingRegistry.GetBuilding(buildings[i].BuildingId);
+                    if (bData == null) continue;
+                    if (sim.GetEffectiveBuildingType(bData) != dominantType) continue;
                     if (bData != null && !bData.IsUnderConstruction)
                         ready.Add(buildings[i]);
                 }
@@ -2826,6 +3028,20 @@ namespace OpenEmpires
                 if (ready.Count > 0)
                 {
                     var resources = sim.ResourceManager.GetPlayerResources(localPid);
+
+                    for (int i = 0; i < ready.Count; i++)
+                    {
+                        var bData = sim.BuildingRegistry.GetBuilding(ready[i].BuildingId);
+                        if (bData == null || bData.Type != BuildingType.Landmark) continue;
+                        if (!LandmarkDefinitions.Get(bData.LandmarkId).HasHealingAura) continue;
+
+                        slots[0] = MakeHealingAuraButton("Heal\nAura", "Abbey Healing Aura",
+                            "Passive battlefield sustain from the Abbey of Kings. Hover to preview exact range.",
+                            ready[i].transform, sim.Config.AbbeyOfKingsHealRange, sim.Config.AbbeyOfKingsHealAmount,
+                            sim.Config.AbbeyOfKingsHealCooldownTicks, sim.Config.TickRate);
+                        hasAny = true;
+                        break;
+                    }
 
                     if (dominantType == BuildingType.Barracks)
                     {
@@ -2862,7 +3078,7 @@ namespace OpenEmpires
                         bool isLongbow = civ == Civilization.English;
                         string arLabel = isLongbow ? "Longbow" : "Archer";
                         string arName = isLongbow ? "Longbowman" : "Archer";
-                        int arIcon = isLongbow ? 6 : 2;
+                        int arIcon = isLongbow ? 10 : 2;
                         int archerFood = isLongbow ? sim.Config.LongbowmanFoodCost : sim.Config.ArcherFoodCost;
                         int archerWood = isLongbow ? sim.Config.LongbowmanWoodCost : sim.Config.ArcherWoodCost;
                         slots[0] = new GridButton { Label = arLabel, Hotkey = "Q",
@@ -3122,10 +3338,12 @@ namespace OpenEmpires
                 {
                     int currentAge = sim.GetPlayerAge(localPid);
                     bool isAgingUp = sim.IsPlayerAgingUp(localPid);
-                    if (currentAge < 3 && !isAgingUp)
+                    int nextAge = currentAge + 1;
+                    var civ = sim.GetPlayerCivilization(localPid);
+                    if (!isAgingUp && LandmarkDefinitions.HasChoices(civ, nextAge))
                     {
                         FlashActionButton(4);
-                        ShowLandmarkChoicePanel(sim, localPid, currentAge + 1);
+                        ShowLandmarkChoicePanel(sim, localPid, nextAge);
                     }
                     else if (currentAge >= 3)
                     {
@@ -3394,11 +3612,13 @@ namespace OpenEmpires
         private void CycleBuildingTab(IReadOnlyList<BuildingView> buildings)
         {
             int localPid = selectionManager.LocalPlayerId;
+            var sim = GameBootstrapper.Instance?.Simulation;
             var counts = new Dictionary<BuildingType, int>();
             for (int i = 0; i < buildings.Count; i++)
             {
                 if (buildings[i].PlayerId != localPid || buildings[i].IsDestroyed) continue;
-                var t = buildings[i].BuildingType;
+                var bData = sim?.BuildingRegistry.GetBuilding(buildings[i].BuildingId);
+                var t = bData != null ? sim.GetEffectiveBuildingType(bData) : buildings[i].BuildingType;
                 counts[t] = counts.TryGetValue(t, out int c) ? c + 1 : 1;
             }
             if (counts.Count <= 1) return;  // Nothing to cycle
@@ -3419,9 +3639,9 @@ namespace OpenEmpires
 
         private bool IsReadyBuilding(BuildingView view, BuildingType type, int playerId, GameSimulation sim)
         {
-            if (view.PlayerId != playerId || view.BuildingType != type) return false;
+            if (view.PlayerId != playerId) return false;
             var bData = sim.BuildingRegistry.GetBuilding(view.BuildingId);
-            return bData != null && !bData.IsUnderConstruction;
+            return bData != null && !bData.IsUnderConstruction && sim.GetEffectiveBuildingType(bData) == type;
         }
 
         private void ProcessUnitHotkeys(IReadOnlyList<UnitView> units, GameSimulation sim)
@@ -3471,12 +3691,12 @@ namespace OpenEmpires
             switch (buildMenuAge)
             {
                 case 1:
-                    if (WasKeyPressed(Key.Q)) TryBuildHotkey(sim, localPid, BuildingType.Mill, o + 0);
-                    else if (WasKeyPressed(Key.W)) TryBuildHotkey(sim, localPid, BuildingType.LumberYard, o + 1);
-                    else if (WasKeyPressed(Key.E)) TryBuildHotkey(sim, localPid, BuildingType.Mine, o + 2);
-                    else if (WasKeyPressed(Key.A)) TryBuildHotkey(sim, localPid, BuildingType.House, o + 3);
-                    else if (WasKeyPressed(Key.S)) TryBuildHotkey(sim, localPid, BuildingType.Farm, o + 4);
-                    else if (WasKeyPressed(Key.D)) TryBuildHotkey(sim, localPid, BuildingType.Barracks, o + 5);
+                    if (WasKeyPressed(Key.Q)) TryBuildHotkey(sim, localPid, BuildingType.House, o + 0);
+                    else if (WasKeyPressed(Key.W)) TryBuildHotkey(sim, localPid, BuildingType.Mill, o + 1);
+                    else if (WasKeyPressed(Key.E)) TryBuildHotkey(sim, localPid, BuildingType.LumberYard, o + 2);
+                    else if (WasKeyPressed(Key.R)) TryBuildHotkey(sim, localPid, BuildingType.Mine, o + 5);
+                    else if (WasKeyPressed(Key.A)) TryBuildHotkey(sim, localPid, BuildingType.Farm, o + 3);
+                    else if (WasKeyPressed(Key.S)) TryBuildHotkey(sim, localPid, BuildingType.Barracks, o + 4);
                     else if (WasKeyPressed(Key.Z)) TryBuildHotkey(sim, localPid, BuildingType.Wall, o + 6, isWall: true);
                     else if (WasKeyPressed(Key.X)) TryBuildHotkey(sim, localPid, BuildingType.WoodGate, o + 7, isWall: true, isGate: true);
                     break;
@@ -3537,10 +3757,12 @@ namespace OpenEmpires
             {
                 int currentAge = sim.GetPlayerAge(localPid);
                 bool isAgingUp = sim.IsPlayerAgingUp(localPid);
-                if (currentAge < 3 && !isAgingUp)
+                int nextAge = currentAge + 1;
+                var civ = sim.GetPlayerCivilization(localPid);
+                if (!isAgingUp && LandmarkDefinitions.HasChoices(civ, nextAge))
                 {
                     FlashActionButton(3);
-                    ShowLandmarkChoicePanel(sim, localPid, currentAge + 1);
+                    ShowLandmarkChoicePanel(sim, localPid, nextAge);
                 }
                 else if (currentAge >= 3)
                 {
@@ -3589,6 +3811,222 @@ namespace OpenEmpires
         //  Tooltip helpers
         // =============================================================
 
+        private void ShowHealingRangePreview(int index)
+        {
+            if (index < 0 || index >= actionRangePreviewTargets.Length) return;
+            var target = actionRangePreviewTargets[index];
+            float radius = actionRangePreviewRadii[index];
+            if (target == null || radius <= 0f)
+            {
+                HideHealingRangePreview();
+                return;
+            }
+
+            Color color = actionRangePreviewColors[index];
+            if (activeRangePreviewGO != null
+                && activeRangePreviewTarget == target
+                && Mathf.Approximately(activeRangePreviewRadius, radius))
+            {
+                UpdateHealingRangePreview();
+                return;
+            }
+
+            HideHealingRangePreview();
+
+            activeRangePreviewTarget = target;
+            activeRangePreviewRadius = radius;
+
+            activeRangePreviewGO = new GameObject("HealingRangePreview");
+            activeRangePreviewGO.layer = target.gameObject.layer;
+            activeRangePreviewGO.transform.position = target.position;
+
+            CreateHealingRangeMist(activeRangePreviewGO.transform, radius, color);
+        }
+
+        private void UpdateHealingRangePreview()
+        {
+            if (activeRangePreviewGO == null) return;
+            if (activeRangePreviewTarget == null)
+            {
+                HideHealingRangePreview();
+                return;
+            }
+
+            activeRangePreviewGO.transform.position = activeRangePreviewTarget.position;
+        }
+
+        private void HideHealingRangePreview()
+        {
+            if (activeRangePreviewGO != null)
+            {
+                var particleRenderers = activeRangePreviewGO.GetComponentsInChildren<ParticleSystemRenderer>();
+                for (int i = 0; i < particleRenderers.Length; i++)
+                {
+                    var mat = particleRenderers[i].sharedMaterial;
+                    if (mat != null) Destroy(mat);
+                }
+
+                Destroy(activeRangePreviewGO);
+            }
+            activeRangePreviewGO = null;
+            activeRangePreviewTarget = null;
+            activeRangePreviewRadius = 0f;
+        }
+
+        /// <summary>
+        /// A fresh soft-mote material for one range preview. The RangeOverlay shader used for flat
+        /// overlays has no texture and ignores depth, so motes drawn with it come out as hard
+        /// squares stacked into a solid band — the opposite of dust. This is a soft round mote that
+        /// glows and fades, matching the aura ring the healer itself emits.
+        ///
+        /// Returned per preview rather than shared, because HideHealingRangePreview destroys the
+        /// materials it finds when the preview goes away.
+        /// </summary>
+        private Material CreateHealingDustMaterial()
+        {
+            // Sprites/Default multiplies the texture by the material colour and by each particle's
+            // own colour, and needs none of URP's surface-type plumbing to do it.
+            //
+            // The URP particle shader was tried first and ignored colour entirely here: motes came
+            // out flat white however they were tinted, and forcing the material red changed nothing
+            // on screen. Tinting the material directly, rather than relying on the particle colour
+            // reaching the shader, is what makes the ring read as gold.
+            var shader = Shader.Find("OpenEmpires/RangeOverlay")
+                      ?? Shader.Find("Sprites/Default")
+                      ?? Shader.Find("Universal Render Pipeline/Particles/Unlit");
+
+            var mat = new Material(shader) { name = "M_HealRangeDust" };
+
+            Texture2D tex = GetHealingDustTexture();
+            if (mat.HasProperty("_MainTex")) mat.SetTexture("_MainTex", tex);
+            if (mat.HasProperty("_BaseMap")) mat.SetTexture("_BaseMap", tex);
+
+            // Left white on purpose. The shader multiplies material colour by each particle's own
+            // colour, so tinting here as well would square the gold and turn the ring orange-red.
+            if (mat.HasProperty("_Color")) mat.SetColor("_Color", Color.white);
+            if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", Color.white);
+
+            return mat;
+        }
+
+        /// <summary>A soft round blob, so each mote reads as a speck of dust rather than a square.</summary>
+        private static Texture2D GetHealingDustTexture()
+        {
+            if (healingDustTexture != null) return healingDustTexture;
+
+            const int size = 32;
+            healingDustTexture = new Texture2D(size, size, TextureFormat.RGBA32, false)
+            {
+                name = "T_HealRangeDust",
+                wrapMode = TextureWrapMode.Clamp,
+                filterMode = FilterMode.Bilinear
+            };
+
+            const float center = (size - 1) * 0.5f;
+            var pixels = new Color32[size * size];
+
+            for (int y = 0; y < size; y++)
+            {
+                for (int x = 0; x < size; x++)
+                {
+                    float dx = (x - center) / center;
+                    float dy = (y - center) / center;
+                    float falloff = Mathf.Clamp01(1f - Mathf.Sqrt(dx * dx + dy * dy));
+                    falloff *= falloff;
+                    pixels[y * size + x] = new Color32(255, 255, 255, (byte)(falloff * 255f));
+                }
+            }
+
+            healingDustTexture.SetPixels32(pixels);
+            healingDustTexture.Apply();
+            return healingDustTexture;
+        }
+
+        private void CreateHealingRangeMist(Transform parent, float radius, Color color)
+        {
+            var mistGO = new GameObject("HealingRangeGoldMist");
+            mistGO.transform.SetParent(parent, false);
+            mistGO.transform.localPosition = Vector3.zero;
+
+            var particles = mistGO.AddComponent<ParticleSystem>();
+            var main = particles.main;
+            main.loop = true;
+            main.playOnAwake = false;
+            main.duration = 2f;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(1.2f, 2.2f);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(0.03f, 0.12f);
+            main.startSize = new ParticleSystem.MinMaxCurve(0.16f, 0.32f);
+            // Kept well below full alpha on purpose: the motes are additive, so overlapping ones
+            // stack. Push these up and the ring saturates to white and loses its gold entirely.
+            // Both ends stay firmly gold. Letting the lighter end drift toward white washed the
+            // ring out to cream at a distance.
+            main.startColor = new ParticleSystem.MinMaxGradient(
+                new Color(color.r, color.g, color.b, 0.85f),
+                new Color(1f, 0.88f, 0.45f, 1f));
+            main.simulationSpace = ParticleSystemSimulationSpace.Local;
+
+            // Keep the ring's density even whether it is the King's 9 or the Abbey's 12: a fixed
+            // rate spread round a bigger circle just thins out until there is nothing to see.
+            // About three motes per unit of rim — pack them tighter and the additive blending
+            // stacks overlapping motes until the ring burns out to white and the gold is lost.
+            const float motesPerUnit = 3f;
+            const float averageLifetime = 1.7f;
+            float circumference = 2f * Mathf.PI * radius;
+
+            main.maxParticles = Mathf.Clamp(Mathf.RoundToInt(circumference * motesPerUnit * 1.6f), 80, 400);
+
+            var emission = particles.emission;
+            emission.rateOverTime = Mathf.Clamp(circumference * motesPerUnit / averageLifetime, 20f, 140f);
+
+            var shape = particles.shape;
+            shape.enabled = true;
+            shape.shapeType = ParticleSystemShapeType.Circle;
+            shape.radius = radius;
+            shape.radiusThickness = 0.10f;
+            shape.arc = 360f;
+            shape.arcMode = ParticleSystemShapeMultiModeValue.Random;
+            shape.rotation = new Vector3(90f, 0f, 0f); // lay the circle flat on the ground
+
+            var velocity = particles.velocityOverLifetime;
+            velocity.enabled = true;
+            velocity.space = ParticleSystemSimulationSpace.Local;
+            // All three axes must share a curve mode, so x and z are given explicit ranges rather
+            // than left as plain constants — mixing the two makes Unity reject the module.
+            velocity.x = new ParticleSystem.MinMaxCurve(0f, 0f);
+            velocity.y = new ParticleSystem.MinMaxCurve(0.03f, 0.16f);
+            velocity.z = new ParticleSystem.MinMaxCurve(0f, 0f);
+
+            var colorOverLifetime = particles.colorOverLifetime;
+            colorOverLifetime.enabled = true;
+            var gradient = new Gradient();
+            gradient.SetKeys(
+                new[]
+                {
+                    new GradientColorKey(Color.white, 0f),
+                    new GradientColorKey(Color.white, 1f)
+                },
+                new[]
+                {
+                    new GradientAlphaKey(0f, 0f),
+                    new GradientAlphaKey(1f, 0.2f),
+                    new GradientAlphaKey(0.85f, 0.7f),
+                    new GradientAlphaKey(0f, 1f)
+                });
+            colorOverLifetime.color = gradient;
+
+            var renderer = particles.GetComponent<ParticleSystemRenderer>();
+            renderer.material = CreateHealingDustMaterial();
+            renderer.renderMode = ParticleSystemRenderMode.Billboard;
+            renderer.alignment = ParticleSystemRenderSpace.View;
+            renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
+
+            // A ParticleSystem added by AddComponent has already missed its own Awake, so
+            // playOnAwake never fires and it sits stopped. Without this the preview built a
+            // perfectly configured system on every hover that emitted absolutely nothing.
+            particles.Play();
+        }
+
         private static bool IsWallType(BuildingType type)
         {
             return type == BuildingType.Wall || type == BuildingType.StoneWall || type == BuildingType.StoneGate || type == BuildingType.WoodGate;
@@ -3599,6 +4037,7 @@ namespace OpenEmpires
             if (actionTooltips[index] == null) return;
             hoveredActionIndex = index;
             tooltipText.text = actionTooltips[index];
+            ShowHealingRangePreview(index);
 
             // Position above the hovered button
             var btnRT = actionButtonGOs[index].GetComponent<RectTransform>();
@@ -3626,6 +4065,7 @@ namespace OpenEmpires
                 hoveredActionIndex = -1;
                 tooltipPanelGO.SetActive(false);
                 s_tooltipPanelRT = null;
+                HideHealingRangePreview();
             }
         }
 
@@ -3644,6 +4084,7 @@ namespace OpenEmpires
                 case 10: return $"<b>Longbowman</b>\nEnglish unique ranged unit with extended range.\nCost: {cfg.LongbowmanFoodCost} <sprite name=\"food\"> {cfg.LongbowmanWoodCost} <sprite name=\"wood\">";
                 case 11: return $"<b>Gendarme</b>\nFrench unique mounted unit with greater health.\nCost: {cfg.GendarmeFoodCost} <sprite name=\"food\"> {cfg.GendarmeWoodCost} <sprite name=\"wood\">";
                 case 12: return $"<b>Landsknecht</b>\nHRE unique infantry with greater speed.\nCost: {cfg.LandsknechtFoodCost} <sprite name=\"food\"> {cfg.LandsknechtWoodCost} <sprite name=\"wood\">";
+                case UnitData.KingUnitType: return "<b>King</b>\nEnglish cavalry hero. Fights in melee and heals nearby friendly units.";
                 default: return $"<b>{GetUnitName(unitType)}</b>";
             }
         }

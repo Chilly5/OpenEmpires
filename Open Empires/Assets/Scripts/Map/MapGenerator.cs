@@ -32,6 +32,18 @@ namespace OpenEmpires
         private const int BaseClearRadius = 15;
 
         public static (TileType[,] tiles, float[,] heights, Vector2Int[] basePositions, float[,] forestDensity) Generate(
+            int width, int height, int seed, float waterThreshold, int playerCount, int[] teamAssignments = null,
+            MapType mapType = MapType.AlbionLowlands)
+        {
+            return mapType switch
+            {
+                MapType.HedgeBunker => GenerateHedgeBunker(width, height, seed, waterThreshold, playerCount, teamAssignments),
+                MapType.Hideout => GenerateHideout(width, height, seed, waterThreshold, playerCount, teamAssignments),
+                _ => GenerateAlbionLowlands(width, height, seed, waterThreshold, playerCount, teamAssignments),
+            };
+        }
+
+        private static (TileType[,] tiles, float[,] heights, Vector2Int[] basePositions, float[,] forestDensity) GenerateAlbionLowlands(
             int width, int height, int seed, float waterThreshold, int playerCount, int[] teamAssignments = null)
         {
             var tiles = new TileType[width, height];
@@ -193,6 +205,369 @@ namespace OpenEmpires
             }
 
             return (tiles, heights, basePositions, forestDensity);
+        }
+
+        private static (TileType[,] tiles, float[,] heights, Vector2Int[] basePositions, float[,] forestDensity) GenerateHedgeBunker(
+            int width, int height, int seed, float waterThreshold, int playerCount, int[] teamAssignments = null)
+        {
+            var tiles = new TileType[width, height];
+            var heights = new float[width, height];
+            var forestDensity = new float[width, height];
+            var rng = new System.Random(seed);
+            float offsetX = (float)(rng.NextDouble() * 10000);
+            float offsetZ = (float)(rng.NextDouble() * 10000);
+
+            // Hedge Bunker wants flatter starts and fewer hard terrain blockers; the drama comes
+            // from forest enclosures rather than cliffs or ponds.
+            const float hideoutHillFrequency = 0.006f;
+            const float hideoutDetailFrequency = 0.018f;
+            for (int z = 0; z < height; z++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    float2 c1 = new float2((x + offsetX) * hideoutHillFrequency, (z + offsetZ) * hideoutHillFrequency);
+                    float2 c2 = new float2((x + offsetX) * hideoutDetailFrequency + 700f, (z + offsetZ) * hideoutDetailFrequency + 700f);
+                    float hills = noise.snoise(c1) * 0.035f + noise.snoise(c2) * 0.018f;
+                    heights[x, z] = 0.46f + hills;
+                }
+            }
+
+            AssignTileTypes(tiles, heights, width, height, waterThreshold, 0.84f);
+
+            float forestOffX = (float)(rng.NextDouble() * 10000);
+            float forestOffZ = (float)(rng.NextDouble() * 10000);
+            for (int z = 0; z < height; z++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    if (tiles[x, z] != TileType.Grass)
+                    {
+                        forestDensity[x, z] = 0f;
+                        continue;
+                    }
+
+                    float2 c1 = new float2((x + forestOffX) * 0.015f, (z + forestOffZ) * 0.015f);
+                    float2 c2 = new float2((x + forestOffX) * 0.045f + 1100f, (z + forestOffZ) * 0.045f + 1100f);
+                    float n = noise.snoise(c1) * 0.7f + noise.snoise(c2) * 0.3f;
+                    n = (n + 1f) * 0.5f;
+
+                    float density = Mathf.Clamp01(n * 0.72f + 0.08f);
+                    if (n > 0.68f)
+                        density = Mathf.Max(density, 0.72f + (n - 0.68f) * 0.7f);
+                    forestDensity[x, z] = Mathf.Clamp01(density);
+                }
+            }
+
+            var basePositions = FindBasePositions(heights, tiles, width, height, playerCount, teamAssignments);
+            float innerRadius = playerCount > 4 ? 22f : 24f;
+            float outerRadius = playerCount > 4 ? 30f : 34f;
+            int baseClearRadius = Mathf.CeilToInt(innerRadius - 1f);
+            int centerX = width / 2;
+            int centerZ = height / 2;
+            int centerClearRadius = Mathf.Max(18, width / 13);
+
+            ClearAreaForBase(tiles, heights, centerX, centerZ, centerClearRadius, width, height);
+            ClearForestCircle(tiles, forestDensity, centerX, centerZ, centerClearRadius + 2, width, height, clearTerrain: true);
+
+            for (int p = 0; p < basePositions.Length; p++)
+            {
+                int bcx = basePositions[p].x + 2;
+                int bcz = basePositions[p].y + 2;
+
+                ClearAreaForBase(tiles, heights, bcx, bcz, baseClearRadius, width, height);
+                ClearForestCircle(tiles, forestDensity, bcx, bcz, baseClearRadius, width, height, clearTerrain: true);
+                AddHedgeBunkerForestRing(tiles, forestDensity, bcx, bcz, innerRadius, outerRadius, width, height);
+            }
+
+            for (int p = 0; p < basePositions.Length; p++)
+            {
+                int bcx = basePositions[p].x + 2;
+                int bcz = basePositions[p].y + 2;
+                CarveForestCorridor(tiles, forestDensity, bcx, bcz, centerX, centerZ, 3.5f, width, height);
+            }
+
+            for (int p = 0; p < basePositions.Length; p++)
+            {
+                int bcx = basePositions[p].x + 2;
+                int bcz = basePositions[p].y + 2;
+                ClearForestCircle(tiles, forestDensity, bcx, bcz, baseClearRadius, width, height, clearTerrain: true);
+            }
+
+            ClearForestCircle(tiles, forestDensity, centerX, centerZ, centerClearRadius, width, height, clearTerrain: true);
+            return (tiles, heights, basePositions, forestDensity);
+        }
+
+        private static (TileType[,] tiles, float[,] heights, Vector2Int[] basePositions, float[,] forestDensity) GenerateHideout(
+            int width, int height, int seed, float waterThreshold, int playerCount, int[] teamAssignments = null)
+        {
+            var tiles = new TileType[width, height];
+            var heights = new float[width, height];
+            var forestDensity = new float[width, height];
+            var rng = new System.Random(seed);
+            float offsetX = (float)(rng.NextDouble() * 10000);
+            float offsetZ = (float)(rng.NextDouble() * 10000);
+
+            const float hideoutHillFrequency = 0.006f;
+            const float hideoutDetailFrequency = 0.02f;
+            for (int z = 0; z < height; z++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    float2 c1 = new float2((x + offsetX) * hideoutHillFrequency, (z + offsetZ) * hideoutHillFrequency);
+                    float2 c2 = new float2((x + offsetX) * hideoutDetailFrequency + 1700f, (z + offsetZ) * hideoutDetailFrequency + 1700f);
+                    float hills = noise.snoise(c1) * 0.028f + noise.snoise(c2) * 0.014f;
+                    heights[x, z] = 0.46f + hills;
+                }
+            }
+
+            AssignTileTypes(tiles, heights, width, height, waterThreshold, 0.86f);
+
+            float forestOffX = (float)(rng.NextDouble() * 10000);
+            float forestOffZ = (float)(rng.NextDouble() * 10000);
+            float centerX = width / 2f;
+            float centerZ = height / 2f;
+            float centralForestRadius = Mathf.Min(width, height) * (playerCount <= 2 ? 0.33f : 0.31f);
+
+            for (int z = 0; z < height; z++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    if (tiles[x, z] != TileType.Grass)
+                    {
+                        forestDensity[x, z] = 0f;
+                        continue;
+                    }
+
+                    float2 c1 = new float2((x + forestOffX) * 0.017f, (z + forestOffZ) * 0.017f);
+                    float2 c2 = new float2((x + forestOffX) * 0.052f + 2100f, (z + forestOffZ) * 0.052f + 2100f);
+                    float n = noise.snoise(c1) * 0.65f + noise.snoise(c2) * 0.35f;
+                    n = (n + 1f) * 0.5f;
+
+                    // Light natural woods outside the main feature.
+                    forestDensity[x, z] = n > 0.78f ? Mathf.Clamp01(0.70f + (n - 0.78f) * 1.2f) : 0f;
+
+                    float dx = x + 0.5f - centerX;
+                    float dz = z + 0.5f - centerZ;
+                    float dist = Mathf.Sqrt(dx * dx + dz * dz);
+                    float edgeNoise = noise.snoise(new float2((x + offsetX) * 0.025f + 900f, (z + offsetZ) * 0.025f + 900f)) * 2.5f;
+                    float effectiveRadius = centralForestRadius + edgeNoise;
+                    if (dist <= effectiveRadius)
+                    {
+                        tiles[x, z] = TileType.Grass;
+                        float edgeT = Mathf.Clamp01((effectiveRadius - dist) / 6f);
+                        forestDensity[x, z] = Mathf.Max(forestDensity[x, z], Mathf.Lerp(0.74f, 0.98f, edgeT));
+                    }
+                }
+            }
+
+            int baseClearRadius = playerCount > 4 ? 23 : 26;
+            var basePositions = FindHideoutBasePositions(width, height, playerCount, teamAssignments,
+                centralForestRadius, baseClearRadius);
+
+            for (int p = 0; p < basePositions.Length; p++)
+            {
+                int bcx = basePositions[p].x + 2;
+                int bcz = basePositions[p].y + 2;
+                float outwardX = bcx - centerX;
+                float outwardZ = bcz - centerZ;
+                float outwardLen = Mathf.Sqrt(outwardX * outwardX + outwardZ * outwardZ);
+                if (outwardLen < 0.001f)
+                {
+                    outwardX = p == 0 ? -1f : 1f;
+                    outwardZ = 0f;
+                    outwardLen = 1f;
+                }
+                outwardX /= outwardLen;
+                outwardZ /= outwardLen;
+
+                ClearAreaForBase(tiles, heights, bcx, bcz, baseClearRadius, width, height);
+                ClearForestCircle(tiles, forestDensity, bcx, bcz, baseClearRadius + 2, width, height, clearTerrain: true);
+                CarveForestCorridor(tiles, forestDensity, bcx, bcz,
+                    centerX + outwardX * (centralForestRadius + baseClearRadius),
+                    centerZ + outwardZ * (centralForestRadius + baseClearRadius),
+                    7f, width, height);
+            }
+
+            return (tiles, heights, basePositions, forestDensity);
+        }
+
+        private static Vector2Int[] FindHideoutBasePositions(int width, int height, int playerCount,
+            int[] teamAssignments, float centralForestRadius, int baseClearRadius)
+        {
+            var result = new Vector2Int[playerCount];
+            float centerX = width / 2f;
+            float centerZ = height / 2f;
+            float pocketCenterRadius = centralForestRadius - baseClearRadius * 0.45f;
+            bool hasTeams = teamAssignments != null && HasRealTeams(teamAssignments);
+
+            if (hasTeams)
+            {
+                int firstTeam = teamAssignments[0];
+                int westCount = 0;
+                int eastCount = 0;
+                for (int p = 0; p < playerCount; p++)
+                {
+                    if (teamAssignments[p] == firstTeam) westCount++;
+                    else eastCount++;
+                }
+
+                int westIndex = 0;
+                int eastIndex = 0;
+                for (int p = 0; p < playerCount; p++)
+                {
+                    bool westSide = teamAssignments[p] == firstTeam;
+                    int sideIndex = westSide ? westIndex++ : eastIndex++;
+                    int sideCount = Mathf.Max(1, westSide ? westCount : eastCount);
+                    float sideCenterAngle = westSide ? Mathf.PI : 0f;
+                    float angle = sideCenterAngle + GetSideSpreadAngle(sideIndex, sideCount);
+                    result[p] = HideoutBaseOriginFromAngle(centerX, centerZ, pocketCenterRadius, angle, width, height);
+                }
+
+                return result;
+            }
+
+            for (int p = 0; p < playerCount; p++)
+            {
+                float angle;
+                if (playerCount == 1)
+                    angle = Mathf.PI;
+                else if (playerCount == 2)
+                    angle = p == 0 ? Mathf.PI : 0f;
+                else
+                    angle = Mathf.PI + p * 2f * Mathf.PI / playerCount;
+
+                result[p] = HideoutBaseOriginFromAngle(centerX, centerZ, pocketCenterRadius, angle, width, height);
+            }
+
+            return result;
+        }
+
+        private static float GetSideSpreadAngle(int index, int count)
+        {
+            if (count <= 1) return 0f;
+            float maxSpread = Mathf.Min(0.72f, 0.24f * (count - 1));
+            return Mathf.Lerp(-maxSpread, maxSpread, index / (float)(count - 1));
+        }
+
+        private static Vector2Int HideoutBaseOriginFromAngle(float centerX, float centerZ, float radius,
+            float angle, int width, int height)
+        {
+            int tcCenterX = Mathf.RoundToInt(centerX + Mathf.Cos(angle) * radius);
+            int tcCenterZ = Mathf.RoundToInt(centerZ + Mathf.Sin(angle) * radius);
+            int originX = Mathf.Clamp(tcCenterX - 2, 8, width - 12);
+            int originZ = Mathf.Clamp(tcCenterZ - 2, 8, height - 12);
+            return new Vector2Int(originX, originZ);
+        }
+
+        private static void AssignTileTypes(TileType[,] tiles, float[,] heights, int width, int height,
+            float waterThreshold, float rockThreshold)
+        {
+            for (int z = 0; z < height; z++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    float h = heights[x, z];
+                    if (h < waterThreshold)
+                    {
+                        tiles[x, z] = TileType.Water;
+                        float depth = waterThreshold - h;
+                        heights[x, z] = waterThreshold - 0.02f - depth * 0.5f;
+                    }
+                    else if (h < waterThreshold + 0.05f)
+                    {
+                        tiles[x, z] = TileType.Sand;
+                    }
+                    else if (h < rockThreshold)
+                    {
+                        tiles[x, z] = TileType.Grass;
+                    }
+                    else
+                    {
+                        tiles[x, z] = TileType.Rock;
+                    }
+                }
+            }
+        }
+
+        private static void AddHedgeBunkerForestRing(TileType[,] tiles, float[,] forestDensity, int centerX, int centerZ,
+            float innerRadius, float outerRadius, int width, int height)
+        {
+            int outer = Mathf.CeilToInt(outerRadius) + 2;
+            float innerSq = innerRadius * innerRadius;
+            float outerSq = outerRadius * outerRadius;
+            for (int dz = -outer; dz <= outer; dz++)
+            {
+                for (int dx = -outer; dx <= outer; dx++)
+                {
+                    int x = centerX + dx;
+                    int z = centerZ + dz;
+                    if (x < 0 || x >= width || z < 0 || z >= height) continue;
+
+                    float distSq = dx * dx + dz * dz;
+                    if (distSq < innerSq || distSq > outerSq) continue;
+
+                    float dist = Mathf.Sqrt(distSq);
+                    float t = Mathf.InverseLerp(innerRadius, outerRadius, dist);
+                    float edgeFalloff = Mathf.Sin(t * Mathf.PI);
+                    float density = Mathf.Lerp(0.78f, 1f, edgeFalloff);
+
+                    tiles[x, z] = TileType.Grass;
+                    forestDensity[x, z] = Mathf.Max(forestDensity[x, z], density);
+                }
+            }
+        }
+
+        private static void ClearForestCircle(TileType[,] tiles, float[,] forestDensity, int centerX, int centerZ,
+            int radius, int width, int height, bool clearTerrain)
+        {
+            int radiusSq = radius * radius;
+            for (int dz = -radius; dz <= radius; dz++)
+            {
+                for (int dx = -radius; dx <= radius; dx++)
+                {
+                    if (dx * dx + dz * dz > radiusSq) continue;
+                    int x = centerX + dx;
+                    int z = centerZ + dz;
+                    if (x < 0 || x >= width || z < 0 || z >= height) continue;
+
+                    forestDensity[x, z] = 0f;
+                    if (clearTerrain && tiles[x, z] != TileType.Sand)
+                        tiles[x, z] = TileType.Grass;
+                }
+            }
+        }
+
+        private static void CarveForestCorridor(TileType[,] tiles, float[,] forestDensity,
+            float fromX, float fromZ, float toX, float toZ, float halfWidth, int width, int height)
+        {
+            Vector2 a = new Vector2(fromX, fromZ);
+            Vector2 b = new Vector2(toX, toZ);
+            Vector2 ab = b - a;
+            float lengthSq = ab.sqrMagnitude;
+            if (lengthSq <= 0.0001f) return;
+
+            int minX = Mathf.Max(0, Mathf.FloorToInt(Mathf.Min(fromX, toX) - halfWidth - 2f));
+            int maxX = Mathf.Min(width - 1, Mathf.CeilToInt(Mathf.Max(fromX, toX) + halfWidth + 2f));
+            int minZ = Mathf.Max(0, Mathf.FloorToInt(Mathf.Min(fromZ, toZ) - halfWidth - 2f));
+            int maxZ = Mathf.Min(height - 1, Mathf.CeilToInt(Mathf.Max(fromZ, toZ) + halfWidth + 2f));
+            float halfWidthSq = halfWidth * halfWidth;
+
+            for (int z = minZ; z <= maxZ; z++)
+            {
+                for (int x = minX; x <= maxX; x++)
+                {
+                    Vector2 p = new Vector2(x + 0.5f, z + 0.5f);
+                    float t = Vector2.Dot(p - a, ab) / lengthSq;
+                    if (t < 0f || t > 1f) continue;
+
+                    Vector2 closest = a + ab * t;
+                    if ((p - closest).sqrMagnitude > halfWidthSq) continue;
+
+                    forestDensity[x, z] = 0f;
+                    if (tiles[x, z] != TileType.Sand)
+                        tiles[x, z] = TileType.Grass;
+                }
+            }
         }
 
         private static void AddCliffPatch(float[,] heights, int width, int height, System.Random rng, bool leftSide)

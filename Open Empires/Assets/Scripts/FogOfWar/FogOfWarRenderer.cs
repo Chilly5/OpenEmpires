@@ -15,9 +15,10 @@ namespace OpenEmpires
         private Material waterMaterial;
 
         // Client-side render overrides (do not affect simulation visibility data).
-        // DisableFogOfWar wins if both are set.
+        // DisableFogOfWar wins if both are set. RevealUnexplored removes the hard
+        // black unexplored layer while keeping the softer LOS fog.
         public static bool DisableFogOfWar;
-        public static bool RevealUnexplored;
+        public static bool RevealUnexplored = true;
 
         private static readonly Color32 Unexplored = new Color32(0, 0, 0, 255);
         private static readonly Color32 Explored = new Color32(0, 0, 0, 160);
@@ -36,9 +37,9 @@ namespace OpenEmpires
             pixelBuffer = new Color32[texWidth * texHeight];
             blurBuffer = new Color32[texWidth * texHeight];
 
-            // Start fully black (unexplored)
+            // Start with the same fog mode used by the first simulation update.
             for (int i = 0; i < pixelBuffer.Length; i++)
-                pixelBuffer[i] = Unexplored;
+                pixelBuffer[i] = RevealUnexplored ? Explored : Unexplored;
             fogTexture.SetPixels32(pixelBuffer);
             fogTexture.Apply();
 

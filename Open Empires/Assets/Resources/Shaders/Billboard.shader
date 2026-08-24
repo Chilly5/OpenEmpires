@@ -5,6 +5,8 @@ Shader "OpenEmpires/Billboard"
         _MainTex ("Texture", 2D) = "white" {}
         _Cutoff ("Alpha Cutoff", Range(0, 1)) = 0.5
         _Color ("Tint", Color) = (1, 1, 1, 1)
+        [HideInInspector] _FlashColor ("Flash Color", Color) = (1, 1, 1, 1)
+        [HideInInspector] _FlashAmount ("Flash Amount", Range(0, 1)) = 0
         [HideInInspector] _FogOfWarTex ("Fog Of War", 2D) = "black" {}
     }
 
@@ -50,6 +52,8 @@ Shader "OpenEmpires/Billboard"
                 float4 _MainTex_ST;
                 half _Cutoff;
                 half4 _Color;
+                half4 _FlashColor;
+                half _FlashAmount;
             CBUFFER_END
 
             struct Attributes { float4 positionOS : POSITION; float2 uv : TEXCOORD0; };
@@ -132,6 +136,8 @@ Shader "OpenEmpires/Billboard"
                 float4 _MainTex_ST;
                 half _Cutoff;
                 half4 _Color;
+                half4 _FlashColor;
+                half _FlashAmount;
             CBUFFER_END
 
             struct Attributes
@@ -233,6 +239,7 @@ Shader "OpenEmpires/Billboard"
                 float aerialFog = saturate((dist - _AerialFogParams.x) * _AerialFogParams.y);
                 aerialFog *= _AerialFogParams.z;
                 col.rgb = lerp(col.rgb, _AerialFogColor.rgb, aerialFog);
+                col.rgb = lerp(col.rgb, _FlashColor.rgb, saturate(_FlashAmount));
 
                 // Fog of war: hide in unexplored, darken in explored
                 float2 fogUV = input.positionWS.xz / _FogOfWarParams.xy;

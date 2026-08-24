@@ -99,6 +99,10 @@ namespace OpenEmpires
                         visionRadius += config.VisionUpgradeRangeBonus;
                     radius = Mathf.RoundToInt(visionRadius);
                 }
+                // Walls reveal only a tiny radius — they're cheap and spammable, so they
+                // shouldn't double as a scouting net.
+                else if (building.Type == BuildingType.Wall || building.Type == BuildingType.StoneWall)
+                    radius = 5;
                 else
                     radius = 20;
                     

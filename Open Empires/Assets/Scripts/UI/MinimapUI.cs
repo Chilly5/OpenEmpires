@@ -130,6 +130,9 @@ namespace OpenEmpires
             // We filter to local-player-owned entities and let TryPlaceAttackPing dedupe by proximity.
             sim.OnEntityDamaged += HandleEntityDamaged;
 
+            // Networked user pings: render any ping issued by the local player OR any ally.
+            sim.OnPingReceived += HandlePingReceived;
+
             BuildCanvas();
         }
 
@@ -138,6 +141,44 @@ namespace OpenEmpires
             int localPid = selectionManager != null ? selectionManager.LocalPlayerId : 0;
             if (ownerPlayerId != localPid) return;
             TryPlaceAttackPing(wx, wz);
+        }
+
+        private void HandlePingReceived(int playerId, float wx, float wz, PingType type)
+        {
+            var sim = GameBootstrapper.Instance?.Simulation;
+            if (sim == null || selectionManager == null) return;
+            int localPid = selectionManager.LocalPlayerId;
+            // Show local player's own pings and pings from any ally.
+            if (playerId != localPid && !sim.AreAllies(localPid, playerId)) return;
+            RenderIncomingPing(wx, wz, type);
+        }
+
+        private void RenderIncomingPing(float wx, float wz, PingType type)
+        {
+            Color color = type switch
+            {
+                PingType.Attack => new Color(1f, 0.2f, 0.2f, 1f),    // red
+                PingType.Defend => new Color(0.3f, 0.6f, 1f, 1f),    // blue
+                PingType.Help   => new Color(1f, 0.6f, 0.1f, 1f),    // orange
+                _               => UserPingColor,                     // yellow (Attention)
+            };
+            activePings.Add(new MinimapPing
+            {
+                worldX = wx,
+                worldZ = wz,
+                timeRemaining = UserPingDuration,
+                totalDuration = UserPingDuration,
+                color = color,
+                style = PingStyle.ExpandingWave,
+            });
+            // Spawn relative to the terrain surface — flat ground is not at world Y=0 (the mesh
+            // sits at SampleHeight * TerrainHeightScale), so a hardcoded Y buries the marker.
+            var pingSim = GameBootstrapper.Instance?.Simulation;
+            float groundY = pingSim != null
+                ? pingSim.MapData.SampleHeight(wx, wz) * pingSim.Config.TerrainHeightScale
+                : 0f;
+            WorldPingMarker.Spawn(new Vector3(wx, groundY, wz));
+            SFXManager.Instance?.PlayUI(SFXType.NotifyPing, 0.7f);
         }
 
         private void GenerateMapTexture(MapData mapData)
@@ -484,7 +525,7 @@ namespace OpenEmpires
             int localPlayerId = selectionManager != null ? selectionManager.LocalPlayerId : 0;
 
             // 2. Resource dots (below fog)
-            DrawResourceDots(sim);
+            DrawResourceDots(sim, localPlayerId);
 
             // 3. Building dots (below fog)
             DrawBuildingDots(sim, localPlayerId);
@@ -569,11 +610,16 @@ namespace OpenEmpires
             }
         }
 
-        private void DrawResourceDots(GameSimulation sim)
+        private void DrawResourceDots(GameSimulation sim, int localPlayerId)
         {
             foreach (var node in sim.MapData.GetAllResourceNodes())
             {
                 if (node.IsDepleted) continue;
+                if (!FogOfWarRenderer.DisableFogOfWar &&
+                    sim.FogOfWar.GetVisibility(localPlayerId, node.TileX, node.TileZ) == TileVisibility.Unexplored)
+                {
+                    continue;
+                }
 
                 Color32 color = node.Type switch
                 {
@@ -714,12 +760,18 @@ namespace OpenEmpires
         {
             if (selectionManager == null) return;
 
-            int[] unitIds = selectionManager.GetSelectedUnitIds();
-            if (unitIds.Length == 0) return;
+            var selectedUnits = selectionManager.SelectedUnits;
+            if (selectedUnits.Count == 0) return;
 
-            for (int u = 0; u < unitIds.Length; u++)
+            int localPlayerId = selectionManager.LocalPlayerId;
+            for (int u = 0; u < selectedUnits.Count; u++)
             {
-                var unit = sim.UnitRegistry.GetUnit(unitIds[u]);
+                UnitView unitView = selectedUnits[u];
+                if (unitView == null || unitView.PlayerId != localPlayerId ||
+                    !selectionManager.ShouldShowWaypointFor(unitView))
+                    continue;
+
+                var unit = sim.UnitRegistry.GetUnit(unitView.UnitId);
                 if (unit == null || unit.State == UnitState.Dead) continue;
 
                 bool hasQueue = unit.HasQueuedCommands;
@@ -792,7 +844,7 @@ namespace OpenEmpires
                 // Resolve rally target position
                 float targetX = buildingData.RallyPoint.x.ToFloat();
                 float targetZ = buildingData.RallyPoint.z.ToFloat();
-                bool isGreen = buildingData.RallyPointOnResource;
+                bool isResourceRally = buildingData.RallyPointOnResource;
 
                 if (buildingData.RallyPointUnitId >= 0)
                 {
@@ -801,12 +853,12 @@ namespace OpenEmpires
                     {
                         targetX = targetUnit.SimPosition.x.ToFloat();
                         targetZ = targetUnit.SimPosition.z.ToFloat();
-                        if (targetUnit.IsSheep) isGreen = true;
+                        if (targetUnit.IsSheep) isResourceRally = true;
                     }
                 }
 
-                Color32 lineColor = isGreen
-                    ? new Color32(0, 255, 0, 255)
+                Color32 lineColor = isResourceRally
+                    ? new Color32(51, 166, 255, 255)
                     : new Color32(255, 255, 255, 255);
 
                 WorldToPixel(buildingData.SimPosition.x.ToFloat(), buildingData.SimPosition.z.ToFloat(), out int fromX, out int fromY);
@@ -1023,17 +1075,16 @@ namespace OpenEmpires
                 recentPingTimes.Dequeue();
             recentPingTimes.Enqueue(now);
 
-            activePings.Add(new MinimapPing
+            // Dispatch as a deterministic networked command. Sim will fire OnPingReceived
+            // on every client, and HandlePingReceived renders it locally for self + allies.
+            var sim = GameBootstrapper.Instance?.Simulation;
+            if (sim != null && selectionManager != null)
             {
-                worldX = worldPos.x,
-                worldZ = worldPos.z,
-                timeRemaining = UserPingDuration,
-                totalDuration = UserPingDuration,
-                color = UserPingColor,
-                style = PingStyle.ExpandingWave,
-            });
-            WorldPingMarker.Spawn(worldPos);
-            SFXManager.Instance?.PlayUI(SFXType.NotifyPing, 0.7f);
+                int pid = selectionManager.LocalPlayerId;
+                int wxRaw = Fixed32.FromFloat(worldPos.x).Raw;
+                int wzRaw = Fixed32.FromFloat(worldPos.z).Raw;
+                sim.CommandBuffer.EnqueueCommand(new PingCommand(pid, wxRaw, wzRaw, PingType.Attention));
+            }
 
             // Fourth (or more) ping within the window → start the cooldown.
             if (recentPingTimes.Count >= SpamThreshold)
@@ -1356,7 +1407,11 @@ namespace OpenEmpires
                 notifyPingAction = null;
             }
             var sim = GameBootstrapper.Instance?.Simulation;
-            if (sim != null) sim.OnEntityDamaged -= HandleEntityDamaged;
+            if (sim != null)
+            {
+                sim.OnEntityDamaged -= HandleEntityDamaged;
+                sim.OnPingReceived -= HandlePingReceived;
+            }
         }
     }
 }

@@ -2,9 +2,11 @@ Shader "Custom/SelectionRing"
 {
     Properties
     {
-        _Color ("Color", Color) = (0, 1, 0, 0.5)
-        _InnerRadius ("Inner Radius", Range(0, 1)) = 0.85
+        _Color ("Color", Color) = (1, 1, 1, 0.45)
+        _InnerRadius ("Inner Radius", Range(0, 1)) = 0.92
         _Softness ("Edge Softness", Range(0, 0.2)) = 0.02
+        _SquareOutline ("Square Outline", Float) = 0
+        [Enum(UnityEngine.Rendering.CompareFunction)] _ZTest ("Depth Test", Float) = 4
     }
 
     SubShader
@@ -21,9 +23,9 @@ Shader "Custom/SelectionRing"
             Name "SelectionRing"
             Tags { "LightMode" = "SRPDefaultUnlit" }
 
-            Blend One One
+            Blend SrcAlpha OneMinusSrcAlpha
             ZWrite Off
-            ZTest LEqual
+            ZTest [_ZTest]
             Cull Off
 
             HLSLPROGRAM
@@ -37,6 +39,7 @@ Shader "Custom/SelectionRing"
                 half4 _Color;
                 half _InnerRadius;
                 half _Softness;
+                half _SquareOutline;
             CBUFFER_END
 
             struct Attributes
@@ -67,7 +70,10 @@ Shader "Custom/SelectionRing"
             {
                 UNITY_SETUP_INSTANCE_ID(input);
 
-                half dist = length(input.objectXZ) * 2.0;
+                half2 normalizedXZ = abs(input.objectXZ) * 2.0;
+                half dist = _SquareOutline > 0.5
+                    ? max(normalizedXZ.x, normalizedXZ.y)
+                    : length(input.objectXZ) * 2.0;
 
                 half outer = 1.0 - smoothstep(1.0 - _Softness, 1.0, dist);
                 half inner = smoothstep(_InnerRadius - _Softness, _InnerRadius, dist);
@@ -75,8 +81,7 @@ Shader "Custom/SelectionRing"
 
                 clip(ring - 0.01);
 
-                half3 col = _Color.rgb * _Color.a * ring;
-                return half4(col, 0.0);
+                return half4(_Color.rgb, _Color.a * ring);
             }
             ENDHLSL
         }
