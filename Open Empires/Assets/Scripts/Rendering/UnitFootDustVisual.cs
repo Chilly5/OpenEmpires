@@ -130,6 +130,7 @@ namespace OpenEmpires
             {
                 case 0: return 0.55f;  // Villager — working clothes, unhurried, light on the ground
                 case 5: return 0.40f;  // Sheep — dainty on top of already being small
+                case 17: return 0.45f; // Deer — light-footed, and there are a lot of them at once
                 case 9: return 0.50f;  // Monk — robes sweep rather than stamp
                 default: return 0.90f; // Soldiery in boots
             }

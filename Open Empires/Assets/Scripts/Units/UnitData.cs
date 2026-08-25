@@ -77,17 +77,38 @@ namespace OpenEmpires
 
         // Unit type
         public const int KingUnitType = 16;
+        public const int DeerUnitType = 17;
 
-        public int UnitType; // 0=Villager, 1=Spearman, 2=Archer, 3=Horseman, 4=Scout, 5=Sheep, 6=ManAtArms, 7=Knight, 8=Crossbowman, 9=Monk, 16=King
+        public int UnitType; // 0=Villager, 1=Spearman, 2=Archer, 3=Horseman, 4=Scout, 5=Sheep, 6=ManAtArms, 7=Knight, 8=Crossbowman, 9=Monk, 16=King, 17=Deer
         public bool IsVillager;
         public bool IsDummy;
         public bool IsSheep;
+        public bool IsDeer;
         public bool IsHealer;
         public int HealTargetId = -1;
         public int FollowTargetId = -1;
         public int SheepTargetBuildingId = -1; // Building the sheep is running toward
-        public int WanderCooldown; // Ticks until next idle wander (sheep)
+        public int WanderCooldown; // Ticks until next idle wander (sheep and deer)
         public FixedVector3 SpawnPosition; // Original position for wander radius
+
+        /// <summary>Animals a villager can kill for food. Sheep must be yours first; deer never are.</summary>
+        public bool IsHuntable => IsSheep || IsDeer;
+
+        // Deer herd state. Deer move as a pack: they graze around a shared anchor and bolt
+        // together when startled, then drift back. The anchor is what keeps a pack a place on
+        // the map rather than a wandering blob, so a drop-off built beside it stays useful.
+        public int HerdId = -1;              // which pack this deer belongs to; -1 = not a herd animal
+        public FixedVector3 HerdAnchor;      // home the pack grazes around and returns to
+        public int PanicTicksRemaining;      // >0 while fleeing; the whole pack panics together
+        public FixedVector3 PanicFrom;       // what startled it — the pack runs away from this
+        // Without a settle period a herd standing next to hunters would bolt every time it landed,
+        // and villagers slower than a deer could never close the gap. This guarantees they can.
+        public int PanicCooldownRemaining;
+
+        // Villager hunting intent. Set when a villager is tasked onto a pack, and kept across
+        // kill → gather → drop-off → return, so it works the pack out instead of going idle
+        // after one carcass. Cleared the moment the player gives the villager any other job.
+        public int HuntHerdId = -1;
 
         public const int NeutralPlayerId = -1;
 

@@ -244,6 +244,28 @@ namespace OpenEmpires
         public int SheepPerPlayer => 10;
         public int SheepSlaughterFood => 150;
 
+        // Deer. Unlike sheep, deer are never owned — you cannot walk them home, so the food stays
+        // where it falls and your economy has to come to it. That is the whole point of them.
+        public int DeerPerPack => 6;
+        public int DeerPacksPerPlayer => 2;
+        public int DeerMaxHealth => 40;          // a lone villager is slow; three or four are quick
+        public float DeerMoveSpeed => 0.7f;      // grazing pace
+        public float DeerFleeSpeed => 3.4f;      // faster than a villager, so hunters lose ground
+        public float DeerMass => 1.5f;
+        public float DeerRadius => 0.4f;
+        public int DeerHuntFood => 140;          // a pack of six is ~840 food
+        public int DeerVillagerDamage => 5;      // per swing, so ~8 swings solo
+        public int DeerHuntSwingTicks => 30;     // one swing a second — a lone villager needs ~8s
+
+        // Panic is deliberately short and leashed. A herd that genuinely escapes would strand the
+        // drop-off you just built next to it, so deer scatter, then settle and drift home.
+        public float DeerScareRange => 6f;       // how close a hostile gets before the pack bolts
+        public float DeerLeashRadius => 9f;      // furthest the pack strays from its anchor
+        public float DeerWanderRadius => 4f;     // grazing drift around the anchor
+        public int DeerPanicTicks => 45;         // 1.5s of bolting at 30 ticks/s
+        public int DeerPanicCooldownTicks => 165; // ~5.5s settle, long enough for hunters to close
+        public float DeerHuntSearchRange => 14f; // how far a villager looks for the next deer
+
         // Training
         public int SpearmanTrainTimeTicks => 300; // 15s at 20 TPS
         public int SpearmanFoodCost => 60;

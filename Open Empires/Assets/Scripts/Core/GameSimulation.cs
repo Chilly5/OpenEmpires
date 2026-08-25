@@ -57,6 +57,7 @@ namespace OpenEmpires
         private ProjectileSystem projectileSystem;
         private BuildingCombatSystem buildingCombatSystem;
         private SheepSystem sheepSystem;
+        private DeerSystem deerSystem;
         private UnitHealingSystem healingSystem;
         private List<AIPlayerSystem> aiPlayers = new List<AIPlayerSystem>();
         private SimulationConfig config;
@@ -776,6 +777,7 @@ namespace OpenEmpires
             projectileSystem = new ProjectileSystem();
             buildingCombatSystem = new BuildingCombatSystem();
             sheepSystem = new SheepSystem();
+            deerSystem = new DeerSystem();
             healingSystem = new UnitHealingSystem();
             FogOfWar = new FogOfWarData(mapSize, mapSize, playerCount);
             FogOfWar.SetMapData(MapData);
@@ -963,6 +965,8 @@ namespace OpenEmpires
             sheepSystem.Tick(UnitRegistry, BuildingRegistry, spatialGrid, MapData, cachedTickDuration, currentTick, playerTeamIds, config,
                 (sheepId, pid) => OnSheepConverted?.Invoke(sheepId, pid));
 
+            deerSystem.Tick(UnitRegistry, spatialGrid, MapData, cachedTickDuration, currentTick, config);
+
             movementSystem.Tick(UnitRegistry, MapData, cachedTickDuration);
             ProcessSlaughterArrivals();
             ProcessArrivedGarrisonUnits();
@@ -1009,6 +1013,10 @@ namespace OpenEmpires
             }
             for (int i = 0; i < projDeadBuildingIds.Count; i++)
                 CleanUpDestroyedBuilding(projDeadBuildingIds[i]);
+
+            // Read the fallen before they are removed: a downed deer becomes meat on the ground,
+            // and whoever was hunting it starts carrying rather than standing over the body.
+            ConvertFallenDeerToCarcasses(deadUnitIds);
 
             for (int i = 0; i < deadUnitIds.Count; i++)
             {
@@ -1532,8 +1540,15 @@ namespace OpenEmpires
                 {
                     int sheepId = qc.ResourceNodeId; // reused field
                     var sheep = UnitRegistry.GetUnit(sheepId);
-                    if (sheep == null || sheep.State == UnitState.Dead || !sheep.IsSheep)
+                    if (sheep == null || sheep.State == UnitState.Dead || !sheep.IsHuntable)
                         continue;
+
+                    // Deer are hunted rather than butchered — hand them to the chase-and-kill path.
+                    if (sheep.IsDeer)
+                    {
+                        AssignVillagerToHunt(unit, sheep);
+                        return;
+                    }
 
                     unit.ClearSavedPath();
                     unit.ClearFormation();
@@ -1790,11 +1805,77 @@ namespace OpenEmpires
             }
         }
 
+        /// <summary>
+        /// Scatters deer packs across the map. Each pack is a fixed six animals sharing an anchor,
+        /// which is what makes it a place worth building a Mill beside rather than a loose scatter
+        /// of animals. Seeded from the map seed, so every client lays down the same herds.
+        /// </summary>
+        public void SpawnDeerPacks()
+        {
+            var rng = new System.Random(config.MapSeed + 4242);
+            int packs = config.DeerPacksPerPlayer * playerCount;
+            int margin = 20;
+            int mapW = MapData.Width;
+            int mapH = MapData.Height;
+
+            for (int pack = 0; pack < packs; pack++)
+            {
+                for (int attempt = 0; attempt < 50; attempt++)
+                {
+                    int tx = rng.Next(margin, mapW - margin);
+                    int tz = rng.Next(margin, mapH - margin);
+                    if (!MapData.IsWalkable(tx, tz)) continue;
+
+                    FixedVector3 anchor = MapData.TileToWorldFixed(tx, tz);
+                    int spawned = 0;
+
+                    for (int i = 0; i < config.DeerPerPack; i++)
+                    {
+                        // Ring the animals loosely around the anchor so the pack reads as a group
+                        // standing together rather than one deer in six places.
+                        int ox = rng.Next(-2, 3);
+                        int oz = rng.Next(-2, 3);
+                        int dx = tx + ox;
+                        int dz = tz + oz;
+                        if (!MapData.IsWalkable(dx, dz)) { dx = tx; dz = tz; }
+
+                        FixedVector3 pos = MapData.TileToWorldFixed(dx, dz);
+                        var deer = UnitRegistry.CreateUnit(UnitData.NeutralPlayerId, pos,
+                            Fixed32.FromFloat(config.DeerMoveSpeed),
+                            Fixed32.FromFloat(config.DeerRadius),
+                            Fixed32.FromFloat(config.DeerMass));
+
+                        deer.UnitType = UnitData.DeerUnitType;
+                        deer.IsDeer = true;
+                        deer.MaxHealth = config.DeerMaxHealth;
+                        deer.CurrentHealth = deer.MaxHealth;
+                        deer.AttackDamage = 0;
+                        deer.AttackRange = Fixed32.Zero;
+                        deer.AttackCooldownTicks = 999;
+                        deer.DetectionRange = Fixed32.FromFloat(2f);
+                        deer.SpawnPosition = pos;
+                        deer.HerdId = pack;
+                        deer.HerdAnchor = anchor;
+                        deer.WanderCooldown = 30 + rng.Next(0, 120);
+                        spawned++;
+                    }
+
+                    if (spawned > 0) break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Tasks villagers onto an animal. Despite the name — kept because it is also the wire
+        /// format — this covers both butchering your own sheep and hunting wild deer, which are
+        /// never owned by anyone.
+        /// </summary>
         private void ProcessSlaughterSheepCommand(SlaughterSheepCommand cmd)
         {
             var sheep = UnitRegistry.GetUnit(cmd.SheepUnitId);
-            if (sheep == null || sheep.State == UnitState.Dead || !sheep.IsSheep) return;
-            if (sheep.PlayerId != cmd.PlayerId) return; // can only slaughter own sheep
+            if (sheep == null || sheep.State == UnitState.Dead || !sheep.IsHuntable) return;
+            // Sheep must be yours before you can eat them; deer belong to nobody.
+            if (sheep.IsSheep && sheep.PlayerId != cmd.PlayerId) return;
 
             for (int i = 0; i < cmd.VillagerIds.Length; i++)
             {
@@ -1802,6 +1883,12 @@ namespace OpenEmpires
                 if (unit == null || unit.State == UnitState.Dead) continue;
                 if (!unit.IsVillager) continue;
                 if (unit.PlayerId != cmd.PlayerId) continue;
+
+                if (sheep.IsDeer && !cmd.IsQueued)
+                {
+                    AssignVillagerToHunt(unit, sheep);
+                    continue;
+                }
 
                 if (cmd.IsQueued)
                 {
@@ -2619,13 +2706,24 @@ namespace OpenEmpires
                 var unit = units[i];
                 if (!unit.IsVillager) continue;
                 if (unit.State != UnitState.Idle) continue;
-                if (unit.CombatTargetId < 0) continue;
 
+                if (unit.CombatTargetId < 0)
+                {
+                    // Idle with a pack still to work: this is what carries a hunter through
+                    // kill → gather → drop-off → next deer without the player re-tasking it.
+                    if (unit.HuntHerdId >= 0)
+                        TryAutoHuntFromIdle(unit);
+                    continue;
+                }
+
+                // Deer are chased and brought down by the ordinary combat system, so an idle
+                // villager holding one as a target has lost the thread — send it back to the pack.
                 var sheep = UnitRegistry.GetUnit(unit.CombatTargetId);
                 if (sheep == null || !sheep.IsSheep)
                 {
                     unit.CombatTargetId = -1;
-                    TryAutoSlaughterFromIdle(unit);
+                    if (unit.HuntHerdId >= 0) TryAutoHuntFromIdle(unit);
+                    else TryAutoSlaughterFromIdle(unit);
                     continue;
                 }
 
@@ -2743,6 +2841,159 @@ namespace OpenEmpires
             else
             {
                 unit.CombatTargetId = -1;
+            }
+        }
+
+        /// <summary>
+        /// Turns deer that died this tick into food piles where they fell, and puts their hunters
+        /// straight onto gathering. Called before the dead are removed from the registry, since it
+        /// needs their final position and which pack they belonged to.
+        /// </summary>
+        private void ConvertFallenDeerToCarcasses(List<int> deadUnitIds)
+        {
+            if (deadUnitIds == null) return;
+
+            for (int i = 0; i < deadUnitIds.Count; i++)
+            {
+                var deer = UnitRegistry.GetUnit(deadUnitIds[i]);
+                if (deer == null || !deer.IsDeer) continue;
+
+                var carcass = MapData.AddCarcassResourceNode(ResourceType.Food, deer.SimPosition, config.DeerHuntFood);
+
+                var units = UnitRegistry.GetAllUnits();
+                for (int u = 0; u < units.Count; u++)
+                {
+                    var hunter = units[u];
+                    if (!hunter.IsVillager || hunter.State == UnitState.Dead) continue;
+                    if (hunter.CombatTargetId != deer.Id) continue;
+
+                    hunter.CombatTargetId = -1;
+                    hunter.ClearPath();
+                    // Remembering the pack is what keeps this villager working after this carcass
+                    // runs out, instead of going idle beside five more deer.
+                    hunter.HuntHerdId = deer.HerdId;
+                    hunter.TargetResourceNodeId = carcass.Id;
+                    hunter.GatherTimer = Fixed32.Zero;
+                    hunter.State = UnitState.Gathering;
+                    hunter.PlayerCommanded = false;
+                }
+
+                OnSheepSlaughtered?.Invoke(deer.Id, carcass.Id);
+            }
+        }
+
+        /// <summary>
+        /// Sends an idle villager after the next animal in the pack it has been working. This is
+        /// the step that makes a drop-off next to a herd behave like a drop-off next to a berry
+        /// patch — the villager keeps going until the pack is gone.
+        /// </summary>
+        private void TryAutoHuntFromIdle(UnitData unit)
+        {
+            if (unit.HuntHerdId < 0) return;
+
+            // Still meat on the ground from this pack? Finish that before killing another.
+            var leftovers = FindPackCarcass(unit);
+            if (leftovers != null)
+            {
+                unit.TargetResourceNodeId = leftovers.Id;
+                unit.GatherTimer = Fixed32.Zero;
+                unit.State = UnitState.Gathering;
+                unit.PlayerCommanded = false;
+                return;
+            }
+
+            // Deliberately not limited by distance. A villager that has just carried a load to a
+            // drop-off can be a long way from the pack, and giving up there would mean the player
+            // re-tasking it after every single trip. The pack cannot run off — it is leashed to
+            // its anchor — so "go back to the herd you were working" always terminates.
+            //
+            // Compared by axis distance rather than true distance: squaring a map-scale gap
+            // overflows fixed-point, and picking the roughly-nearest deer is all this needs.
+            UnitData bestDeer = null;
+            Fixed32 bestDist = Fixed32.Zero;
+
+            var allUnits = UnitRegistry.GetAllUnits();
+            for (int i = 0; i < allUnits.Count; i++)
+            {
+                var candidate = allUnits[i];
+                if (!candidate.IsDeer || candidate.State == UnitState.Dead) continue;
+                if (candidate.HerdId != unit.HuntHerdId) continue;
+
+                Fixed32 dist = Fixed32.Abs(candidate.SimPosition.x - unit.SimPosition.x)
+                             + Fixed32.Abs(candidate.SimPosition.z - unit.SimPosition.z);
+
+                if (bestDeer == null || dist < bestDist)
+                {
+                    bestDist = dist;
+                    bestDeer = candidate;
+                }
+            }
+
+            if (bestDeer == null)
+            {
+                // Pack finished, or it has drifted out of reach. Stop trying.
+                unit.HuntHerdId = -1;
+                return;
+            }
+
+            AssignVillagerToHunt(unit, bestDeer);
+        }
+
+        /// <summary>Any carcass from this villager's pack still worth gathering, nearest first.</summary>
+        private ResourceNodeData FindPackCarcass(UnitData unit)
+        {
+            Fixed32 range = Fixed32.FromFloat(config.DeerHuntSearchRange);
+            Fixed32 bestDistSq = range * range;
+            ResourceNodeData best = null;
+
+            foreach (var node in MapData.GetAllResourceNodes())
+            {
+                if (!node.IsCarcass || node.IsDepleted) continue;
+
+                FixedVector3 diff = node.Position - unit.SimPosition;
+                if (Fixed32.Abs(diff.x) > range || Fixed32.Abs(diff.z) > range) continue;
+
+                Fixed32 distSq = diff.x * diff.x + diff.z * diff.z;
+                if (distSq < bestDistSq)
+                {
+                    bestDistSq = distSq;
+                    best = node;
+                }
+            }
+
+            return best;
+        }
+
+        /// <summary>
+        /// Points a villager at a deer and lets the combat system do the chasing, which is how it
+        /// gets repathing after a bolting animal for free.
+        /// </summary>
+        private void AssignVillagerToHunt(UnitData unit, UnitData deer)
+        {
+            unit.ClearCommandQueue();
+            unit.ClearSavedPath();
+            unit.ClearFormation();
+            unit.ClearPatrol();
+
+            unit.HuntHerdId = deer.HerdId;
+            unit.CombatTargetId = deer.Id;
+            unit.CombatTargetBuildingId = -1;
+            unit.TargetResourceNodeId = -1;
+            unit.ConstructionTargetBuildingId = -1;
+            unit.DropOffBuildingId = -1;
+            unit.TargetGarrisonBuildingId = -1;
+            unit.GatherTimer = Fixed32.Zero;
+            unit.PlayerCommanded = true;
+            unit.State = UnitState.InCombat;
+
+            Vector2Int startTile = MapData.WorldToTile(unit.SimPosition);
+            Vector2Int goalTile = MapData.WorldToTile(deer.SimPosition);
+            var path = GridPathfinder.FindPath(MapData, startTile, goalTile, unit.PlayerId, BuildingRegistry);
+            if (path.Count > 0)
+            {
+                unit.SetPath(path);
+                unit.FinalDestination = deer.SimPosition;
+                unit.State = UnitState.Moving;
             }
         }
 
@@ -3198,6 +3449,7 @@ namespace OpenEmpires
                         unit.SheepTargetBuildingId = FindBuildingNearPosition(cmd.TargetPosition, unit.PlayerId);
                     }
 
+                    unit.HuntHerdId = -1; // Any fresh order takes this villager off the hunt.
                     unit.ClearPatrol();
                 }
 
@@ -3332,6 +3584,12 @@ namespace OpenEmpires
 
         private void AssignUnitToGather(UnitData unit, int resourceNodeId, List<Vector2Int> path, Vector2Int destTile)
         {
+            // Sent to an ordinary resource, this villager is off the hunt; sent to a carcass, it
+            // is still working the pack it was tasked onto.
+            var assignedNode = MapData.GetResourceNode(resourceNodeId);
+            if (assignedNode == null || !assignedNode.IsCarcass)
+                unit.HuntHerdId = -1;
+
             unit.SetPath(path);
             unit.ClearFormation();
             unit.FinalDestination = MapData.TileToWorldFixed(destTile.x, destTile.y);
@@ -3425,6 +3683,7 @@ namespace OpenEmpires
                 unit.DropOffBuildingId = -1;
                 unit.TargetGarrisonBuildingId = -1;
 
+                unit.HuntHerdId = -1; // Any fresh order takes this villager off the hunt.
                 unit.ClearPatrol();
             }
         }
@@ -3697,6 +3956,7 @@ namespace OpenEmpires
                 unit.DropOffBuildingId = -1;
                 unit.TargetGarrisonBuildingId = -1;
 
+                unit.HuntHerdId = -1; // Any fresh order takes this villager off the hunt.
                 unit.ClearPatrol();
 
                 // Find unique walkable tile adjacent to building using retry loop
@@ -3754,6 +4014,7 @@ namespace OpenEmpires
                 unit.DropOffBuildingId = -1;
                 unit.TargetGarrisonBuildingId = -1;
 
+                unit.HuntHerdId = -1; // Any fresh order takes this villager off the hunt.
                 unit.ClearPatrol();
 
                 // Pathfind toward the target unit's current position
@@ -4315,6 +4576,24 @@ namespace OpenEmpires
                             villager.CommandQueue.Add(QueuedCommand.GatherWaypoint(nearbyResource.Position, nearbyResource.Id));
                         }
                     }
+                    else
+                    {
+                        // Nothing to gather, but there may be a herd standing right there. Live
+                        // deer are units rather than resource piles, so the search above cannot
+                        // see them — without this, a Mill planted beside six deer leaves its
+                        // builders standing around next to the food they were sent for.
+                        var pack = FindHuntablePackForDropOff(building2);
+                        if (pack != null)
+                        {
+                            for (int i = 0; i < cmd.VillagerUnitIds.Length; i++)
+                            {
+                                var villager = UnitRegistry.GetUnit(cmd.VillagerUnitIds[i]);
+                                if (villager == null || villager.State == UnitState.Dead || villager.PlayerId != cmd.PlayerId)
+                                    continue;
+                                villager.CommandQueue.Add(QueuedCommand.SlaughterWaypoint(pack.SimPosition, pack.Id));
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -4322,6 +4601,40 @@ namespace OpenEmpires
         // Finds the nearest non-depleted resource node next to a drop-off building that the
         // building accepts. Used to auto-queue a Gather command after a drop-off is built next
         // to a compatible resource. Returns null if no such resource is within range.
+        /// <summary>
+        /// Finds a live deer close enough to a newly finished food drop-off to be what the player
+        /// built it for. Searched more generously than resource piles are, because a herd grazes
+        /// and drifts — the pack you placed the Mill beside will rarely be standing exactly where
+        /// it was when you placed it.
+        /// </summary>
+        private UnitData FindHuntablePackForDropOff(BuildingData building)
+        {
+            if (!LandmarkDefinitions.AcceptsResourceType(building, ResourceType.Food)) return null;
+
+            Fixed32 range = Fixed32.FromFloat(config.DeerHuntSearchRange);
+            Fixed32 bestDistSq = range * range;
+            UnitData best = null;
+
+            var units = UnitRegistry.GetAllUnits();
+            for (int i = 0; i < units.Count; i++)
+            {
+                var deer = units[i];
+                if (!deer.IsDeer || deer.State == UnitState.Dead) continue;
+
+                FixedVector3 diff = deer.SimPosition - building.SimPosition;
+                if (Fixed32.Abs(diff.x) > range || Fixed32.Abs(diff.z) > range) continue;
+
+                Fixed32 distSq = diff.x * diff.x + diff.z * diff.z;
+                if (distSq < bestDistSq)
+                {
+                    bestDistSq = distSq;
+                    best = deer;
+                }
+            }
+
+            return best;
+        }
+
         private ResourceNodeData FindNearestCompatibleResourceForDropOff(BuildingData building)
         {
             // "Next to" tolerance — tiles from the building footprint edge.
@@ -4638,6 +4951,7 @@ namespace OpenEmpires
             unit.IsAttackMoving = false;
             unit.DropOffBuildingId = -1;
             unit.TargetGarrisonBuildingId = -1;
+            unit.HuntHerdId = -1; // Any fresh order takes this villager off the hunt.
             unit.ClearPatrol();
 
             HashSet<Vector2Int> occupiedTiles = null;

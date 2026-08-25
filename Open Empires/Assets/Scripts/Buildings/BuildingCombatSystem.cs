@@ -66,7 +66,7 @@ namespace OpenEmpires
             {
                 var unit = allUnits[i];
                 if (unit.State == UnitState.Dead) continue;
-                if (unit.IsSheep) continue;
+                if (unit.IsHuntable) continue; // livestock and game are not targets
                 if (TeamHelper.AreAllies(playerTeamIds, unit.PlayerId, building.PlayerId)) continue;
 
                 Fixed32 dx = unit.SimPosition.x - building.SimPosition.x;

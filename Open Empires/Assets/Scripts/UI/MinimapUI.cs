@@ -68,6 +68,26 @@ namespace OpenEmpires
         }
         private List<MinimapPing> activePings = new List<MinimapPing>();
 
+        private struct KnownResourceDot
+        {
+            public float worldX, worldZ;
+            public int tileX, tileZ;
+            public ResourceType type;
+        }
+
+        private struct KnownAnimalDot
+        {
+            public float worldX, worldZ;
+            public int tileX, tileZ;
+        }
+
+        private readonly Dictionary<int, KnownResourceDot> knownResourceDots = new Dictionary<int, KnownResourceDot>();
+        private readonly Dictionary<int, KnownAnimalDot> knownDeerPackDots = new Dictionary<int, KnownAnimalDot>();
+        private readonly Dictionary<int, KnownAnimalDot> knownNeutralSheepDots = new Dictionary<int, KnownAnimalDot>();
+        private readonly HashSet<int> liveNeutralDeerPacks = new HashSet<int>();
+        private readonly HashSet<int> liveNeutralSheep = new HashSet<int>();
+        private readonly List<int> staleKnownIds = new List<int>();
+
         // Notify-ping mode (user clicked the ping button and the next world click places a ping).
         private bool isPingMode;
         private const float UserPingDuration = 3.9f; // 3 pulses × 1.3s each
@@ -125,6 +145,7 @@ namespace OpenEmpires
             System.Array.Copy(mapPixelsCache, cachedCompositePixels, mapPixelsCache.Length);
 
             fogPixelBuffer = new Color32[mapWidth * mapHeight];
+            InitializeMapKnowledge(sim);
 
             // Event-driven attack pings: sim emits OnEntityDamaged once per damaged entity per tick.
             // We filter to local-player-owned entities and let TryPlaceAttackPing dedupe by proximity.
@@ -523,9 +544,13 @@ namespace OpenEmpires
             if (sim == null) goto apply;
 
             int localPlayerId = selectionManager != null ? selectionManager.LocalPlayerId : 0;
+            RefreshMapKnowledgeDots(sim, localPlayerId);
 
             // 2. Resource dots (below fog)
-            DrawResourceDots(sim, localPlayerId);
+            DrawResourceDots();
+
+            // 2b. Neutral animals are moving food sources, so draw them with resources.
+            DrawNeutralAnimalDots();
 
             // 3. Building dots (below fog)
             DrawBuildingDots(sim, localPlayerId);
@@ -610,18 +635,173 @@ namespace OpenEmpires
             }
         }
 
-        private void DrawResourceDots(GameSimulation sim, int localPlayerId)
+        private void InitializeMapKnowledge(GameSimulation sim)
+        {
+            knownResourceDots.Clear();
+            knownDeerPackDots.Clear();
+            knownNeutralSheepDots.Clear();
+
+            foreach (var node in sim.MapData.GetAllResourceNodes())
+            {
+                if (node.IsDepleted || node.IsFarmNode || node.IsCarcass) continue;
+                RememberResourceDot(node);
+            }
+
+            var units = sim.UnitRegistry.GetAllUnits();
+            for (int i = 0; i < units.Count; i++)
+            {
+                var unit = units[i];
+                if (unit.State == UnitState.Dead || unit.PlayerId >= 0 || !unit.IsHuntable) continue;
+                if (unit.IsDeer) RememberDeerPackDot(unit);
+                else if (unit.IsSheep) RememberNeutralSheepDot(unit);
+            }
+        }
+
+        private void RefreshMapKnowledgeDots(GameSimulation sim, int localPlayerId)
         {
             foreach (var node in sim.MapData.GetAllResourceNodes())
             {
-                if (node.IsDepleted) continue;
-                if (!FogOfWarRenderer.DisableFogOfWar &&
-                    sim.FogOfWar.GetVisibility(localPlayerId, node.TileX, node.TileZ) == TileVisibility.Unexplored)
+                bool activelyVisible = IsActivelyVisible(sim, localPlayerId, node.TileX, node.TileZ);
+                bool known = knownResourceDots.ContainsKey(node.Id);
+
+                if (known)
                 {
+                    if (activelyVisible && node.IsDepleted)
+                        knownResourceDots.Remove(node.Id);
+                    else if (activelyVisible && !node.IsDepleted)
+                        RememberResourceDot(node);
                     continue;
                 }
 
-                Color32 color = node.Type switch
+                if (!node.IsDepleted && ((!node.IsFarmNode && !node.IsCarcass) || activelyVisible))
+                    RememberResourceDot(node);
+            }
+
+            staleKnownIds.Clear();
+            foreach (var kvp in knownResourceDots)
+            {
+                if (sim.MapData.GetResourceNode(kvp.Key) != null) continue;
+                var dot = kvp.Value;
+                if (IsActivelyVisible(sim, localPlayerId, dot.tileX, dot.tileZ))
+                    staleKnownIds.Add(kvp.Key);
+            }
+            for (int i = 0; i < staleKnownIds.Count; i++)
+                knownResourceDots.Remove(staleKnownIds[i]);
+
+            liveNeutralDeerPacks.Clear();
+            liveNeutralSheep.Clear();
+
+            var units = sim.UnitRegistry.GetAllUnits();
+            for (int i = 0; i < units.Count; i++)
+            {
+                var unit = units[i];
+                if (unit.State == UnitState.Dead || unit.PlayerId >= 0 || !unit.IsHuntable) continue;
+
+                if (unit.IsDeer)
+                {
+                    if (unit.HerdId < 0) continue;
+                    liveNeutralDeerPacks.Add(unit.HerdId);
+                    if (!knownDeerPackDots.ContainsKey(unit.HerdId)
+                        || IsActivelyVisible(sim, localPlayerId, unit.HerdAnchor))
+                    {
+                        RememberDeerPackDot(unit);
+                    }
+                }
+                else if (unit.IsSheep)
+                {
+                    liveNeutralSheep.Add(unit.Id);
+                    if (!knownNeutralSheepDots.ContainsKey(unit.Id)
+                        || IsActivelyVisible(sim, localPlayerId, unit.SimPosition))
+                    {
+                        RememberNeutralSheepDot(unit);
+                    }
+                }
+            }
+
+            staleKnownIds.Clear();
+            foreach (var kvp in knownDeerPackDots)
+            {
+                if (liveNeutralDeerPacks.Contains(kvp.Key)) continue;
+                var dot = kvp.Value;
+                if (IsActivelyVisible(sim, localPlayerId, dot.tileX, dot.tileZ))
+                    staleKnownIds.Add(kvp.Key);
+            }
+            for (int i = 0; i < staleKnownIds.Count; i++)
+                knownDeerPackDots.Remove(staleKnownIds[i]);
+
+            staleKnownIds.Clear();
+            foreach (var kvp in knownNeutralSheepDots)
+            {
+                if (liveNeutralSheep.Contains(kvp.Key)) continue;
+                var dot = kvp.Value;
+                if (IsActivelyVisible(sim, localPlayerId, dot.tileX, dot.tileZ))
+                    staleKnownIds.Add(kvp.Key);
+            }
+            for (int i = 0; i < staleKnownIds.Count; i++)
+                knownNeutralSheepDots.Remove(staleKnownIds[i]);
+        }
+
+        private void RememberResourceDot(ResourceNodeData node)
+        {
+            knownResourceDots[node.Id] = new KnownResourceDot
+            {
+                worldX = node.Position.x.ToFloat(),
+                worldZ = node.Position.z.ToFloat(),
+                tileX = node.TileX,
+                tileZ = node.TileZ,
+                type = node.Type,
+            };
+        }
+
+        private void RememberDeerPackDot(UnitData deer)
+        {
+            if (deer == null || !deer.IsDeer || deer.HerdId < 0) return;
+            var sim = GameBootstrapper.Instance?.Simulation;
+            Vector2Int tile = sim != null
+                ? sim.MapData.WorldToTile(deer.HerdAnchor)
+                : new Vector2Int(Mathf.FloorToInt(deer.HerdAnchor.x.ToFloat()), Mathf.FloorToInt(deer.HerdAnchor.z.ToFloat()));
+            knownDeerPackDots[deer.HerdId] = new KnownAnimalDot
+            {
+                worldX = deer.HerdAnchor.x.ToFloat(),
+                worldZ = deer.HerdAnchor.z.ToFloat(),
+                tileX = tile.x,
+                tileZ = tile.y,
+            };
+        }
+
+        private void RememberNeutralSheepDot(UnitData sheep)
+        {
+            if (sheep == null || !sheep.IsSheep) return;
+            var sim = GameBootstrapper.Instance?.Simulation;
+            Vector2Int tile = sim != null
+                ? sim.MapData.WorldToTile(sheep.SimPosition)
+                : new Vector2Int(Mathf.FloorToInt(sheep.SimPosition.x.ToFloat()), Mathf.FloorToInt(sheep.SimPosition.z.ToFloat()));
+            knownNeutralSheepDots[sheep.Id] = new KnownAnimalDot
+            {
+                worldX = sheep.SimPosition.x.ToFloat(),
+                worldZ = sheep.SimPosition.z.ToFloat(),
+                tileX = tile.x,
+                tileZ = tile.y,
+            };
+        }
+
+        private static bool IsActivelyVisible(GameSimulation sim, int localPlayerId, FixedVector3 position)
+        {
+            Vector2Int tile = sim.MapData.WorldToTile(position);
+            return IsActivelyVisible(sim, localPlayerId, tile.x, tile.y);
+        }
+
+        private static bool IsActivelyVisible(GameSimulation sim, int localPlayerId, int tileX, int tileZ)
+        {
+            return FogOfWarRenderer.DisableFogOfWar
+                || sim.FogOfWar.GetVisibility(localPlayerId, tileX, tileZ) == TileVisibility.Visible;
+        }
+
+        private void DrawResourceDots()
+        {
+            foreach (var dot in knownResourceDots.Values)
+            {
+                Color32 color = dot.type switch
                 {
                     ResourceType.Food => new Color32(179, 38, 38, 255),
                     ResourceType.Wood => new Color32(26, 128, 26, 255),
@@ -630,8 +810,23 @@ namespace OpenEmpires
                     _ => new Color32(255, 255, 255, 255)
                 };
 
-                WorldToPixel(node.Position.x.ToFloat(), node.Position.z.ToFloat(), out int px, out int py);
+                WorldToPixel(dot.worldX, dot.worldZ, out int px, out int py);
                 DrawDot(px, py, 2, color);
+            }
+        }
+
+        private void DrawNeutralAnimalDots()
+        {
+            foreach (var dot in knownDeerPackDots.Values)
+            {
+                WorldToPixel(dot.worldX, dot.worldZ, out int px, out int py);
+                DrawDot(px, py, DotSize, new Color32(214, 151, 73, 255));
+            }
+
+            foreach (var dot in knownNeutralSheepDots.Values)
+            {
+                WorldToPixel(dot.worldX, dot.worldZ, out int px, out int py);
+                DrawDot(px, py, 2, new Color32(235, 232, 205, 255));
             }
         }
 

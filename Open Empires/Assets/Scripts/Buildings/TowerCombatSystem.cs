@@ -31,7 +31,7 @@ namespace OpenEmpires
                 if (building.TowerTargetUnitId >= 0)
                 {
                     var currentTarget = unitRegistry.GetUnit(building.TowerTargetUnitId);
-                    if (currentTarget != null && currentTarget.State != UnitState.Dead && !currentTarget.IsSheep)
+                    if (currentTarget != null && currentTarget.State != UnitState.Dead && !currentTarget.IsHuntable)
                     {
                         // Check if still in range and not allied
                         if (!TeamHelper.AreAllies(playerTeamIds, currentTarget.PlayerId, building.PlayerId))
@@ -63,7 +63,7 @@ namespace OpenEmpires
                     {
                         var unit = nearbyUnits[j];
                         if (unit.State == UnitState.Dead) continue;
-                        if (unit.IsSheep) continue;
+                        if (unit.IsHuntable) continue; // livestock and game are not targets
                         if (TeamHelper.AreAllies(playerTeamIds, unit.PlayerId, building.PlayerId)) continue;
 
                         Fixed32 dx = unit.SimPosition.x - building.SimPosition.x;

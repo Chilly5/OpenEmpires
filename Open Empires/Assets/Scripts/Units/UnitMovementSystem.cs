@@ -12,6 +12,7 @@ namespace OpenEmpires
             {
                 if (unit.State == UnitState.Dead) continue;
                 if (unit.IsSheep) continue; // SheepSystem handles all sheep movement
+                if (unit.IsDeer) continue;  // DeerSystem likewise — deer move as a pack, not alone
                 if (unit.ChargeStunRemaining > 0) continue;
                 if (unit.State != UnitState.Moving && unit.State != UnitState.MovingToGather && unit.State != UnitState.MovingToBuild && unit.State != UnitState.MovingToDropoff && unit.State != UnitState.MovingToGarrison && unit.State != UnitState.MovingToSlaughter)
                     continue;

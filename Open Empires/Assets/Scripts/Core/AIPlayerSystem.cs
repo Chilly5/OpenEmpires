@@ -317,10 +317,10 @@ namespace OpenEmpires
                     cachedMyUnits.Add(u);
                     if (u.UnitType == 0)
                         cachedVillagers.Add(u);
-                    else if (u.UnitType != 4 && !u.IsSheep)
+                    else if (u.UnitType != 4 && !u.IsHuntable)
                         cachedCombatUnits.Add(u);
                 }
-                else if (!sim.AreAllies(u.PlayerId, playerId) && !u.IsSheep)
+                else if (!sim.AreAllies(u.PlayerId, playerId) && !u.IsHuntable)
                 {
                     switch (u.UnitType)
                     {
@@ -1337,7 +1337,7 @@ namespace OpenEmpires
                 if (u.State == UnitState.Dead) continue;
                 if (u.PlayerId == playerId || sim.AreAllies(u.PlayerId, playerId)) continue;
                 if (u.UnitType == 0) continue; // ignore villagers
-                if (u.IsSheep) continue;
+                if (u.IsHuntable) continue;
 
                 int dx = (u.SimPosition.x.Raw >> Fixed32.FractionalBits) - baseTileX;
                 int dz = (u.SimPosition.z.Raw >> Fixed32.FractionalBits) - baseTileZ;
@@ -1386,7 +1386,7 @@ namespace OpenEmpires
                         if (u.State == UnitState.Dead) continue;
                         if (u.PlayerId == playerId || sim.AreAllies(u.PlayerId, playerId)) continue;
                         if (u.UnitType == 0) continue;
-                        if (u.IsSheep) continue;
+                        if (u.IsHuntable) continue;
 
                         int adx = (u.SimPosition.x.Raw >> Fixed32.FractionalBits) - allyTcTileX;
                         int adz = (u.SimPosition.z.Raw >> Fixed32.FractionalBits) - allyTcTileZ;

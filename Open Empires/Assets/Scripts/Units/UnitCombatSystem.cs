@@ -100,7 +100,7 @@ namespace OpenEmpires
             {
                 var unit = allUnits[i];
                 if (unit.State == UnitState.Dead) continue;
-                if (unit.IsSheep) continue;
+                if (unit.IsHuntable) continue; // animals do not fight back
                 if (unit.IsHealer) continue;
 
                 // Always tick cooldowns so units reload while moving
@@ -213,7 +213,7 @@ namespace OpenEmpires
                         var other = nearby[j];
                         if (TeamHelper.AreAllies(playerTeamIds, other.PlayerId, unit.PlayerId)) continue;
                         if (other.State == UnitState.Dead) continue;
-                        if (other.IsSheep) continue;
+                        if (other.IsHuntable) continue; // never auto-attack livestock or game
 
                         Fixed32 dx = other.SimPosition.x - unit.SimPosition.x;
                         if (Fixed32.Abs(dx) > unit.DetectionRange) continue;
@@ -385,6 +385,14 @@ namespace OpenEmpires
 
                     // Attack
                     int damage = unit.AttackDamage;
+
+                    // Hunting is work, not combat. A villager's fighting stats are deliberately
+                    // useless — one damage every three seconds — which would make bringing down a
+                    // deer take minutes. Against game they swing at a working pace instead.
+                    bool isHunting = unit.IsVillager && closestEnemy.IsDeer;
+                    if (isHunting && config != null)
+                        damage = config.DeerVillagerDamage;
+
                     bool wasCharging = unit.IsCharging;
                     // How much of a full-length sprint this charge managed, 0 at a standing start.
                     int chargeMomentum = wasCharging
@@ -406,7 +414,9 @@ namespace OpenEmpires
                     if (unit.BonusDamageVsType2 >= 0 && closestEnemy.UnitType == unit.BonusDamageVsType2)
                         damage += unit.BonusDamageAmount2;
 
-                    unit.AttackCooldownRemaining = unit.AttackCooldownTicks;
+                    unit.AttackCooldownRemaining = isHunting && config != null
+                        ? config.DeerHuntSwingTicks
+                        : unit.AttackCooldownTicks;
 
                     // Combat feedback for view layer (attack-dash animation)
                     unit.LastAttackTick = currentTick;
@@ -428,6 +438,11 @@ namespace OpenEmpires
 
                         closestEnemy.LastDamageTick = currentTick;
                         closestEnemy.LastDamageFromPos = unit.SimPosition;
+
+                        // Being struck sets the whole pack running, even from a villager the deer
+                        // would otherwise have ignored.
+                        if (closestEnemy.IsDeer && config != null)
+                            DeerSystem.StartleFromHit(closestEnemy, unit.SimPosition, config);
 
                         // Only Knights (UnitType 7) produce a visible knock-up on charge hits;
                         // other charging units still apply bonus damage but don't launch the target.

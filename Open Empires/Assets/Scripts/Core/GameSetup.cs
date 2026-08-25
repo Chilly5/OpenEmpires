@@ -316,6 +316,10 @@ namespace OpenEmpires
             sim.SpawnNeutralSheep();
             SpawnSheepViews(sim);
 
+            // Wild deer packs — food you cannot walk home, so your economy has to go to it
+            sim.SpawnDeerPacks();
+            SpawnDeerViews(sim);
+
             // Pre-allocate formation marker pool
             InitMarkerPool();
             InitFacingArrow();
@@ -378,7 +382,6 @@ namespace OpenEmpires
             sim.OnSheepSlaughtered += HandleSheepSlaughtered;
             sim.OnKingHealingAuraPulse += HandleKingHealingAuraPulse;
             sim.OnBuildingHealingAuraPulse += HandleBuildingHealingAuraPulse;
-
             // Meteor visual manager
             var meteorGO = new GameObject("MeteorVisualManager");
             meteorVisualManager = meteorGO.AddComponent<MeteorVisualManager>();
@@ -2433,12 +2436,30 @@ namespace OpenEmpires
             var unitData = sim.UnitRegistry.GetUnit(unitId);
             if (unitData == null) return;
 
+            bool standardPath = CreateUnitViewFor(unitData);
+            if (standardPath)
+                SFXManager.Instance?.Play(SFXType.UnitTrained, unitData.SimPosition.ToVector3(), 0.6f);
+        }
+
+        /// <summary>
+        /// Create the view for a unit that already exists in the registry, routing to the same
+        /// prefab/procedural paths a live training event would use. Returns true when the
+        /// standard prefab path ran (the case where the train sound normally plays).
+        /// </summary>
+        private bool CreateUnitViewFor(UnitData unitData)
+        {
+            int unitType = unitData.UnitType;
             Vector3 spawnPos = unitData.SimPosition.ToVector3();
+            if (unitData.IsDeer)
+            {
+                SpawnDeerView(unitData, spawnPos);
+                return false;
+            }
             if (unitType == 5)
             {
                 // Sheep trained — create procedural view
                 SpawnSheepView(unitData, spawnPos);
-                return;
+                return false;
             }
             if (unitType == 9)
             {
@@ -2446,7 +2467,7 @@ namespace OpenEmpires
                 if (monkPrefab == null)
                 {
                     SpawnProceduralMonk(unitData, spawnPos);
-                    return;
+                    return false;
                 }
             }
             if (unitType == UnitData.KingUnitType && kingPrefab == null)
@@ -2455,12 +2476,12 @@ namespace OpenEmpires
                 // it only ran when the prefab was missing it sat unused while still looking like
                 // the real King to anyone reading the code. Fail loudly instead.
                 Debug.LogError("[GameSetup] No English King prefab assigned; the King cannot be spawned.");
-                return;
+                return false;
             }
             if (unitType >= 13 && unitType <= 15)
             {
                 SpawnProceduralSiege(unitData, spawnPos, unitType);
-                return;
+                return false;
             }
             GameObject prefab;
             switch (unitType)
@@ -2480,7 +2501,6 @@ namespace OpenEmpires
                 default: prefab = villagerPrefab; break;
             }
             SpawnUnit(prefab, unitData, spawnPos, unitType);
-            SFXManager.Instance?.Play(SFXType.UnitTrained, spawnPos, 0.6f);
 
             // Archer dummies show their attack range permanently so the player can see what
             // they cover. Reuses the same SpinningAttackRangeRing used by towers/keeps.
@@ -2492,6 +2512,7 @@ namespace OpenEmpires
                 var ring = ringGO.AddComponent<SpinningAttackRangeRing>();
                 ring.Initialize(unitData.AttackRange.ToFloat());
             }
+            return true;
         }
 
         /// <summary>
@@ -2802,7 +2823,6 @@ namespace OpenEmpires
                     selectionManager.RegisterBuildingView(view);
             }
         }
-
         private void HandleBuildingCreated(BuildingData buildingData)
         {
             SFXManager.Instance?.PlayBuildingPlace(buildingData.Type, buildingData.SimPosition.ToVector3(), 0.8f);
@@ -2984,6 +3004,276 @@ namespace OpenEmpires
             root.AddComponent<UnitView>();
 
             return root;
+        }
+
+        // Deer colouring. Warm russet over a pale underside and rump — the pale patch is what the
+        // eye actually picks out at RTS distance, so it carries more of the read than the hide does.
+        private static readonly Color DeerHide = new Color(0.46f, 0.30f, 0.17f);
+        private static readonly Color DeerHideDark = new Color(0.33f, 0.21f, 0.12f);
+        private static readonly Color DeerPale = new Color(0.82f, 0.73f, 0.57f);
+        private static readonly Color DeerAntler = new Color(0.68f, 0.61f, 0.46f);
+        private static readonly Color DeerDark = new Color(0.13f, 0.10f, 0.08f);
+
+        /// <summary>
+        /// Builds one body part of a procedural animal and strips its collider, since the parent
+        /// carries a single capsule for selection.
+        /// </summary>
+        private GameObject AnimalPart(Transform parent, string name, PrimitiveType shape,
+            Vector3 position, Vector3 scale, Vector3 euler, Material material)
+        {
+            var go = GameObject.CreatePrimitive(shape);
+            go.name = name;
+            go.transform.SetParent(parent);
+            go.transform.localPosition = position;
+            go.transform.localRotation = Quaternion.Euler(euler);
+            go.transform.localScale = scale;
+            go.layer = parent.gameObject.layer;
+            go.GetComponent<Renderer>().sharedMaterial = material;
+            DestroyCollider(go);
+            return go;
+        }
+
+        /// <summary>
+        /// Builds a limb segment that runs from <paramref name="start"/> along <paramref name="dir"/>
+        /// for <paramref name="length"/>, and returns the point it ends at so the next segment can
+        /// start there.
+        ///
+        /// Placing rotated cylinders by their centre — the obvious way — leaves every joint gaping,
+        /// because the centre of a tilted bone is not where the previous bone finished. Chaining
+        /// end to end is what makes a leg read as a leg instead of a pile of sticks.
+        /// </summary>
+        private Vector3 AnimalBone(Transform parent, string name, PrimitiveType shape,
+            Vector3 start, Vector3 dir, float length, float thickness, Material material)
+        {
+            Vector3 unit = dir.sqrMagnitude > 0.0001f ? dir.normalized : Vector3.up;
+            Vector3 end = start + unit * length;
+
+            var go = GameObject.CreatePrimitive(shape);
+            go.name = name;
+            go.transform.SetParent(parent);
+            go.transform.localPosition = start + unit * (length * 0.5f);
+            go.transform.localRotation = Quaternion.FromToRotation(Vector3.up, unit);
+            // Unity's capsule and cylinder are two units tall at scale 1.
+            go.transform.localScale = new Vector3(thickness, length * 0.5f, thickness);
+            go.layer = parent.gameObject.layer;
+            go.GetComponent<Renderer>().sharedMaterial = material;
+            DestroyCollider(go);
+
+            return end;
+        }
+
+        /// <summary>
+        /// A deer, built to the same standard as the King's horse: a barrel with a separate chest
+        /// and rump, a neck in two segments so it can carry its head high, a tapered muzzle, and
+        /// legs split into upper, lower and hoof rather than one stubby cylinder.
+        ///
+        /// Deer are leggier and finer than a horse — long thin legs under a shallow body is most of
+        /// what makes the silhouette read as game rather than livestock. Stags additionally carry
+        /// branched antlers, which is the tell at a distance.
+        /// </summary>
+        private GameObject CreateProceduralDeer(bool isStag)
+        {
+            var root = new GameObject("Deer");
+            root.layer = LayerMask.NameToLayer("Unit");
+            var t = root.transform;
+
+            var shader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
+            var hide = new Material(shader) { color = DeerHide };
+            var hideDark = new Material(shader) { color = DeerHideDark };
+            var pale = new Material(shader) { color = DeerPale };
+            var antler = new Material(shader) { color = DeerAntler };
+            var dark = new Material(shader) { color = DeerDark };
+
+            // Torso: a shallow barrel with the chest and rump overlapping it heavily, so the three
+            // read as one animal rather than three balls on a string.
+            // Narrow across the shoulders and deep through the ribs — a deer seen head-on is a slab,
+            // not a barrel. Keeping the three masses close in size stops them reading as beads.
+            AnimalPart(t, "DeerBarrel", PrimitiveType.Sphere,
+                new Vector3(0f, 0.60f, 0f), new Vector3(0.29f, 0.34f, 0.74f), Vector3.zero, hide);
+            AnimalPart(t, "DeerChest", PrimitiveType.Sphere,
+                new Vector3(0f, 0.59f, 0.17f), new Vector3(0.28f, 0.33f, 0.34f), Vector3.zero, hide);
+            AnimalPart(t, "DeerRump", PrimitiveType.Sphere,
+                new Vector3(0f, 0.62f, -0.19f), new Vector3(0.30f, 0.34f, 0.34f), Vector3.zero, hide);
+            AnimalPart(t, "DeerBelly", PrimitiveType.Sphere,
+                new Vector3(0f, 0.50f, 0f), new Vector3(0.24f, 0.15f, 0.58f), Vector3.zero, pale);
+            // A modest flash on the back of the haunch, not a dinner plate.
+            AnimalPart(t, "DeerRumpPatch", PrimitiveType.Sphere,
+                new Vector3(0f, 0.63f, -0.36f), new Vector3(0.15f, 0.15f, 0.08f), Vector3.zero, pale);
+
+            // Neck: one bone from the withers up to the skull, so the join is clean at both ends.
+            Vector3 neckStart = new Vector3(0f, 0.68f, 0.19f);
+            Vector3 neckDir = new Vector3(0f, 0.94f, 0.48f);
+            Vector3 skull = AnimalBone(t, "DeerNeck", PrimitiveType.Capsule,
+                neckStart, neckDir, 0.36f, 0.115f, hide);
+            AnimalBone(t, "DeerThroat", PrimitiveType.Capsule,
+                neckStart + new Vector3(0f, 0.01f, 0.045f), neckDir, 0.26f, 0.075f, pale);
+
+            // Head, tapering into a dark muzzle.
+            AnimalPart(t, "DeerHead", PrimitiveType.Sphere,
+                new Vector3(skull.x, skull.y + 0.02f, skull.z + 0.02f),
+                new Vector3(0.145f, 0.15f, 0.20f), new Vector3(14f, 0f, 0f), hide);
+            Vector3 muzzleEnd = AnimalBone(t, "DeerMuzzle", PrimitiveType.Capsule,
+                new Vector3(skull.x, skull.y, skull.z + 0.06f), new Vector3(0f, -0.30f, 1f), 0.13f, 0.085f, hideDark);
+            AnimalPart(t, "DeerNose", PrimitiveType.Sphere,
+                muzzleEnd, new Vector3(0.055f, 0.05f, 0.05f), Vector3.zero, dark);
+
+            for (int side = 0; side < 2; side++)
+            {
+                float sx = side == 0 ? -1f : 1f;
+
+                AnimalPart(t, $"DeerEye{side}", PrimitiveType.Sphere,
+                    new Vector3(sx * 0.068f, skull.y + 0.035f, skull.z + 0.09f),
+                    new Vector3(0.030f, 0.030f, 0.030f), Vector3.zero, dark);
+
+                // Big upright ears, swept out and back — half the deer silhouette.
+                AnimalBone(t, $"DeerEar{side}", PrimitiveType.Capsule,
+                    new Vector3(sx * 0.055f, skull.y + 0.06f, skull.z - 0.03f),
+                    new Vector3(sx * 0.62f, 0.72f, -0.30f), 0.10f, 0.045f, hide);
+            }
+
+            // Tail: short and flicked up, showing the pale underside.
+            AnimalBone(t, "DeerTail", PrimitiveType.Capsule,
+                new Vector3(0f, 0.66f, -0.38f), new Vector3(0f, 0.55f, -0.83f), 0.13f, 0.06f, pale);
+
+            // Legs, chained hip → knee → fetlock → hoof. Long and fine: a deer is mostly leg.
+            for (int fb = 0; fb < 2; fb++)
+            {
+                bool front = fb == 0;
+                float hipZ = front ? 0.22f : -0.24f;
+                float hipY = front ? 0.58f : 0.60f;
+
+                for (int lr = 0; lr < 2; lr++)
+                {
+                    float sx = lr == 0 ? -1f : 1f;
+                    string tag = (front ? "Front" : "Back") + (lr == 0 ? "Left" : "Right");
+                    Vector3 hip = new Vector3(sx * 0.125f, hipY, hipZ);
+
+                    // Front legs drop nearly straight; hind legs angle back then forward again,
+                    // which is what gives a deer its coiled, ready-to-bolt stance.
+                    Vector3 upperDir = front ? new Vector3(0f, -1f, 0.06f) : new Vector3(0f, -1f, -0.30f);
+                    Vector3 knee = AnimalBone(t, $"DeerLeg{tag}Upper", PrimitiveType.Capsule,
+                        hip, upperDir, 0.26f, 0.075f, hide);
+
+                    // The hind leg angles back at the hock, so its lower bone has further to fall to
+                    // reach the same ground. Length it accordingly or the animal stands on tiptoe.
+                    Vector3 lowerDir = front ? new Vector3(0f, -1f, -0.04f) : new Vector3(0f, -1f, 0.26f);
+                    float lowerLength = front ? 0.28f : 0.32f;
+                    Vector3 fetlock = AnimalBone(t, $"DeerLeg{tag}Lower", PrimitiveType.Capsule,
+                        knee, lowerDir, lowerLength, 0.045f, hideDark);
+
+                    // Sat on the end of the leg rather than at a fixed height, so no hoof floats.
+                    AnimalPart(t, $"DeerHoof{tag}", PrimitiveType.Cylinder,
+                        new Vector3(fetlock.x, Mathf.Max(fetlock.y, 0.022f), fetlock.z),
+                        new Vector3(0.05f, 0.028f, 0.05f), Vector3.zero, dark);
+                }
+            }
+
+            if (isStag)
+                BuildDeerAntlers(t, skull, antler);
+
+            // Selection capsule covers the standing body; antlers deliberately overhang it, the way
+            // a spear overhangs a soldier.
+            var capsule = root.AddComponent<CapsuleCollider>();
+            capsule.center = new Vector3(0f, 0.56f, 0f);
+            capsule.radius = 0.34f;
+            capsule.height = 1.12f;
+
+            var ringGO = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            ringGO.name = "SelectionRing";
+            ringGO.transform.SetParent(t);
+            ringGO.transform.localPosition = new Vector3(0f, 0.02f, 0f);
+            ringGO.transform.localScale = new Vector3(1f, 0.01f, 1f);
+            ringGO.layer = root.layer;
+            DestroyCollider(ringGO);
+            ringGO.GetComponent<Renderer>().sharedMaterial = sharedSelectionRingMat;
+            ringGO.SetActive(false);
+
+            root.AddComponent<UnitView>();
+            return root;
+        }
+
+        /// <summary>
+        /// Branched antlers: a beam sweeping up and back from each brow, with a brow tine and two
+        /// points off it. Built from thin cylinders — at RTS distance the branching silhouette is
+        /// what registers, not the individual prongs.
+        /// </summary>
+        private void BuildDeerAntlers(Transform t, Vector3 skull, Material antler)
+        {
+            for (int side = 0; side < 2; side++)
+            {
+                float sx = side == 0 ? -1f : 1f;
+
+                // Rooted on the brow, just above and behind the eye.
+                Vector3 pedicle = new Vector3(sx * 0.055f, skull.y + 0.06f, skull.z + 0.01f);
+
+                Vector3 midBeam = AnimalBone(t, $"DeerAntlerBeam{side}", PrimitiveType.Capsule,
+                    pedicle, new Vector3(sx * 0.42f, 0.88f, -0.10f), 0.17f, 0.028f, antler);
+
+                Vector3 beamTop = AnimalBone(t, $"DeerAntlerBeamUpper{side}", PrimitiveType.Capsule,
+                    midBeam, new Vector3(sx * 0.30f, 0.82f, -0.48f), 0.14f, 0.022f, antler);
+
+                // Brow tine, forward over the face.
+                AnimalBone(t, $"DeerAntlerBrow{side}", PrimitiveType.Capsule,
+                    pedicle + new Vector3(sx * 0.01f, 0.03f, 0.01f),
+                    new Vector3(sx * 0.30f, 0.45f, 0.84f), 0.13f, 0.020f, antler);
+
+                // A point off the middle of the beam, and two off the top.
+                AnimalBone(t, $"DeerAntlerTine{side}A", PrimitiveType.Capsule,
+                    midBeam, new Vector3(sx * 0.24f, 0.72f, 0.65f), 0.12f, 0.019f, antler);
+
+                AnimalBone(t, $"DeerAntlerTine{side}B", PrimitiveType.Capsule,
+                    beamTop, new Vector3(sx * 0.20f, 0.88f, 0.44f), 0.10f, 0.017f, antler);
+
+                AnimalBone(t, $"DeerAntlerTine{side}C", PrimitiveType.Capsule,
+                    beamTop, new Vector3(sx * 0.34f, 0.86f, -0.38f), 0.09f, 0.016f, antler);
+            }
+        }
+
+        private static void DestroyCollider(GameObject go)
+        {
+            var col = go.GetComponent<Collider>();
+            if (col != null) Destroy(col);
+        }
+
+        private void SpawnDeerViews(GameSimulation sim)
+        {
+            var allUnits = sim.UnitRegistry.GetAllUnits();
+            for (int i = 0; i < allUnits.Count; i++)
+            {
+                var unit = allUnits[i];
+                if (!unit.IsDeer) continue;
+                SpawnDeerView(unit, unit.SimPosition.ToVector3());
+            }
+        }
+
+        private void SpawnDeerView(UnitData unitData, Vector3 spawnPos)
+        {
+            var sim = GameBootstrapper.Instance?.Simulation;
+            if (sim != null)
+                spawnPos.y = sim.MapData.SampleHeight(spawnPos.x, spawnPos.z) * sim.Config.TerrainHeightScale;
+
+            // Roughly one animal in three carries antlers, so a pack reads as a herd of hinds with
+            // a stag or two rather than six identical copies.
+            bool isStag = unitData.Id % 3 == 0;
+
+            var go = CreateProceduralDeer(isStag);
+            go.transform.position = spawnPos;
+            go.SetActive(false);
+
+            var unitView = go.GetComponent<UnitView>();
+            if (unitView == null) return;
+
+            var ring = go.transform.Find("SelectionRing")?.gameObject;
+            if (ring != null)
+                unitView.SetSelectionRing(ring);
+
+            // Deer are never owned, so they get no player colour and no team silhouette.
+            unitView.Initialize(unitData.Id, spawnPos, unitData, UnitData.DeerUnitType,
+                sim?.MapData, sim?.Config.TerrainHeightScale ?? 0f, unitStencilMat, null);
+            unitViews[unitData.Id] = unitView;
+
+            if (selectionManager != null)
+                selectionManager.RegisterUnitView(unitView);
         }
 
         private void SpawnSheepView(UnitData unitData, Vector3 spawnPos)
@@ -3313,6 +3603,15 @@ namespace OpenEmpires
 
             var node = sim.MapData.GetResourceNode(carcassNodeId);
             if (node == null) return;
+
+            CreateCarcassView(node);
+        }
+
+        /// <summary>Create the brown-sphere carcass view for a carcass resource node.
+        private void CreateCarcassView(ResourceNodeData node)
+        {
+            var sim = GameBootstrapper.Instance?.Simulation;
+            if (sim == null) return;
 
             // Create carcass visual: brown flat sphere
             var carcassGO = GameObject.CreatePrimitive(PrimitiveType.Sphere);

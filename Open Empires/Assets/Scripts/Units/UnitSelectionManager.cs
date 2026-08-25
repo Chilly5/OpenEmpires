@@ -2814,9 +2814,11 @@ namespace OpenEmpires
                 var unitView = unitCmdHit.collider.GetComponent<UnitView>();
                 if (unitView != null && !unitView.IsDead)
                 {
-                    // Check for sheep slaughter: right-click allied sheep with villagers selected
+                    // Right-click an animal with villagers selected: butcher your own sheep, or
+                    // hunt a wild deer, which belongs to nobody and so has no ownership test.
                     var sheepData = sim.UnitRegistry.GetUnit(unitView.UnitId);
-                    if (sheepData != null && sheepData.IsSheep && sim.AreAllies(sheepData.PlayerId, LocalPlayerId))
+                    if (sheepData != null && sheepData.IsHuntable
+                        && (sheepData.IsDeer || sim.AreAllies(sheepData.PlayerId, LocalPlayerId)))
                     {
                         // Collect villager IDs from selection
                         var villagerIds = new System.Collections.Generic.List<int>();
