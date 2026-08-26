@@ -1418,9 +1418,18 @@ namespace OpenEmpires
             }
         }
 
+        /// <summary>Game modes that don't want the idle-villager "zzz" marker (e.g. AI Village) set this.</summary>
+        public static bool DisableIdleEffect;
+
         private void UpdateIdleEffect()
         {
             if (unitData == null || idleZzzContainer == null) return;
+            if (DisableIdleEffect)
+            {
+                if (idleZzzContainer.activeSelf) idleZzzContainer.SetActive(false);
+                showingIdleEffect = false;
+                return;
+            }
 
             bool isIdle = unitData.IsVillager && unitData.State == UnitState.Idle && unitData.CurrentHealth > 0 && unitData.IdleTimer >= Fixed32.One;
             

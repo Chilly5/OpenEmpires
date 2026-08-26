@@ -253,9 +253,9 @@ namespace OpenEmpires
                 }
                 else
                 {
-                    int cooldown = StrikeCooldownTicks;
+                    int cooldown = StrikeCooldownTicks * config.GatherCooldownPercent / 100;
                     if (node.IsFarmNode && IsFarmInfluencedByBuilding(node, unit.PlayerId, buildingRegistry, config.MillInfluenceRadius, isInfluenceBuildingType))
-                        cooldown = StrikeCooldownTicks * (100 - config.MillInfluenceGatherBonusPercent) / 100;
+                        cooldown = cooldown * (100 - config.MillInfluenceGatherBonusPercent) / 100;
                     unit.AttackCooldownRemaining = cooldown;
                     unit.LastAttackTick = currentTick;
                     unit.LastAttackTargetPos = node.Position;

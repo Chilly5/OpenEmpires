@@ -52,6 +52,18 @@ public class AtmosphereController : MonoBehaviour
         UpdateFogParams();
     }
 
+    /// <summary>Base (daytime) aerial fog colour as authored in the inspector.</summary>
+    public Color BaseAerialFogColor => baseAerialFogColor ?? aerialFogColor;
+    private Color? baseAerialFogColor;
+
+    /// <summary>Override the aerial fog colour at runtime (e.g. day/night cycle). Cosmetic only.</summary>
+    public void SetAerialFogColor(Color color)
+    {
+        if (baseAerialFogColor == null) baseAerialFogColor = aerialFogColor;
+        aerialFogColor = color;
+        UpdateFogParams();
+    }
+
     private void UpdateFogParams()
     {
         Shader.SetGlobalVector(AerialFogColorID, aerialFogColor);

@@ -24,6 +24,13 @@ namespace OpenEmpires
         // Dynamically adjusted based on measured RTT (minimum 3 ticks = ~100ms)
         public int InputDelayTicks { get; private set; } = 3;
 
+        /// <summary>
+        /// Single-player simulation pacing multiplier (1 = real time, 0 = paused). Scales only the
+        /// sim tick accumulator, so cameras/UI (which use Time.deltaTime) keep responding.
+        /// Ignored in multiplayer, where lockstep sets the pace.
+        /// </summary>
+        public float SimulationSpeed { get; set; } = 1f;
+
         // Timeout for waiting on commands from other players
         // If we don't receive commands within this time, consider the player disconnected
         private const float CommandTimeoutSeconds = 2.0f;
@@ -156,7 +163,8 @@ namespace OpenEmpires
                 return;
             }
 
-            tickAccumulator += Time.deltaTime;
+            // Local pacing only (single-player modes): 0 pauses the sim while the view keeps running.
+            tickAccumulator += Time.deltaTime * (networkManager != null && networkManager.IsMultiplayer ? 1f : SimulationSpeed);
             float tickInterval = config.SecondsPerTick;
 
             // Raise the cap when we have queued commands to process (catch-up after tab-back)
@@ -167,7 +175,7 @@ namespace OpenEmpires
             if (bufferedTicks > 5)
                 maxAccumulator = tickInterval * 30f;  // 30x speed catch-up
             else
-                maxAccumulator = tickInterval * 3f;   // normal cap
+                maxAccumulator = tickInterval * Mathf.Max(3f, SimulationSpeed * 2f);   // normal cap (raised for fast-forward)
 
             if (tickAccumulator > maxAccumulator)
             {

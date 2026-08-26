@@ -72,6 +72,26 @@ namespace OpenEmpires
         public float CurrentZoom => currentZoom;
         public float Pitch => pitch;
 
+        /// <summary>Closest allowed camera distance (game modes may lower it for close-ups).</summary>
+        public float MinZoomDistance { get => minZoomDistance; set => minZoomDistance = Mathf.Max(0.5f, value); }
+
+        /// <summary>Place the pivot exactly (no smoothing) — for camera-follow, where the target already moves smoothly.</summary>
+        public void SnapPivot(Vector3 position)
+        {
+            pivot.position = position;
+            targetPivotPos = position;
+            pivotVelocity = Vector3.zero;
+        }
+
+        /// <summary>Smoothly zoom to a distance (clamped to the configured min/max).</summary>
+        public void SetTargetZoom(float zoom)
+        {
+            targetZoom = Mathf.Clamp(zoom, minZoomDistance, maxZoomDistance);
+        }
+
+        /// <summary>True while the player is panning with keyboard or middle-mouse drag (used to break camera follow).</summary>
+        public bool HasManualPanInput => panInput.sqrMagnitude > 0.001f || (mousePanEnabled && mousePanDelta.sqrMagnitude > 0.001f);
+
         // Camera settings properties
         public float KeyboardPanSpeed { get => keyboardPanSpeed; set => keyboardPanSpeed = value; }
         public float EdgePanSpeed { get => edgePanSpeed; set => edgePanSpeed = value; }

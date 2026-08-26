@@ -10,6 +10,11 @@ namespace OpenEmpires
         [SerializeField] private UnitSelectionManager selectionManager;
         [SerializeField] private UnitInfoUI unitInfoUI;
 
+        [Header("Game Mode Extension (optional)")]
+        [Tooltip("A MonoBehaviour implementing IGameSetupExtension. Lets a game mode (e.g. AI Village) replace base spawning and hook map setup.")]
+        [SerializeField] private MonoBehaviour setupExtension;
+        private IGameSetupExtension Extension => setupExtension as IGameSetupExtension;
+
         [Header("Prefabs")]
         [SerializeField] private GameObject villagerPrefab;
         [SerializeField] private GameObject spearmanPrefab;
@@ -300,12 +305,17 @@ namespace OpenEmpires
             var basesUsed = new Vector2Int[playerCount];
             for (int p = 0; p < playerCount; p++)
                 basesUsed[p] = basePositions[p];
+            Extension?.OnBeforeMapRender(this, sim, basesUsed);
             if (mapRenderer != null)
                 mapRenderer.Initialize(sim.MapData, basesUsed, sim.Config.MapSeed);
 
             // Spawn each player's base (TC + villagers)
             for (int p = 0; p < playerCount; p++)
+            {
+                if (Extension != null && Extension.SpawnPlayerBase(this, sim, p, basePositions[p].x, basePositions[p].y))
+                    continue;
                 SpawnPlayerBase(sim, p, basePositions[p].x, basePositions[p].y);
+            }
 
             // Recompute holeMap now that trees and buildings have been placed —
             // the initial ComputeHoleMap() in GameSimulation ran before any tiles
@@ -458,6 +468,37 @@ namespace OpenEmpires
             }
         }
 
+        /// <summary>Create a villager in the sim with standard stats and spawn its view. Public for game-mode extensions.</summary>
+        public UnitData SpawnVillager(GameSimulation sim, int playerId, Vector3 spawnPos)
+        {
+            FixedVector3 fixedPos = FixedVector3.FromVector3(spawnPos);
+            var unitData = sim.UnitRegistry.CreateUnit(playerId, fixedPos,
+                sim.ConfigToFixed32(sim.Config.UnitMoveSpeed),
+                sim.ConfigToFixed32(sim.Config.UnitRadius),
+                sim.ConfigToFixed32(sim.Config.VillagerMass));
+            unitData.MaxHealth = sim.Config.VillagerMaxHealth;
+            unitData.CurrentHealth = unitData.MaxHealth;
+            unitData.AttackDamage = sim.Config.VillagerAttackDamage;
+            unitData.AttackRange = sim.ConfigToFixed32(sim.Config.VillagerAttackRange);
+            unitData.AttackCooldownTicks = sim.Config.VillagerAttackCooldownTicks;
+            unitData.UnitType = 0;
+            unitData.MeleeArmor = sim.Config.VillagerMeleeArmor;
+            unitData.RangedArmor = sim.Config.VillagerRangedArmor;
+            unitData.DetectionRange = sim.ConfigToFixed32(sim.Config.VillagerDetectionRange);
+            unitData.CarryCapacity = sim.Config.VillagerCarryCapacity;
+            unitData.IsVillager = true;
+            SpawnUnit(villagerPrefab, unitData, spawnPos);
+            return unitData;
+        }
+
+        /// <summary>Spawn the view for a building already created in the sim. Public for game-mode extensions.</summary>
+        public void SpawnBuildingView(BuildingData buildingData) => SpawnBuilding(buildingData);
+
+        public MapRenderer MapRenderer => mapRenderer;
+
+        /// <summary>Runtime-created billboard materials for sprite buildings (for cosmetic tinting, e.g. day/night).</summary>
+        public IEnumerable<Material> BuildingSpriteMaterials => buildingSpriteMaterials.Values;
+
         private void SpawnPlayerBase(GameSimulation sim, int playerId, int tileX, int tileZ)
         {
             // Validate TC footprint is walkable (safety net against water spawns)
@@ -493,23 +534,7 @@ namespace OpenEmpires
                 if (!sim.MapData.IsWalkable(spawnTile.x, spawnTile.y))
                     sim.MapData.Tiles[spawnTile.x, spawnTile.y] = TileType.Grass;
 
-                FixedVector3 fixedPos = FixedVector3.FromVector3(spawnPos);
-                var unitData = sim.UnitRegistry.CreateUnit(playerId, fixedPos,
-                    sim.ConfigToFixed32(sim.Config.UnitMoveSpeed),
-                    sim.ConfigToFixed32(sim.Config.UnitRadius),
-                    sim.ConfigToFixed32(sim.Config.VillagerMass));
-                unitData.MaxHealth = sim.Config.VillagerMaxHealth;
-                unitData.CurrentHealth = unitData.MaxHealth;
-                unitData.AttackDamage = sim.Config.VillagerAttackDamage;
-                unitData.AttackRange = sim.ConfigToFixed32(sim.Config.VillagerAttackRange);
-                unitData.AttackCooldownTicks = sim.Config.VillagerAttackCooldownTicks;
-                unitData.UnitType = 0;
-                unitData.MeleeArmor = sim.Config.VillagerMeleeArmor;
-                unitData.RangedArmor = sim.Config.VillagerRangedArmor;
-                unitData.DetectionRange = sim.ConfigToFixed32(sim.Config.VillagerDetectionRange);
-                unitData.CarryCapacity = sim.Config.VillagerCarryCapacity;
-                unitData.IsVillager = true;
-                SpawnUnit(villagerPrefab, unitData, spawnPos);
+                SpawnVillager(sim, playerId, spawnPos);
             }
 
             // Starting scout — spawned east of the villager grid
@@ -2745,6 +2770,16 @@ namespace OpenEmpires
                     break;
                 case BuildingType.Wonder:
                     prefab = CreateGenericBuildingPrefab(buildingData.PlayerId, 5, 5, "Wonder");
+                    break;
+                case BuildingType.Tavern:
+                    // AI Village eatery: the large castle-age house (high-res sprite) at 3x3 scale.
+                    prefab = CreateBuildingSpritePrefab("Tavern", "EnglishHouseCastle", 3, 3, 6.6f, 1.54f / 6f)
+                          ?? CreateGenericBuildingPrefab(buildingData.PlayerId, 3, 3, "Tavern");
+                    break;
+                case BuildingType.Graveyard:
+                    // AI Village burial ground: a bare plot (the village mode decorates it with headstones).
+                    prefab = CreateFarmPrefab(buildingData.PlayerId);
+                    prefab.name = "Graveyard";
                     break;
                 case BuildingType.Landmark:
                     prefab = CreateLandmarkPrefab(buildingData.PlayerId, buildingData.LandmarkId);

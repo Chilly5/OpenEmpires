@@ -483,6 +483,35 @@ namespace OpenEmpires
         public int CurrentTick => currentTick;
         public SimulationConfig Config => config;
 
+        /// <summary>
+        /// Optional game-mode extension ticked once per simulation tick, before AI players.
+        /// Used by single-player modes (e.g. AI Village) to drive autonomous behaviour by
+        /// enqueueing ordinary commands into <see cref="AiCommandBuffer"/>.
+        /// </summary>
+        public ISimulationExtension Extension { get; set; }
+
+        /// <summary>
+        /// Release a single garrisoned unit from a building (unlike <see cref="UngarrisonCommand"/>,
+        /// which releases everyone). Returns false if the unit isn't garrisoned there.
+        /// </summary>
+        public bool UngarrisonUnit(int buildingId, int unitId)
+        {
+            var building = BuildingRegistry.GetBuilding(buildingId);
+            if (building == null || building.IsDestroyed) return false;
+            if (!building.GarrisonedUnitIds.Remove(unitId)) return false;
+
+            var unit = UnitRegistry.RestoreUnit(unitId);
+            if (unit == null) return false;
+
+            Vector2Int adjTile = FindNearestWalkableAdjacentTile(building, building.SimPosition);
+            FixedVector3 spawnPos = MapData.TileToWorldFixed(adjTile.x, adjTile.y);
+            unit.SimPosition = spawnPos;
+            unit.PreviousSimPosition = spawnPos;
+            unit.State = UnitState.Idle;
+            OnUnitUngarrisoned?.Invoke(unitId);
+            return true;
+        }
+
         // Read-only spatial query for nearby units. Used by the view layer for cosmetic
         // effects (e.g. gate open/close on unit pass-through). The returned list is the
         // grid's shared buffer — consume it before the next query.
@@ -878,6 +907,7 @@ namespace OpenEmpires
                 ProcessCommand(command);
 
             // AI players enqueue their commands, then we process them
+            Extension?.Tick(this);
             TickAIPlayers();
             var aiCommands = AiCommandBuffer.FlushCommands();
             foreach (var command in aiCommands)
@@ -920,6 +950,7 @@ namespace OpenEmpires
             }
 
             // AI players run deterministically on all clients — no network traffic needed
+            Extension?.Tick(this);
             TickAIPlayers();
             var aiCommands = AiCommandBuffer.FlushCommands();
 
@@ -3507,6 +3538,7 @@ namespace OpenEmpires
                     armor = config.BlacksmithArmor;
                     break;
                 case BuildingType.Market:
+                case BuildingType.Tavern:
                     footprintW = config.MarketFootprintWidth;
                     footprintH = config.MarketFootprintHeight;
                     maxHealth = config.MarketMaxHealth;

@@ -480,6 +480,11 @@ namespace OpenEmpires
         public int StartingGold => 100;
         public int StartingStone => 0;
 
+        // Gathering pace: strike cooldown as a percentage of normal (100 = standard RTS pace,
+        // 250 = 2.5x slower). Integer so it stays deterministic across clients.
+        [SerializeField] private int gatherCooldownPercent = 100;
+        public int GatherCooldownPercent => Mathf.Max(1, gatherCooldownPercent);
+
         // Terrain generation
         [SerializeField] private int mapSeed = 42;
         [SerializeField] private MapType mapType = MapType.AlbionLowlands;

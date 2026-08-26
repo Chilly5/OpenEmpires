@@ -25,7 +25,9 @@ namespace OpenEmpires
         StoneWall,      // 18
         StoneGate,      // 19
         WoodGate,       // 20
-        Wonder          // 21
+        Wonder,         // 21
+        Tavern,         // 22 — AI Village: sells meals to villagers
+        Graveyard       // 23 — AI Village: burial ground
     }
 
     public enum TechnologyType

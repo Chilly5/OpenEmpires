@@ -1199,6 +1199,25 @@ namespace OpenEmpires
             }
         }
 
+        /// <summary>
+        /// Spawn a resource node (sim data + view) at a world position after initialization.
+        /// Uses the standard prefab for the type (trees are billboards). Returns false if the
+        /// footprint was blocked. Public for game-mode extensions (e.g. AI Village).
+        /// </summary>
+        public bool TrySpawnResourceNode(MapData mapData, ResourceType type, Vector3 position, int amount)
+        {
+            GameObject prefab = type switch
+            {
+                ResourceType.Food => berryBushPrefab,
+                ResourceType.Gold => goldMinePrefab,
+                ResourceType.Stone => stoneMinePrefab,
+                _ => null,
+            };
+            int before = mapData.GetAllResourceNodes().Count;
+            SpawnResourceNode(mapData, type, position, amount, prefab);
+            return mapData.GetAllResourceNodes().Count > before;
+        }
+
         private void SpawnResourceNode(MapData mapData, ResourceType type, Vector3 position, int amount, GameObject prefab)
         {
             int footprintW = 1;
