@@ -124,6 +124,7 @@ namespace OpenEmpires
 
         private Material[] playerMaterials;
         private Material[] playerSilhouetteMaterials;
+        private readonly Dictionary<long, Material> texturedTeamMaterialCache = new Dictionary<long, Material>();
         private Material buildingBodyMaterial;
         private Material landmarkWhiteStoneMaterial;
         private Material landmarkDarkStoneMaterial;
@@ -439,8 +440,7 @@ namespace OpenEmpires
                 // signal the same thing by starting with "Body" or "Sphere" — a naming rule that
                 // reads like leftover primitive names but is load bearing — so both are honoured
                 // while models are converted one at a time.
-                bool isTeamColored = IsTeamColoredPart(partName);
-                var primaryMat = isTeamColored ? mat : r.sharedMaterial;
+                var primaryMat = GetPrimaryUnitMaterial(r, partName, unitData.PlayerId, mat);
                 r.sharedMaterials = new Material[] { primaryMat, unitStencilMat, silMat };
             }
 
@@ -2506,6 +2506,32 @@ namespace OpenEmpires
             return partName.EndsWith("_Team", System.StringComparison.Ordinal)
                 || partName.StartsWith("Body", System.StringComparison.Ordinal)
                 || partName.StartsWith("Sphere", System.StringComparison.Ordinal);
+        }
+
+        private Material GetPrimaryUnitMaterial(Renderer renderer, string partName, int playerId, Material legacyPlayerMaterial)
+        {
+            if (!IsTeamColoredPart(partName))
+                return renderer.sharedMaterial;
+
+            // Existing Body*/Sphere* models keep their established solid player material.
+            if (!partName.EndsWith("_Team", System.StringComparison.Ordinal))
+                return legacyPlayerMaterial;
+
+            Material source = renderer.sharedMaterial;
+            if (source == null || playerId < 0 || playerId >= PlayerColors.Length)
+                return legacyPlayerMaterial;
+
+            long key = ((long)source.GetHashCode() << 32) ^ (uint)playerId;
+            if (texturedTeamMaterialCache.TryGetValue(key, out Material cached) && cached != null)
+                return cached;
+
+            Material tinted = new Material(source)
+            {
+                name = $"{source.name}_Player{playerId}_TeamTint"
+            };
+            SetMaterialColor(tinted, PlayerColors[playerId]);
+            texturedTeamMaterialCache[key] = tinted;
+            return tinted;
         }
 
         /// <summary>

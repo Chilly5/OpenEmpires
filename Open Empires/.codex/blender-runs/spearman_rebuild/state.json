@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-08-25T21:37:29+00:00",
+  "updated_at": "2026-08-25T21:37:29+00:00",
+  "task": "Create a production-quality early-medieval Norman-inspired Spearman in Blender from the reference image. This run owns only the Blender asset and export; do not modify Unity C# or scene/prefab files.\n\nReference-derived requirements:\n- final standing height exactly 1.1 Blender meters from ground to helmet apex, realistic 7.5-head adult proportions\n- padded quilted gambeson, knee-length blue team-color tabard, leather belt, gloves, wrapped boots, modest shoulder protection\n- conical steel helmet with nasal guard, rim, visible rivets, chainmail aventail\n- round shield with wooden planks, realistic thickness, metal rim and boss, blank/team emblem area\n- primary weapon is a long ash-wood spear with metal socket and leaf-shaped spearhead\n- no primitives-as-final-blockout, no toy proportions, no oversized head, no fantasy plate armor\n- one standard Humanoid-compatible armature only: Root, Hips, spine/chest/neck/head, standard left/right shoulders/arms/hands and legs/feet/toes. No custom weapon bones.\n- create SpearSocket parented to RightHand and ShieldSocket parented to LeftHand as non-deforming attachment empties/transforms, with separate spear and shield objects parented to those sockets\n- LOD0 9,000-12,000 triangles; LOD1 3,000-5,000 triangles; shared rig/material atlas layout\n- keep renderer/material groups low: Team cloth/emblem, Body/Leather/Wood, Metal\n- complete non-overlapping UVs suitable for a single main 2K atlas\n- author Actions at 30 fps: Idle 2.5s loop, Walk 1.0s loop, RunCharge 0.75s loop, Attack 0.95s, Block 1.2s loop, Hit 0.4s, Death 1.35s. Root motion disabled; attack pullback/thrust/recovery and death collapse must be readable.\n- use solid-mode silhouette inspections and verify hand/socket contacts, shield grip, spear grip, feet-on-ground, helmet/head seating, boss/shield seating, spearhead/socket seating\n- inspect front/back/left/right/top/bottom and three-quarter views before final review\n- save editable source to D:\\unity_projects\\OpenEmpiresTemp\\Spearman_Rebuild_Source.blend\n- export FBX to D:\\unity_projects\\OpenEmpiresTemp\\SM_Spearman_Rebuild.fbx using Unity-compatible -Z forward, Y up, applied scale, deform bones only where appropriate, and baked animations\n- do not touch the existing current Spearman FBX or prefab",
+  "references": [
+    "D:\\unity_projects\\OpenEmpires\\Open Empires\\Assets\\Models\\Units\\Spearman\\Reference\\Spearman_Reference_Sheet.png"
+  ],
+  "workspace": "D:\\unity_projects\\OpenEmpires\\Open Empires",
+  "run_dir": "D:\\unity_projects\\OpenEmpires\\Open Empires\\.codex\\blender-runs\\spearman_rebuild",
+  "phase": "plan",
+  "plan": null,
+  "current_step_index": null,
+  "current_attempt": 1,
+  "max_retries_per_step": 2,
+  "completed_steps": [],
+  "history": [],
+  "last_validation_errors": [],
+  "last_result_summary": null
+}

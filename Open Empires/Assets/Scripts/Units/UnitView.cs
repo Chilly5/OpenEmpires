@@ -82,6 +82,7 @@ namespace OpenEmpires
         private const float AttackDashDuration = 0.18f;
         private const float AttackDashDistance = 0.05f;
         private UnitAttackVisualAnimator attackVisualAnimator;
+        private UnitAnimatorVisualDriver animatorVisualDriver;
         private UnitGallopVisualAnimator gallopVisualAnimator;
         private UnitFootDustVisual footDustVisual;
 
@@ -241,10 +242,19 @@ namespace OpenEmpires
             if (facing.sqrMagnitude > 0.0001f)
                 transform.rotation = Quaternion.LookRotation(facing);
 
-            attackVisualAnimator = new UnitAttackVisualAnimator(transform, selectionRing, UnitType, unitData);
-            if (UnitGallopVisualAnimator.IsMounted(UnitType))
-                gallopVisualAnimator = new UnitGallopVisualAnimator(attackVisualAnimator.AttachmentRoot, UnitType, unitId);
+            animatorVisualDriver = GetComponentInChildren<UnitAnimatorVisualDriver>(true);
+            if (animatorVisualDriver != null)
+            {
+                animatorVisualDriver.Initialize();
+            }
             else
+            {
+                attackVisualAnimator = new UnitAttackVisualAnimator(transform, selectionRing, UnitType, unitData);
+                if (UnitGallopVisualAnimator.IsMounted(UnitType))
+                    gallopVisualAnimator = new UnitGallopVisualAnimator(attackVisualAnimator.AttachmentRoot, UnitType, unitId);
+            }
+
+            if (gallopVisualAnimator == null)
             {
                 // Sized from the body doing the walking, so the dust follows the model rather than
                 // a hand-set number. Hooves already kick their own from real footfall positions.
@@ -271,8 +281,8 @@ namespace OpenEmpires
             if (UnitType == 9) // Monk — match standard unit height
             {
                 healthBarYOffset = HealthBarYOffset;
-                leftArm = attackVisualAnimator.FindVisual("LeftArm");
-                rightArm = attackVisualAnimator.FindVisual("RightArm");
+                leftArm = attackVisualAnimator?.FindVisual("LeftArm");
+                rightArm = attackVisualAnimator?.FindVisual("RightArm");
                 if (leftArm != null) leftArmRestRotation = leftArm.localRotation;
                 if (rightArm != null) rightArmRestRotation = rightArm.localRotation;
             }
@@ -301,7 +311,11 @@ namespace OpenEmpires
                 bodyRenderers[idx] = allRenderers[i];
                 originalColors[idx] = GetMaterialColor(allRenderers[i].sharedMaterial);
                 // Render after tree billboard sprites (Geometry+1)
-                bodyRenderers[idx].material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry + 2;
+                var mats = Application.isPlaying ? bodyRenderers[idx].materials : bodyRenderers[idx].sharedMaterials;
+                if (mats != null && mats.Length > 0 && mats[0] != null)
+                {
+                    mats[0].renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry + 2;
+                }
                 idx++;
             }
         }
@@ -516,7 +530,8 @@ namespace OpenEmpires
         {
             if (sharedIndicatorCanvas != null) return;
             var canvasObj = new GameObject("DepositIndicatorCanvas");
-            Object.DontDestroyOnLoad(canvasObj);
+            if (Application.isPlaying)
+                Object.DontDestroyOnLoad(canvasObj);
             sharedIndicatorCanvas = canvasObj.AddComponent<Canvas>();
             sharedIndicatorCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
             sharedIndicatorCanvas.sortingOrder = 4;
@@ -1211,7 +1226,9 @@ namespace OpenEmpires
             if (unitData.LastAttackTick > lastSeenAttackTick && unitData.LastAttackTick > 0)
             {
                 lastSeenAttackTick = unitData.LastAttackTick;
-                if (attackVisualAnimator.HasAttackMotion)
+                if (animatorVisualDriver != null)
+                    animatorVisualDriver.PlayAttack();
+                else if (attackVisualAnimator.HasAttackMotion)
                     attackVisualAnimator.PlayAttack(attackVisualAnimator.WasCharging);
                 else
                     attackDashTimer = AttackDashDuration;
@@ -1229,6 +1246,7 @@ namespace OpenEmpires
             if (unitData.LastDamageTick > lastSeenDamageTick && unitData.LastDamageTick > 0)
             {
                 lastSeenDamageTick = unitData.LastDamageTick;
+                animatorVisualDriver?.PlayHit();
                 damageFlinchTimer = DamageFlinchDuration;
                 damageFlashTimer = DamageFlashDuration;
                 healthBarDamageTimer = HealthBarDamageVisibleDuration;
@@ -1362,16 +1380,17 @@ namespace OpenEmpires
                 }
             }
 
-            attackVisualAnimator.UpdateAnimation(unitData, Time.deltaTime);
+            attackVisualAnimator?.UpdateAnimation(unitData, Time.deltaTime);
+
+            float secondsPerTick = GameBootstrapper.Instance.Config.SecondsPerTick;
+            float groundSpeed = secondsPerTick > 0f ? (curr - prev).magnitude / secondsPerTick : 0f;
+            float topSpeed = unitData.MoveSpeed.ToFloat();
+            float normalizedSpeed = topSpeed > 0.0001f ? groundSpeed / topSpeed : 0f;
+            animatorVisualDriver?.UpdatePresentation(normalizedSpeed, unitData.IsCharging,
+                unitData.State == UnitState.InCombat);
 
             if (gallopVisualAnimator != null || footDustVisual != null)
             {
-                float secondsPerTick = GameBootstrapper.Instance.Config.SecondsPerTick;
-                float groundSpeed = secondsPerTick > 0f ? (curr - prev).magnitude / secondsPerTick : 0f;
-
-                float topSpeed = unitData.MoveSpeed.ToFloat();
-                float normalizedSpeed = topSpeed > 0.0001f ? groundSpeed / topSpeed : 0f;
-
                 // Gallop layers on top of the attack pose, so it has to run after it.
                 gallopVisualAnimator?.UpdateGallop(normalizedSpeed, groundSpeed, unitData.IsCharging,
                     smoothedBasePos, Time.deltaTime);
@@ -1673,6 +1692,7 @@ namespace OpenEmpires
             if (IsDead) return;
             IsDead = true;
             attackVisualAnimator?.ResetPose();
+            animatorVisualDriver?.PlayDeath();
             gallopVisualAnimator?.ResetPose();
             footDustVisual = null; // a corpse sliding into its death pose should not scuff the ground
 
@@ -1721,21 +1741,29 @@ namespace OpenEmpires
 
         private IEnumerator CorpseFadeCoroutine()
         {
-            // Fall over animation — tip forward 90 degrees
-            float fallDuration = 0.5f;
-            float fallElapsed = 0f;
-            Quaternion startRot = transform.rotation;
-            Quaternion endRot = startRot * Quaternion.Euler(90f, 0f, 0f);
-            while (fallElapsed < fallDuration)
+            if (animatorVisualDriver != null)
             {
-                fallElapsed += Time.deltaTime;
-                float t = Mathf.Clamp01(fallElapsed / fallDuration);
-                // Ease-in curve (accelerating fall like gravity)
-                float eased = t * t;
-                transform.rotation = Quaternion.Slerp(startRot, endRot, eased);
-                yield return null;
+                // The rigged clip replaces only the old visual fall. Corpse wait, fade, and
+                // removal below remain the established OpenEmpires lifecycle.
+                yield return new WaitForSeconds(animatorVisualDriver.DeathPresentationDuration);
             }
-            transform.rotation = endRot;
+            else
+            {
+                // Legacy procedural fall remains unchanged for existing units.
+                float fallDuration = 0.5f;
+                float fallElapsed = 0f;
+                Quaternion startRot = transform.rotation;
+                Quaternion endRot = startRot * Quaternion.Euler(90f, 0f, 0f);
+                while (fallElapsed < fallDuration)
+                {
+                    fallElapsed += Time.deltaTime;
+                    float t = Mathf.Clamp01(fallElapsed / fallDuration);
+                    float eased = t * t;
+                    transform.rotation = Quaternion.Slerp(startRot, endRot, eased);
+                    yield return null;
+                }
+                transform.rotation = endRot;
+            }
 
             yield return new WaitForSeconds(5f);
 

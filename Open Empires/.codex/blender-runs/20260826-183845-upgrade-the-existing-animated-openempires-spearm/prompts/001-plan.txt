@@ -1,0 +1,25 @@
+You are the planning worker for one orchestrated Blender reference-modeling run.
+Do not run blender_orchestrator.py. Do not create Blender geometry in this step.
+
+Task:
+Upgrade the existing animated OpenEmpires Spearman from primitive interim art to production-quality stylized-realistic light medieval two-handed spear infantry. Preserve the current armature, SpearSocket, seven animation actions, FBX/Unity humanoid pipeline, 1.10 Unity-unit scale, no shield, and all gameplay/deterministic systems. Rebuild anatomy, gambeson, tabard, conical nasal helmet, hands, boots, spear and skinning; author efficient PBR textures; create LOD0 9000-12000 tris and LOD1 3000-5000; validate all clips and contacts; back up and save the production blend, export the existing FBX path, validate Unity, capture evidence, and write the required report.
+
+Reference files:
+[
+  "D:\\unity_projects\\OpenEmpires\\Open Empires\\Assets\\Models\\Units\\Spearman\\Reference\\Spearman_Reference_Sheet.png"
+]
+
+Run directory:
+D:\unity_projects\OpenEmpires\Open Empires\.codex\blender-runs\20260826-183845-upgrade-the-existing-animated-openempires-spearm
+
+Required behavior:
+- Inspect the reference before planning.
+- If the target object is small or buried in a busy scene, create or request a focused crop and list it in focused_references.
+- Build an anatomy inventory of visible parts. For buildings include masses, roof parts, openings, facade details, signs, site/base parts, and repeated patterns.
+- Estimate proportions as ratios or fractions from the reference. Include evidence, not just guesses.
+- Convert the anatomy into ordered construction steps.
+- Each step must build only one visible unit or one tightly related module.
+- Each step must include reference_features, anchors, forbidden additions, required_inspections, and pass_criteria.
+- Include specific inspection views such as front orthographic, side, top, close-up contact, or six-side inspection where relevant.
+
+Return JSON only. The JSON must match the output schema supplied by the caller.

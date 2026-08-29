@@ -1,0 +1,128 @@
+{
+  "type": "object",
+  "required": [
+    "status",
+    "view_analysis",
+    "anatomy",
+    "proportions",
+    "steps",
+    "risks"
+  ],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "ok",
+        "blocked"
+      ]
+    },
+    "blocker": {
+      "type": "string"
+    },
+    "focused_references": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "view_analysis": {
+      "type": "object",
+      "additionalProperties": false
+    },
+    "anatomy": {
+      "type": "object",
+      "additionalProperties": false
+    },
+    "proportions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "target",
+          "evidence"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "string"
+          },
+          "tolerance": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "objective",
+          "reference_features",
+          "anchors",
+          "forbidden",
+          "required_inspections",
+          "pass_criteria"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "objective": {
+            "type": "string"
+          },
+          "reference_features": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "anchors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "forbidden": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "required_inspections": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "pass_criteria": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

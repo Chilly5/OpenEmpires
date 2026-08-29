@@ -10,7 +10,8 @@ namespace OpenEmpires
         {
             if (Instance != null) return;
             var go = new GameObject("WorldOverlayCanvas");
-            Object.DontDestroyOnLoad(go);
+            if (Application.isPlaying)
+                Object.DontDestroyOnLoad(go);
             Instance = go.AddComponent<Canvas>();
             Instance.renderMode = RenderMode.ScreenSpaceOverlay;
             Instance.sortingOrder = 3;

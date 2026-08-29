@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "reason": "The bundled orchestrator initialized but Windows denied its Codex worker process with WinError 5. This file preserves the required plan for the deterministic-script fallback.",
+  "reference": "Assets/Models/Units/Spearman/Reference/Spearman_Reference_Sheet.png",
+  "reference_override": "Ignore every shield element in the reference. The production unit is intentionally a no-shield, two-handed spear fighter.",
+  "anatomy": [
+    "continuous padded torso and flared gambeson skirt",
+    "anatomical upper arms, elbows, forearms, wrists, thighs, knees, calves, ankles",
+    "simplified human head with skull, jaw, brow, nose, ears and readable face opening",
+    "simplified mitten-style game hands with palms, grouped fingers and thumbs formed around the spear",
+    "medieval leather ankle boots with shaped toes, heels, cuffs, soles and restrained wraps",
+    "conical nasal helmet with shell thickness, brow band, crown bands, nasal, rivets and mail aventail",
+    "front and back team-color tabard with split lower panels",
+    "waist belt, buckle and hanging strap",
+    "independent wooden spear shaft, socket and leaf head with center ridge",
+    "existing humanoid armature, SpearSocket and seven actions"
+  ],
+  "proportions": {
+    "ground_to_helmet_apex": 1.10,
+    "head_height_fraction": "about 1/7.5 of standing height",
+    "shoulder_width_fraction": "about 0.31 of standing height",
+    "hip_height_fraction": "about 0.49 of standing height",
+    "knee_height_fraction": "about 0.27 of standing height",
+    "tabard_bottom_fraction": "about 0.39 of standing height",
+    "spear_length_fraction": "about 1.35 of standing height",
+    "evidence": "Ratios follow the front and side figures while retaining the existing 1.10 m roster scale and current humanoid bone locations."
+  },
+  "steps": [
+    {
+      "name": "backup_and_baseline",
+      "reference_features": ["existing no-shield source", "current exact hierarchy and action names"],
+      "anchors": ["production blend path", "production FBX path", "OE_Spear_Armature", "SpearSocket"],
+      "forbidden_additions": ["shield", "new gameplay systems", "new deform bones"],
+      "required_inspections": ["source metrics", "action inventory", "weight influence audit"],
+      "pass_criteria": ["backup exists before overwrite", "seven actions preserved", "baseline metrics recorded"]
+    },
+    {
+      "name": "continuous_body_and_joints",
+      "reference_features": ["padded gambeson silhouette", "human limb taper", "waist compression"],
+      "anchors": ["Hips/Spine/Chest", "shoulder to wrist bone segments", "hip to ankle bone segments"],
+      "forbidden_additions": ["cylindrical final limbs", "open elbow or knee seams", "global bevel decoration"],
+      "required_inspections": ["front", "side", "back", "elbow close-up", "knee close-up", "bottom"],
+      "pass_criteria": ["continuous ring topology across elbows and knees", "joint weights blend across adjacent bones", "feet contact ground"]
+    },
+    {
+      "name": "head_hands_boots",
+      "reference_features": ["readable jaw and nose", "grouped-finger grip", "shaped medieval boot"],
+      "anchors": ["Head bone", "LeftHand and RightHand", "Foot and Toes bones", "spear shaft contact line"],
+      "forbidden_additions": ["block hands", "box boots", "high-detail facial microgeometry"],
+      "required_inspections": ["head close-up", "both grip close-ups", "boot front/side/bottom"],
+      "pass_criteria": ["face reads under helmet", "thumb and finger masses wrap the shaft", "toe/heel/sole silhouettes are visible"]
+    },
+    {
+      "name": "helmet_mail_and_spear",
+      "reference_features": ["conical nasal helmet", "dark mail aventail", "leaf spearhead and socket"],
+      "anchors": ["head crown and brow", "neck/shoulder transition", "SpearSocket", "right-palm grip point"],
+      "forbidden_additions": ["fantasy oversized spearhead", "thousands of mail rings", "shield socket"],
+      "required_inspections": ["helmet front/side/back/top/bottom", "spearhead close-up", "socket-to-shaft contact", "two-hand contact"],
+      "pass_criteria": ["helmet apex reaches 1.10 m", "nasal leaves readable face opening", "spear parts have zero unintended gaps"]
+    },
+    {
+      "name": "team_cloth_belt_and_texture_maps",
+      "reference_features": ["blue front/back tabard", "quilted gambeson", "worn leather", "dark mail", "ash wood"],
+      "anchors": ["torso front/back surfaces", "belt plane at waist", "shared atlas regions"],
+      "forbidden_additions": ["whole-character team tint", "generic grayscale noise atlas", "material explosion"],
+      "required_inspections": ["material preview front/back", "team blue/red checks", "UV and map inventory"],
+      "pass_criteria": ["team cloth readable at front and back", "authored BaseColor/Normal/MRA maps exist", "four production material groups retained"]
+    },
+    {
+      "name": "lod_and_skinning",
+      "reference_features": ["LOD silhouette continuity", "smooth anatomical bends"],
+      "anchors": ["same armature and material layout", "joint ring weights", "helmet/spear/team cloth silhouettes"],
+      "forbidden_additions": ["more than four influences", "blind decimation", "shared linked mesh datablocks"],
+      "required_inspections": ["LOD0 and LOD1 metrics", "extreme walk/charge/attack/block/hit/death frames", "six-side checks"],
+      "pass_criteria": ["LOD0 9000-12000 triangles", "LOD1 3000-5000 triangles", "normalized weights", "no zero-weight vertices", "no joint gaps"]
+    },
+    {
+      "name": "animation_export_and_unity",
+      "reference_features": ["two-handed thrust and guard", "in-place locomotion", "runtime readability"],
+      "anchors": ["existing action timing", "SpearSocket", "production FBX GUID/meta", "Spearman_Animated prefab"],
+      "forbidden_additions": ["root motion", "controller rewrite", "simulation changes"],
+      "required_inspections": ["all seven clips", "Unity avatar/import", "camera sizes 5/15/40", "1/5/20-unit formations", "tests and profiler"],
+      "pass_criteria": ["seven clips import with existing timings", "prefab/controller references survive", "31/31 or better tests pass", "runtime evidence is captured rather than inferred"]
+    }
+  ]
+}

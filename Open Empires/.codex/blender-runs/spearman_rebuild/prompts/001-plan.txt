@@ -1,0 +1,44 @@
+You are the planning worker for one orchestrated Blender reference-modeling run.
+Do not run blender_orchestrator.py. Do not create Blender geometry in this step.
+
+Task:
+Create a production-quality early-medieval Norman-inspired Spearman in Blender from the reference image. This run owns only the Blender asset and export; do not modify Unity C# or scene/prefab files.
+
+Reference-derived requirements:
+- final standing height exactly 1.1 Blender meters from ground to helmet apex, realistic 7.5-head adult proportions
+- padded quilted gambeson, knee-length blue team-color tabard, leather belt, gloves, wrapped boots, modest shoulder protection
+- conical steel helmet with nasal guard, rim, visible rivets, chainmail aventail
+- round shield with wooden planks, realistic thickness, metal rim and boss, blank/team emblem area
+- primary weapon is a long ash-wood spear with metal socket and leaf-shaped spearhead
+- no primitives-as-final-blockout, no toy proportions, no oversized head, no fantasy plate armor
+- one standard Humanoid-compatible armature only: Root, Hips, spine/chest/neck/head, standard left/right shoulders/arms/hands and legs/feet/toes. No custom weapon bones.
+- create SpearSocket parented to RightHand and ShieldSocket parented to LeftHand as non-deforming attachment empties/transforms, with separate spear and shield objects parented to those sockets
+- LOD0 9,000-12,000 triangles; LOD1 3,000-5,000 triangles; shared rig/material atlas layout
+- keep renderer/material groups low: Team cloth/emblem, Body/Leather/Wood, Metal
+- complete non-overlapping UVs suitable for a single main 2K atlas
+- author Actions at 30 fps: Idle 2.5s loop, Walk 1.0s loop, RunCharge 0.75s loop, Attack 0.95s, Block 1.2s loop, Hit 0.4s, Death 1.35s. Root motion disabled; attack pullback/thrust/recovery and death collapse must be readable.
+- use solid-mode silhouette inspections and verify hand/socket contacts, shield grip, spear grip, feet-on-ground, helmet/head seating, boss/shield seating, spearhead/socket seating
+- inspect front/back/left/right/top/bottom and three-quarter views before final review
+- save editable source to D:\unity_projects\OpenEmpiresTemp\Spearman_Rebuild_Source.blend
+- export FBX to D:\unity_projects\OpenEmpiresTemp\SM_Spearman_Rebuild.fbx using Unity-compatible -Z forward, Y up, applied scale, deform bones only where appropriate, and baked animations
+- do not touch the existing current Spearman FBX or prefab
+
+Reference files:
+[
+  "D:\\unity_projects\\OpenEmpires\\Open Empires\\Assets\\Models\\Units\\Spearman\\Reference\\Spearman_Reference_Sheet.png"
+]
+
+Run directory:
+D:\unity_projects\OpenEmpires\Open Empires\.codex\blender-runs\spearman_rebuild
+
+Required behavior:
+- Inspect the reference before planning.
+- If the target object is small or buried in a busy scene, create or request a focused crop and list it in focused_references.
+- Build an anatomy inventory of visible parts. For buildings include masses, roof parts, openings, facade details, signs, site/base parts, and repeated patterns.
+- Estimate proportions as ratios or fractions from the reference. Include evidence, not just guesses.
+- Convert the anatomy into ordered construction steps.
+- Each step must build only one visible unit or one tightly related module.
+- Each step must include reference_features, anchors, forbidden additions, required_inspections, and pass_criteria.
+- Include specific inspection views such as front orthographic, side, top, close-up contact, or six-side inspection where relevant.
+
+Return JSON only. The JSON must match the output schema supplied by the caller.
