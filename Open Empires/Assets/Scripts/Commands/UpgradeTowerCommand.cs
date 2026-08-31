@@ -25,7 +25,8 @@ namespace OpenEmpires
         public bool Execute(GameSimulation simulation)
         {
             var building = simulation.BuildingRegistry.GetBuilding(BuildingId);
-            if (building == null || building.Type != BuildingType.Tower || building.IsDestroyed)
+            if (building == null || building.Type != BuildingType.Tower || building.IsDestroyed
+                || building.PlayerId != PlayerId)
                 return false;
 
             // Can't upgrade if under construction

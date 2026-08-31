@@ -273,6 +273,13 @@ namespace OpenEmpires
             }
         }
 
+        public void GetUnitTrainingSpec(int playerId, int requestedUnitType, out int resolvedUnitType,
+            out int foodCost, out int woodCost, out int goldCost, out int trainTime)
+        {
+            resolvedUnitType = ResolveCivUnitType(playerId, requestedUnitType);
+            GetUnitTrainingCostsAndTime(resolvedUnitType, out foodCost, out woodCost, out goldCost, out trainTime);
+        }
+
         private void ApplyTrainingDiscounts(BuildingData building, int unitType, ref int foodCost, ref int woodCost, ref int goldCost)
         {
             if (IsBuildingInFrenchLandmarkInfluence(building))
@@ -1849,7 +1856,7 @@ namespace OpenEmpires
                 var unit = UnitRegistry.GetUnit(cmd.UnitIds[i]);
                 if (unit == null || unit.State == UnitState.Dead) continue;
                 if (!unit.IsSheep) continue;
-                if (!AreAllies(unit.PlayerId, cmd.PlayerId) && unit.PlayerId != UnitData.NeutralPlayerId) continue;
+                if (unit.PlayerId != cmd.PlayerId && unit.PlayerId != UnitData.NeutralPlayerId) continue;
 
                 unit.ClearCommandQueue();
                 unit.ClearSavedPath();
@@ -3036,7 +3043,7 @@ namespace OpenEmpires
                 for (int i = 0; i < cmd.UnitIds.Length; i++)
                 {
                     var u = UnitRegistry.GetUnit(cmd.UnitIds[i]);
-                    if (u != null && u.State != UnitState.Dead) formGroupSize++;
+                    if (u != null && u.State != UnitState.Dead && u.PlayerId == cmd.PlayerId) formGroupSize++;
                 }
             }
 
@@ -3051,7 +3058,7 @@ namespace OpenEmpires
                 for (int i = 0; i < unitCount; i++)
                 {
                     var u = UnitRegistry.GetUnit(cmd.UnitIds[i]);
-                    if (u == null || u.State == UnitState.Dead) continue;
+                    if (u == null || u.State == UnitState.Dead || u.PlayerId != cmd.PlayerId) continue;
                     if (first) { formationMoveSpeed = u.MoveSpeed; first = false; }
                     else formationMoveSpeed = Fixed32.Min(formationMoveSpeed, u.MoveSpeed);
                 }
@@ -3061,7 +3068,7 @@ namespace OpenEmpires
             for (int i = 0; i < cmd.UnitIds.Length; i++)
             {
                 var unit = UnitRegistry.GetUnit(cmd.UnitIds[i]);
-                if (unit == null || unit.State == UnitState.Dead) continue;
+                if (unit == null || unit.State == UnitState.Dead || unit.PlayerId != cmd.PlayerId) continue;
 
                 FixedVector3 targetPos;
                 bool hasFacing = cmd.HasFacing;
@@ -3229,7 +3236,7 @@ namespace OpenEmpires
             for (int i = 0; i < cmd.UnitIds.Length; i++)
             {
                 var unit = UnitRegistry.GetUnit(cmd.UnitIds[i]);
-                if (unit == null || unit.State == UnitState.Dead) continue;
+                if (unit == null || unit.State == UnitState.Dead || unit.PlayerId != cmd.PlayerId || !unit.IsVillager) continue;
 
                 // Resource type switching: if carrying a different type, instantly deposit
                 if (unit.CarriedResourceAmount > 0 && unit.CarriedResourceType != node.Type)
@@ -3409,7 +3416,7 @@ namespace OpenEmpires
             foreach (int unitId in cmd.UnitIds)
             {
                 var unit = UnitRegistry.GetUnit(unitId);
-                if (unit == null) continue;
+                if (unit == null || unit.PlayerId != cmd.PlayerId) continue;
 
                 unit.ClearPath();
                 unit.ClearFormation();
@@ -3683,7 +3690,7 @@ namespace OpenEmpires
             for (int i = 0; i < cmd.UnitIds.Length; i++)
             {
                 var unit = UnitRegistry.GetUnit(cmd.UnitIds[i]);
-                if (unit == null || unit.State == UnitState.Dead) continue;
+                if (unit == null || unit.State == UnitState.Dead || unit.PlayerId != cmd.PlayerId) continue;
 
                 unit.ClearCommandQueue();
                 unit.ClearSavedPath();
@@ -3738,7 +3745,7 @@ namespace OpenEmpires
             for (int i = 0; i < cmd.UnitIds.Length; i++)
             {
                 var unit = UnitRegistry.GetUnit(cmd.UnitIds[i]);
-                if (unit == null || unit.State == UnitState.Dead) continue;
+                if (unit == null || unit.State == UnitState.Dead || unit.PlayerId != cmd.PlayerId) continue;
 
                 unit.ClearCommandQueue();
                 unit.ClearSavedPath();
@@ -3940,7 +3947,8 @@ namespace OpenEmpires
             if (cmd.TargetUnitId >= 0)
             {
                 var targetUnit = UnitRegistry.GetUnit(cmd.TargetUnitId);
-                if (targetUnit != null && targetUnit.State != UnitState.Dead)
+                if (targetUnit != null && targetUnit.State != UnitState.Dead
+                    && AreAllies(targetUnit.PlayerId, cmd.PlayerId))
                 {
                     building.RallyPoint = targetUnit.SimPosition;
                     building.RallyPointOnResource = false;
@@ -3973,7 +3981,8 @@ namespace OpenEmpires
             else if (cmd.TargetBuildingId >= 0)
             {
                 var target = BuildingRegistry.GetBuilding(cmd.TargetBuildingId);
-                if (target != null && target.IsUnderConstruction && !target.IsDestroyed)
+                if (target != null && target.IsUnderConstruction && !target.IsDestroyed
+                    && AreAllies(target.PlayerId, cmd.PlayerId))
                 {
                     building.RallyPoint = target.SimPosition;
                     building.RallyPointOnResource = false;
@@ -3997,6 +4006,19 @@ namespace OpenEmpires
             }
         }
 
+        private bool HasOwnedLivingVillager(int playerId, int[] unitIds)
+        {
+            if (unitIds == null) return false;
+            for (int i = 0; i < unitIds.Length; i++)
+            {
+                UnitData unit = UnitRegistry.GetUnit(unitIds[i]);
+                if (unit != null && unit.PlayerId == playerId && unit.IsVillager
+                    && unit.CurrentHealth > 0 && unit.State != UnitState.Dead)
+                    return true;
+            }
+            return false;
+        }
+
         private void ProcessPlaceBuildingCommand(PlaceBuildingCommand cmd)
         {
             var resources = ResourceManager.GetPlayerResources(cmd.PlayerId);
@@ -4005,6 +4027,7 @@ namespace OpenEmpires
             if (cmd.BuildingType == BuildingType.Landmark)
             {
                 int villagerCount = cmd.VillagerUnitIds != null ? cmd.VillagerUnitIds.Length : 0;
+                if (!HasOwnedLivingVillager(cmd.PlayerId, cmd.VillagerUnitIds)) return;
                 if (cmd.LandmarkIdValue < 0)
                 {
                     Debug.Log($"[Landmark] REJECTED: LandmarkIdValue={cmd.LandmarkIdValue} for player {cmd.PlayerId} (no landmark id set)");
@@ -4130,7 +4153,8 @@ namespace OpenEmpires
             int goldCost = GetBuildingGoldCost(cmd.BuildingType);
             if (!godMode && (resources.Wood < cost || resources.Stone < stoneCost || resources.Food < foodCost || resources.Gold < goldCost)) return;
 
-            bool hasVillagers2 = cmd.VillagerUnitIds != null && cmd.VillagerUnitIds.Length > 0;
+            bool hasVillagers2 = HasOwnedLivingVillager(cmd.PlayerId, cmd.VillagerUnitIds);
+            if (!godMode && !hasVillagers2) return;
 
             // Get footprint size
             int footprintW2, footprintH2;
@@ -4398,13 +4422,15 @@ namespace OpenEmpires
             var resources = ResourceManager.GetPlayerResources(cmd.PlayerId);
             if (!godMode && (resources.Wood < totalWood || resources.Stone < totalStone)) return;
 
+            bool hasVillagers = HasOwnedLivingVillager(cmd.PlayerId, cmd.VillagerUnitIds);
+            if (!godMode && !hasVillagers) return;
+
             if (!godMode)
             {
                 resources.Wood -= totalWood;
                 resources.Stone -= totalStone;
             }
             int wallGroupId = nextWallGroupId++;
-            bool hasVillagers = cmd.VillagerUnitIds != null && cmd.VillagerUnitIds.Length > 0;
             bool underConstructionWall = !godMode && hasVillagers;
 
             // Create wall segment buildings
@@ -4730,7 +4756,7 @@ namespace OpenEmpires
             for (int i = 0; i < cmd.UnitIds.Length; i++)
             {
                 var unit = UnitRegistry.GetUnit(cmd.UnitIds[i]);
-                if (unit == null || unit.State == UnitState.Dead) continue;
+                if (unit == null || unit.State == UnitState.Dead || !unit.IsVillager) continue;
                 if (unit.PlayerId != cmd.PlayerId) continue;
 
                 if (cmd.IsQueued)
@@ -5532,7 +5558,8 @@ namespace OpenEmpires
                 else if (building.RallyPointOnConstruction && unitData.IsVillager)
                 {
                     var targetBuilding = BuildingRegistry.GetBuilding(building.RallyPointConstructionBuildingId);
-                    if (targetBuilding != null && targetBuilding.IsUnderConstruction && !targetBuilding.IsDestroyed)
+                    if (targetBuilding != null && targetBuilding.IsUnderConstruction && !targetBuilding.IsDestroyed
+                        && AreAllies(targetBuilding.PlayerId, playerId))
                     {
                         unitData.ClearFormation();
                         unitData.CombatTargetId = -1;

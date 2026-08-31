@@ -124,6 +124,12 @@ namespace OpenEmpires
                 case ResearchCommand research:
                     payload = JsonUtility.ToJson(new ResearchPayload(research));
                     break;
+                case RepairBuildingCommand repair:
+                    payload = JsonUtility.ToJson(new RepairBuildingPayload(repair));
+                    break;
+                case TributeCommand tribute:
+                    payload = JsonUtility.ToJson(new TributePayload(tribute));
+                    break;
                 case CheatResourceCommand:
                 case CheatProductionCommand:
                 case CheatConstructionCommand:
@@ -132,8 +138,7 @@ namespace OpenEmpires
                     payload = "{}";
                     break;
                 default:
-                    payload = "{}";
-                    break;
+                    throw new NotSupportedException($"No JSON serializer registered for {command.GetType().Name}.");
             }
 
             return (commandType, payload);
@@ -186,6 +191,8 @@ namespace OpenEmpires
                     "Tsunami" => ParseTsunamiCommand(payload, playerId),
                     "MarketTrade" => ParseMarketTradeCommand(payload, playerId),
                     "Research" => ParseResearchCommand(payload, playerId),
+                    "RepairBuilding" => ParseRepairBuildingCommand(payload, playerId),
+                    "Tribute" => ParseTributeCommand(payload, playerId),
                     _ => null
                 };
             }
@@ -354,8 +361,8 @@ namespace OpenEmpires
         {
             var data = JsonUtility.FromJson<AiIntentPayload>(payload);
             return new AiIntentCommand(
+                data.targetPlayerId,
                 playerId,
-                data.issuerPlayerId,
                 (AiIntentKind)data.intentKind,
                 data.paramA, data.paramB, data.paramC, data.paramD,
                 data.durationTicks,
@@ -753,6 +760,7 @@ namespace OpenEmpires
         [Serializable]
         private class AiIntentPayload
         {
+            public int targetPlayerId;
             public int issuerPlayerId;
             public int intentKind;
             public int paramA;
@@ -767,6 +775,7 @@ namespace OpenEmpires
 
             public AiIntentPayload(AiIntentCommand cmd)
             {
+                targetPlayerId = cmd.PlayerId;
                 issuerPlayerId = cmd.IssuerPlayerId;
                 intentKind = cmd.IntentKind;
                 paramA = cmd.ParamA;
@@ -1132,6 +1141,54 @@ namespace OpenEmpires
         {
             var data = JsonUtility.FromJson<ResearchPayload>(payload);
             return new ResearchCommand(playerId, data.buildingId, (TechnologyType)data.techType);
+        }
+
+        [System.Serializable]
+        private class RepairBuildingPayload
+        {
+            public int[] unitIds;
+            public int targetBuildingId;
+            public bool isQueued;
+
+            public RepairBuildingPayload() { }
+
+            public RepairBuildingPayload(RepairBuildingCommand cmd)
+            {
+                unitIds = cmd.UnitIds;
+                targetBuildingId = cmd.TargetBuildingId;
+                isQueued = cmd.IsQueued;
+            }
+        }
+
+        private static RepairBuildingCommand ParseRepairBuildingCommand(string payload, int playerId)
+        {
+            var data = JsonUtility.FromJson<RepairBuildingPayload>(payload);
+            var command = new RepairBuildingCommand(playerId, data.unitIds, data.targetBuildingId);
+            command.IsQueued = data.isQueued;
+            return command;
+        }
+
+        [System.Serializable]
+        private class TributePayload
+        {
+            public int recipientPlayerId;
+            public int resourceType;
+            public int amount;
+
+            public TributePayload() { }
+
+            public TributePayload(TributeCommand cmd)
+            {
+                recipientPlayerId = cmd.RecipientPlayerId;
+                resourceType = cmd.ResourceType;
+                amount = cmd.Amount;
+            }
+        }
+
+        private static TributeCommand ParseTributeCommand(string payload, int playerId)
+        {
+            var data = JsonUtility.FromJson<TributePayload>(payload);
+            return new TributeCommand(playerId, data.recipientPlayerId, data.resourceType, data.amount);
         }
 
         private static TsunamiCommand ParseTsunamiCommand(string payload, int playerId)

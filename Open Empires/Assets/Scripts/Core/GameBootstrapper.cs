@@ -18,6 +18,10 @@ namespace OpenEmpires
         public float InterpolationAlpha { get; private set; }
         public NetworkManager Network => networkManager;
         public int PlayerCount => playerCount;
+        public CommanderGoalManager Commander { get; private set; }
+        [SerializeField] private bool submitCommanderGoalOnStart;
+        [SerializeField] private int commanderSpearmanTarget = 10;
+        private int debugCommanderGoalId = -1;
 
         // Input delay: send commands for N ticks in the future
         // This gives commands time to arrive before they're needed
@@ -116,6 +120,12 @@ namespace OpenEmpires
                 if (civilizations != null)
                     Simulation.SetPlayerCivilizations(civilizations);
 
+                int localPlayerId = networkManager != null && networkManager.IsMultiplayer
+                    ? networkManager.LocalPlayerId : 0;
+                Commander = new CommanderGoalManager(Simulation, localPlayerId);
+                if (submitCommanderGoalOnStart)
+                    debugCommanderGoalId = Commander.SubmitEnsureUnitCount(1, commanderSpearmanTarget).GoalId;
+
                 // Force immediate game setup so all entities exist before first tick
                 var gameSetup = Object.FindFirstObjectByType<GameSetup>();
                 if (gameSetup != null)
@@ -200,6 +210,7 @@ namespace OpenEmpires
                 }
                 else
                 {
+                    Commander?.Tick(Simulation.CurrentTick);
                     Simulation.Tick();
                     NetworkDiagnostics.Instance?.RecordTick();
                 }
@@ -260,6 +271,7 @@ namespace OpenEmpires
             // Flush and send local commands for the future tick
             if (sentCommandsForTick < commandTick)
             {
+                Commander?.Tick(currentTick);
                 localCommandsThisTick.Clear();
                 localCommandsThisTick.AddRange(Simulation.CommandBuffer.FlushCommands());
 
@@ -462,10 +474,80 @@ namespace OpenEmpires
                     surrender.PlayerId = playerId;
                     cmd = surrender;
                     break;
+                case RepairBuildingCommand repair:
+                    repair.PlayerId = playerId;
+                    cmd = repair;
+                    break;
+                case ResearchCommand research:
+                    research.PlayerId = playerId;
+                    cmd = research;
+                    break;
+                case TributeCommand tribute:
+                    tribute.PlayerId = playerId;
+                    cmd = tribute;
+                    break;
+                case MarketTradeCommand marketTrade:
+                    marketTrade.PlayerId = playerId;
+                    cmd = marketTrade;
+                    break;
+                case DeleteBuildingCommand deleteBuilding:
+                    deleteBuilding.PlayerId = playerId;
+                    cmd = deleteBuilding;
+                    break;
+                case DeleteUnitsCommand deleteUnits:
+                    deleteUnits.PlayerId = playerId;
+                    cmd = deleteUnits;
+                    break;
+                case FollowUnitCommand follow:
+                    follow.PlayerId = playerId;
+                    cmd = follow;
+                    break;
+                case HealUnitCommand heal:
+                    heal.PlayerId = playerId;
+                    cmd = heal;
+                    break;
+                case SlaughterSheepCommand slaughter:
+                    slaughter.PlayerId = playerId;
+                    cmd = slaughter;
+                    break;
+                case MeteorStrikeCommand meteor:
+                    meteor.PlayerId = playerId;
+                    cmd = meteor;
+                    break;
+                case HealingRainCommand healingRain:
+                    healingRain.PlayerId = playerId;
+                    cmd = healingRain;
+                    break;
+                case LightningStormCommand lightningStorm:
+                    lightningStorm.PlayerId = playerId;
+                    cmd = lightningStorm;
+                    break;
+                case TsunamiCommand tsunami:
+                    tsunami.PlayerId = playerId;
+                    cmd = tsunami;
+                    break;
                 default:
                     Debug.LogWarning($"[GameBootstrapper] SetCommandPlayerId: unhandled command type {cmd.GetType().Name}");
                     break;
             }
+        }
+
+        [ContextMenu("Commander/Ensure 10 Spearmen")]
+        public void DebugEnsureTenSpearmen()
+        {
+            if (Commander == null)
+            {
+                Debug.LogWarning("[Commander] Simulation is not initialized yet.");
+                return;
+            }
+            debugCommanderGoalId = Commander.SubmitEnsureUnitCount(1, 10).GoalId;
+        }
+
+        [ContextMenu("Commander/Cancel Debug Goal")]
+        public void DebugCancelCommanderGoal()
+        {
+            if (Commander != null && debugCommanderGoalId >= 0)
+                Commander.CancelGoal(debugCommanderGoalId);
         }
 
         private void EnsureSinglePlayerAnalytics()
