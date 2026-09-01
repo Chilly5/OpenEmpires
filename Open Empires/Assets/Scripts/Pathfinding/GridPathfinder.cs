@@ -155,6 +155,25 @@ namespace OpenEmpires
             }
         }
 
+        public static bool TryFindCompletePath(MapData map, Vector2Int start, Vector2Int goal,
+            out List<Vector2Int> path, int playerId = -1,
+            BuildingRegistry buildingRegistry = null, int maxExpansions = 16384)
+        {
+            bool goalWalkable = playerId >= 0 && buildingRegistry != null
+                ? map.IsWalkable(goal.x, goal.y, playerId, buildingRegistry)
+                : map.IsWalkable(goal.x, goal.y);
+            if (!goalWalkable)
+            {
+                path = new List<Vector2Int>();
+                return false;
+            }
+
+            path = FindPath(map, start, goal, playerId, buildingRegistry, maxExpansions);
+            return start == goal
+                ? path.Count == 1 && path[0] == goal
+                : path.Count > 0 && path[path.Count - 1] == goal;
+        }
+
         private static List<Vector2Int> FindPathPooled(MapData map, Vector2Int start, Vector2Int goal, int w, int h, int playerId, BuildingRegistry buildingRegistry, int maxExpansions)
         {
             int startIdx = start.y * w + start.x;

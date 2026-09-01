@@ -273,6 +273,14 @@ namespace OpenEmpires
             }
         }
 
+        public bool IsCompatibleProductionBuilding(int playerId, BuildingData building,
+            int requestedUnitType)
+        {
+            if (building == null || building.PlayerId != playerId || building.IsDestroyed) return false;
+            int resolvedUnitType = ResolveCivUnitType(playerId, requestedUnitType);
+            return CanBuildingTrainUnit(building, requestedUnitType, resolvedUnitType);
+        }
+
         public void GetUnitTrainingSpec(int playerId, int requestedUnitType, out int resolvedUnitType,
             out int foodCost, out int woodCost, out int goldCost, out int trainTime)
         {
@@ -4642,11 +4650,51 @@ namespace OpenEmpires
             endIdx = startIdx + 1;
         }
 
-        private void AssignUnitToConstructionTarget(UnitData unit, BuildingData building,
+        private bool AssignUnitToConstructionTarget(UnitData unit, BuildingData building,
             Dictionary<int, HashSet<Vector2Int>> occupiedTilesByBuildingId = null,
             bool clearQueuedCommands = false,
             bool bankCarriedResources = false)
         {
+            HashSet<Vector2Int> occupiedTiles = null;
+            if (occupiedTilesByBuildingId != null)
+            {
+                if (!occupiedTilesByBuildingId.TryGetValue(building.Id, out occupiedTiles))
+                {
+                    occupiedTiles = new HashSet<Vector2Int>();
+                    occupiedTilesByBuildingId[building.Id] = occupiedTiles;
+                }
+            }
+
+            var triedTiles = occupiedTiles != null
+                ? new HashSet<Vector2Int>(occupiedTiles)
+                : new HashSet<Vector2Int>();
+
+            Vector2Int startTile = MapData.WorldToTile(unit.SimPosition);
+            int constructAttempts = 0;
+            List<Vector2Int> selectedPath = null;
+            Vector2Int selectedTile = default;
+
+            while (true)
+            {
+                if (++constructAttempts > 4) break;
+
+                Vector2Int adjTile = FindNearestWalkableAdjacentTile(building, unit.SimPosition, triedTiles);
+                if (triedTiles.Contains(adjTile)) break;
+                if (!IsPerimeterTile(building, adjTile)) break;
+
+                if (GridPathfinder.TryFindCompletePath(MapData, startTile, adjTile,
+                    out List<Vector2Int> path, unit.PlayerId, BuildingRegistry))
+                {
+                    selectedPath = path;
+                    selectedTile = adjTile;
+                    break;
+                }
+
+                triedTiles.Add(adjTile);
+            }
+
+            if (selectedPath == null) return false;
+
             if (bankCarriedResources)
                 BankCarriedResources(unit);
 
@@ -4666,44 +4714,24 @@ namespace OpenEmpires
             unit.TargetGarrisonBuildingId = -1;
             unit.ClearPatrol();
 
-            HashSet<Vector2Int> occupiedTiles = null;
-            if (occupiedTilesByBuildingId != null)
-            {
-                if (!occupiedTilesByBuildingId.TryGetValue(building.Id, out occupiedTiles))
-                {
-                    occupiedTiles = new HashSet<Vector2Int>();
-                    occupiedTilesByBuildingId[building.Id] = occupiedTiles;
-                }
-            }
+            occupiedTiles?.Add(selectedTile);
+            unit.SetPath(selectedPath);
+            unit.FinalDestination = MapData.TileToWorldFixed(selectedTile.x, selectedTile.y);
+            unit.State = UnitState.MovingToBuild;
+            return true;
+        }
 
-            var triedTiles = occupiedTiles != null
-                ? new HashSet<Vector2Int>(occupiedTiles)
-                : new HashSet<Vector2Int>();
-
-            Vector2Int startTile = MapData.WorldToTile(unit.SimPosition);
-            int constructAttempts = 0;
-
-            while (true)
-            {
-                if (++constructAttempts > 4) break;
-
-                Vector2Int adjTile = FindNearestWalkableAdjacentTile(building, unit.SimPosition, triedTiles);
-                if (triedTiles.Contains(adjTile)) break;
-
-                var path = GridPathfinder.FindPath(MapData, startTile, adjTile, unit.PlayerId, BuildingRegistry);
-                if (path.Count > 0)
-                {
-                    occupiedTiles?.Add(adjTile);
-                    unit.SetPath(path);
-                    unit.FinalDestination = MapData.TileToWorldFixed(adjTile.x, adjTile.y);
-                    unit.State = UnitState.MovingToBuild;
-                    return;
-                }
-
-                triedTiles.Add(adjTile);
-            }
-
-            unit.State = UnitState.Constructing;
+        private static bool IsPerimeterTile(BuildingData building, Vector2Int tile)
+        {
+            bool insideExpanded = tile.x >= building.OriginTileX - 1
+                && tile.x <= building.OriginTileX + building.TileFootprintWidth
+                && tile.y >= building.OriginTileZ - 1
+                && tile.y <= building.OriginTileZ + building.TileFootprintHeight;
+            bool insideFootprint = tile.x >= building.OriginTileX
+                && tile.x < building.OriginTileX + building.TileFootprintWidth
+                && tile.y >= building.OriginTileZ
+                && tile.y < building.OriginTileZ + building.TileFootprintHeight;
+            return insideExpanded && !insideFootprint;
         }
 
         private void BankCarriedResources(UnitData unit)
