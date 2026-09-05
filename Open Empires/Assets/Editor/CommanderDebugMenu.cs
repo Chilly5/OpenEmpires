@@ -10,6 +10,12 @@ namespace OpenEmpires.EditorTools
         private static int humanQaWorkerId = -1;
         private static int humanQaResourceNodeId = -1;
 
+        [MenuItem("Open Empires/Commander/Command Window")]
+        public static void OpenCommandWindow()
+        {
+            CommanderIntentDebugWindow.Open();
+        }
+
         [MenuItem("Open Empires/Commander/Start Local QA Match")]
         public static void StartLocalQaMatch()
         {

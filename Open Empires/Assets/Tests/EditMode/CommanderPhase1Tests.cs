@@ -145,6 +145,8 @@ namespace OpenEmpires.Tests
         {
             CreateVillager(0);
             BuildingData barracks = CreateBarracks(0);
+            // Keep this test focused on death/queue accounting rather than capacity recovery.
+            simulation.CreateBuilding(0, BuildingType.House, baseTile.x + 16, baseTile.y, false);
             GiveResources(0, food: 1000, wood: 1000);
             UnitData first = null;
             for (int i = 0; i < 8; i++)
@@ -210,6 +212,7 @@ namespace OpenEmpires.Tests
             BuildingData foundation = simulation.CreateBuilding(0, BuildingType.Barracks,
                 baseTile.x + 12, baseTile.y, underConstruction: true);
             UnitData stalled = CreateVillager(0);
+            stalled.SimPosition = simulation.MapData.TileToWorldFixed(foundation.OriginTileX - 1, foundation.OriginTileZ);
             stalled.ConstructionTargetBuildingId = foundation.Id;
             stalled.State = UnitState.Constructing;
             UnitData backup = CreateVillager(0);

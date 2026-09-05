@@ -1,0 +1,609 @@
+{
+  "unityVersion": "6000.5.9f1",
+  "jobId": "f8ed074f3a4144d4a3c6b9f8ce9ed3a6",
+  "summary": {
+    "total": 119,
+    "passed": 119,
+    "failed": 0,
+    "skipped": 0,
+    "durationSeconds": 19.8865775,
+    "resultState": "Passed"
+  },
+  "results": [
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentIntegrationTests.GoalCompletionEvent_ProducesDeterministicReadyResponse",
+      "result": "Passed",
+      "durationSeconds": 0.2891579
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentIntegrationTests.InjectedInterpreter_RunsOnlyOnSubmissionNotCommanderTicks",
+      "result": "Passed",
+      "durationSeconds": 0.2533731
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentIntegrationTests.SubmitText_InvalidIntentRejects_BuildIntentCreatesGoalWithoutImmediateCommand",
+      "result": "Passed",
+      "durationSeconds": 0.2507399
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentIntegrationTests.SubmitText_MakeTenSpearmen_CreatesActiveExistingGoal",
+      "result": "Passed",
+      "durationSeconds": 0.2580181
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentIntegrationTests.SubmitText_OversizedUnitTarget_IsRejectedBeforeGoalCreation",
+      "result": "Passed",
+      "durationSeconds": 0.2517106
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentIntegrationTests.SubmitText_UsesExistingCommanderExecutionAndNormalGameplayCommand",
+      "result": "Passed",
+      "durationSeconds": 0.2541614
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentParserTests.Parse_BuildingCommands_ReturnTypedBuildStructure(\"build barracks\",Barracks)",
+      "result": "Passed",
+      "durationSeconds": 0.0006074
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentParserTests.Parse_BuildingCommands_ReturnTypedBuildStructure(\"create house\",House)",
+      "result": "Passed",
+      "durationSeconds": 0.0006988
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentParserTests.Parse_BuildingCommands_ReturnTypedBuildStructure(\"make a stable\",Stables)",
+      "result": "Passed",
+      "durationSeconds": 0.0007049
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentParserTests.Parse_Constraints_AreStronglyTypedAndKeptOutsideCommandNoun",
+      "result": "Passed",
+      "durationSeconds": 0.0014201
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentParserTests.Parse_DoNotQueueMoreThanFive_IsMaximumQueueConstraint",
+      "result": "Passed",
+      "durationSeconds": 0.0003821
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentParserTests.Parse_IdleOnlyConstraint_IsStronglyTyped",
+      "result": "Passed",
+      "durationSeconds": 0.0004012
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentParserTests.Parse_InvalidInput_ReturnsStructuredRejection(\"\",EmptyInput)",
+      "result": "Passed",
+      "durationSeconds": 0.0005499
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentParserTests.Parse_InvalidInput_ReturnsStructuredRejection(\"dance around the town center\",UnknownCommand)",
+      "result": "Passed",
+      "durationSeconds": 0.0001561
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentParserTests.Parse_InvalidInput_ReturnsStructuredRejection(\"make 10 banana warriors\",UnknownUnit)",
+      "result": "Passed",
+      "durationSeconds": 0.000102
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentParserTests.Parse_InvalidInput_ReturnsStructuredRejection(\"put 8 villagers on crystal\",UnknownResource)",
+      "result": "Passed",
+      "durationSeconds": 0.0003054
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentParserTests.Parse_InvalidInput_ReturnsStructuredRejection(\"build dragon keep\",UnknownStructure)",
+      "result": "Passed",
+      "durationSeconds": 0.0000988
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentParserTests.Parse_InvalidInput_ReturnsStructuredRejection(\"make -5 spearmen\",InvalidAmount)",
+      "result": "Passed",
+      "durationSeconds": 0.0001656
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentParserTests.Parse_InvalidInput_ReturnsStructuredRejection(\"make 999999999999999999999 spearmen\",InvalidAmount)",
+      "result": "Passed",
+      "durationSeconds": 0.000232
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentParserTests.Parse_MoreGoldWorkers_RepresentsUnspecifiedIncreaseWithoutInventingCount(\"more gold workers\")",
+      "result": "Passed",
+      "durationSeconds": 0.0009706
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentParserTests.Parse_MoreGoldWorkers_RepresentsUnspecifiedIncreaseWithoutInventingCount(\"increase gold workers\")",
+      "result": "Passed",
+      "durationSeconds": 0.0001708
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentParserTests.Parse_ResourceCommands_ReturnTypedExactAllocation(\"put 8 villagers on wood\",Wood,8)",
+      "result": "Passed",
+      "durationSeconds": 0.0005803
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentParserTests.Parse_ResourceCommands_ReturnTypedExactAllocation(\"move 5 workers to food\",Food,5)",
+      "result": "Passed",
+      "durationSeconds": 0.0001208
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentParserTests.Parse_UnitCommands_ReturnTypedEnsureUnitCount(\"make 5 spearmen\",1,5)",
+      "result": "Passed",
+      "durationSeconds": 0.0004864
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentParserTests.Parse_UnitCommands_ReturnTypedEnsureUnitCount(\"create 10 archers\",2,10)",
+      "result": "Passed",
+      "durationSeconds": 0.0000964
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentParserTests.Parse_UnitCommands_ReturnTypedEnsureUnitCount(\"train 20 knights\",7,20)",
+      "result": "Passed",
+      "durationSeconds": 0.0000528
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentParserTests.Parse_UnitCommands_ReturnTypedEnsureUnitCount(\"  MAKE   10 Spearmen. \",1,10)",
+      "result": "Passed",
+      "durationSeconds": 0.000086
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentResolverTests.Resolve_EnsureUnitCount_SubmitsExistingGoalAndStartedEvent",
+      "result": "Passed",
+      "durationSeconds": 0.252373
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentResolverTests.Resolve_IdleOnlyConstraint_ConfiguresGoalPolicy",
+      "result": "Passed",
+      "durationSeconds": 0.254591
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentResolverTests.Resolve_MaximumQueueConstraint_MapsToExistingGoalField",
+      "result": "Passed",
+      "durationSeconds": 0.2477426
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentResolverTests.Resolve_RecognizedNonSpearmanIntent_CreatesProductionGoal(2)",
+      "result": "Passed",
+      "durationSeconds": 0.2598651
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentResolverTests.Resolve_RecognizedNonSpearmanIntent_CreatesProductionGoal(7)",
+      "result": "Passed",
+      "durationSeconds": 0.2533005
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentResolverTests.Resolve_ResourceAndBuildingIntents_CreateTypedGoals",
+      "result": "Passed",
+      "durationSeconds": 0.2997981
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentValidationTests.Validate_EnsureUnitCountAbovePopulationMaximum_IsRejectedWithoutClamping",
+      "result": "Passed",
+      "durationSeconds": 0.2509276
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentValidationTests.Validate_MaximumQueuePolicyAndDuplicateConstraints_AreRejected",
+      "result": "Passed",
+      "durationSeconds": 0.2454105
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderIntentValidationTests.Validate_UnknownUnitAndPlayerMismatch_AreRejected",
+      "result": "Passed",
+      "durationSeconds": 0.242109
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.AbsoluteMaximumPopulation_BlocksWithoutHouseSpam",
+      "result": "Passed",
+      "durationSeconds": 0.2496561
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.AlreadySatisfied_CompletesWithoutIssuingTraining",
+      "result": "Passed",
+      "durationSeconds": 0.2424
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.Cancellation_StopsFutureCommanderActions",
+      "result": "Passed",
+      "durationSeconds": 0.24126
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.CommanderCommands_RoundTripThroughActiveJsonSerializer",
+      "result": "Passed",
+      "durationSeconds": 0.2455919
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.CommanderPlacement_UnreachableCandidatesEmitNoPlaceCommand",
+      "result": "Passed",
+      "durationSeconds": 0.2781361
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.CommanderReservedWorker_IsReusedBeforeOrdinaryGatherer",
+      "result": "Passed",
+      "durationSeconds": 0.2436892
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.ConstructBuildingCommand_UnreachableWorkerRemainsUnassigned",
+      "result": "Passed",
+      "durationSeconds": 0.2784475
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.ConstructionRecovery_DeadBuilderIssuesConstructCommandForBackup",
+      "result": "Passed",
+      "durationSeconds": 0.242001
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.ConstructionRecovery_ProgressingBuilderDoesNotReceiveDuplicateCommand",
+      "result": "Passed",
+      "durationSeconds": 0.2407098
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.ConstructionRecovery_StalledBuilderReassignsBackupAfterGraceWindow",
+      "result": "Passed",
+      "durationSeconds": 0.2426095
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.ConstructionRecovery_UnreachableBackupBecomesBlocked",
+      "result": "Passed",
+      "durationSeconds": 0.2418994
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.ExistingTrainingQueue_IsCountedAndPreventsBlindOverQueueing",
+      "result": "Passed",
+      "durationSeconds": 0.2409102
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.ExploredResourceDepletion_DoesNotChangeCommanderObservation",
+      "result": "Passed",
+      "durationSeconds": 0.2437379
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.ForeignBuilder_CannotPlaceBuildingOrSpendIssuerResources",
+      "result": "Passed",
+      "durationSeconds": 0.2470173
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.ForeignControlledUnits_AreRejectedByMoveStopAndAttack",
+      "result": "Passed",
+      "durationSeconds": 0.246971
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.ForeignTowerUpgrade_IsRejectedWithoutSpendingOwnerResources",
+      "result": "Passed",
+      "durationSeconds": 0.2468662
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.GatherCommand_CannotControlForeignVillager",
+      "result": "Passed",
+      "durationSeconds": 0.2492734
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.GoalTimeout_PublishesStructuredFailureEvent",
+      "result": "Passed",
+      "durationSeconds": 0.2427467
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.GridPathfinder_CompletePathCheckRejectsNonEmptyPartialPath",
+      "result": "Passed",
+      "durationSeconds": 0.2397335
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.HiddenEnemyBuilding_DoesNotChangePlacementObservation",
+      "result": "Passed",
+      "durationSeconds": 0.2404679
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.HumanCommand_ClearsReservationAndProtectionPreventsReclaim",
+      "result": "Passed",
+      "durationSeconds": 0.2446056
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.HumanProtectionWindow_PreventsRapidReclaimAtSixSimulationSeconds",
+      "result": "Passed",
+      "durationSeconds": 0.2412041
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.InsufficientBarracksWood_ReassignsOwnedVillagerWithoutCheatingResources",
+      "result": "Passed",
+      "durationSeconds": 0.241032
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.MissingBarracks_EmitsLegitimatePlaceBuildingCommand",
+      "result": "Passed",
+      "durationSeconds": 0.2399076
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.MultipleBarracks_UsesLowestLoadAvailableProducer",
+      "result": "Passed",
+      "durationSeconds": 0.2442513
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.PartialCount_PlansOnlyRemainingProduction",
+      "result": "Passed",
+      "durationSeconds": 0.2444014
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.PopulationBlocked_EmitsHousePlacementBeforeMoreTraining",
+      "result": "Passed",
+      "durationSeconds": 0.2422771
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.SameTickHumanGatherCommand_ProtectsWorkerBeforeCommanderPlans",
+      "result": "Passed",
+      "durationSeconds": 0.2408091
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase1Tests.UnitDeathBeforeCompletion_ReevaluationRestoresMissingOrder",
+      "result": "Passed",
+      "durationSeconds": 0.244948
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.BuildStructureGoal_BuildsBarracks",
+      "result": "Passed",
+      "durationSeconds": 0.3224852
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.BuildStructureGoal_DoesNotCompleteOnEnqueue",
+      "result": "Passed",
+      "durationSeconds": 0.2421995
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.BuildStructureGoal_RecoversFromBuilderDeath",
+      "result": "Passed",
+      "durationSeconds": 0.2422546
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.BuildStructureGoal_RejectsInvalidBuilding",
+      "result": "Passed",
+      "durationSeconds": 0.2488866
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.BuildStructureGoal_RejectsUnreachablePlacement",
+      "result": "Passed",
+      "durationSeconds": 0.2934803
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.BuildStructureGoal_TwoQueuedRequestsUseDistinctTargets",
+      "result": "Passed",
+      "durationSeconds": 0.2435415
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.BuildStructureGoal_WaitsForResources",
+      "result": "Passed",
+      "durationSeconds": 0.2410059
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.Constraint_ActiveWorkersOnlyBlocksWithoutIdleFallback",
+      "result": "Passed",
+      "durationSeconds": 0.2462657
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.Constraint_ExplicitProtectedFloorAllowsSurplusButNotBelowFloor",
+      "result": "Passed",
+      "durationSeconds": 0.2463797
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.Constraint_MaxQueueLimitsProduction",
+      "result": "Passed",
+      "durationSeconds": 0.2416931
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.Constraint_ProtectsResourceWorkers",
+      "result": "Passed",
+      "durationSeconds": 0.2408473
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.Constraint_UsesIdleWorkersOnly",
+      "result": "Passed",
+      "durationSeconds": 0.2459019
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.EnsureUnitCount_AccountsForExistingTrainingQueue",
+      "result": "Passed",
+      "durationSeconds": 0.2425157
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.EnsureUnitCount_AlreadySatisfied_CompletesImmediately",
+      "result": "Passed",
+      "durationSeconds": 0.2415192
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.EnsureUnitCount_Archer_Works",
+      "result": "Passed",
+      "durationSeconds": 0.3014101
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.EnsureUnitCount_FullPopulationWithQueuedTargetRequestsHouse",
+      "result": "Passed",
+      "durationSeconds": 0.2506002
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.EnsureUnitCount_Knight_WaitsForAgeThenResumes",
+      "result": "Passed",
+      "durationSeconds": 0.246149
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.EnsureUnitCount_Knight_Works",
+      "result": "Passed",
+      "durationSeconds": 0.309365
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.EnsureUnitCount_MissingArcherRangeRequestsProductionBuildingAfterAge2",
+      "result": "Passed",
+      "durationSeconds": 0.2479646
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.ProductionPlanner_DistributesAcrossAvailableBuildings",
+      "result": "Passed",
+      "durationSeconds": 0.2465789
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.ResourceAllocation_AssignsIdleWorkers(Food)",
+      "result": "Passed",
+      "durationSeconds": 0.2448183
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.ResourceAllocation_AssignsIdleWorkers(Wood)",
+      "result": "Passed",
+      "durationSeconds": 0.2422123
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.ResourceAllocation_AssignsIdleWorkers(Gold)",
+      "result": "Passed",
+      "durationSeconds": 0.2430262
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.ResourceAllocation_AssignsIdleWorkers(Stone)",
+      "result": "Passed",
+      "durationSeconds": 0.2459724
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.ResourceAllocation_CompletesWhenTargetReached",
+      "result": "Passed",
+      "durationSeconds": 0.2416017
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.ResourceAllocation_DoesNotThrashWorkers",
+      "result": "Passed",
+      "durationSeconds": 0.2411906
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.ResourceAllocation_IncreaseSnapshotsOneAdditionalWorker",
+      "result": "Passed",
+      "durationSeconds": 0.2506808
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.ResourceAllocation_RespectsHumanControlledWorkers",
+      "result": "Passed",
+      "durationSeconds": 0.2468609
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderPhase3ATests.ResourceAllocation_TargetNineOfEightWorkersIsAlreadyComplete",
+      "result": "Passed",
+      "durationSeconds": 0.2452329
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderResponseGeneratorTests.Generate_TerminalOrBlockedGoalEvent_ReturnsDeterministicTemplate(GoalBlocked,\"I am blocked.\")",
+      "result": "Passed",
+      "durationSeconds": 0.000526
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderResponseGeneratorTests.Generate_TerminalOrBlockedGoalEvent_ReturnsDeterministicTemplate(GoalFailed,\"I could not complete the request.\")",
+      "result": "Passed",
+      "durationSeconds": 0.0000576
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderResponseGeneratorTests.Generate_TerminalOrBlockedGoalEvent_ReturnsDeterministicTemplate(GoalCancelled,\"The Commander request was cancelled.\")",
+      "result": "Passed",
+      "durationSeconds": 0.0000283
+    },
+    {
+      "name": "OpenEmpires.Tests.CommanderResponseGeneratorTests.Generate_UnsupportedFutureIntent_DoesNotClaimExecution",
+      "result": "Passed",
+      "durationSeconds": 0.0002592
+    },
+    {
+      "name": "OpenEmpires.Tests.FormationFacingTests.GroupedFacingFormation_KeepsDestinationAtCentroid",
+      "result": "Passed",
+      "durationSeconds": 0.0020701
+    },
+    {
+      "name": "OpenEmpires.Tests.FormationFacingTests.GroupedFacingFormation_PutsEarlierGroupsInFront",
+      "result": "Passed",
+      "durationSeconds": 0.0011629
+    },
+    {
+      "name": "OpenEmpires.Tests.FormationFacingTests.GroupedFacingFormation_RotatesRowsWithFacingDirection",
+      "result": "Passed",
+      "durationSeconds": 0.0001826
+    },
+    {
+      "name": "OpenEmpires.Tests.FormationFacingTests.MovementArrival_CommitsRequestedFacingToSimulation",
+      "result": "Passed",
+      "durationSeconds": 0.0005251
+    },
+    {
+      "name": "OpenEmpires.Tests.FormationFacingTests.SingleUnitFacingMove_UsesUnitSpeedAndAdvances",
+      "result": "Passed",
+      "durationSeconds": 0.2552258
+    },
+    {
+      "name": "OpenEmpires.Tests.SpearmanProductionAssetIntegrationTests.ProductionFBX_ImportsWithZeroRigsAndZeroAnimators",
+      "result": "Passed",
+      "durationSeconds": 0.0054673
+    },
+    {
+      "name": "OpenEmpires.Tests.SpearmanProductionAssetIntegrationTests.SpearmanVisualHierarchy_PreservesLocalObjectSpacePivots",
+      "result": "Passed",
+      "durationSeconds": 0.0031348
+    },
+    {
+      "name": "OpenEmpires.Tests.SpearmanProductionAssetIntegrationTests.SpearmanVisualHierarchy_SelectionSilhouetteAndTeamColors_Compatible",
+      "result": "Passed",
+      "durationSeconds": 0.0095052
+    },
+    {
+      "name": "OpenEmpires.Tests.SpearmanProductionAssetIntegrationTests.SpearmanVisualHierarchy_UnitAttackVisualAnimator_DetectsWeaponAndCreatesAttackPivot",
+      "result": "Passed",
+      "durationSeconds": 0.0081095
+    },
+    {
+      "name": "OpenEmpires.Tests.UnitAttackVisualAnimatorTests.Constructor_SeparatesVisualsFromSelectionRing",
+      "result": "Passed",
+      "durationSeconds": 0.0004632
+    },
+    {
+      "name": "OpenEmpires.Tests.UnitAttackVisualAnimatorTests.MountedCharge_LowersLanceIntoChargePose",
+      "result": "Passed",
+      "durationSeconds": 0.0007353
+    },
+    {
+      "name": "OpenEmpires.Tests.UnitAttackVisualAnimatorTests.SpearAttack_AnimatesWeaponWithoutMovingUnitRoot",
+      "result": "Passed",
+      "durationSeconds": 0.0005875
+    },
+    {
+      "name": "OpenEmpires.Tests.UnitAttackVisualAnimatorTests.WeaponPrefab_CreatesAttackPivot(\"Assets/Prefabs/Units/Spearman.prefab\",1)",
+      "result": "Passed",
+      "durationSeconds": 0.001797
+    },
+    {
+      "name": "OpenEmpires.Tests.UnitAttackVisualAnimatorTests.WeaponPrefab_CreatesAttackPivot(\"Assets/Prefabs/Units/Archer.prefab\",2)",
+      "result": "Passed",
+      "durationSeconds": 0.0010606
+    },
+    {
+      "name": "OpenEmpires.Tests.UnitAttackVisualAnimatorTests.WeaponPrefab_CreatesAttackPivot(\"Assets/Prefabs/Units/Horseman.prefab\",3)",
+      "result": "Passed",
+      "durationSeconds": 0.0011415
+    },
+    {
+      "name": "OpenEmpires.Tests.UnitAttackVisualAnimatorTests.WeaponPrefab_CreatesAttackPivot(\"Assets/Prefabs/Units/ManAtArms.prefab\",6)",
+      "result": "Passed",
+      "durationSeconds": 0.0017567
+    },
+    {
+      "name": "OpenEmpires.Tests.UnitAttackVisualAnimatorTests.WeaponPrefab_CreatesAttackPivot(\"Assets/Prefabs/Units/Knight.prefab\",7)",
+      "result": "Passed",
+      "durationSeconds": 0.0019427
+    },
+    {
+      "name": "OpenEmpires.Tests.UnitAttackVisualAnimatorTests.WeaponPrefab_CreatesAttackPivot(\"Assets/Prefabs/Units/Crossbowman.prefab\",8)",
+      "result": "Passed",
+      "durationSeconds": 0.0007509
+    },
+    {
+      "name": "OpenEmpires.Tests.UnitAttackVisualAnimatorTests.WeaponPrefab_CreatesAttackPivot(\"Assets/Prefabs/Units/Longbowman.prefab\",10)",
+      "result": "Passed",
+      "durationSeconds": 0.0006507
+    },
+    {
+      "name": "OpenEmpires.Tests.UnitAttackVisualAnimatorTests.WeaponPrefab_CreatesAttackPivot(\"Assets/Prefabs/Units/Gendarme.prefab\",11)",
+      "result": "Passed",
+      "durationSeconds": 0.0008792
+    },
+    {
+      "name": "OpenEmpires.Tests.UnitAttackVisualAnimatorTests.WeaponPrefab_CreatesAttackPivot(\"Assets/Prefabs/Units/Landsknecht.prefab\",12)",
+      "result": "Passed",
+      "durationSeconds": 0.0005491
+    }
+  ]
+}

@@ -4,7 +4,7 @@ namespace OpenEmpires
 {
     internal sealed class CommanderWorkerAuthority
     {
-        // Fifteen simulation seconds at the current 60 Hz tick rate. This is long enough
+        // Thirty simulation seconds at the current 30 Hz tick rate. This is long enough
         // to avoid the Commander visibly fighting a fresh manual order while remaining a
         // temporary lease that eventually returns scarce workers to goal planning.
         internal const int HumanProtectionTicks = 900;
@@ -13,6 +13,65 @@ namespace OpenEmpires
         private readonly int playerId;
         private readonly Dictionary<int, int> humanProtectedUntilTick = new Dictionary<int, int>();
         private readonly HashSet<int> commanderControlledWorkers = new HashSet<int>();
+        private readonly Dictionary<int, int> commanderGatherUntilTick = new Dictionary<int, int>();
+        private readonly Dictionary<int, CommanderWorkerReservation> reservations = new Dictionary<int, CommanderWorkerReservation>();
+        private readonly List<int> releaseScratch = new List<int>();
+
+        public CommanderWorkerReservation? GetReservation(int workerId) =>
+            reservations.TryGetValue(workerId, out var value) ? value : (CommanderWorkerReservation?)null;
+
+        public bool CanUseWorker(int workerId, int goalId, int currentTick)
+        {
+            if (IsHumanProtected(workerId, currentTick)) return false;
+            return !reservations.TryGetValue(workerId, out var reservation) || reservation.GoalId == goalId;
+        }
+
+        public bool TryReserve(int workerId, int goalId, CommanderWorkerReservationType role, int currentTick)
+        {
+            UnitData unit = simulation.UnitRegistry.GetUnit(workerId);
+            if (goalId <= 0 || unit == null || unit.PlayerId != playerId || !unit.IsVillager
+                || unit.CurrentHealth <= 0 || unit.State == UnitState.Dead || unit.CommandQueue.Count > 0
+                || !CanUseWorker(workerId, goalId, currentTick)) return false;
+            if (reservations.TryGetValue(workerId, out var existing) && existing.ReservationType == role) return true;
+            reservations[workerId] = new CommanderWorkerReservation(workerId, playerId, goalId, role, currentTick);
+            return true;
+        }
+
+        public bool TryReserveCommand(CommanderGoal goal, ICommand command, int currentTick)
+        {
+            int[] workers = GetSubjectUnitIds(command);
+            if (workers == null) return true;
+            // Check every subject before taking any reservation (no partial acquisition).
+            for (int i = 0; i < workers.Length; i++)
+            {
+                var unit = simulation.UnitRegistry.GetUnit(workers[i]);
+                if (unit == null || unit.PlayerId != playerId || !unit.IsVillager || unit.CurrentHealth <= 0
+                    || unit.State == UnitState.Dead || unit.CommandQueue.Count > 0
+                    || !CanUseWorker(unit.Id, goal.GoalId, currentTick)) return false;
+            }
+            var role = command is GatherCommand ? CommanderWorkerReservationType.Gatherer : CommanderWorkerReservationType.Builder;
+            for (int i = 0; i < workers.Length; i++) TryReserve(workers[i], goal.GoalId, role, currentTick);
+            return true;
+        }
+
+        public void ReleaseGoal(int goalId)
+        {
+            releaseScratch.Clear();
+            foreach (var pair in reservations) if (pair.Value.GoalId == goalId) releaseScratch.Add(pair.Key);
+            for (int i = 0; i < releaseScratch.Count; i++) reservations.Remove(releaseScratch[i]);
+        }
+
+        public void PruneUnavailableWorkers()
+        {
+            releaseScratch.Clear();
+            foreach (var pair in reservations)
+            {
+                var unit = simulation.UnitRegistry.GetUnit(pair.Key);
+                if (unit == null || unit.PlayerId != playerId || !unit.IsVillager || unit.CurrentHealth <= 0 || unit.State == UnitState.Dead)
+                    releaseScratch.Add(pair.Key);
+            }
+            for (int i = 0; i < releaseScratch.Count; i++) reservations.Remove(releaseScratch[i]);
+        }
 
         public CommanderWorkerAuthority(GameSimulation simulation, int playerId)
         {
@@ -34,10 +93,14 @@ namespace OpenEmpires
                 {
                     humanProtectedUntilTick.Remove(unit.Id);
                     commanderControlledWorkers.Add(unit.Id);
+                    if (command is GatherCommand) commanderGatherUntilTick[unit.Id] = currentTick + 300;
+                    else commanderGatherUntilTick.Remove(unit.Id);
                 }
                 else
                 {
+                    reservations.Remove(unit.Id);
                     commanderControlledWorkers.Remove(unit.Id);
+                    commanderGatherUntilTick.Remove(unit.Id);
                     humanProtectedUntilTick[unit.Id] = currentTick + HumanProtectionTicks;
                 }
             }
@@ -56,7 +119,12 @@ namespace OpenEmpires
             return commanderControlledWorkers.Contains(unitId);
         }
 
-        private static int[] GetSubjectUnitIds(ICommand command)
+        public bool IsRecentGatherAssignment(int unitId, int currentTick)
+        {
+            return commanderGatherUntilTick.TryGetValue(unitId, out int until) && currentTick < until;
+        }
+
+        internal static int[] GetSubjectUnitIds(ICommand command)
         {
             switch (command)
             {

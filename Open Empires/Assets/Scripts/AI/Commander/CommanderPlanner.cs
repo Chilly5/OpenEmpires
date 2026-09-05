@@ -27,7 +27,6 @@ namespace OpenEmpires
         private const int EconomyCommandCooldownTicks = 90;
         private const int ConstructionStallTicks = 150;
         private const int ConstructionRecoveryCooldownTicks = 150;
-        private const int SpearmanBaseUnitType = 1;
         private readonly GameSimulation simulation;
         private readonly CommanderWorkerAuthority workerAuthority;
 
@@ -37,11 +36,93 @@ namespace OpenEmpires
             this.workerAuthority = workerAuthority;
         }
 
-        public CommanderPlan Plan(EnsureUnitCountGoal goal, int currentTick)
+        public CommanderPlan Plan(CommanderGoal goal, int currentTick)
         {
-            if (goal.RequestedUnitType != SpearmanBaseUnitType)
+            if (goal is EnsureUnitCountGoal units) return PlanUnits(units, currentTick);
+            if (goal is BuildStructureGoal building) return PlanStructure(building, currentTick);
+            if (goal is ResourceAllocationGoal resource) return PlanAllocation(resource, currentTick);
+            return new CommanderPlan(CommanderGoalStatus.Failed, "Unknown goal type.", 0, 0);
+        }
+
+        internal void CaptureConstraints(CommanderGoal goal, IReadOnlyList<CommanderConstraint> constraints)
+        {
+            if (constraints == null) return;
+            for (int i = 0; i < constraints.Count; i++)
+            {
+                if (constraints[i] is MaximumQueueConstraint queue && goal is EnsureUnitCountGoal units)
+                    units.MaxQueueDepth = queue.MaximumQueue;
+                if (constraints[i] is PreferredWorkersConstraint workers)
+                    goal.UseIdleWorkersOnly = workers.WorkerSource == CommanderPreferredWorkerSource.IdleOnly;
+                if (constraints[i] is ProtectedResourceConstraint resource)
+                    goal.ProtectedWorkerMinimums[resource.Resource] = resource.MinimumWorkers
+                        ?? CountResourceWorkers(goal.PlayerId, resource.Resource);
+            }
+        }
+
+        internal int CountCompletedBuildings(int playerId, BuildingType type)
+        {
+            int count = 0;
+            List<BuildingData> buildings = simulation.BuildingRegistry.GetAllBuildings();
+            for (int i = 0; i < buildings.Count; i++)
+                if (buildings[i].PlayerId == playerId && buildings[i].Type == type
+                    && !buildings[i].IsDestroyed && !buildings[i].IsUnderConstruction) count++;
+            return count;
+        }
+
+        internal int CountResourceWorkers(int playerId, ResourceType resource)
+        {
+            int count = 0;
+            List<UnitData> units = simulation.UnitRegistry.GetAllUnits();
+            for (int i = 0; i < units.Count; i++)
+            {
+                UnitData unit = units[i];
+                if (unit.PlayerId == playerId && unit.IsVillager && unit.CurrentHealth > 0
+                    && IsGatheringResource(unit, resource)) count++;
+            }
+            return count;
+        }
+
+        private bool CanReassignWorker(CommanderGoal goal, UnitData worker)
+        {
+            var reservation = workerAuthority.GetReservation(worker.Id);
+            if (reservation.HasValue && reservation.Value.GoalId != goal.GoalId) return false;
+            if (goal.UseIdleWorkersOnly && worker.State != UnitState.Idle) return false;
+            if (worker.CommandQueue.Count > 0) return false;
+            if (!IsGatheringState(worker.State)) return true;
+            ResourceNodeData node = simulation.MapData.GetResourceNode(worker.TargetResourceNodeId);
+            return node == null || !goal.ProtectedWorkerMinimums.TryGetValue(node.Type, out int minimum)
+                || CountResourceWorkers(goal.PlayerId, node.Type) > minimum;
+        }
+
+        private CommanderPlan PlanStructure(BuildStructureGoal goal, int currentTick)
+        {
+            if (!CommanderIntentCatalog.IsSupportedStructure(goal.StructureType))
+                return new CommanderPlan(CommanderGoalStatus.Failed, "Unsupported structure.", 0, 0);
+            int completed = CountCompletedBuildings(goal.PlayerId, goal.StructureType);
+            if (completed >= goal.TargetTotal)
+                return new CommanderPlan(CommanderGoalStatus.Completed,
+                    $"{goal.StructureType} construction complete ({completed}/{goal.TargetTotal}).", completed, 0);
+            BuildingData foundation = FindOwnedBuilding(goal.PlayerId, goal.StructureType, true);
+            if (foundation != null)
+                return PlanConstructionRecovery(goal, foundation, currentTick, completed, 1, "Construction");
+            return PlanBuilding(goal, goal.StructureType, currentTick, completed, 0);
+        }
+
+        private CommanderPlan PlanAllocation(ResourceAllocationGoal goal, int currentTick)
+        {
+            int count = CountResourceWorkers(goal.PlayerId, goal.Resource);
+            if (count >= goal.TargetWorkers)
+                return new CommanderPlan(CommanderGoalStatus.Completed,
+                    $"{count}/{goal.TargetWorkers} villagers assigned to {goal.Resource}.", count, 0);
+            return PlanGather(goal, goal.Resource, currentTick, count, 0,
+                $"Assigning at least {goal.TargetWorkers} villagers to {goal.Resource}; currently {count}.");
+        }
+
+        private CommanderPlan PlanUnits(EnsureUnitCountGoal goal, int currentTick)
+        {
+            if (!CommanderIntentCatalog.IsSupportedUnit(goal.RequestedUnitType))
                 return new CommanderPlan(CommanderGoalStatus.Failed,
-                    $"Phase 1 supports requested unit type {SpearmanBaseUnitType} only.", 0, 0);
+                    "Unsupported unit type.", 0, 0);
 
             int resolvedUnitType = simulation.ResolveCivUnitType(goal.PlayerId, goal.RequestedUnitType);
             int owned = CountOwnedLivingUnits(goal.PlayerId, resolvedUnitType);
@@ -52,9 +133,29 @@ namespace OpenEmpires
                     $"Owned {owned}/{goal.TargetTotal} living units.", owned, queued);
 
             int remainingOrders = goal.TargetTotal - owned - queued;
+            int totalQueuedPopulation = CountAllQueuedUnits(goal.PlayerId);
+            int population = simulation.GetPopulation(goal.PlayerId);
+            int populationCap = simulation.GetPopulationCap(goal.PlayerId);
+            if (population + totalQueuedPopulation > populationCap
+                || (remainingOrders > 0 && population + totalQueuedPopulation >= populationCap))
+            {
+                if (populationCap >= simulation.Config.MaxPopulation)
+                    return new CommanderPlan(CommanderGoalStatus.Blocked,
+                        $"Maximum population reached ({populationCap}/{simulation.Config.MaxPopulation}). "
+                        + "Cannot increase capacity further.", owned, queued);
+                BuildingData house = FindOwnedBuilding(goal.PlayerId, BuildingType.House, true);
+                if (house != null)
+                    return PlanConstructionRecovery(goal, house, currentTick, owned, queued, "Population prerequisite");
+                return PlanBuilding(goal, BuildingType.House, currentTick, owned, queued);
+            }
             if (remainingOrders <= 0)
                 return new CommanderPlan(CommanderGoalStatus.WaitingForProduction,
                     $"Owned {owned}, queued {queued}, target {goal.TargetTotal}.", owned, queued);
+
+            int requiredAge = LandmarkDefinitions.GetUnitRequiredAge(resolvedUnitType);
+            if (simulation.GetPlayerAge(goal.PlayerId) < requiredAge)
+                return new CommanderPlan(CommanderGoalStatus.WaitingForPrerequisite,
+                    $"{CommanderIntentCatalog.GetUnitDisplayName(goal.RequestedUnitType)} requires age {requiredAge}. Advance age to resume.", owned, queued);
 
             BuildingData barracks = FindBestAvailableProductionBuilding(goal, out bool hasOperationalProducer);
             if (barracks == null)
@@ -70,45 +171,32 @@ namespace OpenEmpires
                     return PlanConstructionRecovery(goal, unfinished, currentTick, owned, queued,
                         "Production prerequisite");
 
-                return PlanBuilding(goal, BuildingType.Barracks, currentTick, owned, queued);
+                if (!simulation.TryGetProductionBuildingType(goal.PlayerId, goal.RequestedUnitType,
+                    out BuildingType producerType))
+                    return new CommanderPlan(CommanderGoalStatus.Failed, "No canonical producer exists.", owned, queued);
+                return PlanBuilding(goal, producerType, currentTick, owned, queued);
             }
 
-            int totalQueuedPopulation = CountAllQueuedUnits(goal.PlayerId);
-            int population = simulation.GetPopulation(goal.PlayerId);
-            int populationCap = simulation.GetPopulationCap(goal.PlayerId);
-            if (population + totalQueuedPopulation >= populationCap)
-            {
-                if (populationCap >= simulation.Config.MaxPopulation)
-                    return new CommanderPlan(CommanderGoalStatus.Blocked,
-                        $"Maximum population reached ({populationCap}/{simulation.Config.MaxPopulation}). "
-                        + "Cannot increase capacity further.", owned, queued);
-
-                BuildingData house = FindOwnedBuilding(goal.PlayerId, BuildingType.House, true);
-                if (house != null)
-                    return PlanConstructionRecovery(goal, house, currentTick, owned, queued,
-                        "Population prerequisite");
-                return PlanBuilding(goal, BuildingType.House, currentTick, owned, queued);
-            }
-
-            simulation.GetUnitTrainingSpec(goal.PlayerId, goal.RequestedUnitType,
-                out _, out int foodCost, out int woodCost, out int goldCost, out _);
+            simulation.GetUnitTrainingCosts(barracks, goal.RequestedUnitType,
+                out int foodCost, out int woodCost, out int goldCost);
+            string unitName = CommanderIntentCatalog.GetUnitDisplayName(goal.RequestedUnitType);
             PlayerResources resources = simulation.ResourceManager.GetPlayerResources(goal.PlayerId);
             if (resources.Food < foodCost)
                 return PlanGather(goal, ResourceType.Food, currentTick, owned, queued,
-                    $"Need {foodCost} food for the next Spearman; have {resources.Food}.");
+                    $"Need {foodCost} food for the next {unitName}; have {resources.Food}.");
             if (resources.Wood < woodCost)
                 return PlanGather(goal, ResourceType.Wood, currentTick, owned, queued,
-                    $"Need {woodCost} wood for the next Spearman; have {resources.Wood}.");
+                    $"Need {woodCost} wood for the next {unitName}; have {resources.Wood}.");
             if (resources.Gold < goldCost)
                 return PlanGather(goal, ResourceType.Gold, currentTick, owned, queued,
-                    $"Need {goldCost} gold for the next Spearman; have {resources.Gold}.");
+                    $"Need {goldCost} gold for the next {unitName}; have {resources.Gold}.");
 
             return new CommanderPlan(CommanderGoalStatus.Executing,
-                $"Queueing Spearman at Barracks #{barracks.Id}.", owned, queued,
+                $"Queueing {unitName} at {barracks.Type} #{barracks.Id}.", owned, queued,
                 new TrainUnitCommand(goal.PlayerId, barracks.Id, goal.RequestedUnitType));
         }
 
-        private CommanderPlan PlanConstructionRecovery(EnsureUnitCountGoal goal, BuildingData building,
+        private CommanderPlan PlanConstructionRecovery(CommanderGoal goal, BuildingData building,
             int currentTick, int owned, int queued, string context)
         {
             bool buildingChanged = goal.ObservedConstructionBuildingId != building.Id;
@@ -119,6 +207,7 @@ namespace OpenEmpires
             {
                 goal.ObservedConstructionBuildingId = building.Id;
                 goal.LastConstructionProgressTick = currentTick;
+                goal.ConstructionBuilderInRange = false;
             }
             else if (progressed)
             {
@@ -126,18 +215,24 @@ namespace OpenEmpires
             }
             goal.LastConstructionTicksRemaining = building.ConstructionTicksRemaining;
 
-            UnitData activeBuilder = FindActiveConstructionBuilder(goal.PlayerId, building.Id);
+            UnitData activeBuilder = FindActiveConstructionBuilder(goal.PlayerId, building);
+            bool inRange = activeBuilder != null && IsInConstructionRange(activeBuilder, building);
+            if (!inRange || !goal.ConstructionBuilderInRange)
+                goal.LastConstructionProgressTick = currentTick;
+            goal.ConstructionBuilderInRange = inRange;
             bool stalled = currentTick - goal.LastConstructionProgressTick >= ConstructionStallTicks;
             if (activeBuilder != null && !stalled)
                 return new CommanderPlan(CommanderGoalStatus.WaitingForConstruction,
-                    $"{context}: building #{building.Id} is advancing with villager #{activeBuilder.Id}.",
+                    inRange
+                        ? $"{context}: building #{building.Id} is advancing with villager #{activeBuilder.Id}."
+                        : $"{context}: villager #{activeBuilder.Id} is travelling to building #{building.Id}.",
                     owned, queued);
 
             if (currentTick - goal.LastConstructionRecoveryTick < ConstructionRecoveryCooldownTicks)
                 return new CommanderPlan(CommanderGoalStatus.WaitingForConstruction,
                     $"{context}: waiting for recovery command on building #{building.Id}.", owned, queued);
 
-            UnitData recoveryBuilder = SelectRecoveryBuilder(goal.PlayerId, building, currentTick,
+            UnitData recoveryBuilder = SelectRecoveryBuilder(goal, building, currentTick,
                 allowActiveBuilder: stalled);
             if (recoveryBuilder == null)
                 return new CommanderPlan(CommanderGoalStatus.Blocked,
@@ -150,16 +245,32 @@ namespace OpenEmpires
                 new ConstructBuildingCommand(goal.PlayerId, new[] { recoveryBuilder.Id }, building.Id));
         }
 
-        private CommanderPlan PlanBuilding(EnsureUnitCountGoal goal, BuildingType type,
+        private CommanderPlan PlanBuilding(CommanderGoal goal, BuildingType type,
             int currentTick, int owned, int queued)
         {
+            int requiredAge = LandmarkDefinitions.GetBuildingRequiredAge(type);
+            if (simulation.GetPlayerAge(goal.PlayerId) < requiredAge)
+                return new CommanderPlan(CommanderGoalStatus.WaitingForPrerequisite,
+                    $"{type} requires age {requiredAge}. Advance age to resume.", owned, queued);
             int woodCost = simulation.GetBuildingWoodCost(type);
             PlayerResources resources = simulation.ResourceManager.GetPlayerResources(goal.PlayerId);
             if (resources.Wood < woodCost)
                 return PlanGather(goal, ResourceType.Wood, currentTick, owned, queued,
                     $"Need {woodCost} wood for {type}; have {resources.Wood}.");
+            int foodCost = simulation.GetBuildingFoodCost(type);
+            int goldCost = simulation.GetBuildingGoldCost(type);
+            int stoneCost = simulation.GetBuildingStoneCost(type);
+            if (resources.Food < foodCost)
+                return PlanGather(goal, ResourceType.Food, currentTick, owned, queued,
+                    $"Need {foodCost} food for {type}; have {resources.Food}.");
+            if (resources.Gold < goldCost)
+                return PlanGather(goal, ResourceType.Gold, currentTick, owned, queued,
+                    $"Need {goldCost} gold for {type}; have {resources.Gold}.");
+            if (resources.Stone < stoneCost)
+                return PlanGather(goal, ResourceType.Stone, currentTick, owned, queued,
+                    $"Need {stoneCost} stone for {type}; have {resources.Stone}.");
 
-            UnitData builder = SelectBuilder(goal.PlayerId, currentTick);
+            UnitData builder = SelectBuilder(goal, currentTick);
             if (builder == null)
                 return new CommanderPlan(CommanderGoalStatus.Blocked,
                     $"No owned living villager is available to build {type}.", owned, queued);
@@ -178,18 +289,17 @@ namespace OpenEmpires
                 new PlaceBuildingCommand(goal.PlayerId, type, tile.x, tile.y, new[] { builder.Id }));
         }
 
-        private CommanderPlan PlanGather(EnsureUnitCountGoal goal, ResourceType resourceType,
+        private CommanderPlan PlanGather(CommanderGoal goal, ResourceType resourceType,
             int currentTick, int owned, int queued, string reason)
         {
             if (currentTick - goal.LastEconomyCommandTick < EconomyCommandCooldownTicks)
                 return new CommanderPlan(CommanderGoalStatus.WaitingForResources, reason, owned, queued);
 
-            UnitData worker = SelectEconomyWorker(goal.PlayerId, resourceType, currentTick);
+            UnitData worker = SelectEconomyWorker(goal, resourceType, currentTick, out ResourceNodeData node);
             if (worker == null)
                 return new CommanderPlan(CommanderGoalStatus.Blocked,
                     $"{reason} No eligible owned villager is available.", owned, queued);
 
-            ResourceNodeData node = FindKnownResourceNode(goal.PlayerId, worker.SimPosition, resourceType);
             if (node == null)
                 return new CommanderPlan(CommanderGoalStatus.Blocked,
                     $"{reason} No explored non-depleted {resourceType} node is known.", owned, queued);
@@ -305,8 +415,9 @@ namespace OpenEmpires
             return best;
         }
 
-        private UnitData SelectBuilder(int playerId, int currentTick)
+        private UnitData SelectBuilder(CommanderGoal goal, int currentTick)
         {
+            int playerId = goal.PlayerId;
             UnitData best = null;
             int bestPriority = int.MaxValue;
             List<UnitData> units = simulation.UnitRegistry.GetAllUnits();
@@ -316,6 +427,7 @@ namespace OpenEmpires
                 if (unit.PlayerId != playerId || !unit.IsVillager || unit.CurrentHealth <= 0
                     || unit.State == UnitState.Dead) continue;
                 if (workerAuthority.IsHumanProtected(unit.Id, currentTick)) continue;
+                if (!CanReassignWorker(goal, unit)) continue;
                 int priority = unit.State == UnitState.Idle ? 0
                     : workerAuthority.IsCommanderControlled(unit.Id) && IsGatheringState(unit.State) ? 1
                     : IsGatheringState(unit.State) ? 2 : int.MaxValue;
@@ -328,8 +440,11 @@ namespace OpenEmpires
             return bestPriority == int.MaxValue ? null : best;
         }
 
-        private UnitData SelectEconomyWorker(int playerId, ResourceType neededType, int currentTick)
+        private UnitData SelectEconomyWorker(CommanderGoal goal, ResourceType neededType, int currentTick,
+            out ResourceNodeData selectedNode)
         {
+            int playerId = goal.PlayerId;
+            selectedNode = null;
             UnitData best = null;
             int bestPriority = int.MaxValue;
             List<UnitData> units = simulation.UnitRegistry.GetAllUnits();
@@ -339,20 +454,26 @@ namespace OpenEmpires
                 if (unit.PlayerId != playerId || !unit.IsVillager || unit.CurrentHealth <= 0
                     || unit.State == UnitState.Dead) continue;
                 if (workerAuthority.IsHumanProtected(unit.Id, currentTick)) continue;
+                if (!CanReassignWorker(goal, unit)) continue;
+                if (goal is ResourceAllocationGoal && IsGatheringState(unit.State)
+                    && workerAuthority.IsRecentGatherAssignment(unit.Id, currentTick)) continue;
                 if (IsGatheringResource(unit, neededType)) continue;
                 int priority = unit.State == UnitState.Idle ? 0
                     : workerAuthority.IsCommanderControlled(unit.Id) && IsGatheringState(unit.State) ? 1
                     : IsGatheringState(unit.State) ? 2 : int.MaxValue;
                 if (priority < bestPriority || (priority == bestPriority && (best == null || unit.Id < best.Id)))
                 {
+                    ResourceNodeData node = FindKnownResourceNode(playerId, unit.SimPosition, neededType);
+                    if (node == null) continue;
                     best = unit;
+                    selectedNode = node;
                     bestPriority = priority;
                 }
             }
             return bestPriority == int.MaxValue ? null : best;
         }
 
-        private UnitData FindActiveConstructionBuilder(int playerId, int buildingId)
+        private UnitData FindActiveConstructionBuilder(int playerId, BuildingData building)
         {
             UnitData best = null;
             List<UnitData> units = simulation.UnitRegistry.GetAllUnits();
@@ -360,17 +481,35 @@ namespace OpenEmpires
             {
                 UnitData unit = units[i];
                 if (unit.PlayerId != playerId || !unit.IsVillager || unit.CurrentHealth <= 0
-                    || unit.State == UnitState.Dead || unit.ConstructionTargetBuildingId != buildingId
+                    || unit.State == UnitState.Dead || unit.ConstructionTargetBuildingId != building.Id
                     || (unit.State != UnitState.MovingToBuild && unit.State != UnitState.Constructing))
                     continue;
-                if (best == null || unit.Id < best.Id) best = unit;
+                // An arrived builder must not be masked by a lower-ID travelling builder.
+                bool arrived = IsInConstructionRange(unit, building);
+                bool bestArrived = best != null && IsInConstructionRange(best, building);
+                if (best == null || (arrived && !bestArrived)
+                    || (arrived == bestArrived && unit.Id < best.Id)) best = unit;
             }
             return best;
         }
 
-        private UnitData SelectRecoveryBuilder(int playerId, BuildingData building, int currentTick,
+        private static bool IsInConstructionRange(UnitData unit, BuildingData building)
+        {
+            // Same fixed-point footprint-edge reach and overflow guard as BuildingConstructionSystem.
+            Fixed32 nearX = Fixed32.Max(Fixed32.FromInt(building.OriginTileX),
+                Fixed32.Min(Fixed32.FromInt(building.OriginTileX + building.TileFootprintWidth), unit.SimPosition.x));
+            Fixed32 nearZ = Fixed32.Max(Fixed32.FromInt(building.OriginTileZ),
+                Fixed32.Min(Fixed32.FromInt(building.OriginTileZ + building.TileFootprintHeight), unit.SimPosition.z));
+            Fixed32 dx = nearX - unit.SimPosition.x;
+            Fixed32 dz = nearZ - unit.SimPosition.z;
+            return Fixed32.Abs(dx) <= Fixed32.One && Fixed32.Abs(dz) <= Fixed32.One
+                && dx * dx + dz * dz <= Fixed32.One;
+        }
+
+        private UnitData SelectRecoveryBuilder(CommanderGoal goal, BuildingData building, int currentTick,
             bool allowActiveBuilder)
         {
+            int playerId = goal.PlayerId;
             UnitData best = null;
             int bestPriority = int.MaxValue;
             List<UnitData> units = simulation.UnitRegistry.GetAllUnits();
@@ -381,6 +520,7 @@ namespace OpenEmpires
                     || unit.State == UnitState.Dead || workerAuthority.IsHumanProtected(unit.Id, currentTick))
                     continue;
 
+                if (!CanReassignWorker(goal, unit)) continue;
                 bool activeOnTarget = unit.ConstructionTargetBuildingId == building.Id
                     && (unit.State == UnitState.MovingToBuild || unit.State == UnitState.Constructing);
                 int priority = unit.State == UnitState.Idle ? 0
@@ -401,7 +541,7 @@ namespace OpenEmpires
         {
             if (!IsGatheringState(unit.State)) return false;
             ResourceNodeData node = simulation.MapData.GetResourceNode(unit.TargetResourceNodeId);
-            return node != null && node.Type == type;
+            return node != null && !node.IsDepleted && node.Type == type;
         }
 
         private static bool IsGatheringState(UnitState state)
@@ -429,6 +569,8 @@ namespace OpenEmpires
                 int distance = dx * dx + dz * dz;
                 if (distance < bestDistance || (distance == bestDistance && (best == null || node.Id < best.Id)))
                 {
+                    if (!HasReachableAdjacentTile(simulation.MapData.WorldToTile(position), playerId,
+                        node.TileX, node.TileZ, node.FootprintWidth, node.FootprintHeight)) continue;
                     best = node;
                     bestDistance = distance;
                 }
@@ -494,7 +636,7 @@ namespace OpenEmpires
                     Vector2Int destination = new Vector2Int(x, z);
                     if (!GridPathfinder.TryFindCompletePath(simulation.MapData, start, destination,
                         out List<Vector2Int> path, playerId, simulation.BuildingRegistry)) continue;
-                    if (IsVisiblePath(playerId, path)) return true;
+                    if (IsKnownPath(playerId, start, path)) return true;
                 }
             }
             return false;
@@ -507,12 +649,42 @@ namespace OpenEmpires
                 building.TileFootprintWidth, building.TileFootprintHeight);
         }
 
-        private bool IsVisiblePath(int playerId, List<Vector2Int> path)
+        private bool IsKnownPath(int playerId, Vector2Int start, List<Vector2Int> path)
         {
+            // GridPathfinder returns smoothed waypoints and omits the start tile.
+            // Validate intervening terrain too, using its integer line/corner rules.
+            Vector2Int from = start;
             for (int i = 0; i < path.Count; i++)
-                if (simulation.FogOfWar.GetVisibility(playerId, path[i].x, path[i].y) != TileVisibility.Visible)
-                    return false;
-            return true;
+            {
+                if (!IsKnownSegment(playerId, from, path[i])) return false;
+                from = path[i];
+            }
+            return IsKnownTile(playerId, start.x, start.y);
+        }
+
+        private bool IsKnownSegment(int playerId, Vector2Int from, Vector2Int to)
+        {
+            int x = from.x, z = from.y;
+            int dx = Mathf.Abs(to.x - x), dz = Mathf.Abs(to.y - z);
+            int sx = x < to.x ? 1 : -1, sz = z < to.y ? 1 : -1;
+            int error = dx - dz;
+            while (true)
+            {
+                if (!IsKnownTile(playerId, x, z)) return false;
+                if (x == to.x && z == to.y) return true;
+                int twiceError = 2 * error;
+                bool stepX = twiceError > -dz, stepZ = twiceError < dx;
+                if (stepX && stepZ && (!IsKnownTile(playerId, x + sx, z)
+                    || !IsKnownTile(playerId, x, z + sz))) return false;
+                if (stepX) { error -= dz; x += sx; }
+                if (stepZ) { error += dx; z += sz; }
+            }
+        }
+
+        private bool IsKnownTile(int playerId, int x, int z)
+        {
+            TileVisibility visibility = simulation.FogOfWar.GetVisibility(playerId, x, z);
+            return visibility == TileVisibility.Visible || visibility == TileVisibility.Explored;
         }
 
         private void GetFootprint(BuildingType type, out int width, out int height)
@@ -524,6 +696,10 @@ namespace OpenEmpires
                     width = config.BarracksFootprintWidth; height = config.BarracksFootprintHeight; break;
                 case BuildingType.House:
                     width = config.HouseFootprintWidth; height = config.HouseFootprintHeight; break;
+                case BuildingType.Stables:
+                    width = config.StablesFootprintWidth; height = config.StablesFootprintHeight; break;
+                case BuildingType.ArcheryRange:
+                    width = config.ArcheryRangeFootprintWidth; height = config.ArcheryRangeFootprintHeight; break;
                 default:
                     width = 2; height = 2; break;
             }

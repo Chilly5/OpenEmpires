@@ -207,6 +207,12 @@ namespace OpenEmpires
         {
             if (building == null) return false;
             BuildingType effectiveType = LandmarkDefinitions.GetEffectiveBuildingType(building);
+            return CanBuildingTypeTrainUnit(effectiveType, requestedUnitType, resolvedUnitType, IsTheWhiteTower(building));
+        }
+
+        private static bool CanBuildingTypeTrainUnit(BuildingType effectiveType, int requestedUnitType,
+            int resolvedUnitType, bool isWhiteTower = false)
+        {
             int unitType = requestedUnitType;
 
             switch (effectiveType)
@@ -224,7 +230,7 @@ namespace OpenEmpires
                 case BuildingType.SiegeWorkshop:
                     return unitType >= 13 && unitType <= 15;
                 case BuildingType.Keep:
-                    if (!IsTheWhiteTower(building)) return false;
+                    if (!isWhiteTower) return false;
                     return unitType == 1 || unitType == 2 || unitType == 3 || unitType == 4
                         || unitType == 6 || unitType == 7 || unitType == 8
                         || unitType == 13 || unitType == 14 || unitType == 15
@@ -286,6 +292,29 @@ namespace OpenEmpires
         {
             resolvedUnitType = ResolveCivUnitType(playerId, requestedUnitType);
             GetUnitTrainingCostsAndTime(resolvedUnitType, out foodCost, out woodCost, out goldCost, out trainTime);
+        }
+
+        // Read-only planning queries share the command handler's canonical rules.
+        public bool TryGetProductionBuildingType(int playerId, int requestedUnitType, out BuildingType type)
+        {
+            int resolved = ResolveCivUnitType(playerId, requestedUnitType);
+            foreach (BuildingType value in System.Enum.GetValues(typeof(BuildingType)))
+            {
+                if (value == BuildingType.Landmark) continue;
+                if (!CanBuildingTypeTrainUnit(value, requestedUnitType, resolved)) continue;
+                type = value;
+                return true;
+            }
+            type = default;
+            return false;
+        }
+
+        public void GetUnitTrainingCosts(BuildingData building, int requestedUnitType,
+            out int food, out int wood, out int gold)
+        {
+            int resolved = ResolveCivUnitType(building.PlayerId, requestedUnitType);
+            GetUnitTrainingCostsAndTime(resolved, out food, out wood, out gold, out _);
+            ApplyTrainingDiscounts(building, resolved, ref food, ref wood, ref gold);
         }
 
         private void ApplyTrainingDiscounts(BuildingData building, int unitType, ref int foodCost, ref int woodCost, ref int goldCost)
