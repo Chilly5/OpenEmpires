@@ -3,6 +3,18 @@ using System.Collections.Generic;
 
 namespace OpenEmpires
 {
+    public enum CommanderIntentLayer
+    {
+        Tactical,
+        Strategic
+    }
+
+    public interface ICommanderIntentRequest
+    {
+        int PlayerId { get; }
+        CommanderIntentLayer IntentLayer { get; }
+    }
+
     public enum CommanderIntentType
     {
         EnsureUnitCount,
@@ -74,12 +86,13 @@ namespace OpenEmpires
         }
     }
 
-    public abstract class CommanderIntent
+    public abstract class CommanderIntent : ICommanderIntentRequest
     {
         private readonly List<CommanderConstraint> constraints;
 
         public CommanderIntentType Type { get; }
         public int PlayerId { get; }
+        public CommanderIntentLayer IntentLayer => CommanderIntentLayer.Tactical;
         public IReadOnlyList<CommanderConstraint> Constraints => constraints;
 
         protected CommanderIntent(CommanderIntentType type, int playerId,

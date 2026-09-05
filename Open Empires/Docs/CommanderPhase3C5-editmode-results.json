@@ -1,0 +1,44 @@
+{
+  "phase": "3C-5",
+  "suite": "OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests",
+  "mode": "EditMode",
+  "jobId": "90219b840f43470cbab995fea3e1a7fd",
+  "resultState": "Passed",
+  "total": 13,
+  "passed": 13,
+  "failed": 0,
+  "skipped": 0,
+  "durationSeconds": 3.7055095,
+  "tests": [
+    { "name": "DecisionPolicy_SelectsHighestPriority", "result": "Passed" },
+    { "name": "DecisionPolicy_DefenseOverridesAttack", "result": "Passed" },
+    { "name": "DecisionPolicy_AttackRequiresConditions", "result": "Passed" },
+    { "name": "DecisionPolicy_EconomicFallback", "result": "Passed" },
+    { "name": "PlayerStrategicIntent_OverridesRecommendations", "result": "Passed" },
+    { "name": "PlayerIntentPreservesOwnership", "result": "Passed" },
+    { "name": "DecisionResult_ContainsReason", "result": "Passed" },
+    { "name": "DecisionResult_TracksSourceRecommendation", "result": "Passed" },
+    { "name": "DecisionPolicy_SameInputProducesSameOutput", "result": "Passed" },
+    { "name": "DecisionPolicy_HasNoHiddenState", "result": "Passed" },
+    { "name": "DecisionPolicy_DoesNotCreatePlans", "result": "Passed" },
+    { "name": "DecisionPolicy_DoesNotCreateCommands", "result": "Passed" },
+    { "name": "DecisionPolicy_DoesNotBypassStrategicPlanner", "result": "Passed" }
+  ],
+  "regression": {
+    "fullEditMode": {
+      "jobId": "969d76b9a7274fa39d6fb19907442e83",
+      "executed": 256,
+      "passed": 254,
+      "infrastructureContaminated": 2,
+      "note": "The only two broad-run failures were MCP disposed-NetworkStream error logs injected during test setup."
+    },
+    "exactCleanRerun": {
+      "jobId": "7786155536364f65a62f890f51ff761c",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "durationSeconds": 1.6842859
+    }
+  }
+}

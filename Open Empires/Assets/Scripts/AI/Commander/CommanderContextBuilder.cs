@@ -15,9 +15,40 @@ namespace OpenEmpires
             var resources = simulation.ResourceManager.GetPlayerResources(player);
             var counts = new SortedDictionary<int, int>();
             var queued = new SortedDictionary<int, int>();
+            var workerAllocation = new SortedDictionary<ResourceType, int>();
+            foreach (ResourceType resourceType in Enum.GetValues(typeof(ResourceType)))
+                workerAllocation.Add(resourceType, 0);
             foreach (var unit in simulation.UnitRegistry.GetAllUnits())
+            {
                 if (unit.PlayerId == player && unit.CurrentHealth > 0 && unit.State != UnitState.Dead)
+                {
                     counts[unit.UnitType] = counts.TryGetValue(unit.UnitType, out int count) ? count + 1 : 1;
+                    if ((unit.IsVillager || unit.UnitType == 0)
+                        && IsGatheringAssignment(unit.State)
+                        && unit.TargetResourceNodeId >= 0)
+                    {
+                        ResourceNodeData node = simulation.MapData.GetResourceNode(
+                            unit.TargetResourceNodeId);
+                        if (node != null)
+                            workerAllocation[node.Type] = workerAllocation[node.Type] + 1;
+                    }
+                }
+            }
+
+            var visibleEnemyCounts = new SortedDictionary<int, int>();
+            foreach (UnitData unit in simulation.UnitRegistry.GetAllUnits())
+            {
+                if (unit.PlayerId < 0 || unit.PlayerId == player
+                    || simulation.AreAllies(player, unit.PlayerId)
+                    || unit.CurrentHealth <= 0 || unit.State == UnitState.Dead
+                    || unit.IsVillager || unit.UnitType == 0
+                    || unit.IsSheep || unit.UnitType == 5) continue;
+                UnityEngine.Vector2Int tile = simulation.MapData.WorldToTile(unit.SimPosition);
+                if (simulation.FogOfWar.GetVisibility(player, tile.x, tile.y)
+                    != TileVisibility.Visible) continue;
+                visibleEnemyCounts[unit.UnitType] = visibleEnemyCounts.TryGetValue(
+                    unit.UnitType, out int visibleCount) ? visibleCount + 1 : 1;
+            }
 
             var buildings = new List<CommanderBuildingSnapshot>();
             var production = new List<CommanderBuildingSnapshot>();
@@ -78,11 +109,28 @@ namespace OpenEmpires
                 options.Add(new CommanderUnitOptionSnapshot(CommanderIntentCatalog.GetUnitDisplayName(type), resolved,
                     LandmarkDefinitions.GetUnitRequiredAge(resolved), simulation.GetPlayerAge(player)));
             }
+            var workerAllocationSnapshots = new List<CommanderWorkerAllocationSnapshot>();
+            foreach (KeyValuePair<ResourceType, int> entry in workerAllocation)
+                workerAllocationSnapshots.Add(new CommanderWorkerAllocationSnapshot(
+                    entry.Key, entry.Value));
+            var visibleEnemyMilitary = new List<CommanderVisibleEnemyMilitarySnapshot>();
+            foreach (KeyValuePair<int, int> entry in visibleEnemyCounts)
+                visibleEnemyMilitary.Add(new CommanderVisibleEnemyMilitarySnapshot(
+                    entry.Key, entry.Value));
             return new CommanderContext(player, simulation.CurrentTick,
                 new CommanderResourceSnapshot(resources.Food, resources.Wood, resources.Gold, resources.Stone),
                 simulation.GetPopulation(player), simulation.GetPopulationCap(player), simulation.Config.MaxPopulation,
                 simulation.GetPlayerAge(player), simulation.GetPlayerCivilization(player).ToString(),
-                buildings, units, production, technologies, goals, visibleResources, options);
+                buildings, units, production, technologies, goals, visibleResources, options,
+                workerAllocationSnapshots, visibleEnemyMilitary);
+        }
+
+        private static bool IsGatheringAssignment(UnitState state)
+        {
+            return state == UnitState.MovingToGather
+                || state == UnitState.Gathering
+                || state == UnitState.MovingToDropoff
+                || state == UnitState.DroppingOff;
         }
     }
 }

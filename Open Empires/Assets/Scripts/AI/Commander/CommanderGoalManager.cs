@@ -19,6 +19,7 @@ namespace OpenEmpires
 
         public IReadOnlyList<CommanderGoal> Goals => goals;
         public int PlayerId => playerId;
+        public int CurrentTick => simulation.CurrentTick;
         public CommanderGoal ActiveGoal { get; private set; }
         public event Action<CommanderGoal> GoalStatusChanged;
         public event Action<CommanderGoalEvent> GoalEventPublished;

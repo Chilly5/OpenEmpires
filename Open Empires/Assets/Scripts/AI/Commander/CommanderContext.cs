@@ -22,7 +22,10 @@ namespace OpenEmpires
         public IReadOnlyList<CommanderGoalSnapshot> ActiveGoals { get; }
         public IReadOnlyList<CommanderVisibleResourceSnapshot> VisibleResources { get; }
         public IReadOnlyList<CommanderUnitOptionSnapshot> UnitOptions { get; }
-        public string EnemyAwarenessPolicy => "None: Commander does not plan using enemy rosters.";
+        public IReadOnlyList<CommanderWorkerAllocationSnapshot> WorkerAllocation { get; }
+        public IReadOnlyList<CommanderVisibleEnemyMilitarySnapshot> VisibleEnemyMilitary { get; }
+        public string EnemyAwarenessPolicy =>
+            "Currently visible enemy military aggregates only; no hidden, explored-only, or predicted enemy data.";
         public string ToJson() => Newtonsoft.Json.JsonConvert.SerializeObject(this,
             new Newtonsoft.Json.JsonSerializerSettings { TypeNameHandling = Newtonsoft.Json.TypeNameHandling.None });
 
@@ -31,7 +34,9 @@ namespace OpenEmpires
             List<CommanderBuildingSnapshot> buildings, List<CommanderUnitSnapshot> units,
             List<CommanderBuildingSnapshot> production, List<string> technologies,
             List<CommanderGoalSnapshot> goals, List<CommanderVisibleResourceSnapshot> visibleResources,
-            List<CommanderUnitOptionSnapshot> unitOptions)
+            List<CommanderUnitOptionSnapshot> unitOptions,
+            List<CommanderWorkerAllocationSnapshot> workerAllocation,
+            List<CommanderVisibleEnemyMilitarySnapshot> visibleEnemyMilitary)
         {
             PlayerId = playerId; SnapshotTick = tick; Resources = resources;
             Population = population; PopulationCap = cap; MaximumPopulation = maximum;
@@ -40,6 +45,8 @@ namespace OpenEmpires
             Production = production.AsReadOnly(); UnlockedTechnologies = technologies.AsReadOnly();
             ActiveGoals = goals.AsReadOnly(); VisibleResources = visibleResources.AsReadOnly();
             UnitOptions = unitOptions.AsReadOnly();
+            WorkerAllocation = workerAllocation.AsReadOnly();
+            VisibleEnemyMilitary = visibleEnemyMilitary.AsReadOnly();
         }
     }
 
@@ -121,5 +128,29 @@ namespace OpenEmpires
         public int RemainingAmount { get; }
         internal CommanderVisibleResourceSnapshot(string type, int x, int z, int amount)
         { Type = type; TileX = x; TileZ = z; RemainingAmount = amount; }
+    }
+
+    public sealed class CommanderWorkerAllocationSnapshot
+    {
+        public ResourceType ResourceType { get; }
+        public int AssignedWorkers { get; }
+
+        internal CommanderWorkerAllocationSnapshot(ResourceType resourceType, int assignedWorkers)
+        {
+            ResourceType = resourceType;
+            AssignedWorkers = Math.Max(0, assignedWorkers);
+        }
+    }
+
+    public sealed class CommanderVisibleEnemyMilitarySnapshot
+    {
+        public int UnitType { get; }
+        public int VisibleCount { get; }
+
+        internal CommanderVisibleEnemyMilitarySnapshot(int unitType, int visibleCount)
+        {
+            UnitType = unitType;
+            VisibleCount = Math.Max(0, visibleCount);
+        }
     }
 }

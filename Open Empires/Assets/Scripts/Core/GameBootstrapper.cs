@@ -19,6 +19,7 @@ namespace OpenEmpires
         public NetworkManager Network => networkManager;
         public int PlayerCount => playerCount;
         public CommanderGoalManager Commander { get; private set; }
+        public StrategicPlanner StrategicCommander { get; private set; }
         [SerializeField] private bool submitCommanderGoalOnStart;
         [SerializeField] private int commanderSpearmanTarget = 10;
         private int debugCommanderGoalId = -1;
@@ -63,6 +64,7 @@ namespace OpenEmpires
         private void OnDestroy()
         {
             if (Instance == this) Instance = null;
+            StrategicCommander?.Dispose();
             var mm = MatchmakingManager.Instance;
             if (mm != null)
                 mm.OnPlayerDisconnected -= OnPlayerDisconnectedFromServer;
@@ -123,6 +125,8 @@ namespace OpenEmpires
                 int localPlayerId = networkManager != null && networkManager.IsMultiplayer
                     ? networkManager.LocalPlayerId : 0;
                 Commander = new CommanderGoalManager(Simulation, localPlayerId);
+                StrategicCommander = new StrategicPlanner(Commander,
+                    resourceType => GetStrategicResourceAmount(localPlayerId, resourceType));
                 if (submitCommanderGoalOnStart)
                     debugCommanderGoalId = Commander.SubmitEnsureUnitCount(1, commanderSpearmanTarget).GoalId;
 
@@ -529,6 +533,19 @@ namespace OpenEmpires
                 default:
                     Debug.LogWarning($"[GameBootstrapper] SetCommandPlayerId: unhandled command type {cmd.GetType().Name}");
                     break;
+            }
+        }
+
+        private int GetStrategicResourceAmount(int playerId, ResourceType resourceType)
+        {
+            PlayerResources resources = Simulation.ResourceManager.GetPlayerResources(playerId);
+            switch (resourceType)
+            {
+                case ResourceType.Food: return resources.Food;
+                case ResourceType.Wood: return resources.Wood;
+                case ResourceType.Gold: return resources.Gold;
+                case ResourceType.Stone: return resources.Stone;
+                default: return 0;
             }
         }
 

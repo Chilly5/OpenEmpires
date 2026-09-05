@@ -1,0 +1,39 @@
+{
+  "phase": "3C-3",
+  "mode": "EditMode",
+  "compilerErrors": 0,
+  "focused": {
+    "jobId": "0feea8ac761640bbb4fc061edd322ae3",
+    "total": 13,
+    "passed": 13,
+    "failed": 0,
+    "skipped": 0,
+    "durationSeconds": 11.8152555
+  },
+  "regression": [
+    { "phase": "1", "jobId": "88cbd86ae09940edadaad7d1f18b95ce", "total": 29, "passed": 29, "failed": 0 },
+    { "phase": "2", "total": 40, "passed": 40, "failed": 0, "durationSeconds": 8.0431311 },
+    { "phase": "3A", "jobId": "600902aab6d24e959db5d6aa4116cdc3", "total": 29, "passed": 29, "failed": 0 },
+    {
+      "phase": "3A.1",
+      "jobId": "1eca8db94fc840139fd221332e276919",
+      "total": 20,
+      "productAssertionFailures": 0,
+      "mcpTransportLogContaminated": 2,
+      "isolatedRerunJobId": "0514d69b657e4f228aea5ea634a4d3d7",
+      "isolatedPassed": 2
+    },
+    { "phase": "3B", "jobId": "36c7c6e8d7e448808cd40fce54d34cde", "total": 31, "passed": 31, "failed": 0 },
+    {
+      "phase": "3C Preparation",
+      "jobId": "2ad1ef864c694cb0bbde870832c7782c",
+      "total": 21,
+      "productAssertionFailures": 0,
+      "mcpTransportLogContaminated": 1,
+      "isolatedRerunJobId": "140ef7325a954a908e615e9b9b9d20e3",
+      "isolatedPassed": 1
+    },
+    { "phase": "3C-1 and 3C-2", "jobId": "521436fbab904416b255bb8e57a8a53d", "total": 24, "passed": 24, "failed": 0 }
+  ],
+  "transportNote": "Broad-suite failures listed as contaminated were unhandled MCP-for-Unity disposed NetworkStream logs, not product assertion failures; every affected case passed isolated."
+}

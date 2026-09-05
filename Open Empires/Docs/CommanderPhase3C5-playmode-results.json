@@ -1,0 +1,42 @@
+{
+  "phase": "3C-5",
+  "suite": "OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionPlayModeTests",
+  "mode": "PlayMode",
+  "jobId": "af4c2f608690472badb2ba7b192ff4f9",
+  "resultState": "Passed",
+  "total": 4,
+  "passed": 4,
+  "failed": 0,
+  "skipped": 0,
+  "durationSeconds": 1.080046,
+  "scenarios": [
+    {
+      "name": "Runtime_VisibleThreat_SelectsDefenseWithoutPlan",
+      "result": "Passed",
+      "evidence": "Visible enemy threat with weak defense selected DefensivePreparation and did not start a plan."
+    },
+    {
+      "name": "Runtime_StrongArmy_SelectsAttackPreparation",
+      "result": "Passed",
+      "evidence": "Strong army and large resources without an emergency selected AttackPreparation."
+    },
+    {
+      "name": "Runtime_PlayerIntent_OverridesRecommendations",
+      "result": "Passed",
+      "evidence": "An explicit EconomicExpansion StrategicIntent overrode AI recommendations."
+    },
+    {
+      "name": "Runtime_NoRecommendations_ReturnsNoDecision",
+      "result": "Passed",
+      "evidence": "No recommendations returned NoDecision with no plans or commands."
+    }
+  ],
+  "fullPlayModeRegression": {
+    "jobId": "02a09ec06b1a4332aa877cff6d48841d",
+    "total": 36,
+    "passed": 36,
+    "failed": 0,
+    "skipped": 0,
+    "durationSeconds": 15.4242606
+  }
+}

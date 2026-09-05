@@ -1,0 +1,33 @@
+{
+  "phase": "3C-4",
+  "mode": "PlayMode",
+  "jobId": "29fe48c59b93474ebddb75b281c26664",
+  "resultState": "Passed",
+  "total": 4,
+  "passed": 4,
+  "failed": 0,
+  "skipped": 0,
+  "durationSeconds": 1.0178323,
+  "tests": [
+    {
+      "name": "Runtime_VisibleThreat_RecommendsDefenseWithoutPlan",
+      "result": "Passed",
+      "evidence": "A visible enemy threat with weak defense produced a DefensivePreparation recommendation and no plan."
+    },
+    {
+      "name": "Runtime_LowEconomy_RecommendsExpansion",
+      "result": "Passed",
+      "evidence": "Low worker allocation with available population produced an EconomicExpansion recommendation."
+    },
+    {
+      "name": "Runtime_StrongArmy_RecommendsAttackPreparation",
+      "result": "Passed",
+      "evidence": "A strong owned army with sufficient available resources produced an AttackPreparation recommendation."
+    },
+    {
+      "name": "Runtime_HiddenArmy_DoesNotAffectRecommendations",
+      "result": "Passed",
+      "evidence": "Hidden enemy military changes did not alter recommendations or create a defensive recommendation."
+    }
+  ]
+}

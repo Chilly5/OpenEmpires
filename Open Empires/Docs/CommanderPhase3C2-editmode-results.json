@@ -1,0 +1,39 @@
+{
+  "phase": "OpenEmpires AI Commander Phase 3C-2",
+  "compilerErrors": 0,
+  "focused": {
+    "jobId": "8649945d9a7645708451d67ae5760283",
+    "mode": "EditMode",
+    "total": 13,
+    "passed": 13,
+    "failed": 0,
+    "skipped": 0,
+    "durationSeconds": 3.7453709
+  },
+  "completeInventory": {
+    "coverageTotal": 215,
+    "passedAcrossCleanSuiteJobs": 215,
+    "failedAcrossCleanSuiteJobs": 0,
+    "suites": [
+      { "name": "Phase 1", "jobId": "c131ad46fe394551b362a31fbbf27973", "passed": 29, "total": 29 },
+      { "name": "Phase 2", "jobId": "3889388ba58b4cd0be41ac3b908eae8e", "passed": 40, "total": 40 },
+      { "name": "Phase 3A", "jobId": "826f79e4a77a4df692fdc4aaa5468d13", "passed": 29, "total": 29 },
+      { "name": "Phase 3A.1", "jobId": "84c5e1d1fd0e48e28e0dd67c73009a51", "passed": 20, "total": 20 },
+      { "name": "Phase 3B", "jobId": "9c90e01131bd467b945c810ded88cd83", "passed": 31, "total": 31 },
+      { "name": "Phase 3C Preparation", "jobId": "f2d0b396b6d3416b9429378487db4d27", "passed": 21, "total": 21 },
+      { "name": "Phase 3C-1", "jobId": "f7ae7f89cad549f4a70e166b3403dd16", "passed": 11, "total": 11 },
+      { "name": "Phase 3C-2", "jobId": "8649945d9a7645708451d67ae5760283", "passed": 13, "total": 13 },
+      { "name": "Non-Commander EditMode", "jobId": "e7b0c86772e74fc382332fcfffbcd622", "passed": 21, "total": 21 }
+    ]
+  },
+  "monolithicRunInfrastructureNote": {
+    "jobIds": [
+      "7717ef07152b4119b1bca6e8c891fbb7",
+      "3b579e92d662416da2e16bb192093f1f"
+    ],
+    "executed": 215,
+    "productAssertionsFailed": 0,
+    "logContaminatedTests": 2,
+    "reason": "MCP client disposed-NetworkStream error was injected into Unity test logs during bridge reconnect. The affected Phase 3B suite passed 31/31 independently."
+  }
+}
