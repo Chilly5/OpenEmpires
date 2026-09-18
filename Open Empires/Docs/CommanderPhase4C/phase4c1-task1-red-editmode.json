@@ -1,0 +1,19 @@
+{
+  "jobId": "3f6bb2794532405ba23a7acca593c049",
+  "mode": "EditMode",
+  "status": "failed",
+  "total": 8,
+  "failed": 6,
+  "expectedFailures": [
+    "GeminiPayload_LabelsDetachedMemoryAsUntrusted: missing untrusted memory block",
+    "Memory_ClearsBetweenMatches: no-op store returned no reset sequence entry",
+    "Memory_DoesNotLeakGameState: request memory snapshot was empty",
+    "Memory_IsBounded: no-op store returned no retained values",
+    "Memory_ValidatesAndBoundsValues: no-op store returned no bounded text",
+    "RememberedPreference_ProducesContextualAttackWithoutExecution: provider ignored memory"
+  ],
+  "assertionLevelRed": true,
+  "compilerErrorsAtRun": 0,
+  "testAssemblyTimestamp": "2026-09-15T22:05:30+03:30",
+  "note": "Two tests were compatible with the deliberately empty skeleton; six independent behavioral assertions proved missing functionality."
+}

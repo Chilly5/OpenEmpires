@@ -64,16 +64,16 @@ namespace OpenEmpires.Tests
             var first = manager.SubmitResourceAllocation(ResourceType.Wood, 1);
             var second = manager.SubmitResourceAllocation(ResourceType.Food, 1);
             manager.Tick(0); var firstCommand = SingleGather();
-            Assert.That(firstCommand.UnitIds, Is.EqualTo(new[] { firstWorker.Id }));
-            AssignGather(firstWorker, wood);
+            Assert.That(firstCommand.UnitIds, Is.EqualTo(new[] { secondWorker.Id }));
+            AssignGather(secondWorker, wood);
             manager.Tick(15); var secondCommand = SingleGather();
             Assert.That(first.Status, Is.EqualTo(CommanderGoalStatus.Completed));
-            Assert.That(secondCommand.UnitIds, Is.EqualTo(new[] { secondWorker.Id }));
-            Assert.That(manager.GetWorkerReservation(firstWorker.Id), Is.Null);
-            AssignGather(secondWorker, food);
+            Assert.That(secondCommand.UnitIds, Is.EqualTo(new[] { firstWorker.Id }));
+            Assert.That(manager.GetWorkerReservation(secondWorker.Id), Is.Null);
+            AssignGather(firstWorker, food);
             manager.Tick(30);
             Assert.That(second.Status, Is.EqualTo(CommanderGoalStatus.Completed));
-            Assert.That(manager.GetWorkerReservation(secondWorker.Id), Is.Null);
+            Assert.That(manager.GetWorkerReservation(firstWorker.Id), Is.Null);
             Assert.That(sim.CommandBuffer.FlushCommands(), Is.Empty);
         }
 
@@ -87,10 +87,12 @@ namespace OpenEmpires.Tests
             {
                 manager.Tick(i * 15);
                 var command = SingleGather();
-                Assert.That(command.UnitIds, Is.EqualTo(new[] { workers[i].Id }), "FIFO goals and lowest eligible worker ID must be stable.");
+                UnitData expectedWorker = workers[workers.Length - 1 - i];
+                Assert.That(command.UnitIds, Is.EqualTo(new[] { expectedWorker.Id }),
+                    "FIFO goals and distance-first eligible worker ordering must be stable.");
                 Assert.That(command.ResourceNodeId, Is.EqualTo(resources[i].Id));
-                Assert.That(manager.GetWorkerReservation(workers[i].Id).Value.GoalId, Is.EqualTo(goals[i].GoalId));
-                AssignGather(workers[i], resources[i]);
+                Assert.That(manager.GetWorkerReservation(expectedWorker.Id).Value.GoalId, Is.EqualTo(goals[i].GoalId));
+                AssignGather(expectedWorker, resources[i]);
                 manager.Tick(i * 15);
                 Assert.That(sim.CommandBuffer.FlushCommands(), Is.Empty, "Repeated evaluation of one tick must not emit another command.");
                 manager.Tick(i * 15 + 1);

@@ -59,11 +59,12 @@ namespace OpenEmpires.Tests
         {
             CreateGatherers(ResourceType.Food, CavalryPressurePlan.FoodWorkerTarget, x - 22);
             CreateGatherers(ResourceType.Gold, CavalryPressurePlan.GoldWorkerTarget, x);
+            CreateGatherers(ResourceType.Wood, CavalryPressurePlan.WoodWorkerTarget, x - 10);
             Worker(x + 8, z);
 
             CavalryPressurePlan plan = strategicPlanner.StartCavalryPressurePlan();
             Assert.That(plan.CurrentMilestone.Name, Is.EqualTo("Economic Foundation"));
-            Assert.That(plan.ChildGoalIds, Has.Count.EqualTo(2));
+            Assert.That(plan.ChildGoalIds, Has.Count.EqualTo(3));
             Debug.Log("[Phase3C-1 Runtime] PASS Scenario 1: CavalryPressurePlan started; Economic Foundation active with food and gold goals.");
             yield return null;
 
@@ -100,6 +101,7 @@ namespace OpenEmpires.Tests
         {
             CreateGatherers(ResourceType.Food, CavalryPressurePlan.FoodWorkerTarget, x - 22);
             CreateGatherers(ResourceType.Gold, CavalryPressurePlan.GoldWorkerTarget, x);
+            CreateGatherers(ResourceType.Wood, CavalryPressurePlan.WoodWorkerTarget, x - 10);
             Worker(x + 8, z);
             CavalryPressurePlan plan = strategicPlanner.StartCavalryPressurePlan();
             goalManager.Tick(0);

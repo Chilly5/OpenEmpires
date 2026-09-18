@@ -1,0 +1,31 @@
+{
+  "verifiedAtUtc": "2026-09-11T10:38:43.703Z",
+  "unityVersion": "6000.5.9f1",
+  "jobId": "ba2e592a8d624c7ea70dd193e85e8308",
+  "mode": "EditMode",
+  "fixture": "OpenEmpires.Tests.CommanderPhase4ATests",
+  "summary": {
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "skipped": 0,
+    "durationSeconds": 16.193,
+    "resultState": "Passed"
+  },
+  "tests": [
+    "MockProvider_ReturnsValidIntent",
+    "GeminiProvider_ParsesJsonResponse",
+    "InvalidLLMJson_IsRejectedSafely",
+    "ChatInput_CreatesCommanderIntent",
+    "CommanderIntent_ReachesExistingPipeline",
+    "LLM_CannotCreateCommandsDirectly",
+    "ConversationHistory_RemainsBounded",
+    "GameContext_DoesNotExposeHiddenInformation",
+    "CommanderChat_SubmitsMessage",
+    "CommanderChat_DisplaysResponse"
+  ],
+  "notes": [
+    "GeminiProvider_ParsesJsonResponse simulates a 404 from gemini-flash-lite, then verifies gemini-flash-latest is called and its JSON is parsed.",
+    "Both requests use x-goog-api-key headers and keep the key out of the URL."
+  ]
+}

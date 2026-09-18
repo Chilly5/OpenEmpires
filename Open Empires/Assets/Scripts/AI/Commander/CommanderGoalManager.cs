@@ -4,8 +4,10 @@ using UnityEngine;
 
 namespace OpenEmpires
 {
-    public sealed class CommanderGoalManager
+    public sealed class CommanderGoalManager : IDisposable
     {
+        public const int MaxActiveGoals = 64;
+        public const int MaxArchivedGoals = 50;
         private const int PlanningIntervalTicks = 15;
         private const int BlockedRetryIntervalTicks = 150; // Five seconds at 30 Hz.
         private const int BlockedTimeoutTicks = 1800; // One minute continuously unresolved.
@@ -14,11 +16,20 @@ namespace OpenEmpires
         private readonly CommanderPlanner planner;
         private readonly CommanderWorkerAuthority workerAuthority;
         private readonly List<CommanderGoal> goals = new List<CommanderGoal>();
+        private readonly List<CommanderGoal> activeGoals = new List<CommanderGoal>();
+        private readonly List<CommanderGoal> archivedGoals = new List<CommanderGoal>();
         private int nextGoalId = 1;
         private int lastEvaluatedTick = -1;
+        private bool isTicking;
+        private bool disposed;
 
         public IReadOnlyList<CommanderGoal> Goals => goals;
+        public IReadOnlyList<CommanderGoal> ActiveGoals => activeGoals;
+        public IReadOnlyList<CommanderGoal> ArchivedGoals => archivedGoals;
+        public int DiagnosticPathCheckCount => planner.DiagnosticPathCheckCount;
+        public void ResetDiagnosticPathCheckCount() => planner.ResetDiagnosticPathCheckCount();
         public int PlayerId => playerId;
+        internal GameSimulation Simulation => simulation;
         public int CurrentTick => simulation.CurrentTick;
         public CommanderGoal ActiveGoal { get; private set; }
         public event Action<CommanderGoal> GoalStatusChanged;
@@ -39,13 +50,15 @@ namespace OpenEmpires
                 && workerAuthority.TryReserve(workerId, goalId, reservationType, simulation.CurrentTick);
         }
 
-        public CommanderGoalManager(GameSimulation simulation, int playerId)
+        public CommanderGoalManager(GameSimulation simulation, int playerId,
+            int pathValidationCandidates = CommanderPlanner.DefaultPathValidationCandidates)
         {
             this.simulation = simulation ?? throw new ArgumentNullException(nameof(simulation));
             this.playerId = playerId;
             workerAuthority = new CommanderWorkerAuthority(simulation, playerId);
             simulation.CommandBuffer.CommandEnqueued += HandleCommandEnqueued;
-            planner = new CommanderPlanner(simulation, workerAuthority);
+            planner = new CommanderPlanner(simulation, workerAuthority,
+                pathValidationCandidates);
         }
 
         public EnsureUnitCountGoal SubmitEnsureUnitCount(int requestedUnitType, int targetTotal,
@@ -84,28 +97,62 @@ namespace OpenEmpires
 
         private T Register<T>(T goal, IReadOnlyList<CommanderConstraint> constraints) where T : CommanderGoal
         {
+            ThrowIfDisposed();
+            if (activeGoals.Count >= MaxActiveGoals)
+                throw new InvalidOperationException(
+                    $"The active Commander goal limit of {MaxActiveGoals} has been reached.");
             goal.GoalId = nextGoalId++;
             goal.CreatedTick = simulation.CurrentTick;
             planner.CaptureConstraints(goal, constraints);
             goals.Add(goal);
+            activeGoals.Add(goal);
             if (ActiveGoal == null || ActiveGoal.IsTerminal) ActiveGoal = goal;
             Debug.Log($"[Commander] Goal #{goal.GoalId} submitted: {goal.GoalType}");
             PublishEvent(CommanderGoalEventType.GoalStarted, goal, simulation.CurrentTick);
             return goal;
         }
 
+        private void ArchiveGoal(CommanderGoal goal)
+        {
+            if (!archivedGoals.Contains(goal))
+            {
+                if (archivedGoals.Count >= MaxArchivedGoals)
+                {
+                    CommanderGoal removed = archivedGoals[0];
+                    archivedGoals.RemoveAt(0);
+                    goals.Remove(removed);
+                }
+                archivedGoals.Add(goal);
+            }
+        }
+
+        private void CleanupTerminalGoals()
+        {
+            for (int i = activeGoals.Count - 1; i >= 0; i--)
+            {
+                if (activeGoals[i].IsTerminal)
+                {
+                    ArchiveGoal(activeGoals[i]);
+                    activeGoals.RemoveAt(i);
+                }
+            }
+        }
+
         public bool CancelGoal(int goalId)
         {
+            ThrowIfDisposed();
             for (int i = 0; i < goals.Count; i++)
             {
                 CommanderGoal goal = goals[i];
                 if (goal.GoalId != goalId || goal.IsTerminal) continue;
                 goal.SetStatus(CommanderGoalStatus.Cancelled, "Cancelled by the owning player.");
                 workerAuthority.ReleaseGoal(goal.GoalId);
+                ArchiveGoal(goal);
                 if (ActiveGoal == goal) ActiveGoal = null;
                 Debug.Log($"[Commander] Goal #{goal.GoalId} cancelled.");
                 GoalStatusChanged?.Invoke(goal);
                 PublishEvent(CommanderGoalEventType.GoalCancelled, goal, simulation.CurrentTick);
+                if (!isTicking) CleanupTerminalGoals();
                 return true;
             }
             return false;
@@ -113,76 +160,90 @@ namespace OpenEmpires
 
         public void Tick(int currentTick)
         {
+            ThrowIfDisposed();
             if (currentTick == lastEvaluatedTick) return;
             if (lastEvaluatedTick >= 0 && currentTick % PlanningIntervalTicks != 0) return;
             lastEvaluatedTick = currentTick;
             workerAuthority.PruneUnavailableWorkers();
 
-            // Duration limits also apply while goals are deferred or waiting in the queue.
-            ActiveGoal = null;
-            for (int i = 0; i < goals.Count; i++)
+            isTicking = true;
+            try
             {
-                CommanderGoal goal = goals[i];
-                if (!goal.IsTerminal && goal.MaxDurationTicks > 0
-                    && currentTick - goal.CreatedTick >= goal.MaxDurationTicks)
-                    FailGoal(goal, $"Goal exceeded its {goal.MaxDurationTicks}-tick duration limit.", currentTick);
+                // Duration limits also apply while goals are deferred or waiting in the queue.
+                ActiveGoal = null;
+                for (int i = 0; i < activeGoals.Count; i++)
+                {
+                    CommanderGoal goal = activeGoals[i];
+                    if (!goal.IsTerminal && goal.MaxDurationTicks > 0
+                        && currentTick - goal.CreatedTick >= goal.MaxDurationTicks)
+                        FailGoal(goal, $"Goal exceeded its {goal.MaxDurationTicks}-tick duration limit.", currentTick);
+                }
+
+                // FIFO among runnable goals. Blocked retries keep their original place, but
+                // every no-command wait yields immediately to later requests.
+                // At most one ordinary ICommand is emitted during a planning tick.
+                for (int i = 0; i < activeGoals.Count; i++)
+                {
+                    CommanderGoal goal = activeGoals[i];
+                    if (goal.IsTerminal || (goal.Status == CommanderGoalStatus.Blocked
+                        && currentTick < goal.NextBlockedRetryTick)) continue;
+                    CommanderPlan plan = planner.Plan(goal, currentTick);
+                    if (plan.Command != null && !workerAuthority.TryReserveCommand(goal, plan.Command, currentTick))
+                        plan = new CommanderPlan(CommanderGoalStatus.Blocked,
+                            "Worker is protected or reserved by another goal.", plan.OwnedCount, plan.QueuedCount);
+                    goal.LastObservedOwnedCount = plan.OwnedCount;
+                    goal.LastObservedQueuedCount = plan.QueuedCount;
+                    if (plan.Status == CommanderGoalStatus.Blocked)
+                    {
+                        if (goal.BlockedSinceTick < 0) goal.BlockedSinceTick = currentTick;
+                        // Re-plan before failing, so a condition resolved at the deadline can recover.
+                        if (currentTick - goal.BlockedSinceTick >= BlockedTimeoutTicks)
+                        {
+                            FailGoal(goal, $"Blocked for {BlockedTimeoutTicks} ticks. {plan.Reason}", currentTick);
+                            continue;
+                        }
+                        goal.NextBlockedRetryTick = currentTick + BlockedRetryIntervalTicks;
+                    }
+                    else goal.BlockedSinceTick = -1;
+
+                    bool changed = goal.SetStatus(plan.Status, plan.Reason);
+                    if (goal.IsTerminal)
+                    {
+                        workerAuthority.ReleaseGoal(goal.GoalId);
+                        ArchiveGoal(goal);
+                    }
+                    if (plan.Command != null && !goal.IsTerminal)
+                    {
+                        simulation.CommandBuffer.EnqueueCommand(plan.Command, CommandEnqueueSource.Commander);
+                        if (plan.Command is GatherCommand) goal.LastEconomyCommandTick = currentTick;
+                        if (plan.Command is ConstructBuildingCommand)
+                        {
+                            goal.LastConstructionRecoveryTick = currentTick;
+                            goal.ConstructionBuilderInRange = false;
+                        }
+                    }
+                    if (changed || plan.Command != null)
+                    {
+                        Debug.Log($"[Commander] Goal #{goal.GoalId}: status={goal.Status} "
+                            + $"owned={plan.OwnedCount} queued={plan.QueuedCount}; {plan.Reason}");
+                        GoalStatusChanged?.Invoke(goal);
+                        PublishEvent(GetEventType(goal.Status), goal, currentTick);
+                    }
+                    if (plan.Command != null)
+                    {
+                        ActiveGoal = goal;
+                        return;
+                    }
+                    // ActiveGoal is a compatibility/UI pointer, not an execution lock.
+                    // Evaluate later goals when this one has no command, including all waiting states.
+                    if (!goal.IsTerminal && goal.Status != CommanderGoalStatus.Blocked && ActiveGoal == null)
+                        ActiveGoal = goal;
+                }
             }
-
-            // FIFO among runnable goals. Blocked retries keep their original place, but
-            // every no-command wait yields immediately to later requests.
-            // At most one ordinary ICommand is emitted during a planning tick.
-            for (int i = 0; i < goals.Count; i++)
+            finally
             {
-                CommanderGoal goal = goals[i];
-                if (goal.IsTerminal || (goal.Status == CommanderGoalStatus.Blocked
-                    && currentTick < goal.NextBlockedRetryTick)) continue;
-                CommanderPlan plan = planner.Plan(goal, currentTick);
-                if (plan.Command != null && !workerAuthority.TryReserveCommand(goal, plan.Command, currentTick))
-                    plan = new CommanderPlan(CommanderGoalStatus.Blocked,
-                        "Worker is protected or reserved by another goal.", plan.OwnedCount, plan.QueuedCount);
-                goal.LastObservedOwnedCount = plan.OwnedCount;
-                goal.LastObservedQueuedCount = plan.QueuedCount;
-                if (plan.Status == CommanderGoalStatus.Blocked)
-                {
-                    if (goal.BlockedSinceTick < 0) goal.BlockedSinceTick = currentTick;
-                    // Re-plan before failing, so a condition resolved at the deadline can recover.
-                    if (currentTick - goal.BlockedSinceTick >= BlockedTimeoutTicks)
-                    {
-                        FailGoal(goal, $"Blocked for {BlockedTimeoutTicks} ticks. {plan.Reason}", currentTick);
-                        continue;
-                    }
-                    goal.NextBlockedRetryTick = currentTick + BlockedRetryIntervalTicks;
-                }
-                else goal.BlockedSinceTick = -1;
-
-                bool changed = goal.SetStatus(plan.Status, plan.Reason);
-                if (goal.IsTerminal) workerAuthority.ReleaseGoal(goal.GoalId);
-                if (plan.Command != null && !goal.IsTerminal)
-                {
-                    simulation.CommandBuffer.EnqueueCommand(plan.Command, CommandEnqueueSource.Commander);
-                    if (plan.Command is GatherCommand) goal.LastEconomyCommandTick = currentTick;
-                    if (plan.Command is ConstructBuildingCommand)
-                    {
-                        goal.LastConstructionRecoveryTick = currentTick;
-                        goal.ConstructionBuilderInRange = false;
-                    }
-                }
-                if (changed || plan.Command != null)
-                {
-                    Debug.Log($"[Commander] Goal #{goal.GoalId}: status={goal.Status} "
-                        + $"owned={plan.OwnedCount} queued={plan.QueuedCount}; {plan.Reason}");
-                    GoalStatusChanged?.Invoke(goal);
-                    PublishEvent(GetEventType(goal.Status), goal, currentTick);
-                }
-                if (plan.Command != null)
-                {
-                    ActiveGoal = goal;
-                    return;
-                }
-                // ActiveGoal is a compatibility/UI pointer, not an execution lock.
-                // Evaluate later goals when this one has no command, including all waiting states.
-                if (!goal.IsTerminal && goal.Status != CommanderGoalStatus.Blocked && ActiveGoal == null)
-                    ActiveGoal = goal;
+                isTicking = false;
+                CleanupTerminalGoals();
             }
         }
 
@@ -190,6 +251,7 @@ namespace OpenEmpires
         {
             goal.SetStatus(CommanderGoalStatus.Failed, reason);
             workerAuthority.ReleaseGoal(goal.GoalId);
+            ArchiveGoal(goal);
             Debug.LogWarning($"[Commander] Goal #{goal.GoalId} failed: {goal.StatusReason}");
             GoalStatusChanged?.Invoke(goal);
             PublishEvent(CommanderGoalEventType.GoalFailed, goal, currentTick);
@@ -215,6 +277,22 @@ namespace OpenEmpires
                 case CommanderGoalStatus.Cancelled: return CommanderGoalEventType.GoalCancelled;
                 default: return CommanderGoalEventType.GoalProgressChanged;
             }
+        }
+
+        public void Dispose()
+        {
+            if (disposed) return;
+            disposed = true;
+            simulation.CommandBuffer.CommandEnqueued -= HandleCommandEnqueued;
+            for (int i = 0; i < activeGoals.Count; i++)
+                workerAuthority.ReleaseGoal(activeGoals[i].GoalId);
+            GoalStatusChanged = null;
+            GoalEventPublished = null;
+        }
+
+        private void ThrowIfDisposed()
+        {
+            if (disposed) throw new ObjectDisposedException(nameof(CommanderGoalManager));
         }
 
     }

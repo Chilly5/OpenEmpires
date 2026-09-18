@@ -1,0 +1,139 @@
+diff --git a/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs b/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs
+index 108f2a2..91bb3e0 100644
+--- a/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs
++++ b/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs
+@@ -120,27 +120,34 @@ namespace OpenEmpires
+             canvasRoot.SetActive(true);
+             if (transcript.Length == 0)
+                 AppendLine("Commander", provider is GeminiAIProvider
+                     ? "Gemini translator ready."
+                     : "Local mock translator ready.", false);
+         }
+ 
+         public void InitializeStrategic(IStrategicAIInterpreter interpreter, StrategicPipeline pipeline,
+             System.TimeSpan? providerTimeout = null)
+         {
++            if (interpreter == null) throw new System.ArgumentNullException(nameof(interpreter));
++            if (pipeline == null) throw new System.ArgumentNullException(nameof(pipeline));
++            if (Conversation == null || Conversation.PlayerId != pipeline.StrategicPlanner.PlayerId)
++                throw new System.ArgumentException(
++                    "The strategic runtime must belong to the active Commander player.", nameof(pipeline));
++            if (strategicPipeline != null && !ReferenceEquals(strategicPipeline, pipeline))
++                ResetConversation();
+             runtimeGeneration++;
+             lifetime?.Cancel();
+             lifetime?.Dispose();
+             lifetime = new CancellationTokenSource();
+             strategicBridge?.Dispose();
+             DetachStrategicPipeline();
+-            strategicPipeline = pipeline ?? throw new System.ArgumentNullException(nameof(pipeline));
++            strategicPipeline = pipeline;
+             strategicBridge = new StrategicAIApprovalBridge(interpreter, pipeline.StrategicPlanner.IntentIds,
+                 () => pipeline.CaptureContext(), providerTimeout,
+                 () => Conversation?.Snapshot() ?? System.Array.Empty<MemoryEntry>());
+             strategicPipeline.EvaluationCompleted += OnStrategicEvaluationCompleted;
+             submitting = false;
+             if (inputField != null) inputField.interactable = adapter != null;
+             if (sendButton != null) sendButton.interactable = adapter != null;
+             UpdateStrategicControls();
+         }
+ 
+@@ -176,20 +183,21 @@ namespace OpenEmpires
+             if (wholeForm == "focus cavalry")
+             {
+                 AppendLine("Player", trimmed);
+                 Conversation.Memory.RecordCavalryPreference();
+                 AppendLine("Commander", "Cavalry attack focus remembered for this match.");
+                 return null;
+             }
+             if (submitting) return null;
+             submitting = true;
+             int generation = runtimeGeneration;
++            IReadOnlyList<MemoryEntry> memoryAtTurnStart = Conversation.Snapshot();
+             strategicBridge?.ClearPending();
+             LatestStrategicInterpretation = null;
+             LatestStrategicDecision = null;
+             LatestSubmission = null;
+             UpdateStrategicControls();
+             AppendLine("Player", trimmed);
+             inputField.interactable = false;
+             sendButton.interactable = false;
+             try
+             {
+@@ -199,27 +207,22 @@ namespace OpenEmpires
+                     AppendLine("Commander", "Unsupported or mixed Commander request.");
+                     return null;
+                 }
+                 if (route == CommanderTextRoute.Strategic)
+                 {
+                     if (strategicBridge == null)
+                     {
+                         AppendLine("Commander", "Strategic Commander is not ready.");
+                         return null;
+                     }
+-                    if (IsGenericAttack(wholeForm)
+-                        && !Conversation.TryGetCavalryPreference(out _))
+-                    {
+-                        AppendLine("Commander", "Choose the supported attack focus first: focus cavalry.");
+-                        return null;
+-                    }
+-                    var result = await strategicBridge.TranslateAsync(trimmed, lifetime.Token);
++                    var result = await strategicBridge.TranslateAsync(trimmed, lifetime.Token,
++                        memoryAtTurnStart);
+                     if (this == null || generation != runtimeGeneration || lifetime.IsCancellationRequested) return null;
+                     LatestStrategicInterpretation = result;
+                     AppendLine("Commander", result.Success
+                         ? result.Intent.ObjectiveType + " recommendation. No plan started. Approve normally, or explicitly confirm as your command (may replace AI plans, never direct-player plans)."
+                         : result.ExplanationText);
+                     UpdateStrategicControls();
+                     return null;
+                 }
+                 CommanderAIChatSubmission tacticalResult = await adapter.SubmitAsync(trimmed, lifetime.Token);
+                 if (this != null && generation == runtimeGeneration)
+@@ -336,20 +339,22 @@ namespace OpenEmpires
+         {
+             if (record == null || Conversation == null) return;
+             StrategicIntentSubmission submission = record.Submission;
+             int? intentId = submission?.Intent?.IntentId;
+             int? planId = submission?.CreatedPlan == true
+                 ? submission.Plan.StrategicPlanId : null;
+             string objective = submission?.Intent == null
+                 ? string.Empty : submission.Intent.ObjectiveType.ToString();
+             string status = submission?.CreatedPlan == true ? "Accepted"
+                 : submission != null ? "SubmissionRejected"
++                : record.Decision?.Status == StrategicDecisionStatus.Rejected ? "Rejected"
++                : record.Decision?.Status == StrategicDecisionStatus.NoDecision ? "NoDecision"
+                 : !record.TransitionAllowed ? "TransitionRefused"
+                 : record.Decision?.HasSelection == true ? "SelectionNotSubmitted" : "Rejected";
+             Conversation.Memory.RecordDecision(status, record.Outcome, intentId, planId, objective);
+             if (submission?.CreatedPlan == true)
+                 Conversation.Memory.RecordApprovedStrategy(objective,
+                     submission.Intent.IntentId, submission.Plan.StrategicPlanId, record.Outcome);
+         }
+ 
+         private void DetachStrategicPipeline()
+         {
+@@ -359,23 +364,20 @@ namespace OpenEmpires
+         }
+ 
+         private static string NormalizeWholeForm(string message)
+         {
+             string text = Regex.Replace((message ?? string.Empty).Trim().ToLowerInvariant(), @"\s+", " ");
+             if (text.EndsWith(".", System.StringComparison.Ordinal))
+                 text = text.TrimEnd('.').TrimEnd();
+             return text;
+         }
+ 
+-        private static bool IsGenericAttack(string normalized) =>
+-            normalized == "prepare attack" || normalized == "prepare an attack";
+-
+         private void OnDestroy()
+         {
+             if (bootstrapWait != null) StopCoroutine(bootstrapWait);
+             lifetime?.Cancel();
+             strategicBridge?.Dispose();
+             DetachStrategicPipeline();
+             adapter?.ResetHistory();
+             Conversation?.Reset();
+             transcriptEntries.Clear();
+             transcript.Clear();

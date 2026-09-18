@@ -1,0 +1,408 @@
+using System;
+using System.Collections;
+using System.Linq;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
+using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.TestTools;
+using UnityEngine.UI;
+
+namespace OpenEmpires.Tests
+{
+    [Category("CommanderPhase4C1")]
+    public sealed class CommanderPhase4C1PlayModeTests
+    {
+        private SimulationConfig config;
+        private GameSimulation simulation;
+        private CommanderGoalManager goals;
+        private StrategicPlanner planner;
+        private StrategicPipeline pipeline;
+        private CommanderIntentDispatcher dispatcher;
+        private CommanderChatUI chat;
+
+        [SetUp]
+        public void SetUp()
+        {
+            foreach (var existing in UnityEngine.Object.FindObjectsByType<CommanderChatUI>(FindObjectsSortMode.None))
+                UnityEngine.Object.DestroyImmediate(existing.gameObject);
+            config = ScriptableObject.CreateInstance<SimulationConfig>();
+            simulation = new GameSimulation(config, 2, new[] { 0, 1 }, Array.Empty<int>());
+            simulation.SetPlayerCivilizations(new[] { Civilization.French, Civilization.French });
+            ((int[])typeof(GameSimulation).GetField("playerAges", BindingFlags.NonPublic | BindingFlags.Instance)
+                .GetValue(simulation))[0] = 3;
+            var resources = simulation.ResourceManager.GetPlayerResources(0);
+            resources.Food = resources.Wood = resources.Gold = resources.Stone = 5000;
+            int x = simulation.MapData.Width / 2;
+            int z = simulation.MapData.Height / 2;
+            typeof(MapData).GetField("holeMap", BindingFlags.NonPublic | BindingFlags.Instance)
+                .SetValue(simulation.MapData, null);
+            foreach (var node in simulation.MapData.GetAllResourceNodes()) node.RemainingAmount = 0;
+            for (int tx = x - 35; tx <= x + 35; tx++)
+                for (int tz = z - 22; tz <= z + 22; tz++)
+                {
+                    simulation.MapData.Tiles[tx, tz] = TileType.Grass;
+                    simulation.MapData.ForestDensity[tx, tz] = 0;
+                    simulation.MapData.FoundationCount[tx, tz] = 0;
+                    simulation.FogOfWar.SetVisible(0, tx, tz);
+                }
+            simulation.CreateBuilding(0, BuildingType.TownCenter, x + 12, z, false, true).AutoProduceVillagers = false;
+            simulation.CreateBuilding(0, BuildingType.House, x + 18, z, false);
+            simulation.CreateBuilding(0, BuildingType.House, x + 22, z, false);
+            simulation.CreateBuilding(0, BuildingType.House, x + 18, z + 6, false);
+            simulation.CreateBuilding(0, BuildingType.Barracks, x - 10, z, false);
+            simulation.CreateBuilding(0, BuildingType.ArcheryRange, x - 16, z, false);
+            simulation.CreateBuilding(0, BuildingType.Stables, x - 22, z, false);
+            Gatherers(ResourceType.Food, 10, x - 22, z);
+            Gatherers(ResourceType.Gold, 6, x, z);
+            Gatherers(ResourceType.Wood, 4, x - 10, z);
+            for (int i = 0; i < 12; i++) AddUnit(2);
+            goals = new CommanderGoalManager(simulation, 0);
+            planner = new StrategicPlanner(goals, CurrentResource);
+            pipeline = new StrategicPipeline(simulation, goals, planner);
+            dispatcher = new CommanderIntentDispatcher(simulation, goals, strategicPlanner: planner);
+            chat = new GameObject("Phase4C1RuntimeChat").AddComponent<CommanderChatUI>();
+            chat.enabled = false;
+            chat.Initialize(new MockAIProvider(), simulation, goals, dispatcher);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            if (chat != null) UnityEngine.Object.DestroyImmediate(chat.gameObject);
+            dispatcher?.Dispose();
+            pipeline?.Dispose();
+            planner?.Dispose();
+            goals?.Dispose();
+            if (config != null) UnityEngine.Object.DestroyImmediate(config);
+        }
+
+        [UnityTest]
+        public IEnumerator PreferenceThenAttack_CreatesPreviewOnlyUntilApproval()
+        {
+            var provider = new CapturingProvider();
+            chat.InitializeStrategic(provider, pipeline);
+            Task<CommanderAIChatSubmission> preference = chat.SubmitMessageAsync("focus cavalry.");
+            while (!preference.IsCompleted) yield return null;
+            Assert.That(chat.Conversation.TryGetCavalryPreference(out var focus), Is.True);
+            Assert.That(focus, Is.EqualTo(CommanderCavalryPreference.Cavalry));
+            AssertNoExecution();
+
+            Task<CommanderAIChatSubmission> attack = chat.SubmitMessageAsync("prepare attack");
+            while (!attack.IsCompleted) yield return null;
+            Assert.That(provider.LastRequest, Is.Not.Null);
+            Assert.That(provider.LastRequest.MemorySnapshot.Any(entry =>
+                entry.CavalryPreference == CommanderCavalryPreference.Cavalry), Is.True);
+            Assert.That(provider.LastRequest.MemorySnapshot.Any(entry =>
+                entry.Kind == MemoryEntryKind.PlayerConversation
+                && entry.Text == "prepare attack"), Is.False,
+                "The current request belongs in PlayerMessage, not duplicated into advisory memory.");
+            Assert.That(chat.PendingStrategicIntent.Parameters["focus"], Is.EqualTo("cavalry"));
+            AssertNoExecution();
+
+            chat.GetComponentsInChildren<Button>(true).Single(button => button.name == "Approve strategy")
+                .onClick.Invoke();
+            StrategicDecisionRecord accepted = chat.LatestStrategicDecision;
+            Assert.That(accepted.Submission?.CreatedPlan, Is.True, accepted.Outcome);
+            Assert.That(chat.Conversation.Snapshot().Any(entry =>
+                entry.Kind == MemoryEntryKind.ApprovedStrategy
+                && entry.PlanId == accepted.Submission.Plan.StrategicPlanId), Is.True);
+        }
+
+        [UnityTest]
+        public IEnumerator QueriesAndPreference_DoNotErasePendingRecommendation()
+        {
+            chat.InitializeStrategic(new MockStrategicAIProvider(), pipeline);
+            Task<CommanderAIChatSubmission> prepare = chat.SubmitMessageAsync("prepare defenses");
+            while (!prepare.IsCompleted) yield return null;
+            StrategicIntent pending = chat.PendingStrategicIntent;
+            Assert.That(pending, Is.Not.Null);
+
+            Task<CommanderAIChatSubmission> preference = chat.SubmitMessageAsync("focus cavalry");
+            while (!preference.IsCompleted) yield return null;
+            Assert.That(chat.PendingStrategicIntent, Is.SameAs(pending));
+            Task<CommanderAIChatSubmission> query = chat.SubmitMessageAsync("show memory");
+            while (!query.IsCompleted) yield return null;
+            Assert.That(chat.PendingStrategicIntent, Is.SameAs(pending));
+            Assert.That(chat.DisplayedTranscript, Does.Contain("Cavalry"));
+            Assert.That(planner.Plans, Is.Empty);
+            Assert.That(goals.Goals, Is.Empty);
+        }
+
+        [UnityTest]
+        public IEnumerator Reset_IgnoresUncooperativeLateStrategicResponse()
+        {
+            var provider = new DeferredProvider();
+            chat.InitializeStrategic(provider, pipeline);
+            Task<CommanderAIChatSubmission> pending = chat.SubmitMessageAsync("prepare cavalry attack");
+            yield return null;
+            chat.ResetConversation();
+            for (int i = 0; i < 120 && !pending.IsCompleted; i++) yield return null;
+            provider.Complete();
+            yield return null;
+
+            Assert.That(pending.IsCompleted, Is.True);
+            Assert.That(chat.Conversation.Snapshot(), Is.Empty);
+            Assert.That(chat.DisplayedTranscript, Is.Empty);
+            Assert.That(chat.LatestStrategicInterpretation, Is.Null);
+            Assert.That(chat.PendingStrategicIntent, Is.Null);
+            AssertNoExecution();
+        }
+
+        [UnityTest]
+        public IEnumerator StrategicReinitialize_IgnoresOldProviderPublication()
+        {
+            var provider = new DeferredProvider();
+            chat.InitializeStrategic(provider, pipeline);
+            Task<CommanderAIChatSubmission> pending = chat.SubmitMessageAsync("prepare cavalry attack");
+            yield return null;
+            chat.InitializeStrategic(new MockStrategicAIProvider(), pipeline);
+            string transcript = chat.DisplayedTranscript;
+            for (int i = 0; i < 120 && !pending.IsCompleted; i++) yield return null;
+            provider.Complete();
+            yield return null;
+
+            Assert.That(pending.IsCompleted, Is.True);
+            Assert.That(chat.LatestStrategicInterpretation, Is.Null);
+            Assert.That(chat.PendingStrategicIntent, Is.Null);
+            Assert.That(chat.DisplayedTranscript, Is.EqualTo(transcript));
+            AssertNoExecution();
+        }
+
+        [UnityTest]
+        public IEnumerator ClearMemory_EmptiesHistoriesPendingAndStaleFields()
+        {
+            var provider = new CapturingProvider();
+            chat.InitializeStrategic(provider, pipeline);
+            Task<CommanderAIChatSubmission> first = chat.SubmitMessageAsync("prepare cavalry attack");
+            while (!first.IsCompleted) yield return null;
+            Assert.That(chat.PendingStrategicIntent, Is.Not.Null);
+            Task<CommanderAIChatSubmission> clear = chat.SubmitMessageAsync("clear memory");
+            while (!clear.IsCompleted) yield return null;
+
+            Assert.That(chat.Conversation.Snapshot(), Is.Empty);
+            Assert.That(chat.DisplayedTranscript, Is.Empty);
+            Assert.That(chat.PendingStrategicIntent, Is.Null);
+            Assert.That(chat.LatestStrategicInterpretation, Is.Null);
+            Assert.That(chat.LatestStrategicDecision, Is.Null);
+            Assert.That(chat.LatestSubmission, Is.Null);
+        }
+
+        [UnityTest]
+        public IEnumerator RejectedStrategy_IsDecisionButNeverApprovedMemory()
+        {
+            chat.InitializeStrategic(new MockStrategicAIProvider(), pipeline);
+            var request = new StrategicAIRequest("prepare defenses", pipeline.CaptureContext(),
+                planner.IntentIds);
+            StrategicIntent defense = new MockStrategicAIProvider()
+                .InterpretStrategicIntentAsync(request, default).Result.Intent;
+            StrategicPlan emergency = planner.SubmitIntent(defense, true, false).Plan;
+            Task<CommanderAIChatSubmission> prepare = chat.SubmitMessageAsync("prepare cavalry attack");
+            while (!prepare.IsCompleted) yield return null;
+            StrategicDecisionRecord rejected = chat.ApproveStrategicRecommendation();
+
+            Assert.That(rejected.Submission, Is.Null);
+            Assert.That(emergency.Status, Is.EqualTo(StrategicPlanStatus.Active));
+            Assert.That(chat.Conversation.Snapshot().Any(entry =>
+                entry.Kind == MemoryEntryKind.Decision), Is.True);
+            Assert.That(chat.Conversation.Snapshot().Any(entry =>
+                entry.Kind == MemoryEntryKind.ApprovedStrategy), Is.False);
+        }
+
+        [UnityTest]
+        public IEnumerator ReinitializeForDifferentPlayer_ClearsOldMatchStateAndLateTacticalPublication()
+        {
+            var oldProvider = new DeferredTacticalProvider();
+            chat.Initialize(oldProvider, simulation, goals, dispatcher);
+            ConversationState oldState = chat.Conversation;
+            Task<CommanderAIChatSubmission> old = chat.SubmitMessageAsync("make 2 spearmen");
+            yield return null;
+
+            var otherGoals = new CommanderGoalManager(simulation, 1);
+            using var otherDispatcher = new CommanderIntentDispatcher(simulation, otherGoals);
+            try
+            {
+                chat.Initialize(new MockAIProvider(), simulation, otherGoals, otherDispatcher);
+                oldProvider.Complete();
+                for (int i = 0; i < 120 && !old.IsCompleted; i++) yield return null;
+                Assert.That(chat.Conversation.PlayerId, Is.EqualTo(1));
+                Assert.That(chat.Conversation.Snapshot(), Is.Empty);
+                Assert.That(oldState.Snapshot(), Is.Empty);
+                Assert.That(chat.DisplayedTranscript, Does.Not.Contain("OLD_TACTICAL_MARKER"));
+            }
+            finally { otherGoals.Dispose(); }
+        }
+
+        [UnityTest]
+        public IEnumerator Destroy_ClearsMemoryAndRejectsLateStrategicPublication()
+        {
+            var provider = new DeferredProvider();
+            chat.InitializeStrategic(provider, pipeline);
+            ConversationState retained = chat.Conversation;
+            Task<CommanderAIChatSubmission> pending = chat.SubmitMessageAsync("prepare cavalry attack");
+            yield return null;
+            UnityEngine.Object.Destroy(chat.gameObject);
+            yield return null;
+            for (int i = 0; i < 120 && !pending.IsCompleted; i++) yield return null;
+            provider.Complete();
+            yield return null;
+            Assert.That(retained.Snapshot(), Is.Empty);
+            AssertNoExecution();
+        }
+
+        [UnityTest]
+        public IEnumerator MixedPreferenceAndAttack_IsRejectedWholeFormWithoutAuthority()
+        {
+            chat.InitializeStrategic(new MockStrategicAIProvider(), pipeline);
+            Task<CommanderAIChatSubmission> mixed = chat.SubmitMessageAsync(
+                "focus cavalry and prepare attack");
+            while (!mixed.IsCompleted) yield return null;
+            Assert.That(chat.Conversation.TryGetCavalryPreference(out _), Is.False);
+            Assert.That(chat.PendingStrategicIntent, Is.Null);
+            AssertNoExecution();
+        }
+
+        [UnityTest]
+        public IEnumerator TranscriptAndMemory_RemainBoundedUnderRepeatedConversation()
+        {
+            chat.InitializeStrategic(new MockStrategicAIProvider(), pipeline);
+            for (int i = 0; i < 40; i++)
+            {
+                Task<CommanderAIChatSubmission> preference = chat.SubmitMessageAsync("focus cavalry");
+                while (!preference.IsCompleted) yield return null;
+            }
+            Assert.That(chat.Conversation.Snapshot().Count, Is.EqualTo(32));
+            Assert.That(chat.DisplayedTranscript, Does.Not.Contain("Local mock translator ready."));
+            Assert.That(chat.DisplayedTranscript.Length, Is.LessThan(65536));
+            AssertNoExecution();
+        }
+
+        [UnityTest]
+        public IEnumerator ClearMemory_ClearsTacticalAndStrategicRequestHistories()
+        {
+            var tactical = new CapturingTacticalProvider();
+            var strategic = new CapturingProvider();
+            chat.Initialize(tactical, simulation, goals, dispatcher);
+            chat.InitializeStrategic(strategic, pipeline);
+
+            Task<CommanderAIChatSubmission> first = chat.SubmitMessageAsync("make 2 spearmen");
+            while (!first.IsCompleted) yield return null;
+            Task<CommanderAIChatSubmission> second = chat.SubmitMessageAsync("make 2 spearmen");
+            while (!second.IsCompleted) yield return null;
+            Assert.That(tactical.LastRequest.ConversationHistory, Is.Not.Empty);
+            Task<CommanderAIChatSubmission> strategicFirst = chat.SubmitMessageAsync("prepare defenses");
+            while (!strategicFirst.IsCompleted) yield return null;
+
+            Task<CommanderAIChatSubmission> clear = chat.SubmitMessageAsync("clear memory");
+            while (!clear.IsCompleted) yield return null;
+            Task<CommanderAIChatSubmission> strategicAfter = chat.SubmitMessageAsync("prepare defenses");
+            while (!strategicAfter.IsCompleted) yield return null;
+            Assert.That(strategic.LastRequest.ConversationHistory, Is.Empty);
+            Assert.That(strategic.LastRequest.MemorySnapshot, Is.Empty,
+                "The current PlayerMessage must not be duplicated into cleared memory.");
+            clear = chat.SubmitMessageAsync("clear memory");
+            while (!clear.IsCompleted) yield return null;
+            Task<CommanderAIChatSubmission> tacticalAfter = chat.SubmitMessageAsync("make 2 spearmen");
+            while (!tacticalAfter.IsCompleted) yield return null;
+            Assert.That(tactical.LastRequest.ConversationHistory, Is.Empty);
+        }
+
+        private void AssertNoExecution()
+        {
+            Assert.That(planner.Plans, Is.Empty);
+            Assert.That(goals.Goals, Is.Empty);
+            Assert.That(simulation.CommandBuffer.FlushCommands(), Is.Empty);
+        }
+
+        private UnitData AddUnit(int type)
+        {
+            var unit = simulation.UnitRegistry.CreateUnit(0,
+                simulation.MapData.TileToWorldFixed(simulation.MapData.Width / 2,
+                    simulation.MapData.Height / 2), Fixed32.One, Fixed32.One, Fixed32.One);
+            unit.UnitType = type;
+            unit.IsVillager = type == 0;
+            unit.MaxHealth = unit.CurrentHealth = 100;
+            unit.State = UnitState.Idle;
+            return unit;
+        }
+
+        private void Gatherers(ResourceType resource, int count, int start, int z)
+        {
+            var node = simulation.MapData.AddResourceNode(resource,
+                simulation.MapData.TileToWorldFixed(start + 4, z + 8), 10000);
+            for (int i = 0; i < count; i++)
+            {
+                UnitData worker = AddUnit(0);
+                worker.SimPosition = simulation.MapData.TileToWorldFixed(
+                    start + 3 + i % 2, z + 7 + i / 2);
+                worker.FinalDestination = worker.SimPosition;
+                worker.State = UnitState.Gathering;
+                worker.TargetResourceNodeId = node.Id;
+            }
+        }
+
+        private int CurrentResource(ResourceType type)
+        {
+            var resources = simulation.ResourceManager.GetPlayerResources(0);
+            switch (type)
+            {
+                case ResourceType.Food: return resources.Food;
+                case ResourceType.Wood: return resources.Wood;
+                case ResourceType.Gold: return resources.Gold;
+                case ResourceType.Stone: return resources.Stone;
+                default: return 0;
+            }
+        }
+
+        private sealed class CapturingProvider : IStrategicAIInterpreter
+        {
+            public StrategicAIRequest LastRequest { get; private set; }
+            public async Task<StrategicAIProviderResult> InterpretStrategicIntentAsync(
+                StrategicAIRequest request, CancellationToken cancellationToken)
+            {
+                LastRequest = request;
+                return await new MockStrategicAIProvider().InterpretStrategicIntentAsync(
+                    request, cancellationToken);
+            }
+        }
+
+        private sealed class DeferredProvider : IStrategicAIInterpreter
+        {
+            private StrategicAIRequest request;
+            private readonly TaskCompletionSource<StrategicAIProviderResult> completion =
+                new TaskCompletionSource<StrategicAIProviderResult>();
+            public Task<StrategicAIProviderResult> InterpretStrategicIntentAsync(
+                StrategicAIRequest value, CancellationToken cancellationToken)
+            {
+                request = value;
+                return completion.Task;
+            }
+            public void Complete() => completion.TrySetResult(StrategicAIJson.Parse(
+                "{\"intentCategory\":\"Strategic\",\"objectiveType\":\"AttackPreparation\",\"parameters\":{\"focus\":\"cavalry\"}}",
+                request));
+        }
+
+        private sealed class DeferredTacticalProvider : ICommanderAIProvider
+        {
+            private readonly TaskCompletionSource<CommanderAIProviderResult> completion =
+                new TaskCompletionSource<CommanderAIProviderResult>();
+            public Task<CommanderAIProviderResult> TranslateAsync(CommanderAIRequest request,
+                CancellationToken cancellationToken) => completion.Task;
+            public void Complete() => completion.TrySetResult(CommanderAIProviderResult.Rejected(
+                CommanderIntentErrorCode.ProviderFailure, "OLD_TACTICAL_MARKER"));
+        }
+
+        private sealed class CapturingTacticalProvider : ICommanderAIProvider
+        {
+            public CommanderAIRequest LastRequest { get; private set; }
+            public Task<CommanderAIProviderResult> TranslateAsync(CommanderAIRequest request,
+                CancellationToken cancellationToken)
+            {
+                LastRequest = request;
+                return Task.FromResult(CommanderAIProviderResult.Rejected(
+                    CommanderIntentErrorCode.UnknownCommand, "Test-only rejection."));
+            }
+        }
+    }
+}

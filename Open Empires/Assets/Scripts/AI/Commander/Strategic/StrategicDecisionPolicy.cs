@@ -20,9 +20,15 @@ namespace OpenEmpires
             StrategicIntent playerIntent);
     }
 
+    public interface IStrategicApprovedDecisionPolicy
+    {
+        StrategicDecisionResult DecideApproved(StrategicContext context,
+            IReadOnlyList<StrategicRecommendation> recommendations, StrategicApprovalResult approval);
+    }
+
     // Stateless priority rules over detached strategic values. Selection creates an
     // intent value only; an explicit caller must still submit it to StrategicPlanner.
-    public sealed class RuleBasedStrategicDecisionPolicy : IStrategicDecisionPolicy
+    public sealed class RuleBasedStrategicDecisionPolicy : IStrategicDecisionPolicy, IStrategicApprovedDecisionPolicy
     {
         public const int CriticalDefenseScoreThreshold = 80;
         public const int MilitaryReinforcementScoreThreshold = 85;
@@ -113,9 +119,33 @@ namespace OpenEmpires
             }
         }
 
+        public StrategicDecisionResult DecideApproved(StrategicContext context,
+            IReadOnlyList<StrategicRecommendation> recommendations, StrategicApprovalResult approval)
+        {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+            if (approval == null || !approval.Approved || approval.Intent == null)
+                return StrategicDecisionResult.Rejected(context.SnapshotTick, "Strategic approval is required.");
+            StrategicIntent intent = approval.Intent;
+            var fresh = new StrategicApprovalLayer().Evaluate(context, intent, intent.Source);
+            if (!fresh.Approved || fresh.Authority != approval.Authority)
+                return StrategicDecisionResult.Rejected(context.SnapshotTick, fresh.Reason);
+            // A request-specific approval never authorizes selection of another objective.
+            // In particular, defensive language cannot self-assign emergency priority.
+            if (intent.Source == StrategicIntentSource.AIRecommendation
+                && intent.ObjectiveType == StrategicObjectiveType.AttackPreparation
+                && FindBest(recommendations ?? Array.Empty<StrategicRecommendation>(), context.PlayerId,
+                    StrategicObjectiveType.DefensivePreparation, CriticalDefenseScoreThreshold) != null)
+                return StrategicDecisionResult.Rejected(context.SnapshotTick, "Emergency defense has higher priority.");
+            return StrategicDecisionResult.Selected(intent, null, context.SnapshotTick,
+                StrategicPriorityLevel.Normal, "Selected the approved " + intent.Source + " strategic intent.");
+        }
+
         private static StrategicDecisionResult DecidePlayerOverride(
             StrategicContext context, StrategicIntent playerIntent)
         {
+            if (playerIntent.Source != StrategicIntentSource.PlayerDirect)
+                return StrategicDecisionResult.Rejected(context.SnapshotTick,
+                    "AI-sourced intents require strategic approval, not the direct-player entry.");
             if (playerIntent.PlayerId != context.PlayerId)
                 return StrategicDecisionResult.Rejected(context.SnapshotTick,
                     "Player strategic intent ownership does not match the strategic context.");
@@ -137,7 +167,7 @@ namespace OpenEmpires
             int intentId = CreateDeterministicIntentId(context, recommendation);
             var intent = new StrategicIntent(intentId, context.PlayerId,
                 recommendation.ObjectiveType, context.SnapshotTick,
-                priority: recommendation.Priority);
+                null, recommendation.Priority, StrategicIntentSource.AIRecommendation);
             string reason = $"Selected {priority} {recommendation.ObjectiveType} "
                 + $"recommendation #{recommendation.RecommendationId} "
                 + $"(score {recommendation.Score}): {recommendation.Reason}";

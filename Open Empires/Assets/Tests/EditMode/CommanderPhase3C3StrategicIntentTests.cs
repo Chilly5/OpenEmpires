@@ -78,18 +78,20 @@ namespace OpenEmpires.Tests
         }
 
         [Test]
-        public void StrategicIntent_RejectsUnsupportedParameter()
+        public void StrategicIntent_AllowsOptionalParameters()
         {
             var intent = new StrategicIntent(1, 0,
                 StrategicObjectiveType.AttackPreparation, 0,
-                new Dictionary<string, string> { { "enemyPrediction", "true" } });
+                new Dictionary<string, string> { { "enemyPrediction", "true" }, { "target", "enemy_base" }, { "aggression", "high" } });
 
             StrategicIntentValidationResult result = new StrategicIntentValidator().Validate(
                 intent, 0, StrategicPlanRegistry.CreateDefault());
 
-            Assert.That(result.Error,
-                Is.EqualTo(StrategicIntentValidationError.UnsupportedParameter));
-            StringAssert.Contains("enemyPrediction", result.Reason);
+            Assert.That(result.IsValid, Is.True);
+            Assert.That(result.Error, Is.EqualTo(StrategicIntentValidationError.None));
+            Assert.That(intent.Parameters["enemyPrediction"], Is.EqualTo("true"));
+            Assert.That(intent.Parameters["target"], Is.EqualTo("enemy_base"));
+            Assert.That(intent.Parameters["aggression"], Is.EqualTo("high"));
         }
 
         [Test]
@@ -121,7 +123,8 @@ namespace OpenEmpires.Tests
         [Test]
         public void PlanTemplate_NoMatchFailsSafely()
         {
-            StrategicPlanRegistry registry = StrategicPlanRegistry.CreateDefault();
+            var registry = new StrategicPlanRegistry();
+            registry.Register(new CavalryPressurePlanTemplate());
             var intent = new StrategicIntent(1, 0,
                 StrategicObjectiveType.DefensivePreparation, 0);
 
@@ -157,7 +160,7 @@ namespace OpenEmpires.Tests
                 "Economic Foundation", "Infrastructure", "Army Preparation", "Ready"
             }));
             Assert.That(plan.Milestones.Select(item => item.TacticalGoals.Count),
-                Is.EqualTo(new[] { 2, 1, 1, 0 }));
+                Is.EqualTo(new[] { 3, 1, 1, 0 }));
             Assert.That(plan.Milestones[0].TacticalGoals,
                 Has.All.TypeOf<StrategicResourceAllocationGoalRequest>());
             Assert.That(plan.Milestones[1].TacticalGoals.Single(),
@@ -174,9 +177,9 @@ namespace OpenEmpires.Tests
 
             CommanderGoal[] goals = submission.Plan.ChildGoalIds
                 .Select(goalManager.GetGoal).ToArray();
-            Assert.That(goals, Has.Length.EqualTo(2));
+            Assert.That(goals, Has.Length.EqualTo(3));
             Assert.That(goals.OfType<ResourceAllocationGoal>().Select(item => item.Resource),
-                Is.EquivalentTo(new[] { ResourceType.Food, ResourceType.Gold }));
+                Is.EquivalentTo(new[] { ResourceType.Food, ResourceType.Gold, ResourceType.Wood }));
         }
 
         [Test]
@@ -199,10 +202,13 @@ namespace OpenEmpires.Tests
         [Test]
         public void StrategicPlanner_RejectsUnsupportedIntent()
         {
+            var singleTemplateRegistry = new StrategicPlanRegistry();
+            singleTemplateRegistry.Register(new CavalryPressurePlanTemplate());
+            var localPlanner = new StrategicPlanner(goalManager, CurrentResourceAmount, singleTemplateRegistry);
             string rejected = null;
-            planner.StrategicIntentRejected += (_, reason) => rejected = reason;
+            localPlanner.StrategicIntentRejected += (_, reason) => rejected = reason;
 
-            StrategicIntentSubmission submission = planner.SubmitIntent(
+            StrategicIntentSubmission submission = localPlanner.SubmitIntent(
                 StrategicObjectiveType.DefensivePreparation);
 
             Assert.That(submission.CreatedPlan, Is.False);
@@ -210,8 +216,9 @@ namespace OpenEmpires.Tests
                 Is.EqualTo(StrategicIntentValidationError.NoCompatibleTemplate));
             Assert.That(submission.Intent.Status, Is.EqualTo(StrategicIntentStatus.Rejected));
             Assert.That(rejected, Is.EqualTo("No available strategic plan template."));
-            Assert.That(planner.Plans, Is.Empty);
+            Assert.That(localPlanner.Plans, Is.Empty);
             Assert.That(goalManager.Goals, Is.Empty);
+            localPlanner.Dispose();
         }
 
         [Test]

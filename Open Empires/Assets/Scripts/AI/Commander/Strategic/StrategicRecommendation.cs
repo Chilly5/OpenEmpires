@@ -58,7 +58,7 @@ namespace OpenEmpires
                     "Only a proposed strategic recommendation can become an intent.");
 
             var intent = new StrategicIntent(intentId, PlayerId, ObjectiveType,
-                CreatedTick, parameters, Priority);
+                CreatedTick, parameters, Priority, StrategicIntentSource.AIRecommendation);
             Status = StrategicRecommendationStatus.ConvertedToIntent;
             return intent;
         }

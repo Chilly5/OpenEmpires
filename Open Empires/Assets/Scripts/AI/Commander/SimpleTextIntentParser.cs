@@ -28,6 +28,9 @@ namespace OpenEmpires
         private static readonly Regex BuildingPattern = new Regex(
             @"^(?:please\s+)?(?:build|construct|create|make)\s+(?:([+-]?\d+)\s+)?(?:(?:a|an)\s+)?(.+?)\s*[.!?]*$",
             PatternOptions);
+        private static readonly Regex StrategicPattern = new Regex(
+            @"^(?:please\s+)?(?:prepare|plan|start)\s+(?:for\s+)?(?:(?:a|an)\s+)?(cavalry\s+attack|attack|defen[cs]e|economic\s+expansion|economy|military\s+reinforcement|reinforcements)\s*[.!?]*$",
+            PatternOptions);
 
         private static readonly Regex ProtectedResourcePattern = new Regex(
             @"\s*(?:,?\s*(?:but|and))?\s*(?:do\s+not|don't|dont)\s+touch\s+(food|wood|gold|stone)\b",
@@ -46,6 +49,12 @@ namespace OpenEmpires
             if (string.IsNullOrWhiteSpace(playerInput))
                 return CommanderIntentInterpretation.Rejected(
                     CommanderIntentErrorCode.EmptyInput, "Enter a Commander command.");
+
+            Match strategicMatch = StrategicPattern.Match(playerInput.Trim());
+            if (strategicMatch.Success)
+                return CommanderIntentInterpretation.AcceptedStrategic(
+                    StrategicIntent.FromPlayerInterpretation(playerId,
+                        ParseStrategicObjective(strategicMatch.Groups[1].Value), 0));
 
             var constraints = new List<CommanderConstraint>();
             string command = ExtractConstraints(playerInput.Trim(), constraints);
@@ -190,6 +199,18 @@ namespace OpenEmpires
         private static bool TryParseAmount(string text, out int amount)
         {
             return int.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out amount);
+        }
+
+        private static StrategicObjectiveType ParseStrategicObjective(string text)
+        {
+            string normalized = text.Trim().ToLowerInvariant();
+            if (normalized.Contains("defen"))
+                return StrategicObjectiveType.DefensivePreparation;
+            if (normalized.Contains("economic") || normalized == "economy")
+                return StrategicObjectiveType.EconomicExpansion;
+            if (normalized.Contains("reinforcement"))
+                return StrategicObjectiveType.MilitaryReinforcement;
+            return StrategicObjectiveType.AttackPreparation;
         }
 
         private static CommanderIntentInterpretation InvalidAmount(string text)

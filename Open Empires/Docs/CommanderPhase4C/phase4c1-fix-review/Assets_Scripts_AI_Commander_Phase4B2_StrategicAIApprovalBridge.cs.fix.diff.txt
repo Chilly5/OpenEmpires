@@ -1,0 +1,55 @@
+diff --git a/Assets/Scripts/AI/Commander/Phase4B2/StrategicAIApprovalBridge.cs b/Assets/Scripts/AI/Commander/Phase4B2/StrategicAIApprovalBridge.cs
+index 3440a93..2422a18 100644
+--- a/Assets/Scripts/AI/Commander/Phase4B2/StrategicAIApprovalBridge.cs
++++ b/Assets/Scripts/AI/Commander/Phase4B2/StrategicAIApprovalBridge.cs
+@@ -35,43 +35,47 @@ namespace OpenEmpires
+             this.interpreter = interpreter ?? throw new ArgumentNullException(nameof(interpreter));
+             this.identities = identities ?? throw new ArgumentNullException(nameof(identities));
+             this.contextProvider = contextProvider ?? throw new ArgumentNullException(nameof(contextProvider));
+             timeout = providerTimeout ?? TimeSpan.FromSeconds(15);
+             this.memorySnapshotProvider = memorySnapshotProvider;
+             if (timeout <= TimeSpan.Zero || timeout.TotalMilliseconds > int.MaxValue)
+                 throw new ArgumentOutOfRangeException(nameof(providerTimeout));
+         }
+ 
+         public async Task<StrategicAIProviderResult> TranslateAsync(string message,
+-            CancellationToken cancellationToken = default)
++            CancellationToken cancellationToken = default,
++            IReadOnlyList<MemoryEntry> memorySnapshot = null)
+         {
+             CancellationTokenSource deadline;
+             int requestGeneration;
+             IReadOnlyList<CommanderConversationMessage> requestHistory;
+             lock (sync)
+             {
+                 if (disposed) return StrategicAIProviderResult.Rejected("Strategic chat is closed.");
+                 if (busy) return StrategicAIProviderResult.Rejected("A strategic translation is already in progress.");
+                 ClearPendingLocked();
+                 busy = true;
+                 requestGeneration = ++generation;
+                 deadline = activeRequest = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                 requestHistory = memorySnapshotProvider == null
+                     ? history.Snapshot() : Array.Empty<CommanderConversationMessage>();
+             }
+             try
+             {
+                 deadline.CancelAfter(timeout);
+                 deadline.Token.ThrowIfCancellationRequested();
+-                IReadOnlyList<MemoryEntry> memory = memorySnapshotProvider?.Invoke()
++                bool hasExplicitSnapshot = memorySnapshot != null;
++                IReadOnlyList<MemoryEntry> memory = memorySnapshot
++                    ?? memorySnapshotProvider?.Invoke()
+                     ?? Array.Empty<MemoryEntry>();
+-                memory = WithoutCurrentPlayerTurn(memory, message);
++                if (!hasExplicitSnapshot)
++                    memory = WithoutCurrentPlayerTurn(memory, message);
+                 if (IsGenericAttack(message) && !HasCavalryPreference(memory))
+                     return StrategicAIProviderResult.Rejected(
+                         "Choose the supported attack focus first: focus cavalry.");
+                 var request = new StrategicAIRequest(message, contextProvider(), identities,
+                     requestHistory, memory);
+                 lock (sync)
+                 {
+                     if (disposed || generation != requestGeneration || deadline.IsCancellationRequested)
+                         return StrategicAIProviderResult.Rejected("Strategic translation was cancelled.");
+                     history.Append(CommanderConversationRole.Player, message);

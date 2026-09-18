@@ -1,0 +1,34 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "1d7d9392208b475ab0cde63c8d454b32",
+    "status": "failed",
+    "mode": "EditMode",
+    "started_unix_ms": 1789420731509,
+    "finished_unix_ms": 1789420745802,
+    "last_update_unix_ms": 1789420745802,
+    "progress": {
+      "completed": 37,
+      "total": 37,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1789420745515,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4B2Tests.UnrelatedQueuedPopulation_IsIncludedInFeasibility",
+      "last_finished_unix_ms": 1789420745759,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase4B2Tests.OnlyApprovedIntentReachesPlanner",
+          "message": "  The shared pipeline needs approved source-aware admission.\r\n  Expected: not null\r\n  But was:  null\r\n"
+        }
+      ],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": null
+  },
+  "hint": null
+}

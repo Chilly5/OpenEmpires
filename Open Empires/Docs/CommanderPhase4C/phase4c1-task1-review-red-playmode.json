@@ -1,0 +1,24 @@
+{
+  "jobId": "1ad433fe194e4ed888d22df26c63ee4e",
+  "mode": "PlayMode",
+  "source": "Unity TestResults.xml recovered through Application.persistentDataPath after MCP progress became stale",
+  "summary": { "total": 16, "passed": 10, "failed": 6, "skipped": 0, "durationSeconds": 4.3524045, "resultState": "Failed(Child)" },
+  "results": [
+    { "name": "CapacityEdge_UsesPreferenceRetainedAtTurnStartOnly", "state": "Failed", "durationSeconds": 0.373589, "message": "Expected provider call count 1 but was 0." },
+    { "name": "ClearMemory_ClearsTacticalAndStrategicRequestHistories", "state": "Passed", "durationSeconds": 0.288104 },
+    { "name": "ClearMemory_EmptiesHistoriesPendingAndStaleFields", "state": "Passed", "durationSeconds": 0.249589 },
+    { "name": "Destroy_ClearsMemoryAndRejectsLateStrategicPublication", "state": "Passed", "durationSeconds": 0.261513 },
+    { "name": "DifferentStrategicRuntime_ClearsMatchLocalStateAndHistories", "state": "Failed", "durationSeconds": 0.250064, "message": "Expected empty match-local memory after replacing the strategic runtime; five entries remained." },
+    { "name": "MismatchedStrategicPlayer_IsRejectedWithoutSharingOrClearingMemory", "state": "Failed", "durationSeconds": 0.243663, "message": "Expected ArgumentException but no exception was thrown." },
+    { "name": "MixedPreferenceAndAttack_IsRejectedWholeFormWithoutAuthority", "state": "Passed", "durationSeconds": 0.249446 },
+    { "name": "PreferenceThenAttack_CreatesPreviewOnlyUntilApproval", "state": "Passed", "durationSeconds": 0.270640 },
+    { "name": "QueriesAndPreference_DoNotErasePendingRecommendation", "state": "Passed", "durationSeconds": 0.253712 },
+    { "name": "ReinitializeForDifferentPlayer_ClearsOldMatchStateAndLateTacticalPublication", "state": "Passed", "durationSeconds": 0.250762 },
+    { "name": "RejectedStrategy_IsDecisionButNeverApprovedMemory", "state": "Failed", "durationSeconds": 0.302629, "message": "Expected decision status Rejected but was TransitionRefused." },
+    { "name": "Reset_IgnoresUncooperativeLateStrategicResponse", "state": "Passed", "durationSeconds": 0.256221 },
+    { "name": "StrategicReinitialize_IgnoresOldProviderPublication", "state": "Passed", "durationSeconds": 0.310960 },
+    { "name": "TacticalDestroy_IgnoresUncooperativeLateFailure", "state": "Failed", "durationSeconds": 0.251435, "message": "Expected cleared tactical history to stay empty; one late entry remained." },
+    { "name": "TacticalReset_IgnoresUncooperativeLateSuccess", "state": "Failed", "durationSeconds": 0.259884, "message": "Expected cleared tactical history to stay empty; one late entry remained and one EnsureUnitCount goal was submitted." },
+    { "name": "TranscriptAndMemory_RemainBoundedUnderRepeatedConversation", "state": "Passed", "durationSeconds": 0.249565 }
+  ]
+}

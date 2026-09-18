@@ -1,0 +1,591 @@
+{
+  "audit": "Commander Phase 4C read-only boundary audit (in-flight source; not final phase evidence)",
+  "generatedAt": "2026-09-16T14:20:09.9800942Z",
+  "baseline": {
+    "path": "Docs/CommanderPhase4C-source-baseline.json",
+    "schemaVersion": 1,
+    "fileCount": 246,
+    "schemaValid": true
+  },
+  "files": {
+    "changed": [
+      {
+        "path": "Assets/Scripts/AI/Commander/Phase4B2/CommanderIntentRouter.cs",
+        "baselineSha256": "84D7DAF9F16500EAD4C8432FF1BD3E0781B4B9226535199BEA8FB5E00D5F2B5C",
+        "currentSha256": "0A9D2FB79B8F1C120FE2679138DB765D854F51CABF074088C14740521CD4C391"
+      },
+      {
+        "path": "Assets/Scripts/AI/Commander/Phase4B1/GeminiStrategicAIProvider.cs",
+        "baselineSha256": "96BFEB8D4A5BC16D118A2164D55D7B2C5625DCBD535DEDA67A7E2178C31E5E16",
+        "currentSha256": "C89E17EBC40990C6ADADF6B6F733410AB2C2C2B04753A4E49FB6F5827E1BD750"
+      },
+      {
+        "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs",
+        "baselineSha256": "6F82EF26725E7238255F396E5493D14BEF1D1CA0FB6E8175F090F884239F4783",
+        "currentSha256": "5F03421B75320D7E83F4164177855A78D196A4A65B86B12EE2E0F8C6A536356B"
+      },
+      {
+        "path": "Assets/Scripts/AI/Commander/Phase4B1/StrategicAIInterpreter.cs",
+        "baselineSha256": "E57BA29FCB4C6987AFD29DE002CF0E9A68E6766DB34273D02525784C6FBF9C52",
+        "currentSha256": "420C205CDF39F0D3A5232DB0B5F31AD8A10F85BF3E5114F2F66486A58A00C5B1"
+      },
+      {
+        "path": "Assets/Scripts/AI/Commander/Phase4B2/StrategicAIApprovalBridge.cs",
+        "baselineSha256": "5545D9BD942B77CEB20353DD3ED757CF6C5501A89F42FEEBD60B788D2A630EB1",
+        "currentSha256": "567E6D56A9842250CCFD33990CEC8C196F2F5D471601079DAFB29508DCC5B274"
+      },
+      {
+        "path": "Assets/Scripts/AI/Commander/Phase4B1/MockStrategicAIProvider.cs",
+        "baselineSha256": "A20770A2766F092FC74975BEDDD2000E0DCBC6D18EA1D933C08CA31114431DD4",
+        "currentSha256": "CE20B68DF09DB629C563E34493EC52F10CC6FB5B7C15A2BC240DE37DBAEA489D"
+      },
+      {
+        "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderAIIntentAdapter.cs",
+        "baselineSha256": "E70BBE7CC58B1C6CA6465D0E795E69A6D69C31947BAD4C19D7BD130666EAF795",
+        "currentSha256": "A62459FE714F12536FDE6B5A98042DB1EA497E9A713599B26D3BABF8B9C4CEC6"
+      }
+    ],
+    "new": [
+      {
+        "path": "Assets/Scripts/AI/Commander/Phase4C/MemoryEntry.cs",
+        "currentSha256": "2CCB2A1A34BB8A5540B52E36349312AE306ABB1677F465DCA88CD6DD0DD6EF8D"
+      },
+      {
+        "path": "Assets/Tests/PlayMode/CommanderPhase4C1PlayModeTests.cs",
+        "currentSha256": "2E4D58217546D183F28C859C81612A7AEF96A56384EA83849377B582851994F4"
+      },
+      {
+        "path": "Assets/Tests/EditMode/CommanderPhase4C1Tests.cs",
+        "currentSha256": "D17C9D25878905DA5934963A09E74C3C16622DE270204A83CE409AE29FEED10A"
+      },
+      {
+        "path": "Assets/Scripts/AI/Commander/Phase4C/ConversationState.cs",
+        "currentSha256": "B143D84F0A22C7520FFFB173D1A56FEB7FBD8BF954673EA717F835E54570B17E"
+      },
+      {
+        "path": "Assets/Scripts/AI/Commander/Phase4C/CommanderMemory.cs",
+        "currentSha256": "52D6114289BE52A54543A3B141A44984699CD9650461061B19923C8DAF775586"
+      }
+    ],
+    "missing": []
+  },
+  "frozenBoundaryHashes": [
+    {
+      "path": "Assets/Scripts/Commands/RepairBuildingCommand.cs",
+      "baselineSha256": "1070DD55021E19E89D4A4A5C00DC491C5D7EE4F1788CD0527A6108747F7E965E",
+      "currentSha256": "1070DD55021E19E89D4A4A5C00DC491C5D7EE4F1788CD0527A6108747F7E965E",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/TsunamiCommand.cs",
+      "baselineSha256": "58803248D79D3A84491813D75976D334F3B736B74C1E31DF7BFD8B5106A81BD3",
+      "currentSha256": "58803248D79D3A84491813D75976D334F3B736B74C1E31DF7BFD8B5106A81BD3",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/StopCommand.cs",
+      "baselineSha256": "B00EEFF997579D19FF76879FC7A26BD53D87578725133807F2050F086CFB7646",
+      "currentSha256": "B00EEFF997579D19FF76879FC7A26BD53D87578725133807F2050F086CFB7646",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/ICommand.cs",
+      "baselineSha256": "7878E5A41263542CC9910C8C3EF7BD770598EBFBB057CFB8635D04741723E6CF",
+      "currentSha256": "7878E5A41263542CC9910C8C3EF7BD770598EBFBB057CFB8635D04741723E6CF",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Network/ServerMessages.cs",
+      "baselineSha256": "7F8228EFE1028B784168BDA79A1F039639B3F66CE78A50F25CC5C8A7226B9B79",
+      "currentSha256": "7F8228EFE1028B784168BDA79A1F039639B3F66CE78A50F25CC5C8A7226B9B79",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/GarrisonCommand.cs",
+      "baselineSha256": "A4A87D2C6EF953D159459F0622D162579E7D6A4A6F2DE2E94FD381FD292493F6",
+      "currentSha256": "A4A87D2C6EF953D159459F0622D162579E7D6A4A6F2DE2E94FD381FD292493F6",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/SurrenderVoteCommand.cs",
+      "baselineSha256": "64151E0B04C583C484CBC42E36A211006B6024E674B66D09D9ECE666D858A7E7",
+      "currentSha256": "64151E0B04C583C484CBC42E36A211006B6024E674B66D09D9ECE666D858A7E7",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/QueuedCommand.cs",
+      "baselineSha256": "F47A210EB7E2365313746E41C7919267ED99F293E9251E0179E9E230E91BE043",
+      "currentSha256": "F47A210EB7E2365313746E41C7919267ED99F293E9251E0179E9E230E91BE043",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/ResearchCommand.cs",
+      "baselineSha256": "5D20925380F4E2323EBC5A8EF6FC66060548C4CB50C8DAEFBBBDC55206248555",
+      "currentSha256": "5D20925380F4E2323EBC5A8EF6FC66060548C4CB50C8DAEFBBBDC55206248555",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/DropOffCommand.cs",
+      "baselineSha256": "09DF676DFC6B950358EF76154CD83FC101A8CE1B060445B3C22B5ED6906755FC",
+      "currentSha256": "09DF676DFC6B950358EF76154CD83FC101A8CE1B060445B3C22B5ED6906755FC",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/CheatResourceCommand.cs",
+      "baselineSha256": "3ED0CF7D4024A4438BAB63A2DEAED1A8B7EB43E914DE63F547426FA586A0083C",
+      "currentSha256": "3ED0CF7D4024A4438BAB63A2DEAED1A8B7EB43E914DE63F547426FA586A0083C",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/AttackUnitCommand.cs",
+      "baselineSha256": "6B3E1690D8AED31D47786BAD62D62CDDAA6AA2DBD943531BEB2AE0ACA01E1390",
+      "currentSha256": "6B3E1690D8AED31D47786BAD62D62CDDAA6AA2DBD943531BEB2AE0ACA01E1390",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/CancelUpgradeCommand.cs",
+      "baselineSha256": "340A649E97D991D90204B8BC6B760EAAEE77350442349404347FF56691D8B8A1",
+      "currentSha256": "340A649E97D991D90204B8BC6B760EAAEE77350442349404347FF56691D8B8A1",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/CheatConstructionCommand.cs",
+      "baselineSha256": "A2741E07FC41DE89403B93AE5D6DE65E2192E535EBC99991A3396DFC5BDA17F9",
+      "currentSha256": "A2741E07FC41DE89403B93AE5D6DE65E2192E535EBC99991A3396DFC5BDA17F9",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/HealingRainCommand.cs",
+      "baselineSha256": "6619B75184A3C83ACC78E048EE5E74B15AB056D895CC4F969E535BA0FB655C6E",
+      "currentSha256": "6619B75184A3C83ACC78E048EE5E74B15AB056D895CC4F969E535BA0FB655C6E",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/MoveCommand.cs",
+      "baselineSha256": "0B5B3576DFFAF5723F9A1C165ABCB8674D2693D1EB0DC26B70EAFC0D34434161",
+      "currentSha256": "0B5B3576DFFAF5723F9A1C165ABCB8674D2693D1EB0DC26B70EAFC0D34434161",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/GatherCommand.cs",
+      "baselineSha256": "8EEDC3B339C2012D2CD51514DD9181113C905B8A59F853DBEC78EFC69DDB0DA7",
+      "currentSha256": "8EEDC3B339C2012D2CD51514DD9181113C905B8A59F853DBEC78EFC69DDB0DA7",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/CancelTrainCommand.cs",
+      "baselineSha256": "3200ADA3E32A9200A3F8C924C933BE16653A0CDA2D5EBFA0BB5035C96550FDA6",
+      "currentSha256": "3200ADA3E32A9200A3F8C924C933BE16653A0CDA2D5EBFA0BB5035C96550FDA6",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/TrainUnitCommand.cs",
+      "baselineSha256": "F10BA2E0A187A55E19717F1F98A42452FF9615013832DA571B7E95A321544AAD",
+      "currentSha256": "F10BA2E0A187A55E19717F1F98A42452FF9615013832DA571B7E95A321544AAD",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/MarketTradeCommand.cs",
+      "baselineSha256": "F3B705AA329362FADC26AA839137749AEF24CA25AF30A51B38E89E450763A5D1",
+      "currentSha256": "F3B705AA329362FADC26AA839137749AEF24CA25AF30A51B38E89E450763A5D1",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/CheatVisionCommand.cs",
+      "baselineSha256": "9CB307DE71DE39EFA8664502C940308DB7F9E77701FB8AADC85F4711FF0E0F15",
+      "currentSha256": "9CB307DE71DE39EFA8664502C940308DB7F9E77701FB8AADC85F4711FF0E0F15",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Network/MatchmakingManager.cs",
+      "baselineSha256": "AA4E93ED614A86771DEAA521D157A7C3B61207B31F3F918DCC1AA2599387BC1D",
+      "currentSha256": "AA4E93ED614A86771DEAA521D157A7C3B61207B31F3F918DCC1AA2599387BC1D",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/ConvertToGateCommand.cs",
+      "baselineSha256": "E051456F9CAF9B806FDB896AE58FD683D6CF1D3B5B84A7503E05454E17159A86",
+      "currentSha256": "E051456F9CAF9B806FDB896AE58FD683D6CF1D3B5B84A7503E05454E17159A86",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/PatrolCommand.cs",
+      "baselineSha256": "E051AF023191738DDB9AD9B7D480B492DD3DD488ED4C37EED9E91F7881E2E4F3",
+      "currentSha256": "E051AF023191738DDB9AD9B7D480B492DD3DD488ED4C37EED9E91F7881E2E4F3",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Network/NetworkManager.cs",
+      "baselineSha256": "86754C8C3C16B200E288F37F9B19C25268CFFD9BE3326740649C40206621DEEF",
+      "currentSha256": "86754C8C3C16B200E288F37F9B19C25268CFFD9BE3326740649C40206621DEEF",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/DeleteBuildingCommand.cs",
+      "baselineSha256": "AEC5B98E35489193CF6F76D97A83054D55D69110702766273A0DA200A70F47E8",
+      "currentSha256": "AEC5B98E35489193CF6F76D97A83054D55D69110702766273A0DA200A70F47E8",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/CheatGodModeCommand.cs",
+      "baselineSha256": "15FC3236D2A5E8920F987003F306070008416C738D90BD1BCA090C2433206515",
+      "currentSha256": "15FC3236D2A5E8920F987003F306070008416C738D90BD1BCA090C2433206515",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/SlaughterSheepCommand.cs",
+      "baselineSha256": "B525BB78EE816341D0E494B998436061DD6872B76CCF95BFC485A31DC4161284",
+      "currentSha256": "B525BB78EE816341D0E494B998436061DD6872B76CCF95BFC485A31DC4161284",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/SetRallyPointCommand.cs",
+      "baselineSha256": "AE27BD07DF1358475638D5D2207EC7ADD7E53E3B3C6759799E9A2482AF386DE3",
+      "currentSha256": "AE27BD07DF1358475638D5D2207EC7ADD7E53E3B3C6759799E9A2482AF386DE3",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/PlaceWallCommand.cs",
+      "baselineSha256": "BAE19B889D826765962336E8247796D3F2A579DE9005F959109BB1A6BB7D8579",
+      "currentSha256": "BAE19B889D826765962336E8247796D3F2A579DE9005F959109BB1A6BB7D8579",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/ConstructBuildingCommand.cs",
+      "baselineSha256": "DD45CB81172D241C4E2AB9C42664555081A35DFCB2BFFDCA5DAB060DA779664F",
+      "currentSha256": "DD45CB81172D241C4E2AB9C42664555081A35DFCB2BFFDCA5DAB060DA779664F",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/ToggleAutoProduceCommand.cs",
+      "baselineSha256": "BEFA52A58BFD27D57884A5A99B5EF934A0D662FD74001349AA7C91EA1585EEF6",
+      "currentSha256": "BEFA52A58BFD27D57884A5A99B5EF934A0D662FD74001349AA7C91EA1585EEF6",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/UpgradeTowerCommand.cs",
+      "baselineSha256": "C5AB2229D1513921092BA8A9B787C6CEDFC95B81DD50BC9A7FF990AAB47B8177",
+      "currentSha256": "C5AB2229D1513921092BA8A9B787C6CEDFC95B81DD50BC9A7FF990AAB47B8177",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/UngarrisonCommand.cs",
+      "baselineSha256": "3CD971EC0B71D06118C814B0E75B6035FBC396824170F42CD4F6ED9B8154012F",
+      "currentSha256": "3CD971EC0B71D06118C814B0E75B6035FBC396824170F42CD4F6ED9B8154012F",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/FollowUnitCommand.cs",
+      "baselineSha256": "C3611209D7F9876D759E60523819971436E27EDB82C4C0C04F6621AEDAE9AD6B",
+      "currentSha256": "C3611209D7F9876D759E60523819971436E27EDB82C4C0C04F6621AEDAE9AD6B",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/HealUnitCommand.cs",
+      "baselineSha256": "716D1EDBAE4F49D6E6BD883C3A02D190D164036867C088DAEB25B913F35EB3A0",
+      "currentSha256": "716D1EDBAE4F49D6E6BD883C3A02D190D164036867C088DAEB25B913F35EB3A0",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Network/WebSocketClient.cs",
+      "baselineSha256": "96515E468319F4F9707B5C019F2264D6AEEE025933D0058DE197D0927339E1C2",
+      "currentSha256": "96515E468319F4F9707B5C019F2264D6AEEE025933D0058DE197D0927339E1C2",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/MeteorStrikeCommand.cs",
+      "baselineSha256": "ADC99385B0899384727A35F5B18E6BFB47CEB06BE8B624E420055100914F8BBB",
+      "currentSha256": "ADC99385B0899384727A35F5B18E6BFB47CEB06BE8B624E420055100914F8BBB",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/NoopCommand.cs",
+      "baselineSha256": "D5BB7B02A4C93C0F005E13BF0E957E87E62E2D2C8CFFCFECE046C37A25A1111A",
+      "currentSha256": "D5BB7B02A4C93C0F005E13BF0E957E87E62E2D2C8CFFCFECE046C37A25A1111A",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/AttackBuildingCommand.cs",
+      "baselineSha256": "40B21B1924A90CFCA034402AD8D21E94D3C252A2306DFDE340035ECD5FC0BFD8",
+      "currentSha256": "40B21B1924A90CFCA034402AD8D21E94D3C252A2306DFDE340035ECD5FC0BFD8",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/TributeCommand.cs",
+      "baselineSha256": "D6D13C151F2748292A98C2992901A2215D731819E4F7D23AB8E9A0C6C5B704F4",
+      "currentSha256": "D6D13C151F2748292A98C2992901A2215D731819E4F7D23AB8E9A0C6C5B704F4",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/AiChatCommand.cs",
+      "baselineSha256": "98CE2BC65FD3CEB0C4B7E807E08C263B1B79ED11A661676253FE0ABABD5D2673",
+      "currentSha256": "98CE2BC65FD3CEB0C4B7E807E08C263B1B79ED11A661676253FE0ABABD5D2673",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/PingCommand.cs",
+      "baselineSha256": "3880909E238734F5B7D0C63B46437DCE8F0CAC9ABF571CDF1887A3EF74018894",
+      "currentSha256": "3880909E238734F5B7D0C63B46437DCE8F0CAC9ABF571CDF1887A3EF74018894",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/CommandBuffer.cs",
+      "baselineSha256": "B226514893C7CB7ECA479775CB68D1EE5E1B73450679EB26096753577A9AFBBE",
+      "currentSha256": "B226514893C7CB7ECA479775CB68D1EE5E1B73450679EB26096753577A9AFBBE",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/CheatSpawnUnitCommand.cs",
+      "baselineSha256": "E9FA53C9387EA0B945846986B753C32DD38EC18458A9B0C4C88832C4038E0733",
+      "currentSha256": "E9FA53C9387EA0B945846986B753C32DD38EC18458A9B0C4C88832C4038E0733",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/LightningStormCommand.cs",
+      "baselineSha256": "2CAA7DDD6DED2A11B0946E648DD739D2D2F7DD9B62317869E735EE1CB8A20225",
+      "currentSha256": "2CAA7DDD6DED2A11B0946E648DD739D2D2F7DD9B62317869E735EE1CB8A20225",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/AiIntentCommand.cs",
+      "baselineSha256": "6413354AE6926DB78EA6E656C3ED99FAF10D0F82DA8FF84F3E78BACC5229885B",
+      "currentSha256": "6413354AE6926DB78EA6E656C3ED99FAF10D0F82DA8FF84F3E78BACC5229885B",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/PlaceBuildingCommand.cs",
+      "baselineSha256": "1393646AF0E3B1C2B1EE92E8BD8C306F1634B0BCC8FA0994D80B62E0FFAB08A2",
+      "currentSha256": "1393646AF0E3B1C2B1EE92E8BD8C306F1634B0BCC8FA0994D80B62E0FFAB08A2",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Network/NetworkDiagnostics.cs",
+      "baselineSha256": "6E39FE2C5B8F131C9DCF5C89BF728F86954BAB04E9B153371840D2B5022A8937",
+      "currentSha256": "6E39FE2C5B8F131C9DCF5C89BF728F86954BAB04E9B153371840D2B5022A8937",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/CheatProductionCommand.cs",
+      "baselineSha256": "3C62B604A4E53955F02BFC5684F8D6F897D0F29580351C1E3AB1B1DAF53173C1",
+      "currentSha256": "3C62B604A4E53955F02BFC5684F8D6F897D0F29580351C1E3AB1B1DAF53173C1",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Network/CommandSerializer.cs",
+      "baselineSha256": "1BED486A5C5C05AAF07723983C03CED07ABADDD8B579F67E637C08413EA3FE42",
+      "currentSha256": "1BED486A5C5C05AAF07723983C03CED07ABADDD8B579F67E637C08413EA3FE42",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Commands/DeleteUnitsCommand.cs",
+      "baselineSha256": "832B80AA29651888376108FE201823297D96A82E50702FA42930B468614C23B9",
+      "currentSha256": "832B80AA29651888376108FE201823297D96A82E50702FA42930B468614C23B9",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/Core/GameSimulation.cs",
+      "baselineSha256": "4DCDB275C3FDF9D229CDDD4F8867D7B6807D6433C2DE66CFFF7653A948AB1CD4",
+      "currentSha256": "4DCDB275C3FDF9D229CDDD4F8867D7B6807D6433C2DE66CFFF7653A948AB1CD4",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderPlanner.cs",
+      "baselineSha256": "5F70E85C738FF5B6896B0BD7B6FD62C50ED8F8452AB406AAB37988AF7E9BC2C6",
+      "currentSha256": "5F70E85C738FF5B6896B0BD7B6FD62C50ED8F8452AB406AAB37988AF7E9BC2C6",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderGoalManager.cs",
+      "baselineSha256": "31B2B4554F8A6B7E2266AEAB282DF7B1E1CC784451877C879D66BD64E4899190",
+      "currentSha256": "31B2B4554F8A6B7E2266AEAB282DF7B1E1CC784451877C879D66BD64E4899190",
+      "present": true,
+      "unchanged": true,
+      "auditGap": false
+    }
+  ],
+  "advisoryForbiddenReferences": [
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs",
+      "line": 31,
+      "symbol": "unresolved-symbol",
+      "classification": "documented-host-candidate",
+      "matchedSymbols": [
+        "StrategicPipeline"
+      ]
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs",
+      "line": 92,
+      "symbol": "Initialize",
+      "classification": "documented-host-candidate",
+      "matchedSymbols": [
+        "GameSimulation"
+      ]
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs",
+      "line": 93,
+      "symbol": "unresolved-symbol",
+      "classification": "documented-host-candidate",
+      "matchedSymbols": [
+        "CommanderGoalManager"
+      ]
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs",
+      "line": 127,
+      "symbol": "InitializeStrategic",
+      "classification": "documented-host-candidate",
+      "matchedSymbols": [
+        "StrategicPipeline"
+      ]
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs",
+      "line": 132,
+      "symbol": "unresolved-symbol",
+      "classification": "documented-host-candidate",
+      "matchedSymbols": [
+        "StrategicPlanner"
+      ]
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs",
+      "line": 144,
+      "symbol": "unresolved-symbol",
+      "classification": "documented-host-candidate",
+      "matchedSymbols": [
+        "StrategicPlanner"
+      ]
+    }
+  ],
+  "credentialShapeCounts": {
+    "highConfidenceShapes": 0,
+    "assignmentCandidates": 0
+  },
+  "env": {
+    "present": true,
+    "git": {
+      "available": true,
+      "error": null,
+      "tracked": false,
+      "ignored": true
+    }
+  },
+  "patternSelfTest": {
+    "aqLiteralDotDetected": true
+  },
+  "documentedBoundaryExceptions": [
+    "CommanderChatUI host integration",
+    "StrategicContextBuilder game-owned snapshot boundary",
+    "StrategicPlanner game-owned planning boundary"
+  ]
+}

@@ -63,10 +63,10 @@ namespace OpenEmpires.Tests
             CavalryPressurePlan plan = strategicPlanner.StartCavalryPressurePlan();
 
             Assert.That(plan.Status, Is.EqualTo(StrategicPlanStatus.Active));
-            Assert.That(strategicPlanner.GetReservedAmount(ResourceType.Food), Is.EqualTo(800));
-            Assert.That(strategicPlanner.GetReservedAmount(ResourceType.Gold), Is.EqualTo(500));
+            Assert.That(strategicPlanner.GetReservedAmount(ResourceType.Food), Is.EqualTo(config.KnightFoodCost * CavalryPressurePlan.KnightTarget));
+            Assert.That(strategicPlanner.GetReservedAmount(ResourceType.Gold), Is.EqualTo(config.KnightGoldCost * CavalryPressurePlan.KnightTarget));
             Assert.That(strategicPlanner.GetReservationsForPlan(plan.StrategicPlanId), Has.Count.EqualTo(2));
-            Debug.Log("[Phase3C-2 Runtime] PASS Scenario 1: CavalryPressurePlan created active 800 Food and 500 Gold strategic reservations.");
+            Debug.Log("[Phase3C-2 Runtime] PASS Scenario 1: CavalryPressurePlan reserved canonical Food and Gold in its economy milestone.");
             yield return null;
         }
 
@@ -89,6 +89,7 @@ namespace OpenEmpires.Tests
         {
             CreateGatherers(ResourceType.Food, CavalryPressurePlan.FoodWorkerTarget, x - 22);
             CreateGatherers(ResourceType.Gold, CavalryPressurePlan.GoldWorkerTarget, x);
+            CreateGatherers(ResourceType.Wood, CavalryPressurePlan.WoodWorkerTarget, x - 10);
             Worker(x + 8, z);
             CavalryPressurePlan plan = strategicPlanner.StartCavalryPressurePlan();
             goalManager.Tick(0);
@@ -111,24 +112,29 @@ namespace OpenEmpires.Tests
         public IEnumerator Runtime_ReservationConflict_IsDeterministic()
         {
             PlayerResources resources = sim.ResourceManager.GetPlayerResources(0);
-            resources.Food = 1000;
-            resources.Gold = 600;
+            resources.Wood = 150;
             StrategicReservationConflict observed = null;
             strategicPlanner.ReservationConflictDetected += conflict => observed = conflict;
 
-            CavalryPressurePlan owner = strategicPlanner.StartCavalryPressurePlan();
-            CavalryPressurePlan requester = strategicPlanner.StartCavalryPressurePlan();
+            StrategicPlan owner = strategicPlanner.SubmitIntent(
+                StrategicObjectiveType.DefensivePreparation).Plan;
+            strategicPlanner.CompleteMilestoneAndAdvance(owner.StrategicPlanId);
+            StrategicPlan requester = strategicPlanner.SubmitIntent(
+                StrategicObjectiveType.DefensivePreparation).Plan;
+            strategicPlanner.CompleteMilestoneAndAdvance(requester.StrategicPlanId);
 
             Assert.That(owner.Status, Is.EqualTo(StrategicPlanStatus.Active));
-            Assert.That(requester.Status, Is.EqualTo(StrategicPlanStatus.Failed));
-            Assert.That(observed.ResourceType, Is.EqualTo(ResourceType.Food));
+            Assert.That(requester.Status, Is.EqualTo(StrategicPlanStatus.Active));
+            Assert.That(requester.CurrentMilestone.Status,
+                Is.EqualTo(StrategicMilestoneStatus.WaitingForResources));
+            Assert.That(observed.ResourceType, Is.EqualTo(ResourceType.Wood));
             Assert.That(observed.OwnerPlanId, Is.EqualTo(owner.StrategicPlanId));
             Assert.That(observed.OwnerReservationId, Is.EqualTo(1));
-            Assert.That(requester.ChildGoalIds, Is.Empty);
+            Assert.That(requester.ChildGoalIds, Is.Not.Empty);
             Assert.That(observed.ToString(), Is.EqualTo(
-                "Reservation conflict for Food: plan #2 requested 800; current 1000, "
-                + "reserved 800, available 200; owner: plan #1 (CavalryPressure), reservation #1."));
-            Debug.Log("[Phase3C-2 Runtime] PASS Scenario 4: second plan received a deterministic Food conflict owned by plan #1; no tactical goals were created.");
+                "Reservation conflict for Wood: plan #2 requested 150; current 150, "
+                + "reserved 150, available 0; owner: plan #1 (DefensivePreparation), reservation #1."));
+            Debug.Log("[Phase3C-2 Runtime] PASS Scenario 4: second plan waited on a deterministic milestone Wood conflict owned by plan #1.");
             yield return null;
         }
 
@@ -136,6 +142,7 @@ namespace OpenEmpires.Tests
         {
             CreateGatherers(ResourceType.Food, CavalryPressurePlan.FoodWorkerTarget, x - 22);
             CreateGatherers(ResourceType.Gold, CavalryPressurePlan.GoldWorkerTarget, x);
+            CreateGatherers(ResourceType.Wood, CavalryPressurePlan.WoodWorkerTarget, x - 10);
             Worker(x + 8, z);
             CavalryPressurePlan plan = strategicPlanner.StartCavalryPressurePlan();
             goalManager.Tick(0);

@@ -1,0 +1,220 @@
+warning: in the working copy of 'D:\unity_projects\OpenEmpires\Open Empires\Docs\CommanderPhase4C\phase4c1-task1-before\Assets\Scripts\AI\Commander\Phase4B2\StrategicAIApprovalBridge.cs.before.txt', LF will be replaced by CRLF the next time Git touches it
+diff --git "a/D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderPhase4C\\phase4c1-task1-before\\Assets\\Scripts\\AI\\Commander\\Phase4B2\\StrategicAIApprovalBridge.cs.before.txt" "b/D:\\unity_projects\\OpenEmpires\\Open Empires\\Assets\\Scripts\\AI\\Commander\\Phase4B2\\StrategicAIApprovalBridge.cs"
+index 5833dcc..3440a93 100644
+--- "a/D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderPhase4C\\phase4c1-task1-before\\Assets\\Scripts\\AI\\Commander\\Phase4B2\\StrategicAIApprovalBridge.cs.before.txt"	
++++ "b/D:\\unity_projects\\OpenEmpires\\Open Empires\\Assets\\Scripts\\AI\\Commander\\Phase4B2\\StrategicAIApprovalBridge.cs"	
+@@ -6,61 +6,83 @@ using System.Threading.Tasks;
+ namespace OpenEmpires
+ {
+     // Owns translation and the exact displayed recommendation, never execution.
+     public sealed class StrategicAIApprovalBridge : IDisposable
+     {
+         private readonly object sync = new object();
+         private readonly IStrategicAIInterpreter interpreter;
+warning: in the working copy of 'D:\unity_projects\OpenEmpires\Open Empires\Assets\Scripts\AI\Commander\Phase4B2\StrategicAIApprovalBridge.cs', LF will be replaced by CRLF the next time Git touches it
+         private readonly StrategicIntentIdProvider identities;
+         private readonly Func<StrategicContext> contextProvider;
+         private readonly TimeSpan timeout;
++        private readonly Func<IReadOnlyList<MemoryEntry>> memorySnapshotProvider;
+         private readonly CommanderConversationHistory history = new CommanderConversationHistory();
+         private CancellationTokenSource activeRequest;
+         private StrategicIntent pending;
+         private bool busy;
+         private bool disposed;
+         private int generation;
+ 
+         public StrategicIntent PendingIntent { get { lock (sync) return pending; } }
++        public IReadOnlyList<CommanderConversationMessage> HistorySnapshot
++        {
++            get { lock (sync) return history.Snapshot(); }
++        }
+ 
+         public StrategicAIApprovalBridge(IStrategicAIInterpreter interpreter,
+             StrategicIntentIdProvider identities, Func<StrategicContext> contextProvider,
+-            TimeSpan? providerTimeout = null)
++            TimeSpan? providerTimeout = null,
++            Func<IReadOnlyList<MemoryEntry>> memorySnapshotProvider = null)
+         {
+             this.interpreter = interpreter ?? throw new ArgumentNullException(nameof(interpreter));
+             this.identities = identities ?? throw new ArgumentNullException(nameof(identities));
+             this.contextProvider = contextProvider ?? throw new ArgumentNullException(nameof(contextProvider));
+             timeout = providerTimeout ?? TimeSpan.FromSeconds(15);
++            this.memorySnapshotProvider = memorySnapshotProvider;
+             if (timeout <= TimeSpan.Zero || timeout.TotalMilliseconds > int.MaxValue)
+                 throw new ArgumentOutOfRangeException(nameof(providerTimeout));
+         }
+ 
+         public async Task<StrategicAIProviderResult> TranslateAsync(string message,
+             CancellationToken cancellationToken = default)
+         {
+             CancellationTokenSource deadline;
+             int requestGeneration;
++            IReadOnlyList<CommanderConversationMessage> requestHistory;
+             lock (sync)
+             {
+                 if (disposed) return StrategicAIProviderResult.Rejected("Strategic chat is closed.");
+                 if (busy) return StrategicAIProviderResult.Rejected("A strategic translation is already in progress.");
+                 ClearPendingLocked();
+                 busy = true;
+                 requestGeneration = ++generation;
+                 deadline = activeRequest = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
++                requestHistory = memorySnapshotProvider == null
++                    ? history.Snapshot() : Array.Empty<CommanderConversationMessage>();
+             }
+             try
+             {
+                 deadline.CancelAfter(timeout);
+                 deadline.Token.ThrowIfCancellationRequested();
+-                var request = new StrategicAIRequest(message, contextProvider(), identities, history.Snapshot());
+-                history.Append(CommanderConversationRole.Player, message);
++                IReadOnlyList<MemoryEntry> memory = memorySnapshotProvider?.Invoke()
++                    ?? Array.Empty<MemoryEntry>();
++                memory = WithoutCurrentPlayerTurn(memory, message);
++                if (IsGenericAttack(message) && !HasCavalryPreference(memory))
++                    return StrategicAIProviderResult.Rejected(
++                        "Choose the supported attack focus first: focus cavalry.");
++                var request = new StrategicAIRequest(message, contextProvider(), identities,
++                    requestHistory, memory);
++                lock (sync)
++                {
++                    if (disposed || generation != requestGeneration || deadline.IsCancellationRequested)
++                        return StrategicAIProviderResult.Rejected("Strategic translation was cancelled.");
++                    history.Append(CommanderConversationRole.Player, message);
++                }
+                 Task<StrategicAIProviderResult> translation = interpreter.InterpretStrategicIntentAsync(request, deadline.Token);
+                 if (translation == null) return StrategicAIProviderResult.Rejected("Strategic translation failed safely.");
+                 Task cancelled = Task.Delay(Timeout.Infinite, deadline.Token);
+                 if (await Task.WhenAny(translation, cancelled) != translation)
+                 {
+                     _ = translation.ContinueWith(t => { _ = t.Exception; },
+                         CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.Default);
+                     deadline.Token.ThrowIfCancellationRequested();
+                 }
+                 StrategicAIProviderResult result = await translation;
+@@ -75,37 +97,45 @@ namespace OpenEmpires
+                     || !identities.Owns(intent))
+                     return StrategicAIProviderResult.Rejected("Strategic response did not match the trusted request.");
+                 var validation = new StrategicIntentValidator().Validate(intent, request.Context.PlayerId,
+                     StrategicPlanRegistry.CreateDefault());
+                 if (!validation.IsValid) return StrategicAIProviderResult.Rejected("Strategic response failed validation.");
+                 lock (sync)
+                 {
+                     if (disposed || generation != requestGeneration || deadline.IsCancellationRequested)
+                         return StrategicAIProviderResult.Rejected("Strategic translation was cancelled.");
+                     pending = intent;
++                    history.Append(CommanderConversationRole.Commander,
++                        intent.ObjectiveType + " recommendation ready for review.");
+                 }
+-                history.Append(CommanderConversationRole.Commander, intent.ObjectiveType + " recommendation ready for review.");
+                 return result;
+             }
+             catch (OperationCanceledException)
+             {
+                 return StrategicAIProviderResult.Rejected(cancellationToken.IsCancellationRequested
+                     || disposed || generation != requestGeneration
+                     ? "Strategic translation was cancelled." : "Strategic translation timed out.");
+             }
+             catch (Exception)
+             {
+                 return StrategicAIProviderResult.Rejected("Strategic translation failed safely.");
+             }
+             finally
+             {
+-                lock (sync) { activeRequest = null; busy = false; }
++                lock (sync)
++                {
++                    if (ReferenceEquals(activeRequest, deadline))
++                    {
++                        activeRequest = null;
++                        busy = false;
++                    }
++                }
+                 deadline.Cancel();
+                 deadline.Dispose();
+             }
+         }
+ 
+         public StrategicIntent TakeRecommendation(int intentId)
+         {
+             lock (sync)
+             {
+                 if (disposed || busy || pending == null || pending.IntentId != intentId
+@@ -136,30 +166,75 @@ namespace OpenEmpires
+         public void ClearPending()
+         {
+             lock (sync)
+             {
+                 ++generation;
+                 ClearPendingLocked();
+                 activeRequest?.Cancel();
+             }
+         }
+ 
++        public void Reset()
++        {
++            lock (sync)
++            {
++                ++generation;
++                history.Clear();
++                ClearPendingLocked();
++                activeRequest?.Cancel();
++                activeRequest = null;
++                busy = false;
++            }
++        }
++
++        private static bool IsGenericAttack(string message)
++        {
++            string text = (message ?? string.Empty).Trim().ToLowerInvariant();
++            if (text.EndsWith(".", StringComparison.Ordinal)) text = text.TrimEnd('.').TrimEnd();
++            return text == "prepare attack" || text == "prepare an attack";
++        }
++
++        private static bool HasCavalryPreference(IReadOnlyList<MemoryEntry> memory)
++        {
++            for (int i = memory.Count - 1; i >= 0; i--)
++                if (memory[i].Kind == MemoryEntryKind.Preference
++                    && memory[i].CavalryPreference == CommanderCavalryPreference.Cavalry)
++                    return true;
++            return false;
++        }
++
++        private static IReadOnlyList<MemoryEntry> WithoutCurrentPlayerTurn(
++            IReadOnlyList<MemoryEntry> memory, string message)
++        {
++            if (memory.Count == 0) return memory;
++            MemoryEntry last = memory[memory.Count - 1];
++            if (last.Kind != MemoryEntryKind.PlayerConversation
++                || !string.Equals(last.Text, message ?? string.Empty, StringComparison.Ordinal))
++                return memory;
++            var copy = new List<MemoryEntry>(memory.Count - 1);
++            for (int i = 0; i < memory.Count - 1; i++) copy.Add(memory[i]);
++            return copy.AsReadOnly();
++        }
++
+         private void ClearPendingLocked()
+         {
+             if (pending != null && pending.Status == StrategicIntentStatus.Created)
+                 pending.Status = StrategicIntentStatus.Cancelled;
+             pending = null;
+         }
+ 
+         public void Dispose()
+         {
+             lock (sync)
+             {
+                 if (disposed) return;
+                 disposed = true;
+-                ClearPending();
++                ++generation;
++                history.Clear();
++                ClearPendingLocked();
++                activeRequest?.Cancel();
++                activeRequest = null;
++                busy = false;
+             }
+         }
+     }
+ }
+-
+-

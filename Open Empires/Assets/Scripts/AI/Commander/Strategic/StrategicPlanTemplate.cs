@@ -22,6 +22,9 @@ namespace OpenEmpires
         {
             var registry = new StrategicPlanRegistry();
             registry.Register(new CavalryPressurePlanTemplate());
+            registry.Register(new DefensivePreparationPlanTemplate());
+            registry.Register(new EconomicExpansionPlanTemplate());
+            registry.Register(new MilitaryReinforcementPlanTemplate());
             return registry;
         }
 
@@ -68,8 +71,7 @@ namespace OpenEmpires
         public bool CanHandle(StrategicIntent intent)
         {
             return intent != null
-                && (intent.ObjectiveType == StrategicObjectiveType.AttackPreparation
-                    || intent.ObjectiveType == StrategicObjectiveType.MilitaryReinforcement);
+                && intent.ObjectiveType == StrategicObjectiveType.AttackPreparation;
         }
 
         public StrategicIntentValidationResult ValidateParameters(StrategicIntent intent)
@@ -82,15 +84,8 @@ namespace OpenEmpires
                 return StrategicIntentValidationResult.Rejected(
                     StrategicIntentValidationError.NoCompatibleTemplate,
                     "No available strategic plan template.");
-            string unsupportedParameter = null;
-            foreach (KeyValuePair<string, string> parameter in intent.Parameters)
-                if (unsupportedParameter == null || string.CompareOrdinal(
-                    parameter.Key, unsupportedParameter) < 0)
-                    unsupportedParameter = parameter.Key;
-            if (unsupportedParameter != null)
-                return StrategicIntentValidationResult.Rejected(
-                    StrategicIntentValidationError.UnsupportedParameter,
-                    $"Parameter '{unsupportedParameter}' is not supported by {TemplateId}.");
+            var paramValidation = StrategicPlanTemplateValidation.ValidateCommonParameters(intent);
+            if (paramValidation != null) return paramValidation;
             return StrategicIntentValidationResult.Accepted(this);
         }
 
@@ -99,6 +94,123 @@ namespace OpenEmpires
             StrategicIntentValidationResult validation = ValidateParameters(intent);
             if (!validation.IsValid) throw new ArgumentException(validation.Reason, nameof(intent));
             return new CavalryPressurePlan(intent.PlayerId, intent.IntentId);
+        }
+    }
+
+    public sealed class DefensivePreparationPlanTemplate : IStrategicPlanTemplate
+    {
+        public const string Id = "DefensivePreparation";
+        public string TemplateId => Id;
+
+        public bool CanHandle(StrategicIntent intent)
+        {
+            return intent != null
+                && intent.ObjectiveType == StrategicObjectiveType.DefensivePreparation;
+        }
+
+        public StrategicIntentValidationResult ValidateParameters(StrategicIntent intent)
+        {
+            if (intent == null)
+                return StrategicIntentValidationResult.Rejected(
+                    StrategicIntentValidationError.MissingIntent,
+                    "A strategic intent is required.");
+            if (!CanHandle(intent))
+                return StrategicIntentValidationResult.Rejected(
+                    StrategicIntentValidationError.NoCompatibleTemplate,
+                    "No available strategic plan template.");
+            var paramValidation = StrategicPlanTemplateValidation.ValidateCommonParameters(intent);
+            if (paramValidation != null) return paramValidation;
+            return StrategicIntentValidationResult.Accepted(this);
+        }
+
+        public StrategicPlan CreatePlan(StrategicIntent intent)
+        {
+            StrategicIntentValidationResult validation = ValidateParameters(intent);
+            if (!validation.IsValid) throw new ArgumentException(validation.Reason, nameof(intent));
+            return new DefensivePreparationPlan(intent.PlayerId, intent.IntentId);
+        }
+    }
+
+    public sealed class EconomicExpansionPlanTemplate : IStrategicPlanTemplate
+    {
+        public const string Id = "EconomicExpansion";
+        public string TemplateId => Id;
+
+        public bool CanHandle(StrategicIntent intent)
+        {
+            return intent != null
+                && intent.ObjectiveType == StrategicObjectiveType.EconomicExpansion;
+        }
+
+        public StrategicIntentValidationResult ValidateParameters(StrategicIntent intent)
+        {
+            if (intent == null)
+                return StrategicIntentValidationResult.Rejected(
+                    StrategicIntentValidationError.MissingIntent,
+                    "A strategic intent is required.");
+            if (!CanHandle(intent))
+                return StrategicIntentValidationResult.Rejected(
+                    StrategicIntentValidationError.NoCompatibleTemplate,
+                    "No available strategic plan template.");
+            var paramValidation = StrategicPlanTemplateValidation.ValidateCommonParameters(intent);
+            if (paramValidation != null) return paramValidation;
+            return StrategicIntentValidationResult.Accepted(this);
+        }
+
+        public StrategicPlan CreatePlan(StrategicIntent intent)
+        {
+            StrategicIntentValidationResult validation = ValidateParameters(intent);
+            if (!validation.IsValid) throw new ArgumentException(validation.Reason, nameof(intent));
+            return new EconomicExpansionPlan(intent.PlayerId, intent.IntentId);
+        }
+    }
+
+    public sealed class MilitaryReinforcementPlanTemplate : IStrategicPlanTemplate
+    {
+        public const string Id = "MilitaryReinforcement";
+        public string TemplateId => Id;
+
+        public bool CanHandle(StrategicIntent intent)
+        {
+            return intent != null
+                && intent.ObjectiveType == StrategicObjectiveType.MilitaryReinforcement;
+        }
+
+        public StrategicIntentValidationResult ValidateParameters(StrategicIntent intent)
+        {
+            if (intent == null)
+                return StrategicIntentValidationResult.Rejected(
+                    StrategicIntentValidationError.MissingIntent,
+                    "A strategic intent is required.");
+            if (!CanHandle(intent))
+                return StrategicIntentValidationResult.Rejected(
+                    StrategicIntentValidationError.NoCompatibleTemplate,
+                    "No available strategic plan template.");
+            var paramValidation = StrategicPlanTemplateValidation.ValidateCommonParameters(intent);
+            if (paramValidation != null) return paramValidation;
+            return StrategicIntentValidationResult.Accepted(this);
+        }
+
+        public StrategicPlan CreatePlan(StrategicIntent intent)
+        {
+            StrategicIntentValidationResult validation = ValidateParameters(intent);
+            if (!validation.IsValid) throw new ArgumentException(validation.Reason, nameof(intent));
+            return new MilitaryReinforcementPlan(intent.PlayerId, intent.IntentId);
+        }
+    }
+
+    internal static class StrategicPlanTemplateValidation
+    {
+        public static StrategicIntentValidationResult ValidateCommonParameters(StrategicIntent intent)
+        {
+            if (intent?.Parameters != null && intent.Parameters.TryGetValue("targetCount", out string targetCountStr))
+            {
+                if (!int.TryParse(targetCountStr, out int count) || count <= 0)
+                    return StrategicIntentValidationResult.Rejected(
+                        StrategicIntentValidationError.UnsupportedParameter,
+                        "Parameter 'targetCount' must be a positive integer.");
+            }
+            return null;
         }
     }
 }

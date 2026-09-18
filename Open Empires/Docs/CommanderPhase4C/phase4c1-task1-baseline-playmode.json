@@ -1,0 +1,15 @@
+{
+  "jobId": "6a30f5a8c7c94ada8d1dcc495d5142de",
+  "mode": "PlayMode",
+  "status": "failed",
+  "progress": {
+    "completedTestBodies": 52,
+    "totalTestBodies": 52
+  },
+  "failure": {
+    "test": "OpenEmpires.Tests.CommanderPhase3BPlayModeTests.CancelledState_DisposeAndLateProviderResponse",
+    "message": "Unhandled log message: '[Error] [Package Manager Window] Error while getting auth code: System.InvalidOperationException: Failed to call Unity ID to get auth code. State=DONE_FAILED, ResponseCode=0, URL=https://api.unity.com/v1/oauth2/authorize'. Use UnityEngine.TestTools.LogAssert.Expect"
+  },
+  "classification": "Pre-edit external Unity Package Manager authentication log; no Phase 4C source existed during this run.",
+  "note": "All 52 test bodies completed, but this was not a clean suite pass. No suppression or credential/package/network change was applied."
+}

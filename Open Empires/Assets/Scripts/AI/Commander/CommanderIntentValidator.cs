@@ -49,7 +49,7 @@ namespace OpenEmpires
                     "The requested player is not part of this match.");
             if (intent.PlayerId != owningPlayerId)
                 return Invalid(CommanderIntentErrorCode.PlayerMismatch,
-                    "Commander intents can only target the owning local player.");
+                    "Ownership mismatch: Commander intents can only target the owning local player.");
 
             CommanderIntentValidationResult constraints = ValidateConstraints(intent.Constraints);
             if (!constraints.IsValid) return constraints;

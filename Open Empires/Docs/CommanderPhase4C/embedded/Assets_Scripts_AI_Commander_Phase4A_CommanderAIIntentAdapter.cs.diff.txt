@@ -1,0 +1,41 @@
+diff --git "a/D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderPhase4C\\phase4c1-task1-before\\Assets\\Scripts\\AI\\Commander\\Phase4A\\CommanderAIIntentAdapter.cs.before.txt" "b/D:\\unity_projects\\OpenEmpires\\Open Empires\\Assets\\Scripts\\AI\\Commander\\Phase4A\\CommanderAIIntentAdapter.cs"
+index a2e99eb..f01f395 100644
+--- "a/D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderPhase4C\\phase4c1-task1-before\\Assets\\Scripts\\AI\\Commander\\Phase4A\\CommanderAIIntentAdapter.cs.before.txt"	
++++ "b/D:\\unity_projects\\OpenEmpires\\Open Empires\\Assets\\Scripts\\AI\\Commander\\Phase4A\\CommanderAIIntentAdapter.cs"	
+@@ -32,20 +32,21 @@ namespace OpenEmpires
+ 
+         private readonly ICommanderAIProvider provider;
+         private readonly GameSimulation simulation;
+         private readonly CommanderGoalManager goalManager;
+         private readonly CommanderIntentDispatcher dispatcher;
+         private readonly TimeSpan providerTimeout;
+         private bool isSubmitting;
+ 
+warning: in the working copy of 'D:\unity_projects\OpenEmpires\Open Empires\Docs\CommanderPhase4C\phase4c1-task1-before\Assets\Scripts\AI\Commander\Phase4A\CommanderAIIntentAdapter.cs.before.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'D:\unity_projects\OpenEmpires\Open Empires\Assets\Scripts\AI\Commander\Phase4A\CommanderAIIntentAdapter.cs', LF will be replaced by CRLF the next time Git touches it
+         public CommanderConversationHistory History { get; }
+         public bool IsSubmitting => isSubmitting;
++        public void ResetHistory() => History.Clear();
+ 
+         public CommanderAIIntentAdapter(ICommanderAIProvider provider,
+             GameSimulation simulation, CommanderGoalManager goalManager,
+             CommanderIntentDispatcher dispatcher,
+             CommanderConversationHistory history = null,
+             TimeSpan? providerTimeout = null)
+         {
+             this.provider = provider ?? throw new ArgumentNullException(nameof(provider));
+             this.simulation = simulation ?? throw new ArgumentNullException(nameof(simulation));
+             this.goalManager = goalManager ?? throw new ArgumentNullException(nameof(goalManager));
+@@ -147,12 +148,10 @@ namespace OpenEmpires
+ 
+         private static CommanderAIChatSubmission Reject(
+             CommanderIntentErrorCode code, string text)
+         {
+             var providerResult = CommanderAIProviderResult.Rejected(code, text, text);
+             return new CommanderAIChatSubmission(providerResult,
+                 CommanderIntentInterpretation.Rejected(code, text), null, text);
+         }
+     }
+ }
+-
+-

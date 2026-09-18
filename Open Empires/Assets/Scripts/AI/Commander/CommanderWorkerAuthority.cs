@@ -58,6 +58,7 @@ namespace OpenEmpires
         {
             releaseScratch.Clear();
             foreach (var pair in reservations) if (pair.Value.GoalId == goalId) releaseScratch.Add(pair.Key);
+            releaseScratch.Sort();
             for (int i = 0; i < releaseScratch.Count; i++) reservations.Remove(releaseScratch[i]);
         }
 
@@ -70,6 +71,7 @@ namespace OpenEmpires
                 if (unit == null || unit.PlayerId != playerId || !unit.IsVillager || unit.CurrentHealth <= 0 || unit.State == UnitState.Dead)
                     releaseScratch.Add(pair.Key);
             }
+            releaseScratch.Sort();
             for (int i = 0; i < releaseScratch.Count; i++) reservations.Remove(releaseScratch[i]);
         }
 

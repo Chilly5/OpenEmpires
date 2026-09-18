@@ -54,7 +54,7 @@ namespace OpenEmpires.Tests
             Assert.That(submission.Plan, Is.TypeOf<CavalryPressurePlan>());
             Assert.That(submission.Plan.CurrentMilestone.Name,
                 Is.EqualTo("Economic Foundation"));
-            Assert.That(submission.Plan.ChildGoalIds, Has.Count.EqualTo(2));
+            Assert.That(submission.Plan.ChildGoalIds, Has.Count.EqualTo(3));
             Debug.Log("[Phase3C-3 Runtime] PASS Scenario 1: AttackPreparation intent selected CavalryPressurePlan and began the Economic Foundation milestone through Commander goals.");
             yield return null;
         }
@@ -83,6 +83,7 @@ namespace OpenEmpires.Tests
         {
             CreateGatherers(ResourceType.Food, CavalryPressurePlan.FoodWorkerTarget, x - 22);
             CreateGatherers(ResourceType.Gold, CavalryPressurePlan.GoldWorkerTarget, x);
+            CreateGatherers(ResourceType.Wood, CavalryPressurePlan.WoodWorkerTarget, x - 10);
             Worker(x + 8, z);
             StrategicIntentSubmission submission = planner.SubmitIntent(
                 StrategicObjectiveType.AttackPreparation);

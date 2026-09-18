@@ -30,14 +30,36 @@ namespace OpenEmpires
         public int PlayerId { get; }
         public StrategicObjectiveType ObjectiveType { get; }
         public int CreatedTick { get; }
+        public StrategicIntentSource Source { get; }
+        internal bool NeedsPlayerIdentity { get; private set; }
         public IReadOnlyDictionary<string, string> Parameters => parameters;
         public int? Priority { get; }
         public StrategicIntentStatus Status { get; internal set; }
         public string StatusReason { get; internal set; } = string.Empty;
+        public bool IsTerminal => Status == StrategicIntentStatus.Rejected
+            || Status == StrategicIntentStatus.Completed
+            || Status == StrategicIntentStatus.Failed
+            || Status == StrategicIntentStatus.Cancelled;
         public CommanderIntentLayer IntentLayer => CommanderIntentLayer.Strategic;
 
         public StrategicIntent(int intentId, int playerId, StrategicObjectiveType objectiveType,
             int createdTick, IDictionary<string, string> parameters = null, int? priority = null)
+            : this(intentId, playerId, objectiveType, createdTick, parameters, priority,
+                StrategicIntentSource.PlayerDirect)
+        {
+        }
+
+        // Legacy interpretation produces a value before it has a Commander identity owner.
+        // This marker is never exposed on the model wire or used for fixed-ID caller intents.
+        internal static StrategicIntent FromPlayerInterpretation(int playerId,
+            StrategicObjectiveType objectiveType, int createdTick,
+            IDictionary<string, string> parameters = null, int? priority = null) =>
+            new StrategicIntent(1, playerId, objectiveType, createdTick, parameters, priority)
+            { NeedsPlayerIdentity = true };
+
+        internal StrategicIntent(int intentId, int playerId, StrategicObjectiveType objectiveType,
+            int createdTick, IDictionary<string, string> parameters, int? priority,
+            StrategicIntentSource source)
         {
             if (intentId < 1) throw new ArgumentOutOfRangeException(nameof(intentId));
             if (createdTick < 0) throw new ArgumentOutOfRangeException(nameof(createdTick));
@@ -58,6 +80,9 @@ namespace OpenEmpires
             PlayerId = playerId;
             ObjectiveType = objectiveType;
             CreatedTick = createdTick;
+            if (!Enum.IsDefined(typeof(StrategicIntentSource), source))
+                throw new ArgumentOutOfRangeException(nameof(source));
+            Source = source;
             this.parameters = new ReadOnlyDictionary<string, string>(detached);
             Priority = priority;
             Status = StrategicIntentStatus.Created;
@@ -74,7 +99,9 @@ namespace OpenEmpires
         UnsupportedParameter,
         NoCompatibleTemplate,
         DuplicateIntent,
-        TemplateCreationFailed
+        TemplateCreationFailed,
+        CommitmentBlocked,
+        ActivePlanLimitReached
     }
 
     public sealed class StrategicIntentValidationResult
@@ -113,7 +140,7 @@ namespace OpenEmpires
             if (intent.PlayerId != expectedPlayerId)
                 return StrategicIntentValidationResult.Rejected(
                     StrategicIntentValidationError.PlayerMismatch,
-                    "Strategic intent ownership does not match the local Commander.");
+                    "Ownership mismatch: Strategic intents can only target the local Commander.");
             if (!Enum.IsDefined(typeof(StrategicObjectiveType), intent.ObjectiveType))
                 return StrategicIntentValidationResult.Rejected(
                     StrategicIntentValidationError.UnknownObjective,
@@ -157,6 +184,7 @@ namespace OpenEmpires
         public string Reason { get; }
         public bool CreatedPlan => Status == StrategicIntentSubmissionStatus.PlanCreated
             && Plan != null;
+        public bool IsAccepted => CreatedPlan;
 
         internal StrategicIntentSubmission(StrategicIntentSubmissionStatus status,
             StrategicIntent intent, StrategicPlan plan, StrategicIntentValidationError error,

@@ -24,16 +24,26 @@ namespace OpenEmpires
 
     internal sealed class CommanderPlanner
     {
+        public const int DefaultPathValidationCandidates = 4;
+        public const int MinimumPathValidationCandidates = 3;
+        public const int MaximumPathValidationCandidates = 5;
         private const int EconomyCommandCooldownTicks = 90;
         private const int ConstructionStallTicks = 150;
         private const int ConstructionRecoveryCooldownTicks = 150;
         private readonly GameSimulation simulation;
         private readonly CommanderWorkerAuthority workerAuthority;
+        private readonly int pathValidationCandidates;
 
-        public CommanderPlanner(GameSimulation simulation, CommanderWorkerAuthority workerAuthority)
+        public int DiagnosticPathCheckCount { get; internal set; }
+        public void ResetDiagnosticPathCheckCount() => DiagnosticPathCheckCount = 0;
+
+        public CommanderPlanner(GameSimulation simulation, CommanderWorkerAuthority workerAuthority,
+            int pathValidationCandidates = DefaultPathValidationCandidates)
         {
             this.simulation = simulation;
             this.workerAuthority = workerAuthority;
+            this.pathValidationCandidates = Mathf.Clamp(pathValidationCandidates,
+                MinimumPathValidationCandidates, MaximumPathValidationCandidates);
         }
 
         public CommanderPlan Plan(CommanderGoal goal, int currentTick)
@@ -440,13 +450,38 @@ namespace OpenEmpires
             return bestPriority == int.MaxValue ? null : best;
         }
 
+        private struct CandidatePath
+        {
+            public UnitData Unit;
+            public ResourceNodeData Node;
+            public int Priority;
+            public int DistanceSq;
+        }
+
         private UnitData SelectEconomyWorker(CommanderGoal goal, ResourceType neededType, int currentTick,
             out ResourceNodeData selectedNode)
         {
             int playerId = goal.PlayerId;
             selectedNode = null;
-            UnitData best = null;
-            int bestPriority = int.MaxValue;
+
+            // Stage 1 (Cheap filter): Collect visible, non-depleted nodes of needed type
+            var visibleNodes = new List<ResourceNodeData>();
+            IReadOnlyList<ResourceNodeData> allNodes = simulation.MapData.GetAllResourceNodes();
+            for (int i = 0; i < allNodes.Count; i++)
+            {
+                ResourceNodeData node = allNodes[i];
+                if (node.Type != neededType) continue;
+                if (simulation.FogOfWar.GetVisibility(playerId, node.TileX, node.TileZ) != TileVisibility.Visible)
+                    continue;
+                if (node.IsDepleted) continue;
+                visibleNodes.Add(node);
+            }
+
+            if (visibleNodes.Count == 0) return null;
+
+            // Stage 1 (Cheap filter): Collect eligible workers with cheap distance scoring
+            var eligibleWorkers = new List<UnitData>();
+            var priorities = new Dictionary<int, int>();
             List<UnitData> units = simulation.UnitRegistry.GetAllUnits();
             for (int i = 0; i < units.Count; i++)
             {
@@ -458,19 +493,67 @@ namespace OpenEmpires
                 if (goal is ResourceAllocationGoal && IsGatheringState(unit.State)
                     && workerAuthority.IsRecentGatherAssignment(unit.Id, currentTick)) continue;
                 if (IsGatheringResource(unit, neededType)) continue;
+
                 int priority = unit.State == UnitState.Idle ? 0
                     : workerAuthority.IsCommanderControlled(unit.Id) && IsGatheringState(unit.State) ? 1
                     : IsGatheringState(unit.State) ? 2 : int.MaxValue;
-                if (priority < bestPriority || (priority == bestPriority && (best == null || unit.Id < best.Id)))
+                if (priority == int.MaxValue) continue;
+
+                eligibleWorkers.Add(unit);
+                priorities.Add(unit.Id, priority);
+            }
+
+            if (eligibleWorkers.Count == 0) return null;
+
+            var candidates = new List<CandidatePath>(eligibleWorkers.Count * visibleNodes.Count);
+            for (int w = 0; w < eligibleWorkers.Count; w++)
+            {
+                UnitData unit = eligibleWorkers[w];
+                int originX = unit.SimPosition.x.Raw >> Fixed32.FractionalBits;
+                int originZ = unit.SimPosition.z.Raw >> Fixed32.FractionalBits;
+                for (int n = 0; n < visibleNodes.Count; n++)
                 {
-                    ResourceNodeData node = FindKnownResourceNode(playerId, unit.SimPosition, neededType);
-                    if (node == null) continue;
-                    best = unit;
-                    selectedNode = node;
-                    bestPriority = priority;
+                    ResourceNodeData node = visibleNodes[n];
+                    int dx = node.TileX - originX;
+                    int dz = node.TileZ - originZ;
+                    candidates.Add(new CandidatePath
+                    {
+                        Unit = unit,
+                        Node = node,
+                        Priority = priorities[unit.Id],
+                        DistanceSq = dx * dx + dz * dz
+                    });
                 }
             }
-            return bestPriority == int.MaxValue ? null : best;
+
+            // Cheap deterministic ranking: distance first, then reassignment priority,
+            // stable worker ID, and stable resource ID.
+            candidates.Sort((a, b) =>
+            {
+                int distance = a.DistanceSq.CompareTo(b.DistanceSq);
+                if (distance != 0) return distance;
+                int priority = a.Priority.CompareTo(b.Priority);
+                if (priority != 0) return priority;
+                int worker = a.Unit.Id.CompareTo(b.Unit.Id);
+                return worker != 0 ? worker : a.Node.Id.CompareTo(b.Node.Id);
+            });
+
+            // Expensive validation is strictly bounded to the top-K ranked pairs.
+            int validationCount = Mathf.Min(pathValidationCandidates, candidates.Count);
+            for (int c = 0; c < validationCount; c++)
+            {
+                UnitData unit = candidates[c].Unit;
+                ResourceNodeData node = candidates[c].Node;
+                Vector2Int workerTile = simulation.MapData.WorldToTile(unit.SimPosition);
+                if (HasReachableAdjacentTile(workerTile, playerId, node.TileX,
+                    node.TileZ, node.FootprintWidth, node.FootprintHeight))
+                {
+                    selectedNode = node;
+                    return unit;
+                }
+            }
+
+            return null;
         }
 
         private UnitData FindActiveConstructionBuilder(int playerId, BuildingData building)
@@ -627,6 +710,7 @@ namespace OpenEmpires
         private bool HasReachableAdjacentTile(Vector2Int start, int playerId, int tileX, int tileZ,
             int width, int height)
         {
+            DiagnosticPathCheckCount++;
             for (int x = tileX - 1; x <= tileX + width; x++)
             {
                 for (int z = tileZ - 1; z <= tileZ + height; z++)
@@ -700,6 +784,10 @@ namespace OpenEmpires
                     width = config.StablesFootprintWidth; height = config.StablesFootprintHeight; break;
                 case BuildingType.ArcheryRange:
                     width = config.ArcheryRangeFootprintWidth; height = config.ArcheryRangeFootprintHeight; break;
+                case BuildingType.Tower:
+                    width = config.TowerFootprintWidth; height = config.TowerFootprintHeight; break;
+                case BuildingType.TownCenter:
+                    width = config.TownCenterFootprintWidth; height = config.TownCenterFootprintHeight; break;
                 default:
                     width = 2; height = 2; break;
             }

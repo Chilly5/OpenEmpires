@@ -1,0 +1,129 @@
+{
+  "phase": "4B.1",
+  "readiness": "READY FOR PHASE 4B.2",
+  "verifiedAt": "2026-09-12",
+  "unityVersion": "6000.5.9f1",
+  "unityMcpVersion": "10.2.0",
+  "focused": {
+    "jobId": "5a92fc3265204a378a973b1ec0b6aad7",
+    "total": 60,
+    "passed": 60,
+    "failed": 0,
+    "skipped": 0,
+    "durationSeconds": 71.0639757
+  },
+  "editMode": {
+    "jobId": "e72e8d1b38ec44d1b4d177ac5f298793",
+    "total": 434,
+    "passed": 434,
+    "failed": 0,
+    "skipped": 0,
+    "durationSeconds": 382.6886069,
+    "resultState": "Passed"
+  },
+  "playMode": {
+    "jobId": "35dc90f7e33446e5867ddca3a719973a",
+    "total": 49,
+    "passed": 49,
+    "failed": 0,
+    "skipped": 0,
+    "durationSeconds": 25.9262059,
+    "resultState": "Passed"
+  },
+  "tacticalRegression": {
+    "phase4AEditModePassed": 10,
+    "phase4A1HardeningPassed": 16,
+    "phase4APlayModePassed": 2
+  },
+  "compiler": {
+    "refreshRequested": true,
+    "editorIdle": true,
+    "domainReloadPending": false,
+    "csharpErrorEntries": 0,
+    "latestEditorLogCompilationErrors": 0
+  },
+  "frozenSources": {
+    "existingProductionScripts": 197,
+    "changed": 0,
+    "phase3ManifestEntries": 10,
+    "phase3ManifestChanged": 0,
+    "phase4AChanged": 0,
+    "baseline": "CommanderPhase4B1-frozen-source-hashes.json"
+  },
+  "authority": {
+    "executionDependencies": 0,
+    "automaticSubmission": false,
+    "simulationReferences": false,
+    "existingValidatorReused": true,
+    "existingContextReused": true
+  },
+  "secretChecks": {
+    "allTrackedKeyPatternFiles": 0,
+    "newDeliverableKeyPatternFiles": 0,
+    "envIgnored": true,
+    "envTracked": false,
+    "liveGeminiCallsMade": 0
+  },
+  "demonstrations": [
+    {
+      "input": "prepare cavalry attack",
+      "alsoSupported": "prepare a cavalry attack",
+      "json": {
+        "intentCategory": "Strategic",
+        "objectiveType": "AttackPreparation",
+        "parameters": {
+          "focus": "cavalry"
+        }
+      },
+      "validatedIntent": "AttackPreparation",
+      "status": "Created",
+      "plans": 0,
+      "goals": 0,
+      "commands": 0,
+      "plannerIntentRegistrations": 0,
+      "reservations": 0,
+      "evidenceTests": [
+        "StrategicText_CreatesAttackPreparationIntent",
+        "ShortExample_IsInterpreted",
+        "StrategicProvider_CannotCreatePlans"
+      ]
+    },
+    {
+      "input": "expand economy",
+      "json": {
+        "intentCategory": "Strategic",
+        "objectiveType": "EconomicExpansion",
+        "parameters": {}
+      },
+      "validatedIntent": "EconomicExpansion",
+      "status": "Created",
+      "plans": 0,
+      "goals": 0,
+      "commands": 0,
+      "plannerIntentRegistrations": 0,
+      "reservations": 0,
+      "evidenceTests": [
+        "ShortExample_IsInterpreted",
+        "StrategicProvider_CannotCreateCommands"
+      ]
+    }
+  ],
+  "review": {
+    "critical": 0,
+    "important": 0,
+    "minor": 1,
+    "minorResolved": true,
+    "evidence": "CommanderPhase4B1-review.md"
+  },
+  "limitations": [
+    "Interpretation only: no UI or automatic strategic execution.",
+    "Gemini tested through scripted HTTP transport, not live API inference.",
+    "Existing StrategicContext contains production-building and defense aggregates rather than a full building inventory."
+  ],
+  "verificationHistory": [
+    "Initial missing-provider test failed as expected.",
+    "Full EditMode job 58bdb0f1e498474297c2354bdb0a577c became unobservable and was removed by the user's editor restart. It is not counted as successful evidence.",
+    "After restart, full EditMode job e72e8d1b38ec44d1b4d177ac5f298793 passed all 434 cases.",
+    "No existing production file was modified; inherited dirty worktree preserved; no commit or push."
+  ]
+}

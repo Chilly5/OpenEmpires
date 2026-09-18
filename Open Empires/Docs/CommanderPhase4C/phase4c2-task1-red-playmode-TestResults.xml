@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="5" result="Failed(Child)" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-16 19:33:34Z" end-time="2026-09-16 19:33:35Z" duration="1.5808926">
+  <test-suite type="TestSuite" id="1096" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="74" result="Failed" site="Child" start-time="2026-09-16 19:33:34Z" end-time="2026-09-16 19:33:35Z" duration="1.580893" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1090" name="OpenEmpires.PlayModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.PlayModeTests.dll" runstate="Runnable" testcasecount="74" result="Failed" site="Child" start-time="2026-09-16 19:33:34Z" end-time="2026-09-16 19:33:35Z" duration="1.573309" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="16924" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1091" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="74" result="Failed" site="Child" start-time="2026-09-16 19:33:34Z" end-time="2026-09-16 19:33:35Z" duration="1.570813" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1092" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="74" result="Failed" site="Child" start-time="2026-09-16 19:33:34Z" end-time="2026-09-16 19:33:35Z" duration="1.568718" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1082" name="CommanderPhase4C2PlayModeTests" fullname="OpenEmpires.Tests.CommanderPhase4C2PlayModeTests" classname="OpenEmpires.Tests.CommanderPhase4C2PlayModeTests" runstate="Runnable" testcasecount="5" result="Failed" site="Child" start-time="2026-09-16 19:33:34Z" end-time="2026-09-16 19:33:35Z" duration="1.565710" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase4C2" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1086" name="ClearMemory_DropsExplanationSourceWithoutClearingGameHistory" fullname="OpenEmpires.Tests.CommanderPhase4C2PlayModeTests.ClearMemory_DropsExplanationSourceWithoutClearingGameHistory" methodname="ClearMemory_DropsExplanationSourceWithoutClearingGameHistory" classname="OpenEmpires.Tests.CommanderPhase4C2PlayModeTests" runstate="Runnable" seed="949343527" result="Failed" label="Error" start-time="2026-09-16 19:33:34Z" end-time="2026-09-16 19:33:34Z" duration="0.455514" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at OpenEmpires.Tests.CommanderPhase4C2PlayModeTests+<ClearMemory_DropsExplanationSourceWithoutClearingGameHistory>d__12.MoveNext () [0x00135] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\PlayMode\CommanderPhase4C2PlayModeTests.cs:210 
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44 ]]></stack-trace>
+              </failure>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: DefensivePreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'DefensivePreparation' and started plan #1: DefensivePreparation.
+[StrategicPlanner] Plan #1 milestone active: Economic Defense.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1085" name="CurrentPlanQuery_MatchesFreshDetachedSnapshotWithoutAdvancing" fullname="OpenEmpires.Tests.CommanderPhase4C2PlayModeTests.CurrentPlanQuery_MatchesFreshDetachedSnapshotWithoutAdvancing" methodname="CurrentPlanQuery_MatchesFreshDetachedSnapshotWithoutAdvancing" classname="OpenEmpires.Tests.CommanderPhase4C2PlayModeTests" runstate="Runnable" seed="1496801614" result="Failed" label="Error" start-time="2026-09-16 19:33:34Z" end-time="2026-09-16 19:33:34Z" duration="0.298213" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at OpenEmpires.Tests.CommanderPhase4C2PlayModeTests+<CurrentPlanQuery_MatchesFreshDetachedSnapshotWithoutAdvancing>d__11.MoveNext () [0x001d4] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\PlayMode\CommanderPhase4C2PlayModeTests.cs:181 
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44 ]]></stack-trace>
+              </failure>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: DefensivePreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'DefensivePreparation' and started plan #1: DefensivePreparation.
+[StrategicPlanner] Plan #1 milestone active: Economic Defense.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[StrategicPlanner] Plan #1 milestone completed: Economic Defense.
+[StrategicPlanner] Plan #1 milestone active: Military Infrastructure.
+[StrategicPlanner] Plan #1 milestone completed: Military Infrastructure.
+[StrategicPlanner] Reservation #1 created for plan #1: 600 Wood.
+[StrategicPlanner] Plan #1 milestone active: Defensive Structures.
+[Commander] Goal #3 submitted: BuildStructure
+]]></output>
+            </test-case>
+            <test-case id="1084" name="ExplanationCannotModifyIntent" fullname="OpenEmpires.Tests.CommanderPhase4C2PlayModeTests.ExplanationCannotModifyIntent" methodname="ExplanationCannotModifyIntent" classname="OpenEmpires.Tests.CommanderPhase4C2PlayModeTests" runstate="Runnable" seed="1220729820" result="Failed" start-time="2026-09-16 19:33:34Z" end-time="2026-09-16 19:33:35Z" duration="0.275092" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: same as <OpenEmpires.StrategicIntent>
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4C2PlayModeTests+<ExplanationCannotModifyIntent>d__10.MoveNext () [0x00277] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\PlayMode\CommanderPhase4C2PlayModeTests.cs:141
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: DefensivePreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'DefensivePreparation' and started plan #1: DefensivePreparation.
+[StrategicPlanner] Plan #1 milestone active: Economic Defense.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1083" name="RejectedAttackQuestion_MatchesRecordedReasonDespiteUnrelatedDefense" fullname="OpenEmpires.Tests.CommanderPhase4C2PlayModeTests.RejectedAttackQuestion_MatchesRecordedReasonDespiteUnrelatedDefense" methodname="RejectedAttackQuestion_MatchesRecordedReasonDespiteUnrelatedDefense" classname="OpenEmpires.Tests.CommanderPhase4C2PlayModeTests" runstate="Runnable" seed="1080625282" result="Failed" start-time="2026-09-16 19:33:35Z" end-time="2026-09-16 19:33:35Z" duration="0.264801" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4C2PlayModeTests+<RejectedAttackQuestion_MatchesRecordedReasonDespiteUnrelatedDefense>d__9.MoveNext () [0x00123] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\PlayMode\CommanderPhase4C2PlayModeTests.cs:98
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: DefensivePreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'DefensivePreparation' and started plan #1: DefensivePreparation.
+[StrategicPlanner] Plan #1 milestone active: Economic Defense.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1087" name="WholeFormQueries_AreOfflineAndHostileAppendRemainsRejected" fullname="OpenEmpires.Tests.CommanderPhase4C2PlayModeTests.WholeFormQueries_AreOfflineAndHostileAppendRemainsRejected" methodname="WholeFormQueries_AreOfflineAndHostileAppendRemainsRejected" classname="OpenEmpires.Tests.CommanderPhase4C2PlayModeTests" runstate="Runnable" seed="1006746887" result="Failed" start-time="2026-09-16 19:33:35Z" end-time="2026-09-16 19:33:35Z" duration="0.258713" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4C2PlayModeTests+<WholeFormQueries_AreOfflineAndHostileAppendRemainsRejected>d__13.MoveNext () [0x000a5] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\PlayMode\CommanderPhase4C2PlayModeTests.cs:225
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

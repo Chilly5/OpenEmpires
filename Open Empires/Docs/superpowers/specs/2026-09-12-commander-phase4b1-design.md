@@ -1,0 +1,17 @@
+# Commander Phase 4B.1 design
+
+Authority: the user's Phase 4B.1 attachment at `C:\Users\RS\.codex\attachments\7a4fffa6-7f33-4fe9-8538-28a7ce5aed29\pasted-text-1.txt`.
+
+Implement the supplied separate-interface design. This is a new interpretation subsystem; all existing production files remain frozen. Work in the existing Unity checkout so the loaded editor and the user's uncommitted Phase 3/4A dependencies stay aligned.
+
+`IStrategicAIInterpreter.InterpretStrategicIntentAsync(StrategicAIRequest, CancellationToken)` returns `StrategicAIProviderResult`. A request contains player text, the existing detached `StrategicContext`, existing conversation messages, and a caller-assigned positive intent ID. Player identity and tick come exclusively from the trusted context. No simulation, planner, dispatcher, command buffer, callback, or network game state enters this interface.
+
+The result carries success, an immutable dedicated `StrategicIntentDTO`, canonical JSON, a validated existing `StrategicIntent`, safe explanation, and validation errors. Only the parser can create a successful result. It trims whitespace or one exact JSON markdown fence, parses exactly one object, rejects duplicate/unknown fields and malformed JSON, accepts only the four exact existing objective names, and permits only `focus: cavalry` for AttackPreparation. All other parameters are rejected. It then invokes the existing `StrategicIntentValidator` against a private default registry. It never exposes the returned template or calls any plan creation method.
+
+`MockStrategicAIProvider` recognizes complete deterministic example phrases, rejects unknown or appended instructions, and sends its JSON through the same parser. `GeminiStrategicAIProvider` reuses Phase 4A HTTP transport, environment key rules, models and conversation types, with a strategic-only prompt. It applies cancellation/15-second timeout and safe HTTP failures. Selection belongs to a separate factory and consumers depend on the interface. OpenRouter is optional and omitted.
+
+Context serialization projects allowed scalar/aggregate fields from the existing StrategicContext: food/wood/gold, population, workers, owned military, production, defense aggregates, current plan summaries, and visible threats. It excludes map coordinates, resource nodes, free-text plan reasons, object handles and hidden state. Existing StrategicContext has production buildings and defense aggregates rather than a complete building inventory; reuse these available values without extending the frozen context.
+
+Alternatives considered: extending the tactical interface would modify frozen Phase 4A and mix authority risks; a second strategic context/planner would violate reuse requirements. The supplied separate interpreter with shared transport and validator fits the existing types without either change.
+
+Verification: required named tests and additional malformed-output/provider boundary tests; real simulation and planner fixtures must retain zero plans, goals and commands after interpretation. Compare hidden-state changes against serialized requests. Run all EditMode and PlayMode tests, inspect compiler errors, compare the existing Phase 3 hash manifest plus a pre-change snapshot of every existing production script, and scan deliverables/tracked files for keys. Publish report, results, and demonstration with READY FOR PHASE 4B.2 only after all gates pass. No automatic submission is introduced.

@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="15" result="Failed(Child)" total="15" passed="1" failed="14" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-16 19:21:43Z" end-time="2026-09-16 19:21:44Z" duration="0.5204203">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="527" result="Failed" site="Child" start-time="2026-09-16 19:21:43Z" end-time="2026-09-16 19:21:44Z" duration="0.520420" total="15" passed="1" failed="14" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1594" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="527" result="Failed" site="Child" start-time="2026-09-16 19:21:43Z" end-time="2026-09-16 19:21:44Z" duration="0.507051" total="15" passed="1" failed="14" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="16924" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1595" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="527" result="Failed" site="Child" start-time="2026-09-16 19:21:43Z" end-time="2026-09-16 19:21:44Z" duration="0.410236" total="15" passed="1" failed="14" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1596" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="527" result="Failed" site="Child" start-time="2026-09-16 19:21:43Z" end-time="2026-09-16 19:21:44Z" duration="0.310995" total="15" passed="1" failed="14" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1552" name="CommanderPhase4C2Tests" fullname="OpenEmpires.Tests.CommanderPhase4C2Tests" classname="OpenEmpires.Tests.CommanderPhase4C2Tests" runstate="Runnable" testcasecount="15" result="Failed" site="Child" start-time="2026-09-16 19:21:43Z" end-time="2026-09-16 19:21:44Z" duration="0.210894" total="15" passed="1" failed="14" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase4C2" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1563" name="Context_CopiesAndBoundsPrimitiveInputs" fullname="OpenEmpires.Tests.CommanderPhase4C2Tests.Context_CopiesAndBoundsPrimitiveInputs" methodname="Context_CopiesAndBoundsPrimitiveInputs" classname="OpenEmpires.Tests.CommanderPhase4C2Tests" runstate="Runnable" seed="1917455063" result="Failed" start-time="2026-09-16 19:21:43Z" end-time="2026-09-16 19:21:43Z" duration="0.016040" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: 512
+  But was:  700
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4C2Tests.Context_CopiesAndBoundsPrimitiveInputs () [0x000d0] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4C2Tests.cs:78
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1564" name="Context_RejectsInvalidOwnerIdentityTicksAndEnums" fullname="OpenEmpires.Tests.CommanderPhase4C2Tests.Context_RejectsInvalidOwnerIdentityTicksAndEnums" methodname="Context_RejectsInvalidOwnerIdentityTicksAndEnums" classname="OpenEmpires.Tests.CommanderPhase4C2Tests" runstate="Runnable" seed="1906594344" result="Failed" start-time="2026-09-16 19:21:43Z" end-time="2026-09-16 19:21:43Z" duration="0.001490" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: <System.ArgumentOutOfRangeException>
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4C2Tests.Context_RejectsInvalidOwnerIdentityTicksAndEnums () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4C2Tests.cs:91
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1565" name="CurrentPlan_IsSortedAndDistinguishesUnavailableEmptyAndCapped" fullname="OpenEmpires.Tests.CommanderPhase4C2Tests.CurrentPlan_IsSortedAndDistinguishesUnavailableEmptyAndCapped" methodname="CurrentPlan_IsSortedAndDistinguishesUnavailableEmptyAndCapped" classname="OpenEmpires.Tests.CommanderPhase4C2Tests" runstate="Runnable" seed="1588157967" result="Failed" start-time="2026-09-16 19:21:43Z" end-time="2026-09-16 19:21:43Z" duration="0.003202" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "Current plan state is unavailable"
+  But was:  "No recorded explanation is available."
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4C2Tests.CurrentPlan_IsSortedAndDistinguishesUnavailableEmptyAndCapped () [0x000e6] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4C2Tests.cs:114
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1553" name="Explanation_MatchesDecisionReason" fullname="OpenEmpires.Tests.CommanderPhase4C2Tests.Explanation_MatchesDecisionReason" methodname="Explanation_MatchesDecisionReason" classname="OpenEmpires.Tests.CommanderPhase4C2Tests" runstate="Runnable" seed="2028072948" result="Failed" start-time="2026-09-16 19:21:43Z" end-time="2026-09-16 19:21:43Z" duration="0.000484" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "Insufficient available gold."
+  But was:  "No recorded explanation is available."
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4C2Tests.Explanation_MatchesDecisionReason () [0x00043] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4C2Tests.cs:21
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1562" name="MissingReason_StatesEvidenceIsUnavailable" fullname="OpenEmpires.Tests.CommanderPhase4C2Tests.MissingReason_StatesEvidenceIsUnavailable" methodname="MissingReason_StatesEvidenceIsUnavailable" classname="OpenEmpires.Tests.CommanderPhase4C2Tests" runstate="Runnable" seed="2136445346" result="Failed" start-time="2026-09-16 19:21:43Z" end-time="2026-09-16 19:21:43Z" duration="0.000283" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "No recorded reason is available"
+  But was:  "No recorded explanation is available."
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4C2Tests.MissingReason_StatesEvidenceIsUnavailable () [0x0002b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4C2Tests.cs:62
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1560" name="Outcomes_HaveHandSpecifiedMeaning" fullname="OpenEmpires.Tests.CommanderPhase4C2Tests.Outcomes_HaveHandSpecifiedMeaning" classname="OpenEmpires.Tests.CommanderPhase4C2Tests" runstate="Runnable" testcasecount="6" result="Failed" site="Child" start-time="2026-09-16 19:21:43Z" end-time="2026-09-16 19:21:44Z" duration="0.075781" total="6" passed="0" failed="6" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1554" name="Outcomes_HaveHandSpecifiedMeaning(NoDecision,&quot;No recorded decision is available&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4C2Tests.Outcomes_HaveHandSpecifiedMeaning(NoDecision,&quot;No recorded decision is available&quot;)" methodname="Outcomes_HaveHandSpecifiedMeaning" classname="OpenEmpires.Tests.CommanderPhase4C2Tests" runstate="Runnable" seed="663719108" result="Failed" start-time="2026-09-16 19:21:44Z" end-time="2026-09-16 19:21:44Z" duration="0.000634" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: String containing "No recorded decision is available"
+  But was:  "No recorded explanation is available."
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4C2Tests.Outcomes_HaveHandSpecifiedMeaning (OpenEmpires.ExplanationOutcome outcome, System.String meaning) [0x00034] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4C2Tests.cs:39
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1555" name="Outcomes_HaveHandSpecifiedMeaning(Rejected,&quot;recorded decision was rejected&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4C2Tests.Outcomes_HaveHandSpecifiedMeaning(Rejected,&quot;recorded decision was rejected&quot;)" methodname="Outcomes_HaveHandSpecifiedMeaning" classname="OpenEmpires.Tests.CommanderPhase4C2Tests" runstate="Runnable" seed="350591044" result="Failed" start-time="2026-09-16 19:21:44Z" end-time="2026-09-16 19:21:44Z" duration="0.000223" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: String containing "recorded decision was rejected"
+  But was:  "No recorded explanation is available."
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4C2Tests.Outcomes_HaveHandSpecifiedMeaning (OpenEmpires.ExplanationOutcome outcome, System.String meaning) [0x00034] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4C2Tests.cs:39
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1556" name="Outcomes_HaveHandSpecifiedMeaning(TransitionRefused,&quot;blocked before submission&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4C2Tests.Outcomes_HaveHandSpecifiedMeaning(TransitionRefused,&quot;blocked before submission&quot;)" methodname="Outcomes_HaveHandSpecifiedMeaning" classname="OpenEmpires.Tests.CommanderPhase4C2Tests" runstate="Runnable" seed="2119500285" result="Failed" start-time="2026-09-16 19:21:44Z" end-time="2026-09-16 19:21:44Z" duration="0.000437" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: String containing "blocked before submission"
+  But was:  "No recorded explanation is available."
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4C2Tests.Outcomes_HaveHandSpecifiedMeaning (OpenEmpires.ExplanationOutcome outcome, System.String meaning) [0x00034] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4C2Tests.cs:39
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1557" name="Outcomes_HaveHandSpecifiedMeaning(PlannerRejected,&quot;planner rejected the submitted intent&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4C2Tests.Outcomes_HaveHandSpecifiedMeaning(PlannerRejected,&quot;planner rejected the submitted intent&quot;)" methodname="Outcomes_HaveHandSpecifiedMeaning" classname="OpenEmpires.Tests.CommanderPhase4C2Tests" runstate="Runnable" seed="1342229109" result="Failed" start-time="2026-09-16 19:21:44Z" end-time="2026-09-16 19:21:44Z" duration="0.000287" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: String containing "planner rejected the submitted intent"
+  But was:  "No recorded explanation is available."
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4C2Tests.Outcomes_HaveHandSpecifiedMeaning (OpenEmpires.ExplanationOutcome outcome, System.String meaning) [0x00034] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4C2Tests.cs:39
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1558" name="Outcomes_HaveHandSpecifiedMeaning(PlanCreated,&quot;created plan #8 (CavalryPressure)&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4C2Tests.Outcomes_HaveHandSpecifiedMeaning(PlanCreated,&quot;created plan #8 (CavalryPressure)&quot;)" methodname="Outcomes_HaveHandSpecifiedMeaning" classname="OpenEmpires.Tests.CommanderPhase4C2Tests" runstate="Runnable" seed="1551635624" result="Failed" start-time="2026-09-16 19:21:44Z" end-time="2026-09-16 19:21:44Z" duration="0.000175" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: String containing "created plan #8 (CavalryPressure)"
+  But was:  "No recorded explanation is available."
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4C2Tests.Outcomes_HaveHandSpecifiedMeaning (OpenEmpires.ExplanationOutcome outcome, System.String meaning) [0x00034] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4C2Tests.cs:39
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1559" name="Outcomes_HaveHandSpecifiedMeaning(SelectionNotSubmitted,&quot;selected but was not submitted&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4C2Tests.Outcomes_HaveHandSpecifiedMeaning(SelectionNotSubmitted,&quot;selected but was not submitted&quot;)" methodname="Outcomes_HaveHandSpecifiedMeaning" classname="OpenEmpires.Tests.CommanderPhase4C2Tests" runstate="Runnable" seed="1254084670" result="Failed" start-time="2026-09-16 19:21:44Z" end-time="2026-09-16 19:21:44Z" duration="0.000143" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: String containing "selected but was not submitted"
+  But was:  "No recorded explanation is available."
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4C2Tests.Outcomes_HaveHandSpecifiedMeaning (OpenEmpires.ExplanationOutcome outcome, System.String meaning) [0x00034] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4C2Tests.cs:39
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-case id="1566" name="QuerySemantics_DoNotFabricateRejectionOrAttackAttribution" fullname="OpenEmpires.Tests.CommanderPhase4C2Tests.QuerySemantics_DoNotFabricateRejectionOrAttackAttribution" methodname="QuerySemantics_DoNotFabricateRejectionOrAttackAttribution" classname="OpenEmpires.Tests.CommanderPhase4C2Tests" runstate="Runnable" seed="1559726436" result="Failed" start-time="2026-09-16 19:21:44Z" end-time="2026-09-16 19:21:44Z" duration="0.000403" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "not a rejection"
+  But was:  "No recorded explanation is available."
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4C2Tests.QuerySemantics_DoNotFabricateRejectionOrAttackAttribution () [0x00066] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4C2Tests.cs:135
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1561" name="RejectedPlanHasReason" fullname="OpenEmpires.Tests.CommanderPhase4C2Tests.RejectedPlanHasReason" methodname="RejectedPlanHasReason" classname="OpenEmpires.Tests.CommanderPhase4C2Tests" runstate="Runnable" seed="330408307" result="Failed" start-time="2026-09-16 19:21:44Z" end-time="2026-09-16 19:21:44Z" duration="0.000310" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "No feasible placement was found."
+  But was:  "No recorded explanation is available."
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4C2Tests.RejectedPlanHasReason () [0x00044] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4C2Tests.cs:52
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1567" name="Rendering_IsInvariantAndBounded" fullname="OpenEmpires.Tests.CommanderPhase4C2Tests.Rendering_IsInvariantAndBounded" methodname="Rendering_IsInvariantAndBounded" classname="OpenEmpires.Tests.CommanderPhase4C2Tests" runstate="Runnable" seed="2091841345" result="Failed" start-time="2026-09-16 19:21:44Z" end-time="2026-09-16 19:21:44Z" duration="0.004798" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "450"
+  But was:  "No recorded explanation is available."
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4C2Tests.Rendering_IsInvariantAndBounded () [0x0005f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4C2Tests.cs:153
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1568" name="Service_RejectsNullContextAndInvalidQuery" fullname="OpenEmpires.Tests.CommanderPhase4C2Tests.Service_RejectsNullContextAndInvalidQuery" methodname="Service_RejectsNullContextAndInvalidQuery" classname="OpenEmpires.Tests.CommanderPhase4C2Tests" runstate="Runnable" seed="245472490" result="Passed" start-time="2026-09-16 19:21:44Z" end-time="2026-09-16 19:21:44Z" duration="0.003178" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

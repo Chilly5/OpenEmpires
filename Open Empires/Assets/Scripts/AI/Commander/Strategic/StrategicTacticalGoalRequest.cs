@@ -10,7 +10,7 @@ namespace OpenEmpires
     public sealed class StrategicResourceAllocationGoalRequest : StrategicTacticalGoalRequest
     {
         public ResourceType ResourceType { get; }
-        public int WorkerTarget { get; }
+        public int WorkerTarget { get; internal set; }
 
         public StrategicResourceAllocationGoalRequest(ResourceType resourceType, int workerTarget)
         {
@@ -27,16 +27,25 @@ namespace OpenEmpires
     {
         public BuildingType StructureType { get; }
         public int Count { get; }
+        public bool EnsureExisting { get; }
+        public bool SkipIfAgeUnavailable { get; }
 
-        public StrategicBuildStructureGoalRequest(BuildingType structureType, int count = 1)
+        public StrategicBuildStructureGoalRequest(BuildingType structureType, int count = 1,
+            bool ensureExisting = false, bool skipIfAgeUnavailable = false)
         {
             if (count < 1) throw new ArgumentOutOfRangeException(nameof(count));
             StructureType = structureType;
             Count = count;
+            EnsureExisting = ensureExisting;
+            SkipIfAgeUnavailable = skipIfAgeUnavailable;
         }
 
-        internal override CommanderGoal Submit(CommanderGoalManager goalManager) =>
-            goalManager.SubmitBuildStructure(StructureType, Count);
+        internal override CommanderGoal Submit(CommanderGoalManager goalManager)
+        {
+            BuildStructureGoal goal = goalManager.SubmitBuildStructure(StructureType, Count);
+            if (EnsureExisting) goal.TargetTotal = Count;
+            return goal;
+        }
     }
 
     public sealed class StrategicEnsureUnitCountGoalRequest : StrategicTacticalGoalRequest

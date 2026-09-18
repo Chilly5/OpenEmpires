@@ -1,0 +1,54 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "54c21758e06343599503e37b2789c15d",
+    "status": "failed",
+    "mode": "EditMode",
+    "started_unix_ms": 1789465414113,
+    "finished_unix_ms": 1789465418868,
+    "last_update_unix_ms": 1789465418868,
+    "progress": {
+      "completed": 7,
+      "total": 7,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1789465418260,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4B2Tests.TacticalPunctuationWhitespace_RemainsSupported(\"build barracks !\")",
+      "last_finished_unix_ms": 1789465418548,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase4B2Tests.ConvertedRecommendation_CannotEnterDirectPlayerRoute",
+          "message": "  Expected: null\r\n  But was:  <OpenEmpires.StrategicIntentSubmission>\r\n"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase4B2Tests.LegacyPlayerRequests_ReceiveFreshIdsAfterAIAllocation",
+          "message": "  This strategic identity is reserved or has already been used.\r\n  Expected: True\r\n  But was:  False\r\n"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase4B2Tests.ReinitializedChat_IgnoresOldTacticalPublication",
+          "message": "  Expected: same as <OpenEmpires.CommanderAIChatSubmission>\r\n  But was:  <OpenEmpires.CommanderAIChatSubmission>\r\n"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase4B2Tests.TacticalPunctuationWhitespace_RemainsSupported(\"make 10 spearmen !\")",
+          "message": "  Expected: Tactical\r\n  But was:  Rejected\r\n"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase4B2Tests.TacticalPunctuationWhitespace_RemainsSupported(\"put 8 villagers on wood .\")",
+          "message": "  Expected: Tactical\r\n  But was:  Rejected\r\n"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase4B2Tests.TacticalPunctuationWhitespace_RemainsSupported(\"build barracks !\")",
+          "message": "  Expected: Tactical\r\n  But was:  Rejected\r\n"
+        }
+      ],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": null
+  },
+  "hint": null
+}

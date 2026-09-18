@@ -1,0 +1,339 @@
+warning: in the working copy of 'D:\unity_projects\OpenEmpires\Open Empires\Docs\CommanderPhase4C\phase4c1-task1-before\Assets\Scripts\AI\Commander\Phase4A\CommanderChatUI.cs.before.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'D:\unity_projects\OpenEmpires\Open Empires\Assets\Scripts\AI\Commander\Phase4A\CommanderChatUI.cs', LF will be replaced by CRLF the next time Git touches it
+diff --git "a/D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderPhase4C\\phase4c1-task1-before\\Assets\\Scripts\\AI\\Commander\\Phase4A\\CommanderChatUI.cs.before.txt" "b/D:\\unity_projects\\OpenEmpires\\Open Empires\\Assets\\Scripts\\AI\\Commander\\Phase4A\\CommanderChatUI.cs"
+index adf2d4b..108f2a2 100644
+--- "a/D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderPhase4C\\phase4c1-task1-before\\Assets\\Scripts\\AI\\Commander\\Phase4A\\CommanderChatUI.cs.before.txt"	
++++ "b/D:\\unity_projects\\OpenEmpires\\Open Empires\\Assets\\Scripts\\AI\\Commander\\Phase4A\\CommanderChatUI.cs"	
+@@ -1,45 +1,51 @@
+ using System.Collections;
++using System.Collections.Generic;
+ using System.Text;
++using System.Text.RegularExpressions;
+ using System.Threading;
+ using System.Threading.Tasks;
+ using TMPro;
+ using UnityEngine;
+ using UnityEngine.UI;
+ 
+ namespace OpenEmpires
+ {
+     // Local-only Commander surface. It neither reads nor writes multiplayer chat and
+     // never sends network messages. Accepted intents enter the existing dispatcher.
+     public sealed class CommanderChatUI : MonoBehaviour
+     {
++        private const int TranscriptCapacity = 64;
++        private const int TranscriptMessageMaximum = 32768;
+         private static CommanderChatUI instance;
+         private readonly StringBuilder transcript = new StringBuilder();
++        private readonly List<string> transcriptEntries = new List<string>();
+         private GameObject canvasRoot;
+         private TMP_Text transcriptText;
+         private TMP_InputField inputField;
+         private Button sendButton;
+         private CommanderAIIntentAdapter adapter;
+         private CancellationTokenSource lifetime;
+         private Coroutine bootstrapWait;
+         private readonly CommanderIntentRouter intentRouter = new CommanderIntentRouter();
+         private StrategicAIApprovalBridge strategicBridge;
+         private StrategicPipeline strategicPipeline;
+         private Button approveStrategyButton;
+         private Button confirmStrategyButton;
+         private Button dismissStrategyButton;
+         private bool submitting;
+         private int runtimeGeneration;
+ 
+         public StrategicAIProviderResult LatestStrategicInterpretation { get; private set; }
+         public StrategicDecisionRecord LatestStrategicDecision { get; private set; }
+         public StrategicIntent PendingStrategicIntent => strategicBridge?.PendingIntent;
++        public ConversationState Conversation { get; private set; } = new ConversationState(0);
+ 
+         public string DisplayedTranscript => transcriptText != null
+             ? transcriptText.text : transcript.ToString();
+         public string InputText
+         {
+             get => inputField != null ? inputField.text : string.Empty;
+             set { if (inputField != null) inputField.text = value ?? string.Empty; }
+         }
+         public CommanderAIChatSubmission LatestSubmission { get; private set; }
+         public bool IsReady => adapter != null;
+@@ -89,60 +95,98 @@ namespace OpenEmpires
+         {
+             // Awake is not invoked for a MonoBehaviour added by an EditMode test.
+             // Keeping initialization idempotent also makes programmatic local hosts safe.
+             EnsureLocalSurface();
+             runtimeGeneration++;
+             lifetime.Cancel();
+             lifetime.Dispose();
+             lifetime = new CancellationTokenSource();
+             strategicBridge?.Dispose();
+             strategicBridge = null;
+-            strategicPipeline = null;
++            DetachStrategicPipeline();
++            adapter?.ResetHistory();
++            Conversation?.Reset();
++            transcriptEntries.Clear();
++            transcript.Clear();
++            if (transcriptText != null) transcriptText.text = string.Empty;
+             submitting = false;
+             adapter = new CommanderAIIntentAdapter(provider, simulation, goalManager, dispatcher,
+                 null, providerTimeout);
++            Conversation = new ConversationState(goalManager.PlayerId);
++            LatestStrategicInterpretation = null;
++            LatestStrategicDecision = null;
++            LatestSubmission = null;
+             inputField.interactable = true;
+             sendButton.interactable = true;
+             canvasRoot.SetActive(true);
+             if (transcript.Length == 0)
+                 AppendLine("Commander", provider is GeminiAIProvider
+                     ? "Gemini translator ready."
+-                    : "Local mock translator ready.");
++                    : "Local mock translator ready.", false);
+         }
+ 
+         public void InitializeStrategic(IStrategicAIInterpreter interpreter, StrategicPipeline pipeline,
+             System.TimeSpan? providerTimeout = null)
+         {
++            runtimeGeneration++;
++            lifetime?.Cancel();
++            lifetime?.Dispose();
++            lifetime = new CancellationTokenSource();
+             strategicBridge?.Dispose();
++            DetachStrategicPipeline();
+             strategicPipeline = pipeline ?? throw new System.ArgumentNullException(nameof(pipeline));
+             strategicBridge = new StrategicAIApprovalBridge(interpreter, pipeline.StrategicPlanner.IntentIds,
+-                () => pipeline.CaptureContext(), providerTimeout);
++                () => pipeline.CaptureContext(), providerTimeout,
++                () => Conversation?.Snapshot() ?? System.Array.Empty<MemoryEntry>());
++            strategicPipeline.EvaluationCompleted += OnStrategicEvaluationCompleted;
++            submitting = false;
++            if (inputField != null) inputField.interactable = adapter != null;
++            if (sendButton != null) sendButton.interactable = adapter != null;
+             UpdateStrategicControls();
+         }
+ 
+         private void EnsureLocalSurface()
+         {
+             if (lifetime == null) lifetime = new CancellationTokenSource();
+             if (canvasRoot == null) BuildUI();
+         }
+ 
+         public async Task<CommanderAIChatSubmission> SubmitMessageAsync(string message)
+         {
+             if (adapter == null)
+             {
+                 LatestSubmission = null;
+                 AppendLine("Commander", "Commander runtime is not ready yet.");
+                 return null;
+             }
+ 
+             string trimmed = (message ?? string.Empty).Trim();
+             if (trimmed.Length == 0) return null;
++            string wholeForm = NormalizeWholeForm(trimmed);
++            if (wholeForm == "clear memory")
++            {
++                ResetConversation();
++                return null;
++            }
++            if (wholeForm == "show memory")
++            {
++                AppendLine("Player", trimmed, false);
++                AppendLine("Commander", Conversation.Memory.ToJson(), false);
++                return null;
++            }
++            if (wholeForm == "focus cavalry")
++            {
++                AppendLine("Player", trimmed);
++                Conversation.Memory.RecordCavalryPreference();
++                AppendLine("Commander", "Cavalry attack focus remembered for this match.");
++                return null;
++            }
+             if (submitting) return null;
+             submitting = true;
+             int generation = runtimeGeneration;
+             strategicBridge?.ClearPending();
+             LatestStrategicInterpretation = null;
+             LatestStrategicDecision = null;
+             LatestSubmission = null;
+             UpdateStrategicControls();
+             AppendLine("Player", trimmed);
+             inputField.interactable = false;
+@@ -155,20 +199,26 @@ namespace OpenEmpires
+                     AppendLine("Commander", "Unsupported or mixed Commander request.");
+                     return null;
+                 }
+                 if (route == CommanderTextRoute.Strategic)
+                 {
+                     if (strategicBridge == null)
+                     {
+                         AppendLine("Commander", "Strategic Commander is not ready.");
+                         return null;
+                     }
++                    if (IsGenericAttack(wholeForm)
++                        && !Conversation.TryGetCavalryPreference(out _))
++                    {
++                        AppendLine("Commander", "Choose the supported attack focus first: focus cavalry.");
++                        return null;
++                    }
+                     var result = await strategicBridge.TranslateAsync(trimmed, lifetime.Token);
+                     if (this == null || generation != runtimeGeneration || lifetime.IsCancellationRequested) return null;
+                     LatestStrategicInterpretation = result;
+                     AppendLine("Commander", result.Success
+                         ? result.Intent.ObjectiveType + " recommendation. No plan started. Approve normally, or explicitly confirm as your command (may replace AI plans, never direct-player plans)."
+                         : result.ExplanationText);
+                     UpdateStrategicControls();
+                     return null;
+                 }
+                 CommanderAIChatSubmission tacticalResult = await adapter.SubmitAsync(trimmed, lifetime.Token);
+@@ -208,52 +258,134 @@ namespace OpenEmpires
+             UpdateStrategicControls();
+             return LatestStrategicDecision;
+         }
+ 
+         public void DismissStrategicRecommendation()
+         {
+             strategicBridge?.ClearPending();
+             UpdateStrategicControls();
+         }
+ 
++        public void ResetConversation()
++        {
++            runtimeGeneration++;
++            lifetime?.Cancel();
++            lifetime?.Dispose();
++            lifetime = new CancellationTokenSource();
++            Conversation.Reset();
++            adapter?.ResetHistory();
++            transcript.Clear();
++            transcriptEntries.Clear();
++            if (transcriptText != null) transcriptText.text = string.Empty;
++            strategicBridge?.Reset();
++            LatestStrategicInterpretation = null;
++            LatestStrategicDecision = null;
++            LatestSubmission = null;
++            submitting = false;
++            if (inputField != null)
++            {
++                inputField.text = string.Empty;
++                inputField.interactable = adapter != null;
++            }
++            if (sendButton != null) sendButton.interactable = adapter != null;
++            UpdateStrategicControls();
++        }
++
+         private void UpdateStrategicControls()
+         {
+             bool available = !submitting && strategicBridge?.PendingIntent != null;
+             if (approveStrategyButton != null) approveStrategyButton.interactable = available;
+             if (confirmStrategyButton != null) confirmStrategyButton.interactable = available;
+             if (dismissStrategyButton != null) dismissStrategyButton.interactable = available;
+         }
+ 
+         public Task<CommanderAIChatSubmission> SubmitCurrentInputAsync()
+         {
+             return SubmitMessageAsync(InputText);
+         }
+ 
+         private async void SubmitFromUI()
+         {
+             await SubmitCurrentInputAsync();
+         }
+ 
+-        private void AppendLine(string speaker, string message)
++        private void AppendLine(string speaker, string message, bool remember = true)
+         {
+-            if (transcript.Length > 0) transcript.AppendLine().AppendLine();
+-            transcript.Append(speaker).Append(":").AppendLine()
+-                .Append(message ?? string.Empty);
++            string bounded = message ?? string.Empty;
++            if (bounded.Length > TranscriptMessageMaximum)
++                bounded = bounded.Substring(0, TranscriptMessageMaximum);
++            transcriptEntries.Add((speaker ?? string.Empty) + ":" + System.Environment.NewLine + bounded);
++            while (transcriptEntries.Count > TranscriptCapacity) transcriptEntries.RemoveAt(0);
++            transcript.Clear();
++            for (int i = 0; i < transcriptEntries.Count; i++)
++            {
++                if (i > 0) transcript.AppendLine().AppendLine();
++                transcript.Append(transcriptEntries[i]);
++            }
+             if (transcriptText != null)
+                 transcriptText.text = transcript.ToString();
++            if (remember && Conversation != null)
++            {
++                if (speaker == "Player")
++                    Conversation.Memory.RecordConversation(CommanderConversationRole.Player, bounded);
++                else if (speaker == "Commander")
++                    Conversation.Memory.RecordConversation(CommanderConversationRole.Commander, bounded);
++            }
++        }
++
++        private void OnStrategicEvaluationCompleted(StrategicDecisionRecord record)
++        {
++            if (record == null || Conversation == null) return;
++            StrategicIntentSubmission submission = record.Submission;
++            int? intentId = submission?.Intent?.IntentId;
++            int? planId = submission?.CreatedPlan == true
++                ? submission.Plan.StrategicPlanId : null;
++            string objective = submission?.Intent == null
++                ? string.Empty : submission.Intent.ObjectiveType.ToString();
++            string status = submission?.CreatedPlan == true ? "Accepted"
++                : submission != null ? "SubmissionRejected"
++                : !record.TransitionAllowed ? "TransitionRefused"
++                : record.Decision?.HasSelection == true ? "SelectionNotSubmitted" : "Rejected";
++            Conversation.Memory.RecordDecision(status, record.Outcome, intentId, planId, objective);
++            if (submission?.CreatedPlan == true)
++                Conversation.Memory.RecordApprovedStrategy(objective,
++                    submission.Intent.IntentId, submission.Plan.StrategicPlanId, record.Outcome);
+         }
+ 
++        private void DetachStrategicPipeline()
++        {
++            if (strategicPipeline != null)
++                strategicPipeline.EvaluationCompleted -= OnStrategicEvaluationCompleted;
++            strategicPipeline = null;
++        }
++
++        private static string NormalizeWholeForm(string message)
++        {
++            string text = Regex.Replace((message ?? string.Empty).Trim().ToLowerInvariant(), @"\s+", " ");
++            if (text.EndsWith(".", System.StringComparison.Ordinal))
++                text = text.TrimEnd('.').TrimEnd();
++            return text;
++        }
++
++        private static bool IsGenericAttack(string normalized) =>
++            normalized == "prepare attack" || normalized == "prepare an attack";
++
+         private void OnDestroy()
+         {
+             if (bootstrapWait != null) StopCoroutine(bootstrapWait);
+             lifetime?.Cancel();
+             strategicBridge?.Dispose();
++            DetachStrategicPipeline();
++            adapter?.ResetHistory();
++            Conversation?.Reset();
++            transcriptEntries.Clear();
++            transcript.Clear();
+             lifetime?.Dispose();
+             UnitSelectionManager.SetChatFocused(false);
+             if (instance == this) instance = null;
+         }
+ 
+         private void BuildUI()
+         {
+             canvasRoot = new GameObject("CommanderCanvas");
+             canvasRoot.transform.SetParent(transform, false);
+             Canvas canvas = canvasRoot.AddComponent<Canvas>();
+@@ -411,12 +543,10 @@ namespace OpenEmpires
+         private static void SetRect(RectTransform rect, Vector2 anchorMin,
+             Vector2 anchorMax, Vector2 offsetMin, Vector2 offsetMax)
+         {
+             rect.anchorMin = anchorMin;
+             rect.anchorMax = anchorMax;
+             rect.offsetMin = offsetMin;
+             rect.offsetMax = offsetMax;
+         }
+     }
+ }
+-
+-

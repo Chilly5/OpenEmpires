@@ -6,6 +6,7 @@ namespace OpenEmpires
 {
     public static class CommanderIntentCatalog
     {
+        public const int VillagerUnitType = 0;
         public const int SpearmanUnitType = 1;
         public const int ArcherUnitType = 2;
         public const int KnightUnitType = 7;
@@ -35,7 +36,8 @@ namespace OpenEmpires
 
         public static bool IsSupportedUnit(int unitType)
         {
-            return unitType == SpearmanUnitType
+            return unitType == VillagerUnitType
+                || unitType == SpearmanUnitType
                 || unitType == ArcherUnitType
                 || unitType == KnightUnitType;
         }
@@ -45,13 +47,16 @@ namespace OpenEmpires
             return structureType == BuildingType.House
                 || structureType == BuildingType.Barracks
                 || structureType == BuildingType.ArcheryRange
-                || structureType == BuildingType.Stables;
+                || structureType == BuildingType.Stables
+                || structureType == BuildingType.Tower
+                || structureType == BuildingType.TownCenter;
         }
 
         public static string GetUnitDisplayName(int unitType, bool plural = false)
         {
             switch (unitType)
             {
+                case VillagerUnitType: return plural ? "villagers" : "Villager";
                 case SpearmanUnitType: return plural ? "spearmen" : "Spearman";
                 case ArcherUnitType: return plural ? "archers" : "Archer";
                 case KnightUnitType: return plural ? "knights" : "Knight";
@@ -66,6 +71,8 @@ namespace OpenEmpires
                 case BuildingType.House: return "House";
                 case BuildingType.Barracks: return "Barracks";
                 case BuildingType.Stables: return "Stable";
+                case BuildingType.Tower: return "Tower";
+                case BuildingType.TownCenter: return "Town Center";
                 default: return structureType.ToString();
             }
         }
@@ -73,12 +80,26 @@ namespace OpenEmpires
         private static Dictionary<string, int> CreateUnitAliases()
         {
             var aliases = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+            aliases[NormalizeName(KeybindManager.GetUnitTypeDisplayName(VillagerUnitType))]
+                = VillagerUnitType;
             aliases[NormalizeName(KeybindManager.GetUnitTypeDisplayName(SpearmanUnitType))]
                 = SpearmanUnitType;
             aliases[NormalizeName(KeybindManager.GetUnitTypeDisplayName(ArcherUnitType))]
                 = ArcherUnitType;
             aliases[NormalizeName(KeybindManager.GetUnitTypeDisplayName(KnightUnitType))]
                 = KnightUnitType;
+            aliases["villagers"] = VillagerUnitType;
+            aliases["villager"] = VillagerUnitType;
+            aliases["vil"] = VillagerUnitType;
+            aliases["vils"] = VillagerUnitType;
+            aliases["vill"] = VillagerUnitType;
+            aliases["vills"] = VillagerUnitType;
+            aliases["worker"] = VillagerUnitType;
+            aliases["workers"] = VillagerUnitType;
+            aliases["peasant"] = VillagerUnitType;
+            aliases["peasants"] = VillagerUnitType;
+            aliases["builder"] = VillagerUnitType;
+            aliases["builders"] = VillagerUnitType;
             aliases["spearmen"] = SpearmanUnitType;
             aliases["archers"] = ArcherUnitType;
             aliases["knights"] = KnightUnitType;
@@ -91,11 +112,30 @@ namespace OpenEmpires
             aliases[NormalizeName(BuildingType.House.ToString())] = BuildingType.House;
             aliases[NormalizeName(BuildingType.Barracks.ToString())] = BuildingType.Barracks;
             aliases[NormalizeName(BuildingType.Stables.ToString())] = BuildingType.Stables;
+            aliases[NormalizeName(BuildingType.ArcheryRange.ToString())] = BuildingType.ArcheryRange;
+            aliases[NormalizeName(BuildingType.Tower.ToString())] = BuildingType.Tower;
+            aliases[NormalizeName(BuildingType.TownCenter.ToString())] = BuildingType.TownCenter;
             aliases["houses"] = BuildingType.House;
             aliases["barrack"] = BuildingType.Barracks;
             aliases["stable"] = BuildingType.Stables;
             aliases["archery range"] = BuildingType.ArcheryRange;
             aliases["archery ranges"] = BuildingType.ArcheryRange;
+            aliases["tower"] = BuildingType.Tower;
+            aliases["towers"] = BuildingType.Tower;
+            aliases["watchtower"] = BuildingType.Tower;
+            aliases["watch tower"] = BuildingType.Tower;
+            aliases["watchtowers"] = BuildingType.Tower;
+            aliases["watch towers"] = BuildingType.Tower;
+            aliases["guardtower"] = BuildingType.Tower;
+            aliases["guard tower"] = BuildingType.Tower;
+            aliases["guardtowers"] = BuildingType.Tower;
+            aliases["guard towers"] = BuildingType.Tower;
+            aliases["town center"] = BuildingType.TownCenter;
+            aliases["town centers"] = BuildingType.TownCenter;
+            aliases["towncenter"] = BuildingType.TownCenter;
+            aliases["towncenters"] = BuildingType.TownCenter;
+            aliases["tc"] = BuildingType.TownCenter;
+            aliases["tcs"] = BuildingType.TownCenter;
             return aliases;
         }
 

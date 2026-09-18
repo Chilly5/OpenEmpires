@@ -1,0 +1,47 @@
+{
+  "phase": "3 Fix 1.1",
+  "suite": "OpenEmpires.Tests.CommanderPhase3Fix11PlayModeTests",
+  "mode": "PlayMode",
+  "jobId": "3795c9b850964752b6192909e6fc5f73",
+  "resultState": "Passed",
+  "total": 5,
+  "passed": 5,
+  "failed": 0,
+  "skipped": 0,
+  "durationSeconds": 1.3776064,
+  "scenarios": [
+    {
+      "name": "Runtime_StrategicEvaluationRunsEndToEnd",
+      "result": "Passed",
+      "evidence": "A runtime context flowed through evaluation, recommendation, decision, commitment, and planner submission without direct command creation."
+    },
+    {
+      "name": "Runtime_DispatcherStrategicIntentCreatesPlan",
+      "result": "Passed",
+      "evidence": "Strategic text submitted through the shared dispatcher remained strategic and created a plan rather than a gameplay command."
+    },
+    {
+      "name": "Runtime_CavalryPlanStartsWithoutFutureBudget",
+      "result": "Passed",
+      "evidence": "A cavalry plan started with zero Food and Gold because future plan cost is informational; its blocked milestone waited for resources."
+    },
+    {
+      "name": "Runtime_CommitmentPreventsStrategyThrashing",
+      "result": "Passed",
+      "evidence": "A conflicting non-emergency transition during the commitment window was rejected."
+    },
+    {
+      "name": "Runtime_WorkerSelectionIsDeterministicAndBounded",
+      "result": "Passed",
+      "evidence": "Worker selection chose the deterministic nearest valid candidate while keeping expensive path queries within the configured bound."
+    }
+  ],
+  "fullPlayModeRegression": {
+    "jobId": "c1a613ee764045feb415dc44036cafde",
+    "total": 41,
+    "passed": 41,
+    "failed": 0,
+    "skipped": 0,
+    "durationSeconds": 16.1534089
+  }
+}

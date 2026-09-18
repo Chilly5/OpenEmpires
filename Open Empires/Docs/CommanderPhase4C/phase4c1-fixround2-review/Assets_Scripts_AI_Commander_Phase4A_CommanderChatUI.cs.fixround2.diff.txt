@@ -1,0 +1,41 @@
+diff --git a/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs b/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs
+index 42b5431..88fdf9b 100644
+--- a/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs
++++ b/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs
+@@ -207,22 +207,22 @@ namespace OpenEmpires
+                     AppendLine("Commander", "Unsupported or mixed Commander request.");
+                     return null;
+                 }
+                 if (route == CommanderTextRoute.Strategic)
+                 {
+                     if (strategicBridge == null)
+                     {
+                         AppendLine("Commander", "Strategic Commander is not ready.");
+                         return null;
+                     }
+-                    var result = await strategicBridge.TranslateAsync(trimmed, lifetime.Token,
+-                        memoryAtTurnStart);
++                    var result = await strategicBridge.TranslateWithMemoryAsync(trimmed,
++                        memoryAtTurnStart, lifetime.Token);
+                     if (this == null || generation != runtimeGeneration || lifetime.IsCancellationRequested) return null;
+                     LatestStrategicInterpretation = result;
+                     AppendLine("Commander", result.Success
+                         ? result.Intent.ObjectiveType + " recommendation. No plan started. Approve normally, or explicitly confirm as your command (may replace AI plans, never direct-player plans)."
+                         : result.ExplanationText);
+                     UpdateStrategicControls();
+                     return null;
+                 }
+                 CommanderAIChatSubmission tacticalResult = await adapter.SubmitAsync(trimmed, lifetime.Token);
+                 if (this != null && generation == runtimeGeneration)
+@@ -545,11 +545,10 @@ namespace OpenEmpires
+         private static void SetRect(RectTransform rect, Vector2 anchorMin,
+             Vector2 anchorMax, Vector2 offsetMin, Vector2 offsetMax)
+         {
+             rect.anchorMin = anchorMin;
+             rect.anchorMax = anchorMax;
+             rect.offsetMin = offsetMin;
+             rect.offsetMax = offsetMax;
+         }
+     }
+ }
+-

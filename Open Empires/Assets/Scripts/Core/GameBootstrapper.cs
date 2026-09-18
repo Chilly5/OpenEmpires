@@ -20,6 +20,8 @@ namespace OpenEmpires
         public int PlayerCount => playerCount;
         public CommanderGoalManager Commander { get; private set; }
         public StrategicPlanner StrategicCommander { get; private set; }
+        public StrategicPipeline CommanderStrategicPipeline { get; private set; }
+        public CommanderIntentDispatcher CommanderDispatcher { get; private set; }
         [SerializeField] private bool submitCommanderGoalOnStart;
         [SerializeField] private int commanderSpearmanTarget = 10;
         private int debugCommanderGoalId = -1;
@@ -58,22 +60,55 @@ namespace OpenEmpires
                 return;
             }
             Instance = this;
-            // Simulation created lazily in Update() after playerCount is finalized
+        }
+
+        public void DisposeCommanderSystems()
+        {
+            if (CommanderDispatcher != null)
+            {
+                CommanderDispatcher.Dispose();
+                CommanderDispatcher = null;
+            }
+            if (CommanderStrategicPipeline != null)
+            {
+                CommanderStrategicPipeline.Dispose();
+                CommanderStrategicPipeline = null;
+            }
+            if (StrategicCommander != null)
+            {
+                StrategicCommander.Dispose();
+                StrategicCommander = null;
+            }
+            if (Commander != null)
+            {
+                Commander.Dispose();
+                Commander = null;
+            }
+        }
+
+        public void ShutdownMatch()
+        {
+            DisposeCommanderSystems();
+            if (Simulation != null)
+            {
+                Simulation.OnMatchEnded -= HandleSinglePlayerMatchEnded;
+                Simulation = null;
+            }
+            teamsApplied = false;
+            desyncLogged = false;
+            sentCommandsForTick = -1;
+            localCommandsThisTick.Clear();
+            tickCommandsBuffer.Clear();
+            pendingTicks.Clear();
         }
 
         private void OnDestroy()
         {
             if (Instance == this) Instance = null;
-            StrategicCommander?.Dispose();
+            ShutdownMatch();
             var mm = MatchmakingManager.Instance;
             if (mm != null)
                 mm.OnPlayerDisconnected -= OnPlayerDisconnectedFromServer;
-
-            // Clean up single player analytics subscription
-            if (Simulation != null)
-            {
-                Simulation.OnMatchEnded -= HandleSinglePlayerMatchEnded;
-            }
         }
 
         public void SetPlayerCount(int count)
@@ -125,8 +160,17 @@ namespace OpenEmpires
                 int localPlayerId = networkManager != null && networkManager.IsMultiplayer
                     ? networkManager.LocalPlayerId : 0;
                 Commander = new CommanderGoalManager(Simulation, localPlayerId);
+                var commitmentPolicy = new StrategicCommitmentPolicy();
                 StrategicCommander = new StrategicPlanner(Commander,
-                    resourceType => GetStrategicResourceAmount(localPlayerId, resourceType));
+                    resourceType => GetStrategicResourceAmount(localPlayerId, resourceType),
+                    commitmentPolicy: commitmentPolicy);
+                CommanderStrategicPipeline = new StrategicPipeline(Simulation, Commander,
+                    StrategicCommander, commitmentPolicy: commitmentPolicy);
+                CommanderDispatcher = new CommanderIntentDispatcher(Simulation, Commander,
+                    strategicPlanner: StrategicCommander);
+                CommanderStrategicPipeline.EvaluationTrigger.FireTrigger(
+                    StrategicEvaluationTriggerType.WorldStateChange,
+                    "Commander runtime initialized.");
                 if (submitCommanderGoalOnStart)
                     debugCommanderGoalId = Commander.SubmitEnsureUnitCount(1, commanderSpearmanTarget).GoalId;
 
@@ -214,6 +258,7 @@ namespace OpenEmpires
                 }
                 else
                 {
+                    CommanderStrategicPipeline?.Tick(Simulation.CurrentTick);
                     Commander?.Tick(Simulation.CurrentTick);
                     Simulation.Tick();
                     NetworkDiagnostics.Instance?.RecordTick();
@@ -275,6 +320,7 @@ namespace OpenEmpires
             // Flush and send local commands for the future tick
             if (sentCommandsForTick < commandTick)
             {
+                CommanderStrategicPipeline?.Tick(currentTick);
                 Commander?.Tick(currentTick);
                 localCommandsThisTick.Clear();
                 localCommandsThisTick.AddRange(Simulation.CommandBuffer.FlushCommands());

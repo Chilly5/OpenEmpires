@@ -6,10 +6,12 @@ namespace OpenEmpires
     public enum StrategicMilestoneStatus
     {
         Pending,
+        WaitingForResources,
         Active,
         Completed,
         Failed,
-        Skipped
+        Skipped,
+        WaitingForPrerequisite
     }
 
     public sealed class StrategicMilestone
@@ -18,6 +20,12 @@ namespace OpenEmpires
         private readonly List<int> completedChildGoals = new List<int>();
         private readonly List<StrategicTacticalGoalRequest> tacticalGoals =
             new List<StrategicTacticalGoalRequest>();
+        private readonly List<StrategicResourceRequirement> requiredResources =
+            new List<StrategicResourceRequirement>();
+        private readonly List<int> resourceReservationIds =
+            new List<int>();
+        private bool tacticalGoalsStarted;
+        private readonly HashSet<int> startedRequests = new HashSet<int>();
 
         public int MilestoneId { get; }
         public string Name { get; }
@@ -26,6 +34,14 @@ namespace OpenEmpires
         public IReadOnlyList<int> RequiredChildGoals => requiredChildGoals;
         public IReadOnlyList<int> CompletedChildGoals => completedChildGoals;
         public IReadOnlyList<StrategicTacticalGoalRequest> TacticalGoals => tacticalGoals;
+        public IReadOnlyList<StrategicResourceRequirement> RequiredResources => requiredResources;
+        public IReadOnlyList<int> ResourceReservationIds => resourceReservationIds;
+        public bool HasActiveRequirements => requiredResources.Count > 0;
+        internal bool TacticalGoalsStarted => tacticalGoalsStarted;
+        internal bool RequirementsResolved { get; set; }
+        internal bool UsesCanonicalRequirements { get; set; }
+        internal void ClearRequirements() => requiredResources.Clear();
+        internal bool StartRequest(int index) => startedRequests.Add(index);
 
         internal bool IsSatisfied => requiredChildGoals.Count == completedChildGoals.Count;
 
@@ -61,6 +77,26 @@ namespace OpenEmpires
         {
             if (requiredChildGoals.Contains(goalId) && !completedChildGoals.Contains(goalId))
                 completedChildGoals.Add(goalId);
+        }
+
+        public void AddRequiredResource(ResourceType resourceType, int amount)
+        {
+            for (int i = 0; i < requiredResources.Count; i++)
+                if (requiredResources[i].ResourceType == resourceType)
+                    throw new InvalidOperationException("A milestone can define only one requirement per resource type.");
+            requiredResources.Add(new StrategicResourceRequirement(resourceType, amount));
+        }
+
+        internal void AddResourceReservation(int reservationId)
+        {
+            if (reservationId < 1) throw new ArgumentOutOfRangeException(nameof(reservationId));
+            if (!resourceReservationIds.Contains(reservationId))
+                resourceReservationIds.Add(reservationId);
+        }
+
+        internal void MarkTacticalGoalsStarted()
+        {
+            tacticalGoalsStarted = true;
         }
     }
 }

@@ -21,6 +21,7 @@ namespace OpenEmpires
         public int ArmyStrengthEstimate { get; }
         public StrategicDefenseState Defense { get; }
         public StrategicThreatState Threat { get; }
+        public IReadOnlyList<StrategicFeasibility> Feasibility { get; }
         public string InformationBoundary =>
             "Owned state plus currently visible resource nodes and enemy military aggregates; "
             + "no hidden, explored-only, or predicted enemy data.";
@@ -30,7 +31,8 @@ namespace OpenEmpires
             List<StrategicMilitaryState> military, List<StrategicProductionState> production,
             List<StrategicPlanState> activePlans, List<StrategicVisibleResourceState> visibleResources,
             List<StrategicWorkerAllocationState> workerAllocation, int totalWorkers,
-            StrategicDefenseState defense, StrategicThreatState threat)
+            StrategicDefenseState defense, StrategicThreatState threat,
+            IReadOnlyList<StrategicFeasibility> feasibility = null)
         {
             PlayerId = playerId;
             SnapshotTick = snapshotTick;
@@ -51,6 +53,8 @@ namespace OpenEmpires
             }
             Defense = defense ?? throw new ArgumentNullException(nameof(defense));
             Threat = threat ?? throw new ArgumentNullException(nameof(threat));
+            Feasibility = feasibility == null ? Array.Empty<StrategicFeasibility>()
+                : new List<StrategicFeasibility>(feasibility).AsReadOnly();
         }
 
         public string ToJson() => Newtonsoft.Json.JsonConvert.SerializeObject(this,
@@ -189,10 +193,13 @@ namespace OpenEmpires
     public sealed class StrategicPlanState
     {
         public int StrategicPlanId { get; }
+        public StrategicPlanAuthority Authority { get; }
+        public StrategicIntentSource Source { get; }
         public string PlanType { get; }
         public string Status { get; }
         public string CurrentMilestone { get; }
         public string MilestoneStatus { get; }
+        public string Reason { get; }
         public IReadOnlyList<StrategicRequirementState> RequiredResources { get; }
         public IReadOnlyList<StrategicReservationState> Reservations { get; }
 
@@ -201,10 +208,13 @@ namespace OpenEmpires
             List<StrategicReservationState> reservations)
         {
             StrategicPlanId = plan.StrategicPlanId;
+            Authority = plan.Authority;
+            Source = plan.Source;
             PlanType = plan.PlanType.ToString();
             Status = plan.Status.ToString();
             CurrentMilestone = plan.CurrentMilestone?.Name ?? string.Empty;
             MilestoneStatus = plan.CurrentMilestone?.Status.ToString() ?? string.Empty;
+            Reason = plan.OutcomeMessage;
             RequiredResources = requirements.AsReadOnly();
             Reservations = reservations.AsReadOnly();
         }

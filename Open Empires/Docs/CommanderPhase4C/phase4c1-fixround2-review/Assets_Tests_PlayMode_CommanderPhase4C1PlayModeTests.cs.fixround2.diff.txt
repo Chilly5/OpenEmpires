@@ -1,0 +1,101 @@
+diff --git a/Assets/Tests/PlayMode/CommanderPhase4C1PlayModeTests.cs b/Assets/Tests/PlayMode/CommanderPhase4C1PlayModeTests.cs
+index dd0a9a8..a1fe2d5 100644
+--- a/Assets/Tests/PlayMode/CommanderPhase4C1PlayModeTests.cs
++++ b/Assets/Tests/PlayMode/CommanderPhase4C1PlayModeTests.cs
+@@ -132,20 +132,47 @@ namespace OpenEmpires.Tests
+ 
+             chat.DismissStrategicRecommendation();
+             Task<CommanderAIChatSubmission> second = chat.SubmitMessageAsync("prepare attack");
+             while (!second.IsCompleted) yield return null;
+             Assert.That(provider.CallCount, Is.EqualTo(1),
+                 "A later turn must observe normal bounded-memory eviction.");
+             Assert.That(chat.PendingStrategicIntent, Is.Null);
+             AssertNoExecution();
+         }
+ 
++        [UnityTest]
++        public IEnumerator GenericAttackWhitespace_RequiresRetainedPreferenceBeforeProviderCall()
++        {
++            var provider = new ValidCavalryProvider();
++            chat.InitializeStrategic(provider, pipeline);
++
++            Task<CommanderAIChatSubmission> withoutPreference =
++                chat.SubmitMessageAsync("prepare    attack");
++            while (!withoutPreference.IsCompleted) yield return null;
++            Assert.That(provider.CallCount, Is.Zero,
++                "A generic request without retained focus must be rejected before any provider.");
++            Assert.That(chat.PendingStrategicIntent, Is.Null);
++            AssertNoExecution();
++
++            Task<CommanderAIChatSubmission> preference = chat.SubmitMessageAsync("focus cavalry");
++            while (!preference.IsCompleted) yield return null;
++            Task<CommanderAIChatSubmission> withPreference =
++                chat.SubmitMessageAsync("prepare    attack");
++            while (!withPreference.IsCompleted) yield return null;
++            Assert.That(provider.CallCount, Is.EqualTo(1));
++            Assert.That(provider.LastRequest.MemorySnapshot.Any(entry =>
++                entry.CavalryPreference == CommanderCavalryPreference.Cavalry), Is.True);
++            Assert.That(chat.PendingStrategicIntent, Is.Not.Null);
++            Assert.That(chat.PendingStrategicIntent.Parameters["focus"], Is.EqualTo("cavalry"));
++            AssertNoExecution();
++        }
++
+         [UnityTest]
+         public IEnumerator QueriesAndPreference_DoNotErasePendingRecommendation()
+         {
+             chat.InitializeStrategic(new MockStrategicAIProvider(), pipeline);
+             Task<CommanderAIChatSubmission> prepare = chat.SubmitMessageAsync("prepare defenses");
+             while (!prepare.IsCompleted) yield return null;
+             StrategicIntent pending = chat.PendingStrategicIntent;
+             Assert.That(pending, Is.Not.Null);
+ 
+             Task<CommanderAIChatSubmission> preference = chat.SubmitMessageAsync("focus cavalry");
+@@ -501,20 +528,36 @@ namespace OpenEmpires.Tests
+                 StrategicAIRequest value, CancellationToken cancellationToken)
+             {
+                 request = value;
+                 return completion.Task;
+             }
+             public void Complete() => completion.TrySetResult(StrategicAIJson.Parse(
+                 "{\"intentCategory\":\"Strategic\",\"objectiveType\":\"AttackPreparation\",\"parameters\":{\"focus\":\"cavalry\"}}",
+                 request));
+         }
+ 
++        private sealed class ValidCavalryProvider : IStrategicAIInterpreter
++        {
++            public int CallCount { get; private set; }
++            public StrategicAIRequest LastRequest { get; private set; }
++
++            public Task<StrategicAIProviderResult> InterpretStrategicIntentAsync(
++                StrategicAIRequest request, CancellationToken cancellationToken)
++            {
++                CallCount++;
++                LastRequest = request;
++                return Task.FromResult(StrategicAIJson.Parse(
++                    "{\"intentCategory\":\"Strategic\",\"objectiveType\":\"AttackPreparation\",\"parameters\":{\"focus\":\"cavalry\"}}",
++                    request));
++            }
++        }
++
+         private sealed class DeferredTacticalProvider : ICommanderAIProvider
+         {
+             private readonly TaskCompletionSource<CommanderAIProviderResult> completion =
+                 new TaskCompletionSource<CommanderAIProviderResult>();
+             public Task<CommanderAIProviderResult> TranslateAsync(CommanderAIRequest request,
+                 CancellationToken cancellationToken) => completion.Task;
+             public void Complete() => completion.TrySetResult(CommanderAIProviderResult.Rejected(
+                 CommanderIntentErrorCode.ProviderFailure, "OLD_TACTICAL_MARKER"));
+         }
+ 
+@@ -542,11 +585,10 @@ namespace OpenEmpires.Tests
+             public Task<CommanderAIProviderResult> TranslateAsync(CommanderAIRequest request,
+                 CancellationToken cancellationToken)
+             {
+                 LastRequest = request;
+                 return Task.FromResult(CommanderAIProviderResult.Rejected(
+                     CommanderIntentErrorCode.UnknownCommand, "Test-only rejection."));
+             }
+         }
+     }
+ }
+-

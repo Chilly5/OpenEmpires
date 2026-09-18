@@ -1,0 +1,76 @@
+{
+  "audit": "Commander Phase 4B.2 static boundary audit",
+  "date": "2026-09-15",
+  "baseline": {
+    "manifest": "Docs/CommanderPhase4B2-source-baseline.json",
+    "productionPathCount": 203,
+    "unchangedPathCount": 189,
+    "missingPaths": 0,
+    "changedPathCount": 14,
+    "changedPaths": [
+      "Assets/Scripts/AI/Commander/CommanderIntentDto.cs",
+      "Assets/Scripts/AI/Commander/SimpleTextIntentParser.cs",
+      "Assets/Scripts/AI/Commander/Phase4B1/StrategicAIInterpreter.cs",
+      "Assets/Scripts/AI/Commander/Phase4B1/StrategicAIJson.cs",
+      "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs",
+      "Assets/Scripts/AI/Commander/Strategic/StrategicRecommendation.cs",
+      "Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.cs",
+      "Assets/Scripts/AI/Commander/Strategic/StrategicPlan.cs",
+      "Assets/Scripts/AI/Commander/Strategic/StrategicPipeline.cs",
+      "Assets/Scripts/AI/Commander/Strategic/StrategicIntent.cs",
+      "Assets/Scripts/AI/Commander/Strategic/StrategicDecisionPolicy.cs",
+      "Assets/Scripts/AI/Commander/Strategic/StrategicContextBuilder.cs",
+      "Assets/Scripts/AI/Commander/Strategic/StrategicContext.cs",
+      "Assets/Scripts/AI/Commander/Strategic/StrategicCommitmentPolicy.cs"
+    ],
+    "changedSha256": {
+      "Assets/Scripts/AI/Commander/CommanderIntentDto.cs": "A70E6EF849562E5144E27C86F3A282123CB1958AE696511522EA7299D90DF9CF",
+      "Assets/Scripts/AI/Commander/SimpleTextIntentParser.cs": "90C3B1447C672F4B392C2A2DB3575A98F3127A18CCCA1F4D7F5A1C3A1B63D608",
+      "Assets/Scripts/AI/Commander/Phase4B1/StrategicAIInterpreter.cs": "E57BA29FCB4C6987AFD29DE002CF0E9A68E6766DB34273D02525784C6FBF9C52",
+      "Assets/Scripts/AI/Commander/Phase4B1/StrategicAIJson.cs": "63EAE31055856E79F8FB2E92094AE3468567E48DAE859DCF100C9BFED0F412F6",
+      "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs": "6F82EF26725E7238255F396E5493D14BEF1D1CA0FB6E8175F090F884239F4783"
+    }
+  },
+  "newCommanderProduction": {
+    "count": 7,
+    "files": {
+      "Assets/Scripts/AI/Commander/Phase4B2/CommanderIntentRouter.cs": "84D7DAF9F16500EAD4C8432FF1BD3E0781B4B9226535199BEA8FB5E00D5F2B5C",
+      "Assets/Scripts/AI/Commander/Phase4B2/StrategicAIApprovalBridge.cs": "5545D9BD942B77CEB20353DD3ED757CF6C5501A89F42FEEBD60B788D2A630EB1",
+      "Assets/Scripts/AI/Commander/Phase4B2/StrategicApprovalLayer.cs": "1B1C6BD6BA464BB9D32E260F077AD39AC7B59493BB37DD02F70DD2D80D4C4FC9",
+      "Assets/Scripts/AI/Commander/Strategic/StrategicFeasibility.cs": "1EA3941538151C01B9A728BE37E1101AFB0293FE1938CA44C4CD172EA85095A1",
+      "Assets/Scripts/AI/Commander/Strategic/StrategicIntentIdProvider.cs": "D32CF76EC85CF07E866223D368A76217773862A846F5FCB59839CD97C17EB5C7",
+      "Assets/Scripts/AI/Commander/Strategic/StrategicIntentSource.cs": "BEF9FE405261C795ADC182584FA8F2CF500B6098DE9A3C8C2A9ED544B5952C47",
+      "Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Feasibility.cs": "9EA7C2A8655D4B0366B095C1B4B490A2E5C3110DE61EEAAB7F4B29F241CD21F2"
+    }
+  },
+  "forbiddenHashes": {
+    "Assets/Scripts/Core/GameSimulation.cs": "4DCDB275C3FDF9D229CDDD4F8867D7B6807D6433C2DE66CFFF7653A948AB1CD4",
+    "Assets/Scripts/Commands/CommandBuffer.cs": "B226514893C7CB7ECA479775CB68D1EE5E1B73450679EB26096753577A9AFBBE",
+    "Assets/Scripts/Commands/ICommand.cs": "7878E5A41263542CC9910C8C3EF7BD770598EBFBB057CFB8635D04741723E6CF",
+    "Assets/Scripts/AI/Commander/CommanderPlanner.cs": "5F70E85C738FF5B6896B0BD7B6FD62C50ED8F8452AB406AAB37988AF7E9BC2C6",
+    "Assets/Scripts/AI/Commander/CommanderGoalManager.cs": "31B2B4554F8A6B7E2266AEAB282DF7B1E1CC784451877C879D66BD64E4899190"
+  },
+  "boundary": {
+    "phase4b1b2ExactForbiddenCodeReferenceCount": 0,
+    "providerExecutionServiceReferenceCount": 0,
+    "commentOnlyExecutionBoundaryMentions": 2,
+    "parserDtoStrategicOnlyChange": true,
+    "parserDtoFinding": "In-memory reverse of the two strategic factory-call edits reproduces both baseline hashes; tactical alias expansion is inherited pre-Phase4B2 work, not new drift.",
+    "parserDtoReverseHashMatchesBaseline": {
+      "Assets/Scripts/AI/Commander/SimpleTextIntentParser.cs": true,
+      "Assets/Scripts/AI/Commander/CommanderIntentDto.cs": true
+    },
+    "credentialShapeMatchCount": 0,
+    "envTracked": false,
+    "envIgnoreRulesPresent": true
+  },
+  "verificationManifest": {
+    "commanderProductionFileCount": 53,
+    "phase4b2TestFileCount": 2,
+    "phase4b2Tests": {
+      "Assets/Tests/EditMode/CommanderPhase4B2Tests.cs": "D1754D54779A3E4868E4EF2731416499D855561F9D7E4B9325D1FF8C725D33F7",
+      "Assets/Tests/PlayMode/CommanderPhase4B2PlayModeTests.cs": "A6649C45FB6B1EFEDD06CCBA59B00C3FECAAD88DF2E4A4BACEDB68E9B64C1384"
+    }
+  },
+  "status": "confirmed findings and unknowns only; no readiness claim"
+}

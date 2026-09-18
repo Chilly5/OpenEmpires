@@ -129,7 +129,7 @@ namespace OpenEmpires
                 visibleResources, workerAllocation, totalWorkers,
                 new StrategicDefenseState(defensiveBuildings,
                     militaryStrength + defensiveBuildingStrength),
-                new StrategicThreatState(visibleEnemyMilitary));
+                new StrategicThreatState(visibleEnemyMilitary), planner.QuoteFeasibility(commanderContext));
         }
 
         private static int GetCurrentAmount(CommanderResourceSnapshot resources,

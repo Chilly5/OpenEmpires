@@ -1,0 +1,446 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "2d6ffe92c11d4c2ab6e2ed1a2b6ce783",
+    "status": "succeeded",
+    "mode": "EditMode",
+    "started_unix_ms": 1789421036061,
+    "finished_unix_ms": 1789421051908,
+    "last_update_unix_ms": 1789421051908,
+    "progress": {
+      "completed": 45,
+      "total": 45,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1789421051615,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4B2Tests.UnrelatedQueuedPopulation_IsIncludedInFeasibility",
+      "last_finished_unix_ms": 1789421051855,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": {
+      "mode": "EditMode",
+      "summary": {
+        "total": 45,
+        "passed": 45,
+        "failed": 0,
+        "skipped": 0,
+        "durationSeconds": 11.7058707,
+        "resultState": "Passed"
+      },
+      "results": [
+        {
+          "name": "AffordableMissingProducer_IsQuotedForExistingExecution",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.AffordableMissingProducer_IsQuotedForExistingExecution",
+          "state": "Passed",
+          "durationSeconds": 0.2962701,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "AgeOneDefense_RemainsAvailable",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.AgeOneDefense_RemainsAvailable",
+          "state": "Passed",
+          "durationSeconds": 0.2403514,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "AgeOneExpansion_IsRejectedWithoutPartialPlan",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.AgeOneExpansion_IsRejectedWithoutPartialPlan",
+          "state": "Passed",
+          "durationSeconds": 0.2412626,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "AgeTwoKnights_AreRejectedByCanonicalTrainingAge",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.AgeTwoKnights_AreRejectedByCanonicalTrainingAge",
+          "state": "Passed",
+          "durationSeconds": 0.2402415,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "AIIntent_CannotBecomePlayerOverride",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.AIIntent_CannotBecomePlayerOverride",
+          "state": "Passed",
+          "durationSeconds": 0.2422775,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "AIIntent_CannotUseLegacyPlayerOverrideEntry",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.AIIntent_CannotUseLegacyPlayerOverrideEntry",
+          "state": "Passed",
+          "durationSeconds": 0.243335,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "AIRecommendation_CannotCancelPlayerPlan",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.AIRecommendation_CannotCancelPlayerPlan",
+          "state": "Passed",
+          "durationSeconds": 0.2630806,
+          "message": null,
+          "stackTrace": null,
+          "output": "[StrategicPlanner] Strategic intent #1 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'DefensivePreparation' and started plan #1: DefensivePreparation.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Defense.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+        },
+        {
+          "name": "AIRecommendation_CannotRequestPlannerOverrideFlag",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.AIRecommendation_CannotRequestPlannerOverrideFlag",
+          "state": "Passed",
+          "durationSeconds": 0.2407846,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "AIRecommendation_IsApprovedWhenSafe(AttackPreparation)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.AIRecommendation_IsApprovedWhenSafe(AttackPreparation)",
+          "state": "Passed",
+          "durationSeconds": 0.2410523,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "AIRecommendation_IsApprovedWhenSafe(DefensivePreparation)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.AIRecommendation_IsApprovedWhenSafe(DefensivePreparation)",
+          "state": "Passed",
+          "durationSeconds": 0.2411857,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "AIRecommendation_IsApprovedWhenSafe(EconomicExpansion)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.AIRecommendation_IsApprovedWhenSafe(EconomicExpansion)",
+          "state": "Passed",
+          "durationSeconds": 0.242215,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "AIRecommendation_IsApprovedWhenSafe(MilitaryReinforcement)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.AIRecommendation_IsApprovedWhenSafe(MilitaryReinforcement)",
+          "state": "Passed",
+          "durationSeconds": 0.2421972,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "AIRecommendation_RejectedDuringEmergency",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.AIRecommendation_RejectedDuringEmergency",
+          "state": "Passed",
+          "durationSeconds": 0.2433762,
+          "message": null,
+          "stackTrace": null,
+          "output": "[StrategicPlanner] Strategic intent #1 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'DefensivePreparation' and started plan #1: DefensivePreparation.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Defense.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+        },
+        {
+          "name": "ApprovalLayerDoesNotCreatePlans",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.ApprovalLayerDoesNotCreatePlans",
+          "state": "Passed",
+          "durationSeconds": 0.239806,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ApprovalReplay_DoesNotCreateAnotherPlanOrMutateActiveIntent",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.ApprovalReplay_DoesNotCreateAnotherPlanOrMutateActiveIntent",
+          "state": "Passed",
+          "durationSeconds": 0.2675087,
+          "message": null,
+          "stackTrace": null,
+          "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.\r\n[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+        },
+        {
+          "name": "ApprovedRecommendation_UsesNormalAuthorityAndExactIdentity(AttackPreparation)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.ApprovedRecommendation_UsesNormalAuthorityAndExactIdentity(AttackPreparation)",
+          "state": "Passed",
+          "durationSeconds": 0.2478411,
+          "message": null,
+          "stackTrace": null,
+          "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.\r\n[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+        },
+        {
+          "name": "ApprovedRecommendation_UsesNormalAuthorityAndExactIdentity(DefensivePreparation)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.ApprovedRecommendation_UsesNormalAuthorityAndExactIdentity(DefensivePreparation)",
+          "state": "Passed",
+          "durationSeconds": 0.242994,
+          "message": null,
+          "stackTrace": null,
+          "output": "[StrategicPlanner] Strategic intent #1 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'DefensivePreparation' and started plan #1: DefensivePreparation.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Defense.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+        },
+        {
+          "name": "ConcurrentAllocations_DoNotCollide",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.ConcurrentAllocations_DoNotCollide",
+          "state": "Passed",
+          "durationSeconds": 0.2464618,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "EmergencyDefense_BlocksAttack",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.EmergencyDefense_BlocksAttack",
+          "state": "Passed",
+          "durationSeconds": 0.2431196,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "EvictedIntentIdentity_CannotBeReused",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.EvictedIntentIdentity_CannotBeReused",
+          "state": "Passed",
+          "durationSeconds": 0.3811144,
+          "message": null,
+          "stackTrace": null,
+          "output": "[StrategicPlanner] Strategic intent #1 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'DefensivePreparation' and started plan #1: DefensivePreparation.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Defense.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #1 cancelled.\r\n[Commander] Goal #2 cancelled.\r\n[StrategicPlanner] Plan #1 cancelled.\r\n[StrategicPlanner] Strategic intent #2 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #2 selected template 'DefensivePreparation' and started plan #2: DefensivePreparation.\r\n[StrategicPlanner] Plan #2 milestone active: Economic Defense.\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n[Commander] Goal #4 submitted: ResourceAllocation\r\n[Commander] Goal #3 cancelled.\r\n[Commander] Goal #4 cancelled.\r\n[StrategicPlanner] Plan #2 cancelled.\r\n[StrategicPlanner] Strategic intent #3 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #3 selected template 'DefensivePreparation' and started plan #3: DefensivePreparation.\r\n[StrategicPlanner] Plan #3 milestone active: Economic Defense.\r\n[Commander] Goal #5 submitted: ResourceAllocation\r\n[Commander] Goal #6 submitted: ResourceAllocation\r\n[Commander] Goal #5 cancelled.\r\n[Commander] Goal #6 cancelled.\r\n[StrategicPlanner] Plan #3 cancelled.\r\n[StrategicPlanner] Strategic intent #4 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #4 selected template 'DefensivePreparation' and started plan #4: DefensivePreparation.\r\n[StrategicPlanner] Plan #4 milestone active: Economic Defense.\r\n[Commander] Goal #7 submitted: ResourceAllocation\r\n[Commander] Goal #8 submitted: ResourceAllocation\r\n[Commander] Goal #7 cancelled.\r\n[Commander] Goal #8 cancelled.\r\n[StrategicPlanner] Plan #4 cancelled.\r\n[StrategicPlanner] Strategic intent #5 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #5 selected template 'DefensivePreparation' and started plan #5: DefensivePreparation.\r\n[StrategicPlanner] Plan #5 milestone active: Economic Defense.\r\n[Commander] Goal #9 submitted: ResourceAllocation\r\n[Commander] Goal #10 submitted: ResourceAllocation\r\n[Commander] Goal #9 cancelled.\r\n[Commander] Goal #10 cancelled.\r\n[StrategicPlanner] Plan #5 cancelled.\r\n[StrategicPlanner] Strategic intent #6 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #6 selected template 'DefensivePreparation' and started plan #6: DefensivePreparation.\r\n[StrategicPlanner] Plan #6 milestone active: Economic Defense.\r\n[Commander] Goal #11 submitted: ResourceAllocation\r\n[Commander] Goal #12 submitted: ResourceAllocation\r\n[Commander] Goal #11 cancelled.\r\n[Commander] Goal #12 cancelled.\r\n[StrategicPlanner] Plan #6 cancelled.\r\n[StrategicPlanner] Strategic intent #7 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #7 selected template 'DefensivePreparation' and started plan #7: DefensivePreparation.\r\n[StrategicPlanner] Plan #7 milestone active: Economic Defense.\r\n[Commander] Goal #13 submitted: ResourceAllocation\r\n[Commander] Goal #14 submitted: ResourceAllocation\r\n[Commander] Goal #13 cancelled.\r\n[Commander] Goal #14 cancelled.\r\n[StrategicPlanner] Plan #7 cancelled.\r\n[StrategicPlanner] Strategic intent #8 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #8 selected template 'DefensivePreparation' and started plan #8: DefensivePreparation.\r\n[StrategicPlanner] Plan #8 milestone active: Economic Defense.\r\n[Commander] Goal #15 submitted: ResourceAllocation\r\n[Commander] Goal #16 submitted: ResourceAllocation\r\n[Commander] Goal #15 cancelled.\r\n[Commander] Goal #16 cancelled.\r\n[StrategicPlanner] Plan #8 cancelled.\r\n[StrategicPlanner] Strategic intent #9 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #9 selected template 'DefensivePreparation' and started plan #9: DefensivePreparation.\r\n[StrategicPlanner] Plan #9 milestone active: Economic Defense.\r\n[Commander] Goal #17 submitted: ResourceAllocation\r\n[Commander] Goal #18 submitted: ResourceAllocation\r\n[Commander] Goal #17 cancelled.\r\n[Commander] Goal #18 cancelled.\r\n[StrategicPlanner] Plan #9 cancelled.\r\n[StrategicPlanner] Strategic intent #10 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #10 selected template 'DefensivePreparation' and started plan #10: DefensivePreparation.\r\n[StrategicPlanner] Plan #10 milestone active: Economic Defense.\r\n[Commander] Goal #19 submitted: ResourceAllocation\r\n[Commander] Goal #20 submitted: ResourceAllocation\r\n[Commander] Goal #19 cancelled.\r\n[Commander] Goal #20 cancelled.\r\n[StrategicPlanner] Plan #10 cancelled.\r\n[StrategicPlanner] Strategic intent #11 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #11 selected template 'DefensivePreparation' and started plan #11: DefensivePreparation.\r\n[StrategicPlanner] Plan #11 milestone active: Economic Defense.\r\n[Commander] Goal #21 submitted: ResourceAllocation\r\n[Commander] Goal #22 submitted: ResourceAllocation\r\n[Commander] Goal #21 cancelled.\r\n[Commander] Goal #22 cancelled.\r\n[StrategicPlanner] Plan #11 cancelled.\r\n[StrategicPlanner] Strategic intent #12 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #12 selected template 'DefensivePreparation' and started plan #12: DefensivePreparation.\r\n[StrategicPlanner] Plan #12 milestone active: Economic Defense.\r\n[Commander] Goal #23 submitted: ResourceAllocation\r\n[Commander] Goal #24 submitted: ResourceAllocation\r\n[Commander] Goal #23 cancelled.\r\n[Commander] Goal #24 cancelled.\r\n[StrategicPlanner] Plan #12 cancelled.\r\n[StrategicPlanner] Strategic intent #13 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #13 selected template 'DefensivePreparation' and started plan #13: DefensivePreparation.\r\n[StrategicPlanner] Plan #13 milestone active: Economic Defense.\r\n[Commander] Goal #25 submitted: ResourceAllocation\r\n[Commander] Goal #26 submitted: ResourceAllocation\r\n[Commander] Goal #25 cancelled.\r\n[Commander] Goal #26 cancelled.\r\n[StrategicPlanner] Plan #13 cancelled.\r\n[StrategicPlanner] Strategic intent #14 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #14 selected template 'DefensivePreparation' and started plan #14: DefensivePreparation.\r\n[StrategicPlanner] Plan #14 milestone active: Economic Defense.\r\n[Commander] Goal #27 submitted: ResourceAllocation\r\n[Commander] Goal #28 submitted: ResourceAllocation\r\n[Commander] Goal #27 cancelled.\r\n[Commander] Goal #28 cancelled.\r\n[StrategicPlanner] Plan #14 cancelled.\r\n[StrategicPlanner] Strategic intent #15 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #15 selected template 'DefensivePreparation' and started plan #15: DefensivePreparation.\r\n[StrategicPlanner] Plan #15 milestone active: Economic Defense.\r\n[Commander] Goal #29 submitted: ResourceAllocation\r\n[Commander] Goal #30 submitted: ResourceAllocation\r\n[Commander] Goal #29 cancelled.\r\n[Commander] Goal #30 cancelled.\r\n[StrategicPlanner] Plan #15 cancelled.\r\n[StrategicPlanner] Strategic intent #16 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #16 selected template 'DefensivePreparation' and started plan #16: DefensivePreparation.\r\n[StrategicPlanner] Plan #16 milestone active: Economic Defense.\r\n[Commander] Goal #31 submitted: ResourceAllocation\r\n[Commander] Goal #32 submitted: ResourceAllocation\r\n[Commander] Goal #31 cancelled.\r\n[Commander] Goal #32 cancelled.\r\n[StrategicPlanner] Plan #16 cancelled.\r\n[StrategicPlanner] Strategic intent #17 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #17 selected template 'DefensivePreparation' and started plan #17: DefensivePreparation.\r\n[StrategicPlanner] Plan #17 milestone active: Economic Defense.\r\n[Commander] Goal #33 submitted: ResourceAllocation\r\n[Commander] Goal #34 submitted: ResourceAllocation\r\n[Commander] Goal #33 cancelled.\r\n[Commander] Goal #34 cancelled.\r\n[StrategicPlanner] Plan #17 cancelled.\r\n[StrategicPlanner] Strategic intent #18 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #18 selected template 'DefensivePreparation' and started plan #18: DefensivePreparation.\r\n[StrategicPlanner] Plan #18 milestone active: Economic Defense.\r\n[Commander] Goal #35 submitted: ResourceAllocation\r\n[Commander] Goal #36 submitted: ResourceAllocation\r\n[Commander] Goal #35 cancelled.\r\n[Commander] Goal #36 cancelled.\r\n[StrategicPlanner] Plan #18 cancelled.\r\n[StrategicPlanner] Strategic intent #19 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #19 selected template 'DefensivePreparation' and started plan #19: DefensivePreparation.\r\n[StrategicPlanner] Plan #19 milestone active: Economic Defense.\r\n[Commander] Goal #37 submitted: ResourceAllocation\r\n[Commander] Goal #38 submitted: ResourceAllocation\r\n[Commander] Goal #37 cancelled.\r\n[Commander] Goal #38 cancelled.\r\n[StrategicPlanner] Plan #19 cancelled.\r\n[StrategicPlanner] Strategic intent #20 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #20 selected template 'DefensivePreparation' and started plan #20: DefensivePreparation.\r\n[StrategicPlanner] Plan #20 milestone active: Economic Defense.\r\n[Commander] Goal #39 submitted: ResourceAllocation\r\n[Commander] Goal #40 submitted: ResourceAllocation\r\n[Commander] Goal #39 cancelled.\r\n[Commander] Goal #40 cancelled.\r\n[StrategicPlanner] Plan #20 cancelled.\r\n[StrategicPlanner] Strategic intent #21 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #21 selected template 'DefensivePreparation' and started plan #21: DefensivePreparation.\r\n[StrategicPlanner] Plan #21 milestone active: Economic Defense.\r\n[Commander] Goal #41 submitted: ResourceAllocation\r\n[Commander] Goal #42 submitted: ResourceAllocation\r\n[Commander] Goal #41 cancelled.\r\n[Commander] Goal #42 cancelled.\r\n[StrategicPlanner] Plan #21 cancelled.\r\n[StrategicPlanner] Strategic intent #22 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #22 selected template 'DefensivePreparation' and started plan #22: DefensivePreparation.\r\n[StrategicPlanner] Plan #22 milestone active: Economic Defense.\r\n[Commander] Goal #43 submitted: ResourceAllocation\r\n[Commander] Goal #44 submitted: ResourceAllocation\r\n[Commander] Goal #43 cancelled.\r\n[Commander] Goal #44 cancelled.\r\n[StrategicPlanner] Plan #22 cancelled.\r\n[StrategicPlanner] Strategic intent #23 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #23 selected template 'DefensivePreparation' and started plan #23: DefensivePreparation.\r\n[StrategicPlanner] Plan #23 milestone active: Economic Defense.\r\n[Commander] Goal #45 submitted: ResourceAllocation\r\n[Commander] Goal #46 submitted: ResourceAllocation\r\n[Commander] Goal #45 cancelled.\r\n[Commander] Goal #46 cancelled.\r\n[StrategicPlanner] Plan #23 cancelled.\r\n[StrategicPlanner] Strategic intent #24 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #24 selected template 'DefensivePreparation' and started plan #24: DefensivePreparation.\r\n[StrategicPlanner] Plan #24 milestone active: Economic Defense.\r\n[Commander] Goal #47 submitted: ResourceAllocation\r\n[Commander] Goal #48 submitted: ResourceAllocation\r\n[Commander] Goal #47 cancelled.\r\n[Commander] Goal #48 cancelled.\r\n[StrategicPlanner] Plan #24 cancelled.\r\n[StrategicPlanner] Strategic intent #25 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #25 selected template 'DefensivePreparation' and started plan #25: DefensivePreparation.\r\n[StrategicPlanner] Plan #25 milestone active: Economic Defense.\r\n[Commander] Goal #49 submitted: ResourceAllocation\r\n[Commander] Goal #50 submitted: ResourceAllocation\r\n[Commander] Goal #49 cancelled.\r\n[Commander] Goal #50 cancelled.\r\n[StrategicPlanner] Plan #25 cancelled.\r\n[StrategicPlanner] Strategic intent #26 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #26 selected template 'DefensivePreparation' and started plan #26: DefensivePreparation.\r\n[StrategicPlanner] Plan #26 milestone active: Economic Defense.\r\n[Commander] Goal #51 submitted: ResourceAllocation\r\n[Commander] Goal #52 submitted: ResourceAllocation\r\n[Commander] Goal #51 cancelled.\r\n[Commander] Goal #52 cancelled.\r\n[StrategicPlanner] Plan #26 cancelled.\r\n[StrategicPlanner] Strategic intent #27 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #27 selected template 'DefensivePreparation' and started plan #27: DefensivePreparation.\r\n[StrategicPlanner] Plan #27 milestone active: Economic Defense.\r\n[Commander] Goal #53 submitted: ResourceAllocation\r\n[Commander] Goal #54 submitted: ResourceAllocation\r\n[Commander] Goal #53 cancelled.\r\n[Commander] Goal #54 cancelled.\r\n[StrategicPlanner] Plan #27 cancelled.\r\n[StrategicPlanner] Strategic intent #28 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #28 selected template 'DefensivePreparation' and started plan #28: DefensivePreparation.\r\n[StrategicPlanner] Plan #28 milestone active: Economic Defense.\r\n[Commander] Goal #55 submitted: ResourceAllocation\r\n[Commander] Goal #56 submitted: ResourceAllocation\r\n[Commander] Goal #55 cancelled.\r\n[Commander] Goal #56 cancelled.\r\n[StrategicPlanner] Plan #28 cancelled.\r\n[StrategicPlanner] Strategic intent #29 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #29 selected template 'DefensivePreparation' and started plan #29: DefensivePreparation.\r\n[StrategicPlanner] Plan #29 milestone active: Economic Defense.\r\n[Commander] Goal #57 submitted: ResourceAllocation\r\n[Commander] Goal #58 submitted: ResourceAllocation\r\n[Commander] Goal #57 cancelled.\r\n[Commander] Goal #58 cancelled.\r\n[StrategicPlanner] Plan #29 cancelled.\r\n[StrategicPlanner] Strategic intent #30 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #30 selected template 'DefensivePreparation' and started plan #30: DefensivePreparation.\r\n[StrategicPlanner] Plan #30 milestone active: Economic Defense.\r\n[Commander] Goal #59 submitted: ResourceAllocation\r\n[Commander] Goal #60 submitted: ResourceAllocation\r\n[Commander] Goal #59 cancelled.\r\n[Commander] Goal #60 cancelled.\r\n[StrategicPlanner] Plan #30 cancelled.\r\n[StrategicPlanner] Strategic intent #31 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #31 selected template 'DefensivePreparation' and started plan #31: DefensivePreparation.\r\n[StrategicPlanner] Plan #31 milestone active: Economic Defense.\r\n[Commander] Goal #61 submitted: ResourceAllocation\r\n[Commander] Goal #62 submitted: ResourceAllocation\r\n[Commander] Goal #61 cancelled.\r\n[Commander] Goal #62 cancelled.\r\n[StrategicPlanner] Plan #31 cancelled.\r\n[StrategicPlanner] Strategic intent #32 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #32 selected template 'DefensivePreparation' and started plan #32: DefensivePreparation.\r\n[StrategicPlanner] Plan #32 milestone active: Economic Defense.\r\n[Commander] Goal #63 submitted: ResourceAllocation\r\n[Commander] Goal #64 submitted: ResourceAllocation\r\n[Commander] Goal #63 cancelled.\r\n[Commander] Goal #64 cancelled.\r\n[StrategicPlanner] Plan #32 cancelled.\r\n[StrategicPlanner] Strategic intent #33 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #33 selected template 'DefensivePreparation' and started plan #33: DefensivePreparation.\r\n[StrategicPlanner] Plan #33 milestone active: Economic Defense.\r\n[Commander] Goal #65 submitted: ResourceAllocation\r\n[Commander] Goal #66 submitted: ResourceAllocation\r\n[Commander] Goal #65 cancelled.\r\n[Commander] Goal #66 cancelled.\r\n[StrategicPlanner] Plan #33 cancelled.\r\n[StrategicPlanner] Strategic intent #34 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #34 selected template 'DefensivePreparation' and started plan #34: DefensivePreparation.\r\n[StrategicPlanner] Plan #34 milestone active: Economic Defense.\r\n[Commander] Goal #67 submitted: ResourceAllocation\r\n[Commander] Goal #68 submitted: ResourceAllocation\r\n[Commander] Goal #67 cancelled.\r\n[Commander] Goal #68 cancelled.\r\n[StrategicPlanner] Plan #34 cancelled.\r\n[StrategicPlanner] Strategic intent #35 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #35 selected template 'DefensivePreparation' and started plan #35: DefensivePreparation.\r\n[StrategicPlanner] Plan #35 milestone active: Economic Defense.\r\n[Commander] Goal #69 submitted: ResourceAllocation\r\n[Commander] Goal #70 submitted: ResourceAllocation\r\n[Commander] Goal #69 cancelled.\r\n[Commander] Goal #70 cancelled.\r\n[StrategicPlanner] Plan #35 cancelled.\r\n[StrategicPlanner] Strategic intent #36 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #36 selected template 'DefensivePreparation' and started plan #36: DefensivePreparation.\r\n[StrategicPlanner] Plan #36 milestone active: Economic Defense.\r\n[Commander] Goal #71 submitted: ResourceAllocation\r\n[Commander] Goal #72 submitted: ResourceAllocation\r\n[Commander] Goal #71 cancelled.\r\n[Commander] Goal #72 cancelled.\r\n[StrategicPlanner] Plan #36 cancelled.\r\n[StrategicPlanner] Strategic intent #37 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #37 selected template 'DefensivePreparation' and started plan #37: DefensivePreparation.\r\n[StrategicPlanner] Plan #37 milestone active: Economic Defense.\r\n[Commander] Goal #73 submitted: ResourceAllocation\r\n[Commander] Goal #74 submitted: ResourceAllocation\r\n[Commander] Goal #73 cancelled.\r\n[Commander] Goal #74 cancelled.\r\n[StrategicPlanner] Plan #37 cancelled.\r\n[StrategicPlanner] Strategic intent #38 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #38 selected template 'DefensivePreparation' and started plan #38: DefensivePreparation.\r\n[StrategicPlanner] Plan #38 milestone active: Economic Defense.\r\n[Commander] Goal #75 submitted: ResourceAllocation\r\n[Commander] Goal #76 submitted: ResourceAllocation\r\n[Commander] Goal #75 cancelled.\r\n[Commander] Goal #76 cancelled.\r\n[StrategicPlanner] Plan #38 cancelled.\r\n[StrategicPlanner] Strategic intent #39 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #39 selected template 'DefensivePreparation' and started plan #39: DefensivePreparation.\r\n[StrategicPlanner] Plan #39 milestone active: Economic Defense.\r\n[Commander] Goal #77 submitted: ResourceAllocation\r\n[Commander] Goal #78 submitted: ResourceAllocation\r\n[Commander] Goal #77 cancelled.\r\n[Commander] Goal #78 cancelled.\r\n[StrategicPlanner] Plan #39 cancelled.\r\n[StrategicPlanner] Strategic intent #40 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #40 selected template 'DefensivePreparation' and started plan #40: DefensivePreparation.\r\n[StrategicPlanner] Plan #40 milestone active: Economic Defense.\r\n[Commander] Goal #79 submitted: ResourceAllocation\r\n[Commander] Goal #80 submitted: ResourceAllocation\r\n[Commander] Goal #79 cancelled.\r\n[Commander] Goal #80 cancelled.\r\n[StrategicPlanner] Plan #40 cancelled.\r\n[StrategicPlanner] Strategic intent #41 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #41 selected template 'DefensivePreparation' and started plan #41: DefensivePreparation.\r\n[StrategicPlanner] Plan #41 milestone active: Economic Defense.\r\n[Commander] Goal #81 submitted: ResourceAllocation\r\n[Commander] Goal #82 submitted: ResourceAllocation\r\n[Commander] Goal #81 cancelled.\r\n[Commander] Goal #82 cancelled.\r\n[StrategicPlanner] Plan #41 cancelled.\r\n[StrategicPlanner] Strategic intent #42 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #42 selected template 'DefensivePreparation' and started plan #42: DefensivePreparation.\r\n[StrategicPlanner] Plan #42 milestone active: Economic Defense.\r\n[Commander] Goal #83 submitted: ResourceAllocation\r\n[Commander] Goal #84 submitted: ResourceAllocation\r\n[Commander] Goal #83 cancelled.\r\n[Commander] Goal #84 cancelled.\r\n[StrategicPlanner] Plan #42 cancelled.\r\n[StrategicPlanner] Strategic intent #43 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #43 selected template 'DefensivePreparation' and started plan #43: DefensivePreparation.\r\n[StrategicPlanner] Plan #43 milestone active: Economic Defense.\r\n[Commander] Goal #85 submitted: ResourceAllocation\r\n[Commander] Goal #86 submitted: ResourceAllocation\r\n[Commander] Goal #85 cancelled.\r\n[Commander] Goal #86 cancelled.\r\n[StrategicPlanner] Plan #43 cancelled.\r\n[StrategicPlanner] Strategic intent #44 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #44 selected template 'DefensivePreparation' and started plan #44: DefensivePreparation.\r\n[StrategicPlanner] Plan #44 milestone active: Economic Defense.\r\n[Commander] Goal #87 submitted: ResourceAllocation\r\n[Commander] Goal #88 submitted: ResourceAllocation\r\n[Commander] Goal #87 cancelled.\r\n[Commander] Goal #88 cancelled.\r\n[StrategicPlanner] Plan #44 cancelled.\r\n[StrategicPlanner] Strategic intent #45 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #45 selected template 'DefensivePreparation' and started plan #45: DefensivePreparation.\r\n[StrategicPlanner] Plan #45 milestone active: Economic Defense.\r\n[Commander] Goal #89 submitted: ResourceAllocation\r\n[Commander] Goal #90 submitted: ResourceAllocation\r\n[Commander] Goal #89 cancelled.\r\n[Commander] Goal #90 cancelled.\r\n[StrategicPlanner] Plan #45 cancelled.\r\n[StrategicPlanner] Strategic intent #46 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #46 selected template 'DefensivePreparation' and started plan #46: DefensivePreparation.\r\n[StrategicPlanner] Plan #46 milestone active: Economic Defense.\r\n[Commander] Goal #91 submitted: ResourceAllocation\r\n[Commander] Goal #92 submitted: ResourceAllocation\r\n[Commander] Goal #91 cancelled.\r\n[Commander] Goal #92 cancelled.\r\n[StrategicPlanner] Plan #46 cancelled.\r\n[StrategicPlanner] Strategic intent #47 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #47 selected template 'DefensivePreparation' and started plan #47: DefensivePreparation.\r\n[StrategicPlanner] Plan #47 milestone active: Economic Defense.\r\n[Commander] Goal #93 submitted: ResourceAllocation\r\n[Commander] Goal #94 submitted: ResourceAllocation\r\n[Commander] Goal #93 cancelled.\r\n[Commander] Goal #94 cancelled.\r\n[StrategicPlanner] Plan #47 cancelled.\r\n[StrategicPlanner] Strategic intent #48 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #48 selected template 'DefensivePreparation' and started plan #48: DefensivePreparation.\r\n[StrategicPlanner] Plan #48 milestone active: Economic Defense.\r\n[Commander] Goal #95 submitted: ResourceAllocation\r\n[Commander] Goal #96 submitted: ResourceAllocation\r\n[Commander] Goal #95 cancelled.\r\n[Commander] Goal #96 cancelled.\r\n[StrategicPlanner] Plan #48 cancelled.\r\n[StrategicPlanner] Strategic intent #49 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #49 selected template 'DefensivePreparation' and started plan #49: DefensivePreparation.\r\n[StrategicPlanner] Plan #49 milestone active: Economic Defense.\r\n[Commander] Goal #97 submitted: ResourceAllocation\r\n[Commander] Goal #98 submitted: ResourceAllocation\r\n[Commander] Goal #97 cancelled.\r\n[Commander] Goal #98 cancelled.\r\n[StrategicPlanner] Plan #49 cancelled.\r\n[StrategicPlanner] Strategic intent #50 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #50 selected template 'DefensivePreparation' and started plan #50: DefensivePreparation.\r\n[StrategicPlanner] Plan #50 milestone active: Economic Defense.\r\n[Commander] Goal #99 submitted: ResourceAllocation\r\n[Commander] Goal #100 submitted: ResourceAllocation\r\n[Commander] Goal #99 cancelled.\r\n[Commander] Goal #100 cancelled.\r\n[StrategicPlanner] Plan #50 cancelled.\r\n[StrategicPlanner] Strategic intent #51 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #51 selected template 'DefensivePreparation' and started plan #51: DefensivePreparation.\r\n[StrategicPlanner] Plan #51 milestone active: Economic Defense.\r\n[Commander] Goal #101 submitted: ResourceAllocation\r\n[Commander] Goal #102 submitted: ResourceAllocation\r\n[Commander] Goal #101 cancelled.\r\n[Commander] Goal #102 cancelled.\r\n[StrategicPlanner] Plan #51 cancelled.\r\n[StrategicPlanner] Strategic intent #52 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #52 selected template 'DefensivePreparation' and started plan #52: DefensivePreparation.\r\n[StrategicPlanner] Plan #52 milestone active: Economic Defense.\r\n[Commander] Goal #103 submitted: ResourceAllocation\r\n[Commander] Goal #104 submitted: ResourceAllocation\r\n[Commander] Goal #103 cancelled.\r\n[Commander] Goal #104 cancelled.\r\n[StrategicPlanner] Plan #52 cancelled.\r\n[StrategicPlanner] Strategic intent rejected: This strategic identity is reserved or has already been used.\r\n"
+        },
+        {
+          "name": "ForgedSource_IsRejected",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.ForgedSource_IsRejected",
+          "state": "Passed",
+          "durationSeconds": 0.2402708,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "IdentityExhaustion_FailsWithoutWrapping",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.IdentityExhaustion_FailsWithoutWrapping",
+          "state": "Passed",
+          "durationSeconds": 0.2405584,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ImpossiblePopulationTarget_IsRejected",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.ImpossiblePopulationTarget_IsRejected",
+          "state": "Passed",
+          "durationSeconds": 0.2444554,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "InvalidResources_RejectIntent(AttackPreparation)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.InvalidResources_RejectIntent(AttackPreparation)",
+          "state": "Passed",
+          "durationSeconds": 0.241595,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "InvalidResources_RejectIntent(DefensivePreparation)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.InvalidResources_RejectIntent(DefensivePreparation)",
+          "state": "Passed",
+          "durationSeconds": 0.2409055,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "InvalidResources_RejectIntent(EconomicExpansion)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.InvalidResources_RejectIntent(EconomicExpansion)",
+          "state": "Passed",
+          "durationSeconds": 0.2413194,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "InvalidResources_RejectIntent(MilitaryReinforcement)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.InvalidResources_RejectIntent(MilitaryReinforcement)",
+          "state": "Passed",
+          "durationSeconds": 0.2411756,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "JsonCannotControlIntentSource(\"source\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.JsonCannotControlIntentSource(\"source\")",
+          "state": "Passed",
+          "durationSeconds": 0.2406982,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "JsonCannotControlIntentSource(\"authority\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.JsonCannotControlIntentSource(\"authority\")",
+          "state": "Passed",
+          "durationSeconds": 0.2419266,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "JsonCannotControlIntentSource(\"owner\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.JsonCannotControlIntentSource(\"owner\")",
+          "state": "Passed",
+          "durationSeconds": 0.2457972,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "JsonCannotControlIntentSource(\"playerId\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.JsonCannotControlIntentSource(\"playerId\")",
+          "state": "Passed",
+          "durationSeconds": 0.24188,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "JsonCannotControlIntentSource(\"priority\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.JsonCannotControlIntentSource(\"priority\")",
+          "state": "Passed",
+          "durationSeconds": 0.2412577,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "JsonCannotControlIntentSource(\"intentId\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.JsonCannotControlIntentSource(\"intentId\")",
+          "state": "Passed",
+          "durationSeconds": 0.2407085,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "MultipleAIRequests_CreateUniqueIds",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.MultipleAIRequests_CreateUniqueIds",
+          "state": "Passed",
+          "durationSeconds": 0.2417677,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "OnlyApprovedIntentReachesPlanner",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.OnlyApprovedIntentReachesPlanner",
+          "state": "Passed",
+          "durationSeconds": 0.2444897,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "PendingAIIdentity_CannotBeClaimedByExternalIntent",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.PendingAIIdentity_CannotBeClaimedByExternalIntent",
+          "state": "Passed",
+          "durationSeconds": 0.2733677,
+          "message": null,
+          "stackTrace": null,
+          "output": "[StrategicPlanner] Strategic intent rejected: This strategic identity is reserved or has already been used.\r\n"
+        },
+        {
+          "name": "PlayerAndAIRequests_UseSharedIdentityOwnership",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.PlayerAndAIRequests_UseSharedIdentityOwnership",
+          "state": "Passed",
+          "durationSeconds": 0.2407805,
+          "message": null,
+          "stackTrace": null,
+          "output": "[StrategicPlanner] Strategic intent #2 created: DefensivePreparation for player 0.\r\n"
+        },
+        {
+          "name": "PlayerIntent_OverridesAIRecommendation",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.PlayerIntent_OverridesAIRecommendation",
+          "state": "Passed",
+          "durationSeconds": 0.2480282,
+          "message": null,
+          "stackTrace": null,
+          "output": "[StrategicPlanner] Strategic intent #1 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'DefensivePreparation' and started plan #1: DefensivePreparation.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Defense.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[StrategicPlanner] Strategic intent #2 created: AttackPreparation for player 0.\r\n[Commander] Goal #1 cancelled.\r\n[Commander] Goal #2 cancelled.\r\n[StrategicPlanner] Plan #1 cancelled.\r\n[StrategicPlanner] Intent #2 selected template 'CavalryPressure' and started plan #2: CavalryPressure.\r\n[StrategicPlanner] Reservation #1 created for plan #2: 840 Food.\r\n[StrategicPlanner] Reservation #2 created for plan #2: 600 Gold.\r\n[StrategicPlanner] Plan #2 milestone active: Economic Foundation.\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n[Commander] Goal #4 submitted: ResourceAllocation\r\n[Commander] Goal #5 submitted: ResourceAllocation\r\n"
+        },
+        {
+          "name": "PlayerIntent_ReceivesOverrideAfterApproval",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.PlayerIntent_ReceivesOverrideAfterApproval",
+          "state": "Passed",
+          "durationSeconds": 0.2498889,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "PlayerIntentKeepsPlayerAuthority",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.PlayerIntentKeepsPlayerAuthority",
+          "state": "Passed",
+          "durationSeconds": 0.2445393,
+          "message": null,
+          "stackTrace": null,
+          "output": "[StrategicPlanner] Strategic intent #1 created: DefensivePreparation for player 0.\r\n"
+        },
+        {
+          "name": "PlayerOverride_CanReplacePlan",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.PlayerOverride_CanReplacePlan",
+          "state": "Passed",
+          "durationSeconds": 0.2471758,
+          "message": null,
+          "stackTrace": null,
+          "output": "[StrategicPlanner] Strategic intent #1 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'DefensivePreparation' and started plan #1: DefensivePreparation.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Defense.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[StrategicPlanner] Strategic intent #2 created: AttackPreparation for player 0.\r\n[Commander] Goal #1 cancelled.\r\n[Commander] Goal #2 cancelled.\r\n[StrategicPlanner] Plan #1 cancelled.\r\n[StrategicPlanner] Intent #2 selected template 'CavalryPressure' and started plan #2: CavalryPressure.\r\n[StrategicPlanner] Reservation #1 created for plan #2: 840 Food.\r\n[StrategicPlanner] Reservation #2 created for plan #2: 600 Gold.\r\n[StrategicPlanner] Plan #2 milestone active: Economic Foundation.\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n[Commander] Goal #4 submitted: ResourceAllocation\r\n[Commander] Goal #5 submitted: ResourceAllocation\r\n"
+        },
+        {
+          "name": "RuleBasedPipeline_AllocatesSharedRecommendationIdentity",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.RuleBasedPipeline_AllocatesSharedRecommendationIdentity",
+          "state": "Passed",
+          "durationSeconds": 0.2459357,
+          "message": null,
+          "stackTrace": null,
+          "output": "[StrategicPlanner] Strategic intent #2 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #2 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.\r\n[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n[StrategicPlanner] Strategic intent #3 created: DefensivePreparation for player 0.\r\n"
+        },
+        {
+          "name": "StaleApproval_RechecksResourcesWithoutCancellingExistingPlan",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.StaleApproval_RechecksResourcesWithoutCancellingExistingPlan",
+          "state": "Passed",
+          "durationSeconds": 0.2427323,
+          "message": null,
+          "stackTrace": null,
+          "output": "[StrategicPlanner] Strategic intent #1 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'DefensivePreparation' and started plan #1: DefensivePreparation.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Defense.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[StrategicPlanner] Strategic intent #2 created: AttackPreparation for player 0.\r\n"
+        },
+        {
+          "name": "UnfinishedProducer_IsUsableWithoutRepurchasing",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.UnfinishedProducer_IsUsableWithoutRepurchasing",
+          "state": "Passed",
+          "durationSeconds": 0.2407624,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "UnrelatedQueuedPopulation_IsIncludedInFeasibility",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4B2Tests.UnrelatedQueuedPopulation_IsIncludedInFeasibility",
+          "state": "Passed",
+          "durationSeconds": 0.2404596,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        }
+      ]
+    }
+  },
+  "hint": null
+}

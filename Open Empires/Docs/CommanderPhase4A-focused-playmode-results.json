@@ -1,0 +1,29 @@
+{
+  "verifiedAtUtc": "2026-09-10T22:29:01Z",
+  "unityVersion": "6000.5.9f1",
+  "jobId": "56757446b334486f90df776568106907",
+  "mode": "PlayMode",
+  "fixture": "OpenEmpires.Tests.CommanderPhase4APlayModeTests",
+  "summary": {
+    "total": 2,
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "durationSeconds": 1.105179,
+    "resultState": "Passed"
+  },
+  "runtimeEvidence": [
+    {
+      "input": "make 10 spearmen",
+      "json": "{\"intentCategory\":\"Tactical\",\"intentType\":\"EnsureUnitCount\",\"parameters\":{\"unit\":\"Spearman\",\"count\":10}}",
+      "goal": "EnsureUnitCountGoal",
+      "result": "Completed with exactly 10 living Spearmen produced through the existing planner, command buffer, and simulation."
+    },
+    {
+      "input": "put 8 villagers on wood",
+      "json": "{\"intentCategory\":\"Tactical\",\"intentType\":\"SetResourceAllocation\",\"parameters\":{\"resource\":\"Wood\",\"count\":8}}",
+      "goal": "ResourceAllocationGoal",
+      "result": "Completed with exactly 8 villagers assigned to Wood through the existing planner, command buffer, and simulation."
+    }
+  ]
+}

@@ -3,6 +3,12 @@ using System.Collections.Generic;
 
 namespace OpenEmpires
 {
+    public enum IntentCategory
+    {
+        Tactical,
+        Strategic
+    }
+
     public enum CommanderIntentLayer
     {
         Tactical,
@@ -13,6 +19,7 @@ namespace OpenEmpires
     {
         int PlayerId { get; }
         CommanderIntentLayer IntentLayer { get; }
+        IntentCategory Category => IntentLayer == CommanderIntentLayer.Tactical ? IntentCategory.Tactical : IntentCategory.Strategic;
     }
 
     public enum CommanderIntentType

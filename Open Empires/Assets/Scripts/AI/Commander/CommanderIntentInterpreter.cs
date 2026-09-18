@@ -35,16 +35,20 @@ namespace OpenEmpires
     {
         public CommanderIntentInterpretationStatus Status { get; }
         public CommanderIntent Intent { get; }
+        public StrategicIntent StrategicIntent { get; }
+        public ICommanderIntentRequest Request => (ICommanderIntentRequest)StrategicIntent ?? Intent;
         public CommanderIntentErrorCode ErrorCode { get; }
         public string Reason { get; }
         public string ErrorField { get; }
         public bool Success => Status == CommanderIntentInterpretationStatus.Interpreted;
 
         private CommanderIntentInterpretation(CommanderIntentInterpretationStatus status,
-            CommanderIntent intent, CommanderIntentErrorCode errorCode, string reason, string errorField = "")
+            CommanderIntent intent, CommanderIntentErrorCode errorCode, string reason, string errorField = "",
+            StrategicIntent strategicIntent = null)
         {
             Status = status;
             Intent = intent;
+            StrategicIntent = strategicIntent;
             ErrorCode = errorCode;
             Reason = reason ?? string.Empty;
             ErrorField = errorField ?? string.Empty;
@@ -55,6 +59,13 @@ namespace OpenEmpires
             return new CommanderIntentInterpretation(
                 CommanderIntentInterpretationStatus.Interpreted, intent,
                 CommanderIntentErrorCode.None, string.Empty);
+        }
+
+        public static CommanderIntentInterpretation AcceptedStrategic(StrategicIntent strategicIntent)
+        {
+            return new CommanderIntentInterpretation(
+                CommanderIntentInterpretationStatus.Interpreted, null,
+                CommanderIntentErrorCode.None, string.Empty, string.Empty, strategicIntent);
         }
 
         public static CommanderIntentInterpretation Rejected(

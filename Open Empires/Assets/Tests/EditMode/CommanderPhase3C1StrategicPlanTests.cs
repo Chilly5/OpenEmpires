@@ -136,7 +136,7 @@ namespace OpenEmpires.Tests
             Assert.That(plan.CurrentMilestone.Name, Is.EqualTo("Economic Foundation"));
             Assert.That(plan.CurrentMilestone.Status, Is.EqualTo(StrategicMilestoneStatus.Active));
             Assert.That(plan.CurrentMilestone.CompletedChildGoals, Has.Count.EqualTo(1));
-            Assert.That(plan.ChildGoalIds, Has.Count.EqualTo(2));
+            Assert.That(plan.ChildGoalIds, Has.Count.EqualTo(3));
         }
 
         [Test]
@@ -149,7 +149,7 @@ namespace OpenEmpires.Tests
 
             Assert.That(plan.Milestones[0].Status, Is.EqualTo(StrategicMilestoneStatus.Failed));
             Assert.That(plan.Milestones.Skip(1).All(m => m.Status == StrategicMilestoneStatus.Skipped), Is.True);
-            Assert.That(plan.ChildGoalIds, Has.Count.EqualTo(2), "Failure must not create later milestone goals.");
+            Assert.That(plan.ChildGoalIds, Has.Count.EqualTo(3), "Failure must not create later milestone goals.");
             Assert.That(plan.Status, Is.EqualTo(StrategicPlanStatus.Failed));
         }
 
@@ -159,7 +159,7 @@ namespace OpenEmpires.Tests
             CavalryPressurePlan plan = strategicPlanner.StartCavalryPressurePlan();
             CommanderGoal[] goals = plan.ChildGoalIds.Select(goalManager.GetGoal).ToArray();
 
-            Assert.That(goals, Has.Length.EqualTo(2));
+            Assert.That(goals, Has.Length.EqualTo(3));
             Assert.That(goals.OfType<ResourceAllocationGoal>().Any(g => g.Resource == ResourceType.Food
                 && g.TargetWorkers == CavalryPressurePlan.FoodWorkerTarget), Is.True);
             Assert.That(goals.OfType<ResourceAllocationGoal>().Any(g => g.Resource == ResourceType.Gold
@@ -224,6 +224,7 @@ namespace OpenEmpires.Tests
         {
             CreateGatherers(ResourceType.Food, CavalryPressurePlan.FoodWorkerTarget, x - 22);
             CreateGatherers(ResourceType.Gold, CavalryPressurePlan.GoldWorkerTarget, x);
+            CreateGatherers(ResourceType.Wood, CavalryPressurePlan.WoodWorkerTarget, x - 10);
             Worker(x + 8, z);
             CavalryPressurePlan plan = strategicPlanner.StartCavalryPressurePlan();
             goalManager.Tick(0);

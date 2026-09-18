@@ -29,7 +29,9 @@ namespace OpenEmpires
                 // Deterministic stand-in for model reasoning, followed by the real JSON boundary.
                 var parsed = new SimpleTextIntentParser().Interpret(playerInput, context.PlayerId);
                 if (!parsed.Success) return parsed;
-                json = CommanderIntentDtoCodec.Serialize(CommanderIntentDtoCodec.FromIntent(parsed.Intent));
+                json = CommanderIntentDtoCodec.Serialize(parsed.StrategicIntent != null
+                    ? CommanderIntentDtoCodec.FromStrategicIntent(parsed.StrategicIntent)
+                    : CommanderIntentDtoCodec.FromIntent(parsed.Intent));
             }
             return CommanderIntentDtoCodec.InterpretJson(json, context);
         }

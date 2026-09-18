@@ -14,14 +14,24 @@ namespace OpenEmpires
     {
         public CommanderIntentInterpretation Interpretation { get; }
         public CommanderIntentResolution Resolution { get; }
+        public StrategicIntentSubmission StrategicSubmission { get; }
         public string Response { get; }
         public bool CreatedGoal => Resolution != null && Resolution.CreatedGoal;
+        public bool CreatedPlan => StrategicSubmission != null && StrategicSubmission.CreatedPlan;
 
         public CommanderIntentSubmission(CommanderIntentInterpretation interpretation,
             CommanderIntentResolution resolution, string response)
+            : this(interpretation, resolution, null, response)
+        {
+        }
+
+        public CommanderIntentSubmission(CommanderIntentInterpretation interpretation,
+            CommanderIntentResolution resolution, StrategicIntentSubmission strategicSubmission,
+            string response)
         {
             Interpretation = interpretation;
             Resolution = resolution;
+            StrategicSubmission = strategicSubmission;
             Response = response ?? string.Empty;
         }
     }
@@ -31,6 +41,7 @@ namespace OpenEmpires
         private readonly ICommanderIntentInterpreter interpreter;
         private readonly CommanderIntentResolver resolver;
         private readonly CommanderResponseGenerator responseGenerator;
+        private readonly IntentRouter intentRouter;
         private readonly GameSimulation simulation;
         private readonly CommanderGoalManager goalManager;
         private readonly Dictionary<int, CommanderIntent> intentsByGoalId =
@@ -49,13 +60,17 @@ namespace OpenEmpires
             CommanderGoalManager goalManager,
             ICommanderIntentInterpreter interpreter = null,
             CommanderIntentResolver resolver = null,
-            CommanderResponseGenerator responseGenerator = null)
+            CommanderResponseGenerator responseGenerator = null,
+            StrategicPlanner strategicPlanner = null,
+            IntentRouter intentRouter = null)
         {
             this.simulation = simulation ?? throw new ArgumentNullException(nameof(simulation));
             this.goalManager = goalManager ?? throw new ArgumentNullException(nameof(goalManager));
             this.interpreter = interpreter ?? new SimpleTextIntentParser();
             this.resolver = resolver ?? new CommanderIntentResolver();
             this.responseGenerator = responseGenerator ?? new CommanderResponseGenerator();
+            this.intentRouter = intentRouter ?? new IntentRouter(goalManager.PlayerId,
+                SubmitTacticalIntent, strategicPlanner);
             goalManager.GoalEventPublished += HandleGoalEvent;
         }
 
@@ -85,6 +100,15 @@ namespace OpenEmpires
             if (pendingRequest != null) return RejectBusy();
             var interpretation = CommanderIntentInterpretation.Accepted(intent);
             return SubmitInterpretedIntent(interpretation);
+        }
+
+        public CommanderIntentSubmission SubmitIntent(StrategicIntent intent)
+        {
+            ThrowIfDisposed();
+            CheckOwnerThread();
+            if (pendingRequest != null) return RejectBusy();
+            return SubmitInterpretedIntent(
+                CommanderIntentInterpretation.AcceptedStrategic(intent));
         }
 
         public async Task<CommanderIntentSubmission> SubmitTextAsync(string playerInput,
@@ -219,22 +243,53 @@ namespace OpenEmpires
             CancelSafely(pendingRequest);
             goalManager.GoalEventPublished -= HandleGoalEvent;
             intentsByGoalId.Clear();
+            StateChanged = null;
+            ResponseGenerated = null;
         }
 
         private CommanderIntentSubmission SubmitInterpretedIntent(
             CommanderIntentInterpretation interpretation, bool trackLifecycle = false)
         {
-            CommanderIntentResolution resolution = resolver.Resolve(
-                interpretation.Intent, simulation, goalManager);
-            if (resolution.CreatedGoal)
-                intentsByGoalId[resolution.Goal.GoalId] = resolution.Intent;
+            IntentRouteResult route = intentRouter.Route(interpretation.Request,
+                strategicIsPlayerOverride: interpretation.StrategicIntent != null);
+            CommanderIntentSubmission submission;
+            if (route.TacticalSubmission != null)
+            {
+                submission = route.TacticalSubmission;
+            }
+            else
+            {
+                StrategicIntentSubmission strategic = route.StrategicSubmission;
+                string response = strategic != null && strategic.CreatedPlan
+                    ? $"Strategic plan #{strategic.Plan.StrategicPlanId} started: {strategic.Plan.PlanType}."
+                    : route.Reason;
+                if (strategic?.CreatedPlan == true && !string.IsNullOrEmpty(strategic.Plan.OutcomeMessage))
+                    response += " " + strategic.Plan.OutcomeMessage;
+                submission = new CommanderIntentSubmission(interpretation, null,
+                    strategic, response);
+                if (!disposed) Notify(ResponseGenerated, response);
+            }
 
             if (trackLifecycle)
             {
-                displayedGoalId = resolution.CreatedGoal ? resolution.Goal.GoalId : -1;
-                SetState(resolution.CreatedGoal ? GoalState(resolution.Goal) : CommanderSubmissionState.Failed);
+                displayedGoalId = submission.CreatedGoal ? submission.Resolution.Goal.GoalId : -1;
+                SetState(submission.CreatedGoal
+                    ? GoalState(submission.Resolution.Goal)
+                    : submission.CreatedPlan
+                        ? CommanderSubmissionState.Executing
+                        : CommanderSubmissionState.Failed);
             }
+            return submission;
+        }
 
+        private CommanderIntentSubmission SubmitTacticalIntent(CommanderIntent intent)
+        {
+            CommanderIntentInterpretation interpretation =
+                CommanderIntentInterpretation.Accepted(intent);
+            CommanderIntentResolution resolution = resolver.Resolve(
+                intent, simulation, goalManager);
+            if (resolution.CreatedGoal)
+                intentsByGoalId[resolution.Goal.GoalId] = resolution.Intent;
             string response = responseGenerator.GenerateResolutionResponse(resolution);
             if (!disposed) Notify(ResponseGenerated, response);
             return new CommanderIntentSubmission(interpretation, resolution, response);

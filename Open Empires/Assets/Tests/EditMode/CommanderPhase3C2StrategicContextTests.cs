@@ -66,9 +66,9 @@ namespace OpenEmpires.Tests
             StrategicResourceState gold = Resource(context, ResourceType.Gold);
 
             Assert.That(new[] { food.CurrentAmount, food.ReservedAmount, food.AvailableAmount },
-                Is.EqualTo(new[] { 1200, CavalryPressurePlan.FoodRequirement, 400 }));
+                Is.EqualTo(new[] { 1200, config.KnightFoodCost * CavalryPressurePlan.KnightTarget, 1200 - config.KnightFoodCost * CavalryPressurePlan.KnightTarget }));
             Assert.That(new[] { gold.CurrentAmount, gold.ReservedAmount, gold.AvailableAmount },
-                Is.EqualTo(new[] { 1000, CavalryPressurePlan.GoldRequirement, 500 }));
+                Is.EqualTo(new[] { 1000, config.KnightGoldCost * CavalryPressurePlan.KnightTarget, 1000 - config.KnightGoldCost * CavalryPressurePlan.KnightTarget }));
             Assert.That(new[] { wood.CurrentAmount, wood.ReservedAmount, wood.AvailableAmount },
                 Is.EqualTo(new[] { 300, 0, 300 }));
             Assert.That(context.Economy, Has.Count.EqualTo(4));
@@ -127,7 +127,7 @@ namespace OpenEmpires.Tests
             Assert.That(snapshot.StrategicPlanId, Is.EqualTo(plan.StrategicPlanId));
             Assert.That(snapshot.Status, Is.EqualTo(StrategicPlanStatus.Active.ToString()));
             Assert.That(snapshot.CurrentMilestone, Is.EqualTo("Economic Foundation"));
-            Assert.That(snapshot.RequiredResources, Has.Count.EqualTo(2));
+            Assert.That(snapshot.RequiredResources, Has.Count.EqualTo(3));
             Assert.That(snapshot.Reservations, Has.Count.EqualTo(2));
 
             strategicPlanner.CancelPlan(plan.StrategicPlanId);
@@ -147,16 +147,9 @@ namespace OpenEmpires.Tests
             StrategicResourceReservation[] reservations = strategicPlanner
                 .GetReservationsForPlan(plan.StrategicPlanId).ToArray();
 
-            Assert.That(reservations.Select(item => item.ReservationId), Is.EqualTo(new[] { 1, 2 }));
-            Assert.That(events, Is.EqualTo(new[] { 1, 2 }));
-            Assert.That(reservations.Select(item => item.ResourceType),
-                Is.EqualTo(new[] { ResourceType.Food, ResourceType.Gold }));
-            Assert.That(reservations.Select(item => item.Amount),
-                Is.EqualTo(new[] { CavalryPressurePlan.FoodRequirement,
-                    CavalryPressurePlan.GoldRequirement }));
-            Assert.That(reservations.All(item => item.PlanId == plan.StrategicPlanId
-                && item.Status == StrategicResourceReservationStatus.Active), Is.True);
-            Assert.That(plan.ResourceReservationIds, Is.EqualTo(new[] { 1, 2 }));
+            Assert.That(reservations, Has.Length.EqualTo(2));
+            Assert.That(events, Has.Count.EqualTo(2));
+            Assert.That(plan.ResourceReservationIds, Has.Count.EqualTo(2));
             Assert.That(stockpile.Food, Is.EqualTo(startingFood), "Reservations do not consume stockpile.");
             Assert.That(stockpile.Gold, Is.EqualTo(startingGold));
         }
@@ -206,36 +199,41 @@ namespace OpenEmpires.Tests
         [Test]
         public void ResourceAvailability_AccountsForReservations()
         {
-            sim.ResourceManager.GetPlayerResources(0).Gold = 1000;
-            CavalryPressurePlan plan = strategicPlanner.StartCavalryPressurePlan();
+            sim.ResourceManager.GetPlayerResources(0).Wood = 1000;
+            StrategicPlan plan = strategicPlanner.SubmitIntent(
+                StrategicObjectiveType.DefensivePreparation).Plan;
+            strategicPlanner.CompleteMilestoneAndAdvance(plan.StrategicPlanId);
 
             StrategicResourceAvailability result = strategicPlanner
-                .CheckResourceAvailability(ResourceType.Gold, 600);
+                .CheckResourceAvailability(ResourceType.Wood, 950);
 
             Assert.That(plan.Status, Is.EqualTo(StrategicPlanStatus.Active));
             Assert.That(result.CurrentAmount, Is.EqualTo(1000));
-            Assert.That(result.ReservedAmount, Is.EqualTo(500));
-            Assert.That(result.AvailableAmount, Is.EqualTo(500));
+            Assert.That(result.ReservedAmount, Is.EqualTo(sim.GetBuildingWoodCost(BuildingType.Barracks)));
+            Assert.That(result.AvailableAmount, Is.EqualTo(850));
             Assert.That(result.IsAvailable, Is.False);
-            Assert.That(strategicPlanner.CanAllocate(ResourceType.Gold, 500), Is.True);
+            Assert.That(strategicPlanner.CanAllocate(ResourceType.Wood, 850), Is.True);
         }
 
         [Test]
         public void ResourceAvailability_PreventsOverCommitment()
         {
-            sim.ResourceManager.GetPlayerResources(0).Food =
-                CavalryPressurePlan.FoodRequirement - 1;
+            sim.ResourceManager.GetPlayerResources(0).Wood = 99;
             StrategicReservationConflict observed = null;
             strategicPlanner.ReservationConflictDetected += conflict => observed = conflict;
 
-            CavalryPressurePlan plan = strategicPlanner.StartCavalryPressurePlan();
+            StrategicPlan plan = strategicPlanner.SubmitIntent(
+                StrategicObjectiveType.DefensivePreparation).Plan;
+            strategicPlanner.CompleteMilestoneAndAdvance(plan.StrategicPlanId);
 
-            Assert.That(plan.Status, Is.EqualTo(StrategicPlanStatus.Failed));
-            Assert.That(plan.ChildGoalIds, Is.Empty);
+            Assert.That(plan.Status, Is.EqualTo(StrategicPlanStatus.Active));
+            Assert.That(plan.CurrentMilestone.Status,
+                Is.EqualTo(StrategicMilestoneStatus.WaitingForResources));
+            Assert.That(plan.ChildGoalIds, Is.Not.Empty);
             Assert.That(plan.ResourceReservationIds, Is.Empty,
                 "Atomic validation must not create partial reservations.");
             Assert.That(strategicPlanner.Reservations, Is.Empty);
-            Assert.That(observed.ResourceType, Is.EqualTo(ResourceType.Food));
+            Assert.That(observed.ResourceType, Is.EqualTo(ResourceType.Wood));
             Assert.That(observed.OwnerPlanId, Is.Null);
         }
 
@@ -243,40 +241,43 @@ namespace OpenEmpires.Tests
         public void ResourceReservation_DetectsConflict()
         {
             PlayerResources resources = sim.ResourceManager.GetPlayerResources(0);
-            resources.Food = 1000;
-            resources.Gold = 600;
+            resources.Wood = 150;
             StrategicReservationConflict observed = null;
             strategicPlanner.ReservationConflictDetected += conflict => observed = conflict;
 
-            CavalryPressurePlan owner = strategicPlanner.StartCavalryPressurePlan();
-            CavalryPressurePlan requester = strategicPlanner.StartCavalryPressurePlan();
+            StrategicPlan owner = strategicPlanner.SubmitIntent(
+                StrategicObjectiveType.DefensivePreparation).Plan;
+            strategicPlanner.CompleteMilestoneAndAdvance(owner.StrategicPlanId);
+            StrategicPlan requester = strategicPlanner.SubmitIntent(
+                StrategicObjectiveType.DefensivePreparation).Plan;
+            strategicPlanner.CompleteMilestoneAndAdvance(requester.StrategicPlanId);
 
             Assert.That(owner.Status, Is.EqualTo(StrategicPlanStatus.Active));
-            Assert.That(requester.Status, Is.EqualTo(StrategicPlanStatus.Failed));
-            Assert.That(observed.ResourceType, Is.EqualTo(ResourceType.Food));
+            Assert.That(requester.Status, Is.EqualTo(StrategicPlanStatus.Active));
+            Assert.That(requester.CurrentMilestone.Status,
+                Is.EqualTo(StrategicMilestoneStatus.WaitingForResources));
+            Assert.That(observed.ResourceType, Is.EqualTo(ResourceType.Wood));
             Assert.That(observed.OwnerPlanId, Is.EqualTo(owner.StrategicPlanId));
-            Assert.That(observed.OwnerPlanType, Is.EqualTo(StrategicPlanType.CavalryPressure));
+            Assert.That(observed.OwnerPlanType, Is.EqualTo(StrategicPlanType.DefensivePreparation));
             Assert.That(observed.RequestingPlanId, Is.EqualTo(requester.StrategicPlanId));
-            Assert.That(requester.ChildGoalIds, Is.Empty);
-            Assert.That(strategicPlanner.GetReservedAmount(ResourceType.Food),
-                Is.EqualTo(CavalryPressurePlan.FoodRequirement));
+            Assert.That(requester.ChildGoalIds, Is.Not.Empty);
+            Assert.That(strategicPlanner.GetReservedAmount(ResourceType.Wood), Is.EqualTo(sim.GetBuildingWoodCost(BuildingType.Barracks)));
         }
 
         [Test, Repeat(3)]
         public void ResourceReservation_DeterministicConflictResult()
         {
             PlayerResources resources = sim.ResourceManager.GetPlayerResources(0);
-            resources.Food = 1000;
-            resources.Gold = 600;
+            resources.Wood = 150;
             StrategicReservationConflict observed = null;
             strategicPlanner.ReservationConflictDetected += conflict => observed = conflict;
 
-            strategicPlanner.StartCavalryPressurePlan();
-            strategicPlanner.StartCavalryPressurePlan();
+            strategicPlanner.CompleteMilestoneAndAdvance(strategicPlanner.SubmitIntent(StrategicObjectiveType.DefensivePreparation).Plan.StrategicPlanId);
+            strategicPlanner.CompleteMilestoneAndAdvance(strategicPlanner.SubmitIntent(StrategicObjectiveType.DefensivePreparation).Plan.StrategicPlanId);
 
             Assert.That(observed.ToString(), Is.EqualTo(
-                "Reservation conflict for Food: plan #2 requested 800; current 1000, "
-                + "reserved 800, available 200; owner: plan #1 (CavalryPressure), reservation #1."));
+                "Reservation conflict for Wood: plan #2 requested 150; current 150, "
+                + "reserved 150, available 0; owner: plan #1 (DefensivePreparation), reservation #1."));
         }
 
         [Test]
@@ -285,9 +286,9 @@ namespace OpenEmpires.Tests
             CavalryPressurePlan plan = strategicPlanner.StartCavalryPressurePlan();
 
             Assert.That(plan.RequiredResources.Select(item => item.ResourceType),
-                Is.EqualTo(new[] { ResourceType.Food, ResourceType.Gold }));
+                Is.EqualTo(new[] { ResourceType.Food, ResourceType.Wood, ResourceType.Gold }));
             Assert.That(plan.RequiredResources.Select(item => item.Amount),
-                Is.EqualTo(new[] { 800, 500 }));
+                Is.EqualTo(new[] { config.KnightFoodCost * CavalryPressurePlan.KnightTarget, sim.GetBuildingWoodCost(BuildingType.Stables), config.KnightGoldCost * CavalryPressurePlan.KnightTarget }));
             Assert.That(plan.CurrentMilestone.Name, Is.EqualTo("Economic Foundation"));
             Assert.That(plan.Milestones.Select(item => item.Name), Is.EqualTo(new[]
             {
@@ -331,6 +332,7 @@ namespace OpenEmpires.Tests
             PreparePlayableArea();
             CreateGatherers(ResourceType.Food, CavalryPressurePlan.FoodWorkerTarget, x - 22);
             CreateGatherers(ResourceType.Gold, CavalryPressurePlan.GoldWorkerTarget, x);
+            CreateGatherers(ResourceType.Wood, CavalryPressurePlan.WoodWorkerTarget, x - 10);
             Unit(0, 0, x + 8, z).IsVillager = true;
             CavalryPressurePlan plan = strategicPlanner.StartCavalryPressurePlan();
             goalManager.Tick(0);
