@@ -1,6 +1,6 @@
 # Commander Phase 4C.2 Task 1 Report
 
-Status: **IN PROGRESS — assertion-level EditMode RED captured; value/service GREEN in progress.**
+Status: **PATCH_READY — Fix round 1 source frozen; root-owned focused verification pending.**
 
 ## Scope and gate
 
@@ -16,7 +16,7 @@ Status: **IN PROGRESS — assertion-level EditMode RED captured; value/service G
 - Exact current content preserved at `phase4c2-task1-before/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs`.
 - Pre-edit SHA-256: `5F03421B75320D7E83F4164177855A78D196A4A65B86B12EE2E0F8C6A536356B`.
 
-## Planned interfaces
+## Final interfaces
 
 - `ExplanationOutcome`: `NoDecision`, `Rejected`, `TransitionRefused`, `PlannerRejected`, `PlanCreated`, `SelectionNotSubmitted`.
 - `CommanderExplanationQuery`: `LastDecision`, `LastRejection`, `AttackReason`, `CurrentPlan`.
@@ -25,6 +25,14 @@ Status: **IN PROGRESS — assertion-level EditMode RED captured; value/service G
 - `ExplanationResult`: bounded immutable display text and outcome.
 - `CommanderExplanationService.Explain(...)`: deterministic pure value-to-value rendering.
 - `CommanderChatUI.LatestExplanation`: read-only validation surface, independent of mutable `LatestStrategicDecision`.
+
+Exact public value/service surface:
+
+- `ExplanationPlanState(int planId, string planType, string status, string currentMilestone, string milestoneStatus, string reason)`; all six properties immutable, all strings bounded to 512.
+- `ExplanationContext(int playerId, int? decisionId = null, int? decisionTick = null, ExplanationOutcome outcome = ExplanationOutcome.NoDecision, string reason = null, string requestedObjective = null, int? acceptedPlanId = null, string acceptedPlanType = null, int? currentSnapshotTick = null, IReadOnlyList<ExplanationPlanState> currentPlans = null)`; immutable copied list, maximum 32 plans.
+- `ExplanationResult(string displayText, ExplanationOutcome outcome)`; immutable text bounded to 8192 and immutable outcome.
+- `CommanderExplanationService.Explain(ExplanationContext context, CommanderExplanationQuery query = CommanderExplanationQuery.LastDecision)`; deterministic value-only output, null/invalid-query rejection.
+- Existing `CommanderChatUI` public methods and arities are unchanged. Only `partial` was added to the declaration; the new public member is read-only `LatestExplanation`.
 
 ## Focused TDD evidence
 
@@ -36,7 +44,69 @@ Status: **IN PROGRESS — assertion-level EditMode RED captured; value/service G
 - Complete per-test result: `phase4c2-task1-value-green-editmode-TestResults.xml`, 13,777 bytes, SHA-256 `623BCE0F95758460EAC31CAB292782E853126F48A575717110A9855C4D166026`.
 - Host-level PlayMode RED job `50f477b64b874d8dabe9155a6e4f3152`: 0/5 passed, five expected assertion/runtime failures because the partial exposed only the compilable `LatestExplanation` skeleton. Failures proved that existing routing cleared the pending intent and produced no explanation for rejected-attack, current-plan, reset, or offline queries.
 - Complete per-test RED result: `phase4c2-task1-red-playmode-TestResults.xml`, 12,925 bytes, SHA-256 `B6104EB9F939A01FE54B1125A6E7A9B64F7071E1084845BBC022219883B96EEB`.
+- First host GREEN job `41d30d0af8994467a52da20067102edf`: 5 total, 4 passed, 1 failed. `ExplanationCannotModifyIntent` found that starting a second strategic translation cleared the existing `LatestStrategicDecision` even though no new strategic evaluation had occurred. The copied explanation source remained intact, but the public latest-decision validation surface lost the last meaningful record.
+- Scoped fix: removed only the unconditional `LatestStrategicDecision = null` from the ordinary message-submission preamble. Reset/Initialize/destruction still clear it, and a later real strategic evaluation still replaces it. The existing host test already proves pending identity, intent status, decision history, plan/milestone state, reservations, goal/command counts, provider count, memory kind, and exact prior decision identity across all four explanation questions. Focused verification after this fix is pending from the root-owned runner.
+- Final focused PlayMode job `05f7822ccf2748e49250b589f866a030`: 5/5 passed, zero failures/skips, `Passed`, 1.4933965 seconds. `ExplanationCannotModifyIntent` passed after the scoped fix. The other passing real-host cases cover recorded rejected-attack reason/provenance despite an unrelated defense plan, detached current-plan progress without advancement, reset isolation from retained game decision history, and offline exact-form/adversarial routing.
+- Final focused EditMode job `57a9a33443644ffbb8162629e5be223d`: 15/15 passed, zero failures/skips, `Passed`, 0.0360488 seconds. Required `Explanation_MatchesDecisionReason` and `RejectedPlanHasReason` passed; all six outcomes, bounds/copying, invalid inputs, invariant formatting, absent evidence, attack attribution, deterministic ordering, and current-state semantics passed.
+- Unity MCP 10.2 returned complete per-test data for both final jobs but did not emit a workspace `TestResults.xml`. The job IDs and returned summaries/details are the authoritative current GREEN evidence. No result was fabricated or recovered from an older XML. Earlier RED and value/service GREEN XML files remain preserved with hashes above.
 
-## Changed files, runtime proof, hashes, and concerns
+## Integration and safety boundaries
 
-Pending implementation and focused verification. Full-suite regression is intentionally deferred to Phase 4C.2 Task 2 (Luna) after source freeze.
+- The service/value files reference no `GameSimulation`, pipeline, planner, intent, decision-record, command, delegate, callback, or Unity object type.
+- The game-owned partial retains the only pipeline reference and uses only existing `CaptureContext()` for a current-plan query; it copies primitive `StrategicPlanState` fields immediately into new `ExplanationPlanState` values.
+- Event projection outcome order is: created plan; actual failed submission; explicit rejection; no decision; selected but transition-blocked; selected not submitted. A later `NoDecision` does not erase a meaningful source.
+- Rejected objective provenance is captured immediately around the synchronous approval/evaluation call and cleared in `finally`; unknown provenance stays empty and `ActivePlanType` is never used to infer a rejected objective.
+- The four queries are exact whole-form matches after invariant lowercase/whitespace normalization and at most one trailing `?` or `.`. They route before pending/latest-decision mutation and never start a provider call or approval/planner execution.
+- Each query appends transcript locally and exactly one bounded `MemoryEntryKind.Explanation`; it does not store source records, intents, plans, or current contexts.
+- Explanation source and `LatestExplanation` clear on tactical Initialize, strategic Initialize/session replacement, reset/clear memory, owner replacement through Initialize, and destruction. Game decision history is not cleared or rehydrated.
+- Original Commander public method signatures/reflection arities remain unchanged.
+
+## Changed files
+
+Production source:
+
+- Modified `Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs`.
+- Created `Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Explanations.cs`.
+- Created `Assets/Scripts/AI/Commander/Phase4C/ExplanationContext.cs`.
+- Created `Assets/Scripts/AI/Commander/Phase4C/ExplanationResult.cs`.
+- Created `Assets/Scripts/AI/Commander/Phase4C/CommanderExplanationService.cs`.
+
+Focused tests:
+
+- Created `Assets/Tests/EditMode/CommanderPhase4C2Tests.cs`.
+- Created `Assets/Tests/PlayMode/CommanderPhase4C2PlayModeTests.cs`.
+- Unity generated the six matching `.meta` files for the six new C# assets.
+
+Evidence:
+
+- `Docs/CommanderPhase4C/phase4c2-task1-before/README.md` and exact pre-edit `CommanderChatUI.cs` copy.
+- This report, three preserved RED/intermediate-GREEN XML artifacts, and `phase4c2-task1-source-hashes.json`.
+
+No other production, test, package, settings, credential, branch, commit, or remote state was intentionally changed.
+
+## Frozen source hashes
+
+- `CommanderChatUI.cs`: `7F4C1D642DD2B373D3E7A49ED3F10E779EF36F415466BB4932147A05775DDBCA` (27,101 bytes).
+- `CommanderChatUI.Explanations.cs`: `68458D82489BB8669EF4D95329C4DA869AC55DFA1BFC00C4A87C7D8D54EC5973` (6,061 bytes).
+- `ExplanationContext.cs`: `A902F96FB5B18BD3DCC00BDB924A7BD67C180412D54CE6852E754AE3B10305EE` (4,419 bytes).
+- `ExplanationResult.cs`: `2C1E02410A1D98D855C623AE9C819E0F84B83861A11CD44B04DE16FFC95D1D6D` (577 bytes).
+- `CommanderExplanationService.cs`: `02820AAF58CD193D35A2E448D711E4C9586E4D513C80A765CABD6EE2F2EFCA01` (7,717 bytes).
+- `CommanderPhase4C2Tests.cs`: `046BBA408E061EC5E7BE6E1CE510D5548B88AB9E1DD44AF233658556C3E7B9C4` (11,904 bytes).
+- `CommanderPhase4C2PlayModeTests.cs`: `96DE63C4E7D34593FDB3AC50EA0BA39CBD21FBCEC4B85A35020F769582DB12C5` (20,781 bytes).
+
+The machine-readable inventory is `phase4c2-task1-source-hashes.json`. Production and test source is frozen at these fix-round hashes pending root-owned focused verification.
+
+## Fix round 1 — recorded NoDecision evidence
+
+- Independent review found that the renderer treated every `ExplanationOutcome.NoDecision` as a pristine empty context, dropping a recorded event's copied decision ID, historical tick, bounded reason, and objective. The same enum-only check made pristine `LastRejection` and `AttackReason` queries describe a fictitious latest `NoDecision` outcome.
+- Regression tests were added first for the exact distinction. `PristineContext_DecisionQueriesStateThatRecordedEvidenceIsUnavailable` requires all three decision-derived queries to state that evidence is unavailable without claiming a latest outcome. `RecordedNoDecision_PreservesOutcomeReasonIdAndHistoricalTick` requires an observed `NoDecision` to retain its outcome meaning, ID 23, tick 811, reason, objective, and result outcome. The existing six-outcome table now expects the recorded `NoDecision` meaning rather than the pristine message.
+- Minimal production fix: `CommanderExplanationService` now detects whether copied decision provenance exists independently of the enum value. Only a context with no copied decision ID, tick, reason, objective, accepted-plan ID, or accepted-plan type is pristine. An observed `NoDecision` renders `No strategic decision was selected.` followed by the same copied ID/tick/objective/reason fields used for every other recorded outcome.
+- Low-risk review coverage was also added: `Context_OwnsPlanListAfterCallerReplacesAndRemovesEntries` proves caller replacement/removal after construction cannot alter the owned plan list or rendered snapshot; `HostProjection_ClassifiesRefusedPlannerRejectedAndUnsubmittedSelection` drives the real host projection method through `TransitionRefused`, `PlannerRejected`, and `SelectionNotSubmitted`, and mutates the original intent after the first projection to verify the copied explanation does not change.
+- No public production interface, constructor, enum, authority boundary, package, setting, or unrelated source was changed in this round. Changed source is limited to the service and the two focused test files listed above.
+- Per root instruction, this worker did not invoke Unity. The new tests have not been observed RED or GREEN in this round; focused EditMode and PlayMode verification is pending from the root-owned runner. All earlier job results in this report predate this fix and remain historical evidence only.
+
+## Concerns and handoff
+
+- Fix-round verification is pending. The earlier EditMode 15/15 and PlayMode 5/5 jobs predate the review patch and are not claimed as verification of the new behavior.
+- Evidence concern: final Unity MCP 10.2 jobs returned full per-test details but produced no workspace XML artifact. Their job IDs/results are recorded above; the earlier XML evidence is preserved and hash-verifiable.
+- Per the gated plan, independent scoped review, one fresh full EditMode/PlayMode pair, boundary audit, and Astra integration/security gate remain Task 2 work. Task 1 does not claim the Phase 4C.2 gate or admit Phase 4C.3.

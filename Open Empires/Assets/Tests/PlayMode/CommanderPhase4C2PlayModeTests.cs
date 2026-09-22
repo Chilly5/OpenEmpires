@@ -236,6 +236,63 @@ namespace OpenEmpires.Tests
             Assert.That(chat.DisplayedTranscript, Does.Contain("Unsupported or mixed Commander request."));
         }
 
+        [UnityTest]
+        public IEnumerator HostProjection_ClassifiesRefusedPlannerRejectedAndUnsubmittedSelection()
+        {
+            chat.InitializeStrategic(new ThrowingStrategicProvider(), pipeline);
+            var intent = new StrategicIntent(901, 0, StrategicObjectiveType.AttackPreparation, 70);
+            StrategicDecisionResult selected = StrategicDecisionResult.Selected(intent, null, 70,
+                StrategicPriorityLevel.Normal, "Attack preparation was selected.");
+
+            ProjectExplanation(new StrategicDecisionRecord(31, 70,
+                StrategicEvaluationTriggerType.PlayerRequest, "test", null, null,
+                "Transition policy refused the selected intent.", decision: selected,
+                transitionAllowed: false));
+            intent.StatusReason = "mutated after projection";
+            Task<CommanderAIChatSubmission> refused = chat.SubmitMessageAsync("explain last decision");
+            while (!refused.IsCompleted) yield return null;
+            Assert.That(chat.LatestExplanation.Outcome,
+                Is.EqualTo(ExplanationOutcome.TransitionRefused));
+            Assert.That(chat.LatestExplanation.DisplayText,
+                Does.Contain("Transition policy refused the selected intent."));
+            Assert.That(chat.LatestExplanation.DisplayText, Does.Contain("AttackPreparation"));
+            Assert.That(chat.LatestExplanation.DisplayText,
+                Does.Not.Contain("mutated after projection"));
+
+            var rejectedSubmission = new StrategicIntentSubmission(
+                StrategicIntentSubmissionStatus.Rejected, intent, null,
+                StrategicIntentValidationError.CommitmentBlocked,
+                "Planner commitment was blocked.");
+            ProjectExplanation(new StrategicDecisionRecord(32, 71,
+                StrategicEvaluationTriggerType.PlayerRequest, "test", null, null,
+                "Planner commitment was blocked.", decision: selected,
+                submission: rejectedSubmission));
+            Task<CommanderAIChatSubmission> plannerRejected =
+                chat.SubmitMessageAsync("explain last decision");
+            while (!plannerRejected.IsCompleted) yield return null;
+            Assert.That(chat.LatestExplanation.Outcome,
+                Is.EqualTo(ExplanationOutcome.PlannerRejected));
+            Assert.That(chat.LatestExplanation.DisplayText,
+                Does.Contain("Planner commitment was blocked."));
+
+            ProjectExplanation(new StrategicDecisionRecord(33, 72,
+                StrategicEvaluationTriggerType.PlayerRequest, "test", null, null,
+                "Selection was recorded without submission.", decision: selected));
+            Task<CommanderAIChatSubmission> notSubmitted =
+                chat.SubmitMessageAsync("explain last decision");
+            while (!notSubmitted.IsCompleted) yield return null;
+            Assert.That(chat.LatestExplanation.Outcome,
+                Is.EqualTo(ExplanationOutcome.SelectionNotSubmitted));
+            Assert.That(chat.LatestExplanation.DisplayText,
+                Does.Contain("Selection was recorded without submission."));
+        }
+
+        private void ProjectExplanation(StrategicDecisionRecord record)
+        {
+            typeof(CommanderChatUI).GetMethod("ProjectStrategicExplanation",
+                BindingFlags.NonPublic | BindingFlags.Instance).Invoke(chat, new object[] { record });
+        }
+
         private StrategicPlan CreateEmergencyDefense()
         {
             var request = new StrategicAIRequest("prepare defenses", pipeline.CaptureContext(),

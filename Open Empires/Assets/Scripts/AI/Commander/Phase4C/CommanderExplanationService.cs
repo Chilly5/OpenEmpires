@@ -13,6 +13,7 @@ namespace OpenEmpires
             if (context == null) throw new ArgumentNullException(nameof(context));
             if (!Enum.IsDefined(typeof(CommanderExplanationQuery), query))
                 throw new ArgumentOutOfRangeException(nameof(query));
+            bool hasRecordedDecisionEvidence = HasRecordedDecisionEvidence(context);
             string text;
             switch (query)
             {
@@ -20,13 +21,18 @@ namespace OpenEmpires
                     text = RenderDecision(context);
                     break;
                 case CommanderExplanationQuery.LastRejection:
-                    text = IsRejection(context.Outcome)
+                    text = !hasRecordedDecisionEvidence
+                        ? "No recorded decision or rejection evidence is available."
+                        : IsRejection(context.Outcome)
                         ? RenderDecision(context)
                         : "The latest recorded outcome was " + context.Outcome
                             + ", not a rejection.";
                     break;
                 case CommanderExplanationQuery.AttackReason:
-                    text = IsRejection(context.Outcome)
+                    text = !hasRecordedDecisionEvidence
+                        ? "No recorded decision or rejection evidence is available for "
+                            + "AttackPreparation."
+                        : IsRejection(context.Outcome)
                         && string.Equals(context.RequestedObjective, "AttackPreparation",
                             StringComparison.Ordinal)
                         ? RenderDecision(context)
@@ -49,14 +55,27 @@ namespace OpenEmpires
                 || outcome == ExplanationOutcome.PlannerRejected;
         }
 
+        private static bool HasRecordedDecisionEvidence(ExplanationContext context)
+        {
+            return context.DecisionId.HasValue
+                || context.DecisionTick.HasValue
+                || context.Reason.Length > 0
+                || context.RequestedObjective.Length > 0
+                || context.AcceptedPlanId.HasValue
+                || context.AcceptedPlanType.Length > 0;
+        }
+
         private static string RenderDecision(ExplanationContext context)
         {
-            if (context.Outcome == ExplanationOutcome.NoDecision)
+            if (!HasRecordedDecisionEvidence(context))
                 return "No recorded decision is available.";
 
             var result = new StringBuilder();
             switch (context.Outcome)
             {
+                case ExplanationOutcome.NoDecision:
+                    result.Append("No strategic decision was selected.");
+                    break;
                 case ExplanationOutcome.Rejected:
                     result.Append("The recorded decision was rejected.");
                     break;

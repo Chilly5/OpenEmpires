@@ -196,7 +196,6 @@ namespace OpenEmpires
             IReadOnlyList<MemoryEntry> memoryAtTurnStart = Conversation.Snapshot();
             strategicBridge?.ClearPending();
             LatestStrategicInterpretation = null;
-            LatestStrategicDecision = null;
             LatestSubmission = null;
             UpdateStrategicControls();
             AppendLine("Player", trimmed);

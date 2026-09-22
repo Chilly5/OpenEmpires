@@ -25,7 +25,7 @@ namespace OpenEmpires.Tests
             Assert.That(result.Outcome, Is.EqualTo(ExplanationOutcome.Rejected));
         }
 
-        [TestCase(ExplanationOutcome.NoDecision, "No recorded decision is available")]
+        [TestCase(ExplanationOutcome.NoDecision, "No strategic decision was selected")]
         [TestCase(ExplanationOutcome.Rejected, "recorded decision was rejected")]
         [TestCase(ExplanationOutcome.TransitionRefused, "blocked before submission")]
         [TestCase(ExplanationOutcome.PlannerRejected, "planner rejected the submitted intent")]
@@ -64,6 +64,39 @@ namespace OpenEmpires.Tests
         }
 
         [Test]
+        public void PristineContext_DecisionQueriesStateThatRecordedEvidenceIsUnavailable()
+        {
+            var service = new CommanderExplanationService();
+            var context = new ExplanationContext(0);
+
+            Assert.That(service.Explain(context, CommanderExplanationQuery.LastDecision).DisplayText,
+                Is.EqualTo("No recorded decision is available."));
+            Assert.That(service.Explain(context, CommanderExplanationQuery.LastRejection).DisplayText,
+                Is.EqualTo("No recorded decision or rejection evidence is available."));
+            Assert.That(service.Explain(context, CommanderExplanationQuery.AttackReason).DisplayText,
+                Is.EqualTo("No recorded decision or rejection evidence is available for AttackPreparation."));
+        }
+
+        [Test]
+        public void RecordedNoDecision_PreservesOutcomeReasonIdAndHistoricalTick()
+        {
+            var context = new ExplanationContext(0, decisionId: 23, decisionTick: 811,
+                outcome: ExplanationOutcome.NoDecision,
+                reason: "No eligible strategic recommendation was available.",
+                requestedObjective: "AttackPreparation");
+
+            ExplanationResult result = new CommanderExplanationService().Explain(context);
+
+            Assert.That(result.Outcome, Is.EqualTo(ExplanationOutcome.NoDecision));
+            Assert.That(result.DisplayText, Does.Contain("No strategic decision was selected."));
+            Assert.That(result.DisplayText, Does.Contain("Decision ID: 23."));
+            Assert.That(result.DisplayText, Does.Contain("Historical decision tick: 811."));
+            Assert.That(result.DisplayText,
+                Does.Contain("Recorded reason: No eligible strategic recommendation was available."));
+            Assert.That(result.DisplayText, Does.Contain("Requested objective: AttackPreparation."));
+        }
+
+        [Test]
         public void Context_CopiesAndBoundsPrimitiveInputs()
         {
             var source = new List<ExplanationPlanState>();
@@ -83,6 +116,27 @@ namespace OpenEmpires.Tests
             Assert.Throws<NotSupportedException>(() =>
                 ((IList<ExplanationPlanState>)context.CurrentPlans).Add(
                     new ExplanationPlanState(99, null, null, null, null, null)));
+        }
+
+        [Test]
+        public void Context_OwnsPlanListAfterCallerReplacesAndRemovesEntries()
+        {
+            var original = new ExplanationPlanState(7, "OriginalType", "Active",
+                "OriginalMilestone", "InProgress", "OriginalReason");
+            var source = new List<ExplanationPlanState> { original };
+            var context = new ExplanationContext(0, currentSnapshotTick: 12,
+                currentPlans: source);
+
+            source[0] = new ExplanationPlanState(99, "ReplacementType", "Failed",
+                "ReplacementMilestone", "Failed", "ReplacementReason");
+            source.RemoveAt(0);
+
+            Assert.That(context.CurrentPlans, Has.Count.EqualTo(1));
+            Assert.That(context.CurrentPlans[0], Is.SameAs(original));
+            string rendered = new CommanderExplanationService().Explain(context,
+                CommanderExplanationQuery.CurrentPlan).DisplayText;
+            Assert.That(rendered, Does.Contain("Plan #7 OriginalType"));
+            Assert.That(rendered, Does.Not.Contain("ReplacementType"));
         }
 
         [Test]
