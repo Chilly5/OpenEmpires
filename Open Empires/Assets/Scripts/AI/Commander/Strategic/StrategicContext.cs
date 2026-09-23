@@ -22,6 +22,7 @@ namespace OpenEmpires
         public StrategicDefenseState Defense { get; }
         public StrategicThreatState Threat { get; }
         public IReadOnlyList<StrategicFeasibility> Feasibility { get; }
+        public StrategicContextInsights Insights { get; }
         public string InformationBoundary =>
             "Owned state plus currently visible resource nodes and enemy military aggregates; "
             + "no hidden, explored-only, or predicted enemy data.";
@@ -33,6 +34,19 @@ namespace OpenEmpires
             List<StrategicWorkerAllocationState> workerAllocation, int totalWorkers,
             StrategicDefenseState defense, StrategicThreatState threat,
             IReadOnlyList<StrategicFeasibility> feasibility = null)
+            : this(playerId, snapshotTick, economy, population, military, production,
+                activePlans, visibleResources, workerAllocation, totalWorkers, defense, threat,
+                feasibility, null)
+        {
+        }
+
+        internal StrategicContext(int playerId, int snapshotTick,
+            List<StrategicResourceState> economy, StrategicPopulationState population,
+            List<StrategicMilitaryState> military, List<StrategicProductionState> production,
+            List<StrategicPlanState> activePlans, List<StrategicVisibleResourceState> visibleResources,
+            List<StrategicWorkerAllocationState> workerAllocation, int totalWorkers,
+            StrategicDefenseState defense, StrategicThreatState threat,
+            IReadOnlyList<StrategicFeasibility> feasibility, StrategicContextInsights insights)
         {
             PlayerId = playerId;
             SnapshotTick = snapshotTick;
@@ -55,6 +69,7 @@ namespace OpenEmpires
             Threat = threat ?? throw new ArgumentNullException(nameof(threat));
             Feasibility = feasibility == null ? Array.Empty<StrategicFeasibility>()
                 : new List<StrategicFeasibility>(feasibility).AsReadOnly();
+            Insights = insights;
         }
 
         public string ToJson() => Newtonsoft.Json.JsonConvert.SerializeObject(this,
@@ -200,6 +215,8 @@ namespace OpenEmpires
         public string CurrentMilestone { get; }
         public string MilestoneStatus { get; }
         public string Reason { get; }
+        public int CompletedMilestoneCount { get; }
+        public int TotalMilestoneCount { get; }
         public IReadOnlyList<StrategicRequirementState> RequiredResources { get; }
         public IReadOnlyList<StrategicReservationState> Reservations { get; }
 
@@ -215,6 +232,12 @@ namespace OpenEmpires
             CurrentMilestone = plan.CurrentMilestone?.Name ?? string.Empty;
             MilestoneStatus = plan.CurrentMilestone?.Status.ToString() ?? string.Empty;
             Reason = plan.OutcomeMessage;
+            TotalMilestoneCount = plan.Milestones.Count;
+            int completed = 0;
+            for (int i = 0; i < plan.Milestones.Count; i++)
+                if (plan.Milestones[i].Status == StrategicMilestoneStatus.Completed)
+                    completed++;
+            CompletedMilestoneCount = completed;
             RequiredResources = requirements.AsReadOnly();
             Reservations = reservations.AsReadOnly();
         }

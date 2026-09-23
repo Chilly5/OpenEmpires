@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-22 19:31:29Z" end-time="2026-09-22 19:31:30Z" duration="0.7235">
+  <test-suite type="TestSuite" id="1716" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="77" result="Failed" site="Child" start-time="2026-09-22 19:31:29Z" end-time="2026-09-22 19:31:30Z" duration="0.723500" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1710" name="OpenEmpires.PlayModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.PlayModeTests.dll" runstate="Runnable" testcasecount="77" result="Failed" site="Child" start-time="2026-09-22 19:31:29Z" end-time="2026-09-22 19:31:30Z" duration="0.715903" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="24144" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1711" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="77" result="Failed" site="Child" start-time="2026-09-22 19:31:29Z" end-time="2026-09-22 19:31:30Z" duration="0.713590" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1712" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="77" result="Failed" site="Child" start-time="2026-09-22 19:31:29Z" end-time="2026-09-22 19:31:30Z" duration="0.711668" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1705" name="CommanderPhase4C3PlayModeTests" fullname="OpenEmpires.Tests.CommanderPhase4C3PlayModeTests" classname="OpenEmpires.Tests.CommanderPhase4C3PlayModeTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-09-22 19:31:29Z" end-time="2026-09-22 19:31:30Z" duration="0.708984" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase4C3" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1707" name="ChatProviderPayload_ContainsInsightsWithoutExecutionBeforeApproval" fullname="OpenEmpires.Tests.CommanderPhase4C3PlayModeTests.ChatProviderPayload_ContainsInsightsWithoutExecutionBeforeApproval" methodname="ChatProviderPayload_ContainsInsightsWithoutExecutionBeforeApproval" classname="OpenEmpires.Tests.CommanderPhase4C3PlayModeTests" runstate="Runnable" seed="1912833169" result="Passed" start-time="2026-09-22 19:31:29Z" end-time="2026-09-22 19:31:30Z" duration="0.414416" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1706" name="RuntimeInsights_TrackObservedChangesWithoutCaptureSideEffects" fullname="OpenEmpires.Tests.CommanderPhase4C3PlayModeTests.RuntimeInsights_TrackObservedChangesWithoutCaptureSideEffects" methodname="RuntimeInsights_TrackObservedChangesWithoutCaptureSideEffects" classname="OpenEmpires.Tests.CommanderPhase4C3PlayModeTests" runstate="Runnable" seed="1532368329" result="Failed" start-time="2026-09-22 19:31:30Z" end-time="2026-09-22 19:31:30Z" duration="0.283219" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: 1
+  But was:  2
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4C3PlayModeTests+<RuntimeInsights_TrackObservedChangesWithoutCaptureSideEffects>d__12.MoveNext () [0x0020e] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\PlayMode\CommanderPhase4C3PlayModeTests.cs:100
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: DefensivePreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'DefensivePreparation' and started plan #1: DefensivePreparation.
+[StrategicPlanner] Plan #1 milestone active: Economic Defense.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[StrategicPlanner] Plan #1 milestone completed: Economic Defense.
+[StrategicPlanner] Plan #1 milestone active: Military Infrastructure.
+[StrategicPlanner] Plan #1 milestone completed: Military Infrastructure.
+[StrategicPlanner] Reservation #1 created for plan #1: 600 Wood.
+[StrategicPlanner] Plan #1 milestone active: Defensive Structures.
+[Commander] Goal #3 submitted: BuildStructure
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

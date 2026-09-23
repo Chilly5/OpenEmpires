@@ -115,6 +115,20 @@ namespace OpenEmpires
                     Train(CommanderIntentCatalog.SpearmanUnitType, MilitaryReinforcementPlan.SpearmanTarget);
                     Train(CommanderIntentCatalog.ArcherUnitType, MilitaryReinforcementPlan.ArcherTarget);
                     break;
+                case StrategicObjectiveType.RangedReinforcement:
+                    Build(BuildingType.ArcheryRange, 1, ensure: true);
+                    Train(CommanderIntentCatalog.ArcherUnitType, RangedReinforcementPlan.ArcherTarget);
+                    break;
+                case StrategicObjectiveType.DefensiveTurtle:
+                    Build(BuildingType.Barracks, 1, ensure: true);
+                    Build(BuildingType.ArcheryRange, 1, ensure: true);
+                    Build(BuildingType.Tower, DefensiveTurtlePlan.TowerCount);
+                    Train(CommanderIntentCatalog.SpearmanUnitType, DefensiveTurtlePlan.SpearmanTarget);
+                    Train(CommanderIntentCatalog.ArcherUnitType, DefensiveTurtlePlan.ArcherTarget);
+                    break;
+                default:
+                    Reject("Unsupported strategic objective.");
+                    break;
             }
             if (workers == 0) Reject("Strategic preparation requires owned workers.");
             int finalPopulation = context.Population + queuedPopulation + neededPopulation;

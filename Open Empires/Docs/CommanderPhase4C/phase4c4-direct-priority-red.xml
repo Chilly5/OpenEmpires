@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-23 09:21:14Z" end-time="2026-09-23 09:21:14Z" duration="0.5857522">
+  <test-suite type="TestSuite" id="1661" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="568" result="Failed" site="Child" start-time="2026-09-23 09:21:14Z" end-time="2026-09-23 09:21:14Z" duration="0.585752" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1650" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="568" result="Failed" site="Child" start-time="2026-09-23 09:21:14Z" end-time="2026-09-23 09:21:14Z" duration="0.577986" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="19316" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1651" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="568" result="Failed" site="Child" start-time="2026-09-23 09:21:14Z" end-time="2026-09-23 09:21:14Z" duration="0.577535" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1652" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="568" result="Failed" site="Child" start-time="2026-09-23 09:21:14Z" end-time="2026-09-23 09:21:14Z" duration="0.577257" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1583" name="CommanderPhase4C4Tests" fullname="OpenEmpires.Tests.CommanderPhase4C4Tests" classname="OpenEmpires.Tests.CommanderPhase4C4Tests" runstate="Runnable" testcasecount="28" result="Failed" site="Child" start-time="2026-09-23 09:21:14Z" end-time="2026-09-23 09:21:14Z" duration="0.576565" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase4C4" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="ParameterizedMethod" id="1595" name="DirectPlayerIntent_UsesNormalPriorityAndOverridesExistingPlan" fullname="OpenEmpires.Tests.CommanderPhase4C4Tests.DirectPlayerIntent_UsesNormalPriorityAndOverridesExistingPlan" classname="OpenEmpires.Tests.CommanderPhase4C4Tests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-09-23 09:21:14Z" end-time="2026-09-23 09:21:14Z" duration="0.573841" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1593" name="DirectPlayerIntent_UsesNormalPriorityAndOverridesExistingPlan(4)" fullname="OpenEmpires.Tests.CommanderPhase4C4Tests.DirectPlayerIntent_UsesNormalPriorityAndOverridesExistingPlan(4)" methodname="DirectPlayerIntent_UsesNormalPriorityAndOverridesExistingPlan" classname="OpenEmpires.Tests.CommanderPhase4C4Tests" runstate="Runnable" seed="1275808946" result="Failed" label="Error" start-time="2026-09-23 09:21:14Z" end-time="2026-09-23 09:21:14Z" duration="0.318280" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[System.ArgumentOutOfRangeException : Specified argument was out of the range of valid values.
+Parameter name: objectiveType]]></message>
+                  <stack-trace><![CDATA[  at OpenEmpires.RuleBasedStrategicDecisionPolicy.GetPriorityLevel (OpenEmpires.StrategicObjectiveType objectiveType) [0x00020] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Scripts\AI\Commander\Strategic\StrategicDecisionPolicy.cs:118 
+  at OpenEmpires.RuleBasedStrategicDecisionPolicy.DecidePlayerOverride (OpenEmpires.StrategicContext context, OpenEmpires.StrategicIntent playerIntent) [0x0007e] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Scripts\AI\Commander\Strategic\StrategicDecisionPolicy.cs:159 
+  at OpenEmpires.RuleBasedStrategicDecisionPolicy.Decide (OpenEmpires.StrategicContext context, System.Collections.Generic.IReadOnlyList`1[T] recommendations, OpenEmpires.StrategicIntent playerIntent) [0x0001f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Scripts\AI\Commander\Strategic\StrategicDecisionPolicy.cs:72 
+  at OpenEmpires.StrategicPipeline.Evaluate (OpenEmpires.CommanderContext commanderContext, System.Int32 currentTick, OpenEmpires.StrategicEvaluationTriggerType triggerType, System.String reason, OpenEmpires.StrategicIntent playerIntent) [0x00049] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Scripts\AI\Commander\Strategic\StrategicPipeline.cs:116 
+  at OpenEmpires.StrategicPipeline.EvaluatePlayerIntentNow (OpenEmpires.StrategicIntent playerIntent, System.String reason, System.Nullable`1[T] tick) [0x00020] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Scripts\AI\Commander\Strategic\StrategicPipeline.cs:104 
+  at OpenEmpires.Tests.CommanderPhase4C4Tests.DirectPlayerIntent_UsesNormalPriorityAndOverridesExistingPlan (System.Int32 objective) [0x0007e] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4C4Tests.cs:103 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <816f70bc2a9c4332b0bd119906a8d40e>:0 ]]></stack-trace>
+                </failure>
+                <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: EconomicExpansion for player 0.
+[StrategicPlanner] Intent #1 selected template 'EconomicExpansion' and started plan #1: EconomicExpansion.
+[StrategicPlanner] Plan #1 milestone active: Boom Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+[StrategicPlanner] Strategic intent #2 created: RangedReinforcement for player 0.
+]]></output>
+              </test-case>
+              <test-case id="1594" name="DirectPlayerIntent_UsesNormalPriorityAndOverridesExistingPlan(5)" fullname="OpenEmpires.Tests.CommanderPhase4C4Tests.DirectPlayerIntent_UsesNormalPriorityAndOverridesExistingPlan(5)" methodname="DirectPlayerIntent_UsesNormalPriorityAndOverridesExistingPlan" classname="OpenEmpires.Tests.CommanderPhase4C4Tests" runstate="Runnable" seed="1566614074" result="Failed" label="Error" start-time="2026-09-23 09:21:14Z" end-time="2026-09-23 09:21:14Z" duration="0.246687" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[System.ArgumentOutOfRangeException : Specified argument was out of the range of valid values.
+Parameter name: objectiveType]]></message>
+                  <stack-trace><![CDATA[  at OpenEmpires.RuleBasedStrategicDecisionPolicy.GetPriorityLevel (OpenEmpires.StrategicObjectiveType objectiveType) [0x00020] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Scripts\AI\Commander\Strategic\StrategicDecisionPolicy.cs:118 
+  at OpenEmpires.RuleBasedStrategicDecisionPolicy.DecidePlayerOverride (OpenEmpires.StrategicContext context, OpenEmpires.StrategicIntent playerIntent) [0x0007e] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Scripts\AI\Commander\Strategic\StrategicDecisionPolicy.cs:159 
+  at OpenEmpires.RuleBasedStrategicDecisionPolicy.Decide (OpenEmpires.StrategicContext context, System.Collections.Generic.IReadOnlyList`1[T] recommendations, OpenEmpires.StrategicIntent playerIntent) [0x0001f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Scripts\AI\Commander\Strategic\StrategicDecisionPolicy.cs:72 
+  at OpenEmpires.StrategicPipeline.Evaluate (OpenEmpires.CommanderContext commanderContext, System.Int32 currentTick, OpenEmpires.StrategicEvaluationTriggerType triggerType, System.String reason, OpenEmpires.StrategicIntent playerIntent) [0x00049] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Scripts\AI\Commander\Strategic\StrategicPipeline.cs:116 
+  at OpenEmpires.StrategicPipeline.EvaluatePlayerIntentNow (OpenEmpires.StrategicIntent playerIntent, System.String reason, System.Nullable`1[T] tick) [0x00020] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Scripts\AI\Commander\Strategic\StrategicPipeline.cs:104 
+  at OpenEmpires.Tests.CommanderPhase4C4Tests.DirectPlayerIntent_UsesNormalPriorityAndOverridesExistingPlan (System.Int32 objective) [0x0007e] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4C4Tests.cs:103 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <816f70bc2a9c4332b0bd119906a8d40e>:0 ]]></stack-trace>
+                </failure>
+                <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: EconomicExpansion for player 0.
+[StrategicPlanner] Intent #1 selected template 'EconomicExpansion' and started plan #1: EconomicExpansion.
+[StrategicPlanner] Plan #1 milestone active: Boom Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+[StrategicPlanner] Strategic intent #2 created: DefensiveTurtle for player 0.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

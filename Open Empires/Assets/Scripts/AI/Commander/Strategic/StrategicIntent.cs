@@ -9,7 +9,9 @@ namespace OpenEmpires
         AttackPreparation,
         DefensivePreparation,
         EconomicExpansion,
-        MilitaryReinforcement
+        MilitaryReinforcement,
+        RangedReinforcement,
+        DefensiveTurtle
     }
 
     public enum StrategicIntentStatus

@@ -22,20 +22,23 @@ namespace OpenEmpires
             }
 
             var military = new List<StrategicMilitaryState>();
-            int totalWorkers = 0;
+            long totalWorkers = 0;
             for (int i = 0; i < commanderContext.Units.Count; i++)
             {
                 CommanderUnitSnapshot unit = commanderContext.Units[i];
                 // Villagers (0) and sheep (5) are not part of army composition.
                 if (unit.UnitType == 0)
                 {
-                    totalWorkers += unit.Count;
+                    totalWorkers = checked(totalWorkers + unit.Count);
                     continue;
                 }
                 if (unit.UnitType == 5) continue;
                 military.Add(new StrategicMilitaryState(unit.UnitType, unit.Count, unit.QueuedCount));
             }
             military.Sort((left, right) => left.UnitType.CompareTo(right.UnitType));
+            if (totalWorkers > int.MaxValue || totalWorkers < 0)
+                throw new OverflowException("Owned worker count exceeds Int32 range.");
+            int ownedWorkers = (int)totalWorkers;
 
             var workerAllocation = new List<StrategicWorkerAllocationState>();
             for (int i = 0; i < commanderContext.WorkerAllocation.Count; i++)
@@ -122,14 +125,17 @@ namespace OpenEmpires
                 }
             }
 
+            StrategicContextInsights insights = new StrategicContextInsightsBuilder().Build(
+                ownedWorkers, workerAllocation, military, production, activePlans);
             return new StrategicContext(commanderContext.PlayerId, commanderContext.SnapshotTick,
                 economy, new StrategicPopulationState(commanderContext.Population,
                     commanderContext.PopulationCap, commanderContext.MaximumPopulation),
                 military, production, activePlans,
-                visibleResources, workerAllocation, totalWorkers,
+                visibleResources, workerAllocation, ownedWorkers,
                 new StrategicDefenseState(defensiveBuildings,
                     militaryStrength + defensiveBuildingStrength),
-                new StrategicThreatState(visibleEnemyMilitary), planner.QuoteFeasibility(commanderContext));
+                new StrategicThreatState(visibleEnemyMilitary), planner.QuoteFeasibility(commanderContext),
+                insights);
         }
 
         private static int GetCurrentAmount(CommanderResourceSnapshot resources,

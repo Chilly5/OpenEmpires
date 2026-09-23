@@ -8,7 +8,9 @@ namespace OpenEmpires
         CavalryPressure,
         DefensivePreparation,
         EconomicExpansion,
-        MilitaryReinforcement
+        MilitaryReinforcement,
+        RangedReinforcement,
+        DefensiveTurtle
     }
 
     public enum StrategicPlanStatus

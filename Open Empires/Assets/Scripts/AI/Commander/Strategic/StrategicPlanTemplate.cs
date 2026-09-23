@@ -25,6 +25,8 @@ namespace OpenEmpires
             registry.Register(new DefensivePreparationPlanTemplate());
             registry.Register(new EconomicExpansionPlanTemplate());
             registry.Register(new MilitaryReinforcementPlanTemplate());
+            registry.Register(new RangedReinforcementPlanTemplate());
+            registry.Register(new DefensiveTurtlePlanTemplate());
             return registry;
         }
 

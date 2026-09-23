@@ -44,6 +44,8 @@ namespace OpenEmpires
                     case "DefensivePreparation": objectiveType = StrategicObjectiveType.DefensivePreparation; break;
                     case "EconomicExpansion": objectiveType = StrategicObjectiveType.EconomicExpansion; break;
                     case "MilitaryReinforcement": objectiveType = StrategicObjectiveType.MilitaryReinforcement; break;
+                    case "RangedReinforcement": objectiveType = StrategicObjectiveType.RangedReinforcement; break;
+                    case "DefensiveTurtle": objectiveType = StrategicObjectiveType.DefensiveTurtle; break;
                     default: return StrategicAIProviderResult.Rejected("Unsupported strategic objective.");
                 }
 

@@ -1,6 +1,6 @@
 # Commander Phase 4C.2 Task 1 Report
 
-Status: **PATCH_READY — Fix round 1 source frozen; root-owned focused verification pending.**
+Status: **DONE — Phase 4C.2 gate passed; overall Phase 4C remains open.**
 
 ## Scope and gate
 
@@ -49,6 +49,18 @@ Exact public value/service surface:
 - Final focused PlayMode job `05f7822ccf2748e49250b589f866a030`: 5/5 passed, zero failures/skips, `Passed`, 1.4933965 seconds. `ExplanationCannotModifyIntent` passed after the scoped fix. The other passing real-host cases cover recorded rejected-attack reason/provenance despite an unrelated defense plan, detached current-plan progress without advancement, reset isolation from retained game decision history, and offline exact-form/adversarial routing.
 - Final focused EditMode job `57a9a33443644ffbb8162629e5be223d`: 15/15 passed, zero failures/skips, `Passed`, 0.0360488 seconds. Required `Explanation_MatchesDecisionReason` and `RejectedPlanHasReason` passed; all six outcomes, bounds/copying, invalid inputs, invariant formatting, absent evidence, attack attribution, deterministic ordering, and current-state semantics passed.
 - Unity MCP 10.2 returned complete per-test data for both final jobs but did not emit a workspace `TestResults.xml`. The job IDs and returned summaries/details are the authoritative current GREEN evidence. No result was fabricated or recovered from an older XML. Earlier RED and value/service GREEN XML files remain preserved with hashes above.
+
+## Fix-round 1 and final gate evidence
+
+- Scoped rereview: **APPROVED**; both independent-review findings were addressed, with no new Critical/Important breakage.
+- Fix-round focused EditMode `4568d656eaaa490798eb59bbad443533`: **18/18 passed**, zero failures/skips.
+- Fix-round focused PlayMode `a25af57761a44dc5bdc481ae98a18824`: **6/6 passed**, zero failures/skips.
+- Final full EditMode `e828d0a94df44912a78e740277d896a8`: **530/530 passed**, zero failures/skips, 443.6047501 seconds.
+- First full PlayMode `0611af991765467aa53cac17c69686fe`: 75 tests executed but failed only on the external Package Manager OAuth log from `api.unity.com` in `CommanderPhase3A1PlayModeTests`; this is preserved as failed environment evidence.
+- Clean full PlayMode rerun `0a3decd672b648e8a87a2f8f7f923c31`: **75/75 passed**, zero failures/skips, 32.0661847 seconds.
+- Frozen hash verification: **7/7 matched; mismatch count 0**.
+- Refreshed boundary audit: 55 frozen boundary entries all present/unchanged with `auditGap=false`; 6 advisory host references; credential shapes 0 and assignment candidates 0; `.env` untracked and ignored.
+- These results pass the Phase 4C.2 gate. They do not mark the overall Phase 4C goal complete or admit Phase 4C.3.
 
 ## Integration and safety boundaries
 
@@ -107,6 +119,6 @@ The machine-readable inventory is `phase4c2-task1-source-hashes.json`. Productio
 
 ## Concerns and handoff
 
-- Fix-round verification is pending. The earlier EditMode 15/15 and PlayMode 5/5 jobs predate the review patch and are not claimed as verification of the new behavior.
+- Fix-round focused and full regression verification is complete as recorded above.
 - Evidence concern: final Unity MCP 10.2 jobs returned full per-test details but produced no workspace XML artifact. Their job IDs/results are recorded above; the earlier XML evidence is preserved and hash-verifiable.
-- Per the gated plan, independent scoped review, one fresh full EditMode/PlayMode pair, boundary audit, and Astra integration/security gate remain Task 2 work. Task 1 does not claim the Phase 4C.2 gate or admit Phase 4C.3.
+- Phase 4C.2 is gated complete. The overall Phase 4C goal remains active; Phase 4C.3 is not admitted.

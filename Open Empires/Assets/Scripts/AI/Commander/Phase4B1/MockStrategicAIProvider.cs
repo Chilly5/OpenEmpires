@@ -38,6 +38,8 @@ namespace OpenEmpires
                 case "focus on expanding our economy": objective = "EconomicExpansion"; break;
                 case "build up army":
                 case "build up our army": objective = "MilitaryReinforcement"; break;
+                case "prepare ranged reinforcements": objective = "RangedReinforcement"; break;
+                case "prepare fortified defenses": objective = "DefensiveTurtle"; break;
                 default: return Task.FromResult(StrategicAIProviderResult.Rejected(
                     "Unsupported strategic request. Try preparing an attack, defenses, economy, or army."));
             }

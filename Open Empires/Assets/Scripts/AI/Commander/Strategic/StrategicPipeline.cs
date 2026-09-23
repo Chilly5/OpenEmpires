@@ -242,6 +242,8 @@ namespace OpenEmpires
                 case StrategicObjectiveType.DefensivePreparation: return StrategicPlanType.DefensivePreparation;
                 case StrategicObjectiveType.EconomicExpansion: return StrategicPlanType.EconomicExpansion;
                 case StrategicObjectiveType.MilitaryReinforcement: return StrategicPlanType.MilitaryReinforcement;
+                case StrategicObjectiveType.RangedReinforcement: return StrategicPlanType.RangedReinforcement;
+                case StrategicObjectiveType.DefensiveTurtle: return StrategicPlanType.DefensiveTurtle;
                 default: throw new ArgumentOutOfRangeException(nameof(objectiveType));
             }
         }

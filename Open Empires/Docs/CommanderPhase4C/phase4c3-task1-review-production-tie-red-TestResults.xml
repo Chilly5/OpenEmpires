@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-22 19:45:50Z" end-time="2026-09-22 19:45:51Z" duration="1.0435471">
+  <test-suite type="TestSuite" id="1619" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="540" result="Failed" site="Child" start-time="2026-09-22 19:45:50Z" end-time="2026-09-22 19:45:51Z" duration="1.043547" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1608" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="540" result="Failed" site="Child" start-time="2026-09-22 19:45:50Z" end-time="2026-09-22 19:45:51Z" duration="0.941163" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="24144" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1609" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="540" result="Failed" site="Child" start-time="2026-09-22 19:45:50Z" end-time="2026-09-22 19:45:51Z" duration="0.848739" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1610" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="540" result="Failed" site="Child" start-time="2026-09-22 19:45:50Z" end-time="2026-09-22 19:45:51Z" duration="0.840108" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1572" name="CommanderPhase4C3Tests" fullname="OpenEmpires.Tests.CommanderPhase4C3Tests" classname="OpenEmpires.Tests.CommanderPhase4C3Tests" runstate="Runnable" testcasecount="10" result="Failed" site="Child" start-time="2026-09-22 19:45:51Z" end-time="2026-09-22 19:45:51Z" duration="0.731786" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase4C3" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1575" name="ProviderRequest_SortsProductionIdleCapacityTies" fullname="OpenEmpires.Tests.CommanderPhase4C3Tests.ProviderRequest_SortsProductionIdleCapacityTies" methodname="ProviderRequest_SortsProductionIdleCapacityTies" classname="OpenEmpires.Tests.CommanderPhase4C3Tests" runstate="Runnable" seed="451094185" result="Failed" start-time="2026-09-22 19:45:51Z" end-time="2026-09-22 19:45:51Z" duration="0.615968" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  The complete Gemini request must not depend on insertion order for capacity-only ties.
+  String lengths are both 2894. Strings differ at index 1965.
+  Expected: "...unt\\":0,\\"AvailableCapacity\\":1},{\\"BuildingType\\":\\"Barra..."
+  But was:  "...unt\\":0,\\"AvailableCapacity\\":0},{\\"BuildingType\\":\\"Barra..."
+  -----------------------------------------------^
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4C3Tests.ProviderRequest_SortsProductionIdleCapacityTies () [0x00133] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4C3Tests.cs:174
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

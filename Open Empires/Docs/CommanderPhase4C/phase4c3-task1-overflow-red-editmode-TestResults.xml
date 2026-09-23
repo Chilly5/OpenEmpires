@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-22 19:33:43Z" end-time="2026-09-22 19:33:43Z" duration="0.2894707">
+  <test-suite type="TestSuite" id="1616" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="537" result="Failed" site="Child" start-time="2026-09-22 19:33:43Z" end-time="2026-09-22 19:33:43Z" duration="0.289471" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1605" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="537" result="Failed" site="Child" start-time="2026-09-22 19:33:43Z" end-time="2026-09-22 19:33:43Z" duration="0.279941" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="24144" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1606" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="537" result="Failed" site="Child" start-time="2026-09-22 19:33:43Z" end-time="2026-09-22 19:33:43Z" duration="0.278778" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1607" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="537" result="Failed" site="Child" start-time="2026-09-22 19:33:43Z" end-time="2026-09-22 19:33:43Z" duration="0.278457" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1572" name="CommanderPhase4C3Tests" fullname="OpenEmpires.Tests.CommanderPhase4C3Tests" classname="OpenEmpires.Tests.CommanderPhase4C3Tests" runstate="Runnable" testcasecount="7" result="Failed" site="Child" start-time="2026-09-22 19:33:43Z" end-time="2026-09-22 19:33:43Z" duration="0.277458" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase4C3" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1577" name="Insights_ValidateInputsAndRemainAuthorityFree" fullname="OpenEmpires.Tests.CommanderPhase4C3Tests.Insights_ValidateInputsAndRemainAuthorityFree" methodname="Insights_ValidateInputsAndRemainAuthorityFree" classname="OpenEmpires.Tests.CommanderPhase4C3Tests" runstate="Runnable" seed="1576131594" result="Failed" start-time="2026-09-22 19:33:43Z" end-time="2026-09-22 19:33:43Z" duration="0.266894" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  The army-wide owned denominator must also fit Int32.
+  Expected: <System.OverflowException>
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4C3Tests.Insights_ValidateInputsAndRemainAuthorityFree () [0x00058] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4C3Tests.cs:247
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

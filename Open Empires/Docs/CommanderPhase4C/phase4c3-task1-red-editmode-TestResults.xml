@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="7" result="Failed(Child)" total="7" passed="1" failed="6" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-22 19:22:24Z" end-time="2026-09-22 19:22:26Z" duration="1.7044326">
+  <test-suite type="TestSuite" id="1718" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="537" result="Failed" site="Child" start-time="2026-09-22 19:22:24Z" end-time="2026-09-22 19:22:26Z" duration="1.704433" total="7" passed="1" failed="6" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1605" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="537" result="Failed" site="Child" start-time="2026-09-22 19:22:24Z" end-time="2026-09-22 19:22:26Z" duration="1.698090" total="7" passed="1" failed="6" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="24144" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1606" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="537" result="Failed" site="Child" start-time="2026-09-22 19:22:24Z" end-time="2026-09-22 19:22:26Z" duration="1.693953" total="7" passed="1" failed="6" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1607" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="537" result="Failed" site="Child" start-time="2026-09-22 19:22:24Z" end-time="2026-09-22 19:22:26Z" duration="1.690090" total="7" passed="1" failed="6" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1572" name="CommanderPhase4C3Tests" fullname="OpenEmpires.Tests.CommanderPhase4C3Tests" classname="OpenEmpires.Tests.CommanderPhase4C3Tests" runstate="Runnable" testcasecount="7" result="Failed" site="Child" start-time="2026-09-22 19:22:24Z" end-time="2026-09-22 19:22:26Z" duration="1.685994" total="7" passed="1" failed="6" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase4C3" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1575" name="Aggregates_UseHandCheckedIntegerSemantics" fullname="OpenEmpires.Tests.CommanderPhase4C3Tests.Aggregates_UseHandCheckedIntegerSemantics" methodname="Aggregates_UseHandCheckedIntegerSemantics" classname="OpenEmpires.Tests.CommanderPhase4C3Tests" runstate="Runnable" seed="2080642119" result="Failed" start-time="2026-09-22 19:22:24Z" end-time="2026-09-22 19:22:24Z" duration="0.239421" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4C3Tests.Aggregates_UseHandCheckedIntegerSemantics () [0x000b3] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4C3Tests.cs:168
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1573" name="ContextRemainsFogSafe" fullname="OpenEmpires.Tests.CommanderPhase4C3Tests.ContextRemainsFogSafe" methodname="ContextRemainsFogSafe" classname="OpenEmpires.Tests.CommanderPhase4C3Tests" runstate="Runnable" seed="10148445" result="Failed" start-time="2026-09-22 19:22:24Z" end-time="2026-09-22 19:22:24Z" duration="0.238950" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Owned insights must remain independent of enemy visibility.
+  Expected string length 690 but was 743. Strings differ at index 625.
+  Expected: "...ats":{"VisibleEnemyMilitary":[],"VisibleEnemyMilitaryUnits..."
+  But was:  "...ats":{"VisibleEnemyMilitary":[{"UnitType":91,"VisibleCount..."
+  --------------------------------------------^
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4C3Tests.ContextRemainsFogSafe () [0x002d2] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4C3Tests.cs:83
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1574" name="ContextSerializationDeterministic" fullname="OpenEmpires.Tests.CommanderPhase4C3Tests.ContextSerializationDeterministic" methodname="ContextSerializationDeterministic" classname="OpenEmpires.Tests.CommanderPhase4C3Tests" runstate="Runnable" seed="1873994274" result="Failed" label="Error" start-time="2026-09-22 19:22:24Z" end-time="2026-09-22 19:22:25Z" duration="0.239644" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.ArgumentNullException : actual
+Parameter name: Argument actual must not be null]]></message>
+                <stack-trace><![CDATA[  at NUnit.Framework.Guard.ArgumentNotNull (System.Object value, System.String name) [0x00019] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at NUnit.Framework.Constraints.PropertyConstraint.ApplyTo (System.Object actual) [0x00001] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x0000e] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression) [0x00001] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at OpenEmpires.Tests.CommanderPhase4C3Tests.ContextSerializationDeterministic () [0x001a2] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4C3Tests.cs:130 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <816f70bc2a9c4332b0bd119906a8d40e>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1577" name="Insights_ValidateInputsAndRemainAuthorityFree" fullname="OpenEmpires.Tests.CommanderPhase4C3Tests.Insights_ValidateInputsAndRemainAuthorityFree" methodname="Insights_ValidateInputsAndRemainAuthorityFree" classname="OpenEmpires.Tests.CommanderPhase4C3Tests" runstate="Runnable" seed="273357062" result="Failed" start-time="2026-09-22 19:22:25Z" end-time="2026-09-22 19:22:25Z" duration="0.241441" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: <System.ArgumentOutOfRangeException>
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4C3Tests.Insights_ValidateInputsAndRemainAuthorityFree () [0x00010] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4C3Tests.cs:230
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1578" name="LegacyConstructor_OmitsAbsentInsightsAndPreservesArity" fullname="OpenEmpires.Tests.CommanderPhase4C3Tests.LegacyConstructor_OmitsAbsentInsightsAndPreservesArity" methodname="LegacyConstructor_OmitsAbsentInsightsAndPreservesArity" classname="OpenEmpires.Tests.CommanderPhase4C3Tests" runstate="Runnable" seed="1201973776" result="Passed" start-time="2026-09-22 19:22:25Z" end-time="2026-09-22 19:22:25Z" duration="0.241495" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1576" name="MilestoneCounts_AreDetachedAndCountCompletedOnly" fullname="OpenEmpires.Tests.CommanderPhase4C3Tests.MilestoneCounts_AreDetachedAndCountCompletedOnly" methodname="MilestoneCounts_AreDetachedAndCountCompletedOnly" classname="OpenEmpires.Tests.CommanderPhase4C3Tests" runstate="Runnable" seed="885273195" result="Failed" start-time="2026-09-22 19:22:25Z" end-time="2026-09-22 19:22:25Z" duration="0.242916" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: 5
+  But was:  0
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4C3Tests.MilestoneCounts_AreDetachedAndCountCompletedOnly () [0x0002d] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4C3Tests.cs:210
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: DefensivePreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'DefensivePreparation' and started plan #1: DefensivePreparation.
+[StrategicPlanner] Plan #1 milestone active: Economic Defense.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1579" name="ProviderRequest_ContainsExplicitPrimitiveInsightContract" fullname="OpenEmpires.Tests.CommanderPhase4C3Tests.ProviderRequest_ContainsExplicitPrimitiveInsightContract" methodname="ProviderRequest_ContainsExplicitPrimitiveInsightContract" classname="OpenEmpires.Tests.CommanderPhase4C3Tests" runstate="Runnable" seed="1772972500" result="Failed" start-time="2026-09-22 19:22:25Z" end-time="2026-09-22 19:22:26Z" duration="0.240570" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing ""incomeTrendAvailable":false" and containing ""workerActivity":{" and containing ""available":" and containing ""totalWorkers":" and containing ""gatheringWorkers":" and containing ""basisPoints":" and containing ""armyComposition":[" and containing ""productionPressure":[" and containing ""planProgress":["
+  But was:  "{"resources":{"Food":{"current":0,"reserved":0,"available":0},"Wood":{"current":0,"reserved":0,"available":0},"Gold":{"current":0,"reserved":0,"available":0}},"population":{"CurrentPopulation":0,"PopulationCap":0,"MaximumPopulation":200,"AvailableCapacity":0},"workerAllocation":[{"ResourceType":0,"AssignedWorkers":0},{"ResourceType":1,"AssignedWorkers":0},{"ResourceType":2,"AssignedWorkers":0},{"ResourceType":3,"AssignedWorkers":0}],"totalWorkers":0,"ownedMilitary":[],"productionCapability":[],"ownedDefense":{"DefensiveBuildingCount":0,"CapabilityEstimate":0},"currentStrategicPlans":[],"visibleThreats":{"VisibleEnemyMilitary":[],"VisibleEnemyMilitaryUnits":0,"VisibleEnemyMilitaryStrength":0}}"
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4C3Tests.ProviderRequest_ContainsExplicitPrimitiveInsightContract () [0x0002d] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4C3Tests.cs:294
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

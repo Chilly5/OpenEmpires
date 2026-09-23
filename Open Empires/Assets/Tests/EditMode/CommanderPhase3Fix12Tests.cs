@@ -241,12 +241,19 @@ namespace OpenEmpires.Tests
             var registry = StrategicPlanRegistry.CreateDefault();
             foreach (var template in registry.Templates)
             {
-                var testIntent = new StrategicIntent(1, 0,
-                    template is CavalryPressurePlanTemplate ? StrategicObjectiveType.AttackPreparation
-                    : template is DefensivePreparationPlanTemplate ? StrategicObjectiveType.DefensivePreparation
-                    : template is EconomicExpansionPlanTemplate ? StrategicObjectiveType.EconomicExpansion
-                    : StrategicObjectiveType.MilitaryReinforcement,
-                    0, parameters);
+                StrategicObjectiveType objectiveType;
+                if (template is CavalryPressurePlanTemplate)
+                    objectiveType = StrategicObjectiveType.AttackPreparation;
+                else if (template is DefensivePreparationPlanTemplate)
+                    objectiveType = StrategicObjectiveType.DefensivePreparation;
+                else if (template is EconomicExpansionPlanTemplate)
+                    objectiveType = StrategicObjectiveType.EconomicExpansion;
+                else if (template is MilitaryReinforcementPlanTemplate)
+                    objectiveType = StrategicObjectiveType.MilitaryReinforcement;
+                else
+                    continue;
+
+                var testIntent = new StrategicIntent(1, 0, objectiveType, 0, parameters);
 
                 var validation = template.ValidateParameters(testIntent);
                 Assert.That(validation.IsValid, Is.True, $"Template {template.TemplateId} should allow optional parameters: {validation.Reason}");

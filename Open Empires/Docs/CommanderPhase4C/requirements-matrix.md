@@ -1,52 +1,73 @@
 # Commander Phase 4C Requirements Matrix
 
-Traceability baseline for the Phase 4C user brief and the architecture spec in
-`Docs/superpowers/specs/2026-09-15-commander-phase4c-design.md`. This document
-does not claim implementation, test, or runtime completion. “Verified” is used
-only for discovery/design/baseline facts inspected in the checkout.
+Final requirement-by-requirement traceability for the Phase 4C brief and
+architecture spec. Evidence is current through the post-priority-fix freeze.
+The final independent review recommends **READY FOR PHASE 4D**. Dynamic
+housing runtime completion is a documented non-blocking coverage limitation;
+`TechnologyRush`, `SiegePreparation`, and `NavalExpansion` are explicitly
+deferred rather than represented as supported.
 
-| Requirement | Expected authoritative evidence | Current status |
+| Requirement | Authoritative evidence | Final status |
 |---|---|---|
-| Preserve provider -> validated DTO -> approval -> decision policy -> planner -> existing RTS execution | Current source review and final architecture/security review | Verified as specified design; implementation/runtime unverified |
-| Do not bypass StrategicApprovalLayer, StrategicDecisionPolicy, or StrategicPlanner | Static audit plus focused/regression tests | Implementation/test unverified |
-| Do not create direct commands, give providers simulation access, or add uncontrolled autonomy | Static dependency audit and command-buffer runtime assertions | Implementation/test/runtime unverified |
-| Execute 4C.1 memory, then 4C.2 explanations, then 4C.3 richer context, then 4C.4 objective expansion as gated sub-phases | Phase-specific reports and gate results before each successor | Unverified |
-| Astra handles architecture/design/security/integration/review/conflict work, not routine tests or documentation | Delegation plan and final review ledger | Design requirement verified in architecture spec; execution unverified |
-| Sol handles medium features, interfaces, integrations, and non-trivial tests | Delegation ledger with implementation/test ownership | Design requirement verified in architecture spec; execution unverified |
-| Luna handles routine tests/search/static analysis/documentation and must not change authority, planner, or execution paths | Delegation ledger, touched-file audit, and review | Design requirement verified in architecture spec; execution unverified |
-| Before coding, record architecture plan, delegated tasks, dependency order, and risk assessment | Architecture spec and phase progress ledger | Verified in current design/progress documents |
-| Each delegated task records Agent, Task, Expected output, and Validation | Phase-specific progress ledger | Unverified for implementation run |
-| After implementation, Astra reviews architecture, tests, security, and integration | Final review record and requirements audit | Unverified |
-| 4C.1 provides bounded, deterministic, local short-term conversational memory | `CommanderMemory`, `ConversationState`, `MemoryEntry` source and focused tests | Unverified |
-| Memory stores no permanent profile, hidden state, cloud storage, embeddings, simulation objects, or commands | Type/static audit and behavioral leak tests | Unverified |
-| Memory has bounded size, deterministic behavior, explicit reset, and clears between matches | Focused lifecycle tests and runtime reset evidence | Unverified |
-| Memory records only value summaries; never retains mutable `StrategicDecisionRecord`, intent, plan, or submission graphs | Source review and immutable snapshot tests | Unverified |
-| Player text remains untrusted and does not populate trusted outcome fields | Adversarial history tests and memory/request payload inspection | Unverified |
-| Required 4C.1 test: `Memory_DoesNotLeakGameState` | Named EditMode/PlayMode result with emitted-request and hidden-state assertions | Unverified |
-| Required 4C.1 test: `Memory_IsBounded` | Named test result proving count/text limits and eviction | Unverified |
-| Required 4C.1 test: `Memory_ClearsBetweenMatches` | Named lifecycle test result | Unverified |
-| Required 4C.1 test: `SameHistoryProducesSameContext` | Named deterministic-context test result | Unverified |
-| 4C.2 provides grounded `CommanderExplanationService`, `ExplanationContext`, and `ExplanationResult` | Source review, decision-record projection, and focused tests | Unverified |
-| Explanations use actual recorded reasons/outcomes and do not recompute or fabricate approval/policy | Explanation tests and no-mutation runtime evidence | Unverified |
-| Required 4C.2 test: `Explanation_MatchesDecisionReason` | Named test result | Unverified |
-| Required 4C.2 test: `ExplanationCannotModifyIntent` | Named test result | Unverified |
-| Required 4C.2 test: `RejectedPlanHasReason` | Named test result | Unverified |
-| 4C.3 adds optional detached own-player aggregates: income trends only if authoritative history exists; otherwise activity proxy, composition, bottlenecks, and plan progress | Context-builder source review and serialized provider payload | Unverified; optional/candidate wording preserved |
-| Do not label stockpile deltas as income; unavailable data must be unavailable, not fabricated zero | Context model/source audit and serialization tests | Unverified |
-| New context remains fog-safe and excludes hidden, explored-only, predicted, or remembered enemy information | Differential fog tests and payload inspection | Unverified |
-| Required 4C.3 test: `ContextRemainsFogSafe` | Named test result | Unverified |
-| Required 4C.3 test: `ContextSerializationDeterministic` | Named test result | Unverified |
-| 4C.4 selects only objectives with inspected execution support; candidate list is not permission to invent all objectives | Objective feasibility assessment and approved sub-phase spec | Design requirement verified; scope/implementation unverified |
-| Possible objective candidates: TechnologyRush, SiegePreparation, NavalExpansion, DefensiveTurtle | Source-backed feasibility report records selected and rejected candidates | Candidate nature verified; support unverified |
-| Every selected objective has distinct intent, strict DTO/parser validation, registry template, feasibility quotation, milestones, policy/approval compatibility, provider interpretation, and end-to-end completion test | Objective implementation report and runtime tests | Unverified |
-| Preserve existing objective enum numeric values by appending new types | Source review/static compatibility check | Unverified |
-| All phases include focused tests and full EditMode/PlayMode regression, including Phase 3 and Phase 4A/4B coverage | Fresh Unity runner outputs and per-phase JSON evidence | Unverified |
-| Static checks find no credential/API-key leaks, advisory CommandBuffer access, provider GameSimulation access, or provider-to-planner references | Static audit report over current source | Unverified |
-| Final deliverable contains `Docs/CommanderPhase4C.md` sections A Architecture changes, B Agent delegation report, C New systems, D Safety boundaries, E Tests, F Runtime evidence, G Future improvements | Final report inspected for all seven sections | Unverified |
-| Runtime evidence is current and tied to the implemented phase, not merely prior saved evidence | Fresh Unity runtime/test evidence and detailed logs | Unverified |
-| Final verdict is `READY FOR PHASE 4D` only when every requirement is evidenced; otherwise `REQUIRES FIX PHASE` with concrete gaps | Final requirements audit and report verdict | Unverified |
-| Successful Commander remembers recent conversations | Memory behavior tests and runtime evidence | Unverified |
-| Successful Commander explains decisions from grounded reasons | Explanation tests and runtime evidence | Unverified |
-| Successful Commander uses richer detached context to provide better strategic advice | Context serialization/provider tests and runtime evidence | Unverified |
-| Successful Commander never cheats, bypasses authority, or directly controls simulation | Static safety audit and runtime command/authority assertions | Unverified |
-| Current architecture spec and Phase 4C source baseline exist before implementation | `Docs/superpowers/specs/2026-09-15-commander-phase4c-design.md` and `Docs/CommanderPhase4C-source-baseline.json` | Verified (discovery/baseline only) |
+| Preserve provider → validated DTO → approval → decision policy → planner → existing RTS execution | Source review, Phase 4C reports, focused and full regressions, independent final review | **PASS**; authority path retained |
+| Do not bypass `StrategicApprovalLayer`, `StrategicDecisionPolicy`, or `StrategicPlanner` | Current-source boundary review and 4C.4 direct-player GREEN plus full EditMode/PlayMode regressions | **PASS**; priority handling for the two new objective values fixed and verified |
+| No direct provider commands, simulation access, or uncontrolled autonomy | Final source manifest/boundary audit and runtime approval/command assertions | **PASS**; no provider authority path added |
+| Execute 4C.1 memory, 4C.2 explanations, 4C.3 richer context, then 4C.4 selected objectives as gated phases | Phase reports and gate records in `progress.md`; per-phase regression summaries | **PASS**; 4C.1–4C.4 gates complete |
+| Astra owns architecture/design/security/integration/review/conflict work rather than routine tests/docs | Architecture spec and progress/delegation ledger; independent final review record | **PASS**; final review recommends ready |
+| Sol owns medium features, interfaces, integrations, and non-trivial tests | Task and review artifacts under `Docs/CommanderPhase4C/` | **PASS**; actual assignments and outputs recorded |
+| Luna owns routine tests/search/static analysis/docs and does not change authority/planner/execution paths | Task ledger, before snapshots, final source manifest and touched-file audit | **PASS**; scope constrained and verified |
+| Before coding, record architecture, delegation, dependency order, and risks | `Docs/superpowers/specs/2026-09-15-commander-phase4c-design.md` and `progress.md` | **PASS** |
+| Record Agent, Task, Expected output, and Validation for delegated work | Delegation table and task reports in `progress.md` and phase evidence files | **PASS** |
+| Independent review of architecture, tests, security, and integration after implementation | `phase4c1`/`phase4c2`/`phase4c3` reviews, `phase4c4-independent-review.md`, final root review | **PASS**; no remaining Critical/Important finding |
+| 4C.1 bounded deterministic local conversational memory | Memory source, named tests, focused/full results, 4C.1 report | **PASS** |
+| Memory stores no permanent profile, hidden state, cloud data, embeddings, simulation objects, or commands | Immutable/detached type review, serializer and boundary audit, lifecycle/runtime tests | **PASS** |
+| Memory is bounded/deterministic, resets explicitly, and clears between matches | Focused EditMode/PlayMode lifecycle/capacity/reset evidence; 4C.1 runtime report | **PASS** |
+| Memory retains value summaries, not mutable decision/intent/plan/submission graphs | Source and immutable snapshot review, focused tests, final source audit | **PASS** |
+| Player text remains untrusted and cannot populate trusted outcome fields | Adversarial history/request tests and payload inspection in 4C.1/4C.3 evidence | **PASS** |
+| Required `Memory_DoesNotLeakGameState` | Named test result in 4C.1 regression artifacts | **PASS** |
+| Required `Memory_IsBounded` | Named test result for bounds and eviction | **PASS** |
+| Required `Memory_ClearsBetweenMatches` | Named lifecycle/runtime test result | **PASS** |
+| Required `SameHistoryProducesSameContext` | Named deterministic-context test result | **PASS** |
+| 4C.2 grounded `CommanderExplanationService`, `ExplanationContext`, `ExplanationResult` | Source review and focused/full 4C.2 evidence | **PASS** |
+| Explanations use recorded outcomes, do not recompute/fabricate policy, and do not mutate pending state | Explanation tests, host query PlayMode coverage, current source review | **PASS** |
+| Required `Explanation_MatchesDecisionReason` | Named focused test result | **PASS** |
+| Required `ExplanationCannotModifyIntent` | Named focused test result | **PASS** |
+| Required `RejectedPlanHasReason` | Named focused test result | **PASS** |
+| 4C.3 detached own-player aggregates; income history only if authoritative, otherwise activity proxies/composition/bottlenecks/progress | Context-builder source, deterministic payload serialization and 4C.3 report | **PASS**; no income trend is fabricated |
+| Never label stockpile deltas as income; unavailable values remain unavailable | Context source and serialization tests; static review | **PASS** |
+| New context is fog-safe and excludes hidden, explored-only, predicted, or remembered enemy state | Differential fog tests, payload inspection, full 4C.3 results | **PASS** |
+| Required `ContextRemainsFogSafe` | Named EditMode/PlayMode result | **PASS** |
+| Required `ContextSerializationDeterministic` | Named test result and provider payload evidence | **PASS** |
+| 4C.4 selects only objectives with inspected execution support | `phase4c4-integration-map.md`, implementation/review evidence, runtime completion tests | **PASS**; only Ranged Reinforcement and Defensive Turtle admitted |
+| Candidate objective list does not authorize unsupported objectives | Feasibility assessment and final A–G deferred-scope section | **PASS**; TechnologyRush, SiegePreparation, NavalExpansion deferred |
+| Each selected objective has distinct intent, strict parsing/DTO validation, template, feasibility, milestones, authority compatibility, provider interpretation, and completion test | 4C.4 source/tests, focused runtime evidence, post-fix full regressions | **PASS** |
+| Preserve existing objective enum numeric values by appending new types | Source compatibility review and tests; post-fix priority regression | **PASS** |
+| Focused and full EditMode/PlayMode regressions cover Phase 3 and 4A/4B/4C | Per-phase summaries; final 4C.4 EditMode 568/568, PlayMode 86/86, all unique and Passed | **PASS**; hashes in `phase4c4-final-regression-summary.md` |
+| Static audit for credential/API-key leaks, command-buffer access, provider simulation access, provider-to-planner references | `phase4c4-final-source-hashes.json` and final boundary audit | **PASS**; credential-shape0, assignment0, protected55/55 unchanged, gaps0 |
+| Final report includes A–G sections for architecture, delegation, systems, safety, tests, runtime, future work | `Docs/CommanderPhase4C.md` inspected | **PASS** |
+| Runtime evidence is current and tied to implemented phase | 4C.1/4C.3 runtime evidence, 4C.4 final focused PlayMode XML, final full PlayMode XML | **PASS**; dynamic housing caveat explicitly recorded |
+| Final verdict is READY only when requirements have evidence; otherwise identify concrete gaps | Updated matrix, final source audit, full results, independent final review | **PASS — READY FOR PHASE 4D** |
+| Successful Commander remembers recent conversations | 4C.1 memory tests/runtime evidence and final regression record | **PASS** |
+| Successful Commander explains decisions from grounded reasons | 4C.2 explanation tests and runtime integration evidence | **PASS** |
+| Successful Commander uses richer detached context for strategic advice | 4C.3 context/provider tests and runtime payload evidence | **PASS** |
+| Commander does not cheat, bypass authority, or directly control simulation | Static audit, approval/command assertions, final independent review | **PASS** |
+| Current architecture spec and source baseline exist before implementation | `Docs/superpowers/specs/2026-09-15-commander-phase4c-design.md` and `Docs/CommanderPhase4C-source-baseline.json` | **PASS** |
+
+## Final audit and known limitations
+
+- Final current-source manifest `phase4c4-final-source-hashes.json`: 27/27 live
+  SHA-256 entries match. It covers all 24 Task 1 paths plus
+  `StrategicDecisionPolicy` and two legacy compatibility test files. All 12
+  Task 1 before snapshots match; the priority policy before/current snapshots
+  match. The historical Task 1 manifest has one stale test hash for
+  `CommanderPhase4C4Tests.cs`, predating the direct-priority regression cases;
+  it is not used to claim current-source verification.
+- Final source audit: changed21, new21, missing0; protected55/55 unchanged;
+  gaps0; six documented host references; credential-shape0 and assignment0.
+  `.env` remains untracked and ignored.
+- Dynamic housing completion was not exercised in the focused runtime fixture,
+  which prebuilt six Houses. Independent review found this non-blocking: the
+  supported objectives completed in runtime and the housing helper path is
+  covered without a separate dynamic-housing PlayMode requirement.
+- `TechnologyRush`, `SiegePreparation`, and `NavalExpansion` remain deferred
+  and are not included in the readiness claim.

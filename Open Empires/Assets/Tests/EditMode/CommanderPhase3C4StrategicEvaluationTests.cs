@@ -66,7 +66,9 @@ namespace OpenEmpires.Tests
                 StrategicObjectiveType.AttackPreparation,
                 StrategicObjectiveType.DefensivePreparation,
                 StrategicObjectiveType.EconomicExpansion,
-                StrategicObjectiveType.MilitaryReinforcement
+                StrategicObjectiveType.MilitaryReinforcement,
+                StrategicObjectiveType.RangedReinforcement,
+                StrategicObjectiveType.DefensiveTurtle
             }));
         }
 

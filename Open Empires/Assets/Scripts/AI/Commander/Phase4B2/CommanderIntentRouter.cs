@@ -30,7 +30,9 @@ namespace OpenEmpires
                 case "expand economy":
                 case "focus on expanding our economy":
                 case "build up army":
-                case "build up our army": return CommanderTextRoute.Strategic;
+                case "build up our army":
+                case "prepare ranged reinforcements":
+                case "prepare fortified defenses": return CommanderTextRoute.Strategic;
                 default: return CommanderTextRoute.Rejected;
             }
         }

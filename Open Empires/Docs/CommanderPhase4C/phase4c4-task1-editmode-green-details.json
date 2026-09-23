@@ -1,0 +1,215 @@
+{
+  "job_id": "0d6abb981c0d45c78b2ccacd155f15a6",
+  "status": "succeeded",
+  "mode": "EditMode",
+  "started_unix_ms": 1790151461601,
+  "finished_unix_ms": 1790151487371,
+  "last_update_unix_ms": 1790151487371,
+  "progress": {
+    "completed": 20,
+    "total": 20,
+    "current_test_full_name": null,
+    "current_test_started_unix_ms": 1790151486038,
+    "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4C4Tests.WholeFormAdmission_UsesDistinctStrictObjectives(\"prepare fortified defenses\",5)",
+    "last_finished_unix_ms": 1790151487054,
+    "stuck_suspected": false,
+    "editor_is_focused": false,
+    "blocked_reason": null,
+    "failures_so_far": [],
+    "failures_capped": false
+  },
+  "error": null,
+  "result": {
+    "mode": "EditMode",
+    "summary": {
+      "total": 20,
+      "passed": 20,
+      "failed": 0,
+      "skipped": 0,
+      "durationSeconds": 21.3807007,
+      "resultState": "Passed"
+    },
+    "results": [
+      {
+        "name": "ExactJsonName_AcceptsOnlyEmptyParameters(\"RangedReinforcement\",4)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.ExactJsonName_AcceptsOnlyEmptyParameters(\"RangedReinforcement\",4)",
+        "state": "Passed",
+        "durationSeconds": 1.320152,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "ExactJsonName_AcceptsOnlyEmptyParameters(\"DefensiveTurtle\",5)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.ExactJsonName_AcceptsOnlyEmptyParameters(\"DefensiveTurtle\",5)",
+        "state": "Passed",
+        "durationSeconds": 1.0932216,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "NewTemplatesRejectParametersAndMixedPhrases(4)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.NewTemplatesRejectParametersAndMixedPhrases(4)",
+        "state": "Passed",
+        "durationSeconds": 1.0376686,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "NewTemplatesRejectParametersAndMixedPhrases(5)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.NewTemplatesRejectParametersAndMixedPhrases(5)",
+        "state": "Passed",
+        "durationSeconds": 1.1017497,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "NormalRecommendation_IsApprovedButCannotDisplaceEmergency(4)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.NormalRecommendation_IsApprovedButCannotDisplaceEmergency(4)",
+        "state": "Passed",
+        "durationSeconds": 1.1217758,
+        "message": null,
+        "stackTrace": null,
+        "output": "[StrategicPlanner] Strategic intent #2 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #2 selected template 'DefensivePreparation' and started plan #1: DefensivePreparation.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Defense.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+      },
+      {
+        "name": "NormalRecommendation_IsApprovedButCannotDisplaceEmergency(5)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.NormalRecommendation_IsApprovedButCannotDisplaceEmergency(5)",
+        "state": "Passed",
+        "durationSeconds": 1.0879346,
+        "message": null,
+        "stackTrace": null,
+        "output": "[StrategicPlanner] Strategic intent #2 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #2 selected template 'DefensivePreparation' and started plan #1: DefensivePreparation.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Defense.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+      },
+      {
+        "name": "NoWorkersOrAgeOrResources_CannotApprove(4)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.NoWorkersOrAgeOrResources_CannotApprove(4)",
+        "state": "Passed",
+        "durationSeconds": 1.0085461,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "NoWorkersOrAgeOrResources_CannotApprove(5)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.NoWorkersOrAgeOrResources_CannotApprove(5)",
+        "state": "Passed",
+        "durationSeconds": 0.9911178,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "ObjectiveHasMeaningfulFeasibilityAndPlan(4)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.ObjectiveHasMeaningfulFeasibilityAndPlan(4)",
+        "state": "Passed",
+        "durationSeconds": 1.0111432,
+        "message": null,
+        "stackTrace": null,
+        "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+      },
+      {
+        "name": "ObjectiveHasMeaningfulFeasibilityAndPlan(5)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.ObjectiveHasMeaningfulFeasibilityAndPlan(5)",
+        "state": "Passed",
+        "durationSeconds": 0.9742828,
+        "message": null,
+        "stackTrace": null,
+        "output": "[StrategicPlanner] Strategic intent #1 created: DefensiveTurtle for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'defensive_turtle' and started plan #1: DefensiveTurtle.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+      },
+      {
+        "name": "OwnedAndQueuedUnits_AndCompletedProducersReduceCanonicalQuote(4)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.OwnedAndQueuedUnits_AndCompletedProducersReduceCanonicalQuote(4)",
+        "state": "Passed",
+        "durationSeconds": 0.9866324,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "OwnedAndQueuedUnits_AndCompletedProducersReduceCanonicalQuote(5)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.OwnedAndQueuedUnits_AndCompletedProducersReduceCanonicalQuote(5)",
+        "state": "Passed",
+        "durationSeconds": 1.0011288,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "SaturatedRequiredProducerQueue_IsNotMisquotedAsCapable(4)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.SaturatedRequiredProducerQueue_IsNotMisquotedAsCapable(4)",
+        "state": "Passed",
+        "durationSeconds": 0.9739469,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "SaturatedRequiredProducerQueue_IsNotMisquotedAsCapable(5)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.SaturatedRequiredProducerQueue_IsNotMisquotedAsCapable(5)",
+        "state": "Passed",
+        "durationSeconds": 0.9959923,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "Templates_HaveOrderedFiniteMilestonesAndExactRequests(4)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.Templates_HaveOrderedFiniteMilestonesAndExactRequests(4)",
+        "state": "Passed",
+        "durationSeconds": 0.9887834,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "Templates_HaveOrderedFiniteMilestonesAndExactRequests(5)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.Templates_HaveOrderedFiniteMilestonesAndExactRequests(5)",
+        "state": "Passed",
+        "durationSeconds": 0.9666776,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "TurtleFundedTowerFoundation_IsChargedOnlyOnceInQuoteAndPlan",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.TurtleFundedTowerFoundation_IsChargedOnlyOnceInQuoteAndPlan",
+        "state": "Passed",
+        "durationSeconds": 1.0071125,
+        "message": null,
+        "stackTrace": null,
+        "output": "[StrategicPlanner] Strategic intent #1 created: DefensiveTurtle for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'defensive_turtle' and started plan #1: DefensiveTurtle.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+      },
+      {
+        "name": "UnknownObjective_DoesNotQuoteZeroCostCapability",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.UnknownObjective_DoesNotQuoteZeroCostCapability",
+        "state": "Passed",
+        "durationSeconds": 0.9552723,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "WholeFormAdmission_UsesDistinctStrictObjectives(\"prepare ranged reinforcements\",4)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.WholeFormAdmission_UsesDistinctStrictObjectives(\"prepare ranged reinforcements\",4)",
+        "state": "Passed",
+        "durationSeconds": 0.9947084,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "WholeFormAdmission_UsesDistinctStrictObjectives(\"prepare fortified defenses\",5)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.WholeFormAdmission_UsesDistinctStrictObjectives(\"prepare fortified defenses\",5)",
+        "state": "Passed",
+        "durationSeconds": 1.0159852,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      }
+    ]
+  }
+}

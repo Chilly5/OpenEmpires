@@ -111,6 +111,8 @@ namespace OpenEmpires
                 case StrategicObjectiveType.MilitaryReinforcement:
                     return StrategicPriorityLevel.High;
                 case StrategicObjectiveType.AttackPreparation:
+                case StrategicObjectiveType.RangedReinforcement:
+                case StrategicObjectiveType.DefensiveTurtle:
                     return StrategicPriorityLevel.Normal;
                 case StrategicObjectiveType.EconomicExpansion:
                     return StrategicPriorityLevel.Low;

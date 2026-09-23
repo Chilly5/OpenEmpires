@@ -202,11 +202,15 @@ namespace OpenEmpires
                     $"The active strategic plan limit of {MaxActivePlans} has been reached.");
             }
 
-            if (plan is CavalryPressurePlan || plan is DefensivePreparationPlan || plan is EconomicExpansionPlan)
+            if (plan is DefensiveTurtlePlan turtle)
+                turtle.TowerTargetTotal = CountCompletedTowers() + DefensiveTurtlePlan.TowerCount;
+            if (plan is CavalryPressurePlan || plan is DefensivePreparationPlan || plan is EconomicExpansionPlan
+                || plan is RangedReinforcementPlan || plan is DefensiveTurtlePlan)
             {
                 var totals = new SortedDictionary<ResourceType, int>();
                 foreach (StrategicMilestone stage in plan.Milestones)
-                    foreach (StrategicResourceRequirement cost in ComputeRequirements(stage))
+                    foreach (StrategicResourceRequirement cost in ComputeRequirements(stage,
+                        plan as DefensiveTurtlePlan))
                         totals[cost.ResourceType] = (totals.TryGetValue(cost.ResourceType, out int amount) ? amount : 0) + cost.Amount;
                 var budget = new List<StrategicResourceRequirement>();
                 foreach (var total in totals) budget.Add(new StrategicResourceRequirement(total.Key, total.Value));
@@ -423,7 +427,16 @@ namespace OpenEmpires
                 if (economyOnly && !(request is StrategicResourceAllocationGoalRequest)) continue;
                 if (!milestone.StartRequest(i)) continue;
                 if (ShouldSkipRequest(request)) continue;
-                if (!SubmitTrackedGoal(plan, milestone, () => request.Submit(goalManager))) return;
+                if (plan is DefensiveTurtlePlan turtle
+                    && request is StrategicBuildStructureGoalRequest tower
+                    && tower.StructureType == BuildingType.Tower)
+                {
+                    int remaining = turtle.TowerTargetTotal - CountCompletedTowers();
+                    if (remaining <= 0) continue;
+                    if (!SubmitTrackedGoal(plan, milestone,
+                        () => goalManager.SubmitBuildStructure(BuildingType.Tower, remaining))) return;
+                }
+                else if (!SubmitTrackedGoal(plan, milestone, () => request.Submit(goalManager))) return;
             }
         }
 
@@ -543,7 +556,8 @@ namespace OpenEmpires
                     // These plans establish income before spending. Preserve custom/legacy
                     // templates whose tactical goals also perform their resource recovery.
                     bool preparedEconomy = plan is CavalryPressurePlan
-                        || plan is DefensivePreparationPlan || plan is EconomicExpansionPlan;
+                        || plan is DefensivePreparationPlan || plan is EconomicExpansionPlan
+                        || plan is RangedReinforcementPlan || plan is DefensiveTurtlePlan;
                     CreateGoalsForMilestone(plan, milestone, economyOnly: preparedEconomy);
                     if (preparedEconomy) EnsureRecoveryGatherers(plan, milestone);
                     return;
@@ -587,7 +601,8 @@ namespace OpenEmpires
             }
             if (!milestone.UsesCanonicalRequirements || milestone.ResourceReservationIds.Count > 0) return;
             milestone.ClearRequirements();
-            foreach (StrategicResourceRequirement cost in ComputeRequirements(milestone))
+            foreach (StrategicResourceRequirement cost in ComputeRequirements(milestone,
+                plan as DefensiveTurtlePlan))
                 milestone.AddRequiredResource(cost.ResourceType, cost.Amount);
             if (plan is CavalryPressurePlan && milestone.OrderIndex == 0)
             {
@@ -598,7 +613,9 @@ namespace OpenEmpires
 
         private void FitEconomyToAvailableWorkers(StrategicPlan plan)
         {
-            if (!(plan is DefensivePreparationPlan || plan is CavalryPressurePlan || plan is EconomicExpansionPlan)) return;
+            bool newObjective = plan is RangedReinforcementPlan || plan is DefensiveTurtlePlan;
+            if (!(plan is DefensivePreparationPlan || plan is CavalryPressurePlan
+                || plan is EconomicExpansionPlan || newObjective)) return;
             int available = 0;
             foreach (UnitData unit in goalManager.Simulation.UnitRegistry.GetAllUnits())
                 if (unit.PlayerId == PlayerId && unit.IsVillager && unit.CurrentHealth > 0
@@ -612,12 +629,14 @@ namespace OpenEmpires
                     allocations.Add(allocation);
                     total += allocation.WorkerTarget;
                 }
+            int minimum = newObjective && available < allocations.Count ? 0 : 1;
             // Do not demand more simultaneous gatherers than a fresh settlement owns.
             while (total > available)
             {
                 StrategicResourceAllocationGoalRequest largest = null;
                 foreach (var allocation in allocations)
-                    if (allocation.WorkerTarget > 1 && (largest == null || allocation.WorkerTarget > largest.WorkerTarget))
+                    if (allocation.WorkerTarget > minimum
+                        && (largest == null || allocation.WorkerTarget > largest.WorkerTarget))
                         largest = allocation;
                 if (largest == null) break;
                 largest.WorkerTarget--;
@@ -644,7 +663,17 @@ namespace OpenEmpires
             }
         }
 
-        private List<StrategicResourceRequirement> ComputeRequirements(StrategicMilestone milestone)
+        private int CountCompletedTowers()
+        {
+            int count = 0;
+            foreach (BuildingData building in goalManager.Simulation.BuildingRegistry.GetAllBuildings())
+                if (building.PlayerId == PlayerId && !building.IsDestroyed
+                    && building.Type == BuildingType.Tower && !building.IsUnderConstruction) count++;
+            return count;
+        }
+
+        private List<StrategicResourceRequirement> ComputeRequirements(StrategicMilestone milestone,
+            DefensiveTurtlePlan turtle = null)
         {
             GameSimulation sim = goalManager.Simulation;
             int food = 0, wood = 0, gold = 0, stone = 0;
@@ -655,8 +684,17 @@ namespace OpenEmpires
                 {
                     int count = build.Count;
                     if (build.EnsureExisting)
+                    {
                         foreach (BuildingData existing in sim.BuildingRegistry.GetAllBuildings())
                             if (existing.PlayerId == PlayerId && !existing.IsDestroyed && existing.Type == build.StructureType) count--;
+                    }
+                    else if (turtle != null && build.StructureType == BuildingType.Tower)
+                    {
+                        count = turtle.TowerTargetTotal - CountCompletedTowers();
+                        foreach (BuildingData foundation in sim.BuildingRegistry.GetAllBuildings())
+                            if (foundation.PlayerId == PlayerId && !foundation.IsDestroyed
+                                && foundation.Type == BuildingType.Tower && foundation.IsUnderConstruction) count--;
+                    }
                     count = Math.Max(0, count);
                     food += sim.GetBuildingFoodCost(build.StructureType) * count;
                     wood += sim.GetBuildingWoodCost(build.StructureType) * count;
@@ -812,6 +850,10 @@ namespace OpenEmpires
                     return StrategicPlanType.EconomicExpansion;
                 case StrategicObjectiveType.MilitaryReinforcement:
                     return StrategicPlanType.MilitaryReinforcement;
+                case StrategicObjectiveType.RangedReinforcement:
+                    return StrategicPlanType.RangedReinforcement;
+                case StrategicObjectiveType.DefensiveTurtle:
+                    return StrategicPlanType.DefensiveTurtle;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(objectiveType));
             }

@@ -1,0 +1,31 @@
+{
+  "jobId": "40d1bd03d2244f7b9fffa0d464e177c8",
+  "mode": "EditMode",
+  "status": "failed",
+  "startedUnixMs": 1790153931281,
+  "finishedUnixMs": 1790154062818,
+  "progress": {
+    "completed": 566,
+    "total": 566,
+    "current_test_full_name": null,
+    "current_test_started_unix_ms": 1790154062614,
+    "last_finished_test_full_name": "OpenEmpires.Tests.UnitAttackVisualAnimatorTests.WeaponPrefab_CreatesAttackPivot(\"Assets/Prefabs/Units/Landsknecht.prefab\",12)",
+    "last_finished_unix_ms": 1790154062621,
+    "stuck_suspected": false,
+    "editor_is_focused": true,
+    "blocked_reason": null,
+    "failures_so_far": [
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase3C4StrategicEvaluationTests.Recommendation_UsesExistingObjectiveTypes",
+        "message": "  Expected is <OpenEmpires.StrategicObjectiveType[4]>, actual is <OpenEmpires.StrategicObjectiveType[6]>\r\n  Values differ at index [4]\r\n  Extra:    < RangedReinforcement, DefensiveTurtle >"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase3Fix12Tests.StrategicIntent_AllowsOptionalParameters",
+        "message": "  Template ranged_reinforcement should allow optional parameters: No available strategic plan template.\r\n  Expected: True\r\n  But was:  False\r\n"
+      }
+    ],
+    "failures_capped": false
+  },
+  "error": null,
+  "result": null
+}

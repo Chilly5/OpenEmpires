@@ -1,0 +1,38 @@
+using System;
+using System.Text.RegularExpressions;
+
+namespace OpenEmpires
+{
+    public enum CommanderTextRoute { Rejected, Tactical, Strategic }
+
+    // Classification only: providers and submission services remain with the application host.
+    public sealed class CommanderIntentRouter
+    {
+        private static readonly Regex Tactical = new Regex(
+            @"^(?:make [0-9]{1,9} (?:spearmen|archers|knights)|put [0-9]{1,9} villagers? on (?:wood|food)|build (?:a |one )?barracks)\s*[.!]?$",
+            RegexOptions.CultureInvariant);
+
+        public CommanderTextRoute Classify(string message)
+        {
+            if (string.IsNullOrWhiteSpace(message) || message.Length > 240)
+                return CommanderTextRoute.Rejected;
+            string text = Regex.Replace(message.Trim().ToLowerInvariant(), @"\s+", " ");
+            if (Tactical.IsMatch(text)) return CommanderTextRoute.Tactical;
+            if (text.EndsWith(".", StringComparison.Ordinal)) text = text.TrimEnd('.').TrimEnd();
+            switch (text)
+            {
+                case "prepare attack":
+                case "prepare an attack":
+                case "prepare cavalry attack":
+                case "prepare a cavalry attack":
+                case "prepare defenses":
+                case "prepare our defenses":
+                case "expand economy":
+                case "focus on expanding our economy":
+                case "build up army":
+                case "build up our army": return CommanderTextRoute.Strategic;
+                default: return CommanderTextRoute.Rejected;
+            }
+        }
+    }
+}

@@ -221,7 +221,8 @@ namespace OpenEmpires
                     if (this == null || generation != runtimeGeneration || lifetime.IsCancellationRequested) return null;
                     LatestStrategicInterpretation = result;
                     AppendLine("Commander", result.Success
-                        ? result.Intent.ObjectiveType + " recommendation. No plan started. Approve normally, or explicitly confirm as your command (may replace AI plans, never direct-player plans)."
+                        ? StrategicPreview(result.Intent.ObjectiveType)
+                            + " No plan started. Approve normally, or explicitly confirm as your command (may replace AI plans, never direct-player plans)."
                         : result.ExplanationText);
                     UpdateStrategicControls();
                     return null;
@@ -249,6 +250,19 @@ namespace OpenEmpires
 
         public StrategicDecisionRecord ApproveStrategicRecommendation() => SubmitPendingStrategy(false);
         public StrategicDecisionRecord ConfirmStrategicCommand() => SubmitPendingStrategy(true);
+
+        private static string StrategicPreview(StrategicObjectiveType objective)
+        {
+            switch (objective)
+            {
+                case StrategicObjectiveType.RangedReinforcement:
+                    return "Ranged reinforcement recommendation: finite preparation of an ArcheryRange and 10 archers; no automatic attack or holding behavior.";
+                case StrategicObjectiveType.DefensiveTurtle:
+                    return "Fortified defense recommendation: finite preparation of a Barracks, ArcheryRange, 2 mandatory towers, 8 spearmen, and 8 archers; no walls, keeps, garrisons, perimeter placement, automatic holding, or attack micro.";
+                default:
+                    return objective + " recommendation.";
+            }
+        }
 
         private StrategicDecisionRecord SubmitPendingStrategy(bool confirmed)
         {
