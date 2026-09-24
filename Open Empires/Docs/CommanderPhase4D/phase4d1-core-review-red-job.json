@@ -1,0 +1,22 @@
+{
+  "kind": "Unity MCP terminal get_test_job evidence, review fix RED",
+  "job_id": "0f0378e6035e4c94bd776401cda32b2b",
+  "mode": "EditMode",
+  "group": "CommanderPhase4D1Tests",
+  "status": "failed",
+  "started_unix_ms": 1790194825239,
+  "finished_unix_ms": 1790194837264,
+  "completed": 29,
+  "total": 29,
+  "result_payload": null,
+  "failed_tests": [
+    { "name": "CancellationRevisionOverflow_FailsBeforeAnyMutation", "message": "System.OverflowException : Arithmetic operation resulted in an overflow." },
+    { "name": "PausedChildCancellation_FailsPlanOnlyAfterResume", "message": "Expected Failed; but was Active." },
+    { "name": "PausedChildTerminalEvent_IsReconciledOnResume(Completed,GoalCompleted)", "message": "Expected collection containing 1; but was empty." },
+    { "name": "PausedChildTerminalEvent_IsReconciledOnResume(Failed,GoalFailed)", "message": "Expected Failed; but was Active." },
+    { "name": "ReservationReleaseRevisionOverflow_FailsBeforeMutation", "message": "System.OverflowException : Arithmetic operation resulted in an overflow." },
+    { "name": "ReservationUpdateRevisionOverflow_FailsBeforeMutation(False)", "message": "System.OverflowException : Arithmetic operation resulted in an overflow." },
+    { "name": "ReservationUpdateRevisionOverflow_FailsBeforeMutation(True)", "message": "System.OverflowException : Arithmetic operation resulted in an overflow." }
+  ],
+  "note": "Failed Unity jobs expose progress/failures but result:null and no authoritative XML in this Unity MCP version."
+}

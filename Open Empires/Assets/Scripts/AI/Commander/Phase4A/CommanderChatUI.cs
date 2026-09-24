@@ -103,6 +103,7 @@ namespace OpenEmpires
             strategicBridge?.Dispose();
             strategicBridge = null;
             DetachStrategicPipeline();
+            ResetStrategicHostControls();
             ResetExplanationState();
             adapter?.ResetHistory();
             Conversation?.Reset();
@@ -122,7 +123,9 @@ namespace OpenEmpires
             if (transcript.Length == 0)
                 AppendLine("Commander", provider is GeminiAIProvider
                     ? "Gemini translator ready."
-                    : "Local mock translator ready.", false);
+                    : provider is OpenRouterCommanderProvider
+                        ? "OpenRouter Luna translator ready."
+                        : "Local mock translator ready.", false);
         }
 
         public void InitializeStrategic(IStrategicAIInterpreter interpreter, StrategicPipeline pipeline,
@@ -141,12 +144,18 @@ namespace OpenEmpires
             lifetime = new CancellationTokenSource();
             strategicBridge?.Dispose();
             DetachStrategicPipeline();
+            ResetStrategicHostControls();
             ResetExplanationState();
             strategicPipeline = pipeline;
             strategicBridge = new StrategicAIApprovalBridge(interpreter, pipeline.StrategicPlanner.IntentIds,
                 () => pipeline.CaptureContext(), providerTimeout,
                 () => Conversation?.Snapshot() ?? System.Array.Empty<MemoryEntry>());
             strategicPipeline.EvaluationCompleted += OnStrategicEvaluationCompleted;
+            strategicPipeline.StrategicPlanner.PlanStatusChanged += OnHostPlanStatusChanged;
+            strategicPipeline.StrategicPlanner.MilestoneStatusChanged += OnHostMilestoneStatusChanged;
+            strategicPipeline.StrategicPlanner.ChildGoalEventObserved += OnHostChildGoalEvent;
+            strategicPipeline.StrategicPlanner.ReservationCreated += OnHostReservationCreated;
+            strategicPipeline.StrategicPlanner.ReservationReleased += OnHostReservationReleased;
             submitting = false;
             if (inputField != null) inputField.interactable = adapter != null;
             if (sendButton != null) sendButton.interactable = adapter != null;
@@ -163,6 +172,7 @@ namespace OpenEmpires
         {
             string trimmed = (message ?? string.Empty).Trim();
             if (trimmed.Length == 0) return null;
+            if (TryHandleStrategicLifecycle(trimmed)) return null;
             if (TryHandleExplanationQuery(trimmed)) return null;
             if (adapter == null)
             {
@@ -311,6 +321,7 @@ namespace OpenEmpires
             LatestStrategicDecision = null;
             LatestSubmission = null;
             ResetExplanationState();
+            ResetStrategicHostControls();
             submitting = false;
             if (inputField != null)
             {
@@ -327,6 +338,7 @@ namespace OpenEmpires
             if (approveStrategyButton != null) approveStrategyButton.interactable = available;
             if (confirmStrategyButton != null) confirmStrategyButton.interactable = available;
             if (dismissStrategyButton != null) dismissStrategyButton.interactable = available;
+            UpdateStrategicHostControls();
         }
 
         public Task<CommanderAIChatSubmission> SubmitCurrentInputAsync()
@@ -388,7 +400,14 @@ namespace OpenEmpires
         private void DetachStrategicPipeline()
         {
             if (strategicPipeline != null)
+            {
                 strategicPipeline.EvaluationCompleted -= OnStrategicEvaluationCompleted;
+                strategicPipeline.StrategicPlanner.PlanStatusChanged -= OnHostPlanStatusChanged;
+                strategicPipeline.StrategicPlanner.MilestoneStatusChanged -= OnHostMilestoneStatusChanged;
+                strategicPipeline.StrategicPlanner.ChildGoalEventObserved -= OnHostChildGoalEvent;
+                strategicPipeline.StrategicPlanner.ReservationCreated -= OnHostReservationCreated;
+                strategicPipeline.StrategicPlanner.ReservationReleased -= OnHostReservationReleased;
+            }
             strategicPipeline = null;
         }
 
@@ -406,6 +425,7 @@ namespace OpenEmpires
             lifetime?.Cancel();
             strategicBridge?.Dispose();
             DetachStrategicPipeline();
+            ResetStrategicHostControls();
             ResetExplanationState();
             adapter?.ResetHistory();
             Conversation?.Reset();
@@ -447,7 +467,7 @@ namespace OpenEmpires
             GameObject scrollObject = UIObject("Transcript", panel.transform);
             RectTransform scrollRectTransform = scrollObject.GetComponent<RectTransform>();
             SetRect(scrollRectTransform, new Vector2(0, 0), new Vector2(1, 1),
-                new Vector2(10, 86), new Vector2(-10, -43));
+                new Vector2(10, 146), new Vector2(-10, -43));
             Image scrollImage = scrollObject.AddComponent<Image>();
             scrollImage.color = new Color(0, 0, 0, 0.32f);
             ScrollRect scroll = scrollObject.AddComponent<ScrollRect>();
@@ -533,6 +553,7 @@ namespace OpenEmpires
                 () => ConfirmStrategicCommand());
             dismissStrategyButton = StrategyButton(panel.transform, "Dismiss", 320, 100,
                 DismissStrategicRecommendation);
+            BuildStrategicHostControls(panel.transform);
         }
 
         private static Button StrategyButton(Transform parent, string label, float left, float width,

@@ -1,0 +1,142 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "677669b15bd24844916e247ea24b2a0a",
+      "status": "succeeded",
+      "mode": "PlayMode",
+      "started_unix_ms": 1790271577823,
+      "finished_unix_ms": 1790271591472,
+      "last_update_unix_ms": 1790271591472,
+      "progress": {
+        "completed": 11,
+        "total": 11,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1790271591140,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4D2HostPlayModeTests.WaitingAndBlockedQuestions_UseTypedCurrentChildEvidence",
+        "last_finished_unix_ms": 1790271591417,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "PlayMode",
+        "summary": {
+          "total": 11,
+          "passed": 11,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 3.1776917,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "Destroy_ClearsSelectedHealthView",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2HostPlayModeTests.Destroy_ClearsSelectedHealthView",
+            "state": "Passed",
+            "durationSeconds": 0.3633252,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "ExactHealthQuestions_AreOfflineAndUnavailableWithoutPlan",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2HostPlayModeTests.ExactHealthQuestions_AreOfflineAndUnavailableWithoutPlan",
+            "state": "Passed",
+            "durationSeconds": 0.3503036,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MatchingNumericIdentity_NewPipelineRejectsOldHealth",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2HostPlayModeTests.MatchingNumericIdentity_NewPipelineRejectsOldHealth",
+            "state": "Passed",
+            "durationSeconds": 0.261208,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "MixedHealthQuestion_DoesNotBypassRouter",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2HostPlayModeTests.MixedHealthQuestion_DoesNotBypassRouter",
+            "state": "Passed",
+            "durationSeconds": 0.2714172,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "OwnerMismatch_HealthIsUnavailable",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2HostPlayModeTests.OwnerMismatch_HealthIsUnavailable",
+            "state": "Passed",
+            "durationSeconds": 0.2661004,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "PausedQuestion_UsesCurrentTypedHealthWithoutMutation",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2HostPlayModeTests.PausedQuestion_UsesCurrentTypedHealthWithoutMutation",
+            "state": "Passed",
+            "durationSeconds": 0.2824614,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "Reset_ClearsPlanHealthProjection",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2HostPlayModeTests.Reset_ClearsPlanHealthProjection",
+            "state": "Passed",
+            "durationSeconds": 0.2614551,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "RevisionChange_RefreshesQuestionAndStatus",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2HostPlayModeTests.RevisionChange_RefreshesQuestionAndStatus",
+            "state": "Passed",
+            "durationSeconds": 0.2736784,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "TerminalPlan_DoesNotBecomeCurrentHealthAlias",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2HostPlayModeTests.TerminalPlan_DoesNotBecomeCurrentHealthAlias",
+            "state": "Passed",
+            "durationSeconds": 0.2705118,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #1 cancelled.\r\n[Commander] Goal #2 cancelled.\r\n[StrategicPlanner] Plan #1 cancelled.\r\n"
+          },
+          {
+            "name": "UnchangedRevision_WorldChangeRefreshesHealth",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2HostPlayModeTests.UnchangedRevision_WorldChangeRefreshesHealth",
+            "state": "Passed",
+            "durationSeconds": 0.2582182,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "WaitingAndBlockedQuestions_UseTypedCurrentChildEvidence",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2HostPlayModeTests.WaitingAndBlockedQuestions_UseTypedCurrentChildEvidence",
+            "state": "Passed",
+            "durationSeconds": 0.2765402,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

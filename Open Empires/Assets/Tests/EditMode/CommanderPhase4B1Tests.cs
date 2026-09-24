@@ -345,6 +345,62 @@ namespace OpenEmpires.Tests
         public void Factory_AllowsExplicitOfflineSelection() =>
             Assert.That(StrategicAIInterpreterFactory.Create("mock"), Is.TypeOf<MockStrategicAIProvider>());
 
+        [Test]
+        public async Task OpenRouter_TranslatesStrategicJsonWithoutExecuting()
+        {
+            string response = JsonUtility.ToJson(new OpenRouterResponse
+            {
+                choices = new[] { new OpenRouterChoice
+                {
+                    message = new OpenRouterMessage { content = AttackJson }
+                } }
+            });
+            var transport = new OpenRouterTransport(new CommanderHttpResponse(200, response));
+            var provider = new OpenRouterCommanderProvider("test-only-key", transport);
+            AssertAccepted(await provider.InterpretStrategicIntentAsync(Request(),
+                CancellationToken.None), StrategicObjectiveType.AttackPreparation);
+            var body = JsonUtility.FromJson<OpenRouterBody>(transport.Body);
+            Assert.That(body.messages[0].content,
+                Does.Contain("StrategicIntent JSON"));
+            Assert.That(transport.Body, Does.Contain("Safe strategic context:"));
+            Assert.That(transport.Body, Does.Not.Contain("test-only-key"));
+        }
+
+        [Test]
+        public async Task OpenRouter_RejectsInvalidStrategicOutput()
+        {
+            string response = JsonUtility.ToJson(new OpenRouterResponse
+            {
+                choices = new[] { new OpenRouterChoice
+                {
+                    message = new OpenRouterMessage { content = "{\"command\":\"SpawnUnits\"}" }
+                } }
+            });
+            var result = await new OpenRouterCommanderProvider("test-only-key",
+                new OpenRouterTransport(new CommanderHttpResponse(200, response)))
+                .InterpretStrategicIntentAsync(Request(), CancellationToken.None);
+            Assert.That(result.Success, Is.False);
+            AssertNoExecution();
+        }
+
+        private sealed class OpenRouterTransport : ICommanderHttpTransport
+        {
+            private readonly CommanderHttpResponse response;
+            public string Body;
+            public OpenRouterTransport(CommanderHttpResponse response) => this.response = response;
+            public Task<CommanderHttpResponse> PostJsonAsync(Uri uri, string json,
+                IReadOnlyDictionary<string, string> headers, CancellationToken cancellationToken)
+            {
+                Body = json;
+                return Task.FromResult(response);
+            }
+        }
+
+        [Serializable] private sealed class OpenRouterMessage { public string role; public string content; }
+        [Serializable] private sealed class OpenRouterBody { public OpenRouterMessage[] messages; }
+        [Serializable] private sealed class OpenRouterChoice { public OpenRouterMessage message; }
+        [Serializable] private sealed class OpenRouterResponse { public OpenRouterChoice[] choices; }
+
         private sealed class ScriptedTransport : ICommanderHttpTransport
         {
             private readonly Queue<CommanderHttpResponse> responses;

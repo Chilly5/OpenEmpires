@@ -1,0 +1,673 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "9e95280e6de544c38bd25ed13de8e283",
+      "status": "succeeded",
+      "mode": "EditMode",
+      "started_unix_ms": 1790251114533,
+      "finished_unix_ms": 1790251199925,
+      "last_update_unix_ms": 1790251199925,
+      "progress": {
+        "completed": 70,
+        "total": 70,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1790251198757,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4D1Tests.UnknownAction_IsRejectedWithoutMutation",
+        "last_finished_unix_ms": 1790251199739,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "EditMode",
+        "summary": {
+          "total": 70,
+          "passed": 70,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 79.813334,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "ApprovalUsesAvailableFoodAfterReservations(4)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.ApprovalUsesAvailableFoodAfterReservations(4)",
+            "state": "Passed",
+            "durationSeconds": 1.389714,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "ApprovalUsesAvailableFoodAfterReservations(5)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.ApprovalUsesAvailableFoodAfterReservations(5)",
+            "state": "Passed",
+            "durationSeconds": 1.0777649,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "AtCurrentPopulationCap_FundedHouseFoundationIsNotChargedAgain",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.AtCurrentPopulationCap_FundedHouseFoundationIsNotChargedAgain",
+            "state": "Passed",
+            "durationSeconds": 1.0593325,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "AtCurrentPopulationCap_RangedQuoteIncludesOneHouseAndIsCapable",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.AtCurrentPopulationCap_RangedQuoteIncludesOneHouseAndIsCapable",
+            "state": "Passed",
+            "durationSeconds": 1.0816755,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "AtCurrentPopulationCap_WithoutWorkersStillRejectsConstruction",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.AtCurrentPopulationCap_WithoutWorkersStillRejectsConstruction",
+            "state": "Passed",
+            "durationSeconds": 1.0513722,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "DirectPlayerIntent_UsesNormalPriorityAndOverridesExistingPlan(4)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.DirectPlayerIntent_UsesNormalPriorityAndOverridesExistingPlan(4)",
+            "state": "Passed",
+            "durationSeconds": 1.3381038,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: EconomicExpansion for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'EconomicExpansion' and started plan #1: EconomicExpansion.\r\n[StrategicPlanner] Plan #1 milestone active: Boom Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n[StrategicPlanner] Strategic intent #2 created: RangedReinforcement for player 0.\r\n[Commander] Goal #1 cancelled.\r\n[Commander] Goal #2 cancelled.\r\n[Commander] Goal #3 cancelled.\r\n[StrategicPlanner] Plan #1 cancelled.\r\n[StrategicPlanner] Intent #2 selected template 'ranged_reinforcement' and started plan #2: RangedReinforcement.\r\n[StrategicPlanner] Plan #2 milestone active: Economy.\r\n[Commander] Goal #4 submitted: ResourceAllocation\r\n[Commander] Goal #5 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "DirectPlayerIntent_UsesNormalPriorityAndOverridesExistingPlan(5)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.DirectPlayerIntent_UsesNormalPriorityAndOverridesExistingPlan(5)",
+            "state": "Passed",
+            "durationSeconds": 1.036355,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: EconomicExpansion for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'EconomicExpansion' and started plan #1: EconomicExpansion.\r\n[StrategicPlanner] Plan #1 milestone active: Boom Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n[StrategicPlanner] Strategic intent #2 created: DefensiveTurtle for player 0.\r\n[Commander] Goal #1 cancelled.\r\n[Commander] Goal #2 cancelled.\r\n[Commander] Goal #3 cancelled.\r\n[StrategicPlanner] Plan #1 cancelled.\r\n[StrategicPlanner] Intent #2 selected template 'defensive_turtle' and started plan #2: DefensiveTurtle.\r\n[StrategicPlanner] Plan #2 milestone active: Economy.\r\n[Commander] Goal #4 submitted: ResourceAllocation\r\n[Commander] Goal #5 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "ExactJsonName_AcceptsOnlyEmptyParameters(\"RangedReinforcement\",4)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.ExactJsonName_AcceptsOnlyEmptyParameters(\"RangedReinforcement\",4)",
+            "state": "Passed",
+            "durationSeconds": 1.036356,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "ExactJsonName_AcceptsOnlyEmptyParameters(\"DefensiveTurtle\",5)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.ExactJsonName_AcceptsOnlyEmptyParameters(\"DefensiveTurtle\",5)",
+            "state": "Passed",
+            "durationSeconds": 0.9676596,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "FundedProducerFoundationsAreReusedInQuoteAndPlan(4)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.FundedProducerFoundationsAreReusedInQuoteAndPlan(4)",
+            "state": "Passed",
+            "durationSeconds": 1.0575451,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "FundedProducerFoundationsAreReusedInQuoteAndPlan(5)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.FundedProducerFoundationsAreReusedInQuoteAndPlan(5)",
+            "state": "Passed",
+            "durationSeconds": 1.1449908,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: DefensiveTurtle for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'defensive_turtle' and started plan #1: DefensiveTurtle.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "MaximumPopulationBoundaryRejectsRequiredArmy(4)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.MaximumPopulationBoundaryRejectsRequiredArmy(4)",
+            "state": "Passed",
+            "durationSeconds": 1.0527563,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MaximumPopulationBoundaryRejectsRequiredArmy(5)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.MaximumPopulationBoundaryRejectsRequiredArmy(5)",
+            "state": "Passed",
+            "durationSeconds": 1.0688604,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "NewTemplatesRejectParametersAndMixedPhrases(4)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.NewTemplatesRejectParametersAndMixedPhrases(4)",
+            "state": "Passed",
+            "durationSeconds": 1.0409852,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "NewTemplatesRejectParametersAndMixedPhrases(5)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.NewTemplatesRejectParametersAndMixedPhrases(5)",
+            "state": "Passed",
+            "durationSeconds": 1.0227742,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "NormalRecommendation_IsApprovedButCannotDisplaceEmergency(4)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.NormalRecommendation_IsApprovedButCannotDisplaceEmergency(4)",
+            "state": "Passed",
+            "durationSeconds": 1.2642179,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #2 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #2 selected template 'DefensivePreparation' and started plan #1: DefensivePreparation.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Defense.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "NormalRecommendation_IsApprovedButCannotDisplaceEmergency(5)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.NormalRecommendation_IsApprovedButCannotDisplaceEmergency(5)",
+            "state": "Passed",
+            "durationSeconds": 1.0436041,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #2 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #2 selected template 'DefensivePreparation' and started plan #1: DefensivePreparation.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Defense.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "NoWorkersOrAgeOrResources_CannotApprove(4)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.NoWorkersOrAgeOrResources_CannotApprove(4)",
+            "state": "Passed",
+            "durationSeconds": 1.1054967,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "NoWorkersOrAgeOrResources_CannotApprove(5)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.NoWorkersOrAgeOrResources_CannotApprove(5)",
+            "state": "Passed",
+            "durationSeconds": 0.9553724,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "ObjectiveHasMeaningfulFeasibilityAndPlan(4)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.ObjectiveHasMeaningfulFeasibilityAndPlan(4)",
+            "state": "Passed",
+            "durationSeconds": 1.0336811,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "ObjectiveHasMeaningfulFeasibilityAndPlan(5)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.ObjectiveHasMeaningfulFeasibilityAndPlan(5)",
+            "state": "Passed",
+            "durationSeconds": 1.1866876,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: DefensiveTurtle for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'defensive_turtle' and started plan #1: DefensiveTurtle.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "OwnedAndQueuedUnits_AndCompletedProducersReduceCanonicalQuote(4)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.OwnedAndQueuedUnits_AndCompletedProducersReduceCanonicalQuote(4)",
+            "state": "Passed",
+            "durationSeconds": 1.0449852,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "OwnedAndQueuedUnits_AndCompletedProducersReduceCanonicalQuote(5)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.OwnedAndQueuedUnits_AndCompletedProducersReduceCanonicalQuote(5)",
+            "state": "Passed",
+            "durationSeconds": 1.0771255,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "SaturatedRequiredProducerQueue_IsNotMisquotedAsCapable(4)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.SaturatedRequiredProducerQueue_IsNotMisquotedAsCapable(4)",
+            "state": "Passed",
+            "durationSeconds": 1.0475155,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "SaturatedRequiredProducerQueue_IsNotMisquotedAsCapable(5)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.SaturatedRequiredProducerQueue_IsNotMisquotedAsCapable(5)",
+            "state": "Passed",
+            "durationSeconds": 1.0560492,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Templates_HaveOrderedFiniteMilestonesAndExactRequests(4)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.Templates_HaveOrderedFiniteMilestonesAndExactRequests(4)",
+            "state": "Passed",
+            "durationSeconds": 1.082891,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Templates_HaveOrderedFiniteMilestonesAndExactRequests(5)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.Templates_HaveOrderedFiniteMilestonesAndExactRequests(5)",
+            "state": "Passed",
+            "durationSeconds": 1.0679149,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "TurtleFundedTowerFoundation_IsChargedOnlyOnceInQuoteAndPlan",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.TurtleFundedTowerFoundation_IsChargedOnlyOnceInQuoteAndPlan",
+            "state": "Passed",
+            "durationSeconds": 1.1802383,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: DefensiveTurtle for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'defensive_turtle' and started plan #1: DefensiveTurtle.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "UnknownObjective_DoesNotQuoteZeroCostCapability",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.UnknownObjective_DoesNotQuoteZeroCostCapability",
+            "state": "Passed",
+            "durationSeconds": 0.9999933,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "WholeFormAdmission_UsesDistinctStrictObjectives(\"prepare ranged reinforcements\",4)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.WholeFormAdmission_UsesDistinctStrictObjectives(\"prepare ranged reinforcements\",4)",
+            "state": "Passed",
+            "durationSeconds": 1.129373,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "WholeFormAdmission_UsesDistinctStrictObjectives(\"prepare fortified defenses\",5)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4C4Tests.WholeFormAdmission_UsesDistinctStrictObjectives(\"prepare fortified defenses\",5)",
+            "state": "Passed",
+            "durationSeconds": 1.2313974,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "CancellationRevisionOverflow_FailsBeforeAnyMutation",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.CancellationRevisionOverflow_FailsBeforeAnyMutation",
+            "state": "Passed",
+            "durationSeconds": 1.3934429,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.\r\n[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "CancelPausedPlan_ReleasesItsReservations",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.CancelPausedPlan_ReleasesItsReservations",
+            "state": "Passed",
+            "durationSeconds": 1.7751381,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.\r\n[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n[Commander] Goal #1 cancelled.\r\n[Commander] Goal #2 cancelled.\r\n[Commander] Goal #3 cancelled.\r\n[StrategicPlanner] Reservation #1 cancelled for plan #1.\r\n[StrategicPlanner] Reservation #2 cancelled for plan #1.\r\n[StrategicPlanner] Plan #1 cancelled.\r\n"
+          },
+          {
+            "name": "CancelStrategy_DoesNotAffectUnrelatedPlayerCommands",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.CancelStrategy_DoesNotAffectUnrelatedPlayerCommands",
+            "state": "Passed",
+            "durationSeconds": 1.0098387,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n[Commander] Goal #1 cancelled.\r\n[Commander] Goal #2 cancelled.\r\n[StrategicPlanner] Plan #1 cancelled.\r\n[Commander] Goal #3: status=Blocked owned=0 queued=0; Assigning at least 1 villagers to Gold; currently 0. No eligible owned villager is available.\r\n"
+          },
+          {
+            "name": "CancelStrategy_DoesNotDeleteCompletedAssets",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.CancelStrategy_DoesNotDeleteCompletedAssets",
+            "state": "Passed",
+            "durationSeconds": 1.1906029,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #1 cancelled.\r\n[Commander] Goal #2 cancelled.\r\n[StrategicPlanner] Plan #1 cancelled.\r\n"
+          },
+          {
+            "name": "CancelStrategy_ReleasesReservations",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.CancelStrategy_ReleasesReservations",
+            "state": "Passed",
+            "durationSeconds": 1.1543748,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.\r\n[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n[Commander] Goal #1 cancelled.\r\n[Commander] Goal #2 cancelled.\r\n[Commander] Goal #3 cancelled.\r\n[StrategicPlanner] Reservation #1 cancelled for plan #1.\r\n[StrategicPlanner] Reservation #2 cancelled for plan #1.\r\n[StrategicPlanner] Plan #1 cancelled.\r\n"
+          },
+          {
+            "name": "ChildCompletionRevisionExhaustion_LeavesMilestoneAndReservationsUntouched",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.ChildCompletionRevisionExhaustion_LeavesMilestoneAndReservationsUntouched",
+            "state": "Passed",
+            "durationSeconds": 1.2678061,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "ChildFailureRevisionExhaustion_DoesNotPartiallyFailPlan",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.ChildFailureRevisionExhaustion_DoesNotPartiallyFailPlan",
+            "state": "Passed",
+            "durationSeconds": 1.197518,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.\r\n[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "ChildProgressRevisionExhaustion_DoesNotThrowOrMutatePlan",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.ChildProgressRevisionExhaustion_DoesNotThrowOrMutatePlan",
+            "state": "Passed",
+            "durationSeconds": 1.1915774,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "ChildTrackingRevisionExhaustion_DoesNotPartiallyLinkGoal",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.ChildTrackingRevisionExhaustion_DoesNotPartiallyLinkGoal",
+            "state": "Passed",
+            "durationSeconds": 1.1230193,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "LifecycleCommands_CannotBypassOwnership",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.LifecycleCommands_CannotBypassOwnership",
+            "state": "Passed",
+            "durationSeconds": 1.2712853,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "LongPause_PreservesGoalDurationAndRetryBudget",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.LongPause_PreservesGoalDurationAndRetryBudget",
+            "state": "Passed",
+            "durationSeconds": 1.3449612,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "LongPause_ResumeShiftsGoalDurationAnchor",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.LongPause_ResumeShiftsGoalDurationAnchor",
+            "state": "Passed",
+            "durationSeconds": 1.3191527,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[SyncCheck] tick=1 checksum=DCE8FD31\r\n[SyncCheck] tick=2 checksum=09764250\r\n[SyncCheck] tick=3 checksum=D4F7A080\r\n[SyncCheck] tick=4 checksum=52898C4E\r\n[SyncCheck] tick=5 checksum=A9DA8968\r\n[SyncCheck] tick=6 checksum=2ED5F0B6\r\n[SyncCheck] tick=7 checksum=97C53E41\r\n[SyncCheck] tick=8 checksum=CED8D712\r\n[SyncCheck] tick=9 checksum=0888CDD8\r\n[SyncCheck] tick=10 checksum=CAD6E33B\r\n[SyncCheck] tick=11 checksum=251AFD2B\r\n[SyncCheck] tick=12 checksum=B8F68998\r\n[SyncCheck] tick=13 checksum=AA55AB51\r\n[SyncCheck] tick=14 checksum=F3BD0C46\r\n[SyncCheck] tick=15 checksum=4BE28346\r\n[SyncCheck] tick=16 checksum=D6B23320\r\n[SyncCheck] tick=17 checksum=F8542DC4\r\n[SyncCheck] tick=18 checksum=61631BBF\r\n[SyncCheck] tick=19 checksum=AEC2477E\r\n[SyncCheck] tick=20 checksum=C7D4B7E2\r\n[SyncCheck] tick=21 checksum=02FBB1C8\r\n[SyncCheck] tick=22 checksum=CBD68263\r\n[SyncCheck] tick=23 checksum=51920354\r\n[SyncCheck] tick=24 checksum=C49B3EB4\r\n[SyncCheck] tick=25 checksum=6B9A7A4B\r\n[SyncCheck] tick=26 checksum=D02A7F20\r\n[SyncCheck] tick=27 checksum=DB32F212\r\n[SyncCheck] tick=28 checksum=EF4E9800\r\n[SyncCheck] tick=29 checksum=7E6AA2B2\r\n[SyncCheck] tick=30 checksum=B7F0500E\r\n[SyncCheck] tick=31 checksum=E81535D2\r\n[SyncCheck] tick=32 checksum=A9C285BC\r\n[SyncCheck] tick=33 checksum=5F587D10\r\n[SyncCheck] tick=34 checksum=871FE238\r\n[SyncCheck] tick=35 checksum=0C710BD1\r\n[SyncCheck] tick=36 checksum=5C7BBFA3\r\n[SyncCheck] tick=37 checksum=2B518F94\r\n[SyncCheck] tick=38 checksum=54740162\r\n[SyncCheck] tick=39 checksum=8854D80F\r\n[SyncCheck] tick=40 checksum=BD233936\r\n[SyncCheck] tick=41 checksum=C3D74225\r\n[SyncCheck] tick=42 checksum=4637CE3B\r\n[SyncCheck] tick=43 checksum=4872C9F6\r\n[SyncCheck] tick=44 checksum=C11DD877\r\n[SyncCheck] tick=45 checksum=BB21ACDF\r\n[SyncCheck] tick=46 checksum=70A3BE4F\r\n[SyncCheck] tick=47 checksum=36F23709\r\n[SyncCheck] tick=48 checksum=3E09062E\r\n[SyncCheck] tick=49 checksum=F9F41ADF\r\n[SyncCheck] tick=50 checksum=4BF5B03D\r\n[SyncCheck] tick=51 checksum=C2C23C8A\r\n[SyncCheck] tick=52 checksum=690373C6\r\n[SyncCheck] tick=53 checksum=00FECD12\r\n[SyncCheck] tick=54 checksum=08E9BF8F\r\n[SyncCheck] tick=55 checksum=CF7DFF3D\r\n[SyncCheck] tick=56 checksum=1701033D\r\n[SyncCheck] tick=57 checksum=B60B52B0\r\n[SyncCheck] tick=58 checksum=F12D1996\r\n[SyncCheck] tick=59 checksum=C86657EF\r\n[SyncCheck] tick=60 checksum=A51948DC\r\n[SyncCheck] tick=61 checksum=D5FFA05D\r\n[SyncCheck] tick=62 checksum=8A952193\r\n[SyncCheck] tick=63 checksum=EC41455D\r\n[SyncCheck] tick=64 checksum=BD4982DC\r\n[SyncCheck] tick=65 checksum=FDADDA10\r\n[SyncCheck] tick=66 checksum=4A6186F9\r\n[SyncCheck] tick=67 checksum=88BC0276\r\n[SyncCheck] tick=68 checksum=F8B80EC9\r\n[SyncCheck] tick=69 checksum=503161B0\r\n[SyncCheck] tick=70 checksum=F88A364C\r\n[SyncCheck] tick=71 checksum=54CF509D\r\n[SyncCheck] tick=72 checksum=6500B0A3\r\n[SyncCheck] tick=73 checksum=AB690B3D\r\n[SyncCheck] tick=74 checksum=38875F8C\r\n[SyncCheck] tick=75 checksum=F1B3266F\r\n[SyncCheck] tick=76 checksum=D6EC5FE6\r\n[SyncCheck] tick=77 checksum=E8330BF1\r\n[SyncCheck] tick=78 checksum=7E6A6690\r\n[SyncCheck] tick=79 checksum=21B26FC3\r\n[SyncCheck] tick=80 checksum=A2CE638A\r\n[SyncCheck] tick=81 checksum=16527EC4\r\n[SyncCheck] tick=82 checksum=2E053971\r\n[SyncCheck] tick=83 checksum=4CF35791\r\n[SyncCheck] tick=84 checksum=54201524\r\n[SyncCheck] tick=85 checksum=A698362A\r\n[SyncCheck] tick=86 checksum=29B33382\r\n[SyncCheck] tick=87 checksum=46D3484D\r\n[SyncCheck] tick=88 checksum=3189756A\r\n[SyncCheck] tick=89 checksum=7649F7B8\r\n[SyncCheck] tick=90 checksum=7E770A58\r\n[SyncCheck] tick=91 checksum=AD1D714A\r\n[SyncCheck] tick=92 checksum=9F30688E\r\n[SyncCheck] tick=93 checksum=8840F103\r\n[SyncCheck] tick=94 checksum=1A1582A9\r\n[SyncCheck] tick=95 checksum=883F1E5F\r\n[SyncCheck] tick=96 checksum=E33CC346\r\n[SyncCheck] tick=97 checksum=7372AE3D\r\n[SyncCheck] tick=98 checksum=495FDE65\r\n[SyncCheck] tick=99 checksum=9895549D\r\n[SyncCheck] tick=100 checksum=B9F64CE5\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; Assigning at least 4 villagers to Food; currently 0. No eligible owned villager is available.\r\n[Commander] Goal #2: status=Blocked owned=0 queued=0; Assigning at least 4 villagers to Wood; currently 0. No eligible owned villager is available.\r\n"
+          },
+          {
+            "name": "MultipleActivePlans_CurrentCaptureIsAmbiguous",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.MultipleActivePlans_CurrentCaptureIsAmbiguous",
+            "state": "Passed",
+            "durationSeconds": 1.5922212,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[StrategicPlanner] Strategic intent #2 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #2 selected template 'ranged_reinforcement' and started plan #2: RangedReinforcement.\r\n[StrategicPlanner] Plan #2 milestone active: Economy.\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n[Commander] Goal #4 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "PausedChildCancellation_FailsPlanOnlyAfterResume",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.PausedChildCancellation_FailsPlanOnlyAfterResume",
+            "state": "Passed",
+            "durationSeconds": 1.0715188,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #1 cancelled.\r\n[Commander] Goal #2 cancelled.\r\n[StrategicPlanner] Plan #1 failed: Tactical goal #1 was cancelled before the milestone completed.\r\n"
+          },
+          {
+            "name": "PausedChildTerminalEvent_IsReconciledOnResume(Completed,GoalCompleted)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.PausedChildTerminalEvent_IsReconciledOnResume(Completed,GoalCompleted)",
+            "state": "Passed",
+            "durationSeconds": 1.0146638,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "PausedChildTerminalEvent_IsReconciledOnResume(Failed,GoalFailed)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.PausedChildTerminalEvent_IsReconciledOnResume(Failed,GoalFailed)",
+            "state": "Passed",
+            "durationSeconds": 0.9996813,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #2 cancelled.\r\n[StrategicPlanner] Plan #1 failed: Tactical goal #1 failed: Finished by an already-dispatched atomic action.\r\n"
+          },
+          {
+            "name": "PauseStrategy_ManualGoalStillTicks",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.PauseStrategy_ManualGoalStillTicks",
+            "state": "Passed",
+            "durationSeconds": 1.1019904,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n[Commander] Goal #3: status=Blocked owned=0 queued=0; Assigning at least 1 villagers to Stone; currently 0. No eligible owned villager is available.\r\n"
+          },
+          {
+            "name": "PauseStrategy_RetainsAndProtectsExistingReservations",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.PauseStrategy_RetainsAndProtectsExistingReservations",
+            "state": "Passed",
+            "durationSeconds": 1.0169833,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.\r\n[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "PauseStrategy_StopsFutureStrategicProgress",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.PauseStrategy_StopsFutureStrategicProgress",
+            "state": "Passed",
+            "durationSeconds": 1.1812103,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.\r\n[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "PlanCompletionRevisionExhaustion_DoesNotPartiallyCompletePlan",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.PlanCompletionRevisionExhaustion_DoesNotPartiallyCompletePlan",
+            "state": "Passed",
+            "durationSeconds": 1.0798469,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.\r\n[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "PlayerCannotCancelOtherPlayersPlan",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.PlayerCannotCancelOtherPlayersPlan",
+            "state": "Passed",
+            "durationSeconds": 0.995512,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "PlayerCannotPauseOtherPlayersPlan",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.PlayerCannotPauseOtherPlayersPlan",
+            "state": "Passed",
+            "durationSeconds": 1.019697,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "PlayerCannotResumeOtherPlayersPlan",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.PlayerCannotResumeOtherPlayersPlan",
+            "state": "Passed",
+            "durationSeconds": 1.0078981,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "PublicMilestoneAdvanceRevisionExhaustion_LeavesPlanAtSameMilestone",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.PublicMilestoneAdvanceRevisionExhaustion_LeavesPlanAtSameMilestone",
+            "state": "Passed",
+            "durationSeconds": 1.0000681,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "ReplacementCannotProceedWhenConflictingCancellationCannotComplete",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.ReplacementCannotProceedWhenConflictingCancellationCannotComplete",
+            "state": "Passed",
+            "durationSeconds": 1.1226033,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.\r\n[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n[StrategicPlanner] Strategic intent #2 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Strategic intent rejected: The conflicting plan could not be cancelled safely.\r\n"
+          },
+          {
+            "name": "ReservationCreatedCallbackRevisionExhaustion_DoesNotRecordReservation",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.ReservationCreatedCallbackRevisionExhaustion_DoesNotRecordReservation",
+            "state": "Passed",
+            "durationSeconds": 1.06939,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "ReservationReleasedCallbackRevisionExhaustion_DoesNotThrowOrPublish",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.ReservationReleasedCallbackRevisionExhaustion_DoesNotThrowOrPublish",
+            "state": "Passed",
+            "durationSeconds": 1.1739514,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "ReservationReleaseRevisionOverflow_FailsBeforeMutation",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.ReservationReleaseRevisionOverflow_FailsBeforeMutation",
+            "state": "Passed",
+            "durationSeconds": 1.1239137,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.\r\n[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "ReservationUpdateRevisionOverflow_FailsBeforeMutation(False)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.ReservationUpdateRevisionOverflow_FailsBeforeMutation(False)",
+            "state": "Passed",
+            "durationSeconds": 1.1161817,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.\r\n[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "ReservationUpdateRevisionOverflow_FailsBeforeMutation(True)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.ReservationUpdateRevisionOverflow_FailsBeforeMutation(True)",
+            "state": "Passed",
+            "durationSeconds": 1.1911428,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.\r\n[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "Reset_ClearsLifecycleState",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.Reset_ClearsLifecycleState",
+            "state": "Passed",
+            "durationSeconds": 1.0959781,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "ResumeStrategy_ContinuesSamePlan",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.ResumeStrategy_ContinuesSamePlan",
+            "state": "Passed",
+            "durationSeconds": 1.207923,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #1: status=Completed owned=8 queued=0; 8/4 villagers assigned to Food.\r\n[Commander] Goal #2: status=Completed owned=8 queued=0; 8/4 villagers assigned to Wood.\r\n[StrategicPlanner] Plan #1 milestone completed: Economy.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 150 Wood.\r\n[StrategicPlanner] Plan #1 milestone active: Production.\r\n[Commander] Goal #3 submitted: BuildStructure\r\n[Commander] Goal #3: status=Blocked owned=0 queued=0; No visible, reachable buildable location was found for ArcheryRange.\r\n"
+          },
+          {
+            "name": "ResumeStrategy_ShiftsBlockedAndConstructionAnchors",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.ResumeStrategy_ShiftsBlockedAndConstructionAnchors",
+            "state": "Passed",
+            "durationSeconds": 1.1476898,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[SyncCheck] tick=1 checksum=DCE8FD31\r\n[SyncCheck] tick=2 checksum=09764250\r\n[SyncCheck] tick=3 checksum=D4F7A080\r\n[SyncCheck] tick=4 checksum=52898C4E\r\n[SyncCheck] tick=5 checksum=A9DA8968\r\n[SyncCheck] tick=6 checksum=2ED5F0B6\r\n[SyncCheck] tick=7 checksum=97C53E41\r\n[SyncCheck] tick=8 checksum=CED8D712\r\n[SyncCheck] tick=9 checksum=0888CDD8\r\n[SyncCheck] tick=10 checksum=CAD6E33B\r\n[SyncCheck] tick=11 checksum=251AFD2B\r\n[SyncCheck] tick=12 checksum=B8F68998\r\n[SyncCheck] tick=13 checksum=AA55AB51\r\n[SyncCheck] tick=14 checksum=F3BD0C46\r\n[SyncCheck] tick=15 checksum=4BE28346\r\n[SyncCheck] tick=16 checksum=D6B23320\r\n[SyncCheck] tick=17 checksum=F8542DC4\r\n[SyncCheck] tick=18 checksum=61631BBF\r\n[SyncCheck] tick=19 checksum=AEC2477E\r\n[SyncCheck] tick=20 checksum=C7D4B7E2\r\n[SyncCheck] tick=21 checksum=02FBB1C8\r\n[SyncCheck] tick=22 checksum=CBD68263\r\n[SyncCheck] tick=23 checksum=51920354\r\n[SyncCheck] tick=24 checksum=C49B3EB4\r\n[SyncCheck] tick=25 checksum=6B9A7A4B\r\n[SyncCheck] tick=26 checksum=D02A7F20\r\n[SyncCheck] tick=27 checksum=DB32F212\r\n[SyncCheck] tick=28 checksum=EF4E9800\r\n[SyncCheck] tick=29 checksum=7E6AA2B2\r\n[SyncCheck] tick=30 checksum=B7F0500E\r\n[SyncCheck] tick=31 checksum=E81535D2\r\n[SyncCheck] tick=32 checksum=A9C285BC\r\n[SyncCheck] tick=33 checksum=5F587D10\r\n[SyncCheck] tick=34 checksum=871FE238\r\n[SyncCheck] tick=35 checksum=0C710BD1\r\n[SyncCheck] tick=36 checksum=5C7BBFA3\r\n[SyncCheck] tick=37 checksum=2B518F94\r\n[SyncCheck] tick=38 checksum=54740162\r\n[SyncCheck] tick=39 checksum=8854D80F\r\n[SyncCheck] tick=40 checksum=BD233936\r\n[SyncCheck] tick=41 checksum=C3D74225\r\n[SyncCheck] tick=42 checksum=4637CE3B\r\n[SyncCheck] tick=43 checksum=4872C9F6\r\n[SyncCheck] tick=44 checksum=C11DD877\r\n[SyncCheck] tick=45 checksum=BB21ACDF\r\n[SyncCheck] tick=46 checksum=70A3BE4F\r\n[SyncCheck] tick=47 checksum=36F23709\r\n[SyncCheck] tick=48 checksum=3E09062E\r\n[SyncCheck] tick=49 checksum=F9F41ADF\r\n[SyncCheck] tick=50 checksum=4BF5B03D\r\n[SyncCheck] tick=51 checksum=C2C23C8A\r\n[SyncCheck] tick=52 checksum=690373C6\r\n[SyncCheck] tick=53 checksum=00FECD12\r\n[SyncCheck] tick=54 checksum=08E9BF8F\r\n[SyncCheck] tick=55 checksum=CF7DFF3D\r\n[SyncCheck] tick=56 checksum=1701033D\r\n[SyncCheck] tick=57 checksum=B60B52B0\r\n[SyncCheck] tick=58 checksum=F12D1996\r\n[SyncCheck] tick=59 checksum=C86657EF\r\n[SyncCheck] tick=60 checksum=A51948DC\r\n[SyncCheck] tick=61 checksum=D5FFA05D\r\n[SyncCheck] tick=62 checksum=8A952193\r\n[SyncCheck] tick=63 checksum=EC41455D\r\n[SyncCheck] tick=64 checksum=BD4982DC\r\n[SyncCheck] tick=65 checksum=FDADDA10\r\n[SyncCheck] tick=66 checksum=4A6186F9\r\n[SyncCheck] tick=67 checksum=88BC0276\r\n[SyncCheck] tick=68 checksum=F8B80EC9\r\n[SyncCheck] tick=69 checksum=503161B0\r\n[SyncCheck] tick=70 checksum=F88A364C\r\n[SyncCheck] tick=71 checksum=54CF509D\r\n[SyncCheck] tick=72 checksum=6500B0A3\r\n[SyncCheck] tick=73 checksum=AB690B3D\r\n[SyncCheck] tick=74 checksum=38875F8C\r\n[SyncCheck] tick=75 checksum=F1B3266F\r\n[SyncCheck] tick=76 checksum=D6EC5FE6\r\n[SyncCheck] tick=77 checksum=E8330BF1\r\n[SyncCheck] tick=78 checksum=7E6A6690\r\n[SyncCheck] tick=79 checksum=21B26FC3\r\n[SyncCheck] tick=80 checksum=A2CE638A\r\n[SyncCheck] tick=81 checksum=16527EC4\r\n[SyncCheck] tick=82 checksum=2E053971\r\n[SyncCheck] tick=83 checksum=4CF35791\r\n[SyncCheck] tick=84 checksum=54201524\r\n[SyncCheck] tick=85 checksum=A698362A\r\n[SyncCheck] tick=86 checksum=29B33382\r\n[SyncCheck] tick=87 checksum=46D3484D\r\n[SyncCheck] tick=88 checksum=3189756A\r\n[SyncCheck] tick=89 checksum=7649F7B8\r\n[SyncCheck] tick=90 checksum=7E770A58\r\n[SyncCheck] tick=91 checksum=AD1D714A\r\n[SyncCheck] tick=92 checksum=9F30688E\r\n[SyncCheck] tick=93 checksum=8840F103\r\n[SyncCheck] tick=94 checksum=1A1582A9\r\n[SyncCheck] tick=95 checksum=883F1E5F\r\n[SyncCheck] tick=96 checksum=E33CC346\r\n[SyncCheck] tick=97 checksum=7372AE3D\r\n[SyncCheck] tick=98 checksum=495FDE65\r\n[SyncCheck] tick=99 checksum=9895549D\r\n[SyncCheck] tick=100 checksum=B9F64CE5\r\n"
+          },
+          {
+            "name": "ResumeWithTerminalChild_RevisionOverflowFailsBeforeAnchorMutation",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.ResumeWithTerminalChild_RevisionOverflowFailsBeforeAnchorMutation",
+            "state": "Passed",
+            "durationSeconds": 0.9719217,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #1 cancelled.\r\n"
+          },
+          {
+            "name": "SameLifecycleStateProducesSameResult",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.SameLifecycleStateProducesSameResult",
+            "state": "Passed",
+            "durationSeconds": 1.1878311,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "StaleCancelRequest_CannotCancelReplacementPlan",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.StaleCancelRequest_CannotCancelReplacementPlan",
+            "state": "Passed",
+            "durationSeconds": 1.0851749,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #1 cancelled.\r\n[Commander] Goal #2 cancelled.\r\n[StrategicPlanner] Plan #1 cancelled.\r\n[StrategicPlanner] Strategic intent #2 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #2 selected template 'ranged_reinforcement' and started plan #2: RangedReinforcement.\r\n[StrategicPlanner] Plan #2 milestone active: Economy.\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n[Commander] Goal #4 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "StalePauseRequest_CannotPauseReplacementPlan",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.StalePauseRequest_CannotPauseReplacementPlan",
+            "state": "Passed",
+            "durationSeconds": 1.1304085,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #1 cancelled.\r\n[Commander] Goal #2 cancelled.\r\n[StrategicPlanner] Plan #1 cancelled.\r\n[StrategicPlanner] Strategic intent #2 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #2 selected template 'ranged_reinforcement' and started plan #2: RangedReinforcement.\r\n[StrategicPlanner] Plan #2 milestone active: Economy.\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n[Commander] Goal #4 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "StaleRevisionRequest_CannotPauseChangedPlan",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.StaleRevisionRequest_CannotPauseChangedPlan",
+            "state": "Passed",
+            "durationSeconds": 0.8785935,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "UnknownAction_IsRejectedWithoutMutation",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D1Tests.UnknownAction_IsRejectedWithoutMutation",
+            "state": "Passed",
+            "durationSeconds": 0.981065,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

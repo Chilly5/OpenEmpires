@@ -1,0 +1,295 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "b1663c301f944ef2844fd62425571298",
+      "status": "succeeded",
+      "mode": "EditMode",
+      "started_unix_ms": 1790267717129,
+      "finished_unix_ms": 1790267724334,
+      "last_update_unix_ms": 1790267724334,
+      "progress": {
+        "completed": 28,
+        "total": 28,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1790267724060,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4D2Tests.UnresolvedRequirement_IsUnknownNotZero",
+        "last_finished_unix_ms": 1790267724304,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "EditMode",
+        "summary": {
+          "total": 28,
+          "passed": 28,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 6.9088626,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "ActiveWithoutExecutionOrProgress_IsUnknown",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.ActiveWithoutExecutionOrProgress_IsUnknown",
+            "state": "Passed",
+            "durationSeconds": 0.2424213,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "ArchivedGoalEviction_ReportsMissingHistory",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.ArchivedGoalEviction_ReportsMissingHistory",
+            "state": "Passed",
+            "durationSeconds": 0.2802568,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #1: status=Completed owned=4 queued=0; 4/4 villagers assigned to Food.\r\n[Commander] Goal #2: status=Completed owned=4 queued=0; 4/4 villagers assigned to Wood.\r\n[StrategicPlanner] Plan #1 milestone completed: Economy.\r\n[StrategicPlanner] Plan #1 milestone active: Production.\r\n[StrategicPlanner] Plan #1 milestone completed: Production.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 300 Food.\r\n[StrategicPlanner] Reservation #2 created for plan #1: 500 Wood.\r\n[StrategicPlanner] Plan #1 milestone active: Force.\r\n[Commander] Goal #3 submitted: EnsureUnitCount\r\n[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.\r\n[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.\r\n[Commander] Goal #3 cancelled.\r\n[StrategicPlanner] Reservation #1 cancelled for plan #1.\r\n[StrategicPlanner] Reservation #2 cancelled for plan #1.\r\n[StrategicPlanner] Plan #1 cancelled.\r\n[Commander] Goal #4 submitted: EnsureUnitCount\r\n[Commander] Goal #4 cancelled.\r\n[Commander] Goal #5 submitted: EnsureUnitCount\r\n[Commander] Goal #5 cancelled.\r\n[Commander] Goal #6 submitted: EnsureUnitCount\r\n[Commander] Goal #6 cancelled.\r\n[Commander] Goal #7 submitted: EnsureUnitCount\r\n[Commander] Goal #7 cancelled.\r\n[Commander] Goal #8 submitted: EnsureUnitCount\r\n[Commander] Goal #8 cancelled.\r\n[Commander] Goal #9 submitted: EnsureUnitCount\r\n[Commander] Goal #9 cancelled.\r\n[Commander] Goal #10 submitted: EnsureUnitCount\r\n[Commander] Goal #10 cancelled.\r\n[Commander] Goal #11 submitted: EnsureUnitCount\r\n[Commander] Goal #11 cancelled.\r\n[Commander] Goal #12 submitted: EnsureUnitCount\r\n[Commander] Goal #12 cancelled.\r\n[Commander] Goal #13 submitted: EnsureUnitCount\r\n[Commander] Goal #13 cancelled.\r\n[Commander] Goal #14 submitted: EnsureUnitCount\r\n[Commander] Goal #14 cancelled.\r\n[Commander] Goal #15 submitted: EnsureUnitCount\r\n[Commander] Goal #15 cancelled.\r\n[Commander] Goal #16 submitted: EnsureUnitCount\r\n[Commander] Goal #16 cancelled.\r\n[Commander] Goal #17 submitted: EnsureUnitCount\r\n[Commander] Goal #17 cancelled.\r\n[Commander] Goal #18 submitted: EnsureUnitCount\r\n[Commander] Goal #18 cancelled.\r\n[Commander] Goal #19 submitted: EnsureUnitCount\r\n[Commander] Goal #19 cancelled.\r\n[Commander] Goal #20 submitted: EnsureUnitCount\r\n[Commander] Goal #20 cancelled.\r\n[Commander] Goal #21 submitted: EnsureUnitCount\r\n[Commander] Goal #21 cancelled.\r\n[Commander] Goal #22 submitted: EnsureUnitCount\r\n[Commander] Goal #22 cancelled.\r\n[Commander] Goal #23 submitted: EnsureUnitCount\r\n[Commander] Goal #23 cancelled.\r\n[Commander] Goal #24 submitted: EnsureUnitCount\r\n[Commander] Goal #24 cancelled.\r\n[Commander] Goal #25 submitted: EnsureUnitCount\r\n[Commander] Goal #25 cancelled.\r\n[Commander] Goal #26 submitted: EnsureUnitCount\r\n[Commander] Goal #26 cancelled.\r\n[Commander] Goal #27 submitted: EnsureUnitCount\r\n[Commander] Goal #27 cancelled.\r\n[Commander] Goal #28 submitted: EnsureUnitCount\r\n[Commander] Goal #28 cancelled.\r\n[Commander] Goal #29 submitted: EnsureUnitCount\r\n[Commander] Goal #29 cancelled.\r\n[Commander] Goal #30 submitted: EnsureUnitCount\r\n[Commander] Goal #30 cancelled.\r\n[Commander] Goal #31 submitted: EnsureUnitCount\r\n[Commander] Goal #31 cancelled.\r\n[Commander] Goal #32 submitted: EnsureUnitCount\r\n[Commander] Goal #32 cancelled.\r\n[Commander] Goal #33 submitted: EnsureUnitCount\r\n[Commander] Goal #33 cancelled.\r\n[Commander] Goal #34 submitted: EnsureUnitCount\r\n[Commander] Goal #34 cancelled.\r\n[Commander] Goal #35 submitted: EnsureUnitCount\r\n[Commander] Goal #35 cancelled.\r\n[Commander] Goal #36 submitted: EnsureUnitCount\r\n[Commander] Goal #36 cancelled.\r\n[Commander] Goal #37 submitted: EnsureUnitCount\r\n[Commander] Goal #37 cancelled.\r\n[Commander] Goal #38 submitted: EnsureUnitCount\r\n[Commander] Goal #38 cancelled.\r\n[Commander] Goal #39 submitted: EnsureUnitCount\r\n[Commander] Goal #39 cancelled.\r\n[Commander] Goal #40 submitted: EnsureUnitCount\r\n[Commander] Goal #40 cancelled.\r\n[Commander] Goal #41 submitted: EnsureUnitCount\r\n[Commander] Goal #41 cancelled.\r\n[Commander] Goal #42 submitted: EnsureUnitCount\r\n[Commander] Goal #42 cancelled.\r\n[Commander] Goal #43 submitted: EnsureUnitCount\r\n[Commander] Goal #43 cancelled.\r\n[Commander] Goal #44 submitted: EnsureUnitCount\r\n[Commander] Goal #44 cancelled.\r\n[Commander] Goal #45 submitted: EnsureUnitCount\r\n[Commander] Goal #45 cancelled.\r\n[Commander] Goal #46 submitted: EnsureUnitCount\r\n[Commander] Goal #46 cancelled.\r\n[Commander] Goal #47 submitted: EnsureUnitCount\r\n[Commander] Goal #47 cancelled.\r\n[Commander] Goal #48 submitted: EnsureUnitCount\r\n[Commander] Goal #48 cancelled.\r\n[Commander] Goal #49 submitted: EnsureUnitCount\r\n[Commander] Goal #49 cancelled.\r\n[Commander] Goal #50 submitted: EnsureUnitCount\r\n[Commander] Goal #50 cancelled.\r\n[Commander] Goal #51 submitted: EnsureUnitCount\r\n[Commander] Goal #51 cancelled.\r\n[Commander] Goal #52 submitted: EnsureUnitCount\r\n[Commander] Goal #52 cancelled.\r\n[Commander] Goal #53 submitted: EnsureUnitCount\r\n[Commander] Goal #53 cancelled.\r\n"
+          },
+          {
+            "name": "BlockedDuration_StopsAtPauseTickAndRejectsInvalidOrdering",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.BlockedDuration_StopsAtPauseTickAndRejectsInvalidOrdering",
+            "state": "Passed",
+            "durationSeconds": 0.2425064,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #1: status=Completed owned=4 queued=0; 4/4 villagers assigned to Food.\r\n[Commander] Goal #2: status=Completed owned=4 queued=0; 4/4 villagers assigned to Wood.\r\n[StrategicPlanner] Plan #1 milestone completed: Economy.\r\n[StrategicPlanner] Plan #1 milestone active: Production.\r\n[StrategicPlanner] Plan #1 milestone completed: Production.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 300 Food.\r\n[StrategicPlanner] Reservation #2 created for plan #1: 500 Wood.\r\n[StrategicPlanner] Plan #1 milestone active: Force.\r\n[Commander] Goal #3 submitted: EnsureUnitCount\r\n[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.\r\n[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.\r\n"
+          },
+          {
+            "name": "CancelledPlan_ReportsCancelled",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.CancelledPlan_ReportsCancelled",
+            "state": "Passed",
+            "durationSeconds": 0.2403505,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n[Commander] Goal #1 cancelled.\r\n[Commander] Goal #2 cancelled.\r\n[Commander] Goal #3 cancelled.\r\n[StrategicPlanner] Plan #1 cancelled.\r\n"
+          },
+          {
+            "name": "CapturedHealth_IsDetachedFromResourceMutation",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.CapturedHealth_IsDetachedFromResourceMutation",
+            "state": "Passed",
+            "durationSeconds": 0.2395398,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "ChangingWorldStateWithoutRevision_ChangesHealthEvidence",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.ChangingWorldStateWithoutRevision_ChangesHealthEvidence",
+            "state": "Passed",
+            "durationSeconds": 0.2406609,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "CompletedPlan_ReportsCompleted",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.CompletedPlan_ReportsCompleted",
+            "state": "Passed",
+            "durationSeconds": 0.2501188,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #1: status=Completed owned=4 queued=0; 4/4 villagers assigned to Food.\r\n[Commander] Goal #2: status=Completed owned=4 queued=0; 4/4 villagers assigned to Wood.\r\n[StrategicPlanner] Plan #1 milestone completed: Economy.\r\n[StrategicPlanner] Plan #1 milestone active: Production.\r\n[StrategicPlanner] Plan #1 milestone completed: Production.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 300 Food.\r\n[StrategicPlanner] Reservation #2 created for plan #1: 500 Wood.\r\n[StrategicPlanner] Plan #1 milestone active: Force.\r\n[Commander] Goal #3 submitted: EnsureUnitCount\r\n[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.\r\n[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.\r\n[Commander] Goal #3: status=Completed owned=10 queued=0; Owned 10/10 living units.\r\n[StrategicPlanner] Plan #1 milestone completed: Force.\r\n[StrategicPlanner] Reservation #1 released for plan #1.\r\n[StrategicPlanner] Reservation #2 released for plan #1.\r\n[StrategicPlanner] Plan #1 milestone active: Ready.\r\n[StrategicPlanner] Plan #1 milestone completed: Ready.\r\n[StrategicPlanner] Plan #1 completed. Ranged reinforcement preparation complete.\r\n"
+          },
+          {
+            "name": "ForeignAndUnknownPlan_ReturnNoHealth",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.ForeignAndUnknownPlan_ReturnNoHealth",
+            "state": "Passed",
+            "durationSeconds": 0.242182,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "HealthSnapshot_DoesNotRetainSimulationObjects",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.HealthSnapshot_DoesNotRetainSimulationObjects",
+            "state": "Passed",
+            "durationSeconds": 0.2415601,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "MalformedPlanEnum_FailsClosed",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.MalformedPlanEnum_FailsClosed",
+            "state": "Passed",
+            "durationSeconds": 0.2428052,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "MaxPopulation_DoesNotInventHouseRecovery",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.MaxPopulation_DoesNotInventHouseRecovery",
+            "state": "Passed",
+            "durationSeconds": 0.244424,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #1: status=Completed owned=4 queued=0; 4/4 villagers assigned to Food.\r\n[Commander] Goal #2: status=Completed owned=4 queued=0; 4/4 villagers assigned to Wood.\r\n[StrategicPlanner] Plan #1 milestone completed: Economy.\r\n[StrategicPlanner] Plan #1 milestone active: Production.\r\n[StrategicPlanner] Plan #1 milestone completed: Production.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 300 Food.\r\n[StrategicPlanner] Reservation #2 created for plan #1: 500 Wood.\r\n[StrategicPlanner] Plan #1 milestone active: Force.\r\n[Commander] Goal #3 submitted: EnsureUnitCount\r\n[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.\r\n[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.\r\n"
+          },
+          {
+            "name": "OldPlanHealth_DoesNotDescribeReplacementPlan",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.OldPlanHealth_DoesNotDescribeReplacementPlan",
+            "state": "Passed",
+            "durationSeconds": 0.2436095,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n[Commander] Goal #1 cancelled.\r\n[Commander] Goal #2 cancelled.\r\n[Commander] Goal #3 cancelled.\r\n[StrategicPlanner] Plan #1 cancelled.\r\n[StrategicPlanner] Strategic intent #2 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #2 selected template 'CavalryPressure' and started plan #2: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #2 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #2 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #4 submitted: ResourceAllocation\r\n[Commander] Goal #5 submitted: ResourceAllocation\r\n[Commander] Goal #6 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "PausedPlan_ReportsPaused",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.PausedPlan_ReportsPaused",
+            "state": "Passed",
+            "durationSeconds": 0.2426822,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "PlanBudget_DiffersFromMilestoneDeficitAndReservations",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.PlanBudget_DiffersFromMilestoneDeficitAndReservations",
+            "state": "Passed",
+            "durationSeconds": 0.2426278,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "PlanHealth_DoesNotAdvancePlan",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.PlanHealth_DoesNotAdvancePlan",
+            "state": "Passed",
+            "durationSeconds": 0.2410606,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "PlanHealth_DoesNotCallProvider",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.PlanHealth_DoesNotCallProvider",
+            "state": "Passed",
+            "durationSeconds": 0.2451073,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "PlanHealth_DoesNotMutateSimulation",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.PlanHealth_DoesNotMutateSimulation",
+            "state": "Passed",
+            "durationSeconds": 0.2447346,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "PlanHealth_IsDeterministic",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.PlanHealth_IsDeterministic",
+            "state": "Passed",
+            "durationSeconds": 0.2742557,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "PlanHealth_RemainsFogSafe",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.PlanHealth_RemainsFogSafe",
+            "state": "Passed",
+            "durationSeconds": 0.2421894,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "PopulationMirror_ExcludesGarrisonedUnits",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.PopulationMirror_ExcludesGarrisonedUnits",
+            "state": "Passed",
+            "durationSeconds": 0.2472636,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #1: status=Completed owned=4 queued=0; 4/4 villagers assigned to Food.\r\n[Commander] Goal #2: status=Completed owned=4 queued=0; 4/4 villagers assigned to Wood.\r\n[StrategicPlanner] Plan #1 milestone completed: Economy.\r\n[StrategicPlanner] Plan #1 milestone active: Production.\r\n[StrategicPlanner] Plan #1 milestone completed: Production.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 300 Food.\r\n[StrategicPlanner] Reservation #2 created for plan #1: 500 Wood.\r\n[StrategicPlanner] Plan #1 milestone active: Force.\r\n[Commander] Goal #3 submitted: EnsureUnitCount\r\n[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.\r\n[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.\r\n"
+          },
+          {
+            "name": "PopulationMirror_UsesPlanUnitsRegistryAndQueuePredicates",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.PopulationMirror_UsesPlanUnitsRegistryAndQueuePredicates",
+            "state": "Passed",
+            "durationSeconds": 0.2456887,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #1: status=Completed owned=4 queued=0; 4/4 villagers assigned to Food.\r\n[Commander] Goal #2: status=Completed owned=4 queued=0; 4/4 villagers assigned to Wood.\r\n[StrategicPlanner] Plan #1 milestone completed: Economy.\r\n[StrategicPlanner] Plan #1 milestone active: Production.\r\n[StrategicPlanner] Plan #1 milestone completed: Production.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 300 Food.\r\n[StrategicPlanner] Reservation #2 created for plan #1: 500 Wood.\r\n[StrategicPlanner] Plan #1 milestone active: Force.\r\n[Commander] Goal #3 submitted: EnsureUnitCount\r\n[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.\r\n[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.\r\n"
+          },
+          {
+            "name": "PopulationWaiting_IsStructured",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.PopulationWaiting_IsStructured",
+            "state": "Passed",
+            "durationSeconds": 0.2459007,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #1: status=Completed owned=4 queued=0; 4/4 villagers assigned to Food.\r\n[Commander] Goal #2: status=Completed owned=4 queued=0; 4/4 villagers assigned to Wood.\r\n[StrategicPlanner] Plan #1 milestone completed: Economy.\r\n[StrategicPlanner] Plan #1 milestone active: Production.\r\n[StrategicPlanner] Plan #1 milestone completed: Production.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 300 Food.\r\n[StrategicPlanner] Reservation #2 created for plan #1: 500 Wood.\r\n[StrategicPlanner] Plan #1 milestone active: Force.\r\n[Commander] Goal #3 submitted: EnsureUnitCount\r\n[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.\r\n[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.\r\n"
+          },
+          {
+            "name": "PrimaryAndSecondaryBlockers_AreRankedAndBounded",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.PrimaryAndSecondaryBlockers_AreRankedAndBounded",
+            "state": "Passed",
+            "durationSeconds": 0.2452025,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #1: status=Completed owned=4 queued=0; 4/4 villagers assigned to Food.\r\n[Commander] Goal #2: status=Completed owned=4 queued=0; 4/4 villagers assigned to Wood.\r\n[StrategicPlanner] Plan #1 milestone completed: Economy.\r\n[StrategicPlanner] Plan #1 milestone active: Production.\r\n[StrategicPlanner] Plan #1 milestone completed: Production.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 300 Food.\r\n[StrategicPlanner] Reservation #2 created for plan #1: 500 Wood.\r\n[StrategicPlanner] Plan #1 milestone active: Force.\r\n[Commander] Goal #3 submitted: EnsureUnitCount\r\n[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.\r\n[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.\r\n"
+          },
+          {
+            "name": "ReservationTotals_UnchangedByHealthCapture",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.ReservationTotals_UnchangedByHealthCapture",
+            "state": "Passed",
+            "durationSeconds": 0.2449249,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "Reset_ClearsPlanHealthProjection",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.Reset_ClearsPlanHealthProjection",
+            "state": "Passed",
+            "durationSeconds": 0.2440184,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "ResourceWaiting_IsNotMisclassifiedAsFailure",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.ResourceWaiting_IsNotMisclassifiedAsFailure",
+            "state": "Passed",
+            "durationSeconds": 0.2443424,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "SameStateProducesSameHealthSnapshot",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.SameStateProducesSameHealthSnapshot",
+            "state": "Passed",
+            "durationSeconds": 0.2427531,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "UnresolvedRequirement_IsUnknownNotZero",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D2Tests.UnresolvedRequirement_IsUnknownNotZero",
+            "state": "Passed",
+            "durationSeconds": 0.2434165,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

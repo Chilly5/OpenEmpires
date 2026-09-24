@@ -168,3 +168,40 @@ This final entry supersedes the historical in-progress checkpoints above.
   deferred. Detailed evidence is in
   `phase4c4-final-regression-summary.md`, `requirements-matrix.md`, and the
   current A–G report.
+
+## Final scoped Antigravity population-cap fix — READY FOR PHASE 4D
+
+This entry supersedes the earlier Phase 4C gate above; its housing limitation
+was later closed. On branch `unit_models_and_voice_control` at audited commit
+`205c4fa`, the external audit found the current-cap feasibility rejection
+preempted the existing House calculation. Root removed only that rejection,
+without altering provider, approval, policy, planner authority, tactical
+execution, packages, or authentication. Sol handled test-only regressions and
+independent read-only execution/review; Luna audited scene hygiene. Root owned
+the production edit, Unity runner, artifact verification, boundary audit, and
+final documentation.
+
+- RED EditMode job `03e03bbe10b047288e3c743ae848668d` failed the two
+  10/10-cap regressions with the expected population-cap rejection. Focused
+  post-fix EditMode `ce5c2db6cb3149edbe05d1d5d13f7a83` passed 31/31;
+  focused PlayMode XML passed 10/10; new housing PlayMode job
+  `21fc37ac99be449f9dd78bf263652ee2` passed 1/1.
+- Full EditMode job `024a2c805b33467b947965ae57cc309c` passed 571/571;
+  full PlayMode job `4fe992b52c814dc5a36e67fa3c854389` passed 87/87.
+  Both full XMLs have unique names and zero failures, skips, or inconclusive
+  cases. The focused PlayMode MCP callback timed out after Unity wrote 10/10
+  XML; the subsequent full PlayMode job reported succeeded.
+- The dynamic-housing test began at population/cap 10/10 with no House,
+  approved Ranged Reinforcement via chat UI, observed House foundation and
+  completion, Archer training after housing, ten Archers, completed plan, and
+  released reservations. No broader deterministic execution fix was needed.
+- Two identical unreferenced TestRunner/recovery scene/meta pairs were removed;
+  Git commit `205c4fa` can restore them. The updated 27-entry source manifest
+  matches current hashes. Final boundary audit: changed21/new21/missing0,
+  protected55/55 unchanged, gaps0, six documented host references, zero
+  credential matches. Independent final review found no Critical or Important
+  code defect.
+- Known separate limitation: feasibility quotes dynamic House cost, but the
+  static milestone plan budget/reservations do not include its opportunistic
+  50 wood. Fully funded runtime execution passed; changing planner budgeting
+  was outside this authorized narrow round.

@@ -1,0 +1,40 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "a910808264dd4a718dba7b4fde1d7769",
+      "status": "failed",
+      "mode": "PlayMode",
+      "started_unix_ms": 1790271759696,
+      "finished_unix_ms": 1790271773717,
+      "last_update_unix_ms": 1790271773717,
+      "progress": {
+        "completed": 12,
+        "total": 12,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1790271773381,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4D2HostPlayModeTests.WaitingAndBlockedQuestions_UseTypedCurrentChildEvidence",
+        "last_finished_unix_ms": 1790271773650,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4D2HostPlayModeTests.ExplicitRetainedTerminalPlan_ReportsOnlyAuthoritativeStatus",
+            "message": "  Expected: String containing \"Strategy #1: Cancelled\"\r\n  But was:  \"Commander:\r\nLocal mock translator ready.\r\n\r\nPlayer:\r\nwhy did plan #1 stop?\r\n\r\nCommander:\r\nUnsupported or mixed Commander request.\"\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4D2HostPlayModeTests.UnchangedRevision_WorldChangeRefreshesHealth",
+            "message": "  Expected: String containing \"queued 1\"\r\n  But was:  \"Strategy #1 (1/1): Active, Economy.\nHealth: Unknown; wood 17.\"\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

@@ -119,7 +119,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &669131073
+--- !u!1 &897357532
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,8 +127,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 669131075}
-  - component: {fileID: 669131074}
+  - component: {fileID: 897357534}
+  - component: {fileID: 897357533}
   m_Layer: 0
   m_Name: Code-based tests runner
   m_TagString: Untagged
@@ -136,13 +136,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &669131074
+--- !u!114 &897357533
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 669131073}
+  m_GameObject: {fileID: 897357532}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 102e512f651ee834f951a2516c1ea3b8, type: 3}
@@ -171,7 +171,8 @@ MonoBehaviour:
       assemblyNames: []
       groupNames: []
       categoryNames: []
-      testNames: []
+      testNames:
+      - OpenEmpires.Tests.CommanderPhase4C4PlayModeTests.AtCurrentCap_ApprovedRangedPlanBuildsHouseThenTrainsAndReleasesReservations
       synchronousOnly: 0
     sceneBased: 0
     originalScene: 
@@ -186,13 +187,13 @@ MonoBehaviour:
     repeatCount: 0
     automated: 0
     randomOrderSeed: 0
---- !u!4 &669131075
+--- !u!4 &897357534
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 669131073}
+  m_GameObject: {fileID: 897357532}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -205,4 +206,4 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 669131075}
+  - {fileID: 897357534}

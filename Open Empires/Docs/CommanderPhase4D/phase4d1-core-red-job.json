@@ -1,0 +1,30 @@
+{
+  "kind": "UnityMCP terminal get_test_job evidence; no NUnit XML emitted by this failed job",
+  "job_id": "52e31fa3eb1746d7ab0748c677494a7c",
+  "mode": "EditMode",
+  "group": "CommanderPhase4D1Tests",
+  "status": "failed",
+  "started_unix_ms": 1790192129899,
+  "finished_unix_ms": 1790192136053,
+  "completed": 16,
+  "total": 16,
+  "failed": 7,
+  "passed_inferred_from_terminal_counts": 9,
+  "result_payload": null,
+  "failed_tests": [
+    { "name": "LongPause_PreservesGoalDurationAndRetryBudget", "message": "Expected True; but was False. Existing goal expired during the long pause." },
+    { "name": "MultipleActivePlans_CurrentCaptureIsAmbiguous", "message": "Expected AmbiguousPlan; but was Rejected. Current-plan capture boundary is absent." },
+    { "name": "PauseStrategy_StopsFutureStrategicProgress", "message": "Expected Applied; but was Rejected. Existing planner has no pause control." },
+    { "name": "Reset_ClearsLifecycleState", "message": "Expected StalePlan; but was Rejected. This expectation will be revised to test disposal; cross-runtime generation belongs to host." },
+    { "name": "ResumeStrategy_ContinuesSamePlan", "message": "Expected Applied; but was Rejected. Existing planner has no resume control." },
+    { "name": "SameLifecycleStateProducesSameResult", "message": "Expected Applied; but was Rejected. Existing planner has no status control." },
+    { "name": "StalePauseRequest_CannotPauseReplacementPlan", "message": "Expected StalePlan; but was Rejected. Existing planner has no revision-bound capture." }
+  ],
+  "source_sha256": {
+    "Assets/Tests/EditMode/CommanderPhase4D1Tests.cs": "CB3134CFB6586AC3D5D79E72ADD291A766D1A28C9E9AAA73EEC72E5A8450498B",
+    "Assets/Scripts/AI/Commander/Strategic/StrategicPlan.cs": "324375AC73BFB7985A1AFC590FBDA89C95473C92E706FA39F86285D8507611D7",
+    "Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.cs": "EC33917275B681855A2706CA12902149724A9E3FB585C38349BD44CFDF3E8F4C",
+    "Assets/Scripts/AI/Commander/CommanderGoalManager.cs": "31B2B4554F8A6B7E2266AEAB282DF7B1E1CC784451877C879D66BD64E4899190",
+    "Assets/Scripts/AI/Commander/CommanderGoal.cs": "57A0104835BE5377D3EB45D8624C26E9906186703C48A27E83D998BB212CEFAE"
+  }
+}

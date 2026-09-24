@@ -134,8 +134,6 @@ namespace OpenEmpires
             int finalPopulation = context.Population + queuedPopulation + neededPopulation;
             if (finalPopulation > context.MaximumPopulation)
                 Reject("Required units exceed maximum population capacity.");
-            if (neededPopulation > 0 && context.PopulationCap <= context.Population + queuedPopulation)
-                Reject("No population capacity is available.");
             int futureCapacity = context.PopulationCap + plannedPopulation;
             foreach (var building in context.Buildings)
                 if (building.IsUnderConstruction)

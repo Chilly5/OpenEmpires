@@ -1,0 +1,1581 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="10" result="Passed" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-23 15:59:17Z" end-time="2026-09-23 15:59:29Z" duration="11.5073325">
+  <test-suite type="TestSuite" id="1111" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="87" result="Passed" start-time="2026-09-23 15:59:17Z" end-time="2026-09-23 15:59:29Z" duration="11.507333" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1105" name="OpenEmpires.PlayModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.PlayModeTests.dll" runstate="Runnable" testcasecount="87" result="Passed" start-time="2026-09-23 15:59:17Z" end-time="2026-09-23 15:59:29Z" duration="11.499424" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="10880" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1106" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="87" result="Passed" start-time="2026-09-23 15:59:17Z" end-time="2026-09-23 15:59:29Z" duration="11.496536" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1107" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="87" result="Passed" start-time="2026-09-23 15:59:17Z" end-time="2026-09-23 15:59:29Z" duration="11.494333" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1092" name="CommanderPhase4C4PlayModeTests" fullname="OpenEmpires.Tests.CommanderPhase4C4PlayModeTests" classname="OpenEmpires.Tests.CommanderPhase4C4PlayModeTests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-09-23 15:59:17Z" end-time="2026-09-23 15:59:29Z" duration="11.487368" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase4C4" />
+            </properties>
+            <test-case id="1099" name="AtCurrentCap_ApprovedRangedPlanBuildsHouseThenTrainsAndReleasesReservations" fullname="OpenEmpires.Tests.CommanderPhase4C4PlayModeTests.AtCurrentCap_ApprovedRangedPlanBuildsHouseThenTrainsAndReleasesReservations" methodname="AtCurrentCap_ApprovedRangedPlanBuildsHouseThenTrainsAndReleasesReservations" classname="OpenEmpires.Tests.CommanderPhase4C4PlayModeTests" runstate="Runnable" seed="1814459428" result="Passed" start-time="2026-09-23 15:59:17Z" end-time="2026-09-23 15:59:18Z" duration="1.301795" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1: status=Completed owned=5 queued=0; 5/5 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=5 queued=0; 5/5 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Reservation #1 created for plan #1: 150 Wood.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[Commander] Goal #3 submitted: BuildStructure
+[Commander] Goal #3: status=Executing owned=0 queued=0; Placing ArcheryRange at (141,134) with villager #0.
+[SyncCheck] tick=1 checksum=1C4BD2D7
+[SyncCheck] tick=2 checksum=369246C8
+[SyncCheck] tick=3 checksum=13AFE8E5
+[SyncCheck] tick=4 checksum=0543005B
+[SyncCheck] tick=5 checksum=5486AF70
+[SyncCheck] tick=6 checksum=51473835
+[SyncCheck] tick=7 checksum=F6748222
+[SyncCheck] tick=8 checksum=3277F5F9
+[SyncCheck] tick=9 checksum=5E668684
+[SyncCheck] tick=10 checksum=7FD23668
+[SyncCheck] tick=11 checksum=73A50F84
+[SyncCheck] tick=12 checksum=498102B8
+[SyncCheck] tick=13 checksum=6C744C4D
+[SyncCheck] tick=14 checksum=4026A411
+[SyncCheck] tick=15 checksum=9C3F5DC2
+[Commander] Goal #3: status=WaitingForConstruction owned=0 queued=1; Construction: villager #0 is travelling to building #2.
+[SyncCheck] tick=16 checksum=E1917380
+[SyncCheck] tick=17 checksum=07BDEBB6
+[SyncCheck] tick=18 checksum=4D769F27
+[SyncCheck] tick=19 checksum=3841F676
+[SyncCheck] tick=20 checksum=07BEB05A
+[SyncCheck] tick=21 checksum=9D47BDDA
+[SyncCheck] tick=22 checksum=13380E50
+[SyncCheck] tick=23 checksum=8BBD49D6
+[SyncCheck] tick=24 checksum=1C4B2DC7
+[SyncCheck] tick=25 checksum=889A2EDD
+[SyncCheck] tick=26 checksum=5B8C7CB9
+[SyncCheck] tick=27 checksum=E39D6EFA
+[SyncCheck] tick=28 checksum=849B755E
+[SyncCheck] tick=29 checksum=1EC08C22
+[SyncCheck] tick=30 checksum=BA1C7B08
+[SyncCheck] tick=31 checksum=E9AE564E
+[SyncCheck] tick=32 checksum=78C5AD76
+[SyncCheck] tick=33 checksum=AD6A46A3
+[SyncCheck] tick=34 checksum=D95EDEEC
+[SyncCheck] tick=35 checksum=0A58D255
+[SyncCheck] tick=36 checksum=EE81D2A0
+[SyncCheck] tick=37 checksum=7B0F6E09
+[SyncCheck] tick=38 checksum=5BD81D72
+[SyncCheck] tick=39 checksum=C42AF482
+[SyncCheck] tick=40 checksum=4669C3E5
+[SyncCheck] tick=41 checksum=5C3CB248
+[SyncCheck] tick=42 checksum=EA13E710
+[SyncCheck] tick=43 checksum=02329A57
+[SyncCheck] tick=44 checksum=9A94B6E2
+[SyncCheck] tick=45 checksum=626DEBBA
+[SyncCheck] tick=46 checksum=B7E3DFC7
+[SyncCheck] tick=47 checksum=55D20C7F
+[SyncCheck] tick=48 checksum=F0D37BF0
+[SyncCheck] tick=49 checksum=46CB2BA2
+[SyncCheck] tick=50 checksum=70F85586
+[SyncCheck] tick=51 checksum=12494755
+[SyncCheck] tick=52 checksum=EC6F35B7
+[SyncCheck] tick=53 checksum=A8404097
+[SyncCheck] tick=54 checksum=86353174
+[SyncCheck] tick=55 checksum=CDA5A7FA
+[SyncCheck] tick=56 checksum=70AB637E
+[SyncCheck] tick=57 checksum=1D05EC08
+[SyncCheck] tick=58 checksum=083BD5D8
+[SyncCheck] tick=59 checksum=5C0B2F97
+[SyncCheck] tick=60 checksum=74651BB4
+[SyncCheck] tick=61 checksum=49D85FC0
+[SyncCheck] tick=62 checksum=2D6CF859
+[SyncCheck] tick=63 checksum=79D4513E
+[SyncCheck] tick=64 checksum=86F2FFFF
+[SyncCheck] tick=65 checksum=7317F624
+[SyncCheck] tick=66 checksum=85AF4889
+[SyncCheck] tick=67 checksum=6AB94F72
+[SyncCheck] tick=68 checksum=AE28C149
+[SyncCheck] tick=69 checksum=05353668
+[SyncCheck] tick=70 checksum=986F1254
+[SyncCheck] tick=71 checksum=F088A0CB
+[SyncCheck] tick=72 checksum=FA2632EE
+[SyncCheck] tick=73 checksum=CCB673D5
+[SyncCheck] tick=74 checksum=22703B07
+[SyncCheck] tick=75 checksum=10610A3E
+[SyncCheck] tick=76 checksum=788E80F1
+[SyncCheck] tick=77 checksum=AB8790BD
+[SyncCheck] tick=78 checksum=F0820794
+[SyncCheck] tick=79 checksum=0B49C0AD
+[SyncCheck] tick=80 checksum=9A9C39DB
+[SyncCheck] tick=81 checksum=2D8895E7
+[SyncCheck] tick=82 checksum=E6B1F509
+[SyncCheck] tick=83 checksum=4924BA32
+[SyncCheck] tick=84 checksum=A4E7C2E6
+[SyncCheck] tick=85 checksum=F99518F2
+[SyncCheck] tick=86 checksum=FC71C7E7
+[SyncCheck] tick=87 checksum=38205447
+[SyncCheck] tick=88 checksum=FBDD0140
+[SyncCheck] tick=89 checksum=9597B11E
+[SyncCheck] tick=90 checksum=9819D915
+[SyncCheck] tick=91 checksum=3C73E352
+[SyncCheck] tick=92 checksum=DFBC2ADB
+[SyncCheck] tick=93 checksum=65657153
+[SyncCheck] tick=94 checksum=EDDC3EEF
+[SyncCheck] tick=95 checksum=DA16CD12
+[SyncCheck] tick=96 checksum=79C50F65
+[SyncCheck] tick=97 checksum=48AFF2FA
+[SyncCheck] tick=98 checksum=64837FFD
+[SyncCheck] tick=99 checksum=8A690775
+[SyncCheck] tick=100 checksum=6618B923
+[Commander] Goal #3: status=WaitingForConstruction owned=0 queued=1; Construction: building #2 is advancing with villager #0.
+[Commander] Goal #3: status=Completed owned=1 queued=0; ArcheryRange construction complete (1/1).
+[StrategicPlanner] Plan #1 milestone completed: Production.
+[StrategicPlanner] Reservation #1 released for plan #1.
+[StrategicPlanner] Reservation #2 created for plan #1: 300 Food.
+[StrategicPlanner] Reservation #3 created for plan #1: 500 Wood.
+[StrategicPlanner] Plan #1 milestone active: Force.
+[Commander] Goal #4 submitted: EnsureUnitCount
+[Commander] Goal #4: status=Executing owned=0 queued=0; Placing House at (146,134) with villager #0.
+[Commander] Goal #4: status=WaitingForConstruction owned=0 queued=0; Population prerequisite: villager #0 is travelling to building #3.
+[Commander] Goal #4: status=WaitingForConstruction owned=0 queued=0; Population prerequisite: building #3 is advancing with villager #0.
+[Commander] Goal #4: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #2.
+[Commander] Goal #4: status=Executing owned=0 queued=1; Queueing Archer at ArcheryRange #2.
+[Commander] Goal #4: status=Executing owned=0 queued=2; Queueing Archer at ArcheryRange #2.
+[Commander] Goal #4: status=WaitingForProduction owned=0 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=1 queued=2; Queueing Archer at ArcheryRange #2.
+[Commander] Goal #4: status=WaitingForProduction owned=1 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=2 queued=2; Queueing Archer at ArcheryRange #2.
+[Commander] Goal #4: status=WaitingForProduction owned=2 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=3 queued=2; Queueing Archer at ArcheryRange #2.
+[Commander] Goal #4: status=WaitingForProduction owned=3 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=4 queued=2; Queueing Archer at ArcheryRange #2.
+[Commander] Goal #4: status=WaitingForProduction owned=4 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=5 queued=2; Queueing Archer at ArcheryRange #2.
+[Commander] Goal #4: status=WaitingForProduction owned=5 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=6 queued=2; Queueing Archer at ArcheryRange #2.
+[Commander] Goal #4: status=WaitingForProduction owned=6 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=7 queued=2; Queueing Archer at ArcheryRange #2.
+[Commander] Goal #4: status=WaitingForProduction owned=7 queued=3; Owned 7, queued 3, target 10.
+[Commander] Goal #4: status=WaitingForProduction owned=8 queued=2; Owned 8, queued 2, target 10.
+[Commander] Goal #4: status=WaitingForProduction owned=9 queued=1; Owned 9, queued 1, target 10.
+[Commander] Goal #4: status=Completed owned=10 queued=0; Owned 10/10 living units.
+[StrategicPlanner] Plan #1 milestone completed: Force.
+[StrategicPlanner] Reservation #2 released for plan #1.
+[StrategicPlanner] Reservation #3 released for plan #1.
+[StrategicPlanner] Plan #1 milestone active: Ready.
+[StrategicPlanner] Plan #1 milestone completed: Ready.
+[StrategicPlanner] Plan #1 completed. Ranged reinforcement preparation complete.
+[Phase4C4 Runtime] RangedReinforcement completed at 5551/40000 ticks via UI Approve; reservations released.
+]]></output>
+            </test-case>
+            <test-case id="1100" name="BelowAgeTurtle_IsRejectedBeforeTowersCanBeSkipped" fullname="OpenEmpires.Tests.CommanderPhase4C4PlayModeTests.BelowAgeTurtle_IsRejectedBeforeTowersCanBeSkipped" methodname="BelowAgeTurtle_IsRejectedBeforeTowersCanBeSkipped" classname="OpenEmpires.Tests.CommanderPhase4C4PlayModeTests" runstate="Runnable" seed="601068949" result="Passed" start-time="2026-09-23 15:59:18Z" end-time="2026-09-23 15:59:19Z" duration="0.255588" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1095" name="FundedTowerFinishesBeforeFortifications_OnlyOneMoreTowerIsBuilt" fullname="OpenEmpires.Tests.CommanderPhase4C4PlayModeTests.FundedTowerFinishesBeforeFortifications_OnlyOneMoreTowerIsBuilt" methodname="FundedTowerFinishesBeforeFortifications_OnlyOneMoreTowerIsBuilt" classname="OpenEmpires.Tests.CommanderPhase4C4PlayModeTests" runstate="Runnable" seed="763747317" result="Passed" start-time="2026-09-23 15:59:19Z" end-time="2026-09-23 15:59:20Z" duration="1.639262" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: DefensiveTurtle for player 0.
+[StrategicPlanner] Intent #1 selected template 'defensive_turtle' and started plan #1: DefensiveTurtle.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1: status=Completed owned=8 queued=0; 8/8 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=8 queued=0; 8/8 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Reservation #1 created for plan #1: 300 Wood.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[Commander] Goal #3 submitted: BuildStructure
+[Commander] Goal #4 submitted: BuildStructure
+[Commander] Goal #3: status=Executing owned=0 queued=0; Placing Barracks at (141,134) with villager #0.
+[SyncCheck] tick=1 checksum=262C3AE2
+[SyncCheck] tick=2 checksum=1BE69B91
+[SyncCheck] tick=3 checksum=13AB213C
+[SyncCheck] tick=4 checksum=518F0228
+[SyncCheck] tick=5 checksum=BCF5715A
+[SyncCheck] tick=6 checksum=2A3F6A4C
+[SyncCheck] tick=7 checksum=FD087256
+[SyncCheck] tick=8 checksum=85EFBCDA
+[SyncCheck] tick=9 checksum=262C3102
+[SyncCheck] tick=10 checksum=C2BD35D3
+[SyncCheck] tick=11 checksum=845CA9CC
+[SyncCheck] tick=12 checksum=D94F9DED
+[SyncCheck] tick=13 checksum=9BF8E79F
+[SyncCheck] tick=14 checksum=427BC050
+[SyncCheck] tick=15 checksum=C0F3E11E
+[Commander] Goal #3: status=WaitingForConstruction owned=0 queued=1; Construction: villager #0 is travelling to building #9.
+[Commander] Goal #4: status=Executing owned=0 queued=0; Placing ArcheryRange at (146,134) with villager #16.
+[SyncCheck] tick=16 checksum=7FA09485
+[SyncCheck] tick=17 checksum=74352A0E
+[SyncCheck] tick=18 checksum=D0A674E3
+[SyncCheck] tick=19 checksum=BE97DD86
+[SyncCheck] tick=20 checksum=54D773B0
+[SyncCheck] tick=21 checksum=37F54484
+[SyncCheck] tick=22 checksum=40B6105E
+[SyncCheck] tick=23 checksum=29EB7F38
+[SyncCheck] tick=24 checksum=57EF088D
+[SyncCheck] tick=25 checksum=0930124E
+[SyncCheck] tick=26 checksum=7D4F26F4
+[SyncCheck] tick=27 checksum=ED270995
+[SyncCheck] tick=28 checksum=E3631D1F
+[SyncCheck] tick=29 checksum=8C46D4FA
+[SyncCheck] tick=30 checksum=75670C15
+[Commander] Goal #4: status=WaitingForConstruction owned=0 queued=1; Construction: villager #16 is travelling to building #10.
+[SyncCheck] tick=31 checksum=CADE4B8E
+[SyncCheck] tick=32 checksum=6E8926F9
+[SyncCheck] tick=33 checksum=D111EA59
+[SyncCheck] tick=34 checksum=E80E52E5
+[SyncCheck] tick=35 checksum=AE934161
+[SyncCheck] tick=36 checksum=E1B91B4A
+[SyncCheck] tick=37 checksum=1A3B84E6
+[SyncCheck] tick=38 checksum=ACBD4C8D
+[SyncCheck] tick=39 checksum=D2705BCE
+[SyncCheck] tick=40 checksum=4E25FD2D
+[SyncCheck] tick=41 checksum=F35D2D24
+[SyncCheck] tick=42 checksum=89455C69
+[SyncCheck] tick=43 checksum=5F520DCB
+[SyncCheck] tick=44 checksum=1FFB221F
+[SyncCheck] tick=45 checksum=D0AD2481
+[SyncCheck] tick=46 checksum=736AFF2A
+[SyncCheck] tick=47 checksum=90B8EF92
+[SyncCheck] tick=48 checksum=B86EF166
+[SyncCheck] tick=49 checksum=4723264E
+[SyncCheck] tick=50 checksum=1B3458D9
+[SyncCheck] tick=51 checksum=4F88C004
+[SyncCheck] tick=52 checksum=4A2BF3B5
+[SyncCheck] tick=53 checksum=2B1EB015
+[SyncCheck] tick=54 checksum=2097BB84
+[SyncCheck] tick=55 checksum=03B05B31
+[SyncCheck] tick=56 checksum=67EA812D
+[SyncCheck] tick=57 checksum=80AE3102
+[SyncCheck] tick=58 checksum=CBC6BF10
+[SyncCheck] tick=59 checksum=412BB840
+[SyncCheck] tick=60 checksum=E5F9A6C0
+[SyncCheck] tick=61 checksum=1867B402
+[SyncCheck] tick=62 checksum=F9BBD703
+[SyncCheck] tick=63 checksum=4B081D04
+[SyncCheck] tick=64 checksum=38BFF1F4
+[SyncCheck] tick=65 checksum=3F8CCF79
+[SyncCheck] tick=66 checksum=01AB2212
+[SyncCheck] tick=67 checksum=E2346221
+[SyncCheck] tick=68 checksum=4444B952
+[SyncCheck] tick=69 checksum=0C9BDD7D
+[SyncCheck] tick=70 checksum=24E96FC8
+[SyncCheck] tick=71 checksum=E04D5570
+[SyncCheck] tick=72 checksum=94774BB7
+[SyncCheck] tick=73 checksum=488B9A13
+[SyncCheck] tick=74 checksum=3261978E
+[SyncCheck] tick=75 checksum=51629600
+[SyncCheck] tick=76 checksum=2D8B00E3
+[SyncCheck] tick=77 checksum=D579FBD0
+[SyncCheck] tick=78 checksum=E671B0FB
+[SyncCheck] tick=79 checksum=C756B35A
+[SyncCheck] tick=80 checksum=D65798C1
+[SyncCheck] tick=81 checksum=8697D038
+[SyncCheck] tick=82 checksum=FB38D5B8
+[SyncCheck] tick=83 checksum=7B33DC71
+[SyncCheck] tick=84 checksum=EE29924C
+[SyncCheck] tick=85 checksum=C2811D8E
+[SyncCheck] tick=86 checksum=84E520EC
+[SyncCheck] tick=87 checksum=4A88EC88
+[SyncCheck] tick=88 checksum=80FD382E
+[SyncCheck] tick=89 checksum=3CA9898C
+[SyncCheck] tick=90 checksum=5013A7D7
+[SyncCheck] tick=91 checksum=6895537A
+[SyncCheck] tick=92 checksum=7903955C
+[SyncCheck] tick=93 checksum=4103475F
+[SyncCheck] tick=94 checksum=D4E7C979
+[SyncCheck] tick=95 checksum=2F2AED4C
+[SyncCheck] tick=96 checksum=6B6D5043
+[SyncCheck] tick=97 checksum=D360E1AD
+[SyncCheck] tick=98 checksum=EF259B58
+[SyncCheck] tick=99 checksum=9BCEF62C
+[SyncCheck] tick=100 checksum=9AED2D89
+[Commander] Goal #3: status=WaitingForConstruction owned=0 queued=1; Construction: building #9 is advancing with villager #0.
+[Commander] Goal #4: status=WaitingForConstruction owned=0 queued=1; Construction: building #10 is advancing with villager #16.
+[Commander] Goal #3: status=Completed owned=1 queued=0; Barracks construction complete (1/1).
+[Commander] Goal #4: status=Completed owned=1 queued=0; ArcheryRange construction complete (1/1).
+[StrategicPlanner] Plan #1 milestone completed: Production.
+[StrategicPlanner] Reservation #1 released for plan #1.
+[StrategicPlanner] Reservation #2 created for plan #1: 300 Wood.
+[StrategicPlanner] Plan #1 milestone active: Fortifications.
+[Commander] Goal #5 submitted: BuildStructure
+[Commander] Goal #5: status=Executing owned=1 queued=0; Placing Tower at (149,126) with villager #0.
+[Commander] Goal #5: status=WaitingForConstruction owned=1 queued=1; Construction: villager #0 is travelling to building #11.
+[Commander] Goal #5: status=WaitingForConstruction owned=1 queued=1; Construction: building #11 is advancing with villager #0.
+[Commander] Goal #5: status=Completed owned=2 queued=0; Tower construction complete (2/2).
+[StrategicPlanner] Plan #1 milestone completed: Fortifications.
+[StrategicPlanner] Reservation #2 released for plan #1.
+[StrategicPlanner] Reservation #3 created for plan #1: 720 Food.
+[StrategicPlanner] Reservation #4 created for plan #1: 560 Wood.
+[StrategicPlanner] Plan #1 milestone active: Force.
+[Commander] Goal #6 submitted: EnsureUnitCount
+[Commander] Goal #7 submitted: EnsureUnitCount
+[Commander] Goal #6: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #9.
+[Commander] Goal #6: status=Executing owned=0 queued=1; Queueing Spearman at Barracks #9.
+[Commander] Goal #6: status=Executing owned=0 queued=2; Queueing Spearman at Barracks #9.
+[Commander] Goal #6: status=WaitingForProduction owned=0 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #7: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #10.
+[Commander] Goal #7: status=Executing owned=0 queued=1; Queueing Archer at ArcheryRange #10.
+[Commander] Goal #7: status=Executing owned=0 queued=2; Queueing Archer at ArcheryRange #10.
+[Commander] Goal #7: status=WaitingForProduction owned=0 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #6: status=Executing owned=1 queued=2; Queueing Spearman at Barracks #9.
+[Commander] Goal #6: status=WaitingForProduction owned=1 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #7: status=Executing owned=1 queued=2; Queueing Archer at ArcheryRange #10.
+[Commander] Goal #7: status=WaitingForProduction owned=1 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #6: status=Executing owned=2 queued=2; Queueing Spearman at Barracks #9.
+[Commander] Goal #6: status=WaitingForProduction owned=2 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #7: status=Executing owned=2 queued=2; Queueing Archer at ArcheryRange #10.
+[Commander] Goal #7: status=WaitingForProduction owned=2 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #6: status=Executing owned=3 queued=2; Queueing Spearman at Barracks #9.
+[Commander] Goal #6: status=WaitingForProduction owned=3 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #7: status=Executing owned=3 queued=2; Queueing Archer at ArcheryRange #10.
+[Commander] Goal #7: status=WaitingForProduction owned=3 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #6: status=Executing owned=4 queued=2; Queueing Spearman at Barracks #9.
+[Commander] Goal #6: status=WaitingForProduction owned=4 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #7: status=Executing owned=4 queued=2; Queueing Archer at ArcheryRange #10.
+[Commander] Goal #7: status=WaitingForProduction owned=4 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #6: status=Executing owned=5 queued=2; Queueing Spearman at Barracks #9.
+[Commander] Goal #6: status=WaitingForProduction owned=5 queued=3; Owned 5, queued 3, target 8.
+[Commander] Goal #7: status=Executing owned=5 queued=2; Queueing Archer at ArcheryRange #10.
+[Commander] Goal #7: status=WaitingForProduction owned=5 queued=3; Owned 5, queued 3, target 8.
+[Commander] Goal #6: status=WaitingForProduction owned=6 queued=2; Owned 6, queued 2, target 8.
+[Commander] Goal #7: status=WaitingForProduction owned=6 queued=2; Owned 6, queued 2, target 8.
+[Commander] Goal #6: status=WaitingForProduction owned=7 queued=1; Owned 7, queued 1, target 8.
+[Commander] Goal #7: status=WaitingForProduction owned=7 queued=1; Owned 7, queued 1, target 8.
+[Commander] Goal #6: status=Completed owned=8 queued=0; Owned 8/8 living units.
+[Commander] Goal #7: status=Completed owned=8 queued=0; Owned 8/8 living units.
+[StrategicPlanner] Plan #1 milestone completed: Force.
+[StrategicPlanner] Reservation #3 released for plan #1.
+[StrategicPlanner] Reservation #4 released for plan #1.
+[StrategicPlanner] Plan #1 milestone active: Ready.
+[StrategicPlanner] Plan #1 milestone completed: Ready.
+[StrategicPlanner] Plan #1 completed. Fortified defense preparation complete.
+[Phase4C4 Runtime] DefensiveTurtle completed at 6646/40000 ticks via UI Approve; reservations released.
+]]></output>
+            </test-case>
+            <test-case id="1097" name="OneFundedWorker_RangedPreparationCanFinish" fullname="OpenEmpires.Tests.CommanderPhase4C4PlayModeTests.OneFundedWorker_RangedPreparationCanFinish" methodname="OneFundedWorker_RangedPreparationCanFinish" classname="OpenEmpires.Tests.CommanderPhase4C4PlayModeTests" runstate="Runnable" seed="318945946" result="Passed" start-time="2026-09-23 15:59:20Z" end-time="2026-09-23 15:59:21Z" duration="0.933818" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1: status=Completed owned=0 queued=0; 0/0 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=1 queued=0; 1/1 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Reservation #1 created for plan #1: 150 Wood.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[Commander] Goal #3 submitted: BuildStructure
+[Commander] Goal #3: status=Executing owned=0 queued=0; Placing ArcheryRange at (141,134) with villager #0.
+[SyncCheck] tick=1 checksum=278B88B8
+[SyncCheck] tick=2 checksum=332F0E32
+[SyncCheck] tick=3 checksum=97B19A28
+[SyncCheck] tick=4 checksum=FD8DFED8
+[SyncCheck] tick=5 checksum=F1056943
+[SyncCheck] tick=6 checksum=7C5EADEA
+[SyncCheck] tick=7 checksum=0911CB4B
+[SyncCheck] tick=8 checksum=235FEE67
+[SyncCheck] tick=9 checksum=0A4BEAFE
+[SyncCheck] tick=10 checksum=8919C1D1
+[SyncCheck] tick=11 checksum=CA3E9D9E
+[SyncCheck] tick=12 checksum=D80152E6
+[SyncCheck] tick=13 checksum=7DA5E26A
+[SyncCheck] tick=14 checksum=EFE84B69
+[SyncCheck] tick=15 checksum=2481B962
+[Commander] Goal #3: status=WaitingForConstruction owned=0 queued=1; Construction: villager #0 is travelling to building #8.
+[SyncCheck] tick=16 checksum=F0FD0197
+[SyncCheck] tick=17 checksum=8A162347
+[SyncCheck] tick=18 checksum=EFCD1E72
+[SyncCheck] tick=19 checksum=E31F1F58
+[SyncCheck] tick=20 checksum=D7CAF8F8
+[SyncCheck] tick=21 checksum=2F9CAD95
+[SyncCheck] tick=22 checksum=88C83AEC
+[SyncCheck] tick=23 checksum=79D5A27F
+[SyncCheck] tick=24 checksum=3780E38D
+[SyncCheck] tick=25 checksum=82C72A56
+[SyncCheck] tick=26 checksum=9AAB4A9A
+[SyncCheck] tick=27 checksum=7F2D4459
+[SyncCheck] tick=28 checksum=304D1793
+[SyncCheck] tick=29 checksum=794EC509
+[SyncCheck] tick=30 checksum=8EEE4BFA
+[SyncCheck] tick=31 checksum=3C6FAD27
+[SyncCheck] tick=32 checksum=B68EE7CF
+[SyncCheck] tick=33 checksum=FD4BFBF2
+[SyncCheck] tick=34 checksum=10A6E990
+[SyncCheck] tick=35 checksum=BBE3B16A
+[SyncCheck] tick=36 checksum=33BE52BF
+[SyncCheck] tick=37 checksum=6DEFF90E
+[SyncCheck] tick=38 checksum=40037999
+[SyncCheck] tick=39 checksum=DEB4D39F
+[SyncCheck] tick=40 checksum=4A040720
+[SyncCheck] tick=41 checksum=577BE95E
+[SyncCheck] tick=42 checksum=664DA456
+[SyncCheck] tick=43 checksum=D8453A4B
+[SyncCheck] tick=44 checksum=4B96A8FA
+[SyncCheck] tick=45 checksum=56C9F1E5
+[SyncCheck] tick=46 checksum=2E9B144B
+[SyncCheck] tick=47 checksum=9E4E10ED
+[SyncCheck] tick=48 checksum=0F5AE649
+[SyncCheck] tick=49 checksum=184995E1
+[SyncCheck] tick=50 checksum=B91A1FB5
+[SyncCheck] tick=51 checksum=5B448243
+[SyncCheck] tick=52 checksum=9550BF0D
+[SyncCheck] tick=53 checksum=7185AA94
+[SyncCheck] tick=54 checksum=4F146ED5
+[SyncCheck] tick=55 checksum=C4850D52
+[SyncCheck] tick=56 checksum=0693854A
+[SyncCheck] tick=57 checksum=E083D77E
+[SyncCheck] tick=58 checksum=8712032D
+[SyncCheck] tick=59 checksum=0484DCD8
+[SyncCheck] tick=60 checksum=4E958FFE
+[SyncCheck] tick=61 checksum=30881D60
+[SyncCheck] tick=62 checksum=DF18843D
+[SyncCheck] tick=63 checksum=648D9916
+[SyncCheck] tick=64 checksum=81E4882B
+[SyncCheck] tick=65 checksum=6BD950BB
+[SyncCheck] tick=66 checksum=226BF2C6
+[SyncCheck] tick=67 checksum=AFE342CD
+[SyncCheck] tick=68 checksum=D53C6D10
+[SyncCheck] tick=69 checksum=C73370CE
+[SyncCheck] tick=70 checksum=900F2288
+[SyncCheck] tick=71 checksum=F0CCAE7E
+[SyncCheck] tick=72 checksum=1E2813EF
+[SyncCheck] tick=73 checksum=2268275C
+[SyncCheck] tick=74 checksum=BE8A1505
+[SyncCheck] tick=75 checksum=2749DC29
+[SyncCheck] tick=76 checksum=66EE5149
+[SyncCheck] tick=77 checksum=73309FE4
+[SyncCheck] tick=78 checksum=1754C8BB
+[SyncCheck] tick=79 checksum=925D9F8E
+[SyncCheck] tick=80 checksum=DA044FDC
+[SyncCheck] tick=81 checksum=C3D3AEE7
+[SyncCheck] tick=82 checksum=AEFCE6AC
+[SyncCheck] tick=83 checksum=FD4BF96E
+[SyncCheck] tick=84 checksum=998470FB
+[SyncCheck] tick=85 checksum=D9AD15C4
+[SyncCheck] tick=86 checksum=19D5BA8D
+[SyncCheck] tick=87 checksum=59FE5F56
+[SyncCheck] tick=88 checksum=9A27041F
+[SyncCheck] tick=89 checksum=DA4FA8E8
+[SyncCheck] tick=90 checksum=1A784DB1
+[SyncCheck] tick=91 checksum=5AA0F27A
+[SyncCheck] tick=92 checksum=9AC99743
+[SyncCheck] tick=93 checksum=DAF23C0C
+[SyncCheck] tick=94 checksum=1B1AE0D5
+[SyncCheck] tick=95 checksum=5B43859E
+[SyncCheck] tick=96 checksum=9B6C2A67
+[SyncCheck] tick=97 checksum=DB94CF30
+[SyncCheck] tick=98 checksum=1BBD73F9
+[SyncCheck] tick=99 checksum=5BE618C2
+[SyncCheck] tick=100 checksum=9C0EBD8B
+[Commander] Goal #3: status=WaitingForConstruction owned=0 queued=1; Construction: building #8 is advancing with villager #0.
+[Commander] Goal #3: status=Completed owned=1 queued=0; ArcheryRange construction complete (1/1).
+[StrategicPlanner] Plan #1 milestone completed: Production.
+[StrategicPlanner] Reservation #1 released for plan #1.
+[StrategicPlanner] Reservation #2 created for plan #1: 300 Food.
+[StrategicPlanner] Reservation #3 created for plan #1: 500 Wood.
+[StrategicPlanner] Plan #1 milestone active: Force.
+[Commander] Goal #4 submitted: EnsureUnitCount
+[Commander] Goal #4: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=Executing owned=0 queued=1; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=Executing owned=0 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=0 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=1 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=1 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=2 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=2 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=3 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=3 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=4 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=4 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=5 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=5 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=6 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=6 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=7 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=7 queued=3; Owned 7, queued 3, target 10.
+[Commander] Goal #4: status=WaitingForProduction owned=8 queued=2; Owned 8, queued 2, target 10.
+[Commander] Goal #4: status=WaitingForProduction owned=9 queued=1; Owned 9, queued 1, target 10.
+[Commander] Goal #4: status=Completed owned=10 queued=0; Owned 10/10 living units.
+[StrategicPlanner] Plan #1 milestone completed: Force.
+[StrategicPlanner] Reservation #2 released for plan #1.
+[StrategicPlanner] Reservation #3 released for plan #1.
+[StrategicPlanner] Plan #1 milestone active: Ready.
+[StrategicPlanner] Plan #1 milestone completed: Ready.
+[StrategicPlanner] Plan #1 completed. Ranged reinforcement preparation complete.
+[Phase4C4 Runtime] RangedReinforcement completed at 4441/40000 ticks via UI Approve; reservations released.
+]]></output>
+            </test-case>
+            <test-case id="1101" name="RangedConfirmation_UsesPlayerCommandOnceAndCannotReplaceDirectPlan" fullname="OpenEmpires.Tests.CommanderPhase4C4PlayModeTests.RangedConfirmation_UsesPlayerCommandOnceAndCannotReplaceDirectPlan" methodname="RangedConfirmation_UsesPlayerCommandOnceAndCannotReplaceDirectPlan" classname="OpenEmpires.Tests.CommanderPhase4C4PlayModeTests" runstate="Runnable" seed="1624372665" result="Passed" start-time="2026-09-23 15:59:21Z" end-time="2026-09-23 15:59:22Z" duration="0.274080" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[StrategicPlanner] Strategic intent #2 created: DefensivePreparation for player 0.
+[Commander] Goal #1 cancelled.
+[Commander] Goal #2 cancelled.
+[StrategicPlanner] Plan #1 cancelled.
+[StrategicPlanner] Intent #2 selected template 'DefensivePreparation' and started plan #2: DefensivePreparation.
+[StrategicPlanner] Plan #2 milestone active: Economic Defense.
+[Commander] Goal #3 submitted: ResourceAllocation
+[Commander] Goal #4 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1098" name="RangedPreparation_RecoversAfterApprovedStockpilesAreSpent" fullname="OpenEmpires.Tests.CommanderPhase4C4PlayModeTests.RangedPreparation_RecoversAfterApprovedStockpilesAreSpent" methodname="RangedPreparation_RecoversAfterApprovedStockpilesAreSpent" classname="OpenEmpires.Tests.CommanderPhase4C4PlayModeTests" runstate="Runnable" seed="329758018" result="Passed" start-time="2026-09-23 15:59:22Z" end-time="2026-09-23 15:59:24Z" duration="2.571665" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1: status=Completed owned=8 queued=0; 8/8 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=8 queued=0; 8/8 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Production.
+[SyncCheck] tick=1 checksum=0F752A2E
+[SyncCheck] tick=2 checksum=5045583E
+[SyncCheck] tick=3 checksum=B8A71FC7
+[SyncCheck] tick=4 checksum=FF61F086
+[SyncCheck] tick=5 checksum=0B85FD3B
+[SyncCheck] tick=6 checksum=8AA398C0
+[SyncCheck] tick=7 checksum=DAC35192
+[SyncCheck] tick=8 checksum=6EB1AB4D
+[SyncCheck] tick=9 checksum=18957F54
+[SyncCheck] tick=10 checksum=2E679F27
+[SyncCheck] tick=11 checksum=865E9A30
+[SyncCheck] tick=12 checksum=AF57B65F
+[SyncCheck] tick=13 checksum=1433BF44
+[SyncCheck] tick=14 checksum=E74AF9E5
+[SyncCheck] tick=15 checksum=0C7D9F24
+[SyncCheck] tick=16 checksum=2515832D
+[SyncCheck] tick=17 checksum=018D35DE
+[SyncCheck] tick=18 checksum=4F68E573
+[SyncCheck] tick=19 checksum=A53A40E4
+[SyncCheck] tick=20 checksum=B17112A7
+[SyncCheck] tick=21 checksum=1587963C
+[SyncCheck] tick=22 checksum=80723DFB
+[SyncCheck] tick=23 checksum=11AF239E
+[SyncCheck] tick=24 checksum=276131FF
+[SyncCheck] tick=25 checksum=B4D7A7D6
+[SyncCheck] tick=26 checksum=F31B9885
+[SyncCheck] tick=27 checksum=774B9FEA
+[SyncCheck] tick=28 checksum=35022A63
+[SyncCheck] tick=29 checksum=771FB94C
+[SyncCheck] tick=30 checksum=DCF8FFC7
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[SyncCheck] tick=31 checksum=C7394AB2
+[SyncCheck] tick=32 checksum=C497DCEF
+[SyncCheck] tick=33 checksum=E160EFA2
+[SyncCheck] tick=34 checksum=FE19BE03
+[SyncCheck] tick=35 checksum=DC50AFF2
+[SyncCheck] tick=36 checksum=EC97BEB5
+[SyncCheck] tick=37 checksum=CACEB0A4
+[SyncCheck] tick=38 checksum=EE957EA3
+[SyncCheck] tick=39 checksum=62CC90F4
+[SyncCheck] tick=40 checksum=86935EF3
+[SyncCheck] tick=41 checksum=64CA50E2
+[SyncCheck] tick=42 checksum=88911EE1
+[SyncCheck] tick=43 checksum=66C810D0
+[SyncCheck] tick=44 checksum=8A8EDECF
+[SyncCheck] tick=45 checksum=68C5D0BE
+[SyncCheck] tick=46 checksum=8C8C9EBD
+[SyncCheck] tick=47 checksum=6AC390AC
+[SyncCheck] tick=48 checksum=8E8A5EAB
+[SyncCheck] tick=49 checksum=AB53715E
+[SyncCheck] tick=50 checksum=C80C3FBF
+[SyncCheck] tick=51 checksum=A64331AE
+[SyncCheck] tick=52 checksum=B68A4071
+[SyncCheck] tick=53 checksum=94C13260
+[SyncCheck] tick=54 checksum=B888005F
+[SyncCheck] tick=55 checksum=2CBF12B0
+[SyncCheck] tick=56 checksum=5085E0AF
+[SyncCheck] tick=57 checksum=2EBCD29E
+[SyncCheck] tick=58 checksum=5283A09D
+[SyncCheck] tick=59 checksum=30BA928C
+[SyncCheck] tick=60 checksum=5481608B
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[SyncCheck] tick=61 checksum=32B8527A
+[SyncCheck] tick=62 checksum=567F2079
+[SyncCheck] tick=63 checksum=34B61268
+[SyncCheck] tick=64 checksum=587CE067
+[SyncCheck] tick=65 checksum=7545F31A
+[SyncCheck] tick=66 checksum=91FEC17B
+[SyncCheck] tick=67 checksum=7035B36A
+[SyncCheck] tick=68 checksum=807CC22D
+[SyncCheck] tick=69 checksum=5EB3B41C
+[SyncCheck] tick=70 checksum=827A821B
+[SyncCheck] tick=71 checksum=F6B1946C
+[SyncCheck] tick=72 checksum=1A78626B
+[SyncCheck] tick=73 checksum=F8AF545A
+[SyncCheck] tick=74 checksum=1C762259
+[SyncCheck] tick=75 checksum=FAAD1448
+[SyncCheck] tick=76 checksum=1E73E247
+[SyncCheck] tick=77 checksum=FCAAD436
+[SyncCheck] tick=78 checksum=2071A235
+[SyncCheck] tick=79 checksum=FEA89424
+[SyncCheck] tick=80 checksum=226F6223
+[SyncCheck] tick=81 checksum=3F3874D6
+[SyncCheck] tick=82 checksum=5BF14337
+[SyncCheck] tick=83 checksum=3A283526
+[SyncCheck] tick=84 checksum=4A6F43E9
+[SyncCheck] tick=85 checksum=28A635D8
+[SyncCheck] tick=86 checksum=4C6D03D7
+[SyncCheck] tick=87 checksum=C0A41628
+[SyncCheck] tick=88 checksum=E46AE427
+[SyncCheck] tick=89 checksum=C2A1D616
+[SyncCheck] tick=90 checksum=E668A415
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[SyncCheck] tick=91 checksum=C49F9604
+[SyncCheck] tick=92 checksum=E8666403
+[SyncCheck] tick=93 checksum=C69D55F2
+[SyncCheck] tick=94 checksum=EA6423F1
+[SyncCheck] tick=95 checksum=C89B15E0
+[SyncCheck] tick=96 checksum=EC61E3DF
+[SyncCheck] tick=97 checksum=092AF692
+[SyncCheck] tick=98 checksum=25E3C4F3
+[SyncCheck] tick=99 checksum=041AB6E2
+[SyncCheck] tick=100 checksum=1461C5A5
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 10, reserved 0, available 10; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 30, reserved 0, available 30; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 40, reserved 0, available 40; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 50, reserved 0, available 50; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 50, reserved 0, available 50; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 60, reserved 0, available 60; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 70, reserved 0, available 70; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 90, reserved 0, available 90; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 100, reserved 0, available 100; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 110, reserved 0, available 110; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 110, reserved 0, available 110; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 110, reserved 0, available 110; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 120, reserved 0, available 120; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 120, reserved 0, available 120; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 130, reserved 0, available 130; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 130, reserved 0, available 130; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 130, reserved 0, available 130; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 130, reserved 0, available 130; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 140, reserved 0, available 140; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 140, reserved 0, available 140; owner: no active reservation owner.
+[StrategicPlanner] Reservation #1 created for plan #1: 150 Wood.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[Commander] Goal #3 submitted: BuildStructure
+[Commander] Goal #3: status=Executing owned=0 queued=0; Placing ArcheryRange at (141,134) with villager #0.
+[Commander] Goal #3: status=WaitingForConstruction owned=0 queued=1; Construction: villager #0 is travelling to building #8.
+[Commander] Goal #3: status=WaitingForConstruction owned=0 queued=1; Construction: building #8 is advancing with villager #0.
+[Commander] Goal #3: status=Completed owned=1 queued=0; ArcheryRange construction complete (1/1).
+[StrategicPlanner] Plan #1 milestone completed: Production.
+[StrategicPlanner] Reservation #1 released for plan #1.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Force.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 160, reserved 0, available 160; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 160, reserved 0, available 160; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 170, reserved 0, available 170; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 170, reserved 0, available 170; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 170, reserved 0, available 170; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 170, reserved 0, available 170; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 170, reserved 0, available 170; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 170, reserved 0, available 170; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 180, reserved 0, available 180; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 180, reserved 0, available 180; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 180, reserved 0, available 180; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 190, reserved 0, available 190; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 190, reserved 0, available 190; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 190, reserved 0, available 190; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 200, reserved 0, available 200; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 200, reserved 0, available 200; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 200, reserved 0, available 200; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 200, reserved 0, available 200; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 200, reserved 0, available 200; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 210, reserved 0, available 210; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 210, reserved 0, available 210; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 210, reserved 0, available 210; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 210, reserved 0, available 210; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 210, reserved 0, available 210; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 210, reserved 0, available 210; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 230, reserved 0, available 230; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 230, reserved 0, available 230; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 230, reserved 0, available 230; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 240, reserved 0, available 240; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 240, reserved 0, available 240; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 240, reserved 0, available 240; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 240, reserved 0, available 240; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 240, reserved 0, available 240; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 240, reserved 0, available 240; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 240, reserved 0, available 240; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 250, reserved 0, available 250; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 250, reserved 0, available 250; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 250, reserved 0, available 250; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 250, reserved 0, available 250; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 250, reserved 0, available 250; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 250, reserved 0, available 250; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 260, reserved 0, available 260; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 260, reserved 0, available 260; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 260, reserved 0, available 260; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 260, reserved 0, available 260; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 260, reserved 0, available 260; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 270, reserved 0, available 270; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 270, reserved 0, available 270; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 270, reserved 0, available 270; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 270, reserved 0, available 270; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 270, reserved 0, available 270; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 280, reserved 0, available 280; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 280, reserved 0, available 280; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 280, reserved 0, available 280; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 280, reserved 0, available 280; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 280, reserved 0, available 280; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 280, reserved 0, available 280; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 280, reserved 0, available 280; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 280, reserved 0, available 280; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 280, reserved 0, available 280; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 360, reserved 0, available 360; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 360, reserved 0, available 360; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 360, reserved 0, available 360; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 360, reserved 0, available 360; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 370, reserved 0, available 370; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 370, reserved 0, available 370; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 370, reserved 0, available 370; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 370, reserved 0, available 370; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 380, reserved 0, available 380; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 380, reserved 0, available 380; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 380, reserved 0, available 380; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 380, reserved 0, available 380; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 380, reserved 0, available 380; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 380, reserved 0, available 380; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 390, reserved 0, available 390; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 390, reserved 0, available 390; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 390, reserved 0, available 390; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 390, reserved 0, available 390; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 390, reserved 0, available 390; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 390, reserved 0, available 390; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 390, reserved 0, available 390; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 400, reserved 0, available 400; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 400, reserved 0, available 400; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 400, reserved 0, available 400; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 410, reserved 0, available 410; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 410, reserved 0, available 410; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 410, reserved 0, available 410; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 410, reserved 0, available 410; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 410, reserved 0, available 410; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 410, reserved 0, available 410; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 410, reserved 0, available 410; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 420, reserved 0, available 420; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 420, reserved 0, available 420; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 420, reserved 0, available 420; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 420, reserved 0, available 420; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 430, reserved 0, available 430; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 430, reserved 0, available 430; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 430, reserved 0, available 430; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 430, reserved 0, available 430; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 430, reserved 0, available 430; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 430, reserved 0, available 430; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 440, reserved 0, available 440; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 440, reserved 0, available 440; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 440, reserved 0, available 440; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 440, reserved 0, available 440; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 440, reserved 0, available 440; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 440, reserved 0, available 440; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 450, reserved 0, available 450; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 450, reserved 0, available 450; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 450, reserved 0, available 450; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 450, reserved 0, available 450; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 450, reserved 0, available 450; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 450, reserved 0, available 450; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 450, reserved 0, available 450; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 450, reserved 0, available 450; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 470, reserved 0, available 470; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 470, reserved 0, available 470; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 470, reserved 0, available 470; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 470, reserved 0, available 470; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 470, reserved 0, available 470; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 470, reserved 0, available 470; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 470, reserved 0, available 470; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 470, reserved 0, available 470; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 470, reserved 0, available 470; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 470, reserved 0, available 470; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 470, reserved 0, available 470; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 480, reserved 0, available 480; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 480, reserved 0, available 480; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 480, reserved 0, available 480; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 480, reserved 0, available 480; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 490, reserved 0, available 490; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 490, reserved 0, available 490; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 490, reserved 0, available 490; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 490, reserved 0, available 490; owner: no active reservation owner.
+[StrategicPlanner] Reservation #2 created for plan #1: 300 Food.
+[StrategicPlanner] Reservation #3 created for plan #1: 500 Wood.
+[StrategicPlanner] Plan #1 milestone active: Force.
+[Commander] Goal #4 submitted: EnsureUnitCount
+[Commander] Goal #4: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=Executing owned=0 queued=1; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=Executing owned=0 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=0 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=1 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=1 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=2 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=2 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=3 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=3 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=4 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=4 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=5 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=5 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=6 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=6 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=7 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=7 queued=3; Owned 7, queued 3, target 10.
+[Commander] Goal #4: status=WaitingForProduction owned=8 queued=2; Owned 8, queued 2, target 10.
+[Commander] Goal #4: status=WaitingForProduction owned=9 queued=1; Owned 9, queued 1, target 10.
+[Commander] Goal #4: status=Completed owned=10 queued=0; Owned 10/10 living units.
+[StrategicPlanner] Plan #1 milestone completed: Force.
+[StrategicPlanner] Reservation #2 released for plan #1.
+[StrategicPlanner] Reservation #3 released for plan #1.
+[StrategicPlanner] Plan #1 milestone active: Ready.
+[StrategicPlanner] Plan #1 milestone completed: Ready.
+[StrategicPlanner] Plan #1 completed. Ranged reinforcement preparation complete.
+[Phase4C4 Runtime] RangedReinforcement completed at 13981/40000 ticks via UI Approve; reservations released.
+]]></output>
+            </test-case>
+            <test-case id="1093" name="RangedPreview_ApprovedPlanBuildsArcheryRangeAndTenArchers" fullname="OpenEmpires.Tests.CommanderPhase4C4PlayModeTests.RangedPreview_ApprovedPlanBuildsArcheryRangeAndTenArchers" methodname="RangedPreview_ApprovedPlanBuildsArcheryRangeAndTenArchers" classname="OpenEmpires.Tests.CommanderPhase4C4PlayModeTests" runstate="Runnable" seed="1367847508" result="Passed" start-time="2026-09-23 15:59:24Z" end-time="2026-09-23 15:59:25Z" duration="1.110502" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1: status=Completed owned=8 queued=0; 8/8 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=8 queued=0; 8/8 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Reservation #1 created for plan #1: 150 Wood.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[Commander] Goal #3 submitted: BuildStructure
+[Commander] Goal #3: status=Executing owned=0 queued=0; Placing ArcheryRange at (141,134) with villager #0.
+[SyncCheck] tick=1 checksum=F2E7B612
+[SyncCheck] tick=2 checksum=F6184A07
+[SyncCheck] tick=3 checksum=A8FEF8D6
+[SyncCheck] tick=4 checksum=C3CB9F69
+[SyncCheck] tick=5 checksum=F8B16F7A
+[SyncCheck] tick=6 checksum=8E1EF94B
+[SyncCheck] tick=7 checksum=BCA0E834
+[SyncCheck] tick=8 checksum=E47BFA17
+[SyncCheck] tick=9 checksum=3944C29E
+[SyncCheck] tick=10 checksum=C6A80F0E
+[SyncCheck] tick=11 checksum=7169BCA6
+[SyncCheck] tick=12 checksum=FC441C66
+[SyncCheck] tick=13 checksum=DD4DE6F7
+[SyncCheck] tick=14 checksum=89E7DF47
+[SyncCheck] tick=15 checksum=1340E3F4
+[Commander] Goal #3: status=WaitingForConstruction owned=0 queued=1; Construction: villager #0 is travelling to building #8.
+[SyncCheck] tick=16 checksum=C3ECD73E
+[SyncCheck] tick=17 checksum=D66050F0
+[SyncCheck] tick=18 checksum=1D5B43ED
+[SyncCheck] tick=19 checksum=CBBB9138
+[SyncCheck] tick=20 checksum=5399918A
+[SyncCheck] tick=21 checksum=21EC8D86
+[SyncCheck] tick=22 checksum=96675B88
+[SyncCheck] tick=23 checksum=309DBC8A
+[SyncCheck] tick=24 checksum=B1013F87
+[SyncCheck] tick=25 checksum=733FF619
+[SyncCheck] tick=26 checksum=A05E4481
+[SyncCheck] tick=27 checksum=20266DBE
+[SyncCheck] tick=28 checksum=CAB474AE
+[SyncCheck] tick=29 checksum=6E6FB3EE
+[SyncCheck] tick=30 checksum=D145C060
+[SyncCheck] tick=31 checksum=26A5E122
+[SyncCheck] tick=32 checksum=4A05D2D6
+[SyncCheck] tick=33 checksum=3FDB6CFF
+[SyncCheck] tick=34 checksum=2766B8D4
+[SyncCheck] tick=35 checksum=8EF1B339
+[SyncCheck] tick=36 checksum=16386572
+[SyncCheck] tick=37 checksum=806B07D7
+[SyncCheck] tick=38 checksum=0BBAC64C
+[SyncCheck] tick=39 checksum=9BE52BD8
+[SyncCheck] tick=40 checksum=18CAD747
+[SyncCheck] tick=41 checksum=359419A6
+[SyncCheck] tick=42 checksum=6BB804FA
+[SyncCheck] tick=43 checksum=D4769E3D
+[SyncCheck] tick=44 checksum=D5CF6AD4
+[SyncCheck] tick=45 checksum=EABDD628
+[SyncCheck] tick=46 checksum=47224B41
+[SyncCheck] tick=47 checksum=0F609E75
+[SyncCheck] tick=48 checksum=5C8960F2
+[SyncCheck] tick=49 checksum=91397C20
+[SyncCheck] tick=50 checksum=518AFF10
+[SyncCheck] tick=51 checksum=97CF5ADB
+[SyncCheck] tick=52 checksum=9612BEAB
+[SyncCheck] tick=53 checksum=EED44407
+[SyncCheck] tick=54 checksum=339C9DF0
+[SyncCheck] tick=55 checksum=9C200DF2
+[SyncCheck] tick=56 checksum=4E4BBE02
+[SyncCheck] tick=57 checksum=47D2E608
+[SyncCheck] tick=58 checksum=6D984A64
+[SyncCheck] tick=59 checksum=8E4E861F
+[SyncCheck] tick=60 checksum=49D37B48
+[SyncCheck] tick=61 checksum=D3FD2FD0
+[SyncCheck] tick=62 checksum=EED6EF75
+[SyncCheck] tick=63 checksum=1D0DED56
+[SyncCheck] tick=64 checksum=A16E1723
+[SyncCheck] tick=65 checksum=F49A4A44
+[SyncCheck] tick=66 checksum=BC563E35
+[SyncCheck] tick=67 checksum=2C970C1A
+[SyncCheck] tick=68 checksum=9DC955DF
+[SyncCheck] tick=69 checksum=C0255CFA
+[SyncCheck] tick=70 checksum=01D8A172
+[SyncCheck] tick=71 checksum=9278A9E5
+[SyncCheck] tick=72 checksum=0A347814
+[SyncCheck] tick=73 checksum=63986EF7
+[SyncCheck] tick=74 checksum=250B71B5
+[SyncCheck] tick=75 checksum=F3099EE8
+[SyncCheck] tick=76 checksum=CEEC19A7
+[SyncCheck] tick=77 checksum=5DDF79EF
+[SyncCheck] tick=78 checksum=8CB026D2
+[SyncCheck] tick=79 checksum=AE993EE7
+[SyncCheck] tick=80 checksum=F8EDD1A1
+[SyncCheck] tick=81 checksum=0D5B9629
+[SyncCheck] tick=82 checksum=A51DDD57
+[SyncCheck] tick=83 checksum=6718897C
+[SyncCheck] tick=84 checksum=2C28C09E
+[SyncCheck] tick=85 checksum=73258726
+[SyncCheck] tick=86 checksum=AE656B27
+[SyncCheck] tick=87 checksum=D9F0AE03
+[SyncCheck] tick=88 checksum=089FB208
+[SyncCheck] tick=89 checksum=BFF54B62
+[SyncCheck] tick=90 checksum=6AAF3965
+[SyncCheck] tick=91 checksum=417C549E
+[SyncCheck] tick=92 checksum=20D8BB33
+[SyncCheck] tick=93 checksum=6D2D0827
+[SyncCheck] tick=94 checksum=85A3964F
+[SyncCheck] tick=95 checksum=BFA2586E
+[SyncCheck] tick=96 checksum=BAC86ECD
+[SyncCheck] tick=97 checksum=149CC75E
+[SyncCheck] tick=98 checksum=553734ED
+[SyncCheck] tick=99 checksum=E9F042E1
+[SyncCheck] tick=100 checksum=56996FFD
+[Commander] Goal #3: status=WaitingForConstruction owned=0 queued=1; Construction: building #8 is advancing with villager #0.
+[Commander] Goal #3: status=Completed owned=1 queued=0; ArcheryRange construction complete (1/1).
+[StrategicPlanner] Plan #1 milestone completed: Production.
+[StrategicPlanner] Reservation #1 released for plan #1.
+[StrategicPlanner] Reservation #2 created for plan #1: 300 Food.
+[StrategicPlanner] Reservation #3 created for plan #1: 500 Wood.
+[StrategicPlanner] Plan #1 milestone active: Force.
+[Commander] Goal #4 submitted: EnsureUnitCount
+[Commander] Goal #4: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=Executing owned=0 queued=1; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=Executing owned=0 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=0 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=1 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=1 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=2 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=2 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=3 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=3 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=4 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=4 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=5 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=5 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=6 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=6 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=7 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=7 queued=3; Owned 7, queued 3, target 10.
+[Commander] Goal #4: status=WaitingForProduction owned=8 queued=2; Owned 8, queued 2, target 10.
+[Commander] Goal #4: status=WaitingForProduction owned=9 queued=1; Owned 9, queued 1, target 10.
+[Commander] Goal #4: status=Completed owned=10 queued=0; Owned 10/10 living units.
+[StrategicPlanner] Plan #1 milestone completed: Force.
+[StrategicPlanner] Reservation #2 released for plan #1.
+[StrategicPlanner] Reservation #3 released for plan #1.
+[StrategicPlanner] Plan #1 milestone active: Ready.
+[StrategicPlanner] Plan #1 milestone completed: Ready.
+[StrategicPlanner] Plan #1 completed. Ranged reinforcement preparation complete.
+[Phase4C4 Runtime] RangedReinforcement completed at 4861/30000 ticks via UI Approve; reservations released.
+]]></output>
+            </test-case>
+            <test-case id="1102" name="TurtleConfirmation_UsesPlayerCommandOnceAndCannotReplaceDirectPlan" fullname="OpenEmpires.Tests.CommanderPhase4C4PlayModeTests.TurtleConfirmation_UsesPlayerCommandOnceAndCannotReplaceDirectPlan" methodname="TurtleConfirmation_UsesPlayerCommandOnceAndCannotReplaceDirectPlan" classname="OpenEmpires.Tests.CommanderPhase4C4PlayModeTests" runstate="Runnable" seed="1383733965" result="Passed" start-time="2026-09-23 15:59:25Z" end-time="2026-09-23 15:59:26Z" duration="0.267610" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: DefensiveTurtle for player 0.
+[StrategicPlanner] Intent #1 selected template 'defensive_turtle' and started plan #1: DefensiveTurtle.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[StrategicPlanner] Strategic intent #2 created: DefensivePreparation for player 0.
+[Commander] Goal #1 cancelled.
+[Commander] Goal #2 cancelled.
+[StrategicPlanner] Plan #1 cancelled.
+[StrategicPlanner] Intent #2 selected template 'DefensivePreparation' and started plan #2: DefensivePreparation.
+[StrategicPlanner] Plan #2 milestone active: Economic Defense.
+[Commander] Goal #3 submitted: ResourceAllocation
+[Commander] Goal #4 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1094" name="TurtlePreview_ApprovedPlanBuildsMandatoryTowersAndBothForces" fullname="OpenEmpires.Tests.CommanderPhase4C4PlayModeTests.TurtlePreview_ApprovedPlanBuildsMandatoryTowersAndBothForces" methodname="TurtlePreview_ApprovedPlanBuildsMandatoryTowersAndBothForces" classname="OpenEmpires.Tests.CommanderPhase4C4PlayModeTests" runstate="Runnable" seed="1789528784" result="Passed" start-time="2026-09-23 15:59:26Z" end-time="2026-09-23 15:59:27Z" duration="1.855555" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: DefensiveTurtle for player 0.
+[StrategicPlanner] Intent #1 selected template 'defensive_turtle' and started plan #1: DefensiveTurtle.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1: status=Completed owned=8 queued=0; 8/8 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=8 queued=0; 8/8 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Reservation #1 created for plan #1: 300 Wood.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[Commander] Goal #3 submitted: BuildStructure
+[Commander] Goal #4 submitted: BuildStructure
+[Commander] Goal #3: status=Executing owned=0 queued=0; Placing Barracks at (141,134) with villager #0.
+[SyncCheck] tick=1 checksum=F2E7B612
+[SyncCheck] tick=2 checksum=F6184A07
+[SyncCheck] tick=3 checksum=A8FEF8D6
+[SyncCheck] tick=4 checksum=C3CB9F69
+[SyncCheck] tick=5 checksum=F8B16F7A
+[SyncCheck] tick=6 checksum=8E1EF94B
+[SyncCheck] tick=7 checksum=BCA0E834
+[SyncCheck] tick=8 checksum=E47BFA17
+[SyncCheck] tick=9 checksum=3944C29E
+[SyncCheck] tick=10 checksum=C6A80F0E
+[SyncCheck] tick=11 checksum=7169BCA6
+[SyncCheck] tick=12 checksum=FC441C66
+[SyncCheck] tick=13 checksum=DD4DE6F7
+[SyncCheck] tick=14 checksum=89E7DF47
+[SyncCheck] tick=15 checksum=1340E3F4
+[Commander] Goal #3: status=WaitingForConstruction owned=0 queued=1; Construction: villager #0 is travelling to building #8.
+[Commander] Goal #4: status=Executing owned=0 queued=0; Placing ArcheryRange at (146,134) with villager #1.
+[SyncCheck] tick=16 checksum=E2BFA6FF
+[SyncCheck] tick=17 checksum=1C5849B5
+[SyncCheck] tick=18 checksum=EBA12F19
+[SyncCheck] tick=19 checksum=E758652C
+[SyncCheck] tick=20 checksum=86628708
+[SyncCheck] tick=21 checksum=1E950AAF
+[SyncCheck] tick=22 checksum=BBFF4A5E
+[SyncCheck] tick=23 checksum=9F343ACF
+[SyncCheck] tick=24 checksum=CC803CFD
+[SyncCheck] tick=25 checksum=220A1E42
+[SyncCheck] tick=26 checksum=FA3AD080
+[SyncCheck] tick=27 checksum=E2515DF4
+[SyncCheck] tick=28 checksum=AA93E91F
+[SyncCheck] tick=29 checksum=1243373B
+[SyncCheck] tick=30 checksum=A3D777CD
+[Commander] Goal #4: status=WaitingForConstruction owned=0 queued=1; Construction: villager #1 is travelling to building #9.
+[SyncCheck] tick=31 checksum=D4D87B50
+[SyncCheck] tick=32 checksum=85585707
+[SyncCheck] tick=33 checksum=2AE94E54
+[SyncCheck] tick=34 checksum=938D1811
+[SyncCheck] tick=35 checksum=E235B241
+[SyncCheck] tick=36 checksum=974DDD07
+[SyncCheck] tick=37 checksum=FEA9859C
+[SyncCheck] tick=38 checksum=614C6803
+[SyncCheck] tick=39 checksum=5E0C005D
+[SyncCheck] tick=40 checksum=D961F129
+[SyncCheck] tick=41 checksum=79806C86
+[SyncCheck] tick=42 checksum=0D896BB7
+[SyncCheck] tick=43 checksum=C65AF579
+[SyncCheck] tick=44 checksum=7A73B90D
+[SyncCheck] tick=45 checksum=D9449855
+[SyncCheck] tick=46 checksum=A6106A4E
+[SyncCheck] tick=47 checksum=904810DA
+[SyncCheck] tick=48 checksum=75C6F138
+[SyncCheck] tick=49 checksum=E84D11AB
+[SyncCheck] tick=50 checksum=1DE6048E
+[SyncCheck] tick=51 checksum=40E07DE2
+[SyncCheck] tick=52 checksum=C2EDD1CE
+[SyncCheck] tick=53 checksum=8BE7A0A8
+[SyncCheck] tick=54 checksum=C2DC6233
+[SyncCheck] tick=55 checksum=19DD6AD4
+[SyncCheck] tick=56 checksum=69853AC4
+[SyncCheck] tick=57 checksum=D698DF47
+[SyncCheck] tick=58 checksum=3EF3BD9C
+[SyncCheck] tick=59 checksum=E6AFB4C4
+[SyncCheck] tick=60 checksum=67BDA17E
+[SyncCheck] tick=61 checksum=9AE05FEA
+[SyncCheck] tick=62 checksum=C94A5828
+[SyncCheck] tick=63 checksum=152024F9
+[SyncCheck] tick=64 checksum=CEF0E47B
+[SyncCheck] tick=65 checksum=A3152B33
+[SyncCheck] tick=66 checksum=3A4C445B
+[SyncCheck] tick=67 checksum=BEE4E3F4
+[SyncCheck] tick=68 checksum=A2905E25
+[SyncCheck] tick=69 checksum=3FDC0C23
+[SyncCheck] tick=70 checksum=D86EF3F3
+[SyncCheck] tick=71 checksum=910E22D9
+[SyncCheck] tick=72 checksum=4254190E
+[SyncCheck] tick=73 checksum=A5AEE0F5
+[SyncCheck] tick=74 checksum=6FA7E58F
+[SyncCheck] tick=75 checksum=EBB5BBDB
+[SyncCheck] tick=76 checksum=630ACBF9
+[SyncCheck] tick=77 checksum=F7CBB0AA
+[SyncCheck] tick=78 checksum=87D3CF2D
+[SyncCheck] tick=79 checksum=3CA47841
+[SyncCheck] tick=80 checksum=E55FA529
+[SyncCheck] tick=81 checksum=227EC824
+[SyncCheck] tick=82 checksum=AFFD04B0
+[SyncCheck] tick=83 checksum=9633CA8E
+[SyncCheck] tick=84 checksum=70266823
+[SyncCheck] tick=85 checksum=03B93985
+[SyncCheck] tick=86 checksum=929344B9
+[SyncCheck] tick=87 checksum=B42D4FE2
+[SyncCheck] tick=88 checksum=5BBA697B
+[SyncCheck] tick=89 checksum=B55C54C6
+[SyncCheck] tick=90 checksum=759C7CC4
+[SyncCheck] tick=91 checksum=E7F17674
+[SyncCheck] tick=92 checksum=558DA9F6
+[SyncCheck] tick=93 checksum=53496AEA
+[SyncCheck] tick=94 checksum=D998ACD1
+[SyncCheck] tick=95 checksum=84B07949
+[SyncCheck] tick=96 checksum=B85BC6B4
+[SyncCheck] tick=97 checksum=EBC20D13
+[SyncCheck] tick=98 checksum=6F876D03
+[SyncCheck] tick=99 checksum=E3CE220F
+[SyncCheck] tick=100 checksum=85C5A8BE
+[Commander] Goal #3: status=WaitingForConstruction owned=0 queued=1; Construction: building #8 is advancing with villager #0.
+[Commander] Goal #4: status=Executing owned=0 queued=1; Construction: assigning villager #1 to recover building #9.
+[Commander] Goal #4: status=WaitingForConstruction owned=0 queued=1; Construction: villager #1 is travelling to building #9.
+[Commander] Goal #4: status=WaitingForConstruction owned=0 queued=1; Construction: building #9 is advancing with villager #1.
+[Commander] Goal #3: status=Completed owned=1 queued=0; Barracks construction complete (1/1).
+[Commander] Goal #4: status=Completed owned=1 queued=0; ArcheryRange construction complete (1/1).
+[StrategicPlanner] Plan #1 milestone completed: Production.
+[StrategicPlanner] Reservation #1 released for plan #1.
+[StrategicPlanner] Reservation #2 created for plan #1: 600 Wood.
+[StrategicPlanner] Plan #1 milestone active: Fortifications.
+[Commander] Goal #5 submitted: BuildStructure
+[Commander] Goal #5: status=Executing owned=0 queued=0; Placing Tower at (149,126) with villager #0.
+[Commander] Goal #5: status=WaitingForConstruction owned=0 queued=1; Construction: villager #0 is travelling to building #10.
+[Commander] Goal #5: status=WaitingForConstruction owned=0 queued=1; Construction: building #10 is advancing with villager #0.
+[Commander] Goal #5: status=Executing owned=1 queued=0; Placing Tower at (149,130) with villager #0.
+[Commander] Goal #5: status=WaitingForConstruction owned=1 queued=1; Construction: villager #0 is travelling to building #11.
+[Commander] Goal #5: status=WaitingForConstruction owned=1 queued=1; Construction: building #11 is advancing with villager #0.
+[Commander] Goal #5: status=Completed owned=2 queued=0; Tower construction complete (2/2).
+[StrategicPlanner] Plan #1 milestone completed: Fortifications.
+[StrategicPlanner] Reservation #2 released for plan #1.
+[StrategicPlanner] Reservation #3 created for plan #1: 720 Food.
+[StrategicPlanner] Reservation #4 created for plan #1: 560 Wood.
+[StrategicPlanner] Plan #1 milestone active: Force.
+[Commander] Goal #6 submitted: EnsureUnitCount
+[Commander] Goal #7 submitted: EnsureUnitCount
+[Commander] Goal #6: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #8.
+[Commander] Goal #6: status=Executing owned=0 queued=1; Queueing Spearman at Barracks #8.
+[Commander] Goal #6: status=Executing owned=0 queued=2; Queueing Spearman at Barracks #8.
+[Commander] Goal #6: status=WaitingForProduction owned=0 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #7: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #9.
+[Commander] Goal #7: status=Executing owned=0 queued=1; Queueing Archer at ArcheryRange #9.
+[Commander] Goal #7: status=Executing owned=0 queued=2; Queueing Archer at ArcheryRange #9.
+[Commander] Goal #7: status=WaitingForProduction owned=0 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #6: status=Executing owned=1 queued=2; Queueing Spearman at Barracks #8.
+[Commander] Goal #6: status=WaitingForProduction owned=1 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #7: status=Executing owned=1 queued=2; Queueing Archer at ArcheryRange #9.
+[Commander] Goal #7: status=WaitingForProduction owned=1 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #6: status=Executing owned=2 queued=2; Queueing Spearman at Barracks #8.
+[Commander] Goal #6: status=WaitingForProduction owned=2 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #7: status=Executing owned=2 queued=2; Queueing Archer at ArcheryRange #9.
+[Commander] Goal #7: status=WaitingForProduction owned=2 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #6: status=Executing owned=3 queued=2; Queueing Spearman at Barracks #8.
+[Commander] Goal #6: status=WaitingForProduction owned=3 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #7: status=Executing owned=3 queued=2; Queueing Archer at ArcheryRange #9.
+[Commander] Goal #7: status=WaitingForProduction owned=3 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #6: status=Executing owned=4 queued=2; Queueing Spearman at Barracks #8.
+[Commander] Goal #6: status=WaitingForProduction owned=4 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #7: status=Executing owned=4 queued=2; Queueing Archer at ArcheryRange #9.
+[Commander] Goal #7: status=WaitingForProduction owned=4 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #6: status=Executing owned=5 queued=2; Queueing Spearman at Barracks #8.
+[Commander] Goal #6: status=WaitingForProduction owned=5 queued=3; Owned 5, queued 3, target 8.
+[Commander] Goal #7: status=Executing owned=5 queued=2; Queueing Archer at ArcheryRange #9.
+[Commander] Goal #7: status=WaitingForProduction owned=5 queued=3; Owned 5, queued 3, target 8.
+[Commander] Goal #6: status=WaitingForProduction owned=6 queued=2; Owned 6, queued 2, target 8.
+[Commander] Goal #7: status=WaitingForProduction owned=6 queued=2; Owned 6, queued 2, target 8.
+[Commander] Goal #6: status=WaitingForProduction owned=7 queued=1; Owned 7, queued 1, target 8.
+[Commander] Goal #7: status=WaitingForProduction owned=7 queued=1; Owned 7, queued 1, target 8.
+[Commander] Goal #6: status=Completed owned=8 queued=0; Owned 8/8 living units.
+[Commander] Goal #7: status=Completed owned=8 queued=0; Owned 8/8 living units.
+[StrategicPlanner] Plan #1 milestone completed: Force.
+[StrategicPlanner] Reservation #3 released for plan #1.
+[StrategicPlanner] Reservation #4 released for plan #1.
+[StrategicPlanner] Plan #1 milestone active: Ready.
+[StrategicPlanner] Plan #1 milestone completed: Ready.
+[StrategicPlanner] Plan #1 completed. Fortified defense preparation complete.
+[Phase4C4 Runtime] DefensiveTurtle completed at 8401/40000 ticks via UI Approve; reservations released.
+]]></output>
+            </test-case>
+            <test-case id="1096" name="TwoFundedTowersFinishBeforeFortifications_NoThirdTowerGoalIsCreated" fullname="OpenEmpires.Tests.CommanderPhase4C4PlayModeTests.TwoFundedTowersFinishBeforeFortifications_NoThirdTowerGoalIsCreated" methodname="TwoFundedTowersFinishBeforeFortifications_NoThirdTowerGoalIsCreated" classname="OpenEmpires.Tests.CommanderPhase4C4PlayModeTests" runstate="Runnable" seed="705152853" result="Passed" start-time="2026-09-23 15:59:27Z" end-time="2026-09-23 15:59:29Z" duration="1.264835" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: DefensiveTurtle for player 0.
+[StrategicPlanner] Intent #1 selected template 'defensive_turtle' and started plan #1: DefensiveTurtle.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1: status=Completed owned=8 queued=0; 8/8 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=8 queued=0; 8/8 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Reservation #1 created for plan #1: 300 Wood.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[Commander] Goal #3 submitted: BuildStructure
+[Commander] Goal #4 submitted: BuildStructure
+[Commander] Goal #3: status=Executing owned=0 queued=0; Placing Barracks at (141,134) with villager #0.
+[SyncCheck] tick=1 checksum=5D3BBCB5
+[SyncCheck] tick=2 checksum=0A17E11E
+[SyncCheck] tick=3 checksum=437F97A5
+[SyncCheck] tick=4 checksum=33BD2E29
+[SyncCheck] tick=5 checksum=39FF7DFC
+[SyncCheck] tick=6 checksum=2BBD278F
+[SyncCheck] tick=7 checksum=9E700A3A
+[SyncCheck] tick=8 checksum=4AE6EEDF
+[SyncCheck] tick=9 checksum=6D1AB028
+[SyncCheck] tick=10 checksum=09211EDA
+[SyncCheck] tick=11 checksum=C9F48AB4
+[SyncCheck] tick=12 checksum=CFF4C4B6
+[SyncCheck] tick=13 checksum=5400CF09
+[SyncCheck] tick=14 checksum=8442399B
+[SyncCheck] tick=15 checksum=29C8780A
+[Commander] Goal #3: status=WaitingForConstruction owned=0 queued=1; Construction: villager #0 is travelling to building #10.
+[Commander] Goal #4: status=Executing owned=0 queued=0; Placing ArcheryRange at (146,134) with villager #16.
+[SyncCheck] tick=16 checksum=95350454
+[SyncCheck] tick=17 checksum=BE07F87E
+[SyncCheck] tick=18 checksum=7B3AF1B4
+[SyncCheck] tick=19 checksum=342B2878
+[SyncCheck] tick=20 checksum=E70FC403
+[SyncCheck] tick=21 checksum=D4B095B8
+[SyncCheck] tick=22 checksum=44933AF3
+[SyncCheck] tick=23 checksum=84054B2E
+[SyncCheck] tick=24 checksum=DBDEA424
+[SyncCheck] tick=25 checksum=8F18ECA5
+[SyncCheck] tick=26 checksum=318CD1CB
+[SyncCheck] tick=27 checksum=D690DB2C
+[SyncCheck] tick=28 checksum=B24AE236
+[SyncCheck] tick=29 checksum=74939851
+[SyncCheck] tick=30 checksum=3265BDAC
+[Commander] Goal #4: status=WaitingForConstruction owned=0 queued=1; Construction: villager #16 is travelling to building #11.
+[SyncCheck] tick=31 checksum=394B95E5
+[SyncCheck] tick=32 checksum=748DFB90
+[SyncCheck] tick=33 checksum=2A2996F0
+[SyncCheck] tick=34 checksum=54E24F3C
+[SyncCheck] tick=35 checksum=970F62B8
+[SyncCheck] tick=36 checksum=5890D961
+[SyncCheck] tick=37 checksum=58DF7FFD
+[SyncCheck] tick=38 checksum=A4E7C6E4
+[SyncCheck] tick=39 checksum=1C8BBCE5
+[SyncCheck] tick=40 checksum=5FF03784
+[SyncCheck] tick=41 checksum=C5DE82BB
+[SyncCheck] tick=42 checksum=47BECBC0
+[SyncCheck] tick=43 checksum=CF6AA2A2
+[SyncCheck] tick=44 checksum=02F30DF6
+[SyncCheck] tick=45 checksum=FB0EF5D8
+[SyncCheck] tick=46 checksum=F20E6D41
+[SyncCheck] tick=47 checksum=99855BA9
+[SyncCheck] tick=48 checksum=D959D47D
+[SyncCheck] tick=49 checksum=02067765
+[SyncCheck] tick=50 checksum=0CF60AF0
+[SyncCheck] tick=51 checksum=6DD74C5B
+[SyncCheck] tick=52 checksum=253562CC
+[SyncCheck] tick=53 checksum=BD86A72C
+[SyncCheck] tick=54 checksum=02E0F7DB
+[SyncCheck] tick=55 checksum=2F913748
+[SyncCheck] tick=56 checksum=CCB62244
+[SyncCheck] tick=57 checksum=BBE037D9
+[SyncCheck] tick=58 checksum=7DFB5467
+[SyncCheck] tick=59 checksum=975DD197
+[SyncCheck] tick=60 checksum=6199A017
+[SyncCheck] tick=61 checksum=1805FAD9
+[SyncCheck] tick=62 checksum=E7BFCC9A
+[SyncCheck] tick=63 checksum=A396015B
+[SyncCheck] tick=64 checksum=999CAA4B
+[SyncCheck] tick=65 checksum=2630E190
+[SyncCheck] tick=66 checksum=F659A3A9
+[SyncCheck] tick=67 checksum=E62860F8
+[SyncCheck] tick=68 checksum=FF8F3AE9
+[SyncCheck] tick=69 checksum=20B6F954
+[SyncCheck] tick=70 checksum=04197DDF
+[SyncCheck] tick=71 checksum=E5565987
+[SyncCheck] tick=72 checksum=CBD2870E
+[SyncCheck] tick=73 checksum=7A29226A
+[SyncCheck] tick=74 checksum=1AA31625
+[SyncCheck] tick=75 checksum=7CA9E617
+[SyncCheck] tick=76 checksum=07B3053A
+[SyncCheck] tick=77 checksum=09DD07E7
+[SyncCheck] tick=78 checksum=BB601752
+[SyncCheck] tick=79 checksum=442AB2F1
+[SyncCheck] tick=80 checksum=5890E798
+[SyncCheck] tick=81 checksum=8633EA4F
+[SyncCheck] tick=82 checksum=236BCE8F
+[SyncCheck] tick=83 checksum=AE885E08
+[SyncCheck] tick=84 checksum=2EB2A223
+[SyncCheck] tick=85 checksum=484AFAE5
+[SyncCheck] tick=86 checksum=C001E8C3
+[SyncCheck] tick=87 checksum=772DF95F
+[SyncCheck] tick=88 checksum=30825585
+[SyncCheck] tick=89 checksum=77401163
+[SyncCheck] tick=90 checksum=7B5021EE
+[SyncCheck] tick=91 checksum=103591D1
+[SyncCheck] tick=92 checksum=B8065933
+[SyncCheck] tick=93 checksum=400BD776
+[SyncCheck] tick=94 checksum=39D31910
+[SyncCheck] tick=95 checksum=F768C523
+[SyncCheck] tick=96 checksum=FFB2835A
+[SyncCheck] tick=97 checksum=F1E5C044
+[SyncCheck] tick=98 checksum=1E5DF2EF
+[SyncCheck] tick=99 checksum=C2E684C3
+[SyncCheck] tick=100 checksum=814247E0
+[Commander] Goal #3: status=WaitingForConstruction owned=0 queued=1; Construction: building #10 is advancing with villager #0.
+[Commander] Goal #4: status=WaitingForConstruction owned=0 queued=1; Construction: building #11 is advancing with villager #16.
+[Commander] Goal #3: status=Completed owned=1 queued=0; Barracks construction complete (1/1).
+[Commander] Goal #4: status=Completed owned=1 queued=0; ArcheryRange construction complete (1/1).
+[StrategicPlanner] Plan #1 milestone completed: Production.
+[StrategicPlanner] Reservation #1 released for plan #1.
+[StrategicPlanner] Plan #1 milestone active: Fortifications.
+[StrategicPlanner] Plan #1 milestone completed: Fortifications.
+[StrategicPlanner] Reservation #2 created for plan #1: 720 Food.
+[StrategicPlanner] Reservation #3 created for plan #1: 560 Wood.
+[StrategicPlanner] Plan #1 milestone active: Force.
+[Commander] Goal #5 submitted: EnsureUnitCount
+[Commander] Goal #6 submitted: EnsureUnitCount
+[Commander] Goal #5: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #10.
+[Commander] Goal #5: status=Executing owned=0 queued=1; Queueing Spearman at Barracks #10.
+[Commander] Goal #5: status=Executing owned=0 queued=2; Queueing Spearman at Barracks #10.
+[Commander] Goal #5: status=WaitingForProduction owned=0 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #6: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #11.
+[Commander] Goal #6: status=Executing owned=0 queued=1; Queueing Archer at ArcheryRange #11.
+[Commander] Goal #6: status=Executing owned=0 queued=2; Queueing Archer at ArcheryRange #11.
+[Commander] Goal #6: status=WaitingForProduction owned=0 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #5: status=Executing owned=1 queued=2; Queueing Spearman at Barracks #10.
+[Commander] Goal #5: status=WaitingForProduction owned=1 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #6: status=Executing owned=1 queued=2; Queueing Archer at ArcheryRange #11.
+[Commander] Goal #6: status=WaitingForProduction owned=1 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #5: status=Executing owned=2 queued=2; Queueing Spearman at Barracks #10.
+[Commander] Goal #5: status=WaitingForProduction owned=2 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #6: status=Executing owned=2 queued=2; Queueing Archer at ArcheryRange #11.
+[Commander] Goal #6: status=WaitingForProduction owned=2 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #5: status=Executing owned=3 queued=2; Queueing Spearman at Barracks #10.
+[Commander] Goal #5: status=WaitingForProduction owned=3 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #6: status=Executing owned=3 queued=2; Queueing Archer at ArcheryRange #11.
+[Commander] Goal #6: status=WaitingForProduction owned=3 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #5: status=Executing owned=4 queued=2; Queueing Spearman at Barracks #10.
+[Commander] Goal #5: status=WaitingForProduction owned=4 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #6: status=Executing owned=4 queued=2; Queueing Archer at ArcheryRange #11.
+[Commander] Goal #6: status=WaitingForProduction owned=4 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #5: status=Executing owned=5 queued=2; Queueing Spearman at Barracks #10.
+[Commander] Goal #5: status=WaitingForProduction owned=5 queued=3; Owned 5, queued 3, target 8.
+[Commander] Goal #6: status=Executing owned=5 queued=2; Queueing Archer at ArcheryRange #11.
+[Commander] Goal #6: status=WaitingForProduction owned=5 queued=3; Owned 5, queued 3, target 8.
+[Commander] Goal #5: status=WaitingForProduction owned=6 queued=2; Owned 6, queued 2, target 8.
+[Commander] Goal #6: status=WaitingForProduction owned=6 queued=2; Owned 6, queued 2, target 8.
+[Commander] Goal #5: status=WaitingForProduction owned=7 queued=1; Owned 7, queued 1, target 8.
+[Commander] Goal #6: status=WaitingForProduction owned=7 queued=1; Owned 7, queued 1, target 8.
+[Commander] Goal #5: status=Completed owned=8 queued=0; Owned 8/8 living units.
+[Commander] Goal #6: status=Completed owned=8 queued=0; Owned 8/8 living units.
+[StrategicPlanner] Plan #1 milestone completed: Force.
+[StrategicPlanner] Reservation #2 released for plan #1.
+[StrategicPlanner] Reservation #3 released for plan #1.
+[StrategicPlanner] Plan #1 milestone active: Ready.
+[StrategicPlanner] Plan #1 milestone completed: Ready.
+[StrategicPlanner] Plan #1 completed. Fortified defense preparation complete.
+[Phase4C4 Runtime] DefensiveTurtle completed at 4456/40000 ticks via UI Approve; reservations released.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

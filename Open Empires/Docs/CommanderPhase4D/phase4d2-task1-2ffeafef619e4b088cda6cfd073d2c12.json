@@ -1,0 +1,36 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "2ffeafef619e4b088cda6cfd073d2c12",
+      "status": "failed",
+      "mode": "EditMode",
+      "started_unix_ms": 1790267609350,
+      "finished_unix_ms": 1790267617121,
+      "last_update_unix_ms": 1790267617121,
+      "progress": {
+        "completed": 28,
+        "total": 28,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1790267616815,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4D2Tests.UnresolvedRequirement_IsUnknownNotZero",
+        "last_finished_unix_ms": 1790267617060,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4D2Tests.ActiveWithoutExecutionOrProgress_IsUnknown",
+            "message": "  Expected: Unknown\r\n  But was:  Healthy\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

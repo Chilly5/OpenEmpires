@@ -1,0 +1,40 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "acd68038f5a245279686dd7441ff8872",
+      "status": "failed",
+      "mode": "EditMode",
+      "started_unix_ms": 1790268866417,
+      "finished_unix_ms": 1790268876060,
+      "last_update_unix_ms": 1790268876060,
+      "progress": {
+        "completed": 38,
+        "total": 38,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1790268875788,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4D2Tests.UnresolvedRequirement_IsUnknownNotZero",
+        "last_finished_unix_ms": 1790268876027,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4D2Tests.MalformedUnitGoalStatus_CannotAssertPopulationWait",
+            "message": "  Expected: Unknown\r\n  But was:  WaitingForPopulation\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4D2Tests.OverqueuedUnitGoal_PreservesSignedRemainingOrders",
+            "message": "  Expected: -2\r\n  But was:  0\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

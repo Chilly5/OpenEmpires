@@ -323,9 +323,59 @@ namespace OpenEmpires.Tests
         {
             RichWorld();
             for (int i = 0; i < 185; i++) AddUnit(CommanderIntentCatalog.KnightUnitType);
+            Assert.That(Context().Population.CurrentPopulation + (objective == Ranged ? 10 : 16),
+                Is.GreaterThan(config.MaxPopulation));
             var quote = Context().Feasibility.Single(value => (int)value.Objective == objective);
             Assert.That(quote.Capable, Is.False);
             Assert.That(quote.RejectionReason, Does.Contain("maximum population"));
+        }
+
+        [Test]
+        public void AtCurrentPopulationCap_RangedQuoteIncludesOneHouseAndIsCapable()
+        {
+            RichWorld(houses: 0, workers: 10);
+            var context = Context();
+            Assert.That(context.Population.CurrentPopulation, Is.EqualTo(10));
+            Assert.That(context.Population.PopulationCap, Is.EqualTo(10));
+            Assert.That(context.Population.MaximumPopulation, Is.EqualTo(200));
+
+            var quote = context.Feasibility.Single(value => (int)value.Objective == Ranged);
+            Assert.That(quote.Capable, Is.True, quote.RejectionReason);
+            Assert.That(quote.Costs.Single(value => value.ResourceType == ResourceType.Food).Amount,
+                Is.EqualTo(300));
+            Assert.That(quote.Costs.Single(value => value.ResourceType == ResourceType.Wood).Amount,
+                Is.EqualTo(700), "Ten archers (500) + Archery Range (150) + one House (50).");
+        }
+
+        [Test]
+        public void AtCurrentPopulationCap_FundedHouseFoundationIsNotChargedAgain()
+        {
+            RichWorld(houses: 0, workers: 10);
+            int x = simulation.MapData.Width / 2;
+            int z = simulation.MapData.Height / 2;
+            simulation.CreateBuilding(0, BuildingType.House, x + 18, z + 10, true);
+            var context = Context();
+            Assert.That(context.Population.CurrentPopulation, Is.EqualTo(context.Population.PopulationCap));
+            Assert.That(context.Population.PopulationCap, Is.EqualTo(10));
+
+            var quote = context.Feasibility.Single(value => (int)value.Objective == Ranged);
+            Assert.That(quote.Capable, Is.True, quote.RejectionReason);
+            Assert.That(quote.Costs.Single(value => value.ResourceType == ResourceType.Wood).Amount,
+                Is.EqualTo(650), "The funded House already provides the needed future capacity.");
+        }
+
+        [Test]
+        public void AtCurrentPopulationCap_WithoutWorkersStillRejectsConstruction()
+        {
+            RichWorld(houses: 0, workers: 0);
+            for (int i = 0; i < 10; i++) AddUnit(CommanderIntentCatalog.KnightUnitType);
+            var context = Context();
+            Assert.That(context.Population.CurrentPopulation, Is.EqualTo(context.Population.PopulationCap));
+            Assert.That(context.Population.PopulationCap, Is.EqualTo(10));
+
+            var quote = context.Feasibility.Single(value => (int)value.Objective == Ranged);
+            Assert.That(quote.Capable, Is.False);
+            Assert.That(quote.RejectionReason, Does.Contain("worker"));
         }
 
         [TestCase(Ranged)]
@@ -390,7 +440,7 @@ namespace OpenEmpires.Tests
             }
         }
 
-        private void RichWorld()
+        private void RichWorld(int houses = 4, int workers = 8)
         {
             ((int[])typeof(GameSimulation).GetField("playerAges",
                 System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
@@ -401,9 +451,9 @@ namespace OpenEmpires.Tests
             int z = simulation.MapData.Height / 2;
             simulation.CreateBuilding(0, BuildingType.TownCenter, x + 12, z, false, true)
                 .AutoProduceVillagers = false;
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < houses; i++)
                 simulation.CreateBuilding(0, BuildingType.House, x + 18 + i * 3, z + 10, false);
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < workers; i++)
             {
                 var worker = simulation.UnitRegistry.CreateUnit(0,
                     simulation.MapData.TileToWorldFixed(x - 10 + i, z), Fixed32.One,

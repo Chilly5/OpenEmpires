@@ -51,6 +51,8 @@ namespace OpenEmpires
             && currentMilestoneIndex < milestones.Count ? milestones[currentMilestoneIndex] : null;
         public StrategicPlanStatus Status { get; internal set; }
         public int CreatedTick { get; internal set; }
+        public int Revision { get; private set; }
+        internal int PausedAtTick { get; set; } = -1;
         public IReadOnlyList<int> ChildGoalIds => childGoalIds;
         public IReadOnlyList<StrategicMilestone> Milestones => milestones;
         public IReadOnlyList<StrategicResourceRequirement> RequiredResources => requiredResources;
@@ -62,6 +64,17 @@ namespace OpenEmpires
         public bool IsTerminal => Status == StrategicPlanStatus.Completed
             || Status == StrategicPlanStatus.Failed
             || Status == StrategicPlanStatus.Cancelled;
+
+        internal void InitializeRevision()
+        {
+            if (Revision != 0) throw new InvalidOperationException("A plan revision can be initialized only once.");
+            Revision = 1;
+        }
+
+        internal void AdvanceRevision()
+        {
+            Revision = checked(Revision + 1);
+        }
 
         protected StrategicPlan(int ownerPlayerId, StrategicPlanType planType, int sourceIntentId,
             string completionResponse, string cancellationResponse)

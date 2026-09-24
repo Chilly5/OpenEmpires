@@ -1,0 +1,112 @@
+{
+  "schema": "commander-phase4d-source-baseline@1",
+  "capturedAtUtc": "2026-09-23T17:07:52Z",
+  "purpose": "Pre-Phase-4D source and evidence baseline. Captured from the live worktree before Phase 4D production changes.",
+  "repository": {
+    "gitTopLevel": "D:/unity_projects/OpenEmpires",
+    "projectRoot": "D:/unity_projects/OpenEmpires/Open Empires",
+    "branch": "unit_models_and_voice_control",
+    "head": "205c4fa8d2aae8d5abe5b7806f1fb66bb0727519",
+    "workingTreeClean": false,
+    "statusSnapshotCapturedBeforeCreatingThisBaseline": true,
+    "statusSnapshot": [
+      { "xy": " D", "path": "Open Empires/Assets/InitTestScene96b8db94-f324-467b-b277-198ae049b236.unity" },
+      { "xy": " D", "path": "Open Empires/Assets/InitTestScene96b8db94-f324-467b-b277-198ae049b236.unity.meta" },
+      { "xy": " M", "path": "Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Feasibility.cs" },
+      { "xy": " M", "path": "Open Empires/Assets/Tests/EditMode/CommanderPhase4C4Tests.cs" },
+      { "xy": " M", "path": "Open Empires/Assets/Tests/PlayMode/CommanderPhase4C4PlayModeTests.cs" },
+      { "xy": " D", "path": "Open Empires/Assets/_Recovery/0 (10).unity" },
+      { "xy": " D", "path": "Open Empires/Assets/_Recovery/0 (10).unity.meta" },
+      { "xy": " M", "path": "Open Empires/Docs/CommanderPhase4C.md" },
+      { "xy": " M", "path": "Open Empires/Docs/CommanderPhase4C/phase4c4-final-regression-summary.md" },
+      { "xy": " M", "path": "Open Empires/Docs/CommanderPhase4C/phase4c4-final-source-hashes.json" },
+      { "xy": " M", "path": "Open Empires/Docs/CommanderPhase4C/progress.md" },
+      { "xy": " M", "path": "Open Empires/Docs/CommanderPhase4C/requirements-matrix.md" },
+      { "xy": "??", "path": "Open Empires/Assets/InitTestScene4e274152-2989-491e-9211-298d6647bbfd.unity" },
+      { "xy": "??", "path": "Open Empires/Assets/InitTestScene4e274152-2989-491e-9211-298d6647bbfd.unity.meta" },
+      { "xy": "??", "path": "Open Empires/Docs/CommanderPhase4C/phase4c4-housing-editmode-green.xml" },
+      { "xy": "??", "path": "Open Empires/Docs/CommanderPhase4C/phase4c4-housing-final-boundary-audit.json" },
+      { "xy": "??", "path": "Open Empires/Docs/CommanderPhase4C/phase4c4-housing-focused-editmode.xml" },
+      { "xy": "??", "path": "Open Empires/Docs/CommanderPhase4C/phase4c4-housing-focused-playmode.xml" },
+      { "xy": "??", "path": "Open Empires/Docs/CommanderPhase4C/phase4c4-housing-full-editmode.xml" },
+      { "xy": "??", "path": "Open Empires/Docs/CommanderPhase4C/phase4c4-housing-full-playmode.xml" },
+      { "xy": "??", "path": "Open Empires/Docs/CommanderPhase4C/phase4c4-housing-playmode-green.xml" }
+    ],
+    "notes": [
+      "The Phase 4C housing source, test, and documentation changes are uncommitted and are treated as part of this live baseline; they were not reverted or staged.",
+      "The deleted scene/recovery files and untracked replacement scene/meta pair are recorded as unresolved worktree state. This baseline does not classify them as safe to delete, restore, or keep; inspect provenance and references before acting.",
+      "This baseline file and progress.md are intentionally not included in the pre-creation status snapshot above."
+    ]
+  },
+  "phase4cSourceManifest": {
+    "path": "Docs/CommanderPhase4C/phase4c4-final-source-hashes.json",
+    "sha256": "76D571C3FB9FED87206712D5FD559FE162F1E034754CA2E3B8A765174A4E245F",
+    "declaredFileCount": 27,
+    "diskHashMatches": 27,
+    "allDeclaredFilesPresent": true,
+    "verificationRule": "Resolve each files[].path against projectRoot; recompute SHA-256 and require equality with files[].sha256. The complete 27 path/hash pairs are in the referenced manifest whose own SHA-256 is pinned above."
+  },
+  "protectedBoundary": {
+    "path": "Docs/CommanderPhase4C/phase4c4-housing-final-boundary-audit.json",
+    "sha256": "A0B76274D4D7F0E4ED9110C24CB7F95D0CFBAC2B56343E745C0D16D455E68122",
+    "auditLabel": "Commander Phase 4C read-only boundary audit (in-flight source; not final phase evidence)",
+    "generatedAtUtc": "2026-09-23T16:18:38.2475359Z",
+    "protectedFileCount": 55,
+    "protectedDiskHashMatches": 55,
+    "changedCount": 21,
+    "newCount": 21,
+    "missingCount": 0,
+    "auditGapCount": 0,
+    "documentedHostReferences": 6,
+    "credentialShapeMatches": 0,
+    "credentialAssignmentCandidates": 0,
+    "verificationRule": "Resolve each frozenBoundaryHashes[].path against projectRoot; require present=true, unchanged=true, auditGap=false, baselineSha256=currentSha256, and recomputed disk SHA-256=currentSha256. The exact 55 path/hash records and all changed/new records are in the referenced audit, whose SHA-256 is pinned above.",
+    "labelCaveat": "The JSON label says in-flight/not final, while its 55/55 frozen hashes and all declared changed/new hashes were independently recomputed against the captured worktree and match. Preserve this caveat; do not silently relabel the artifact."
+  },
+  "regressionEvidence": {
+    "unityTestsRunDuringThisPreflight": false,
+    "artifacts": [
+      {
+        "path": "Docs/CommanderPhase4C/phase4c4-housing-full-editmode.xml",
+        "sha256": "771A0EFB388EB21B0B478817E50DD58E70A4BC27B915F88AEEC1EDA11A1B2B66",
+        "result": "Passed", "total": 571, "passed": 571, "failed": 0, "skipped": 0
+      },
+      {
+        "path": "Docs/CommanderPhase4C/phase4c4-housing-full-playmode.xml",
+        "sha256": "63ED603142539BE6ED6BAFE4BB6824B8C34C0EA9192EEF8891D678FB0D466B28",
+        "result": "Passed", "total": 87, "passed": 87, "failed": 0, "skipped": 0
+      },
+      {
+        "path": "Docs/CommanderPhase4C/phase4c4-housing-focused-editmode.xml",
+        "sha256": "39A3E8E7E865FBDEB7147B0C3BC322B68516260CF73B5FAA4BE335497345055C",
+        "result": "Passed", "total": 31, "passed": 31, "failed": 0, "skipped": 0
+      },
+      {
+        "path": "Docs/CommanderPhase4C/phase4c4-housing-focused-playmode.xml",
+        "sha256": "7B8609A14AE36D8BB8823408B99951F8DFB0996F3C9114F7891CEA705A757178",
+        "result": "Passed", "total": 10, "passed": 10, "failed": 0, "skipped": 0
+      },
+      {
+        "path": "Docs/CommanderPhase4C/phase4c4-housing-editmode-green.xml",
+        "sha256": "CECDE545BCB0A5170D0E1AB8201CF5112B82DE04ABD18B44C93479CDF2ECF53F",
+        "result": "Passed", "total": 3, "passed": 3, "failed": 0, "skipped": 0
+      },
+      {
+        "path": "Docs/CommanderPhase4C/phase4c4-housing-playmode-green.xml",
+        "sha256": "CBB630538842838139F5D8C5C7F43236FDA0E10B41A7401BD8FE6A963B0DBFB0",
+        "result": "Passed", "total": 1, "passed": 1, "failed": 0, "skipped": 0,
+        "testCase": "AtCurrentCap_ApprovedRangedPlanBuildsHouseThenTrainsAndReleasesReservations"
+      }
+    ],
+    "dynamicHousingSummary": {
+      "path": "Docs/CommanderPhase4C/phase4c4-final-regression-summary.md",
+      "sha256": "1F8FBDA5F303A659BDDDB391CB2284B460343C7442948D8BF65C61923FFA7B7C"
+    },
+    "dynamicHousingEvidence": "The recorded PlayMode scenario starts at population/cap 10/10 without a House, approves Ranged Reinforcement, observes House foundation and completion, then Archer training and ten Archers, plan completion, and reservation release. XML proves the case ran and passed; the summary supplies the scenario detail."
+  },
+  "phase4dReadiness": {
+    "productionImplementationStarted": false,
+    "baselineAmbiguity": "The live worktree is dirty, but its Phase 4C source manifest and protected boundary hashes verify. Treat these exact live files as the Phase 4D starting point; do not assume the commits alone contain them.",
+    "gate": "Proceed only after the Phase 4D owner reviews this snapshot and resolves any required direction on the uncommitted scene/recovery churn and the audit-label caveat."
+  }
+}

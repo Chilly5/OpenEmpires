@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Passed" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-24 19:29:54Z" end-time="2026-09-24 19:29:59Z" duration="4.7291291">
+  <test-suite type="TestSuite" id="1144" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="116" result="Passed" start-time="2026-09-24 19:29:54Z" end-time="2026-09-24 19:29:59Z" duration="4.729129" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1138" name="OpenEmpires.PlayModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.PlayModeTests.dll" runstate="Runnable" testcasecount="116" result="Passed" start-time="2026-09-24 19:29:54Z" end-time="2026-09-24 19:29:59Z" duration="4.721232" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="16104" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1139" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="116" result="Passed" start-time="2026-09-24 19:29:54Z" end-time="2026-09-24 19:29:59Z" duration="4.718718" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1140" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="116" result="Passed" start-time="2026-09-24 19:29:54Z" end-time="2026-09-24 19:29:59Z" duration="4.715370" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1134" name="CommanderPhase4D2RuntimePlayModeTests" fullname="OpenEmpires.Tests.CommanderPhase4D2RuntimePlayModeTests" classname="OpenEmpires.Tests.CommanderPhase4D2RuntimePlayModeTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-24 19:29:54Z" end-time="2026-09-24 19:29:59Z" duration="4.711701" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase4D2Runtime" />
+            </properties>
+            <test-case id="1135" name="ApprovedRangedResourceWait_RecoversSamePlanAndCompletesWithoutReapproval" fullname="OpenEmpires.Tests.CommanderPhase4D2RuntimePlayModeTests.ApprovedRangedResourceWait_RecoversSamePlanAndCompletesWithoutReapproval" methodname="ApprovedRangedResourceWait_RecoversSamePlanAndCompletesWithoutReapproval" classname="OpenEmpires.Tests.CommanderPhase4D2RuntimePlayModeTests" runstate="Runnable" seed="894703066" result="Passed" start-time="2026-09-24 19:29:54Z" end-time="2026-09-24 19:29:59Z" duration="4.700259" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1: status=Completed owned=8 queued=0; 8/8 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=8 queued=0; 8/8 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Production.
+[SyncCheck] tick=1 checksum=0F752A2E
+[Phase4D2 Runtime WAIT] plan=1/0 rev=7 tick=1 milestone=2/WaitingForResources children=0/0 health=WaitingForResources wood=0/150 deficit=150 planReserved=0 queue=0 population=16/70
+[SyncCheck] tick=2 checksum=5045583E
+[SyncCheck] tick=3 checksum=B8A71FC7
+[SyncCheck] tick=4 checksum=FF61F086
+[SyncCheck] tick=5 checksum=0B85FD3B
+[SyncCheck] tick=6 checksum=8AA398C0
+[SyncCheck] tick=7 checksum=DAC35192
+[SyncCheck] tick=8 checksum=6EB1AB4D
+[SyncCheck] tick=9 checksum=18957F54
+[SyncCheck] tick=10 checksum=2E679F27
+[SyncCheck] tick=11 checksum=865E9A30
+[SyncCheck] tick=12 checksum=AF57B65F
+[SyncCheck] tick=13 checksum=1433BF44
+[SyncCheck] tick=14 checksum=E74AF9E5
+[SyncCheck] tick=15 checksum=0C7D9F24
+[SyncCheck] tick=16 checksum=2515832D
+[SyncCheck] tick=17 checksum=018D35DE
+[SyncCheck] tick=18 checksum=4F68E573
+[SyncCheck] tick=19 checksum=A53A40E4
+[SyncCheck] tick=20 checksum=B17112A7
+[SyncCheck] tick=21 checksum=1587963C
+[SyncCheck] tick=22 checksum=80723DFB
+[SyncCheck] tick=23 checksum=11AF239E
+[SyncCheck] tick=24 checksum=276131FF
+[SyncCheck] tick=25 checksum=B4D7A7D6
+[SyncCheck] tick=26 checksum=F31B9885
+[SyncCheck] tick=27 checksum=774B9FEA
+[SyncCheck] tick=28 checksum=35022A63
+[SyncCheck] tick=29 checksum=771FB94C
+[SyncCheck] tick=30 checksum=DCF8FFC7
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[SyncCheck] tick=31 checksum=C7394AB2
+[SyncCheck] tick=32 checksum=C497DCEF
+[SyncCheck] tick=33 checksum=E160EFA2
+[SyncCheck] tick=34 checksum=FE19BE03
+[SyncCheck] tick=35 checksum=DC50AFF2
+[SyncCheck] tick=36 checksum=EC97BEB5
+[SyncCheck] tick=37 checksum=CACEB0A4
+[SyncCheck] tick=38 checksum=EE957EA3
+[SyncCheck] tick=39 checksum=62CC90F4
+[SyncCheck] tick=40 checksum=86935EF3
+[SyncCheck] tick=41 checksum=64CA50E2
+[SyncCheck] tick=42 checksum=88911EE1
+[SyncCheck] tick=43 checksum=66C810D0
+[SyncCheck] tick=44 checksum=8A8EDECF
+[SyncCheck] tick=45 checksum=68C5D0BE
+[SyncCheck] tick=46 checksum=8C8C9EBD
+[SyncCheck] tick=47 checksum=6AC390AC
+[SyncCheck] tick=48 checksum=8E8A5EAB
+[SyncCheck] tick=49 checksum=AB53715E
+[SyncCheck] tick=50 checksum=C80C3FBF
+[SyncCheck] tick=51 checksum=A64331AE
+[SyncCheck] tick=52 checksum=B68A4071
+[SyncCheck] tick=53 checksum=94C13260
+[SyncCheck] tick=54 checksum=B888005F
+[SyncCheck] tick=55 checksum=2CBF12B0
+[SyncCheck] tick=56 checksum=5085E0AF
+[SyncCheck] tick=57 checksum=2EBCD29E
+[SyncCheck] tick=58 checksum=5283A09D
+[SyncCheck] tick=59 checksum=30BA928C
+[SyncCheck] tick=60 checksum=5481608B
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[SyncCheck] tick=61 checksum=32B8527A
+[SyncCheck] tick=62 checksum=567F2079
+[SyncCheck] tick=63 checksum=34B61268
+[SyncCheck] tick=64 checksum=587CE067
+[SyncCheck] tick=65 checksum=7545F31A
+[SyncCheck] tick=66 checksum=91FEC17B
+[SyncCheck] tick=67 checksum=7035B36A
+[SyncCheck] tick=68 checksum=807CC22D
+[SyncCheck] tick=69 checksum=5EB3B41C
+[SyncCheck] tick=70 checksum=827A821B
+[SyncCheck] tick=71 checksum=F6B1946C
+[SyncCheck] tick=72 checksum=1A78626B
+[SyncCheck] tick=73 checksum=F8AF545A
+[SyncCheck] tick=74 checksum=1C762259
+[SyncCheck] tick=75 checksum=FAAD1448
+[SyncCheck] tick=76 checksum=1E73E247
+[SyncCheck] tick=77 checksum=FCAAD436
+[SyncCheck] tick=78 checksum=2071A235
+[SyncCheck] tick=79 checksum=FEA89424
+[SyncCheck] tick=80 checksum=226F6223
+[SyncCheck] tick=81 checksum=3F3874D6
+[SyncCheck] tick=82 checksum=5BF14337
+[SyncCheck] tick=83 checksum=3A283526
+[SyncCheck] tick=84 checksum=4A6F43E9
+[SyncCheck] tick=85 checksum=28A635D8
+[SyncCheck] tick=86 checksum=4C6D03D7
+[SyncCheck] tick=87 checksum=C0A41628
+[SyncCheck] tick=88 checksum=E46AE427
+[SyncCheck] tick=89 checksum=C2A1D616
+[SyncCheck] tick=90 checksum=E668A415
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[SyncCheck] tick=91 checksum=C49F9604
+[SyncCheck] tick=92 checksum=E8666403
+[SyncCheck] tick=93 checksum=C69D55F2
+[SyncCheck] tick=94 checksum=EA6423F1
+[SyncCheck] tick=95 checksum=C89B15E0
+[SyncCheck] tick=96 checksum=EC61E3DF
+[SyncCheck] tick=97 checksum=092AF692
+[SyncCheck] tick=98 checksum=25E3C4F3
+[SyncCheck] tick=99 checksum=041AB6E2
+[SyncCheck] tick=100 checksum=1461C5A5
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 10, reserved 0, available 10; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 30, reserved 0, available 30; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 40, reserved 0, available 40; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 50, reserved 0, available 50; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 50, reserved 0, available 50; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 60, reserved 0, available 60; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 70, reserved 0, available 70; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 80, reserved 0, available 80; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 90, reserved 0, available 90; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 100, reserved 0, available 100; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 110, reserved 0, available 110; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 110, reserved 0, available 110; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 110, reserved 0, available 110; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 120, reserved 0, available 120; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 120, reserved 0, available 120; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 130, reserved 0, available 130; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 130, reserved 0, available 130; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 130, reserved 0, available 130; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 130, reserved 0, available 130; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 140, reserved 0, available 140; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 150; current 140, reserved 0, available 140; owner: no active reservation owner.
+[StrategicPlanner] Reservation #1 created for plan #1: 150 Wood.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[Commander] Goal #3 submitted: BuildStructure
+[Commander] Goal #3: status=Executing owned=0 queued=0; Placing ArcheryRange at (141,134) with villager #0.
+[Phase4D2 Runtime CHILD] plan=1/0 tick=2371 milestone=2 child=3/Executing linked=1
+[Commander] Goal #3: status=WaitingForConstruction owned=0 queued=1; Construction: villager #0 is travelling to building #8.
+[Commander] Goal #3: status=WaitingForConstruction owned=0 queued=1; Construction: building #8 is advancing with villager #0.
+[Commander] Goal #3: status=Completed owned=1 queued=0; ArcheryRange construction complete (1/1).
+[StrategicPlanner] Plan #1 milestone completed: Production.
+[StrategicPlanner] Reservation #1 released for plan #1.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Force.
+[Phase4D2 Runtime PROGRESS] plan=1/0 rev=17 tick=3841 milestones=1->2 health=WaitingForResources
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 150, reserved 0, available 150; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 160, reserved 0, available 160; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 160, reserved 0, available 160; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 170, reserved 0, available 170; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 170, reserved 0, available 170; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 170, reserved 0, available 170; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 170, reserved 0, available 170; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 170, reserved 0, available 170; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 170, reserved 0, available 170; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 180, reserved 0, available 180; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 180, reserved 0, available 180; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 180, reserved 0, available 180; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 190, reserved 0, available 190; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 190, reserved 0, available 190; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 190, reserved 0, available 190; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 200, reserved 0, available 200; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 200, reserved 0, available 200; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 200, reserved 0, available 200; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 200, reserved 0, available 200; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 200, reserved 0, available 200; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 210, reserved 0, available 210; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 210, reserved 0, available 210; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 210, reserved 0, available 210; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 210, reserved 0, available 210; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 210, reserved 0, available 210; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 210, reserved 0, available 210; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 220, reserved 0, available 220; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 230, reserved 0, available 230; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 230, reserved 0, available 230; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 230, reserved 0, available 230; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 240, reserved 0, available 240; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 240, reserved 0, available 240; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 240, reserved 0, available 240; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 240, reserved 0, available 240; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 240, reserved 0, available 240; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 240, reserved 0, available 240; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 240, reserved 0, available 240; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 250, reserved 0, available 250; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 250, reserved 0, available 250; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 250, reserved 0, available 250; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 250, reserved 0, available 250; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 250, reserved 0, available 250; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 250, reserved 0, available 250; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 260, reserved 0, available 260; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 260, reserved 0, available 260; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 260, reserved 0, available 260; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 260, reserved 0, available 260; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 260, reserved 0, available 260; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 270, reserved 0, available 270; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 270, reserved 0, available 270; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 270, reserved 0, available 270; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 270, reserved 0, available 270; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 270, reserved 0, available 270; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 280, reserved 0, available 280; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 280, reserved 0, available 280; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 280, reserved 0, available 280; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 280, reserved 0, available 280; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 280, reserved 0, available 280; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 280, reserved 0, available 280; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 280, reserved 0, available 280; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 280, reserved 0, available 280; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 280, reserved 0, available 280; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 300; current 290, reserved 0, available 290; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 360, reserved 0, available 360; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 360, reserved 0, available 360; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 360, reserved 0, available 360; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 360, reserved 0, available 360; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 370, reserved 0, available 370; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 370, reserved 0, available 370; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 370, reserved 0, available 370; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 370, reserved 0, available 370; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 380, reserved 0, available 380; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 380, reserved 0, available 380; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 380, reserved 0, available 380; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 380, reserved 0, available 380; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 380, reserved 0, available 380; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 380, reserved 0, available 380; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 390, reserved 0, available 390; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 390, reserved 0, available 390; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 390, reserved 0, available 390; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 390, reserved 0, available 390; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 390, reserved 0, available 390; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 390, reserved 0, available 390; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 390, reserved 0, available 390; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 400, reserved 0, available 400; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 400, reserved 0, available 400; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 400, reserved 0, available 400; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 410, reserved 0, available 410; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 410, reserved 0, available 410; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 410, reserved 0, available 410; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 410, reserved 0, available 410; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 410, reserved 0, available 410; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 410, reserved 0, available 410; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 410, reserved 0, available 410; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 420, reserved 0, available 420; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 420, reserved 0, available 420; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 420, reserved 0, available 420; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 420, reserved 0, available 420; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 430, reserved 0, available 430; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 430, reserved 0, available 430; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 430, reserved 0, available 430; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 430, reserved 0, available 430; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 430, reserved 0, available 430; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 430, reserved 0, available 430; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 440, reserved 0, available 440; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 440, reserved 0, available 440; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 440, reserved 0, available 440; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 440, reserved 0, available 440; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 440, reserved 0, available 440; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 440, reserved 0, available 440; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 450, reserved 0, available 450; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 450, reserved 0, available 450; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 450, reserved 0, available 450; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 450, reserved 0, available 450; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 450, reserved 0, available 450; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 450, reserved 0, available 450; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 450, reserved 0, available 450; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 450, reserved 0, available 450; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 470, reserved 0, available 470; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 470, reserved 0, available 470; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 470, reserved 0, available 470; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 470, reserved 0, available 470; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 470, reserved 0, available 470; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 470, reserved 0, available 470; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 470, reserved 0, available 470; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 470, reserved 0, available 470; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 470, reserved 0, available 470; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 470, reserved 0, available 470; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 470, reserved 0, available 470; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 480, reserved 0, available 480; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 480, reserved 0, available 480; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 480, reserved 0, available 480; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 480, reserved 0, available 480; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 490, reserved 0, available 490; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 490, reserved 0, available 490; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 490, reserved 0, available 490; owner: no active reservation owner.
+[StrategicPlanner] Reservation conflict for Wood: plan #1 requested 500; current 490, reserved 0, available 490; owner: no active reservation owner.
+[StrategicPlanner] Reservation #2 created for plan #1: 300 Food.
+[StrategicPlanner] Reservation #3 created for plan #1: 500 Wood.
+[StrategicPlanner] Plan #1 milestone active: Force.
+[Commander] Goal #4 submitted: EnsureUnitCount
+[Commander] Goal #4: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=Executing owned=0 queued=1; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=Executing owned=0 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=0 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=1 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=1 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=2 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=2 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=3 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=3 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=4 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=4 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=5 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=5 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=6 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=6 queued=3; All compatible production queues are at Commander limit 3.
+[Commander] Goal #4: status=Executing owned=7 queued=2; Queueing Archer at ArcheryRange #8.
+[Commander] Goal #4: status=WaitingForProduction owned=7 queued=3; Owned 7, queued 3, target 10.
+[Commander] Goal #4: status=WaitingForProduction owned=8 queued=2; Owned 8, queued 2, target 10.
+[Commander] Goal #4: status=WaitingForProduction owned=9 queued=1; Owned 9, queued 1, target 10.
+[Commander] Goal #4: status=Completed owned=10 queued=0; Owned 10/10 living units.
+[StrategicPlanner] Plan #1 milestone completed: Force.
+[StrategicPlanner] Reservation #2 released for plan #1.
+[StrategicPlanner] Reservation #3 released for plan #1.
+[StrategicPlanner] Plan #1 milestone active: Ready.
+[StrategicPlanner] Plan #1 milestone completed: Ready.
+[StrategicPlanner] Plan #1 completed. Ranged reinforcement preparation complete.
+[Phase4D2 Runtime COMPLETE] plan=1/0 rev=47 tick=13981 waitTicks=0 recoveryTicks=13980 progressTick=3841 archers=10 commanderCommands=11 goals=4 reservations=0 providerCalls=1
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

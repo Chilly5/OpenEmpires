@@ -7,9 +7,12 @@ namespace OpenEmpires
         public static IStrategicAIInterpreter Create(string preference = null,
             ICommanderHttpTransport transport = null)
         {
-            preference = preference ?? Environment.GetEnvironmentVariable("OPENEMPIRES_COMMANDER_PROVIDER");
+            preference = preference ?? OpenRouterCommanderProvider.ReadSetting(
+                OpenRouterCommanderProvider.ProviderEnvironmentVariable);
             if (string.Equals(preference, "mock", StringComparison.OrdinalIgnoreCase))
                 return new MockStrategicAIProvider();
+            if (string.Equals(preference, "openrouter", StringComparison.OrdinalIgnoreCase))
+                return new OpenRouterCommanderProvider(null, transport);
             if (!string.IsNullOrWhiteSpace(preference)
                 && !string.Equals(preference, "gemini", StringComparison.OrdinalIgnoreCase))
                 throw new ArgumentException("Unsupported strategic provider.", nameof(preference));

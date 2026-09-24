@@ -1,9 +1,9 @@
 # Commander Phase 4C Requirements Matrix
 
 Final requirement-by-requirement traceability for the Phase 4C brief and
-architecture spec. Evidence is current through the post-priority-fix freeze.
+architecture spec. Evidence is current through the final population-cap fix.
 The final independent review recommends **READY FOR PHASE 4D**. Dynamic
-housing runtime completion is a documented non-blocking coverage limitation;
+housing runtime completion is now proven through UI-approved PlayMode;
 `TechnologyRush`, `SiegePreparation`, and `NavalExpansion` are explicitly
 deferred rather than represented as supported.
 
@@ -42,10 +42,10 @@ deferred rather than represented as supported.
 | Candidate objective list does not authorize unsupported objectives | Feasibility assessment and final A–G deferred-scope section | **PASS**; TechnologyRush, SiegePreparation, NavalExpansion deferred |
 | Each selected objective has distinct intent, strict parsing/DTO validation, template, feasibility, milestones, authority compatibility, provider interpretation, and completion test | 4C.4 source/tests, focused runtime evidence, post-fix full regressions | **PASS** |
 | Preserve existing objective enum numeric values by appending new types | Source compatibility review and tests; post-fix priority regression | **PASS** |
-| Focused and full EditMode/PlayMode regressions cover Phase 3 and 4A/4B/4C | Per-phase summaries; final 4C.4 EditMode 568/568, PlayMode 86/86, all unique and Passed | **PASS**; hashes in `phase4c4-final-regression-summary.md` |
+| Focused and full EditMode/PlayMode regressions cover Phase 3 and 4A/4B/4C | Per-phase summaries; final 4C.4 EditMode 571/571, PlayMode 87/87, all unique and Passed | **PASS**; hashes in `phase4c4-final-regression-summary.md` |
 | Static audit for credential/API-key leaks, command-buffer access, provider simulation access, provider-to-planner references | `phase4c4-final-source-hashes.json` and final boundary audit | **PASS**; credential-shape0, assignment0, protected55/55 unchanged, gaps0 |
 | Final report includes A–G sections for architecture, delegation, systems, safety, tests, runtime, future work | `Docs/CommanderPhase4C.md` inspected | **PASS** |
-| Runtime evidence is current and tied to implemented phase | 4C.1/4C.3 runtime evidence, 4C.4 final focused PlayMode XML, final full PlayMode XML | **PASS**; dynamic housing caveat explicitly recorded |
+| Runtime evidence is current and tied to implemented phase | 4C.1/4C.3 runtime evidence, 4C.4 final focused and full PlayMode XML, new housing case | **PASS**; dynamic House completed after approval |
 | Final verdict is READY only when requirements have evidence; otherwise identify concrete gaps | Updated matrix, final source audit, full results, independent final review | **PASS — READY FOR PHASE 4D** |
 | Successful Commander remembers recent conversations | 4C.1 memory tests/runtime evidence and final regression record | **PASS** |
 | Successful Commander explains decisions from grounded reasons | 4C.2 explanation tests and runtime integration evidence | **PASS** |
@@ -65,9 +65,11 @@ deferred rather than represented as supported.
 - Final source audit: changed21, new21, missing0; protected55/55 unchanged;
   gaps0; six documented host references; credential-shape0 and assignment0.
   `.env` remains untracked and ignored.
-- Dynamic housing completion was not exercised in the focused runtime fixture,
-  which prebuilt six Houses. Independent review found this non-blocking: the
-  supported objectives completed in runtime and the housing helper path is
-  covered without a separate dynamic-housing PlayMode requirement.
+- Dynamic housing completed in the final focused and full PlayMode suites:
+  the new 10/10-cap case started with no Houses and observed a House foundation,
+  completion, subsequent Archer training, completed force/plan, and released
+  reservations. The earlier nine-case fixture prebuilt six Houses and is
+  historical. The feasibility quote includes the House cost; static plan
+  milestone reservations do not include this opportunistic 50 wood.
 - `TechnologyRush`, `SiegePreparation`, and `NavalExpansion` remain deferred
   and are not included in the readiness claim.

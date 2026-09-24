@@ -1,11 +1,11 @@
 # Commander Phase 4C — A–G report
 
-Status: **READY FOR PHASE 4D.** Phases 4C.1–4C.4 passed their focused, review,
-full-regression, static-boundary, runtime, and requirements gates. The final
-independent review found no remaining Critical or Important issue. Dynamic
-housing completion remains an explicitly documented, non-blocking runtime
-coverage limitation; `TechnologyRush`, `SiegePreparation`, and `NavalExpansion`
-remain deferred and unsupported.
+Status: **READY FOR PHASE 4D** after the final scoped population-cap correction.
+Fresh full regressions passed 571/571 EditMode and 87/87 PlayMode. A UI-approved
+PlayMode run constructed a House dynamically before training the required
+force. The final independent review found no Critical or Important issue.
+`TechnologyRush`, `SiegePreparation`, and `NavalExpansion` remain deferred and
+unsupported. The earlier 568/568 and 86/86 results below are historical.
 
 ## A. Architecture
 
@@ -121,9 +121,9 @@ remain deferred and unsupported.
   passed after the independent review's funded-Tower fix. The final PlayMode
   XML records all nine passes, including funded foundations completing before
   Fortifications and post-approval resource depletion. Independent rereview
-  found no new Critical or Important issues; dynamic housing is explicitly a
-  remaining coverage limitation.
-- **4C.4 final post-fix full regression:** Full EditMode job
+  found no new Critical or Important issues; dynamic housing was a coverage
+  limitation at that historical gate and is proven in the final round below.
+- **4C.4 prior post-fix full regression:** Full EditMode job
   `5c24beac55114fe68b5e0f3ff6e7ea88` passed **568/568**, zero failures/skips;
   all 568 test names are unique and Passed. XML SHA-256
   `D2FA8CB42DFC5D14C840DE2C4E89C1087CF36C8469203303BB72EA022F4704B7`, file
@@ -158,10 +158,61 @@ remain deferred and unsupported.
   includes one-worker allocation, below-age rejection, replay/direct-player
   protections, funded Tower foundations, and resource depletion followed by
   gathering and completion. Reservations were asserted released.
-- **Dynamic housing runtime completion is unproven.** The focused runtime
-  fixture prebuilds six Houses; no claim is made that runtime constructed
-  housing was demonstrated. No Phase 4D readiness claim follows from the full
-  regressions alone.
+- **Dynamic housing runtime completion is proven in PlayMode.** The new
+  10/10-population fixture has no prebuilt House; real chat approval produces
+  a plan, a House foundation and completed House, subsequent Archer training,
+  ten Archers, completed plan, and released reservations. The nine older
+  PlayMode cases explicitly retain their six-House fixture.
+
+### Final scoped Antigravity population-cap round
+
+- Root cause: `StrategicPlanner.Feasibility.cs` rejected current-cap objectives
+  before its existing future-capacity/House calculation. Only that premature
+  two-line rejection was removed. Maximum-population and deterministic worker,
+  age, resource, construction, and unsupported-objective checks remain.
+- Test-first RED job `03e03bbe10b047288e3c743ae848668d` reproduced both
+  current-cap failures with “No population capacity is available.” After the
+  fix, EditMode cases cover 700-wood Ranged feasibility (including one canonical
+  House), funded-House no-double-charge at 650 wood, zero-worker rejection, and
+  the existing explicit maximum-population and unavailable-age cases.
+- Focused EditMode job `ce5c2db6cb3149edbe05d1d5d13f7a83`: **31/31**;
+  `phase4c4-housing-focused-editmode.xml` SHA-256
+  `39A3E8E7E865FBDEB7147B0C3BC322B68516260CF73B5FAA4BE335497345055C`.
+  Focused PlayMode: **10/10**; `phase4c4-housing-focused-playmode.xml`
+  SHA-256 `7B8609A14AE36D8BB8823408B99951F8DFB0996F3C9114F7891CEA705A757178`.
+  Separate housing PlayMode job `21fc37ac99be449f9dd78bf263652ee2`:
+  **1/1**, XML SHA-256
+  `CBB630538842838139F5D8C5C7F43236FDA0E10B41A7401BD8FE6A963B0DBFB0`.
+- Fresh complete EditMode job `024a2c805b33467b947965ae57cc309c`:
+  **571/571**; `phase4c4-housing-full-editmode.xml` SHA-256
+  `771A0EFB388EB21B0B478817E50DD58E70A4BC27B915F88AEEC1EDA11A1B2B66`.
+  Fresh complete PlayMode job `4fe992b52c814dc5a36e67fa3c854389`:
+  **87/87**; `phase4c4-housing-full-playmode.xml` SHA-256
+  `63ED603142539BE6ED6BAFE4BB6824B8C34C0EA9192EEF8891D678FB0D466B28`.
+  Both full XMLs contain unique test names and zero failed, skipped, or
+  inconclusive cases. A focused PlayMode MCP job callback timed out after Unity
+  wrote the successful 10/10 XML; the later complete PlayMode job reported
+  succeeded through MCP.
+- Updated `phase4c4-final-source-hashes.json` matches 27/27 current files;
+  its SHA-256 is
+  `76D571C3FB9FED87206712D5FD559FE162F1E034754CA2E3B8A765174A4E245F`.
+  The changed feasibility source SHA-256 is
+  `F736FDC674EB89C761FBDCA7B7CBB41A5FA5228E519A94E2592C1A89778EA14A`.
+  `phase4c4-housing-final-boundary-audit.json` SHA-256
+  `A0B76274D4D7F0E4ED9110C24CB7F95D0CFBAC2B56343E745C0D16D455E68122`
+  reports changed21/new21/missing0, protected55/55 unchanged, gaps0, six
+  documented host references, and zero credential-shape/assignment matches.
+  Approval, provider, policy, planner authority, tactical execution, commands,
+  networking, packages, and authentication were not changed. Independent
+  final-round review found no Critical or Important defect.
+- The two reported scene/meta pairs were verified as byte-identical,
+  unreferenced TestRunner-only/recovery artifacts outside Build Settings and
+  removed. Git commit `205c4fa` retains recoverable copies.
+- Limitation outside this narrowly authorized fix: the feasibility quote
+  includes 50 wood for a dynamic House, but the strategic plan's static
+  milestone budget/reservation still omits that opportunistic House. The
+  fully funded integration proof is unaffected; no planner-budget or authority
+  redesign was made.
 
 ## G. Supported scope and deferred work
 
@@ -183,9 +234,8 @@ Still deferred and unsupported:
   silent optional Towers are not promised. Genuine income trends also remain
   future work because authoritative detached income history is unavailable.
 
-Final verdict: **READY FOR PHASE 4D.** The direct-player priority fix passed its
-focused GREEN test; fresh full EditMode 568/568 and PlayMode 86/86 passed; final
-source hashes and protected-boundary audit passed; and independent review found
-no remaining Critical or Important finding. Dynamic housing runtime coverage
-remains unproven but is a documented non-blocking limitation; the three
-unsupported objectives remain explicitly deferred.
+Final verdict: **READY FOR PHASE 4D.** The scoped population-cap fix passed
+focused EditMode 31/31, focused PlayMode 10/10, full EditMode 571/571, and full
+PlayMode 87/87. Dynamic housing is proven through UI approval; source hashes,
+protected-boundary audit, and independent review passed. The three unsupported
+objectives remain explicitly deferred.

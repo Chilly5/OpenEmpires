@@ -1,0 +1,236 @@
+{
+  "schema": "commander-phase4d-protected-boundary-frozen@1",
+  "purpose": "Frozen copy of the protected-boundary path and SHA-256 pairs verified for the Phase 4D baseline.",
+  "baseline": {
+    "path": "Docs/CommanderPhase4D/phase4d-source-baseline.json",
+    "note": "Captured branch, HEAD, working-tree status, Phase 4C manifest and test evidence."
+  },
+  "sourceAudit": {
+    "path": "Docs/CommanderPhase4C/phase4c4-housing-final-boundary-audit.json",
+    "sha256": "A0B76274D4D7F0E4ED9110C24CB7F95D0CFBAC2B56343E745C0D16D455E68122"
+  },
+  "entryCount": 55,
+  "verificationRule": "For every entries[] item, resolve path against the project root and require the current SHA-256 to equal sha256. Also verify sourceAudit SHA-256 before treating its records as provenance.",
+  "entries": [
+    {
+      "path": "Assets/Scripts/Commands/FollowUnitCommand.cs",
+      "sha256": "C3611209D7F9876D759E60523819971436E27EDB82C4C0C04F6621AEDAE9AD6B"
+    },
+    {
+      "path": "Assets/Scripts/Commands/CancelTrainCommand.cs",
+      "sha256": "3200ADA3E32A9200A3F8C924C933BE16653A0CDA2D5EBFA0BB5035C96550FDA6"
+    },
+    {
+      "path": "Assets/Scripts/Commands/LightningStormCommand.cs",
+      "sha256": "2CAA7DDD6DED2A11B0946E648DD739D2D2F7DD9B62317869E735EE1CB8A20225"
+    },
+    {
+      "path": "Assets/Scripts/Commands/DropOffCommand.cs",
+      "sha256": "09DF676DFC6B950358EF76154CD83FC101A8CE1B060445B3C22B5ED6906755FC"
+    },
+    {
+      "path": "Assets/Scripts/Commands/PingCommand.cs",
+      "sha256": "3880909E238734F5B7D0C63B46437DCE8F0CAC9ABF571CDF1887A3EF74018894"
+    },
+    {
+      "path": "Assets/Scripts/Commands/CheatSpawnUnitCommand.cs",
+      "sha256": "E9FA53C9387EA0B945846986B753C32DD38EC18458A9B0C4C88832C4038E0733"
+    },
+    {
+      "path": "Assets/Scripts/Commands/MarketTradeCommand.cs",
+      "sha256": "F3B705AA329362FADC26AA839137749AEF24CA25AF30A51B38E89E450763A5D1"
+    },
+    {
+      "path": "Assets/Scripts/Commands/ICommand.cs",
+      "sha256": "7878E5A41263542CC9910C8C3EF7BD770598EBFBB057CFB8635D04741723E6CF"
+    },
+    {
+      "path": "Assets/Scripts/Commands/AiIntentCommand.cs",
+      "sha256": "6413354AE6926DB78EA6E656C3ED99FAF10D0F82DA8FF84F3E78BACC5229885B"
+    },
+    {
+      "path": "Assets/Scripts/Commands/NoopCommand.cs",
+      "sha256": "D5BB7B02A4C93C0F005E13BF0E957E87E62E2D2C8CFFCFECE046C37A25A1111A"
+    },
+    {
+      "path": "Assets/Scripts/Commands/ConvertToGateCommand.cs",
+      "sha256": "E051456F9CAF9B806FDB896AE58FD683D6CF1D3B5B84A7503E05454E17159A86"
+    },
+    {
+      "path": "Assets/Scripts/Commands/RepairBuildingCommand.cs",
+      "sha256": "1070DD55021E19E89D4A4A5C00DC491C5D7EE4F1788CD0527A6108747F7E965E"
+    },
+    {
+      "path": "Assets/Scripts/Commands/HealUnitCommand.cs",
+      "sha256": "716D1EDBAE4F49D6E6BD883C3A02D190D164036867C088DAEB25B913F35EB3A0"
+    },
+    {
+      "path": "Assets/Scripts/Network/ServerMessages.cs",
+      "sha256": "7F8228EFE1028B784168BDA79A1F039639B3F66CE78A50F25CC5C8A7226B9B79"
+    },
+    {
+      "path": "Assets/Scripts/Commands/CheatConstructionCommand.cs",
+      "sha256": "A2741E07FC41DE89403B93AE5D6DE65E2192E535EBC99991A3396DFC5BDA17F9"
+    },
+    {
+      "path": "Assets/Scripts/Commands/CheatGodModeCommand.cs",
+      "sha256": "15FC3236D2A5E8920F987003F306070008416C738D90BD1BCA090C2433206515"
+    },
+    {
+      "path": "Assets/Scripts/Commands/ToggleAutoProduceCommand.cs",
+      "sha256": "BEFA52A58BFD27D57884A5A99B5EF934A0D662FD74001349AA7C91EA1585EEF6"
+    },
+    {
+      "path": "Assets/Scripts/Commands/HealingRainCommand.cs",
+      "sha256": "6619B75184A3C83ACC78E048EE5E74B15AB056D895CC4F969E535BA0FB655C6E"
+    },
+    {
+      "path": "Assets/Scripts/Commands/SlaughterSheepCommand.cs",
+      "sha256": "B525BB78EE816341D0E494B998436061DD6872B76CCF95BFC485A31DC4161284"
+    },
+    {
+      "path": "Assets/Scripts/Commands/AttackUnitCommand.cs",
+      "sha256": "6B3E1690D8AED31D47786BAD62D62CDDAA6AA2DBD943531BEB2AE0ACA01E1390"
+    },
+    {
+      "path": "Assets/Scripts/Commands/AiChatCommand.cs",
+      "sha256": "98CE2BC65FD3CEB0C4B7E807E08C263B1B79ED11A661676253FE0ABABD5D2673"
+    },
+    {
+      "path": "Assets/Scripts/Commands/UpgradeTowerCommand.cs",
+      "sha256": "C5AB2229D1513921092BA8A9B787C6CEDFC95B81DD50BC9A7FF990AAB47B8177"
+    },
+    {
+      "path": "Assets/Scripts/Commands/TrainUnitCommand.cs",
+      "sha256": "F10BA2E0A187A55E19717F1F98A42452FF9615013832DA571B7E95A321544AAD"
+    },
+    {
+      "path": "Assets/Scripts/Commands/ConstructBuildingCommand.cs",
+      "sha256": "DD45CB81172D241C4E2AB9C42664555081A35DFCB2BFFDCA5DAB060DA779664F"
+    },
+    {
+      "path": "Assets/Scripts/Commands/StopCommand.cs",
+      "sha256": "B00EEFF997579D19FF76879FC7A26BD53D87578725133807F2050F086CFB7646"
+    },
+    {
+      "path": "Assets/Scripts/Commands/SurrenderVoteCommand.cs",
+      "sha256": "64151E0B04C583C484CBC42E36A211006B6024E674B66D09D9ECE666D858A7E7"
+    },
+    {
+      "path": "Assets/Scripts/Commands/ResearchCommand.cs",
+      "sha256": "5D20925380F4E2323EBC5A8EF6FC66060548C4CB50C8DAEFBBBDC55206248555"
+    },
+    {
+      "path": "Assets/Scripts/Commands/DeleteBuildingCommand.cs",
+      "sha256": "AEC5B98E35489193CF6F76D97A83054D55D69110702766273A0DA200A70F47E8"
+    },
+    {
+      "path": "Assets/Scripts/Network/NetworkDiagnostics.cs",
+      "sha256": "6E39FE2C5B8F131C9DCF5C89BF728F86954BAB04E9B153371840D2B5022A8937"
+    },
+    {
+      "path": "Assets/Scripts/Commands/CancelUpgradeCommand.cs",
+      "sha256": "340A649E97D991D90204B8BC6B760EAAEE77350442349404347FF56691D8B8A1"
+    },
+    {
+      "path": "Assets/Scripts/Network/CommandSerializer.cs",
+      "sha256": "1BED486A5C5C05AAF07723983C03CED07ABADDD8B579F67E637C08413EA3FE42"
+    },
+    {
+      "path": "Assets/Scripts/Commands/CheatResourceCommand.cs",
+      "sha256": "3ED0CF7D4024A4438BAB63A2DEAED1A8B7EB43E914DE63F547426FA586A0083C"
+    },
+    {
+      "path": "Assets/Scripts/Commands/PatrolCommand.cs",
+      "sha256": "E051AF023191738DDB9AD9B7D480B492DD3DD488ED4C37EED9E91F7881E2E4F3"
+    },
+    {
+      "path": "Assets/Scripts/Commands/CheatProductionCommand.cs",
+      "sha256": "3C62B604A4E53955F02BFC5684F8D6F897D0F29580351C1E3AB1B1DAF53173C1"
+    },
+    {
+      "path": "Assets/Scripts/Commands/MoveCommand.cs",
+      "sha256": "0B5B3576DFFAF5723F9A1C165ABCB8674D2693D1EB0DC26B70EAFC0D34434161"
+    },
+    {
+      "path": "Assets/Scripts/Commands/CommandBuffer.cs",
+      "sha256": "B226514893C7CB7ECA479775CB68D1EE5E1B73450679EB26096753577A9AFBBE"
+    },
+    {
+      "path": "Assets/Scripts/Commands/QueuedCommand.cs",
+      "sha256": "F47A210EB7E2365313746E41C7919267ED99F293E9251E0179E9E230E91BE043"
+    },
+    {
+      "path": "Assets/Scripts/Commands/MeteorStrikeCommand.cs",
+      "sha256": "ADC99385B0899384727A35F5B18E6BFB47CEB06BE8B624E420055100914F8BBB"
+    },
+    {
+      "path": "Assets/Scripts/Commands/GatherCommand.cs",
+      "sha256": "8EEDC3B339C2012D2CD51514DD9181113C905B8A59F853DBEC78EFC69DDB0DA7"
+    },
+    {
+      "path": "Assets/Scripts/Commands/DeleteUnitsCommand.cs",
+      "sha256": "832B80AA29651888376108FE201823297D96A82E50702FA42930B468614C23B9"
+    },
+    {
+      "path": "Assets/Scripts/Commands/GarrisonCommand.cs",
+      "sha256": "A4A87D2C6EF953D159459F0622D162579E7D6A4A6F2DE2E94FD381FD292493F6"
+    },
+    {
+      "path": "Assets/Scripts/Network/MatchmakingManager.cs",
+      "sha256": "AA4E93ED614A86771DEAA521D157A7C3B61207B31F3F918DCC1AA2599387BC1D"
+    },
+    {
+      "path": "Assets/Scripts/Commands/SetRallyPointCommand.cs",
+      "sha256": "AE27BD07DF1358475638D5D2207EC7ADD7E53E3B3C6759799E9A2482AF386DE3"
+    },
+    {
+      "path": "Assets/Scripts/Commands/TsunamiCommand.cs",
+      "sha256": "58803248D79D3A84491813D75976D334F3B736B74C1E31DF7BFD8B5106A81BD3"
+    },
+    {
+      "path": "Assets/Scripts/Commands/UngarrisonCommand.cs",
+      "sha256": "3CD971EC0B71D06118C814B0E75B6035FBC396824170F42CD4F6ED9B8154012F"
+    },
+    {
+      "path": "Assets/Scripts/Commands/CheatVisionCommand.cs",
+      "sha256": "9CB307DE71DE39EFA8664502C940308DB7F9E77701FB8AADC85F4711FF0E0F15"
+    },
+    {
+      "path": "Assets/Scripts/Commands/PlaceBuildingCommand.cs",
+      "sha256": "1393646AF0E3B1C2B1EE92E8BD8C306F1634B0BCC8FA0994D80B62E0FFAB08A2"
+    },
+    {
+      "path": "Assets/Scripts/Commands/TributeCommand.cs",
+      "sha256": "D6D13C151F2748292A98C2992901A2215D731819E4F7D23AB8E9A0C6C5B704F4"
+    },
+    {
+      "path": "Assets/Scripts/Commands/AttackBuildingCommand.cs",
+      "sha256": "40B21B1924A90CFCA034402AD8D21E94D3C252A2306DFDE340035ECD5FC0BFD8"
+    },
+    {
+      "path": "Assets/Scripts/Commands/PlaceWallCommand.cs",
+      "sha256": "BAE19B889D826765962336E8247796D3F2A579DE9005F959109BB1A6BB7D8579"
+    },
+    {
+      "path": "Assets/Scripts/Network/WebSocketClient.cs",
+      "sha256": "96515E468319F4F9707B5C019F2264D6AEEE025933D0058DE197D0927339E1C2"
+    },
+    {
+      "path": "Assets/Scripts/Network/NetworkManager.cs",
+      "sha256": "86754C8C3C16B200E288F37F9B19C25268CFFD9BE3326740649C40206621DEEF"
+    },
+    {
+      "path": "Assets/Scripts/Core/GameSimulation.cs",
+      "sha256": "4DCDB275C3FDF9D229CDDD4F8867D7B6807D6433C2DE66CFFF7653A948AB1CD4"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderPlanner.cs",
+      "sha256": "5F70E85C738FF5B6896B0BD7B6FD62C50ED8F8452AB406AAB37988AF7E9BC2C6"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderGoalManager.cs",
+      "sha256": "31B2B4554F8A6B7E2266AEAB282DF7B1E1CC784451877C879D66BD64E4899190"
+    }
+  ]
+}

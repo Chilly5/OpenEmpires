@@ -45,8 +45,6 @@ namespace OpenEmpires.Tests
                 }
             simulation.CreateBuilding(0, BuildingType.TownCenter, x + 15, z, false, true)
                 .AutoProduceVillagers = false;
-            for (int i = 0; i < 6; i++)
-                simulation.CreateBuilding(0, BuildingType.House, x + 19 + i * 3, z + 12, false);
             var enemy = simulation.MapData.BasePositions[1];
             simulation.CreateBuilding(1, BuildingType.TownCenter, enemy.x, enemy.y, false, true)
                 .AutoProduceVillagers = false;
@@ -76,6 +74,7 @@ namespace OpenEmpires.Tests
         [UnityTest]
         public IEnumerator RangedPreview_ApprovedPlanBuildsArcheryRangeAndTenArchers()
         {
+            PrebuildSixHouses();
             Gatherers(ResourceType.Food, 8, x - 22);
             Gatherers(ResourceType.Wood, 8, x - 10);
             yield return ApproveAndRun("prepare ranged reinforcements", StrategicPlanType.RangedReinforcement,
@@ -89,6 +88,7 @@ namespace OpenEmpires.Tests
         [UnityTest]
         public IEnumerator TurtlePreview_ApprovedPlanBuildsMandatoryTowersAndBothForces()
         {
+            PrebuildSixHouses();
             Gatherers(ResourceType.Food, 8, x - 22);
             Gatherers(ResourceType.Wood, 8, x - 10);
             yield return ApproveAndRun("prepare fortified defenses", StrategicPlanType.DefensiveTurtle,
@@ -105,6 +105,7 @@ namespace OpenEmpires.Tests
         [UnityTest]
         public IEnumerator FundedTowerFinishesBeforeFortifications_OnlyOneMoreTowerIsBuilt()
         {
+            PrebuildSixHouses();
             Gatherers(ResourceType.Food, 8, x - 22);
             Gatherers(ResourceType.Wood, 8, x - 10);
             BuildingData funded = simulation.CreateBuilding(0, BuildingType.Tower,
@@ -145,6 +146,7 @@ namespace OpenEmpires.Tests
         [UnityTest]
         public IEnumerator TwoFundedTowersFinishBeforeFortifications_NoThirdTowerGoalIsCreated()
         {
+            PrebuildSixHouses();
             Gatherers(ResourceType.Food, 8, x - 22);
             Gatherers(ResourceType.Wood, 8, x - 10);
             for (int i = 0; i < 2; i++)
@@ -177,6 +179,7 @@ namespace OpenEmpires.Tests
         [UnityTest]
         public IEnumerator OneFundedWorker_RangedPreparationCanFinish()
         {
+            PrebuildSixHouses();
             Gatherers(ResourceType.Wood, 1, x - 10);
             yield return ApproveAndRun("prepare ranged reinforcements", StrategicPlanType.RangedReinforcement,
                 40000, plan =>
@@ -193,6 +196,7 @@ namespace OpenEmpires.Tests
         [UnityTest]
         public IEnumerator RangedPreparation_RecoversAfterApprovedStockpilesAreSpent()
         {
+            PrebuildSixHouses();
             Gatherers(ResourceType.Food, 8, x - 22);
             Gatherers(ResourceType.Wood, 8, x - 10);
             PlayerResources resources = simulation.ResourceManager.GetPlayerResources(0);
@@ -209,8 +213,39 @@ namespace OpenEmpires.Tests
         }
 
         [UnityTest]
+        public IEnumerator AtCurrentCap_ApprovedRangedPlanBuildsHouseThenTrainsAndReleasesReservations()
+        {
+            Gatherers(ResourceType.Food, 5, x - 22);
+            Gatherers(ResourceType.Wood, 5, x - 10);
+            Assert.That(simulation.GetPopulation(0), Is.EqualTo(10));
+            Assert.That(simulation.GetPopulationCap(0), Is.EqualTo(10));
+            Assert.That(simulation.BuildingRegistry.GetAllBuildings()
+                .Count(value => value.PlayerId == 0 && value.Type == BuildingType.House), Is.Zero);
+
+            bool sawHouseFoundation = false;
+            bool sawArcherTrainingAfterHouse = false;
+            yield return ApproveAndRun("prepare ranged reinforcements",
+                StrategicPlanType.RangedReinforcement, 40000, plan =>
+                {
+                    Assert.That(sawHouseFoundation, Is.True, "A House must be placed and constructed dynamically.");
+                    Assert.That(sawArcherTrainingAfterHouse, Is.True, "Archer training must resume after housing.");
+                    Assert.That(Completed(BuildingType.House), Is.GreaterThanOrEqualTo(1));
+                    Assert.That(Completed(BuildingType.ArcheryRange), Is.GreaterThanOrEqualTo(1));
+                    Assert.That(Count(CommanderIntentCatalog.ArcherUnitType), Is.GreaterThanOrEqualTo(10));
+                }, observeTick: plan =>
+                {
+                    sawHouseFoundation |= simulation.BuildingRegistry.GetAllBuildings().Any(value =>
+                        value.PlayerId == 0 && value.Type == BuildingType.House && value.IsUnderConstruction);
+                    sawArcherTrainingAfterHouse |= Completed(BuildingType.House) > 0
+                        && simulation.BuildingRegistry.GetAllBuildings().Any(value =>
+                            value.PlayerId == 0 && value.TrainingQueue.Contains(CommanderIntentCatalog.ArcherUnitType));
+                });
+        }
+
+        [UnityTest]
         public IEnumerator BelowAgeTurtle_IsRejectedBeforeTowersCanBeSkipped()
         {
+            PrebuildSixHouses();
             Gatherers(ResourceType.Food, 8, x - 22);
             Gatherers(ResourceType.Wood, 8, x - 10);
             SetAge(1);
@@ -227,6 +262,7 @@ namespace OpenEmpires.Tests
         [UnityTest]
         public IEnumerator RangedConfirmation_UsesPlayerCommandOnceAndCannotReplaceDirectPlan()
         {
+            PrebuildSixHouses();
             Gatherers(ResourceType.Food, 8, x - 22);
             Gatherers(ResourceType.Wood, 8, x - 10);
             yield return ConfirmationAndDirectProtection("prepare ranged reinforcements",
@@ -236,6 +272,7 @@ namespace OpenEmpires.Tests
         [UnityTest]
         public IEnumerator TurtleConfirmation_UsesPlayerCommandOnceAndCannotReplaceDirectPlan()
         {
+            PrebuildSixHouses();
             Gatherers(ResourceType.Food, 8, x - 22);
             Gatherers(ResourceType.Wood, 8, x - 10);
             yield return ConfirmationAndDirectProtection("prepare fortified defenses",
@@ -275,7 +312,8 @@ namespace OpenEmpires.Tests
         private IEnumerator ApproveAndRun(string phrase, StrategicPlanType expectedType,
             int tickBound, Action<StrategicPlan> verify,
             Action<StrategicPlan> verifyFortifications = null,
-            Action<StrategicPlan> afterApproval = null)
+            Action<StrategicPlan> afterApproval = null,
+            Action<StrategicPlan> observeTick = null)
         {
             int initialTowers = Completed(BuildingType.Tower);
             int initialArchers = Count(CommanderIntentCatalog.ArcherUnitType);
@@ -308,6 +346,7 @@ namespace OpenEmpires.Tests
                 planner.Tick(simulation.CurrentTick);
                 goals.Tick(simulation.CurrentTick);
                 simulation.Tick();
+                observeTick?.Invoke(submission.Plan);
                 if (!checkedFortifications && verifyFortifications != null
                     && submission.Plan.CurrentMilestone?.Name == "Fortifications")
                 {
@@ -328,6 +367,11 @@ namespace OpenEmpires.Tests
 
         private Button ApproveButton() => chat.GetComponentsInChildren<Button>(true)
             .Single(value => value.name == "Approve strategy");
+        private void PrebuildSixHouses()
+        {
+            for (int i = 0; i < 6; i++)
+                simulation.CreateBuilding(0, BuildingType.House, x + 19 + i * 3, z + 12, false);
+        }
         private int Count(int type) => simulation.UnitRegistry.GetAllUnits()
             .Count(value => value.PlayerId == 0 && value.CurrentHealth > 0 && value.UnitType == type);
         private int Completed(BuildingType type) => simulation.BuildingRegistry.GetAllBuildings()

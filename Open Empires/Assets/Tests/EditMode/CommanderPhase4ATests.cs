@@ -89,6 +89,48 @@ namespace OpenEmpires.Tests
         }
 
         [Test]
+        public async Task OpenRouterProvider_TranslatesTacticalJsonWithoutExposingKeyOrExecuting()
+        {
+            const string intent = "{\"intentCategory\":\"Tactical\",\"intentType\":\"EnsureUnitCount\",\"parameters\":{\"unit\":\"Archer\",\"count\":5}}";
+            string response = JsonUtility.ToJson(new CompletionResponse
+            {
+                choices = new[] { new CompletionChoice { message = new ChatMessage { content = intent } } }
+            });
+            var transport = new FakeTransport(new CommanderHttpResponse(200, response));
+            var provider = new OpenRouterCommanderProvider("test-only-key", transport);
+
+            CommanderAIProviderResult result = await provider.TranslateAsync(
+                Request("make 5 archers"), CancellationToken.None);
+
+            Assert.That(result.Success, Is.True, result.FailureReason);
+            Assert.That(result.IntentDto.unit, Is.EqualTo("Archer"));
+            Assert.That(result.IntentDto.amount, Is.EqualTo(5));
+            Assert.That(transport.RequestedUris.Single().AbsoluteUri,
+                Is.EqualTo("https://openrouter.ai/api/v1/chat/completions"));
+            Assert.That(transport.Headers.Single()["Authorization"], Is.EqualTo("Bearer test-only-key"));
+            Assert.That(transport.RequestBodies.Single(), Does.Not.Contain("test-only-key"));
+            ChatBody body = JsonUtility.FromJson<ChatBody>(transport.RequestBodies.Single());
+            Assert.That(body.model, Is.EqualTo("openai/gpt-6-luna"));
+            Assert.That(body.max_tokens, Is.LessThanOrEqualTo(256));
+            Assert.That(body.messages[0].role, Is.EqualTo("system"));
+            Assert.That(body.messages[1].role, Is.EqualTo("user"));
+            Assert.That(goalManager.Goals, Is.Empty);
+            Assert.That(simulation.CommandBuffer.FlushCommands(), Is.Empty);
+        }
+
+        [Test]
+        public async Task OpenRouterProvider_HttpErrorDoesNotLeakResponseOrKey()
+        {
+            var transport = new FakeTransport(new CommanderHttpResponse(401,
+                "test-only-key secret upstream detail"));
+            var result = await new OpenRouterCommanderProvider("test-only-key", transport)
+                .TranslateAsync(Request("make 5 archers"), CancellationToken.None);
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.FailureReason, Does.Not.Contain("test-only-key"));
+            Assert.That(result.AIResponseText, Does.Not.Contain("secret upstream"));
+        }
+
+        [Test]
         public void InvalidLLMJson_IsRejectedSafely()
         {
             CommanderAIProviderResult result = CommanderAIJson.ParseTacticalIntent(
@@ -226,6 +268,7 @@ namespace OpenEmpires.Tests
             public readonly List<Uri> RequestedUris = new List<Uri>();
             public readonly List<IReadOnlyDictionary<string, string>> Headers =
                 new List<IReadOnlyDictionary<string, string>>();
+            public readonly List<string> RequestBodies = new List<string>();
 
             public FakeTransport(params CommanderHttpResponse[] values)
             {
@@ -238,8 +281,14 @@ namespace OpenEmpires.Tests
             {
                 RequestedUris.Add(uri);
                 Headers.Add(new Dictionary<string, string>(headers));
+                RequestBodies.Add(json);
                 return Task.FromResult(responses.Dequeue());
             }
         }
+
+        [Serializable] private sealed class ChatMessage { public string role; public string content; }
+        [Serializable] private sealed class ChatBody { public string model; public int max_tokens; public ChatMessage[] messages; }
+        [Serializable] private sealed class CompletionChoice { public ChatMessage message; }
+        [Serializable] private sealed class CompletionResponse { public CompletionChoice[] choices; }
     }
 }

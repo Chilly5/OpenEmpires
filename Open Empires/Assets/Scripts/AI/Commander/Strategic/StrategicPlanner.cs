@@ -36,6 +36,10 @@ namespace OpenEmpires
         private readonly Dictionary<int, StrategicIntent> intentsByPlanId =
             new Dictionary<int, StrategicIntent>();
         private readonly Dictionary<int, ChildGoalLink> childGoalLinks = new Dictionary<int, ChildGoalLink>();
+        private readonly Dictionary<int, CommanderGoalEvent> deferredTerminalGoalEvents =
+            new Dictionary<int, CommanderGoalEvent>();
+        private readonly HashSet<StrategicPlan> preflightedRevisionCascades =
+            new HashSet<StrategicPlan>();
         private int nextPlanId = 1;
         public StrategicIntentIdProvider IntentIds { get; } = new StrategicIntentIdProvider();
         private int lastResourceRetryTick = -1;
@@ -192,7 +196,9 @@ namespace OpenEmpires
                 StrategicPlan conflicting = conflictingPlans[i];
                 if (isPlayerOverride || (isEmergency && conflicting.Authority < StrategicPlanAuthority.Emergency))
                 {
-                    CancelPlan(conflicting.StrategicPlanId);
+                    if (!CancelPlan(conflicting.StrategicPlanId))
+                        return RejectIntent(intent, StrategicIntentValidationError.CommitmentBlocked,
+                            "The conflicting plan could not be cancelled safely.");
                 }
             }
 
@@ -221,6 +227,7 @@ namespace OpenEmpires
             FitEconomyToAvailableWorkers(plan);
             plan.StrategicPlanId = nextPlanId++;
             plan.CreatedTick = goalManager.CurrentTick;
+            plan.InitializeRevision();
             plans.Add(plan);
             activePlans.Add(plan);
             intentsByPlanId.Add(plan.StrategicPlanId, intent);
@@ -279,13 +286,16 @@ namespace OpenEmpires
             ThrowIfDisposed();
             StrategicPlan plan = GetPlan(strategicPlanId);
             if (plan == null || plan.IsTerminal) return false;
+            if (!CanAdvanceRevision(plan, 1L + CountActiveReservations(plan))) return false;
             plan.Status = StrategicPlanStatus.Cancelled;
+            plan.AdvanceRevision();
             plan.OutcomeMessage = plan.CancellationMessage;
             activePlans.Remove(plan);
             ArchivePlan(plan);
             SkipUnfinishedMilestones(plan);
             CancelOwnedNonTerminalGoals(plan);
             reservationManager.ReleasePlanReservations(plan.StrategicPlanId, cancelled: true);
+            ClearDeferredTerminalEvents(plan);
             Debug.Log($"[StrategicPlanner] Plan #{plan.StrategicPlanId} cancelled.");
             PublishPlanStatus(plan);
             ResponseGenerated?.Invoke(plan, plan.OutcomeMessage);
@@ -301,6 +311,8 @@ namespace OpenEmpires
             reservationManager.ReservationCreated -= HandleReservationCreated;
             reservationManager.ReservationReleased -= HandleReservationReleased;
             reservationManager.ReservationConflictDetected -= HandleReservationConflict;
+            deferredTerminalGoalEvents.Clear();
+            preflightedRevisionCascades.Clear();
             StrategicIntentCreated = null;
             StrategicIntentStatusChanged = null;
             StrategicIntentRejected = null;
@@ -335,7 +347,8 @@ namespace OpenEmpires
             for (int i = 0; i < waiting.Count; i++)
             {
                 StrategicPlan plan = waiting[i];
-                if (!plan.IsTerminal && plan.CurrentMilestone != null)
+                if (!plan.IsTerminal && plan.Status != StrategicPlanStatus.Paused
+                    && plan.CurrentMilestone != null)
                     StartOrWaitForMilestone(plan, plan.CurrentMilestone);
             }
         }
@@ -389,29 +402,49 @@ namespace OpenEmpires
         public bool UpdateReservationAmount(int reservationId, int newAmount)
         {
             ThrowIfDisposed();
-            return reservationManager.UpdateReservationAmount(reservationId, newAmount);
+            for (int i = 0; i < reservationManager.Reservations.Count; i++)
+            {
+                StrategicResourceReservation reservation = reservationManager.Reservations[i];
+                if (reservation.ReservationId != reservationId) continue;
+                StrategicPlan plan = GetPlan(reservation.PlanId);
+                if (plan == null || plan.Status == StrategicPlanStatus.Paused
+                    || !CanAdvanceRevision(plan, 1)) return false;
+                bool updated = reservationManager.UpdateReservationAmount(reservationId, newAmount);
+                if (updated && newAmount > 0) plan.AdvanceRevision();
+                return updated;
+            }
+            return false;
         }
 
         public bool ReleaseReservation(int reservationId, bool cancelled = false)
         {
             ThrowIfDisposed();
-            return reservationManager.ReleaseReservation(reservationId, cancelled);
+            for (int i = 0; i < reservationManager.Reservations.Count; i++)
+            {
+                StrategicResourceReservation reservation = reservationManager.Reservations[i];
+                if (reservation.ReservationId != reservationId) continue;
+                StrategicPlan plan = GetPlan(reservation.PlanId);
+                return plan != null && plan.Status != StrategicPlanStatus.Paused
+                    && CanAdvanceRevision(plan, 1)
+                    && reservationManager.ReleaseReservation(reservationId, cancelled);
+            }
+            return false;
         }
 
         public bool CompleteMilestoneAndAdvance(int strategicPlanId)
         {
             ThrowIfDisposed();
             StrategicPlan plan = GetPlan(strategicPlanId);
-            if (plan == null || plan.IsTerminal)
+            if (plan == null || plan.IsTerminal || plan.Status == StrategicPlanStatus.Paused)
                 return false;
             if (plan.CurrentMilestone == null) return false;
-            CompleteMilestoneAndAdvance(plan, plan.CurrentMilestone);
-            return true;
+            return CompleteMilestoneAndAdvance(plan, plan.CurrentMilestone);
         }
 
         private void CreateGoalsForMilestone(StrategicPlan plan, StrategicMilestone milestone,
             bool economyOnly = false)
         {
+            if (plan.Status == StrategicPlanStatus.Paused) return;
             if (milestone.TacticalGoalsStarted) return;
             if (!economyOnly) milestone.MarkTacticalGoalsStarted();
             if (milestone.TacticalGoals.Count == 0)
@@ -443,7 +476,7 @@ namespace OpenEmpires
         private bool SubmitTrackedGoal(StrategicPlan plan, StrategicMilestone milestone,
             Func<CommanderGoal> submit)
         {
-            if (plan.IsTerminal) return false;
+            if (plan.IsTerminal || plan.Status == StrategicPlanStatus.Paused) return false;
             submittingPlan = plan;
             submittingMilestone = milestone;
             try
@@ -474,15 +507,42 @@ namespace OpenEmpires
 
             ChildGoalEventObserved?.Invoke(link.Plan, goalEvent);
             if (link.Plan.IsTerminal) return;
+            if (link.Plan.Status == StrategicPlanStatus.Paused)
+            {
+                if (goalEvent.Goal.IsTerminal)
+                    deferredTerminalGoalEvents[goalId] = goalEvent;
+                return;
+            }
+            ProcessChildGoalEvent(goalEvent, link);
+        }
+
+        private void ProcessChildGoalEvent(CommanderGoalEvent goalEvent, ChildGoalLink link)
+        {
+            int goalId = goalEvent.Goal.GoalId;
+            long revisions = goalEvent.EventType switch
+            {
+                CommanderGoalEventType.GoalProgressChanged => 1,
+                CommanderGoalEventType.GoalBlocked => 1,
+                CommanderGoalEventType.GoalCompleted => RemainingCascadeRevisionBudget(link.Plan),
+                CommanderGoalEventType.GoalFailed => 1L + CountActiveReservations(link.Plan),
+                CommanderGoalEventType.GoalCancelled => 1L + CountActiveReservations(link.Plan),
+                _ => 0
+            };
+            if (!TryEnterRevisionCascade(link.Plan, revisions, out bool ownsCascade)) return;
+            try
+            {
             switch (goalEvent.EventType)
             {
                 case CommanderGoalEventType.GoalStarted:
+                    break;
                 case CommanderGoalEventType.GoalProgressChanged:
                 case CommanderGoalEventType.GoalBlocked:
                     // These events are observable but do not advance a milestone.
+                    link.Plan.AdvanceRevision();
                     break;
                 case CommanderGoalEventType.GoalCompleted:
                     link.Milestone.MarkChildGoalCompleted(goalId);
+                    link.Plan.AdvanceRevision();
                     if (link.Milestone.Status == StrategicMilestoneStatus.Active
                         && link.Milestone.IsSatisfied)
                         CompleteMilestoneAndAdvance(link.Plan, link.Milestone);
@@ -496,13 +556,94 @@ namespace OpenEmpires
                         $"Tactical goal #{goalId} was cancelled before the milestone completed.");
                     break;
             }
-            if (goalEvent.Goal.IsTerminal) childGoalLinks.Remove(goalId);
+            if (goalEvent.Goal.IsTerminal)
+            {
+                childGoalLinks.Remove(goalId);
+                deferredTerminalGoalEvents.Remove(goalId);
+            }
+            }
+            finally { ExitRevisionCascade(link.Plan, ownsCascade); }
         }
 
-        private void CompleteMilestoneAndAdvance(StrategicPlan plan, StrategicMilestone milestone)
+        private void ReconcileDeferredTerminalGoals(StrategicPlan plan)
         {
-            if (plan.IsTerminal || milestone.Status != StrategicMilestoneStatus.Active) return;
+            for (int i = 0; i < plan.ChildGoalIds.Count && !plan.IsTerminal; i++)
+            {
+                int goalId = plan.ChildGoalIds[i];
+                if (!deferredTerminalGoalEvents.TryGetValue(goalId, out CommanderGoalEvent goalEvent)
+                    || !childGoalLinks.TryGetValue(goalId, out ChildGoalLink link)) continue;
+                deferredTerminalGoalEvents.Remove(goalId);
+                ProcessChildGoalEvent(goalEvent, link);
+            }
+        }
+
+        private void ClearDeferredTerminalEvents(StrategicPlan plan)
+        {
+            for (int i = 0; i < plan.ChildGoalIds.Count; i++)
+                deferredTerminalGoalEvents.Remove(plan.ChildGoalIds[i]);
+        }
+
+        private int CountActiveReservations(StrategicPlan plan)
+        {
+            int count = 0;
+            for (int i = 0; i < reservationManager.Reservations.Count; i++)
+                if (reservationManager.Reservations[i].PlanId == plan.StrategicPlanId)
+                    count++;
+            return count;
+        }
+
+        private static bool CanAdvanceRevision(StrategicPlan plan, long additional)
+        {
+            return additional >= 0 && (long)plan.Revision + additional <= int.MaxValue;
+        }
+
+        private bool TryEnterRevisionCascade(StrategicPlan plan, long budget, out bool ownsCascade)
+        {
+            ownsCascade = false;
+            if (preflightedRevisionCascades.Contains(plan)) return true;
+            if (!CanAdvanceRevision(plan, budget)) return false;
+            preflightedRevisionCascades.Add(plan);
+            ownsCascade = true;
+            return true;
+        }
+
+        private void ExitRevisionCascade(StrategicPlan plan, bool ownsCascade)
+        {
+            if (ownsCascade) preflightedRevisionCascades.Remove(plan);
+        }
+
+        private long RemainingCascadeRevisionBudget(StrategicPlan plan)
+        {
+            long budget = 2L + CountActiveReservations(plan) + plan.ChildGoalIds.Count * 2L;
+            int first = plan.CurrentMilestone?.OrderIndex ?? 0;
+            for (int i = first; i < plan.Milestones.Count; i++)
+            {
+                StrategicMilestone milestone = plan.Milestones[i];
+                // Includes status transitions, reservation creation/release, goal tracking,
+                // and synchronous completion/failure through later milestones.
+                budget += 32L + milestone.TacticalGoals.Count * 8L
+                    + milestone.RequiredResources.Count * 8L;
+            }
+            return budget;
+        }
+
+        // A terminal child may complete its milestone and synchronously start later ones.
+        // Reserve a conservative bound for that whole resume-time cascade before moving anchors.
+        private bool CanReconcileOnResume(StrategicPlan plan)
+        {
+            return CanAdvanceRevision(plan, RemainingCascadeRevisionBudget(plan));
+        }
+
+        private bool CompleteMilestoneAndAdvance(StrategicPlan plan, StrategicMilestone milestone)
+        {
+            if (plan.IsTerminal || plan.Status == StrategicPlanStatus.Paused
+                || milestone.Status != StrategicMilestoneStatus.Active) return false;
+            if (!TryEnterRevisionCascade(plan, RemainingCascadeRevisionBudget(plan),
+                out bool ownsCascade)) return false;
+            try
+            {
             milestone.SetStatus(StrategicMilestoneStatus.Completed);
+            plan.AdvanceRevision();
             Debug.Log($"[StrategicPlanner] Plan #{plan.StrategicPlanId} milestone completed: {milestone.Name}.");
             MilestoneStatusChanged?.Invoke(plan, milestone);
 
@@ -516,20 +657,29 @@ namespace OpenEmpires
             if (next == null)
             {
                 CompletePlan(plan);
-                return;
+                return true;
             }
 
             StartOrWaitForMilestone(plan, next);
+            return true;
+            }
+            finally { ExitRevisionCascade(plan, ownsCascade); }
         }
 
         private void StartOrWaitForMilestone(StrategicPlan plan, StrategicMilestone milestone)
         {
-            if (plan == null || milestone == null || plan.IsTerminal) return;
+            if (plan == null || milestone == null || plan.IsTerminal
+                || plan.Status == StrategicPlanStatus.Paused) return;
+            if (!TryEnterRevisionCascade(plan, RemainingCascadeRevisionBudget(plan),
+                out bool ownsCascade)) return;
+            try
+            {
             if (plan is EconomicExpansionPlan && goalManager.Simulation.GetPlayerAge(PlayerId)
                 < LandmarkDefinitions.GetBuildingRequiredAge(BuildingType.TownCenter))
             {
                 bool changed = milestone.Status != StrategicMilestoneStatus.WaitingForPrerequisite;
                 milestone.SetStatus(StrategicMilestoneStatus.WaitingForPrerequisite);
+                if (changed) plan.AdvanceRevision();
                 plan.OutcomeMessage = $"TownCenter requires age {LandmarkDefinitions.GetBuildingRequiredAge(BuildingType.TownCenter)}. Advance age to resume economic expansion.";
                 if (changed) MilestoneStatusChanged?.Invoke(plan, milestone);
                 return;
@@ -546,6 +696,7 @@ namespace OpenEmpires
                     bool changed = milestone.Status
                         != StrategicMilestoneStatus.WaitingForResources;
                     milestone.SetStatus(StrategicMilestoneStatus.WaitingForResources);
+                    if (changed) plan.AdvanceRevision();
                     plan.OutcomeMessage = conflict.ToString();
                     if (changed)
                     {
@@ -567,7 +718,9 @@ namespace OpenEmpires
                     milestone.AddResourceReservation(created[r].ReservationId);
             }
 
+            bool activated = milestone.Status != StrategicMilestoneStatus.Active;
             milestone.SetStatus(StrategicMilestoneStatus.Active);
+            if (activated) plan.AdvanceRevision();
             plan.OutcomeMessage = string.Empty;
             Debug.Log($"[StrategicPlanner] Plan #{plan.StrategicPlanId} milestone active: {milestone.Name}.");
             MilestoneStatusChanged?.Invoke(plan, milestone);
@@ -575,6 +728,8 @@ namespace OpenEmpires
             if (!plan.IsTerminal && milestone.Status == StrategicMilestoneStatus.Active
                 && milestone.IsSatisfied && milestone.TacticalGoalsStarted)
                 CompleteMilestoneAndAdvance(plan, milestone);
+            }
+            finally { ExitRevisionCascade(plan, ownsCascade); }
         }
 
         private bool ShouldSkipRequest(StrategicTacticalGoalRequest request)
@@ -729,58 +884,95 @@ namespace OpenEmpires
 
         private void CompletePlan(StrategicPlan plan)
         {
+            if (!TryEnterRevisionCascade(plan, 1L + CountActiveReservations(plan),
+                out bool ownsCascade)) return;
+            try
+            {
             plan.Status = StrategicPlanStatus.Completed;
+            plan.AdvanceRevision();
             plan.OutcomeMessage = plan.CompletionMessage;
             activePlans.Remove(plan);
             ArchivePlan(plan);
             reservationManager.ReleasePlanReservations(plan.StrategicPlanId, cancelled: false);
+            ClearDeferredTerminalEvents(plan);
             Debug.Log($"[StrategicPlanner] Plan #{plan.StrategicPlanId} completed. {plan.OutcomeMessage}");
             PublishPlanStatus(plan);
             ResponseGenerated?.Invoke(plan, plan.OutcomeMessage);
+            }
+            finally { ExitRevisionCascade(plan, ownsCascade); }
         }
 
         private void FailPlan(StrategicPlan plan, StrategicMilestone milestone, string reason)
         {
             if (plan.IsTerminal) return;
+            if (!TryEnterRevisionCascade(plan, 1L + CountActiveReservations(plan),
+                out bool ownsCascade)) return;
+            try
+            {
             if (milestone != null && milestone.Status != StrategicMilestoneStatus.Completed)
             {
                 milestone.SetStatus(StrategicMilestoneStatus.Failed);
                 MilestoneStatusChanged?.Invoke(plan, milestone);
             }
             plan.Status = StrategicPlanStatus.Failed;
+            plan.AdvanceRevision();
             plan.OutcomeMessage = reason ?? "The strategic plan failed.";
             activePlans.Remove(plan);
             ArchivePlan(plan);
             SkipPendingMilestones(plan);
             CancelOwnedNonTerminalGoals(plan);
             reservationManager.ReleasePlanReservations(plan.StrategicPlanId, cancelled: false);
+            ClearDeferredTerminalEvents(plan);
             Debug.LogWarning($"[StrategicPlanner] Plan #{plan.StrategicPlanId} failed: {plan.OutcomeMessage}");
             PublishPlanStatus(plan);
             ResponseGenerated?.Invoke(plan, plan.OutcomeMessage);
+            }
+            finally { ExitRevisionCascade(plan, ownsCascade); }
         }
 
         private void TrackChildGoal(StrategicPlan plan, StrategicMilestone milestone, int goalId)
         {
             if (plan == null || milestone == null || childGoalLinks.ContainsKey(goalId)) return;
+            if (!TryEnterRevisionCascade(plan, 1, out bool ownsCascade)) return;
+            try
+            {
             childGoalLinks.Add(goalId, new ChildGoalLink(plan, milestone));
             plan.AddChildGoal(goalId);
+            plan.AdvanceRevision();
             milestone.AddRequiredChildGoal(goalId);
+            }
+            finally { ExitRevisionCascade(plan, ownsCascade); }
         }
 
         private void HandleReservationCreated(StrategicResourceReservation reservation)
         {
             StrategicPlan plan = GetPlan(reservation.PlanId);
+            bool ownsCascade = false;
+            if (plan != null && !TryEnterRevisionCascade(plan, 1, out ownsCascade)) return;
+            try
+            {
             plan?.AddResourceReservation(reservation.ReservationId);
+            plan?.AdvanceRevision();
             Debug.Log($"[StrategicPlanner] Reservation #{reservation.ReservationId} created for "
                 + $"plan #{reservation.PlanId}: {reservation.Amount} {reservation.ResourceType}.");
             ReservationCreated?.Invoke(reservation);
+            }
+            finally { if (plan != null) ExitRevisionCascade(plan, ownsCascade); }
         }
 
         private void HandleReservationReleased(StrategicResourceReservation reservation)
         {
+            StrategicPlan plan = GetPlan(reservation.PlanId);
+            bool ownsCascade = false;
+            if (plan != null && !TryEnterRevisionCascade(plan, 1, out ownsCascade)) return;
+            try
+            {
+            plan?.AdvanceRevision();
             Debug.Log($"[StrategicPlanner] Reservation #{reservation.ReservationId} "
                 + $"{reservation.Status.ToString().ToLowerInvariant()} for plan #{reservation.PlanId}.");
             ReservationReleased?.Invoke(reservation);
+            }
+            finally { if (plan != null) ExitRevisionCascade(plan, ownsCascade); }
         }
 
         private void HandleReservationConflict(StrategicReservationConflict conflict)

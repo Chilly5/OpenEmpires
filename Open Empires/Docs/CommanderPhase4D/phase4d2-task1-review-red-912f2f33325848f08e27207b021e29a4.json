@@ -1,0 +1,48 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "912f2f33325848f08e27207b021e29a4",
+      "status": "failed",
+      "mode": "EditMode",
+      "started_unix_ms": 1790268298067,
+      "finished_unix_ms": 1790268307384,
+      "last_update_unix_ms": 1790268307384,
+      "progress": {
+        "completed": 35,
+        "total": 35,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1790268307109,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4D2Tests.UnresolvedRequirement_IsUnknownNotZero",
+        "last_finished_unix_ms": 1790268307353,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4D2Tests.LiveStatusCounts_IncludeChildrenBeyondDetailLimitAndInvalidStatus",
+            "message": "System.InvalidOperationException : Sequence contains no matching element"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4D2Tests.MilestoneName_IsDeterministicallyBounded",
+            "message": "  Expected: less than or equal to 96\r\n  But was:  500\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4D2Tests.OwnReservation_DoesNotCreateMilestoneDeficit",
+            "message": "  Own reserved stock remains usable by this plan; another plan's 50 is excluded.\r\n  Expected: 0\r\n  But was:  300\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4D2Tests.SatisfiedUnitTarget_OverCapQueueDoesNotInventPopulationWait",
+            "message": "  Expected: not equal to WaitingForPopulation\r\n  But was:  WaitingForPopulation\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

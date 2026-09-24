@@ -17,6 +17,7 @@ namespace OpenEmpires
         private bool TryHandleExplanationQuery(string message)
         {
             string normalized = NormalizeExplanationWholeForm(message);
+            if (TryHandlePlanHealthQuery(message, normalized)) return true;
             CommanderExplanationQuery query;
             switch (normalized)
             {

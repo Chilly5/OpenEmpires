@@ -219,10 +219,12 @@ namespace OpenEmpires
     {
         public static ICommanderAIProvider CreateDefault()
         {
-            string preference = Environment.GetEnvironmentVariable(
-                "OPENEMPIRES_COMMANDER_PROVIDER");
+            string preference = OpenRouterCommanderProvider.ReadSetting(
+                OpenRouterCommanderProvider.ProviderEnvironmentVariable);
             if (string.Equals(preference, "mock", StringComparison.OrdinalIgnoreCase))
                 return new MockAIProvider();
+            if (string.Equals(preference, "openrouter", StringComparison.OrdinalIgnoreCase))
+                return new OpenRouterCommanderProvider();
 
             string key = DotEnvLoader.Get(GeminiAIProvider.KeyEnvironmentVariable);
             if (!string.IsNullOrWhiteSpace(key))

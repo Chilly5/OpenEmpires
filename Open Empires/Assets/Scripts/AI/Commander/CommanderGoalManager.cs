@@ -18,6 +18,7 @@ namespace OpenEmpires
         private readonly List<CommanderGoal> goals = new List<CommanderGoal>();
         private readonly List<CommanderGoal> activeGoals = new List<CommanderGoal>();
         private readonly List<CommanderGoal> archivedGoals = new List<CommanderGoal>();
+        private readonly HashSet<int> suspendedGoalIds = new HashSet<int>();
         private int nextGoalId = 1;
         private int lastEvaluatedTick = -1;
         private bool isTicking;
@@ -40,6 +41,54 @@ namespace OpenEmpires
             for (int i = 0; i < goals.Count; i++) if (goals[i].GoalId == goalId) return goals[i];
             return null;
         }
+
+        // Called only with child IDs selected by StrategicPlanner, never from player text.
+        internal void SuspendGoal(int goalId)
+        {
+            CommanderGoal goal = GetGoal(goalId);
+            if (goal == null || goal.IsTerminal) return;
+            suspendedGoalIds.Add(goalId);
+            if (ActiveGoal == goal) ActiveGoal = null;
+        }
+
+        internal bool CanResumeGoal(int goalId, int pausedTicks)
+        {
+            CommanderGoal goal = GetGoal(goalId);
+            if (pausedTicks < 0 || goal == null || goal.IsTerminal || !suspendedGoalIds.Contains(goalId))
+                return pausedTicks >= 0;
+            return CanShift(goal.CreatedTick, pausedTicks)
+                && (goal.BlockedSinceTick < 0 || CanShift(goal.BlockedSinceTick, pausedTicks))
+                && (goal.BlockedSinceTick < 0 || CanShift(goal.NextBlockedRetryTick, pausedTicks))
+                && (goal.LastEconomyCommandTick == int.MinValue / 2
+                    || CanShift(goal.LastEconomyCommandTick, pausedTicks))
+                && (goal.ObservedConstructionBuildingId < 0
+                    || CanShift(goal.LastConstructionProgressTick, pausedTicks))
+                && (goal.LastConstructionRecoveryTick == int.MinValue / 2
+                    || CanShift(goal.LastConstructionRecoveryTick, pausedTicks));
+        }
+
+        internal void ResumeGoal(int goalId, int pausedTicks)
+        {
+            CommanderGoal goal = GetGoal(goalId);
+            if (goal == null || goal.IsTerminal || !suspendedGoalIds.Contains(goalId)) return;
+            if (!CanResumeGoal(goalId, pausedTicks))
+                throw new InvalidOperationException("A suspended goal tick anchor cannot be shifted safely.");
+            goal.CreatedTick = checked(goal.CreatedTick + pausedTicks);
+            if (goal.BlockedSinceTick >= 0)
+            {
+                goal.BlockedSinceTick = checked(goal.BlockedSinceTick + pausedTicks);
+                goal.NextBlockedRetryTick = checked(goal.NextBlockedRetryTick + pausedTicks);
+            }
+            if (goal.LastEconomyCommandTick != int.MinValue / 2)
+                goal.LastEconomyCommandTick = checked(goal.LastEconomyCommandTick + pausedTicks);
+            if (goal.ObservedConstructionBuildingId >= 0)
+                goal.LastConstructionProgressTick = checked(goal.LastConstructionProgressTick + pausedTicks);
+            if (goal.LastConstructionRecoveryTick != int.MinValue / 2)
+                goal.LastConstructionRecoveryTick = checked(goal.LastConstructionRecoveryTick + pausedTicks);
+            suspendedGoalIds.Remove(goalId);
+        }
+
+        private static bool CanShift(int anchor, int delta) => (long)anchor + delta <= int.MaxValue;
 
         public CommanderWorkerReservation? GetWorkerReservation(int workerId) => workerAuthority.GetReservation(workerId);
 
@@ -145,6 +194,7 @@ namespace OpenEmpires
             {
                 CommanderGoal goal = goals[i];
                 if (goal.GoalId != goalId || goal.IsTerminal) continue;
+                suspendedGoalIds.Remove(goalId);
                 goal.SetStatus(CommanderGoalStatus.Cancelled, "Cancelled by the owning player.");
                 workerAuthority.ReleaseGoal(goal.GoalId);
                 ArchiveGoal(goal);
@@ -174,7 +224,8 @@ namespace OpenEmpires
                 for (int i = 0; i < activeGoals.Count; i++)
                 {
                     CommanderGoal goal = activeGoals[i];
-                    if (!goal.IsTerminal && goal.MaxDurationTicks > 0
+                    if (!goal.IsTerminal && !suspendedGoalIds.Contains(goal.GoalId)
+                        && goal.MaxDurationTicks > 0
                         && currentTick - goal.CreatedTick >= goal.MaxDurationTicks)
                         FailGoal(goal, $"Goal exceeded its {goal.MaxDurationTicks}-tick duration limit.", currentTick);
                 }
@@ -185,7 +236,8 @@ namespace OpenEmpires
                 for (int i = 0; i < activeGoals.Count; i++)
                 {
                     CommanderGoal goal = activeGoals[i];
-                    if (goal.IsTerminal || (goal.Status == CommanderGoalStatus.Blocked
+                    if (goal.IsTerminal || suspendedGoalIds.Contains(goal.GoalId)
+                        || (goal.Status == CommanderGoalStatus.Blocked
                         && currentTick < goal.NextBlockedRetryTick)) continue;
                     CommanderPlan plan = planner.Plan(goal, currentTick);
                     if (plan.Command != null && !workerAuthority.TryReserveCommand(goal, plan.Command, currentTick))
@@ -286,6 +338,7 @@ namespace OpenEmpires
             simulation.CommandBuffer.CommandEnqueued -= HandleCommandEnqueued;
             for (int i = 0; i < activeGoals.Count; i++)
                 workerAuthority.ReleaseGoal(activeGoals[i].GoalId);
+            suspendedGoalIds.Clear();
             GoalStatusChanged = null;
             GoalEventPublished = null;
         }
