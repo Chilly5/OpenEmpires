@@ -76,7 +76,7 @@
 
 **Interfaces:**
 - Consumes `ICommanderSemanticProvider` when the initialized provider implements it; otherwise preserves legacy route for existing mocks/tests until the final migration gate.
-- Produces `CommanderSemanticAdmission.TryCreateTacticalIntent(CommanderSemanticNode node, CommanderContext context, out CommanderIntent intent, out string safeReason) : bool`. It builds a game-side tactical intent from typed fields using existing catalog/validator, never model-supplied owner/provenance; the ordinary dispatcher remains the executor.
+- Produces `CommanderSemanticAdmission.TryCreateTacticalIntent(CommanderSemanticNode node, CommanderContext context, out CommanderIntent intent, out string safeReason) : bool`. It constructs a **tactical-only** `CommanderIntentDTO` from typed fields and calls `CommanderIntentDtoCodec.ValidateAndConvert(dto, context)`; it requires a non-null tactical `Intent` and null `StrategicIntent`. The ordinary dispatcher remains the executor; no model-supplied owner/provenance survives.
 
 - [ ] **Step 1: Write failing host tests** using a fake semantic provider for seven Spearman paraphrases, structure/resource nodes, unsupported unit, ambiguous/unsupported outcome, malformed response, busy state, stale reset, and no-goal admission for a two-node response. Check offline pause/status still bypasses provider and UI controls recover after provider failure.
 - [ ] **Step 2: Run** `CommanderPhase4E1ChatTests` in Unity EditMode. **Expected:** RED because the host still exact-classifies and rejects paraphrases.

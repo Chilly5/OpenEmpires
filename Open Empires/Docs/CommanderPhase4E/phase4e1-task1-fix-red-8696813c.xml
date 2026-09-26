@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="33" result="Failed(Child)" total="33" passed="31" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.0917606">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="736" result="Failed" site="Child" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.091761" total="33" passed="31" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1828" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="736" result="Failed" site="Child" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.075430" total="33" passed="31" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="16828" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1829" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="736" result="Failed" site="Child" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.073723" total="33" passed="31" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1830" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="736" result="Failed" site="Child" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.073102" total="33" passed="31" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1767" name="CommanderPhase4E1SemanticJsonTests" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" testcasecount="33" result="Failed" site="Child" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.071895" total="33" passed="31" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase4E1" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="ParameterizedMethod" id="1798" name="Parse_InvalidPayload_RejectsWithoutPartialRequest" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.Parse_InvalidPayload_RejectsWithoutPartialRequest" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" testcasecount="21" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.038996" total="21" passed="21" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1777" name="RejectsDuplicateRootProperty" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsDuplicateRootProperty" methodname="Parse_InvalidPayload_RejectsWithoutPartialRequest" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="2071911410" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.019710" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1778" name="RejectsDuplicateNodeProperty" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsDuplicateNodeProperty" methodname="Parse_InvalidPayload_RejectsWithoutPartialRequest" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="1370424896" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.000645" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1779" name="RejectsTrailingJson" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsTrailingJson" methodname="Parse_InvalidPayload_RejectsWithoutPartialRequest" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="1931292148" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.000279" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1780" name="RejectsUnknownRootField" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsUnknownRootField" methodname="Parse_InvalidPayload_RejectsWithoutPartialRequest" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="206435986" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.002464" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1781" name="RejectsAuthorityField" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsAuthorityField" methodname="Parse_InvalidPayload_RejectsWithoutPartialRequest" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="1700242167" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.002016" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1782" name="RejectsComment" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsComment" methodname="Parse_InvalidPayload_RejectsWithoutPartialRequest" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="1844419729" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.000109" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1783" name="RejectsNaN" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsNaN" methodname="Parse_InvalidPayload_RejectsWithoutPartialRequest" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="440099568" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.000495" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1784" name="RejectsNegativeUnitCount" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsNegativeUnitCount" methodname="Parse_InvalidPayload_RejectsWithoutPartialRequest" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="1247198856" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.000862" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1785" name="RejectsUnitCountAbove200" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsUnitCountAbove200" methodname="Parse_InvalidPayload_RejectsWithoutPartialRequest" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="1239633182" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.000121" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1786" name="RejectsStructureCountAbove20" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsStructureCountAbove20" methodname="Parse_InvalidPayload_RejectsWithoutPartialRequest" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="2047962950" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.000388" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1787" name="RejectsUnsupportedUnitEnum" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsUnsupportedUnitEnum" methodname="Parse_InvalidPayload_RejectsWithoutPartialRequest" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="1213582262" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.000093" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1788" name="RejectsNumericEnumString" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsNumericEnumString" methodname="Parse_InvalidPayload_RejectsWithoutPartialRequest" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="1639361136" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.000240" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1789" name="RejectsWrongEnumCase" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsWrongEnumCase" methodname="Parse_InvalidPayload_RejectsWithoutPartialRequest" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="886935059" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.000086" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1790" name="RejectsWrongFieldForNodeType" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsWrongFieldForNodeType" methodname="Parse_InvalidPayload_RejectsWithoutPartialRequest" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="1002000140" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.000079" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1791" name="RejectsMessageForRequest" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsMessageForRequest" methodname="Parse_InvalidPayload_RejectsWithoutPartialRequest" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="2053762987" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.000242" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1792" name="RejectsNodesPropertyForClarify" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsNodesPropertyForClarify" methodname="Parse_InvalidPayload_RejectsWithoutPartialRequest" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="547289914" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.000121" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1793" name="RejectsTrailingComma" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsTrailingComma" methodname="Parse_InvalidPayload_RejectsWithoutPartialRequest" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="805744872" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.000065" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1794" name="RejectsWrongOutcomeCase" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsWrongOutcomeCase" methodname="Parse_InvalidPayload_RejectsWithoutPartialRequest" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="519643312" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.000077" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1795" name="RejectsUnknownStructureEnum" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsUnknownStructureEnum" methodname="Parse_InvalidPayload_RejectsWithoutPartialRequest" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="1131115514" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.000097" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1796" name="RejectsUnknownResourceEnum" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsUnknownResourceEnum" methodname="Parse_InvalidPayload_RejectsWithoutPartialRequest" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="1683101695" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.000309" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1797" name="RejectsNonRequestNodes" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsNonRequestNodes" methodname="Parse_InvalidPayload_RejectsWithoutPartialRequest" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="1743549902" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.000107" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1772" name="Parse_NonRequestOutcome_ContainsNoNodesAndBoundedExplanation" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.Parse_NonRequestOutcome_ContainsNoNodesAndBoundedExplanation" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.006270" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1770" name="Parse_NonRequestOutcome_ContainsNoNodesAndBoundedExplanation(&quot;Clarify&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.Parse_NonRequestOutcome_ContainsNoNodesAndBoundedExplanation(&quot;Clarify&quot;)" methodname="Parse_NonRequestOutcome_ContainsNoNodesAndBoundedExplanation" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="586006113" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.004760" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1771" name="Parse_NonRequestOutcome_ContainsNoNodesAndBoundedExplanation(&quot;Unsupported&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.Parse_NonRequestOutcome_ContainsNoNodesAndBoundedExplanation(&quot;Unsupported&quot;)" methodname="Parse_NonRequestOutcome_ContainsNoNodesAndBoundedExplanation" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="1591341583" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.000114" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1776" name="Parse_RejectsDefinedButUnsupportedStructure" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.Parse_RejectsDefinedButUnsupportedStructure" methodname="Parse_RejectsDefinedButUnsupportedStructure" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="1682323000" result="Failed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.006943" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.Parse_RejectsDefinedButUnsupportedStructure () [0x0000a] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4E1SemanticJsonTests.cs:94
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1802" name="Parse_RejectsJsonDeeperThanEightLevels" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.Parse_RejectsJsonDeeperThanEightLevels" methodname="Parse_RejectsJsonDeeperThanEightLevels" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="1799304754" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.000501" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1799" name="Parse_RejectsMoreThanFourNodesWithoutPartialRequest" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.Parse_RejectsMoreThanFourNodesWithoutPartialRequest" methodname="Parse_RejectsMoreThanFourNodesWithoutPartialRequest" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="116756468" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.000934" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1800" name="Parse_RejectsOverlongOrMarkupExplanation" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.Parse_RejectsOverlongOrMarkupExplanation" methodname="Parse_RejectsOverlongOrMarkupExplanation" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="1600966207" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.000195" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1801" name="Parse_RejectsRawResponseOver8192Characters" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.Parse_RejectsRawResponseOver8192Characters" methodname="Parse_RejectsRawResponseOver8192Characters" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="1216784080" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.000175" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1769" name="Parse_Request_ProducesTypedRangedStrategicNode" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.Parse_Request_ProducesTypedRangedStrategicNode" methodname="Parse_Request_ProducesTypedRangedStrategicNode" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="1679445616" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.003615" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1768" name="Parse_Request_ProducesTypedSpearmanNode" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.Parse_Request_ProducesTypedSpearmanNode" methodname="Parse_Request_ProducesTypedSpearmanNode" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="185802587" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.000891" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1773" name="Parse_ResourceAllocation_AcceptsZeroWorkers" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.Parse_ResourceAllocation_AcceptsZeroWorkers" methodname="Parse_ResourceAllocation_AcceptsZeroWorkers" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="1606965592" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.000317" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1774" name="Parse_Structure_ProducesTypedBuildingAndCount" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.Parse_Structure_ProducesTypedBuildingAndCount" methodname="Parse_Structure_ProducesTypedBuildingAndCount" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="1499310193" result="Passed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.000234" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1775" name="SemanticResult_HasNoAssemblyAccessibleConstructorOrValiditySetter" fullname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.SemanticResult_HasNoAssemblyAccessibleConstructorOrValiditySetter" methodname="SemanticResult_HasNoAssemblyAccessibleConstructorOrValiditySetter" classname="OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests" runstate="Runnable" seed="1179410901" result="Failed" start-time="2026-09-26 16:23:40Z" end-time="2026-09-26 16:23:40Z" duration="0.002379" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.SemanticResult_HasNoAssemblyAccessibleConstructorOrValiditySetter () [0x00043] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4E1SemanticJsonTests.cs:84
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

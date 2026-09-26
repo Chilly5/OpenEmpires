@@ -1,0 +1,9 @@
+# Phase 4E.1 provider context audit (read-only)
+
+The existing `CommanderContext` is detached but too rich to serialize wholesale for the new semantic provider. Its `Buildings` include building IDs and queues; `ActiveGoals` include goal/owner/parent IDs and ticks; `VisibleResources` include tile coordinates; `VisibleEnemyMilitary` and policy fields disclose additional world information. `CommanderAIContextSerializer` projects these whole snapshot objects, so it is not the Phase 4E serializer.
+
+The Phase 4E provider request should use a dedicated allow-list: current age/civilization, population and cap, local resource totals, aggregate owned unit/building counts (with in-progress/queued counts where useful), worker-allocation counts, supported unit/structure/strategy names and bounded detached recent semantic facts. Do not include `PlayerId`, tick, building/goal/unit IDs, coordinates, training queue IDs, enemies or map-node data. Bound and sort aggregate fields before serializing. The authoritative context remains game-side and is revalidated after the await.
+
+The existing `ICommanderHttpTransport.PostJsonAsync` injection seam in `GeminiAIProvider.cs` supports fake-response/error/timeout tests for `OpenRouterCommanderProvider`. Existing tactical and strategic methods use separate Gemini-style request builders before OpenRouter message conversion; the Phase 4E semantic method should construct its own narrow prompt/body and preserve those legacy paths.
+
+Source pointers: `CommanderContext.cs:7-28,55-155`, `CommanderContextBuilder.cs:21-125`, `Phase4A/CommanderAIProvider.cs:118-145`, `Phase4A/OpenRouterCommanderProvider.cs:43-127`, `Phase4A/GeminiAIProvider.cs:24,149-176`, `Assets/Tests/EditMode/CommanderPhase4ATests.cs:204`, `CommanderPhase4B1Tests.cs:349-420`. This is a source audit, not a compiled or runtime result.
