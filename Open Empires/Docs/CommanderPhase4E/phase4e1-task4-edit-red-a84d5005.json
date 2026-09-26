@@ -1,0 +1,48 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "a84d5005d2e64cb3bf18962a7380c48e",
+      "status": "failed",
+      "mode": "EditMode",
+      "started_unix_ms": 1790453665398,
+      "finished_unix_ms": 1790453673183,
+      "last_update_unix_ms": 1790453673183,
+      "progress": {
+        "completed": 70,
+        "total": 70,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1790453672902,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4E1StrategicTests.SemanticObjective_StagesOwnedAiRecommendationWithoutCreatingPlan",
+        "last_finished_unix_ms": 1790453673142,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4E1StrategicTests.SemanticAttackObjective_AcceptsOnlyWithExistingCavalryPreference",
+            "message": "  The bridge must expose its synchronized generation for semantic async guards.\r\n  Expected: not null\r\n  But was:  null\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4E1StrategicTests.SemanticAttackObjective_RequiresExistingCavalryPreference",
+            "message": "  The bridge must expose its synchronized generation for semantic async guards.\r\n  Expected: not null\r\n  But was:  null\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4E1StrategicTests.SemanticObjective_RejectsWrongOwnerAndStaleGeneration",
+            "message": "  The bridge must expose its synchronized generation for semantic async guards.\r\n  Expected: not null\r\n  But was:  null\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4E1StrategicTests.SemanticObjective_StagesOwnedAiRecommendationWithoutCreatingPlan",
+            "message": "  The bridge must expose its synchronized generation for semantic async guards.\r\n  Expected: not null\r\n  But was:  null\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}
