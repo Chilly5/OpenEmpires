@@ -24,6 +24,11 @@ namespace OpenEmpires
         private TMP_InputField inputField;
         private Button sendButton;
         private CommanderAIIntentAdapter adapter;
+        private ICommanderSemanticProvider semanticProvider;
+        private GameSimulation semanticSimulation;
+        private CommanderGoalManager semanticGoalManager;
+        private CommanderIntentDispatcher semanticDispatcher;
+        private System.TimeSpan semanticProviderTimeout = CommanderAIIntentAdapter.DefaultProviderTimeout;
         private CancellationTokenSource lifetime;
         private Coroutine bootstrapWait;
         private readonly CommanderIntentRouter intentRouter = new CommanderIntentRouter();
@@ -123,6 +128,11 @@ namespace OpenEmpires
             submitting = false;
             adapter = new CommanderAIIntentAdapter(provider, simulation, goalManager, dispatcher,
                 null, providerTimeout);
+            semanticProvider = provider as ICommanderSemanticProvider;
+            semanticSimulation = simulation;
+            semanticGoalManager = goalManager;
+            semanticDispatcher = dispatcher;
+            semanticProviderTimeout = providerTimeout ?? CommanderAIIntentAdapter.DefaultProviderTimeout;
             advisorySimulation = simulation;
             Conversation = new ConversationState(goalManager.PlayerId);
             LatestStrategicInterpretation = null;
@@ -239,6 +249,9 @@ namespace OpenEmpires
             sendButton.interactable = false;
             try
             {
+                if (semanticProvider != null)
+                    return await SubmitSemanticTacticalAsync(trimmed, generation);
+
                 CommanderTextRoute route = intentRouter.Classify(trimmed);
                 if (route == CommanderTextRoute.Rejected)
                 {
@@ -336,6 +349,113 @@ namespace OpenEmpires
                     sendButton.interactable = true;
                     inputField.text = string.Empty;
                     UpdateStrategicControls();
+                }
+            }
+        }
+
+        private async Task<CommanderAIChatSubmission> SubmitSemanticTacticalAsync(
+            string message, int generation)
+        {
+            ICommanderSemanticProvider provider = semanticProvider;
+            GameSimulation simulation = semanticSimulation;
+            CommanderGoalManager manager = semanticGoalManager;
+            CommanderIntentDispatcher dispatcher = semanticDispatcher;
+            int owner = Conversation.PlayerId;
+            if (message.Length > CommanderSemanticProviderRequest.MaximumPlayerMessageCharacters)
+            {
+                AppendLine("Commander", "That request is too long; please shorten it.");
+                return null;
+            }
+
+            using (var request = CancellationTokenSource.CreateLinkedTokenSource(lifetime.Token))
+            {
+                request.CancelAfter(semanticProviderTimeout);
+                try
+                {
+                    CommanderContext context = new CommanderContextBuilder().Build(simulation, manager);
+                    if (context.PlayerId != owner)
+                    {
+                        AppendLine("Commander", "Commander ownership changed; ask again.");
+                        return null;
+                    }
+                    var providerRequest = new CommanderSemanticProviderRequest(message, context);
+                    Task<CommanderSemanticResult> translation = provider.TranslateSemanticAsync(
+                        providerRequest, request.Token);
+                    // A provider may ignore cancellation. Keep the host usable and observe
+                    // any late fault without ever admitting its late response.
+                    _ = translation.ContinueWith(task => { var ignored = task.Exception; },
+                        CancellationToken.None,
+                        TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously,
+                        TaskScheduler.Default);
+                    Task finished = await Task.WhenAny(translation,
+                        Task.Delay(semanticProviderTimeout, request.Token));
+                    if (finished != translation)
+                    {
+                        request.Cancel();
+                        if (this != null && generation == runtimeGeneration
+                            && !lifetime.IsCancellationRequested)
+                            AppendLine("Commander", "Commander AI request timed out. Please try again or use offline commands.");
+                        return null;
+                    }
+                    CommanderSemanticResult result = await translation;
+                    if (this == null || generation != runtimeGeneration
+                        || !ReferenceEquals(semanticProvider, provider)
+                        || !ReferenceEquals(semanticSimulation, simulation)
+                        || !ReferenceEquals(semanticGoalManager, manager)
+                        || !ReferenceEquals(semanticDispatcher, dispatcher)
+                        || Conversation == null || Conversation.PlayerId != owner
+                        || request.IsCancellationRequested || lifetime.IsCancellationRequested)
+                        return null;
+
+                    if (result == null || !result.IsValid)
+                    {
+                        AppendLine("Commander", "I couldn't understand that request safely.");
+                        return null;
+                    }
+                    if (result.Outcome != CommanderSemanticOutcome.Request)
+                    {
+                        AppendLine("Commander", string.IsNullOrWhiteSpace(result.SafeExplanation)
+                            ? "Please clarify or try a supported Commander request."
+                            : result.SafeExplanation);
+                        return null;
+                    }
+                    if (result.Nodes == null || result.Nodes.Count != 1)
+                    {
+                        AppendLine("Commander", "Please make one Commander request at a time.");
+                        return null;
+                    }
+                    if (!CommanderSemanticAdmission.TryCreateTacticalIntent(result.Nodes[0], context,
+                        out CommanderIntent intent, out string reason))
+                    {
+                        AppendLine("Commander", reason);
+                        return null;
+                    }
+                    CommanderIntentSubmission submission = dispatcher.SubmitIntent(intent);
+                    string display = string.IsNullOrWhiteSpace(submission?.Response)
+                        ? "Commander order submitted." : submission.Response;
+                    CommanderIntentInterpretation interpretation = submission?.Interpretation
+                        ?? CommanderIntentInterpretation.Accepted(intent);
+                    CommanderAIProviderResult providerResult = CommanderAIProviderResult.Accepted(
+                        CommanderIntentDtoCodec.FromIntent(intent), string.Empty, display);
+                    var chatSubmission = new CommanderAIChatSubmission(providerResult,
+                        interpretation, submission, display);
+                    LatestSubmission = chatSubmission;
+                    AppendLine("Commander", display);
+                    return chatSubmission;
+                }
+                catch (System.OperationCanceledException)
+                {
+                    if (this != null && generation == runtimeGeneration
+                        && !lifetime.IsCancellationRequested)
+                        AppendLine("Commander", "Commander AI request timed out. Please try again or use offline commands.");
+                    return null;
+                }
+                catch (System.Exception)
+                {
+                    if (this != null && generation == runtimeGeneration
+                        && !lifetime.IsCancellationRequested)
+                        AppendLine("Commander", "Commander translation failed safely; no order was submitted.");
+                    return null;
                 }
             }
         }
@@ -594,6 +714,10 @@ namespace OpenEmpires
             ResetStrategicHostControls();
             ResetExplanationState();
             adapter?.ResetHistory();
+            semanticProvider = null;
+            semanticSimulation = null;
+            semanticGoalManager = null;
+            semanticDispatcher = null;
             Conversation?.Reset();
             transcriptEntries.Clear();
             transcript.Clear();
