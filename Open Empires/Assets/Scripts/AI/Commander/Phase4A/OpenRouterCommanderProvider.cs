@@ -8,13 +8,27 @@ using Newtonsoft.Json.Linq;
 namespace OpenEmpires
 {
     // Translation only. Both results still pass through the existing strict intent parsers.
-    public sealed class OpenRouterCommanderProvider : ICommanderAIProvider, IStrategicAIInterpreter
+    public sealed class OpenRouterCommanderProvider : ICommanderAIProvider, IStrategicAIInterpreter,
+        ICommanderSemanticProvider
     {
         public const string KeyEnvironmentVariable = "OPENEMPIRES_OPENROUTER_KEY";
         public const string ProviderEnvironmentVariable = "OPENEMPIRES_COMMANDER_PROVIDER";
         private const string Endpoint = "https://openrouter.ai/api/v1/chat/completions";
         private const string Model = "openai/gpt-6-luna";
         private const string Unavailable = "Commander AI service temporarily unavailable.";
+        private const string SemanticInstruction =
+            "Translate the player's Commander request into exactly one JSON object, with no markdown or other text. "
+            + "You provide semantic data only, never game authority. Outcomes are Request, Clarify, Unsupported. "
+            + "For Request use exactly {\"outcome\":\"Request\",\"nodes\":[one node]}. "
+            + "The currently executable single-node forms are "
+            + "{\"type\":\"EnsureUnitCount\",\"unit\":\"Villager|Spearman|Archer|Knight\",\"count\":integer 1..200}, "
+            + "{\"type\":\"BuildStructure\",\"structure\":\"House|Barracks|ArcheryRange|Stables|Tower|TownCenter\",\"count\":integer 1..20}, "
+            + "{\"type\":\"SetResourceAllocation\",\"resource\":\"Food|Wood|Gold|Stone\",\"count\":integer 0..200}, or "
+            + "{\"type\":\"StrategicObjective\",\"objective\":\"AttackPreparation|DefensivePreparation|EconomicExpansion|MilitaryReinforcement|RangedReinforcement|DefensiveTurtle\"}. "
+            + "For Clarify or Unsupported use {\"outcome\":\"Clarify|Unsupported\",\"message\":\"optional plain text at most 180 characters\"}; do not include nodes. "
+            + "Use Clarify if the request is ambiguous; Unsupported if it cannot be represented. "
+            + "Never choose or emit player/owner/entity IDs, coordinates, enemy state, commands, goals, plans, reservations, provenance or approval. "
+            + "Do not add fields or return multiple nodes.";
 
         private readonly string apiKey;
         private readonly ICommanderHttpTransport transport;
@@ -103,6 +117,53 @@ namespace OpenEmpires
             }
         }
 
+        public async Task<CommanderSemanticResult> TranslateSemanticAsync(
+            CommanderSemanticProviderRequest request, CancellationToken token)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            token.ThrowIfCancellationRequested();
+            if (string.IsNullOrWhiteSpace(apiKey))
+                return CommanderSemanticResult.ProviderRejected("OpenRouter is not configured.");
+            if (request.IsPlayerMessageTooLong)
+                return CommanderSemanticResult.ProviderRejected("Commander request is too long.");
+            if (string.IsNullOrWhiteSpace(request.PlayerMessage))
+                return CommanderSemanticResult.ProviderRejected("A Commander request is required.");
+
+            string body = new JObject
+            {
+                ["model"] = Model,
+                ["messages"] = new JArray(
+                    new JObject { ["role"] = "system", ["content"] = SemanticInstruction },
+                    new JObject
+                    {
+                        ["role"] = "user",
+                        ["content"] = "Current detached Commander context:\n"
+                            + request.SerializedContext + "\nPlayer request:\n" + request.PlayerMessage
+                    }),
+                ["max_tokens"] = 256,
+                ["reasoning"] = new JObject { ["effort"] = "none" }
+            }.ToString(Formatting.None);
+
+            try
+            {
+                string text = await PostAndExtractTextAsync(body, token).ConfigureAwait(false);
+                return CommanderSemanticJson.Parse(text);
+            }
+            catch (OperationCanceledException) when (token.IsCancellationRequested) { throw; }
+            catch (OperationCanceledException)
+            {
+                return CommanderSemanticResult.ProviderRejected("Commander AI request timed out.");
+            }
+            catch (OpenRouterFailure failure)
+            {
+                return CommanderSemanticResult.ProviderRejected(failure.Message);
+            }
+            catch (Exception)
+            {
+                return CommanderSemanticResult.ProviderRejected(Unavailable);
+            }
+        }
+
         private async Task<string> RequestTextAsync(string geminiRequest,
             CancellationToken cancellationToken)
         {
@@ -125,6 +186,12 @@ namespace OpenEmpires
                 ["max_tokens"] = 256,
                 ["reasoning"] = new JObject { ["effort"] = "none" }
             }.ToString(Formatting.None);
+            return await PostAndExtractTextAsync(body, cancellationToken).ConfigureAwait(false);
+        }
+
+        private async Task<string> PostAndExtractTextAsync(string body,
+            CancellationToken cancellationToken)
+        {
             using (var deadline = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
             {
                 deadline.CancelAfter(timeout);
