@@ -1,0 +1,88 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "8845e513c74b468182a29938cf2a3524",
+      "status": "succeeded",
+      "mode": "PlayMode",
+      "started_unix_ms": 1790455728063,
+      "finished_unix_ms": 1790455731384,
+      "last_update_unix_ms": 1790455731384,
+      "progress": {
+        "completed": 5,
+        "total": 5,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1790455731097,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4E1StrategicPlayModeTests.StrategicParaphrase_StagesRecommendationUntilOrdinaryApproval",
+        "last_finished_unix_ms": 1790455731351,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "PlayMode",
+        "summary": {
+          "total": 5,
+          "passed": 5,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 1.4454657,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "ActiveAiPlan_RequiresExplicitConfirmForSemanticAdaptation",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1StrategicPlayModeTests.ActiveAiPlan_RequiresExplicitConfirmForSemanticAdaptation",
+            "state": "Passed",
+            "durationSeconds": 0.3940848,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[StrategicPlanner] Strategic intent #2 created: DefensivePreparation for player 0.\r\n[Commander] Goal #1 cancelled.\r\n[Commander] Goal #2 cancelled.\r\n[StrategicPlanner] Plan #1 cancelled.\r\n[StrategicPlanner] Intent #2 selected template 'DefensivePreparation' and started plan #2: DefensivePreparation.\r\n[StrategicPlanner] Plan #2 milestone active: Economic Defense.\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n[Commander] Goal #4 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "BusyHost_DoesNotStartASecondSemanticRequest",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1StrategicPlayModeTests.BusyHost_DoesNotStartASecondSemanticRequest",
+            "state": "Passed",
+            "durationSeconds": 0.2574026,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MixedSemanticRequest_AdmitsNoStrategicNode",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1StrategicPlayModeTests.MixedSemanticRequest_AdmitsNoStrategicNode",
+            "state": "Passed",
+            "durationSeconds": 0.2553855,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "ResetDuringSemanticTranslation_RejectsLateStrategicResult",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1StrategicPlayModeTests.ResetDuringSemanticTranslation_RejectsLateStrategicResult",
+            "state": "Passed",
+            "durationSeconds": 0.2527667,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "StrategicParaphrase_StagesRecommendationUntilOrdinaryApproval",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1StrategicPlayModeTests.StrategicParaphrase_StagesRecommendationUntilOrdinaryApproval",
+            "state": "Passed",
+            "durationSeconds": 0.2541748,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}
