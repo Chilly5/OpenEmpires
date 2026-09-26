@@ -361,6 +361,17 @@ namespace OpenEmpires
             CommanderGoalManager manager = semanticGoalManager;
             CommanderIntentDispatcher dispatcher = semanticDispatcher;
             int owner = Conversation.PlayerId;
+            StrategicAIApprovalBridge bridge = strategicBridge;
+            StrategicPipeline sourcePipeline = strategicPipeline;
+            int bridgeGeneration = bridge?.Generation ?? -1;
+            int capturedSourceCount = 0;
+            StrategicAdaptationSource capturedSource = null;
+            bool sourceCaptured = sourcePipeline != null
+                && TryCaptureOwnedStrategicSource(sourcePipeline, owner,
+                    out capturedSourceCount, out capturedSource);
+            int sourceCount = sourceCaptured ? capturedSourceCount : 0;
+            StrategicAdaptationSource source = sourceCaptured ? capturedSource : null;
+            int sourceLastPlanId = sourcePipeline == null ? 0 : LatestRetainedPlanId(sourcePipeline.StrategicPlanner);
             if (message.Length > CommanderSemanticProviderRequest.MaximumPlayerMessageCharacters)
             {
                 AppendLine("Commander", "That request is too long; please shorten it.");
@@ -422,6 +433,67 @@ namespace OpenEmpires
                     if (result.Nodes == null || result.Nodes.Count != 1)
                     {
                         AppendLine("Commander", "Please make one Commander request at a time.");
+                        return null;
+                    }
+                    CommanderSemanticNode node = result.Nodes[0];
+                    if (node.Type == CommanderSemanticNodeType.StrategicObjective)
+                    {
+                        if (!node.StrategicObjectiveType.HasValue || bridge == null
+                            || sourcePipeline == null || !sourceCaptured)
+                        {
+                            AppendLine("Commander", "Strategic Commander is not ready.");
+                            return null;
+                        }
+                        if (sourceCount > 1)
+                        {
+                            AppendLine("Commander", "Multiple active strategies make this request ambiguous; select a single strategy before asking again.");
+                            return null;
+                        }
+                        StrategicAIProviderResult staged = bridge.StageValidatedSemanticObjective(
+                            node.StrategicObjectiveType.Value, owner, bridgeGeneration);
+                        LatestStrategicInterpretation = staged;
+                        if (!staged.Success)
+                        {
+                            AppendLine("Commander", staged.ExplanationText);
+                            UpdateStrategicControls();
+                            return null;
+                        }
+                        StrategicIntent pending = bridge.PendingIntent;
+                        if (pending == null || !ReferenceEquals(pending, staged.Intent)
+                            || pending.PlayerId != owner || pending.Source != StrategicIntentSource.AIRecommendation
+                            || !TryCaptureOwnedStrategicSource(sourcePipeline, owner,
+                                out int freshCount, out StrategicAdaptationSource fresh)
+                            || freshCount != sourceCount
+                            || LatestRetainedPlanId(sourcePipeline.StrategicPlanner) != sourceLastPlanId)
+                        {
+                            RejectStaleStrategicPreview();
+                            return null;
+                        }
+                        if (sourceCount == 1)
+                        {
+                            StrategicAdaptationProposal proposal = StrategicAdaptationProposalBuilder.Build(
+                                source, pending, null, "Player-requested strategic change.");
+                            if (proposal == null || !StrategicAdaptationProposalBuilder.IsFresh(proposal, fresh))
+                            {
+                                RejectStaleStrategicPreview();
+                                return null;
+                            }
+                            pendingAdaptationProposal = proposal;
+                        }
+                        pendingStrategicPipeline = sourcePipeline;
+                        pendingStrategicGeneration = generation;
+                        pendingStrategicOwner = owner;
+                        pendingStrategicIntentId = pending.IntentId;
+                        pendingStrategicLastPlanId = sourceLastPlanId;
+                        pendingStrategicHadNoPlan = sourceCount == 0;
+                        AppendLine("Commander", StrategicPreview(pending.ObjectiveType)
+                            + (pendingAdaptationProposal == null
+                                ? " No plan started. Approve normally, or explicitly confirm as your command (may replace AI plans, never direct-player plans)."
+                                : " Strategy #" + pendingAdaptationProposal.SourcePlanId
+                                    + " is still active. This is a pending adaptation proposal, not a new plan."
+                                    + " Ordinary Approve cannot replace it. Choose Confirm as command explicitly;"
+                                    + " existing policy may reject it or allow coexistence instead of replacement."));
+                        UpdateStrategicControls();
                         return null;
                     }
                     if (!CommanderSemanticAdmission.TryCreateTacticalIntent(result.Nodes[0], context,

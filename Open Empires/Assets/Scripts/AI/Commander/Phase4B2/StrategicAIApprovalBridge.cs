@@ -23,6 +23,9 @@ namespace OpenEmpires
         private int generation;
 
         public StrategicIntent PendingIntent { get { lock (sync) return pending; } }
+        // The caller captures this before awaiting a semantic provider and supplies it
+        // unchanged when staging; lifecycle changes invalidate that response.
+        public int Generation { get { lock (sync) return generation; } }
         public IReadOnlyList<CommanderConversationMessage> HistorySnapshot
         {
             get { lock (sync) return history.Snapshot(); }
@@ -59,6 +62,79 @@ namespace OpenEmpires
         {
             if (memorySnapshot == null) throw new ArgumentNullException(nameof(memorySnapshot));
             return TranslateCoreAsync(message, cancellationToken, memorySnapshot, true);
+        }
+
+        public StrategicAIProviderResult StageValidatedSemanticObjective(
+            StrategicObjectiveType objective, int expectedOwner, int expectedGeneration)
+        {
+            if (!Enum.IsDefined(typeof(StrategicObjectiveType), objective))
+                return StrategicAIProviderResult.Rejected("Unsupported strategic objective.");
+
+            int observedGeneration;
+            lock (sync)
+            {
+                if (disposed) return StrategicAIProviderResult.Rejected("Strategic chat is closed.");
+                if (busy || pending != null)
+                    return StrategicAIProviderResult.Rejected("A strategic recommendation is already active.");
+                if (expectedGeneration != generation)
+                    return StrategicAIProviderResult.Rejected("Strategic response is stale.");
+                observedGeneration = generation;
+            }
+
+            StrategicContext context;
+            IReadOnlyList<MemoryEntry> memory;
+            try
+            {
+                context = contextProvider();
+                memory = memorySnapshotProvider?.Invoke() ?? Array.Empty<MemoryEntry>();
+            }
+            catch (Exception)
+            {
+                return StrategicAIProviderResult.Rejected("Strategic context is unavailable.");
+            }
+            if (context == null || expectedOwner < 0 || context.PlayerId != expectedOwner)
+                return StrategicAIProviderResult.Rejected("Strategic ownership changed.");
+
+            var parameters = new Dictionary<string, string>(StringComparer.Ordinal);
+            if (objective == StrategicObjectiveType.AttackPreparation)
+            {
+                if (!HasCavalryPreference(memory))
+                    return StrategicAIProviderResult.Rejected(
+                        "Choose the supported attack focus first: focus cavalry.");
+                // The preference is game-side memory, never a model-supplied parameter.
+                parameters.Add("focus", "cavalry");
+            }
+
+            var request = new StrategicAIRequest(string.Empty, context, identities);
+            var intent = new StrategicIntent(request.IntentId, context.PlayerId, objective,
+                context.SnapshotTick, parameters, null, StrategicIntentSource.AIRecommendation);
+            var validation = new StrategicIntentValidator().Validate(intent, expectedOwner,
+                StrategicPlanRegistry.CreateDefault());
+            if (!validation.IsValid)
+                return StrategicAIProviderResult.Rejected("Strategic response failed validation.");
+            if (!request.BindIntent(intent))
+                return StrategicAIProviderResult.Rejected("Strategic request identity was already consumed.");
+
+            var dto = new StrategicIntentDTO(objective.ToString(), parameters);
+            string json = "{\"intentCategory\":\"Strategic\",\"objectiveType\":\""
+                + objective + "\",\"parameters\":" + SerializeParameters(parameters) + "}";
+            lock (sync)
+            {
+                if (disposed || busy || pending != null || generation != observedGeneration
+                    || generation != expectedGeneration)
+                    return StrategicAIProviderResult.Rejected("Strategic response is stale.");
+                pending = intent;
+                history.Append(CommanderConversationRole.Commander,
+                    objective + " recommendation ready for review.");
+            }
+            return StrategicAIProviderResult.Accepted(dto, intent, json);
+        }
+
+        private static string SerializeParameters(IReadOnlyDictionary<string, string> parameters)
+        {
+            if (parameters.TryGetValue("focus", out string focus))
+                return "{\"focus\":\"" + focus + "\"}";
+            return "{}";
         }
 
         private async Task<StrategicAIProviderResult> TranslateCoreAsync(string message,
