@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="17" result="Passed" total="17" passed="17" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-25 10:13:45Z" end-time="2026-09-25 10:13:49Z" duration="4.2879548">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="682" result="Passed" start-time="2026-09-25 10:13:45Z" end-time="2026-09-25 10:13:49Z" duration="4.287955" total="17" passed="17" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1770" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="682" result="Passed" start-time="2026-09-25 10:13:45Z" end-time="2026-09-25 10:13:49Z" duration="4.274695" total="17" passed="17" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="8332" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1771" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="682" result="Passed" start-time="2026-09-25 10:13:45Z" end-time="2026-09-25 10:13:49Z" duration="4.269348" total="17" passed="17" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1772" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="682" result="Passed" start-time="2026-09-25 10:13:45Z" end-time="2026-09-25 10:13:49Z" duration="4.264276" total="17" passed="17" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1727" name="CommanderPhase4D3Tests" fullname="OpenEmpires.Tests.CommanderPhase4D3Tests" classname="OpenEmpires.Tests.CommanderPhase4D3Tests" runstate="Runnable" testcasecount="17" result="Passed" start-time="2026-09-25 10:13:45Z" end-time="2026-09-25 10:13:49Z" duration="4.257926" total="17" passed="17" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase4D3" />
+            </properties>
+            <test-case id="1730" name="AdaptationProposal_DoesNotCallPlanner" fullname="OpenEmpires.Tests.CommanderPhase4D3Tests.AdaptationProposal_DoesNotCallPlanner" methodname="AdaptationProposal_DoesNotCallPlanner" classname="OpenEmpires.Tests.CommanderPhase4D3Tests" runstate="Runnable" seed="1247042488" result="Passed" start-time="2026-09-25 10:13:45Z" end-time="2026-09-25 10:13:45Z" duration="0.303297" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1729" name="AdaptationProposal_DoesNotModifyPlan" fullname="OpenEmpires.Tests.CommanderPhase4D3Tests.AdaptationProposal_DoesNotModifyPlan" methodname="AdaptationProposal_DoesNotModifyPlan" classname="OpenEmpires.Tests.CommanderPhase4D3Tests" runstate="Runnable" seed="503812275" result="Passed" start-time="2026-09-25 10:13:45Z" end-time="2026-09-25 10:13:45Z" duration="0.242891" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1731" name="AdaptationProposal_IsDetached" fullname="OpenEmpires.Tests.CommanderPhase4D3Tests.AdaptationProposal_IsDetached" methodname="AdaptationProposal_IsDetached" classname="OpenEmpires.Tests.CommanderPhase4D3Tests" runstate="Runnable" seed="2138155713" result="Passed" start-time="2026-09-25 10:13:45Z" end-time="2026-09-25 10:13:46Z" duration="0.258925" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1732" name="AdaptationProposal_IsDeterministic" fullname="OpenEmpires.Tests.CommanderPhase4D3Tests.AdaptationProposal_IsDeterministic" methodname="AdaptationProposal_IsDeterministic" classname="OpenEmpires.Tests.CommanderPhase4D3Tests" runstate="Runnable" seed="669533839" result="Passed" start-time="2026-09-25 10:13:46Z" end-time="2026-09-25 10:13:46Z" duration="0.243658" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1739" name="BlockerDisappeared_RejectsOldProposal" fullname="OpenEmpires.Tests.CommanderPhase4D3Tests.BlockerDisappeared_RejectsOldProposal" methodname="BlockerDisappeared_RejectsOldProposal" classname="OpenEmpires.Tests.CommanderPhase4D3Tests" runstate="Runnable" seed="41970561" result="Passed" start-time="2026-09-25 10:13:46Z" end-time="2026-09-25 10:13:46Z" duration="0.245232" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1740" name="BlockerIdentityChangedWithSameCategory_RejectsOldProposal" fullname="OpenEmpires.Tests.CommanderPhase4D3Tests.BlockerIdentityChangedWithSameCategory_RejectsOldProposal" methodname="BlockerIdentityChangedWithSameCategory_RejectsOldProposal" classname="OpenEmpires.Tests.CommanderPhase4D3Tests" runstate="Runnable" seed="1827105113" result="Passed" start-time="2026-09-25 10:13:46Z" end-time="2026-09-25 10:13:46Z" duration="0.245428" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1737" name="BudgetIncreaseRequiresApproval" fullname="OpenEmpires.Tests.CommanderPhase4D3Tests.BudgetIncreaseRequiresApproval" methodname="BudgetIncreaseRequiresApproval" classname="OpenEmpires.Tests.CommanderPhase4D3Tests" runstate="Runnable" seed="1474840689" result="Passed" start-time="2026-09-25 10:13:46Z" end-time="2026-09-25 10:13:47Z" duration="0.247764" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1735" name="CancelledPlanRejectsOldAdaptationProposal" fullname="OpenEmpires.Tests.CommanderPhase4D3Tests.CancelledPlanRejectsOldAdaptationProposal" methodname="CancelledPlanRejectsOldAdaptationProposal" classname="OpenEmpires.Tests.CommanderPhase4D3Tests" runstate="Runnable" seed="1205627505" result="Passed" start-time="2026-09-25 10:13:47Z" end-time="2026-09-25 10:13:47Z" duration="0.246458" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1 cancelled.
+[Commander] Goal #2 cancelled.
+[StrategicPlanner] Plan #1 cancelled.
+]]></output>
+            </test-case>
+            <test-case id="1734" name="CompletedPlanRejectsOldAdaptationProposal" fullname="OpenEmpires.Tests.CommanderPhase4D3Tests.CompletedPlanRejectsOldAdaptationProposal" methodname="CompletedPlanRejectsOldAdaptationProposal" classname="OpenEmpires.Tests.CommanderPhase4D3Tests" runstate="Runnable" seed="426738175" result="Passed" start-time="2026-09-25 10:13:47Z" end-time="2026-09-25 10:13:47Z" duration="0.245934" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1743" name="CopiedSourceRetainsOldFittedWorkerTargetAndExactRequests" fullname="OpenEmpires.Tests.CommanderPhase4D3Tests.CopiedSourceRetainsOldFittedWorkerTargetAndExactRequests" methodname="CopiedSourceRetainsOldFittedWorkerTargetAndExactRequests" classname="OpenEmpires.Tests.CommanderPhase4D3Tests" runstate="Runnable" seed="926559825" result="Passed" start-time="2026-09-25 10:13:47Z" end-time="2026-09-25 10:13:47Z" duration="0.247337" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1728" name="MaterialObjectiveChange_RequiresPlayerApproval" fullname="OpenEmpires.Tests.CommanderPhase4D3Tests.MaterialObjectiveChange_RequiresPlayerApproval" methodname="MaterialObjectiveChange_RequiresPlayerApproval" classname="OpenEmpires.Tests.CommanderPhase4D3Tests" runstate="Runnable" seed="1019427100" result="Passed" start-time="2026-09-25 10:13:47Z" end-time="2026-09-25 10:13:48Z" duration="0.244565" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1742" name="OwnerMismatchAndMalformedInput_FailClosed" fullname="OpenEmpires.Tests.CommanderPhase4D3Tests.OwnerMismatchAndMalformedInput_FailClosed" methodname="OwnerMismatchAndMalformedInput_FailClosed" classname="OpenEmpires.Tests.CommanderPhase4D3Tests" runstate="Runnable" seed="2012942720" result="Passed" start-time="2026-09-25 10:13:48Z" end-time="2026-09-25 10:13:48Z" duration="0.246316" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1741" name="PauseResumeAndRevisionOnly_RejectOldProposal" fullname="OpenEmpires.Tests.CommanderPhase4D3Tests.PauseResumeAndRevisionOnly_RejectOldProposal" methodname="PauseResumeAndRevisionOnly_RejectOldProposal" classname="OpenEmpires.Tests.CommanderPhase4D3Tests" runstate="Runnable" seed="1856904682" result="Passed" start-time="2026-09-25 10:13:48Z" end-time="2026-09-25 10:13:48Z" duration="0.249369" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1744" name="ProposedQuoteIsNotCanonicalBudget" fullname="OpenEmpires.Tests.CommanderPhase4D3Tests.ProposedQuoteIsNotCanonicalBudget" methodname="ProposedQuoteIsNotCanonicalBudget" classname="OpenEmpires.Tests.CommanderPhase4D3Tests" runstate="Runnable" seed="1230111311" result="Passed" start-time="2026-09-25 10:13:48Z" end-time="2026-09-25 10:13:48Z" duration="0.244844" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1736" name="ReplacementPlanRejectsOldProposal" fullname="OpenEmpires.Tests.CommanderPhase4D3Tests.ReplacementPlanRejectsOldProposal" methodname="ReplacementPlanRejectsOldProposal" classname="OpenEmpires.Tests.CommanderPhase4D3Tests" runstate="Runnable" seed="1891186076" result="Passed" start-time="2026-09-25 10:13:48Z" end-time="2026-09-25 10:13:49Z" duration="0.246861" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[StrategicPlanner] Strategic intent #2 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #2 selected template 'ranged_reinforcement' and started plan #2: RangedReinforcement.
+[StrategicPlanner] Plan #2 milestone active: Economy.
+[Commander] Goal #3 submitted: ResourceAllocation
+[Commander] Goal #4 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1733" name="StaleAdaptationProposal_IsRejected" fullname="OpenEmpires.Tests.CommanderPhase4D3Tests.StaleAdaptationProposal_IsRejected" methodname="StaleAdaptationProposal_IsRejected" classname="OpenEmpires.Tests.CommanderPhase4D3Tests" runstate="Runnable" seed="1458907114" result="Passed" start-time="2026-09-25 10:13:49Z" end-time="2026-09-25 10:13:49Z" duration="0.243270" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1738" name="TargetIncreaseRequiresApproval" fullname="OpenEmpires.Tests.CommanderPhase4D3Tests.TargetIncreaseRequiresApproval" methodname="TargetIncreaseRequiresApproval" classname="OpenEmpires.Tests.CommanderPhase4D3Tests" runstate="Runnable" seed="1284088527" result="Passed" start-time="2026-09-25 10:13:49Z" end-time="2026-09-25 10:13:49Z" duration="0.242077" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

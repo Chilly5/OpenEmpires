@@ -1,0 +1,48 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "e487054c228b445da0c3c66a2b2761bb",
+      "status": "failed",
+      "mode": "PlayMode",
+      "started_unix_ms": 1790421458915,
+      "finished_unix_ms": 1790421545378,
+      "last_update_unix_ms": 1790421545378,
+      "progress": {
+        "completed": 159,
+        "total": 159,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1790421544566,
+        "last_finished_test_full_name": "OpenEmpires.Tests.SpearmanAnimatedPlayModeTests.Candidate_SpawnsThroughGameSetupAndCompletesExistingCorpseLifecycle",
+        "last_finished_unix_ms": 1790421545106,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4D1HostPlayModeTests.StaleUiCallback_RejectsRevisionAndNewPipelineEvenWithSameNumbers",
+            "message": "System.ArgumentException : The strategic runtime must use the active Commander simulation and goal manager.\r\nParameter name: pipeline"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4D1PlayModeTests.OldDisplayedCallback_CannotPauseMatchingIdentityInNewPipeline",
+            "message": "System.ArgumentException : The strategic runtime must use the active Commander simulation and goal manager.\r\nParameter name: pipeline"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4D2HostPlayModeTests.MatchingNumericIdentity_NewPipelineRejectsOldHealth",
+            "message": "System.ArgumentException : The strategic runtime must use the active Commander simulation and goal manager.\r\nParameter name: pipeline"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4D3HostPlayModeTests.PipelineReplacementAndReinitialize_ClearProposal",
+            "message": "System.ArgumentException : The strategic runtime must use the active Commander simulation and goal manager.\r\nParameter name: pipeline"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Passed" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-25 20:07:00Z" end-time="2026-09-25 20:07:01Z" duration="0.3191095">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="688" result="Passed" start-time="2026-09-25 20:07:00Z" end-time="2026-09-25 20:07:01Z" duration="0.319110" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1776" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="688" result="Passed" start-time="2026-09-25 20:07:00Z" end-time="2026-09-25 20:07:01Z" duration="0.311852" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="8796" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1777" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="688" result="Passed" start-time="2026-09-25 20:07:00Z" end-time="2026-09-25 20:07:01Z" duration="0.311406" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1778" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="688" result="Passed" start-time="2026-09-25 20:07:00Z" end-time="2026-09-25 20:07:01Z" duration="0.311160" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1632" name="CommanderPhase4D1Tests" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" testcasecount="49" result="Passed" start-time="2026-09-25 20:07:00Z" end-time="2026-09-25 20:07:01Z" duration="0.310260" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase4D1" />
+            </properties>
+            <test-case id="1644" name="ReplacementCancellationObserver_CannotAdmitNestedIncompatiblePlan" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.ReplacementCancellationObserver_CannotAdmitNestedIncompatiblePlan" methodname="ReplacementCancellationObserver_CannotAdmitNestedIncompatiblePlan" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="1012720754" result="Passed" start-time="2026-09-25 20:07:00Z" end-time="2026-09-25 20:07:01Z" duration="0.300761" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Reservation #1 created for plan #1: 150 Wood.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[Commander] Goal #3 submitted: BuildStructure
+[StrategicPlanner] Strategic intent #2 created: DefensivePreparation for player 0.
+[Commander] Goal #1 cancelled.
+[Commander] Goal #2 cancelled.
+[Commander] Goal #3 cancelled.
+[StrategicPlanner] Reservation #1 cancelled for plan #1.
+[StrategicPlanner] Plan #1 cancelled.
+[StrategicPlanner] Strategic intent #3 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #2 selected template 'DefensivePreparation' and started plan #2: DefensivePreparation.
+[StrategicPlanner] Plan #2 milestone active: Economic Defense.
+[Commander] Goal #4 submitted: ResourceAllocation
+[Commander] Goal #5 submitted: ResourceAllocation
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

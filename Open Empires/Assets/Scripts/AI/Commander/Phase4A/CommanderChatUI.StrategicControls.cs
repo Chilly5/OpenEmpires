@@ -86,6 +86,7 @@ namespace OpenEmpires
                 default: return false;
             }
 
+            InvalidateLifecycleInterpretation();
             AppendLine("Player", message, false);
             if (strategicPipeline == null || Conversation == null)
             {
@@ -164,6 +165,7 @@ namespace OpenEmpires
             lifetime?.Dispose();
             lifetime = new System.Threading.CancellationTokenSource();
             strategicBridge?.ClearPending();
+            ClearStrategicPreview();
             LatestStrategicInterpretation = null;
             submitting = false;
             if (inputField != null) inputField.interactable = adapter != null;
@@ -171,18 +173,35 @@ namespace OpenEmpires
             UpdateStrategicControls();
         }
 
-        private void OnHostPlanStatusChanged(StrategicPlan _) => UpdateStrategicHostControls();
-        private void OnHostMilestoneStatusChanged(StrategicPlan _, StrategicMilestone __) =>
+        private void OnHostPlanStatusChanged(StrategicPlan plan)
+        {
+            ObserveAdvisoryEvent(plan);
             UpdateStrategicHostControls();
-        private void OnHostChildGoalEvent(StrategicPlan _, CommanderGoalEvent __) =>
+        }
+        private void OnHostMilestoneStatusChanged(StrategicPlan plan, StrategicMilestone _)
+        {
+            ObserveAdvisoryEvent(plan);
             UpdateStrategicHostControls();
-        private void OnHostReservationCreated(StrategicResourceReservation _) =>
+        }
+        private void OnHostChildGoalEvent(StrategicPlan plan, CommanderGoalEvent _)
+        {
+            ObserveAdvisoryEvent(plan);
             UpdateStrategicHostControls();
-        private void OnHostReservationReleased(StrategicResourceReservation _) =>
+        }
+        private void OnHostReservationCreated(StrategicResourceReservation reservation)
+        {
+            ObserveAdvisoryReservation(reservation);
             UpdateStrategicHostControls();
+        }
+        private void OnHostReservationReleased(StrategicResourceReservation reservation)
+        {
+            ObserveAdvisoryReservation(reservation);
+            UpdateStrategicHostControls();
+        }
 
         private void LateUpdate()
         {
+            ScanOwnedAdvisories();
             StrategicPlanner planner = strategicPipeline?.StrategicPlanner;
             if (planner == null || currentPlanStatusText == null || selectedPlanId == 0) return;
             StrategicPlan plan = planner.GetPlan(selectedPlanId);

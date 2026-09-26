@@ -1,0 +1,169 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "f6b31a49683c443a92dcc35ee335404e",
+      "status": "succeeded",
+      "mode": "EditMode",
+      "started_unix_ms": 1790421243378,
+      "finished_unix_ms": 1790421247857,
+      "last_update_unix_ms": 1790421247857,
+      "progress": {
+        "completed": 14,
+        "total": 14,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1790421247362,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4D4Tests.Pipeline_RejectsForeignSimulationBeforeBindingPlanner",
+        "last_finished_unix_ms": 1790421247842,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "EditMode",
+        "summary": {
+          "total": 14,
+          "passed": 14,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 3.6699232,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "Advisory_CompletionEmitsOnce",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D4Tests.Advisory_CompletionEmitsOnce",
+            "state": "Passed",
+            "durationSeconds": 0.2498998,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "Advisory_DoesNotRepeatEveryTick",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D4Tests.Advisory_DoesNotRepeatEveryTick",
+            "state": "Passed",
+            "durationSeconds": 0.2443142,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "Advisory_EmitsOnMeaningfulTransition",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D4Tests.Advisory_EmitsOnMeaningfulTransition",
+            "state": "Passed",
+            "durationSeconds": 0.2415978,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "Advisory_IsBounded",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D4Tests.Advisory_IsBounded",
+            "state": "Passed",
+            "durationSeconds": 0.2437801,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "Advisory_IsPlanVersionSafe",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D4Tests.Advisory_IsPlanVersionSafe",
+            "state": "Passed",
+            "durationSeconds": 0.2412359,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "Advisory_PauseResumeDoesNotInventRecovery",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D4Tests.Advisory_PauseResumeDoesNotInventRecovery",
+            "state": "Passed",
+            "durationSeconds": 0.2423098,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "Advisory_RecoveryEmitsOnce",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D4Tests.Advisory_RecoveryEmitsOnce",
+            "state": "Passed",
+            "durationSeconds": 0.2413504,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "Advisory_RemainsFogSafe",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D4Tests.Advisory_RemainsFogSafe",
+            "state": "Passed",
+            "durationSeconds": 0.2449341,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "Advisory_ResetClearsDeduplication",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D4Tests.Advisory_ResetClearsDeduplication",
+            "state": "Passed",
+            "durationSeconds": 0.2428759,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "Advisory_ResourceIdentityChangeIsTransition",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D4Tests.Advisory_ResourceIdentityChangeIsTransition",
+            "state": "Passed",
+            "durationSeconds": 0.2410933,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "Advisory_ResourceRecoveryWhileAnotherWaits",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D4Tests.Advisory_ResourceRecoveryWhileAnotherWaits",
+            "state": "Passed",
+            "durationSeconds": 0.242126,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "Advisory_UnknownDoesNotSettleKnownWait",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D4Tests.Advisory_UnknownDoesNotSettleKnownWait",
+            "state": "Passed",
+            "durationSeconds": 0.2415999,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.\r\n[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "Pipeline_RejectsForeignGoalManagerBeforeBindingPlanner",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D4Tests.Pipeline_RejectsForeignGoalManagerBeforeBindingPlanner",
+            "state": "Passed",
+            "durationSeconds": 0.2439238,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Pipeline_RejectsForeignSimulationBeforeBindingPlanner",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D4Tests.Pipeline_RejectsForeignSimulationBeforeBindingPlanner",
+            "state": "Passed",
+            "durationSeconds": 0.4804043,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

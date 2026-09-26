@@ -1,0 +1,566 @@
+Task 1 fix-round-1 review package. This is the complete current /dev/null diff of both changed untracked files; compare only the two Important findings from the prior review against the original package `phase4d4-task1-review.diff`. Source before SHA 3BB96D7C..., after SHA 44B513AA...; test before SHA 3AEF620A..., after SHA 0BF83039.... No other Task1 paths changed.
+
+diff --git a/Assets/Scripts/AI/Commander/Strategic/StrategicAdvisory.cs b/Assets/Scripts/AI/Commander/Strategic/StrategicAdvisory.cs
+new file mode 100644
+index 0000000..683bb4e
+--- /dev/null
++++ b/Assets/Scripts/AI/Commander/Strategic/StrategicAdvisory.cs
+@@ -0,0 +1,253 @@
++using System;
++using System.Collections.Generic;
++using System.Collections.ObjectModel;
++using System.Globalization;
++
++namespace OpenEmpires
++{
++    public enum StrategicAdvisoryTransition
++    {
++        WaitingForResources, WaitingForPopulation, WaitingForPrerequisite,
++        WaitingForConstruction, WaitingForProduction, TemporarilyBlocked,
++        Recovered, Paused, Resumed, Completed, Cancelled, Failed
++    }
++
++    public sealed class StrategicAdvisory
++    {
++        public int PlayerId { get; }
++        public int PlanId { get; }
++        public int CreatedTick { get; }
++        public int ObservedTick { get; }
++        public int Revision { get; }
++        public StrategicAdvisoryTransition Transition { get; }
++        public string Display { get; }
++
++        internal StrategicAdvisory(int playerId, int planId, int createdTick, int observedTick,
++            int revision, StrategicAdvisoryTransition transition, string display)
++        {
++            PlayerId = playerId; PlanId = planId; CreatedTick = createdTick;
++            ObservedTick = observedTick; Revision = revision; Transition = transition;
++            Display = display ?? string.Empty;
++        }
++    }
++
++    public sealed class StrategicAdvisoryFeed
++    {
++        private const int MaxPlans = 32;
++        private const int MaxOutput = 4;
++        private readonly List<PlanState> plans = new List<PlanState>();
++
++        private struct WaitKey : IEquatable<WaitKey>
++        {
++            public StrategicPlanHealthCategory Category;
++            public ResourceType? Resource;
++
++            public bool Equals(WaitKey other) => Category == other.Category && Resource == other.Resource;
++        }
++
++        private sealed class PlanState
++        {
++            public int PlayerId, PlanId, CreatedTick, Revision, ObservedTick;
++            public StrategicPlanStatus Status;
++            public List<WaitKey> Waits;
++        }
++
++        public IReadOnlyList<StrategicAdvisory> Observe(StrategicPlanHealthSnapshot snapshot)
++        {
++            if (snapshot == null) throw new ArgumentNullException(nameof(snapshot));
++            if (!Enum.IsDefined(typeof(StrategicPlanStatus), snapshot.PlanStatus))
++                return Array.Empty<StrategicAdvisory>();
++
++            int index = plans.FindIndex(p => p.PlayerId == snapshot.PlayerId
++                && p.PlanId == snapshot.PlanId && p.CreatedTick == snapshot.CreatedTick);
++            if (index >= 0 && (snapshot.Revision < plans[index].Revision
++                || snapshot.ObservedTick < plans[index].ObservedTick))
++                return Array.Empty<StrategicAdvisory>();
++
++            var currentWaits = CopyWaits(snapshot);
++            if (index < 0)
++            {
++                if (plans.Count == MaxPlans) plans.RemoveAt(0);
++                plans.Add(new PlanState { PlayerId = snapshot.PlayerId, PlanId = snapshot.PlanId,
++                    CreatedTick = snapshot.CreatedTick, Revision = snapshot.Revision,
++                    ObservedTick = snapshot.ObservedTick, Status = snapshot.PlanStatus,
++                    Waits = currentWaits });
++                return Array.Empty<StrategicAdvisory>();
++            }
++
++            PlanState previous = plans[index];
++            if (snapshot.PlanStatus == StrategicPlanStatus.Paused)
++                currentWaits = previous.Waits;
++            var result = new List<StrategicAdvisory>(MaxOutput);
++            if (snapshot.PlanStatus != previous.Status)
++            {
++                StrategicAdvisoryTransition? statusTransition = StatusTransition(snapshot.PlanStatus,
++                    previous.Status);
++                if (statusTransition.HasValue)
++                    Add(result, snapshot, statusTransition.Value, StatusText(snapshot.PlanStatus));
++            }
++
++            bool terminal = snapshot.PlanStatus == StrategicPlanStatus.Completed
++                || snapshot.PlanStatus == StrategicPlanStatus.Cancelled
++                || snapshot.PlanStatus == StrategicPlanStatus.Failed;
++            bool known = Enum.IsDefined(typeof(StrategicPlanHealthCategory),
++                snapshot.PrimaryHealthCategory)
++                && snapshot.PrimaryHealthCategory != StrategicPlanHealthCategory.Unknown;
++            if (!terminal && known && snapshot.PlanStatus != StrategicPlanStatus.Paused)
++            {
++                for (int i = 0; i < previous.Waits.Count && result.Count < MaxOutput; i++)
++                {
++                    WaitKey old = previous.Waits[i];
++                    if (!currentWaits.Contains(old))
++                        Add(result, snapshot, StrategicAdvisoryTransition.Recovered,
++                            "Plan " + Number(snapshot.PlanId) + " recovered from "
++                            + CategoryText(old.Category, old.Resource) + ".");
++                }
++                for (int i = 0; i < currentWaits.Count && result.Count < MaxOutput; i++)
++                {
++                    WaitKey next = currentWaits[i];
++                    if (!previous.Waits.Contains(next))
++                        Add(result, snapshot, WaitTransition(next.Category),
++                            WaitText(snapshot, next));
++                }
++            }
++
++            previous.Revision = snapshot.Revision;
++            previous.ObservedTick = snapshot.ObservedTick;
++            previous.Status = snapshot.PlanStatus;
++            if (known || terminal) previous.Waits = currentWaits;
++            return new ReadOnlyCollection<StrategicAdvisory>(result);
++        }
++
++        public void Reset() => plans.Clear();
++
++        private static string Number(int value) => value.ToString(CultureInfo.InvariantCulture);
++
++        private static void Add(List<StrategicAdvisory> result, StrategicPlanHealthSnapshot snapshot,
++            StrategicAdvisoryTransition transition, string display)
++        {
++            if (result.Count >= MaxOutput) return;
++            result.Add(new StrategicAdvisory(snapshot.PlayerId, snapshot.PlanId,
++                snapshot.CreatedTick, snapshot.ObservedTick, snapshot.Revision,
++                transition, display.Length <= 200 ? display : display.Substring(0, 200)));
++        }
++
++        private static List<WaitKey> CopyWaits(StrategicPlanHealthSnapshot snapshot)
++        {
++            if (!Enum.IsDefined(typeof(StrategicPlanHealthCategory),
++                snapshot.PrimaryHealthCategory)
++                || snapshot.PrimaryHealthCategory == StrategicPlanHealthCategory.Unknown)
++                return new List<WaitKey>();
++            var categories = new List<StrategicPlanHealthCategory>();
++            if (Enum.IsDefined(typeof(StrategicPlanHealthCategory), snapshot.PrimaryHealthCategory)
++                && snapshot.PrimaryHealthCategory != StrategicPlanHealthCategory.Unknown)
++                categories.Add(snapshot.PrimaryHealthCategory);
++            foreach (StrategicPlanHealthCategory category in snapshot.SecondaryHealthCategories)
++                if (Enum.IsDefined(typeof(StrategicPlanHealthCategory), category)
++                    && category != StrategicPlanHealthCategory.Unknown && !categories.Contains(category))
++                    categories.Add(category);
++            categories.Sort();
++
++            var waits = new List<WaitKey>();
++            foreach (StrategicPlanHealthCategory category in categories)
++            {
++                if (!IsWait(category)) continue;
++                if (category == StrategicPlanHealthCategory.WaitingForResources)
++                {
++                    var resources = new List<ResourceType>();
++                    foreach (StrategicPlanHealthResource resource in snapshot.Resources)
++                        if (resource.MilestoneRequirementKnown && resource.MilestoneDeficit > 0
++                            && Enum.IsDefined(typeof(ResourceType), resource.ResourceType)
++                            && !resources.Contains(resource.ResourceType))
++                            resources.Add(resource.ResourceType);
++                    resources.Sort();
++                    if (resources.Count == 0)
++                        waits.Add(new WaitKey { Category = category });
++                    else foreach (ResourceType resource in resources)
++                        waits.Add(new WaitKey { Category = category, Resource = resource });
++                }
++                else waits.Add(new WaitKey { Category = category });
++            }
++            return waits;
++        }
++
++        private static bool IsWait(StrategicPlanHealthCategory category) =>
++            category == StrategicPlanHealthCategory.WaitingForResources
++            || category == StrategicPlanHealthCategory.WaitingForPopulation
++            || category == StrategicPlanHealthCategory.WaitingForPrerequisite
++            || category == StrategicPlanHealthCategory.WaitingForConstruction
++            || category == StrategicPlanHealthCategory.WaitingForProduction
++            || category == StrategicPlanHealthCategory.TemporarilyBlocked;
++
++        private static StrategicAdvisoryTransition WaitTransition(StrategicPlanHealthCategory category)
++        {
++            switch (category)
++            {
++                case StrategicPlanHealthCategory.WaitingForResources: return StrategicAdvisoryTransition.WaitingForResources;
++                case StrategicPlanHealthCategory.WaitingForPopulation: return StrategicAdvisoryTransition.WaitingForPopulation;
++                case StrategicPlanHealthCategory.WaitingForPrerequisite: return StrategicAdvisoryTransition.WaitingForPrerequisite;
++                case StrategicPlanHealthCategory.WaitingForConstruction: return StrategicAdvisoryTransition.WaitingForConstruction;
++                case StrategicPlanHealthCategory.WaitingForProduction: return StrategicAdvisoryTransition.WaitingForProduction;
++                default: return StrategicAdvisoryTransition.TemporarilyBlocked;
++            }
++        }
++
++        private static StrategicAdvisoryTransition? StatusTransition(StrategicPlanStatus now,
++            StrategicPlanStatus before)
++        {
++            switch (now)
++            {
++                case StrategicPlanStatus.Paused: return StrategicAdvisoryTransition.Paused;
++                case StrategicPlanStatus.Completed: return StrategicAdvisoryTransition.Completed;
++                case StrategicPlanStatus.Cancelled: return StrategicAdvisoryTransition.Cancelled;
++                case StrategicPlanStatus.Failed: return StrategicAdvisoryTransition.Failed;
++                case StrategicPlanStatus.Active:
++                    return before == StrategicPlanStatus.Paused
++                        ? StrategicAdvisoryTransition.Resumed : (StrategicAdvisoryTransition?)null;
++                default: return null;
++            }
++        }
++
++        private static string StatusText(StrategicPlanStatus status)
++        {
++            switch (status)
++            {
++                case StrategicPlanStatus.Paused: return "Plan paused.";
++                case StrategicPlanStatus.Active: return "Plan resumed.";
++                case StrategicPlanStatus.Completed: return "Plan completed.";
++                case StrategicPlanStatus.Cancelled: return "Plan cancelled.";
++                default: return "Plan failed.";
++            }
++        }
++
++        private static string CategoryText(StrategicPlanHealthCategory category,
++            ResourceType? resource)
++        {
++            switch (category)
++            {
++                case StrategicPlanHealthCategory.WaitingForResources:
++                    return resource.HasValue ? resource.Value + " resource wait" : "resource wait";
++                case StrategicPlanHealthCategory.WaitingForPopulation: return "population wait";
++                case StrategicPlanHealthCategory.WaitingForPrerequisite: return "prerequisite wait";
++                case StrategicPlanHealthCategory.WaitingForConstruction: return "construction wait";
++                case StrategicPlanHealthCategory.WaitingForProduction: return "production wait";
++                default: return "temporary block";
++            }
++        }
++
++        private static string WaitText(StrategicPlanHealthSnapshot snapshot, WaitKey wait)
++        {
++            string display = "Plan " + Number(snapshot.PlanId) + " waiting for "
++                + CategoryText(wait.Category, wait.Resource);
++            if (wait.Resource.HasValue)
++                foreach (StrategicPlanHealthResource resource in snapshot.Resources)
++                    if (resource.ResourceType == wait.Resource.Value
++                        && resource.MilestoneRequirementKnown && resource.MilestoneDeficit > 0)
++                    {
++                        display += ": milestone deficit " + Number(resource.MilestoneDeficit);
++                        break;
++                    }
++            return display + ".";
++        }
++    }
++}
+
+diff --git a/Assets/Tests/EditMode/CommanderPhase4D4Tests.cs b/Assets/Tests/EditMode/CommanderPhase4D4Tests.cs
+new file mode 100644
+index 0000000..3554447
+--- /dev/null
++++ b/Assets/Tests/EditMode/CommanderPhase4D4Tests.cs
+@@ -0,0 +1,296 @@
++using System;
++using System.Collections.Generic;
++using System.Linq;
++using System.Reflection;
++using NUnit.Framework;
++using UnityEngine;
++
++namespace OpenEmpires.Tests
++{
++    [Category("CommanderPhase4D4")]
++    public sealed class CommanderPhase4D4Tests
++    {
++        private SimulationConfig config;
++        private GameSimulation simulation;
++        private CommanderGoalManager goals;
++        private StrategicPlanner planner;
++        private StrategicAdvisoryFeed feed;
++
++        [SetUp]
++        public void SetUp()
++        {
++            config = ScriptableObject.CreateInstance<SimulationConfig>();
++            simulation = new GameSimulation(config, 2, new[] { 0, 1 }, Array.Empty<int>());
++            simulation.SetPlayerCivilizations(new[] { Civilization.French, Civilization.French });
++            goals = new CommanderGoalManager(simulation, 0);
++            planner = new StrategicPlanner(goals, Resource);
++            feed = new StrategicAdvisoryFeed();
++        }
++
++        [TearDown]
++        public void TearDown()
++        {
++            planner?.Dispose();
++            goals?.Dispose();
++            UnityEngine.Object.DestroyImmediate(config);
++        }
++
++        // Mutation caught: dropping a real typed resource-wait transition or copying the wrong identity.
++        [Test]
++        public void Advisory_EmitsOnMeaningfulTransition()
++        {
++            StrategicPlan plan = StartPlan();
++            feed.Observe(Health(plan, 1, StrategicPlanHealthCategory.Healthy));
++            var output = feed.Observe(Health(plan, 2, StrategicPlanHealthCategory.WaitingForResources,
++                resourceDeficit: 12));
++            Assert.That(output.Count, Is.EqualTo(1));
++            Assert.That(output[0].Transition, Is.EqualTo(StrategicAdvisoryTransition.WaitingForResources));
++            Assert.That(output[0].Display, Does.Contain("Wood"));
++            Assert.That(output[0].Display, Does.Contain("12"));
++            Assert.That(output[0].PlayerId, Is.EqualTo(0));
++            Assert.That(output[0].PlanId, Is.EqualTo(plan.StrategicPlanId));
++            Assert.That(output[0].CreatedTick, Is.EqualTo(plan.CreatedTick));
++            Assert.That(output[0].ObservedTick, Is.EqualTo(2));
++        }
++
++        // Mutation caught: treating changed tick or deficit amount as a new transition.
++        [Test]
++        public void Advisory_DoesNotRepeatEveryTick()
++        {
++            StrategicPlan plan = StartPlan();
++            feed.Observe(Health(plan, 1, StrategicPlanHealthCategory.Healthy));
++            Assert.That(feed.Observe(Health(plan, 2, StrategicPlanHealthCategory.WaitingForResources,
++                resourceDeficit: 12)).Count, Is.EqualTo(1));
++            Assert.That(feed.Observe(Health(plan, 3, StrategicPlanHealthCategory.WaitingForResources,
++                resourceDeficit: 9)), Is.Empty);
++        }
++
++        // Mutation caught: missing recovery or repeating it after a wait disappears.
++        [Test]
++        public void Advisory_RecoveryEmitsOnce()
++        {
++            StrategicPlan plan = StartPlan();
++            feed.Observe(Health(plan, 1, StrategicPlanHealthCategory.WaitingForPopulation));
++            var recovery = feed.Observe(Health(plan, 2, StrategicPlanHealthCategory.Healthy));
++            Assert.That(recovery.Select(x => x.Transition), Is.EqualTo(new[] {
++                StrategicAdvisoryTransition.Recovered }));
++            Assert.That(recovery[0].Display, Does.Contain("population"));
++            Assert.That(feed.Observe(Health(plan, 3, StrategicPlanHealthCategory.Healthy)), Is.Empty);
++        }
++
++        // Mutation caught: an Unknown sample clears a known blocker and then repeats or loses it.
++        [Test]
++        public void Advisory_UnknownDoesNotSettleKnownWait()
++        {
++            StrategicPlan plan = StartPlan();
++            feed.Observe(Health(plan, 1, StrategicPlanHealthCategory.WaitingForResources,
++                resourceDeficit: 12));
++            Assert.That(feed.Observe(Health(plan, 2, StrategicPlanHealthCategory.Unknown)), Is.Empty);
++            Assert.That(feed.Observe(Health(plan, 3, StrategicPlanHealthCategory.WaitingForResources,
++                resourceDeficit: 9)), Is.Empty, "Unknown must not rearm the same Wood wait.");
++            Assert.That(feed.Observe(Health(plan, 4, StrategicPlanHealthCategory.Unknown)), Is.Empty);
++            var recovery = feed.Observe(Health(plan, 5, StrategicPlanHealthCategory.Healthy));
++            Assert.That(recovery.Select(x => x.Transition), Is.EqualTo(new[] {
++                StrategicAdvisoryTransition.Recovered }));
++            Assert.That(recovery.Single().Display, Does.Contain("Wood"));
++            Assert.That(feed.Observe(Health(plan, 6, StrategicPlanHealthCategory.Healthy)), Is.Empty);
++        }
++
++        // Mutation caught: category-only comparison misses one resource recovering while another remains.
++        [Test]
++        public void Advisory_ResourceRecoveryWhileAnotherWaits()
++        {
++            StrategicPlan plan = StartPlan();
++            feed.Observe(HealthWithResources(plan, 1, ResourceType.Wood, ResourceType.Gold));
++            var recovery = feed.Observe(HealthWithResources(plan, 2, ResourceType.Gold));
++            Assert.That(recovery.Select(x => x.Transition), Is.EqualTo(new[] {
++                StrategicAdvisoryTransition.Recovered }));
++            Assert.That(recovery.Single().Display, Does.Contain("Wood"));
++            Assert.That(recovery.Single().Display, Does.Not.Contain("Gold"));
++            Assert.That(feed.Observe(HealthWithResources(plan, 3, ResourceType.Gold)), Is.Empty);
++        }
++
++        // Mutation caught: category-only comparison suppresses a new typed resource blocker.
++        [Test]
++        public void Advisory_ResourceIdentityChangeIsTransition()
++        {
++            StrategicPlan plan = StartPlan();
++            feed.Observe(HealthWithResources(plan, 1, ResourceType.Wood));
++            var changed = feed.Observe(HealthWithResources(plan, 2, ResourceType.Gold));
++            Assert.That(changed.Select(x => x.Transition), Is.EqualTo(new[] {
++                StrategicAdvisoryTransition.Recovered,
++                StrategicAdvisoryTransition.WaitingForResources }));
++            Assert.That(changed[0].Display, Does.Contain("Wood"));
++            Assert.That(changed[1].Display, Does.Contain("Gold"));
++            Assert.That(feed.Observe(HealthWithResources(plan, 3, ResourceType.Gold)), Is.Empty);
++        }
++
++        // Mutation caught: terminal completion omitted or repeated at each sampled tick.
++        [Test]
++        public void Advisory_CompletionEmitsOnce()
++        {
++            StrategicPlan plan = StartPlan();
++            feed.Observe(Health(plan, 1, StrategicPlanHealthCategory.Healthy));
++            plan.Status = StrategicPlanStatus.Completed;
++            var completed = feed.Observe(Health(plan, 2, StrategicPlanHealthCategory.Completed));
++            Assert.That(completed.Select(x => x.Transition), Is.EqualTo(new[] {
++                StrategicAdvisoryTransition.Completed }));
++            Assert.That(completed[0].Display, Does.Contain("completed"));
++            Assert.That(feed.Observe(Health(plan, 3, StrategicPlanHealthCategory.Completed)), Is.Empty);
++        }
++
++        // Mutation caught: Reset leaves old plan identity/dedup state behind.
++        [Test]
++        public void Advisory_ResetClearsDeduplication()
++        {
++            StrategicPlan plan = StartPlan();
++            var waiting = Health(plan, 1, StrategicPlanHealthCategory.WaitingForResources,
++                resourceDeficit: 12);
++            Assert.That(feed.Observe(waiting), Is.Empty);
++            feed.Reset();
++            Assert.That(feed.Observe(waiting), Is.Empty, "The first sample after reset seeds silently.");
++            Assert.That(feed.Observe(Health(plan, 2, StrategicPlanHealthCategory.Healthy))
++                .Single().Transition, Is.EqualTo(StrategicAdvisoryTransition.Recovered));
++        }
++
++        // Mutation caught: unbounded output or retaining the 33rd identity without oldest eviction.
++        [Test]
++        public void Advisory_IsBounded()
++        {
++            StrategicPlan plan = StartPlan();
++            int originalId = plan.StrategicPlanId;
++            feed.Observe(Health(plan, 1, StrategicPlanHealthCategory.Healthy));
++            var many = feed.Observe(Health(plan, 2, StrategicPlanHealthCategory.WaitingForPopulation,
++                StrategicPlanHealthCategory.WaitingForResources,
++                StrategicPlanHealthCategory.WaitingForPrerequisite,
++                StrategicPlanHealthCategory.WaitingForConstruction,
++                StrategicPlanHealthCategory.WaitingForProduction,
++                StrategicPlanHealthCategory.TemporarilyBlocked));
++            Assert.That(many.Count, Is.EqualTo(4));
++            for (int i = 1; i <= 32; i++)
++            {
++                plan.StrategicPlanId = originalId + i;
++                Assert.That(feed.Observe(Health(plan, 1, StrategicPlanHealthCategory.Healthy)), Is.Empty);
++            }
++            plan.StrategicPlanId = originalId;
++            Assert.That(feed.Observe(Health(plan, 3, StrategicPlanHealthCategory.WaitingForPopulation)),
++                Is.Empty, "The oldest identity was evicted, so this is a silent first sample.");
++        }
++
++        // Mutation caught: accepting an older revision/tick or conflating a reused numeric ID.
++        [Test]
++        public void Advisory_IsPlanVersionSafe()
++        {
++            StrategicPlan plan = StartPlan();
++            var old = Health(plan, 1, StrategicPlanHealthCategory.Healthy);
++            feed.Observe(old);
++            plan.AdvanceRevision();
++            Assert.That(feed.Observe(Health(plan, 3, StrategicPlanHealthCategory.WaitingForPopulation))
++                .Single().Transition, Is.EqualTo(StrategicAdvisoryTransition.WaitingForPopulation));
++            Assert.That(feed.Observe(old), Is.Empty);
++            Assert.That(feed.Observe(Health(plan, 2, StrategicPlanHealthCategory.Healthy)), Is.Empty);
++            Assert.That(feed.Observe(Health(plan, 4, StrategicPlanHealthCategory.WaitingForPopulation)),
++                Is.Empty);
++            plan.CreatedTick++;
++            Assert.That(feed.Observe(Health(plan, 1, StrategicPlanHealthCategory.Healthy)), Is.Empty);
++            Assert.That(feed.Observe(Health(plan, 2, StrategicPlanHealthCategory.WaitingForResources,
++                resourceDeficit: 12)).Single().Transition,
++                Is.EqualTo(StrategicAdvisoryTransition.WaitingForResources));
++        }
++
++        // Mutation caught: emitting a hidden-enemy fact or inventing a cause for Unknown.
++        [Test]
++        public void Advisory_RemainsFogSafe()
++        {
++            StrategicPlan plan = StartPlan();
++            feed.Observe(planner.CapturePlanHealth(0, plan.StrategicPlanId));
++            int x = simulation.MapData.Width / 2, z = simulation.MapData.Height / 2;
++            var enemy = simulation.UnitRegistry.CreateUnit(1,
++                simulation.MapData.TileToWorldFixed(x - 30, z - 30),
++                Fixed32.One, Fixed32.One, Fixed32.One);
++            enemy.UnitType = CommanderIntentCatalog.KnightUnitType;
++            enemy.CurrentHealth = enemy.MaxHealth = 100;
++            Assert.That(feed.Observe(planner.CapturePlanHealth(0, plan.StrategicPlanId)), Is.Empty);
++            feed.Reset();
++            feed.Observe(Health(plan, 1, StrategicPlanHealthCategory.Healthy));
++            var unknown = feed.Observe(Health(plan, 2, StrategicPlanHealthCategory.Unknown,
++                StrategicPlanHealthCategory.WaitingForResources));
++            Assert.That(unknown, Is.Empty);
++            Assert.That(feed.Observe(Health(plan, 3, StrategicPlanHealthCategory.Healthy)), Is.Empty,
++                "An unknown primary cannot seed a causal wait from secondary hints.");
++            foreach (FieldInfo field in typeof(StrategicAdvisoryFeed).GetFields(
++                BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
++                .Concat(typeof(StrategicAdvisory).GetFields(BindingFlags.Instance
++                    | BindingFlags.NonPublic | BindingFlags.Public)))
++                Assert.That(new[] { typeof(GameSimulation), typeof(StrategicPlan),
++                    typeof(StrategicPlanHealthSnapshot), typeof(CommanderGoalManager),
++                    typeof(StrategicPlanner), typeof(CommanderContext) }
++                    .Any(type => type == field.FieldType), Is.False, field.Name);
++        }
++
++        // Mutation caught: pause is mistaken for recovery from an earlier blocker.
++        [Test]
++        public void Advisory_PauseResumeDoesNotInventRecovery()
++        {
++            StrategicPlan plan = StartPlan();
++            feed.Observe(Health(plan, 1, StrategicPlanHealthCategory.WaitingForResources,
++                resourceDeficit: 12));
++            plan.Status = StrategicPlanStatus.Paused;
++            Assert.That(feed.Observe(Health(plan, 2, StrategicPlanHealthCategory.Paused))
++                .Select(x => x.Transition), Is.EqualTo(new[] { StrategicAdvisoryTransition.Paused }));
++            plan.Status = StrategicPlanStatus.Active;
++            Assert.That(feed.Observe(Health(plan, 3, StrategicPlanHealthCategory.WaitingForResources,
++                resourceDeficit: 9)).Select(x => x.Transition),
++                Is.EqualTo(new[] { StrategicAdvisoryTransition.Resumed }));
++        }
++
++        private StrategicPlanHealthSnapshot Health(StrategicPlan plan, int tick,
++            StrategicPlanHealthCategory primary, params StrategicPlanHealthCategory[] secondary) =>
++            Health(plan, tick, primary, 0, secondary);
++
++        private StrategicPlanHealthSnapshot Health(StrategicPlan plan, int tick,
++            StrategicPlanHealthCategory primary, int resourceDeficit,
++            params StrategicPlanHealthCategory[] secondary)
++        {
++            var context = new CommanderContextBuilder().Build(simulation, goals);
++            return new StrategicPlanHealthSnapshot(plan, plan.CurrentMilestone, tick, 0, 0, 0,
++                context, 0, primary, secondary.ToList(),
++                new List<StrategicPlanHealthResource> {
++                    new StrategicPlanHealthResource(ResourceType.Wood, 100, true, 12, 0,
++                        resourceDeficit, 0, 0)
++                }, new List<StrategicPlanHealthChild>(),
++                new List<StrategicPlanHealthStatusCount>());
++        }
++
++        private StrategicPlanHealthSnapshot HealthWithResources(StrategicPlan plan, int tick,
++            params ResourceType[] blockers)
++        {
++            var context = new CommanderContextBuilder().Build(simulation, goals);
++            var resources = blockers.Select(type => new StrategicPlanHealthResource(type,
++                100, true, 12, 0, 12, 0, 0)).ToList();
++            return new StrategicPlanHealthSnapshot(plan, plan.CurrentMilestone, tick, 0, 0, 0,
++                context, 0, StrategicPlanHealthCategory.WaitingForResources,
++                new List<StrategicPlanHealthCategory>(), resources,
++                new List<StrategicPlanHealthChild>(),
++                new List<StrategicPlanHealthStatusCount>());
++        }
++
++        private StrategicPlan StartPlan()
++        {
++            int x = simulation.MapData.Width / 2, z = simulation.MapData.Height / 2;
++            simulation.CreateBuilding(0, BuildingType.TownCenter, x + 12, z, false, true)
++                .AutoProduceVillagers = false;
++            StrategicPlan plan = planner.SubmitIntent(StrategicObjectiveType.AttackPreparation).Plan;
++            Assert.That(plan, Is.Not.Null);
++            return plan;
++        }
++
++        private int Resource(ResourceType type)
++        {
++            var resources = simulation.ResourceManager.GetPlayerResources(0);
++            return type == ResourceType.Food ? resources.Food
++                : type == ResourceType.Wood ? resources.Wood
++                : type == ResourceType.Gold ? resources.Gold : resources.Stone;
++        }
++    }
++}
+
+

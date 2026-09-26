@@ -34,10 +34,18 @@ namespace OpenEmpires
         private Button dismissStrategyButton;
         private bool submitting;
         private int runtimeGeneration;
+        private StrategicAdaptationProposal pendingAdaptationProposal;
+        private StrategicPipeline pendingStrategicPipeline;
+        private int pendingStrategicGeneration;
+        private int pendingStrategicOwner;
+        private int pendingStrategicIntentId;
+        private int pendingStrategicLastPlanId;
+        private bool pendingStrategicHadNoPlan;
 
         public StrategicAIProviderResult LatestStrategicInterpretation { get; private set; }
         public StrategicDecisionRecord LatestStrategicDecision { get; private set; }
         public StrategicIntent PendingStrategicIntent => strategicBridge?.PendingIntent;
+        public StrategicAdaptationProposal PendingAdaptationProposal => pendingAdaptationProposal;
         public ConversationState Conversation { get; private set; } = new ConversationState(0);
 
         public string DisplayedTranscript => transcriptText != null
@@ -97,12 +105,14 @@ namespace OpenEmpires
             // Keeping initialization idempotent also makes programmatic local hosts safe.
             EnsureLocalSurface();
             runtimeGeneration++;
+            ClearStrategicPreview();
             lifetime.Cancel();
             lifetime.Dispose();
             lifetime = new CancellationTokenSource();
             strategicBridge?.Dispose();
             strategicBridge = null;
             DetachStrategicPipeline();
+            ResetAdvisories();
             ResetStrategicHostControls();
             ResetExplanationState();
             adapter?.ResetHistory();
@@ -113,6 +123,7 @@ namespace OpenEmpires
             submitting = false;
             adapter = new CommanderAIIntentAdapter(provider, simulation, goalManager, dispatcher,
                 null, providerTimeout);
+            advisorySimulation = simulation;
             Conversation = new ConversationState(goalManager.PlayerId);
             LatestStrategicInterpretation = null;
             LatestStrategicDecision = null;
@@ -136,14 +147,20 @@ namespace OpenEmpires
             if (Conversation == null || Conversation.PlayerId != pipeline.StrategicPlanner.PlayerId)
                 throw new System.ArgumentException(
                     "The strategic runtime must belong to the active Commander player.", nameof(pipeline));
+            if (!pipeline.UsesSimulation(advisorySimulation))
+                throw new System.ArgumentException(
+                    "The strategic runtime must use the active Commander simulation.",
+                    nameof(pipeline));
             if (strategicPipeline != null && !ReferenceEquals(strategicPipeline, pipeline))
                 ResetConversation();
             runtimeGeneration++;
+            ClearStrategicPreview();
             lifetime?.Cancel();
             lifetime?.Dispose();
             lifetime = new CancellationTokenSource();
             strategicBridge?.Dispose();
             DetachStrategicPipeline();
+            ResetAdvisories();
             ResetStrategicHostControls();
             ResetExplanationState();
             strategicPipeline = pipeline;
@@ -160,6 +177,7 @@ namespace OpenEmpires
             if (inputField != null) inputField.interactable = adapter != null;
             if (sendButton != null) sendButton.interactable = adapter != null;
             UpdateStrategicControls();
+            ScanOwnedAdvisories(); // seed current owned plans without announcing a fabricated transition
         }
 
         private void EnsureLocalSurface()
@@ -172,6 +190,13 @@ namespace OpenEmpires
         {
             string trimmed = (message ?? string.Empty).Trim();
             if (trimmed.Length == 0) return null;
+            // Any new player turn dismisses an adaptation, while no-plan recommendations
+            // retain the established preference/explanation query behavior.
+            if (pendingAdaptationProposal != null)
+            {
+                strategicBridge?.ClearPending();
+                ClearStrategicPreview();
+            }
             if (TryHandleStrategicLifecycle(trimmed)) return null;
             if (TryHandleExplanationQuery(trimmed)) return null;
             if (adapter == null)
@@ -205,6 +230,7 @@ namespace OpenEmpires
             int generation = runtimeGeneration;
             IReadOnlyList<MemoryEntry> memoryAtTurnStart = Conversation.Snapshot();
             strategicBridge?.ClearPending();
+            ClearStrategicPreview();
             LatestStrategicInterpretation = null;
             LatestSubmission = null;
             UpdateStrategicControls();
@@ -226,13 +252,69 @@ namespace OpenEmpires
                         AppendLine("Commander", "Strategic Commander is not ready.");
                         return null;
                     }
+                    StrategicPipeline sourcePipeline = strategicPipeline;
+                    int owner = Conversation.PlayerId;
+                    if (!TryCaptureOwnedStrategicSource(sourcePipeline, owner,
+                        out int sourceCount, out StrategicAdaptationSource source))
+                    {
+                        AppendLine("Commander", "Strategic source evidence is unavailable; ask again after the current strategy settles.");
+                        return null;
+                    }
+                    if (sourceCount > 1)
+                    {
+                        AppendLine("Commander", "Multiple active strategies make this request ambiguous; select a single strategy before asking again.");
+                        return null;
+                    }
+                    int sourceLastPlanId = LatestRetainedPlanId(sourcePipeline.StrategicPlanner);
                     var result = await strategicBridge.TranslateWithMemoryAsync(trimmed,
                         memoryAtTurnStart, lifetime.Token);
                     if (this == null || generation != runtimeGeneration || lifetime.IsCancellationRequested) return null;
+                    if (!ReferenceEquals(strategicPipeline, sourcePipeline)
+                        || Conversation == null || Conversation.PlayerId != owner)
+                    {
+                        RejectStaleStrategicPreview();
+                        return null;
+                    }
+                    if (result.Success)
+                    {
+                        StrategicIntent pending = strategicBridge.PendingIntent;
+                        if (pending == null || !ReferenceEquals(pending, result.Intent)
+                            || pending.PlayerId != owner || pending.IntentId < 1
+                            || !TryCaptureOwnedStrategicSource(sourcePipeline, owner,
+                                out int freshCount, out StrategicAdaptationSource fresh)
+                            || freshCount != sourceCount
+                            || LatestRetainedPlanId(sourcePipeline.StrategicPlanner) != sourceLastPlanId)
+                        {
+                            RejectStaleStrategicPreview();
+                            return null;
+                        }
+                        if (sourceCount == 1)
+                        {
+                            StrategicAdaptationProposal proposal = StrategicAdaptationProposalBuilder.Build(
+                                source, pending, null, "Player-requested strategic change.");
+                            if (proposal == null || !StrategicAdaptationProposalBuilder.IsFresh(proposal, fresh))
+                            {
+                                RejectStaleStrategicPreview();
+                                return null;
+                            }
+                            pendingAdaptationProposal = proposal;
+                        }
+                        pendingStrategicPipeline = sourcePipeline;
+                        pendingStrategicGeneration = generation;
+                        pendingStrategicOwner = owner;
+                        pendingStrategicIntentId = pending.IntentId;
+                        pendingStrategicLastPlanId = sourceLastPlanId;
+                        pendingStrategicHadNoPlan = sourceCount == 0;
+                    }
                     LatestStrategicInterpretation = result;
                     AppendLine("Commander", result.Success
                         ? StrategicPreview(result.Intent.ObjectiveType)
-                            + " No plan started. Approve normally, or explicitly confirm as your command (may replace AI plans, never direct-player plans)."
+                            + (pendingAdaptationProposal == null
+                                ? " No plan started. Approve normally, or explicitly confirm as your command (may replace AI plans, never direct-player plans)."
+                                : " Strategy #" + pendingAdaptationProposal.SourcePlanId
+                                    + " is still active. This is a pending adaptation proposal, not a new plan."
+                                    + " Ordinary Approve cannot replace it. Choose Confirm as command explicitly;"
+                                    + " existing policy may reject it or allow coexistence instead of replacement.")
                         : result.ExplanationText);
                     UpdateStrategicControls();
                     return null;
@@ -274,13 +356,89 @@ namespace OpenEmpires
             }
         }
 
+        private bool TryCaptureOwnedStrategicSource(StrategicPipeline pipeline, int owner,
+            out int count, out StrategicAdaptationSource source)
+        {
+            count = 0;
+            source = null;
+            if (pipeline == null || !ReferenceEquals(strategicPipeline, pipeline)
+                || Conversation == null || Conversation.PlayerId != owner
+                || pipeline.StrategicPlanner.PlayerId != owner) return false;
+            int generation = runtimeGeneration;
+            StrategicPlanner planner = pipeline.StrategicPlanner;
+            StrategicPlan sole = null;
+            foreach (StrategicPlan candidate in planner.ActivePlans)
+            {
+                if (candidate.IsTerminal || candidate.OwnerPlayerId != owner) continue;
+                count++;
+                if (count == 1) sole = candidate;
+                if (count > 1) return true;
+            }
+            if (count == 0) return true;
+            StrategicPlanHealthSnapshot health = planner.CapturePlanHealth(owner, sole.StrategicPlanId);
+            source = StrategicAdaptationProposalBuilder.Capture(owner, sole, health);
+            return source != null && generation == runtimeGeneration
+                && ReferenceEquals(strategicPipeline, pipeline)
+                && Conversation != null && Conversation.PlayerId == owner
+                && ReferenceEquals(planner.GetPlan(sole.StrategicPlanId), sole);
+        }
+
+        private static int LatestRetainedPlanId(StrategicPlanner planner)
+        {
+            int latest = 0;
+            foreach (StrategicPlan plan in planner.Plans)
+                if (plan.StrategicPlanId > latest) latest = plan.StrategicPlanId;
+            return latest;
+        }
+
+        private void ClearStrategicPreview()
+        {
+            pendingAdaptationProposal = null;
+            pendingStrategicPipeline = null;
+            pendingStrategicGeneration = 0;
+            pendingStrategicOwner = -1;
+            pendingStrategicIntentId = 0;
+            pendingStrategicLastPlanId = 0;
+            pendingStrategicHadNoPlan = false;
+        }
+
+        private void RejectStaleStrategicPreview()
+        {
+            strategicBridge?.ClearPending();
+            ClearStrategicPreview();
+            LatestStrategicInterpretation = null;
+            AppendLine("Commander", "Strategic recommendation is stale; no plan changed. Ask again for a fresh proposal.");
+            UpdateStrategicControls();
+        }
+
         private StrategicDecisionRecord SubmitPendingStrategy(bool confirmed)
         {
             if (submitting || strategicPipeline == null || strategicBridge?.PendingIntent == null
                 || lifetime.IsCancellationRequested) return null;
-            int id = strategicBridge.PendingIntent.IntentId;
+            StrategicIntent pending = strategicBridge.PendingIntent;
+            int id = pending.IntentId;
+            if (!ReferenceEquals(strategicPipeline, pendingStrategicPipeline)
+                || runtimeGeneration != pendingStrategicGeneration
+                || Conversation == null || Conversation.PlayerId != pendingStrategicOwner
+                || id != pendingStrategicIntentId
+                || pending.PlayerId != pendingStrategicOwner
+                || LatestRetainedPlanId(strategicPipeline.StrategicPlanner) != pendingStrategicLastPlanId
+                || pending.Source != StrategicIntentSource.AIRecommendation
+                || pending.Status != StrategicIntentStatus.Created
+                || !TryCaptureOwnedStrategicSource(strategicPipeline, pendingStrategicOwner,
+                    out int currentCount, out StrategicAdaptationSource currentSource)
+                || pendingAdaptationProposal == null && (!pendingStrategicHadNoPlan || currentCount != 0)
+                || pendingAdaptationProposal != null && (currentCount != 1
+                    || pendingAdaptationProposal.PendingIntentId != id
+                    || !StrategicAdaptationProposalBuilder.IsFresh(pendingAdaptationProposal, currentSource)))
+            {
+                RejectStaleStrategicPreview();
+                return null;
+            }
+            if (pendingAdaptationProposal != null && !confirmed) return null;
             StrategicIntent intent = confirmed ? strategicBridge.Confirm(id) : strategicBridge.TakeRecommendation(id);
             if (intent == null) return null;
+            ClearStrategicPreview();
             pendingExplanationIntentId = intent.IntentId;
             pendingExplanationObjective = intent.ObjectiveType.ToString();
             try
@@ -302,12 +460,14 @@ namespace OpenEmpires
         public void DismissStrategicRecommendation()
         {
             strategicBridge?.ClearPending();
+            ClearStrategicPreview();
             UpdateStrategicControls();
         }
 
         public void ResetConversation()
         {
             runtimeGeneration++;
+            ClearStrategicPreview();
             lifetime?.Cancel();
             lifetime?.Dispose();
             lifetime = new CancellationTokenSource();
@@ -317,6 +477,7 @@ namespace OpenEmpires
             transcriptEntries.Clear();
             if (transcriptText != null) transcriptText.text = string.Empty;
             strategicBridge?.Reset();
+            ResetAdvisories();
             LatestStrategicInterpretation = null;
             LatestStrategicDecision = null;
             LatestSubmission = null;
@@ -330,12 +491,14 @@ namespace OpenEmpires
             }
             if (sendButton != null) sendButton.interactable = adapter != null;
             UpdateStrategicControls();
+            ScanOwnedAdvisories(); // a real event on the next tick must not become a silent first sample
         }
 
         private void UpdateStrategicControls()
         {
             bool available = !submitting && strategicBridge?.PendingIntent != null;
-            if (approveStrategyButton != null) approveStrategyButton.interactable = available;
+            if (approveStrategyButton != null)
+                approveStrategyButton.interactable = available && pendingAdaptationProposal == null;
             if (confirmStrategyButton != null) confirmStrategyButton.interactable = available;
             if (dismissStrategyButton != null) dismissStrategyButton.interactable = available;
             UpdateStrategicHostControls();
@@ -421,10 +584,13 @@ namespace OpenEmpires
 
         private void OnDestroy()
         {
+            ClearStrategicPreview();
             if (bootstrapWait != null) StopCoroutine(bootstrapWait);
             lifetime?.Cancel();
             strategicBridge?.Dispose();
             DetachStrategicPipeline();
+            ResetAdvisories();
+            advisorySimulation = null;
             ResetStrategicHostControls();
             ResetExplanationState();
             adapter?.ResetHistory();

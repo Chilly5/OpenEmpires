@@ -88,13 +88,12 @@ namespace OpenEmpires.Tests
         [UnityTest]
         public IEnumerator ApprovedRangedResourceWait_RecoversSamePlanAndCompletesWithoutReapproval()
         {
-            var commanderCommands = new List<CommandObservation>();
+            var enqueuedCommands = new List<CommandObservation>();
             simulation.CommandBuffer.CommandEnqueued += (command, source) =>
             {
-                if (source == CommandEnqueueSource.Commander)
-                    commanderCommands.Add(new CommandObservation(command,
-                        simulation.GetPopulation(0), simulation.GetPopulationCap(0),
-                        OwnedQueuedUnits()));
+                enqueuedCommands.Add(new CommandObservation(command, source,
+                    simulation.GetPopulation(0), simulation.GetPopulationCap(0),
+                    OwnedQueuedUnits()));
             };
             Task<CommanderAIChatSubmission> translation =
                 chat.SubmitMessageAsync("prepare ranged reinforcements");
@@ -106,7 +105,7 @@ namespace OpenEmpires.Tests
             Assert.That(planner.Plans, Is.Empty);
             Assert.That(goals.Goals, Is.Empty);
             Assert.That(planner.Reservations, Is.Empty);
-            Assert.That(commanderCommands, Is.Empty);
+            Assert.That(enqueuedCommands, Is.Empty);
             Assert.That(simulation.CommandBuffer.FlushCommands(), Is.Empty);
             Assert.That(strategicProvider.Calls, Is.EqualTo(1));
             Assert.That(tacticalProvider.Calls, Is.Zero);
@@ -228,9 +227,22 @@ namespace OpenEmpires.Tests
             Assert.That(strategicProvider.Calls, Is.EqualTo(providerCalls),
                 "Recovery cannot call the provider again.");
             Assert.That(tacticalProvider.Calls, Is.Zero);
-            Assert.That(commanderCommands, Is.Not.Empty,
-                "The approved plan must execute real Commander commands.");
-            foreach (CommandObservation observation in commanderCommands)
+            CommandObservation[] ownerCommands = enqueuedCommands
+                .Where(item => item.Command.PlayerId == 0).ToArray();
+            Assert.That(enqueuedCommands.Count, Is.EqualTo(ownerCommands.Length),
+                "The fixture has no enemy command producer; every enqueue must belong to this plan.");
+            Assert.That(ownerCommands.Length, Is.EqualTo(1 + RangedReinforcementPlan.ArcherTarget),
+                "The fixture authorizes one Archery Range and exactly the Archer target, no extra work.");
+            Assert.That(ownerCommands.All(item => item.Source == CommandEnqueueSource.Commander),
+                Is.True, "No player-owned command may be mislabeled as a Human command.");
+            Assert.That(ownerCommands.Count(item => item.Command is PlaceBuildingCommand),
+                Is.EqualTo(1));
+            PlaceBuildingCommand rangePlacement = (PlaceBuildingCommand)ownerCommands
+                .Single(item => item.Command is PlaceBuildingCommand).Command;
+            Assert.That(rangePlacement.BuildingType, Is.EqualTo(BuildingType.ArcheryRange));
+            Assert.That(ownerCommands.Count(item => item.Command is TrainUnitCommand),
+                Is.EqualTo(RangedReinforcementPlan.ArcherTarget));
+            foreach (CommandObservation observation in ownerCommands)
                 AssertApprovedRangedCommand(observation);
             AssertApprovedRangedGoals(plan);
             Assert.That(goals.ActiveGoals, Is.Empty);
@@ -239,7 +251,7 @@ namespace OpenEmpires.Tests
                 "Completion must release every plan-owned strategic reservation.");
             Assert.That(planner.Reservations
                 .Where(item => item.Status == StrategicResourceReservationStatus.Active), Is.Empty);
-            Debug.Log($"[Phase4D2 Runtime COMPLETE] plan={planId}/{createdTick} rev={terminal.Revision} tick={terminal.ObservedTick} waitTicks={waitTicks} recoveryTicks={ticks} progressTick={progressTick} archers={Count(CommanderIntentCatalog.ArcherUnitType)} commanderCommands={commanderCommands.Count} goals={goals.Goals.Count} reservations=0 providerCalls={providerCalls}");
+            Debug.Log($"[Phase4D2 Runtime COMPLETE] plan={planId}/{createdTick} rev={terminal.Revision} tick={terminal.ObservedTick} waitTicks={waitTicks} recoveryTicks={ticks} progressTick={progressTick} archers={Count(CommanderIntentCatalog.ArcherUnitType)} commanderCommands={ownerCommands.Length} goals={goals.Goals.Count} reservations=0 providerCalls={providerCalls}");
         }
 
         private void AssertApprovedRangedGoals(StrategicPlan plan)
@@ -332,13 +344,16 @@ namespace OpenEmpires.Tests
         private readonly struct CommandObservation
         {
             public readonly ICommand Command;
+            public readonly CommandEnqueueSource Source;
             public readonly int Population;
             public readonly int PopulationCap;
             public readonly int Queued;
 
-            public CommandObservation(ICommand command, int population, int populationCap, int queued)
+            public CommandObservation(ICommand command, CommandEnqueueSource source,
+                int population, int populationCap, int queued)
             {
                 Command = command;
+                Source = source;
                 Population = population;
                 PopulationCap = populationCap;
                 Queued = queued;

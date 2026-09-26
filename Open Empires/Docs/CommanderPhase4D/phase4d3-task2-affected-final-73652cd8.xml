@@ -1,0 +1,1932 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="90" result="Passed" total="90" passed="90" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-25 10:17:06Z" end-time="2026-09-25 10:17:29Z" duration="22.3684043">
+  <test-suite type="TestSuite" id="1781" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="682" result="Passed" start-time="2026-09-25 10:17:06Z" end-time="2026-09-25 10:17:29Z" duration="22.368404" total="90" passed="90" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1770" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="682" result="Passed" start-time="2026-09-25 10:17:06Z" end-time="2026-09-25 10:17:29Z" duration="22.362282" total="90" passed="90" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="8332" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1771" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="682" result="Passed" start-time="2026-09-25 10:17:06Z" end-time="2026-09-25 10:17:29Z" duration="22.357182" total="90" passed="90" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1772" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="682" result="Passed" start-time="2026-09-25 10:17:06Z" end-time="2026-09-25 10:17:29Z" duration="22.347614" total="90" passed="90" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1632" name="CommanderPhase4D1Tests" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" testcasecount="48" result="Passed" start-time="2026-09-25 10:17:06Z" end-time="2026-09-25 10:17:18Z" duration="11.953660" total="48" passed="48" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase4D1" />
+            </properties>
+            <test-case id="1641" name="AIRecommendationCannotAutoReplaceActivePlan" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.AIRecommendationCannotAutoReplaceActivePlan" methodname="AIRecommendationCannotAutoReplaceActivePlan" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="1423558101" result="Passed" start-time="2026-09-25 10:17:06Z" end-time="2026-09-25 10:17:07Z" duration="0.274466" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.
+[StrategicPlanner] Plan #1 milestone active: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+[StrategicPlanner] Strategic intent #2 created: DefensivePreparation for player 0.
+[StrategicPlanner] Strategic intent #3 created: DefensivePreparation for player 0.
+[StrategicPlanner] Strategic intent rejected: Active plan #1 (CavalryPressure) has positive commitment momentum. Conflicting plan DefensivePreparation rejected to prevent strategic oscillation.
+]]></output>
+            </test-case>
+            <test-case id="1639" name="CancellationRevisionOverflow_FailsBeforeAnyMutation" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.CancellationRevisionOverflow_FailsBeforeAnyMutation" methodname="CancellationRevisionOverflow_FailsBeforeAnyMutation" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="2033844217" result="Passed" start-time="2026-09-25 10:17:07Z" end-time="2026-09-25 10:17:07Z" duration="0.269429" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.
+[StrategicPlanner] Plan #1 milestone active: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1681" name="CancelPausedPlan_ReleasesItsReservations" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.CancelPausedPlan_ReleasesItsReservations" methodname="CancelPausedPlan_ReleasesItsReservations" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="1193636727" result="Passed" start-time="2026-09-25 10:17:07Z" end-time="2026-09-25 10:17:07Z" duration="0.245148" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.
+[StrategicPlanner] Plan #1 milestone active: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+[Commander] Goal #1 cancelled.
+[Commander] Goal #2 cancelled.
+[Commander] Goal #3 cancelled.
+[StrategicPlanner] Reservation #1 cancelled for plan #1.
+[StrategicPlanner] Reservation #2 cancelled for plan #1.
+[StrategicPlanner] Plan #1 cancelled.
+]]></output>
+            </test-case>
+            <test-case id="1666" name="CancelStrategy_DoesNotAffectUnrelatedPlayerCommands" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.CancelStrategy_DoesNotAffectUnrelatedPlayerCommands" methodname="CancelStrategy_DoesNotAffectUnrelatedPlayerCommands" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="1580446127" result="Passed" start-time="2026-09-25 10:17:07Z" end-time="2026-09-25 10:17:07Z" duration="0.246333" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+[Commander] Goal #1 cancelled.
+[Commander] Goal #2 cancelled.
+[StrategicPlanner] Plan #1 cancelled.
+[Commander] Goal #3: status=Blocked owned=0 queued=0; Assigning at least 1 villagers to Gold; currently 0. No eligible owned villager is available.
+]]></output>
+            </test-case>
+            <test-case id="1665" name="CancelStrategy_DoesNotDeleteCompletedAssets" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.CancelStrategy_DoesNotDeleteCompletedAssets" methodname="CancelStrategy_DoesNotDeleteCompletedAssets" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="760366511" result="Passed" start-time="2026-09-25 10:17:07Z" end-time="2026-09-25 10:17:08Z" duration="0.242092" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1 cancelled.
+[Commander] Goal #2 cancelled.
+[StrategicPlanner] Plan #1 cancelled.
+]]></output>
+            </test-case>
+            <test-case id="1664" name="CancelStrategy_ReleasesReservations" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.CancelStrategy_ReleasesReservations" methodname="CancelStrategy_ReleasesReservations" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="2053625266" result="Passed" start-time="2026-09-25 10:17:08Z" end-time="2026-09-25 10:17:08Z" duration="0.246068" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.
+[StrategicPlanner] Plan #1 milestone active: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+[Commander] Goal #1 cancelled.
+[Commander] Goal #2 cancelled.
+[Commander] Goal #3 cancelled.
+[StrategicPlanner] Reservation #1 cancelled for plan #1.
+[StrategicPlanner] Reservation #2 cancelled for plan #1.
+[StrategicPlanner] Plan #1 cancelled.
+]]></output>
+            </test-case>
+            <test-case id="1656" name="ChildCompletionRevisionExhaustion_LeavesMilestoneAndReservationsUntouched" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.ChildCompletionRevisionExhaustion_LeavesMilestoneAndReservationsUntouched" methodname="ChildCompletionRevisionExhaustion_LeavesMilestoneAndReservationsUntouched" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="2103219998" result="Passed" start-time="2026-09-25 10:17:08Z" end-time="2026-09-25 10:17:08Z" duration="0.245562" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1657" name="ChildFailureRevisionExhaustion_DoesNotPartiallyFailPlan" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.ChildFailureRevisionExhaustion_DoesNotPartiallyFailPlan" methodname="ChildFailureRevisionExhaustion_DoesNotPartiallyFailPlan" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="177742185" result="Passed" start-time="2026-09-25 10:17:08Z" end-time="2026-09-25 10:17:08Z" duration="0.241866" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.
+[StrategicPlanner] Plan #1 milestone active: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1659" name="ChildProgressRevisionExhaustion_DoesNotThrowOrMutatePlan" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.ChildProgressRevisionExhaustion_DoesNotThrowOrMutatePlan" methodname="ChildProgressRevisionExhaustion_DoesNotThrowOrMutatePlan" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="1870499152" result="Passed" start-time="2026-09-25 10:17:08Z" end-time="2026-09-25 10:17:09Z" duration="0.242421" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1661" name="ChildTrackingRevisionExhaustion_DoesNotPartiallyLinkGoal" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.ChildTrackingRevisionExhaustion_DoesNotPartiallyLinkGoal" methodname="ChildTrackingRevisionExhaustion_DoesNotPartiallyLinkGoal" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="480830180" result="Passed" start-time="2026-09-25 10:17:09Z" end-time="2026-09-25 10:17:09Z" duration="0.240599" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1672" name="LifecycleCommands_CannotBypassOwnership" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.LifecycleCommands_CannotBypassOwnership" methodname="LifecycleCommands_CannotBypassOwnership" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="437079390" result="Passed" start-time="2026-09-25 10:17:09Z" end-time="2026-09-25 10:17:09Z" duration="0.242108" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1677" name="LongPause_PreservesGoalDurationAndRetryBudget" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.LongPause_PreservesGoalDurationAndRetryBudget" methodname="LongPause_PreservesGoalDurationAndRetryBudget" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="205016629" result="Passed" start-time="2026-09-25 10:17:09Z" end-time="2026-09-25 10:17:09Z" duration="0.245657" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1678" name="LongPause_ResumeShiftsGoalDurationAnchor" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.LongPause_ResumeShiftsGoalDurationAnchor" methodname="LongPause_ResumeShiftsGoalDurationAnchor" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="535831314" result="Passed" start-time="2026-09-25 10:17:09Z" end-time="2026-09-25 10:17:10Z" duration="0.311016" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[SyncCheck] tick=1 checksum=DCE8FD31
+[SyncCheck] tick=2 checksum=09764250
+[SyncCheck] tick=3 checksum=D4F7A080
+[SyncCheck] tick=4 checksum=52898C4E
+[SyncCheck] tick=5 checksum=A9DA8968
+[SyncCheck] tick=6 checksum=2ED5F0B6
+[SyncCheck] tick=7 checksum=97C53E41
+[SyncCheck] tick=8 checksum=CED8D712
+[SyncCheck] tick=9 checksum=0888CDD8
+[SyncCheck] tick=10 checksum=CAD6E33B
+[SyncCheck] tick=11 checksum=251AFD2B
+[SyncCheck] tick=12 checksum=B8F68998
+[SyncCheck] tick=13 checksum=AA55AB51
+[SyncCheck] tick=14 checksum=F3BD0C46
+[SyncCheck] tick=15 checksum=4BE28346
+[SyncCheck] tick=16 checksum=D6B23320
+[SyncCheck] tick=17 checksum=F8542DC4
+[SyncCheck] tick=18 checksum=61631BBF
+[SyncCheck] tick=19 checksum=AEC2477E
+[SyncCheck] tick=20 checksum=C7D4B7E2
+[SyncCheck] tick=21 checksum=02FBB1C8
+[SyncCheck] tick=22 checksum=CBD68263
+[SyncCheck] tick=23 checksum=51920354
+[SyncCheck] tick=24 checksum=C49B3EB4
+[SyncCheck] tick=25 checksum=6B9A7A4B
+[SyncCheck] tick=26 checksum=D02A7F20
+[SyncCheck] tick=27 checksum=DB32F212
+[SyncCheck] tick=28 checksum=EF4E9800
+[SyncCheck] tick=29 checksum=7E6AA2B2
+[SyncCheck] tick=30 checksum=B7F0500E
+[SyncCheck] tick=31 checksum=E81535D2
+[SyncCheck] tick=32 checksum=A9C285BC
+[SyncCheck] tick=33 checksum=5F587D10
+[SyncCheck] tick=34 checksum=871FE238
+[SyncCheck] tick=35 checksum=0C710BD1
+[SyncCheck] tick=36 checksum=5C7BBFA3
+[SyncCheck] tick=37 checksum=2B518F94
+[SyncCheck] tick=38 checksum=54740162
+[SyncCheck] tick=39 checksum=8854D80F
+[SyncCheck] tick=40 checksum=BD233936
+[SyncCheck] tick=41 checksum=C3D74225
+[SyncCheck] tick=42 checksum=4637CE3B
+[SyncCheck] tick=43 checksum=4872C9F6
+[SyncCheck] tick=44 checksum=C11DD877
+[SyncCheck] tick=45 checksum=BB21ACDF
+[SyncCheck] tick=46 checksum=70A3BE4F
+[SyncCheck] tick=47 checksum=36F23709
+[SyncCheck] tick=48 checksum=3E09062E
+[SyncCheck] tick=49 checksum=F9F41ADF
+[SyncCheck] tick=50 checksum=4BF5B03D
+[SyncCheck] tick=51 checksum=C2C23C8A
+[SyncCheck] tick=52 checksum=690373C6
+[SyncCheck] tick=53 checksum=00FECD12
+[SyncCheck] tick=54 checksum=08E9BF8F
+[SyncCheck] tick=55 checksum=CF7DFF3D
+[SyncCheck] tick=56 checksum=1701033D
+[SyncCheck] tick=57 checksum=B60B52B0
+[SyncCheck] tick=58 checksum=F12D1996
+[SyncCheck] tick=59 checksum=C86657EF
+[SyncCheck] tick=60 checksum=A51948DC
+[SyncCheck] tick=61 checksum=D5FFA05D
+[SyncCheck] tick=62 checksum=8A952193
+[SyncCheck] tick=63 checksum=EC41455D
+[SyncCheck] tick=64 checksum=BD4982DC
+[SyncCheck] tick=65 checksum=FDADDA10
+[SyncCheck] tick=66 checksum=4A6186F9
+[SyncCheck] tick=67 checksum=88BC0276
+[SyncCheck] tick=68 checksum=F8B80EC9
+[SyncCheck] tick=69 checksum=503161B0
+[SyncCheck] tick=70 checksum=F88A364C
+[SyncCheck] tick=71 checksum=54CF509D
+[SyncCheck] tick=72 checksum=6500B0A3
+[SyncCheck] tick=73 checksum=AB690B3D
+[SyncCheck] tick=74 checksum=38875F8C
+[SyncCheck] tick=75 checksum=F1B3266F
+[SyncCheck] tick=76 checksum=D6EC5FE6
+[SyncCheck] tick=77 checksum=E8330BF1
+[SyncCheck] tick=78 checksum=7E6A6690
+[SyncCheck] tick=79 checksum=21B26FC3
+[SyncCheck] tick=80 checksum=A2CE638A
+[SyncCheck] tick=81 checksum=16527EC4
+[SyncCheck] tick=82 checksum=2E053971
+[SyncCheck] tick=83 checksum=4CF35791
+[SyncCheck] tick=84 checksum=54201524
+[SyncCheck] tick=85 checksum=A698362A
+[SyncCheck] tick=86 checksum=29B33382
+[SyncCheck] tick=87 checksum=46D3484D
+[SyncCheck] tick=88 checksum=3189756A
+[SyncCheck] tick=89 checksum=7649F7B8
+[SyncCheck] tick=90 checksum=7E770A58
+[SyncCheck] tick=91 checksum=AD1D714A
+[SyncCheck] tick=92 checksum=9F30688E
+[SyncCheck] tick=93 checksum=8840F103
+[SyncCheck] tick=94 checksum=1A1582A9
+[SyncCheck] tick=95 checksum=883F1E5F
+[SyncCheck] tick=96 checksum=E33CC346
+[SyncCheck] tick=97 checksum=7372AE3D
+[SyncCheck] tick=98 checksum=495FDE65
+[SyncCheck] tick=99 checksum=9895549D
+[SyncCheck] tick=100 checksum=B9F64CE5
+[Commander] Goal #1: status=Blocked owned=0 queued=0; Assigning at least 4 villagers to Food; currently 0. No eligible owned villager is available.
+[Commander] Goal #2: status=Blocked owned=0 queued=0; Assigning at least 4 villagers to Wood; currently 0. No eligible owned villager is available.
+]]></output>
+            </test-case>
+            <test-case id="1675" name="MultipleActivePlans_CurrentCaptureIsAmbiguous" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.MultipleActivePlans_CurrentCaptureIsAmbiguous" methodname="MultipleActivePlans_CurrentCaptureIsAmbiguous" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="779746374" result="Passed" start-time="2026-09-25 10:17:10Z" end-time="2026-09-25 10:17:10Z" duration="0.244542" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[StrategicPlanner] Strategic intent #2 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #2 selected template 'ranged_reinforcement' and started plan #2: RangedReinforcement.
+[StrategicPlanner] Plan #2 milestone active: Economy.
+[Commander] Goal #3 submitted: ResourceAllocation
+[Commander] Goal #4 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1645" name="MultipleConflicts_PreflightAllBeforeCancellation" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.MultipleConflicts_PreflightAllBeforeCancellation" methodname="MultipleConflicts_PreflightAllBeforeCancellation" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="1152561924" result="Passed" start-time="2026-09-25 10:17:10Z" end-time="2026-09-25 10:17:10Z" duration="0.245460" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: EconomicExpansion for player 0.
+[StrategicPlanner] Intent #1 selected template 'EconomicExpansion' and started plan #1: EconomicExpansion.
+[StrategicPlanner] Plan #1 milestone active: Boom Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+[StrategicPlanner] Strategic intent #2 created: DefensivePreparation for player 0.
+[StrategicPlanner] Intent #2 selected template 'DefensivePreparation' and started plan #2: DefensivePreparation.
+[StrategicPlanner] Plan #2 milestone active: Economic Defense.
+[Commander] Goal #4 submitted: ResourceAllocation
+[Commander] Goal #5 submitted: ResourceAllocation
+[StrategicPlanner] Strategic intent #3 created: AttackPreparation for player 0.
+[StrategicPlanner] Strategic intent rejected: The conflicting plan could not be cancelled safely.
+]]></output>
+            </test-case>
+            <test-case id="1646" name="MultipleConflicts_ReentrantRevisionCannotCausePartialCancellation" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.MultipleConflicts_ReentrantRevisionCannotCausePartialCancellation" methodname="MultipleConflicts_ReentrantRevisionCannotCausePartialCancellation" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="1040184797" result="Passed" start-time="2026-09-25 10:17:10Z" end-time="2026-09-25 10:17:10Z" duration="0.254475" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.
+[StrategicPlanner] Plan #1 milestone active: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+[StrategicPlanner] Strategic intent #2 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #2 selected template 'CavalryPressure' and started plan #2: CavalryPressure.
+[StrategicPlanner] Reservation #3 created for plan #2: 840 Food.
+[StrategicPlanner] Reservation #4 created for plan #2: 600 Gold.
+[StrategicPlanner] Plan #2 milestone active: Economic Foundation.
+[Commander] Goal #4 submitted: ResourceAllocation
+[Commander] Goal #5 submitted: ResourceAllocation
+[Commander] Goal #6 submitted: ResourceAllocation
+[StrategicPlanner] Strategic intent #3 created: DefensivePreparation for player 0.
+[Commander] Goal #1 cancelled.
+[Commander] Goal #2 cancelled.
+[Commander] Goal #3 cancelled.
+[StrategicPlanner] Reservation #1 cancelled for plan #1.
+[StrategicPlanner] Reservation #2 cancelled for plan #1.
+[StrategicPlanner] Plan #1 cancelled.
+[Commander] Goal #4 cancelled.
+[Commander] Goal #5 cancelled.
+[Commander] Goal #6 cancelled.
+[StrategicPlanner] Reservation #3 cancelled for plan #2.
+[StrategicPlanner] Reservation #4 cancelled for plan #2.
+[StrategicPlanner] Plan #2 cancelled.
+[StrategicPlanner] Intent #3 selected template 'DefensivePreparation' and started plan #3: DefensivePreparation.
+[StrategicPlanner] Plan #3 milestone active: Economic Defense.
+[Commander] Goal #7 submitted: ResourceAllocation
+[Commander] Goal #8 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1650" name="MultipleConflicts_ThrowingCancellationSubscriberDoesNotStrandCleanup" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.MultipleConflicts_ThrowingCancellationSubscriberDoesNotStrandCleanup" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-09-25 10:17:10Z" end-time="2026-09-25 10:17:11Z" duration="0.756081" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1647" name="MultipleConflicts_ThrowingCancellationSubscriberDoesNotStrandCleanup(0)" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.MultipleConflicts_ThrowingCancellationSubscriberDoesNotStrandCleanup(0)" methodname="MultipleConflicts_ThrowingCancellationSubscriberDoesNotStrandCleanup" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="1859147812" result="Passed" start-time="2026-09-25 10:17:10Z" end-time="2026-09-25 10:17:11Z" duration="0.254821" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.
+[StrategicPlanner] Plan #1 milestone active: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+[StrategicPlanner] Strategic intent #2 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #2 selected template 'CavalryPressure' and started plan #2: CavalryPressure.
+[StrategicPlanner] Reservation #3 created for plan #2: 840 Food.
+[StrategicPlanner] Reservation #4 created for plan #2: 600 Gold.
+[StrategicPlanner] Plan #2 milestone active: Economic Foundation.
+[Commander] Goal #4 submitted: ResourceAllocation
+[Commander] Goal #5 submitted: ResourceAllocation
+[Commander] Goal #6 submitted: ResourceAllocation
+[StrategicPlanner] Strategic intent #3 created: DefensivePreparation for player 0.
+[Commander] Goal #1 cancelled.
+[Commander] Goal #2 cancelled.
+[Commander] Goal #3 cancelled.
+[StrategicPlanner] Reservation #1 cancelled for plan #1.
+[StrategicPlanner] Reservation #2 cancelled for plan #1.
+[StrategicPlanner] Plan #1 cancelled.
+[Commander] Goal #4 cancelled.
+[Commander] Goal #5 cancelled.
+[Commander] Goal #6 cancelled.
+[StrategicPlanner] Reservation #3 cancelled for plan #2.
+[StrategicPlanner] Reservation #4 cancelled for plan #2.
+[StrategicPlanner] Plan #2 cancelled.
+]]></output>
+              </test-case>
+              <test-case id="1648" name="MultipleConflicts_ThrowingCancellationSubscriberDoesNotStrandCleanup(1)" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.MultipleConflicts_ThrowingCancellationSubscriberDoesNotStrandCleanup(1)" methodname="MultipleConflicts_ThrowingCancellationSubscriberDoesNotStrandCleanup" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="1093419911" result="Passed" start-time="2026-09-25 10:17:11Z" end-time="2026-09-25 10:17:11Z" duration="0.249021" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.
+[StrategicPlanner] Plan #1 milestone active: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+[StrategicPlanner] Strategic intent #2 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #2 selected template 'CavalryPressure' and started plan #2: CavalryPressure.
+[StrategicPlanner] Reservation #3 created for plan #2: 840 Food.
+[StrategicPlanner] Reservation #4 created for plan #2: 600 Gold.
+[StrategicPlanner] Plan #2 milestone active: Economic Foundation.
+[Commander] Goal #4 submitted: ResourceAllocation
+[Commander] Goal #5 submitted: ResourceAllocation
+[Commander] Goal #6 submitted: ResourceAllocation
+[StrategicPlanner] Strategic intent #3 created: DefensivePreparation for player 0.
+[Commander] Goal #1 cancelled.
+[Commander] Goal #2 cancelled.
+[Commander] Goal #3 cancelled.
+[StrategicPlanner] Reservation #1 cancelled for plan #1.
+[StrategicPlanner] Reservation #2 cancelled for plan #1.
+[StrategicPlanner] Plan #1 cancelled.
+[Commander] Goal #4 cancelled.
+[Commander] Goal #5 cancelled.
+[Commander] Goal #6 cancelled.
+[StrategicPlanner] Reservation #3 cancelled for plan #2.
+[StrategicPlanner] Reservation #4 cancelled for plan #2.
+[StrategicPlanner] Plan #2 cancelled.
+]]></output>
+              </test-case>
+              <test-case id="1649" name="MultipleConflicts_ThrowingCancellationSubscriberDoesNotStrandCleanup(2)" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.MultipleConflicts_ThrowingCancellationSubscriberDoesNotStrandCleanup(2)" methodname="MultipleConflicts_ThrowingCancellationSubscriberDoesNotStrandCleanup" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="59327095" result="Passed" start-time="2026-09-25 10:17:11Z" end-time="2026-09-25 10:17:11Z" duration="0.248735" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.
+[StrategicPlanner] Plan #1 milestone active: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+[StrategicPlanner] Strategic intent #2 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #2 selected template 'CavalryPressure' and started plan #2: CavalryPressure.
+[StrategicPlanner] Reservation #3 created for plan #2: 840 Food.
+[StrategicPlanner] Reservation #4 created for plan #2: 600 Gold.
+[StrategicPlanner] Plan #2 milestone active: Economic Foundation.
+[Commander] Goal #4 submitted: ResourceAllocation
+[Commander] Goal #5 submitted: ResourceAllocation
+[Commander] Goal #6 submitted: ResourceAllocation
+[StrategicPlanner] Strategic intent #3 created: DefensivePreparation for player 0.
+[Commander] Goal #1 cancelled.
+[Commander] Goal #2 cancelled.
+[Commander] Goal #3 cancelled.
+[StrategicPlanner] Reservation #1 cancelled for plan #1.
+[StrategicPlanner] Reservation #2 cancelled for plan #1.
+[StrategicPlanner] Plan #1 cancelled.
+[Commander] Goal #4 cancelled.
+[Commander] Goal #5 cancelled.
+[Commander] Goal #6 cancelled.
+[StrategicPlanner] Reservation #3 cancelled for plan #2.
+[StrategicPlanner] Reservation #4 cancelled for plan #2.
+[StrategicPlanner] Plan #2 cancelled.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-case id="1635" name="PausedChildCancellation_FailsPlanOnlyAfterResume" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.PausedChildCancellation_FailsPlanOnlyAfterResume" methodname="PausedChildCancellation_FailsPlanOnlyAfterResume" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="688017253" result="Passed" start-time="2026-09-25 10:17:11Z" end-time="2026-09-25 10:17:11Z" duration="0.243451" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1 cancelled.
+[Commander] Goal #2 cancelled.
+[StrategicPlanner] Plan #1 failed: Tactical goal #1 was cancelled before the milestone completed.
+]]></output>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1638" name="PausedChildTerminalEvent_IsReconciledOnResume" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.PausedChildTerminalEvent_IsReconciledOnResume" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-09-25 10:17:11Z" end-time="2026-09-25 10:17:12Z" duration="0.488838" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1636" name="PausedChildTerminalEvent_IsReconciledOnResume(Completed,GoalCompleted)" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.PausedChildTerminalEvent_IsReconciledOnResume(Completed,GoalCompleted)" methodname="PausedChildTerminalEvent_IsReconciledOnResume" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="675381949" result="Passed" start-time="2026-09-25 10:17:11Z" end-time="2026-09-25 10:17:12Z" duration="0.242759" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+              </test-case>
+              <test-case id="1637" name="PausedChildTerminalEvent_IsReconciledOnResume(Failed,GoalFailed)" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.PausedChildTerminalEvent_IsReconciledOnResume(Failed,GoalFailed)" methodname="PausedChildTerminalEvent_IsReconciledOnResume" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="1341667398" result="Passed" start-time="2026-09-25 10:17:12Z" end-time="2026-09-25 10:17:12Z" duration="0.241333" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #2 cancelled.
+[StrategicPlanner] Plan #1 failed: Tactical goal #1 failed: Finished by an already-dispatched atomic action.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-case id="1679" name="PauseStrategy_ManualGoalStillTicks" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.PauseStrategy_ManualGoalStillTicks" methodname="PauseStrategy_ManualGoalStillTicks" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="188038140" result="Passed" start-time="2026-09-25 10:17:12Z" end-time="2026-09-25 10:17:12Z" duration="0.240397" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+[Commander] Goal #3: status=Blocked owned=0 queued=0; Assigning at least 1 villagers to Stone; currently 0. No eligible owned villager is available.
+]]></output>
+            </test-case>
+            <test-case id="1680" name="PauseStrategy_RetainsAndProtectsExistingReservations" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.PauseStrategy_RetainsAndProtectsExistingReservations" methodname="PauseStrategy_RetainsAndProtectsExistingReservations" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="1200079118" result="Passed" start-time="2026-09-25 10:17:12Z" end-time="2026-09-25 10:17:12Z" duration="0.241537" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.
+[StrategicPlanner] Plan #1 milestone active: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1633" name="PauseStrategy_StopsFutureStrategicProgress" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.PauseStrategy_StopsFutureStrategicProgress" methodname="PauseStrategy_StopsFutureStrategicProgress" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="1441393374" result="Passed" start-time="2026-09-25 10:17:12Z" end-time="2026-09-25 10:17:13Z" duration="0.244913" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.
+[StrategicPlanner] Plan #1 milestone active: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1660" name="PlanCompletionRevisionExhaustion_DoesNotPartiallyCompletePlan" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.PlanCompletionRevisionExhaustion_DoesNotPartiallyCompletePlan" methodname="PlanCompletionRevisionExhaustion_DoesNotPartiallyCompletePlan" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="1126645470" result="Passed" start-time="2026-09-25 10:17:13Z" end-time="2026-09-25 10:17:13Z" duration="0.242347" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.
+[StrategicPlanner] Plan #1 milestone active: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1642" name="PlayerApprovedReplacementUsesExistingAuthorityPath" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.PlayerApprovedReplacementUsesExistingAuthorityPath" methodname="PlayerApprovedReplacementUsesExistingAuthorityPath" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="14654545" result="Passed" start-time="2026-09-25 10:17:13Z" end-time="2026-09-25 10:17:13Z" duration="0.263359" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.
+[StrategicPlanner] Plan #1 milestone active: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+[StrategicPlanner] Strategic intent #2 created: DefensivePreparation for player 0.
+[Commander] Goal #1 cancelled.
+[Commander] Goal #2 cancelled.
+[Commander] Goal #3 cancelled.
+[StrategicPlanner] Reservation #1 cancelled for plan #1.
+[StrategicPlanner] Reservation #2 cancelled for plan #1.
+[StrategicPlanner] Plan #1 cancelled.
+[StrategicPlanner] Intent #2 selected template 'DefensivePreparation' and started plan #2: DefensivePreparation.
+[StrategicPlanner] Plan #2 milestone active: Economic Defense.
+[Commander] Goal #4 submitted: ResourceAllocation
+[Commander] Goal #5 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1670" name="PlayerCannotCancelOtherPlayersPlan" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.PlayerCannotCancelOtherPlayersPlan" methodname="PlayerCannotCancelOtherPlayersPlan" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="1700055190" result="Passed" start-time="2026-09-25 10:17:13Z" end-time="2026-09-25 10:17:13Z" duration="0.240526" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1669" name="PlayerCannotPauseOtherPlayersPlan" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.PlayerCannotPauseOtherPlayersPlan" methodname="PlayerCannotPauseOtherPlayersPlan" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="1306703164" result="Passed" start-time="2026-09-25 10:17:13Z" end-time="2026-09-25 10:17:14Z" duration="0.240095" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1671" name="PlayerCannotResumeOtherPlayersPlan" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.PlayerCannotResumeOtherPlayersPlan" methodname="PlayerCannotResumeOtherPlayersPlan" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="1322695600" result="Passed" start-time="2026-09-25 10:17:14Z" end-time="2026-09-25 10:17:14Z" duration="0.240625" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1658" name="PublicMilestoneAdvanceRevisionExhaustion_LeavesPlanAtSameMilestone" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.PublicMilestoneAdvanceRevisionExhaustion_LeavesPlanAtSameMilestone" methodname="PublicMilestoneAdvanceRevisionExhaustion_LeavesPlanAtSameMilestone" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="138146002" result="Passed" start-time="2026-09-25 10:17:14Z" end-time="2026-09-25 10:17:14Z" duration="0.240475" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1640" name="ReplacementCannotProceedWhenConflictingCancellationCannotComplete" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.ReplacementCannotProceedWhenConflictingCancellationCannotComplete" methodname="ReplacementCannotProceedWhenConflictingCancellationCannotComplete" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="119426043" result="Passed" start-time="2026-09-25 10:17:14Z" end-time="2026-09-25 10:17:14Z" duration="0.243055" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.
+[StrategicPlanner] Plan #1 milestone active: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+[StrategicPlanner] Strategic intent #2 created: DefensivePreparation for player 0.
+[StrategicPlanner] Strategic intent rejected: The conflicting plan could not be cancelled safely.
+]]></output>
+            </test-case>
+            <test-case id="1644" name="ReplacementLateAdmissionFailure_PreservesOldPlan" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.ReplacementLateAdmissionFailure_PreservesOldPlan" methodname="ReplacementLateAdmissionFailure_PreservesOldPlan" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="1571567543" result="Passed" start-time="2026-09-25 10:17:14Z" end-time="2026-09-25 10:17:15Z" duration="0.248500" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.
+[StrategicPlanner] Plan #1 milestone active: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+[StrategicPlanner] Strategic intent #2 created: DefensivePreparation for player 0.
+[StrategicPlanner] Strategic intent rejected: Strategic plan admission failed: The incoming plan has no valid initial milestone.
+]]></output>
+            </test-case>
+            <test-case id="1643" name="ReplacementReleasesOldReservationsCorrectly" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.ReplacementReleasesOldReservationsCorrectly" methodname="ReplacementReleasesOldReservationsCorrectly" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="661394458" result="Passed" start-time="2026-09-25 10:17:15Z" end-time="2026-09-25 10:17:15Z" duration="0.248940" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.
+[StrategicPlanner] Plan #1 milestone active: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+[StrategicPlanner] Strategic intent #2 created: DefensivePreparation for player 0.
+[Commander] Goal #1 cancelled.
+[Commander] Goal #2 cancelled.
+[Commander] Goal #3 cancelled.
+[StrategicPlanner] Reservation #1 cancelled for plan #1.
+[StrategicPlanner] Reservation #2 cancelled for plan #1.
+[StrategicPlanner] Plan #1 cancelled.
+[StrategicPlanner] Intent #2 selected template 'DefensivePreparation' and started plan #2: DefensivePreparation.
+[StrategicPlanner] Plan #2 milestone active: Economic Defense.
+[Commander] Goal #4 submitted: ResourceAllocation
+[Commander] Goal #5 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1662" name="ReservationCreatedCallbackRevisionExhaustion_DoesNotRecordReservation" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.ReservationCreatedCallbackRevisionExhaustion_DoesNotRecordReservation" methodname="ReservationCreatedCallbackRevisionExhaustion_DoesNotRecordReservation" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="1966384997" result="Passed" start-time="2026-09-25 10:17:15Z" end-time="2026-09-25 10:17:15Z" duration="0.244942" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1663" name="ReservationReleasedCallbackRevisionExhaustion_DoesNotThrowOrPublish" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.ReservationReleasedCallbackRevisionExhaustion_DoesNotThrowOrPublish" methodname="ReservationReleasedCallbackRevisionExhaustion_DoesNotThrowOrPublish" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="190118509" result="Passed" start-time="2026-09-25 10:17:15Z" end-time="2026-09-25 10:17:15Z" duration="0.265140" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1654" name="ReservationReleaseRevisionOverflow_FailsBeforeMutation" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.ReservationReleaseRevisionOverflow_FailsBeforeMutation" methodname="ReservationReleaseRevisionOverflow_FailsBeforeMutation" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="157511649" result="Passed" start-time="2026-09-25 10:17:15Z" end-time="2026-09-25 10:17:16Z" duration="0.258086" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.
+[StrategicPlanner] Plan #1 milestone active: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1653" name="ReservationUpdateRevisionOverflow_FailsBeforeMutation" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.ReservationUpdateRevisionOverflow_FailsBeforeMutation" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-09-25 10:17:16Z" end-time="2026-09-25 10:17:16Z" duration="0.494825" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1651" name="ReservationUpdateRevisionOverflow_FailsBeforeMutation(False)" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.ReservationUpdateRevisionOverflow_FailsBeforeMutation(False)" methodname="ReservationUpdateRevisionOverflow_FailsBeforeMutation" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="74425606" result="Passed" start-time="2026-09-25 10:17:16Z" end-time="2026-09-25 10:17:16Z" duration="0.247889" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.
+[StrategicPlanner] Plan #1 milestone active: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+              </test-case>
+              <test-case id="1652" name="ReservationUpdateRevisionOverflow_FailsBeforeMutation(True)" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.ReservationUpdateRevisionOverflow_FailsBeforeMutation(True)" methodname="ReservationUpdateRevisionOverflow_FailsBeforeMutation" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="254605007" result="Passed" start-time="2026-09-25 10:17:16Z" end-time="2026-09-25 10:17:16Z" duration="0.244529" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.
+[StrategicPlanner] Plan #1 milestone active: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-case id="1676" name="Reset_ClearsLifecycleState" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.Reset_ClearsLifecycleState" methodname="Reset_ClearsLifecycleState" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="1107718326" result="Passed" start-time="2026-09-25 10:17:16Z" end-time="2026-09-25 10:17:16Z" duration="0.243314" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1634" name="ResumeStrategy_ContinuesSamePlan" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.ResumeStrategy_ContinuesSamePlan" methodname="ResumeStrategy_ContinuesSamePlan" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="1100654406" result="Passed" start-time="2026-09-25 10:17:16Z" end-time="2026-09-25 10:17:17Z" duration="0.247854" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1: status=Completed owned=8 queued=0; 8/4 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=8 queued=0; 8/4 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Reservation #1 created for plan #1: 150 Wood.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[Commander] Goal #3 submitted: BuildStructure
+[Commander] Goal #3: status=Blocked owned=0 queued=0; No visible, reachable buildable location was found for ArcheryRange.
+]]></output>
+            </test-case>
+            <test-case id="1683" name="ResumeStrategy_ShiftsBlockedAndConstructionAnchors" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.ResumeStrategy_ShiftsBlockedAndConstructionAnchors" methodname="ResumeStrategy_ShiftsBlockedAndConstructionAnchors" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="1553726860" result="Passed" start-time="2026-09-25 10:17:17Z" end-time="2026-09-25 10:17:17Z" duration="0.273710" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[SyncCheck] tick=1 checksum=DCE8FD31
+[SyncCheck] tick=2 checksum=09764250
+[SyncCheck] tick=3 checksum=D4F7A080
+[SyncCheck] tick=4 checksum=52898C4E
+[SyncCheck] tick=5 checksum=A9DA8968
+[SyncCheck] tick=6 checksum=2ED5F0B6
+[SyncCheck] tick=7 checksum=97C53E41
+[SyncCheck] tick=8 checksum=CED8D712
+[SyncCheck] tick=9 checksum=0888CDD8
+[SyncCheck] tick=10 checksum=CAD6E33B
+[SyncCheck] tick=11 checksum=251AFD2B
+[SyncCheck] tick=12 checksum=B8F68998
+[SyncCheck] tick=13 checksum=AA55AB51
+[SyncCheck] tick=14 checksum=F3BD0C46
+[SyncCheck] tick=15 checksum=4BE28346
+[SyncCheck] tick=16 checksum=D6B23320
+[SyncCheck] tick=17 checksum=F8542DC4
+[SyncCheck] tick=18 checksum=61631BBF
+[SyncCheck] tick=19 checksum=AEC2477E
+[SyncCheck] tick=20 checksum=C7D4B7E2
+[SyncCheck] tick=21 checksum=02FBB1C8
+[SyncCheck] tick=22 checksum=CBD68263
+[SyncCheck] tick=23 checksum=51920354
+[SyncCheck] tick=24 checksum=C49B3EB4
+[SyncCheck] tick=25 checksum=6B9A7A4B
+[SyncCheck] tick=26 checksum=D02A7F20
+[SyncCheck] tick=27 checksum=DB32F212
+[SyncCheck] tick=28 checksum=EF4E9800
+[SyncCheck] tick=29 checksum=7E6AA2B2
+[SyncCheck] tick=30 checksum=B7F0500E
+[SyncCheck] tick=31 checksum=E81535D2
+[SyncCheck] tick=32 checksum=A9C285BC
+[SyncCheck] tick=33 checksum=5F587D10
+[SyncCheck] tick=34 checksum=871FE238
+[SyncCheck] tick=35 checksum=0C710BD1
+[SyncCheck] tick=36 checksum=5C7BBFA3
+[SyncCheck] tick=37 checksum=2B518F94
+[SyncCheck] tick=38 checksum=54740162
+[SyncCheck] tick=39 checksum=8854D80F
+[SyncCheck] tick=40 checksum=BD233936
+[SyncCheck] tick=41 checksum=C3D74225
+[SyncCheck] tick=42 checksum=4637CE3B
+[SyncCheck] tick=43 checksum=4872C9F6
+[SyncCheck] tick=44 checksum=C11DD877
+[SyncCheck] tick=45 checksum=BB21ACDF
+[SyncCheck] tick=46 checksum=70A3BE4F
+[SyncCheck] tick=47 checksum=36F23709
+[SyncCheck] tick=48 checksum=3E09062E
+[SyncCheck] tick=49 checksum=F9F41ADF
+[SyncCheck] tick=50 checksum=4BF5B03D
+[SyncCheck] tick=51 checksum=C2C23C8A
+[SyncCheck] tick=52 checksum=690373C6
+[SyncCheck] tick=53 checksum=00FECD12
+[SyncCheck] tick=54 checksum=08E9BF8F
+[SyncCheck] tick=55 checksum=CF7DFF3D
+[SyncCheck] tick=56 checksum=1701033D
+[SyncCheck] tick=57 checksum=B60B52B0
+[SyncCheck] tick=58 checksum=F12D1996
+[SyncCheck] tick=59 checksum=C86657EF
+[SyncCheck] tick=60 checksum=A51948DC
+[SyncCheck] tick=61 checksum=D5FFA05D
+[SyncCheck] tick=62 checksum=8A952193
+[SyncCheck] tick=63 checksum=EC41455D
+[SyncCheck] tick=64 checksum=BD4982DC
+[SyncCheck] tick=65 checksum=FDADDA10
+[SyncCheck] tick=66 checksum=4A6186F9
+[SyncCheck] tick=67 checksum=88BC0276
+[SyncCheck] tick=68 checksum=F8B80EC9
+[SyncCheck] tick=69 checksum=503161B0
+[SyncCheck] tick=70 checksum=F88A364C
+[SyncCheck] tick=71 checksum=54CF509D
+[SyncCheck] tick=72 checksum=6500B0A3
+[SyncCheck] tick=73 checksum=AB690B3D
+[SyncCheck] tick=74 checksum=38875F8C
+[SyncCheck] tick=75 checksum=F1B3266F
+[SyncCheck] tick=76 checksum=D6EC5FE6
+[SyncCheck] tick=77 checksum=E8330BF1
+[SyncCheck] tick=78 checksum=7E6A6690
+[SyncCheck] tick=79 checksum=21B26FC3
+[SyncCheck] tick=80 checksum=A2CE638A
+[SyncCheck] tick=81 checksum=16527EC4
+[SyncCheck] tick=82 checksum=2E053971
+[SyncCheck] tick=83 checksum=4CF35791
+[SyncCheck] tick=84 checksum=54201524
+[SyncCheck] tick=85 checksum=A698362A
+[SyncCheck] tick=86 checksum=29B33382
+[SyncCheck] tick=87 checksum=46D3484D
+[SyncCheck] tick=88 checksum=3189756A
+[SyncCheck] tick=89 checksum=7649F7B8
+[SyncCheck] tick=90 checksum=7E770A58
+[SyncCheck] tick=91 checksum=AD1D714A
+[SyncCheck] tick=92 checksum=9F30688E
+[SyncCheck] tick=93 checksum=8840F103
+[SyncCheck] tick=94 checksum=1A1582A9
+[SyncCheck] tick=95 checksum=883F1E5F
+[SyncCheck] tick=96 checksum=E33CC346
+[SyncCheck] tick=97 checksum=7372AE3D
+[SyncCheck] tick=98 checksum=495FDE65
+[SyncCheck] tick=99 checksum=9895549D
+[SyncCheck] tick=100 checksum=B9F64CE5
+]]></output>
+            </test-case>
+            <test-case id="1655" name="ResumeWithTerminalChild_RevisionOverflowFailsBeforeAnchorMutation" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.ResumeWithTerminalChild_RevisionOverflowFailsBeforeAnchorMutation" methodname="ResumeWithTerminalChild_RevisionOverflowFailsBeforeAnchorMutation" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="1174307127" result="Passed" start-time="2026-09-25 10:17:17Z" end-time="2026-09-25 10:17:17Z" duration="0.241547" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1 cancelled.
+]]></output>
+            </test-case>
+            <test-case id="1673" name="SameLifecycleStateProducesSameResult" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.SameLifecycleStateProducesSameResult" methodname="SameLifecycleStateProducesSameResult" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="197790204" result="Passed" start-time="2026-09-25 10:17:17Z" end-time="2026-09-25 10:17:17Z" duration="0.240943" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1668" name="StaleCancelRequest_CannotCancelReplacementPlan" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.StaleCancelRequest_CannotCancelReplacementPlan" methodname="StaleCancelRequest_CannotCancelReplacementPlan" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="1882188560" result="Passed" start-time="2026-09-25 10:17:17Z" end-time="2026-09-25 10:17:18Z" duration="0.244872" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1 cancelled.
+[Commander] Goal #2 cancelled.
+[StrategicPlanner] Plan #1 cancelled.
+[StrategicPlanner] Strategic intent #2 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #2 selected template 'ranged_reinforcement' and started plan #2: RangedReinforcement.
+[StrategicPlanner] Plan #2 milestone active: Economy.
+[Commander] Goal #3 submitted: ResourceAllocation
+[Commander] Goal #4 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1667" name="StalePauseRequest_CannotPauseReplacementPlan" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.StalePauseRequest_CannotPauseReplacementPlan" methodname="StalePauseRequest_CannotPauseReplacementPlan" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="917942493" result="Passed" start-time="2026-09-25 10:17:18Z" end-time="2026-09-25 10:17:18Z" duration="0.244962" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1 cancelled.
+[Commander] Goal #2 cancelled.
+[StrategicPlanner] Plan #1 cancelled.
+[StrategicPlanner] Strategic intent #2 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #2 selected template 'ranged_reinforcement' and started plan #2: RangedReinforcement.
+[StrategicPlanner] Plan #2 milestone active: Economy.
+[Commander] Goal #3 submitted: ResourceAllocation
+[Commander] Goal #4 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1682" name="StaleRevisionRequest_CannotPauseChangedPlan" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.StaleRevisionRequest_CannotPauseChangedPlan" methodname="StaleRevisionRequest_CannotPauseChangedPlan" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="153755951" result="Passed" start-time="2026-09-25 10:17:18Z" end-time="2026-09-25 10:17:18Z" duration="0.242189" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1674" name="UnknownAction_IsRejectedWithoutMutation" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.UnknownAction_IsRejectedWithoutMutation" methodname="UnknownAction_IsRejectedWithoutMutation" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="1013094328" result="Passed" start-time="2026-09-25 10:17:18Z" end-time="2026-09-25 10:17:18Z" duration="0.241657" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1684" name="CommanderPhase4D2Tests" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" testcasecount="42" result="Passed" start-time="2026-09-25 10:17:18Z" end-time="2026-09-25 10:17:29Z" duration="10.377013" total="42" passed="42" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase4D2" />
+            </properties>
+            <test-case id="1712" name="ActiveWithoutExecutionOrProgress_IsUnknown" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.ActiveWithoutExecutionOrProgress_IsUnknown" methodname="ActiveWithoutExecutionOrProgress_IsUnknown" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="606918644" result="Passed" start-time="2026-09-25 10:17:18Z" end-time="2026-09-25 10:17:19Z" duration="0.246379" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1707" name="ArchivedGoalEviction_ReportsMissingHistory" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.ArchivedGoalEviction_ReportsMissingHistory" methodname="ArchivedGoalEviction_ReportsMissingHistory" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="513010847" result="Passed" start-time="2026-09-25 10:17:19Z" end-time="2026-09-25 10:17:19Z" duration="0.282379" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1: status=Completed owned=4 queued=0; 4/4 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=4 queued=0; 4/4 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[StrategicPlanner] Plan #1 milestone completed: Production.
+[StrategicPlanner] Reservation #1 created for plan #1: 300 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 500 Wood.
+[StrategicPlanner] Plan #1 milestone active: Force.
+[Commander] Goal #3 submitted: EnsureUnitCount
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+[Commander] Goal #3 cancelled.
+[StrategicPlanner] Reservation #1 cancelled for plan #1.
+[StrategicPlanner] Reservation #2 cancelled for plan #1.
+[StrategicPlanner] Plan #1 cancelled.
+[Commander] Goal #4 submitted: EnsureUnitCount
+[Commander] Goal #4 cancelled.
+[Commander] Goal #5 submitted: EnsureUnitCount
+[Commander] Goal #5 cancelled.
+[Commander] Goal #6 submitted: EnsureUnitCount
+[Commander] Goal #6 cancelled.
+[Commander] Goal #7 submitted: EnsureUnitCount
+[Commander] Goal #7 cancelled.
+[Commander] Goal #8 submitted: EnsureUnitCount
+[Commander] Goal #8 cancelled.
+[Commander] Goal #9 submitted: EnsureUnitCount
+[Commander] Goal #9 cancelled.
+[Commander] Goal #10 submitted: EnsureUnitCount
+[Commander] Goal #10 cancelled.
+[Commander] Goal #11 submitted: EnsureUnitCount
+[Commander] Goal #11 cancelled.
+[Commander] Goal #12 submitted: EnsureUnitCount
+[Commander] Goal #12 cancelled.
+[Commander] Goal #13 submitted: EnsureUnitCount
+[Commander] Goal #13 cancelled.
+[Commander] Goal #14 submitted: EnsureUnitCount
+[Commander] Goal #14 cancelled.
+[Commander] Goal #15 submitted: EnsureUnitCount
+[Commander] Goal #15 cancelled.
+[Commander] Goal #16 submitted: EnsureUnitCount
+[Commander] Goal #16 cancelled.
+[Commander] Goal #17 submitted: EnsureUnitCount
+[Commander] Goal #17 cancelled.
+[Commander] Goal #18 submitted: EnsureUnitCount
+[Commander] Goal #18 cancelled.
+[Commander] Goal #19 submitted: EnsureUnitCount
+[Commander] Goal #19 cancelled.
+[Commander] Goal #20 submitted: EnsureUnitCount
+[Commander] Goal #20 cancelled.
+[Commander] Goal #21 submitted: EnsureUnitCount
+[Commander] Goal #21 cancelled.
+[Commander] Goal #22 submitted: EnsureUnitCount
+[Commander] Goal #22 cancelled.
+[Commander] Goal #23 submitted: EnsureUnitCount
+[Commander] Goal #23 cancelled.
+[Commander] Goal #24 submitted: EnsureUnitCount
+[Commander] Goal #24 cancelled.
+[Commander] Goal #25 submitted: EnsureUnitCount
+[Commander] Goal #25 cancelled.
+[Commander] Goal #26 submitted: EnsureUnitCount
+[Commander] Goal #26 cancelled.
+[Commander] Goal #27 submitted: EnsureUnitCount
+[Commander] Goal #27 cancelled.
+[Commander] Goal #28 submitted: EnsureUnitCount
+[Commander] Goal #28 cancelled.
+[Commander] Goal #29 submitted: EnsureUnitCount
+[Commander] Goal #29 cancelled.
+[Commander] Goal #30 submitted: EnsureUnitCount
+[Commander] Goal #30 cancelled.
+[Commander] Goal #31 submitted: EnsureUnitCount
+[Commander] Goal #31 cancelled.
+[Commander] Goal #32 submitted: EnsureUnitCount
+[Commander] Goal #32 cancelled.
+[Commander] Goal #33 submitted: EnsureUnitCount
+[Commander] Goal #33 cancelled.
+[Commander] Goal #34 submitted: EnsureUnitCount
+[Commander] Goal #34 cancelled.
+[Commander] Goal #35 submitted: EnsureUnitCount
+[Commander] Goal #35 cancelled.
+[Commander] Goal #36 submitted: EnsureUnitCount
+[Commander] Goal #36 cancelled.
+[Commander] Goal #37 submitted: EnsureUnitCount
+[Commander] Goal #37 cancelled.
+[Commander] Goal #38 submitted: EnsureUnitCount
+[Commander] Goal #38 cancelled.
+[Commander] Goal #39 submitted: EnsureUnitCount
+[Commander] Goal #39 cancelled.
+[Commander] Goal #40 submitted: EnsureUnitCount
+[Commander] Goal #40 cancelled.
+[Commander] Goal #41 submitted: EnsureUnitCount
+[Commander] Goal #41 cancelled.
+[Commander] Goal #42 submitted: EnsureUnitCount
+[Commander] Goal #42 cancelled.
+[Commander] Goal #43 submitted: EnsureUnitCount
+[Commander] Goal #43 cancelled.
+[Commander] Goal #44 submitted: EnsureUnitCount
+[Commander] Goal #44 cancelled.
+[Commander] Goal #45 submitted: EnsureUnitCount
+[Commander] Goal #45 cancelled.
+[Commander] Goal #46 submitted: EnsureUnitCount
+[Commander] Goal #46 cancelled.
+[Commander] Goal #47 submitted: EnsureUnitCount
+[Commander] Goal #47 cancelled.
+[Commander] Goal #48 submitted: EnsureUnitCount
+[Commander] Goal #48 cancelled.
+[Commander] Goal #49 submitted: EnsureUnitCount
+[Commander] Goal #49 cancelled.
+[Commander] Goal #50 submitted: EnsureUnitCount
+[Commander] Goal #50 cancelled.
+[Commander] Goal #51 submitted: EnsureUnitCount
+[Commander] Goal #51 cancelled.
+[Commander] Goal #52 submitted: EnsureUnitCount
+[Commander] Goal #52 cancelled.
+[Commander] Goal #53 submitted: EnsureUnitCount
+[Commander] Goal #53 cancelled.
+]]></output>
+            </test-case>
+            <test-case id="1719" name="BlockedChild_OutranksMilestoneResourceWait" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.BlockedChild_OutranksMilestoneResourceWait" methodname="BlockedChild_OutranksMilestoneResourceWait" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="2027079690" result="Passed" start-time="2026-09-25 10:17:19Z" end-time="2026-09-25 10:17:19Z" duration="0.245820" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1: status=Completed owned=4 queued=0; 4/4 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=4 queued=0; 4/4 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[StrategicPlanner] Plan #1 milestone completed: Production.
+[StrategicPlanner] Reservation #1 created for plan #1: 300 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 500 Wood.
+[StrategicPlanner] Plan #1 milestone active: Force.
+[Commander] Goal #3 submitted: EnsureUnitCount
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+]]></output>
+            </test-case>
+            <test-case id="1720" name="BlockedDuration_IntMaxBoundaryAndMissingPauseAnchorFailClosed" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.BlockedDuration_IntMaxBoundaryAndMissingPauseAnchorFailClosed" methodname="BlockedDuration_IntMaxBoundaryAndMissingPauseAnchorFailClosed" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="954387837" result="Passed" start-time="2026-09-25 10:17:19Z" end-time="2026-09-25 10:17:19Z" duration="0.246211" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1: status=Completed owned=4 queued=0; 4/4 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=4 queued=0; 4/4 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[StrategicPlanner] Plan #1 milestone completed: Production.
+[StrategicPlanner] Reservation #1 created for plan #1: 300 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 500 Wood.
+[StrategicPlanner] Plan #1 milestone active: Force.
+[Commander] Goal #3 submitted: EnsureUnitCount
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+]]></output>
+            </test-case>
+            <test-case id="1709" name="BlockedDuration_StopsAtPauseTickAndRejectsInvalidOrdering" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.BlockedDuration_StopsAtPauseTickAndRejectsInvalidOrdering" methodname="BlockedDuration_StopsAtPauseTickAndRejectsInvalidOrdering" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="1545644800" result="Passed" start-time="2026-09-25 10:17:19Z" end-time="2026-09-25 10:17:20Z" duration="0.244756" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1: status=Completed owned=4 queued=0; 4/4 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=4 queued=0; 4/4 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[StrategicPlanner] Plan #1 milestone completed: Production.
+[StrategicPlanner] Reservation #1 created for plan #1: 300 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 500 Wood.
+[StrategicPlanner] Plan #1 milestone active: Force.
+[Commander] Goal #3 submitted: EnsureUnitCount
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+]]></output>
+            </test-case>
+            <test-case id="1694" name="CancelledPlan_ReportsCancelled" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.CancelledPlan_ReportsCancelled" methodname="CancelledPlan_ReportsCancelled" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="1975342941" result="Passed" start-time="2026-09-25 10:17:20Z" end-time="2026-09-25 10:17:20Z" duration="0.242942" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+[Commander] Goal #1 cancelled.
+[Commander] Goal #2 cancelled.
+[Commander] Goal #3 cancelled.
+[StrategicPlanner] Plan #1 cancelled.
+]]></output>
+            </test-case>
+            <test-case id="1711" name="CapturedHealth_IsDetachedFromResourceMutation" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.CapturedHealth_IsDetachedFromResourceMutation" methodname="CapturedHealth_IsDetachedFromResourceMutation" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="348716715" result="Passed" start-time="2026-09-25 10:17:20Z" end-time="2026-09-25 10:17:20Z" duration="0.257338" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1700" name="ChangingWorldStateWithoutRevision_ChangesHealthEvidence" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.ChangingWorldStateWithoutRevision_ChangesHealthEvidence" methodname="ChangingWorldStateWithoutRevision_ChangesHealthEvidence" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="3990120" result="Passed" start-time="2026-09-25 10:17:20Z" end-time="2026-09-25 10:17:20Z" duration="0.243049" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1705" name="CompletedPlan_ReportsCompleted" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.CompletedPlan_ReportsCompleted" methodname="CompletedPlan_ReportsCompleted" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="2100073159" result="Passed" start-time="2026-09-25 10:17:20Z" end-time="2026-09-25 10:17:21Z" duration="0.247677" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1: status=Completed owned=4 queued=0; 4/4 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=4 queued=0; 4/4 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[StrategicPlanner] Plan #1 milestone completed: Production.
+[StrategicPlanner] Reservation #1 created for plan #1: 300 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 500 Wood.
+[StrategicPlanner] Plan #1 milestone active: Force.
+[Commander] Goal #3 submitted: EnsureUnitCount
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+[Commander] Goal #3: status=Completed owned=10 queued=0; Owned 10/10 living units.
+[StrategicPlanner] Plan #1 milestone completed: Force.
+[StrategicPlanner] Reservation #1 released for plan #1.
+[StrategicPlanner] Reservation #2 released for plan #1.
+[StrategicPlanner] Plan #1 milestone active: Ready.
+[StrategicPlanner] Plan #1 milestone completed: Ready.
+[StrategicPlanner] Plan #1 completed. Ranged reinforcement preparation complete.
+]]></output>
+            </test-case>
+            <test-case id="1688" name="ForeignAndUnknownPlan_ReturnNoHealth" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.ForeignAndUnknownPlan_ReturnNoHealth" methodname="ForeignAndUnknownPlan_ReturnNoHealth" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="646081472" result="Passed" start-time="2026-09-25 10:17:21Z" end-time="2026-09-25 10:17:21Z" duration="0.241287" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1724" name="HealthAnswer_MixedFactsRetainPopulationAndResourceNumbers" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.HealthAnswer_MixedFactsRetainPopulationAndResourceNumbers" methodname="HealthAnswer_MixedFactsRetainPopulationAndResourceNumbers" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="857125566" result="Passed" start-time="2026-09-25 10:17:21Z" end-time="2026-09-25 10:17:21Z" duration="0.243418" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1726" name="HealthAnswer_NumbersAreCultureInvariant" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.HealthAnswer_NumbersAreCultureInvariant" methodname="HealthAnswer_NumbersAreCultureInvariant" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="1841922829" result="Passed" start-time="2026-09-25 10:17:21Z" end-time="2026-09-25 10:17:21Z" duration="0.242536" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1723" name="HealthAnswer_PreservesFourthTypedSecondaryWithinBound" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.HealthAnswer_PreservesFourthTypedSecondaryWithinBound" methodname="HealthAnswer_PreservesFourthTypedSecondaryWithinBound" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="2090452434" result="Passed" start-time="2026-09-25 10:17:21Z" end-time="2026-09-25 10:17:22Z" duration="0.247410" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1725" name="HealthAnswer_UnknownCategoryFailsClosed" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.HealthAnswer_UnknownCategoryFailsClosed" methodname="HealthAnswer_UnknownCategoryFailsClosed" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="1400869951" result="Passed" start-time="2026-09-25 10:17:22Z" end-time="2026-09-25 10:17:22Z" duration="0.245384" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1697" name="HealthSnapshot_DoesNotRetainSimulationObjects" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.HealthSnapshot_DoesNotRetainSimulationObjects" methodname="HealthSnapshot_DoesNotRetainSimulationObjects" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="1414117670" result="Passed" start-time="2026-09-25 10:17:22Z" end-time="2026-09-25 10:17:22Z" duration="0.244247" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1715" name="LiveStatusCounts_IncludeChildrenBeyondDetailLimitAndInvalidStatus" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.LiveStatusCounts_IncludeChildrenBeyondDetailLimitAndInvalidStatus" methodname="LiveStatusCounts_IncludeChildrenBeyondDetailLimitAndInvalidStatus" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="622709318" result="Passed" start-time="2026-09-25 10:17:22Z" end-time="2026-09-25 10:17:22Z" duration="0.255190" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1: status=Completed owned=4 queued=0; 4/4 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=4 queued=0; 4/4 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[StrategicPlanner] Plan #1 milestone completed: Production.
+[StrategicPlanner] Reservation #1 created for plan #1: 300 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 500 Wood.
+[StrategicPlanner] Plan #1 milestone active: Force.
+[Commander] Goal #3 submitted: EnsureUnitCount
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+[Commander] Goal #4 submitted: EnsureUnitCount
+]]></output>
+            </test-case>
+            <test-case id="1710" name="MalformedPlanEnum_FailsClosed" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.MalformedPlanEnum_FailsClosed" methodname="MalformedPlanEnum_FailsClosed" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="1041888463" result="Passed" start-time="2026-09-25 10:17:22Z" end-time="2026-09-25 10:17:23Z" duration="0.246154" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1721" name="MalformedUnitGoalStatus_CannotAssertPopulationWait" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.MalformedUnitGoalStatus_CannotAssertPopulationWait" methodname="MalformedUnitGoalStatus_CannotAssertPopulationWait" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="1647084019" result="Passed" start-time="2026-09-25 10:17:23Z" end-time="2026-09-25 10:17:23Z" duration="0.249327" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1: status=Completed owned=4 queued=0; 4/4 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=4 queued=0; 4/4 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[StrategicPlanner] Plan #1 milestone completed: Production.
+[StrategicPlanner] Reservation #1 created for plan #1: 300 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 500 Wood.
+[StrategicPlanner] Plan #1 milestone active: Force.
+[Commander] Goal #3 submitted: EnsureUnitCount
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+]]></output>
+            </test-case>
+            <test-case id="1704" name="MaxPopulation_DoesNotInventHouseRecovery" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.MaxPopulation_DoesNotInventHouseRecovery" methodname="MaxPopulation_DoesNotInventHouseRecovery" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="1496339102" result="Passed" start-time="2026-09-25 10:17:23Z" end-time="2026-09-25 10:17:23Z" duration="0.247994" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1: status=Completed owned=4 queued=0; 4/4 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=4 queued=0; 4/4 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[StrategicPlanner] Plan #1 milestone completed: Production.
+[StrategicPlanner] Reservation #1 created for plan #1: 300 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 500 Wood.
+[StrategicPlanner] Plan #1 milestone active: Force.
+[Commander] Goal #3 submitted: EnsureUnitCount
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+]]></output>
+            </test-case>
+            <test-case id="1714" name="MilestoneName_IsDeterministicallyBounded" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.MilestoneName_IsDeterministicallyBounded" methodname="MilestoneName_IsDeterministicallyBounded" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="194612383" result="Passed" start-time="2026-09-25 10:17:23Z" end-time="2026-09-25 10:17:23Z" duration="0.242120" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1696" name="OldPlanHealth_DoesNotDescribeReplacementPlan" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.OldPlanHealth_DoesNotDescribeReplacementPlan" methodname="OldPlanHealth_DoesNotDescribeReplacementPlan" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="430155588" result="Passed" start-time="2026-09-25 10:17:23Z" end-time="2026-09-25 10:17:24Z" duration="0.271243" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+[Commander] Goal #1 cancelled.
+[Commander] Goal #2 cancelled.
+[Commander] Goal #3 cancelled.
+[StrategicPlanner] Plan #1 cancelled.
+[StrategicPlanner] Strategic intent #2 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #2 selected template 'CavalryPressure' and started plan #2: CavalryPressure.
+[StrategicPlanner] Reservation conflict for Food: plan #2 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #2 milestone waiting for resources: Economic Foundation.
+[Commander] Goal #4 submitted: ResourceAllocation
+[Commander] Goal #5 submitted: ResourceAllocation
+[Commander] Goal #6 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1722" name="OverqueuedUnitGoal_PreservesSignedRemainingOrders" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.OverqueuedUnitGoal_PreservesSignedRemainingOrders" methodname="OverqueuedUnitGoal_PreservesSignedRemainingOrders" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="1474741052" result="Passed" start-time="2026-09-25 10:17:24Z" end-time="2026-09-25 10:17:24Z" duration="0.245608" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1: status=Completed owned=4 queued=0; 4/4 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=4 queued=0; 4/4 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[StrategicPlanner] Plan #1 milestone completed: Production.
+[StrategicPlanner] Reservation #1 created for plan #1: 300 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 500 Wood.
+[StrategicPlanner] Plan #1 milestone active: Force.
+[Commander] Goal #3 submitted: EnsureUnitCount
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+]]></output>
+            </test-case>
+            <test-case id="1716" name="OwnReservation_DoesNotCreateMilestoneDeficit" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.OwnReservation_DoesNotCreateMilestoneDeficit" methodname="OwnReservation_DoesNotCreateMilestoneDeficit" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="1551480901" result="Passed" start-time="2026-09-25 10:17:24Z" end-time="2026-09-25 10:17:24Z" duration="0.247118" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1: status=Completed owned=4 queued=0; 4/4 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=4 queued=0; 4/4 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[StrategicPlanner] Plan #1 milestone completed: Production.
+[StrategicPlanner] Reservation #1 created for plan #1: 300 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 500 Wood.
+[StrategicPlanner] Plan #1 milestone active: Force.
+[Commander] Goal #3 submitted: EnsureUnitCount
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+]]></output>
+            </test-case>
+            <test-case id="1693" name="PausedPlan_ReportsPaused" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.PausedPlan_ReportsPaused" methodname="PausedPlan_ReportsPaused" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="1035732330" result="Passed" start-time="2026-09-25 10:17:24Z" end-time="2026-09-25 10:17:24Z" duration="0.241884" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1699" name="PlanBudget_DiffersFromMilestoneDeficitAndReservations" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.PlanBudget_DiffersFromMilestoneDeficitAndReservations" methodname="PlanBudget_DiffersFromMilestoneDeficitAndReservations" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="993402687" result="Passed" start-time="2026-09-25 10:17:24Z" end-time="2026-09-25 10:17:25Z" duration="0.243614" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1690" name="PlanHealth_DoesNotAdvancePlan" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.PlanHealth_DoesNotAdvancePlan" methodname="PlanHealth_DoesNotAdvancePlan" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="1998061791" result="Passed" start-time="2026-09-25 10:17:25Z" end-time="2026-09-25 10:17:25Z" duration="0.242459" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1692" name="PlanHealth_DoesNotCallProvider" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.PlanHealth_DoesNotCallProvider" methodname="PlanHealth_DoesNotCallProvider" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="1783445082" result="Passed" start-time="2026-09-25 10:17:25Z" end-time="2026-09-25 10:17:25Z" duration="0.242777" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1687" name="PlanHealth_DoesNotMutateSimulation" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.PlanHealth_DoesNotMutateSimulation" methodname="PlanHealth_DoesNotMutateSimulation" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="2064344529" result="Passed" start-time="2026-09-25 10:17:25Z" end-time="2026-09-25 10:17:25Z" duration="0.242690" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1686" name="PlanHealth_IsDeterministic" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.PlanHealth_IsDeterministic" methodname="PlanHealth_IsDeterministic" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="1547768228" result="Passed" start-time="2026-09-25 10:17:25Z" end-time="2026-09-25 10:17:26Z" duration="0.243010" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1698" name="PlanHealth_RemainsFogSafe" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.PlanHealth_RemainsFogSafe" methodname="PlanHealth_RemainsFogSafe" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="855897598" result="Passed" start-time="2026-09-25 10:17:26Z" end-time="2026-09-25 10:17:26Z" duration="0.243947" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1718" name="PopulationAndMilestoneResourceWait_AreBothPreserved" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.PopulationAndMilestoneResourceWait_AreBothPreserved" methodname="PopulationAndMilestoneResourceWait_AreBothPreserved" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="307089696" result="Passed" start-time="2026-09-25 10:17:26Z" end-time="2026-09-25 10:17:26Z" duration="0.245088" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1: status=Completed owned=4 queued=0; 4/4 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=4 queued=0; 4/4 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[StrategicPlanner] Plan #1 milestone completed: Production.
+[StrategicPlanner] Reservation #1 created for plan #1: 300 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 500 Wood.
+[StrategicPlanner] Plan #1 milestone active: Force.
+[Commander] Goal #3 submitted: EnsureUnitCount
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+]]></output>
+            </test-case>
+            <test-case id="1708" name="PopulationMirror_ExcludesGarrisonedUnits" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.PopulationMirror_ExcludesGarrisonedUnits" methodname="PopulationMirror_ExcludesGarrisonedUnits" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="791373790" result="Passed" start-time="2026-09-25 10:17:26Z" end-time="2026-09-25 10:17:26Z" duration="0.246583" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1: status=Completed owned=4 queued=0; 4/4 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=4 queued=0; 4/4 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[StrategicPlanner] Plan #1 milestone completed: Production.
+[StrategicPlanner] Reservation #1 created for plan #1: 300 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 500 Wood.
+[StrategicPlanner] Plan #1 milestone active: Force.
+[Commander] Goal #3 submitted: EnsureUnitCount
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+]]></output>
+            </test-case>
+            <test-case id="1703" name="PopulationMirror_UsesPlanUnitsRegistryAndQueuePredicates" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.PopulationMirror_UsesPlanUnitsRegistryAndQueuePredicates" methodname="PopulationMirror_UsesPlanUnitsRegistryAndQueuePredicates" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="2066067624" result="Passed" start-time="2026-09-25 10:17:26Z" end-time="2026-09-25 10:17:27Z" duration="0.246169" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1: status=Completed owned=4 queued=0; 4/4 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=4 queued=0; 4/4 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[StrategicPlanner] Plan #1 milestone completed: Production.
+[StrategicPlanner] Reservation #1 created for plan #1: 300 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 500 Wood.
+[StrategicPlanner] Plan #1 milestone active: Force.
+[Commander] Goal #3 submitted: EnsureUnitCount
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+]]></output>
+            </test-case>
+            <test-case id="1702" name="PopulationWaiting_IsStructured" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.PopulationWaiting_IsStructured" methodname="PopulationWaiting_IsStructured" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="1892568627" result="Passed" start-time="2026-09-25 10:17:27Z" end-time="2026-09-25 10:17:27Z" duration="0.244160" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1: status=Completed owned=4 queued=0; 4/4 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=4 queued=0; 4/4 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[StrategicPlanner] Plan #1 milestone completed: Production.
+[StrategicPlanner] Reservation #1 created for plan #1: 300 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 500 Wood.
+[StrategicPlanner] Plan #1 milestone active: Force.
+[Commander] Goal #3 submitted: EnsureUnitCount
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+]]></output>
+            </test-case>
+            <test-case id="1706" name="PrimaryAndSecondaryBlockers_AreRankedAndBounded" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.PrimaryAndSecondaryBlockers_AreRankedAndBounded" methodname="PrimaryAndSecondaryBlockers_AreRankedAndBounded" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="688749594" result="Passed" start-time="2026-09-25 10:17:27Z" end-time="2026-09-25 10:17:27Z" duration="0.245161" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1: status=Completed owned=4 queued=0; 4/4 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=4 queued=0; 4/4 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[StrategicPlanner] Plan #1 milestone completed: Production.
+[StrategicPlanner] Reservation #1 created for plan #1: 300 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 500 Wood.
+[StrategicPlanner] Plan #1 milestone active: Force.
+[Commander] Goal #3 submitted: EnsureUnitCount
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+]]></output>
+            </test-case>
+            <test-case id="1717" name="QueuedProduction_IsExpectedWaiting" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.QueuedProduction_IsExpectedWaiting" methodname="QueuedProduction_IsExpectedWaiting" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="213524635" result="Passed" start-time="2026-09-25 10:17:27Z" end-time="2026-09-25 10:17:27Z" duration="0.246585" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1: status=Completed owned=4 queued=0; 4/4 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=4 queued=0; 4/4 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[StrategicPlanner] Plan #1 milestone completed: Production.
+[StrategicPlanner] Reservation #1 created for plan #1: 300 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 500 Wood.
+[StrategicPlanner] Plan #1 milestone active: Force.
+[Commander] Goal #3 submitted: EnsureUnitCount
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+]]></output>
+            </test-case>
+            <test-case id="1691" name="ReservationTotals_UnchangedByHealthCapture" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.ReservationTotals_UnchangedByHealthCapture" methodname="ReservationTotals_UnchangedByHealthCapture" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="334423532" result="Passed" start-time="2026-09-25 10:17:27Z" end-time="2026-09-25 10:17:27Z" duration="0.242402" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1695" name="Reset_ClearsPlanHealthProjection" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.Reset_ClearsPlanHealthProjection" methodname="Reset_ClearsPlanHealthProjection" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="1795682537" result="Passed" start-time="2026-09-25 10:17:27Z" end-time="2026-09-25 10:17:28Z" duration="0.242082" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1685" name="ResourceWaiting_IsNotMisclassifiedAsFailure" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.ResourceWaiting_IsNotMisclassifiedAsFailure" methodname="ResourceWaiting_IsNotMisclassifiedAsFailure" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="1716971613" result="Passed" start-time="2026-09-25 10:17:28Z" end-time="2026-09-25 10:17:28Z" duration="0.242934" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1689" name="SameStateProducesSameHealthSnapshot" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.SameStateProducesSameHealthSnapshot" methodname="SameStateProducesSameHealthSnapshot" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="921365063" result="Passed" start-time="2026-09-25 10:17:28Z" end-time="2026-09-25 10:17:28Z" duration="0.244805" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1713" name="SatisfiedUnitTarget_OverCapQueueDoesNotInventPopulationWait" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.SatisfiedUnitTarget_OverCapQueueDoesNotInventPopulationWait" methodname="SatisfiedUnitTarget_OverCapQueueDoesNotInventPopulationWait" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="750135381" result="Passed" start-time="2026-09-25 10:17:28Z" end-time="2026-09-25 10:17:28Z" duration="0.247540" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #1: status=Completed owned=4 queued=0; 4/4 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=4 queued=0; 4/4 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[StrategicPlanner] Plan #1 milestone completed: Production.
+[StrategicPlanner] Reservation #1 created for plan #1: 300 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 500 Wood.
+[StrategicPlanner] Plan #1 milestone active: Force.
+[Commander] Goal #3 submitted: EnsureUnitCount
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+[Commander] Goal #3: status=Executing owned=0 queued=0; Queueing Archer at ArcheryRange #1.
+]]></output>
+            </test-case>
+            <test-case id="1701" name="UnresolvedRequirement_IsUnknownNotZero" fullname="OpenEmpires.Tests.CommanderPhase4D2Tests.UnresolvedRequirement_IsUnknownNotZero" methodname="UnresolvedRequirement_IsUnknownNotZero" classname="OpenEmpires.Tests.CommanderPhase4D2Tests" runstate="Runnable" seed="1068837738" result="Passed" start-time="2026-09-25 10:17:28Z" end-time="2026-09-25 10:17:29Z" duration="0.243084" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation conflict for Food: plan #1 requested 840; current 0, reserved 0, available 0; owner: no active reservation owner.
+[StrategicPlanner] Plan #1 milestone waiting for resources: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

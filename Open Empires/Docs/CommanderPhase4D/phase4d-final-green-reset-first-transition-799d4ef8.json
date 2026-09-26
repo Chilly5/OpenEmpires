@@ -1,0 +1,61 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "799d4ef87c5a4643950297c3c227f38f",
+      "status": "succeeded",
+      "mode": "PlayMode",
+      "started_unix_ms": 1790421212836,
+      "finished_unix_ms": 1790421215291,
+      "last_update_unix_ms": 1790421215291,
+      "progress": {
+        "completed": 2,
+        "total": 2,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1790421215003,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4D4HostPlayModeTests.Advisory_SamePipelineReinitializeClearsState",
+        "last_finished_unix_ms": 1790421215262,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "PlayMode",
+        "summary": {
+          "total": 2,
+          "passed": 2,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 0.7262195,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "Advisory_ResetRejectsOldProviderAndEvent",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D4HostPlayModeTests.Advisory_ResetRejectsOldProviderAndEvent",
+            "state": "Passed",
+            "durationSeconds": 0.4402323,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "Advisory_SamePipelineReinitializeClearsState",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4D4HostPlayModeTests.Advisory_SamePipelineReinitializeClearsState",
+            "state": "Passed",
+            "durationSeconds": 0.2586769,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "bf016c66fd09475195095c5de89c10b1",
+    "status": "succeeded",
+    "mode": "PlayMode",
+    "started_unix_ms": 1790348791890,
+    "finished_unix_ms": 1790348793982,
+    "last_update_unix_ms": 1790348793982,
+    "progress": {
+      "completed": 2,
+      "total": 2,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1790348793659,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4C2PlayModeTests.RejectedAttackQuestion_ExplainsHostRefusalOfDirectPlayerOverride",
+      "last_finished_unix_ms": 1790348793953,
+      "stuck_suspected": false,
+      "editor_is_focused": true,
+      "blocked_reason": null,
+      "failures_so_far": [],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": {
+      "mode": "PlayMode",
+      "summary": {
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0,
+        "durationSeconds": 0.6625089,
+        "resultState": "Passed"
+      },
+      "results": [
+        {
+          "name": "EmergencyDefensePolicy_RejectsUnconfirmedAttackWithPriorityReason",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4C2PlayModeTests.EmergencyDefensePolicy_RejectsUnconfirmedAttackWithPriorityReason",
+          "state": "Passed",
+          "durationSeconds": 0.3380767,
+          "message": null,
+          "stackTrace": null,
+          "output": "[StrategicPlanner] Strategic intent #1 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'DefensivePreparation' and started plan #1: DefensivePreparation.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Defense.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+        },
+        {
+          "name": "RejectedAttackQuestion_ExplainsHostRefusalOfDirectPlayerOverride",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4C2PlayModeTests.RejectedAttackQuestion_ExplainsHostRefusalOfDirectPlayerOverride",
+          "state": "Passed",
+          "durationSeconds": 0.2953702,
+          "message": null,
+          "stackTrace": null,
+          "output": "[StrategicPlanner] Strategic intent #1 created: DefensivePreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'DefensivePreparation' and started plan #1: DefensivePreparation.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Defense.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+        }
+      ]
+    }
+  },
+  "hint": null
+}

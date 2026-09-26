@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
 using UnityEngine;
 
 namespace OpenEmpires
@@ -45,6 +46,7 @@ namespace OpenEmpires
         private int lastResourceRetryTick = -1;
         private StrategicPlan submittingPlan;
         private StrategicMilestone submittingMilestone;
+        private bool committingSubmission;
         private bool disposed;
 
         public IReadOnlyList<StrategicPlan> Plans => plans;
@@ -56,6 +58,10 @@ namespace OpenEmpires
         public StrategicPlanRegistry PlanRegistry => planRegistry;
         public StrategicCommitmentPolicy CommitmentPolicy => commitmentPolicy;
         public int PlayerId => goalManager.PlayerId;
+        internal bool UsesSimulation(GameSimulation candidate) => candidate != null
+            && ReferenceEquals(goalManager.Simulation, candidate);
+        internal bool UsesContext(GameSimulation candidate, CommanderGoalManager manager)
+            => UsesSimulation(candidate) && ReferenceEquals(goalManager, manager);
         internal StrategicPipeline Pipeline { get; set; }
         internal StrategicPipeline GetOrCreatePipeline() => Pipeline
             ?? new StrategicPipeline(goalManager.Simulation, goalManager, this);
@@ -127,6 +133,19 @@ namespace OpenEmpires
             bool isEmergency, bool isPlayerOverride)
         {
             ThrowIfDisposed();
+            if (committingSubmission)
+            {
+                const string reason = "A strategic plan submission is already being committed.";
+                if (intent != null && intent.Status == StrategicIntentStatus.Created)
+                {
+                    intent.Status = StrategicIntentStatus.Rejected;
+                    intent.StatusReason = reason;
+                    TrimIntentHistory();
+                }
+                return new StrategicIntentSubmission(StrategicIntentSubmissionStatus.Rejected,
+                    intent, null, StrategicIntentValidationError.CommitmentBlocked,
+                    reason);
+            }
             if (intent != null && isPlayerOverride && intent.Source == StrategicIntentSource.AIRecommendation)
                 return new StrategicIntentSubmission(StrategicIntentSubmissionStatus.Rejected,
                     intent, null, StrategicIntentValidationError.CommitmentBlocked,
@@ -191,56 +210,110 @@ namespace OpenEmpires
                 }
             }
 
-            for (int i = 0; i < conflictingPlans.Count; i++)
+            // Complete every fallible admission check before cancelling any existing plan.
+            StrategicIntentValidationError preflightError = StrategicIntentValidationError.None;
+            string preflightReason = string.Empty;
+            try
             {
-                StrategicPlan conflicting = conflictingPlans[i];
-                if (isPlayerOverride || (isEmergency && conflicting.Authority < StrategicPlanAuthority.Emergency))
+                if (plan.Status != StrategicPlanStatus.Created || plan.Revision != 0
+                    || plan.Milestones.Count == 0)
+                    throw new InvalidOperationException("The incoming plan has no valid initial milestone.");
+                for (int i = 0; i < plan.Milestones.Count; i++)
                 {
-                    if (!CancelPlan(conflicting.StrategicPlanId))
-                        return RejectIntent(intent, StrategicIntentValidationError.CommitmentBlocked,
-                            "The conflicting plan could not be cancelled safely.");
+                    StrategicMilestone stage = plan.Milestones[i];
+                    if (stage == null || stage.OrderIndex != i
+                        || stage.Status != StrategicMilestoneStatus.Pending)
+                        throw new InvalidOperationException("The incoming plan has invalid milestone order or status.");
+                }
+
+                int projectedActiveCount = activePlans.Count;
+                for (int i = 0; i < conflictingPlans.Count; i++)
+                {
+                    StrategicPlan conflicting = conflictingPlans[i];
+                    if (!isPlayerOverride && !(isEmergency
+                        && conflicting.Authority < StrategicPlanAuthority.Emergency)) continue;
+                    if (!CanAdvanceRevision(conflicting, 1L + CountActiveReservations(conflicting)))
+                    {
+                        preflightError = StrategicIntentValidationError.CommitmentBlocked;
+                        preflightReason = "The conflicting plan could not be cancelled safely.";
+                        break;
+                    }
+                    projectedActiveCount--;
+                }
+                if (preflightError == StrategicIntentValidationError.None
+                    && projectedActiveCount >= MaxActivePlans)
+                {
+                    preflightError = StrategicIntentValidationError.ActivePlanLimitReached;
+                    preflightReason = $"The active strategic plan limit of {MaxActivePlans} has been reached.";
+                }
+
+                if (preflightError == StrategicIntentValidationError.None)
+                {
+                    if (plan is DefensiveTurtlePlan turtle)
+                        turtle.TowerTargetTotal = CountCompletedTowers() + DefensiveTurtlePlan.TowerCount;
+                    if (plan is CavalryPressurePlan || plan is DefensivePreparationPlan || plan is EconomicExpansionPlan
+                        || plan is RangedReinforcementPlan || plan is DefensiveTurtlePlan)
+                    {
+                        var totals = new SortedDictionary<ResourceType, int>();
+                        foreach (StrategicMilestone stage in plan.Milestones)
+                            foreach (StrategicResourceRequirement cost in ComputeRequirements(stage,
+                                plan as DefensiveTurtlePlan))
+                                totals[cost.ResourceType] = (totals.TryGetValue(cost.ResourceType, out int amount) ? amount : 0) + cost.Amount;
+                        var budget = new List<StrategicResourceRequirement>();
+                        foreach (var total in totals) budget.Add(new StrategicResourceRequirement(total.Key, total.Value));
+                        plan.SetBudgetFromSimulation(budget);
+                    }
+                    FitEconomyToAvailableWorkers(plan);
                 }
             }
-
-            if (activePlans.Count >= MaxActivePlans)
+            catch (Exception error)
             {
-                return RejectIntent(intent, StrategicIntentValidationError.ActivePlanLimitReached,
-                    $"The active strategic plan limit of {MaxActivePlans} has been reached.");
+                preflightError = StrategicIntentValidationError.TemplateCreationFailed;
+                preflightReason = $"Strategic plan admission failed: {error.Message}";
             }
+            if (preflightError != StrategicIntentValidationError.None)
+                return RejectIntent(intent, preflightError, preflightReason);
 
-            if (plan is DefensiveTurtlePlan turtle)
-                turtle.TowerTargetTotal = CountCompletedTowers() + DefensiveTurtlePlan.TowerCount;
-            if (plan is CavalryPressurePlan || plan is DefensivePreparationPlan || plan is EconomicExpansionPlan
-                || plan is RangedReinforcementPlan || plan is DefensiveTurtlePlan)
+            committingSubmission = true;
+            try
             {
-                var totals = new SortedDictionary<ResourceType, int>();
-                foreach (StrategicMilestone stage in plan.Milestones)
-                    foreach (StrategicResourceRequirement cost in ComputeRequirements(stage,
-                        plan as DefensiveTurtlePlan))
-                        totals[cost.ResourceType] = (totals.TryGetValue(cost.ResourceType, out int amount) ? amount : 0) + cost.Amount;
-                var budget = new List<StrategicResourceRequirement>();
-                foreach (var total in totals) budget.Add(new StrategicResourceRequirement(total.Key, total.Value));
-                plan.SetBudgetFromSimulation(budget);
-            }
-            plan.Authority = incomingAuthority;
-            plan.Source = intent.Source;
-            FitEconomyToAvailableWorkers(plan);
-            plan.StrategicPlanId = nextPlanId++;
-            plan.CreatedTick = goalManager.CurrentTick;
-            plan.InitializeRevision();
-            plans.Add(plan);
-            activePlans.Add(plan);
-            intentsByPlanId.Add(plan.StrategicPlanId, intent);
+                var cancellations = new List<StrategicPlan>();
+                for (int i = 0; i < conflictingPlans.Count; i++)
+                {
+                    StrategicPlan conflicting = conflictingPlans[i];
+                    if (isPlayerOverride || (isEmergency && conflicting.Authority < StrategicPlanAuthority.Emergency))
+                    {
+                        cancellations.Add(conflicting);
+                    }
+                }
+                // Commit all cancellation states before cleanup publishes any reentrant event.
+                for (int i = 0; i < cancellations.Count; i++)
+                    BeginPlanCancellation(cancellations[i]);
+                Exception cancellationError = null;
+                for (int i = 0; i < cancellations.Count; i++)
+                    FinishPlanCancellation(cancellations[i], ref cancellationError);
+                if (cancellationError != null) ExceptionDispatchInfo.Capture(cancellationError).Throw();
 
-            plan.Status = StrategicPlanStatus.Active;
-            SetIntentStatus(intent, StrategicIntentStatus.Active, string.Empty);
-            StrategicMilestone milestone = plan.ActivateFirstMilestone();
-            Debug.Log($"[StrategicPlanner] Intent #{intent.IntentId} selected template "
-                + $"'{validation.Template.TemplateId}' and started plan #{plan.StrategicPlanId}: "
-                + $"{plan.PlanType}.");
-            PublishPlanStatus(plan);
-            StartOrWaitForMilestone(plan, milestone);
-            return CreatedSubmission(intent, plan);
+                plan.Authority = incomingAuthority;
+                plan.Source = intent.Source;
+                plan.StrategicPlanId = nextPlanId++;
+                plan.CreatedTick = goalManager.CurrentTick;
+                plan.InitializeRevision();
+                plans.Add(plan);
+                activePlans.Add(plan);
+                intentsByPlanId.Add(plan.StrategicPlanId, intent);
+
+                plan.Status = StrategicPlanStatus.Active;
+                SetIntentStatus(intent, StrategicIntentStatus.Active, string.Empty);
+                StrategicMilestone milestone = plan.ActivateFirstMilestone();
+                Debug.Log($"[StrategicPlanner] Intent #{intent.IntentId} selected template "
+                    + $"'{validation.Template.TemplateId}' and started plan #{plan.StrategicPlanId}: "
+                    + $"{plan.PlanType}.");
+                PublishPlanStatus(plan);
+                StartOrWaitForMilestone(plan, milestone);
+                return CreatedSubmission(intent, plan);
+            }
+            finally { committingSubmission = false; }
         }
 
         internal StrategicIntent MaterializeRecommendation(StrategicIntent selected)
@@ -287,19 +360,54 @@ namespace OpenEmpires
             StrategicPlan plan = GetPlan(strategicPlanId);
             if (plan == null || plan.IsTerminal) return false;
             if (!CanAdvanceRevision(plan, 1L + CountActiveReservations(plan))) return false;
+            BeginPlanCancellation(plan);
+            Exception cancellationError = null;
+            FinishPlanCancellation(plan, ref cancellationError);
+            if (cancellationError != null) ExceptionDispatchInfo.Capture(cancellationError).Throw();
+            return true;
+        }
+
+        private void BeginPlanCancellation(StrategicPlan plan)
+        {
             plan.Status = StrategicPlanStatus.Cancelled;
             plan.AdvanceRevision();
             plan.OutcomeMessage = plan.CancellationMessage;
             activePlans.Remove(plan);
             ArchivePlan(plan);
+        }
+
+        private void FinishPlanCancellation(StrategicPlan plan, ref Exception cancellationError)
+        {
             SkipUnfinishedMilestones(plan);
-            CancelOwnedNonTerminalGoals(plan);
-            reservationManager.ReleasePlanReservations(plan.StrategicPlanId, cancelled: true);
+            for (int i = 0; i < plan.ChildGoalIds.Count; i++)
+            {
+                int goalId = plan.ChildGoalIds[i];
+                CommanderGoal goal = goalManager.GetGoal(goalId);
+                try
+                {
+                    if (goal != null && !goal.IsTerminal) goalManager.CancelGoal(goalId);
+                }
+                catch (Exception error) { if (cancellationError == null) cancellationError = error; }
+                finally { childGoalLinks.Remove(goalId); }
+            }
+            var reservationIds = new List<int>();
+            for (int i = 0; i < reservationManager.Reservations.Count; i++)
+            {
+                StrategicResourceReservation reservation = reservationManager.Reservations[i];
+                if (reservation.PlanId == plan.StrategicPlanId)
+                    reservationIds.Add(reservation.ReservationId);
+            }
+            for (int i = 0; i < reservationIds.Count; i++)
+            {
+                try { reservationManager.ReleaseReservation(reservationIds[i], cancelled: true); }
+                catch (Exception error) { if (cancellationError == null) cancellationError = error; }
+            }
             ClearDeferredTerminalEvents(plan);
             Debug.Log($"[StrategicPlanner] Plan #{plan.StrategicPlanId} cancelled.");
-            PublishPlanStatus(plan);
-            ResponseGenerated?.Invoke(plan, plan.OutcomeMessage);
-            return true;
+            try { PublishPlanStatus(plan); }
+            catch (Exception error) { if (cancellationError == null) cancellationError = error; }
+            try { ResponseGenerated?.Invoke(plan, plan.OutcomeMessage); }
+            catch (Exception error) { if (cancellationError == null) cancellationError = error; }
         }
 
         public void Dispose()
@@ -407,7 +515,7 @@ namespace OpenEmpires
                 StrategicResourceReservation reservation = reservationManager.Reservations[i];
                 if (reservation.ReservationId != reservationId) continue;
                 StrategicPlan plan = GetPlan(reservation.PlanId);
-                if (plan == null || plan.Status == StrategicPlanStatus.Paused
+                if (plan == null || plan.IsTerminal || plan.Status == StrategicPlanStatus.Paused
                     || !CanAdvanceRevision(plan, 1)) return false;
                 bool updated = reservationManager.UpdateReservationAmount(reservationId, newAmount);
                 if (updated && newAmount > 0) plan.AdvanceRevision();
@@ -424,7 +532,7 @@ namespace OpenEmpires
                 StrategicResourceReservation reservation = reservationManager.Reservations[i];
                 if (reservation.ReservationId != reservationId) continue;
                 StrategicPlan plan = GetPlan(reservation.PlanId);
-                return plan != null && plan.Status != StrategicPlanStatus.Paused
+                return plan != null && !plan.IsTerminal && plan.Status != StrategicPlanStatus.Paused
                     && CanAdvanceRevision(plan, 1)
                     && reservationManager.ReleaseReservation(reservationId, cancelled);
             }
@@ -1104,21 +1212,26 @@ namespace OpenEmpires
 
         private void PublishPlanStatus(StrategicPlan plan)
         {
-            PlanStatusChanged?.Invoke(plan);
-            if (!intentsByPlanId.TryGetValue(plan.StrategicPlanId,
-                out StrategicIntent intent)) return;
-            switch (plan.Status)
+            Exception observerError = null;
+            try { PlanStatusChanged?.Invoke(plan); }
+            catch (Exception error) { observerError = error; }
+            if (intentsByPlanId.TryGetValue(plan.StrategicPlanId,
+                out StrategicIntent intent))
             {
-                case StrategicPlanStatus.Completed:
-                    SetIntentStatus(intent, StrategicIntentStatus.Completed, plan.OutcomeMessage);
-                    break;
-                case StrategicPlanStatus.Failed:
-                    SetIntentStatus(intent, StrategicIntentStatus.Failed, plan.OutcomeMessage);
-                    break;
-                case StrategicPlanStatus.Cancelled:
-                    SetIntentStatus(intent, StrategicIntentStatus.Cancelled, plan.OutcomeMessage);
-                    break;
+                switch (plan.Status)
+                {
+                    case StrategicPlanStatus.Completed:
+                        SetIntentStatus(intent, StrategicIntentStatus.Completed, plan.OutcomeMessage);
+                        break;
+                    case StrategicPlanStatus.Failed:
+                        SetIntentStatus(intent, StrategicIntentStatus.Failed, plan.OutcomeMessage);
+                        break;
+                    case StrategicPlanStatus.Cancelled:
+                        SetIntentStatus(intent, StrategicIntentStatus.Cancelled, plan.OutcomeMessage);
+                        break;
+                }
             }
+            if (observerError != null) ExceptionDispatchInfo.Capture(observerError).Throw();
         }
 
         private void SetIntentStatus(StrategicIntent intent, StrategicIntentStatus status,

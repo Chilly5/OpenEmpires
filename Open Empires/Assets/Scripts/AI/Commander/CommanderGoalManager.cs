@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
 using UnityEngine;
 
 namespace OpenEmpires
@@ -200,9 +201,13 @@ namespace OpenEmpires
                 ArchiveGoal(goal);
                 if (ActiveGoal == goal) ActiveGoal = null;
                 Debug.Log($"[Commander] Goal #{goal.GoalId} cancelled.");
-                GoalStatusChanged?.Invoke(goal);
-                PublishEvent(CommanderGoalEventType.GoalCancelled, goal, simulation.CurrentTick);
-                if (!isTicking) CleanupTerminalGoals();
+                Exception observerError = null;
+                try { GoalStatusChanged?.Invoke(goal); }
+                catch (Exception error) { observerError = error; }
+                try { PublishEvent(CommanderGoalEventType.GoalCancelled, goal, simulation.CurrentTick); }
+                catch (Exception error) { if (observerError == null) observerError = error; }
+                finally { if (!isTicking) CleanupTerminalGoals(); }
+                if (observerError != null) ExceptionDispatchInfo.Capture(observerError).Throw();
                 return true;
             }
             return false;

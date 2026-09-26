@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-25 20:18:15Z" end-time="2026-09-25 20:18:16Z" duration="0.6078134">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="689" result="Failed" site="Child" start-time="2026-09-25 20:18:15Z" end-time="2026-09-25 20:18:16Z" duration="0.607813" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1777" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="689" result="Failed" site="Child" start-time="2026-09-25 20:18:15Z" end-time="2026-09-25 20:18:16Z" duration="0.600865" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="8796" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1778" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="689" result="Failed" site="Child" start-time="2026-09-25 20:18:15Z" end-time="2026-09-25 20:18:16Z" duration="0.600383" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1779" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="689" result="Failed" site="Child" start-time="2026-09-25 20:18:15Z" end-time="2026-09-25 20:18:16Z" duration="0.599255" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1632" name="CommanderPhase4D1Tests" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" testcasecount="50" result="Failed" site="Child" start-time="2026-09-25 20:18:15Z" end-time="2026-09-25 20:18:16Z" duration="0.598164" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase4D1" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1644" name="ReplacementCancellationObserver_CannotAdmitNestedIncompatiblePlan" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.ReplacementCancellationObserver_CannotAdmitNestedIncompatiblePlan" methodname="ReplacementCancellationObserver_CannotAdmitNestedIncompatiblePlan" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="1475300449" result="Failed" start-time="2026-09-25 20:18:15Z" end-time="2026-09-25 20:18:16Z" duration="0.301427" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  A directly submitted intent must not remain Created after guarded rejection.
+  Expected: Rejected
+  But was:  Created
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4D1Tests.ReplacementCancellationObserver_CannotAdmitNestedIncompatiblePlan () [0x00186] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4D1Tests.cs:238
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Reservation #1 created for plan #1: 150 Wood.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[Commander] Goal #3 submitted: BuildStructure
+[StrategicPlanner] Strategic intent #2 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #3 created: DefensivePreparation for player 0.
+[Commander] Goal #1 cancelled.
+[Commander] Goal #2 cancelled.
+[Commander] Goal #3 cancelled.
+[StrategicPlanner] Reservation #1 cancelled for plan #1.
+[StrategicPlanner] Plan #1 cancelled.
+[StrategicPlanner] Intent #3 selected template 'DefensivePreparation' and started plan #2: DefensivePreparation.
+[StrategicPlanner] Plan #2 milestone active: Economic Defense.
+[Commander] Goal #4 submitted: ResourceAllocation
+[Commander] Goal #5 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1645" name="ReplacementCancellationObserver_RepeatedConvenienceSubmissionsRemainBounded" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.ReplacementCancellationObserver_RepeatedConvenienceSubmissionsRemainBounded" methodname="ReplacementCancellationObserver_RepeatedConvenienceSubmissionsRemainBounded" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="857348240" result="Failed" start-time="2026-09-25 20:18:16Z" end-time="2026-09-25 20:18:16Z" duration="0.286390" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Guarded convenience submissions must not strand Created intents.
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4D1Tests.ReplacementCancellationObserver_RepeatedConvenienceSubmissionsRemainBounded () [0x00113] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4D1Tests.cs:270
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.
+[StrategicPlanner] Plan #1 milestone active: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+[StrategicPlanner] Strategic intent #2 created: DefensivePreparation for player 0.
+[Commander] Goal #1 cancelled.
+[Commander] Goal #2 cancelled.
+[Commander] Goal #3 cancelled.
+[StrategicPlanner] Reservation #1 cancelled for plan #1.
+[StrategicPlanner] Reservation #2 cancelled for plan #1.
+[StrategicPlanner] Plan #1 cancelled.
+[StrategicPlanner] Strategic intent #3 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #4 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #5 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #6 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #7 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #8 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #9 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #10 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #11 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #12 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #13 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #14 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #15 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #16 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #17 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #18 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #19 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #20 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #21 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #22 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #23 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #24 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #25 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #26 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #27 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #28 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #29 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #30 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #31 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #32 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #33 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #34 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #35 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #36 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #37 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #38 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #39 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #40 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #41 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #42 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #43 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #44 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #45 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #46 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #47 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #48 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #49 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #50 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #51 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #52 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #53 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #54 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #55 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #56 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #57 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #58 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #59 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #60 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #61 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #62 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #63 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #64 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #65 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #66 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #67 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #68 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #69 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #70 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #71 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #72 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #73 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #74 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #75 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #76 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #77 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #78 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #79 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #80 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #81 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #82 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #83 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #84 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #85 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #86 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #87 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #88 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #89 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #90 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #91 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #92 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #93 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #94 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #95 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #96 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #97 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #98 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #99 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #100 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #101 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #102 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #103 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #104 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #105 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #106 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #107 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #2 selected template 'DefensivePreparation' and started plan #2: DefensivePreparation.
+[StrategicPlanner] Plan #2 milestone active: Economic Defense.
+[Commander] Goal #4 submitted: ResourceAllocation
+[Commander] Goal #5 submitted: ResourceAllocation
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

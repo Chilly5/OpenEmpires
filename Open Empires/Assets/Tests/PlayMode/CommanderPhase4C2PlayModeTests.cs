@@ -80,16 +80,55 @@ namespace OpenEmpires.Tests
         }
 
         [UnityTest]
-        public IEnumerator RejectedAttackQuestion_MatchesRecordedReasonDespiteUnrelatedDefense()
+        public IEnumerator RejectedAttackQuestion_ExplainsHostRefusalOfDirectPlayerOverride()
         {
             var provider = new CountingStrategicProvider();
             chat.InitializeStrategic(provider, pipeline);
-            StrategicPlan defense = CreateEmergencyDefense();
+            StrategicIntent directIntent = planner.CreateIntent(
+                StrategicObjectiveType.DefensivePreparation);
+            StrategicApprovalResult directApproval = new StrategicApprovalLayer().Evaluate(
+                pipeline.CaptureContext(), directIntent, directIntent.Source);
+            StrategicPlan defense = pipeline.EvaluateApprovedIntentNow(directApproval).Submission?.Plan;
+            Assert.That(defense, Is.Not.Null);
+            Assert.That(defense.Source, Is.EqualTo(StrategicIntentSource.PlayerDirect));
+            int plans = planner.Plans.Count;
+            int goalsBefore = goals.Goals.Count;
+            int reservations = planner.Reservations.Count;
+            int commands = PendingCommandCount();
+            int history = pipeline.DecisionHistory.History.Count;
+            int approvedBefore = chat.Conversation.Snapshot().Count(entry =>
+                entry.Kind == MemoryEntryKind.ApprovedStrategy);
             Task<CommanderAIChatSubmission> prepare = chat.SubmitMessageAsync("prepare cavalry attack");
             while (!prepare.IsCompleted) yield return null;
-            StrategicDecisionRecord rejected = chat.ApproveStrategicRecommendation();
-            Assert.That(rejected.Decision.Status, Is.EqualTo(StrategicDecisionStatus.Rejected));
-            Assert.That(rejected.Outcome, Does.Contain("Emergency defense has higher priority"));
+            StrategicIntent pending = chat.PendingStrategicIntent;
+            Assert.That(pending, Is.Not.Null);
+            Assert.That(chat.PendingAdaptationProposal, Is.Not.Null);
+            Assert.That(chat.PendingAdaptationProposal.PendingIntentId,
+                Is.EqualTo(pending.IntentId));
+            Assert.That(chat.ApproveStrategicRecommendation(), Is.Null);
+            Assert.That(chat.PendingStrategicIntent, Is.SameAs(pending));
+            Assert.That(planner.Plans.Count, Is.EqualTo(plans));
+            Assert.That(pipeline.DecisionHistory.History.Count, Is.EqualTo(history));
+            StrategicDecisionRecord refused = chat.ConfirmStrategicCommand();
+            Assert.That(refused, Is.Not.Null);
+            Assert.That(refused.Decision.Status, Is.EqualTo(StrategicDecisionStatus.Rejected));
+            Assert.That(refused.Decision.SelectedIntent, Is.Null,
+                "Approval refuses the confirmed command before policy selection.");
+            Assert.That(pending.IntentId, Is.GreaterThan(0));
+            Assert.That(pending.Source, Is.EqualTo(StrategicIntentSource.AIRecommendation));
+            Assert.That(planner.IntentIds.Owns(pending), Is.False,
+                "Confirmation transfers the trusted ID away from the displayed recommendation.");
+            Assert.That(chat.PendingStrategicIntent, Is.Null);
+            Assert.That(refused.Submission, Is.Null);
+            Assert.That(refused.Outcome,
+                Does.Contain("Direct player plans have higher priority than confirmed AI commands"));
+            Assert.That(chat.LatestStrategicDecision, Is.SameAs(refused));
+            Assert.That(pipeline.DecisionHistory.History.Count, Is.EqualTo(history + 1));
+            Assert.That(pipeline.DecisionHistory.History.Last(), Is.SameAs(refused));
+            Assert.That(chat.Conversation.Snapshot().Last(entry =>
+                entry.Kind == MemoryEntryKind.Decision).Status, Is.EqualTo("Rejected"));
+            Assert.That(chat.Conversation.Snapshot().Count(entry =>
+                entry.Kind == MemoryEntryKind.ApprovedStrategy), Is.EqualTo(approvedBefore));
 
             Task<CommanderAIChatSubmission> explain =
                 chat.SubmitMessageAsync("  WHY   are we not attacking?  ");
@@ -97,11 +136,34 @@ namespace OpenEmpires.Tests
 
             Assert.That(chat.LatestExplanation, Is.Not.Null);
             Assert.That(chat.LatestExplanation.Outcome, Is.EqualTo(ExplanationOutcome.Rejected));
-            Assert.That(chat.LatestExplanation.DisplayText, Does.Contain(rejected.Outcome));
+            Assert.That(chat.LatestExplanation.DisplayText, Does.Contain(refused.Outcome));
             Assert.That(chat.LatestExplanation.DisplayText, Does.Contain("AttackPreparation"));
             Assert.That(chat.LatestExplanation.DisplayText, Does.Not.Contain("income"));
             Assert.That(defense.Status, Is.EqualTo(StrategicPlanStatus.Active));
+            Assert.That(planner.Plans.Count, Is.EqualTo(plans));
+            Assert.That(goals.Goals.Count, Is.EqualTo(goalsBefore));
+            Assert.That(planner.Reservations.Count, Is.EqualTo(reservations));
+            Assert.That(PendingCommandCount(), Is.EqualTo(commands));
             Assert.That(provider.CallCount, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void EmergencyDefensePolicy_RejectsUnconfirmedAttackWithPriorityReason()
+        {
+            StrategicPlan defense = CreateEmergencyDefense();
+            var request = new StrategicAIRequest("prepare cavalry attack",
+                pipeline.CaptureContext(), planner.IntentIds);
+            StrategicIntent attack = new MockStrategicAIProvider()
+                .InterpretStrategicIntentAsync(request, default).Result.Intent;
+            StrategicApprovalResult approval = new StrategicApprovalLayer().Evaluate(
+                pipeline.CaptureContext(), attack, attack.Source);
+
+            StrategicDecisionRecord rejected = pipeline.EvaluateApprovedIntentNow(approval);
+
+            Assert.That(rejected.Decision.Status, Is.EqualTo(StrategicDecisionStatus.Rejected));
+            Assert.That(rejected.Submission, Is.Null);
+            Assert.That(rejected.Outcome, Does.Contain("Emergency defense has higher priority"));
+            Assert.That(defense.Status, Is.EqualTo(StrategicPlanStatus.Active));
         }
 
         [UnityTest]
@@ -109,10 +171,20 @@ namespace OpenEmpires.Tests
         {
             var provider = new CountingStrategicProvider();
             chat.InitializeStrategic(provider, pipeline);
-            CreateEmergencyDefense();
+            StrategicPlan emergency = CreateEmergencyDefense();
             Task<CommanderAIChatSubmission> first = chat.SubmitMessageAsync("prepare cavalry attack");
             while (!first.IsCompleted) yield return null;
-            StrategicDecisionRecord projected = chat.ApproveStrategicRecommendation();
+            StrategicIntent firstPending = chat.PendingStrategicIntent;
+            Assert.That(firstPending, Is.Not.Null);
+            Assert.That(chat.ApproveStrategicRecommendation(), Is.Null);
+            StrategicApprovalResult approval = new StrategicApprovalLayer().Evaluate(
+                pipeline.CaptureContext(), firstPending, firstPending.Source);
+            StrategicDecisionRecord projected = pipeline.EvaluateApprovedIntentNow(approval);
+            Assert.That(projected.Decision.Status, Is.EqualTo(StrategicDecisionStatus.Rejected));
+            chat.DismissStrategicRecommendation();
+            Assert.That(planner.CaptureControlRequest(0, emergency.StrategicPlanId,
+                StrategicPlanControlType.Cancel, out StrategicPlanControlRequest cancel), Is.True);
+            planner.ApplyControl(cancel);
             Task<CommanderAIChatSubmission> second = chat.SubmitMessageAsync("prepare cavalry attack");
             while (!second.IsCompleted) yield return null;
             StrategicIntent pending = chat.PendingStrategicIntent;
@@ -140,7 +212,8 @@ namespace OpenEmpires.Tests
 
             Assert.That(chat.PendingStrategicIntent, Is.SameAs(pending));
             Assert.That(pending.Status, Is.EqualTo(StrategicIntentStatus.Created));
-            Assert.That(chat.LatestStrategicDecision, Is.SameAs(projected));
+            Assert.That(pipeline.DecisionHistory.History.Last(), Is.SameAs(projected));
+            Assert.That(chat.LatestStrategicDecision, Is.Null);
             Assert.That(pipeline.DecisionHistory.History.Count, Is.EqualTo(history));
             Assert.That(planner.Plans.Count, Is.EqualTo(plans));
             Assert.That(planner.Reservations.Count, Is.EqualTo(reservations));

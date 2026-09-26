@@ -125,9 +125,10 @@ namespace OpenEmpires.Tests
             var emergency = planner.SubmitIntent(defense.Intent, true, false).Plan;
             var translation = chat.SubmitMessageAsync("prepare cavalry attack");
             while (!translation.IsCompleted) yield return null;
-            var rejected = chat.ApproveStrategicRecommendation();
-            Assert.That(rejected.Submission, Is.Null);
-            Assert.That(rejected.Outcome, Does.Contain("Emergency"));
+            StrategicIntent pending = chat.PendingStrategicIntent;
+            Assert.That(chat.ApproveStrategicRecommendation(), Is.Null);
+            Assert.That(chat.PendingStrategicIntent, Is.SameAs(pending),
+                "Ordinary Approve must not consume an active-plan proposal.");
             Assert.That(emergency.Status, Is.EqualTo(StrategicPlanStatus.Active));
             translation = chat.SubmitMessageAsync("prepare cavalry attack");
             while (!translation.IsCompleted) yield return null;

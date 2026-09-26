@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="13" result="Passed" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-25 10:15:04Z" end-time="2026-09-25 10:15:07Z" duration="3.1275561">
+  <test-suite type="TestSuite" id="1782" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="682" result="Passed" start-time="2026-09-25 10:15:04Z" end-time="2026-09-25 10:15:07Z" duration="3.127556" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1770" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="682" result="Passed" start-time="2026-09-25 10:15:04Z" end-time="2026-09-25 10:15:07Z" duration="3.124286" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="8332" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1771" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="682" result="Passed" start-time="2026-09-25 10:15:04Z" end-time="2026-09-25 10:15:07Z" duration="3.122678" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1772" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="682" result="Passed" start-time="2026-09-25 10:15:04Z" end-time="2026-09-25 10:15:07Z" duration="3.121034" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1231" name="CommanderPhase3C5StrategicDecisionTests" fullname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests" classname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-09-25 10:15:04Z" end-time="2026-09-25 10:15:07Z" duration="3.115224" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1234" name="DecisionPolicy_AttackRequiresConditions" fullname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.DecisionPolicy_AttackRequiresConditions" methodname="DecisionPolicy_AttackRequiresConditions" classname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests" runstate="Runnable" seed="1853751559" result="Passed" start-time="2026-09-25 10:15:04Z" end-time="2026-09-25 10:15:04Z" duration="0.245090" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1233" name="DecisionPolicy_DefenseOverridesAttack" fullname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.DecisionPolicy_DefenseOverridesAttack" methodname="DecisionPolicy_DefenseOverridesAttack" classname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests" runstate="Runnable" seed="1149930150" result="Passed" start-time="2026-09-25 10:15:04Z" end-time="2026-09-25 10:15:04Z" duration="0.238137" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1244" name="DecisionPolicy_DoesNotBypassStrategicPlanner" fullname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.DecisionPolicy_DoesNotBypassStrategicPlanner" methodname="DecisionPolicy_DoesNotBypassStrategicPlanner" classname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests" runstate="Runnable" seed="1143607693" result="Passed" start-time="2026-09-25 10:15:04Z" end-time="2026-09-25 10:15:05Z" duration="0.241408" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #2 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #2 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.
+[StrategicPlanner] Plan #1 milestone active: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="1243" name="DecisionPolicy_DoesNotCreateCommands" fullname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.DecisionPolicy_DoesNotCreateCommands" methodname="DecisionPolicy_DoesNotCreateCommands" classname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests" runstate="Runnable" seed="1105864863" result="Passed" start-time="2026-09-25 10:15:05Z" end-time="2026-09-25 10:15:05Z" duration="0.237946" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1242" name="DecisionPolicy_DoesNotCreatePlans" fullname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.DecisionPolicy_DoesNotCreatePlans" methodname="DecisionPolicy_DoesNotCreatePlans" classname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests" runstate="Runnable" seed="1373963720" result="Passed" start-time="2026-09-25 10:15:05Z" end-time="2026-09-25 10:15:05Z" duration="0.238339" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1235" name="DecisionPolicy_EconomicFallback" fullname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.DecisionPolicy_EconomicFallback" methodname="DecisionPolicy_EconomicFallback" classname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests" runstate="Runnable" seed="627197332" result="Passed" start-time="2026-09-25 10:15:05Z" end-time="2026-09-25 10:15:05Z" duration="0.238404" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1241" name="DecisionPolicy_HasNoHiddenState" fullname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.DecisionPolicy_HasNoHiddenState" methodname="DecisionPolicy_HasNoHiddenState" classname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests" runstate="Runnable" seed="1236232225" result="Passed" start-time="2026-09-25 10:15:05Z" end-time="2026-09-25 10:15:06Z" duration="0.240044" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1240" name="DecisionPolicy_SameInputProducesSameOutput" fullname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.DecisionPolicy_SameInputProducesSameOutput" methodname="DecisionPolicy_SameInputProducesSameOutput" classname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests" runstate="Runnable" seed="523875206" result="Passed" start-time="2026-09-25 10:15:06Z" end-time="2026-09-25 10:15:06Z" duration="0.240062" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1232" name="DecisionPolicy_SelectsHighestPriority" fullname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.DecisionPolicy_SelectsHighestPriority" methodname="DecisionPolicy_SelectsHighestPriority" classname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests" runstate="Runnable" seed="1449767477" result="Passed" start-time="2026-09-25 10:15:06Z" end-time="2026-09-25 10:15:06Z" duration="0.237355" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1238" name="DecisionResult_ContainsReason" fullname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.DecisionResult_ContainsReason" methodname="DecisionResult_ContainsReason" classname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests" runstate="Runnable" seed="718354097" result="Passed" start-time="2026-09-25 10:15:06Z" end-time="2026-09-25 10:15:06Z" duration="0.236570" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1239" name="DecisionResult_TracksSourceRecommendation" fullname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.DecisionResult_TracksSourceRecommendation" methodname="DecisionResult_TracksSourceRecommendation" classname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests" runstate="Runnable" seed="291359680" result="Passed" start-time="2026-09-25 10:15:06Z" end-time="2026-09-25 10:15:07Z" duration="0.237608" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1237" name="PlayerIntentPreservesOwnership" fullname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.PlayerIntentPreservesOwnership" methodname="PlayerIntentPreservesOwnership" classname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests" runstate="Runnable" seed="400061554" result="Passed" start-time="2026-09-25 10:15:07Z" end-time="2026-09-25 10:15:07Z" duration="0.239223" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1236" name="PlayerStrategicIntent_OverridesRecommendations" fullname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.PlayerStrategicIntent_OverridesRecommendations" methodname="PlayerStrategicIntent_OverridesRecommendations" classname="OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests" runstate="Runnable" seed="1817657858" result="Passed" start-time="2026-09-25 10:15:07Z" end-time="2026-09-25 10:15:07Z" duration="0.242505" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
@@ -149,6 +150,318 @@ namespace OpenEmpires.Tests
             Assert.That(submission.CreatedPlan, Is.False);
             Assert.That(old.Status, Is.EqualTo(StrategicPlanStatus.Active));
             Assert.That(planner.ActivePlans, Has.Count.EqualTo(1));
+        }
+
+        [Test]
+        public void AIRecommendationCannotAutoReplaceActivePlan()
+        {
+            RichWorld();
+            StrategicPlan old = planner.StartCavalryPressurePlan();
+            int revision = old.Revision;
+            int[] children = old.ChildGoalIds.ToArray();
+            int[] reservations = planner.GetReservationsForPlan(old.StrategicPlanId)
+                .Where(value => value.Status == StrategicResourceReservationStatus.Active)
+                .Select(value => value.ReservationId).ToArray();
+            StrategicIntent ai = planner.MaterializeRecommendation(
+                planner.CreateIntent(StrategicObjectiveType.DefensivePreparation));
+
+            Assert.That(planner.SubmitIntent(ai).CreatedPlan, Is.False);
+            AssertOldPlanUnchanged(old, revision, children, reservations);
+        }
+
+        [Test]
+        public void PlayerApprovedReplacementUsesExistingAuthorityPath()
+        {
+            RichWorld();
+            StrategicPlan old = planner.StartCavalryPressurePlan();
+            using var pipeline = new StrategicPipeline(simulation, goals, planner);
+            StrategicIntent incoming = planner.CreateIntent(StrategicObjectiveType.DefensivePreparation);
+            StrategicApprovalResult approval = new StrategicApprovalLayer().Evaluate(
+                pipeline.CaptureContext(), incoming, incoming.Source);
+            Assert.That(approval.Approved, Is.True, approval.Reason);
+
+            StrategicDecisionRecord record = pipeline.EvaluateApprovedIntentNow(approval);
+
+            Assert.That(record.Submission?.CreatedPlan, Is.True, record.Outcome);
+            Assert.That(old.Status, Is.EqualTo(StrategicPlanStatus.Cancelled));
+            Assert.That(record.Submission.Plan.Authority, Is.EqualTo(StrategicPlanAuthority.PlayerOverride));
+        }
+
+        [Test]
+        public void ReplacementReleasesOldReservationsCorrectly()
+        {
+            RichWorld();
+            StrategicPlan old = planner.StartCavalryPressurePlan();
+            StrategicResourceReservation[] held = planner.GetReservationsForPlan(old.StrategicPlanId)
+                .Where(value => value.Status == StrategicResourceReservationStatus.Active).ToArray();
+            Assert.That(held, Is.Not.Empty);
+
+            var result = planner.SubmitIntent(planner.CreateIntent(
+                StrategicObjectiveType.DefensivePreparation), false, true);
+
+            Assert.That(result.CreatedPlan, Is.True, result.Reason);
+            Assert.That(held.All(value => value.Status != StrategicResourceReservationStatus.Active), Is.True);
+            Assert.That(planner.GetReservationsForPlan(old.StrategicPlanId)
+                .Any(value => value.Status == StrategicResourceReservationStatus.Active), Is.False);
+        }
+
+        [Test]
+        public void ReplacementCancellationObserver_CannotAdmitNestedIncompatiblePlan()
+        {
+            RichWorld();
+            StrategicPlan old = planner.SubmitIntent(
+                planner.CreateIntent(StrategicObjectiveType.RangedReinforcement)).Plan;
+            Assert.That(old, Is.Not.Null);
+            Assert.That(planner.CompleteMilestoneAndAdvance(old.StrategicPlanId), Is.True,
+                "Advance the real Ranged plan to its reserving production milestone.");
+            StrategicResourceReservation[] held = planner.GetReservationsForPlan(old.StrategicPlanId)
+                .Where(value => value.Status == StrategicResourceReservationStatus.Active).ToArray();
+            Assert.That(held, Is.Not.Empty);
+            StrategicIntent preCreated = planner.CreateIntent(
+                StrategicObjectiveType.RangedReinforcement);
+            StrategicIntentSubmission nested = null;
+            int callbackCount = 0;
+            planner.PlanStatusChanged += changed =>
+            {
+                if (changed != old || changed.Status != StrategicPlanStatus.Cancelled) return;
+                callbackCount++;
+                nested = planner.SubmitIntent(preCreated, false, true);
+            };
+
+            StrategicIntentSubmission replacement = planner.SubmitIntent(planner.CreateIntent(
+                StrategicObjectiveType.DefensivePreparation), false, true);
+
+            Assert.That(callbackCount, Is.EqualTo(1), "The actual cancellation event must run.");
+            Assert.That(nested, Is.Not.Null);
+            Assert.That(nested.CreatedPlan, Is.False,
+                "A nested submission must not enter the temporary replacement gap.");
+            Assert.That(preCreated.Status, Is.EqualTo(StrategicIntentStatus.Rejected),
+                "A directly submitted intent must not remain Created after guarded rejection.");
+            Assert.That(replacement.CreatedPlan, Is.True, replacement.Reason);
+            Assert.That(old.Status, Is.EqualTo(StrategicPlanStatus.Cancelled));
+            Assert.That(held.All(value => value.Status != StrategicResourceReservationStatus.Active), Is.True);
+            Assert.That(planner.ActivePlans, Has.Count.EqualTo(1));
+            Assert.That(planner.ActivePlans[0], Is.SameAs(replacement.Plan));
+            Assert.That(replacement.Plan.PlanType, Is.EqualTo(StrategicPlanType.DefensivePreparation));
+        }
+
+        [Test]
+        public void ReplacementCancellationObserver_RepeatedConvenienceSubmissionsRemainBounded()
+        {
+            RichWorld();
+            StrategicPlan old = planner.StartCavalryPressurePlan();
+            StrategicResourceReservation[] held = planner.GetReservationsForPlan(old.StrategicPlanId)
+                .Where(value => value.Status == StrategicResourceReservationStatus.Active).ToArray();
+            Assert.That(held, Is.Not.Empty);
+            var nested = new List<StrategicIntentSubmission>();
+            planner.PlanStatusChanged += changed =>
+            {
+                if (changed != old || changed.Status != StrategicPlanStatus.Cancelled) return;
+                for (int i = 0; i < StrategicPlanner.MaxIntentHistory + 5; i++)
+                    nested.Add(planner.SubmitIntent(StrategicObjectiveType.RangedReinforcement));
+            };
+
+            StrategicIntentSubmission replacement = planner.SubmitIntent(planner.CreateIntent(
+                StrategicObjectiveType.DefensivePreparation), false, true);
+
+            Assert.That(nested, Has.Count.EqualTo(StrategicPlanner.MaxIntentHistory + 5),
+                "The cancellation callback must exercise every nested attempt.");
+            Assert.That(nested.All(result => !result.CreatedPlan), Is.True);
+            Assert.That(nested.All(result => result.Intent.Status == StrategicIntentStatus.Rejected),
+                Is.True, "Guarded convenience submissions must not strand Created intents.");
+            Assert.That(planner.Intents.Count, Is.LessThanOrEqualTo(StrategicPlanner.MaxIntentHistory));
+            Assert.That(replacement.CreatedPlan, Is.True, replacement.Reason);
+            Assert.That(planner.Plans, Has.Count.EqualTo(2), "Only the old and replacement plans may exist.");
+            Assert.That(planner.ActivePlans, Has.Count.EqualTo(1));
+            Assert.That(planner.ActivePlans[0], Is.SameAs(replacement.Plan));
+            Assert.That(held.All(value => value.Status != StrategicResourceReservationStatus.Active), Is.True);
+        }
+
+        [Test]
+        public void ReplacementLateAdmissionFailure_PreservesOldPlan()
+        {
+            RichWorld();
+            planner.Dispose();
+            var registry = new StrategicPlanRegistry();
+            registry.Register(new EmptyDefenseTemplate());
+            foreach (IStrategicPlanTemplate template in StrategicPlanRegistry.CreateDefault().Templates)
+                registry.Register(template);
+            planner = new StrategicPlanner(goals, Resource, registry);
+            StrategicPlan old = planner.StartCavalryPressurePlan();
+            int revision = old.Revision;
+            int[] children = old.ChildGoalIds.ToArray();
+            int[] reservations = planner.GetReservationsForPlan(old.StrategicPlanId)
+                .Where(value => value.Status == StrategicResourceReservationStatus.Active)
+                .Select(value => value.ReservationId).ToArray();
+            Assert.That(planner.SubmitIntent(planner.CreateIntent(
+                StrategicObjectiveType.DefensivePreparation), false, true).CreatedPlan, Is.False);
+            AssertOldPlanUnchanged(old, revision, children, reservations);
+        }
+
+        [Test]
+        public void MultipleConflicts_PreflightAllBeforeCancellation()
+        {
+            RichWorld();
+            StrategicPlan first = planner.SubmitIntent(
+                planner.CreateIntent(StrategicObjectiveType.EconomicExpansion)).Plan;
+            StrategicPlan later = planner.SubmitIntent(
+                planner.CreateIntent(StrategicObjectiveType.DefensivePreparation)).Plan;
+            Assert.That(first, Is.Not.Null);
+            Assert.That(later, Is.Not.Null);
+            int revision = first.Revision;
+            int[] children = first.ChildGoalIds.ToArray();
+            int[] reservations = planner.GetReservationsForPlan(first.StrategicPlanId)
+                .Where(value => value.Status == StrategicResourceReservationStatus.Active)
+                .Select(value => value.ReservationId).ToArray();
+            SetRevision(later, int.MaxValue);
+
+            Assert.That(planner.SubmitIntent(planner.CreateIntent(
+                StrategicObjectiveType.AttackPreparation), false, true).CreatedPlan, Is.False);
+            AssertOldPlanUnchanged(first, revision, children, reservations);
+            Assert.That(later.Status, Is.EqualTo(StrategicPlanStatus.Active));
+            Assert.That(later.Revision, Is.EqualTo(int.MaxValue));
+        }
+
+        [Test]
+        public void MultipleConflicts_ReentrantRevisionCannotCausePartialCancellation()
+        {
+            RichWorld();
+            StrategicPlan first = planner.StartCavalryPressurePlan();
+            StrategicPlan later = planner.StartCavalryPressurePlan();
+            StrategicResourceReservation[] firstHeld = planner.GetReservationsForPlan(first.StrategicPlanId)
+                .Where(value => value.Status == StrategicResourceReservationStatus.Active).ToArray();
+            StrategicResourceReservation[] laterHeld = planner.GetReservationsForPlan(later.StrategicPlanId)
+                .Where(value => value.Status == StrategicResourceReservationStatus.Active).ToArray();
+            Assert.That(firstHeld, Is.Not.Empty);
+            Assert.That(laterHeld, Is.Not.Empty);
+            int firstRevision = first.Revision;
+            int[] firstChildren = first.ChildGoalIds.ToArray();
+            int[] firstReservationIds = firstHeld.Select(value => value.ReservationId).ToArray();
+            SetRevision(later, int.MaxValue - 1 - laterHeld.Length);
+            bool callbackRan = false;
+            bool callbackChangedLaterReservation = false;
+            planner.PlanStatusChanged += changed =>
+            {
+                if (changed != first || changed.Status != StrategicPlanStatus.Cancelled) return;
+                callbackRan = true;
+                callbackChangedLaterReservation = planner.UpdateReservationAmount(
+                    laterHeld[0].ReservationId, laterHeld[0].Amount - 1);
+            };
+
+            StrategicIntentSubmission result = planner.SubmitIntent(planner.CreateIntent(
+                StrategicObjectiveType.DefensivePreparation), false, true);
+
+            Assert.That(callbackRan, Is.True, "The real cancellation event must exercise reentrancy.");
+            if (result.CreatedPlan)
+                Assert.That(callbackChangedLaterReservation, Is.False,
+                    "A terminal cancellation anchor must block reentrant reservation edits.");
+            if (result.CreatedPlan)
+            {
+                Assert.That(first.Status, Is.EqualTo(StrategicPlanStatus.Cancelled));
+                Assert.That(later.Status, Is.EqualTo(StrategicPlanStatus.Cancelled));
+                Assert.That(firstHeld.All(value => value.Status != StrategicResourceReservationStatus.Active), Is.True);
+                Assert.That(laterHeld.All(value => value.Status != StrategicResourceReservationStatus.Active), Is.True);
+            }
+            else
+            {
+                AssertOldPlanUnchanged(first, firstRevision, firstChildren, firstReservationIds);
+                Assert.That(later.Status, Is.EqualTo(StrategicPlanStatus.Active));
+            }
+        }
+
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(2)]
+        public void MultipleConflicts_ThrowingCancellationSubscriberDoesNotStrandCleanup(int throwKind)
+        {
+            RichWorld();
+            StrategicPlan first = planner.StartCavalryPressurePlan();
+            StrategicPlan later = planner.StartCavalryPressurePlan();
+            StrategicPlan[] oldPlans = { first, later };
+            Assert.That(oldPlans.All(plan => planner.GetReservationsForPlan(plan.StrategicPlanId)
+                .Any(value => value.Status == StrategicResourceReservationStatus.Active)), Is.True);
+            bool injected = false;
+            bool cancellationEventPublished = false;
+            if (throwKind == 1)
+            {
+                goals.GoalEventPublished += goalEvent =>
+                {
+                    if (goalEvent.EventType == CommanderGoalEventType.GoalCancelled
+                        && goalEvent.Goal.GoalId == later.ChildGoalIds.Last())
+                        cancellationEventPublished = true;
+                };
+                goals.GoalStatusChanged += goal =>
+                {
+                    if (injected || goal.GoalId != later.ChildGoalIds.Last()
+                        || goal.Status != CommanderGoalStatus.Cancelled) return;
+                    injected = true;
+                    throw new InvalidOperationException("Injected goal observer failure.");
+                };
+            }
+            else if (throwKind == 2)
+                planner.PlanStatusChanged += changed =>
+                {
+                    if (injected || changed != first || changed.Status != StrategicPlanStatus.Cancelled) return;
+                    injected = true;
+                    throw new InvalidOperationException("Injected plan observer failure.");
+                };
+            else
+                planner.ReservationReleased += reservation =>
+                {
+                    if (injected || reservation.PlanId != first.StrategicPlanId) return;
+                    injected = true;
+                    throw new InvalidOperationException("Injected reservation observer failure.");
+                };
+
+            Assert.Throws<InvalidOperationException>(() => planner.SubmitIntent(planner.CreateIntent(
+                StrategicObjectiveType.DefensivePreparation), false, true));
+
+            Assert.That(injected, Is.True);
+            if (throwKind == 1) Assert.That(cancellationEventPublished, Is.True,
+                "The cancellation event must still publish after a status observer throws.");
+            foreach (StrategicPlan old in oldPlans)
+            {
+                Assert.That(old.Status, Is.EqualTo(StrategicPlanStatus.Cancelled));
+                Assert.That(old.ChildGoalIds.Select(goals.GetGoal)
+                    .All(goal => goal == null || goal.IsTerminal), Is.True);
+                Assert.That(goals.ActiveGoals.Any(goal => old.ChildGoalIds.Contains(goal.GoalId)),
+                    Is.False, "Cancelled children must not consume the active-goal capacity.");
+                Assert.That(planner.GetReservationsForPlan(old.StrategicPlanId)
+                    .Any(value => value.Status == StrategicResourceReservationStatus.Active), Is.False);
+                Assert.That(planner.GetIntent(old.SourceIntentId).Status,
+                    Is.EqualTo(StrategicIntentStatus.Cancelled));
+            }
+            Assert.That(planner.ActivePlans, Is.Empty);
+            Assert.That(goals.ActiveGoals, Is.Empty);
+        }
+
+        private void AssertOldPlanUnchanged(StrategicPlan old, int revision,
+            int[] children, int[] reservationIds)
+        {
+            Assert.That(old.Status, Is.EqualTo(StrategicPlanStatus.Active));
+            Assert.That(old.Revision, Is.EqualTo(revision));
+            Assert.That(old.ChildGoalIds, Is.EqualTo(children));
+            Assert.That(children.Select(goals.GetGoal).All(goal => goal != null && !goal.IsTerminal), Is.True);
+            Assert.That(planner.GetReservationsForPlan(old.StrategicPlanId)
+                .Where(value => value.Status == StrategicResourceReservationStatus.Active)
+                .Select(value => value.ReservationId).ToArray(), Is.EqualTo(reservationIds));
+        }
+
+        private sealed class EmptyDefensePlan : StrategicPlan
+        {
+            public EmptyDefensePlan(StrategicIntent intent)
+                : base(intent.PlayerId, StrategicPlanType.DefensivePreparation, intent.IntentId,
+                    "Completed", "Cancelled") { }
+        }
+
+        private sealed class EmptyDefenseTemplate : IStrategicPlanTemplate
+        {
+            public string TemplateId => "EmptyDefense";
+            public bool CanHandle(StrategicIntent intent) =>
+                intent.ObjectiveType == StrategicObjectiveType.DefensivePreparation;
+            public StrategicIntentValidationResult ValidateParameters(StrategicIntent intent) =>
+                StrategicIntentValidationResult.Accepted(this);
+            public StrategicPlan CreatePlan(StrategicIntent intent) => new EmptyDefensePlan(intent);
         }
 
         [TestCase(false)]

@@ -1,0 +1,87 @@
+{
+  "schema": "commander-phase4d3-scoped-boundary-audit@1",
+  "sourceFreezeDate": "2026-09-26",
+  "scope": "Phase 4D.3 only; final Phase 4D audit remains separate",
+  "baseline": {
+    "reference": "Docs/CommanderPhase4D/phase4d-source-baseline.json",
+    "defaultVerifierExitCode": 0,
+    "phase4cManifestPathsPresent": 27,
+    "phase4cManifestPathsExpected": 27,
+    "frozenProtectedPathsPresent": 55,
+    "frozenProtectedPathsExpected": 55,
+    "frozenProtectedUnchanged": 54,
+    "frozenProtectedChanged": 1,
+    "frozenProtectedMissing": 0,
+    "pinnedXmlVerified": 6,
+    "pinnedXmlExpected": 6,
+    "originalSourceDiagnosticExitCode": 2,
+    "originalSourceMatchCount": 24,
+    "originalSourceExpectedCount": 27,
+    "originalSourceDrifts": [
+      "Assets/Scripts/AI/Commander/Strategic/StrategicPlan.cs",
+      "Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.cs",
+      "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs"
+    ]
+  },
+  "protectedChanges": [
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderGoalManager.cs",
+      "frozenSha256": "31B2B4554F8A6B7E2266AEAB282DF7B1E1CC784451877C879D66BD64E4899190",
+      "currentSha256": "0F79E294D202340044BDDE0539735AAB139CDBAA4E0DBCEB327D31CFE21C048A",
+      "classification": "intentional Task 1 cancellation cleanup; reviewed in phase4d3-task1-report.md"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.cs",
+      "pre4d3Sha256": "A50B64D49B4D2FB5CBB43ED2835E0890047DE28D46BC6C4ABAA14609EB1E5902",
+      "acceptedTask1Sha256": "23B96F77FBAA080C54A86AB1186470AE6691096BD646A5B7C0C0198326F17FC4",
+      "currentSha256": "47171C6D433B54A78FF98EF900AA1C57807081C1A34F51CDAEBD08B6591177EC",
+      "classification": "intentional Task 1 admission preflight and reviewed nested-admission/intent-history repairs; exact incremental diffs and RED/GREEN in task1 and reentrant-admission fix reports"
+    }
+  ],
+  "currentSourceHashes": {
+    "Assets/Scripts/AI/Commander/Strategic/StrategicPlan.cs": "D58A6C1EC366FD1E8765F56F4298BE00C10FB42894C1E2E7EC12B7123A143C02",
+    "Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.cs": "47171C6D433B54A78FF98EF900AA1C57807081C1A34F51CDAEBD08B6591177EC",
+    "Assets/Scripts/AI/Commander/CommanderGoalManager.cs": "0F79E294D202340044BDDE0539735AAB139CDBAA4E0DBCEB327D31CFE21C048A",
+    "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs": "D999D806A54CF515AD98E223B618393C8CAF20004133BF9DF7C3CAA85734E8CD",
+    "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.StrategicControls.cs": "F5642EF3806645AE328336EE285FDD14301E0F3E9771CE20C0E92FC7C54A0A2B",
+    "Assets/Scripts/AI/Commander/Strategic/StrategicAdaptationProposal.cs": "85111D1E1C77F4E08BF1FFC3F130DBDA3F5D34D2BDA4E88A548F2DD332AA754A",
+    "Assets/Tests/EditMode/CommanderPhase4D1Tests.cs": "0D7709546F7164EB51E58764615FAE2DC25034C3972C53655AAFEC8323EFAC62",
+    "Assets/Tests/EditMode/CommanderPhase4D3Tests.cs": "4DC7CE9A67A0BD4E793191911500F797DFFA85DF91195C95A5101D7ABC23AA3E",
+    "Assets/Tests/PlayMode/CommanderPhase4B2PlayModeTests.cs": "6F1811CBF8744277F7B6095D4BCB9A6875C675DB61DD44ABAD62CDAA4A78E621",
+    "Assets/Tests/PlayMode/CommanderPhase4C1PlayModeTests.cs": "F80F15F15EEDBCD48B37D0529E43DF51D57D826E8E70DC5BD3C41593D72DE819",
+    "Assets/Tests/PlayMode/CommanderPhase4C2PlayModeTests.cs": "647BBE0E8E8FAA2A77C0A0286A1E9C1D778BE9987AFC58FDD1CF11211CADBBE1",
+    "Assets/Tests/PlayMode/CommanderPhase4D2RuntimePlayModeTests.cs": "07708958A428AD4BCBE42898F2A0185185EF996888F4ECAA395C9C9295CA1D0F",
+    "Assets/Tests/PlayMode/CommanderPhase4D3HostPlayModeTests.cs": "9A1EC73A383FE9CAD57F838E2B1F4FD8F5870B1044B39AA9A9A3D6CED854EA4D",
+    "Assets/Tests/PlayMode/CommanderPhase4D3RuntimePlayModeTests.cs": "69040993B008F6BD470C9632A94ABDDAABF945450ADE0B5C4C41A55D6F341EB1"
+  },
+  "staticScan": {
+    "changedProposalValueForbiddenDependencyCandidates": 0,
+    "forbiddenDependenciesSearched": ["CommandBuffer", "GameSimulation", "StrategicPlanner", "CommanderGoalManager", "System.Reflection"],
+    "hostPlannerReferenceClassification": "owner-scoped host capture/control and established approval/pipeline path; no provider-to-planner route",
+    "credentialShapeCandidateFilesInCommanderSource": [
+      "Assets/Scripts/AI/Commander/Phase4A/GeminiAIProvider.cs",
+      "Assets/Scripts/AI/Commander/Phase4B1/GeminiStrategicAIProvider.cs",
+      "Assets/Scripts/AI/Commander/Phase4A/OpenRouterCommanderProvider.cs"
+    ],
+    "credentialShapeCandidatesInChanged4d3SourceAndTests": 0,
+    "credentialValuesInspectedOrPrinted": false,
+    "newStrategicObjectives": 0,
+    "newProviderExecutionPaths": 0,
+    "auditGapsWithinScopedFiles": 0
+  },
+  "workspaceScope": {
+    "packageStatusChanges": 0,
+    "projectSettingsStatusChanges": 0,
+    "userSettingsStatusChanges": 0,
+    "envExists": true,
+    "envTracked": false,
+    "envIgnored": true,
+    "envContentsRead": false,
+    "testRunnerSceneObservedDuringFullPlay": "Assets/InitTestScene32862490-2aa9-4e22-8b6b-4ed6f2ae2051.unity",
+    "testRunnerSceneClassification": "transient untracked PlaymodeTestsController scene; disappeared automatically by terminal",
+    "sceneStatusChangesAfterFullPlay": 0,
+    "inheritedTrackedTestAndRecoveryScenes": "retained unchanged; provenance belongs to earlier workspace/HEAD, not Phase 4D.3 production",
+    "deletedOrMovedScenes": false
+  },
+  "finalPhase4dAuditStillRequired": true
+}

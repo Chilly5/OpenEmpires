@@ -301,12 +301,208 @@ namespace OpenEmpires.Tests
         }
 
         [UnityTest]
+        public IEnumerator ScenarioD_ConfirmedDefensiveReplacement_NeverResurrectsCancelledRangedWork()
+        {
+            StrategicPlan ranged = null;
+            yield return Approve("prepare ranged reinforcements", StrategicPlanType.RangedReinforcement,
+                plan => ranged = plan);
+            int oldCommands = 0;
+            simulation.CommandBuffer.CommandEnqueued += (_, source) =>
+            {
+                if (source == CommandEnqueueSource.Commander) oldCommands++;
+            };
+            int partial = 0;
+            while (partial++ < 12000 && ranged.CurrentMilestone.Name == "Economy")
+            {
+                Advance();
+                if (partial % 300 == 0) yield return null;
+            }
+            Assert.That(ranged.Status, Is.EqualTo(StrategicPlanStatus.Active));
+            Assert.That(ranged.CurrentMilestone.Name, Is.Not.EqualTo("Economy"),
+                "Ranged must be in real in-progress work at the replacement boundary.");
+            int rangedRevision = ranged.Revision;
+            int rangedMilestone = ranged.CurrentMilestone.MilestoneId;
+            int[] rangedChildren = ranged.ChildGoalIds.ToArray();
+            int goalCount = goals.Goals.Count;
+            int reservations = ActiveReservations(ranged).Length;
+            Assert.That(reservations, Is.GreaterThan(0));
+            int commandsBeforeRecommendation = oldCommands;
+            Task<CommanderAIChatSubmission> request = chat.SubmitMessageAsync("prepare fortified defenses");
+            while (!request.IsCompleted) yield return null;
+            Assert.That(request.IsFaulted, Is.False, request.Exception?.ToString());
+            Assert.That(chat.PendingStrategicIntent, Is.Not.Null);
+            Assert.That(chat.PendingAdaptationProposal, Is.Not.Null);
+            Assert.That(ranged.Status, Is.EqualTo(StrategicPlanStatus.Active));
+            Assert.That(ranged.Revision, Is.EqualTo(rangedRevision));
+            Assert.That(goals.Goals.Count, Is.EqualTo(goalCount));
+            Assert.That(ActiveReservations(ranged).Length, Is.EqualTo(reservations));
+            Assert.That(oldCommands, Is.EqualTo(commandsBeforeRecommendation));
+            Assert.That(planner.Plans.Count, Is.EqualTo(1));
+            Assert.That(simulation.CommandBuffer.FlushCommands(), Is.Empty);
+            for (int tick = 0; tick < 5; tick++) Advance();
+            Assert.That(ranged.Status, Is.EqualTo(StrategicPlanStatus.Active),
+                "A pending recommendation must not stop the already-approved strategy.");
+            Assert.That(planner.Plans.Count, Is.EqualTo(1));
+            Assert.That(chat.PendingStrategicIntent, Is.Not.Null);
+            Assert.That(chat.PendingAdaptationProposal, Is.Not.Null);
+            Assert.That(ActiveReservations(ranged).Length, Is.EqualTo(reservations));
+
+            int[] oldGoalIds = goals.Goals.Select(goal => goal.GoalId).ToArray();
+            StrategicDecisionRecord decision = chat.ConfirmStrategicCommand();
+            Assert.That(decision?.Submission?.CreatedPlan, Is.True, decision?.Outcome);
+            StrategicPlan defensive = decision.Submission.Plan;
+            Assert.That(defensive.PlanType, Is.EqualTo(StrategicPlanType.DefensiveTurtle));
+            Assert.That(defensive.StrategicPlanId, Is.Not.EqualTo(ranged.StrategicPlanId));
+            Assert.That(ranged.Status, Is.EqualTo(StrategicPlanStatus.Cancelled));
+            Assert.That(ActiveReservations(ranged), Is.Empty);
+            Assert.That(defensive.Status, Is.EqualTo(StrategicPlanStatus.Active));
+            Assert.That(planner.Reservations.Where(r => r.Status == StrategicResourceReservationStatus.Active)
+                .All(r => r.PlanId == defensive.StrategicPlanId), Is.True,
+                "Any active reservation after replacement must belong to the new plan.");
+            int cancelledRevision = ranged.Revision;
+            int cancelledMilestone = ranged.CurrentMilestone.MilestoneId;
+            int[] cancelledChildren = ranged.ChildGoalIds.ToArray();
+            var cancelledGoalStates = goals.Goals.Select(goal =>
+                (goal.GoalId, goal.Status, goal.StatusReason, goal.ParentGoalId)).ToArray();
+            int[] goalIdsAtReplacement = goals.Goals.Select(goal => goal.GoalId).ToArray();
+            int newMilestone = defensive.CurrentMilestone.MilestoneId;
+            Assert.That(planner.CaptureControlRequest(0, defensive.StrategicPlanId,
+                StrategicPlanControlType.Pause, out StrategicPlanControlRequest pauseDefensive), Is.True);
+            Assert.That(planner.ApplyControl(pauseDefensive).Status,
+                Is.EqualTo(StrategicPlanControlStatus.Applied));
+            int commandsAtIsolation = oldCommands;
+            for (int tick = 0; tick < 1200; tick++)
+            {
+                Advance();
+                if (tick % 300 == 0) yield return null;
+            }
+            Assert.That(defensive.Status, Is.EqualTo(StrategicPlanStatus.Paused));
+            Assert.That(defensive.CurrentMilestone.MilestoneId, Is.EqualTo(newMilestone));
+            Assert.That(goals.Goals.Select(goal => goal.GoalId), Is.EqualTo(goalIdsAtReplacement),
+                "No old orphan goal or paused replacement goal may be admitted during isolation.");
+            Assert.That(goals.Goals.Select(goal =>
+                (goal.GoalId, goal.Status, goal.StatusReason, goal.ParentGoalId)).ToArray(),
+                Is.EqualTo(cancelledGoalStates),
+                "All pre-replacement goals, including orphaned work, must remain frozen.");
+            Assert.That(oldCommands, Is.EqualTo(commandsAtIsolation),
+                "With Plan B paused, no cancelled Plan A work may enqueue Commander commands.");
+            Assert.That(ActiveReservations(ranged), Is.Empty);
+            Assert.That(planner.CaptureControlRequest(0, defensive.StrategicPlanId,
+                StrategicPlanControlType.Resume, out StrategicPlanControlRequest resumeDefensive), Is.True);
+            Assert.That(planner.ApplyControl(resumeDefensive).Status,
+                Is.EqualTo(StrategicPlanControlStatus.Applied));
+            for (int tick = 0; tick < 1200; tick++)
+            {
+                Advance();
+                if (tick % 300 == 0) yield return null;
+            }
+            Assert.That(ranged.Status, Is.EqualTo(StrategicPlanStatus.Cancelled));
+            Assert.That(ranged.Revision, Is.EqualTo(cancelledRevision));
+            Assert.That(ranged.CurrentMilestone.MilestoneId, Is.EqualTo(cancelledMilestone));
+            Assert.That(ranged.ChildGoalIds, Is.EqualTo(cancelledChildren));
+            Assert.That(goals.Goals.Where(goal => oldGoalIds.Contains(goal.GoalId))
+                .Select(goal => (goal.GoalId, goal.Status, goal.StatusReason, goal.ParentGoalId)).ToArray(),
+                Is.EqualTo(cancelledGoalStates.Where(goal => oldGoalIds.Contains(goal.GoalId)).ToArray()),
+                "Cancelled Plan A goals, including any orphaned work, must remain frozen after B resumes.");
+            Assert.That(ActiveReservations(ranged), Is.Empty);
+            Assert.That(defensive.CurrentMilestone.MilestoneId, Is.GreaterThan(newMilestone),
+                "The replacement plan itself must advance through real milestone work.");
+            int[] subsequentGoalIds = goals.Goals.Select(goal => goal.GoalId)
+                .Except(goalIdsAtReplacement).ToArray();
+            Assert.That(subsequentGoalIds, Is.Not.Empty);
+            Assert.That(subsequentGoalIds.All(id => defensive.ChildGoalIds.Contains(id)), Is.True,
+                "Every newly admitted strategic goal must be linked to replacement Plan B.");
+            Assert.That(subsequentGoalIds.Any(id => goals.GetGoal(id)?.Status
+                != CommanderGoalStatus.Pending), Is.True,
+                "Replacement-owned child goals must perform real work.");
+            Assert.That(subsequentGoalIds.Intersect(ranged.ChildGoalIds), Is.Empty);
+            Assert.That(planner.ActivePlans.All(plan => plan.StrategicPlanId != ranged.StrategicPlanId),
+                Is.True);
+            Debug.Log($"[Phase4D4 D] ranged={ranged.StrategicPlanId} defensive={defensive.StrategicPlanId} partial={partial} isolatedTicks=1200 resumedTicks=1200 oldMilestone={rangedMilestone}/{cancelledMilestone} newMilestone={newMilestone}/{defensive.CurrentMilestone.MilestoneId} replacementGoals={string.Join(",", subsequentGoalIds)} commands={commandsAtIsolation}->{oldCommands}");
+        }
+
+        [UnityTest]
+        public IEnumerator ScenarioE_CapturedPlanAControlRejectedAfterCancelAndPlanBAdmission()
+        {
+            StrategicPlan planA = null;
+            yield return Approve("prepare ranged reinforcements", StrategicPlanType.RangedReinforcement,
+                plan => planA = plan);
+            Assert.That(planner.CaptureControlRequest(0, planA.StrategicPlanId,
+                StrategicPlanControlType.Pause, out StrategicPlanControlRequest stalePause), Is.True);
+            Assert.That(planner.CaptureControlRequest(0, planA.StrategicPlanId,
+                StrategicPlanControlType.Cancel, out StrategicPlanControlRequest cancel), Is.True);
+            Assert.That(planner.ApplyControl(cancel).Status, Is.EqualTo(StrategicPlanControlStatus.Applied));
+            Task<CommanderAIChatSubmission> translation = chat.SubmitMessageAsync("prepare fortified defenses");
+            while (!translation.IsCompleted) yield return null;
+            Assert.That(translation.IsFaulted, Is.False, translation.Exception?.ToString());
+            Assert.That(chat.PendingStrategicIntent, Is.Not.Null);
+            ButtonNamed("Approve strategy").onClick.Invoke();
+            StrategicIntentSubmission submission = chat.LatestStrategicDecision?.Submission;
+            Assert.That(submission?.CreatedPlan, Is.True, chat.LatestStrategicDecision?.Outcome);
+            StrategicPlan planB = submission.Plan;
+            Assert.That(planB.PlanType, Is.EqualTo(StrategicPlanType.DefensiveTurtle));
+            for (int tick = 0; tick < 1200 && ActiveReservations(planB).Length == 0; tick++)
+            {
+                Advance();
+                if (tick % 300 == 0) yield return null;
+            }
+            Assert.That(planB.Status, Is.EqualTo(StrategicPlanStatus.Active));
+            Assert.That(ActiveReservations(planB), Is.Not.Empty,
+                "Plan B must have real resources at risk when the stale control is applied.");
+            int revision = planB.Revision;
+            int milestone = planB.CurrentMilestone.MilestoneId;
+            int[] children = planB.ChildGoalIds.ToArray();
+            int goalsBefore = goals.Goals.Count;
+            var goalStates = goals.Goals.Select(goal =>
+                (goal.GoalId, goal.Status, goal.StatusReason, goal.ParentGoalId)).ToArray();
+            var reservations = ActiveReservations(planB);
+            int commands = 0;
+            simulation.CommandBuffer.CommandEnqueued += (_, source) =>
+            {
+                if (source == CommandEnqueueSource.Commander) commands++;
+            };
+            StrategicPlanControlResult result = planner.ApplyControl(stalePause);
+            Assert.That(result.Status, Is.EqualTo(StrategicPlanControlStatus.StalePlan));
+            Assert.That(result.PlanId, Is.EqualTo(planA.StrategicPlanId));
+            Assert.That(planB.Status, Is.EqualTo(StrategicPlanStatus.Active));
+            Assert.That(planB.Revision, Is.EqualTo(revision));
+            Assert.That(planB.CurrentMilestone.MilestoneId, Is.EqualTo(milestone));
+            Assert.That(planB.ChildGoalIds, Is.EqualTo(children));
+            Assert.That(goals.Goals.Count, Is.EqualTo(goalsBefore));
+            Assert.That(goals.Goals.Select(goal =>
+                (goal.GoalId, goal.Status, goal.StatusReason, goal.ParentGoalId)).ToArray(),
+                Is.EqualTo(goalStates));
+            Assert.That(ActiveReservations(planB), Is.EqualTo(reservations));
+            Assert.That(commands, Is.Zero);
+            Assert.That(simulation.CommandBuffer.FlushCommands(), Is.Empty);
+            Advance();
+            Assert.That(planB.Status, Is.EqualTo(StrategicPlanStatus.Active),
+                "The rejected stale request must not stop Plan B on its next runtime tick.");
+            Debug.Log($"[Phase4D4 E] stale={result.Status} A={planA.StrategicPlanId} B={planB.StrategicPlanId} goals={goalsBefore} reservations={reservations.Length}");
+        }
+
+        [UnityTest]
         public IEnumerator MatchResetDuringHeldProviderReply_CannotLeakIntoNewRuntime()
         {
+            StrategicPlan oldPlan = null;
+            yield return Approve("prepare ranged reinforcements", StrategicPlanType.RangedReinforcement,
+                plan => oldPlan = plan);
+            Assert.That(oldPlan.Status, Is.EqualTo(StrategicPlanStatus.Active));
             var held = new HeldStrategicProvider();
             chat.InitializeStrategic(held, pipeline);
+            yield return null;
+            Assert.That((int)typeof(CommanderChatUI).GetField("selectedPlanId",
+                BindingFlags.NonPublic | BindingFlags.Instance).GetValue(chat),
+                Is.EqualTo(oldPlan.StrategicPlanId));
+            object oldFeed = typeof(CommanderChatUI).GetField("advisoryFeed",
+                BindingFlags.NonPublic | BindingFlags.Instance).GetValue(chat);
+            Assert.That(((System.Collections.ICollection)oldFeed.GetType().GetField("plans",
+                BindingFlags.NonPublic | BindingFlags.Instance).GetValue(oldFeed)).Count,
+                Is.GreaterThan(0), "The old match must have real advisory observation to clear.");
             Task<CommanderAIChatSubmission> oldTranslation = chat.SubmitMessageAsync("prepare fortified defenses");
             Assert.That(held.Calls, Is.EqualTo(1));
+            Assert.That(planner.CaptureControlRequest(0, oldPlan.StrategicPlanId,
+                StrategicPlanControlType.Pause, out StrategicPlanControlRequest endedMatchControl), Is.True);
             GameSimulation laterSimulation = new GameSimulation(config, 2, new[] { 0, 1 }, Array.Empty<int>());
             laterSimulation.SetPlayerCivilizations(new[] { Civilization.French, Civilization.French });
             var laterGoals = new CommanderGoalManager(laterSimulation, 0);
@@ -314,8 +510,29 @@ namespace OpenEmpires.Tests
             var laterPipeline = new StrategicPipeline(laterSimulation, laterGoals, laterPlanner);
             var laterDispatcher = new CommanderIntentDispatcher(laterSimulation, laterGoals,
                 strategicPlanner: laterPlanner);
+            int lateCommanderCommands = 0;
+            laterSimulation.CommandBuffer.CommandEnqueued += (_, source) =>
+            {
+                if (source == CommandEnqueueSource.Commander) lateCommanderCommands++;
+            };
             try
             {
+                chat.ResetConversation(); // end the old match while provider work is still held
+                Assert.That(planner.CaptureControlRequest(0, oldPlan.StrategicPlanId,
+                    StrategicPlanControlType.Cancel, out StrategicPlanControlRequest endOldPlan), Is.True);
+                Assert.That(planner.ApplyControl(endOldPlan).Status,
+                    Is.EqualTo(StrategicPlanControlStatus.Applied));
+                Assert.That(oldPlan.Status, Is.EqualTo(StrategicPlanStatus.Cancelled));
+                Assert.That(planner.GetReservationsForPlan(oldPlan.StrategicPlanId)
+                    .Any(reservation => reservation.Status == StrategicResourceReservationStatus.Active),
+                    Is.False);
+                dispatcher.Dispose();
+                pipeline.Dispose();
+                planner.Dispose();
+                goals.Dispose();
+                Assert.That(planner.ApplyControl(endedMatchControl).Status,
+                    Is.EqualTo(StrategicPlanControlStatus.StalePlan),
+                    "The old Commander authority must be disposed before the late reply arrives.");
                 chat.Initialize(new MockAIProvider(), laterSimulation, laterGoals, laterDispatcher);
                 chat.InitializeStrategic(new MockStrategicAIProvider(), laterPipeline);
                 held.Release();
@@ -324,14 +541,48 @@ namespace OpenEmpires.Tests
                 Assert.That(oldTranslation.IsFaulted, Is.False,
                     oldTranslation.Exception?.ToString() ?? string.Empty);
                 Assert.That(chat.PendingStrategicIntent, Is.Null);
+                Assert.That(chat.PendingAdaptationProposal, Is.Null);
                 Assert.That(chat.LatestStrategicInterpretation, Is.Null);
+                Assert.That(chat.LatestStrategicDecision, Is.Null);
+                Assert.That(chat.LatestSubmission, Is.Null);
                 Assert.That(chat.Conversation.Memory.Count, Is.Zero);
                 Assert.That(chat.DisplayedTranscript, Does.Not.Contain("prepare fortified defenses"));
+                Assert.That((int)typeof(CommanderChatUI).GetField("selectedPlanId",
+                    BindingFlags.NonPublic | BindingFlags.Instance).GetValue(chat), Is.Zero);
+                Component statusText = (Component)typeof(CommanderChatUI).GetField(
+                    "currentPlanStatusText", BindingFlags.NonPublic | BindingFlags.Instance)
+                    .GetValue(chat);
+                Assert.That((string)statusText.GetType().GetProperty("text").GetValue(statusText),
+                    Is.EqualTo("No active strategy."));
+                object feed = typeof(CommanderChatUI).GetField("advisoryFeed",
+                    BindingFlags.NonPublic | BindingFlags.Instance).GetValue(chat);
+                Assert.That(((System.Collections.ICollection)feed.GetType().GetField("plans",
+                    BindingFlags.NonPublic | BindingFlags.Instance).GetValue(feed)).Count, Is.Zero);
+                Assert.That(laterPlanner.Plans, Is.Empty);
+                Assert.That(laterPlanner.Intents, Is.Empty);
+                Assert.That(laterPlanner.Reservations, Is.Empty);
+                Assert.That(laterGoals.Goals, Is.Empty);
+                Assert.That(laterPlanner.CapturePlanHealth(0, 1), Is.Null);
+                Assert.That(laterPlanner.CaptureCurrentControlRequest(0,
+                    StrategicPlanControlType.Pause, out _), Is.False);
+                Assert.That(chat.ConfirmStrategicCommand(), Is.Null);
+                Assert.That(laterSimulation.CommandBuffer.FlushCommands(), Is.Empty);
+                Assert.That(planner.ApplyControl(endedMatchControl).Status,
+                    Is.EqualTo(StrategicPlanControlStatus.StalePlan));
+                for (int tick = 0; tick < 120; tick++)
+                {
+                    laterPlanner.Tick(laterSimulation.CurrentTick);
+                    laterGoals.Tick(laterSimulation.CurrentTick);
+                    laterSimulation.Tick();
+                }
                 Assert.That(laterPlanner.Plans, Is.Empty);
                 Assert.That(laterGoals.Goals, Is.Empty);
+                Assert.That(laterPlanner.Reservations, Is.Empty);
                 Assert.That(laterSimulation.CommandBuffer.FlushCommands(), Is.Empty);
-                Assert.That(planner.Plans, Is.Empty);
-                Debug.Log("[Phase4D1 F] old held provider reply discarded after Initialize/InitializeStrategic new match; pending=0 memory=0 plans=0 commands=0");
+                Assert.That(lateCommanderCommands, Is.Zero);
+                Assert.That(chat.Conversation.Memory.Count, Is.Zero);
+                Assert.That(chat.PendingAdaptationProposal, Is.Null);
+                Debug.Log("[Phase4D4 F] old match reset and commander authority disposed before held provider reply; new pending=0 memory=0 plans=0 commands=0");
             }
             finally
             {

@@ -1,0 +1,290 @@
+{
+  "schema": "commander-phase4d-final-source-hashes@1",
+  "generatedAtUtc": "2026-09-26 11:25:38 UTC",
+  "baselineCommit": "205c4fa8d2aae8d5abe5b7806f1fb66bb0727519",
+  "headCommit": "4ae6269d3a3d1c16f6160813f3a06c66456b5bf5",
+  "scope": "Tracked diff from Phase 4C baseline commit through current working tree plus relevant untracked Commander C# and Unity meta files. Adjacent provider migration and inherited Phase 4C test drift are explicitly classified, not silently attributed to Phase 4D.",
+  "verificationRule": "Resolve each files[].path against project root, recompute SHA-256, require exact match; include all relevant Commander production/test C# and new meta paths in baseline-to-working-tree union.",
+  "files": [
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderGoalManager.cs",
+      "sha256": "0F79E294D202340044BDDE0539735AAB139CDBAA4E0DBCEB327D31CFE21C048A",
+      "role": "phase4d-production"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Advisories.cs",
+      "sha256": "7055A0797A735A654EDB013CF3D4B70D2842AA1CE00BBF1EBC8D3958E71E3FFC",
+      "role": "phase4d-production"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Advisories.cs.meta",
+      "sha256": "1DF9C6C758C6AEC69E7AEB828F782F5047C79A7B80A3A56EA6E8894BD079B9BF",
+      "role": "unity-meta"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Explanations.cs",
+      "sha256": "8B49EC9E23CE5AB00A5189CECF2A8B95CD6256994CB3912D3625A2D972BE0E55",
+      "role": "phase4d-production"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.StrategicControls.cs",
+      "sha256": "686F1D2324F5E541AE1F27832BE6961F7CC727CF4AD579E69F253718DBA9CE81",
+      "role": "phase4d-production"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.StrategicControls.cs.meta",
+      "sha256": "1F5A9B8EC858355D173AADC04D77FEC51226ADABA0D7365F8AFE0D36872004AF",
+      "role": "unity-meta"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs",
+      "sha256": "95309D15712659AE8C2225A4FDDA80BAC1F0A6DC349E99EFFFB7B0E23E0D490E",
+      "role": "phase4d-production"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/GeminiAIProvider.cs",
+      "sha256": "D9E17DA44D2550528F34F7DADBE75F82547AE853A672A5113E194A869DB864F4",
+      "role": "provider-migration-adjacent"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/OpenRouterCommanderProvider.cs",
+      "sha256": "A6532AA7E2F887F436E3E1239560BD4FDDA844E3024CE7523EDDAE6CB8C537CA",
+      "role": "provider-migration-adjacent"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/OpenRouterCommanderProvider.cs.meta",
+      "sha256": "42BBA7F9C9B728BFA6E9140EBFC3374353DCDBE56B69D531DD53C9FFBC7644EC",
+      "role": "unity-meta"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4B1/StrategicAIInterpreterFactory.cs",
+      "sha256": "5D30CAA9B17DC859C08550A81545A486432C35002BEBDD9252D20B264E6396C2",
+      "role": "provider-migration-adjacent"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicAdaptationProposal.cs",
+      "sha256": "85111D1E1C77F4E08BF1FFC3F130DBDA3F5D34D2BDA4E88A548F2DD332AA754A",
+      "role": "phase4d-production"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicAdaptationProposal.cs.meta",
+      "sha256": "5441D7B0DA3CB631FF18BD86257D31FE53097C4360FD25A167FBA6A4A6AC9DF9",
+      "role": "unity-meta"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicAdvisory.cs",
+      "sha256": "44B513AA877D2F2C80EA6A5175091AFD41BE077AFA57EC8B0225ECA7ADD11F67",
+      "role": "phase4d-production"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicAdvisory.cs.meta",
+      "sha256": "65C89CD96369885069A16E6D6D143F901D7798D850E8A47E4D75A0770987C066",
+      "role": "unity-meta"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicPipeline.cs",
+      "sha256": "EBBF1C5A9E170EEDE17CD5D45736BAD243A196FE8438534FBC0B25F764BF2099",
+      "role": "phase4d-production"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicPlan.cs",
+      "sha256": "D58A6C1EC366FD1E8765F56F4298BE00C10FB42894C1E2E7EC12B7123A143C02",
+      "role": "phase4d-production"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicPlanControl.cs",
+      "sha256": "E71A1FB2E5C74DCD29F06093984EC81D1D4A386C6DD2B823BA4D110AD4299DF3",
+      "role": "phase4d-production"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicPlanControl.cs.meta",
+      "sha256": "63C11970E9770A14F60EE466E1EF26C20C2ACF8880D5EC4E2C0A3B9DBA7C065E",
+      "role": "unity-meta"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicPlanHealthSnapshot.cs",
+      "sha256": "A4D73120B5ACAA8D5AEDAB24F48F8511DBF25432B0BA29FCD7735F1E0177A408",
+      "role": "phase4d-production"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicPlanHealthSnapshot.cs.meta",
+      "sha256": "DBF0152F486ED89262FE3E724310FABEDB2E2A210A9144888A3F9ADD954B7C90",
+      "role": "unity-meta"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Controls.cs",
+      "sha256": "A6DDAB7E636CFAF1BDD4CD0B9351FA6E96F462280654F14325ACEE8A3BEAC49F",
+      "role": "phase4d-production"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Controls.cs.meta",
+      "sha256": "4F5CFFAB6997A9FD576E546F2664D55EE2C4DB4AF2BAF8973A694F930106471D",
+      "role": "unity-meta"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Feasibility.cs",
+      "sha256": "F736FDC674EB89C761FBDCA7B7CBB41A5FA5228E519A94E2592C1A89778EA14A",
+      "role": "phase4d-production"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Health.cs",
+      "sha256": "EAFDFC54C8B98757FBDDC40554C6E60256A5100B23A34D6FAD738ACA7F88EC9B",
+      "role": "phase4d-production"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Health.cs.meta",
+      "sha256": "5459BCB0F7AA0673C4F8AA4B744979A1764D646E8774445B3F250CD6781011B0",
+      "role": "unity-meta"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.cs",
+      "sha256": "46CCF148570E9803521938AC8140A9CF86BF9D3D416822A380F6FD9061C00ACF",
+      "role": "phase4d-production"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4ATests.cs",
+      "sha256": "DF406D3F5C8B537569E81FE6A0976A2E136E5012192E8DDCC2B327BAA44B5EC1",
+      "role": "adjacent-provider-or-regression-test"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4B1Tests.cs",
+      "sha256": "D30FAC2DE100B85E1AD1E621B2ADF61A0CEBFC90341150770743F51D654B5AA1",
+      "role": "adjacent-provider-or-regression-test"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4C4Tests.cs",
+      "sha256": "17F250AFF94003017E99BC86AC43DBD5BB6C8055FA8FC78A14ABA259897F73C2",
+      "role": "inherited-phase4c-test"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4D1Tests.cs",
+      "sha256": "0D7709546F7164EB51E58764615FAE2DC25034C3972C53655AAFEC8323EFAC62",
+      "role": "phase4d-test"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4D1Tests.cs.meta",
+      "sha256": "B1C787BA8AE6584C4CF26B63D76F228069A5BDA8B3BC8377F6E86A45E23CA1A1",
+      "role": "unity-meta"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4D2Tests.cs",
+      "sha256": "6A0D517CDC9D7EAF7C5AF709EC43BC2E61D181EB27A354CF344636316B576BD2",
+      "role": "phase4d-test"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4D2Tests.cs.meta",
+      "sha256": "C687041E0528676774123941F2CD0DC1E57FDCCAB1F05F56137AABA64D81C32C",
+      "role": "unity-meta"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4D3Tests.cs",
+      "sha256": "4DC7CE9A67A0BD4E793191911500F797DFFA85DF91195C95A5101D7ABC23AA3E",
+      "role": "phase4d-test"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4D3Tests.cs.meta",
+      "sha256": "BC09589BE0CF4472AB74C2671E3CC358590BAFAFE3814F1957E2904BF439FC88",
+      "role": "unity-meta"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4D4Tests.cs",
+      "sha256": "D6F1BE6E7C4C870E271E60892359FFA8EDE727675750634BF39207C19C708B58",
+      "role": "phase4d-test"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4D4Tests.cs.meta",
+      "sha256": "A1FD7255D81174429EC9BC59C1EB154994D4EA70B317254B31902D27FCA4E00C",
+      "role": "unity-meta"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4B2PlayModeTests.cs",
+      "sha256": "6F1811CBF8744277F7B6095D4BCB9A6875C675DB61DD44ABAD62CDAA4A78E621",
+      "role": "adjacent-provider-or-regression-test"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4C1PlayModeTests.cs",
+      "sha256": "F80F15F15EEDBCD48B37D0529E43DF51D57D826E8E70DC5BD3C41593D72DE819",
+      "role": "adjacent-regression-test"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4C2PlayModeTests.cs",
+      "sha256": "647BBE0E8E8FAA2A77C0A0286A1E9C1D778BE9987AFC58FDD1CF11211CADBBE1",
+      "role": "adjacent-regression-test"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4C4PlayModeTests.cs",
+      "sha256": "6A6B0989FCA8FAB6FF939C2082D2CEEED7EE3AE8690EF0D68C5650E1583C384F",
+      "role": "inherited-phase4c-test"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4D1HostPlayModeTests.cs",
+      "sha256": "BC57CB3277D96F4437A91D037F28ECB77240862F622912046A6DD03728BE9129",
+      "role": "phase4d-test"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4D1HostPlayModeTests.cs.meta",
+      "sha256": "28BD51AF343D658D9E32DDFDFB55C13CC4F146A2E6FFF48A1E72A949B2E17700",
+      "role": "unity-meta"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4D1PlayModeTests.cs",
+      "sha256": "833DB13A27B2B2ADF7CE3A64A967CA4C1BB477262F2BC74D739BE0A33639EF5E",
+      "role": "phase4d-test"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4D1PlayModeTests.cs.meta",
+      "sha256": "DDAC0E41BD61FC1E8C9F806B39196A03F02A5E7037FA66A346F5C1300048360B",
+      "role": "unity-meta"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4D2HostPlayModeTests.cs",
+      "sha256": "75ED9DA0B7F7A447B118301825F078941966ACE823E166BEEEF9C2F7839CC619",
+      "role": "phase4d-test"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4D2HostPlayModeTests.cs.meta",
+      "sha256": "F64D86DC7C2FE47FCC84E9BE0B0CF6E19DEE441A2E971FF59C7E80CE60BD3305",
+      "role": "unity-meta"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4D2RuntimePlayModeTests.cs",
+      "sha256": "07708958A428AD4BCBE42898F2A0185185EF996888F4ECAA395C9C9295CA1D0F",
+      "role": "phase4d-test"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4D2RuntimePlayModeTests.cs.meta",
+      "sha256": "3365682E668734A5B66B3C4510F70DBAF6E52EB326329F1892AC41FF631650A0",
+      "role": "unity-meta"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4D3HostPlayModeTests.cs",
+      "sha256": "9A1EC73A383FE9CAD57F838E2B1F4FD8F5870B1044B39AA9A9A3D6CED854EA4D",
+      "role": "phase4d-test"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4D3HostPlayModeTests.cs.meta",
+      "sha256": "66BE010CE264C53926B28AC99D6224548E04DA81280D4A5F58DF442B70367BE3",
+      "role": "unity-meta"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4D3RuntimePlayModeTests.cs",
+      "sha256": "69040993B008F6BD470C9632A94ABDDAABF945450ADE0B5C4C41A55D6F341EB1",
+      "role": "phase4d-test"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4D3RuntimePlayModeTests.cs.meta",
+      "sha256": "586B025AD5DD6DF44E00CED6F1F6F7BF139736C642BEE5AFCFB6FE6ACB24EA8C",
+      "role": "unity-meta"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4D4HostPlayModeTests.cs",
+      "sha256": "4FBAA244D4B5B3C70217F148191EA2D01720170E13146D70B4A3321CD16F5C82",
+      "role": "phase4d-test"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4D4HostPlayModeTests.cs.meta",
+      "sha256": "97D228FAAF331AA9A09726A8C9C9B434DC2516202F78BA6A9EB91A4DCE47F6DB",
+      "role": "unity-meta"
+    }
+  ]
+}

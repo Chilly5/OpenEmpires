@@ -1,0 +1,2741 @@
+diff --git a/Open Empires/Assets/Scripts/AI/Commander/CommanderGoalManager.cs b/Open Empires/Assets/Scripts/AI/Commander/CommanderGoalManager.cs
+index d71c083..25c0abf 100644
+--- a/Open Empires/Assets/Scripts/AI/Commander/CommanderGoalManager.cs	
++++ b/Open Empires/Assets/Scripts/AI/Commander/CommanderGoalManager.cs	
+@@ -1,5 +1,6 @@
+ using System;
+ using System.Collections.Generic;
++using System.Runtime.ExceptionServices;
+ using UnityEngine;
+ 
+ namespace OpenEmpires
+@@ -18,6 +19,7 @@ namespace OpenEmpires
+         private readonly List<CommanderGoal> goals = new List<CommanderGoal>();
+         private readonly List<CommanderGoal> activeGoals = new List<CommanderGoal>();
+         private readonly List<CommanderGoal> archivedGoals = new List<CommanderGoal>();
++        private readonly HashSet<int> suspendedGoalIds = new HashSet<int>();
+         private int nextGoalId = 1;
+         private int lastEvaluatedTick = -1;
+         private bool isTicking;
+@@ -41,6 +43,54 @@ namespace OpenEmpires
+             return null;
+         }
+ 
++        // Called only with child IDs selected by StrategicPlanner, never from player text.
++        internal void SuspendGoal(int goalId)
++        {
++            CommanderGoal goal = GetGoal(goalId);
++            if (goal == null || goal.IsTerminal) return;
++            suspendedGoalIds.Add(goalId);
++            if (ActiveGoal == goal) ActiveGoal = null;
++        }
++
++        internal bool CanResumeGoal(int goalId, int pausedTicks)
++        {
++            CommanderGoal goal = GetGoal(goalId);
++            if (pausedTicks < 0 || goal == null || goal.IsTerminal || !suspendedGoalIds.Contains(goalId))
++                return pausedTicks >= 0;
++            return CanShift(goal.CreatedTick, pausedTicks)
++                && (goal.BlockedSinceTick < 0 || CanShift(goal.BlockedSinceTick, pausedTicks))
++                && (goal.BlockedSinceTick < 0 || CanShift(goal.NextBlockedRetryTick, pausedTicks))
++                && (goal.LastEconomyCommandTick == int.MinValue / 2
++                    || CanShift(goal.LastEconomyCommandTick, pausedTicks))
++                && (goal.ObservedConstructionBuildingId < 0
++                    || CanShift(goal.LastConstructionProgressTick, pausedTicks))
++                && (goal.LastConstructionRecoveryTick == int.MinValue / 2
++                    || CanShift(goal.LastConstructionRecoveryTick, pausedTicks));
++        }
++
++        internal void ResumeGoal(int goalId, int pausedTicks)
++        {
++            CommanderGoal goal = GetGoal(goalId);
++            if (goal == null || goal.IsTerminal || !suspendedGoalIds.Contains(goalId)) return;
++            if (!CanResumeGoal(goalId, pausedTicks))
++                throw new InvalidOperationException("A suspended goal tick anchor cannot be shifted safely.");
++            goal.CreatedTick = checked(goal.CreatedTick + pausedTicks);
++            if (goal.BlockedSinceTick >= 0)
++            {
++                goal.BlockedSinceTick = checked(goal.BlockedSinceTick + pausedTicks);
++                goal.NextBlockedRetryTick = checked(goal.NextBlockedRetryTick + pausedTicks);
++            }
++            if (goal.LastEconomyCommandTick != int.MinValue / 2)
++                goal.LastEconomyCommandTick = checked(goal.LastEconomyCommandTick + pausedTicks);
++            if (goal.ObservedConstructionBuildingId >= 0)
++                goal.LastConstructionProgressTick = checked(goal.LastConstructionProgressTick + pausedTicks);
++            if (goal.LastConstructionRecoveryTick != int.MinValue / 2)
++                goal.LastConstructionRecoveryTick = checked(goal.LastConstructionRecoveryTick + pausedTicks);
++            suspendedGoalIds.Remove(goalId);
++        }
++
++        private static bool CanShift(int anchor, int delta) => (long)anchor + delta <= int.MaxValue;
++
+         public CommanderWorkerReservation? GetWorkerReservation(int workerId) => workerAuthority.GetReservation(workerId);
+ 
+         public bool TryReserveWorker(int goalId, int workerId, CommanderWorkerReservationType reservationType)
+@@ -145,14 +195,19 @@ namespace OpenEmpires
+             {
+                 CommanderGoal goal = goals[i];
+                 if (goal.GoalId != goalId || goal.IsTerminal) continue;
++                suspendedGoalIds.Remove(goalId);
+                 goal.SetStatus(CommanderGoalStatus.Cancelled, "Cancelled by the owning player.");
+                 workerAuthority.ReleaseGoal(goal.GoalId);
+                 ArchiveGoal(goal);
+                 if (ActiveGoal == goal) ActiveGoal = null;
+                 Debug.Log($"[Commander] Goal #{goal.GoalId} cancelled.");
+-                GoalStatusChanged?.Invoke(goal);
+-                PublishEvent(CommanderGoalEventType.GoalCancelled, goal, simulation.CurrentTick);
+-                if (!isTicking) CleanupTerminalGoals();
++                Exception observerError = null;
++                try { GoalStatusChanged?.Invoke(goal); }
++                catch (Exception error) { observerError = error; }
++                try { PublishEvent(CommanderGoalEventType.GoalCancelled, goal, simulation.CurrentTick); }
++                catch (Exception error) { if (observerError == null) observerError = error; }
++                finally { if (!isTicking) CleanupTerminalGoals(); }
++                if (observerError != null) ExceptionDispatchInfo.Capture(observerError).Throw();
+                 return true;
+             }
+             return false;
+@@ -174,7 +229,8 @@ namespace OpenEmpires
+                 for (int i = 0; i < activeGoals.Count; i++)
+                 {
+                     CommanderGoal goal = activeGoals[i];
+-                    if (!goal.IsTerminal && goal.MaxDurationTicks > 0
++                    if (!goal.IsTerminal && !suspendedGoalIds.Contains(goal.GoalId)
++                        && goal.MaxDurationTicks > 0
+                         && currentTick - goal.CreatedTick >= goal.MaxDurationTicks)
+                         FailGoal(goal, $"Goal exceeded its {goal.MaxDurationTicks}-tick duration limit.", currentTick);
+                 }
+@@ -185,7 +241,8 @@ namespace OpenEmpires
+                 for (int i = 0; i < activeGoals.Count; i++)
+                 {
+                     CommanderGoal goal = activeGoals[i];
+-                    if (goal.IsTerminal || (goal.Status == CommanderGoalStatus.Blocked
++                    if (goal.IsTerminal || suspendedGoalIds.Contains(goal.GoalId)
++                        || (goal.Status == CommanderGoalStatus.Blocked
+                         && currentTick < goal.NextBlockedRetryTick)) continue;
+                     CommanderPlan plan = planner.Plan(goal, currentTick);
+                     if (plan.Command != null && !workerAuthority.TryReserveCommand(goal, plan.Command, currentTick))
+@@ -286,6 +343,7 @@ namespace OpenEmpires
+             simulation.CommandBuffer.CommandEnqueued -= HandleCommandEnqueued;
+             for (int i = 0; i < activeGoals.Count; i++)
+                 workerAuthority.ReleaseGoal(activeGoals[i].GoalId);
++            suspendedGoalIds.Clear();
+             GoalStatusChanged = null;
+             GoalEventPublished = null;
+         }
+diff --git a/Open Empires/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Explanations.cs b/Open Empires/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Explanations.cs
+index ac965af..631258f 100644
+--- a/Open Empires/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Explanations.cs	
++++ b/Open Empires/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Explanations.cs	
+@@ -17,6 +17,7 @@ namespace OpenEmpires
+         private bool TryHandleExplanationQuery(string message)
+         {
+             string normalized = NormalizeExplanationWholeForm(message);
++            if (TryHandlePlanHealthQuery(message, normalized)) return true;
+             CommanderExplanationQuery query;
+             switch (normalized)
+             {
+diff --git a/Open Empires/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.StrategicControls.cs b/Open Empires/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.StrategicControls.cs
+new file mode 100644
+index 0000000..0ecca7a
+--- /dev/null
++++ b/Open Empires/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.StrategicControls.cs	
+@@ -0,0 +1,548 @@
++using System;
++using System.Collections.Generic;
++using System.Globalization;
++using System.Linq;
++using System.Text;
++using System.Text.RegularExpressions;
++using TMPro;
++using UnityEngine;
++using UnityEngine.UI;
++
++namespace OpenEmpires
++{
++    public sealed partial class CommanderChatUI
++    {
++        private TMP_Text currentPlanStatusText;
++        private TMP_Text cancelPlanLabel;
++        private Button selectPlanButton;
++        private Button pausePlanButton;
++        private Button resumePlanButton;
++        private Button cancelPlanButton;
++        private int selectedPlanId;
++        private int displayedPlanRevision = -1;
++        private string selectedPlanStatusPrefix;
++        private bool cancelArmed;
++        private StrategicPlanControlRequest armedCancel;
++        private StrategicPipeline armedPipeline;
++        private int armedGeneration;
++        private Action displayedPauseCallback;
++        private Action displayedResumeCallback;
++        private Action displayedCancelCallback;
++        private Action displayedSelectCallback;
++
++        private void BuildStrategicHostControls(Transform panel)
++        {
++            currentPlanStatusText = Text("Current plan status", panel, "No active strategy.", 11,
++                TextAlignmentOptions.Left);
++            SetRect(currentPlanStatusText.rectTransform, Vector2.zero, Vector2.zero,
++                new Vector2(10, 116), new Vector2(420, 140));
++            selectPlanButton = StrategyButton(panel, "Select plan", 10, 95,
++                () => displayedSelectCallback?.Invoke());
++            pausePlanButton = StrategyButton(panel, "Pause", 110, 78,
++                () => displayedPauseCallback?.Invoke());
++            resumePlanButton = StrategyButton(panel, "Resume", 193, 78,
++                () => displayedResumeCallback?.Invoke());
++            cancelPlanButton = StrategyButton(panel, "Cancel", 276, 144,
++                () => displayedCancelCallback?.Invoke());
++            MoveHostButton(selectPlanButton, 83, 111);
++            MoveHostButton(pausePlanButton, 83, 111);
++            MoveHostButton(resumePlanButton, 83, 111);
++            MoveHostButton(cancelPlanButton, 83, 111);
++            cancelPlanLabel = cancelPlanButton.GetComponentInChildren<TMP_Text>();
++        }
++
++        private static void MoveHostButton(Button button, float bottom, float top)
++        {
++            RectTransform rect = button.GetComponent<RectTransform>();
++            Vector2 min = rect.offsetMin;
++            Vector2 max = rect.offsetMax;
++            rect.offsetMin = new Vector2(min.x, bottom);
++            rect.offsetMax = new Vector2(max.x, top);
++        }
++
++        private static string NormalizeLifecycleForm(string message)
++        {
++            string text = Regex.Replace((message ?? string.Empty).Trim().ToLowerInvariant(),
++                @"\s+", " ");
++            if (text.EndsWith(".", StringComparison.Ordinal)
++                || text.EndsWith("?", StringComparison.Ordinal))
++                text = text.Substring(0, text.Length - 1).TrimEnd();
++            return text;
++        }
++
++        private bool TryHandleStrategicLifecycle(string message)
++        {
++            StrategicPlanControlType action;
++            switch (NormalizeLifecycleForm(message))
++            {
++                case "pause strategy":
++                case "pause current strategy": action = StrategicPlanControlType.Pause; break;
++                case "resume strategy":
++                case "resume current strategy": action = StrategicPlanControlType.Resume; break;
++                case "cancel strategy":
++                case "cancel current strategy": action = StrategicPlanControlType.Cancel; break;
++                case "strategy status":
++                case "current strategy status": action = StrategicPlanControlType.Status; break;
++                default: return false;
++            }
++
++            InvalidateLifecycleInterpretation();
++            AppendLine("Player", message, false);
++            if (strategicPipeline == null || Conversation == null)
++            {
++                AppendLine("Commander", "Strategic Commander is not ready.", false);
++                return true;
++            }
++            StrategicPlanner planner = strategicPipeline.StrategicPlanner;
++            if (planner.PlayerId != Conversation.PlayerId)
++            {
++                AppendLine("Commander", "Strategy control is unavailable to this player.", false);
++                return true;
++            }
++            if (action == StrategicPlanControlType.Status)
++            {
++                AppendLine("Commander", CurrentPlansStatus(strategicPipeline, Conversation.PlayerId), false);
++                UpdateStrategicHostControls();
++                return true;
++            }
++
++            int ownedCount = 0;
++            foreach (StrategicPlan plan in planner.ActivePlans)
++                if (!plan.IsTerminal && plan.OwnerPlayerId == Conversation.PlayerId) ownedCount++;
++            if (ownedCount != 1)
++            {
++                AppendLine("Commander", ownedCount == 0
++                    ? "No active strategy."
++                    : "Multiple active strategies; select a plan in the Commander panel.", false);
++                return true;
++            }
++            if (!planner.CaptureCurrentControlRequest(Conversation.PlayerId, action,
++                out StrategicPlanControlRequest request))
++            {
++                AppendLine("Commander", "Strategy control is unavailable.", false);
++                return true;
++            }
++            ApplyHostControl(request, strategicPipeline, runtimeGeneration);
++            return true;
++        }
++
++        private static string CurrentPlansStatus(StrategicPipeline pipeline, int playerId)
++        {
++            var lines = new List<string>();
++            StrategicContext snapshot = pipeline.CaptureContext();
++            if (snapshot.PlayerId != playerId) return "Strategy control is unavailable to this player.";
++            foreach (StrategicPlanState plan in snapshot.ActivePlans)
++            {
++                lines.Add("Strategy #" + plan.StrategicPlanId + ": " + plan.Status
++                    + ", milestone " + (string.IsNullOrEmpty(plan.CurrentMilestone)
++                        ? "none" : plan.CurrentMilestone) + ".");
++                if (lines.Count == StrategicPlanner.MaxActivePlans) break;
++            }
++            return lines.Count == 0 ? "No active strategy." : string.Join(" ", lines);
++        }
++
++        private void ApplyHostControl(StrategicPlanControlRequest request,
++            StrategicPipeline capturedPipeline, int capturedGeneration)
++        {
++            if (!ReferenceEquals(strategicPipeline, capturedPipeline)
++                || runtimeGeneration != capturedGeneration || Conversation == null
++                || Conversation.PlayerId != capturedPipeline.StrategicPlanner.PlayerId)
++                return;
++            StrategicPlanControlResult result = capturedPipeline.StrategicPlanner.ApplyControl(request);
++            AppendLine("Commander", result.Status == StrategicPlanControlStatus.Applied
++                ? "Strategy #" + result.PlanId + ": " + result.Message
++                : "Strategy control " + result.Status + ": " + result.Message, false);
++            if (result.Status == StrategicPlanControlStatus.Applied
++                && request.ControlType != StrategicPlanControlType.Status)
++                InvalidateLifecycleInterpretation();
++            UpdateStrategicHostControls();
++        }
++
++        private void InvalidateLifecycleInterpretation()
++        {
++            runtimeGeneration++;
++            lifetime?.Cancel();
++            lifetime?.Dispose();
++            lifetime = new System.Threading.CancellationTokenSource();
++            strategicBridge?.ClearPending();
++            ClearStrategicPreview();
++            LatestStrategicInterpretation = null;
++            submitting = false;
++            if (inputField != null) inputField.interactable = adapter != null;
++            if (sendButton != null) sendButton.interactable = adapter != null;
++            UpdateStrategicControls();
++        }
++
++        private void OnHostPlanStatusChanged(StrategicPlan plan)
++        {
++            ObserveAdvisoryEvent(plan);
++            UpdateStrategicHostControls();
++        }
++        private void OnHostMilestoneStatusChanged(StrategicPlan plan, StrategicMilestone _)
++        {
++            ObserveAdvisoryEvent(plan);
++            UpdateStrategicHostControls();
++        }
++        private void OnHostChildGoalEvent(StrategicPlan plan, CommanderGoalEvent _)
++        {
++            ObserveAdvisoryEvent(plan);
++            UpdateStrategicHostControls();
++        }
++        private void OnHostReservationCreated(StrategicResourceReservation reservation)
++        {
++            ObserveAdvisoryReservation(reservation);
++            UpdateStrategicHostControls();
++        }
++        private void OnHostReservationReleased(StrategicResourceReservation reservation)
++        {
++            ObserveAdvisoryReservation(reservation);
++            UpdateStrategicHostControls();
++        }
++
++        private void LateUpdate()
++        {
++            ScanOwnedAdvisories();
++            StrategicPlanner planner = strategicPipeline?.StrategicPlanner;
++            if (planner == null || currentPlanStatusText == null || selectedPlanId == 0) return;
++            StrategicPlan plan = planner.GetPlan(selectedPlanId);
++            if (plan == null || plan.IsTerminal || plan.Revision != displayedPlanRevision)
++                UpdateStrategicHostControls();
++            else
++                RefreshSelectedPlanHealth(plan);
++        }
++
++        private void UpdateStrategicHostControls()
++        {
++            if (currentPlanStatusText == null) return;
++            displayedPauseCallback = displayedResumeCallback = displayedCancelCallback = null;
++            displayedSelectCallback = null;
++            StrategicPlanner planner = strategicPipeline?.StrategicPlanner;
++            if (planner == null || Conversation == null || planner.PlayerId != Conversation.PlayerId)
++            {
++                DisarmCancel();
++                selectedPlanStatusPrefix = null;
++                currentPlanStatusText.text = "No active strategy.";
++                SetHostButtons(false, false, false, false);
++                return;
++            }
++            var plans = new List<StrategicPlan>();
++            foreach (StrategicPlan plan in planner.ActivePlans)
++                if (!plan.IsTerminal && plan.OwnerPlayerId == Conversation.PlayerId)
++                    plans.Add(plan);
++            if (plans.Count == 0)
++            {
++                selectedPlanId = 0;
++                DisarmCancel();
++                selectedPlanStatusPrefix = null;
++                currentPlanStatusText.text = "No active strategy.";
++                SetHostButtons(false, false, false, false);
++                return;
++            }
++            int index = plans.FindIndex(plan => plan.StrategicPlanId == selectedPlanId);
++            if (index < 0)
++            {
++                index = 0;
++                selectedPlanId = plans[0].StrategicPlanId;
++                DisarmCancel();
++            }
++            StrategicPlan selected = plans[index];
++            displayedPlanRevision = selected.Revision;
++            selectedPlanStatusPrefix = "Strategy #" + selected.StrategicPlanId + " ("
++                + (index + 1) + "/" + plans.Count + "): " + selected.Status
++                + ", " + (selected.CurrentMilestone?.Name ?? "none") + ".";
++            RefreshSelectedPlanHealth(selected);
++            StrategicPipeline capturedPipeline = strategicPipeline;
++            int capturedGeneration = runtimeGeneration;
++            int capturedPlanId = selected.StrategicPlanId;
++            if (plans.Count > 1)
++            {
++                int nextPlanId = plans[(index + 1) % plans.Count].StrategicPlanId;
++                displayedSelectCallback = () =>
++                {
++                    if (!ReferenceEquals(strategicPipeline, capturedPipeline)
++                        || runtimeGeneration != capturedGeneration || selectedPlanId != capturedPlanId)
++                        return;
++                    selectedPlanId = nextPlanId;
++                    DisarmCancel();
++                    UpdateStrategicHostControls();
++                };
++            }
++            bool hasPause = planner.CaptureControlRequest(Conversation.PlayerId,
++                selected.StrategicPlanId, StrategicPlanControlType.Pause, out StrategicPlanControlRequest pause);
++            bool hasResume = planner.CaptureControlRequest(Conversation.PlayerId,
++                selected.StrategicPlanId, StrategicPlanControlType.Resume, out StrategicPlanControlRequest resume);
++            bool hasCancel = planner.CaptureControlRequest(Conversation.PlayerId,
++                selected.StrategicPlanId, StrategicPlanControlType.Cancel, out StrategicPlanControlRequest cancel);
++            if (cancelArmed && (!ReferenceEquals(armedPipeline, capturedPipeline)
++                || armedGeneration != capturedGeneration || !SameToken(armedCancel, cancel)))
++                DisarmCancel();
++            if (hasPause && selected.Status != StrategicPlanStatus.Paused)
++                displayedPauseCallback = () => ApplyHostControl(pause, capturedPipeline, capturedGeneration);
++            if (hasResume && selected.Status == StrategicPlanStatus.Paused)
++                displayedResumeCallback = () => ApplyHostControl(resume, capturedPipeline, capturedGeneration);
++            if (hasCancel)
++                displayedCancelCallback = () => ArmOrApplyCancel(cancel, capturedPipeline, capturedGeneration);
++            if (cancelPlanLabel != null)
++                cancelPlanLabel.text = cancelArmed ? "Confirm cancel #" + cancel.PlanId : "Cancel";
++            SetHostButtons(plans.Count > 1, displayedPauseCallback != null,
++                displayedResumeCallback != null, displayedCancelCallback != null);
++        }
++
++        private void ArmOrApplyCancel(StrategicPlanControlRequest request,
++            StrategicPipeline capturedPipeline, int capturedGeneration)
++        {
++            if (!ReferenceEquals(strategicPipeline, capturedPipeline)
++                || runtimeGeneration != capturedGeneration || Conversation == null
++                || Conversation.PlayerId != capturedPipeline.StrategicPlanner.PlayerId)
++                return;
++            if (!cancelArmed || !ReferenceEquals(armedPipeline, capturedPipeline)
++                || armedGeneration != capturedGeneration || !SameToken(armedCancel, request))
++            {
++                DisarmCancel();
++                if (!capturedPipeline.StrategicPlanner.CaptureControlRequest(Conversation.PlayerId,
++                    request.PlanId, StrategicPlanControlType.Cancel, out StrategicPlanControlRequest current)
++                    || !SameToken(current, request))
++                {
++                    UpdateStrategicHostControls();
++                    return;
++                }
++                cancelArmed = true;
++                armedCancel = request;
++                armedPipeline = capturedPipeline;
++                armedGeneration = capturedGeneration;
++                UpdateStrategicHostControls();
++                return;
++            }
++            DisarmCancel();
++            ApplyHostControl(request, capturedPipeline, capturedGeneration);
++        }
++
++        private static bool SameToken(StrategicPlanControlRequest a, StrategicPlanControlRequest b) =>
++            a.PlayerId == b.PlayerId && a.PlanId == b.PlanId && a.CreatedTick == b.CreatedTick
++            && a.ObservedRevision == b.ObservedRevision && a.ControlType == b.ControlType;
++
++        private void DisarmCancel()
++        {
++            cancelArmed = false;
++            armedCancel = default;
++            armedPipeline = null;
++            armedGeneration = 0;
++            if (cancelPlanLabel != null) cancelPlanLabel.text = "Cancel";
++        }
++
++        private void ResetStrategicHostControls()
++        {
++            selectedPlanId = 0;
++            displayedPlanRevision = -1;
++            selectedPlanStatusPrefix = null;
++            displayedPauseCallback = displayedResumeCallback = displayedCancelCallback = null;
++            displayedSelectCallback = null;
++            DisarmCancel();
++            if (currentPlanStatusText != null) currentPlanStatusText.text = "No active strategy.";
++            SetHostButtons(false, false, false, false);
++        }
++
++        private StrategicPlanHealthSnapshot CaptureCurrentSelectedHealth(StrategicPlan selected)
++        {
++            StrategicPipeline source = strategicPipeline;
++            int generation = runtimeGeneration;
++            int owner = Conversation?.PlayerId ?? -1;
++            StrategicPlanner planner = source?.StrategicPlanner;
++            if (selected == null || selected.IsTerminal || planner == null
++                || planner.PlayerId != owner || selected.OwnerPlayerId != owner
++                || selectedPlanId != selected.StrategicPlanId
++                || !ReferenceEquals(planner.GetPlan(selected.StrategicPlanId), selected)) return null;
++            int id = selected.StrategicPlanId;
++            int created = selected.CreatedTick;
++            int revision = selected.Revision;
++            StrategicPlanHealthSnapshot health = planner.CapturePlanHealth(owner, id);
++            if (health == null || !ReferenceEquals(strategicPipeline, source)
++                || runtimeGeneration != generation || Conversation == null
++                || Conversation.PlayerId != owner || selectedPlanId != id
++                || selected.IsTerminal || selected.Revision != revision
++                || !ReferenceEquals(planner.GetPlan(id), selected)
++                || health.PlayerId != owner || health.PlanId != id
++                || health.CreatedTick != created || health.Revision != revision
++                || !Enum.IsDefined(typeof(StrategicPlanHealthCategory),
++                    health.PrimaryHealthCategory)) return null;
++            return health;
++        }
++
++        private void RefreshSelectedPlanHealth(StrategicPlan selected)
++        {
++            if (currentPlanStatusText == null) return;
++            StrategicPlanHealthSnapshot health = CaptureCurrentSelectedHealth(selected);
++            if (health == null)
++            {
++                currentPlanStatusText.text = "Health evidence unavailable.";
++                return;
++            }
++            string summary = HealthCategoryText(health.PrimaryHealthCategory);
++            int wood = 0;
++            bool hasWood = false;
++            foreach (StrategicPlanHealthResource resource in health.Resources)
++                if (resource.ResourceType == ResourceType.Wood)
++                {
++                    wood = resource.Owned;
++                    hasWood = true;
++                    break;
++                }
++            currentPlanStatusText.text = selectedPlanStatusPrefix + "\nHealth: " + summary
++                + (hasWood ? "; wood " + wood : string.Empty)
++                + "; population " + health.Population + "/" + health.PopulationCap
++                + "; queued " + health.AllQueuedUnits + ".";
++        }
++
++        private bool TryHandlePlanHealthQuery(string message, string normalized)
++        {
++            bool asksPause = normalized == "why is the strategy paused";
++            bool asksWait = normalized == "why is the plan waiting";
++            bool asksBlock = normalized == "what is blocking the current strategy";
++            bool asksRecovery = normalized == "did the strategy recover";
++            bool asksStop = normalized == "why did the plan stop";
++            Match terminalForm = Regex.Match(normalized, @"^why did plan #([1-9][0-9]*) stop$",
++                RegexOptions.CultureInvariant);
++            bool asksExplicitStop = terminalForm.Success;
++            if (!asksPause && !asksWait && !asksBlock && !asksRecovery && !asksStop
++                && !asksExplicitStop)
++                return false;
++            AppendLine("Player", (message ?? string.Empty).Trim(), false);
++            StrategicPlanHealthSnapshot health = null;
++            StrategicPlanner planner = strategicPipeline?.StrategicPlanner;
++            if (planner != null && Conversation != null && planner.PlayerId == Conversation.PlayerId
++                && selectedPlanId > 0)
++                health = CaptureCurrentSelectedHealth(planner.GetPlan(selectedPlanId));
++            string answer = "Health evidence unavailable for the current strategy.";
++            if (asksExplicitStop
++                && int.TryParse(terminalForm.Groups[1].Value, NumberStyles.None,
++                    CultureInfo.InvariantCulture, out int terminalId))
++            {
++                StrategicPlanHealthSnapshot terminal = CaptureExplicitTerminalHealth(terminalId);
++                if (terminal != null)
++                    answer = "Strategy #" + terminal.PlanId + ": "
++                        + HealthCategoryText(terminal.PrimaryHealthCategory)
++                        + ". Past blocker cause is not retained in this health snapshot.";
++            }
++            else if (health != null && !asksRecovery && !asksStop)
++            {
++                bool matching = asksPause
++                    ? health.PrimaryHealthCategory == StrategicPlanHealthCategory.Paused
++                    : asksWait
++                        ? IsWaitingHealth(health.PrimaryHealthCategory)
++                        : IsWaitingHealth(health.PrimaryHealthCategory)
++                            || health.PrimaryHealthCategory == StrategicPlanHealthCategory.TemporarilyBlocked;
++                if (!matching && !asksPause)
++                    foreach (StrategicPlanHealthCategory secondary in health.SecondaryHealthCategories)
++                        if (IsWaitingHealth(secondary)
++                            || secondary == StrategicPlanHealthCategory.TemporarilyBlocked)
++                        {
++                            matching = true;
++                            break;
++                        }
++                if (matching) answer = FormatHealthAnswer(health);
++            }
++            AppendLine("Commander", answer, false);
++            Conversation?.Memory.RecordExplanation(answer);
++            return true;
++        }
++
++        private StrategicPlanHealthSnapshot CaptureExplicitTerminalHealth(int id)
++        {
++            StrategicPipeline source = strategicPipeline;
++            int generation = runtimeGeneration;
++            int owner = Conversation?.PlayerId ?? -1;
++            StrategicPlanner planner = source?.StrategicPlanner;
++            if (planner == null || planner.PlayerId != owner) return null;
++            StrategicPlan plan = planner.GetPlan(id);
++            if (plan == null || !plan.IsTerminal || plan.OwnerPlayerId != owner) return null;
++            int created = plan.CreatedTick;
++            int revision = plan.Revision;
++            StrategicPlanHealthSnapshot health = planner.CapturePlanHealth(owner, id);
++            if (health == null || !ReferenceEquals(strategicPipeline, source)
++                || runtimeGeneration != generation || Conversation == null
++                || Conversation.PlayerId != owner || !ReferenceEquals(planner.GetPlan(id), plan)
++                || !plan.IsTerminal || plan.CreatedTick != created || plan.Revision != revision
++                || health.PlayerId != owner || health.PlanId != id
++                || health.CreatedTick != created || health.Revision != revision) return null;
++            switch (plan.Status)
++            {
++                case StrategicPlanStatus.Completed:
++                    return health.PrimaryHealthCategory == StrategicPlanHealthCategory.Completed ? health : null;
++                case StrategicPlanStatus.Cancelled:
++                    return health.PrimaryHealthCategory == StrategicPlanHealthCategory.Cancelled ? health : null;
++                case StrategicPlanStatus.Failed:
++                    return health.PrimaryHealthCategory == StrategicPlanHealthCategory.Failed ? health : null;
++                default: return null;
++            }
++        }
++
++        private static bool IsWaitingHealth(StrategicPlanHealthCategory category) =>
++            category == StrategicPlanHealthCategory.WaitingForResources
++            || category == StrategicPlanHealthCategory.WaitingForPopulation
++            || category == StrategicPlanHealthCategory.WaitingForPrerequisite
++            || category == StrategicPlanHealthCategory.WaitingForProduction
++            || category == StrategicPlanHealthCategory.WaitingForConstruction;
++
++        private static string HealthCategoryText(StrategicPlanHealthCategory category)
++        {
++            switch (category)
++            {
++                case StrategicPlanHealthCategory.Healthy: return "Active progress";
++                case StrategicPlanHealthCategory.Paused: return "Paused";
++                case StrategicPlanHealthCategory.WaitingForResources: return "Waiting for resources";
++                case StrategicPlanHealthCategory.WaitingForPopulation: return "Waiting for population capacity";
++                case StrategicPlanHealthCategory.WaitingForPrerequisite: return "Waiting for a prerequisite";
++                case StrategicPlanHealthCategory.WaitingForProduction: return "Waiting for production";
++                case StrategicPlanHealthCategory.WaitingForConstruction: return "Waiting for construction";
++                case StrategicPlanHealthCategory.TemporarilyBlocked: return "Temporarily blocked";
++                case StrategicPlanHealthCategory.Completed: return "Completed";
++                case StrategicPlanHealthCategory.Cancelled: return "Cancelled";
++                case StrategicPlanHealthCategory.Failed: return "Failed";
++                default: return "Unknown";
++            }
++        }
++
++        private static string FormatHealthAnswer(StrategicPlanHealthSnapshot health)
++        {
++            var answer = new StringBuilder(256);
++            answer.Append("Strategy #").Append(health.PlanId.ToString(CultureInfo.InvariantCulture)).Append(": ")
++                .Append(HealthCategoryText(health.PrimaryHealthCategory)).Append('.');
++            if (health.PrimaryHealthCategory == StrategicPlanHealthCategory.Unknown
++                || !Enum.IsDefined(typeof(StrategicPlanHealthCategory), health.PrimaryHealthCategory))
++                return answer.ToString();
++            foreach (StrategicPlanHealthCategory category in health.SecondaryHealthCategories)
++            {
++                answer.Append(" Also: ").Append(HealthCategoryText(category)).Append('.');
++            }
++            if (health.PrimaryHealthCategory == StrategicPlanHealthCategory.WaitingForPopulation
++                || health.SecondaryHealthCategories.Contains(StrategicPlanHealthCategory.WaitingForPopulation))
++                answer.Append(" Population ")
++                    .Append(health.Population.ToString(CultureInfo.InvariantCulture)).Append('/')
++                    .Append(health.PopulationCap.ToString(CultureInfo.InvariantCulture))
++                    .Append("; queued ")
++                    .Append(health.AllQueuedUnits.ToString(CultureInfo.InvariantCulture)).Append('.');
++            if (health.PrimaryHealthCategory == StrategicPlanHealthCategory.WaitingForResources
++                || health.SecondaryHealthCategories.Contains(StrategicPlanHealthCategory.WaitingForResources))
++            {
++                foreach (StrategicPlanHealthResource resource in health.Resources)
++                {
++                    if (!resource.MilestoneRequirementKnown || resource.MilestoneDeficit <= 0) continue;
++                    answer.Append(' ').Append(resource.ResourceType).Append(" owned ")
++                        .Append(resource.Owned.ToString(CultureInfo.InvariantCulture))
++                        .Append(", milestone deficit ")
++                        .Append(resource.MilestoneDeficit.ToString(CultureInfo.InvariantCulture)).Append('.');
++                }
++            }
++            if (answer.Length > 512) answer.Length = 512;
++            return answer.ToString();
++        }
++
++        private void SetHostButtons(bool select, bool pause, bool resume, bool cancel)
++        {
++            if (selectPlanButton != null) selectPlanButton.interactable = select;
++            if (pausePlanButton != null) pausePlanButton.interactable = pause;
++            if (resumePlanButton != null) resumePlanButton.interactable = resume;
++            if (cancelPlanButton != null) cancelPlanButton.interactable = cancel;
++        }
++    }
++}
+diff --git a/Open Empires/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.StrategicControls.cs.meta b/Open Empires/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.StrategicControls.cs.meta
+new file mode 100644
+index 0000000..72cc7fe
+--- /dev/null
++++ b/Open Empires/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.StrategicControls.cs.meta	
+@@ -0,0 +1,2 @@
++fileFormatVersion: 2
++guid: c54129d90fe04cbda94579be6d12a251
+diff --git a/Open Empires/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs b/Open Empires/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs
+index 9fd56f5..4e0e3af 100644
+--- a/Open Empires/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs	
++++ b/Open Empires/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs	
+@@ -34,10 +34,18 @@ namespace OpenEmpires
+         private Button dismissStrategyButton;
+         private bool submitting;
+         private int runtimeGeneration;
++        private StrategicAdaptationProposal pendingAdaptationProposal;
++        private StrategicPipeline pendingStrategicPipeline;
++        private int pendingStrategicGeneration;
++        private int pendingStrategicOwner;
++        private int pendingStrategicIntentId;
++        private int pendingStrategicLastPlanId;
++        private bool pendingStrategicHadNoPlan;
+ 
+         public StrategicAIProviderResult LatestStrategicInterpretation { get; private set; }
+         public StrategicDecisionRecord LatestStrategicDecision { get; private set; }
+         public StrategicIntent PendingStrategicIntent => strategicBridge?.PendingIntent;
++        public StrategicAdaptationProposal PendingAdaptationProposal => pendingAdaptationProposal;
+         public ConversationState Conversation { get; private set; } = new ConversationState(0);
+ 
+         public string DisplayedTranscript => transcriptText != null
+@@ -97,12 +105,15 @@ namespace OpenEmpires
+             // Keeping initialization idempotent also makes programmatic local hosts safe.
+             EnsureLocalSurface();
+             runtimeGeneration++;
++            ClearStrategicPreview();
+             lifetime.Cancel();
+             lifetime.Dispose();
+             lifetime = new CancellationTokenSource();
+             strategicBridge?.Dispose();
+             strategicBridge = null;
+             DetachStrategicPipeline();
++            ResetAdvisories();
++            ResetStrategicHostControls();
+             ResetExplanationState();
+             adapter?.ResetHistory();
+             Conversation?.Reset();
+@@ -112,6 +123,7 @@ namespace OpenEmpires
+             submitting = false;
+             adapter = new CommanderAIIntentAdapter(provider, simulation, goalManager, dispatcher,
+                 null, providerTimeout);
++            advisorySimulation = simulation;
+             Conversation = new ConversationState(goalManager.PlayerId);
+             LatestStrategicInterpretation = null;
+             LatestStrategicDecision = null;
+@@ -122,7 +134,9 @@ namespace OpenEmpires
+             if (transcript.Length == 0)
+                 AppendLine("Commander", provider is GeminiAIProvider
+                     ? "Gemini translator ready."
+-                    : "Local mock translator ready.", false);
++                    : provider is OpenRouterCommanderProvider
++                        ? "OpenRouter Luna translator ready."
++                        : "Local mock translator ready.", false);
+         }
+ 
+         public void InitializeStrategic(IStrategicAIInterpreter interpreter, StrategicPipeline pipeline,
+@@ -133,24 +147,37 @@ namespace OpenEmpires
+             if (Conversation == null || Conversation.PlayerId != pipeline.StrategicPlanner.PlayerId)
+                 throw new System.ArgumentException(
+                     "The strategic runtime must belong to the active Commander player.", nameof(pipeline));
++            if (!pipeline.UsesSimulation(advisorySimulation))
++                throw new System.ArgumentException(
++                    "The strategic runtime must use the active Commander simulation.",
++                    nameof(pipeline));
+             if (strategicPipeline != null && !ReferenceEquals(strategicPipeline, pipeline))
+                 ResetConversation();
+             runtimeGeneration++;
++            ClearStrategicPreview();
+             lifetime?.Cancel();
+             lifetime?.Dispose();
+             lifetime = new CancellationTokenSource();
+             strategicBridge?.Dispose();
+             DetachStrategicPipeline();
++            ResetAdvisories();
++            ResetStrategicHostControls();
+             ResetExplanationState();
+             strategicPipeline = pipeline;
+             strategicBridge = new StrategicAIApprovalBridge(interpreter, pipeline.StrategicPlanner.IntentIds,
+                 () => pipeline.CaptureContext(), providerTimeout,
+                 () => Conversation?.Snapshot() ?? System.Array.Empty<MemoryEntry>());
+             strategicPipeline.EvaluationCompleted += OnStrategicEvaluationCompleted;
++            strategicPipeline.StrategicPlanner.PlanStatusChanged += OnHostPlanStatusChanged;
++            strategicPipeline.StrategicPlanner.MilestoneStatusChanged += OnHostMilestoneStatusChanged;
++            strategicPipeline.StrategicPlanner.ChildGoalEventObserved += OnHostChildGoalEvent;
++            strategicPipeline.StrategicPlanner.ReservationCreated += OnHostReservationCreated;
++            strategicPipeline.StrategicPlanner.ReservationReleased += OnHostReservationReleased;
+             submitting = false;
+             if (inputField != null) inputField.interactable = adapter != null;
+             if (sendButton != null) sendButton.interactable = adapter != null;
+             UpdateStrategicControls();
++            ScanOwnedAdvisories(); // seed current owned plans without announcing a fabricated transition
+         }
+ 
+         private void EnsureLocalSurface()
+@@ -163,6 +190,14 @@ namespace OpenEmpires
+         {
+             string trimmed = (message ?? string.Empty).Trim();
+             if (trimmed.Length == 0) return null;
++            // Any new player turn dismisses an adaptation, while no-plan recommendations
++            // retain the established preference/explanation query behavior.
++            if (pendingAdaptationProposal != null)
++            {
++                strategicBridge?.ClearPending();
++                ClearStrategicPreview();
++            }
++            if (TryHandleStrategicLifecycle(trimmed)) return null;
+             if (TryHandleExplanationQuery(trimmed)) return null;
+             if (adapter == null)
+             {
+@@ -195,6 +230,7 @@ namespace OpenEmpires
+             int generation = runtimeGeneration;
+             IReadOnlyList<MemoryEntry> memoryAtTurnStart = Conversation.Snapshot();
+             strategicBridge?.ClearPending();
++            ClearStrategicPreview();
+             LatestStrategicInterpretation = null;
+             LatestSubmission = null;
+             UpdateStrategicControls();
+@@ -216,13 +252,69 @@ namespace OpenEmpires
+                         AppendLine("Commander", "Strategic Commander is not ready.");
+                         return null;
+                     }
++                    StrategicPipeline sourcePipeline = strategicPipeline;
++                    int owner = Conversation.PlayerId;
++                    if (!TryCaptureOwnedStrategicSource(sourcePipeline, owner,
++                        out int sourceCount, out StrategicAdaptationSource source))
++                    {
++                        AppendLine("Commander", "Strategic source evidence is unavailable; ask again after the current strategy settles.");
++                        return null;
++                    }
++                    if (sourceCount > 1)
++                    {
++                        AppendLine("Commander", "Multiple active strategies make this request ambiguous; select a single strategy before asking again.");
++                        return null;
++                    }
++                    int sourceLastPlanId = LatestRetainedPlanId(sourcePipeline.StrategicPlanner);
+                     var result = await strategicBridge.TranslateWithMemoryAsync(trimmed,
+                         memoryAtTurnStart, lifetime.Token);
+                     if (this == null || generation != runtimeGeneration || lifetime.IsCancellationRequested) return null;
++                    if (!ReferenceEquals(strategicPipeline, sourcePipeline)
++                        || Conversation == null || Conversation.PlayerId != owner)
++                    {
++                        RejectStaleStrategicPreview();
++                        return null;
++                    }
++                    if (result.Success)
++                    {
++                        StrategicIntent pending = strategicBridge.PendingIntent;
++                        if (pending == null || !ReferenceEquals(pending, result.Intent)
++                            || pending.PlayerId != owner || pending.IntentId < 1
++                            || !TryCaptureOwnedStrategicSource(sourcePipeline, owner,
++                                out int freshCount, out StrategicAdaptationSource fresh)
++                            || freshCount != sourceCount
++                            || LatestRetainedPlanId(sourcePipeline.StrategicPlanner) != sourceLastPlanId)
++                        {
++                            RejectStaleStrategicPreview();
++                            return null;
++                        }
++                        if (sourceCount == 1)
++                        {
++                            StrategicAdaptationProposal proposal = StrategicAdaptationProposalBuilder.Build(
++                                source, pending, null, "Player-requested strategic change.");
++                            if (proposal == null || !StrategicAdaptationProposalBuilder.IsFresh(proposal, fresh))
++                            {
++                                RejectStaleStrategicPreview();
++                                return null;
++                            }
++                            pendingAdaptationProposal = proposal;
++                        }
++                        pendingStrategicPipeline = sourcePipeline;
++                        pendingStrategicGeneration = generation;
++                        pendingStrategicOwner = owner;
++                        pendingStrategicIntentId = pending.IntentId;
++                        pendingStrategicLastPlanId = sourceLastPlanId;
++                        pendingStrategicHadNoPlan = sourceCount == 0;
++                    }
+                     LatestStrategicInterpretation = result;
+                     AppendLine("Commander", result.Success
+                         ? StrategicPreview(result.Intent.ObjectiveType)
+-                            + " No plan started. Approve normally, or explicitly confirm as your command (may replace AI plans, never direct-player plans)."
++                            + (pendingAdaptationProposal == null
++                                ? " No plan started. Approve normally, or explicitly confirm as your command (may replace AI plans, never direct-player plans)."
++                                : " Strategy #" + pendingAdaptationProposal.SourcePlanId
++                                    + " is still active. This is a pending adaptation proposal, not a new plan."
++                                    + " Ordinary Approve cannot replace it. Choose Confirm as command explicitly;"
++                                    + " existing policy may reject it or allow coexistence instead of replacement.")
+                         : result.ExplanationText);
+                     UpdateStrategicControls();
+                     return null;
+@@ -264,13 +356,89 @@ namespace OpenEmpires
+             }
+         }
+ 
++        private bool TryCaptureOwnedStrategicSource(StrategicPipeline pipeline, int owner,
++            out int count, out StrategicAdaptationSource source)
++        {
++            count = 0;
++            source = null;
++            if (pipeline == null || !ReferenceEquals(strategicPipeline, pipeline)
++                || Conversation == null || Conversation.PlayerId != owner
++                || pipeline.StrategicPlanner.PlayerId != owner) return false;
++            int generation = runtimeGeneration;
++            StrategicPlanner planner = pipeline.StrategicPlanner;
++            StrategicPlan sole = null;
++            foreach (StrategicPlan candidate in planner.ActivePlans)
++            {
++                if (candidate.IsTerminal || candidate.OwnerPlayerId != owner) continue;
++                count++;
++                if (count == 1) sole = candidate;
++                if (count > 1) return true;
++            }
++            if (count == 0) return true;
++            StrategicPlanHealthSnapshot health = planner.CapturePlanHealth(owner, sole.StrategicPlanId);
++            source = StrategicAdaptationProposalBuilder.Capture(owner, sole, health);
++            return source != null && generation == runtimeGeneration
++                && ReferenceEquals(strategicPipeline, pipeline)
++                && Conversation != null && Conversation.PlayerId == owner
++                && ReferenceEquals(planner.GetPlan(sole.StrategicPlanId), sole);
++        }
++
++        private static int LatestRetainedPlanId(StrategicPlanner planner)
++        {
++            int latest = 0;
++            foreach (StrategicPlan plan in planner.Plans)
++                if (plan.StrategicPlanId > latest) latest = plan.StrategicPlanId;
++            return latest;
++        }
++
++        private void ClearStrategicPreview()
++        {
++            pendingAdaptationProposal = null;
++            pendingStrategicPipeline = null;
++            pendingStrategicGeneration = 0;
++            pendingStrategicOwner = -1;
++            pendingStrategicIntentId = 0;
++            pendingStrategicLastPlanId = 0;
++            pendingStrategicHadNoPlan = false;
++        }
++
++        private void RejectStaleStrategicPreview()
++        {
++            strategicBridge?.ClearPending();
++            ClearStrategicPreview();
++            LatestStrategicInterpretation = null;
++            AppendLine("Commander", "Strategic recommendation is stale; no plan changed. Ask again for a fresh proposal.");
++            UpdateStrategicControls();
++        }
++
+         private StrategicDecisionRecord SubmitPendingStrategy(bool confirmed)
+         {
+             if (submitting || strategicPipeline == null || strategicBridge?.PendingIntent == null
+                 || lifetime.IsCancellationRequested) return null;
+-            int id = strategicBridge.PendingIntent.IntentId;
++            StrategicIntent pending = strategicBridge.PendingIntent;
++            int id = pending.IntentId;
++            if (!ReferenceEquals(strategicPipeline, pendingStrategicPipeline)
++                || runtimeGeneration != pendingStrategicGeneration
++                || Conversation == null || Conversation.PlayerId != pendingStrategicOwner
++                || id != pendingStrategicIntentId
++                || pending.PlayerId != pendingStrategicOwner
++                || LatestRetainedPlanId(strategicPipeline.StrategicPlanner) != pendingStrategicLastPlanId
++                || pending.Source != StrategicIntentSource.AIRecommendation
++                || pending.Status != StrategicIntentStatus.Created
++                || !TryCaptureOwnedStrategicSource(strategicPipeline, pendingStrategicOwner,
++                    out int currentCount, out StrategicAdaptationSource currentSource)
++                || pendingAdaptationProposal == null && (!pendingStrategicHadNoPlan || currentCount != 0)
++                || pendingAdaptationProposal != null && (currentCount != 1
++                    || pendingAdaptationProposal.PendingIntentId != id
++                    || !StrategicAdaptationProposalBuilder.IsFresh(pendingAdaptationProposal, currentSource)))
++            {
++                RejectStaleStrategicPreview();
++                return null;
++            }
++            if (pendingAdaptationProposal != null && !confirmed) return null;
+             StrategicIntent intent = confirmed ? strategicBridge.Confirm(id) : strategicBridge.TakeRecommendation(id);
+             if (intent == null) return null;
++            ClearStrategicPreview();
+             pendingExplanationIntentId = intent.IntentId;
+             pendingExplanationObjective = intent.ObjectiveType.ToString();
+             try
+@@ -292,12 +460,14 @@ namespace OpenEmpires
+         public void DismissStrategicRecommendation()
+         {
+             strategicBridge?.ClearPending();
++            ClearStrategicPreview();
+             UpdateStrategicControls();
+         }
+ 
+         public void ResetConversation()
+         {
+             runtimeGeneration++;
++            ClearStrategicPreview();
+             lifetime?.Cancel();
+             lifetime?.Dispose();
+             lifetime = new CancellationTokenSource();
+@@ -307,10 +477,12 @@ namespace OpenEmpires
+             transcriptEntries.Clear();
+             if (transcriptText != null) transcriptText.text = string.Empty;
+             strategicBridge?.Reset();
++            ResetAdvisories();
+             LatestStrategicInterpretation = null;
+             LatestStrategicDecision = null;
+             LatestSubmission = null;
+             ResetExplanationState();
++            ResetStrategicHostControls();
+             submitting = false;
+             if (inputField != null)
+             {
+@@ -319,14 +491,17 @@ namespace OpenEmpires
+             }
+             if (sendButton != null) sendButton.interactable = adapter != null;
+             UpdateStrategicControls();
++            ScanOwnedAdvisories(); // a real event on the next tick must not become a silent first sample
+         }
+ 
+         private void UpdateStrategicControls()
+         {
+             bool available = !submitting && strategicBridge?.PendingIntent != null;
+-            if (approveStrategyButton != null) approveStrategyButton.interactable = available;
++            if (approveStrategyButton != null)
++                approveStrategyButton.interactable = available && pendingAdaptationProposal == null;
+             if (confirmStrategyButton != null) confirmStrategyButton.interactable = available;
+             if (dismissStrategyButton != null) dismissStrategyButton.interactable = available;
++            UpdateStrategicHostControls();
+         }
+ 
+         public Task<CommanderAIChatSubmission> SubmitCurrentInputAsync()
+@@ -388,7 +563,14 @@ namespace OpenEmpires
+         private void DetachStrategicPipeline()
+         {
+             if (strategicPipeline != null)
++            {
+                 strategicPipeline.EvaluationCompleted -= OnStrategicEvaluationCompleted;
++                strategicPipeline.StrategicPlanner.PlanStatusChanged -= OnHostPlanStatusChanged;
++                strategicPipeline.StrategicPlanner.MilestoneStatusChanged -= OnHostMilestoneStatusChanged;
++                strategicPipeline.StrategicPlanner.ChildGoalEventObserved -= OnHostChildGoalEvent;
++                strategicPipeline.StrategicPlanner.ReservationCreated -= OnHostReservationCreated;
++                strategicPipeline.StrategicPlanner.ReservationReleased -= OnHostReservationReleased;
++            }
+             strategicPipeline = null;
+         }
+ 
+@@ -402,10 +584,14 @@ namespace OpenEmpires
+ 
+         private void OnDestroy()
+         {
++            ClearStrategicPreview();
+             if (bootstrapWait != null) StopCoroutine(bootstrapWait);
+             lifetime?.Cancel();
+             strategicBridge?.Dispose();
+             DetachStrategicPipeline();
++            ResetAdvisories();
++            advisorySimulation = null;
++            ResetStrategicHostControls();
+             ResetExplanationState();
+             adapter?.ResetHistory();
+             Conversation?.Reset();
+@@ -447,7 +633,7 @@ namespace OpenEmpires
+             GameObject scrollObject = UIObject("Transcript", panel.transform);
+             RectTransform scrollRectTransform = scrollObject.GetComponent<RectTransform>();
+             SetRect(scrollRectTransform, new Vector2(0, 0), new Vector2(1, 1),
+-                new Vector2(10, 86), new Vector2(-10, -43));
++                new Vector2(10, 146), new Vector2(-10, -43));
+             Image scrollImage = scrollObject.AddComponent<Image>();
+             scrollImage.color = new Color(0, 0, 0, 0.32f);
+             ScrollRect scroll = scrollObject.AddComponent<ScrollRect>();
+@@ -533,6 +719,7 @@ namespace OpenEmpires
+                 () => ConfirmStrategicCommand());
+             dismissStrategyButton = StrategyButton(panel.transform, "Dismiss", 320, 100,
+                 DismissStrategicRecommendation);
++            BuildStrategicHostControls(panel.transform);
+         }
+ 
+         private static Button StrategyButton(Transform parent, string label, float left, float width,
+diff --git a/Open Empires/Assets/Scripts/AI/Commander/Phase4A/GeminiAIProvider.cs b/Open Empires/Assets/Scripts/AI/Commander/Phase4A/GeminiAIProvider.cs
+index fdc4af8..8d0eccc 100644
+--- a/Open Empires/Assets/Scripts/AI/Commander/Phase4A/GeminiAIProvider.cs	
++++ b/Open Empires/Assets/Scripts/AI/Commander/Phase4A/GeminiAIProvider.cs	
+@@ -219,10 +219,12 @@ namespace OpenEmpires
+     {
+         public static ICommanderAIProvider CreateDefault()
+         {
+-            string preference = Environment.GetEnvironmentVariable(
+-                "OPENEMPIRES_COMMANDER_PROVIDER");
++            string preference = OpenRouterCommanderProvider.ReadSetting(
++                OpenRouterCommanderProvider.ProviderEnvironmentVariable);
+             if (string.Equals(preference, "mock", StringComparison.OrdinalIgnoreCase))
+                 return new MockAIProvider();
++            if (string.Equals(preference, "openrouter", StringComparison.OrdinalIgnoreCase))
++                return new OpenRouterCommanderProvider();
+ 
+             string key = DotEnvLoader.Get(GeminiAIProvider.KeyEnvironmentVariable);
+             if (!string.IsNullOrWhiteSpace(key))
+diff --git a/Open Empires/Assets/Scripts/AI/Commander/Phase4A/OpenRouterCommanderProvider.cs b/Open Empires/Assets/Scripts/AI/Commander/Phase4A/OpenRouterCommanderProvider.cs
+new file mode 100644
+index 0000000..ff781d7
+--- /dev/null
++++ b/Open Empires/Assets/Scripts/AI/Commander/Phase4A/OpenRouterCommanderProvider.cs	
+@@ -0,0 +1,161 @@
++using System;
++using System.Collections.Generic;
++using System.Threading;
++using System.Threading.Tasks;
++using Newtonsoft.Json;
++using Newtonsoft.Json.Linq;
++
++namespace OpenEmpires
++{
++    // Translation only. Both results still pass through the existing strict intent parsers.
++    public sealed class OpenRouterCommanderProvider : ICommanderAIProvider, IStrategicAIInterpreter
++    {
++        public const string KeyEnvironmentVariable = "OPENEMPIRES_OPENROUTER_KEY";
++        public const string ProviderEnvironmentVariable = "OPENEMPIRES_COMMANDER_PROVIDER";
++        private const string Endpoint = "https://openrouter.ai/api/v1/chat/completions";
++        private const string Model = "openai/gpt-6-luna";
++        private const string Unavailable = "Commander AI service temporarily unavailable.";
++
++        private readonly string apiKey;
++        private readonly ICommanderHttpTransport transport;
++        private readonly TimeSpan timeout;
++
++        public OpenRouterCommanderProvider(string apiKey = null,
++            ICommanderHttpTransport transport = null, TimeSpan? providerTimeout = null)
++        {
++            this.apiKey = apiKey ?? ReadSetting(KeyEnvironmentVariable);
++            this.transport = transport ?? new CommanderHttpClientTransport();
++            timeout = providerTimeout ?? TimeSpan.FromSeconds(15);
++            if (timeout <= TimeSpan.Zero || timeout.TotalMilliseconds > int.MaxValue)
++                throw new ArgumentOutOfRangeException(nameof(providerTimeout));
++        }
++
++        // The editor process may predate a new user-level setting. Project .env and
++        // process variables retain precedence for existing setups.
++        internal static string ReadSetting(string name)
++        {
++            string value = DotEnvLoader.Get(name);
++            if (!string.IsNullOrWhiteSpace(value)) return value;
++            try { return Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.User); }
++            catch { return null; }
++        }
++
++        public async Task<CommanderAIProviderResult> TranslateAsync(CommanderAIRequest request,
++            CancellationToken cancellationToken)
++        {
++            if (request == null) throw new ArgumentNullException(nameof(request));
++            cancellationToken.ThrowIfCancellationRequested();
++            if (string.IsNullOrWhiteSpace(apiKey))
++                return CommanderAIProviderResult.Rejected(CommanderIntentErrorCode.ProviderFailure,
++                    "OpenRouter is not configured.");
++            try
++            {
++                string text = await RequestTextAsync(GeminiAIProvider.BuildRequestJson(request),
++                    cancellationToken).ConfigureAwait(false);
++                return CommanderAIJson.ParseTacticalIntent(text, request.Context);
++            }
++            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { throw; }
++            catch (OperationCanceledException)
++            {
++                return CommanderAIProviderResult.Rejected(CommanderIntentErrorCode.ProviderFailure,
++                    "Commander AI request timed out.");
++            }
++            catch (OpenRouterFailure failure)
++            {
++                return CommanderAIProviderResult.Rejected(CommanderIntentErrorCode.ProviderFailure,
++                    failure.Message);
++            }
++            catch (Exception)
++            {
++                return CommanderAIProviderResult.Rejected(CommanderIntentErrorCode.ProviderFailure,
++                    Unavailable);
++            }
++        }
++
++        public async Task<StrategicAIProviderResult> InterpretStrategicIntentAsync(
++            StrategicAIRequest request, CancellationToken cancellationToken)
++        {
++            if (request == null) throw new ArgumentNullException(nameof(request));
++            cancellationToken.ThrowIfCancellationRequested();
++            if (string.IsNullOrWhiteSpace(apiKey))
++                return StrategicAIProviderResult.Rejected("OpenRouter is not configured.");
++            if (string.IsNullOrWhiteSpace(request.PlayerMessage))
++                return StrategicAIProviderResult.Rejected("A strategic request is required.");
++            try
++            {
++                string text = await RequestTextAsync(
++                    GeminiStrategicAIProvider.BuildRequestJson(request), cancellationToken)
++                    .ConfigureAwait(false);
++                return StrategicAIJson.Parse(text, request);
++            }
++            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { throw; }
++            catch (OperationCanceledException)
++            {
++                return StrategicAIProviderResult.Rejected("Commander AI request timed out.");
++            }
++            catch (OpenRouterFailure failure)
++            {
++                return StrategicAIProviderResult.Rejected(failure.Message);
++            }
++            catch (Exception)
++            {
++                return StrategicAIProviderResult.Rejected(Unavailable);
++            }
++        }
++
++        private async Task<string> RequestTextAsync(string geminiRequest,
++            CancellationToken cancellationToken)
++        {
++            JObject source = JObject.Parse(geminiRequest);
++            var messages = new JArray(new JObject
++            {
++                ["role"] = "system",
++                ["content"] = (string)source["system_instruction"]?["parts"]?[0]?["text"]
++            });
++            foreach (JToken turn in (JArray)source["contents"])
++                messages.Add(new JObject
++                {
++                    ["role"] = (string)turn["role"] == "model" ? "assistant" : "user",
++                    ["content"] = (string)turn["parts"]?[0]?["text"]
++                });
++            string body = new JObject
++            {
++                ["model"] = Model,
++                ["messages"] = messages,
++                ["max_tokens"] = 256,
++                ["reasoning"] = new JObject { ["effort"] = "none" }
++            }.ToString(Formatting.None);
++            using (var deadline = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
++            {
++                deadline.CancelAfter(timeout);
++                CommanderHttpResponse response = await transport.PostJsonAsync(new Uri(Endpoint),
++                    body, new Dictionary<string, string>
++                    {
++                        ["Authorization"] = "Bearer " + apiKey
++                    }, deadline.Token).ConfigureAwait(false);
++                deadline.Token.ThrowIfCancellationRequested();
++                if (response == null) throw new OpenRouterFailure(Unavailable);
++                if (response.StatusCode == 401 || response.StatusCode == 403)
++                    throw new OpenRouterFailure("Commander AI authentication failed.");
++                if (response.StatusCode == 429)
++                    throw new OpenRouterFailure(
++                        "Commander AI quota exhausted. Please wait or use offline commands.");
++                if (response.StatusCode < 200 || response.StatusCode > 299)
++                    throw new OpenRouterFailure(Unavailable);
++                try
++                {
++                    JObject result = JObject.Parse(response.Body);
++                    string text = (string)result["choices"]?[0]?["message"]?["content"];
++                    if (string.IsNullOrWhiteSpace(text)) throw new OpenRouterFailure(Unavailable);
++                    return text;
++                }
++                catch (JsonException) { throw new OpenRouterFailure(Unavailable); }
++            }
++        }
++
++        private sealed class OpenRouterFailure : Exception
++        {
++            public OpenRouterFailure(string safeMessage) : base(safeMessage) { }
++        }
++    }
++}
+diff --git a/Open Empires/Assets/Scripts/AI/Commander/Phase4A/OpenRouterCommanderProvider.cs.meta b/Open Empires/Assets/Scripts/AI/Commander/Phase4A/OpenRouterCommanderProvider.cs.meta
+new file mode 100644
+index 0000000..2744a1c
+--- /dev/null
++++ b/Open Empires/Assets/Scripts/AI/Commander/Phase4A/OpenRouterCommanderProvider.cs.meta	
+@@ -0,0 +1,2 @@
++fileFormatVersion: 2
++guid: 70a446c49369e6e4a851522cc8e8e893
+\ No newline at end of file
+diff --git a/Open Empires/Assets/Scripts/AI/Commander/Phase4B1/StrategicAIInterpreterFactory.cs b/Open Empires/Assets/Scripts/AI/Commander/Phase4B1/StrategicAIInterpreterFactory.cs
+index 2db9c20..9da6fb3 100644
+--- a/Open Empires/Assets/Scripts/AI/Commander/Phase4B1/StrategicAIInterpreterFactory.cs	
++++ b/Open Empires/Assets/Scripts/AI/Commander/Phase4B1/StrategicAIInterpreterFactory.cs	
+@@ -7,9 +7,12 @@ namespace OpenEmpires
+         public static IStrategicAIInterpreter Create(string preference = null,
+             ICommanderHttpTransport transport = null)
+         {
+-            preference = preference ?? Environment.GetEnvironmentVariable("OPENEMPIRES_COMMANDER_PROVIDER");
++            preference = preference ?? OpenRouterCommanderProvider.ReadSetting(
++                OpenRouterCommanderProvider.ProviderEnvironmentVariable);
+             if (string.Equals(preference, "mock", StringComparison.OrdinalIgnoreCase))
+                 return new MockStrategicAIProvider();
++            if (string.Equals(preference, "openrouter", StringComparison.OrdinalIgnoreCase))
++                return new OpenRouterCommanderProvider(null, transport);
+             if (!string.IsNullOrWhiteSpace(preference)
+                 && !string.Equals(preference, "gemini", StringComparison.OrdinalIgnoreCase))
+                 throw new ArgumentException("Unsupported strategic provider.", nameof(preference));
+diff --git a/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPipeline.cs b/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPipeline.cs
+index aee7e3d..761678d 100644
+--- a/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPipeline.cs	
++++ b/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPipeline.cs	
+@@ -19,6 +19,9 @@ namespace OpenEmpires
+         private bool disposed;
+ 
+         public StrategicPlanner StrategicPlanner => strategicPlanner;
++        internal bool UsesSimulation(GameSimulation candidate)
++            => candidate != null && ReferenceEquals(simulation, candidate)
++                && strategicPlanner.UsesSimulation(candidate);
+         public StrategicEvaluationTrigger EvaluationTrigger => evaluationTrigger;
+         public StrategicCommitmentPolicy CommitmentPolicy => commitmentPolicy;
+         public RecentDecisionHistory DecisionHistory => decisionHistory;
+@@ -66,16 +69,30 @@ namespace OpenEmpires
+             IStrategicEvaluator evaluator = null,
+             IStrategicDecisionPolicy decisionPolicy = null)
+             : this(strategicPlanner,
+-                   () => new CommanderContextBuilder().Build(simulation, goalManager),
++                   CreateValidatedContextProvider(simulation, goalManager, strategicPlanner),
+                    evaluationTrigger, commitmentPolicy, decisionHistory, evaluator, decisionPolicy)
+         {
+-            this.simulation = simulation ?? throw new ArgumentNullException(nameof(simulation));
++            this.simulation = simulation;
+             simulation.OnUnitDied += OnStrategicUnitChanged;
+             simulation.OnBuildingDestroyed += OnStrategicBuildingChanged;
+             simulation.OnUnitTrained += OnStrategicUnitTrained;
+             simulation.OnBuildingCreated += OnStrategicBuildingCreated;
+         }
+ 
++        private static Func<CommanderContext> CreateValidatedContextProvider(
++            GameSimulation simulation, CommanderGoalManager goalManager,
++            StrategicPlanner strategicPlanner)
++        {
++            if (simulation == null) throw new ArgumentNullException(nameof(simulation));
++            if (goalManager == null) throw new ArgumentNullException(nameof(goalManager));
++            if (strategicPlanner == null) throw new ArgumentNullException(nameof(strategicPlanner));
++            if (!strategicPlanner.UsesContext(simulation, goalManager))
++                throw new ArgumentException(
++                    "The strategic planner must use the supplied Commander goal manager and simulation.",
++                    nameof(strategicPlanner));
++            return () => new CommanderContextBuilder().Build(simulation, goalManager);
++        }
++
+         public void Tick(int currentTick)
+         {
+             ThrowIfDisposed();
+diff --git a/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlan.cs b/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlan.cs
+index 7940ec2..4ad92df 100644
+--- a/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlan.cs	
++++ b/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlan.cs	
+@@ -51,6 +51,8 @@ namespace OpenEmpires
+             && currentMilestoneIndex < milestones.Count ? milestones[currentMilestoneIndex] : null;
+         public StrategicPlanStatus Status { get; internal set; }
+         public int CreatedTick { get; internal set; }
++        public int Revision { get; private set; }
++        internal int PausedAtTick { get; set; } = -1;
+         public IReadOnlyList<int> ChildGoalIds => childGoalIds;
+         public IReadOnlyList<StrategicMilestone> Milestones => milestones;
+         public IReadOnlyList<StrategicResourceRequirement> RequiredResources => requiredResources;
+@@ -63,6 +65,17 @@ namespace OpenEmpires
+             || Status == StrategicPlanStatus.Failed
+             || Status == StrategicPlanStatus.Cancelled;
+ 
++        internal void InitializeRevision()
++        {
++            if (Revision != 0) throw new InvalidOperationException("A plan revision can be initialized only once.");
++            Revision = 1;
++        }
++
++        internal void AdvanceRevision()
++        {
++            Revision = checked(Revision + 1);
++        }
++
+         protected StrategicPlan(int ownerPlayerId, StrategicPlanType planType, int sourceIntentId,
+             string completionResponse, string cancellationResponse)
+         {
+diff --git a/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanControl.cs b/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanControl.cs
+new file mode 100644
+index 0000000..a895809
+--- /dev/null
++++ b/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanControl.cs	
+@@ -0,0 +1,63 @@
++using System;
++
++namespace OpenEmpires
++{
++    public enum StrategicPlanControlType { Pause, Resume, Cancel, Status }
++
++    public enum StrategicPlanControlStatus
++    {
++        Applied,
++        NoActivePlan,
++        AmbiguousPlan,
++        AlreadyPaused,
++        AlreadyRunning,
++        AlreadyCompleted,
++        AlreadyCancelled,
++        StalePlan,
++        Unauthorized,
++        Rejected
++    }
++
++    // A copied observation, not a reference to a plan or an authority to submit goals.
++    public readonly struct StrategicPlanControlRequest
++    {
++        public int PlayerId { get; }
++        public int PlanId { get; }
++        public int CreatedTick { get; }
++        public int ObservedRevision { get; }
++        public StrategicPlanControlType ControlType { get; }
++
++        internal StrategicPlanControlRequest(int playerId, int planId, int createdTick,
++            int observedRevision, StrategicPlanControlType controlType)
++        {
++            PlayerId = playerId;
++            PlanId = planId;
++            CreatedTick = createdTick;
++            ObservedRevision = observedRevision;
++            ControlType = controlType;
++        }
++    }
++
++    public readonly struct StrategicPlanControlResult
++    {
++        public StrategicPlanControlStatus Status { get; }
++        public int PlayerId { get; }
++        public int PlanId { get; }
++        public int CreatedTick { get; }
++        public int Revision { get; }
++        public StrategicPlanStatus PlanStatus { get; }
++        public string Message { get; }
++
++        internal StrategicPlanControlResult(StrategicPlanControlStatus status,
++            StrategicPlanControlRequest request, StrategicPlan plan, string message)
++        {
++            Status = status;
++            PlayerId = request.PlayerId;
++            PlanId = request.PlanId;
++            CreatedTick = request.CreatedTick;
++            Revision = plan?.Revision ?? request.ObservedRevision;
++            PlanStatus = plan?.Status ?? StrategicPlanStatus.Created;
++            Message = message ?? string.Empty;
++        }
++    }
++}
+diff --git a/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanControl.cs.meta b/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanControl.cs.meta
+new file mode 100644
+index 0000000..321e2c8
+--- /dev/null
++++ b/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanControl.cs.meta	
+@@ -0,0 +1,2 @@
++fileFormatVersion: 2
++guid: 72e910cd9c054dfe8382c0330e16025a
+diff --git a/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanHealthSnapshot.cs b/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanHealthSnapshot.cs
+new file mode 100644
+index 0000000..0c5ebf4
+--- /dev/null
++++ b/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanHealthSnapshot.cs	
+@@ -0,0 +1,201 @@
++using System;
++using System.Collections.Generic;
++using System.Collections.ObjectModel;
++using Newtonsoft.Json;
++
++namespace OpenEmpires
++{
++    public enum StrategicPlanHealthCategory
++    {
++        Unknown, Healthy, Paused, WaitingForResources, WaitingForPopulation,
++        WaitingForPrerequisite, WaitingForConstruction, WaitingForProduction,
++        TemporarilyBlocked, Completed, Cancelled, Failed
++    }
++
++    public sealed class StrategicPlanHealthResource
++    {
++        public ResourceType ResourceType { get; }
++        public int PlanBudget { get; }
++        public bool MilestoneRequirementKnown { get; }
++        public int MilestoneRequirement { get; }
++        public int Owned { get; }
++        public int MilestoneDeficit { get; }
++        public int PlanActiveReservation { get; }
++        public int GlobalActiveReservation { get; }
++        public int Available { get; }
++
++        internal StrategicPlanHealthResource(ResourceType type, int budget, bool known,
++            int requirement, int owned, int deficit, int planReserved, int globalReserved)
++        {
++            if (!Enum.IsDefined(typeof(ResourceType), type) || budget < 0 || requirement < 0
++                || owned < 0 || deficit < 0 || planReserved < 0 || globalReserved < 0)
++                throw new ArgumentOutOfRangeException(nameof(type));
++            ResourceType = type; PlanBudget = budget; MilestoneRequirementKnown = known;
++            MilestoneRequirement = known ? requirement : 0; Owned = owned;
++            MilestoneDeficit = known ? deficit : 0; PlanActiveReservation = planReserved;
++            GlobalActiveReservation = globalReserved;
++            Available = Math.Max(0, owned - globalReserved);
++        }
++    }
++
++    public sealed class StrategicPlanHealthChild
++    {
++        public int GoalId { get; }
++        public bool CompletedHistorically { get; }
++        public bool Retained { get; }
++        public CommanderGoalStatus? FineStatus { get; }
++        public StrategicPlanHealthCategory Category { get; }
++        public int? BlockedDurationTicks { get; }
++        public int? RequestedUnitType { get; }
++        public int? ResolvedUnitType { get; }
++        public int? TargetUnits { get; }
++        public int? OwnedLivingUnits { get; }
++        public int? MatchingQueuedUnits { get; }
++        public int? RemainingOrders { get; }
++
++        internal StrategicPlanHealthChild(int id, bool completed, bool retained,
++            CommanderGoalStatus? status, StrategicPlanHealthCategory category, int? blockedDuration,
++            int? requested, int? resolved, int? target, int? owned, int? queued, int? remaining)
++        {
++            if (id < 1 || blockedDuration < 0 || target < 0 || owned < 0 || queued < 0)
++                throw new ArgumentOutOfRangeException(nameof(id));
++            GoalId = id; CompletedHistorically = completed; Retained = retained;
++            FineStatus = status; Category = category; BlockedDurationTicks = blockedDuration;
++            RequestedUnitType = requested; ResolvedUnitType = resolved; TargetUnits = target;
++            OwnedLivingUnits = owned; MatchingQueuedUnits = queued; RemainingOrders = remaining;
++        }
++    }
++
++    public sealed class StrategicPlanHealthStatusCount
++    {
++        public CommanderGoalStatus? Status { get; }
++        public int Count { get; }
++        internal StrategicPlanHealthStatusCount(CommanderGoalStatus? status, int count)
++        {
++            if (status.HasValue && !Enum.IsDefined(typeof(CommanderGoalStatus), status.Value))
++                throw new ArgumentOutOfRangeException(nameof(status));
++            if (count < 0) throw new ArgumentOutOfRangeException(nameof(count));
++            Status = status; Count = count;
++        }
++    }
++
++    public sealed class StrategicPlanHealthSnapshot
++    {
++        private const int MaxMilestoneNameLength = 96;
++        public int PlayerId { get; }
++        public int PlanId { get; }
++        public int CreatedTick { get; }
++        public int Revision { get; }
++        public int ObservedTick { get; }
++        public StrategicPlanType PlanType { get; }
++        public StrategicPlanStatus PlanStatus { get; }
++        public int? MilestoneId { get; }
++        public string MilestoneName { get; }
++        public StrategicMilestoneStatus? MilestoneStatus { get; }
++        public int CompletedMilestones { get; }
++        public int TotalMilestones { get; }
++        public int RequiredChildGoals { get; }
++        public int CompletedChildGoals { get; }
++        public int RetainedChildGoals { get; }
++        public int MissingHistoryCount { get; }
++        public int Population { get; }
++        public int PopulationCap { get; }
++        public int MaximumPopulation { get; }
++        public int AllQueuedUnits { get; }
++        public int OwnedProductionBuildings { get; }
++        public StrategicPlanHealthCategory PrimaryHealthCategory { get; }
++        public IReadOnlyList<StrategicPlanHealthCategory> SecondaryHealthCategories { get; }
++        public IReadOnlyList<StrategicPlanHealthResource> Resources { get; }
++        public IReadOnlyList<StrategicPlanHealthChild> Children { get; }
++        public IReadOnlyList<StrategicPlanHealthStatusCount> RetainedChildStatusCounts { get; }
++
++        internal StrategicPlanHealthSnapshot(StrategicPlan plan, StrategicMilestone milestone,
++            int tick, int completedMilestones, int retained, int missing, CommanderContext context,
++            int allQueued, StrategicPlanHealthCategory primary,
++            List<StrategicPlanHealthCategory> secondary,
++            List<StrategicPlanHealthResource> resources, List<StrategicPlanHealthChild> children,
++            List<StrategicPlanHealthStatusCount> retainedCounts)
++        {
++            PlayerId = plan.OwnerPlayerId; PlanId = plan.StrategicPlanId;
++            CreatedTick = plan.CreatedTick; Revision = plan.Revision; ObservedTick = tick;
++            PlanType = plan.PlanType; PlanStatus = plan.Status;
++            MilestoneId = milestone?.MilestoneId;
++            MilestoneName = BoundMilestoneName(milestone?.Name);
++            MilestoneStatus = milestone?.Status; CompletedMilestones = completedMilestones;
++            TotalMilestones = plan.Milestones.Count;
++            RequiredChildGoals = milestone?.RequiredChildGoals.Count ?? 0;
++            CompletedChildGoals = milestone?.CompletedChildGoals.Count ?? 0;
++            RetainedChildGoals = retained; MissingHistoryCount = missing;
++            Population = context.Population; PopulationCap = context.PopulationCap;
++            MaximumPopulation = context.MaximumPopulation; AllQueuedUnits = allQueued;
++            OwnedProductionBuildings = context.Production.Count;
++            PrimaryHealthCategory = primary;
++            SecondaryHealthCategories = new ReadOnlyCollection<StrategicPlanHealthCategory>(
++                new List<StrategicPlanHealthCategory>(secondary));
++            Resources = new ReadOnlyCollection<StrategicPlanHealthResource>(
++                new List<StrategicPlanHealthResource>(resources));
++            Children = new ReadOnlyCollection<StrategicPlanHealthChild>(
++                new List<StrategicPlanHealthChild>(children));
++            RetainedChildStatusCounts = new ReadOnlyCollection<StrategicPlanHealthStatusCount>(
++                new List<StrategicPlanHealthStatusCount>(retainedCounts));
++        }
++
++        private static string BoundMilestoneName(string name)
++        {
++            if (string.IsNullOrEmpty(name)) return string.Empty;
++            if (name.Length <= MaxMilestoneNameLength) return name;
++            int length = MaxMilestoneNameLength;
++            if (char.IsHighSurrogate(name[length - 1])) length--;
++            return name.Substring(0, length);
++        }
++
++        public string ToJson() => JsonConvert.SerializeObject(new
++        {
++            PlayerId, PlanId, CreatedTick, Revision, ObservedTick, PlanType, PlanStatus,
++            MilestoneId, MilestoneName, MilestoneStatus, CompletedMilestones, TotalMilestones,
++            RequiredChildGoals, CompletedChildGoals, RetainedChildGoals, MissingHistoryCount,
++            Population, PopulationCap, MaximumPopulation, AllQueuedUnits,
++            OwnedProductionBuildings, PrimaryHealthCategory, SecondaryHealthCategories,
++            Resources = SerializeResources(), Children = SerializeChildren(),
++            RetainedChildStatusCounts = SerializeStatusCounts()
++        }, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.None });
++
++        private object[] SerializeResources()
++        {
++            var result = new object[Resources.Count];
++            for (int i = 0; i < result.Length; i++)
++            {
++                StrategicPlanHealthResource r = Resources[i];
++                result[i] = new { r.ResourceType, r.PlanBudget, r.MilestoneRequirementKnown,
++                    r.MilestoneRequirement, r.Owned, r.MilestoneDeficit, r.PlanActiveReservation,
++                    r.GlobalActiveReservation, r.Available };
++            }
++            return result;
++        }
++
++        private object[] SerializeChildren()
++        {
++            var result = new object[Children.Count];
++            for (int i = 0; i < result.Length; i++)
++            {
++                StrategicPlanHealthChild c = Children[i];
++                result[i] = new { c.GoalId, c.CompletedHistorically, c.Retained,
++                    c.FineStatus, c.Category, c.BlockedDurationTicks, c.RequestedUnitType,
++                    c.ResolvedUnitType, c.TargetUnits, c.OwnedLivingUnits,
++                    c.MatchingQueuedUnits, c.RemainingOrders };
++            }
++            return result;
++        }
++
++        private object[] SerializeStatusCounts()
++        {
++            var result = new object[RetainedChildStatusCounts.Count];
++            for (int i = 0; i < result.Length; i++)
++            {
++                StrategicPlanHealthStatusCount count = RetainedChildStatusCounts[i];
++                result[i] = new { count.Status, count.Count };
++            }
++            return result;
++        }
++    }
++}
+diff --git a/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanHealthSnapshot.cs.meta b/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanHealthSnapshot.cs.meta
+new file mode 100644
+index 0000000..22bbe29
+--- /dev/null
++++ b/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanHealthSnapshot.cs.meta	
+@@ -0,0 +1,2 @@
++fileFormatVersion: 2
++guid: d114294318ae42b683e7002516004726
+diff --git a/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Controls.cs b/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Controls.cs
+new file mode 100644
+index 0000000..9898d6c
+--- /dev/null
++++ b/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Controls.cs	
+@@ -0,0 +1,132 @@
++using System;
++
++namespace OpenEmpires
++{
++    public sealed partial class StrategicPlanner
++    {
++        public bool CaptureControlRequest(int trustedPlayerId, int planId,
++            StrategicPlanControlType action, out StrategicPlanControlRequest request)
++        {
++            request = default;
++            if (disposed || trustedPlayerId != PlayerId || !Enum.IsDefined(typeof(StrategicPlanControlType), action))
++                return false;
++            StrategicPlan plan = GetPlan(planId);
++            if (plan == null || plan.IsTerminal || plan.OwnerPlayerId != trustedPlayerId)
++                return false;
++            request = new StrategicPlanControlRequest(trustedPlayerId, plan.StrategicPlanId,
++                plan.CreatedTick, plan.Revision, action);
++            return true;
++        }
++
++        public bool CaptureCurrentControlRequest(int trustedPlayerId,
++            StrategicPlanControlType action, out StrategicPlanControlRequest request)
++        {
++            request = default;
++            if (disposed || trustedPlayerId != PlayerId || !Enum.IsDefined(typeof(StrategicPlanControlType), action))
++                return false;
++            StrategicPlan selected = null;
++            for (int i = 0; i < activePlans.Count; i++)
++            {
++                StrategicPlan plan = activePlans[i];
++                if (plan.IsTerminal || plan.OwnerPlayerId != trustedPlayerId) continue;
++                if (selected != null) return false;
++                selected = plan;
++            }
++            return selected != null && CaptureControlRequest(trustedPlayerId,
++                selected.StrategicPlanId, action, out request);
++        }
++
++        public StrategicPlanControlResult ApplyControl(StrategicPlanControlRequest request)
++        {
++            if (disposed) return Result(StrategicPlanControlStatus.StalePlan, request, null,
++                "The plan runtime is no longer active.");
++            if (!Enum.IsDefined(typeof(StrategicPlanControlType), request.ControlType))
++                return Result(StrategicPlanControlStatus.Rejected, request, null,
++                    "Unknown plan control action.");
++            if (request.PlayerId != PlayerId)
++                return Result(StrategicPlanControlStatus.Unauthorized, request, null,
++                    "Plan owner does not match the Commander host.");
++            StrategicPlan plan = GetPlan(request.PlanId);
++            if (plan == null || plan.OwnerPlayerId != request.PlayerId
++                || plan.CreatedTick != request.CreatedTick || plan.Revision != request.ObservedRevision)
++                return Result(StrategicPlanControlStatus.StalePlan, request, null,
++                    "The captured plan state has changed.");
++            if (plan.Status == StrategicPlanStatus.Completed || plan.Status == StrategicPlanStatus.Failed)
++                return Result(StrategicPlanControlStatus.AlreadyCompleted, request, plan,
++                    "The plan has already ended.");
++            if (plan.Status == StrategicPlanStatus.Cancelled)
++                return Result(StrategicPlanControlStatus.AlreadyCancelled, request, plan,
++                    "The plan has already been cancelled.");
++
++            switch (request.ControlType)
++            {
++                case StrategicPlanControlType.Status:
++                    return Result(StrategicPlanControlStatus.Applied, request, plan,
++                        "Plan status observed.");
++                case StrategicPlanControlType.Pause:
++                    if (plan.Status == StrategicPlanStatus.Paused)
++                        return Result(StrategicPlanControlStatus.AlreadyPaused, request, plan,
++                            "The plan is already paused.");
++                    if (plan.Revision == int.MaxValue)
++                        return Result(StrategicPlanControlStatus.Rejected, request, plan,
++                            "Plan revision exhausted.");
++                    for (int i = 0; i < plan.ChildGoalIds.Count; i++)
++                        goalManager.SuspendGoal(plan.ChildGoalIds[i]);
++                    plan.PausedAtTick = goalManager.CurrentTick;
++                    plan.Status = StrategicPlanStatus.Paused;
++                    plan.AdvanceRevision();
++                    PublishPlanStatus(plan);
++                    return Result(StrategicPlanControlStatus.Applied, request, plan,
++                        "Plan paused; already-dispatched actions may finish.");
++                case StrategicPlanControlType.Resume:
++                    if (plan.Status != StrategicPlanStatus.Paused)
++                        return Result(StrategicPlanControlStatus.AlreadyRunning, request, plan,
++                            "The plan is already running.");
++                    long elapsed = (long)goalManager.CurrentTick - plan.PausedAtTick;
++                    if (elapsed < 0 || elapsed > int.MaxValue || !CanReconcileOnResume(plan))
++                        return Result(StrategicPlanControlStatus.Rejected, request, plan,
++                            "The pause interval cannot be resumed safely.");
++                    for (int i = 0; i < plan.ChildGoalIds.Count; i++)
++                        if (!goalManager.CanResumeGoal(plan.ChildGoalIds[i], (int)elapsed))
++                            return Result(StrategicPlanControlStatus.Rejected, request, plan,
++                                "A goal tick anchor cannot be resumed safely.");
++                    if (!TryEnterRevisionCascade(plan, RemainingCascadeRevisionBudget(plan),
++                        out bool ownsResumeCascade))
++                        return Result(StrategicPlanControlStatus.Rejected, request, plan,
++                            "Plan revision exhausted.");
++                    try
++                    {
++                    for (int i = 0; i < plan.ChildGoalIds.Count; i++)
++                        goalManager.ResumeGoal(plan.ChildGoalIds[i], (int)elapsed);
++                    plan.PausedAtTick = -1;
++                    plan.Status = StrategicPlanStatus.Active;
++                    plan.AdvanceRevision();
++                    PublishPlanStatus(plan);
++                    ReconcileDeferredTerminalGoals(plan);
++                    if (plan.CurrentMilestone != null
++                        && plan.CurrentMilestone.Status == StrategicMilestoneStatus.Active
++                        && plan.CurrentMilestone.IsSatisfied)
++                        CompleteMilestoneAndAdvance(plan, plan.CurrentMilestone);
++                    return Result(StrategicPlanControlStatus.Applied, request, plan,
++                        "The same plan resumed.");
++                    }
++                    finally { ExitRevisionCascade(plan, ownsResumeCascade); }
++                case StrategicPlanControlType.Cancel:
++                    if (!CancelPlan(plan.StrategicPlanId))
++                        return Result(StrategicPlanControlStatus.Rejected, request, plan,
++                            "The plan could not be cancelled safely.");
++                    return Result(StrategicPlanControlStatus.Applied, request, plan,
++                        "The plan was cancelled.");
++                default:
++                    return Result(StrategicPlanControlStatus.Rejected, request, plan,
++                        "Unknown plan control action.");
++            }
++        }
++
++        private static StrategicPlanControlResult Result(StrategicPlanControlStatus status,
++            StrategicPlanControlRequest request, StrategicPlan plan, string message)
++        {
++            return new StrategicPlanControlResult(status, request, plan, message);
++        }
++    }
++}
+diff --git a/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Controls.cs.meta b/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Controls.cs.meta
+new file mode 100644
+index 0000000..61d4041
+--- /dev/null
++++ b/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Controls.cs.meta	
+@@ -0,0 +1,2 @@
++fileFormatVersion: 2
++guid: 6174511b5c454004bf98ffde72a6635b
+diff --git a/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Feasibility.cs b/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Feasibility.cs
+index a4d06e7..4efe734 100644
+--- a/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Feasibility.cs	
++++ b/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Feasibility.cs	
+@@ -134,8 +134,6 @@ namespace OpenEmpires
+             int finalPopulation = context.Population + queuedPopulation + neededPopulation;
+             if (finalPopulation > context.MaximumPopulation)
+                 Reject("Required units exceed maximum population capacity.");
+-            if (neededPopulation > 0 && context.PopulationCap <= context.Population + queuedPopulation)
+-                Reject("No population capacity is available.");
+             int futureCapacity = context.PopulationCap + plannedPopulation;
+             foreach (var building in context.Buildings)
+                 if (building.IsUnderConstruction)
+diff --git a/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Health.cs b/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Health.cs
+new file mode 100644
+index 0000000..27ab9dc
+--- /dev/null
++++ b/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Health.cs	
+@@ -0,0 +1,219 @@
++using System;
++using System.Collections.Generic;
++
++namespace OpenEmpires
++{
++    public sealed partial class StrategicPlanner
++    {
++        public StrategicPlanHealthSnapshot CapturePlanHealth(int trustedPlayerId, int planId)
++        {
++            if (disposed || trustedPlayerId != PlayerId || planId < 1) return null;
++            StrategicPlan plan = GetPlan(planId);
++            if (plan == null || plan.OwnerPlayerId != trustedPlayerId
++                || !Enum.IsDefined(typeof(StrategicPlanType), plan.PlanType)
++                || !Enum.IsDefined(typeof(StrategicPlanStatus), plan.Status)) return null;
++            StrategicMilestone milestone = plan.CurrentMilestone;
++            if (milestone != null && !Enum.IsDefined(typeof(StrategicMilestoneStatus), milestone.Status))
++                return null;
++
++            // Build a fresh owner-scoped projection only after identity and exact ID validation.
++            GameSimulation simulation = goalManager.Simulation;
++            CommanderContext context = new CommanderContextBuilder().Build(simulation, goalManager);
++            int tick = simulation.CurrentTick;
++            int completedMilestones = 0;
++            foreach (StrategicMilestone item in plan.Milestones)
++                if (item.Status == StrategicMilestoneStatus.Completed) completedMilestones++;
++
++            var children = new List<StrategicPlanHealthChild>();
++            var facts = new List<(StrategicPlanHealthCategory Category, int Id)>();
++            var statusCounts = new SortedDictionary<CommanderGoalStatus, int>();
++            foreach (CommanderGoalStatus value in Enum.GetValues(typeof(CommanderGoalStatus)))
++                statusCounts.Add(value, 0);
++            int unknownStatusCount = 0;
++            int retained = 0, missing = 0, allQueued = 0;
++            bool hasProgressEvidence = completedMilestones > 0;
++            foreach (BuildingData building in simulation.BuildingRegistry.GetAllBuildings())
++                if (building.PlayerId == trustedPlayerId && !building.IsDestroyed)
++                    allQueued = checked(allQueued + building.TrainingQueue.Count);
++
++            if (milestone != null)
++            {
++                var ids = new List<int>(milestone.RequiredChildGoals);
++                ids.Sort();
++                foreach (int id in ids)
++                {
++                    bool completed = ContainsId(milestone.CompletedChildGoals, id);
++                    CommanderGoal goal = goalManager.GetGoal(id);
++                    if (goal == null) missing++; else retained++;
++                    CommanderGoalStatus? status = goal != null
++                        && Enum.IsDefined(typeof(CommanderGoalStatus), goal.Status)
++                        ? goal.Status : (CommanderGoalStatus?)null;
++                    if (goal != null)
++                    {
++                        if (status.HasValue) statusCounts[status.Value]++;
++                        else unknownStatusCount++;
++                    }
++                    if (completed || status == CommanderGoalStatus.Executing
++                        || status == CommanderGoalStatus.Planning)
++                        hasProgressEvidence = true;
++                    StrategicPlanHealthCategory category = CategoryForStatus(status);
++                    int? blockedTicks = goal != null && status == CommanderGoalStatus.Blocked
++                        ? BlockedDuration(goal.BlockedSinceTick, tick, plan.PausedAtTick,
++                            plan.Status == StrategicPlanStatus.Paused) : null;
++                    int? requested = null, resolved = null, target = null, owned = null,
++                        queued = null, remaining = null;
++                    if (goal is EnsureUnitCountGoal units && status.HasValue
++                        && !completed && !goal.IsTerminal
++                        && CommanderIntentCatalog.IsSupportedUnit(units.RequestedUnitType))
++                    {
++                        requested = units.RequestedUnitType;
++                        resolved = simulation.ResolveCivUnitType(trustedPlayerId, units.RequestedUnitType);
++                        target = units.TargetTotal;
++                        int ownedCount = 0, matchingQueued = 0;
++                        foreach (UnitData unit in simulation.UnitRegistry.GetAllUnits())
++                            if (unit.PlayerId == trustedPlayerId && unit.UnitType == resolved
++                                && unit.CurrentHealth > 0 && unit.State != UnitState.Dead)
++                                ownedCount = checked(ownedCount + 1);
++                        foreach (BuildingData building in simulation.BuildingRegistry.GetAllBuildings())
++                            if (building.PlayerId == trustedPlayerId && !building.IsDestroyed)
++                                foreach (int queuedType in building.TrainingQueue)
++                                    if (queuedType == resolved) matchingQueued = checked(matchingQueued + 1);
++                        owned = ownedCount; queued = matchingQueued;
++                        remaining = checked(units.TargetTotal - ownedCount - matchingQueued);
++                        long occupied = (long)context.Population + allQueued;
++                        // PlanUnits returns Completed before inspecting capacity when the
++                        // living-unit target is already satisfied.
++                        if (ownedCount < units.TargetTotal
++                            && (occupied > context.PopulationCap
++                                || (remaining > 0 && occupied >= context.PopulationCap)))
++                        {
++                            // Capacity is a typed fact, including at the hard maximum; it does not
++                            // imply a recoverable House or override a tactical Blocked status.
++                            facts.Add((StrategicPlanHealthCategory.WaitingForPopulation, id));
++                        }
++                    }
++                    if (category != StrategicPlanHealthCategory.Unknown)
++                        facts.Add((category, id));
++                    if (children.Count < 128)
++                        children.Add(new StrategicPlanHealthChild(id, completed, goal != null,
++                            status, category, blockedTicks, requested, resolved, target,
++                            owned, queued, remaining));
++                }
++                if (milestone.Status == StrategicMilestoneStatus.WaitingForResources)
++                    facts.Add((StrategicPlanHealthCategory.WaitingForResources, int.MaxValue));
++                else if (milestone.Status == StrategicMilestoneStatus.WaitingForPrerequisite)
++                    facts.Add((StrategicPlanHealthCategory.WaitingForPrerequisite, int.MaxValue));
++            }
++
++            var resources = CopyResources(plan, milestone, context);
++            facts.Sort((a, b) =>
++            {
++                int order = HealthRank(a.Category).CompareTo(HealthRank(b.Category));
++                return order != 0 ? order : a.Id.CompareTo(b.Id);
++            });
++            StrategicPlanHealthCategory primary = plan.Status switch
++            {
++                StrategicPlanStatus.Completed => StrategicPlanHealthCategory.Completed,
++                StrategicPlanStatus.Cancelled => StrategicPlanHealthCategory.Cancelled,
++                StrategicPlanStatus.Failed => StrategicPlanHealthCategory.Failed,
++                StrategicPlanStatus.Paused => StrategicPlanHealthCategory.Paused,
++                _ => facts.Count > 0 ? facts[0].Category
++                    : hasProgressEvidence && unknownStatusCount == 0
++                        ? StrategicPlanHealthCategory.Healthy : StrategicPlanHealthCategory.Unknown
++            };
++            var secondary = new List<StrategicPlanHealthCategory>();
++            facts.Sort((a, b) => a.Id != b.Id
++                ? a.Id.CompareTo(b.Id)
++                : HealthRank(a.Category).CompareTo(HealthRank(b.Category)));
++            foreach (var fact in facts)
++                if (fact.Category != primary && !secondary.Contains(fact.Category)
++                    && secondary.Count < 8) secondary.Add(fact.Category);
++            var retainedCounts = new List<StrategicPlanHealthStatusCount>();
++            foreach (var entry in statusCounts)
++                retainedCounts.Add(new StrategicPlanHealthStatusCount(entry.Key, entry.Value));
++            retainedCounts.Add(new StrategicPlanHealthStatusCount(null, unknownStatusCount));
++            return new StrategicPlanHealthSnapshot(plan, milestone, tick, completedMilestones,
++                retained, missing, context, allQueued, primary, secondary, resources,
++                children, retainedCounts);
++        }
++
++        private List<StrategicPlanHealthResource> CopyResources(StrategicPlan plan,
++            StrategicMilestone milestone, CommanderContext context)
++        {
++            var result = new List<StrategicPlanHealthResource>();
++            foreach (ResourceType type in Enum.GetValues(typeof(ResourceType)))
++            {
++                int budget = 0, requirement = 0, planReserved = 0, globalReserved = 0;
++                foreach (StrategicBudgetRequirement item in plan.BudgetRequirements)
++                    if (item.ResourceType == type) budget = checked(budget + item.Amount);
++                bool known = milestone != null && milestone.RequirementsResolved;
++                if (known)
++                    foreach (StrategicResourceRequirement item in milestone.RequiredResources)
++                        if (item.ResourceType == type) requirement = checked(requirement + item.Amount);
++                foreach (StrategicResourceReservation item in reservationManager.Reservations)
++                    if (item.Status == StrategicResourceReservationStatus.Active
++                        && item.ResourceType == type)
++                    {
++                        globalReserved = checked(globalReserved + item.Amount);
++                        if (item.PlanId == plan.StrategicPlanId)
++                            planReserved = checked(planReserved + item.Amount);
++                    }
++                int owned = type switch
++                {
++                    ResourceType.Food => context.Resources.Food,
++                    ResourceType.Wood => context.Resources.Wood,
++                    ResourceType.Gold => context.Resources.Gold,
++                    ResourceType.Stone => context.Resources.Stone,
++                    _ => 0
++                };
++                owned = Math.Max(0, owned);
++                int otherReserved = checked(globalReserved - planReserved);
++                int usableForPlan = Math.Max(0, owned - otherReserved);
++                int deficit = known ? Math.Max(0, requirement - usableForPlan) : 0;
++                result.Add(new StrategicPlanHealthResource(type, budget, known, requirement,
++                    owned, deficit, planReserved, globalReserved));
++            }
++            return result;
++        }
++
++        private static bool ContainsId(IReadOnlyList<int> ids, int id)
++        {
++            for (int i = 0; i < ids.Count; i++) if (ids[i] == id) return true;
++            return false;
++        }
++
++        private static StrategicPlanHealthCategory CategoryForStatus(CommanderGoalStatus? status)
++        {
++            if (!status.HasValue) return StrategicPlanHealthCategory.Unknown;
++            return status.Value switch
++            {
++                CommanderGoalStatus.Blocked => StrategicPlanHealthCategory.TemporarilyBlocked,
++                CommanderGoalStatus.WaitingForResources => StrategicPlanHealthCategory.WaitingForResources,
++                CommanderGoalStatus.WaitingForPrerequisite => StrategicPlanHealthCategory.WaitingForPrerequisite,
++                CommanderGoalStatus.WaitingForProduction => StrategicPlanHealthCategory.WaitingForProduction,
++                CommanderGoalStatus.WaitingForConstruction => StrategicPlanHealthCategory.WaitingForConstruction,
++                _ => StrategicPlanHealthCategory.Unknown
++            };
++        }
++
++        private static int HealthRank(StrategicPlanHealthCategory category) => category switch
++        {
++            StrategicPlanHealthCategory.TemporarilyBlocked => 0,
++            StrategicPlanHealthCategory.WaitingForPopulation => 1,
++            StrategicPlanHealthCategory.WaitingForResources => 2,
++            StrategicPlanHealthCategory.WaitingForPrerequisite => 3,
++            StrategicPlanHealthCategory.WaitingForProduction => 4,
++            StrategicPlanHealthCategory.WaitingForConstruction => 5,
++            _ => 6
++        };
++
++        private static int? BlockedDuration(int blockedSince, int observed, int pausedAt, bool paused)
++        {
++            if (blockedSince < 0 || observed < 0 || (paused && pausedAt < 0)) return null;
++            long end = paused ? Math.Min((long)observed, pausedAt) : observed;
++            long duration = end - blockedSince;
++            if (duration < 0 || duration > int.MaxValue) return null;
++            return (int)duration;
++        }
++    }
++}
+diff --git a/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Health.cs.meta b/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Health.cs.meta
+new file mode 100644
+index 0000000..16fe092
+--- /dev/null
++++ b/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Health.cs.meta	
+@@ -0,0 +1,2 @@
++fileFormatVersion: 2
++guid: 91d2a2f366ef48dab6fa8c0643120250
+diff --git a/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.cs b/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.cs
+index 31836c8..d06fc58 100644
+--- a/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.cs	
++++ b/Open Empires/Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.cs	
+@@ -1,5 +1,6 @@
+ using System;
+ using System.Collections.Generic;
++using System.Runtime.ExceptionServices;
+ using UnityEngine;
+ 
+ namespace OpenEmpires
+@@ -36,11 +37,16 @@ namespace OpenEmpires
+         private readonly Dictionary<int, StrategicIntent> intentsByPlanId =
+             new Dictionary<int, StrategicIntent>();
+         private readonly Dictionary<int, ChildGoalLink> childGoalLinks = new Dictionary<int, ChildGoalLink>();
++        private readonly Dictionary<int, CommanderGoalEvent> deferredTerminalGoalEvents =
++            new Dictionary<int, CommanderGoalEvent>();
++        private readonly HashSet<StrategicPlan> preflightedRevisionCascades =
++            new HashSet<StrategicPlan>();
+         private int nextPlanId = 1;
+         public StrategicIntentIdProvider IntentIds { get; } = new StrategicIntentIdProvider();
+         private int lastResourceRetryTick = -1;
+         private StrategicPlan submittingPlan;
+         private StrategicMilestone submittingMilestone;
++        private bool committingSubmission;
+         private bool disposed;
+ 
+         public IReadOnlyList<StrategicPlan> Plans => plans;
+@@ -52,6 +58,10 @@ namespace OpenEmpires
+         public StrategicPlanRegistry PlanRegistry => planRegistry;
+         public StrategicCommitmentPolicy CommitmentPolicy => commitmentPolicy;
+         public int PlayerId => goalManager.PlayerId;
++        internal bool UsesSimulation(GameSimulation candidate) => candidate != null
++            && ReferenceEquals(goalManager.Simulation, candidate);
++        internal bool UsesContext(GameSimulation candidate, CommanderGoalManager manager)
++            => UsesSimulation(candidate) && ReferenceEquals(goalManager, manager);
+         internal StrategicPipeline Pipeline { get; set; }
+         internal StrategicPipeline GetOrCreatePipeline() => Pipeline
+             ?? new StrategicPipeline(goalManager.Simulation, goalManager, this);
+@@ -123,6 +133,19 @@ namespace OpenEmpires
+             bool isEmergency, bool isPlayerOverride)
+         {
+             ThrowIfDisposed();
++            if (committingSubmission)
++            {
++                const string reason = "A strategic plan submission is already being committed.";
++                if (intent != null && intent.Status == StrategicIntentStatus.Created)
++                {
++                    intent.Status = StrategicIntentStatus.Rejected;
++                    intent.StatusReason = reason;
++                    TrimIntentHistory();
++                }
++                return new StrategicIntentSubmission(StrategicIntentSubmissionStatus.Rejected,
++                    intent, null, StrategicIntentValidationError.CommitmentBlocked,
++                    reason);
++            }
+             if (intent != null && isPlayerOverride && intent.Source == StrategicIntentSource.AIRecommendation)
+                 return new StrategicIntentSubmission(StrategicIntentSubmissionStatus.Rejected,
+                     intent, null, StrategicIntentValidationError.CommitmentBlocked,
+@@ -187,53 +210,110 @@ namespace OpenEmpires
+                 }
+             }
+ 
+-            for (int i = 0; i < conflictingPlans.Count; i++)
++            // Complete every fallible admission check before cancelling any existing plan.
++            StrategicIntentValidationError preflightError = StrategicIntentValidationError.None;
++            string preflightReason = string.Empty;
++            try
+             {
+-                StrategicPlan conflicting = conflictingPlans[i];
+-                if (isPlayerOverride || (isEmergency && conflicting.Authority < StrategicPlanAuthority.Emergency))
++                if (plan.Status != StrategicPlanStatus.Created || plan.Revision != 0
++                    || plan.Milestones.Count == 0)
++                    throw new InvalidOperationException("The incoming plan has no valid initial milestone.");
++                for (int i = 0; i < plan.Milestones.Count; i++)
++                {
++                    StrategicMilestone stage = plan.Milestones[i];
++                    if (stage == null || stage.OrderIndex != i
++                        || stage.Status != StrategicMilestoneStatus.Pending)
++                        throw new InvalidOperationException("The incoming plan has invalid milestone order or status.");
++                }
++
++                int projectedActiveCount = activePlans.Count;
++                for (int i = 0; i < conflictingPlans.Count; i++)
+                 {
+-                    CancelPlan(conflicting.StrategicPlanId);
++                    StrategicPlan conflicting = conflictingPlans[i];
++                    if (!isPlayerOverride && !(isEmergency
++                        && conflicting.Authority < StrategicPlanAuthority.Emergency)) continue;
++                    if (!CanAdvanceRevision(conflicting, 1L + CountActiveReservations(conflicting)))
++                    {
++                        preflightError = StrategicIntentValidationError.CommitmentBlocked;
++                        preflightReason = "The conflicting plan could not be cancelled safely.";
++                        break;
++                    }
++                    projectedActiveCount--;
+                 }
++                if (preflightError == StrategicIntentValidationError.None
++                    && projectedActiveCount >= MaxActivePlans)
++                {
++                    preflightError = StrategicIntentValidationError.ActivePlanLimitReached;
++                    preflightReason = $"The active strategic plan limit of {MaxActivePlans} has been reached.";
++                }
++
++                if (preflightError == StrategicIntentValidationError.None)
++                {
++                    if (plan is DefensiveTurtlePlan turtle)
++                        turtle.TowerTargetTotal = CountCompletedTowers() + DefensiveTurtlePlan.TowerCount;
++                    if (plan is CavalryPressurePlan || plan is DefensivePreparationPlan || plan is EconomicExpansionPlan
++                        || plan is RangedReinforcementPlan || plan is DefensiveTurtlePlan)
++                    {
++                        var totals = new SortedDictionary<ResourceType, int>();
++                        foreach (StrategicMilestone stage in plan.Milestones)
++                            foreach (StrategicResourceRequirement cost in ComputeRequirements(stage,
++                                plan as DefensiveTurtlePlan))
++                                totals[cost.ResourceType] = (totals.TryGetValue(cost.ResourceType, out int amount) ? amount : 0) + cost.Amount;
++                        var budget = new List<StrategicResourceRequirement>();
++                        foreach (var total in totals) budget.Add(new StrategicResourceRequirement(total.Key, total.Value));
++                        plan.SetBudgetFromSimulation(budget);
++                    }
++                    FitEconomyToAvailableWorkers(plan);
++                }
++            }
++            catch (Exception error)
++            {
++                preflightError = StrategicIntentValidationError.TemplateCreationFailed;
++                preflightReason = $"Strategic plan admission failed: {error.Message}";
+             }
++            if (preflightError != StrategicIntentValidationError.None)
++                return RejectIntent(intent, preflightError, preflightReason);
+ 
+-            if (activePlans.Count >= MaxActivePlans)
+-            {
+-                return RejectIntent(intent, StrategicIntentValidationError.ActivePlanLimitReached,
+-                    $"The active strategic plan limit of {MaxActivePlans} has been reached.");
+-            }
+-
+-            if (plan is DefensiveTurtlePlan turtle)
+-                turtle.TowerTargetTotal = CountCompletedTowers() + DefensiveTurtlePlan.TowerCount;
+-            if (plan is CavalryPressurePlan || plan is DefensivePreparationPlan || plan is EconomicExpansionPlan
+-                || plan is RangedReinforcementPlan || plan is DefensiveTurtlePlan)
+-            {
+-                var totals = new SortedDictionary<ResourceType, int>();
+-                foreach (StrategicMilestone stage in plan.Milestones)
+-                    foreach (StrategicResourceRequirement cost in ComputeRequirements(stage,
+-                        plan as DefensiveTurtlePlan))
+-                        totals[cost.ResourceType] = (totals.TryGetValue(cost.ResourceType, out int amount) ? amount : 0) + cost.Amount;
+-                var budget = new List<StrategicResourceRequirement>();
+-                foreach (var total in totals) budget.Add(new StrategicResourceRequirement(total.Key, total.Value));
+-                plan.SetBudgetFromSimulation(budget);
+-            }
+-            plan.Authority = incomingAuthority;
+-            plan.Source = intent.Source;
+-            FitEconomyToAvailableWorkers(plan);
+-            plan.StrategicPlanId = nextPlanId++;
+-            plan.CreatedTick = goalManager.CurrentTick;
+-            plans.Add(plan);
+-            activePlans.Add(plan);
+-            intentsByPlanId.Add(plan.StrategicPlanId, intent);
+-
+-            plan.Status = StrategicPlanStatus.Active;
+-            SetIntentStatus(intent, StrategicIntentStatus.Active, string.Empty);
+-            StrategicMilestone milestone = plan.ActivateFirstMilestone();
+-            Debug.Log($"[StrategicPlanner] Intent #{intent.IntentId} selected template "
+-                + $"'{validation.Template.TemplateId}' and started plan #{plan.StrategicPlanId}: "
+-                + $"{plan.PlanType}.");
+-            PublishPlanStatus(plan);
+-            StartOrWaitForMilestone(plan, milestone);
+-            return CreatedSubmission(intent, plan);
++            committingSubmission = true;
++            try
++            {
++                var cancellations = new List<StrategicPlan>();
++                for (int i = 0; i < conflictingPlans.Count; i++)
++                {
++                    StrategicPlan conflicting = conflictingPlans[i];
++                    if (isPlayerOverride || (isEmergency && conflicting.Authority < StrategicPlanAuthority.Emergency))
++                    {
++                        cancellations.Add(conflicting);
++                    }
++                }
++                // Commit all cancellation states before cleanup publishes any reentrant event.
++                for (int i = 0; i < cancellations.Count; i++)
++                    BeginPlanCancellation(cancellations[i]);
++                Exception cancellationError = null;
++                for (int i = 0; i < cancellations.Count; i++)
++                    FinishPlanCancellation(cancellations[i], ref cancellationError);
++                if (cancellationError != null) ExceptionDispatchInfo.Capture(cancellationError).Throw();
++
++                plan.Authority = incomingAuthority;
++                plan.Source = intent.Source;
++                plan.StrategicPlanId = nextPlanId++;
++                plan.CreatedTick = goalManager.CurrentTick;
++                plan.InitializeRevision();
++                plans.Add(plan);
++                activePlans.Add(plan);
++                intentsByPlanId.Add(plan.StrategicPlanId, intent);
++
++                plan.Status = StrategicPlanStatus.Active;
++                SetIntentStatus(intent, StrategicIntentStatus.Active, string.Empty);
++                StrategicMilestone milestone = plan.ActivateFirstMilestone();
++                Debug.Log($"[StrategicPlanner] Intent #{intent.IntentId} selected template "
++                    + $"'{validation.Template.TemplateId}' and started plan #{plan.StrategicPlanId}: "
++                    + $"{plan.PlanType}.");
++                PublishPlanStatus(plan);
++                StartOrWaitForMilestone(plan, milestone);
++                return CreatedSubmission(intent, plan);
++            }
++            finally { committingSubmission = false; }
+         }
+ 
+         internal StrategicIntent MaterializeRecommendation(StrategicIntent selected)
+@@ -279,17 +359,55 @@ namespace OpenEmpires
+             ThrowIfDisposed();
+             StrategicPlan plan = GetPlan(strategicPlanId);
+             if (plan == null || plan.IsTerminal) return false;
++            if (!CanAdvanceRevision(plan, 1L + CountActiveReservations(plan))) return false;
++            BeginPlanCancellation(plan);
++            Exception cancellationError = null;
++            FinishPlanCancellation(plan, ref cancellationError);
++            if (cancellationError != null) ExceptionDispatchInfo.Capture(cancellationError).Throw();
++            return true;
++        }
++
++        private void BeginPlanCancellation(StrategicPlan plan)
++        {
+             plan.Status = StrategicPlanStatus.Cancelled;
++            plan.AdvanceRevision();
+             plan.OutcomeMessage = plan.CancellationMessage;
+             activePlans.Remove(plan);
+             ArchivePlan(plan);
++        }
++
++        private void FinishPlanCancellation(StrategicPlan plan, ref Exception cancellationError)
++        {
+             SkipUnfinishedMilestones(plan);
+-            CancelOwnedNonTerminalGoals(plan);
+-            reservationManager.ReleasePlanReservations(plan.StrategicPlanId, cancelled: true);
++            for (int i = 0; i < plan.ChildGoalIds.Count; i++)
++            {
++                int goalId = plan.ChildGoalIds[i];
++                CommanderGoal goal = goalManager.GetGoal(goalId);
++                try
++                {
++                    if (goal != null && !goal.IsTerminal) goalManager.CancelGoal(goalId);
++                }
++                catch (Exception error) { if (cancellationError == null) cancellationError = error; }
++                finally { childGoalLinks.Remove(goalId); }
++            }
++            var reservationIds = new List<int>();
++            for (int i = 0; i < reservationManager.Reservations.Count; i++)
++            {
++                StrategicResourceReservation reservation = reservationManager.Reservations[i];
++                if (reservation.PlanId == plan.StrategicPlanId)
++                    reservationIds.Add(reservation.ReservationId);
++            }
++            for (int i = 0; i < reservationIds.Count; i++)
++            {
++                try { reservationManager.ReleaseReservation(reservationIds[i], cancelled: true); }
++                catch (Exception error) { if (cancellationError == null) cancellationError = error; }
++            }
++            ClearDeferredTerminalEvents(plan);
+             Debug.Log($"[StrategicPlanner] Plan #{plan.StrategicPlanId} cancelled.");
+-            PublishPlanStatus(plan);
+-            ResponseGenerated?.Invoke(plan, plan.OutcomeMessage);
+-            return true;
++            try { PublishPlanStatus(plan); }
++            catch (Exception error) { if (cancellationError == null) cancellationError = error; }
++            try { ResponseGenerated?.Invoke(plan, plan.OutcomeMessage); }
++            catch (Exception error) { if (cancellationError == null) cancellationError = error; }
+         }
+ 
+         public void Dispose()
+@@ -301,6 +419,8 @@ namespace OpenEmpires
+             reservationManager.ReservationCreated -= HandleReservationCreated;
+             reservationManager.ReservationReleased -= HandleReservationReleased;
+             reservationManager.ReservationConflictDetected -= HandleReservationConflict;
++            deferredTerminalGoalEvents.Clear();
++            preflightedRevisionCascades.Clear();
+             StrategicIntentCreated = null;
+             StrategicIntentStatusChanged = null;
+             StrategicIntentRejected = null;
+@@ -335,7 +455,8 @@ namespace OpenEmpires
+             for (int i = 0; i < waiting.Count; i++)
+             {
+                 StrategicPlan plan = waiting[i];
+-                if (!plan.IsTerminal && plan.CurrentMilestone != null)
++                if (!plan.IsTerminal && plan.Status != StrategicPlanStatus.Paused
++                    && plan.CurrentMilestone != null)
+                     StartOrWaitForMilestone(plan, plan.CurrentMilestone);
+             }
+         }
+@@ -389,29 +510,49 @@ namespace OpenEmpires
+         public bool UpdateReservationAmount(int reservationId, int newAmount)
+         {
+             ThrowIfDisposed();
+-            return reservationManager.UpdateReservationAmount(reservationId, newAmount);
++            for (int i = 0; i < reservationManager.Reservations.Count; i++)
++            {
++                StrategicResourceReservation reservation = reservationManager.Reservations[i];
++                if (reservation.ReservationId != reservationId) continue;
++                StrategicPlan plan = GetPlan(reservation.PlanId);
++                if (plan == null || plan.IsTerminal || plan.Status == StrategicPlanStatus.Paused
++                    || !CanAdvanceRevision(plan, 1)) return false;
++                bool updated = reservationManager.UpdateReservationAmount(reservationId, newAmount);
++                if (updated && newAmount > 0) plan.AdvanceRevision();
++                return updated;
++            }
++            return false;
+         }
+ 
+         public bool ReleaseReservation(int reservationId, bool cancelled = false)
+         {
+             ThrowIfDisposed();
+-            return reservationManager.ReleaseReservation(reservationId, cancelled);
++            for (int i = 0; i < reservationManager.Reservations.Count; i++)
++            {
++                StrategicResourceReservation reservation = reservationManager.Reservations[i];
++                if (reservation.ReservationId != reservationId) continue;
++                StrategicPlan plan = GetPlan(reservation.PlanId);
++                return plan != null && !plan.IsTerminal && plan.Status != StrategicPlanStatus.Paused
++                    && CanAdvanceRevision(plan, 1)
++                    && reservationManager.ReleaseReservation(reservationId, cancelled);
++            }
++            return false;
+         }
+ 
+         public bool CompleteMilestoneAndAdvance(int strategicPlanId)
+         {
+             ThrowIfDisposed();
+             StrategicPlan plan = GetPlan(strategicPlanId);
+-            if (plan == null || plan.IsTerminal)
++            if (plan == null || plan.IsTerminal || plan.Status == StrategicPlanStatus.Paused)
+                 return false;
+             if (plan.CurrentMilestone == null) return false;
+-            CompleteMilestoneAndAdvance(plan, plan.CurrentMilestone);
+-            return true;
++            return CompleteMilestoneAndAdvance(plan, plan.CurrentMilestone);
+         }
+ 
+         private void CreateGoalsForMilestone(StrategicPlan plan, StrategicMilestone milestone,
+             bool economyOnly = false)
+         {
++            if (plan.Status == StrategicPlanStatus.Paused) return;
+             if (milestone.TacticalGoalsStarted) return;
+             if (!economyOnly) milestone.MarkTacticalGoalsStarted();
+             if (milestone.TacticalGoals.Count == 0)
+@@ -443,7 +584,7 @@ namespace OpenEmpires
+         private bool SubmitTrackedGoal(StrategicPlan plan, StrategicMilestone milestone,
+             Func<CommanderGoal> submit)
+         {
+-            if (plan.IsTerminal) return false;
++            if (plan.IsTerminal || plan.Status == StrategicPlanStatus.Paused) return false;
+             submittingPlan = plan;
+             submittingMilestone = milestone;
+             try
+@@ -474,15 +615,42 @@ namespace OpenEmpires
+ 
+             ChildGoalEventObserved?.Invoke(link.Plan, goalEvent);
+             if (link.Plan.IsTerminal) return;
++            if (link.Plan.Status == StrategicPlanStatus.Paused)
++            {
++                if (goalEvent.Goal.IsTerminal)
++                    deferredTerminalGoalEvents[goalId] = goalEvent;
++                return;
++            }
++            ProcessChildGoalEvent(goalEvent, link);
++        }
++
++        private void ProcessChildGoalEvent(CommanderGoalEvent goalEvent, ChildGoalLink link)
++        {
++            int goalId = goalEvent.Goal.GoalId;
++            long revisions = goalEvent.EventType switch
++            {
++                CommanderGoalEventType.GoalProgressChanged => 1,
++                CommanderGoalEventType.GoalBlocked => 1,
++                CommanderGoalEventType.GoalCompleted => RemainingCascadeRevisionBudget(link.Plan),
++                CommanderGoalEventType.GoalFailed => 1L + CountActiveReservations(link.Plan),
++                CommanderGoalEventType.GoalCancelled => 1L + CountActiveReservations(link.Plan),
++                _ => 0
++            };
++            if (!TryEnterRevisionCascade(link.Plan, revisions, out bool ownsCascade)) return;
++            try
++            {
+             switch (goalEvent.EventType)
+             {
+                 case CommanderGoalEventType.GoalStarted:
++                    break;
+                 case CommanderGoalEventType.GoalProgressChanged:
+                 case CommanderGoalEventType.GoalBlocked:
+                     // These events are observable but do not advance a milestone.
++                    link.Plan.AdvanceRevision();
+                     break;
+                 case CommanderGoalEventType.GoalCompleted:
+                     link.Milestone.MarkChildGoalCompleted(goalId);
++                    link.Plan.AdvanceRevision();
+                     if (link.Milestone.Status == StrategicMilestoneStatus.Active
+                         && link.Milestone.IsSatisfied)
+                         CompleteMilestoneAndAdvance(link.Plan, link.Milestone);
+@@ -496,13 +664,94 @@ namespace OpenEmpires
+                         $"Tactical goal #{goalId} was cancelled before the milestone completed.");
+                     break;
+             }
+-            if (goalEvent.Goal.IsTerminal) childGoalLinks.Remove(goalId);
++            if (goalEvent.Goal.IsTerminal)
++            {
++                childGoalLinks.Remove(goalId);
++                deferredTerminalGoalEvents.Remove(goalId);
++            }
++            }
++            finally { ExitRevisionCascade(link.Plan, ownsCascade); }
++        }
++
++        private void ReconcileDeferredTerminalGoals(StrategicPlan plan)
++        {
++            for (int i = 0; i < plan.ChildGoalIds.Count && !plan.IsTerminal; i++)
++            {
++                int goalId = plan.ChildGoalIds[i];
++                if (!deferredTerminalGoalEvents.TryGetValue(goalId, out CommanderGoalEvent goalEvent)
++                    || !childGoalLinks.TryGetValue(goalId, out ChildGoalLink link)) continue;
++                deferredTerminalGoalEvents.Remove(goalId);
++                ProcessChildGoalEvent(goalEvent, link);
++            }
++        }
++
++        private void ClearDeferredTerminalEvents(StrategicPlan plan)
++        {
++            for (int i = 0; i < plan.ChildGoalIds.Count; i++)
++                deferredTerminalGoalEvents.Remove(plan.ChildGoalIds[i]);
++        }
++
++        private int CountActiveReservations(StrategicPlan plan)
++        {
++            int count = 0;
++            for (int i = 0; i < reservationManager.Reservations.Count; i++)
++                if (reservationManager.Reservations[i].PlanId == plan.StrategicPlanId)
++                    count++;
++            return count;
++        }
++
++        private static bool CanAdvanceRevision(StrategicPlan plan, long additional)
++        {
++            return additional >= 0 && (long)plan.Revision + additional <= int.MaxValue;
++        }
++
++        private bool TryEnterRevisionCascade(StrategicPlan plan, long budget, out bool ownsCascade)
++        {
++            ownsCascade = false;
++            if (preflightedRevisionCascades.Contains(plan)) return true;
++            if (!CanAdvanceRevision(plan, budget)) return false;
++            preflightedRevisionCascades.Add(plan);
++            ownsCascade = true;
++            return true;
++        }
++
++        private void ExitRevisionCascade(StrategicPlan plan, bool ownsCascade)
++        {
++            if (ownsCascade) preflightedRevisionCascades.Remove(plan);
++        }
++
++        private long RemainingCascadeRevisionBudget(StrategicPlan plan)
++        {
++            long budget = 2L + CountActiveReservations(plan) + plan.ChildGoalIds.Count * 2L;
++            int first = plan.CurrentMilestone?.OrderIndex ?? 0;
++            for (int i = first; i < plan.Milestones.Count; i++)
++            {
++                StrategicMilestone milestone = plan.Milestones[i];
++                // Includes status transitions, reservation creation/release, goal tracking,
++                // and synchronous completion/failure through later milestones.
++                budget += 32L + milestone.TacticalGoals.Count * 8L
++                    + milestone.RequiredResources.Count * 8L;
++            }
++            return budget;
++        }
++
++        // A terminal child may complete its milestone and synchronously start later ones.
++        // Reserve a conservative bound for that whole resume-time cascade before moving anchors.
++        private bool CanReconcileOnResume(StrategicPlan plan)
++        {
++            return CanAdvanceRevision(plan, RemainingCascadeRevisionBudget(plan));
+         }
+ 
+-        private void CompleteMilestoneAndAdvance(StrategicPlan plan, StrategicMilestone milestone)
++        private bool CompleteMilestoneAndAdvance(StrategicPlan plan, StrategicMilestone milestone)
+         {
+-            if (plan.IsTerminal || milestone.Status != StrategicMilestoneStatus.Active) return;
++            if (plan.IsTerminal || plan.Status == StrategicPlanStatus.Paused
++                || milestone.Status != StrategicMilestoneStatus.Active) return false;
++            if (!TryEnterRevisionCascade(plan, RemainingCascadeRevisionBudget(plan),
++                out bool ownsCascade)) return false;
++            try
++            {
+             milestone.SetStatus(StrategicMilestoneStatus.Completed);
++            plan.AdvanceRevision();
+             Debug.Log($"[StrategicPlanner] Plan #{plan.StrategicPlanId} milestone completed: {milestone.Name}.");
+             MilestoneStatusChanged?.Invoke(plan, milestone);
+ 
+@@ -516,20 +765,29 @@ namespace OpenEmpires
+             if (next == null)
+             {
+                 CompletePlan(plan);
+-                return;
++                return true;
+             }
+ 
+             StartOrWaitForMilestone(plan, next);
++            return true;
++            }
++            finally { ExitRevisionCascade(plan, ownsCascade); }
+         }
+ 
+         private void StartOrWaitForMilestone(StrategicPlan plan, StrategicMilestone milestone)
+         {
+-            if (plan == null || milestone == null || plan.IsTerminal) return;
++            if (plan == null || milestone == null || plan.IsTerminal
++                || plan.Status == StrategicPlanStatus.Paused) return;
++            if (!TryEnterRevisionCascade(plan, RemainingCascadeRevisionBudget(plan),
++                out bool ownsCascade)) return;
++            try
++            {
+             if (plan is EconomicExpansionPlan && goalManager.Simulation.GetPlayerAge(PlayerId)
+                 < LandmarkDefinitions.GetBuildingRequiredAge(BuildingType.TownCenter))
+             {
+                 bool changed = milestone.Status != StrategicMilestoneStatus.WaitingForPrerequisite;
+                 milestone.SetStatus(StrategicMilestoneStatus.WaitingForPrerequisite);
++                if (changed) plan.AdvanceRevision();
+                 plan.OutcomeMessage = $"TownCenter requires age {LandmarkDefinitions.GetBuildingRequiredAge(BuildingType.TownCenter)}. Advance age to resume economic expansion.";
+                 if (changed) MilestoneStatusChanged?.Invoke(plan, milestone);
+                 return;
+@@ -546,6 +804,7 @@ namespace OpenEmpires
+                     bool changed = milestone.Status
+                         != StrategicMilestoneStatus.WaitingForResources;
+                     milestone.SetStatus(StrategicMilestoneStatus.WaitingForResources);
++                    if (changed) plan.AdvanceRevision();
+                     plan.OutcomeMessage = conflict.ToString();
+                     if (changed)
+                     {
+@@ -567,7 +826,9 @@ namespace OpenEmpires
+                     milestone.AddResourceReservation(created[r].ReservationId);
+             }
+ 
++            bool activated = milestone.Status != StrategicMilestoneStatus.Active;
+             milestone.SetStatus(StrategicMilestoneStatus.Active);
++            if (activated) plan.AdvanceRevision();
+             plan.OutcomeMessage = string.Empty;
+             Debug.Log($"[StrategicPlanner] Plan #{plan.StrategicPlanId} milestone active: {milestone.Name}.");
+             MilestoneStatusChanged?.Invoke(plan, milestone);
+@@ -575,6 +836,8 @@ namespace OpenEmpires
+             if (!plan.IsTerminal && milestone.Status == StrategicMilestoneStatus.Active
+                 && milestone.IsSatisfied && milestone.TacticalGoalsStarted)
+                 CompleteMilestoneAndAdvance(plan, milestone);
++            }
++            finally { ExitRevisionCascade(plan, ownsCascade); }
+         }
+ 
+         private bool ShouldSkipRequest(StrategicTacticalGoalRequest request)
+@@ -729,58 +992,95 @@ namespace OpenEmpires
+ 
+         private void CompletePlan(StrategicPlan plan)
+         {
++            if (!TryEnterRevisionCascade(plan, 1L + CountActiveReservations(plan),
++                out bool ownsCascade)) return;
++            try
++            {
+             plan.Status = StrategicPlanStatus.Completed;
++            plan.AdvanceRevision();
+             plan.OutcomeMessage = plan.CompletionMessage;
+             activePlans.Remove(plan);
+             ArchivePlan(plan);
+             reservationManager.ReleasePlanReservations(plan.StrategicPlanId, cancelled: false);
++            ClearDeferredTerminalEvents(plan);
+             Debug.Log($"[StrategicPlanner] Plan #{plan.StrategicPlanId} completed. {plan.OutcomeMessage}");
+             PublishPlanStatus(plan);
+             ResponseGenerated?.Invoke(plan, plan.OutcomeMessage);
++            }
++            finally { ExitRevisionCascade(plan, ownsCascade); }
+         }
+ 
+         private void FailPlan(StrategicPlan plan, StrategicMilestone milestone, string reason)
+         {
+             if (plan.IsTerminal) return;
++            if (!TryEnterRevisionCascade(plan, 1L + CountActiveReservations(plan),
++                out bool ownsCascade)) return;
++            try
++            {
+             if (milestone != null && milestone.Status != StrategicMilestoneStatus.Completed)
+             {
+                 milestone.SetStatus(StrategicMilestoneStatus.Failed);
+                 MilestoneStatusChanged?.Invoke(plan, milestone);
+             }
+             plan.Status = StrategicPlanStatus.Failed;
++            plan.AdvanceRevision();
+             plan.OutcomeMessage = reason ?? "The strategic plan failed.";
+             activePlans.Remove(plan);
+             ArchivePlan(plan);
+             SkipPendingMilestones(plan);
+             CancelOwnedNonTerminalGoals(plan);
+             reservationManager.ReleasePlanReservations(plan.StrategicPlanId, cancelled: false);
++            ClearDeferredTerminalEvents(plan);
+             Debug.LogWarning($"[StrategicPlanner] Plan #{plan.StrategicPlanId} failed: {plan.OutcomeMessage}");
+             PublishPlanStatus(plan);
+             ResponseGenerated?.Invoke(plan, plan.OutcomeMessage);
++            }
++            finally { ExitRevisionCascade(plan, ownsCascade); }
+         }
+ 
+         private void TrackChildGoal(StrategicPlan plan, StrategicMilestone milestone, int goalId)
+         {
+             if (plan == null || milestone == null || childGoalLinks.ContainsKey(goalId)) return;
++            if (!TryEnterRevisionCascade(plan, 1, out bool ownsCascade)) return;
++            try
++            {
+             childGoalLinks.Add(goalId, new ChildGoalLink(plan, milestone));
+             plan.AddChildGoal(goalId);
++            plan.AdvanceRevision();
+             milestone.AddRequiredChildGoal(goalId);
++            }
++            finally { ExitRevisionCascade(plan, ownsCascade); }
+         }
+ 
+         private void HandleReservationCreated(StrategicResourceReservation reservation)
+         {
+             StrategicPlan plan = GetPlan(reservation.PlanId);
++            bool ownsCascade = false;
++            if (plan != null && !TryEnterRevisionCascade(plan, 1, out ownsCascade)) return;
++            try
++            {
+             plan?.AddResourceReservation(reservation.ReservationId);
++            plan?.AdvanceRevision();
+             Debug.Log($"[StrategicPlanner] Reservation #{reservation.ReservationId} created for "
+                 + $"plan #{reservation.PlanId}: {reservation.Amount} {reservation.ResourceType}.");
+             ReservationCreated?.Invoke(reservation);
++            }
++            finally { if (plan != null) ExitRevisionCascade(plan, ownsCascade); }
+         }
+ 
+         private void HandleReservationReleased(StrategicResourceReservation reservation)
+         {
++            StrategicPlan plan = GetPlan(reservation.PlanId);
++            bool ownsCascade = false;
++            if (plan != null && !TryEnterRevisionCascade(plan, 1, out ownsCascade)) return;
++            try
++            {
++            plan?.AdvanceRevision();
+             Debug.Log($"[StrategicPlanner] Reservation #{reservation.ReservationId} "
+                 + $"{reservation.Status.ToString().ToLowerInvariant()} for plan #{reservation.PlanId}.");
+             ReservationReleased?.Invoke(reservation);
++            }
++            finally { if (plan != null) ExitRevisionCascade(plan, ownsCascade); }
+         }
+ 
+         private void HandleReservationConflict(StrategicReservationConflict conflict)
+@@ -912,21 +1212,26 @@ namespace OpenEmpires
+ 
+         private void PublishPlanStatus(StrategicPlan plan)
+         {
+-            PlanStatusChanged?.Invoke(plan);
+-            if (!intentsByPlanId.TryGetValue(plan.StrategicPlanId,
+-                out StrategicIntent intent)) return;
+-            switch (plan.Status)
++            Exception observerError = null;
++            try { PlanStatusChanged?.Invoke(plan); }
++            catch (Exception error) { observerError = error; }
++            if (intentsByPlanId.TryGetValue(plan.StrategicPlanId,
++                out StrategicIntent intent))
+             {
+-                case StrategicPlanStatus.Completed:
+-                    SetIntentStatus(intent, StrategicIntentStatus.Completed, plan.OutcomeMessage);
+-                    break;
+-                case StrategicPlanStatus.Failed:
+-                    SetIntentStatus(intent, StrategicIntentStatus.Failed, plan.OutcomeMessage);
+-                    break;
+-                case StrategicPlanStatus.Cancelled:
+-                    SetIntentStatus(intent, StrategicIntentStatus.Cancelled, plan.OutcomeMessage);
+-                    break;
++                switch (plan.Status)
++                {
++                    case StrategicPlanStatus.Completed:
++                        SetIntentStatus(intent, StrategicIntentStatus.Completed, plan.OutcomeMessage);
++                        break;
++                    case StrategicPlanStatus.Failed:
++                        SetIntentStatus(intent, StrategicIntentStatus.Failed, plan.OutcomeMessage);
++                        break;
++                    case StrategicPlanStatus.Cancelled:
++                        SetIntentStatus(intent, StrategicIntentStatus.Cancelled, plan.OutcomeMessage);
++                        break;
++                }
+             }
++            if (observerError != null) ExceptionDispatchInfo.Capture(observerError).Throw();
+         }
+ 
+         private void SetIntentStatus(StrategicIntent intent, StrategicIntentStatus status,

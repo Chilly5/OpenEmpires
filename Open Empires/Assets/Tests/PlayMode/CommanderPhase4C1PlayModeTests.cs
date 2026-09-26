@@ -256,8 +256,15 @@ namespace OpenEmpires.Tests
             StrategicPlan emergency = planner.SubmitIntent(defense, true, false).Plan;
             Task<CommanderAIChatSubmission> prepare = chat.SubmitMessageAsync("prepare cavalry attack");
             while (!prepare.IsCompleted) yield return null;
-            StrategicDecisionRecord rejected = chat.ApproveStrategicRecommendation();
+            StrategicIntent pending = chat.PendingStrategicIntent;
+            Assert.That(pending, Is.Not.Null);
+            Assert.That(chat.ApproveStrategicRecommendation(), Is.Null);
+            Assert.That(chat.PendingStrategicIntent, Is.SameAs(pending));
+            StrategicApprovalResult approval = new StrategicApprovalLayer().Evaluate(
+                pipeline.CaptureContext(), pending, pending.Source);
+            StrategicDecisionRecord rejected = pipeline.EvaluateApprovedIntentNow(approval);
 
+            Assert.That(rejected.Decision.Status, Is.EqualTo(StrategicDecisionStatus.Rejected));
             Assert.That(rejected.Submission, Is.Null);
             Assert.That(emergency.Status, Is.EqualTo(StrategicPlanStatus.Active));
             Assert.That(chat.Conversation.Snapshot().Any(entry =>

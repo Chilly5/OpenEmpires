@@ -19,6 +19,9 @@ namespace OpenEmpires
         private bool disposed;
 
         public StrategicPlanner StrategicPlanner => strategicPlanner;
+        internal bool UsesSimulation(GameSimulation candidate)
+            => candidate != null && ReferenceEquals(simulation, candidate)
+                && strategicPlanner.UsesSimulation(candidate);
         public StrategicEvaluationTrigger EvaluationTrigger => evaluationTrigger;
         public StrategicCommitmentPolicy CommitmentPolicy => commitmentPolicy;
         public RecentDecisionHistory DecisionHistory => decisionHistory;
@@ -66,14 +69,28 @@ namespace OpenEmpires
             IStrategicEvaluator evaluator = null,
             IStrategicDecisionPolicy decisionPolicy = null)
             : this(strategicPlanner,
-                   () => new CommanderContextBuilder().Build(simulation, goalManager),
+                   CreateValidatedContextProvider(simulation, goalManager, strategicPlanner),
                    evaluationTrigger, commitmentPolicy, decisionHistory, evaluator, decisionPolicy)
         {
-            this.simulation = simulation ?? throw new ArgumentNullException(nameof(simulation));
+            this.simulation = simulation;
             simulation.OnUnitDied += OnStrategicUnitChanged;
             simulation.OnBuildingDestroyed += OnStrategicBuildingChanged;
             simulation.OnUnitTrained += OnStrategicUnitTrained;
             simulation.OnBuildingCreated += OnStrategicBuildingCreated;
+        }
+
+        private static Func<CommanderContext> CreateValidatedContextProvider(
+            GameSimulation simulation, CommanderGoalManager goalManager,
+            StrategicPlanner strategicPlanner)
+        {
+            if (simulation == null) throw new ArgumentNullException(nameof(simulation));
+            if (goalManager == null) throw new ArgumentNullException(nameof(goalManager));
+            if (strategicPlanner == null) throw new ArgumentNullException(nameof(strategicPlanner));
+            if (!strategicPlanner.UsesContext(simulation, goalManager))
+                throw new ArgumentException(
+                    "The strategic planner must use the supplied Commander goal manager and simulation.",
+                    nameof(strategicPlanner));
+            return () => new CommanderContextBuilder().Build(simulation, goalManager);
         }
 
         public void Tick(int currentTick)

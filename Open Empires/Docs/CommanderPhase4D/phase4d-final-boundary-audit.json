@@ -1,0 +1,109 @@
+{
+  "schema": "commander-phase4d-final-boundary-audit@1",
+  "generatedAtUtc": "2026-09-26 11:30:57 UTC",
+  "scope": "Final Phase 4D source freeze; static/manifest audit only. Runtime and independent review are recorded separately.",
+  "baseline": {
+    "path": "Docs/CommanderPhase4D/phase4d-source-baseline.json",
+    "baselineCommit": "205c4fa8d2aae8d5abe5b7806f1fb66bb0727519",
+    "defaultVerifierExitCode": 0,
+    "phase4cManifestPathsPresent": 27,
+    "phase4cManifestPathsExpected": 27,
+    "originalSourceHashMatches": 23,
+    "originalSourceExpected": 27,
+    "originalSourceIntentionalDrifts": [
+      "Assets/Scripts/AI/Commander/Strategic/StrategicPlan.cs",
+      "Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.cs",
+      "Assets/Scripts/AI/Commander/Strategic/StrategicPipeline.cs",
+      "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs"
+    ],
+    "pinnedXmlVerified": 6,
+    "pinnedXmlExpected": 6
+  },
+  "protected": {
+    "frozenPath": "Docs/CommanderPhase4D/phase4d-protected-boundary-frozen.json",
+    "count": 55,
+    "present": 55,
+    "unchanged": 54,
+    "intentionalChanged": [
+      {
+        "path": "Assets/Scripts/AI/Commander/CommanderGoalManager.cs",
+        "frozenSha256": "31B2B4554F8A6B7E2266AEAB282DF7B1E1CC784451877C879D66BD64E4899190",
+        "currentSha256": "0F79E294D202340044BDDE0539735AAB139CDBAA4E0DBCEB327D31CFE21C048A",
+        "reason": "Phase 4D.3 cancellation cleanup under observer exceptions; before/after diff, behavioral RED/GREEN, affected regression, and independent review are recorded in phase4d3 task/fix reports."
+      }
+    ],
+    "missing": 0,
+    "unexplainedChanged": 0
+  },
+  "manifest": {
+    "path": "Docs/CommanderPhase4D/phase4d-final-source-hashes.json",
+    "sha256": "4425F6BFB1DC1C55A5A773A426F5943FCCE9C643DA63678A73BC76BD4F6E876C",
+    "files": 56,
+    "verifiedAgainstDisk": 56,
+    "mismatches": 0,
+    "includesBaselineToHeadAndWorkingTree": true,
+    "adjacentProviderMigrationClassified": true,
+    "unityMetaIncluded": true
+  },
+  "staticSecurity": {
+    "phase4dCoreProductionFilesScanned": 15,
+    "credentialAssignmentShapeCandidatesCore": 0,
+    "providerMigrationAdjacentFilesScanned": 3,
+    "credentialAssignmentShapeCandidatesAdjacent": 4,
+    "adjacentCandidateClassification": "Four apiKey assignments are null/constructor/environment flow; no quoted literal assignment matched. Values were not inspected or printed.",
+    "quotedLiteralCredentialAssignmentsInScannedFiles": 0,
+    "valueModuleFilesScanned": [
+      "Assets/Scripts/AI/Commander/Strategic/StrategicAdvisory.cs",
+      "Assets/Scripts/AI/Commander/Strategic/StrategicAdaptationProposal.cs",
+      "Assets/Scripts/AI/Commander/Strategic/StrategicPlanHealthSnapshot.cs",
+      "Assets/Scripts/AI/Commander/Strategic/StrategicPlanControl.cs"
+    ],
+    "valueModuleForbiddenDependencyCandidates": 0,
+    "providerDirectPlannerGoalCommandSimulationReferences": 0,
+    "providerExecutionDelegateCandidates": 0,
+    "reflectionEscapeCandidates": 0,
+    "dynamicCommandFromTextCandidates": 0,
+    "hostAndCoreCandidates": [
+      {
+        "symbol": "CommandBuffer",
+        "path": "Assets/Scripts/AI/Commander/CommanderGoalManager.cs",
+        "classification": "Existing deterministic goal-manager execution path, not newly added advisory/provider authority."
+      },
+      {
+        "symbol": "GameObject",
+        "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs",
+        "classification": "Existing Unity host UI creation, not a value/provider retention path."
+      }
+    ],
+    "newStrategicObjectives": 0
+  },
+  "workspace": {
+    "envExists": true,
+    "envTracked": false,
+    "envIgnored": true,
+    "envContentsRead": false,
+    "packageStatusChanges": 0,
+    "projectSettingsStatusChanges": 0,
+    "userSettingsStatusChanges": 0,
+    "untrackedTestRunnerScenePairs": [
+      {
+        "scene": "Assets/InitTestSceneab672bd0-3ca3-453e-ba4a-20d939b38c36.unity",
+        "classification": "Unity TestRunner PlaymodeTestsController; untracked; not implementation; not deleted."
+      },
+      {
+        "scene": "Assets/InitTestSceneca8686e8-042c-4b49-9d76-7dcadbfb69b8.unity",
+        "classification": "Unity TestRunner PlaymodeTestsController; untracked and currently active Editor scene; not implementation; not deleted."
+      },
+      {
+        "scene": "Assets/_Recovery/0 (13).unity",
+        "classification": "Unity recovery copy of TestRunner PlaymodeTestsController; untracked; retained without deleting user data."
+      }
+    ],
+    "unexpectedImplementationSourceFiles": 0
+  },
+  "auditGapsWithinEnumeratedSource": 0,
+  "limitations": [
+    "Static scans classify candidates but do not replace runtime proof or external Antigravity review.",
+    "Generated TestRunner/recovery scenes remain untracked on disk and are excluded from the Phase 4D source manifest; no cleanup was performed."
+  ]
+}

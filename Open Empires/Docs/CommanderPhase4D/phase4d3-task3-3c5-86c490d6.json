@@ -1,0 +1,152 @@
+{
+  "job_id": "86c490d6b34f45939aad8b42681a3078",
+  "status": "succeeded",
+  "mode": "EditMode",
+  "started_unix_ms": 1790347476798,
+  "finished_unix_ms": 1790347480054,
+  "last_update_unix_ms": 1790347480054,
+  "progress": {
+    "completed": 13,
+    "total": 13,
+    "current_test_full_name": null,
+    "current_test_started_unix_ms": 1790347479794,
+    "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.PlayerStrategicIntent_OverridesRecommendations",
+    "last_finished_unix_ms": 1790347480038,
+    "stuck_suspected": false,
+    "editor_is_focused": true,
+    "blocked_reason": null,
+    "failures_so_far": [],
+    "failures_capped": false
+  },
+  "error": null,
+  "result": {
+    "mode": "EditMode",
+    "summary": {
+      "total": 13,
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "durationSeconds": 3.1211657,
+      "resultState": "Passed"
+    },
+    "results": [
+      {
+        "name": "DecisionPolicy_AttackRequiresConditions",
+        "fullName": "OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.DecisionPolicy_AttackRequiresConditions",
+        "state": "Passed",
+        "durationSeconds": 0.2400385,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "DecisionPolicy_DefenseOverridesAttack",
+        "fullName": "OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.DecisionPolicy_DefenseOverridesAttack",
+        "state": "Passed",
+        "durationSeconds": 0.2384965,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "DecisionPolicy_DoesNotBypassStrategicPlanner",
+        "fullName": "OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.DecisionPolicy_DoesNotBypassStrategicPlanner",
+        "state": "Passed",
+        "durationSeconds": 0.2427381,
+        "message": null,
+        "stackTrace": null,
+        "output": "[StrategicPlanner] Strategic intent #2 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #2 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.\r\n[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n"
+      },
+      {
+        "name": "DecisionPolicy_DoesNotCreateCommands",
+        "fullName": "OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.DecisionPolicy_DoesNotCreateCommands",
+        "state": "Passed",
+        "durationSeconds": 0.2375706,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "DecisionPolicy_DoesNotCreatePlans",
+        "fullName": "OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.DecisionPolicy_DoesNotCreatePlans",
+        "state": "Passed",
+        "durationSeconds": 0.2380513,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "DecisionPolicy_EconomicFallback",
+        "fullName": "OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.DecisionPolicy_EconomicFallback",
+        "state": "Passed",
+        "durationSeconds": 0.2396647,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "DecisionPolicy_HasNoHiddenState",
+        "fullName": "OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.DecisionPolicy_HasNoHiddenState",
+        "state": "Passed",
+        "durationSeconds": 0.2398137,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "DecisionPolicy_SameInputProducesSameOutput",
+        "fullName": "OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.DecisionPolicy_SameInputProducesSameOutput",
+        "state": "Passed",
+        "durationSeconds": 0.2399692,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "DecisionPolicy_SelectsHighestPriority",
+        "fullName": "OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.DecisionPolicy_SelectsHighestPriority",
+        "state": "Passed",
+        "durationSeconds": 0.2384297,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "DecisionResult_ContainsReason",
+        "fullName": "OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.DecisionResult_ContainsReason",
+        "state": "Passed",
+        "durationSeconds": 0.2387123,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "DecisionResult_TracksSourceRecommendation",
+        "fullName": "OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.DecisionResult_TracksSourceRecommendation",
+        "state": "Passed",
+        "durationSeconds": 0.2387277,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "PlayerIntentPreservesOwnership",
+        "fullName": "OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.PlayerIntentPreservesOwnership",
+        "state": "Passed",
+        "durationSeconds": 0.2397314,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "PlayerStrategicIntent_OverridesRecommendations",
+        "fullName": "OpenEmpires.Tests.CommanderPhase3C5StrategicDecisionTests.PlayerStrategicIntent_OverridesRecommendations",
+        "state": "Passed",
+        "durationSeconds": 0.2443662,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      }
+    ]
+  }
+}
