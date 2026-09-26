@@ -10,13 +10,21 @@ namespace OpenEmpires
     {
         public const int MaximumResponseCharacters = 8192;
         public const int MaximumNodes = 4;
+
+        public static CommanderSemanticResult Parse(string raw) => CommanderSemanticResult.ParseTrusted(raw);
+    }
+
+    // Keep result construction and validity assignment inside the parser's own class.
+    // Other runtime code can request parsing, but cannot mark arbitrary data valid.
+    public sealed partial class CommanderSemanticResult
+    {
         private const string InvalidExplanation = "I couldn't understand that request safely.";
 
-        public static CommanderSemanticResult Parse(string raw)
+        internal static CommanderSemanticResult ParseTrusted(string raw)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(raw) || raw.Length > MaximumResponseCharacters)
+                if (string.IsNullOrWhiteSpace(raw) || raw.Length > CommanderSemanticJson.MaximumResponseCharacters)
                     throw new JsonException();
                 CheckStrictSyntax(raw);
 
@@ -51,7 +59,7 @@ namespace OpenEmpires
                 }
 
                 CheckFields(root, "outcome", "nodes");
-                if (!(root["nodes"] is JArray items) || items.Count < 1 || items.Count > MaximumNodes)
+                if (!(root["nodes"] is JArray items) || items.Count < 1 || items.Count > CommanderSemanticJson.MaximumNodes)
                     throw new JsonException();
                 var nodes = new List<CommanderSemanticNode>(items.Count);
                 foreach (JToken item in items)
@@ -111,10 +119,18 @@ namespace OpenEmpires
 
         private static BuildingType ParseBuilding(string name)
         {
-            // Exact, defined enum names only. Executability for the current context is checked at admission.
-            foreach (BuildingType value in Enum.GetValues(typeof(BuildingType)))
-                if (name == value.ToString()) return value;
-            throw new JsonException();
+            // Exact currently supported structure names only. Context-specific legality still
+            // belongs to admission, but unsupported structure types fail at the JSON boundary.
+            switch (name)
+            {
+                case "House": return BuildingType.House;
+                case "Barracks": return BuildingType.Barracks;
+                case "ArcheryRange": return BuildingType.ArcheryRange;
+                case "Stables": return BuildingType.Stables;
+                case "Tower": return BuildingType.Tower;
+                case "TownCenter": return BuildingType.TownCenter;
+                default: throw new JsonException();
+            }
         }
 
         private static ResourceType ParseResource(string name)

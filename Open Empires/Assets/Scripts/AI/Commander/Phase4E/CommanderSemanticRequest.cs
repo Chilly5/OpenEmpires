@@ -41,14 +41,14 @@ namespace OpenEmpires
         }
     }
 
-    public sealed class CommanderSemanticResult
+    public sealed partial class CommanderSemanticResult
     {
         public bool IsValid { get; }
         public CommanderSemanticOutcome Outcome { get; }
         public IReadOnlyList<CommanderSemanticNode> Nodes { get; }
         public string SafeExplanation { get; }
 
-        internal CommanderSemanticResult(bool isValid, CommanderSemanticOutcome outcome,
+        private CommanderSemanticResult(bool isValid, CommanderSemanticOutcome outcome,
             IReadOnlyList<CommanderSemanticNode> nodes, string safeExplanation)
         {
             IsValid = isValid;

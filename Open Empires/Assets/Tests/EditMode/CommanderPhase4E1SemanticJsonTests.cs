@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Reflection;
 using NUnit.Framework;
 
 namespace OpenEmpires.Tests
@@ -68,6 +69,30 @@ namespace OpenEmpires.Tests
             Assert.That(result.IsValid, Is.True);
             Assert.That(result.Nodes[0].BuildingType, Is.EqualTo(BuildingType.Barracks));
             Assert.That(result.Nodes[0].Count, Is.EqualTo(20));
+        }
+
+        // Mutation caught: runtime classes must not be able to fabricate parser acceptance.
+        [Test]
+        public void SemanticResult_HasNoAssemblyAccessibleConstructorOrValiditySetter()
+        {
+            var constructors = typeof(CommanderSemanticResult).GetConstructors(
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            var validitySetter = typeof(CommanderSemanticResult).GetProperty(
+                nameof(CommanderSemanticResult.IsValid))?.GetSetMethod(true);
+
+            Assert.That(constructors, Is.Not.Empty);
+            Assert.That(constructors.All(constructor => constructor.IsPrivate), Is.True);
+            Assert.That(validitySetter, Is.Null);
+        }
+
+        // Mutation caught: a known enum is not enough; the Commander must support the structure.
+        [Test]
+        public void Parse_RejectsDefinedButUnsupportedStructure()
+        {
+            var result = CommanderSemanticJson.Parse("{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"BuildStructure\",\"structure\":\"Landmark\",\"count\":1}]}");
+
+            Assert.That(result.IsValid, Is.False);
+            Assert.That(result.Nodes, Is.Empty);
         }
 
         // Each fixture catches a distinct parser relaxation; no invalid input may retain a partial node.
