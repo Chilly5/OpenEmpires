@@ -66,6 +66,39 @@ namespace OpenEmpires.Tests
         }
 
         [Test]
+        public void CivilizationResolvedUnits_AreCountedUnderSemanticCapabilities()
+        {
+            var english = new CommanderSemanticProviderRequest("archers",
+                Context(new List<CommanderUnitSnapshot>
+                {
+                    new CommanderUnitSnapshot(10, 3, 0)
+                }, "English"));
+            var hre = new CommanderSemanticProviderRequest("spearmen",
+                Context(new List<CommanderUnitSnapshot>
+                {
+                    new CommanderUnitSnapshot(12, 4, 0)
+                }, "HolyRomanEmpire"));
+
+            Assert.That(english.SerializedContext, Does.Contain("\"Archer\":3"));
+            Assert.That(hre.SerializedContext, Does.Contain("\"Spearman\":4"));
+        }
+
+        [Test]
+        public async Task Prompt_ProvidesOnlyParserValidNonRequestOutcomes()
+        {
+            var transport = new FakeTransport(Completion(200, UnitJson));
+            await new OpenRouterCommanderProvider(DummyKey, transport).TranslateSemanticAsync(
+                new CommanderSemanticProviderRequest("unclear order", Context()),
+                CancellationToken.None);
+
+            ChatBody body = JsonUtility.FromJson<ChatBody>(transport.Body);
+            string instruction = body.messages[0].content;
+            Assert.That(instruction, Does.Contain("\"outcome\":\"Clarify\""));
+            Assert.That(instruction, Does.Contain("\"outcome\":\"Unsupported\""));
+            Assert.That(instruction, Does.Not.Contain("\"outcome\":\"Clarify|Unsupported\""));
+        }
+
+        [Test]
         public async Task LongPlayerMessage_IsRejectedBeforeTransport()
         {
             var transport = new FakeTransport(Completion(200, UnitJson));
@@ -164,15 +197,16 @@ namespace OpenEmpires.Tests
             }));
         }
 
-        private static CommanderContext Context()
+        private static CommanderContext Context(List<CommanderUnitSnapshot> units = null,
+            string civilization = "English")
         {
             return new CommanderContext(987654321, 432109876,
                 new CommanderResourceSnapshot(100, 200, 300, 400), 12, 20, 200, 2,
-                "English", new List<CommanderBuildingSnapshot>
+                civilization, new List<CommanderBuildingSnapshot>
                 {
                     new CommanderBuildingSnapshot(987654321, "Barracks", "Barracks", false,
                         new List<int> { 1 }, new List<int>(), 0)
-                }, new List<CommanderUnitSnapshot>
+                }, units ?? new List<CommanderUnitSnapshot>
                 {
                     new CommanderUnitSnapshot(1, 4, 2)
                 }, new List<CommanderBuildingSnapshot>(), new List<string>(),

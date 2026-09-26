@@ -81,8 +81,10 @@ namespace OpenEmpires
             switch (type)
             {
                 case 0: return "Villager";
-                case 1: return "Spearman";
-                case 2: return "Archer";
+                case 1:
+                case 12: return "Spearman"; // HRE Landsknecht resolves from Spearman.
+                case 2:
+                case 10: return "Archer"; // English Longbowman resolves from Archer.
                 case 7: return "Knight";
                 default: return null;
             }
