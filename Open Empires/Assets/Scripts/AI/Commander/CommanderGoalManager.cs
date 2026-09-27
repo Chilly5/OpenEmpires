@@ -160,6 +160,18 @@ namespace OpenEmpires
             return Register(new ResourceAllocationGoal(playerId, resource, target, maxDurationTicks), constraints);
         }
 
+        public ReachAgeGoal SubmitReachAge(CommanderSemanticAgeTarget requestedTarget,
+            int maxDurationTicks = 36000, IReadOnlyList<CommanderConstraint> constraints = null)
+        {
+            int targetAge = requestedTarget == CommanderSemanticAgeTarget.Next
+                ? simulation.GetPlayerAge(playerId) + 1 : (int)requestedTarget;
+            var intent = new ReachAgeIntent(playerId, requestedTarget, targetAge, constraints);
+            CommanderIntentValidationResult validation = new CommanderIntentValidator().Validate(
+                intent, simulation, playerId);
+            if (!validation.IsValid) throw new ArgumentException(validation.Reason, nameof(requestedTarget));
+            return Register(new ReachAgeGoal(playerId, requestedTarget, targetAge, maxDurationTicks), constraints);
+        }
+
         // Atomic game-side commit for a preflighted semantic graph. The graph admission
         // layer owns JSON/reference validation; this method owns goal creation and result
         // linkage. No provider data can reach this method without a trusted plan.
@@ -211,6 +223,11 @@ namespace OpenEmpires
                         ? planner.CountResourceWorkers(playerId, allocation.Resource) + (allocation.WorkerCount ?? 1)
                         : allocation.WorkerCount ?? throw new ArgumentException("Worker count is required.", nameof(plan));
                     goal = new ResourceAllocationGoal(playerId, allocation.Resource, target, maxDurationTicks);
+                }
+                else if (node.Intent is ReachAgeIntent reachAge)
+                {
+                    goal = new ReachAgeGoal(playerId, reachAge.RequestedTarget, reachAge.TargetAge,
+                        maxDurationTicks);
                 }
                 else throw new ArgumentException("Unsupported compound intent.", nameof(plan));
                 planner.CaptureConstraints(goal, node.Intent.Constraints);
@@ -300,6 +317,8 @@ namespace OpenEmpires
                 suspendedGoalIds.Remove(goalId);
                 if (goal is BuildStructureGoal cancelledBuild)
                     cancelledBuild.PendingPlacementCommand = null;
+                if (goal is ReachAgeGoal cancelledAge)
+                    cancelledAge.PendingAgeUpCommand = null;
                 goal.SetStatus(CommanderGoalStatus.Cancelled, "Cancelled by the owning player.");
                 workerAuthority.ReleaseGoal(goal.GoalId);
                 ArchiveGoal(goal);
@@ -384,6 +403,13 @@ namespace OpenEmpires
                             spatial.PlacementIssuedSimulationTick = simulation.CurrentTick;
                             spatial.PendingPlacementCommand = plan.Command;
                         }
+                        if (goal is ReachAgeGoal reachAge && plan.Command is PlaceBuildingCommand ageUp)
+                        {
+                            reachAge.PlacedTileX = ageUp.TileX;
+                            reachAge.PlacedTileZ = ageUp.TileZ;
+                            reachAge.PendingAgeUpCommand = plan.Command;
+                            reachAge.AgeUpIssuedSimulationTick = simulation.CurrentTick;
+                        }
                         simulation.CommandBuffer.EnqueueCommand(plan.Command, CommandEnqueueSource.Commander);
                         if (plan.Command is GatherCommand) goal.LastEconomyCommandTick = currentTick;
                         if (plan.Command is ConstructBuildingCommand)
@@ -422,6 +448,8 @@ namespace OpenEmpires
             goal.SetStatus(CommanderGoalStatus.Failed, reason);
             if (goal is BuildStructureGoal failedBuild)
                 failedBuild.PendingPlacementCommand = null;
+            if (goal is ReachAgeGoal failedAge)
+                failedAge.PendingAgeUpCommand = null;
             workerAuthority.ReleaseGoal(goal.GoalId);
             ArchiveGoal(goal);
             Debug.LogWarning($"[Commander] Goal #{goal.GoalId} failed: {goal.StatusReason}");
@@ -438,6 +466,17 @@ namespace OpenEmpires
         {
             for (int i = 0; i < activeGoals.Count; i++)
             {
+                if (activeGoals[i] is ReachAgeGoal ageGoal && !ageGoal.IsTerminal
+                    && ReferenceEquals(ageGoal.PendingAgeUpCommand, command))
+                {
+                    ageGoal.PendingAgeUpCommand = null;
+                    if (created.PlayerId == ageGoal.PlayerId && !created.IsDestroyed
+                        && created.Type == BuildingType.Landmark
+                        && created.OriginTileX == ageGoal.PlacedTileX
+                        && created.OriginTileZ == ageGoal.PlacedTileZ)
+                        ageGoal.AgeUpBuildingId = created.Id;
+                    return;
+                }
                 if (!(activeGoals[i] is BuildStructureGoal goal) || !goal.HasSemanticPlacement
                     || goal.IsTerminal || !ReferenceEquals(goal.PendingPlacementCommand, command))
                     continue;
@@ -478,6 +517,8 @@ namespace OpenEmpires
             {
                 if (activeGoals[i] is BuildStructureGoal spatial)
                     spatial.PendingPlacementCommand = null;
+                if (activeGoals[i] is ReachAgeGoal reachAge)
+                    reachAge.PendingAgeUpCommand = null;
                 workerAuthority.ReleaseGoal(activeGoals[i].GoalId);
             }
             suspendedGoalIds.Clear();

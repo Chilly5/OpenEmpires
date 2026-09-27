@@ -15,7 +15,17 @@ namespace OpenEmpires
         EnsureUnitCount,
         BuildStructure,
         SetResourceAllocation,
+        ReachAge,
         StrategicObjective
+    }
+
+    // Provider-facing age vocabulary. Numeric game ages remain game-side data.
+    public enum CommanderSemanticAgeTarget
+    {
+        Next,
+        Feudal = 2,
+        Castle = 3,
+        Imperial = 4
     }
 
     public enum CommanderSemanticAnchorSelector
@@ -42,6 +52,7 @@ namespace OpenEmpires
         public ResourceType? ResourceType { get; }
         public int? Count { get; }
         public StrategicObjectiveType? StrategicObjectiveType { get; }
+        public CommanderSemanticAgeTarget? AgeTarget { get; }
         public CommanderSemanticAnchorSelector? PlacementAnchorSelector { get; }
         public int? PlacementAnchorOrdinal { get; }
         public CommanderSemanticPlacementRelation? PlacementRelation { get; }
@@ -57,6 +68,7 @@ namespace OpenEmpires
             int? placementAnchorOrdinal = null,
             CommanderSemanticPlacementRelation? placementRelation = null,
             int? clearGapTiles = null,
+            CommanderSemanticAgeTarget? ageTarget = null,
             IReadOnlyList<int> dependsOn = null,
             int? producerFromNode = null)
         {
@@ -70,6 +82,7 @@ namespace OpenEmpires
             PlacementAnchorOrdinal = placementAnchorOrdinal;
             PlacementRelation = placementRelation;
             ClearGapTiles = clearGapTiles;
+            AgeTarget = ageTarget;
             ProducerFromNode = producerFromNode;
             var normalizedDependencies = dependsOn != null
                 ? new List<int>(dependsOn)

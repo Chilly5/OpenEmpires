@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -51,6 +52,7 @@ namespace OpenEmpires
             if (goal is EnsureUnitCountGoal units) return PlanUnits(units, currentTick);
             if (goal is BuildStructureGoal building) return PlanStructure(building, currentTick);
             if (goal is ResourceAllocationGoal resource) return PlanAllocation(resource, currentTick);
+            if (goal is ReachAgeGoal reachAge) return PlanReachAge(reachAge, currentTick);
             return new CommanderPlan(CommanderGoalStatus.Failed, "Unknown goal type.", 0, 0);
         }
 
@@ -164,6 +166,114 @@ namespace OpenEmpires
                     $"{count}/{goal.TargetWorkers} villagers assigned to {goal.Resource}.", count, 0);
             return PlanGather(goal, goal.Resource, currentTick, count, 0,
                 $"Assigning at least {goal.TargetWorkers} villagers to {goal.Resource}; currently {count}.");
+        }
+
+        private CommanderPlan PlanReachAge(ReachAgeGoal goal, int currentTick)
+        {
+            int currentAge = simulation.GetPlayerAge(goal.PlayerId);
+            if (currentAge >= goal.TargetAge)
+            {
+                goal.Blocker = CommanderAgeBlocker.None;
+                return new CommanderPlan(CommanderGoalStatus.Completed,
+                    $"Player has reached age {goal.TargetAge}.", currentAge, 0);
+            }
+
+            int nextAge = currentAge + 1;
+            Civilization civ = simulation.GetPlayerCivilization(goal.PlayerId);
+            if (!LandmarkDefinitions.HasChoices(civ, goal.TargetAge))
+            {
+                goal.Blocker = CommanderAgeBlocker.UnsupportedTarget;
+                return new CommanderPlan(CommanderGoalStatus.Failed,
+                    $"Civilization {civ} cannot reach requested age {goal.TargetAge}.", currentAge, 0);
+            }
+            if (!LandmarkDefinitions.HasChoices(civ, nextAge))
+            {
+                goal.Blocker = CommanderAgeBlocker.UnsupportedTarget;
+                return new CommanderPlan(CommanderGoalStatus.Failed,
+                    $"Civilization {civ} has no supported landmark progression to age {nextAge}.", currentAge, 0);
+            }
+
+            if (goal.PendingAgeUpCommand != null)
+            {
+                if (simulation.CurrentTick <= goal.AgeUpIssuedSimulationTick)
+                    return new CommanderPlan(CommanderGoalStatus.WaitingForConstruction,
+                        "Waiting for the age-up placement command to be processed.", currentAge, 0);
+                goal.PendingAgeUpCommand = null;
+                goal.AgeUpIssuedSimulationTick = -1;
+            }
+
+            if (goal.AgeUpBuildingId >= 0)
+            {
+                BuildingData tracked = FindBuildingById(goal.PlayerId, goal.AgeUpBuildingId);
+                if (tracked != null && !tracked.IsDestroyed)
+                {
+                    if (tracked.IsUnderConstruction)
+                        return PlanConstructionRecovery(goal, tracked, currentTick, currentAge, 0,
+                            $"Age {nextAge} landmark");
+                    // A completed landmark should have advanced the simulation age. If it
+                    // did not, forget the stale binding and re-evaluate the real state.
+                    goal.AgeUpBuildingId = -1;
+                }
+                else
+                {
+                    goal.AgeUpBuildingId = -1;
+                    goal.Blocker = CommanderAgeBlocker.LandmarkUnavailable;
+                    return new CommanderPlan(CommanderGoalStatus.Blocked,
+                        "The age-up landmark was destroyed or is no longer owned; retrying from current state.", currentAge, 0);
+                }
+            }
+
+            BuildingData inProgress = FindOwnedBuilding(goal.PlayerId, BuildingType.Landmark, true);
+            if (inProgress != null)
+            {
+                goal.AgeUpBuildingId = inProgress.Id;
+                return PlanConstructionRecovery(goal, inProgress, currentTick, currentAge, 0,
+                    $"Age {nextAge} landmark");
+            }
+
+            var choices = LandmarkDefinitions.GetChoices(civ, nextAge);
+            LandmarkId landmark = (LandmarkId)Math.Min((int)choices.a, (int)choices.b);
+            LandmarkDefinition definition = LandmarkDefinitions.Get(landmark);
+            PlayerResources resources = simulation.ResourceManager.GetPlayerResources(goal.PlayerId);
+            if (resources.Food < definition.FoodCost)
+            {
+                goal.Blocker = CommanderAgeBlocker.MissingFood;
+                return PlanGather(goal, ResourceType.Food, currentTick, currentAge, 0,
+                    $"Need {definition.FoodCost} food for age {nextAge}; have {resources.Food}.");
+            }
+            if (resources.Gold < definition.GoldCost)
+            {
+                goal.Blocker = CommanderAgeBlocker.MissingGold;
+                return PlanGather(goal, ResourceType.Gold, currentTick, currentAge, 0,
+                    $"Need {definition.GoldCost} gold for age {nextAge}; have {resources.Gold}.");
+            }
+
+            UnitData builder = SelectBuilder(goal, currentTick);
+            if (builder == null)
+            {
+                goal.Blocker = CommanderAgeBlocker.NoEligibleBuilder;
+                return new CommanderPlan(CommanderGoalStatus.Blocked,
+                    $"No owned living villager is available to start age {nextAge}.", currentAge, 0);
+            }
+            BuildingData primaryBase = FindPrimaryTownCenter(goal.PlayerId);
+            if (primaryBase == null)
+                return new CommanderPlan(CommanderGoalStatus.Blocked,
+                    "No owned Town Center is available as an age-up placement anchor.", currentAge, 0);
+            if (!TryFindBuildableTile(goal.PlayerId, BuildingType.Landmark, primaryBase, builder,
+                out Vector2Int tile))
+            {
+                goal.Blocker = CommanderAgeBlocker.NoLegalCandidate;
+                return new CommanderPlan(CommanderGoalStatus.Blocked,
+                    $"No visible, reachable location is legal for the age {nextAge} landmark.", currentAge, 0);
+            }
+
+            var command = new PlaceBuildingCommand(goal.PlayerId, BuildingType.Landmark,
+                tile.x, tile.y, new[] { builder.Id });
+            command.LandmarkIdValue = (int)landmark;
+            goal.Blocker = CommanderAgeBlocker.None;
+            return new CommanderPlan(CommanderGoalStatus.Executing,
+                $"Starting age {nextAge} with landmark {landmark} at ({tile.x},{tile.y}) using villager #{builder.Id}.",
+                currentAge, 0, command);
         }
 
         private CommanderPlan PlanUnits(EnsureUnitCountGoal goal, int currentTick)
@@ -990,6 +1100,8 @@ namespace OpenEmpires
                     width = config.TowerFootprintWidth; height = config.TowerFootprintHeight; break;
                 case BuildingType.TownCenter:
                     width = config.TownCenterFootprintWidth; height = config.TownCenterFootprintHeight; break;
+                case BuildingType.Landmark:
+                    width = config.LandmarkFootprintWidth; height = config.LandmarkFootprintHeight; break;
                 default:
                     width = 2; height = 2; break;
             }

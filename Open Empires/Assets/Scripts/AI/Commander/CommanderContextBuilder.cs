@@ -94,6 +94,7 @@ namespace OpenEmpires
                 if (goal is EnsureUnitCountGoal ensure) { target = CommanderIntentCatalog.GetUnitDisplayName(ensure.RequestedUnitType); amount = ensure.TargetTotal; }
                 if (goal is BuildStructureGoal build) { target = build.StructureType.ToString(); amount = build.TargetTotal; }
                 if (goal is ResourceAllocationGoal allocation) { target = allocation.Resource.ToString(); amount = allocation.TargetWorkers; }
+                if (goal is ReachAgeGoal reachAge) { target = reachAge.TargetAge.ToString(); amount = reachAge.TargetAge; }
                 goals.Add(new CommanderGoalSnapshot(goal.GoalId, goal.GoalType.ToString(), goal.Status.ToString(), target, amount,
                     goal.PlayerId, goal.CreatedTick, goal.Priority, goal.ParentGoalId, goal.Lifecycle.ToString()));
             }

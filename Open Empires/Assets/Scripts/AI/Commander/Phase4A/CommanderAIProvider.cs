@@ -139,7 +139,7 @@ namespace OpenEmpires
                 ["availableUnitCapabilities"] = JArray.FromObject(context.UnitOptions),
                 ["activeGoals"] = JArray.FromObject(context.ActiveGoals),
                 ["supportedTacticalIntents"] = new JArray(
-                    "EnsureUnitCount", "BuildStructure", "SetResourceAllocation"),
+                    "EnsureUnitCount", "BuildStructure", "SetResourceAllocation", "ReachAge"),
                 ["visibilityPolicy"] = context.EnemyAwarenessPolicy
             };
             return root.ToString(Formatting.None);
@@ -211,6 +211,11 @@ namespace OpenEmpires
                     dto.resource = ReadString(parameters, "resource");
                     dto.mode = ResourceAllocationMode.SetExact.ToString();
                     dto.amount = ReadInteger(parameters, "count");
+                }
+                else if (string.Equals(intentType, "ReachAge", StringComparison.OrdinalIgnoreCase))
+                {
+                    CheckFields(parameters, "targetAge");
+                    dto.targetAge = ReadString(parameters, "targetAge");
                 }
                 else
                 {
@@ -311,6 +316,8 @@ namespace OpenEmpires
             if (intent is SetResourceAllocationIntent allocation)
                 return "Assigning " + allocation.WorkerCount.GetValueOrDefault() + " villagers to "
                     + allocation.Resource.ToString().ToLowerInvariant() + ".";
+            if (intent is ReachAgeIntent reachAge)
+                return "Advancing to age " + reachAge.TargetAge + ".";
             return "Order accepted.";
         }
     }

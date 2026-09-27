@@ -50,6 +50,14 @@ namespace OpenEmpires
                     dto.amount = node.Count.Value;
                     break;
 
+                case CommanderSemanticNodeType.ReachAge:
+                    if (!node.AgeTarget.HasValue || node.UnitType.HasValue || node.BuildingType.HasValue
+                        || node.ResourceType.HasValue || node.Count.HasValue
+                        || node.StrategicObjectiveType.HasValue) return false;
+                    dto.intentType = nameof(CommanderIntentType.ReachAge);
+                    dto.targetAge = node.AgeTarget.Value.ToString();
+                    break;
+
                 default:
                     return false;
             }

@@ -70,6 +70,8 @@ namespace OpenEmpires
                 return ValidateResourceAllocation(allocation, simulation.Config.MaxPopulation);
             if (intent is BuildStructureIntent build)
                 return ValidateBuildStructure(build);
+            if (intent is ReachAgeIntent reachAge)
+                return ValidateReachAge(reachAge);
 
             return Invalid(CommanderIntentErrorCode.UnknownCommand,
                 "The Commander intent type is not recognized.");
@@ -139,6 +141,15 @@ namespace OpenEmpires
                     return Invalid(CommanderIntentErrorCode.UnknownCommand,
                         "Unsupported or ambiguous semantic placement.");
             }
+            return CommanderIntentValidationResult.Valid();
+        }
+
+        private static CommanderIntentValidationResult ValidateReachAge(ReachAgeIntent intent)
+        {
+            if (!Enum.IsDefined(typeof(CommanderSemanticAgeTarget), intent.RequestedTarget)
+                || intent.TargetAge < 2 || intent.TargetAge > 4)
+                return Invalid(CommanderIntentErrorCode.AmountOutOfRange,
+                    "The requested age is outside the bounded Commander range.");
             return CommanderIntentValidationResult.Valid();
         }
 

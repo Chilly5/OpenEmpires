@@ -68,7 +68,8 @@ namespace OpenEmpires
             + "Allowed forms are: "
             + "{\"intentCategory\":\"Tactical\",\"intentType\":\"EnsureUnitCount\",\"parameters\":{\"unit\":\"Spearman|Archer|Knight\",\"count\":integer}}, "
             + "{\"intentCategory\":\"Tactical\",\"intentType\":\"BuildStructure\",\"parameters\":{\"structure\":\"Barracks\",\"count\":1}}, or "
-            + "{\"intentCategory\":\"Tactical\",\"intentType\":\"SetResourceAllocation\",\"parameters\":{\"resource\":\"Wood|Food\",\"count\":integer}}. "
+            + "{\"intentCategory\":\"Tactical\",\"intentType\":\"SetResourceAllocation\",\"parameters\":{\"resource\":\"Wood|Food\",\"count\":integer}}, or "
+            + "{\"intentCategory\":\"Tactical\",\"intentType\":\"ReachAge\",\"parameters\":{\"targetAge\":\"Next|Feudal|Castle|Imperial\"}}. "
             + "Do not return strategic intents, player IDs, game commands, simulation objects, or extra fields.";
 
         private readonly string apiKey;

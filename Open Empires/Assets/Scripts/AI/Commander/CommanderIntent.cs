@@ -26,7 +26,8 @@ namespace OpenEmpires
     {
         EnsureUnitCount,
         SetResourceAllocation,
-        BuildStructure
+        BuildStructure,
+        ReachAge
     }
 
     public enum CommanderConstraintType
@@ -167,6 +168,23 @@ namespace OpenEmpires
             PlacementAnchorOrdinal = placementAnchorOrdinal;
             PlacementRelation = placementRelation;
             ClearGapTiles = clearGapTiles;
+        }
+    }
+
+    public sealed class ReachAgeIntent : CommanderIntent
+    {
+        // Resolved game age. The provider can only supply the bounded semantic target
+        // token; admission resolves Next against the owning simulation.
+        public int TargetAge { get; }
+        public CommanderSemanticAgeTarget RequestedTarget { get; }
+
+        public ReachAgeIntent(int playerId, CommanderSemanticAgeTarget requestedTarget, int targetAge,
+            IEnumerable<CommanderConstraint> constraints = null)
+            : base(CommanderIntentType.ReachAge, playerId, constraints)
+        {
+            if (targetAge < 2 || targetAge > 4) throw new ArgumentOutOfRangeException(nameof(targetAge));
+            RequestedTarget = requestedTarget;
+            TargetAge = targetAge;
         }
     }
 }

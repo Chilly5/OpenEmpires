@@ -160,6 +160,12 @@ namespace OpenEmpires
                         resourceType: ParseResource(RequiredString(node, "resource")),
                         count: RequiredCount(node, 0, 200), dependsOn: dependsOn);
 
+                case "ReachAge":
+                    CheckFields(node, "type", "targetAge", "dependsOn");
+                    return new CommanderSemanticNode(CommanderSemanticNodeType.ReachAge,
+                        ageTarget: ParseAgeTarget(RequiredString(node, "targetAge")),
+                        dependsOn: dependsOn);
+
                 case "StrategicObjective":
                     CheckFields(node, "type", "objective", "dependsOn");
                     return new CommanderSemanticNode(CommanderSemanticNodeType.StrategicObjective,
@@ -287,6 +293,18 @@ namespace OpenEmpires
                 case "MilitaryReinforcement": return StrategicObjectiveType.MilitaryReinforcement;
                 case "RangedReinforcement": return StrategicObjectiveType.RangedReinforcement;
                 case "DefensiveTurtle": return StrategicObjectiveType.DefensiveTurtle;
+                default: throw new JsonException();
+            }
+        }
+
+        private static CommanderSemanticAgeTarget ParseAgeTarget(string name)
+        {
+            switch (name)
+            {
+                case "Next": return CommanderSemanticAgeTarget.Next;
+                case "Feudal": return CommanderSemanticAgeTarget.Feudal;
+                case "Castle": return CommanderSemanticAgeTarget.Castle;
+                case "Imperial": return CommanderSemanticAgeTarget.Imperial;
                 default: throw new JsonException();
             }
         }

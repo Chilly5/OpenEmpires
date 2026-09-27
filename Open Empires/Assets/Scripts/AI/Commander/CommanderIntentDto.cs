@@ -19,6 +19,7 @@ namespace OpenEmpires
         public string structure;
         public string resource;
         public string mode;
+        public string targetAge;
         public int? amount;
         public List<CommanderConstraintDTO> constraints = new List<CommanderConstraintDTO>();
     }
@@ -62,7 +63,7 @@ namespace OpenEmpires
                     if (reader.Read()) throw new JsonException("Trailing JSON content is not allowed.");
                 }
                 NormalizeExternalJson(root);
-                CheckFields(root, "intentCategory", "intentType", "objectiveType", "priority", "parameters", "unit", "structure", "resource", "mode", "amount", "constraints");
+                CheckFields(root, "intentCategory", "intentType", "objectiveType", "priority", "parameters", "unit", "structure", "resource", "mode", "targetAge", "amount", "constraints");
                 var dto = new CommanderIntentDTO
                 {
                     intentCategory = ReadString(root, "intentCategory"),
@@ -73,6 +74,7 @@ namespace OpenEmpires
                     structure = ReadString(root, "structure"),
                     resource = ReadString(root, "resource"),
                     mode = ReadString(root, "mode"),
+                    targetAge = ReadString(root, "targetAge"),
                     amount = ReadAmount(root, "amount")
                 };
                 if (root.TryGetValue("parameters", out JToken paramsToken) && paramsToken is JObject paramsObj)
@@ -117,7 +119,7 @@ namespace OpenEmpires
                     && !Enum.TryParse(rawObjective, true, out objectiveType)
                     && !TryResolveObjectiveAlias(rawObjective, out objectiveType))
                     return Reject(CommanderIntentErrorCode.UnknownCommand, "objectiveType", "Unknown strategic objective type.");
-                if (dto.unit != null || dto.structure != null || dto.resource != null || dto.mode != null)
+                if (dto.unit != null || dto.structure != null || dto.resource != null || dto.mode != null || dto.targetAge != null)
                     return UnexpectedFields();
 
                 var parameters = dto.parameters != null
@@ -185,7 +187,7 @@ namespace OpenEmpires
                                 return Reject(CommanderIntentErrorCode.UnknownUnit, "unit", "Unknown unit type.");
                             break;
                     }
-                    if (dto.structure != null || dto.resource != null || dto.mode != null) return UnexpectedFields();
+                    if (dto.structure != null || dto.resource != null || dto.mode != null || dto.targetAge != null) return UnexpectedFields();
                     if (!InRange(dto.amount, 1, context.MaximumPopulation)) return InvalidAmount();
                     intent = new EnsureUnitCountIntent(context.PlayerId, unitType, dto.amount.Value, constraints); break;
                 case CommanderIntentType.BuildStructure:
@@ -194,15 +196,25 @@ namespace OpenEmpires
                         return Reject(CommanderIntentErrorCode.UnknownStructure, "structure", "Unknown structure type.");
                     if (!CommanderIntentCatalog.IsSupportedStructure(structure))
                         return Reject(CommanderIntentErrorCode.UnknownStructure, "structure", "Unknown structure type.");
-                    if (dto.unit != null || dto.resource != null || dto.mode != null) return UnexpectedFields();
+                    if (dto.unit != null || dto.resource != null || dto.mode != null || dto.targetAge != null) return UnexpectedFields();
                     if (!InRange(dto.amount, 1, CommanderIntentValidator.MaximumStructureCount)) return InvalidAmount();
                     intent = new BuildStructureIntent(context.PlayerId, structure, dto.amount.Value, constraints); break;
                 case CommanderIntentType.SetResourceAllocation:
                     if (!NamedEnum(dto.resource, out ResourceType resource)) return Reject(CommanderIntentErrorCode.UnknownResource, "resource", "Unknown resource type.");
                     if (!NamedEnum(dto.mode, out ResourceAllocationMode mode)) return Reject(CommanderIntentErrorCode.UnknownCommand, "mode", "Unknown allocation mode.");
-                    if (dto.unit != null || dto.structure != null) return UnexpectedFields();
+                    if (dto.unit != null || dto.structure != null || dto.targetAge != null) return UnexpectedFields();
                     if ((mode == ResourceAllocationMode.SetExact || dto.amount.HasValue) && !InRange(dto.amount, 0, context.MaximumPopulation)) return InvalidAmount();
                     intent = new SetResourceAllocationIntent(context.PlayerId, resource, mode, dto.amount, constraints); break;
+                case CommanderIntentType.ReachAge:
+                    if (dto.unit != null || dto.structure != null || dto.resource != null || dto.mode != null
+                        || dto.amount.HasValue || string.IsNullOrWhiteSpace(dto.targetAge)) return UnexpectedFields();
+                    if (!TryParseAgeTarget(dto.targetAge, out CommanderSemanticAgeTarget requestedTarget))
+                        return Reject(CommanderIntentErrorCode.AmountOutOfRange, "targetAge", "Unknown age target.");
+                    int targetAge = requestedTarget == CommanderSemanticAgeTarget.Next
+                        ? context.Age + 1 : (int)requestedTarget;
+                    if (targetAge < 2 || targetAge > 4)
+                        return Reject(CommanderIntentErrorCode.AmountOutOfRange, "targetAge", "Age target is outside the supported range.");
+                    intent = new ReachAgeIntent(context.PlayerId, requestedTarget, targetAge, constraints); break;
                 default: return Reject(CommanderIntentErrorCode.UnknownCommand, "intentType", "Unknown intent type.");
             }
             return CommanderIntentInterpretation.Accepted(intent);
@@ -299,6 +311,18 @@ namespace OpenEmpires
             }
         }
 
+        private static bool TryParseAgeTarget(string value, out CommanderSemanticAgeTarget target)
+        {
+            switch (value)
+            {
+                case "Next": target = CommanderSemanticAgeTarget.Next; return true;
+                case "Feudal": target = CommanderSemanticAgeTarget.Feudal; return true;
+                case "Castle": target = CommanderSemanticAgeTarget.Castle; return true;
+                case "Imperial": target = CommanderSemanticAgeTarget.Imperial; return true;
+                default: target = CommanderSemanticAgeTarget.Next; return false;
+            }
+        }
+
         public static CommanderIntentDTO FromIntent(CommanderIntent intent)
         {
             if (intent == null) throw new ArgumentNullException(nameof(intent));
@@ -309,6 +333,7 @@ namespace OpenEmpires
             };
             if (intent is EnsureUnitCountIntent ensure) { dto.unit = CommanderIntentCatalog.GetUnitDisplayName(ensure.UnitType); dto.amount = ensure.TargetTotal; }
             else if (intent is BuildStructureIntent build) { dto.structure = build.StructureType.ToString(); dto.amount = build.Count; }
+            else if (intent is ReachAgeIntent reachAge) { dto.targetAge = reachAge.RequestedTarget.ToString(); }
             else if (intent is SetResourceAllocationIntent allocation) { dto.resource = allocation.Resource.ToString(); dto.mode = allocation.Mode.ToString(); dto.amount = allocation.WorkerCount; }
             else throw new ArgumentException("Unsupported intent implementation.", nameof(intent));
             foreach (var constraint in intent.Constraints)

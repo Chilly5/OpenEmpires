@@ -7,7 +7,8 @@ namespace OpenEmpires
     {
         EnsureUnitCount,
         BuildStructure,
-        ResourceAllocation
+        ResourceAllocation,
+        ReachAge
     }
 
     public enum CommanderGoalStatus
@@ -32,6 +33,17 @@ namespace OpenEmpires
         NoEligibleBuilder,
         NoLegalCandidate,
         BoundBuildingUnavailable
+    }
+
+    public enum CommanderAgeBlocker
+    {
+        None,
+        UnsupportedTarget,
+        MissingFood,
+        MissingGold,
+        NoEligibleBuilder,
+        NoLegalCandidate,
+        LandmarkUnavailable
     }
 
     // Stable coarse lifecycle for consumers; detailed tactical statuses remain compatible.
@@ -191,6 +203,30 @@ namespace OpenEmpires
             RequestedUnitType = requestedUnitType;
             TargetTotal = targetTotal;
             MaxQueueDepth = maxQueueDepth;
+        }
+    }
+
+    public sealed class ReachAgeGoal : CommanderGoal
+    {
+        public CommanderSemanticAgeTarget RequestedTarget { get; }
+        public int TargetAge { get; }
+        public int AgeUpBuildingId { get; internal set; } = -1;
+        public CommanderAgeBlocker Blocker { get; internal set; }
+        internal int? PlacedTileX { get; set; }
+        internal int? PlacedTileZ { get; set; }
+        internal ICommand PendingAgeUpCommand { get; set; }
+        internal int AgeUpIssuedSimulationTick { get; set; } = -1;
+
+        public ReachAgeGoal(int playerId, CommanderSemanticAgeTarget requestedTarget, int targetAge,
+            int maxDurationTicks = 36000)
+            : base(playerId, CommanderGoalType.ReachAge, maxDurationTicks)
+        {
+            if (!Enum.IsDefined(typeof(CommanderSemanticAgeTarget), requestedTarget))
+                throw new ArgumentOutOfRangeException(nameof(requestedTarget));
+            if (targetAge < 2 || targetAge > 4)
+                throw new ArgumentOutOfRangeException(nameof(targetAge));
+            RequestedTarget = requestedTarget;
+            TargetAge = targetAge;
         }
     }
 }

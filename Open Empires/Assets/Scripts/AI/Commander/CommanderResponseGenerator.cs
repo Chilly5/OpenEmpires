@@ -26,6 +26,8 @@ namespace OpenEmpires
                 return $"Understood. I will construct {build.Count} {CommanderIntentCatalog.GetStructureDisplayName(build.StructureType).ToLowerInvariant()}.";
             if (resolution.Goal is ResourceAllocationGoal allocation)
                 return $"Understood. I will assign at least {allocation.TargetWorkers} villagers to {allocation.Resource.ToString().ToLowerInvariant()}.";
+            if (resolution.Intent is ReachAgeIntent reachAge)
+                return $"Understood. I will advance to age {reachAge.TargetAge}.";
 
             return "Understood.";
         }
@@ -47,6 +49,8 @@ namespace OpenEmpires
                             : $"The {build.Count} requested structures are complete.";
                     if (goalEvent.Goal is ResourceAllocationGoal allocation)
                         return $"At least {allocation.TargetWorkers} villagers are assigned to {allocation.Resource.ToString().ToLowerInvariant()}.";
+                    if (goalEvent.Goal is ReachAgeGoal reachAge)
+                        return $"We have reached age {reachAge.TargetAge}.";
                     return null;
                 case CommanderGoalEventType.GoalBlocked:
                     return "I am blocked. " + goalEvent.Goal.StatusReason;

@@ -29,6 +29,7 @@ namespace OpenEmpires
             + "{\"type\":\"EnsureUnitCount\",\"unit\":\"Villager|Spearman|Archer|Knight\",\"count\":integer 0..200}, "
             + "{\"type\":\"BuildStructure\",\"structure\":\"House|Barracks|ArcheryRange|Stables|Tower|TownCenter\",\"count\":integer 1..20}, "
             + "{\"type\":\"SetResourceAllocation\",\"resource\":\"Food|Wood|Gold|Stone\",\"count\":integer 0..200}, or "
+            + "{\"type\":\"ReachAge\",\"targetAge\":\"Next|Feudal|Castle|Imperial\"}, or "
             + "{\"type\":\"StrategicObjective\",\"objective\":\"AttackPreparation|DefensivePreparation|EconomicExpansion|MilitaryReinforcement|RangedReinforcement|DefensiveTurtle\"}. "
             + "For Clarify use {\"outcome\":\"Clarify\",\"message\":\"brief plain text\"}. "
             + "For Unsupported use {\"outcome\":\"Unsupported\",\"message\":\"brief plain text\"}. "

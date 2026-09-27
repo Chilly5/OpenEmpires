@@ -72,6 +72,9 @@ namespace OpenEmpires
                     placementAnchorOrdinal: build.PlacementAnchorOrdinal,
                     placementRelation: build.PlacementRelation,
                     clearGapTiles: build.ClearGapTiles));
+            if (intent is ReachAgeIntent reachAge)
+                return Created(intent, goalManager.SubmitReachAge(reachAge.RequestedTarget,
+                    constraints: intent.Constraints));
 
             return Rejected(intent, CommanderIntentErrorCode.UnknownCommand,
                 "The Commander intent type is not recognized.");
