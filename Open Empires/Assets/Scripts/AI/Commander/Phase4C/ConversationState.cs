@@ -7,12 +7,14 @@ namespace OpenEmpires
     {
         public int PlayerId { get; }
         public CommanderMemory Memory { get; }
+        public CommanderSemanticConversationMemory SemanticMemory { get; }
 
         public ConversationState(int playerId, int capacity = CommanderMemory.DefaultCapacity)
         {
             if (playerId < 0) throw new ArgumentOutOfRangeException(nameof(playerId));
             PlayerId = playerId;
             Memory = new CommanderMemory(capacity);
+            SemanticMemory = new CommanderSemanticConversationMemory();
         }
 
         public IReadOnlyList<MemoryEntry> Snapshot() => Memory.Snapshot();
@@ -29,6 +31,10 @@ namespace OpenEmpires
             preference = default;
             return false;
         }
-        public void Reset() => Memory.Clear();
+        public void Reset()
+        {
+            Memory.Clear();
+            SemanticMemory.Clear();
+        }
     }
 }

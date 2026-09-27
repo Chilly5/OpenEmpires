@@ -18,18 +18,25 @@ namespace OpenEmpires
     {
         public const int MaximumPlayerMessageCharacters = 1024;
         public const int MaximumContextCharacters = 8192;
+        public const int MaximumSemanticMemoryCharacters = 4096;
 
         public string PlayerMessage { get; }
         public string SerializedContext { get; }
+        public string SerializedSemanticMemory { get; }
         public bool IsPlayerMessageTooLong { get; }
 
-        public CommanderSemanticProviderRequest(string playerMessage, CommanderContext context)
+        public CommanderSemanticProviderRequest(string playerMessage, CommanderContext context,
+            IReadOnlyList<CommanderSemanticMemoryEntry> semanticMemory = null)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
             string text = playerMessage ?? string.Empty;
             IsPlayerMessageTooLong = text.Length > MaximumPlayerMessageCharacters;
             PlayerMessage = IsPlayerMessageTooLong ? string.Empty : text;
             SerializedContext = SerializeContext(context);
+            SerializedSemanticMemory = CommanderSemanticConversationMemory.Serialize(semanticMemory
+                ?? Array.Empty<CommanderSemanticMemoryEntry>());
+            if (SerializedSemanticMemory.Length > MaximumSemanticMemoryCharacters)
+                throw new InvalidOperationException("Semantic conversation memory exceeded its limit.");
         }
 
         private static string SerializeContext(CommanderContext context)

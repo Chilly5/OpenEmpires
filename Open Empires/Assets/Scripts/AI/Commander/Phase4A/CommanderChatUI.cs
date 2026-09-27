@@ -389,7 +389,10 @@ namespace OpenEmpires
                         AppendLine("Commander", "Commander ownership changed; ask again.");
                         return null;
                     }
-                    var providerRequest = new CommanderSemanticProviderRequest(message, context);
+                    IReadOnlyList<CommanderSemanticMemoryEntry> semanticMemoryAtTurnStart =
+                        Conversation.SemanticMemory.Snapshot();
+                    var providerRequest = new CommanderSemanticProviderRequest(message, context,
+                        semanticMemoryAtTurnStart);
                     Task<CommanderSemanticResult> translation = provider.TranslateSemanticAsync(
                         providerRequest, request.Token);
                     // A provider may ignore cancellation. Keep the host usable and observe
@@ -425,6 +428,8 @@ namespace OpenEmpires
                     }
                     if (result.Outcome != CommanderSemanticOutcome.Request)
                     {
+                        if (result.Outcome == CommanderSemanticOutcome.Clarify)
+                            Conversation.SemanticMemory.RecordClarification(result.SafeExplanation);
                         AppendLine("Commander", string.IsNullOrWhiteSpace(result.SafeExplanation)
                             ? "Please clarify or try a supported Commander request."
                             : result.SafeExplanation);
@@ -459,6 +464,8 @@ namespace OpenEmpires
                         var graphChatSubmission = new CommanderAIChatSubmission(graphProviderResult,
                             graphSubmission.Interpretation, graphSubmission, graphDisplay);
                         LatestSubmission = graphChatSubmission;
+                        if (graphSubmission.CreatedGoal)
+                            RecordAcceptedSemanticNodes(result.Nodes);
                         AppendLine("Commander", graphDisplay);
                         return graphChatSubmission;
                     }
@@ -539,6 +546,8 @@ namespace OpenEmpires
                     var chatSubmission = new CommanderAIChatSubmission(providerResult,
                         interpretation, submission, display);
                     LatestSubmission = chatSubmission;
+                    if (submission?.CreatedGoal == true)
+                        RecordAcceptedSemanticNodes(result.Nodes);
                     AppendLine("Commander", display);
                     return chatSubmission;
                 }
@@ -556,6 +565,25 @@ namespace OpenEmpires
                         AppendLine("Commander", "Commander translation failed safely; no order was submitted.");
                     return null;
                 }
+            }
+        }
+
+        private void RecordAcceptedSemanticNodes(IReadOnlyList<CommanderSemanticNode> nodes)
+        {
+            if (Conversation == null || nodes == null) return;
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                CommanderSemanticNode node = nodes[i];
+                if (node == null) continue;
+                if (node.Type == CommanderSemanticNodeType.EnsureUnitCount
+                    && node.UnitType.HasValue && node.Count.HasValue)
+                    Conversation.SemanticMemory.RecordAcceptedUnitCount(node.UnitType.Value,
+                        node.Count.Value);
+                else if (node.Type == CommanderSemanticNodeType.BuildStructure
+                    && node.BuildingType.HasValue && node.Count.HasValue)
+                    Conversation.SemanticMemory.RecordAcceptedStructure(node.BuildingType.Value,
+                        node.Count.Value, node.PlacementAnchorSelector,
+                        node.PlacementRelation, node.ClearGapTiles);
             }
         }
 
