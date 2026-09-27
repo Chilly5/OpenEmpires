@@ -18,6 +18,21 @@ namespace OpenEmpires
         StrategicObjective
     }
 
+    public enum CommanderSemanticAnchorSelector
+    {
+        MyTownCenter,
+        MyBarracks
+    }
+
+    // Near is nondirectional: deterministic placement considers cardinal sides and defaults
+    // to one clear tile when no explicit gap was supplied. This enum contains no world position.
+    public enum CommanderSemanticPlacementRelation
+    {
+        MapWest,
+        MapEast,
+        Near
+    }
+
     // Parsed provider data only. No player, entity, position, provenance, or command authority lives here.
     public sealed class CommanderSemanticNode
     {
@@ -27,10 +42,18 @@ namespace OpenEmpires
         public ResourceType? ResourceType { get; }
         public int? Count { get; }
         public StrategicObjectiveType? StrategicObjectiveType { get; }
+        public CommanderSemanticAnchorSelector? PlacementAnchorSelector { get; }
+        public int? PlacementAnchorOrdinal { get; }
+        public CommanderSemanticPlacementRelation? PlacementRelation { get; }
+        public int? ClearGapTiles { get; }
 
         internal CommanderSemanticNode(CommanderSemanticNodeType type, int? unitType = null,
             BuildingType? buildingType = null, ResourceType? resourceType = null,
-            int? count = null, StrategicObjectiveType? strategicObjectiveType = null)
+            int? count = null, StrategicObjectiveType? strategicObjectiveType = null,
+            CommanderSemanticAnchorSelector? placementAnchorSelector = null,
+            int? placementAnchorOrdinal = null,
+            CommanderSemanticPlacementRelation? placementRelation = null,
+            int? clearGapTiles = null)
         {
             Type = type;
             UnitType = unitType;
@@ -38,6 +61,10 @@ namespace OpenEmpires
             ResourceType = resourceType;
             Count = count;
             StrategicObjectiveType = strategicObjectiveType;
+            PlacementAnchorSelector = placementAnchorSelector;
+            PlacementAnchorOrdinal = placementAnchorOrdinal;
+            PlacementRelation = placementRelation;
+            ClearGapTiles = clearGapTiles;
         }
     }
 

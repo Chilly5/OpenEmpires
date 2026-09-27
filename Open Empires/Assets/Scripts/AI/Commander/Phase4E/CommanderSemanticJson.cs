@@ -10,6 +10,10 @@ namespace OpenEmpires
     {
         public const int MaximumResponseCharacters = 8192;
         public const int MaximumNodes = 4;
+        public const int MinimumTownCenterOrdinal = 1;
+        public const int MaximumTownCenterOrdinal = 8;
+        public const int MinimumClearGapTiles = 1;
+        public const int MaximumClearGapTiles = 20;
 
         public static CommanderSemanticResult Parse(string raw) => CommanderSemanticResult.ParseTrusted(raw);
     }
@@ -97,10 +101,52 @@ namespace OpenEmpires
                         unitType: unit, count: RequiredCount(node, 0, 200));
 
                 case "BuildStructure":
-                    CheckFields(node, "type", "structure", "count");
+                    CheckFields(node, "type", "structure", "count", "placement");
+                    CommanderSemanticAnchorSelector? anchor = null;
+                    int? ordinal = null;
+                    CommanderSemanticPlacementRelation? relation = null;
+                    int? clearGapTiles = null;
+                    if (node.Property("placement") != null)
+                    {
+                        if (!(node["placement"] is JObject placement)) throw new JsonException();
+                        CheckFields(placement, "anchor", "ordinal", "relation", "clearGapTiles");
+                        switch (RequiredString(placement, "anchor"))
+                        {
+                            case "MyTownCenter": anchor = CommanderSemanticAnchorSelector.MyTownCenter; break;
+                            case "MyBarracks": anchor = CommanderSemanticAnchorSelector.MyBarracks; break;
+                            default: throw new JsonException();
+                        }
+                        if (placement.Property("ordinal") != null)
+                        {
+                            if (anchor != CommanderSemanticAnchorSelector.MyTownCenter) throw new JsonException();
+                            ordinal = RequiredBoundedInteger(placement, "ordinal",
+                                CommanderSemanticJson.MinimumTownCenterOrdinal,
+                                CommanderSemanticJson.MaximumTownCenterOrdinal);
+                        }
+                        switch (RequiredString(placement, "relation"))
+                        {
+                            case "MapWest": relation = CommanderSemanticPlacementRelation.MapWest; break;
+                            case "MapEast": relation = CommanderSemanticPlacementRelation.MapEast; break;
+                            case "Near": relation = CommanderSemanticPlacementRelation.Near; break;
+                            default: throw new JsonException();
+                        }
+                        // Omission is intentional: the deterministic resolver owns its relation-specific default.
+                        if (placement.Property("clearGapTiles") != null)
+                        {
+                            clearGapTiles = RequiredBoundedInteger(placement, "clearGapTiles",
+                                CommanderSemanticJson.MinimumClearGapTiles,
+                                CommanderSemanticJson.MaximumClearGapTiles);
+                            if (relation == CommanderSemanticPlacementRelation.Near && clearGapTiles != 1)
+                                throw new JsonException();
+                        }
+                    }
                     return new CommanderSemanticNode(CommanderSemanticNodeType.BuildStructure,
                         buildingType: ParseBuilding(RequiredString(node, "structure")),
-                        count: RequiredCount(node, 1, 20));
+                        count: RequiredCount(node, 1, 20),
+                        placementAnchorSelector: anchor,
+                        placementAnchorOrdinal: ordinal,
+                        placementRelation: relation,
+                        clearGapTiles: clearGapTiles);
 
                 case "SetResourceAllocation":
                     CheckFields(node, "type", "resource", "count");
@@ -179,7 +225,12 @@ namespace OpenEmpires
 
         private static int RequiredCount(JObject value, int minimum, int maximum)
         {
-            JToken token = value["count"];
+            return RequiredBoundedInteger(value, "count", minimum, maximum);
+        }
+
+        private static int RequiredBoundedInteger(JObject value, string name, int minimum, int maximum)
+        {
+            JToken token = value[name];
             if (token == null || token.Type != JTokenType.Integer) throw new JsonException();
             int number = token.Value<int>();
             if (number < minimum || number > maximum) throw new JsonException();
