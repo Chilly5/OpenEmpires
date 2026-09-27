@@ -51,6 +51,15 @@ namespace OpenEmpires.Tests
             Worker(centerX - 6);
             Worker(centerX - 7);
             Worker(centerX - 8);
+            for (int i = 0; i < 10; i++)
+            {
+                UnitData pressure = simulation.UnitRegistry.CreateUnit(0,
+                    simulation.MapData.TileToWorldFixed(centerX + 2, centerZ + i + 1),
+                    Fixed32.One, Fixed32.FromFloat(.4f), Fixed32.One);
+                pressure.UnitType = CommanderIntentCatalog.ArcherUnitType;
+                pressure.MaxHealth = pressure.CurrentHealth = 100;
+                pressure.State = UnitState.Idle;
+            }
             simulation.MapData.AddResourceNode(ResourceType.Food,
                 simulation.MapData.TileToWorldFixed(centerX, centerZ + 8), 10000);
 

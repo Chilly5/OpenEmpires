@@ -294,8 +294,8 @@ namespace OpenEmpires
             int totalQueuedPopulation = CountAllQueuedUnits(goal.PlayerId);
             int population = simulation.GetPopulation(goal.PlayerId);
             int populationCap = simulation.GetPopulationCap(goal.PlayerId);
-            bool capacityNeeded = population + totalQueuedPopulation + remainingOrders > populationCap;
-            if (population + totalQueuedPopulation > populationCap || capacityNeeded)
+            if (population + totalQueuedPopulation > populationCap
+                || (remainingOrders > 0 && population + totalQueuedPopulation >= populationCap))
             {
                 if (populationCap >= simulation.Config.MaxPopulation)
                     return new CommanderPlan(CommanderGoalStatus.Blocked,
