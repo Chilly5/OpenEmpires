@@ -107,6 +107,7 @@ namespace OpenEmpires
             this.playerId = playerId;
             workerAuthority = new CommanderWorkerAuthority(simulation, playerId);
             simulation.CommandBuffer.CommandEnqueued += HandleCommandEnqueued;
+            simulation.OnBuildingPlacedFromCommand += HandleBuildingPlacedFromCommand;
             planner = new CommanderPlanner(simulation, workerAuthority,
                 pathValidationCandidates);
         }
@@ -121,9 +122,23 @@ namespace OpenEmpires
         }
 
         public BuildStructureGoal SubmitBuildStructure(BuildingType type, int count = 1,
-            int maxDurationTicks = 36000, IReadOnlyList<CommanderConstraint> constraints = null)
+            int maxDurationTicks = 36000, IReadOnlyList<CommanderConstraint> constraints = null,
+            CommanderSemanticAnchorSelector? placementAnchorSelector = null,
+            int? placementAnchorOrdinal = null,
+            CommanderSemanticPlacementRelation? placementRelation = null,
+            int? clearGapTiles = null)
         {
-            var goal = new BuildStructureGoal(playerId, type, count, maxDurationTicks);
+            if (placementAnchorSelector.HasValue || placementAnchorOrdinal.HasValue
+                || placementRelation.HasValue || clearGapTiles.HasValue)
+            {
+                var placedIntent = new BuildStructureIntent(playerId, type, count, constraints,
+                    placementAnchorSelector, placementAnchorOrdinal, placementRelation, clearGapTiles);
+                CommanderIntentValidationResult validation = new CommanderIntentValidator().Validate(
+                    placedIntent, simulation, playerId);
+                if (!validation.IsValid) throw new ArgumentException(validation.Reason, nameof(placementAnchorSelector));
+            }
+            var goal = new BuildStructureGoal(playerId, type, count, maxDurationTicks,
+                placementAnchorSelector, placementAnchorOrdinal, placementRelation, clearGapTiles);
             goal.TargetTotal = planner.CountCompletedBuildings(playerId, type) + count;
             for (int i = 0; i < goals.Count; i++)
                 if (goals[i] is BuildStructureGoal earlier && !earlier.IsTerminal && earlier.StructureType == type)
@@ -196,6 +211,8 @@ namespace OpenEmpires
                 CommanderGoal goal = goals[i];
                 if (goal.GoalId != goalId || goal.IsTerminal) continue;
                 suspendedGoalIds.Remove(goalId);
+                if (goal is BuildStructureGoal cancelledBuild)
+                    cancelledBuild.PendingPlacementCommand = null;
                 goal.SetStatus(CommanderGoalStatus.Cancelled, "Cancelled by the owning player.");
                 workerAuthority.ReleaseGoal(goal.GoalId);
                 ArchiveGoal(goal);
@@ -271,6 +288,15 @@ namespace OpenEmpires
                     }
                     if (plan.Command != null && !goal.IsTerminal)
                     {
+                        if (goal is BuildStructureGoal spatial && spatial.HasSemanticPlacement
+                            && plan.Command is PlaceBuildingCommand placement)
+                        {
+                            spatial.PlacedTileX = placement.TileX;
+                            spatial.PlacedTileZ = placement.TileZ;
+                            spatial.PlacementIssuedTick = currentTick;
+                            spatial.PlacementIssuedSimulationTick = simulation.CurrentTick;
+                            spatial.PendingPlacementCommand = plan.Command;
+                        }
                         simulation.CommandBuffer.EnqueueCommand(plan.Command, CommandEnqueueSource.Commander);
                         if (plan.Command is GatherCommand) goal.LastEconomyCommandTick = currentTick;
                         if (plan.Command is ConstructBuildingCommand)
@@ -307,6 +333,8 @@ namespace OpenEmpires
         private void FailGoal(CommanderGoal goal, string reason, int currentTick)
         {
             goal.SetStatus(CommanderGoalStatus.Failed, reason);
+            if (goal is BuildStructureGoal failedBuild)
+                failedBuild.PendingPlacementCommand = null;
             workerAuthority.ReleaseGoal(goal.GoalId);
             ArchiveGoal(goal);
             Debug.LogWarning($"[Commander] Goal #{goal.GoalId} failed: {goal.StatusReason}");
@@ -317,6 +345,23 @@ namespace OpenEmpires
         private void HandleCommandEnqueued(ICommand command, CommandEnqueueSource source)
         {
             workerAuthority.ObserveEnqueuedCommand(command, source, simulation.CurrentTick);
+        }
+
+        private void HandleBuildingPlacedFromCommand(ICommand command, BuildingData created)
+        {
+            for (int i = 0; i < activeGoals.Count; i++)
+            {
+                if (!(activeGoals[i] is BuildStructureGoal goal) || !goal.HasSemanticPlacement
+                    || goal.IsTerminal || !ReferenceEquals(goal.PendingPlacementCommand, command))
+                    continue;
+                goal.PendingPlacementCommand = null;
+                if (created.PlayerId == goal.PlayerId && !created.IsDestroyed
+                    && simulation.GetEffectiveBuildingType(created) == goal.StructureType
+                    && created.OriginTileX == goal.PlacedTileX
+                    && created.OriginTileZ == goal.PlacedTileZ)
+                    goal.PlacedBuildingId = created.Id;
+                return;
+            }
         }
 
         private void PublishEvent(CommanderGoalEventType type, CommanderGoal goal, int tick)
@@ -341,8 +386,13 @@ namespace OpenEmpires
             if (disposed) return;
             disposed = true;
             simulation.CommandBuffer.CommandEnqueued -= HandleCommandEnqueued;
+            simulation.OnBuildingPlacedFromCommand -= HandleBuildingPlacedFromCommand;
             for (int i = 0; i < activeGoals.Count; i++)
+            {
+                if (activeGoals[i] is BuildStructureGoal spatial)
+                    spatial.PendingPlacementCommand = null;
                 workerAuthority.ReleaseGoal(activeGoals[i].GoalId);
+            }
             suspendedGoalIds.Clear();
             GoalStatusChanged = null;
             GoalEventPublished = null;

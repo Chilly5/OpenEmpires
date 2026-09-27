@@ -108,6 +108,8 @@ namespace OpenEmpires
         {
             if (!CommanderIntentCatalog.IsSupportedStructure(goal.StructureType))
                 return new CommanderPlan(CommanderGoalStatus.Failed, "Unsupported structure.", 0, 0);
+            if (goal.HasSemanticPlacement)
+                return PlanPlacedStructure(goal, currentTick);
             int completed = CountCompletedBuildings(goal.PlayerId, goal.StructureType);
             if (completed >= goal.TargetTotal)
                 return new CommanderPlan(CommanderGoalStatus.Completed,
@@ -116,6 +118,42 @@ namespace OpenEmpires
             if (foundation != null)
                 return PlanConstructionRecovery(goal, foundation, currentTick, completed, 1, "Construction");
             return PlanBuilding(goal, goal.StructureType, currentTick, completed, 0);
+        }
+
+        private CommanderPlan PlanPlacedStructure(BuildStructureGoal goal, int currentTick)
+        {
+            goal.PlacementBlocker = CommanderPlacementBlocker.None;
+            if (goal.PlacedBuildingId >= 0)
+            {
+                BuildingData bound = simulation.BuildingRegistry.GetBuilding(goal.PlacedBuildingId);
+                if (bound == null || bound.IsDestroyed || bound.PlayerId != goal.PlayerId
+                    || simulation.GetEffectiveBuildingType(bound) != goal.StructureType
+                    || bound.OriginTileX != goal.PlacedTileX || bound.OriginTileZ != goal.PlacedTileZ)
+                {
+                    goal.PlacementBlocker = CommanderPlacementBlocker.BoundBuildingUnavailable;
+                    return new CommanderPlan(CommanderGoalStatus.Blocked,
+                        "The placed building is no longer owned and available at its requested tile.", 0, 0);
+                }
+                goal.PlacementBlocker = CommanderPlacementBlocker.None;
+                if (!bound.IsUnderConstruction)
+                    return new CommanderPlan(CommanderGoalStatus.Completed,
+                        $"{goal.StructureType} construction complete at ({bound.OriginTileX},{bound.OriginTileZ}) "
+                        + $"as building #{bound.Id}.", 1, 0);
+                return PlanConstructionRecovery(goal, bound, currentTick, 0, 1,
+                    $"Placed {goal.StructureType} at ({bound.OriginTileX},{bound.OriginTileZ})");
+            }
+
+            if (goal.PlacementIssuedTick >= 0)
+            {
+                if (simulation.CurrentTick <= goal.PlacementIssuedSimulationTick)
+                    return new CommanderPlan(CommanderGoalStatus.WaitingForConstruction,
+                        $"Waiting for the placement command at ({goal.PlacedTileX},{goal.PlacedTileZ}).", 0, 0);
+                // The ordinary command was processed without creating this building. Recheck
+                // current rules and the bounded candidate set instead of accepting another site.
+                goal.PlacementIssuedTick = -1;
+                goal.PendingPlacementCommand = null;
+            }
+            return PlanBuilding(goal, goal.StructureType, currentTick, 0, 0);
         }
 
         private CommanderPlan PlanAllocation(ResourceAllocationGoal goal, int currentTick)
@@ -280,6 +318,9 @@ namespace OpenEmpires
                 return PlanGather(goal, ResourceType.Stone, currentTick, owned, queued,
                     $"Need {stoneCost} stone for {type}; have {resources.Stone}.");
 
+            if (goal is BuildStructureGoal placed && placed.HasSemanticPlacement)
+                return PlanSemanticBuilding(placed, type, currentTick, owned, queued);
+
             UnitData builder = SelectBuilder(goal, currentTick);
             if (builder == null)
                 return new CommanderPlan(CommanderGoalStatus.Blocked,
@@ -297,6 +338,125 @@ namespace OpenEmpires
             return new CommanderPlan(CommanderGoalStatus.Executing,
                 $"Placing {type} at ({tile.x},{tile.y}) with villager #{builder.Id}.", owned, queued,
                 new PlaceBuildingCommand(goal.PlayerId, type, tile.x, tile.y, new[] { builder.Id }));
+        }
+
+        private CommanderPlan PlanSemanticBuilding(BuildStructureGoal goal, BuildingType type,
+            int currentTick, int owned, int queued)
+        {
+            var resolver = new CommanderSemanticReferenceResolver(simulation);
+            if (!resolver.TryResolveOwnedAnchor(goal.PlayerId, goal.PlacementAnchorSelector.Value,
+                goal.PlacementAnchorOrdinal, out BuildingData anchor))
+            {
+                goal.PlacementBlocker = CommanderPlacementBlocker.AnchorUnavailable;
+                return new CommanderPlan(CommanderGoalStatus.Blocked,
+                    "The requested owned placement anchor is unavailable.", owned, queued);
+            }
+            if (SelectBuilder(goal, currentTick) == null)
+            {
+                goal.PlacementBlocker = CommanderPlacementBlocker.NoEligibleBuilder;
+                return new CommanderPlan(CommanderGoalStatus.Blocked,
+                    $"No owned living villager is available to build {type}.", owned, queued);
+            }
+
+            GetFootprint(type, out int width, out int height);
+            IReadOnlyList<Vector2Int> candidates = CommanderSemanticPlacementCandidates.Generate(
+                anchor.OriginTileX, anchor.OriginTileZ, anchor.TileFootprintWidth,
+                anchor.TileFootprintHeight, width, height, simulation.MapData.Width,
+                simulation.MapData.Height, goal.PlacementRelation.Value, goal.ClearGapTiles);
+            int border = type == BuildingType.Farm ? 0 : 1;
+            for (int i = 0; i < candidates.Count; i++)
+            {
+                Vector2Int tile = candidates[i];
+                if (!IsVisibleBuildableArea(goal.PlayerId, tile.x, tile.y, width, height,
+                    border, type)) continue;
+                UnitData builder = FindReachableSemanticBuilder(goal, tile, width, height, currentTick);
+                if (builder == null) continue;
+                goal.PlacementBlocker = CommanderPlacementBlocker.None;
+                int actualGap = SemanticClearGap(goal.PlacementRelation.Value, anchor,
+                    tile, width, height);
+                string placement = IsExactSemanticCandidate(goal, anchor, tile, width,
+                    height, actualGap) ? "exact" : "bounded fallback";
+                return new CommanderPlan(CommanderGoalStatus.Executing,
+                    $"Placing {type} at ({tile.x},{tile.y}) using {placement} semantic placement "
+                    + $"with {actualGap} clear-tile gap and villager #{builder.Id}.", owned, queued,
+                    new PlaceBuildingCommand(goal.PlayerId, type, tile.x, tile.y,
+                        new[] { builder.Id }));
+            }
+            goal.PlacementBlocker = CommanderPlacementBlocker.NoLegalCandidate;
+            return new CommanderPlan(CommanderGoalStatus.Blocked,
+                $"No visible, buildable, reachable location satisfies the bounded {type} placement.",
+                owned, queued);
+        }
+
+        private UnitData FindReachableSemanticBuilder(CommanderGoal goal, Vector2Int tile,
+            int width, int height, int currentTick)
+        {
+            UnitData best = null;
+            int bestPriority = int.MaxValue;
+            List<UnitData> units = simulation.UnitRegistry.GetAllUnits();
+            for (int i = 0; i < units.Count; i++)
+            {
+                UnitData unit = units[i];
+                if (unit.PlayerId != goal.PlayerId || !unit.IsVillager || unit.CurrentHealth <= 0
+                    || unit.State == UnitState.Dead || workerAuthority.IsHumanProtected(unit.Id, currentTick)
+                    || !CanReassignWorker(goal, unit)) continue;
+                int priority = unit.State == UnitState.Idle ? 0
+                    : workerAuthority.IsCommanderControlled(unit.Id) && IsGatheringState(unit.State) ? 1
+                    : IsGatheringState(unit.State) ? 2 : int.MaxValue;
+                if (priority == int.MaxValue || priority > bestPriority
+                    || (priority == bestPriority && best != null && unit.Id >= best.Id)) continue;
+                if (!HasReachableAdjacentTile(simulation.MapData.WorldToTile(unit.SimPosition),
+                    goal.PlayerId, tile.x, tile.y, width, height)) continue;
+                best = unit;
+                bestPriority = priority;
+            }
+            return best;
+        }
+
+        private static int SemanticClearGap(CommanderSemanticPlacementRelation relation,
+            BuildingData anchor, Vector2Int tile, int width, int height)
+        {
+            if (relation == CommanderSemanticPlacementRelation.MapWest)
+                return anchor.OriginTileX - (tile.x + width);
+            if (relation == CommanderSemanticPlacementRelation.MapEast)
+                return tile.x - (anchor.OriginTileX + anchor.TileFootprintWidth);
+            if (tile.x + width <= anchor.OriginTileX)
+                return anchor.OriginTileX - (tile.x + width);
+            if (tile.x >= anchor.OriginTileX + anchor.TileFootprintWidth)
+                return tile.x - (anchor.OriginTileX + anchor.TileFootprintWidth);
+            return tile.y + height <= anchor.OriginTileZ
+                ? anchor.OriginTileZ - (tile.y + height)
+                : tile.y - (anchor.OriginTileZ + anchor.TileFootprintHeight);
+        }
+
+        private static bool IsExactSemanticCandidate(BuildStructureGoal goal,
+            BuildingData anchor, Vector2Int tile, int width, int height, int actualGap)
+        {
+            if (actualGap != goal.ClearGapTiles) return false;
+            int centeredX = anchor.OriginTileX
+                + Mathf.FloorToInt((anchor.TileFootprintWidth - width) / 2f);
+            int centeredZ = anchor.OriginTileZ
+                + Mathf.FloorToInt((anchor.TileFootprintHeight - height) / 2f);
+            switch (goal.PlacementRelation.Value)
+            {
+                case CommanderSemanticPlacementRelation.MapWest:
+                    return tile.x == anchor.OriginTileX - goal.ClearGapTiles - width
+                        && tile.y == centeredZ;
+                case CommanderSemanticPlacementRelation.MapEast:
+                    return tile.x == anchor.OriginTileX + anchor.TileFootprintWidth
+                        + goal.ClearGapTiles && tile.y == centeredZ;
+                case CommanderSemanticPlacementRelation.Near:
+                    return (tile.x == anchor.OriginTileX - goal.ClearGapTiles - width
+                            && tile.y == centeredZ)
+                        || (tile.x == anchor.OriginTileX + anchor.TileFootprintWidth
+                            + goal.ClearGapTiles && tile.y == centeredZ)
+                        || (tile.y == anchor.OriginTileZ - goal.ClearGapTiles - height
+                            && tile.x == centeredX)
+                        || (tile.y == anchor.OriginTileZ + anchor.TileFootprintHeight
+                            + goal.ClearGapTiles && tile.x == centeredX);
+                default:
+                    return false;
+            }
         }
 
         private CommanderPlan PlanGather(CommanderGoal goal, ResourceType resourceType,

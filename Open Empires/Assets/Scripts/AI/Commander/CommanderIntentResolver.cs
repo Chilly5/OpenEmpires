@@ -67,7 +67,11 @@ namespace OpenEmpires
             }
             if (intent is BuildStructureIntent build)
                 return Created(intent, goalManager.SubmitBuildStructure(build.StructureType,
-                    build.Count, constraints: intent.Constraints));
+                    build.Count, constraints: intent.Constraints,
+                    placementAnchorSelector: build.PlacementAnchorSelector,
+                    placementAnchorOrdinal: build.PlacementAnchorOrdinal,
+                    placementRelation: build.PlacementRelation,
+                    clearGapTiles: build.ClearGapTiles));
 
             return Rejected(intent, CommanderIntentErrorCode.UnknownCommand,
                 "The Commander intent type is not recognized.");

@@ -114,7 +114,7 @@ namespace OpenEmpires.Tests
         }
 
         [Test]
-        public void Admission_PlacedBuildFailsClosedUntilSpatialPlannerExists()
+        public void Admission_PlacedBuildCarriesTrustedSemanticPlacementThroughTacticalIntent()
         {
             var config = ScriptableObject.CreateInstance<SimulationConfig>();
             var simulation = new GameSimulation(config, 2, new[] { 0, 1 }, System.Array.Empty<int>());
@@ -130,11 +130,14 @@ namespace OpenEmpires.Tests
                 bool unplacedAdmitted = CommanderSemanticAdmission.TryCreateTacticalIntent(unplaced, context,
                     out CommanderIntent unplacedIntent, out string unplacedReason);
 
-                Assert.That(placedAdmitted, Is.False);
-                Assert.That(placedIntent, Is.Null);
-                Assert.That(placedReason, Is.Not.Empty);
+                Assert.That(placedAdmitted, Is.True, placedReason);
+                Assert.That(placedIntent, Is.TypeOf<BuildStructureIntent>());
+                Assert.That(GetIntentProperty(placedIntent, "PlacementAnchorSelector")?.ToString(), Is.EqualTo("MyTownCenter"));
+                Assert.That(GetIntentProperty(placedIntent, "PlacementRelation")?.ToString(), Is.EqualTo("MapWest"));
+                Assert.That(GetIntentProperty(placedIntent, "ClearGapTiles"), Is.EqualTo(5));
                 Assert.That(unplacedAdmitted, Is.True, unplacedReason);
                 Assert.That(unplacedIntent, Is.Not.Null);
+                Assert.That(GetIntentProperty(unplacedIntent, "PlacementAnchorSelector"), Is.Null);
             }
             finally
             {
@@ -148,6 +151,13 @@ namespace OpenEmpires.Tests
             var property = typeof(CommanderSemanticNode).GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
             Assert.That(property, Is.Not.Null, "Expected typed semantic node property " + propertyName);
             return property.GetValue(node);
+        }
+
+        private static object GetIntentProperty(CommanderIntent intent, string propertyName)
+        {
+            var property = intent.GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
+            Assert.That(property, Is.Not.Null, "Trusted tactical intent must retain " + propertyName);
+            return property.GetValue(intent);
         }
     }
 }

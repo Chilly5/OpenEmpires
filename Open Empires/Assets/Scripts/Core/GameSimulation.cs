@@ -12,6 +12,9 @@ namespace OpenEmpires
         public event Action<ProjectileData> OnProjectileCreated;
         public event Action<int> OnProjectileHit;
         public event Action<BuildingData> OnBuildingCreated;
+        // Local command-result correlation for trusted planners. The original ICommand
+        // object is not gameplay state and is not part of deterministic serialization.
+        public event Action<ICommand, BuildingData> OnBuildingPlacedFromCommand;
         public event Action<int, int> OnUnitGarrisoned; // unitId, buildingId
         public event Action<int> OnUnitUngarrisoned; // unitId
 
@@ -1691,7 +1694,7 @@ namespace OpenEmpires
                     ProcessSetRallyPointCommand(rally);
                     break;
                 case PlaceBuildingCommand place:
-                    ProcessPlaceBuildingCommand(place);
+                    ProcessPlaceBuildingCommand(place, command);
                     break;
                 case ConstructBuildingCommand construct:
                     ProcessConstructBuildingCommand(construct);
@@ -4056,7 +4059,7 @@ namespace OpenEmpires
             return false;
         }
 
-        private void ProcessPlaceBuildingCommand(PlaceBuildingCommand cmd)
+        private void ProcessPlaceBuildingCommand(PlaceBuildingCommand cmd, ICommand originalCommand)
         {
             var resources = ResourceManager.GetPlayerResources(cmd.PlayerId);
 
@@ -4121,6 +4124,7 @@ namespace OpenEmpires
                 playerAgingUp[cmd.PlayerId] = true;
                 playerAgingUpBuildingId[cmd.PlayerId] = building.Id;
                 OnBuildingCreated?.Invoke(building);
+                OnBuildingPlacedFromCommand?.Invoke(originalCommand, building);
 
                 if (hasVillagers)
                 {
@@ -4296,6 +4300,7 @@ namespace OpenEmpires
             bool underConstruction2 = !godMode && hasVillagers2;
             var building2 = CreateBuilding(cmd.PlayerId, cmd.BuildingType, cmd.TileX, cmd.TileZ, underConstruction: underConstruction2);
             OnBuildingCreated?.Invoke(building2);
+            OnBuildingPlacedFromCommand?.Invoke(originalCommand, building2);
             if (!underConstruction2)
                 EjectUnitsFromBuildingFootprint(building2);
 

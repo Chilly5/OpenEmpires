@@ -116,6 +116,29 @@ namespace OpenEmpires
             if (intent.Count < 1 || intent.Count > MaximumStructureCount)
                 return Invalid(CommanderIntentErrorCode.AmountOutOfRange,
                     $"Structure count must be between 1 and {MaximumStructureCount}.");
+            bool placed = intent.PlacementAnchorSelector.HasValue;
+            if (!placed && (intent.PlacementAnchorOrdinal.HasValue || intent.PlacementRelation.HasValue
+                || intent.ClearGapTiles.HasValue))
+                return Invalid(CommanderIntentErrorCode.UnknownCommand, "Incomplete semantic placement.");
+            if (placed)
+            {
+                if (intent.Count != 1 || !Enum.IsDefined(typeof(CommanderSemanticAnchorSelector),
+                        intent.PlacementAnchorSelector.Value)
+                    || !intent.PlacementRelation.HasValue
+                    || !Enum.IsDefined(typeof(CommanderSemanticPlacementRelation),
+                        intent.PlacementRelation.Value)
+                    || (intent.PlacementAnchorOrdinal.HasValue
+                        && (intent.PlacementAnchorSelector != CommanderSemanticAnchorSelector.MyTownCenter
+                            || intent.PlacementAnchorOrdinal.Value < CommanderSemanticJson.MinimumTownCenterOrdinal
+                            || intent.PlacementAnchorOrdinal.Value > CommanderSemanticJson.MaximumTownCenterOrdinal))
+                    || (intent.ClearGapTiles.HasValue
+                        && (intent.ClearGapTiles.Value < CommanderSemanticJson.MinimumClearGapTiles
+                            || intent.ClearGapTiles.Value > CommanderSemanticJson.MaximumClearGapTiles))
+                    || (intent.PlacementRelation == CommanderSemanticPlacementRelation.Near
+                        && intent.ClearGapTiles.HasValue && intent.ClearGapTiles.Value != 1))
+                    return Invalid(CommanderIntentErrorCode.UnknownCommand,
+                        "Unsupported or ambiguous semantic placement.");
+            }
             return CommanderIntentValidationResult.Valid();
         }
 

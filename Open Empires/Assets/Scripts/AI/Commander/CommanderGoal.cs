@@ -25,6 +25,15 @@ namespace OpenEmpires
         Cancelled
     }
 
+    public enum CommanderPlacementBlocker
+    {
+        None,
+        AnchorUnavailable,
+        NoEligibleBuilder,
+        NoLegalCandidate,
+        BoundBuildingUnavailable
+    }
+
     // Stable coarse lifecycle for consumers; detailed tactical statuses remain compatible.
     public enum CommanderGoalLifecycle { Created, Active, Waiting, Blocked, Completed, Failed, Cancelled }
 
@@ -119,14 +128,35 @@ namespace OpenEmpires
         public BuildingType StructureType { get; }
         public int Count { get; }
         public int TargetTotal { get; internal set; }
+        public CommanderSemanticAnchorSelector? PlacementAnchorSelector { get; }
+        public int? PlacementAnchorOrdinal { get; }
+        public CommanderSemanticPlacementRelation? PlacementRelation { get; }
+        public int ClearGapTiles { get; }
+        public int? PlacedTileX { get; internal set; }
+        public int? PlacedTileZ { get; internal set; }
+        public int PlacedBuildingId { get; internal set; } = -1;
+        public CommanderPlacementBlocker PlacementBlocker { get; internal set; }
+        internal int PlacementIssuedTick { get; set; } = -1;
+        internal int PlacementIssuedSimulationTick { get; set; } = -1;
+        internal ICommand PendingPlacementCommand { get; set; }
+        public bool HasSemanticPlacement => PlacementAnchorSelector.HasValue;
 
         public BuildStructureGoal(int playerId, BuildingType structureType, int count = 1,
-            int maxDurationTicks = 36000) : base(playerId, CommanderGoalType.BuildStructure, maxDurationTicks)
+            int maxDurationTicks = 36000,
+            CommanderSemanticAnchorSelector? placementAnchorSelector = null,
+            int? placementAnchorOrdinal = null,
+            CommanderSemanticPlacementRelation? placementRelation = null,
+            int? clearGapTiles = null)
+            : base(playerId, CommanderGoalType.BuildStructure, maxDurationTicks)
         {
             if (count < 1 || count > CommanderIntentValidator.MaximumStructureCount)
                 throw new ArgumentOutOfRangeException(nameof(count));
             StructureType = structureType;
             Count = count;
+            PlacementAnchorSelector = placementAnchorSelector;
+            PlacementAnchorOrdinal = placementAnchorOrdinal;
+            PlacementRelation = placementRelation;
+            ClearGapTiles = clearGapTiles ?? 1;
         }
     }
 

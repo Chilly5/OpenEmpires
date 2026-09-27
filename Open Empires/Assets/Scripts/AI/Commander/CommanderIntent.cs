@@ -148,13 +148,25 @@ namespace OpenEmpires
     {
         public BuildingType StructureType { get; }
         public int Count { get; }
+        public CommanderSemanticAnchorSelector? PlacementAnchorSelector { get; }
+        public int? PlacementAnchorOrdinal { get; }
+        public CommanderSemanticPlacementRelation? PlacementRelation { get; }
+        public int? ClearGapTiles { get; }
 
         public BuildStructureIntent(int playerId, BuildingType structureType, int count = 1,
-            IEnumerable<CommanderConstraint> constraints = null)
+            IEnumerable<CommanderConstraint> constraints = null,
+            CommanderSemanticAnchorSelector? placementAnchorSelector = null,
+            int? placementAnchorOrdinal = null,
+            CommanderSemanticPlacementRelation? placementRelation = null,
+            int? clearGapTiles = null)
             : base(CommanderIntentType.BuildStructure, playerId, constraints)
         {
             StructureType = structureType;
             Count = count;
+            PlacementAnchorSelector = placementAnchorSelector;
+            PlacementAnchorOrdinal = placementAnchorOrdinal;
+            PlacementRelation = placementRelation;
+            ClearGapTiles = clearGapTiles;
         }
     }
 }

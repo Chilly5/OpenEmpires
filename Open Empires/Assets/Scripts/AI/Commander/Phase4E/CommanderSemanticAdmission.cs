@@ -33,12 +33,7 @@ namespace OpenEmpires
                         || !CommanderIntentCatalog.IsSupportedStructure(node.BuildingType.Value)
                         || node.UnitType.HasValue || node.ResourceType.HasValue
                         || node.StrategicObjectiveType.HasValue
-                        // Placement is parsed for the upcoming deterministic resolver, but this
-                        // admission path cannot carry it. Fail closed until spatial planning is wired.
-                        || node.PlacementAnchorSelector.HasValue
-                        || node.PlacementAnchorOrdinal.HasValue
-                        || node.PlacementRelation.HasValue
-                        || node.ClearGapTiles.HasValue) return false;
+                        || (node.PlacementAnchorSelector.HasValue && node.Count.Value != 1)) return false;
                     dto.intentType = nameof(CommanderIntentType.BuildStructure);
                     dto.structure = node.BuildingType.Value.ToString();
                     dto.amount = node.Count.Value;
@@ -62,7 +57,12 @@ namespace OpenEmpires
             CommanderIntentInterpretation validated = CommanderIntentDtoCodec.ValidateAndConvert(dto, context);
             if (!validated.Success || validated.Intent == null || validated.StrategicIntent != null)
                 return false;
-            intent = validated.Intent;
+            intent = node.Type == CommanderSemanticNodeType.BuildStructure
+                && node.PlacementAnchorSelector.HasValue
+                ? new BuildStructureIntent(context.PlayerId, node.BuildingType.Value, node.Count.Value,
+                    validated.Intent.Constraints, node.PlacementAnchorSelector,
+                    node.PlacementAnchorOrdinal, node.PlacementRelation, node.ClearGapTiles)
+                : validated.Intent;
             safeReason = string.Empty;
             return true;
         }
