@@ -294,17 +294,18 @@ namespace OpenEmpires
             int totalQueuedPopulation = CountAllQueuedUnits(goal.PlayerId);
             int population = simulation.GetPopulation(goal.PlayerId);
             int populationCap = simulation.GetPopulationCap(goal.PlayerId);
-            if (population + totalQueuedPopulation > populationCap
-                || (remainingOrders > 0 && population + totalQueuedPopulation >= populationCap))
+            bool capacityNeeded = population + totalQueuedPopulation + remainingOrders > populationCap;
+            if (population + totalQueuedPopulation > populationCap || capacityNeeded)
             {
                 if (populationCap >= simulation.Config.MaxPopulation)
                     return new CommanderPlan(CommanderGoalStatus.Blocked,
                         $"Maximum population reached ({populationCap}/{simulation.Config.MaxPopulation}). "
                         + "Cannot increase capacity further.", owned, queued);
                 BuildingData house = FindOwnedBuilding(goal.PlayerId, BuildingType.House, true);
-                if (house != null)
-                    return PlanConstructionRecovery(goal, house, currentTick, owned, queued, "Population prerequisite");
-                return PlanBuilding(goal, BuildingType.House, currentTick, owned, queued);
+                if (house == null)
+                    return PlanBuilding(goal, BuildingType.House, currentTick, owned, queued);
+                // A House foundation already exists. Leave its builder reserved and
+                // continue discovering independent producer/resource work below.
             }
             if (remainingOrders <= 0)
                 return new CommanderPlan(CommanderGoalStatus.WaitingForProduction,
@@ -327,8 +328,12 @@ namespace OpenEmpires
                     return new CommanderPlan(CommanderGoalStatus.Blocked,
                         "The requested producer goal is no longer available.", owned, queued);
                 if (producerGoal.PlacedBuildingId < 0)
+                {
+                    CommanderPlan preparation = PlanUnitResourcePreparation(goal, currentTick, owned, queued);
+                    if (preparation.Command != null) return preparation;
                     return new CommanderPlan(CommanderGoalStatus.WaitingForPrerequisite,
                         "Waiting for the requested new producer to be placed before training.", owned, queued);
+                }
                 requiredProducer = FindBuildingById(goal.PlayerId, producerGoal.PlacedBuildingId);
                 if (requiredProducer == null || requiredProducer.IsDestroyed
                     || requiredProducer.Type != requiredProducerType
@@ -336,8 +341,12 @@ namespace OpenEmpires
                     return new CommanderPlan(CommanderGoalStatus.Blocked,
                         "The requested producer is no longer owned, alive, or compatible.", owned, queued);
                 if (requiredProducer.IsUnderConstruction)
+                {
+                    CommanderPlan preparation = PlanUnitResourcePreparation(goal, currentTick, owned, queued);
+                    if (preparation.Command != null) return preparation;
                     return PlanConstructionRecovery(goal, requiredProducer, currentTick, owned, queued,
                         "Requested producer prerequisite");
+                }
                 if (requiredProducer.TrainingQueue.Count >= goal.MaxQueueDepth)
                     return new CommanderPlan(CommanderGoalStatus.WaitingForProduction,
                         $"The requested producer queue is at Commander limit {goal.MaxQueueDepth}.", owned, queued);
@@ -357,8 +366,12 @@ namespace OpenEmpires
                 BuildingData unfinished = FindCompatibleProductionBuilding(goal.PlayerId,
                     goal.RequestedUnitType, true);
                 if (unfinished != null)
+                {
+                    CommanderPlan preparation = PlanUnitResourcePreparation(goal, currentTick, owned, queued);
+                    if (preparation.Command != null) return preparation;
                     return PlanConstructionRecovery(goal, unfinished, currentTick, owned, queued,
                         "Production prerequisite");
+                }
 
                 if (!simulation.TryGetProductionBuildingType(goal.PlayerId, goal.RequestedUnitType,
                     out BuildingType producerType))
@@ -383,6 +396,26 @@ namespace OpenEmpires
             return new CommanderPlan(CommanderGoalStatus.Executing,
                 $"Queueing {unitName} at {barracks.Type} #{barracks.Id}.", owned, queued,
                 new TrainUnitCommand(goal.PlayerId, barracks.Id, goal.RequestedUnitType));
+        }
+
+        private CommanderPlan PlanUnitResourcePreparation(EnsureUnitCountGoal goal, int currentTick,
+            int owned, int queued)
+        {
+            simulation.GetUnitTrainingSpec(goal.PlayerId, goal.RequestedUnitType,
+                out _, out int foodCost, out int woodCost, out int goldCost, out _);
+            PlayerResources resources = simulation.ResourceManager.GetPlayerResources(goal.PlayerId);
+            string unitName = CommanderIntentCatalog.GetUnitDisplayName(goal.RequestedUnitType);
+            if (resources.Food < foodCost)
+                return PlanGather(goal, ResourceType.Food, currentTick, owned, queued,
+                    $"Preparing food for the next {unitName}; need {foodCost}, have {resources.Food}.");
+            if (resources.Wood < woodCost)
+                return PlanGather(goal, ResourceType.Wood, currentTick, owned, queued,
+                    $"Preparing wood for the next {unitName}; need {woodCost}, have {resources.Wood}.");
+            if (resources.Gold < goldCost)
+                return PlanGather(goal, ResourceType.Gold, currentTick, owned, queued,
+                    $"Preparing gold for the next {unitName}; need {goldCost}, have {resources.Gold}.");
+            return new CommanderPlan(CommanderGoalStatus.WaitingForPrerequisite,
+                "No immediate unit-resource preparation is required.", owned, queued);
         }
 
         private CommanderPlan PlanConstructionRecovery(CommanderGoal goal, BuildingData building,
