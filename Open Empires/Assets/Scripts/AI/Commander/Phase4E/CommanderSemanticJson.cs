@@ -14,6 +14,8 @@ namespace OpenEmpires
         public const int MaximumTownCenterOrdinal = 8;
         public const int MinimumClearGapTiles = 1;
         public const int MaximumClearGapTiles = 20;
+        public const int MaximumDependencyReferences = 8;
+        public const int MaximumDependencyDepth = 4;
 
         public static CommanderSemanticResult Parse(string raw) => CommanderSemanticResult.ParseTrusted(raw);
     }
@@ -71,6 +73,7 @@ namespace OpenEmpires
                     if (!(item is JObject node)) throw new JsonException();
                     nodes.Add(ParseNode(node));
                 }
+                ValidateGraph(nodes);
                 return new CommanderSemanticResult(true, outcome, nodes.AsReadOnly(), string.Empty);
             }
             catch (Exception error) when (error is JsonException || error is FormatException
@@ -84,10 +87,11 @@ namespace OpenEmpires
 
         private static CommanderSemanticNode ParseNode(JObject node)
         {
+            IReadOnlyList<int> dependsOn = ParseDependencies(node);
             switch (RequiredString(node, "type"))
             {
                 case "EnsureUnitCount":
-                    CheckFields(node, "type", "unit", "count");
+                    CheckFields(node, "type", "unit", "count", "dependsOn", "producerFromNode");
                     int unit;
                     switch (RequiredString(node, "unit"))
                     {
@@ -98,10 +102,11 @@ namespace OpenEmpires
                         default: throw new JsonException();
                     }
                     return new CommanderSemanticNode(CommanderSemanticNodeType.EnsureUnitCount,
-                        unitType: unit, count: RequiredCount(node, 0, 200));
+                        unitType: unit, count: RequiredCount(node, 0, 200), dependsOn: dependsOn,
+                        producerFromNode: ParseOptionalNodeIndex(node, "producerFromNode"));
 
                 case "BuildStructure":
-                    CheckFields(node, "type", "structure", "count", "placement");
+                    CheckFields(node, "type", "structure", "count", "placement", "dependsOn");
                     CommanderSemanticAnchorSelector? anchor = null;
                     int? ordinal = null;
                     CommanderSemanticPlacementRelation? relation = null;
@@ -146,22 +151,103 @@ namespace OpenEmpires
                         placementAnchorSelector: anchor,
                         placementAnchorOrdinal: ordinal,
                         placementRelation: relation,
-                        clearGapTiles: clearGapTiles);
+                        clearGapTiles: clearGapTiles,
+                        dependsOn: dependsOn);
 
                 case "SetResourceAllocation":
-                    CheckFields(node, "type", "resource", "count");
+                    CheckFields(node, "type", "resource", "count", "dependsOn");
                     return new CommanderSemanticNode(CommanderSemanticNodeType.SetResourceAllocation,
                         resourceType: ParseResource(RequiredString(node, "resource")),
-                        count: RequiredCount(node, 0, 200));
+                        count: RequiredCount(node, 0, 200), dependsOn: dependsOn);
 
                 case "StrategicObjective":
-                    CheckFields(node, "type", "objective");
+                    CheckFields(node, "type", "objective", "dependsOn");
                     return new CommanderSemanticNode(CommanderSemanticNodeType.StrategicObjective,
-                        strategicObjectiveType: ParseObjective(RequiredString(node, "objective")));
+                        strategicObjectiveType: ParseObjective(RequiredString(node, "objective")), dependsOn: dependsOn);
 
                 default: throw new JsonException();
             }
         }
+
+        private static IReadOnlyList<int> ParseDependencies(JObject node)
+        {
+            JProperty property = node.Property("dependsOn");
+            if (property == null) return Array.Empty<int>();
+            if (!(property.Value is JArray values) || values.Count > CommanderSemanticJson.MaximumDependencyReferences)
+                throw new JsonException();
+            var result = new List<int>(values.Count);
+            foreach (JToken value in values)
+            {
+                if (value.Type != JTokenType.Integer) throw new JsonException();
+                int index = value.Value<int>();
+                if (index < 0 || result.Contains(index)) throw new JsonException();
+                result.Add(index);
+            }
+            return result.AsReadOnly();
+        }
+
+        private static int? ParseOptionalNodeIndex(JObject node, string name)
+        {
+            JToken token = node[name];
+            if (token == null) return null;
+            if (token.Type != JTokenType.Integer) throw new JsonException();
+            int index = token.Value<int>();
+            if (index < 0) throw new JsonException();
+            return index;
+        }
+
+        private static void ValidateGraph(IReadOnlyList<CommanderSemanticNode> nodes)
+        {
+            int totalReferences = 0;
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                CommanderSemanticNode node = nodes[i];
+                totalReferences += node.DependsOn.Count;
+                if (totalReferences > CommanderSemanticJson.MaximumDependencyReferences) throw new JsonException();
+                for (int d = 0; d < node.DependsOn.Count; d++)
+                {
+                    int dependency = node.DependsOn[d];
+                    if (dependency >= nodes.Count || dependency == i) throw new JsonException();
+                }
+                if (node.ProducerFromNode.HasValue)
+                {
+                    int producer = node.ProducerFromNode.Value;
+                    if (node.Type != CommanderSemanticNodeType.EnsureUnitCount || producer >= nodes.Count
+                        || producer == i || nodes[producer].Type != CommanderSemanticNodeType.BuildStructure)
+                        throw new JsonException();
+                    BuildingType producerType = nodes[producer].BuildingType.Value;
+                    if (nodes[producer].Count != 1 || !CanProduce(producerType, node.UnitType.Value))
+                        throw new JsonException();
+                }
+            }
+            for (int i = 0; i < nodes.Count; i++)
+                if (DependencyDepth(nodes, i, new bool[nodes.Count]) > CommanderSemanticJson.MaximumDependencyDepth)
+                    throw new JsonException();
+        }
+
+        private static int DependencyDepth(IReadOnlyList<CommanderSemanticNode> nodes, int index, bool[] visiting)
+        {
+            if (visiting[index]) throw new JsonException();
+            visiting[index] = true;
+            int depth = 1;
+            for (int i = 0; i < nodes[index].DependsOn.Count; i++)
+                depth = Math.Max(depth, 1 + DependencyDepth(nodes, nodes[index].DependsOn[i], visiting));
+            visiting[index] = false;
+            return depth;
+        }
+
+        private static bool CanProduce(BuildingType producer, int unitType)
+        {
+            switch (unitType)
+            {
+                case 0: return producer == BuildingType.TownCenter;
+                case 1: return producer == BuildingType.Barracks;
+                case 2: return producer == BuildingType.ArcheryRange;
+                case 7: return producer == BuildingType.Stables;
+                default: return false;
+            }
+        }
+
 
         private static BuildingType ParseBuilding(string name)
         {

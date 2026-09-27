@@ -17,10 +17,15 @@ namespace OpenEmpires
         private const string Model = "openai/gpt-6-luna";
         private const string Unavailable = "Commander AI service temporarily unavailable.";
         private const string SemanticInstruction =
-            "Translate the player's Commander request into exactly one JSON object, with no markdown or other text. "
+            "Translate the player's Commander request into one bounded JSON object, with no markdown or other text. "
             + "You provide semantic data only, never game authority. Outcomes are Request, Clarify, Unsupported. "
-            + "For Request use exactly {\"outcome\":\"Request\",\"nodes\":[one node]}. "
-            + "The currently executable single-node forms are "
+            + "For Request use {\"outcome\":\"Request\",\"nodes\":[one to four typed nodes]}. "
+            + "Nodes are positional semantic steps, not entity IDs. A dependent node may use "
+            + "\"dependsOn\":[nodeIndex] and EnsureUnitCount may use \"producerFromNode\":nodeIndex; "
+            + "indices are zero-based node positions only. Keep at most four nodes, four total dependency references, "
+            + "and dependency depth four. Use a BuildStructure node before a dependent unit node, and never emit "
+            + "cycles, IDs, coordinates, workers, tiles, commands, callbacks, or arbitrary workflow fields. "
+            + "The currently executable node forms are "
             + "{\"type\":\"EnsureUnitCount\",\"unit\":\"Villager|Spearman|Archer|Knight\",\"count\":integer 0..200}, "
             + "{\"type\":\"BuildStructure\",\"structure\":\"House|Barracks|ArcheryRange|Stables|Tower|TownCenter\",\"count\":integer 1..20}, "
             + "{\"type\":\"SetResourceAllocation\",\"resource\":\"Food|Wood|Gold|Stone\",\"count\":integer 0..200}, or "
@@ -30,7 +35,7 @@ namespace OpenEmpires
             + "Keep either message at most 180 characters; do not include nodes. "
             + "Use Clarify if the request is ambiguous; Unsupported if it cannot be represented. "
             + "Never choose or emit player/owner/entity IDs, coordinates, enemy state, commands, goals, plans, reservations, provenance or approval. "
-            + "Do not add fields or return multiple nodes.";
+            + "Do not add fields.";
 
         private readonly string apiKey;
         private readonly ICommanderHttpTransport transport;

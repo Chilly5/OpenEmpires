@@ -205,7 +205,38 @@ namespace OpenEmpires
                 return new CommanderPlan(CommanderGoalStatus.WaitingForPrerequisite,
                     $"{CommanderIntentCatalog.GetUnitDisplayName(goal.RequestedUnitType)} requires age {requiredAge}. Advance age to resume.", owned, queued);
 
-            BuildingData barracks = FindBestAvailableProductionBuilding(goal, out bool hasOperationalProducer);
+            BuildingData requiredProducer = null;
+            if (goal.RequiredProducerGoal != null)
+            {
+                BuildStructureGoal producerGoal = goal.RequiredProducerGoal;
+                if (!simulation.TryGetProductionBuildingType(goal.PlayerId, goal.RequestedUnitType,
+                    out BuildingType requiredProducerType))
+                    return new CommanderPlan(CommanderGoalStatus.Failed,
+                        "No canonical producer exists.", owned, queued);
+                if (producerGoal.IsTerminal && producerGoal.Status != CommanderGoalStatus.Completed)
+                    return new CommanderPlan(CommanderGoalStatus.Blocked,
+                        "The requested producer goal is no longer available.", owned, queued);
+                if (producerGoal.PlacedBuildingId < 0)
+                    return new CommanderPlan(CommanderGoalStatus.WaitingForPrerequisite,
+                        "Waiting for the requested new producer to be placed before training.", owned, queued);
+                requiredProducer = FindBuildingById(goal.PlayerId, producerGoal.PlacedBuildingId);
+                if (requiredProducer == null || requiredProducer.IsDestroyed
+                    || requiredProducer.Type != requiredProducerType
+                    || !simulation.IsCompatibleProductionBuilding(goal.PlayerId, requiredProducer, goal.RequestedUnitType))
+                    return new CommanderPlan(CommanderGoalStatus.Blocked,
+                        "The requested producer is no longer owned, alive, or compatible.", owned, queued);
+                if (requiredProducer.IsUnderConstruction)
+                    return PlanConstructionRecovery(goal, requiredProducer, currentTick, owned, queued,
+                        "Requested producer prerequisite");
+                if (requiredProducer.TrainingQueue.Count >= goal.MaxQueueDepth)
+                    return new CommanderPlan(CommanderGoalStatus.WaitingForProduction,
+                        $"The requested producer queue is at Commander limit {goal.MaxQueueDepth}.", owned, queued);
+            }
+
+            BuildingData barracks = requiredProducer;
+            bool hasOperationalProducer = false;
+            if (barracks == null)
+                barracks = FindBestAvailableProductionBuilding(goal, out hasOperationalProducer);
             if (barracks == null)
             {
                 if (hasOperationalProducer)
@@ -553,6 +584,17 @@ namespace OpenEmpires
                 if (best == null || building.Id < best.Id) best = building;
             }
             return best;
+        }
+
+        private BuildingData FindBuildingById(int playerId, int buildingId)
+        {
+            List<BuildingData> buildings = simulation.BuildingRegistry.GetAllBuildings();
+            for (int i = 0; i < buildings.Count; i++)
+            {
+                BuildingData building = buildings[i];
+                if (building.Id == buildingId && building.PlayerId == playerId) return building;
+            }
+            return null;
         }
 
         private BuildingData FindOwnedBuilding(int playerId, BuildingType type, bool underConstruction)

@@ -54,6 +54,8 @@ namespace OpenEmpires.Tests
             worker.MaxHealth = worker.CurrentHealth = 100;
             worker.State = UnitState.Idle;
             simulation.ResourceManager.GetPlayerResources(0).Wood = 1000;
+            simulation.ResourceManager.GetPlayerResources(0).Food = 1000;
+            simulation.ResourceManager.GetPlayerResources(0).Gold = 1000;
             goals = new CommanderGoalManager(simulation, 0);
         }
 
@@ -117,6 +119,49 @@ namespace OpenEmpires.Tests
             Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Blocked));
             Assert.That(GetGoalProperty(goal, "PlacementBlocker")?.ToString(),
                 Is.EqualTo("NoLegalCandidate"));
+        }
+
+        [Test]
+        [Category("CommanderPhase4E3")]
+        public void CompoundWestBuildThenSpearmen_UsesOnlyTheBoundNewBarracks()
+        {
+            CommanderSemanticResult parsed = CommanderSemanticJson.Parse(
+                "{\"outcome\":\"Request\",\"nodes\":[" +
+                "{\"type\":\"BuildStructure\",\"structure\":\"Barracks\",\"count\":1," +
+                "\"placement\":{\"anchor\":\"MyTownCenter\",\"relation\":\"MapWest\",\"clearGapTiles\":5}}," +
+                "{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":10,\"producerFromNode\":0}]}" );
+            CommanderContext context = new CommanderContextBuilder().Build(simulation, goals);
+            Assert.That(CommanderSemanticGraphAdmission.TryAdmit(parsed, context,
+                out CommanderSemanticGraphPlan plan, out string reason), Is.True, reason);
+            var submitted = goals.SubmitSemanticGraph(plan);
+            var build = submitted[0] as BuildStructureGoal;
+            var units = submitted[1] as EnsureUnitCountGoal;
+
+            goals.Tick(0);
+            simulation.Tick();
+            Assert.That(simulation.CommandBuffer.FlushCommands(), Is.Empty);
+            BuildingData created = simulation.BuildingRegistry.GetAllBuildings().Single(building =>
+                building.PlayerId == 0 && building.Type == BuildingType.Barracks
+                && building.OriginTileX < anchor.OriginTileX && !building.IsDestroyed);
+            goals.Tick(15);
+            Assert.That(units.RequiredProducerGoal, Is.SameAs(build));
+            Assert.That(build.PlacedBuildingId, Is.EqualTo(created.Id));
+            Assert.That(units.Status, Is.EqualTo(CommanderGoalStatus.WaitingForConstruction));
+
+            created.IsUnderConstruction = false;
+            created.ConstructionTicksRemaining = 0;
+            goals.Tick(30);
+            var commands = simulation.CommandBuffer.FlushCommands();
+            TrainUnitCommand train = commands.OfType<TrainUnitCommand>().Single();
+            Assert.That(train.BuildingId, Is.EqualTo(created.Id));
+            Assert.That(train.UnitType, Is.EqualTo(CommanderIntentCatalog.SpearmanUnitType));
+
+            created.CurrentHealth = 0;
+            simulation.CreateBuilding(0, BuildingType.Barracks, anchorX + 20, anchorZ + 10, false, true);
+            goals.Tick(45);
+            Assert.That(units.Status, Is.EqualTo(CommanderGoalStatus.Blocked));
+            Assert.That(simulation.CommandBuffer.FlushCommands(), Is.Empty,
+                "A linked goal must not switch to an unrelated Barracks after its bound result is destroyed.");
         }
 
         private BuildStructureGoal SubmitPlacedBarracks()

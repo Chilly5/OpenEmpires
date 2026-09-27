@@ -179,6 +179,8 @@ namespace OpenEmpires
         public int RequestedUnitType { get; }
         public int TargetTotal { get; }
         public int MaxQueueDepth { get; internal set; }
+        // Game-side dependency only. The provider never supplies this reference.
+        public BuildStructureGoal RequiredProducerGoal { get; internal set; }
 
         public EnsureUnitCountGoal(int playerId, int requestedUnitType, int targetTotal,
             int maxQueueDepth = 3, int priority = 0, int maxDurationTicks = 36000)

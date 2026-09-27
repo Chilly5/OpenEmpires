@@ -160,6 +160,93 @@ namespace OpenEmpires
             return Register(new ResourceAllocationGoal(playerId, resource, target, maxDurationTicks), constraints);
         }
 
+        // Atomic game-side commit for a preflighted semantic graph. The graph admission
+        // layer owns JSON/reference validation; this method owns goal creation and result
+        // linkage. No provider data can reach this method without a trusted plan.
+        public IReadOnlyList<CommanderGoal> SubmitSemanticGraph(CommanderSemanticGraphPlan plan,
+            int maxDurationTicks = 36000)
+        {
+            ThrowIfDisposed();
+            if (plan == null || plan.Nodes == null || plan.Nodes.Count < 1
+                || plan.Nodes.Count > CommanderSemanticGraphAdmission.MaximumNodes)
+                throw new ArgumentException("The semantic graph is unavailable.", nameof(plan));
+            if (activeGoals.Count > MaxActiveGoals - plan.Nodes.Count)
+                throw new InvalidOperationException("The active Commander goal limit has been reached.");
+
+            var pending = new List<CommanderGoal>(plan.Nodes.Count);
+            var byIndex = new Dictionary<int, CommanderGoal>();
+            var validator = new CommanderIntentValidator();
+            for (int order = 0; order < plan.TopologicalOrder.Count; order++)
+            {
+                int index = plan.TopologicalOrder[order];
+                CommanderSemanticGraphNode node = plan.Nodes[index];
+                CommanderIntentValidationResult validation = validator.Validate(node.Intent, simulation, playerId);
+                if (!validation.IsValid) throw new ArgumentException(validation.Reason, nameof(plan));
+                CommanderGoal goal;
+                if (node.Intent is EnsureUnitCountIntent ensure)
+                {
+                    int maxQueue = 3;
+                    for (int i = 0; i < ensure.Constraints.Count; i++)
+                        if (ensure.Constraints[i] is MaximumQueueConstraint queue) maxQueue = queue.MaximumQueue;
+                    goal = new EnsureUnitCountGoal(playerId, ensure.UnitType, ensure.TargetTotal,
+                        maxQueue, maxDurationTicks: maxDurationTicks);
+                }
+                else if (node.Intent is BuildStructureIntent build)
+                {
+                    goal = new BuildStructureGoal(playerId, build.StructureType, build.Count,
+                        maxDurationTicks, build.PlacementAnchorSelector, build.PlacementAnchorOrdinal,
+                        build.PlacementRelation, build.ClearGapTiles);
+                    var structureGoal = (BuildStructureGoal)goal;
+                    structureGoal.TargetTotal = planner.CountCompletedBuildings(playerId, build.StructureType)
+                        + build.Count;
+                    for (int i = 0; i < pending.Count; i++)
+                        if (pending[i] is BuildStructureGoal earlier && !earlier.IsTerminal
+                            && earlier.StructureType == build.StructureType)
+                            structureGoal.TargetTotal = Math.Max(structureGoal.TargetTotal,
+                                earlier.TargetTotal + build.Count);
+                }
+                else if (node.Intent is SetResourceAllocationIntent allocation)
+                {
+                    int target = allocation.Mode == ResourceAllocationMode.Increase
+                        ? planner.CountResourceWorkers(playerId, allocation.Resource) + (allocation.WorkerCount ?? 1)
+                        : allocation.WorkerCount ?? throw new ArgumentException("Worker count is required.", nameof(plan));
+                    goal = new ResourceAllocationGoal(playerId, allocation.Resource, target, maxDurationTicks);
+                }
+                else throw new ArgumentException("Unsupported compound intent.", nameof(plan));
+                planner.CaptureConstraints(goal, node.Intent.Constraints);
+                pending.Add(goal);
+                byIndex.Add(index, goal);
+            }
+
+            for (int i = 0; i < plan.Nodes.Count; i++)
+            {
+                CommanderSemanticGraphNode node = plan.Nodes[i];
+                if (!node.ProducerFromNode.HasValue) continue;
+                var dependent = byIndex[i] as EnsureUnitCountGoal;
+                var producer = byIndex[node.ProducerFromNode.Value] as BuildStructureGoal;
+                if (dependent == null || producer == null)
+                    throw new ArgumentException("The producer link is invalid.", nameof(plan));
+                dependent.RequiredProducerGoal = producer;
+            }
+
+            for (int i = 0; i < pending.Count; i++)
+            {
+                CommanderGoal goal = pending[i];
+                goal.GoalId = nextGoalId++;
+                goal.CreatedTick = simulation.CurrentTick;
+                goals.Add(goal);
+                activeGoals.Add(goal);
+            }
+            if (ActiveGoal == null || ActiveGoal.IsTerminal) ActiveGoal = pending[0];
+            for (int i = 0; i < pending.Count; i++)
+            {
+                CommanderGoal goal = pending[i];
+                Debug.Log($"[Commander] Goal #{goal.GoalId} submitted: {goal.GoalType}");
+                PublishEvent(CommanderGoalEventType.GoalStarted, goal, simulation.CurrentTick);
+            }
+            return pending.AsReadOnly();
+        }
+
         private T Register<T>(T goal, IReadOnlyList<CommanderConstraint> constraints) where T : CommanderGoal
         {
             ThrowIfDisposed();

@@ -46,6 +46,9 @@ namespace OpenEmpires
         public int? PlacementAnchorOrdinal { get; }
         public CommanderSemanticPlacementRelation? PlacementRelation { get; }
         public int? ClearGapTiles { get; }
+        // References are bounded semantic node indices, never game/entity IDs.
+        public IReadOnlyList<int> DependsOn { get; }
+        public int? ProducerFromNode { get; }
 
         internal CommanderSemanticNode(CommanderSemanticNodeType type, int? unitType = null,
             BuildingType? buildingType = null, ResourceType? resourceType = null,
@@ -53,7 +56,9 @@ namespace OpenEmpires
             CommanderSemanticAnchorSelector? placementAnchorSelector = null,
             int? placementAnchorOrdinal = null,
             CommanderSemanticPlacementRelation? placementRelation = null,
-            int? clearGapTiles = null)
+            int? clearGapTiles = null,
+            IReadOnlyList<int> dependsOn = null,
+            int? producerFromNode = null)
         {
             Type = type;
             UnitType = unitType;
@@ -65,6 +70,13 @@ namespace OpenEmpires
             PlacementAnchorOrdinal = placementAnchorOrdinal;
             PlacementRelation = placementRelation;
             ClearGapTiles = clearGapTiles;
+            ProducerFromNode = producerFromNode;
+            var normalizedDependencies = dependsOn != null
+                ? new List<int>(dependsOn)
+                : new List<int>();
+            if (producerFromNode.HasValue && !normalizedDependencies.Contains(producerFromNode.Value))
+                normalizedDependencies.Add(producerFromNode.Value);
+            DependsOn = normalizedDependencies.AsReadOnly();
         }
     }
 

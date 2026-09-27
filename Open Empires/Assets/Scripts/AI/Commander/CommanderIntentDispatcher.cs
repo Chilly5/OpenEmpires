@@ -102,6 +102,38 @@ namespace OpenEmpires
             return SubmitInterpretedIntent(interpretation);
         }
 
+        // Main-thread entry point for a preflighted semantic graph. The graph is committed
+        // atomically by the goal manager; this wrapper preserves dispatcher lifecycle and
+        // event ownership without routing each node through the single-intent path.
+        public CommanderIntentSubmission SubmitSemanticGraph(CommanderSemanticGraphPlan plan)
+        {
+            ThrowIfDisposed();
+            CheckOwnerThread();
+            if (pendingRequest != null) return RejectBusy();
+            if (plan == null || plan.TopologicalOrder == null || plan.TopologicalOrder.Count == 0)
+            {
+                var rejected = new CommanderIntentResolution(CommanderIntentResolutionStatus.Rejected,
+                    null, null, CommanderIntentErrorCode.InvalidJson,
+                    "The compound Commander order was rejected safely.");
+                return new CommanderIntentSubmission(CommanderIntentInterpretation.Rejected(
+                    CommanderIntentErrorCode.InvalidJson, rejected.Reason),
+                    rejected, rejected.Reason);
+            }
+            IReadOnlyList<CommanderGoal> goals = goalManager.SubmitSemanticGraph(plan);
+            CommanderIntent firstIntent = plan.Nodes[plan.TopologicalOrder[0]].Intent;
+            var interpretation = CommanderIntentInterpretation.Accepted(firstIntent);
+            var resolution = new CommanderIntentResolution(CommanderIntentResolutionStatus.GoalCreated,
+                firstIntent, goals[0], CommanderIntentErrorCode.None, string.Empty);
+            for (int i = 0; i < plan.TopologicalOrder.Count; i++)
+            {
+                int index = plan.TopologicalOrder[i];
+                intentsByGoalId[goals[i].GoalId] = plan.Nodes[index].Intent;
+            }
+            const string response = "Compound Commander order submitted.";
+            if (!disposed) Notify(ResponseGenerated, response);
+            return new CommanderIntentSubmission(interpretation, resolution, response);
+        }
+
         public CommanderIntentSubmission SubmitIntent(StrategicIntent intent)
         {
             ThrowIfDisposed();

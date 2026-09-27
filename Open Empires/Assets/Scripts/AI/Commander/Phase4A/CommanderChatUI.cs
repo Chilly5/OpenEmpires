@@ -430,10 +430,37 @@ namespace OpenEmpires
                             : result.SafeExplanation);
                         return null;
                     }
-                    if (result.Nodes == null || result.Nodes.Count != 1)
+                    if (result.Nodes == null || result.Nodes.Count < 1
+                        || result.Nodes.Count > CommanderSemanticGraphAdmission.MaximumNodes)
                     {
-                        AppendLine("Commander", "Please make one Commander request at a time.");
+                        AppendLine("Commander", "That compound Commander request is outside the bounded request limit.");
                         return null;
+                    }
+                    if (result.Nodes.Count > 1)
+                    {
+                        if (!CommanderSemanticGraphAdmission.TryAdmit(result, context,
+                            out CommanderSemanticGraphPlan graph, out string graphReason))
+                        {
+                            AppendLine("Commander", graphReason);
+                            return null;
+                        }
+                        CommanderIntentSubmission graphSubmission;
+                        try { graphSubmission = dispatcher.SubmitSemanticGraph(graph); }
+                        catch (System.InvalidOperationException)
+                        {
+                            AppendLine("Commander", "The compound Commander order could not be admitted safely.");
+                            return null;
+                        }
+                        string graphDisplay = string.IsNullOrWhiteSpace(graphSubmission?.Response)
+                            ? "Compound Commander order submitted." : graphSubmission.Response;
+                        CommanderIntent graphIntent = graph.Nodes[graph.TopologicalOrder[0]].Intent;
+                        CommanderAIProviderResult graphProviderResult = CommanderAIProviderResult.Accepted(
+                            CommanderIntentDtoCodec.FromIntent(graphIntent), string.Empty, graphDisplay);
+                        var graphChatSubmission = new CommanderAIChatSubmission(graphProviderResult,
+                            graphSubmission.Interpretation, graphSubmission, graphDisplay);
+                        LatestSubmission = graphChatSubmission;
+                        AppendLine("Commander", graphDisplay);
+                        return graphChatSubmission;
                     }
                     CommanderSemanticNode node = result.Nodes[0];
                     if (node.Type == CommanderSemanticNodeType.StrategicObjective)

@@ -97,17 +97,18 @@ namespace OpenEmpires.Tests
         }
 
         [Test]
-        public async Task TwoNodeResponse_IsRejectedAtomically()
+        public async Task TwoNodeResponse_IsAdmittedAtomically()
         {
             var provider = new FakeSemanticProvider("{\"outcome\":\"Request\",\"nodes\":["
                 + "{\"type\":\"BuildStructure\",\"structure\":\"Barracks\",\"count\":1},"
-                + "{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":10}]}");
+                + "{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":10,\"producerFromNode\":0}]}");
             CommanderChatUI chat = CreateChat(provider);
 
             CommanderAIChatSubmission result = await chat.SubmitMessageAsync("Build and train these.");
 
-            Assert.That(result == null || !result.Success, Is.True);
-            Assert.That(goals.Goals, Is.Empty);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Success, Is.True, result?.DisplayText);
+            Assert.That(goals.Goals, Has.Count.EqualTo(2));
             Assert.That(simulation.CommandBuffer.FlushCommands(), Is.Empty);
         }
 
