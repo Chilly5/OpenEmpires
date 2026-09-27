@@ -1,0 +1,304 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "b75601312a9c431ebc94e02cb09aca65",
+      "status": "succeeded",
+      "mode": "EditMode",
+      "started_unix_ms": 1790510103407,
+      "finished_unix_ms": 1790510115155,
+      "last_update_unix_ms": 1790510115155,
+      "progress": {
+        "completed": 29,
+        "total": 29,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1790510114878,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase1Tests.UnitDeathBeforeCompletion_ReevaluationRestoresMissingOrder",
+        "last_finished_unix_ms": 1790510115118,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "EditMode",
+        "summary": {
+          "total": 29,
+          "passed": 29,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 7.5264707,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "AbsoluteMaximumPopulation_BlocksWithoutHouseSpam",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.AbsoluteMaximumPopulation_BlocksWithoutHouseSpam",
+            "state": "Passed",
+            "durationSeconds": 0.24611,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; Maximum population reached (200/200). Cannot increase capacity further.\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; Maximum population reached (200/200). Cannot increase capacity further.\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; Maximum population reached (200/200). Cannot increase capacity further.\r\n"
+          },
+          {
+            "name": "AlreadySatisfied_CompletesWithoutIssuingTraining",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.AlreadySatisfied_CompletesWithoutIssuingTraining",
+            "state": "Passed",
+            "durationSeconds": 0.2439015,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1: status=Completed owned=10 queued=0; Owned 10/10 living units.\r\n[Commander] Goal #1: status=Completed owned=10 queued=0; Owned 10/10 living units.\r\n[Commander] Goal #1: status=Completed owned=10 queued=0; Owned 10/10 living units.\r\n"
+          },
+          {
+            "name": "Cancellation_StopsFutureCommanderActions",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.Cancellation_StopsFutureCommanderActions",
+            "state": "Passed",
+            "durationSeconds": 0.2407702,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 cancelled.\r\n[Commander] Goal #1 cancelled.\r\n[Commander] Goal #1 cancelled.\r\n"
+          },
+          {
+            "name": "CommanderCommands_RoundTripThroughActiveJsonSerializer",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.CommanderCommands_RoundTripThroughActiveJsonSerializer",
+            "state": "Passed",
+            "durationSeconds": 0.2416189,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "CommanderPlacement_UnreachableCandidatesEmitNoPlaceCommand",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.CommanderPlacement_UnreachableCandidatesEmitNoPlaceCommand",
+            "state": "Passed",
+            "durationSeconds": 0.2767421,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No visible, reachable buildable location was found for Barracks.\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No visible, reachable buildable location was found for Barracks.\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No visible, reachable buildable location was found for Barracks.\r\n"
+          },
+          {
+            "name": "CommanderReservedWorker_IsReusedBeforeOrdinaryGatherer",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.CommanderReservedWorker_IsReusedBeforeOrdinaryGatherer",
+            "state": "Passed",
+            "durationSeconds": 0.2535282,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Need 150 wood for Barracks; have 0. Reassigning villager #0 to Wood node #0.\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Need 150 wood for Barracks; have 0. Reassigning villager #0 to Wood node #0.\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Need 150 wood for Barracks; have 0. Reassigning villager #0 to Wood node #0.\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Need 20 wood for the next Spearman; have 0. Reassigning villager #0 to Wood node #0.\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Need 20 wood for the next Spearman; have 0. Reassigning villager #0 to Wood node #0.\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Need 20 wood for the next Spearman; have 0. Reassigning villager #0 to Wood node #0.\r\n"
+          },
+          {
+            "name": "ConstructBuildingCommand_UnreachableWorkerRemainsUnassigned",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.ConstructBuildingCommand_UnreachableWorkerRemainsUnassigned",
+            "state": "Passed",
+            "durationSeconds": 0.2819412,
+            "message": null,
+            "stackTrace": null,
+            "output": "[SyncCheck] tick=0 PRE-CMD=72608F91 cmds=1\r\n[SyncCheck] tick=0 PRE-CMD=72608F91 cmds=1\r\n[SyncCheck] tick=0 PRE-CMD=72608F91 cmds=1\r\n[SyncCheck] tick=0 POST-CMD=72608F91\r\n[SyncCheck] tick=0 POST-CMD=72608F91\r\n[SyncCheck] tick=0 POST-CMD=72608F91\r\n[SyncCheck] tick=0 PRE-AI-EXEC=72608F91 aiCmds=0\r\n[SyncCheck] tick=0 PRE-AI-EXEC=72608F91 aiCmds=0\r\n[SyncCheck] tick=0 PRE-AI-EXEC=72608F91 aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=FB7068AD systemDetail=72608F91,72608F91,72608F91,72608F91,72608F91,72608F91,72608F91,72608F91,72608F91\r\n[SyncCheck] INIT tick=1 checksum=FB7068AD systemDetail=72608F91,72608F91,72608F91,72608F91,72608F91,72608F91,72608F91,72608F91,72608F91\r\n[SyncCheck] INIT tick=1 checksum=FB7068AD systemDetail=72608F91,72608F91,72608F91,72608F91,72608F91,72608F91,72608F91,72608F91,72608F91\r\n"
+          },
+          {
+            "name": "ConstructionRecovery_DeadBuilderIssuesConstructCommandForBackup",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.ConstructionRecovery_DeadBuilderIssuesConstructCommandForBackup",
+            "state": "Passed",
+            "durationSeconds": 0.2450309,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Production prerequisite: assigning villager #1 to recover building #1.\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Production prerequisite: assigning villager #1 to recover building #1.\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Production prerequisite: assigning villager #1 to recover building #1.\r\n"
+          },
+          {
+            "name": "ConstructionRecovery_ProgressingBuilderDoesNotReceiveDuplicateCommand",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.ConstructionRecovery_ProgressingBuilderDoesNotReceiveDuplicateCommand",
+            "state": "Passed",
+            "durationSeconds": 0.2416215,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=0; Production prerequisite: villager #0 is travelling to building #1.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=0; Production prerequisite: villager #0 is travelling to building #1.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=0; Production prerequisite: villager #0 is travelling to building #1.\r\n"
+          },
+          {
+            "name": "ConstructionRecovery_StalledBuilderReassignsBackupAfterGraceWindow",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.ConstructionRecovery_StalledBuilderReassignsBackupAfterGraceWindow",
+            "state": "Passed",
+            "durationSeconds": 0.2428072,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=0; Production prerequisite: building #1 is advancing with villager #0.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=0; Production prerequisite: building #1 is advancing with villager #0.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=0; Production prerequisite: building #1 is advancing with villager #0.\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Production prerequisite: assigning villager #1 to recover building #1.\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Production prerequisite: assigning villager #1 to recover building #1.\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Production prerequisite: assigning villager #1 to recover building #1.\r\n"
+          },
+          {
+            "name": "ConstructionRecovery_UnreachableBackupBecomesBlocked",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.ConstructionRecovery_UnreachableBackupBecomesBlocked",
+            "state": "Passed",
+            "durationSeconds": 0.2428786,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; Production prerequisite: building #1 is stalled and no reachable, unprotected owned villager can resume it.\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; Production prerequisite: building #1 is stalled and no reachable, unprotected owned villager can resume it.\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; Production prerequisite: building #1 is stalled and no reachable, unprotected owned villager can resume it.\r\n"
+          },
+          {
+            "name": "ExistingTrainingQueue_IsCountedAndPreventsBlindOverQueueing",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.ExistingTrainingQueue_IsCountedAndPreventsBlindOverQueueing",
+            "state": "Passed",
+            "durationSeconds": 0.2411412,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1: status=WaitingForProduction owned=5 queued=3; All compatible production queues are at Commander limit 3.\r\n[Commander] Goal #1: status=WaitingForProduction owned=5 queued=3; All compatible production queues are at Commander limit 3.\r\n[Commander] Goal #1: status=WaitingForProduction owned=5 queued=3; All compatible production queues are at Commander limit 3.\r\n"
+          },
+          {
+            "name": "ExploredResourceDepletion_DoesNotChangeCommanderObservation",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.ExploredResourceDepletion_DoesNotChangeCommanderObservation",
+            "state": "Passed",
+            "durationSeconds": 0.2445559,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; Need 150 wood for Barracks; have 0. No eligible owned villager is available.\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; Need 150 wood for Barracks; have 0. No eligible owned villager is available.\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; Need 150 wood for Barracks; have 0. No eligible owned villager is available.\r\n"
+          },
+          {
+            "name": "ForeignBuilder_CannotPlaceBuildingOrSpendIssuerResources",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.ForeignBuilder_CannotPlaceBuildingOrSpendIssuerResources",
+            "state": "Passed",
+            "durationSeconds": 0.2425614,
+            "message": null,
+            "stackTrace": null,
+            "output": "[SyncCheck] tick=0 PRE-CMD=1C668F91 cmds=1\r\n[SyncCheck] tick=0 PRE-CMD=1C668F91 cmds=1\r\n[SyncCheck] tick=0 PRE-CMD=1C668F91 cmds=1\r\n[SyncCheck] tick=0 POST-CMD=1C668F91\r\n[SyncCheck] tick=0 POST-CMD=1C668F91\r\n[SyncCheck] tick=0 POST-CMD=1C668F91\r\n[SyncCheck] tick=0 PRE-AI-EXEC=1C668F91 aiCmds=0\r\n[SyncCheck] tick=0 PRE-AI-EXEC=1C668F91 aiCmds=0\r\n[SyncCheck] tick=0 PRE-AI-EXEC=1C668F91 aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=14499382 systemDetail=1C668F91,1C668F91,1C668F91,1C668F91,1C668F91,1C668F91,1C668F91,1C668F91,1C668F91\r\n[SyncCheck] INIT tick=1 checksum=14499382 systemDetail=1C668F91,1C668F91,1C668F91,1C668F91,1C668F91,1C668F91,1C668F91,1C668F91,1C668F91\r\n[SyncCheck] INIT tick=1 checksum=14499382 systemDetail=1C668F91,1C668F91,1C668F91,1C668F91,1C668F91,1C668F91,1C668F91,1C668F91,1C668F91\r\n"
+          },
+          {
+            "name": "ForeignControlledUnits_AreRejectedByMoveStopAndAttack",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.ForeignControlledUnits_AreRejectedByMoveStopAndAttack",
+            "state": "Passed",
+            "durationSeconds": 0.2474766,
+            "message": null,
+            "stackTrace": null,
+            "output": "[SyncCheck] tick=0 PRE-CMD=BEBCD370 cmds=3\r\n[SyncCheck] tick=0 PRE-CMD=BEBCD370 cmds=3\r\n[SyncCheck] tick=0 PRE-CMD=BEBCD370 cmds=3\r\n[SyncCheck] tick=0 POST-CMD=BEBCD370\r\n[SyncCheck] tick=0 POST-CMD=BEBCD370\r\n[SyncCheck] tick=0 POST-CMD=BEBCD370\r\n[SyncCheck] tick=0 PRE-AI-EXEC=BEBCD370 aiCmds=0\r\n[SyncCheck] tick=0 PRE-AI-EXEC=BEBCD370 aiCmds=0\r\n[SyncCheck] tick=0 PRE-AI-EXEC=BEBCD370 aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=1FBD3E3A systemDetail=BEBCD370,BEBCD370,BEBCD370,BEBCD370,BEBCD370,BEBCD370,BEBCD370,BEBCD370,BEBCD370\r\n[SyncCheck] INIT tick=1 checksum=1FBD3E3A systemDetail=BEBCD370,BEBCD370,BEBCD370,BEBCD370,BEBCD370,BEBCD370,BEBCD370,BEBCD370,BEBCD370\r\n[SyncCheck] INIT tick=1 checksum=1FBD3E3A systemDetail=BEBCD370,BEBCD370,BEBCD370,BEBCD370,BEBCD370,BEBCD370,BEBCD370,BEBCD370,BEBCD370\r\n"
+          },
+          {
+            "name": "ForeignTowerUpgrade_IsRejectedWithoutSpendingOwnerResources",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.ForeignTowerUpgrade_IsRejectedWithoutSpendingOwnerResources",
+            "state": "Passed",
+            "durationSeconds": 0.2417879,
+            "message": null,
+            "stackTrace": null,
+            "output": "[SyncCheck] tick=0 PRE-CMD=00000011 cmds=1\r\n[SyncCheck] tick=0 PRE-CMD=00000011 cmds=1\r\n[SyncCheck] tick=0 PRE-CMD=00000011 cmds=1\r\n[SyncCheck] tick=0 POST-CMD=00000011\r\n[SyncCheck] tick=0 POST-CMD=00000011\r\n[SyncCheck] tick=0 POST-CMD=00000011\r\n[SyncCheck] tick=0 PRE-AI-EXEC=00000011 aiCmds=0\r\n[SyncCheck] tick=0 PRE-AI-EXEC=00000011 aiCmds=0\r\n[SyncCheck] tick=0 PRE-AI-EXEC=00000011 aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=E83D7494 systemDetail=00000011,00000011,00000011,00000011,00000011,00000011,00000011,00000011,00000011\r\n[SyncCheck] INIT tick=1 checksum=E83D7494 systemDetail=00000011,00000011,00000011,00000011,00000011,00000011,00000011,00000011,00000011\r\n[SyncCheck] INIT tick=1 checksum=E83D7494 systemDetail=00000011,00000011,00000011,00000011,00000011,00000011,00000011,00000011,00000011\r\n"
+          },
+          {
+            "name": "GatherCommand_CannotControlForeignVillager",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.GatherCommand_CannotControlForeignVillager",
+            "state": "Passed",
+            "durationSeconds": 0.2432292,
+            "message": null,
+            "stackTrace": null,
+            "output": "[SyncCheck] tick=0 PRE-CMD=1C668F91 cmds=1\r\n[SyncCheck] tick=0 PRE-CMD=1C668F91 cmds=1\r\n[SyncCheck] tick=0 PRE-CMD=1C668F91 cmds=1\r\n[SyncCheck] tick=0 POST-CMD=1C668F91\r\n[SyncCheck] tick=0 POST-CMD=1C668F91\r\n[SyncCheck] tick=0 POST-CMD=1C668F91\r\n[SyncCheck] tick=0 PRE-AI-EXEC=1C668F91 aiCmds=0\r\n[SyncCheck] tick=0 PRE-AI-EXEC=1C668F91 aiCmds=0\r\n[SyncCheck] tick=0 PRE-AI-EXEC=1C668F91 aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=D14DBA6C systemDetail=1C668F91,1C668F91,1C668F91,1C668F91,1C668F91,1C668F91,1C668F91,1C668F91,1C668F91\r\n[SyncCheck] INIT tick=1 checksum=D14DBA6C systemDetail=1C668F91,1C668F91,1C668F91,1C668F91,1C668F91,1C668F91,1C668F91,1C668F91,1C668F91\r\n[SyncCheck] INIT tick=1 checksum=D14DBA6C systemDetail=1C668F91,1C668F91,1C668F91,1C668F91,1C668F91,1C668F91,1C668F91,1C668F91,1C668F91\r\n"
+          },
+          {
+            "name": "GoalTimeout_PublishesStructuredFailureEvent",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.GoalTimeout_PublishesStructuredFailureEvent",
+            "state": "Passed",
+            "durationSeconds": 0.2460157,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; Need 150 wood for Barracks; have 0. No eligible owned villager is available.\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; Need 150 wood for Barracks; have 0. No eligible owned villager is available.\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; Need 150 wood for Barracks; have 0. No eligible owned villager is available.\r\n[Commander] Goal #1 failed: Goal exceeded its 30-tick duration limit.\r\n[Commander] Goal #1 failed: Goal exceeded its 30-tick duration limit.\r\n[Commander] Goal #1 failed: Goal exceeded its 30-tick duration limit.\r\n"
+          },
+          {
+            "name": "GridPathfinder_CompletePathCheckRejectsNonEmptyPartialPath",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.GridPathfinder_CompletePathCheckRejectsNonEmptyPartialPath",
+            "state": "Passed",
+            "durationSeconds": 0.2411756,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "HiddenEnemyBuilding_DoesNotChangePlacementObservation",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.HiddenEnemyBuilding_DoesNotChangePlacementObservation",
+            "state": "Passed",
+            "durationSeconds": 0.2420527,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No visible, reachable buildable location was found for Barracks.\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No visible, reachable buildable location was found for Barracks.\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No visible, reachable buildable location was found for Barracks.\r\n"
+          },
+          {
+            "name": "HumanCommand_ClearsReservationAndProtectionPreventsReclaim",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.HumanCommand_ClearsReservationAndProtectionPreventsReclaim",
+            "state": "Passed",
+            "durationSeconds": 0.2412824,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Need 150 wood for Barracks; have 0. Reassigning villager #0 to Wood node #0.\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Need 150 wood for Barracks; have 0. Reassigning villager #0 to Wood node #0.\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Need 150 wood for Barracks; have 0. Reassigning villager #0 to Wood node #0.\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Need 150 wood for Barracks; have 0. Reassigning villager #1 to Wood node #0.\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Need 150 wood for Barracks; have 0. Reassigning villager #1 to Wood node #0.\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Need 150 wood for Barracks; have 0. Reassigning villager #1 to Wood node #0.\r\n"
+          },
+          {
+            "name": "HumanProtectionWindow_PreventsRapidReclaimAtSixSimulationSeconds",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.HumanProtectionWindow_PreventsRapidReclaimAtSixSimulationSeconds",
+            "state": "Passed",
+            "durationSeconds": 0.2415611,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Need 150 wood for Barracks; have 0. Reassigning villager #0 to Wood node #0.\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Need 150 wood for Barracks; have 0. Reassigning villager #0 to Wood node #0.\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Need 150 wood for Barracks; have 0. Reassigning villager #0 to Wood node #0.\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Need 150 wood for Barracks; have 0. Reassigning villager #1 to Wood node #0.\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Need 150 wood for Barracks; have 0. Reassigning villager #1 to Wood node #0.\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Need 150 wood for Barracks; have 0. Reassigning villager #1 to Wood node #0.\r\n"
+          },
+          {
+            "name": "InsufficientBarracksWood_ReassignsOwnedVillagerWithoutCheatingResources",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.InsufficientBarracksWood_ReassignsOwnedVillagerWithoutCheatingResources",
+            "state": "Passed",
+            "durationSeconds": 0.2414407,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Need 150 wood for Barracks; have 0. Reassigning villager #0 to Wood node #0.\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Need 150 wood for Barracks; have 0. Reassigning villager #0 to Wood node #0.\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Need 150 wood for Barracks; have 0. Reassigning villager #0 to Wood node #0.\r\n"
+          },
+          {
+            "name": "MissingBarracks_EmitsLegitimatePlaceBuildingCommand",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.MissingBarracks_EmitsLegitimatePlaceBuildingCommand",
+            "state": "Passed",
+            "durationSeconds": 0.2420548,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Barracks at (197,140) with villager #0.\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Barracks at (197,140) with villager #0.\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Barracks at (197,140) with villager #0.\r\n"
+          },
+          {
+            "name": "MultipleBarracks_UsesLowestLoadAvailableProducer",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.MultipleBarracks_UsesLowestLoadAvailableProducer",
+            "state": "Passed",
+            "durationSeconds": 0.2409205,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1: status=Executing owned=0 queued=4; Queueing Spearman at Barracks #3.\r\n[Commander] Goal #1: status=Executing owned=0 queued=4; Queueing Spearman at Barracks #3.\r\n[Commander] Goal #1: status=Executing owned=0 queued=4; Queueing Spearman at Barracks #3.\r\n"
+          },
+          {
+            "name": "PartialCount_PlansOnlyRemainingProduction",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.PartialCount_PlansOnlyRemainingProduction",
+            "state": "Passed",
+            "durationSeconds": 0.2400105,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1: status=Executing owned=4 queued=0; Queueing Spearman at Barracks #1.\r\n[Commander] Goal #1: status=Executing owned=4 queued=0; Queueing Spearman at Barracks #1.\r\n[Commander] Goal #1: status=Executing owned=4 queued=0; Queueing Spearman at Barracks #1.\r\n"
+          },
+          {
+            "name": "PopulationBlocked_EmitsHousePlacementBeforeMoreTraining",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.PopulationBlocked_EmitsHousePlacementBeforeMoreTraining",
+            "state": "Passed",
+            "durationSeconds": 0.2426433,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing House at (197,140) with villager #0.\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing House at (197,140) with villager #0.\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing House at (197,140) with villager #0.\r\n"
+          },
+          {
+            "name": "SameTickHumanGatherCommand_ProtectsWorkerBeforeCommanderPlans",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.SameTickHumanGatherCommand_ProtectsWorkerBeforeCommanderPlans",
+            "state": "Passed",
+            "durationSeconds": 0.2399367,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Need 60 food for the next Spearman; have 0. Reassigning villager #1 to Food node #0.\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Need 60 food for the next Spearman; have 0. Reassigning villager #1 to Food node #0.\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Need 60 food for the next Spearman; have 0. Reassigning villager #1 to Food node #0.\r\n"
+          },
+          {
+            "name": "UnitDeathBeforeCompletion_ReevaluationRestoresMissingOrder",
+            "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.UnitDeathBeforeCompletion_ReevaluationRestoresMissingOrder",
+            "state": "Passed",
+            "durationSeconds": 0.2415128,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1: status=WaitingForProduction owned=8 queued=2; Owned 8, queued 2, target 10.\r\n[Commander] Goal #1: status=WaitingForProduction owned=8 queued=2; Owned 8, queued 2, target 10.\r\n[Commander] Goal #1: status=WaitingForProduction owned=8 queued=2; Owned 8, queued 2, target 10.\r\n[Commander] Goal #1: status=Executing owned=7 queued=2; Queueing Spearman at Barracks #1.\r\n[Commander] Goal #1: status=Executing owned=7 queued=2; Queueing Spearman at Barracks #1.\r\n[Commander] Goal #1: status=Executing owned=7 queued=2; Queueing Spearman at Barracks #1.\r\n"
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

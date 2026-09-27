@@ -1,0 +1,655 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "22a62ae53b75496bbc7b3b42833d3ae8",
+      "status": "succeeded",
+      "mode": "EditMode",
+      "started_unix_ms": 1790509906609,
+      "finished_unix_ms": 1790509951259,
+      "last_update_unix_ms": 1790509951259,
+      "progress": {
+        "completed": 68,
+        "total": 68,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1790509949934,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4E2SpatialIntegrationTests.PlacedBuild_UsesOrdinaryCommandAtExactWestOriginDespiteUnrelatedCompletedBarracks",
+        "last_finished_unix_ms": 1790509951066,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "EditMode",
+        "summary": {
+          "total": 68,
+          "passed": 68,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 36.1235631,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "MapEast_ExactOriginStartsAfterAnchorMaxEdgeAndFiveClearColumns",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2PlacementCandidatesTests.MapEast_ExactOriginStartsAfterAnchorMaxEdgeAndFiveClearColumns",
+            "state": "Passed",
+            "durationSeconds": 0.1095473,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MapEast_ExcludesCandidatesWhoseFullFootprintCrossesMapBounds",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2PlacementCandidatesTests.MapEast_ExcludesCandidatesWhoseFullFootprintCrossesMapBounds",
+            "state": "Passed",
+            "durationSeconds": 0.0041948,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MapWest_AtMapEdgeReturnsNoOutOfBoundsOrUnrelatedCandidate",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2PlacementCandidatesTests.MapWest_AtMapEdgeReturnsNoOutOfBoundsOrUnrelatedCandidate",
+            "state": "Passed",
+            "durationSeconds": 0.00069,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MapWest_CandidatesNeverReverseDirectionOrExceedBoundedTolerance",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2PlacementCandidatesTests.MapWest_CandidatesNeverReverseDirectionOrExceedBoundedTolerance",
+            "state": "Passed",
+            "durationSeconds": 0.0184371,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MapWest_CenterlineHalfTileTieUsesFloorAndLowerZ(2,3,19)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2PlacementCandidatesTests.MapWest_CenterlineHalfTileTieUsesFloorAndLowerZ(2,3,19)",
+            "state": "Passed",
+            "durationSeconds": 0.0017245,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MapWest_CenterlineHalfTileTieUsesFloorAndLowerZ(4,3,20)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2PlacementCandidatesTests.MapWest_CenterlineHalfTileTieUsesFloorAndLowerZ(4,3,20)",
+            "state": "Passed",
+            "durationSeconds": 0.0003518,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MapWest_CenterlineHalfTileTieUsesFloorAndLowerZ(3,4,19)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2PlacementCandidatesTests.MapWest_CenterlineHalfTileTieUsesFloorAndLowerZ(3,4,19)",
+            "state": "Passed",
+            "durationSeconds": 0.0003295,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MapWest_FallbacksRankGapErrorThenDisplacementThenXThenZ",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2PlacementCandidatesTests.MapWest_FallbacksRankGapErrorThenDisplacementThenXThenZ",
+            "state": "Passed",
+            "durationSeconds": 0.0040645,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MapWest_FiveClearColumnsPlacesExactOriginBeforeFallbacks",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2PlacementCandidatesTests.MapWest_FiveClearColumnsPlacesExactOriginBeforeFallbacks",
+            "state": "Passed",
+            "durationSeconds": 0.0032046,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Near_AllCandidatesStayOnOverlappingCardinalSideWithinGapAndCenterlineTolerance",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2PlacementCandidatesTests.Near_AllCandidatesStayOnOverlappingCardinalSideWithinGapAndCenterlineTolerance",
+            "state": "Passed",
+            "durationSeconds": 0.1233414,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Near_VisitsFourExactCardinalOneClearTileSidesBeforeFallbacks",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2PlacementCandidatesTests.Near_VisitsFourExactCardinalOneClearTileSidesBeforeFallbacks",
+            "state": "Passed",
+            "durationSeconds": 0.0021661,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MyBarracks_ChoosesNearestOwnedBarracksToOldestTownCenter",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.MyBarracks_ChoosesNearestOwnedBarracksToOldestTownCenter",
+            "state": "Passed",
+            "durationSeconds": 1.2177434,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MyBarracks_EqualDistanceChoosesLowerIdAfterRegistryReorder",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.MyBarracks_EqualDistanceChoosesLowerIdAfterRegistryReorder",
+            "state": "Passed",
+            "durationSeconds": 1.0987783,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MyBarracks_ExcludesDestroyedForeignAndUnsupportedOrdinal",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.MyBarracks_ExcludesDestroyedForeignAndUnsupportedOrdinal",
+            "state": "Passed",
+            "durationSeconds": 1.3986335,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MyBarracks_WithoutOwnedTownCenterFailsClosed",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.MyBarracks_WithoutOwnedTownCenterFailsClosed",
+            "state": "Passed",
+            "durationSeconds": 1.0761941,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MyTownCenter_ChoosesOldestSurvivingOwnedIdInsteadOfMainFlag",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.MyTownCenter_ChoosesOldestSurvivingOwnedIdInsteadOfMainFlag",
+            "state": "Passed",
+            "durationSeconds": 1.1349836,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MyTownCenter_ExcludesDestroyedAndForeignBuildings",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.MyTownCenter_ExcludesDestroyedAndForeignBuildings",
+            "state": "Passed",
+            "durationSeconds": 1.0621988,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MyTownCenter_FailsClosedForInvalidOrdinalAndNoOwnedTownCenter",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.MyTownCenter_FailsClosedForInvalidOrdinalAndNoOwnedTownCenter",
+            "state": "Passed",
+            "durationSeconds": 1.1482043,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MyTownCenter_IncludesSurvivingUnderConstructionTownCenter",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.MyTownCenter_IncludesSurvivingUnderConstructionTownCenter",
+            "state": "Passed",
+            "durationSeconds": 1.0620937,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MyTownCenter_OrdinalUsesOwnedSurvivingIdOrderAfterRegistryReorder",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.MyTownCenter_OrdinalUsesOwnedSurvivingIdOrderAfterRegistryReorder",
+            "state": "Passed",
+            "durationSeconds": 1.0655394,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "NearestGold_EqualDistanceChoosesLowerResourceId",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.NearestGold_EqualDistanceChoosesLowerResourceId",
+            "state": "Passed",
+            "durationSeconds": 1.1355669,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "NearestGold_NoCurrentlyVisibleCandidateFailsWithoutRevealingFog",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.NearestGold_NoCurrentlyVisibleCandidateFailsWithoutRevealingFog",
+            "state": "Passed",
+            "durationSeconds": 1.0439624,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "NearestGold_UsesOnlyCurrentlyVisibleNondepletedMatchingResources",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.NearestGold_UsesOnlyCurrentlyVisibleNondepletedMatchingResources",
+            "state": "Passed",
+            "durationSeconds": 1.0891005,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "NearestGold_UsesRequestedOwnedTownCenterOrdinal",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.NearestGold_UsesRequestedOwnedTownCenterOrdinal",
+            "state": "Passed",
+            "durationSeconds": 1.0643293,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Admission_PlacedBuildCarriesTrustedSemanticPlacementThroughTacticalIntent",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Admission_PlacedBuildCarriesTrustedSemanticPlacementThroughTacticalIntent",
+            "state": "Passed",
+            "durationSeconds": 1.0951037,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_BuildPlacement_AcceptsBoundedRelationTokens(\"MapWest\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_BuildPlacement_AcceptsBoundedRelationTokens(\"MapWest\")",
+            "state": "Passed",
+            "durationSeconds": 0.0059395,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_BuildPlacement_AcceptsBoundedRelationTokens(\"MapEast\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_BuildPlacement_AcceptsBoundedRelationTokens(\"MapEast\")",
+            "state": "Passed",
+            "durationSeconds": 0.0004183,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_ClearGapTiles_AcceptsInclusiveIntegerBounds(1)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_ClearGapTiles_AcceptsInclusiveIntegerBounds(1)",
+            "state": "Passed",
+            "durationSeconds": 0.0017448,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_ClearGapTiles_AcceptsInclusiveIntegerBounds(20)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_ClearGapTiles_AcceptsInclusiveIntegerBounds(20)",
+            "state": "Passed",
+            "durationSeconds": 0.0004583,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_ExistingTacticalAndStrategicForms_RemainValid",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_ExistingTacticalAndStrategicForms_RemainValid",
+            "state": "Passed",
+            "durationSeconds": 0.0056401,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsUnknownRelation",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.RejectsUnknownRelation",
+            "state": "Passed",
+            "durationSeconds": 0.0018169,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsUnknownSelector",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.RejectsUnknownSelector",
+            "state": "Passed",
+            "durationSeconds": 0.0003788,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsOrdinalBelowBound",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.RejectsOrdinalBelowBound",
+            "state": "Passed",
+            "durationSeconds": 0.0003564,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsOrdinalAboveBound",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.RejectsOrdinalAboveBound",
+            "state": "Passed",
+            "durationSeconds": 0.0003325,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsNegativeClearGap",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.RejectsNegativeClearGap",
+            "state": "Passed",
+            "durationSeconds": 0.0004741,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsZeroExplicitClearGap",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.RejectsZeroExplicitClearGap",
+            "state": "Passed",
+            "durationSeconds": 0.0003426,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsClearGapAboveApprovedBound",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.RejectsClearGapAboveApprovedBound",
+            "state": "Passed",
+            "durationSeconds": 0.0003229,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsNearFiveTileContradiction",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.RejectsNearFiveTileContradiction",
+            "state": "Passed",
+            "durationSeconds": 0.0003269,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsNonIntegerClearGap",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.RejectsNonIntegerClearGap",
+            "state": "Passed",
+            "durationSeconds": 0.0002144,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsExtraPlacementField",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.RejectsExtraPlacementField",
+            "state": "Passed",
+            "durationSeconds": 0.0004654,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsDuplicatePlacementField",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.RejectsDuplicatePlacementField",
+            "state": "Passed",
+            "durationSeconds": 0.0063566,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsProviderCoordinates",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.RejectsProviderCoordinates",
+            "state": "Passed",
+            "durationSeconds": 0.0004673,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsProviderEntityId",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.RejectsProviderEntityId",
+            "state": "Passed",
+            "durationSeconds": 0.0004014,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_MyTownCenterOrdinal_AcceptsInclusiveBounds(1)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_MyTownCenterOrdinal_AcceptsInclusiveBounds(1)",
+            "state": "Passed",
+            "durationSeconds": 0.0013738,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_MyTownCenterOrdinal_AcceptsInclusiveBounds(8)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_MyTownCenterOrdinal_AcceptsInclusiveBounds(8)",
+            "state": "Passed",
+            "durationSeconds": 0.0002839,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_Near_ExplicitOneClearTileIsConsistentWithApprovedMeaning",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_Near_ExplicitOneClearTileIsConsistentWithApprovedMeaning",
+            "state": "Passed",
+            "durationSeconds": 0.0008215,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_NearMyBarracks_AcceptsOwnedSemanticAnchorWithoutId",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_NearMyBarracks_AcceptsOwnedSemanticAnchorWithoutId",
+            "state": "Passed",
+            "durationSeconds": 0.0009602,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_PlacementWithoutDistance_LeavesGameSideDefaultUnset(\"MapWest\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_PlacementWithoutDistance_LeavesGameSideDefaultUnset(\"MapWest\")",
+            "state": "Passed",
+            "durationSeconds": 0.0011926,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_PlacementWithoutDistance_LeavesGameSideDefaultUnset(\"MapEast\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_PlacementWithoutDistance_LeavesGameSideDefaultUnset(\"MapEast\")",
+            "state": "Passed",
+            "durationSeconds": 0.0002611,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_PlacementWithoutDistance_LeavesGameSideDefaultUnset(\"Near\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_PlacementWithoutDistance_LeavesGameSideDefaultUnset(\"Near\")",
+            "state": "Passed",
+            "durationSeconds": 0.0002214,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "PlacedBuild_BindsNewFoundationIdAtRequestedTargetOnly",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SpatialIntegrationTests.PlacedBuild_BindsNewFoundationIdAtRequestedTargetOnly",
+            "state": "Passed",
+            "durationSeconds": 1.233659,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Barracks at (120,128) using exact semantic placement with 5 clear-tile gap and villager #0.\r\n[SyncCheck] tick=1 checksum=CC518313\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Barracks at (120,128): villager #0 is travelling to building #2.\r\n"
+          },
+          {
+            "name": "PlacedBuild_CompleteExploredWorkerPathIsLegitimate",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SpatialIntegrationTests.PlacedBuild_CompleteExploredWorkerPathIsLegitimate",
+            "state": "Passed",
+            "durationSeconds": 1.0067871,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Barracks at (120,128) using exact semantic placement with 5 clear-tile gap and villager #0.\r\n"
+          },
+          {
+            "name": "PlacedBuild_DestroyedBoundIdCannotBeHijackedByOtherCompletedBarracks",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SpatialIntegrationTests.PlacedBuild_DestroyedBoundIdCannotBeHijackedByOtherCompletedBarracks",
+            "state": "Passed",
+            "durationSeconds": 0.9800498,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Barracks at (120,128) using exact semantic placement with 5 clear-tile gap and villager #0.\r\n[SyncCheck] tick=1 checksum=0844BACE\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Barracks at (120,128): villager #0 is travelling to building #1.\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; The placed building is no longer owned and available at its requested tile.\r\n"
+          },
+          {
+            "name": "PlacedBuild_DirectManagerSubmissionRejectsIncompletePlacement",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SpatialIntegrationTests.PlacedBuild_DirectManagerSubmissionRejectsIncompletePlacement",
+            "state": "Passed",
+            "durationSeconds": 0.9654589,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "PlacedBuild_DoesNotRecoverAnUnrelatedSameTypeFoundation",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SpatialIntegrationTests.PlacedBuild_DoesNotRecoverAnUnrelatedSameTypeFoundation",
+            "state": "Passed",
+            "durationSeconds": 1.0206738,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Barracks at (120,128) using exact semantic placement with 5 clear-tile gap and villager #0.\r\n"
+          },
+          {
+            "name": "PlacedBuild_DoesNotRepeatPlacementWhileOrdinaryCommandRemainsQueued",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SpatialIntegrationTests.PlacedBuild_DoesNotRepeatPlacementWhileOrdinaryCommandRemainsQueued",
+            "state": "Passed",
+            "durationSeconds": 0.9701315,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Barracks at (120,128) using exact semantic placement with 5 clear-tile gap and villager #0.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=0; Waiting for the placement command at (120,128).\r\n"
+          },
+          {
+            "name": "PlacedBuild_ExhaustedCandidatesHasTypedBlockerAndNoCommand",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SpatialIntegrationTests.PlacedBuild_ExhaustedCandidatesHasTypedBlockerAndNoCommand",
+            "state": "Passed",
+            "durationSeconds": 0.994693,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No visible, buildable, reachable location satisfies the bounded Barracks placement.\r\n"
+          },
+          {
+            "name": "PlacedBuild_HumanCommandProcessedFirstAtSameTileCannotHijackResultId",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SpatialIntegrationTests.PlacedBuild_HumanCommandProcessedFirstAtSameTileCannotHijackResultId",
+            "state": "Passed",
+            "durationSeconds": 1.0150514,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Barracks at (120,128) using exact semantic placement with 5 clear-tile gap and villager #0.\r\n[SyncCheck] tick=1 checksum=47EDABFC\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No visible, buildable, reachable location satisfies the bounded Barracks placement.\r\n"
+          },
+          {
+            "name": "PlacedBuild_InvalidExactTerrainUsesOnlyBoundedFallbackAndExplainsIt",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SpatialIntegrationTests.PlacedBuild_InvalidExactTerrainUsesOnlyBoundedFallbackAndExplainsIt",
+            "state": "Passed",
+            "durationSeconds": 0.9750375,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Barracks at (120,127) using bounded fallback semantic placement with 5 clear-tile gap and villager #0.\r\n"
+          },
+          {
+            "name": "PlacedBuild_MapEdgeHasNoOutOfBoundsFallback",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SpatialIntegrationTests.PlacedBuild_MapEdgeHasNoOutOfBoundsFallback",
+            "state": "Passed",
+            "durationSeconds": 1.0529215,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No visible, buildable, reachable location satisfies the bounded Barracks placement.\r\n"
+          },
+          {
+            "name": "PlacedBuild_NearFoundationBorderFallbackExplainsActualGap",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SpatialIntegrationTests.PlacedBuild_NearFoundationBorderFallbackExplainsActualGap",
+            "state": "Passed",
+            "durationSeconds": 1.0305929,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Barracks at (128,123) using bounded fallback semantic placement with 2 clear-tile gap and villager #0.\r\n"
+          },
+          {
+            "name": "PlacedBuild_OccupiedExactBorderCannotReceivePlacement",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SpatialIntegrationTests.PlacedBuild_OccupiedExactBorderCannotReceivePlacement",
+            "state": "Passed",
+            "durationSeconds": 1.0525473,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Barracks at (120,126) using bounded fallback semantic placement with 5 clear-tile gap and villager #0.\r\n"
+          },
+          {
+            "name": "PlacedBuild_PreservesAgeAndCostGateBeforePlacement",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SpatialIntegrationTests.PlacedBuild_PreservesAgeAndCostGateBeforePlacement",
+            "state": "Passed",
+            "durationSeconds": 1.1861956,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=WaitingForPrerequisite owned=0 queued=0; Barracks requires age 1. Advance age to resume.\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; Need 150 wood for Barracks; have 0. No eligible owned villager is available.\r\n"
+          },
+          {
+            "name": "PlacedBuild_RejectsForeignOnlyBuilder",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SpatialIntegrationTests.PlacedBuild_RejectsForeignOnlyBuilder",
+            "state": "Passed",
+            "durationSeconds": 1.0694471,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No owned living villager is available to build Barracks.\r\n"
+          },
+          {
+            "name": "PlacedBuild_RequiresCurrentVisibilityOfFootprintAndBorder",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SpatialIntegrationTests.PlacedBuild_RequiresCurrentVisibilityOfFootprintAndBorder",
+            "state": "Passed",
+            "durationSeconds": 1.1427368,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No visible, buildable, reachable location satisfies the bounded Barracks placement.\r\n"
+          },
+          {
+            "name": "PlacedBuild_SelectsReachableOwnedWorkerWhenFirstEligibleCannotReach",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SpatialIntegrationTests.PlacedBuild_SelectsReachableOwnedWorkerWhenFirstEligibleCannotReach",
+            "state": "Passed",
+            "durationSeconds": 1.0158187,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Barracks at (120,128) using exact semantic placement with 5 clear-tile gap and villager #1.\r\n"
+          },
+          {
+            "name": "PlacedBuild_UnexploredBarrierRejectsPartialKnownWorkerPath",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SpatialIntegrationTests.PlacedBuild_UnexploredBarrierRejectsPartialKnownWorkerPath",
+            "state": "Passed",
+            "durationSeconds": 1.1119042,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No visible, buildable, reachable location satisfies the bounded Barracks placement.\r\n"
+          },
+          {
+            "name": "PlacedBuild_UsesOrdinaryCommandAtExactWestOriginDespiteUnrelatedCompletedBarracks",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SpatialIntegrationTests.PlacedBuild_UsesOrdinaryCommandAtExactWestOriginDespiteUnrelatedCompletedBarracks",
+            "state": "Passed",
+            "durationSeconds": 1.1307297,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Barracks at (120,128) using exact semantic placement with 5 clear-tile gap and villager #0.\r\n"
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}
