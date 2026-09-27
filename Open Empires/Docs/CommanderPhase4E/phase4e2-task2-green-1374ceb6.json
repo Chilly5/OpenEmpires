@@ -1,0 +1,394 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "1374ceb694f6440e97457e456e9b7d61",
+      "status": "succeeded",
+      "mode": "EditMode",
+      "started_unix_ms": 1790489503196,
+      "finished_unix_ms": 1790489507562,
+      "last_update_unix_ms": 1790489507562,
+      "progress": {
+        "completed": 39,
+        "total": 39,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1790489507526,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_PlacementWithoutDistance_LeavesGameSideDefaultUnset(\"Near\")",
+        "last_finished_unix_ms": 1790489507526,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "EditMode",
+        "summary": {
+          "total": 39,
+          "passed": 39,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 3.6249315,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "MyBarracks_ChoosesNearestOwnedBarracksToOldestTownCenter",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.MyBarracks_ChoosesNearestOwnedBarracksToOldestTownCenter",
+            "state": "Passed",
+            "durationSeconds": 0.2715457,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MyBarracks_EqualDistanceChoosesLowerIdAfterRegistryReorder",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.MyBarracks_EqualDistanceChoosesLowerIdAfterRegistryReorder",
+            "state": "Passed",
+            "durationSeconds": 0.2428339,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MyBarracks_ExcludesDestroyedForeignAndUnsupportedOrdinal",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.MyBarracks_ExcludesDestroyedForeignAndUnsupportedOrdinal",
+            "state": "Passed",
+            "durationSeconds": 0.2464966,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MyBarracks_WithoutOwnedTownCenterFailsClosed",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.MyBarracks_WithoutOwnedTownCenterFailsClosed",
+            "state": "Passed",
+            "durationSeconds": 0.2570649,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MyTownCenter_ChoosesOldestSurvivingOwnedIdInsteadOfMainFlag",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.MyTownCenter_ChoosesOldestSurvivingOwnedIdInsteadOfMainFlag",
+            "state": "Passed",
+            "durationSeconds": 0.252138,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MyTownCenter_ExcludesDestroyedAndForeignBuildings",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.MyTownCenter_ExcludesDestroyedAndForeignBuildings",
+            "state": "Passed",
+            "durationSeconds": 0.2609476,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MyTownCenter_FailsClosedForInvalidOrdinalAndNoOwnedTownCenter",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.MyTownCenter_FailsClosedForInvalidOrdinalAndNoOwnedTownCenter",
+            "state": "Passed",
+            "durationSeconds": 0.3009032,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MyTownCenter_IncludesSurvivingUnderConstructionTownCenter",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.MyTownCenter_IncludesSurvivingUnderConstructionTownCenter",
+            "state": "Passed",
+            "durationSeconds": 0.2418683,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MyTownCenter_OrdinalUsesOwnedSurvivingIdOrderAfterRegistryReorder",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.MyTownCenter_OrdinalUsesOwnedSurvivingIdOrderAfterRegistryReorder",
+            "state": "Passed",
+            "durationSeconds": 0.2418949,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "NearestGold_EqualDistanceChoosesLowerResourceId",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.NearestGold_EqualDistanceChoosesLowerResourceId",
+            "state": "Passed",
+            "durationSeconds": 0.2425028,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "NearestGold_NoCurrentlyVisibleCandidateFailsWithoutRevealingFog",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.NearestGold_NoCurrentlyVisibleCandidateFailsWithoutRevealingFog",
+            "state": "Passed",
+            "durationSeconds": 0.2424145,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "NearestGold_UsesOnlyCurrentlyVisibleNondepletedMatchingResources",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.NearestGold_UsesOnlyCurrentlyVisibleNondepletedMatchingResources",
+            "state": "Passed",
+            "durationSeconds": 0.2426398,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "NearestGold_UsesRequestedOwnedTownCenterOrdinal",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.NearestGold_UsesRequestedOwnedTownCenterOrdinal",
+            "state": "Passed",
+            "durationSeconds": 0.2436591,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Admission_PlacedBuildFailsClosedUntilSpatialPlannerExists",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Admission_PlacedBuildFailsClosedUntilSpatialPlannerExists",
+            "state": "Passed",
+            "durationSeconds": 0.261176,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_BuildPlacement_AcceptsBoundedRelationTokens(\"MapWest\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_BuildPlacement_AcceptsBoundedRelationTokens(\"MapWest\")",
+            "state": "Passed",
+            "durationSeconds": 0.0018096,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_BuildPlacement_AcceptsBoundedRelationTokens(\"MapEast\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_BuildPlacement_AcceptsBoundedRelationTokens(\"MapEast\")",
+            "state": "Passed",
+            "durationSeconds": 0.0001128,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_ClearGapTiles_AcceptsInclusiveIntegerBounds(1)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_ClearGapTiles_AcceptsInclusiveIntegerBounds(1)",
+            "state": "Passed",
+            "durationSeconds": 0.0003308,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_ClearGapTiles_AcceptsInclusiveIntegerBounds(20)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_ClearGapTiles_AcceptsInclusiveIntegerBounds(20)",
+            "state": "Passed",
+            "durationSeconds": 0.0000563,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_ExistingTacticalAndStrategicForms_RemainValid",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_ExistingTacticalAndStrategicForms_RemainValid",
+            "state": "Passed",
+            "durationSeconds": 0.0006151,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsUnknownRelation",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.RejectsUnknownRelation",
+            "state": "Passed",
+            "durationSeconds": 0.0008453,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsUnknownSelector",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.RejectsUnknownSelector",
+            "state": "Passed",
+            "durationSeconds": 0.0000931,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsOrdinalBelowBound",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.RejectsOrdinalBelowBound",
+            "state": "Passed",
+            "durationSeconds": 0.0000597,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsOrdinalAboveBound",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.RejectsOrdinalAboveBound",
+            "state": "Passed",
+            "durationSeconds": 0.0000621,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsNegativeClearGap",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.RejectsNegativeClearGap",
+            "state": "Passed",
+            "durationSeconds": 0.0000608,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsZeroExplicitClearGap",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.RejectsZeroExplicitClearGap",
+            "state": "Passed",
+            "durationSeconds": 0.0000528,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsClearGapAboveApprovedBound",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.RejectsClearGapAboveApprovedBound",
+            "state": "Passed",
+            "durationSeconds": 0.0000475,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsNearFiveTileContradiction",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.RejectsNearFiveTileContradiction",
+            "state": "Passed",
+            "durationSeconds": 0.0000761,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsNonIntegerClearGap",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.RejectsNonIntegerClearGap",
+            "state": "Passed",
+            "durationSeconds": 0.0000391,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsExtraPlacementField",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.RejectsExtraPlacementField",
+            "state": "Passed",
+            "durationSeconds": 0.0000617,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsDuplicatePlacementField",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.RejectsDuplicatePlacementField",
+            "state": "Passed",
+            "durationSeconds": 0.0013056,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsProviderCoordinates",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.RejectsProviderCoordinates",
+            "state": "Passed",
+            "durationSeconds": 0.0000792,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsProviderEntityId",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.RejectsProviderEntityId",
+            "state": "Passed",
+            "durationSeconds": 0.0000533,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_MyTownCenterOrdinal_AcceptsInclusiveBounds(1)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_MyTownCenterOrdinal_AcceptsInclusiveBounds(1)",
+            "state": "Passed",
+            "durationSeconds": 0.0002515,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_MyTownCenterOrdinal_AcceptsInclusiveBounds(8)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_MyTownCenterOrdinal_AcceptsInclusiveBounds(8)",
+            "state": "Passed",
+            "durationSeconds": 0.000051,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_Near_ExplicitOneClearTileIsConsistentWithApprovedMeaning",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_Near_ExplicitOneClearTileIsConsistentWithApprovedMeaning",
+            "state": "Passed",
+            "durationSeconds": 0.0001521,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_NearMyBarracks_AcceptsOwnedSemanticAnchorWithoutId",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_NearMyBarracks_AcceptsOwnedSemanticAnchorWithoutId",
+            "state": "Passed",
+            "durationSeconds": 0.0001869,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_PlacementWithoutDistance_LeavesGameSideDefaultUnset(\"MapWest\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_PlacementWithoutDistance_LeavesGameSideDefaultUnset(\"MapWest\")",
+            "state": "Passed",
+            "durationSeconds": 0.0001883,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_PlacementWithoutDistance_LeavesGameSideDefaultUnset(\"MapEast\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_PlacementWithoutDistance_LeavesGameSideDefaultUnset(\"MapEast\")",
+            "state": "Passed",
+            "durationSeconds": 0.0000425,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_PlacementWithoutDistance_LeavesGameSideDefaultUnset(\"Near\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_PlacementWithoutDistance_LeavesGameSideDefaultUnset(\"Near\")",
+            "state": "Passed",
+            "durationSeconds": 0.0000341,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "f589f16fb1bd4ff1a4fe5c28dd4538f1",
+      "status": "failed",
+      "mode": "EditMode",
+      "started_unix_ms": 1790489676055,
+      "finished_unix_ms": 1790489685336,
+      "last_update_unix_ms": 1790489685336,
+      "progress": {
+        "completed": 50,
+        "total": 50,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1790489685288,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_PlacementWithoutDistance_LeavesGameSideDefaultUnset(\"Near\")",
+        "last_finished_unix_ms": 1790489685288,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4E2PlacementCandidatesTests.MapEast_ExactOriginStartsAfterAnchorMaxEdgeAndFiveClearColumns",
+            "message": "  Task 3 requires pure deterministic candidate generation.\r\n  Expected: not null\r\n  But was:  null\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4E2PlacementCandidatesTests.MapEast_ExcludesCandidatesWhoseFullFootprintCrossesMapBounds",
+            "message": "  Task 3 requires pure deterministic candidate generation.\r\n  Expected: not null\r\n  But was:  null\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4E2PlacementCandidatesTests.MapWest_AtMapEdgeReturnsNoOutOfBoundsOrUnrelatedCandidate",
+            "message": "  Task 3 requires pure deterministic candidate generation.\r\n  Expected: not null\r\n  But was:  null\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4E2PlacementCandidatesTests.MapWest_CandidatesNeverReverseDirectionOrExceedBoundedTolerance",
+            "message": "  Task 3 requires pure deterministic candidate generation.\r\n  Expected: not null\r\n  But was:  null\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4E2PlacementCandidatesTests.MapWest_CenterlineHalfTileTieUsesFloorAndLowerZ(2,3,19)",
+            "message": "  Task 3 requires pure deterministic candidate generation.\r\n  Expected: not null\r\n  But was:  null\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4E2PlacementCandidatesTests.MapWest_CenterlineHalfTileTieUsesFloorAndLowerZ(4,3,20)",
+            "message": "  Task 3 requires pure deterministic candidate generation.\r\n  Expected: not null\r\n  But was:  null\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4E2PlacementCandidatesTests.MapWest_CenterlineHalfTileTieUsesFloorAndLowerZ(3,4,19)",
+            "message": "  Task 3 requires pure deterministic candidate generation.\r\n  Expected: not null\r\n  But was:  null\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4E2PlacementCandidatesTests.MapWest_FallbacksRankGapErrorThenDisplacementThenXThenZ",
+            "message": "  Task 3 requires pure deterministic candidate generation.\r\n  Expected: not null\r\n  But was:  null\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4E2PlacementCandidatesTests.MapWest_FiveClearColumnsPlacesExactOriginBeforeFallbacks",
+            "message": "  Task 3 requires pure deterministic candidate generation.\r\n  Expected: not null\r\n  But was:  null\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4E2PlacementCandidatesTests.Near_AllCandidatesStayOnOverlappingCardinalSideWithinGapAndCenterlineTolerance",
+            "message": "  Task 3 requires pure deterministic candidate generation.\r\n  Expected: not null\r\n  But was:  null\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4E2PlacementCandidatesTests.Near_VisitsFourExactCardinalOneClearTileSidesBeforeFallbacks",
+            "message": "  Task 3 requires pure deterministic candidate generation.\r\n  Expected: not null\r\n  But was:  null\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}
