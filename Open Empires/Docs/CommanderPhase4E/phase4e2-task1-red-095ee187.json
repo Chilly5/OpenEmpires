@@ -1,0 +1,64 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "095ee187946044159b70f69b3bf7902e",
+      "status": "failed",
+      "mode": "EditMode",
+      "started_unix_ms": 1790488293049,
+      "finished_unix_ms": 1790488301330,
+      "last_update_unix_ms": 1790488301330,
+      "progress": {
+        "completed": 19,
+        "total": 19,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1790488301289,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_MyTownCenterOrdinal_AcceptsInclusiveBounds(8)",
+        "last_finished_unix_ms": 1790488301289,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_BuildPlacement_AcceptsBoundedRelationTokens(\"MapWest\")",
+            "message": "  Expected: True\r\n  But was:  False\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_BuildPlacement_AcceptsBoundedRelationTokens(\"MapEast\")",
+            "message": "  Expected: True\r\n  But was:  False\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_BuildPlacement_AcceptsBoundedRelationTokens(\"Near\")",
+            "message": "  Expected: True\r\n  But was:  False\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_ClearGapTiles_AcceptsInclusiveIntegerBounds(0)",
+            "message": "  Expected: True\r\n  But was:  False\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_ClearGapTiles_AcceptsInclusiveIntegerBounds(64)",
+            "message": "  Expected: True\r\n  But was:  False\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_ExistingTacticalAndStrategicForms_RemainValid",
+            "message": "  Expected typed semantic node property PlacementAnchorSelector\r\n  Expected: not null\r\n  But was:  null\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_MyTownCenterOrdinal_AcceptsInclusiveBounds(1)",
+            "message": "  Expected: True\r\n  But was:  False\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase4E2SemanticPlacementContractTests.Parse_MyTownCenterOrdinal_AcceptsInclusiveBounds(8)",
+            "message": "  Expected: True\r\n  But was:  False\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

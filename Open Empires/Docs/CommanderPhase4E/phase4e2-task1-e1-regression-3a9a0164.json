@@ -1,0 +1,682 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "3a9a01646b9844729cdbf4b90625be6e",
+      "status": "succeeded",
+      "mode": "EditMode",
+      "started_unix_ms": 1790488778798,
+      "finished_unix_ms": 1790488786105,
+      "last_update_unix_ms": 1790488786105,
+      "progress": {
+        "completed": 71,
+        "total": 71,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1790488785846,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4E1StrategicTests.SemanticObjective_StagesOwnedAiRecommendationWithoutCreatingPlan",
+        "last_finished_unix_ms": 1790488786085,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "EditMode",
+        "summary": {
+          "total": 71,
+          "passed": 71,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 7.0431639,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "BusyRequest_DoesNotStartSecondProviderCall_AndControlsRecover",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ChatTests.BusyRequest_DoesNotStartSecondProviderCall_AndControlsRecover",
+            "state": "Passed",
+            "durationSeconds": 0.2921965,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n"
+          },
+          {
+            "name": "NonCooperativeProvider_TimeoutUnlocksControls_AndLateReplyCannotAdmit",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ChatTests.NonCooperativeProvider_TimeoutUnlocksControls_AndLateReplyCannotAdmit",
+            "state": "Passed",
+            "durationSeconds": 0.303396,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "NonTacticalOrInvalidSemanticResult_CreatesNoGoal(\"{\\\"outcome\\\":\\\"Request\\\",\\\"nodes\\\":[{\\\"type\\\":\\\"EnsureUnitCount\\\",\\\"unit\\\":\\\"Trebuchet\\\",\\\"count\\\":10}]}\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ChatTests.NonTacticalOrInvalidSemanticResult_CreatesNoGoal(\"{\\\"outcome\\\":\\\"Request\\\",\\\"nodes\\\":[{\\\"type\\\":\\\"EnsureUnitCount\\\",\\\"unit\\\":\\\"Trebuchet\\\",\\\"count\\\":10}]}\")",
+            "state": "Passed",
+            "durationSeconds": 0.2501727,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "NonTacticalOrInvalidSemanticResult_CreatesNoGoal(\"{\\\"outcome\\\":\\\"Clarify\\\",\\\"message\\\":\\\"Which unit?\\\"}\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ChatTests.NonTacticalOrInvalidSemanticResult_CreatesNoGoal(\"{\\\"outcome\\\":\\\"Clarify\\\",\\\"message\\\":\\\"Which unit?\\\"}\")",
+            "state": "Passed",
+            "durationSeconds": 0.2470425,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "NonTacticalOrInvalidSemanticResult_CreatesNoGoal(\"{\\\"outcome\\\":\\\"Unsupported\\\",\\\"message\\\":\\\"I cannot do that.\\\"}\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ChatTests.NonTacticalOrInvalidSemanticResult_CreatesNoGoal(\"{\\\"outcome\\\":\\\"Unsupported\\\",\\\"message\\\":\\\"I cannot do that.\\\"}\")",
+            "state": "Passed",
+            "durationSeconds": 0.2488131,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "NonTacticalOrInvalidSemanticResult_CreatesNoGoal(\"{\\\"outcome\\\":\\\"Request\\\",\\\"nodes\\\":[{\\\"type\\\":\\\"EnsureUnitCount\\\",\\\"unit\\\":\\\"Spearman\\\",\\\"count\\\":10}]\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ChatTests.NonTacticalOrInvalidSemanticResult_CreatesNoGoal(\"{\\\"outcome\\\":\\\"Request\\\",\\\"nodes\\\":[{\\\"type\\\":\\\"EnsureUnitCount\\\",\\\"unit\\\":\\\"Spearman\\\",\\\"count\\\":10}]\")",
+            "state": "Passed",
+            "durationSeconds": 0.2478027,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "OfflineStatus_BypassesSemanticProvider",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ChatTests.OfflineStatus_BypassesSemanticProvider",
+            "state": "Passed",
+            "durationSeconds": 0.2479865,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "ProviderFailure_LeavesControlsUsable_AndDoesNotEchoUnsafeText",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ChatTests.ProviderFailure_LeavesControlsUsable_AndDoesNotEchoUnsafeText",
+            "state": "Passed",
+            "durationSeconds": 0.2546799,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "ReinitializeForDifferentRuntimeAndOwner_RejectsOldProviderResult",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ChatTests.ReinitializeForDifferentRuntimeAndOwner_RejectsOldProviderResult",
+            "state": "Passed",
+            "durationSeconds": 0.4923086,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "ResetWhileProviderPending_RejectsLateResultWithoutGoal",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ChatTests.ResetWhileProviderPending_RejectsLateResultWithoutGoal",
+            "state": "Passed",
+            "durationSeconds": 0.2525043,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "SemanticProvider_AdmitsOtherTacticalNodes(\"{\\\"outcome\\\":\\\"Request\\\",\\\"nodes\\\":[{\\\"type\\\":\\\"BuildStructure\\\",\\\"structure\\\":\\\"Barracks\\\",\\\"count\\\":1}]}\",OpenEmpires.BuildStructureGoal)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ChatTests.SemanticProvider_AdmitsOtherTacticalNodes(\"{\\\"outcome\\\":\\\"Request\\\",\\\"nodes\\\":[{\\\"type\\\":\\\"BuildStructure\\\",\\\"structure\\\":\\\"Barracks\\\",\\\"count\\\":1}]}\",OpenEmpires.BuildStructureGoal)",
+            "state": "Passed",
+            "durationSeconds": 0.256234,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: BuildStructure\r\n"
+          },
+          {
+            "name": "SemanticProvider_AdmitsOtherTacticalNodes(\"{\\\"outcome\\\":\\\"Request\\\",\\\"nodes\\\":[{\\\"type\\\":\\\"SetResourceAllocation\\\",\\\"resource\\\":\\\"Food\\\",\\\"count\\\":2}]}\",OpenEmpires.ResourceAllocationGoal)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ChatTests.SemanticProvider_AdmitsOtherTacticalNodes(\"{\\\"outcome\\\":\\\"Request\\\",\\\"nodes\\\":[{\\\"type\\\":\\\"SetResourceAllocation\\\",\\\"resource\\\":\\\"Food\\\",\\\"count\\\":2}]}\",OpenEmpires.ResourceAllocationGoal)",
+            "state": "Passed",
+            "durationSeconds": 0.2547607,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(\"Could you make sure we have ten spearmen?\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ChatTests.SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(\"Could you make sure we have ten spearmen?\")",
+            "state": "Passed",
+            "durationSeconds": 0.2548074,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n"
+          },
+          {
+            "name": "SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(\"I'd like our spearman force to reach ten.\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ChatTests.SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(\"I'd like our spearman force to reach ten.\")",
+            "state": "Passed",
+            "durationSeconds": 0.2528752,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n"
+          },
+          {
+            "name": "SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(\"We need a total of ten spearmen in the army.\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ChatTests.SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(\"We need a total of ten spearmen in the army.\")",
+            "state": "Passed",
+            "durationSeconds": 0.2559602,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n"
+          },
+          {
+            "name": "SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(\"Please bring the spearmen count up to 10.\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ChatTests.SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(\"Please bring the spearmen count up to 10.\")",
+            "state": "Passed",
+            "durationSeconds": 0.2514759,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n"
+          },
+          {
+            "name": "SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(\"Can we field ten spearmen?\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ChatTests.SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(\"Can we field ten spearmen?\")",
+            "state": "Passed",
+            "durationSeconds": 0.2558861,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n"
+          },
+          {
+            "name": "SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(\"Aim for a squad of ten spearmen.\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ChatTests.SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(\"Aim for a squad of ten spearmen.\")",
+            "state": "Passed",
+            "durationSeconds": 0.2700127,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n"
+          },
+          {
+            "name": "SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(\"Get us to 10 spearmen when you can.\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ChatTests.SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(\"Get us to 10 spearmen when you can.\")",
+            "state": "Passed",
+            "durationSeconds": 0.2668217,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n"
+          },
+          {
+            "name": "TacticalAdmission_RejectsStrategicNodeWithoutConvertingToPlayerDirect",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ChatTests.TacticalAdmission_RejectsStrategicNodeWithoutConvertingToPlayerDirect",
+            "state": "Passed",
+            "durationSeconds": 0.2388221,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "TwoNodeResponse_IsRejectedAtomically",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ChatTests.TwoNodeResponse_IsRejectedAtomically",
+            "state": "Passed",
+            "durationSeconds": 0.2498177,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "CivilizationResolvedUnits_AreCountedUnderSemanticCapabilities",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.CivilizationResolvedUnits_AreCountedUnderSemanticCapabilities",
+            "state": "Passed",
+            "durationSeconds": 0.0019362,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "DetachedContext_ExcludesIdsCoordinatesAndEnemyData",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.DetachedContext_ExcludesIdsCoordinatesAndEnemyData",
+            "state": "Passed",
+            "durationSeconds": 0.0037468,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "LongPlayerMessage_IsRejectedBeforeTransport",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.LongPlayerMessage_IsRejectedBeforeTransport",
+            "state": "Passed",
+            "durationSeconds": 0.0018396,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MalformedSemanticJson_IsRejectedWithoutAuthority(\"not json\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.MalformedSemanticJson_IsRejectedWithoutAuthority(\"not json\")",
+            "state": "Passed",
+            "durationSeconds": 0.0008885,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MalformedSemanticJson_IsRejectedWithoutAuthority(\"{\\\"outcome\\\":\\\"Request\\\",\\\"nodes\\\":[{\\\"type\\\":\\\"EnsureUnitCount\\\",\\\"unit\\\":\\\"Spearman\\\",\\\"count\\\":10,\\\"playerId\\\":99}]}\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.MalformedSemanticJson_IsRejectedWithoutAuthority(\"{\\\"outcome\\\":\\\"Request\\\",\\\"nodes\\\":[{\\\"type\\\":\\\"EnsureUnitCount\\\",\\\"unit\\\":\\\"Spearman\\\",\\\"count\\\":10,\\\"playerId\\\":99}]}\")",
+            "state": "Passed",
+            "durationSeconds": 0.0010519,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "NaturalParaphrase_ReturnsSameTypedUnitRequest(\"Could you get our spearmen up to ten?\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.NaturalParaphrase_ReturnsSameTypedUnitRequest(\"Could you get our spearmen up to ten?\")",
+            "state": "Passed",
+            "durationSeconds": 0.0022323,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "NaturalParaphrase_ReturnsSameTypedUnitRequest(\"I want a total of ten spears in my army.\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.NaturalParaphrase_ReturnsSameTypedUnitRequest(\"I want a total of ten spears in my army.\")",
+            "state": "Passed",
+            "durationSeconds": 0.0003974,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "OmittedKey_DoesNotCallTransport",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.OmittedKey_DoesNotCallTransport",
+            "state": "Passed",
+            "durationSeconds": 0.0007573,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "OversizedModelText_IsRejectedWithoutEcho",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.OversizedModelText_IsRejectedWithoutEcho",
+            "state": "Passed",
+            "durationSeconds": 0.0008742,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Prompt_ProvidesOnlyParserValidNonRequestOutcomes",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.Prompt_ProvidesOnlyParserValidNonRequestOutcomes",
+            "state": "Passed",
+            "durationSeconds": 0.000855,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "QuotaFailure_DoesNotRetryOrEchoResponse",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.QuotaFailure_DoesNotRetryOrEchoResponse",
+            "state": "Passed",
+            "durationSeconds": 0.0010899,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Timeout_ReturnsSafeRejectionWithoutRetry",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.Timeout_ReturnsSafeRejectionWithoutRetry",
+            "state": "Passed",
+            "durationSeconds": 0.1183425,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsDuplicateRootProperty",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsDuplicateRootProperty",
+            "state": "Passed",
+            "durationSeconds": 0.0003145,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsDuplicateNodeProperty",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsDuplicateNodeProperty",
+            "state": "Passed",
+            "durationSeconds": 0.0001308,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsTrailingJson",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsTrailingJson",
+            "state": "Passed",
+            "durationSeconds": 0.0000836,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsUnknownRootField",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsUnknownRootField",
+            "state": "Passed",
+            "durationSeconds": 0.0000769,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsAuthorityField",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsAuthorityField",
+            "state": "Passed",
+            "durationSeconds": 0.0000759,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsComment",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsComment",
+            "state": "Passed",
+            "durationSeconds": 0.0000571,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsNaN",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsNaN",
+            "state": "Passed",
+            "durationSeconds": 0.0000535,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsNegativeUnitCount",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsNegativeUnitCount",
+            "state": "Passed",
+            "durationSeconds": 0.0000711,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsUnitCountAbove200",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsUnitCountAbove200",
+            "state": "Passed",
+            "durationSeconds": 0.000096,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsStructureCountAbove20",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsStructureCountAbove20",
+            "state": "Passed",
+            "durationSeconds": 0.0000722,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsUnsupportedUnitEnum",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsUnsupportedUnitEnum",
+            "state": "Passed",
+            "durationSeconds": 0.0000714,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsNumericEnumString",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsNumericEnumString",
+            "state": "Passed",
+            "durationSeconds": 0.000071,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsWrongEnumCase",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsWrongEnumCase",
+            "state": "Passed",
+            "durationSeconds": 0.0000663,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsWrongFieldForNodeType",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsWrongFieldForNodeType",
+            "state": "Passed",
+            "durationSeconds": 0.0000667,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsMessageForRequest",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsMessageForRequest",
+            "state": "Passed",
+            "durationSeconds": 0.0000621,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsNodesPropertyForClarify",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsNodesPropertyForClarify",
+            "state": "Passed",
+            "durationSeconds": 0.0000623,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsTrailingComma",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsTrailingComma",
+            "state": "Passed",
+            "durationSeconds": 0.0000575,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsWrongOutcomeCase",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsWrongOutcomeCase",
+            "state": "Passed",
+            "durationSeconds": 0.0000622,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsUnknownStructureEnum",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsUnknownStructureEnum",
+            "state": "Passed",
+            "durationSeconds": 0.0000708,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsUnknownResourceEnum",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsUnknownResourceEnum",
+            "state": "Passed",
+            "durationSeconds": 0.0000715,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "RejectsNonRequestNodes",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.RejectsNonRequestNodes",
+            "state": "Passed",
+            "durationSeconds": 0.0000633,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_NonRequestOutcome_ContainsNoNodesAndBoundedExplanation(\"Clarify\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.Parse_NonRequestOutcome_ContainsNoNodesAndBoundedExplanation(\"Clarify\")",
+            "state": "Passed",
+            "durationSeconds": 0.0003008,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_NonRequestOutcome_ContainsNoNodesAndBoundedExplanation(\"Unsupported\")",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.Parse_NonRequestOutcome_ContainsNoNodesAndBoundedExplanation(\"Unsupported\")",
+            "state": "Passed",
+            "durationSeconds": 0.0000648,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_RejectsDefinedButUnsupportedStructure",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.Parse_RejectsDefinedButUnsupportedStructure",
+            "state": "Passed",
+            "durationSeconds": 0.0001702,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_RejectsJsonDeeperThanEightLevels",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.Parse_RejectsJsonDeeperThanEightLevels",
+            "state": "Passed",
+            "durationSeconds": 0.0002136,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_RejectsMoreThanFourNodesWithoutPartialRequest",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.Parse_RejectsMoreThanFourNodesWithoutPartialRequest",
+            "state": "Passed",
+            "durationSeconds": 0.0004888,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_RejectsOverlongOrMarkupExplanation",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.Parse_RejectsOverlongOrMarkupExplanation",
+            "state": "Passed",
+            "durationSeconds": 0.0001943,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_RejectsRawResponseOver8192Characters",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.Parse_RejectsRawResponseOver8192Characters",
+            "state": "Passed",
+            "durationSeconds": 0.0001653,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_Request_ProducesTypedRangedStrategicNode",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.Parse_Request_ProducesTypedRangedStrategicNode",
+            "state": "Passed",
+            "durationSeconds": 0.0002759,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_Request_ProducesTypedSpearmanNode",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.Parse_Request_ProducesTypedSpearmanNode",
+            "state": "Passed",
+            "durationSeconds": 0.0005578,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_ResourceAllocation_AcceptsZeroWorkers",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.Parse_ResourceAllocation_AcceptsZeroWorkers",
+            "state": "Passed",
+            "durationSeconds": 0.0002185,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Parse_Structure_ProducesTypedBuildingAndCount",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.Parse_Structure_ProducesTypedBuildingAndCount",
+            "state": "Passed",
+            "durationSeconds": 0.0002029,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "SemanticResult_HasNoAssemblyAccessibleConstructorOrValiditySetter",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1SemanticJsonTests.SemanticResult_HasNoAssemblyAccessibleConstructorOrValiditySetter",
+            "state": "Passed",
+            "durationSeconds": 0.0006482,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "SemanticAttackObjective_AcceptsOnlyWithExistingCavalryPreference",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1StrategicTests.SemanticAttackObjective_AcceptsOnlyWithExistingCavalryPreference",
+            "state": "Passed",
+            "durationSeconds": 0.2576933,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "SemanticAttackObjective_RequiresExistingCavalryPreference",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1StrategicTests.SemanticAttackObjective_RequiresExistingCavalryPreference",
+            "state": "Passed",
+            "durationSeconds": 0.2367666,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "SemanticObjective_RejectsWhileLegacyTranslationIsInFlight",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1StrategicTests.SemanticObjective_RejectsWhileLegacyTranslationIsInFlight",
+            "state": "Passed",
+            "durationSeconds": 0.2435342,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "SemanticObjective_RejectsWrongOwnerAndStaleGeneration",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1StrategicTests.SemanticObjective_RejectsWrongOwnerAndStaleGeneration",
+            "state": "Passed",
+            "durationSeconds": 0.2383882,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "SemanticObjective_StagesOwnedAiRecommendationWithoutCreatingPlan",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1StrategicTests.SemanticObjective_StagesOwnedAiRecommendationWithoutCreatingPlan",
+            "state": "Passed",
+            "durationSeconds": 0.2391059,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

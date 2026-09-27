@@ -1,0 +1,97 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "0f3424b9805e4c7bac087fb2b99470e2",
+      "status": "succeeded",
+      "mode": "PlayMode",
+      "started_unix_ms": 1790489040589,
+      "finished_unix_ms": 1790489050775,
+      "last_update_unix_ms": 1790489050775,
+      "progress": {
+        "completed": 6,
+        "total": 6,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1790489050489,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4E1StrategicPlayModeTests.StrategicParaphrase_StagesRecommendationUntilOrdinaryApproval",
+        "last_finished_unix_ms": 1790489050760,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "PlayMode",
+        "summary": {
+          "total": 6,
+          "passed": 6,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 1.8827542,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "ActiveAiPlan_RequiresExplicitConfirmForSemanticAdaptation",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1StrategicPlayModeTests.ActiveAiPlan_RequiresExplicitConfirmForSemanticAdaptation",
+            "state": "Passed",
+            "durationSeconds": 0.3194123,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[StrategicPlanner] Strategic intent #2 created: DefensivePreparation for player 0.\r\n[Commander] Goal #1 cancelled.\r\n[Commander] Goal #2 cancelled.\r\n[StrategicPlanner] Plan #1 cancelled.\r\n[StrategicPlanner] Intent #2 selected template 'DefensivePreparation' and started plan #2: DefensivePreparation.\r\n[StrategicPlanner] Plan #2 milestone active: Economic Defense.\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n[Commander] Goal #4 submitted: ResourceAllocation\r\n"
+          },
+          {
+            "name": "BusyHost_DoesNotStartASecondSemanticRequest",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1StrategicPlayModeTests.BusyHost_DoesNotStartASecondSemanticRequest",
+            "state": "Passed",
+            "durationSeconds": 0.2587643,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MixedSemanticRequest_AdmitsNoStrategicNode",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1StrategicPlayModeTests.MixedSemanticRequest_AdmitsNoStrategicNode",
+            "state": "Passed",
+            "durationSeconds": 0.2541942,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "OwnerRuntimeReplacement_RejectsLateSemanticStrategicResult",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1StrategicPlayModeTests.OwnerRuntimeReplacement_RejectsLateSemanticStrategicResult",
+            "state": "Passed",
+            "durationSeconds": 0.5024217,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "ResetDuringSemanticTranslation_RejectsLateStrategicResult",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1StrategicPlayModeTests.ResetDuringSemanticTranslation_RejectsLateStrategicResult",
+            "state": "Passed",
+            "durationSeconds": 0.258685,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "StrategicParaphrase_StagesRecommendationUntilOrdinaryApproval",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4E1StrategicPlayModeTests.StrategicParaphrase_StagesRecommendationUntilOrdinaryApproval",
+            "state": "Passed",
+            "durationSeconds": 0.2703059,
+            "message": null,
+            "stackTrace": null,
+            "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n"
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}
