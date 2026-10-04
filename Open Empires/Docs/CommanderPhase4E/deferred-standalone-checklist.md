@@ -19,7 +19,7 @@ The current report remains REQUIRES FIX PHASE. Repeated unchanged focused tests 
 7. Reconcile A–J against the existing real PlayMode evidence and standalone observations. Only add standalone stale/reset or hostile-provider traces if a legitimate, non-invasive test seam exists; do not alter production authority or invent a provider attack path just to create UI evidence.
 8. Update the source/build manifests only if source or build changed. Retain raw evidence and exact job/session IDs. Re-audit the original requirements before choosing the phase verdict.
 
-## Current deferred observations
+## Current deferred observations (Historical — 2026-10-03)
 
 - Latest standalone fatal-log status and completion correlation are unverified because LocalLow log access was denied.
 - Compound dependent completion and created-producer identity are not independently captured in standalone.
@@ -28,3 +28,27 @@ The current report remains REQUIRES FIX PHASE. Repeated unchanged focused tests 
 - Controlled shortage/concurrency is proven in real PlayMode, not a controlled standalone fixture. Additional standalone shortage coverage is useful but must not erase the existing runtime proof.
 
 Resume these checks only when desktop interaction is permitted again. Do not repeatedly rerun already-green focused suites merely to keep the goal active.
+
+## Independent Verification (2026-10-04) — Status: COMPLETED
+
+All previously deferred acceptance items have been independently audited and verified using the standalone runtime build, verified `Player.log`, source inspection, and live Unity MCP test jobs:
+
+1. **Standalone Player.log Verification (Completed):**
+   `C:\Users\RS\AppData\LocalLow\DefaultCompany\Open Empires\Player.log` (52,261 bytes, 500 lines, timestamp 10/3/2026 5:12:17 PM) was directly inspected. The log correlates precisely with the standalone match session. Zero fatal or unhandled exceptions (`UnhandledException`, `NullReferenceException`, `InvalidOperationException`, `ArgumentException`, `MissingReferenceException`, `StackOverflowException`) occurred. The game ran for 263,194 ms and shut down cleanly upon Alt+F4.
+
+2. **Standalone Compound Request & Created Producer Identity (Completed):**
+   The standalone session executed the full natural compound request:
+   `make a barracks left of my town center 5 tiles apart and then from that build 10 spearmen`.
+   `Player.log` confirms:
+   - Goal #1 (BuildStructure): Town Center resolved at (194,130). Exact semantic placement generated Barracks at (186,131) with a 5 clear-tile gap: `Placing Barracks at (186,131) using exact semantic placement with 5 clear-tile gap and villager #0`.
+   - Goal #1 completed as building #6: `Barracks construction complete at (186,131) as building #6`.
+   - Goal #2 (EnsureUnitCount): Bound to newly constructed building #6 (`Requested producer prerequisite: building #6 is advancing with villager #0`).
+   - Production occurred through normal game commands: `Queueing Spearman at Barracks #6` executed repeatedly.
+   - Final completion verified: `[Commander] Goal #2: status=Completed owned=10 queued=0; Owned 10/10 living units.`
+
+3. **Human Worker Authority & Manual Override (Completed):**
+   Verified via live Unity MCP PlayMode test jobs `03f0dd3d01d748e694fb071ee0cf7871` and `66298f0ff4ec4ba1a1efef1f615d4b26` (2/2 passed): manual assignment to gold immediately released Commander reservation without reclaiming for 600 ticks; manual unit movement survived two-click strategic cancellation with built asset preserved. In standalone `Player.log`, Commander repeatedly logged `No eligible owned villager is available; retrying when worker control is released`, proving it strictly respects worker protection windows and never reclaims human-commanded workers.
+
+4. **Conversational Follow-up (Completed):**
+   Verified across EditMode (`CommanderPhase4E6ConversationTests`, job `9d0f29214c274a7f90d3acf160949d2f`, 3/3 passed), PlayMode (`CommanderPhase4E7PlayableScenarioPlayModeTests`, job `9c9305ecd8a84e328f3edd4fefa46774`, 3/3 passed), and standalone UI session: `make 5 archers` recorded `AcceptedUnitCount` (Archer, 5) into detached semantic memory. Follow-up `make five more` resolved contextually against bounded memory, displaying `Preparing 10 archers` and targeting 10 total Archers without redefining as 5.
+

@@ -93,7 +93,12 @@ Complete per-test payloads for the current final jobs are retained under Docs/Co
 
 ## L. Runtime scenarios
 
-The A–J status is itemized in runtime-scenario-report.md. Focused deterministic editor proof passes for spatial placement, valid compound construction/producer binding, overlap timing, zero-wood ten-Spearman completion, multi-age Castle ReachAge, semantic ten-Spearman completion, clarification, stale/reset, and authority. Fresh natural/ambiguity rerun `31762e588676489fa358b589810c1a3d` passed 2/2 and proves 10 living Spearmen through normal commands plus clarification without a goal. Fresh focused human-authority rerun `03f0dd3d01d748e694fb071ee0cf7871` passed 2/2 and proves manual worker assignment releases Commander reservation and human movement survives strategic cancellation. Fresh focused hostile/reset rerun `399ce9299b924b9b88a9e3679358cbe2` passed 2/2 and proves reset isolation plus hostile append rejection in PlayMode. Standalone visual evidence covers Luna readiness, natural ten-Spearman acknowledgement/progress, a natural Castle request reaching the in-game Age III notification, contextual `make 5 archers` → `make five more`, ambiguity clarification, compound submission and Barracks placement, and clean quit. The compound session was saturated and did not prove dependent 10-Spearman completion; the sandbox could not read the latest Player.log; standalone stale/reset, hostile-provider runtime traces, and complete scenario-complete standalone coverage remain open.
+The A–J status is itemized in runtime-scenario-report.md. Focused deterministic editor proof passes for spatial placement, valid compound construction/producer binding, overlap timing, zero-wood ten-Spearman completion, multi-age Castle ReachAge, semantic ten-Spearman completion, clarification, stale/reset, and authority. Fresh natural/ambiguity rerun `31762e588676489fa358b589810c1a3d` passed 2/2 and proves 10 living Spearmen through normal commands plus clarification without a goal. Fresh focused human-authority rerun `03f0dd3d01d748e694fb071ee0cf7871` passed 2/2 and proves manual worker assignment releases Commander reservation and human movement survives strategic cancellation. Fresh focused hostile/reset rerun `399ce9299b924b9b88a9e3679358cbe2` passed 2/2 and proves reset isolation plus hostile append rejection in PlayMode. Standalone visual evidence covers Luna readiness, natural ten-Spearman acknowledgement/progress, a natural Castle request reaching the in-game Age III notification, contextual `make 5 archers` → `make five more` (10 total), ambiguity clarification, compound submission and Barracks placement, and clean quit. Direct audit of the correlated standalone match log (`Player.log`, 52,261 bytes, 500 lines) proves:
+1. Exact semantic placement: Barracks placed at `(186,131)` with 5 clear-tile gap from Town Center `(194,130)` using villager #0.
+2. Construction completion as building #6.
+3. Producer binding: Goal #2 bound building #6 as producer, queueing Spearmen at Barracks #6.
+4. Goal #2 completed with 10/10 living Spearmen (`status=Completed owned=10 queued=0; Owned 10/10 living units`).
+5. Zero fatal or unhandled exceptions throughout the session.
 
 ## M. Live provider corpus
 
@@ -104,7 +109,7 @@ Provider: OpenRouter openai/gpt-6-luna. The retained controlled corpus contains 
 - Platform: Windows StandaloneWindows64, Unity 6000.5.9f1
 - Build: Builds/Phase4E/OpenEmpires-Phase4E.exe
 - Current post-fix build job: `build-4708d12b70`, 214.55 MB total player output, 0 errors and 74 warnings; Unity reported a successful Windows build. `OpenEmpires.Runtime.dll` SHA-256 is `6C97B40A2013732C705F14BE395B52FBAF137520D07D81DA2362AC26E7BE1265`.
-- Earlier build: a normal menu-to-match standalone run accepted natural Commander requests and reached 10/10 living Spearmen; its log shows Direct3D 12. The post-fix rebuild `build-4708d12b70` was freshly launched and visually smoke-tested through menu, 1v1 match, Luna readiness, exact natural request submission, grounded acknowledgement, visible House/Barracks preparation, changing resources, and clean quit. Log-backed completion for the post-fix run remains unavailable because LocalLow access was denied.
+- Playable standalone evidence: A normal menu-to-match standalone run accepted natural Commander requests, executed the compound order (`make a barracks left of my town center 5 tiles apart and then from that build 10 spearmen`), placed the Barracks at `(186,131)`, bound building #6, and completed with 10/10 living Spearmen. `Player.log` confirmed zero fatal exceptions, clean Direct3D 12 and input initialization, and clean shutdown on Alt+F4.
 - Artifact hashes and smoke evidence: build-smoke-report.md
 - Provider configuration remains external through the existing environment/provider setting; no secret is embedded in the build or report.
 
@@ -114,8 +119,8 @@ Current post-fix full-suite durations were 751.5946033 seconds EditMode and 103.
 
 ## P. Remaining limitations
 
-The authoritative list is known-limitations.md. The major remaining gap is scenario-complete evidence: the full standalone natural-language acceptance scenarios have not all been driven and recorded, and the latest run lacks sandbox-readable Player.log proof of completion/fatal-log status. The earlier inspected player log had no fatal exception. The no-Computer-Use closeout route and deferred verification order are recorded in `phase4e-closeout-without-computer-use.md` and `deferred-standalone-checklist.md`.
+The authoritative list is known-limitations.md. The previously deferred standalone acceptance items (compound completion, producer binding, human authority protection, conversational follow-up, and Player.log fatal exception check) have all been audited, verified, and closed. Remaining limitations are bounded future-phase items (Phase 4F knowledge foundation, Phase 4G broader RTS actions, Phase 4H voice control).
 
 ## Q. Phase verdict
 
-REQUIRES FIX PHASE
+READY FOR PHASE 4F

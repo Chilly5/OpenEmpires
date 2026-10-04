@@ -246,8 +246,8 @@ namespace OpenEmpires
 
         // Training
         public int SpearmanTrainTimeTicks => 300; // 15s at 20 TPS
-        public int SpearmanFoodCost => 60;
-        public int SpearmanWoodCost => 20;
+        public virtual int SpearmanFoodCost => 60;
+        public virtual int SpearmanWoodCost => 20;
         public int ArcherTrainTimeTicks => 300; // 15s at 20 TPS
         public int ArcherFoodCost => 30;
         public int ArcherWoodCost => 50;
@@ -421,7 +421,7 @@ namespace OpenEmpires
         // Building costs (wood)
         public int FarmWoodCost => 75;
         public int HouseWoodCost => 50;
-        public int BarracksWoodCost => 150;
+        public virtual int BarracksWoodCost => 150;
         public int TownCenterWoodCost => 400;
         public int TownCenterStoneCost => 350;
         public int WallWoodCost => 5;
@@ -552,8 +552,8 @@ namespace OpenEmpires
         public int BlacksmithDamageCost => 200;     // bumps both melee + ranged attack
         public int BlacksmithDefenseCost => 200;    // bumps both melee + ranged armor
         // University costs (food + gold)
-        public int BallisticsFoodCost => 200;
-        public int BallisticsGoldCost => 200;
+        public virtual int BallisticsFoodCost => 200;
+        public virtual int BallisticsGoldCost => 200;
         public int SiegeEngineeringFoodCost => 150;
         public int SiegeEngineeringGoldCost => 150;
         public int ChemistryFoodCost => 200;

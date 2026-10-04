@@ -102,6 +102,11 @@ namespace OpenEmpires
             return Civilization.English;
         }
         public void SetPlayerCivilizations(Civilization[] civs) { playerCivilizations = civs; }
+        public void SetPlayerAge(int playerId, int age)
+        {
+            if (playerAges != null && playerId >= 0 && playerId < playerAges.Length)
+                playerAges[playerId] = age;
+        }
         public BuildingType GetInfluenceBuildingType(int playerId)
         {
             return GetPlayerCivilization(playerId) == Civilization.English
@@ -118,7 +123,12 @@ namespace OpenEmpires
         }
         public int ResolveCivUnitType(int playerId, int baseUnitType)
         {
-            var civ = GetPlayerCivilization(playerId);
+            return ResolveCivUnitType(GetPlayerCivilization(playerId), baseUnitType);
+        }
+
+        /// <summary>Read-only civilization replacement query for detached planning projections.</summary>
+        public int ResolveCivUnitType(Civilization civ, int baseUnitType)
+        {
             return (civ, baseUnitType) switch
             {
                 (Civilization.English, 2) => 10,           // Archer → Longbowman
@@ -2377,6 +2387,18 @@ namespace OpenEmpires
                 case TechnologyType.MurderHoles: food = config.MurderHolesFoodCost; gold = config.MurderHolesGoldCost; break;
                 default: gold = 0; break;
             }
+        }
+
+        // Detached knowledge adapters may inspect the same research rules without
+        // entering the command path or mutating simulation state.
+        public void GetTechnologySpec(TechnologyType tech, out int requiredAge, out int food,
+            out int gold, out BuildingType researchBuilding, out int researchTicks)
+        {
+            requiredAge = GetRequiredAgeForTech(tech);
+            GetResearchCost(tech, out food, out gold);
+            researchBuilding = tech == TechnologyType.BlacksmithDamage || tech == TechnologyType.BlacksmithDefense
+                ? BuildingType.Blacksmith : BuildingType.University;
+            researchTicks = ResearchSystem.GetResearchTicks(config, tech);
         }
 
         private void ProcessMarketTradeCommand(MarketTradeCommand cmd)

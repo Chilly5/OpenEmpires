@@ -75,12 +75,20 @@ namespace OpenEmpires
                 ["resourceCapabilities"] = new JArray("Food", "Wood", "Gold", "Stone"),
                 ["strategyCapabilities"] = new JArray("AttackPreparation", "DefensivePreparation",
                     "EconomicExpansion", "MilitaryReinforcement", "RangedReinforcement",
-                    "DefensiveTurtle")
+                    "DefensiveTurtle"),
+                ["knowledge"] = ParseKnowledge(context.KnowledgeContext)
             };
             string serialized = root.ToString(Formatting.None);
             if (serialized.Length > MaximumContextCharacters)
                 throw new InvalidOperationException("Semantic context exceeded its limit.");
             return serialized;
+        }
+
+        private static JToken ParseKnowledge(string json)
+        {
+            if (string.IsNullOrEmpty(json)) return new JObject();
+            try { return JToken.Parse(json); }
+            catch (JsonException) { return new JObject(); }
         }
 
         private static string UnitName(int type)

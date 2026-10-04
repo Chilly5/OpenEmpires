@@ -118,12 +118,14 @@ namespace OpenEmpires
             foreach (KeyValuePair<int, int> entry in visibleEnemyCounts)
                 visibleEnemyMilitary.Add(new CommanderVisibleEnemyMilitarySnapshot(
                     entry.Key, entry.Value));
+            string knowledgeContext = GameKnowledgeCatalog.Build(simulation)
+                .Slice(string.Empty, 12).ToDeterministicJson();
             return new CommanderContext(player, simulation.CurrentTick,
                 new CommanderResourceSnapshot(resources.Food, resources.Wood, resources.Gold, resources.Stone),
                 simulation.GetPopulation(player), simulation.GetPopulationCap(player), simulation.Config.MaxPopulation,
                 simulation.GetPlayerAge(player), simulation.GetPlayerCivilization(player).ToString(),
                 buildings, units, production, technologies, goals, visibleResources, options,
-                workerAllocationSnapshots, visibleEnemyMilitary);
+                workerAllocationSnapshots, visibleEnemyMilitary, knowledgeContext);
         }
 
         private static bool IsGatheringAssignment(UnitState state)
