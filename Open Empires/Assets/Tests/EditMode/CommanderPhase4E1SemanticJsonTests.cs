@@ -125,6 +125,38 @@ namespace OpenEmpires.Tests
             Assert.That(result.Nodes, Is.Empty);
         }
 
+        [TestCase("\\uD800")]
+        [TestCase("\\uDC00")]
+        [TestCase("\\uD800x")]
+        [TestCase("\\uD800\\u0041")]
+        public void Parse_RejectsUnpairedEscapedSurrogate(string encoded)
+        {
+            var result = CommanderSemanticJson.Parse(
+                "{\"outcome\":\"Clarify\",\"message\":\"" + encoded + "\"}");
+            Assert.That(result.IsValid, Is.False);
+            Assert.That(result.Nodes, Is.Empty);
+        }
+
+        [TestCase(0xD800)]
+        [TestCase(0xDC00)]
+        public void Parse_RejectsUnpairedRawSurrogate(int codeUnit)
+        {
+            var result = CommanderSemanticJson.Parse(
+                "{\"outcome\":\"Clarify\",\"message\":\"" + (char)codeUnit + "\"}");
+            Assert.That(result.IsValid, Is.False);
+            Assert.That(result.Nodes, Is.Empty);
+        }
+
+        [TestCase("\\uD83D\\uDE00")]
+        [TestCase("\U0001F600")]
+        public void Parse_AcceptsValidSurrogatePair(string encoded)
+        {
+            var result = CommanderSemanticJson.Parse(
+                "{\"outcome\":\"Clarify\",\"message\":\"" + encoded + "\"}");
+            Assert.That(result.IsValid, Is.True);
+            Assert.That(result.SafeExplanation, Is.EqualTo("\U0001F600"));
+        }
+
         [Test]
         public void Parse_RejectsMoreThanFourNodesWithoutPartialRequest()
         {

@@ -21,6 +21,7 @@ namespace OpenEmpires
         private readonly List<string> transcriptEntries = new List<string>();
         private GameObject canvasRoot;
         private TMP_Text transcriptText;
+        private ScrollRect transcriptScroll;
         private TMP_InputField inputField;
         private Button sendButton;
         private CommanderAIIntentAdapter adapter;
@@ -775,7 +776,15 @@ namespace OpenEmpires
                 transcript.Append(transcriptEntries[i]);
             }
             if (transcriptText != null)
+            {
                 transcriptText.text = transcript.ToString();
+                if (transcriptScroll != null)
+                {
+                    Canvas.ForceUpdateCanvases();
+                    transcriptScroll.StopMovement();
+                    transcriptScroll.verticalNormalizedPosition = 0f;
+                }
+            }
             if (remember && Conversation != null)
             {
                 if (speaker == "Player")
@@ -888,6 +897,7 @@ namespace OpenEmpires
             Image scrollImage = scrollObject.AddComponent<Image>();
             scrollImage.color = new Color(0, 0, 0, 0.32f);
             ScrollRect scroll = scrollObject.AddComponent<ScrollRect>();
+            transcriptScroll = scroll;
 
             GameObject viewport = UIObject("Viewport", scrollObject.transform);
             RectTransform viewportRect = viewport.GetComponent<RectTransform>();

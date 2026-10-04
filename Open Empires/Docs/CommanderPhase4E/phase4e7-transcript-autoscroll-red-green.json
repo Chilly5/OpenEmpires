@@ -1,0 +1,25 @@
+{
+  "schema": "commander-phase4e7-transcript-autoscroll-red-green@1",
+  "issue": "In a playable standalone match, subsequent Commander replies accumulated below the visible transcript viewport while the scroll position remained at the top.",
+  "test": "OpenEmpires.Tests.CommanderPhase4E7PlayableScenarioPlayModeTests.Runtime_NewCommanderReply_IsVisibleAfterTranscriptOverflows",
+  "red": {
+    "jobId": "ed258201c25447e9aa785f9bbfdaa906",
+    "status": "failed as expected",
+    "observed": "Transcript overflowed; verticalNormalizedPosition was 1.0 (top), expected less than 0.05 (latest reply at bottom)."
+  },
+  "green": {
+    "jobId": "1385b8f5aad74b89b4af65eee7693da8",
+    "status": "succeeded",
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "fix": "CommanderChatUI retains its ScrollRect and moves it to the visible bottom after appending each bounded transcript entry.",
+  "fullRegression": {
+    "editModeJobId": "43b6b3a68c7c46c9a0f02f9a0dbf2413",
+    "editModePassed": 870,
+    "playModeJobId": "5119f296571e4408b74d891c0cd21b9f",
+    "playModePassed": 179
+  },
+  "remainingCheck": "The post-fix standalone build has not yet been visually checked because the user stopped Computer Use."
+}

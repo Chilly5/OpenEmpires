@@ -1,8 +1,10 @@
 using System;
+using System.Collections;
 using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace OpenEmpires.Tests
 {
@@ -162,6 +164,60 @@ namespace OpenEmpires.Tests
             Assert.That(units.Status, Is.EqualTo(CommanderGoalStatus.Blocked));
             Assert.That(simulation.CommandBuffer.FlushCommands(), Is.Empty,
                 "A linked goal must not switch to an unrelated Barracks after its bound result is destroyed.");
+        }
+
+        [UnityTest]
+        [Category("CommanderPhase4E3")]
+        public IEnumerator CompoundWestBuildThenSpearmen_CompletesThroughNormalSimulation()
+        {
+            simulation.CreateBuilding(0, BuildingType.House, anchorX + 12, anchorZ + 12, false);
+            for (int i = 0; i < 3; i++)
+            {
+                UnitData extraWorker = simulation.UnitRegistry.CreateUnit(0,
+                    simulation.MapData.TileToWorldFixed(anchorX + 7 + i, anchorZ + 9),
+                    Fixed32.One, Fixed32.FromFloat(.4f), Fixed32.One);
+                extraWorker.IsVillager = true;
+                extraWorker.UnitType = 0;
+                extraWorker.MaxHealth = extraWorker.CurrentHealth = 100;
+                extraWorker.State = UnitState.Idle;
+            }
+
+            CommanderSemanticResult parsed = CommanderSemanticJson.Parse(
+                "{\"outcome\":\"Request\",\"nodes\":[" +
+                "{\"type\":\"BuildStructure\",\"structure\":\"Barracks\",\"count\":1," +
+                "\"placement\":{\"anchor\":\"MyTownCenter\",\"relation\":\"MapWest\",\"clearGapTiles\":5}}," +
+                "{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":10," +
+                "\"producerFromNode\":0}]}" );
+            CommanderContext context = new CommanderContextBuilder().Build(simulation, goals);
+            Assert.That(CommanderSemanticGraphAdmission.TryAdmit(parsed, context,
+                out CommanderSemanticGraphPlan plan, out string reason), Is.True, reason);
+            var submitted = goals.SubmitSemanticGraph(plan);
+            var build = submitted[0] as BuildStructureGoal;
+            var units = submitted[1] as EnsureUnitCountGoal;
+            Assert.That(build, Is.Not.Null);
+            Assert.That(units, Is.Not.Null);
+
+            for (int i = 0; i < 30000 && !units.IsTerminal; i++)
+            {
+                goals.Tick(simulation.CurrentTick);
+                simulation.Tick();
+                if (i % 300 == 0) yield return null;
+            }
+
+            int spearmen = simulation.UnitRegistry.GetAllUnits().Count(unit =>
+                unit.PlayerId == 0 && unit.UnitType == CommanderIntentCatalog.SpearmanUnitType
+                && unit.CurrentHealth > 0);
+            BuildingData created = simulation.BuildingRegistry.GetAllBuildings().SingleOrDefault(building =>
+                building.PlayerId == 0 && building.Type == BuildingType.Barracks
+                && !building.IsDestroyed && building.Id == build.PlacedBuildingId);
+            Assert.That(created, Is.Not.Null, build.StatusReason);
+            Assert.That(created.OriginTileX, Is.EqualTo(anchor.OriginTileX
+                - created.TileFootprintWidth - 5));
+            Assert.That(units.RequiredProducerGoal, Is.SameAs(build));
+            Assert.That(units.Status, Is.EqualTo(CommanderGoalStatus.Completed),
+                units.StatusReason + $" owned={spearmen} tick={simulation.CurrentTick}");
+            Assert.That(spearmen, Is.GreaterThanOrEqualTo(10));
+            Debug.Log($"[Phase4E3 Compound Runtime] PASS bound barracks #{created.Id}, spearmen={spearmen}, tick={simulation.CurrentTick}.");
         }
 
         private BuildStructureGoal SubmitPlacedBarracks()

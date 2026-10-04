@@ -1,0 +1,32 @@
+{
+  "job_id": "060cd010677140709d96676c8907d476",
+  "status": "succeeded",
+  "mode": "PlayMode",
+  "test": "OpenEmpires.Tests.CommanderPhase4E5ConcurrencyPlayModeTests.Runtime_ZeroWoodEnsureSpearmen_GathersWoodAndConverges",
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "durationSeconds": 2.1354933,
+    "resultState": "Passed"
+  },
+  "runtimeEvidence": {
+    "initialWood": 0,
+    "firstCommanderAction": "Gather Wood node #1 for the House prerequisite",
+    "house": "constructed",
+    "barracks": "constructed",
+    "spearmen": 10,
+    "target": 10,
+    "completedAtSimulationTick": 9406,
+    "keyOutput": [
+      "Need 50 wood for House; have 0. Reassigning villager #3 to Wood node #1.",
+      "Placing House at (130,134) with villager #0.",
+      "Need 150 wood for Barracks; have 0.",
+      "Placing Barracks at (134,126) with villager #0.",
+      "Queueing Spearman at Barracks #3.",
+      "Owned 10/10 living units."
+    ]
+  },
+  "note": "The exact raw Unity runner payload is represented by this bounded evidence artifact; no credential or unrelated state is included. Human-protected worker behavior is separately covered by phase4e5-worker-control-red-green.json."
+}

@@ -1,0 +1,19 @@
+{
+  "recordedAt": "2026-10-03",
+  "jobId": "31762e588676489fa358b589810c1a3d",
+  "mode": "PlayMode",
+  "summary": { "total": 2, "passed": 2, "failed": 0, "skipped": 0, "resultState": "Passed" },
+  "tests": [
+    {
+      "fullName": "OpenEmpires.Tests.CommanderPhase4E7PlayableScenarioPlayModeTests.Runtime_NaturalSemanticRequest_ExecutesTenSpearmenThroughNormalCommands",
+      "state": "Passed",
+      "evidence": "Natural semantic request completed through normal commands with Goal #1 completed at 10/10 living Spearmen, tick 5101."
+    },
+    {
+      "fullName": "OpenEmpires.Tests.CommanderPhase4E7PlayableScenarioPlayModeTests.Runtime_AmbiguousSemanticReply_ShowsClarificationWithoutGoal",
+      "state": "Passed",
+      "evidence": "Ambiguous semantic input produced clarification without creating a gameplay goal."
+    }
+  ],
+  "scope": "Fresh focused PlayMode rerun for free-form execution and safe ambiguity handling; this is editor/runtime proof, not standalone UI evidence."
+}

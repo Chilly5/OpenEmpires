@@ -1,0 +1,19 @@
+{
+  "recordedAt": "2026-10-03",
+  "jobId": "03f0dd3d01d748e694fb071ee0cf7871",
+  "mode": "PlayMode",
+  "summary": { "total": 2, "passed": 2, "failed": 0, "skipped": 0, "resultState": "Passed" },
+  "tests": [
+    {
+      "fullName": "OpenEmpires.Tests.CommanderPhase3CPreparationPlayModeTests.Runtime_ManualAssignmentOverridesGoalReservation",
+      "state": "Passed",
+      "evidence": "Manual gold assignment released the Commander reservation; no Commander reclaim occurred through 600 ticks of the unchanged 900-tick protection window."
+    },
+    {
+      "fullName": "OpenEmpires.Tests.CommanderPhase4D1PlayModeTests.TurtleApproval_TwoClickCancelPreservesBuiltAssetAndHumanMove",
+      "state": "Passed",
+      "evidence": "Human movement survived strategic cancellation; retained Barracks asset and manual unit were reported by the runtime test."
+    }
+  ],
+  "scope": "Fresh focused PlayMode authority regression. This strengthens Scenario H editor/runtime evidence but is not standalone UI evidence."
+}

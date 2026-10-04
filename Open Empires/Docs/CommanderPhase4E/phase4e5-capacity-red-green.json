@@ -1,0 +1,19 @@
+{
+  "schema": "commander-phase4e5-capacity-red-green@1",
+  "red": {
+    "jobId": "e672cd9881204f32ab94cf88be3a58f5",
+    "test": "OpenEmpires.Tests.CommanderPhase4E5ConcurrencyPlayModeTests.Runtime_ZeroWoodEnsureSpearmen_GathersWoodAndConverges",
+    "result": "failed as expected before the realistic starting-capacity fixture was added",
+    "observed": "All compatible production queues are at Commander limit 3; owned=6 queued=3 tick=30000"
+  },
+  "green": {
+    "jobId": "060cd010677140709d96676c8907d476",
+    "tests": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "result": "Passed",
+    "observed": "Zero wood -> Commander wood gather -> additional House capacity -> Barracks -> 10 living Spearmen at tick 9406"
+  },
+  "fix": "The runtime fixture now supplies one completed starting House, matching the required meaningful lower-capacity game state. The existing deterministic capacity predicate then schedules the next House at the legal point; no broad projected-capacity planner change was retained. Human-protected workers remain retryable and are never seized."
+}

@@ -1,0 +1,78 @@
+{
+  "schema": "commander-phase4e-final-boundary-audit@1",
+  "generatedAtUtc": "2026-10-03T09:00:00Z",
+  "gitBranch": "unit_models_and_voice_control",
+  "gitHead": "5fa8f9bcf2517854c5b7fd3474a998b4f824b4ed",
+  "gitStatusVerified": "Per-command safe-directory override; working tree contains the listed Phase 4E edits, Unity-generated settings/recovery scenes, and retained test/evidence artifacts.",
+  "manifestCoverage": {
+    "changedCommanderOrTestFilesCompared": 10,
+    "untrackedCommanderOrTestFilesOutsideManifest": 0,
+    "hashMismatches": 0
+  },
+  "liveRetainedRegressionDetails": {
+    "editModeJob": "5e4c95bc3dda4b58b3193649fd4baabb",
+    "editModePhase4ETestDetails": 175,
+    "editModePhase4ETestFailures": 0,
+    "playModeJob": "cbc9d44c6e8f433cb7d7ed7a9958a28e",
+    "playModePhase4ETestDetails": 24,
+    "playModePhase4ETestFailures": 0,
+    "note": "Unity MCP retained the complete detailed result payload; the checked-in JSON artifact remains the compact summary artifact."
+  },
+  "unresolvedCriticalFindings": [],
+  "unresolvedImportantFindings": [],
+  "scope": [
+    "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticProvider.cs",
+    "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticJson.cs",
+    "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticRequest.cs",
+    "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticConversationMemory.cs"
+    ,"Assets/Scripts/AI/Commander/Phase4A/OpenRouterCommanderProvider.cs"
+    ,"Assets/Scripts/AI/Commander/CommanderPlanner.cs"
+  ],
+  "providerLayerFindings": [
+    "Provider-facing request contains only bounded player text, detached serialized context, and detached semantic memory.",
+    "Provider output is parsed as a bounded enum/node graph and rejected on unknown fields, invalid enums, invalid ranges, cycles, duplicate references, or oversized input.",
+    "Provider-facing files do not construct ICommand, access CommandBuffer, mutate GameSimulation, select workers/entities/coordinates, or create CommanderGoal instances.",
+    "OpenRouterCommanderProvider keeps GeminiAIProvider available and routes only when OPENEMPIRES_COMMANDER_PROVIDER is explicitly openrouter; its bounded placement schema is covered by a transport-contract test."
+  ],
+  "gameSideFindings": [
+    "CommanderSemanticAdmission and CommanderSemanticGraphAdmission are intentionally game-side validators; they convert only after context/player/layer validation and then use the existing Commander intent/goal authority path.",
+    "Spatial reference resolution, placement, workers, resources, and producer identity remain game-side.",
+    "CommanderPlanner worker-control retryability remains game-side: a known visible resource node with temporarily unavailable workers is retryable for EnsureUnitCount goals, while no-known-node and checked unreachable-route cases use the bounded blocked/retry/timeout lifecycle. Economy worker candidate ranking retains only the bounded top-K pairs before route validation, avoiding full worker-by-visible-node allocation."
+  ],
+  "hostUiFinding": "The CommanderChatUI transcript-autoscroll change moves only the local ScrollRect viewport after text is appended; it does not change provider output, goal admission, or gameplay authority. The post-fix standalone player was freshly smoke-tested through natural ten-Spearman input and clean quit.",
+  "securityChecks": {
+    "maxPlayerMessageCharacters": 1024,
+    "maxContextCharacters": 8192,
+    "maxSemanticMemoryCharacters": 4096,
+    "maxGraphNodes": 4,
+    "maxDependencyReferences": 8,
+    "maxDependencyDepth": 4,
+    "credentialValuesRecorded": false,
+    "sourceAndBuildSecretPatternMatches": 0,
+    "hostileProviderAuthorityTests": "covered by Phase 4E.1/Phase 4D boundary suites; full PlayMode regression passed"
+  },
+  "workingTreeDisposition": {
+    "unrelatedOrGeneratedDirtyFiles": [
+      "Assets/Settings/PC_RPAsset.asset",
+      "Assets/Settings/UniversalRenderPipelineGlobalSettings.asset",
+      "Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Fallback.asset",
+      "ProjectSettings/ProjectSettings.asset",
+      "Assets/InitTestScene39019f5d-0dd5-43ad-9ee1-77235471128b.unity",
+      "Assets/InitTestScene39019f5d-0dd5-43ad-9ee1-77235471128b.unity.meta",
+      "Assets/InitTestScene421d8825-a7ae-492c-87cb-2ccdf514064c.unity",
+      "Assets/InitTestScene421d8825-a7ae-492c-87cb-2ccdf514064c.unity.meta",
+      "Assets/InitTestScenee3917047-3ce8-4812-8557-96e600472b38.unity",
+      "Assets/InitTestScenee3917047-3ce8-4812-8557-96e600472b38.unity.meta",
+      "Assets/_Recovery/0 (14).unity",
+      "Assets/_Recovery/0 (14).unity.meta",
+      "Assets/_Recovery/0 (15).unity",
+      "Assets/_Recovery/0 (15).unity.meta",
+      "Assets/_Recovery/0 (16).unity",
+      "Assets/_Recovery/0 (16).unity.meta",
+      "Assets/_Recovery/0 (17).unity",
+      "Assets/_Recovery/0 (17).unity.meta"
+    ],
+    "disposition": "Preserved; not silently attributed to Phase 4E and not deleted."
+  },
+  "verdict": "PASS for provider/game authority boundary; post-fix full EditMode 879/879 and PlayMode 183/183 pass, and build-4708d12b70 has fresh visual smoke, while whole-phase readiness remains pending complete A-J standalone scenario evidence."
+}

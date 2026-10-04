@@ -121,6 +121,142 @@ namespace OpenEmpires.Tests
             yield return null;
         }
 
+        [Test]
+        public void TemporaryHumanWorkerProtection_KeepsUnitGoalRetryable()
+        {
+            BuildingData house = simulation.CreateBuilding(0, BuildingType.House,
+                centerX + 4, centerZ, false, true);
+            BuildingData barracks = simulation.CreateBuilding(0, BuildingType.Barracks,
+                centerX + 8, centerZ, false, true);
+            ResourceNodeData food = simulation.MapData.GetAllResourceNodes()
+                .First(node => node.Type == ResourceType.Food);
+            food.RemainingAmount = 10000;
+            simulation.FogOfWar.SetVisionCheat(0, true);
+
+            PlayerResources resources = simulation.ResourceManager.GetPlayerResources(0);
+            resources.Food = 0;
+            resources.Wood = 1000;
+            resources.Gold = 1000;
+
+            List<UnitData> villagers = simulation.UnitRegistry.GetAllUnits()
+                .Where(unit => unit.PlayerId == 0 && unit.IsVillager).ToList();
+            foreach (UnitData villager in villagers)
+                simulation.CommandBuffer.EnqueueCommand(
+                    new GatherCommand(0, new[] { villager.Id }, food.Id));
+
+            EnsureUnitCountGoal goal = goals.SubmitEnsureUnitCount(
+                CommanderIntentCatalog.SpearmanUnitType, 1);
+            goals.Tick(0);
+
+            Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.WaitingForResources),
+                "Temporary human worker ownership must remain retryable instead of entering a terminal-looking blocked state. "
+                + goal.StatusReason + $" node=({food.TileX},{food.TileZ}) vis="
+                + simulation.FogOfWar.GetVisibility(0, food.TileX, food.TileZ)
+                + $" amount={food.RemainingAmount} nodes={simulation.MapData.GetAllResourceNodes().Count}");
+            Assert.That(goal.StatusReason, Does.Contain("No eligible owned villager"));
+            Assert.That(house.IsDestroyed, Is.False);
+            Assert.That(barracks.IsDestroyed, Is.False);
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void UnreachableVisibleResource_BlocksAndRecoversOnlyWhenRouteOpens(bool reopenRoute)
+        {
+            simulation.CreateBuilding(0, BuildingType.House, centerX + 4, centerZ, false, true);
+            simulation.CreateBuilding(0, BuildingType.Barracks, centerX + 8, centerZ, false, true);
+            ResourceNodeData food = simulation.MapData.GetAllResourceNodes()
+                .Single(node => node.Type == ResourceType.Food && !node.IsDepleted);
+            for (int x = food.TileX - 4; x <= food.TileX + 4; x++)
+                for (int z = food.TileZ - 4; z <= food.TileZ + 4; z++)
+                    if (Math.Abs(x - food.TileX) == 4 || Math.Abs(z - food.TileZ) == 4)
+                        simulation.MapData.Tiles[x, z] = TileType.Water;
+
+            int gatherCommands = 0;
+            simulation.CommandBuffer.CommandEnqueued += (command, source) =>
+            {
+                if (source == CommandEnqueueSource.Commander && command is GatherCommand)
+                    gatherCommands++;
+            };
+            EnsureUnitCountGoal goal = goals.SubmitEnsureUnitCount(
+                CommanderIntentCatalog.SpearmanUnitType, 1);
+            goals.Tick(0);
+            Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Blocked), goal.StatusReason);
+            Assert.That(goal.StatusReason, Does.Contain("reachable"));
+            Assert.That(gatherCommands, Is.Zero);
+
+            if (reopenRoute)
+            {
+                for (int x = food.TileX - 4; x <= food.TileX + 4; x++)
+                    for (int z = food.TileZ - 4; z <= food.TileZ + 4; z++)
+                        if (Math.Abs(x - food.TileX) == 4 || Math.Abs(z - food.TileZ) == 4)
+                            simulation.MapData.Tiles[x, z] = TileType.Grass;
+                goals.Tick(300);
+                Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.WaitingForResources));
+                Assert.That(gatherCommands, Is.EqualTo(1));
+            }
+            else
+            {
+                goals.Tick(1800);
+                Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Failed));
+                Assert.That(gatherCommands, Is.Zero);
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator Runtime_ZeroWoodEnsureSpearmen_GathersWoodAndConverges()
+        {
+            simulation.CreateBuilding(0, BuildingType.House, centerX - 14, centerZ - 6, false);
+            ResourceNodeData wood = simulation.MapData.AddResourceNode(ResourceType.Wood,
+                simulation.MapData.TileToWorldFixed(centerX - 12, centerZ), 10000);
+            simulation.FogOfWar.SetVisionCheat(0, true);
+            PlayerResources resources = simulation.ResourceManager.GetPlayerResources(0);
+            resources.Food = 10000;
+            resources.Wood = 0;
+            resources.Gold = 10000;
+
+            EnsureUnitCountGoal goal = goals.SubmitEnsureUnitCount(
+                CommanderIntentCatalog.SpearmanUnitType, 10);
+            bool woodGatherCommandSeen = false;
+            simulation.CommandBuffer.CommandEnqueued += (command, source) =>
+            {
+                if (source == CommandEnqueueSource.Commander
+                    && command is GatherCommand gather
+                    && gather.ResourceNodeId == wood.Id)
+                    woodGatherCommandSeen = true;
+            };
+
+            for (int i = 0; i < 30000 && !goal.IsTerminal; i++)
+            {
+                goals.Tick(simulation.CurrentTick);
+                simulation.Tick();
+                if (i % 300 == 0) yield return null;
+            }
+
+            int spearmen = simulation.UnitRegistry.GetAllUnits().Count(unit =>
+                unit.PlayerId == 0 && unit.UnitType == CommanderIntentCatalog.SpearmanUnitType
+                && unit.CurrentHealth > 0);
+            Assert.That(woodGatherCommandSeen, Is.True,
+                "A zero-wood Spearman request must issue a Commander gather command for visible wood.");
+            int completedBarracks = simulation.BuildingRegistry.GetAllBuildings().Count(building =>
+                building.PlayerId == 0 && building.Type == BuildingType.Barracks
+                && !building.IsDestroyed && !building.IsUnderConstruction);
+            int pendingHouses = simulation.BuildingRegistry.GetAllBuildings().Count(building =>
+                building.PlayerId == 0 && building.Type == BuildingType.House
+                && !building.IsDestroyed && building.IsUnderConstruction);
+            Assert.That(completedBarracks, Is.GreaterThanOrEqualTo(1),
+                $"The request must construct a completed Barracks after gathering wood. "
+                + $"status={goal.Status} reason={goal.StatusReason} owned={spearmen} "
+                + $"tick={simulation.CurrentTick} cap={simulation.GetPopulationCap(0)} "
+                + $"housesPending={pendingHouses}");
+            int queued = simulation.BuildingRegistry.GetAllBuildings()
+                .Where(building => building.PlayerId == 0 && !building.IsDestroyed)
+                .Sum(building => building.TrainingQueue.Count);
+            Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Completed),
+                goal.StatusReason + $" owned={spearmen} queued={queued} tick={simulation.CurrentTick}");
+            Assert.That(spearmen, Is.GreaterThanOrEqualTo(10));
+            Debug.Log($"[Phase4E5 ZeroWood Runtime] PASS wood node #{wood.Id}, spearmen={spearmen}, tick={simulation.CurrentTick}.");
+        }
+
         private UnitData Worker(int tileX)
         {
             UnitData worker = simulation.UnitRegistry.CreateUnit(0,

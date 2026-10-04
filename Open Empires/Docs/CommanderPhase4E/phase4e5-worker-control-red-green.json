@@ -1,0 +1,18 @@
+{
+  "schema": "commander-phase4e5-worker-control-red-green@1",
+  "red": {
+    "jobId": "e19521a7565b4354a252b3c22ab26af7",
+    "test": "OpenEmpires.Tests.CommanderPhase4E5ConcurrencyPlayModeTests.TemporaryHumanWorkerProtection_KeepsUnitGoalRetryable",
+    "result": "failed as expected",
+    "observed": "Expected WaitingForResources but was Blocked"
+  },
+  "green": {
+    "jobId": "c366f31bc0b14252aed9d64be22be6a4",
+    "tests": 2,
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "result": "Passed"
+  },
+  "fix": "CommanderPlanner now checks whether a visible non-depleted node exists separately from whether a worker is currently eligible. A known node plus temporary worker control yields a retryable WaitingForResources plan; no known node remains Blocked."
+}

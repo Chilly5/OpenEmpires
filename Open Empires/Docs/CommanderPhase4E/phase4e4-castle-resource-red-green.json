@@ -1,0 +1,34 @@
+{
+  "schema": "commander-phase4e4-castle-resource-red-green@1",
+  "scope": "ReachAge from a legitimate age-one state with zero food and gold, visible non-depleted resource nodes, owned villagers, and normal landmark commands.",
+  "concurrencyRed": {
+    "jobId": "2371b73025ba4afa86d20d2578abc371",
+    "test": "OpenEmpires.Tests.CommanderPhase4E4ReachAgePlayModeTests.ReachAge_WhenFoodAndGoldAreMissing_PreparesBothBeforeEitherIsReady",
+    "observed": "Before the independent food deficit was paid, no Commander gold gather command was issued."
+  },
+  "concurrencyGreen": {
+    "jobId": "1b3977d6c1de4385a5fe50add3ce30e3",
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "convergenceCharacterization": {
+    "jobId": "9588cff265b3478b8f56339f3e6dbf0d",
+    "result": "Passed, but reached Castle at simulation tick 35056 against the default 36000-tick goal limit."
+  },
+  "spareWorkerRed": {
+    "jobId": "e3634da8798c47f6820b223cd271acc8",
+    "test": "OpenEmpires.Tests.CommanderPhase4E4ReachAgePlayModeTests.ReachAge_CastleFromResourceShortState_GathersAndCompletesNaturally",
+    "observed": "Only two of six available villagers were preparing food/gold while both age resources were short; expected at least three."
+  },
+  "finalFocusedGreen": {
+    "jobId": "a3b1750b419241d98b8db9684a3346f1",
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "resourceShortCastleCompletionTick": 27811,
+    "realAgeReached": 3
+  },
+  "productionChange": "CommanderPlanner starts independent food and gold preparation under a deterministic bounded worker cap (up to three food and two gold gatherers while both are short), preserves workers already gathering the other required resource, and keeps temporary worker unavailability retryable for ReachAge goals. It still uses normal GatherCommand and PlaceBuildingCommand execution and honors existing worker-authority checks.",
+  "remaining": "The latest standalone player has not been rebuilt or visually smoke-tested after this planner change."
+}

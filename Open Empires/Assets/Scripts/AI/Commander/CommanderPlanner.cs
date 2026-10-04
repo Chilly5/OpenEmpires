@@ -235,13 +235,48 @@ namespace OpenEmpires
             LandmarkId landmark = (LandmarkId)Math.Min((int)choices.a, (int)choices.b);
             LandmarkDefinition definition = LandmarkDefinitions.Get(landmark);
             PlayerResources resources = simulation.ResourceManager.GetPlayerResources(goal.PlayerId);
-            if (resources.Food < definition.FoodCost)
+            bool needsFood = resources.Food < definition.FoodCost;
+            bool needsGold = resources.Gold < definition.GoldCost;
+            if (needsFood && needsGold)
+            {
+                int foodWorkers = CountResourceWorkers(goal.PlayerId, ResourceType.Food);
+                int goldWorkers = CountResourceWorkers(goal.PlayerId, ResourceType.Gold);
+                // Keep both independent resource branches alive and use a bounded
+                // number of spare workers. The opposing branch's gatherers are
+                // preserved so a short age goal cannot oscillate between resources.
+                if (foodWorkers < 3 && (goldWorkers >= 2 || foodWorkers <= goldWorkers))
+                {
+                    goal.Blocker = CommanderAgeBlocker.MissingFood;
+                    return PlanGather(goal, ResourceType.Food, currentTick, currentAge, 0,
+                        $"Need {definition.FoodCost} food and {definition.GoldCost} gold for age {nextAge}; preparing food.",
+                        goldWorkers > 0 ? ResourceType.Gold : (ResourceType?)null);
+                }
+                if (goldWorkers < 2)
+                {
+                    goal.Blocker = CommanderAgeBlocker.MissingGold;
+                    return PlanGather(goal, ResourceType.Gold, currentTick, currentAge, 0,
+                        $"Need {definition.FoodCost} food and {definition.GoldCost} gold for age {nextAge}; preparing gold.",
+                        ResourceType.Food);
+                }
+                if (foodWorkers < 3)
+                {
+                    goal.Blocker = CommanderAgeBlocker.MissingFood;
+                    return PlanGather(goal, ResourceType.Food, currentTick, currentAge, 0,
+                        $"Need {definition.FoodCost} food and {definition.GoldCost} gold for age {nextAge}; preparing food.",
+                        ResourceType.Gold);
+                }
+                goal.Blocker = CommanderAgeBlocker.MissingFood;
+                return new CommanderPlan(CommanderGoalStatus.WaitingForResources,
+                    $"Gathering food and gold for age {nextAge}; have {resources.Food}/{definition.FoodCost} food and {resources.Gold}/{definition.GoldCost} gold.",
+                    currentAge, 0);
+            }
+            if (needsFood)
             {
                 goal.Blocker = CommanderAgeBlocker.MissingFood;
                 return PlanGather(goal, ResourceType.Food, currentTick, currentAge, 0,
                     $"Need {definition.FoodCost} food for age {nextAge}; have {resources.Food}.");
             }
-            if (resources.Gold < definition.GoldCost)
+            if (needsGold)
             {
                 goal.Blocker = CommanderAgeBlocker.MissingGold;
                 return PlanGather(goal, ResourceType.Gold, currentTick, currentAge, 0,
@@ -634,23 +669,66 @@ namespace OpenEmpires
         }
 
         private CommanderPlan PlanGather(CommanderGoal goal, ResourceType resourceType,
-            int currentTick, int owned, int queued, string reason)
+            int currentTick, int owned, int queued, string reason,
+            ResourceType? preserveGatherersOf = null)
         {
             if (currentTick - goal.LastEconomyCommandTick < EconomyCommandCooldownTicks)
                 return new CommanderPlan(CommanderGoalStatus.WaitingForResources, reason, owned, queued);
 
-            UnitData worker = SelectEconomyWorker(goal, resourceType, currentTick, out ResourceNodeData node);
-            if (worker == null)
-                return new CommanderPlan(CommanderGoalStatus.Blocked,
-                    $"{reason} No eligible owned villager is available.", owned, queued);
+            bool hasVisibleNode = false;
+            IReadOnlyList<ResourceNodeData> knownNodes = simulation.MapData.GetAllResourceNodes();
+            for (int i = 0; i < knownNodes.Count; i++)
+            {
+                ResourceNodeData known = knownNodes[i];
+                if (known.Type == resourceType && !known.IsDepleted
+                    && simulation.FogOfWar.GetVisibility(goal.PlayerId,
+                        known.TileX, known.TileZ) == TileVisibility.Visible)
+                {
+                    hasVisibleNode = true;
+                    break;
+                }
+            }
 
-            if (node == null)
+            UnitData worker = SelectEconomyWorker(goal, resourceType, currentTick,
+                out ResourceNodeData node, out bool checkedRoutesUnavailable, preserveGatherersOf);
+            if (!hasVisibleNode)
                 return new CommanderPlan(CommanderGoalStatus.Blocked,
                     $"{reason} No explored non-depleted {resourceType} node is known.", owned, queued);
+            if (worker == null)
+            {
+                if (checkedRoutesUnavailable)
+                    return new CommanderPlan(CommanderGoalStatus.Blocked,
+                        $"{reason} No reachable known route was found among the checked worker/resource candidates.",
+                        owned, queued);
+                if ((goal is EnsureUnitCountGoal || goal is ReachAgeGoal)
+                    && !goal.UseIdleWorkersOnly
+                    && HasOwnedLivingVillager(goal.PlayerId))
+                    return new CommanderPlan(CommanderGoalStatus.WaitingForResources,
+                        $"{reason} No eligible owned villager is available; retrying when worker control is released.",
+                        owned, queued);
+                return new CommanderPlan(CommanderGoalStatus.Blocked,
+                    $"{reason} No eligible owned villager is available.", owned, queued);
+            }
+            if (node == null)
+                return new CommanderPlan(CommanderGoalStatus.Blocked,
+                    $"{reason} No suitable visible {resourceType} node is available.", owned, queued);
 
             return new CommanderPlan(CommanderGoalStatus.WaitingForResources,
                 $"{reason} Reassigning villager #{worker.Id} to {resourceType} node #{node.Id}.",
                 owned, queued, new GatherCommand(goal.PlayerId, new[] { worker.Id }, node.Id));
+        }
+
+        private bool HasOwnedLivingVillager(int playerId)
+        {
+            List<UnitData> units = simulation.UnitRegistry.GetAllUnits();
+            for (int i = 0; i < units.Count; i++)
+            {
+                UnitData unit = units[i];
+                if (unit.PlayerId == playerId && unit.IsVillager
+                    && unit.CurrentHealth > 0 && unit.State != UnitState.Dead)
+                    return true;
+            }
+            return false;
         }
 
         private int CountOwnedLivingUnits(int playerId, int unitType)
@@ -804,10 +882,12 @@ namespace OpenEmpires
         }
 
         private UnitData SelectEconomyWorker(CommanderGoal goal, ResourceType neededType, int currentTick,
-            out ResourceNodeData selectedNode)
+            out ResourceNodeData selectedNode, out bool checkedRoutesUnavailable,
+            ResourceType? preserveGatherersOf = null)
         {
             int playerId = goal.PlayerId;
             selectedNode = null;
+            checkedRoutesUnavailable = false;
 
             // Stage 1 (Cheap filter): Collect visible, non-depleted nodes of needed type
             var visibleNodes = new List<ResourceNodeData>();
@@ -838,6 +918,8 @@ namespace OpenEmpires
                 if (goal is ResourceAllocationGoal && IsGatheringState(unit.State)
                     && workerAuthority.IsRecentGatherAssignment(unit.Id, currentTick)) continue;
                 if (IsGatheringResource(unit, neededType)) continue;
+                if (preserveGatherersOf.HasValue
+                    && IsGatheringResource(unit, preserveGatherersOf.Value)) continue;
 
                 int priority = unit.State == UnitState.Idle ? 0
                     : workerAuthority.IsCommanderControlled(unit.Id) && IsGatheringState(unit.State) ? 1
@@ -850,7 +932,12 @@ namespace OpenEmpires
 
             if (eligibleWorkers.Count == 0) return null;
 
-            var candidates = new List<CandidatePath>(eligibleWorkers.Count * visibleNodes.Count);
+            // Keep only the pairs that can actually reach the bounded validation stage.
+            // Building/sorting the full worker x node Cartesian product made planning
+            // cost and memory scale with the entire visible map even though only the
+            // nearest top-K pairs are ever path-validated.
+            int candidateLimit = Mathf.Max(1, pathValidationCandidates);
+            var candidates = new List<CandidatePath>(candidateLimit);
             for (int w = 0; w < eligibleWorkers.Count; w++)
             {
                 UnitData unit = eligibleWorkers[w];
@@ -861,27 +948,24 @@ namespace OpenEmpires
                     ResourceNodeData node = visibleNodes[n];
                     int dx = node.TileX - originX;
                     int dz = node.TileZ - originZ;
-                    candidates.Add(new CandidatePath
+                    CandidatePath candidate = new CandidatePath
                     {
                         Unit = unit,
                         Node = node,
                         Priority = priorities[unit.Id],
                         DistanceSq = dx * dx + dz * dz
-                    });
+                    };
+
+                    if (candidates.Count == candidateLimit
+                        && CompareCandidatePath(candidate, candidates[candidates.Count - 1]) >= 0)
+                        continue;
+
+                    int insertion = FindCandidateInsertionIndex(candidates, candidate);
+                    if (insertion >= candidates.Count) candidates.Add(candidate);
+                    else candidates.Insert(insertion, candidate);
+                    if (candidates.Count > candidateLimit) candidates.RemoveAt(candidates.Count - 1);
                 }
             }
-
-            // Cheap deterministic ranking: distance first, then reassignment priority,
-            // stable worker ID, and stable resource ID.
-            candidates.Sort((a, b) =>
-            {
-                int distance = a.DistanceSq.CompareTo(b.DistanceSq);
-                if (distance != 0) return distance;
-                int priority = a.Priority.CompareTo(b.Priority);
-                if (priority != 0) return priority;
-                int worker = a.Unit.Id.CompareTo(b.Unit.Id);
-                return worker != 0 ? worker : a.Node.Id.CompareTo(b.Node.Id);
-            });
 
             // Expensive validation is strictly bounded to the top-K ranked pairs.
             int validationCount = Mathf.Min(pathValidationCandidates, candidates.Count);
@@ -898,7 +982,34 @@ namespace OpenEmpires
                 }
             }
 
+            // Eligible workers existed, but the bounded path checks found no legal
+            // route. Use the existing blocked retry/timeout lifecycle rather than
+            // reporting a temporary worker-ownership wait indefinitely.
+            checkedRoutesUnavailable = true;
             return null;
+        }
+
+        private static int FindCandidateInsertionIndex(List<CandidatePath> candidates, CandidatePath candidate)
+        {
+            int low = 0;
+            int high = candidates.Count;
+            while (low < high)
+            {
+                int middle = low + ((high - low) >> 1);
+                if (CompareCandidatePath(candidate, candidates[middle]) < 0) high = middle;
+                else low = middle + 1;
+            }
+            return low;
+        }
+
+        private static int CompareCandidatePath(CandidatePath a, CandidatePath b)
+        {
+            int distance = a.DistanceSq.CompareTo(b.DistanceSq);
+            if (distance != 0) return distance;
+            int priority = a.Priority.CompareTo(b.Priority);
+            if (priority != 0) return priority;
+            int worker = a.Unit.Id.CompareTo(b.Unit.Id);
+            return worker != 0 ? worker : a.Node.Id.CompareTo(b.Node.Id);
         }
 
         private UnitData FindActiveConstructionBuilder(int playerId, BuildingData building)

@@ -364,19 +364,44 @@ namespace OpenEmpires
                 if (c == '"')
                 {
                     bool closed = false;
+                    bool pendingHighSurrogate = false;
                     while (++i < json.Length)
                     {
                         c = json[i];
-                        if (c == '"') { closed = true; break; }
+                        if (c == '"')
+                        {
+                            if (pendingHighSurrogate) throw new JsonException();
+                            closed = true;
+                            break;
+                        }
                         if (c < 32) throw new JsonException();
                         if (c == '\\')
                         {
                             if (++i >= json.Length || "\"\\/bfnrtu".IndexOf(json[i]) < 0)
                                 throw new JsonException();
+                            c = json[i];
                             if (json[i] == 'u')
+                            {
+                                int codeUnit = 0;
                                 for (int d = 0; d < 4; d++)
+                                {
                                     if (++i >= json.Length || !Uri.IsHexDigit(json[i])) throw new JsonException();
+                                    char hex = json[i];
+                                    codeUnit = codeUnit * 16 + (hex <= '9' ? hex - '0'
+                                        : char.ToUpperInvariant(hex) - 'A' + 10);
+                                }
+                                c = (char)codeUnit;
+                            }
                         }
+                        // Validate decoded UTF-16 before Json.NET can replace malformed
+                        // escaped surrogates with a replacement character.
+                        if (pendingHighSurrogate)
+                        {
+                            if (!char.IsLowSurrogate(c)) throw new JsonException();
+                            pendingHighSurrogate = false;
+                        }
+                        else if (char.IsHighSurrogate(c)) pendingHighSurrogate = true;
+                        else if (char.IsLowSurrogate(c)) throw new JsonException();
                     }
                     if (!closed) throw new JsonException();
                     previous = '"';

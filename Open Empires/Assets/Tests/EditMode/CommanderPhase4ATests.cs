@@ -119,6 +119,27 @@ namespace OpenEmpires.Tests
         }
 
         [Test]
+        public async Task OpenRouterSemanticRequest_TransmitsSupportedPlacementSchema()
+        {
+            string response = "{\"choices\":[{\"message\":{\"content\":\""
+                + "{\\\"outcome\\\":\\\"Unsupported\\\",\\\"message\\\":\\\"not needed\\\"}"
+                + "\"}}]}";
+            var transport = new FakeTransport(new CommanderHttpResponse(200, response));
+            var provider = new OpenRouterCommanderProvider("test-only-key", transport);
+            var request = new CommanderSemanticProviderRequest("build a barracks west of my town center",
+                Context());
+
+            await provider.TranslateSemanticAsync(request, CancellationToken.None);
+
+            string body = transport.RequestBodies.Single();
+            Assert.That(body, Does.Contain("\\\"placement\\\""));
+            Assert.That(body, Does.Contain("MyTownCenter|MyBarracks"));
+            Assert.That(body, Does.Contain("MapWest|MapEast|Near"));
+            Assert.That(body, Does.Contain("clearGapTiles"));
+            Assert.That(body, Does.Contain("producerFromNode"));
+        }
+
+        [Test]
         public async Task OpenRouterProvider_HttpErrorDoesNotLeakResponseOrKey()
         {
             var transport = new FakeTransport(new CommanderHttpResponse(401,

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
+using UnityEngine.UI;
 
 namespace OpenEmpires.Tests
 {
@@ -110,6 +111,31 @@ namespace OpenEmpires.Tests
             StringAssert.Contains("Which Town Center should I use?", chat.DisplayedTranscript);
             Assert.That(chat.Conversation.SemanticMemory.Snapshot(), Has.Count.EqualTo(1));
             yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator Runtime_NewCommanderReply_IsVisibleAfterTranscriptOverflows()
+        {
+            provider.Json = "{\"outcome\":\"Clarify\",\"message\":\"Please clarify this request.\"}";
+            ScrollRect transcriptScroll = chat.GetComponentInChildren<ScrollRect>(true);
+            Assert.That(transcriptScroll, Is.Not.Null);
+
+            for (int i = 0; i < 12; i++)
+            {
+                Task<CommanderAIChatSubmission> request = chat.SubmitMessageAsync(
+                    $"Question {i}: please clarify this Commander request.");
+                while (!request.IsCompleted) yield return null;
+                Assert.That(request.IsFaulted, Is.False,
+                    $"Question {i} should complete without an exception.");
+            }
+
+            yield return null;
+            Canvas.ForceUpdateCanvases();
+            Assert.That(transcriptScroll.content.rect.height,
+                Is.GreaterThan(transcriptScroll.viewport.rect.height),
+                "The transcript must overflow for this visibility regression to be meaningful.");
+            Assert.That(transcriptScroll.verticalNormalizedPosition, Is.LessThan(0.05f),
+                "The latest Commander reply should be at the visible bottom of the transcript.");
         }
 
         private sealed class SemanticProvider : ICommanderAIProvider, ICommanderSemanticProvider

@@ -1,0 +1,285 @@
+{
+  "schema": "commander-phase4e-final-source-hashes@1",
+  "generatedAtUtc": "2026-10-03T08:05:00Z",
+  "baselineHead": "a2c410446769ec22468814978dd591cdc075a9de",
+  "finalHead": "5fa8f9bcf2517854c5b7fd3474a998b4f824b4ed",
+  "note": "Interim source snapshot, not a Phase 4E completion claim. Hashes cover Phase 4E production/test files changed after the accepted Phase 4D baseline, including Unicode validation, unreachable-route handling, provider placement-contract, worker-control, resource-short Castle concurrency/runtime, compound-runtime, and Commander transcript-autoscroll edits. Unity-generated dirty files are listed separately in the boundary audit.",
+  "files": [
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderContextBuilder.cs",
+      "sha256": "78CBB3705F2CA42459F9D59B6BB9667046B5205CCF36512D55FE1685E49C8E71"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderGoal.cs",
+      "sha256": "1653FADE8C64F21F81D1FD49582A7F60B1848ACC779EF06220F65812F78BF49F"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderGoalManager.cs",
+      "sha256": "2E4EC307B56D75B7D92150A1DAE59874CF72EF2D1A2A5322EEB9DEF8D0F59F91"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderIntent.cs",
+      "sha256": "B7AB4F047105E148B4DFDAB1A9EA80E39AC83039A7812C795359568B8999E7A6"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderIntentDispatcher.cs",
+      "sha256": "C75EC5E9B119641E0B252C76B0457DDA62D3186C0A510B160692A693E342228D"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderIntentDto.cs",
+      "sha256": "2657B2D7CAB9ED9C645021EB597F22B768F51DAD2CCDC00CB1AD0BC38AAC4E7A"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderIntentResolver.cs",
+      "sha256": "23ABBB9943D77507EB54DEC22DDCA257596C4F20BA5BD4AFAF7DFB6D90616A5F"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderIntentValidator.cs",
+      "sha256": "70A965DD9FAC55E05A7717420978AAEF8DAEC6C7693EEFA8A593A7144A3AFB6C"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderPlanner.cs",
+      "sha256": "4ECFDFA477465EB9DCAB207CE851ADCD397F43FAE44C34FBD3A34AF339E376E4"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderResponseGenerator.cs",
+      "sha256": "28E15ACC173352DCEA44A96D80492512004E47AA94823AA03BD89A4E3DD307DC"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderAIProvider.cs",
+      "sha256": "8D892E3EC451CF96BFFC3F1722D5BD99207F94E42482A8A83A5B6A8C42A804DB"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs",
+      "sha256": "5C585FA5726D0FDA2E2698272AE6BEE17C692E0335B28A4A1596BD7B046BDD29"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/GeminiAIProvider.cs",
+      "sha256": "DE5FDC6CD43E2F377A081A5CBCEACB9D8E741D29CF06CC3E4E83ED5C3C033D8B"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/OpenRouterCommanderProvider.cs",
+      "sha256": "FB5151480FB4BC31797AC39B419D4A28C55A77BC44E495EEF019A55B32C24C70"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4B2/StrategicAIApprovalBridge.cs",
+      "sha256": "77913C413506D5815509F48B5CF1CD5B446A06B44A36AFB3CF3BC603D9FA2E3C"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4C/ConversationState.cs",
+      "sha256": "DF81816FAFFC4A42EEAE0D09EC0254A122B2F3F71FA29BC3EEB629AF85A1F77C"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E.meta",
+      "sha256": "0203B3A68C4985C6AFAAFD340EBCCD1D614DC8B93FA84ADE6546612CFE5B7F95"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticAdmission.cs",
+      "sha256": "1AE268AF44A3152123F9A4146522EA9D4C572BCF33AA10323FF641C06741C374"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticAdmission.cs.meta",
+      "sha256": "3559F57D68EAD8FCAEB9D739F184537BC5D85A7C5CFEBAC8909F39CC7C49F63C"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticConversationMemory.cs",
+      "sha256": "97421B5094ED36CB2D94A5478B1D98FCF0E82030165E9155C11F24F843E754C0"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticConversationMemory.cs.meta",
+      "sha256": "439DF3300AB8E2113746CF93AC9F47A4FFDB4EA3FA8DE40C6BA37977F68FADA0"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticGraphAdmission.cs",
+      "sha256": "BA82DDAC7C7D3561F77E96EC6918650F17400C17542C6B288EE0AE751C872D19"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticGraphAdmission.cs.meta",
+      "sha256": "97B63E21CFAAC2EDFBE3AF9AADD13CBBF6AA1AE6CD9679E50EFA13857D4C4EE7"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticJson.cs",
+      "sha256": "827D7BC7495AD27E6F4E634FE62988C2E1A5CE4F3CDB81EAF11A61E683E02368"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticJson.cs.meta",
+      "sha256": "70079DE9382BAE352F3DDCEEA3AF355E6796DF16E07B7DBB3473ADAEB60BE7A8"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticPlacementCandidates.cs",
+      "sha256": "FD7662B2185234403EEE421179542EBBBF4F8449BE91FF225A5D177EAF006267"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticPlacementCandidates.cs.meta",
+      "sha256": "49D3DAEC0F4F033087FBED121C600ACE050145FEBFC8A48B981DF088D941F211"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticProvider.cs",
+      "sha256": "DFDCD87D93C2B4F537A08A95D3D3FA5D2F68D52E2B75B17E810F7C289E3087B2"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticProvider.cs.meta",
+      "sha256": "829A7A5D6655EE87A86C41DE6C104327EA40C133CBC53DD6E21CF02F914354DC"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticReferenceResolver.cs",
+      "sha256": "E68B8DADDC36069E2CF6C0B4B4405883F491F3E38B234428488F7C03D459C2E9"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticReferenceResolver.cs.meta",
+      "sha256": "21CAB34471AE627B374427D0199162D9846822544A4B0CB5F3FAAA317347B89B"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticRequest.cs",
+      "sha256": "A7E6633AB7306D9500DEC5DDF8D85802E1EEC7C64B9D1FA6DF14CA6A9D3595C0"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticRequest.cs.meta",
+      "sha256": "633D94FFE5F1F8E296B07CABBF8DC533FEE2D9C435AF0DA738EE0645F2C97BC1"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4ATests.cs",
+      "sha256": "DFAD6B52021CC9D7E02D1AA4DB30A0207FC1BB2F5850C8218CE66360A6DFC715"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4ATests.cs.meta",
+      "sha256": "01C647F392B28CE687B3356D6459DF3DC4D988EACC99586465406AF627E1243A"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E1ChatTests.cs",
+      "sha256": "2C6E1AE36F8B860A9AA0E07B1B6A6F19D5247EB6A459F22AED60C5BD5B5C04EA"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E1ChatTests.cs.meta",
+      "sha256": "2F4BBD163CAEE8EDA7517BFEA8E562A1C38950AC6B6E87BDB56B28A31AF68DD0"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E1ProviderTests.cs",
+      "sha256": "1D77F46173AD29B75B35DB8A50A32498034245006654DA98BAA836C5A6DE9670"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E1ProviderTests.cs.meta",
+      "sha256": "4058EFB4861E65E68A2734547017CB8C5A4562E1B1691CED7471F3248731EED7"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E1SemanticJsonTests.cs",
+      "sha256": "A011A58C3F35AD10B5C1C4957CAB8E139BCACBB6443AFC1F10653CBFF668E624"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E1SemanticJsonTests.cs.meta",
+      "sha256": "68BAF71D71CADFB988A9309913CB2E74BA54CF52F38801B613CE71C6747EFAB7"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E1StrategicTests.cs",
+      "sha256": "AD194A69835C1B3E695FCA93B7D136540A4DA77F5095B9024CDC213AF1248391"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E1StrategicTests.cs.meta",
+      "sha256": "AAD2920CC59D0A1D17577D7FB3EADCD19C3B93329BF88A52095234BD54AB18E8"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E2PlacementCandidatesTests.cs",
+      "sha256": "D2F6B1119400766EE4640D4E17ACCB38EDB97A808787AC522DEF844895769D73"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E2PlacementCandidatesTests.cs.meta",
+      "sha256": "B85CA96E26416418A79F6381E46C549CE282A29AFC0127CDB91E11B54E87D4D8"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E2ReferenceResolverTests.cs",
+      "sha256": "C0F81DA291B69064AB566C51008B3E2F9F878AEDB8506EE1E15BBE1301272576"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E2ReferenceResolverTests.cs.meta",
+      "sha256": "E6779860296C035B8D4E0822730FEBF149882FAD42C241CDBEC564823BCED26C"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E2SemanticPlacementContractTests.cs",
+      "sha256": "6F47C446E9D1D3E3E1866152283AF7884988EF1376459C0E8E244D98C435A9C2"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E2SemanticPlacementContractTests.cs.meta",
+      "sha256": "2703143EF1B2E420D746E32660D2433088A24FDAF40CFA02E9C199EC6C8CF06C"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E2SpatialIntegrationTests.cs",
+      "sha256": "2C6C98D46C48E40EC33E4CA7F275CCE902B5A3CF0AA6F5D26AC03404B99A95A9"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E2SpatialIntegrationTests.cs.meta",
+      "sha256": "EA46273804BB03F38D6AC2D758CA5D4C653B0343DD5D4680294E3DF7CE1D85AA"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E3GraphAdmissionTests.cs",
+      "sha256": "37ABF586211B7F9FE87D8161D5F65873617CC1B4FFF39901A0DB156B012BC4EF"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E3GraphAdmissionTests.cs.meta",
+      "sha256": "B2125492E1FC318C8510C9968396A61DC402ADDAC604B2817B06AB2946A169AF"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E3GraphContractTests.cs",
+      "sha256": "6A273733B72BDEC644B98DF86275E0C7D536A803061C4678E9649DE864C9F79E"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E3GraphContractTests.cs.meta",
+      "sha256": "3EBF2BCCEF20FC8D5E8E4BD524ACC439212864C2B16BC9806E3630A66895F06D"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E4ReachAgeTests.cs",
+      "sha256": "C0E7058281E3F5CABEFA3236EDBE25029019F8024BBA6663CA4EE76DD58719FF"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E4ReachAgeTests.cs.meta",
+      "sha256": "416552444E35D391A046846CFD88674FD95799F66D2A26E9CD581198F7A24A5F"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E6ConversationTests.cs",
+      "sha256": "965DD649EF36DD032967CA4EA9A99B1ECDA08B4A5425938C397043D8F512E929"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E6ConversationTests.cs.meta",
+      "sha256": "E0969FC7FA1A5DBAA7F76A898EA106033FF51A8840F5EBACA85507C9822DB23E"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4E1StrategicPlayModeTests.cs",
+      "sha256": "5C9A2D205BBCF3EA574B2A1F4EAD46F71117B6D41D393193B240F08E2D8FF1B7"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4E1StrategicPlayModeTests.cs.meta",
+      "sha256": "C7C32E3384A8113FB3FC36A029C876800E776AC89C46233EC5BDCD2F7DE09AE5"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4E2SpatialPlacementPlayModeTests.cs",
+      "sha256": "CFCADD324E9BCEAD5E9433C2AF07315C784167421B7624C3F0C65FE311B06904"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4E2SpatialPlacementPlayModeTests.cs.meta",
+      "sha256": "EA13C1E3F3CF9FC6FDB85C0517C136C28E205AD73DF1FDB440BA24214B29F9EC"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4E4ReachAgePlayModeTests.cs",
+      "sha256": "42D348989FF40178D75010A45E210D5A090D77A552B5C0630BA0FD082999BCA0"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4E4ReachAgePlayModeTests.cs.meta",
+      "sha256": "AD13AFAD8F159AA7F350BF593021CE7E924191545A0A4679A8E8420E54EDFBD8"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4E5ConcurrencyPlayModeTests.cs",
+      "sha256": "B0FA1005FC34F69D9B44F5EE8D11E9DE018CA2A437383B709ABF5AB410B30C9F"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4E5ConcurrencyPlayModeTests.cs.meta",
+      "sha256": "005242C4D0F5BFEEEEF160B2D704AF90606D82E9D08BAEC98BC5553231FF1587"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4E7PlayableScenarioPlayModeTests.cs",
+      "sha256": "67AEE7249119D235CA014205C5AAB875F966A8C57DB5726E3AEBE667A7C15D69"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4E7PlayableScenarioPlayModeTests.cs.meta",
+      "sha256": "03F8FBB62E7759281F21F127CD559FEF757584F097683FA0B36F19120139F067"
+    }
+  ]
+}

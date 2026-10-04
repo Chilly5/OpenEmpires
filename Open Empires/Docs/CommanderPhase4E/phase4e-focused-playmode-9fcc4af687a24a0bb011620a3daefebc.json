@@ -1,0 +1,116 @@
+{
+  "job_id": "9fcc4af687a24a0bb011620a3daefebc",
+  "status": "succeeded",
+  "mode": "PlayMode",
+  "started_unix_ms": 1790536015261,
+  "finished_unix_ms": 1790536029718,
+  "last_update_unix_ms": 1790536029718,
+  "progress": {
+    "completed": 9,
+    "total": 9,
+    "current_test_full_name": null,
+    "current_test_started_unix_ms": 1790536028701,
+    "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4E7PlayableScenarioPlayModeTests.Runtime_NaturalSemanticRequest_ExecutesTenSpearmenThroughNormalCommands",
+    "last_finished_unix_ms": 1790536029674,
+    "stuck_suspected": false,
+    "editor_is_focused": false,
+    "blocked_reason": null,
+    "failures_so_far": [],
+    "failures_capped": false
+  },
+  "error": null,
+  "result": {
+    "mode": "PlayMode",
+    "summary": {
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0,
+      "durationSeconds": 3.2610953,
+      "resultState": "Passed"
+    },
+    "results": [
+      {
+        "name": "CompoundWestBuildThenSpearmen_UsesOnlyTheBoundNewBarracks",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4E2SpatialPlacementPlayModeTests.CompoundWestBuildThenSpearmen_UsesOnlyTheBoundNewBarracks",
+        "state": "Passed",
+        "durationSeconds": 0.3594744,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #2 submitted: EnsureUnitCount\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Barracks at (120,128) using exact semantic placement with 5 clear-tile gap and villager #0.\r\n[SyncCheck] tick=1 checksum=0FC52C79\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Barracks at (120,128): villager #0 is travelling to building #2.\r\n[Commander] Goal #2: status=WaitingForConstruction owned=0 queued=0; Requested producer prerequisite: villager #0 is travelling to building #2.\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; Barracks construction complete at (120,128) as building #2.\r\n[Commander] Goal #2: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #2.\r\n[Commander] Goal #2: status=Blocked owned=0 queued=0; The requested producer is no longer owned, alive, or compatible.\r\n"
+      },
+      {
+        "name": "SemanticWestPlacement_CreatesOwnedBarracksAtFiveClearColumnsAndBindsFoundation",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4E2SpatialPlacementPlayModeTests.SemanticWestPlacement_CreatesOwnedBarracksAtFiveClearColumnsAndBindsFoundation",
+        "state": "Passed",
+        "durationSeconds": 0.2563002,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Barracks at (120,128) using exact semantic placement with 5 clear-tile gap and villager #0.\r\n[SyncCheck] tick=1 checksum=0FC52C79\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Barracks at (120,128): villager #0 is travelling to building #2.\r\n"
+      },
+      {
+        "name": "SemanticWestPlacement_WhenEveryBoundedCandidateIsInvalidCreatesNothing",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4E2SpatialPlacementPlayModeTests.SemanticWestPlacement_WhenEveryBoundedCandidateIsInvalidCreatesNothing",
+        "state": "Passed",
+        "durationSeconds": 0.2522186,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No visible, buildable, reachable location satisfies the bounded Barracks placement.\r\n[SyncCheck] tick=1 checksum=B874DAAB\r\n"
+      },
+      {
+        "name": "ReachAge_UnsupportedCivilizationTargetFailsWithTypedBlocker",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4E4ReachAgePlayModeTests.ReachAge_UnsupportedCivilizationTargetFailsWithTypedBlocker",
+        "state": "Passed",
+        "durationSeconds": 0.246919,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Commander] Goal #1 submitted: ReachAge\r\n[Commander] Goal #1: status=Failed owned=1 queued=0; Civilization French cannot reach requested age 4.\r\n"
+      },
+      {
+        "name": "ReachAge_UsesNormalLandmarkCommandAndCompletesOnlyAfterRealAgeTransition",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4E4ReachAgePlayModeTests.ReachAge_UsesNormalLandmarkCommandAndCompletesOnlyAfterRealAgeTransition",
+        "state": "Passed",
+        "durationSeconds": 0.259901,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Commander] Goal #1 submitted: ReachAge\r\n[Commander] Goal #1: status=Executing owned=1 queued=0; Starting age 2 with landmark English_Age2_A at (126,134) using villager #0.\r\n[Landmark] Placing English_Age2_A at (126,134) for player 0 with 1 villager(s), queued=False\r\n[Landmark] Villager 0 assigned to landmark 1: MovingToBuild via path of 1 tiles to (130,136)\r\n[SyncCheck] tick=1 checksum=04FC5186\r\n[Commander] Goal #1: status=WaitingForConstruction owned=1 queued=0; Age 2 landmark: villager #0 is travelling to building #1.\r\n[SyncCheck] tick=2 checksum=5F504563\r\n[Commander] Goal #1: status=Completed owned=2 queued=0; Player has reached age 2.\r\n"
+      },
+      {
+        "name": "ReachAge_WhenAlreadyAtTargetSucceedsWithoutCommand",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4E4ReachAgePlayModeTests.ReachAge_WhenAlreadyAtTargetSucceedsWithoutCommand",
+        "state": "Passed",
+        "durationSeconds": 0.2513416,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Commander] Goal #1 submitted: ReachAge\r\n[Commander] Goal #1: status=Completed owned=3 queued=0; Player has reached age 3.\r\n"
+      },
+      {
+        "name": "Runtime_EnsureSpearmen_OverlapsCapacityProducerAndFoodPreparation",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4E5ConcurrencyPlayModeTests.Runtime_EnsureSpearmen_OverlapsCapacityProducerAndFoodPreparation",
+        "state": "Passed",
+        "durationSeconds": 0.3114127,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing House at (130,134) with villager #0.\r\n[SyncCheck] tick=1 checksum=21B7A561\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Barracks at (134,126) with villager #1.\r\n[SyncCheck] tick=2 checksum=10DE5F18\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Preparing food for the next Spearman; need 60, have 0. Reassigning villager #2 to Food node #0.\r\n[SyncCheck] tick=3 checksum=151AB5D0\r\n[Phase4E5 Concurrency Runtime] PASS House #2, Barracks #3, food gatherer #2 started before producer completion; commands=3.\r\n"
+      },
+      {
+        "name": "Runtime_AmbiguousSemanticReply_ShowsClarificationWithoutGoal",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4E7PlayableScenarioPlayModeTests.Runtime_AmbiguousSemanticReply_ShowsClarificationWithoutGoal",
+        "state": "Passed",
+        "durationSeconds": 0.310389,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "Runtime_NaturalSemanticRequest_ExecutesTenSpearmenThroughNormalCommands",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4E7PlayableScenarioPlayModeTests.Runtime_NaturalSemanticRequest_ExecutesTenSpearmenThroughNormalCommands",
+        "state": "Passed",
+        "durationSeconds": 0.9724147,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.\r\n[SyncCheck] tick=1 checksum=9C3A4015\r\n[SyncCheck] tick=2 checksum=C3B201D5\r\n[SyncCheck] tick=3 checksum=EB29C395\r\n[SyncCheck] tick=4 checksum=12A18555\r\n[SyncCheck] tick=5 checksum=3A194715\r\n[SyncCheck] tick=6 checksum=619108D5\r\n[SyncCheck] tick=7 checksum=8908CA95\r\n[SyncCheck] tick=8 checksum=B0808C55\r\n[SyncCheck] tick=9 checksum=D7F84E15\r\n[SyncCheck] tick=10 checksum=FF700FD5\r\n[SyncCheck] tick=11 checksum=26E7D195\r\n[SyncCheck] tick=12 checksum=4E5F9355\r\n[SyncCheck] tick=13 checksum=75D75515\r\n[SyncCheck] tick=14 checksum=9D4F16D5\r\n[SyncCheck] tick=15 checksum=C4C6D895\r\n[Commander] Goal #1: status=Executing owned=0 queued=1; Queueing Spearman at Barracks #1.\r\n[SyncCheck] tick=16 checksum=BC61C803\r\n[SyncCheck] tick=17 checksum=83E23E43\r\n[SyncCheck] tick=18 checksum=4B62B483\r\n[SyncCheck] tick=19 checksum=12E32AC3\r\n[SyncCheck] tick=20 checksum=DA63A103\r\n[SyncCheck] tick=21 checksum=A1E41743\r\n[SyncCheck] tick=22 checksum=69648D83\r\n[SyncCheck] tick=23 checksum=30E503C3\r\n[SyncCheck] tick=24 checksum=F8657A03\r\n[SyncCheck] tick=25 checksum=BFE5F043\r\n[SyncCheck] tick=26 checksum=87666683\r\n[SyncCheck] tick=27 checksum=4EE6DCC3\r\n[SyncCheck] tick=28 checksum=16675303\r\n[SyncCheck] tick=29 checksum=DDE7C943\r\n[SyncCheck] tick=30 checksum=A5683F83\r\n[Commander] Goal #1: status=Executing owned=0 queued=2; Queueing Spearman at Barracks #1.\r\n[SyncCheck] tick=31 checksum=6F258723\r\n[SyncCheck] tick=32 checksum=97B3D8E3\r\n[SyncCheck] tick=33 checksum=C0422AA3\r\n[SyncCheck] tick=34 checksum=E8D07C63\r\n[SyncCheck] tick=35 checksum=115ECE23\r\n[SyncCheck] tick=36 checksum=39ED1FE3\r\n[SyncCheck] tick=37 checksum=627B71A3\r\n[SyncCheck] tick=38 checksum=8B09C363\r\n[SyncCheck] tick=39 checksum=B3981523\r\n[SyncCheck] tick=40 checksum=DC2666E3\r\n[SyncCheck] tick=41 checksum=04B4B8A3\r\n[SyncCheck] tick=42 checksum=2D430A63\r\n[SyncCheck] tick=43 checksum=55D15C23\r\n[SyncCheck] tick=44 checksum=7E5FADE3\r\n[SyncCheck] tick=45 checksum=A6EDFFA3\r\n[Commander] Goal #1: status=WaitingForProduction owned=0 queued=3; All compatible production queues are at Commander limit 3.\r\n[SyncCheck] tick=46 checksum=CF7C5163\r\n[SyncCheck] tick=47 checksum=F80AA323\r\n[SyncCheck] tick=48 checksum=2098F4E3\r\n[SyncCheck] tick=49 checksum=492746A3\r\n[SyncCheck] tick=50 checksum=71B59863\r\n[SyncCheck] tick=51 checksum=9A43EA23\r\n[SyncCheck] tick=52 checksum=C2D23BE3\r\n[SyncCheck] tick=53 checksum=EB608DA3\r\n[SyncCheck] tick=54 checksum=13EEDF63\r\n[SyncCheck] tick=55 checksum=3C7D3123\r\n[SyncCheck] tick=56 checksum=650B82E3\r\n[SyncCheck] tick=57 checksum=8D99D4A3\r\n[SyncCheck] tick=58 checksum=B6282663\r\n[SyncCheck] tick=59 checksum=DEB67823\r\n[SyncCheck] tick=60 checksum=0744C9E3\r\n[SyncCheck] tick=61 checksum=2FD31BA3\r\n[SyncCheck] tick=62 checksum=58616D63\r\n[SyncCheck] tick=63 checksum=80EFBF23\r\n[SyncCheck] tick=64 checksum=A97E10E3\r\n[SyncCheck] tick=65 checksum=D20C62A3\r\n[SyncCheck] tick=66 checksum=FA9AB463\r\n[SyncCheck] tick=67 checksum=23290623\r\n[SyncCheck] tick=68 checksum=4BB757E3\r\n[SyncCheck] tick=69 checksum=7445A9A3\r\n[SyncCheck] tick=70 checksum=9CD3FB63\r\n[SyncCheck] tick=71 checksum=C5624D23\r\n[SyncCheck] tick=72 checksum=EDF09EE3\r\n[SyncCheck] tick=73 checksum=167EF0A3\r\n[SyncCheck] tick=74 checksum=3F0D4263\r\n[SyncCheck] tick=75 checksum=679B9423\r\n[SyncCheck] tick=76 checksum=9029E5E3\r\n[SyncCheck] tick=77 checksum=B8B837A3\r\n[SyncCheck] tick=78 checksum=E1468963\r\n[SyncCheck] tick=79 checksum=09D4DB23\r\n[SyncCheck] tick=80 checksum=32632CE3\r\n[SyncCheck] tick=81 checksum=5AF17EA3\r\n[SyncCheck] tick=82 checksum=837FD063\r\n[SyncCheck] tick=83 checksum=AC0E2223\r\n[SyncCheck] tick=84 checksum=D49C73E3\r\n[SyncCheck] tick=85 checksum=FD2AC5A3\r\n[SyncCheck] tick=86 checksum=25B91763\r\n[SyncCheck] tick=87 checksum=4E476923\r\n[SyncCheck] tick=88 checksum=76D5BAE3\r\n[SyncCheck] tick=89 checksum=9F640CA3\r\n[SyncCheck] tick=90 checksum=C7F25E63\r\n[SyncCheck] tick=91 checksum=F080B023\r\n[SyncCheck] tick=92 checksum=190F01E3\r\n[SyncCheck] tick=93 checksum=419D53A3\r\n[SyncCheck] tick=94 checksum=6A2BA563\r\n[SyncCheck] tick=95 checksum=92B9F723\r\n[SyncCheck] tick=96 checksum=BB4848E3\r\n[SyncCheck] tick=97 checksum=E3D69AA3\r\n[SyncCheck] tick=98 checksum=0C64EC63\r\n[SyncCheck] tick=99 checksum=34F33E23\r\n[SyncCheck] tick=100 checksum=5D818FE3\r\n[Commander] Goal #1: status=Executing owned=1 queued=2; Queueing Spearman at Barracks #1.\r\n[Commander] Goal #1: status=WaitingForProduction owned=1 queued=3; All compatible production queues are at Commander limit 3.\r\n[Commander] Goal #1: status=Executing owned=2 queued=2; Queueing Spearman at Barracks #1.\r\n[Commander] Goal #1: status=WaitingForProduction owned=2 queued=3; All compatible production queues are at Commander limit 3.\r\n[Commander] Goal #1: status=Executing owned=2 queued=2; Queueing Spearman at Barracks #1.\r\n[Commander] Goal #1: status=WaitingForProduction owned=2 queued=3; All compatible production queues are at Commander limit 3.\r\n[Commander] Goal #1: status=Executing owned=3 queued=2; Queueing Spearman at Barracks #1.\r\n[Commander] Goal #1: status=WaitingForProduction owned=3 queued=3; All compatible production queues are at Commander limit 3.\r\n[Commander] Goal #1: status=Executing owned=4 queued=2; Queueing Spearman at Barracks #1.\r\n[Commander] Goal #1: status=WaitingForProduction owned=3 queued=3; All compatible production queues are at Commander limit 3.\r\n[Commander] Goal #1: status=Executing owned=4 queued=2; Queueing Spearman at Barracks #1.\r\n[Commander] Goal #1: status=WaitingForProduction owned=4 queued=3; All compatible production queues are at Commander limit 3.\r\n[Commander] Goal #1: status=Executing owned=5 queued=2; Queueing Spearman at Barracks #1.\r\n[Commander] Goal #1: status=WaitingForProduction owned=4 queued=3; All compatible production queues are at Commander limit 3.\r\n[Commander] Goal #1: status=Executing owned=5 queued=2; Queueing Spearman at Barracks #1.\r\n[Commander] Goal #1: status=WaitingForProduction owned=5 queued=3; All compatible production queues are at Commander limit 3.\r\n[Commander] Goal #1: status=Executing owned=6 queued=2; Queueing Spearman at Barracks #1.\r\n[Commander] Goal #1: status=WaitingForProduction owned=6 queued=3; All compatible production queues are at Commander limit 3.\r\n[Commander] Goal #1: status=Executing owned=6 queued=2; Queueing Spearman at Barracks #1.\r\n[Commander] Goal #1: status=WaitingForProduction owned=6 queued=3; All compatible production queues are at Commander limit 3.\r\n[Commander] Goal #1: status=Executing owned=7 queued=2; Queueing Spearman at Barracks #1.\r\n[Commander] Goal #1: status=WaitingForProduction owned=7 queued=3; Owned 7, queued 3, target 10.\r\n[Commander] Goal #1: status=WaitingForProduction owned=6 queued=3; All compatible production queues are at Commander limit 3.\r\n[Commander] Goal #1: status=Executing owned=7 queued=2; Queueing Spearman at Barracks #1.\r\n[Commander] Goal #1: status=WaitingForProduction owned=7 queued=3; Owned 7, queued 3, target 10.\r\n[Commander] Goal #1: status=WaitingForProduction owned=8 queued=2; Owned 8, queued 2, target 10.\r\n[Commander] Goal #1: status=Executing owned=7 queued=2; Queueing Spearman at Barracks #1.\r\n[Commander] Goal #1: status=WaitingForProduction owned=7 queued=3; Owned 7, queued 3, target 10.\r\n[Commander] Goal #1: status=WaitingForProduction owned=8 queued=2; Owned 8, queued 2, target 10.\r\n[Commander] Goal #1: status=WaitingForProduction owned=9 queued=1; Owned 9, queued 1, target 10.\r\n[Commander] Goal #1: status=Executing owned=8 queued=1; Queueing Spearman at Barracks #1.\r\n[Commander] Goal #1: status=WaitingForProduction owned=8 queued=2; Owned 8, queued 2, target 10.\r\n[Commander] Goal #1: status=WaitingForProduction owned=9 queued=1; Owned 9, queued 1, target 10.\r\n[Commander] Goal #1: status=Completed owned=10 queued=0; Owned 10/10 living units.\r\n[Phase4E7 Playable Runtime] PASS semantic natural request -> 10 live spearmen; tick=5101.\r\n"
+      }
+    ]
+  }
+}

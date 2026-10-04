@@ -1,0 +1,19 @@
+{
+  "recordedAt": "2026-10-03",
+  "jobId": "399ce9299b924b9b88a9e3679358cbe2",
+  "mode": "PlayMode",
+  "summary": { "total": 2, "passed": 2, "failed": 0, "skipped": 0, "resultState": "Passed" },
+  "tests": [
+    {
+      "fullName": "OpenEmpires.Tests.CommanderPhase4C2PlayModeTests.WholeFormQueries_AreOfflineAndHostileAppendRemainsRejected",
+      "state": "Passed",
+      "evidence": "Hostile appended provider-style content remained rejected while offline whole-form controls stayed deterministic."
+    },
+    {
+      "fullName": "OpenEmpires.Tests.CommanderPhase4D1PlayModeTests.MatchResetDuringHeldProviderReply_CannotLeakIntoNewRuntime",
+      "state": "Passed",
+      "evidence": "The old runtime was reset and disposed before the held provider reply; the new runtime ended with pending=0, memory=0, plans=0, commands=0."
+    }
+  ],
+  "scope": "Fresh focused PlayMode authority/reset rerun. This strengthens Scenarios I and J editor/runtime evidence but is not standalone UI evidence."
+}

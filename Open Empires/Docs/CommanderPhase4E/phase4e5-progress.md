@@ -6,13 +6,13 @@ Bounded concurrency for `EnsureUnitCount(Spearman=10)`: population capacity, pro
 
 ## Implementation
 
-- `CommanderPlanner.PlanUnits` now starts a House when the projected target exceeds the current population cap, but does not wait for an existing House foundation to finish before continuing to producer/resource evaluation.
+- `CommanderPlanner.PlanUnits` preserves the existing deterministic population-cap predicate and does not wait for an existing House foundation to finish before continuing to producer/resource evaluation.
 - A compatible Barracks foundation can coexist with a food `GatherCommand` for the next Spearman when food is below the real training cost.
 - All worker selection, reachability, reservations, manual-command protection, duplicate detection, and command cadence remain in the existing deterministic systems.
 
 ## Evidence
 
-Pending Unity run after the editor restart. The focused test asserts one active House foundation, one active Barracks foundation, a food-gathering villager before Barracks completion, no duplicate Barracks, and at most one Commander command per planning tick.
+The focused concurrency test asserts one active House foundation, one active Barracks foundation, a food-gathering villager before Barracks completion, no duplicate Barracks, and at most one Commander command per planning tick. The dedicated zero-wood runtime test passed 1/1 and reached 10 living Spearmen at tick 9406.
 
 ## Caveat
 
