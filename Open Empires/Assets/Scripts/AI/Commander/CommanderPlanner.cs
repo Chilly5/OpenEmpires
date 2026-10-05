@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace OpenEmpires
@@ -53,7 +54,174 @@ namespace OpenEmpires
             if (goal is BuildStructureGoal building) return PlanStructure(building, currentTick);
             if (goal is ResourceAllocationGoal resource) return PlanAllocation(resource, currentTick);
             if (goal is ReachAgeGoal reachAge) return PlanReachAge(reachAge, currentTick);
+            if (goal is CommanderCapabilityGoal capability) return PlanCapability(capability, currentTick);
             return new CommanderPlan(CommanderGoalStatus.Failed, "Unknown goal type.", 0, 0);
+        }
+
+        private CommanderPlan PlanCapability(CommanderCapabilityGoal goal, int currentTick)
+        {
+            if (goal.CommandIssued)
+                return ObserveCapability(goal, currentTick);
+            var executor = new CommanderCapabilityExecutor(simulation);
+            CommanderResultBinding? binding = null;
+            if (goal.ResultSourceGoal is EnsureUnitCountGoal units)
+            {
+                if (units.ResultCaptureTick < 0 || units.ResultUnitIds == null
+                    || units.ResultUnitIds.Count < units.TargetTotal - units.BaselineUnitIds.Count)
+                    return new CommanderPlan(CommanderGoalStatus.WaitingForProduction,
+                        "Waiting for the referenced producer result; no unrelated unit may substitute.", 0, 0);
+                binding = CommanderResultBinding.ForUnits(units.ResultUnitIds,
+                    units.GoalId, units.CreatedTick);
+            }
+            else if (goal.ResultSourceGoal is BuildStructureGoal building)
+            {
+                if (building.ResultCaptureTick < 0 || building.ResultBuildingIds == null
+                    || building.ResultBuildingIds.Count != 1)
+                    return new CommanderPlan(CommanderGoalStatus.WaitingForConstruction,
+                        "Waiting for the referenced structure result; no unrelated building may substitute.", 0, 0);
+                binding = CommanderResultBinding.ForBuilding(building.ResultBuildingIds[0],
+                    building.GoalId, building.CreatedTick);
+            }
+            ICommand command;
+            string reason;
+            bool created = binding.HasValue
+                ? executor.TryCreateCommand(goal.Action, binding.Value, out command, out reason)
+                : executor.TryCreateCommand(goal.Action, out command, out reason);
+            if (!created)
+                return new CommanderPlan(CommanderGoalStatus.Blocked, reason, 0, 0);
+            return new CommanderPlan(CommanderGoalStatus.Executing, reason, 0, 0, command);
+        }
+
+        private CommanderPlan ObserveCapability(CommanderCapabilityGoal goal, int currentTick)
+        {
+            ICommand issued = goal.IssuedCommand;
+            if (issued == null)
+                return new CommanderPlan(CommanderGoalStatus.Blocked,
+                    "Capability command reservation was not committed; retrying safely.", 0, 0);
+
+            int[] subjects = CommanderWorkerAuthority.GetSubjectUnitIds(issued);
+            int eligible = 0;
+            if (subjects != null)
+            {
+                for (int i = 0; i < subjects.Length; i++)
+                {
+                    UnitData unit = simulation.UnitRegistry.GetUnit(subjects[i]);
+                    if (unit != null && unit.PlayerId == goal.PlayerId && unit.CurrentHealth > 0
+                        && unit.State != UnitState.Dead && !workerAuthority.IsHumanProtected(unit.Id, currentTick))
+                        eligible++;
+                }
+                if (eligible == 0)
+                    return new CommanderPlan(CommanderGoalStatus.Blocked,
+                        "The player took control of every eligible capability unit; Commander will not reclaim them.", 0, 0);
+            }
+
+            switch (goal.Action.ActionType)
+            {
+                case CommanderCapabilityActionType.MoveUnits:
+                case CommanderCapabilityActionType.DefendArea:
+                case CommanderCapabilityActionType.RetreatUnits:
+                case CommanderCapabilityActionType.ScoutArea:
+                    if (issued is MoveCommand move && AllUnitsAt(subjects, move.TargetPosition, currentTick))
+                        return new CommanderPlan(CommanderGoalStatus.Completed,
+                            "The movement objective is satisfied in simulation state.", eligible, 0);
+                    return new CommanderPlan(CommanderGoalStatus.Executing,
+                        "Waiting for the selected units to reach the resolved location.", eligible, 0);
+
+                case CommanderCapabilityActionType.PatrolArea:
+                    if (issued is PatrolCommand patrol)
+                    {
+                        int patrolling = CountPatrolling(subjects, currentTick);
+                        if (patrolling > 0)
+                            return new CommanderPlan(CommanderGoalStatus.Executing,
+                                $"Patrol is active for {patrolling} eligible unit(s).", patrolling, 0);
+                    }
+                    return new CommanderPlan(CommanderGoalStatus.Executing,
+                        "Patrol remains an active persistent Commander objective.", eligible, 0);
+
+                case CommanderCapabilityActionType.AttackTarget:
+                    if (issued is AttackUnitCommand attackUnit)
+                    {
+                        UnitData target = simulation.UnitRegistry.GetUnit(attackUnit.TargetUnitId);
+                        if (target == null || target.State == UnitState.Dead || target.CurrentHealth <= 0)
+                            return new CommanderPlan(CommanderGoalStatus.Completed,
+                                "The visible enemy unit target is no longer alive.", eligible, 0);
+                    }
+                    if (issued is AttackBuildingCommand attackBuilding)
+                    {
+                        BuildingData target = simulation.BuildingRegistry.GetBuilding(attackBuilding.TargetBuildingId);
+                        if (target == null || target.IsDestroyed)
+                            return new CommanderPlan(CommanderGoalStatus.Completed,
+                                "The visible enemy building target is no longer present.", eligible, 0);
+                    }
+                    return new CommanderPlan(CommanderGoalStatus.Executing,
+                        "Waiting for the resolved attack target to be destroyed.", eligible, 0);
+
+                case CommanderCapabilityActionType.SetRallyPoint:
+                    if (issued is SetRallyPointCommand rally)
+                    {
+                        BuildingData building = simulation.BuildingRegistry.GetBuilding(rally.BuildingId);
+                        if (building != null && !building.IsDestroyed && building.HasRallyPoint)
+                            return new CommanderPlan(CommanderGoalStatus.Completed,
+                                "The production building has the requested rally point in simulation state.", 1, 0);
+                    }
+                    return new CommanderPlan(CommanderGoalStatus.Executing,
+                        "Waiting for the rally point command to be applied.", 0, 0);
+
+                case CommanderCapabilityActionType.RepairTarget:
+                    if (issued is RepairBuildingCommand repair)
+                    {
+                        BuildingData building = simulation.BuildingRegistry.GetBuilding(repair.TargetBuildingId);
+                        if (building == null || building.IsDestroyed)
+                            return new CommanderPlan(CommanderGoalStatus.Failed,
+                                "The repair target was destroyed or lost.", eligible, 0);
+                        if (building.CurrentHealth >= building.MaxHealth)
+                            return new CommanderPlan(CommanderGoalStatus.Completed,
+                                "The owned building is fully repaired.", eligible, 0);
+                    }
+                    return new CommanderPlan(CommanderGoalStatus.Executing,
+                        "Waiting for the owned building repair to complete.", eligible, 0);
+
+                case CommanderCapabilityActionType.ResearchTechnology:
+                    if (goal.Action.Technology.HasValue && simulation.HasTechnology(goal.PlayerId, goal.Action.Technology.Value))
+                        return new CommanderPlan(CommanderGoalStatus.Completed,
+                            "The requested technology is researched in simulation state.", 1, 0);
+                    return new CommanderPlan(CommanderGoalStatus.WaitingForProduction,
+                        "Waiting for the requested technology research to complete.", 0, 0);
+                default:
+                    return new CommanderPlan(CommanderGoalStatus.Failed,
+                        "Unsupported Commander capability state.", 0, 0);
+            }
+        }
+
+        private bool AllUnitsAt(int[] subjects, FixedVector3 target, int currentTick)
+        {
+            if (subjects == null || subjects.Length == 0) return false;
+            int eligible = 0;
+            Fixed32 tolerance = Fixed32.FromInt(1);
+            Fixed32 toleranceSquared = tolerance * tolerance;
+            for (int i = 0; i < subjects.Length; i++)
+            {
+                UnitData unit = simulation.UnitRegistry.GetUnit(subjects[i]);
+                if (unit == null || unit.PlayerId < 0 || unit.CurrentHealth <= 0
+                    || unit.State == UnitState.Dead || workerAuthority.IsHumanProtected(unit.Id, currentTick)) continue;
+                eligible++;
+                Fixed32 dx = unit.SimPosition.x - target.x;
+                Fixed32 dz = unit.SimPosition.z - target.z;
+                if (dx * dx + dz * dz > toleranceSquared) return false;
+            }
+            return eligible > 0;
+        }
+
+        private int CountPatrolling(int[] subjects, int currentTick)
+        {
+            int count = 0;
+            if (subjects == null) return count;
+            for (int i = 0; i < subjects.Length; i++)
+            {
+                UnitData unit = simulation.UnitRegistry.GetUnit(subjects[i]);
+                if (unit != null && unit.IsPatrolling && !workerAuthority.IsHumanProtected(unit.Id, currentTick)) count++;
+            }
+            return count;
         }
 
         internal void CaptureConstraints(CommanderGoal goal, IReadOnlyList<CommanderConstraint> constraints)
@@ -114,8 +282,19 @@ namespace OpenEmpires
                 return PlanPlacedStructure(goal, currentTick);
             int completed = CountCompletedBuildings(goal.PlayerId, goal.StructureType);
             if (completed >= goal.TargetTotal)
+            {
+                if (goal.HasResultConsumer)
+                {
+                    List<int> produced = FindNewCompletedBuildings(goal);
+                    if (produced.Count < goal.Count)
+                        return new CommanderPlan(CommanderGoalStatus.WaitingForConstruction,
+                            "The requested structure count is met only by pre-existing buildings; waiting for the exact new result.",
+                            completed, 0);
+                    goal.CaptureBuildingResult(produced.Take(goal.Count).ToArray(), currentTick);
+                }
                 return new CommanderPlan(CommanderGoalStatus.Completed,
                     $"{goal.StructureType} construction complete ({completed}/{goal.TargetTotal}).", completed, 0);
+            }
             BuildingData foundation = FindOwnedBuilding(goal.PlayerId, goal.StructureType, true);
             if (foundation != null)
                 return PlanConstructionRecovery(goal, foundation, currentTick, completed, 1, "Construction");
@@ -138,9 +317,13 @@ namespace OpenEmpires
                 }
                 goal.PlacementBlocker = CommanderPlacementBlocker.None;
                 if (!bound.IsUnderConstruction)
+                {
+                    if (goal.HasResultConsumer)
+                        goal.CaptureBuildingResult(new[] { bound.Id }, currentTick);
                     return new CommanderPlan(CommanderGoalStatus.Completed,
                         $"{goal.StructureType} construction complete at ({bound.OriginTileX},{bound.OriginTileZ}) "
                         + $"as building #{bound.Id}.", 1, 0);
+                }
                 return PlanConstructionRecovery(goal, bound, currentTick, 0, 1,
                     $"Placed {goal.StructureType} at ({bound.OriginTileX},{bound.OriginTileZ})");
             }
@@ -322,8 +505,20 @@ namespace OpenEmpires
             int queued = CountQueuedUnits(goal.PlayerId, resolvedUnitType);
 
             if (owned >= goal.TargetTotal)
+            {
+                if (goal.HasResultConsumer)
+                {
+                    int requiredNew = Math.Max(0, goal.TargetTotal - goal.BaselineUnitIds.Count);
+                    List<int> produced = FindNewLivingUnits(goal.PlayerId, resolvedUnitType, goal.BaselineUnitIds);
+                    if (produced.Count < requiredNew)
+                        return new CommanderPlan(CommanderGoalStatus.WaitingForProduction,
+                            "The requested count is met only by pre-existing units; waiting for the exact new result.",
+                            owned, queued);
+                    goal.CaptureUnitResult(produced.Take(requiredNew).ToArray(), currentTick);
+                }
                 return new CommanderPlan(CommanderGoalStatus.Completed,
                     $"Owned {owned}/{goal.TargetTotal} living units.", owned, queued);
+            }
 
             int remainingOrders = goal.TargetTotal - owned - queued;
             int totalQueuedPopulation = CountAllQueuedUnits(goal.PlayerId);
@@ -553,6 +748,8 @@ namespace OpenEmpires
             int currentTick, int owned, int queued)
         {
             var resolver = new CommanderSemanticReferenceResolver(simulation);
+            if (goal.PlacementAnchorSelector == CommanderSemanticAnchorSelector.WorkedResource)
+                return PlanWorkedResourceBuilding(goal, type, resolver, currentTick, owned, queued);
             if (!resolver.TryResolveOwnedAnchor(goal.PlayerId, goal.PlacementAnchorSelector.Value,
                 goal.PlacementAnchorOrdinal, out BuildingData anchor))
             {
@@ -594,6 +791,41 @@ namespace OpenEmpires
             goal.PlacementBlocker = CommanderPlacementBlocker.NoLegalCandidate;
             return new CommanderPlan(CommanderGoalStatus.Blocked,
                 $"No visible, buildable, reachable location satisfies the bounded {type} placement.",
+                owned, queued);
+        }
+
+        private CommanderPlan PlanWorkedResourceBuilding(BuildStructureGoal goal, BuildingType type,
+            CommanderSemanticReferenceResolver resolver, int currentTick, int owned, int queued)
+        {
+            if (!goal.PlacementResourceType.HasValue)
+                return new CommanderPlan(CommanderGoalStatus.Failed, "A worked resource type is required.", owned, queued);
+            if (!resolver.TryResolveWorkedResource(goal.PlayerId, goal.PlacementResourceType.Value,
+                out ResourceNodeData resource))
+            {
+                goal.PlacementBlocker = CommanderPlacementBlocker.AnchorUnavailable;
+                return new CommanderPlan(CommanderGoalStatus.Blocked,
+                    "No visible resource node currently worked by an owned villager matches the request.", owned, queued);
+            }
+            GetFootprint(type, out int width, out int height);
+            IReadOnlyList<Vector2Int> candidates = CommanderSemanticPlacementCandidates.Generate(
+                resource.TileX, resource.TileZ, resource.FootprintWidth, resource.FootprintHeight,
+                width, height, simulation.MapData.Width, simulation.MapData.Height,
+                CommanderSemanticPlacementRelation.Near, goal.ClearGapTiles);
+            for (int i = 0; i < candidates.Count; i++)
+            {
+                Vector2Int tile = candidates[i];
+                if (!IsVisibleBuildableArea(goal.PlayerId, tile.x, tile.y, width, height, 0, type)) continue;
+                UnitData builder = FindReachableSemanticBuilder(goal, tile, width, height, currentTick);
+                if (builder == null) continue;
+                goal.PlacementBlocker = CommanderPlacementBlocker.None;
+                return new CommanderPlan(CommanderGoalStatus.Executing,
+                    $"Placing {type} near the worked {goal.PlacementResourceType.Value} node "
+                    + $"at ({tile.x},{tile.y}) with villager #{builder.Id}.", owned, queued,
+                    new PlaceBuildingCommand(goal.PlayerId, type, tile.x, tile.y, new[] { builder.Id }));
+            }
+            goal.PlacementBlocker = CommanderPlacementBlocker.NoLegalCandidate;
+            return new CommanderPlan(CommanderGoalStatus.Blocked,
+                $"No visible, buildable, reachable location is available near the worked {goal.PlacementResourceType.Value} node.",
                 owned, queued);
         }
 
@@ -743,6 +975,39 @@ namespace OpenEmpires
                     count++;
             }
             return count;
+        }
+
+        private List<int> FindNewLivingUnits(int playerId, int unitType, HashSet<int> baseline)
+        {
+            var result = new List<int>();
+            List<UnitData> units = simulation.UnitRegistry.GetAllUnits();
+            for (int i = 0; i < units.Count; i++)
+            {
+                UnitData unit = units[i];
+                if (unit != null && unit.PlayerId == playerId && unit.UnitType == unitType
+                    && unit.CurrentHealth > 0 && unit.State != UnitState.Dead
+                    && (baseline == null || !baseline.Contains(unit.Id)))
+                    result.Add(unit.Id);
+            }
+            result.Sort();
+            return result;
+        }
+
+        private List<int> FindNewCompletedBuildings(BuildStructureGoal goal)
+        {
+            var result = new List<int>();
+            List<BuildingData> buildings = simulation.BuildingRegistry.GetAllBuildings();
+            for (int i = 0; i < buildings.Count; i++)
+            {
+                BuildingData building = buildings[i];
+                if (building != null && building.PlayerId == goal.PlayerId && !building.IsDestroyed
+                    && !building.IsUnderConstruction
+                    && simulation.GetEffectiveBuildingType(building) == goal.StructureType
+                    && !goal.BaselineBuildingIds.Contains(building.Id))
+                    result.Add(building.Id);
+            }
+            result.Sort();
+            return result;
         }
 
         private int CountQueuedUnits(int playerId, int unitType)

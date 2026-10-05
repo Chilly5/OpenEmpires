@@ -126,19 +126,22 @@ namespace OpenEmpires
             CommanderSemanticAnchorSelector? placementAnchorSelector = null,
             int? placementAnchorOrdinal = null,
             CommanderSemanticPlacementRelation? placementRelation = null,
-            int? clearGapTiles = null)
+            int? clearGapTiles = null,
+            ResourceType? placementResourceType = null)
         {
             if (placementAnchorSelector.HasValue || placementAnchorOrdinal.HasValue
-                || placementRelation.HasValue || clearGapTiles.HasValue)
+                || placementRelation.HasValue || clearGapTiles.HasValue || placementResourceType.HasValue)
             {
                 var placedIntent = new BuildStructureIntent(playerId, type, count, constraints,
-                    placementAnchorSelector, placementAnchorOrdinal, placementRelation, clearGapTiles);
+                    placementAnchorSelector, placementAnchorOrdinal, placementRelation, clearGapTiles,
+                    placementResourceType);
                 CommanderIntentValidationResult validation = new CommanderIntentValidator().Validate(
                     placedIntent, simulation, playerId);
                 if (!validation.IsValid) throw new ArgumentException(validation.Reason, nameof(placementAnchorSelector));
             }
             var goal = new BuildStructureGoal(playerId, type, count, maxDurationTicks,
-                placementAnchorSelector, placementAnchorOrdinal, placementRelation, clearGapTiles);
+                placementAnchorSelector, placementAnchorOrdinal, placementRelation, clearGapTiles,
+                placementResourceType);
             goal.TargetTotal = planner.CountCompletedBuildings(playerId, type) + count;
             for (int i = 0; i < goals.Count; i++)
                 if (goals[i] is BuildStructureGoal earlier && !earlier.IsTerminal && earlier.StructureType == type)
@@ -170,6 +173,16 @@ namespace OpenEmpires
                 intent, simulation, playerId);
             if (!validation.IsValid) throw new ArgumentException(validation.Reason, nameof(requestedTarget));
             return Register(new ReachAgeGoal(playerId, requestedTarget, targetAge, maxDurationTicks), constraints);
+        }
+
+        public CommanderCapabilityGoal SubmitCapabilityAction(CapabilityActionIntent action,
+            int maxDurationTicks = 36000)
+        {
+            if (action == null) throw new ArgumentNullException(nameof(action));
+            CommanderIntentValidationResult validation = new CommanderIntentValidator().Validate(
+                action, simulation, playerId);
+            if (!validation.IsValid) throw new ArgumentException(validation.Reason, nameof(action));
+            return Register(new CommanderCapabilityGoal(action, maxDurationTicks), action.Constraints);
         }
 
         // Atomic game-side commit for a preflighted semantic graph. The graph admission
@@ -207,7 +220,7 @@ namespace OpenEmpires
                 {
                     goal = new BuildStructureGoal(playerId, build.StructureType, build.Count,
                         maxDurationTicks, build.PlacementAnchorSelector, build.PlacementAnchorOrdinal,
-                        build.PlacementRelation, build.ClearGapTiles);
+                        build.PlacementRelation, build.ClearGapTiles, build.PlacementResourceType);
                     var structureGoal = (BuildStructureGoal)goal;
                     structureGoal.TargetTotal = planner.CountCompletedBuildings(playerId, build.StructureType)
                         + build.Count;
@@ -229,6 +242,10 @@ namespace OpenEmpires
                     goal = new ReachAgeGoal(playerId, reachAge.RequestedTarget, reachAge.TargetAge,
                         maxDurationTicks);
                 }
+                else if (node.Intent is CapabilityActionIntent capability)
+                {
+                    goal = new CommanderCapabilityGoal(capability, maxDurationTicks);
+                }
                 else throw new ArgumentException("Unsupported compound intent.", nameof(plan));
                 planner.CaptureConstraints(goal, node.Intent.Constraints);
                 pending.Add(goal);
@@ -238,13 +255,43 @@ namespace OpenEmpires
             for (int i = 0; i < plan.Nodes.Count; i++)
             {
                 CommanderSemanticGraphNode node = plan.Nodes[i];
-                if (!node.ProducerFromNode.HasValue) continue;
-                var dependent = byIndex[i] as EnsureUnitCountGoal;
-                var producer = byIndex[node.ProducerFromNode.Value] as BuildStructureGoal;
-                if (dependent == null || producer == null)
-                    throw new ArgumentException("The producer link is invalid.", nameof(plan));
-                dependent.RequiredProducerGoal = producer;
+                var dependencies = new List<CommanderGoal>(node.DependsOn.Count);
+                for (int d = 0; d < node.DependsOn.Count; d++)
+                {
+                    if (!byIndex.TryGetValue(node.DependsOn[d], out CommanderGoal dependency))
+                        throw new ArgumentException("The semantic dependency is unavailable.", nameof(plan));
+                    dependencies.Add(dependency);
+                }
+                byIndex[node.Index].SetDependencies(dependencies);
+                if (node.ProducerFromNode.HasValue)
+                {
+                    var dependent = byIndex[i] as EnsureUnitCountGoal;
+                    var producer = byIndex[node.ProducerFromNode.Value] as BuildStructureGoal;
+                    if (dependent == null || producer == null)
+                        throw new ArgumentException("The producer link is invalid.", nameof(plan));
+                    dependent.RequiredProducerGoal = producer;
+                }
+                if (node.ResultFromNode.HasValue)
+                {
+                    var capability = byIndex[i] as CommanderCapabilityGoal;
+                    CommanderGoal source = byIndex[node.ResultFromNode.Value];
+                    if (capability == null) throw new ArgumentException(
+                        "Only capability actions may consume a result reference.", nameof(plan));
+                    if (source is EnsureUnitCountGoal units)
+                    {
+                        units.HasResultConsumer = true;
+                        capability.ResultSourceGoal = units;
+                    }
+                    else if (source is BuildStructureGoal building)
+                    {
+                        building.HasResultConsumer = true;
+                        capability.ResultSourceGoal = building;
+                    }
+                    else throw new ArgumentException("The result reference type is invalid.", nameof(plan));
+                }
             }
+
+            CaptureResultBaselines(pending);
 
             for (int i = 0; i < pending.Count; i++)
             {
@@ -262,6 +309,38 @@ namespace OpenEmpires
                 PublishEvent(CommanderGoalEventType.GoalStarted, goal, simulation.CurrentTick);
             }
             return pending.AsReadOnly();
+        }
+
+        private void CaptureResultBaselines(IReadOnlyList<CommanderGoal> pending)
+        {
+            for (int i = 0; i < pending.Count; i++)
+            {
+                if (pending[i] is EnsureUnitCountGoal units && units.HasResultConsumer)
+                {
+                    int resolvedType = simulation.ResolveCivUnitType(units.PlayerId, units.RequestedUnitType);
+                    List<UnitData> all = simulation.UnitRegistry.GetAllUnits();
+                    for (int u = 0; u < all.Count; u++)
+                    {
+                        UnitData unit = all[u];
+                        if (unit != null && unit.PlayerId == units.PlayerId
+                            && unit.UnitType == resolvedType && unit.CurrentHealth > 0
+                            && unit.State != UnitState.Dead)
+                            units.BaselineUnitIds.Add(unit.Id);
+                    }
+                }
+                else if (pending[i] is BuildStructureGoal building && building.HasResultConsumer)
+                {
+                    List<BuildingData> all = simulation.BuildingRegistry.GetAllBuildings();
+                    for (int b = 0; b < all.Count; b++)
+                    {
+                        BuildingData candidate = all[b];
+                        if (candidate != null && candidate.PlayerId == building.PlayerId
+                            && !candidate.IsDestroyed
+                            && simulation.GetEffectiveBuildingType(candidate) == building.StructureType)
+                            building.BaselineBuildingIds.Add(candidate.Id);
+                    }
+                }
+            }
         }
 
         private T Register<T>(T goal, IReadOnlyList<CommanderConstraint> constraints) where T : CommanderGoal
@@ -367,6 +446,23 @@ namespace OpenEmpires
                     if (goal.IsTerminal || suspendedGoalIds.Contains(goal.GoalId)
                         || (goal.Status == CommanderGoalStatus.Blocked
                         && currentTick < goal.NextBlockedRetryTick)) continue;
+                    if (!AreDependenciesReady(goal, out string dependencyReason, out bool dependencyFailed))
+                    {
+                        if (dependencyFailed)
+                        {
+                            FailGoal(goal, dependencyReason, currentTick);
+                            continue;
+                        }
+                        bool waitingChanged = goal.SetStatus(CommanderGoalStatus.WaitingForPrerequisite,
+                            dependencyReason);
+                        if (waitingChanged)
+                        {
+                            GoalStatusChanged?.Invoke(goal);
+                            PublishEvent(CommanderGoalEventType.GoalProgressChanged, goal, currentTick);
+                        }
+                        if (ActiveGoal == null) ActiveGoal = goal;
+                        continue;
+                    }
                     CommanderPlan plan = planner.Plan(goal, currentTick);
                     if (plan.Command != null && !workerAuthority.TryReserveCommand(goal, plan.Command, currentTick))
                         plan = new CommanderPlan(CommanderGoalStatus.Blocked,
@@ -411,6 +507,12 @@ namespace OpenEmpires
                             reachAge.AgeUpIssuedSimulationTick = simulation.CurrentTick;
                         }
                         simulation.CommandBuffer.EnqueueCommand(plan.Command, CommandEnqueueSource.Commander);
+                        if (goal is CommanderCapabilityGoal capability)
+                        {
+                            capability.CommandIssued = true;
+                            capability.IssuedCommand = plan.Command;
+                            capability.CommandIssuedSimulationTick = simulation.CurrentTick;
+                        }
                         if (plan.Command is GatherCommand) goal.LastEconomyCommandTick = currentTick;
                         if (plan.Command is ConstructBuildingCommand)
                         {
@@ -455,6 +557,30 @@ namespace OpenEmpires
             Debug.LogWarning($"[Commander] Goal #{goal.GoalId} failed: {goal.StatusReason}");
             GoalStatusChanged?.Invoke(goal);
             PublishEvent(CommanderGoalEventType.GoalFailed, goal, currentTick);
+        }
+
+        private static bool AreDependenciesReady(CommanderGoal goal, out string reason, out bool failed)
+        {
+            reason = string.Empty;
+            failed = false;
+            IReadOnlyList<CommanderGoal> dependencies = goal.Dependencies;
+            for (int i = 0; i < dependencies.Count; i++)
+            {
+                CommanderGoal dependency = dependencies[i];
+                if (dependency.Status == CommanderGoalStatus.Failed
+                    || dependency.Status == CommanderGoalStatus.Cancelled)
+                {
+                    failed = true;
+                    reason = $"Dependency goal #{dependency.GoalId} {dependency.Status.ToString().ToLowerInvariant()}; dependent execution was cancelled.";
+                    return false;
+                }
+                if (dependency.Status != CommanderGoalStatus.Completed)
+                {
+                    reason = $"Waiting for dependency goal #{dependency.GoalId} to complete.";
+                    return false;
+                }
+            }
+            return true;
         }
 
         private void HandleCommandEnqueued(ICommand command, CommandEnqueueSource source)

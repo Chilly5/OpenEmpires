@@ -11,14 +11,16 @@ namespace OpenEmpires
         public CommanderIntent Intent { get; }
         public IReadOnlyList<int> DependsOn { get; }
         public int? ProducerFromNode { get; }
+        public int? ResultFromNode { get; }
 
         internal CommanderSemanticGraphNode(int index, CommanderIntent intent,
-            IReadOnlyList<int> dependsOn, int? producerFromNode)
+            IReadOnlyList<int> dependsOn, int? producerFromNode, int? resultFromNode)
         {
             Index = index;
             Intent = intent;
             DependsOn = dependsOn ?? Array.Empty<int>();
             ProducerFromNode = producerFromNode;
+            ResultFromNode = resultFromNode;
         }
     }
 
@@ -75,13 +77,14 @@ namespace OpenEmpires
                 totalReferences += dependencies.Count;
                 if (totalReferences > CommanderSemanticJson.MaximumDependencyReferences) return false;
                 admitted.Add(new CommanderSemanticGraphNode(index, intent,
-                    dependencies.AsReadOnly(), node.ProducerFromNode));
+                    dependencies.AsReadOnly(), node.ProducerFromNode, node.ResultFromNode));
             }
 
             // The parser already performs this check, but admission repeats it at the
             // mutation boundary so callers cannot construct or deserialize an unsafe result
             // in a future code path and bypass graph invariants.
             if (!ValidateProducerLinks(result.Nodes)) return false;
+            if (!ValidateResultLinks(admitted)) return false;
             if (!TryTopologicalOrder(admitted, out var order)) return false;
 
             plan = new CommanderSemanticGraphPlan(admitted.AsReadOnly(), order);
@@ -108,7 +111,62 @@ namespace OpenEmpires
                     if (dependencies[i] == node.ProducerFromNode.Value) { linked = true; break; }
                 if (!linked) return false;
             }
+            if (node.ResultFromNode.HasValue)
+            {
+                int resultSource = node.ResultFromNode.Value;
+                if (resultSource < 0 || resultSource >= nodeCount || resultSource == index)
+                    return false;
+                bool linked = false;
+                for (int i = 0; i < dependencies.Count; i++)
+                    if (dependencies[i] == resultSource) { linked = true; break; }
+                if (!linked) return false;
+            }
             return true;
+        }
+
+        private static bool ValidateResultLinks(IReadOnlyList<CommanderSemanticGraphNode> admitted)
+        {
+            for (int i = 0; i < admitted.Count; i++)
+            {
+                CommanderSemanticGraphNode node = admitted[i];
+                if (!node.ResultFromNode.HasValue) continue;
+                int sourceIndex = node.ResultFromNode.Value;
+                if (sourceIndex < 0 || sourceIndex >= admitted.Count || sourceIndex == i)
+                    return false;
+                CommanderIntent sourceIntent = admitted[sourceIndex].Intent;
+                if (!(node.Intent is CapabilityActionIntent action)) return false;
+
+                if (sourceIntent is EnsureUnitCountIntent ensure)
+                {
+                    if (!CanBindUnits(action, ensure.UnitType)) return false;
+                }
+                else if (sourceIntent is BuildStructureIntent build)
+                {
+                    if (action.ActionType != CommanderCapabilityActionType.SetRallyPoint)
+                        return false;
+                    if (action.StructureType.HasValue && action.StructureType.Value != build.StructureType)
+                        return false;
+                }
+                else return false;
+            }
+            return true;
+        }
+
+        private static bool CanBindUnits(CapabilityActionIntent action, int unitType)
+        {
+            switch (action.UnitSelector.Kind)
+            {
+                case CommanderUnitSelectorKind.UnitType:
+                    return action.UnitSelector.UnitType == unitType;
+                case CommanderUnitSelectorKind.Scout:
+                    return unitType == 4;
+                case CommanderUnitSelectorKind.Villagers:
+                    return unitType == 0;
+                case CommanderUnitSelectorKind.Military:
+                    return unitType != 0 && unitType != 4;
+                default:
+                    return false;
+            }
         }
 
         private static bool ValidateProducerLinks(IReadOnlyList<CommanderSemanticNode> nodes)

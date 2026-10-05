@@ -56,7 +56,7 @@ namespace OpenEmpires
             var buildingCounts = new SortedDictionary<string, int>(StringComparer.Ordinal)
             {
                 ["House"] = 0, ["Barracks"] = 0, ["ArcheryRange"] = 0,
-                ["Stables"] = 0, ["Tower"] = 0, ["TownCenter"] = 0
+                ["Stables"] = 0, ["Mill"] = 0, ["Tower"] = 0, ["TownCenter"] = 0
             };
             foreach (CommanderBuildingSnapshot building in context.Buildings)
                 if (building.Type != null && buildingCounts.ContainsKey(building.Type))
@@ -71,11 +71,19 @@ namespace OpenEmpires
                 ["ownedBuildingCounts"] = JObject.FromObject(buildingCounts),
                 ["unitCapabilities"] = new JArray("Villager", "Spearman", "Archer", "Knight"),
                 ["structureCapabilities"] = new JArray("House", "Barracks", "ArcheryRange",
-                    "Stables", "Tower", "TownCenter"),
+                    "Stables", "Mill", "Tower", "TownCenter"),
                 ["resourceCapabilities"] = new JArray("Food", "Wood", "Gold", "Stone"),
                 ["strategyCapabilities"] = new JArray("AttackPreparation", "DefensivePreparation",
                     "EconomicExpansion", "MilitaryReinforcement", "RangedReinforcement",
                     "DefensiveTurtle"),
+                ["actionCapabilities"] = new JArray("MoveUnits", "ScoutArea", "PatrolArea",
+                    "SetRallyPoint", "AttackTarget", "DefendArea", "RetreatUnits",
+                    "RepairTarget", "ResearchTechnology"),
+                ["selectorCapabilities"] = new JObject
+                {
+                    ["units"] = new JArray("Military", "Scout", "Villagers", "Spearman", "Archer", "Knight", "DamagedMilitary"),
+                    ["locations"] = new JArray("PlayerBase", "WorkedResource", "VisibleResource", "VisibleEnemy", "RelativeToSelectedUnits")
+                },
                 ["knowledge"] = ParseKnowledge(context.KnowledgeContext)
             };
             string serialized = root.ToString(Formatting.None);
@@ -101,6 +109,7 @@ namespace OpenEmpires
                 case 2:
                 case 10: return "Archer"; // English Longbowman resolves from Archer.
                 case 7: return "Knight";
+                case 4: return "Scout";
                 default: return null;
             }
         }

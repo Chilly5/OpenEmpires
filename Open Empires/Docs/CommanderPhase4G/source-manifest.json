@@ -1,0 +1,55 @@
+{
+  "phase": "4G",
+  "status": "antigravity-audit-passed",
+  "generated": "2026-10-05",
+  "production": {
+    "Assets/Scripts/AI/Commander/Phase4G/CommanderCapability.cs": "D1D0503B27322FB8C99FF5D967813EAB0F6AD2CFE749244FBF59D8064BF61429",
+    "Assets/Scripts/AI/Commander/Phase4G/CommanderCapabilityExecutor.cs": "97931525491E531891AD3797E7C7F861D197650D2D3D32F2B680F5FB773FB342",
+    "Assets/Scripts/AI/Commander/CommanderIntent.cs": "E40DBD9A8AC5E693675AE0E32EE9883E91CA8BD2ECDD73673CCF210234F93A8D",
+    "Assets/Scripts/AI/Commander/CommanderGoal.cs": "33F74ACAB13581280DA636E3B0AFD430B513F8E1375B739318BAC4E2DE660CE7",
+    "Assets/Scripts/AI/Commander/CommanderGoalManager.cs": "25A08C076791F57C0B5B8703AD2DB8171D23ABF6AF45A9BA6570A8745A3A8E4F",
+    "Assets/Scripts/AI/Commander/CommanderPlanner.cs": "90108CFA2ACBABBC70E4F7371901E9E5B7045B7291316E19D07762ACC4DC2760",
+    "Assets/Scripts/AI/Commander/CommanderIntentValidator.cs": "2D7C71435D6F507537BB2C6C29BFD16634727954BDD0BA070A358D69160E2C29",
+    "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticJson.cs": "8756588598E2003158507C482983676A19F7A2D523C410572A6E66FD4B78EBD6",
+    "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticAdmission.cs": "37AC3F794CFA24367ABB804E7037261DECF3C1CD0CC6AD608E867006572F10B3",
+    "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticGraphAdmission.cs": "E76592A7D96C11576F6CD3C4BA87786F8B7BD53A6DB7CBB0366D36EF98BC0783",
+    "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticRequest.cs": "B302CCF40F4FD771F8A07B624EB341680108221257B896AF0B8F396529A68F13",
+    "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Questions.cs": "3E80C0C10F5F4EDF6BD7D4457523B9CFADBAC181A4FDBA66B977329A357B85EF",
+    "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Explanations.cs": "A1695E21C5C979B69DAA09BDC0BFF7ECC024DA33ED225FDD97C513B6772CF97F"
+  },
+  "tests": {
+    "Assets/Tests/EditMode/CommanderPhase4GCapabilityTests.cs": "5C32CFBA179DBBD26C2A77F44F139BF62837719663AB696990D42317EB4B0BFB",
+    "Assets/Tests/EditMode/CommanderPhase4GHostileAuditTests.cs": "B9F944220E1D6C4EC4802C1CB24099BF10D409669E8D57B75473357A4B5D4873",
+    "Assets/Tests/PlayMode/CommanderPhase4GResultBindingPlayModeTests.cs": "EC36032B8435C6A961F0A56BF0F730506693566C95318A4B50C33E5C4EA1DBA2",
+    "Assets/Tests/EditMode/CommanderPhase4E1ProviderTests.cs": "604E46906FCAB2AAB8CF6882380B4739BD08F0DB92DFF4446308948B2BE39B52",
+    "Assets/Tests/PlayMode/CommanderPhase4E2SpatialPlacementPlayModeTests.cs": "9EC8406DAB861C29198908C2D5173980F9169E885285CD957EFCA12D82131A21"
+  },
+  "docs": {
+    "Docs/CommanderPhase4G/phase4g-specification.md": "9971F34287C31A5F5B2CDBBD5DBA03AD71533C74C92C3FE1D8120DADCB425B97",
+    "Docs/CommanderPhase4G/phase4g-implementation-report.md": "61E2FE02B875C4ED2AF000C4BCC6B3CF9636439D398510A8E52C5936B3D819DD",
+    "Docs/CommanderPhase4G/implemented-capabilities.md": "61174F029D9021BC81C93A4FDE4C3A0E8CEE021D487CD50141E9555A612DBC4B",
+    "Docs/CommanderPhase4G/execution-mapping.md": "0AF53568F014C547E53E6C0A9CB98AC7FF5F3D9C05CA0576470E5981F54AB785",
+    "Docs/CommanderPhase4G/selector-model.md": "FB9EE6F5A6F4B3CFBB06425223DCF7151F55CBBA437794D59F63ADEA4B04F0EA",
+    "Docs/CommanderPhase4G/known-limitations.md": "0568C4AF496839E3BA39C3BABB3CBBC0970C96E815BEFEFE1765F35DE2E498F9",
+    "Docs/CommanderPhase4G/antigravity-test-plan.md": "860A8898CE84889BC778AFA2F09B3ABFD50E537F01356E35B7928BC3102D90CB"
+  },
+  "verification": {
+    "editmode_full_job": "10a473c668c6406197c281a06dfa6c62",
+    "editmode_full_summary": "953/953 passed (214.85s)",
+    "playmode_full_job": "e31fd48af2794202963825b747eeee78",
+    "playmode_full_summary": "184/184 passed (104.44s)",
+    "hostile_audit_job": "7f85a277aaa54c2ca056912077a64509",
+    "hostile_audit_summary": "33/33 passed (37.85s)",
+    "standalone_build": {
+      "job": "build-85dbe438d4",
+      "platform": "StandaloneWindows64",
+      "output_path": "Builds/Windows/OpenEmpires.exe",
+      "sha256": "36C5C9F13481406382A8E9EF8FC0EA7CDF055C43BB12FC8FD545B07C199CD277",
+      "size_mb": 610.3,
+      "errors": 0,
+      "warnings": 74
+    },
+    "compiler_errors": 0,
+    "audit_verdict": "READY FOR PHASE 4H"
+  }
+}

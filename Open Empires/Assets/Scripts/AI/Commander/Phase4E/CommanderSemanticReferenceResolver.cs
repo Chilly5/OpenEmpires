@@ -33,6 +33,9 @@ namespace OpenEmpires
                     building = FindNearestOwnedBarracks(playerId, townCenter);
                     return building != null;
 
+                case CommanderSemanticAnchorSelector.WorkedResource:
+                    return false;
+
                 default:
                     return false;
             }
@@ -65,6 +68,30 @@ namespace OpenEmpires
                     node = candidate;
                     bestDistance = distance;
                 }
+            }
+            return node != null;
+        }
+
+        public bool TryResolveWorkedResource(int playerId, ResourceType type,
+            out ResourceNodeData node)
+        {
+            node = null;
+            if (!IsValidPlayer(playerId) || !Enum.IsDefined(typeof(ResourceType), type)) return false;
+            var worked = new HashSet<int>();
+            List<UnitData> units = simulation.UnitRegistry.GetAllUnits();
+            for (int i = 0; i < units.Count; i++)
+                if (units[i] != null && units[i].PlayerId == playerId && units[i].IsVillager
+                    && units[i].TargetResourceNodeId >= 0)
+                    worked.Add(units[i].TargetResourceNodeId);
+            IReadOnlyList<ResourceNodeData> resources = simulation.MapData.GetAllResourceNodes();
+            for (int i = 0; i < resources.Count; i++)
+            {
+                ResourceNodeData candidate = resources[i];
+                if (candidate == null || candidate.Type != type || candidate.IsDepleted
+                    || !worked.Contains(candidate.Id)
+                    || simulation.FogOfWar.GetVisibility(playerId, candidate.TileX, candidate.TileZ)
+                        != TileVisibility.Visible) continue;
+                if (node == null || candidate.Id < node.Id) node = candidate;
             }
             return node != null;
         }

@@ -27,3 +27,7 @@ If the mechanic is not represented by an existing deterministic rule, document t
 ## Provider and security rules
 
 Send only bounded `KnowledgeSlice` data. Never expose `GameSimulation`, registries, workers, buildings, commands, delegates, or credentials. Reject unknown/forged/removed IDs, ambiguous aliases, duplicate IDs, oversized text, wrong-civilization content, invalid ages/technologies, and unsupported capabilities safely. These security and provider-boundary cases remain required Phase 4F evidence; do not mark them passing from static intent alone.
+
+## Phase 4G capabilities
+
+Generic actions belong in the semantic action schema and deterministic capability executor, not in prompt-only facts. Add a selector only when it can resolve owned/current/visible state and tie-break deterministically. Reuse existing `ICommand` paths and let `GameSimulation` perform final validation. A discovered knowledge record is not automatically executable; register execution separately and add focused runtime evidence. See `Docs/CommanderPhase4G/semantic-action-schema.md` and `execution-mapping.md`.

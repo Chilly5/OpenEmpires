@@ -12,6 +12,10 @@ namespace OpenEmpires
     {
         public string intentCategory;
         public string intentType;
+        public string action;
+        public string location;
+        public string technology;
+        public int? unitType;
         public string objectiveType;
         public int? priority;
         public Dictionary<string, string> parameters;
@@ -63,11 +67,15 @@ namespace OpenEmpires
                     if (reader.Read()) throw new JsonException("Trailing JSON content is not allowed.");
                 }
                 NormalizeExternalJson(root);
-                CheckFields(root, "intentCategory", "intentType", "objectiveType", "priority", "parameters", "unit", "structure", "resource", "mode", "targetAge", "amount", "constraints");
+                CheckFields(root, "intentCategory", "intentType", "action", "location", "technology", "unitType", "objectiveType", "priority", "parameters", "unit", "structure", "resource", "mode", "targetAge", "amount", "constraints");
                 var dto = new CommanderIntentDTO
                 {
                     intentCategory = ReadString(root, "intentCategory"),
                     intentType = ReadString(root, "intentType"),
+                    action = ReadString(root, "action"),
+                    location = ReadString(root, "location"),
+                    technology = ReadString(root, "technology"),
+                    unitType = ReadAmount(root, "unitType"),
                     objectiveType = ReadString(root, "objectiveType"),
                     priority = ReadAmount(root, "priority"),
                     unit = ReadString(root, "unit"),
@@ -119,7 +127,8 @@ namespace OpenEmpires
                     && !Enum.TryParse(rawObjective, true, out objectiveType)
                     && !TryResolveObjectiveAlias(rawObjective, out objectiveType))
                     return Reject(CommanderIntentErrorCode.UnknownCommand, "objectiveType", "Unknown strategic objective type.");
-                if (dto.unit != null || dto.structure != null || dto.resource != null || dto.mode != null || dto.targetAge != null)
+                if (dto.action != null || dto.location != null || dto.technology != null || dto.unitType.HasValue
+                    || dto.unit != null || dto.structure != null || dto.resource != null || dto.mode != null || dto.targetAge != null)
                     return UnexpectedFields();
 
                 var parameters = dto.parameters != null
@@ -142,6 +151,9 @@ namespace OpenEmpires
 
             if (!NamedEnum(dto.intentType, out CommanderIntentType type))
                 return Reject(CommanderIntentErrorCode.UnknownCommand, "intentType", "Unknown intent type.");
+            if (type != CommanderIntentType.CapabilityAction
+                && (dto.action != null || dto.location != null || dto.technology != null || dto.unitType.HasValue))
+                return UnexpectedFields();
             var constraints = new List<CommanderConstraint>();
             var seen = new HashSet<string>(StringComparer.Ordinal);
             if (dto.constraints == null || dto.constraints.Count > 3)
@@ -215,6 +227,53 @@ namespace OpenEmpires
                     if (targetAge < 2 || targetAge > 4)
                         return Reject(CommanderIntentErrorCode.AmountOutOfRange, "targetAge", "Age target is outside the supported range.");
                     intent = new ReachAgeIntent(context.PlayerId, requestedTarget, targetAge, constraints); break;
+                case CommanderIntentType.CapabilityAction:
+                    if (!NamedEnum(dto.action, out CommanderCapabilityActionType action)
+                        || !NamedEnum(dto.unit, out CommanderUnitSelectorKind unitKind)
+                        || !NamedEnum(dto.location, out CommanderLocationSelectorKind locationKind))
+                        return Reject(CommanderIntentErrorCode.UnknownCommand, "action", "Unknown or incomplete capability action selectors.");
+                    if (unitKind == CommanderUnitSelectorKind.UnitType
+                        && (!dto.unitType.HasValue || !CommanderIntentCatalog.IsSupportedUnit(dto.unitType.Value)))
+                        return Reject(CommanderIntentErrorCode.UnknownUnit, "unitType", "The capability unit type is not supported.");
+                    if (unitKind != CommanderUnitSelectorKind.UnitType && dto.unitType.HasValue)
+                        return UnexpectedFields();
+                    ResourceType? actionResource = null;
+                    if (dto.resource != null)
+                    {
+                        if (!NamedEnum(dto.resource, out ResourceType parsedResource))
+                            return Reject(CommanderIntentErrorCode.UnknownResource, "resource", "Unknown capability resource.");
+                        actionResource = parsedResource;
+                    }
+                    if ((locationKind == CommanderLocationSelectorKind.WorkedResource
+                        || locationKind == CommanderLocationSelectorKind.VisibleResource) && !actionResource.HasValue)
+                        return Reject(CommanderIntentErrorCode.UnknownResource, "resource", "This location requires a resource selector.");
+                    if (locationKind != CommanderLocationSelectorKind.WorkedResource
+                        && locationKind != CommanderLocationSelectorKind.VisibleResource && actionResource.HasValue)
+                        return UnexpectedFields();
+                    TechnologyType? actionTechnology = null;
+                    if (dto.technology != null)
+                    {
+                        if (!NamedEnum(dto.technology, out TechnologyType parsedTechnology))
+                            return Reject(CommanderIntentErrorCode.UnknownCommand, "technology", "Unknown capability technology.");
+                        actionTechnology = parsedTechnology;
+                    }
+                    BuildingType? actionStructure = null;
+                    if (dto.structure != null)
+                    {
+                        if (!NamedEnum(dto.structure, out BuildingType parsedStructure))
+                            return Reject(CommanderIntentErrorCode.UnknownStructure, "structure", "Unknown capability structure.");
+                        actionStructure = parsedStructure;
+                    }
+                    if (action == CommanderCapabilityActionType.ResearchTechnology && !actionTechnology.HasValue)
+                        return Reject(CommanderIntentErrorCode.UnknownCommand, "technology", "Research requires a technology selector.");
+                    if (action != CommanderCapabilityActionType.ResearchTechnology && actionTechnology.HasValue)
+                        return UnexpectedFields();
+                    if (!InRange(dto.amount, 1, 50)) return InvalidAmount();
+                    intent = new CapabilityActionIntent(context.PlayerId, action,
+                        new CommanderUnitSelector(unitKind, dto.amount.Value, dto.unitType ?? -1),
+                        new CommanderLocationSelector(locationKind, actionResource), actionTechnology,
+                        actionStructure, constraints);
+                    break;
                 default: return Reject(CommanderIntentErrorCode.UnknownCommand, "intentType", "Unknown intent type.");
             }
             return CommanderIntentInterpretation.Accepted(intent);
@@ -335,6 +394,18 @@ namespace OpenEmpires
             else if (intent is BuildStructureIntent build) { dto.structure = build.StructureType.ToString(); dto.amount = build.Count; }
             else if (intent is ReachAgeIntent reachAge) { dto.targetAge = reachAge.RequestedTarget.ToString(); }
             else if (intent is SetResourceAllocationIntent allocation) { dto.resource = allocation.Resource.ToString(); dto.mode = allocation.Mode.ToString(); dto.amount = allocation.WorkerCount; }
+            else if (intent is CapabilityActionIntent capability)
+            {
+                dto.action = capability.ActionType.ToString();
+                dto.unit = capability.UnitSelector.Kind.ToString();
+                dto.unitType = capability.UnitSelector.Kind == CommanderUnitSelectorKind.UnitType
+                    ? capability.UnitSelector.UnitType : (int?)null;
+                dto.location = capability.LocationSelector.Kind.ToString();
+                dto.resource = capability.LocationSelector.ResourceType?.ToString();
+                dto.technology = capability.Technology?.ToString();
+                dto.structure = capability.StructureType?.ToString();
+                dto.amount = capability.UnitSelector.Count;
+            }
             else throw new ArgumentException("Unsupported intent implementation.", nameof(intent));
             foreach (var constraint in intent.Constraints)
             {

@@ -8,7 +8,8 @@ namespace OpenEmpires
         EnsureUnitCount,
         BuildStructure,
         ResourceAllocation,
-        ReachAge
+        ReachAge,
+        CapabilityAction
     }
 
     public enum CommanderGoalStatus
@@ -75,6 +76,7 @@ namespace OpenEmpires
 
     public abstract class CommanderGoal
     {
+        private readonly List<CommanderGoal> dependencies = new List<CommanderGoal>();
         public int GoalId { get; internal set; }
         public int PlayerId { get; }
         public CommanderGoalType GoalType { get; }
@@ -112,6 +114,7 @@ namespace OpenEmpires
         public bool IsTerminal => Status == CommanderGoalStatus.Completed
             || Status == CommanderGoalStatus.Failed
             || Status == CommanderGoalStatus.Cancelled;
+        public IReadOnlyList<CommanderGoal> Dependencies => dependencies.AsReadOnly();
 
         protected CommanderGoal(int playerId, CommanderGoalType goalType, int maxDurationTicks, int priority = 0)
         {
@@ -133,6 +136,14 @@ namespace OpenEmpires
             StatusReason = reason;
             return true;
         }
+
+        internal void SetDependencies(IEnumerable<CommanderGoal> requiredGoals)
+        {
+            dependencies.Clear();
+            if (requiredGoals == null) return;
+            foreach (CommanderGoal required in requiredGoals)
+                if (required != null && !dependencies.Contains(required)) dependencies.Add(required);
+        }
     }
 
     public sealed class BuildStructureGoal : CommanderGoal
@@ -143,6 +154,7 @@ namespace OpenEmpires
         public CommanderSemanticAnchorSelector? PlacementAnchorSelector { get; }
         public int? PlacementAnchorOrdinal { get; }
         public CommanderSemanticPlacementRelation? PlacementRelation { get; }
+        public ResourceType? PlacementResourceType { get; }
         public int ClearGapTiles { get; }
         public int? PlacedTileX { get; internal set; }
         public int? PlacedTileZ { get; internal set; }
@@ -151,14 +163,26 @@ namespace OpenEmpires
         internal int PlacementIssuedTick { get; set; } = -1;
         internal int PlacementIssuedSimulationTick { get; set; } = -1;
         internal ICommand PendingPlacementCommand { get; set; }
+        // Result-binding state is captured by the game-side manager, never by the provider.
+        internal bool HasResultConsumer { get; set; }
+        internal readonly HashSet<int> BaselineBuildingIds = new HashSet<int>();
+        internal IReadOnlyList<int> ResultBuildingIds { get; private set; } = Array.Empty<int>();
+        internal int ResultCaptureTick { get; private set; } = -1;
         public bool HasSemanticPlacement => PlacementAnchorSelector.HasValue;
+
+        internal void CaptureBuildingResult(IReadOnlyList<int> buildingIds, int tick)
+        {
+            ResultBuildingIds = buildingIds ?? Array.Empty<int>();
+            ResultCaptureTick = tick;
+        }
 
         public BuildStructureGoal(int playerId, BuildingType structureType, int count = 1,
             int maxDurationTicks = 36000,
             CommanderSemanticAnchorSelector? placementAnchorSelector = null,
             int? placementAnchorOrdinal = null,
             CommanderSemanticPlacementRelation? placementRelation = null,
-            int? clearGapTiles = null)
+            int? clearGapTiles = null,
+            ResourceType? placementResourceType = null)
             : base(playerId, CommanderGoalType.BuildStructure, maxDurationTicks)
         {
             if (count < 1 || count > CommanderIntentValidator.MaximumStructureCount)
@@ -169,6 +193,7 @@ namespace OpenEmpires
             PlacementAnchorOrdinal = placementAnchorOrdinal;
             PlacementRelation = placementRelation;
             ClearGapTiles = clearGapTiles ?? 1;
+            PlacementResourceType = placementResourceType;
         }
     }
 
@@ -193,6 +218,11 @@ namespace OpenEmpires
         public int MaxQueueDepth { get; internal set; }
         // Game-side dependency only. The provider never supplies this reference.
         public BuildStructureGoal RequiredProducerGoal { get; internal set; }
+        // A result consumer receives only units created after this goal was submitted.
+        internal bool HasResultConsumer { get; set; }
+        internal readonly HashSet<int> BaselineUnitIds = new HashSet<int>();
+        internal IReadOnlyList<int> ResultUnitIds { get; private set; } = Array.Empty<int>();
+        internal int ResultCaptureTick { get; private set; } = -1;
 
         public EnsureUnitCountGoal(int playerId, int requestedUnitType, int targetTotal,
             int maxQueueDepth = 3, int priority = 0, int maxDurationTicks = 36000)
@@ -203,6 +233,12 @@ namespace OpenEmpires
             RequestedUnitType = requestedUnitType;
             TargetTotal = targetTotal;
             MaxQueueDepth = maxQueueDepth;
+        }
+
+        internal void CaptureUnitResult(IReadOnlyList<int> unitIds, int tick)
+        {
+            ResultUnitIds = unitIds ?? Array.Empty<int>();
+            ResultCaptureTick = tick;
         }
     }
 
@@ -227,6 +263,24 @@ namespace OpenEmpires
                 throw new ArgumentOutOfRangeException(nameof(targetAge));
             RequestedTarget = requestedTarget;
             TargetAge = targetAge;
+        }
+    }
+
+    public sealed class CommanderCapabilityGoal : CommanderGoal
+    {
+        public CapabilityActionIntent Action { get; }
+        internal bool CommandIssued { get; set; }
+        internal ICommand IssuedCommand { get; set; }
+        internal int CommandIssuedSimulationTick { get; set; } = -1;
+        // Runtime-only typed result source. This prevents provider node indices from
+        // becoming entity references and prevents cross-manager/stale-result reuse.
+        internal CommanderGoal ResultSourceGoal { get; set; }
+
+        public CommanderCapabilityGoal(CapabilityActionIntent action, int maxDurationTicks = 36000)
+            : base(action?.PlayerId ?? throw new ArgumentNullException(nameof(action)),
+                CommanderGoalType.CapabilityAction, maxDurationTicks)
+        {
+            Action = action;
         }
     }
 }

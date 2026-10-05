@@ -18,6 +18,7 @@ namespace OpenEmpires
         {
             string normalized = NormalizeExplanationWholeForm(message);
             if (TryHandlePlanHealthQuery(message, normalized)) return true;
+            if (TryHandleQuestionQuery(message, normalized)) return true;
             CommanderExplanationQuery query;
             switch (normalized)
             {

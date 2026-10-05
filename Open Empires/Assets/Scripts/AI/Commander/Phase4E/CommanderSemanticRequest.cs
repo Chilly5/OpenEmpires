@@ -16,6 +16,15 @@ namespace OpenEmpires
         BuildStructure,
         SetResourceAllocation,
         ReachAge,
+        MoveUnits,
+        ScoutArea,
+        PatrolArea,
+        SetRallyPoint,
+        AttackTarget,
+        DefendArea,
+        RetreatUnits,
+        RepairTarget,
+        ResearchTechnology,
         StrategicObjective
     }
 
@@ -31,7 +40,8 @@ namespace OpenEmpires
     public enum CommanderSemanticAnchorSelector
     {
         MyTownCenter,
-        MyBarracks
+        MyBarracks,
+        WorkedResource
     }
 
     // Near is nondirectional: deterministic placement considers cardinal sides and defaults
@@ -41,6 +51,26 @@ namespace OpenEmpires
         MapWest,
         MapEast,
         Near
+    }
+
+    public enum CommanderSemanticUnitSelector
+    {
+        Military,
+        Scout,
+        Villagers,
+        Spearman,
+        Archer,
+        Knight,
+        DamagedMilitary
+    }
+
+    public enum CommanderSemanticLocationSelector
+    {
+        PlayerBase,
+        WorkedResource,
+        VisibleResource,
+        VisibleEnemy,
+        RelativeToSelectedUnits
     }
 
     // Parsed provider data only. No player, entity, position, provenance, or command authority lives here.
@@ -57,9 +87,13 @@ namespace OpenEmpires
         public int? PlacementAnchorOrdinal { get; }
         public CommanderSemanticPlacementRelation? PlacementRelation { get; }
         public int? ClearGapTiles { get; }
+        public CommanderSemanticUnitSelector? UnitSelector { get; }
+        public CommanderSemanticLocationSelector? LocationSelector { get; }
+        public TechnologyType? Technology { get; }
         // References are bounded semantic node indices, never game/entity IDs.
         public IReadOnlyList<int> DependsOn { get; }
         public int? ProducerFromNode { get; }
+        public int? ResultFromNode { get; }
 
         internal CommanderSemanticNode(CommanderSemanticNodeType type, int? unitType = null,
             BuildingType? buildingType = null, ResourceType? resourceType = null,
@@ -69,8 +103,12 @@ namespace OpenEmpires
             CommanderSemanticPlacementRelation? placementRelation = null,
             int? clearGapTiles = null,
             CommanderSemanticAgeTarget? ageTarget = null,
+            CommanderSemanticUnitSelector? unitSelector = null,
+            CommanderSemanticLocationSelector? locationSelector = null,
+            TechnologyType? technology = null,
             IReadOnlyList<int> dependsOn = null,
-            int? producerFromNode = null)
+            int? producerFromNode = null,
+            int? resultFromNode = null)
         {
             Type = type;
             UnitType = unitType;
@@ -83,7 +121,11 @@ namespace OpenEmpires
             PlacementRelation = placementRelation;
             ClearGapTiles = clearGapTiles;
             AgeTarget = ageTarget;
+            UnitSelector = unitSelector;
+            LocationSelector = locationSelector;
+            Technology = technology;
             ProducerFromNode = producerFromNode;
+            ResultFromNode = resultFromNode;
             var normalizedDependencies = dependsOn != null
                 ? new List<int>(dependsOn)
                 : new List<int>();

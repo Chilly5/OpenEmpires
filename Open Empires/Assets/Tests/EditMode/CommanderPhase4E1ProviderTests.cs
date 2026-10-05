@@ -59,7 +59,7 @@ namespace OpenEmpires.Tests
             Assert.That(sent, Does.Not.Contain("PlayerId"));
             Assert.That(sent, Does.Not.Contain("BuildingId"));
             Assert.That(sent, Does.Not.Contain("TileX"));
-            Assert.That(sent, Does.Not.Contain("VisibleEnemy"));
+            Assert.That(sent, Does.Not.Contain("VisibleEnemyMilitary"));
             Assert.That(sent, Does.Not.Contain("enemy-sentinel"));
             Assert.That(sent, Does.Not.Contain("987654321"));
             Assert.That(sent, Does.Not.Contain("432109876"));

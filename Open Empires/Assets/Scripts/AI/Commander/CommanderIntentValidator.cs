@@ -72,6 +72,8 @@ namespace OpenEmpires
                 return ValidateBuildStructure(build);
             if (intent is ReachAgeIntent reachAge)
                 return ValidateReachAge(reachAge);
+            if (intent is CapabilityActionIntent capability)
+                return ValidateCapabilityAction(capability);
 
             return Invalid(CommanderIntentErrorCode.UnknownCommand,
                 "The Commander intent type is not recognized.");
@@ -120,7 +122,7 @@ namespace OpenEmpires
                     $"Structure count must be between 1 and {MaximumStructureCount}.");
             bool placed = intent.PlacementAnchorSelector.HasValue;
             if (!placed && (intent.PlacementAnchorOrdinal.HasValue || intent.PlacementRelation.HasValue
-                || intent.ClearGapTiles.HasValue))
+                || intent.ClearGapTiles.HasValue || intent.PlacementResourceType.HasValue))
                 return Invalid(CommanderIntentErrorCode.UnknownCommand, "Incomplete semantic placement.");
             if (placed)
             {
@@ -133,6 +135,11 @@ namespace OpenEmpires
                         && (intent.PlacementAnchorSelector != CommanderSemanticAnchorSelector.MyTownCenter
                             || intent.PlacementAnchorOrdinal.Value < CommanderSemanticJson.MinimumTownCenterOrdinal
                             || intent.PlacementAnchorOrdinal.Value > CommanderSemanticJson.MaximumTownCenterOrdinal))
+                    || (intent.PlacementAnchorSelector == CommanderSemanticAnchorSelector.WorkedResource
+                        && (!intent.PlacementResourceType.HasValue
+                            || intent.PlacementRelation != CommanderSemanticPlacementRelation.Near))
+                    || (intent.PlacementAnchorSelector != CommanderSemanticAnchorSelector.WorkedResource
+                        && intent.PlacementResourceType.HasValue)
                     || (intent.ClearGapTiles.HasValue
                         && (intent.ClearGapTiles.Value < CommanderSemanticJson.MinimumClearGapTiles
                             || intent.ClearGapTiles.Value > CommanderSemanticJson.MaximumClearGapTiles))
@@ -150,6 +157,37 @@ namespace OpenEmpires
                 || intent.TargetAge < 2 || intent.TargetAge > 4)
                 return Invalid(CommanderIntentErrorCode.AmountOutOfRange,
                     "The requested age is outside the bounded Commander range.");
+            return CommanderIntentValidationResult.Valid();
+        }
+
+        private static CommanderIntentValidationResult ValidateCapabilityAction(CapabilityActionIntent intent)
+        {
+            if (!Enum.IsDefined(typeof(CommanderCapabilityActionType), intent.ActionType))
+                return Invalid(CommanderIntentErrorCode.UnknownCommand, "Unknown Commander capability action.");
+            if (intent.UnitSelector.Count < 1 || intent.UnitSelector.Count > 50)
+                return Invalid(CommanderIntentErrorCode.AmountOutOfRange, "Unit selector count is outside the bounded range.");
+            if (!Enum.IsDefined(typeof(CommanderUnitSelectorKind), intent.UnitSelector.Kind)
+                || !Enum.IsDefined(typeof(CommanderLocationSelectorKind), intent.LocationSelector.Kind))
+                return Invalid(CommanderIntentErrorCode.UnknownCommand, "Unknown Commander selector.");
+            if (intent.UnitSelector.Kind == CommanderUnitSelectorKind.UnitType
+                && !CommanderIntentCatalog.IsSupportedUnit(intent.UnitSelector.UnitType))
+                return Invalid(CommanderIntentErrorCode.UnknownUnit, "The requested unit selector is not supported.");
+            if (intent.ActionType == CommanderCapabilityActionType.RepairTarget
+                && intent.UnitSelector.Kind != CommanderUnitSelectorKind.Villagers)
+                return Invalid(CommanderIntentErrorCode.UnknownCommand,
+                    "RepairTarget requires an owned-villager selector.");
+            if (intent.ActionType == CommanderCapabilityActionType.AttackTarget
+                && intent.UnitSelector.Kind == CommanderUnitSelectorKind.Villagers)
+                return Invalid(CommanderIntentErrorCode.UnknownCommand,
+                    "AttackTarget cannot commandeer villagers.");
+            if ((intent.LocationSelector.Kind == CommanderLocationSelectorKind.WorkedResource
+                || intent.LocationSelector.Kind == CommanderLocationSelectorKind.VisibleResource)
+                && !intent.LocationSelector.ResourceType.HasValue)
+                return Invalid(CommanderIntentErrorCode.UnknownResource,
+                    "Resource locations require a resource selector.");
+            if ((intent.ActionType == CommanderCapabilityActionType.ResearchTechnology)
+                && (!intent.Technology.HasValue || !Enum.IsDefined(typeof(TechnologyType), intent.Technology.Value)))
+                return Invalid(CommanderIntentErrorCode.UnknownCommand, "A known technology is required.");
             return CommanderIntentValidationResult.Valid();
         }
 

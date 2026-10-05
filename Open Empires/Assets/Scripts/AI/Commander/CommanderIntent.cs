@@ -27,7 +27,8 @@ namespace OpenEmpires
         EnsureUnitCount,
         SetResourceAllocation,
         BuildStructure,
-        ReachAge
+        ReachAge,
+        CapabilityAction
     }
 
     public enum CommanderConstraintType
@@ -153,13 +154,15 @@ namespace OpenEmpires
         public int? PlacementAnchorOrdinal { get; }
         public CommanderSemanticPlacementRelation? PlacementRelation { get; }
         public int? ClearGapTiles { get; }
+        public ResourceType? PlacementResourceType { get; }
 
         public BuildStructureIntent(int playerId, BuildingType structureType, int count = 1,
             IEnumerable<CommanderConstraint> constraints = null,
             CommanderSemanticAnchorSelector? placementAnchorSelector = null,
             int? placementAnchorOrdinal = null,
             CommanderSemanticPlacementRelation? placementRelation = null,
-            int? clearGapTiles = null)
+            int? clearGapTiles = null,
+            ResourceType? placementResourceType = null)
             : base(CommanderIntentType.BuildStructure, playerId, constraints)
         {
             StructureType = structureType;
@@ -168,6 +171,7 @@ namespace OpenEmpires
             PlacementAnchorOrdinal = placementAnchorOrdinal;
             PlacementRelation = placementRelation;
             ClearGapTiles = clearGapTiles;
+            PlacementResourceType = placementResourceType;
         }
     }
 
@@ -185,6 +189,32 @@ namespace OpenEmpires
             if (targetAge < 2 || targetAge > 4) throw new ArgumentOutOfRangeException(nameof(targetAge));
             RequestedTarget = requestedTarget;
             TargetAge = targetAge;
+        }
+    }
+
+    // Generic Phase 4G action. The provider supplies only bounded semantic selectors;
+    // the executor resolves concrete units, buildings, resources and positions.
+    public sealed class CapabilityActionIntent : CommanderIntent
+    {
+        public CommanderCapabilityActionType ActionType { get; }
+        public CommanderUnitSelector UnitSelector { get; }
+        public CommanderLocationSelector LocationSelector { get; }
+        public TechnologyType? Technology { get; }
+        public BuildingType? StructureType { get; }
+
+        public CapabilityActionIntent(int playerId, CommanderCapabilityActionType actionType,
+            CommanderUnitSelector unitSelector, CommanderLocationSelector locationSelector,
+            TechnologyType? technology = null, BuildingType? structureType = null,
+            IEnumerable<CommanderConstraint> constraints = null)
+            : base(CommanderIntentType.CapabilityAction, playerId, constraints)
+        {
+            if (!Enum.IsDefined(typeof(CommanderCapabilityActionType), actionType))
+                throw new ArgumentOutOfRangeException(nameof(actionType));
+            ActionType = actionType;
+            UnitSelector = unitSelector;
+            LocationSelector = locationSelector;
+            Technology = technology;
+            StructureType = structureType;
         }
     }
 }

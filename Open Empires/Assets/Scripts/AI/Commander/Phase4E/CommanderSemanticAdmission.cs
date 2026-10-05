@@ -31,8 +31,10 @@ namespace OpenEmpires
                 case CommanderSemanticNodeType.BuildStructure:
                     if (!node.BuildingType.HasValue || !node.Count.HasValue
                         || !CommanderIntentCatalog.IsSupportedStructure(node.BuildingType.Value)
-                        || node.UnitType.HasValue || node.ResourceType.HasValue
+                        || node.UnitType.HasValue
                         || node.StrategicObjectiveType.HasValue
+                        || (node.ResourceType.HasValue
+                            && node.PlacementAnchorSelector != CommanderSemanticAnchorSelector.WorkedResource)
                         || (node.PlacementAnchorSelector.HasValue && node.Count.Value != 1)) return false;
                     dto.intentType = nameof(CommanderIntentType.BuildStructure);
                     dto.structure = node.BuildingType.Value.ToString();
@@ -58,6 +60,26 @@ namespace OpenEmpires
                     dto.targetAge = node.AgeTarget.Value.ToString();
                     break;
 
+                case CommanderSemanticNodeType.MoveUnits:
+                case CommanderSemanticNodeType.ScoutArea:
+                case CommanderSemanticNodeType.PatrolArea:
+                case CommanderSemanticNodeType.SetRallyPoint:
+                case CommanderSemanticNodeType.AttackTarget:
+                case CommanderSemanticNodeType.DefendArea:
+                case CommanderSemanticNodeType.RetreatUnits:
+                case CommanderSemanticNodeType.RepairTarget:
+                case CommanderSemanticNodeType.ResearchTechnology:
+                    if (!node.UnitSelector.HasValue || !node.LocationSelector.HasValue)
+                        return false;
+                    if (node.Type == CommanderSemanticNodeType.ResearchTechnology && !node.Technology.HasValue)
+                        return false;
+                    intent = new CapabilityActionIntent(context.PlayerId,
+                        ToCapabilityAction(node.Type), ToUnitSelector(node.UnitSelector.Value, node.UnitType, node.Count),
+                        new CommanderLocationSelector(ToLocationSelector(node.LocationSelector.Value),
+                            node.ResourceType), node.Technology, node.BuildingType);
+                    safeReason = string.Empty;
+                    return true;
+
                 default:
                     return false;
             }
@@ -69,10 +91,38 @@ namespace OpenEmpires
                 && node.PlacementAnchorSelector.HasValue
                 ? new BuildStructureIntent(context.PlayerId, node.BuildingType.Value, node.Count.Value,
                     validated.Intent.Constraints, node.PlacementAnchorSelector,
-                    node.PlacementAnchorOrdinal, node.PlacementRelation, node.ClearGapTiles)
+                    node.PlacementAnchorOrdinal, node.PlacementRelation, node.ClearGapTiles,
+                    node.ResourceType)
                 : validated.Intent;
             safeReason = string.Empty;
             return true;
+        }
+
+        private static CommanderCapabilityActionType ToCapabilityAction(CommanderSemanticNodeType type)
+        {
+            return (CommanderCapabilityActionType)Enum.Parse(typeof(CommanderCapabilityActionType), type.ToString());
+        }
+
+        private static CommanderUnitSelector ToUnitSelector(CommanderSemanticUnitSelector selector,
+            int? unitType, int? count)
+        {
+            CommanderUnitSelectorKind kind;
+            switch (selector)
+            {
+                case CommanderSemanticUnitSelector.Scout: kind = CommanderUnitSelectorKind.Scout; break;
+                case CommanderSemanticUnitSelector.Villagers: kind = CommanderUnitSelectorKind.Villagers; break;
+                case CommanderSemanticUnitSelector.Spearman: kind = CommanderUnitSelectorKind.UnitType; unitType = 1; break;
+                case CommanderSemanticUnitSelector.Archer: kind = CommanderUnitSelectorKind.UnitType; unitType = 2; break;
+                case CommanderSemanticUnitSelector.Knight: kind = CommanderUnitSelectorKind.UnitType; unitType = 7; break;
+                case CommanderSemanticUnitSelector.DamagedMilitary: kind = CommanderUnitSelectorKind.DamagedMilitary; break;
+                default: kind = CommanderUnitSelectorKind.Military; break;
+            }
+            return new CommanderUnitSelector(kind, Math.Max(1, count ?? 1), unitType ?? -1);
+        }
+
+        private static CommanderLocationSelectorKind ToLocationSelector(CommanderSemanticLocationSelector selector)
+        {
+            return (CommanderLocationSelectorKind)Enum.Parse(typeof(CommanderLocationSelectorKind), selector.ToString());
         }
     }
 }

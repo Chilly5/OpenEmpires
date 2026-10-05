@@ -48,6 +48,7 @@ namespace OpenEmpires
                 || structureType == BuildingType.Barracks
                 || structureType == BuildingType.ArcheryRange
                 || structureType == BuildingType.Stables
+                || structureType == BuildingType.Mill
                 || structureType == BuildingType.Tower
                 || structureType == BuildingType.TownCenter;
         }
@@ -72,6 +73,7 @@ namespace OpenEmpires
                 case BuildingType.Barracks: return "Barracks";
                 case BuildingType.Stables: return "Stable";
                 case BuildingType.Tower: return "Tower";
+                case BuildingType.Mill: return "Mill";
                 case BuildingType.TownCenter: return "Town Center";
                 default: return structureType.ToString();
             }
@@ -114,6 +116,7 @@ namespace OpenEmpires
             aliases[NormalizeName(BuildingType.Stables.ToString())] = BuildingType.Stables;
             aliases[NormalizeName(BuildingType.ArcheryRange.ToString())] = BuildingType.ArcheryRange;
             aliases[NormalizeName(BuildingType.Tower.ToString())] = BuildingType.Tower;
+            aliases[NormalizeName(BuildingType.Mill.ToString())] = BuildingType.Mill;
             aliases[NormalizeName(BuildingType.TownCenter.ToString())] = BuildingType.TownCenter;
             aliases["houses"] = BuildingType.House;
             aliases["barrack"] = BuildingType.Barracks;
@@ -126,6 +129,7 @@ namespace OpenEmpires
             aliases["watch tower"] = BuildingType.Tower;
             aliases["watchtowers"] = BuildingType.Tower;
             aliases["watch towers"] = BuildingType.Tower;
+            aliases["mills"] = BuildingType.Mill;
             aliases["guardtower"] = BuildingType.Tower;
             aliases["guard tower"] = BuildingType.Tower;
             aliases["guardtowers"] = BuildingType.Tower;

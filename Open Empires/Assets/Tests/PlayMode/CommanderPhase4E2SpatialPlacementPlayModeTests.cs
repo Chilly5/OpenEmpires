@@ -148,7 +148,7 @@ namespace OpenEmpires.Tests
             goals.Tick(15);
             Assert.That(units.RequiredProducerGoal, Is.SameAs(build));
             Assert.That(build.PlacedBuildingId, Is.EqualTo(created.Id));
-            Assert.That(units.Status, Is.EqualTo(CommanderGoalStatus.WaitingForConstruction));
+            Assert.That(units.Status, Is.EqualTo(CommanderGoalStatus.WaitingForPrerequisite));
 
             created.IsUnderConstruction = false;
             created.ConstructionTicksRemaining = 0;

@@ -75,6 +75,8 @@ namespace OpenEmpires
             if (intent is ReachAgeIntent reachAge)
                 return Created(intent, goalManager.SubmitReachAge(reachAge.RequestedTarget,
                     constraints: intent.Constraints));
+            if (intent is CapabilityActionIntent capability)
+                return Created(intent, goalManager.SubmitCapabilityAction(capability));
 
             return Rejected(intent, CommanderIntentErrorCode.UnknownCommand,
                 "The Commander intent type is not recognized.");
