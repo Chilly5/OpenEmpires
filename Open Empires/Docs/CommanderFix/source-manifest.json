@@ -1,0 +1,740 @@
+{
+  "capturedUtc": "2026-10-06T10:21:21.4346684Z",
+  "branch": "unit_models_and_voice_control",
+  "headAtCapture": "097f01b5b3684bc12c0cb149a17a1bfed2ef7fdc",
+  "baselineHead": "b96cf9b622f796df5c90f402b2bb16720c52f78e",
+  "runtimeSourceIncludesPreservedDirtyHooks": true,
+  "sourceScope": "Changed/new Commander-related runtime/tests/docs/dependency files in the integrated checkout; excludes secrets, binaries and self-referential manifest/consistency files",
+  "files": [
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderContext.cs",
+      "sha256": "67afd1025dff72996b71a0b1c2b09018ee812db8282721c26fa15a5e00a49d80",
+      "bytes": 7615
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderContextBuilder.cs",
+      "sha256": "27b1046f1a65e1434a82ffd8f008cae8885a380aeb784c1eeba0e67e2b18e573",
+      "bytes": 9440
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderGoal.cs",
+      "sha256": "a185fa38c3c916e363c1d2456842858b80a499c4e85b737e7c66306ceac6d206",
+      "bytes": 12408
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderGoalManager.cs",
+      "sha256": "5aea4b523c7e1bd849fcc13664ee1452b81f23b78cb5fe52d038b3d9fe5a26f2",
+      "bytes": 38810
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderIntent.cs",
+      "sha256": "d7cfb4ab8556c4d0165bfc79136c3a83100487188f80169685e09e3fcfc83d0e",
+      "bytes": 7788
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderIntentCatalog.cs",
+      "sha256": "426a272b216c6d751c3434a43bf3beee0c36aa20a803a4cac5652b1ae4057ea0",
+      "bytes": 8162
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderIntentDto.cs",
+      "sha256": "92258b7f39d2d8c6bc443dc9c6ce9213ef22a6206f5082120da59bc862a921b2",
+      "bytes": 36987
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderIntentResolver.cs",
+      "sha256": "510fcc29dbcc6f24e522e62854310b24daeb6b193ad9f4ebff95c0aad5f91cf8",
+      "bytes": 5152
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderIntentValidator.cs",
+      "sha256": "3b1cf24056bed6229d78b729a88d0f5b1ffd9008299c025cbf33dcc7f7102079",
+      "bytes": 14277
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderPlanner.cs",
+      "sha256": "faf9bf8dc7dc1062563683b23e07c891a85c7493aa33656f81f32bb638b4b8a9",
+      "bytes": 84422
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderResponseGenerator.cs",
+      "sha256": "86ac99eba1a89843404cc79ad08e9a1e11b8a037e040cc71b6e0bd5646f4cf03",
+      "bytes": 5172
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderWorkerAuthority.cs",
+      "sha256": "1689bcbbadd02045a90a1439541ef4199cf61045003ebba87d45ca511c25af9a",
+      "bytes": 10223
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Economy.meta",
+      "sha256": "f0c605bd4363e4f7de21ae3a06f9b1216580090d46360bdc806191bd7944c859",
+      "bytes": 172
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Economy/AllocateWorkersGoal.cs",
+      "sha256": "697dc7c80ecb71525ec5f818e35f9f1ebcd5971a6ebd0e9b7f72f348001c4f60",
+      "bytes": 1363
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Economy/AllocateWorkersGoal.cs.meta",
+      "sha256": "0c333e0871c4ee98505a0390c4ed7899a36715de46bde69dcedfd91fa2cbdecc",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Economy/AllocateWorkersIntent.cs",
+      "sha256": "3faecb15130a9c794abcda9351b6d9cf5d885486e2a89e7be2654b3a7316525b",
+      "bytes": 459
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Economy/AllocateWorkersIntent.cs.meta",
+      "sha256": "ff1ace14e7500027c8bc4a7328081eb9271bfab60e6b9d47a34adb926afbc337",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Economy/CommanderPendingClarification.cs",
+      "sha256": "517f9e5920897dcc72a5f0a2db8bfb28f3cd7c00beb31e0e6b3009b572efeb3d",
+      "bytes": 4717
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Economy/CommanderPendingClarification.cs.meta",
+      "sha256": "65f455549ee0247ee61496b377b696c14d9ea4ed585b825c726f506670dc64ae",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Economy/CommanderPlanner.Economy.cs",
+      "sha256": "0110e6ad8dd5b91d4409a47ba01e3723a650cdc6109ba8e7c1af862598a0604f",
+      "bytes": 17210
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Economy/CommanderPlanner.Economy.cs.meta",
+      "sha256": "54d18e82a638cb6ac8e941b1dd432838f8079d66c6c432ad236bb9ed31a7876d",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Economy/CommanderSemanticResult.Clarification.cs",
+      "sha256": "085eca6dd2a56e58c546ffd3e109d585ac181463858a59e9f5e49dd852e5068e",
+      "bytes": 2239
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Economy/CommanderSemanticResult.Clarification.cs.meta",
+      "sha256": "12af2fd601dc718d0d9d0c204ad22cd228b9def1c0a76c6d47c2d6c6c3f7917e",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Economy/CommanderSemanticResult.Economy.cs",
+      "sha256": "3f828a1b5173bab26afd7de94f8466b92760a2acd812e2a967650ddcda873a34",
+      "bytes": 2103
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Economy/CommanderSemanticResult.Economy.cs.meta",
+      "sha256": "1b053c480930de80abc226085c29663da26086031bf59b85c2d10420ea9ce0ed",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Economy/CommanderWorkerAllocation.cs",
+      "sha256": "ee9f5f483307f2c8981129d4b026c7b3be8f8880305fa2e54aed5187951ae0a2",
+      "bytes": 3053
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Economy/CommanderWorkerAllocation.cs.meta",
+      "sha256": "e8c1e4209166a2214ce30e98b10fd7ed9307bb6503dd9303f4703c785837b746",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Clarification.cs",
+      "sha256": "d64a23cc376120a242f8a591d18fa473fc07f2e39d623d11c382ac64beeccd44",
+      "bytes": 7780
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Clarification.cs.meta",
+      "sha256": "ffad94f39adfae1e32185c366bebcac1b82629c84cd249657a99bf2f01925455",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs",
+      "sha256": "e4d88aaaf98a691608ad114399fb220d6325205a8cecfcba1b3e631ec4ab0289",
+      "bytes": 62685
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Explanations.cs",
+      "sha256": "a3290f14bb74419db7ecccb6a06db5622e9f6383c751bda85ddaf14bd2563692",
+      "bytes": 6281
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Questions.cs",
+      "sha256": "412d40550af89d7db8124d1d5f9f6548336f8501b374c0c97e1252d440e343d2",
+      "bytes": 14912
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.StrategicControls.cs",
+      "sha256": "79f6eccb74a9f56e57469c3aa38bf967d28051896a41dc1f5edd345eb741393f",
+      "bytes": 28592
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/OpenRouterCommanderProvider.cs",
+      "sha256": "ee091e68f80ea7707585ad9179ca6e92f13ed61f4f5c6d2eef3412c35ad1f825",
+      "bytes": 23302
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticAdmission.cs",
+      "sha256": "f0b22969e1cda52e001a478897033fd51a5c24a23faef50e770dc8dbe0947051",
+      "bytes": 7695
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticGraphAdmission.cs",
+      "sha256": "61dfcbc466036fdb9afccefe6635b93c6c09c51b27f60c402841965df180ad00",
+      "bytes": 10937
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticJson.cs",
+      "sha256": "71a2b833b224d4fd4beddfc9df21b104d217c9d62c4de4b12cd09095e9ef5fba",
+      "bytes": 29171
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticProvider.cs",
+      "sha256": "f2220b4a1d777a0c4f150f2ed716d600750f7b343f04b4d8a3a7ac3339c04d22",
+      "bytes": 7047
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticRequest.cs",
+      "sha256": "4653d43b29e0000d98d15553cf749d903f3a9519af6125d7281185613c2b7b6c",
+      "bytes": 5840
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4G/CommanderCapability.cs",
+      "sha256": "ceb2373bc38ea963e3b1bbc05e80c946ff24223b0b5e632886acb8ac9f0ae0d8",
+      "bytes": 4733
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4G/CommanderCapabilityExecutor.cs",
+      "sha256": "e31bc1ab6136d798a610996525f0f3bf92082c810a4a4ae7420cff005806807b",
+      "bytes": 19346
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H.meta",
+      "sha256": "0dacb52e3e2728fb84ee6aa046d1e3dbfa63dff5e4e0323d0d767c355a148ebe",
+      "bytes": 172
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderAudioConverter.cs",
+      "sha256": "0624cdc05083650324b76e95e206cd49daf574eab6d6ac4400370df4535c3975",
+      "bytes": 3552
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderAudioConverter.cs.meta",
+      "sha256": "bd341c69d1628fce238db205a295683cbc2db017d0d521ab4925059148ab6e28",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderAudioData.cs",
+      "sha256": "afe3723517a94925b3c055856bd1fca01159893c93c4ecd59753672402a99359",
+      "bytes": 988
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderAudioData.cs.meta",
+      "sha256": "ab4c8d44711f73bea287ed813f77f6028ca5735e733bce6a662db65d15c74b98",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderChatUI.Voice.cs",
+      "sha256": "11a1496e25ce9e6840cf0ce79805a2aaeec7cd27fd723239193f808516f7b6d0",
+      "bytes": 13036
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderChatUI.Voice.cs.meta",
+      "sha256": "fd7775cf1ff053cdcfb79301630c817bd4378c60f432d0500590e18f1fd5b59d",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderSpeechToTextResult.cs",
+      "sha256": "c96949ed239660044e9b84cc2e4a561322fa00321ff15bcf7f722fa697abc921",
+      "bytes": 2547
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderSpeechToTextResult.cs.meta",
+      "sha256": "75984e9161ad9bb06c9908ea01f54fa9a4d8bff4f8ae45065ff277fef7650a00",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderVoiceInputController.cs",
+      "sha256": "b8b69cf1de3c9838327ec8fa95bcbc9a273eea73381865216e688a87434b6019",
+      "bytes": 9189
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderVoiceInputController.cs.meta",
+      "sha256": "cfec253d3c38ff4b2b97702ec37423291b6b3e1f695dc269580f819e5b5806b0",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderVoiceSettings.cs",
+      "sha256": "5759dc71fba7b1e95fc5688c19d9c437e75cee8fc4733e3de54d00862a36eb4c",
+      "bytes": 3098
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderVoiceSettings.cs.meta",
+      "sha256": "55d7e140db538bbb57b8237f58bf0c76879396a9fc4ea7c9ad06c3cc8d59538c",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderVoiceState.cs",
+      "sha256": "43ab4c7a40fcda2cbd68c6ac8490ca1ee2c550e6fe117c4281133d48fcb607a6",
+      "bytes": 273
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderVoiceState.cs.meta",
+      "sha256": "93a8c650a953bdb65dda1dfbc8d41ad49c4bd31abe95ccf3435a38014957dadf",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/ICommanderAudioCapture.cs",
+      "sha256": "5a682dd1dff6d132dcc89d0db55b52d49ff617a5998897e9c3a9882c06914372",
+      "bytes": 525
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/ICommanderAudioCapture.cs.meta",
+      "sha256": "5640a2d098159dcc6eb8078f0df522fcd82a01f0166ab07ba9549488c064bcce",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/ICommanderSpeechToTextProvider.cs",
+      "sha256": "fb0c48a1b38f197249067fb0ca0825e7db11611036b6fb9006c8f075af42f119",
+      "bytes": 847
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/ICommanderSpeechToTextProvider.cs.meta",
+      "sha256": "dcf608e3a21401856538cceede55e71330de4fc951c45dc67244ddae718856be",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/MockCommanderSpeechToTextProvider.cs",
+      "sha256": "5f9d106fab9febff7d362c2d0d537b2a9c05df728348caf5083ab2f0d55b9e1a",
+      "bytes": 2987
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/MockCommanderSpeechToTextProvider.cs.meta",
+      "sha256": "696aaa8e11111bce0db1063b8ee0d4bcb0826f44cb951ad8646f412e7ab52ecd",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/UnityMicrophoneAudioCapture.cs",
+      "sha256": "8f9b11463d3082cabff4183f0318e0b4fe3c2216775ad942c36a9c6d208e22cd",
+      "bytes": 6278
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/UnityMicrophoneAudioCapture.cs.meta",
+      "sha256": "c9599c7a08dd80c842bc4685f4e785e72bfe3cb0e338575f04b6e5f016069577",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/WhisperCommanderSpeechToTextProvider.cs",
+      "sha256": "2546a8a00af744294625a8ca44e26a01d92210cd6f7bea8a6bf7edf763aab608",
+      "bytes": 7650
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/WhisperCommanderSpeechToTextProvider.cs.meta",
+      "sha256": "f4d5f9fe0c0d2ecaf938cf260f97f7c8697bf356dbe553c0cca946e9b9f1e7df",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/WhisperModelLocator.cs",
+      "sha256": "68abef27c9c997488fdb2cf2b50c1446bea0b2c9688d691439bea883c004690b",
+      "bytes": 2833
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/WhisperModelLocator.cs.meta",
+      "sha256": "8c2eb8136530e5c4ad1566b3b31a3ac74e94020aae84e5483b5c592059a52e64",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Scripts/Commands/GatherCommand.cs",
+      "sha256": "f8f1f893dd859f19576deadffbbae711b239e506598cf5990d15697f36d95371",
+      "bytes": 671
+    },
+    {
+      "path": "Assets/Scripts/Commands/QueuedCommand.cs",
+      "sha256": "2e2885b7d4037e418e3a609aca5456278a6d50211f1c3fc3654f0c76b0aae433",
+      "bytes": 4148
+    },
+    {
+      "path": "Assets/Scripts/Commands/SlaughterSheepCommand.cs",
+      "sha256": "130024c4729fd9d0058a661efcf7a564400bd611e4e7f5ab5456ff9498ad3f50",
+      "bytes": 348
+    },
+    {
+      "path": "Assets/Scripts/Core/GameSimulation.cs",
+      "sha256": "96fe82b0bf1ac1a22c340cdd3fe263632fe6d853d063600770608e9fef6d9600",
+      "bytes": 335472
+    },
+    {
+      "path": "Assets/Scripts/Network/CommandSerializer.cs",
+      "sha256": "9ad46d031d792039ffa28614559aa02021245787466085d556db4a42f86a20a9",
+      "bytes": 78745
+    },
+    {
+      "path": "Assets/Scripts/OpenEmpires.Runtime.asmdef",
+      "sha256": "4f671dc21784016f135a5c030a12e968a748851184db0dce5b97763f49de4c31",
+      "bytes": 605
+    },
+    {
+      "path": "Assets/Scripts/Resources/ResourceGatheringSystem.cs",
+      "sha256": "8bca526017cde649771df7a17704c1ff8970678daad21661949ef28eeec628bc",
+      "bytes": 41146
+    },
+    {
+      "path": "Assets/Scripts/Resources/ResourceSourceKind.cs",
+      "sha256": "6c71eb9bec53089e40303fa49dd4022059bc4c7f05d131f353ac7ae7c65a976f",
+      "bytes": 218
+    },
+    {
+      "path": "Assets/Scripts/Resources/ResourceSourceKind.cs.meta",
+      "sha256": "9fdc86ecdc8043417ebeff935a071231d618149f9334e69008d42831cb5acdf1",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Scripts/Resources/ResourceSourceRules.cs",
+      "sha256": "7d6c12f62287174868444d874064100015fcb2786bf23cc2cdd06f581e2d0c99",
+      "bytes": 2467
+    },
+    {
+      "path": "Assets/Scripts/Resources/ResourceSourceRules.cs.meta",
+      "sha256": "5bfc06d275a75eea9f8abab3d4881c55a3b7d8b8f6ded168387ad6dcfd545b1d",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Scripts/Units/UnitData.cs",
+      "sha256": "427d6f6ef7249508ebe261fc9bb5723af8731efa35230913c56b9ad5dfea2ad8",
+      "bytes": 9154
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Chat.cs",
+      "sha256": "7fcba69a488b69d324ac5b6e2a0ce3d849e3a8c6579761115adc15d8e6f7e406",
+      "bytes": 11534
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Chat.cs.meta",
+      "sha256": "fc677143d923758c86440bc605184b1f0852922de1e949276c56a337cc5d268b",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.cs",
+      "sha256": "24e8c6cd62af3f36157a68543077baf1c4190ca63a7323615caba59d3225b1fa",
+      "bytes": 7177
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.cs.meta",
+      "sha256": "f2c352fc5219ce7d07b42a36815e30032db387c09546053a98f83b0ec9baebd0",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Execution.cs",
+      "sha256": "3efe4b8508a865000e40f3ec686c45b4e31be832728941b3e1d635bedfe48fae",
+      "bytes": 15429
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Execution.cs.meta",
+      "sha256": "6866a5d54c8547518ec3e79db96de42ebff763e27c684f44e295b91ce37a7475",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Provider.cs",
+      "sha256": "67c158f3dc304218610385c5de37598b8da7e15c097672539334d42e58419052",
+      "bytes": 4266
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Provider.cs.meta",
+      "sha256": "4dd29b93c0c87ddf473f56b4c3927c94deb28cbb66f18570ef3ff0e0c53af835",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Source.cs",
+      "sha256": "80665e0f66c9af4b28ce66d83d61784d2b096d84127b6c972855b8ee25e4facb",
+      "bytes": 11122
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Source.cs.meta",
+      "sha256": "cc10895281d80116bcd5071b331edee1b2eabaf6f14f4172c8068f3fd920208b",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E1ChatTests.cs",
+      "sha256": "1ea67f2b96a41ec226ea9f8ee73d99852b32341cb957be60dd3e9fe0ef45c15a",
+      "bytes": 16967
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E1ProviderTests.cs",
+      "sha256": "e6b3ed45ffa38a444f4f70072a01a93be460b3c2890c5c258fb880500f845f1a",
+      "bytes": 17205
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4GCapabilityTests.cs",
+      "sha256": "26adc98ee589821aa5862bfa73317af78a2a867a78ae16b68cccc5079a3dcdc1",
+      "bytes": 23427
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4GHostileAuditTests.cs",
+      "sha256": "8984e7367de837f4763e13fa9d40caa2dfae379ae0101408bad77821122d8e7d",
+      "bytes": 38420
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4HAudioFixtureTests.cs",
+      "sha256": "2eab83e5b46d2e4819e101bb158c94789bb2753d5a900f2755076878361f7b95",
+      "bytes": 5410
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4HAudioFixtureTests.cs.meta",
+      "sha256": "bf6e05d8dd197e68d4f6a7dbdb1cb1c2b46ead46311655fc791a57d81ee5747b",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4HVoiceTests.cs",
+      "sha256": "fb571f8c66bca2ae8ad57345e3d61e0f84057a0001222b55f588809f1ecb3371",
+      "bytes": 15284
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4HVoiceTests.cs.meta",
+      "sha256": "5aea46cc89dbca95fb6a46cb4f61786d1705edf9012e5c8cdb8a9b1185f32bbe",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderEconomyClarificationPlayModeTests.cs",
+      "sha256": "379132b225703305013ecf7e9c1b279a1d01ed34dfa477a2ff1157bbc6d2a30f",
+      "bytes": 15404
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderEconomyClarificationPlayModeTests.cs.meta",
+      "sha256": "9e34afc971ea353850dd6765897155c4a4cfc2747216935223aababef4d8f76e",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4GResultBindingPlayModeTests.cs",
+      "sha256": "2f839b480352cdbe01a542053fd4d40bcddbb5886fd3ea00db7e63178c2680ad",
+      "bytes": 5658
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4HVoicePlayModeTests.cs",
+      "sha256": "90c2edd34b39dd4c2b9dba0a4cbae3e3beab911cab7bd42f7dbe1ccdfb0d7b9c",
+      "bytes": 13913
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4HVoicePlayModeTests.cs.meta",
+      "sha256": "0992e726a998b99b78d8d7009ed06c368e0dec1f94d129365647b4545cf7d07f",
+      "bytes": 59
+    },
+    {
+      "path": "Docs/CommanderFix/baseline-git-status.txt",
+      "sha256": "b36c9566532663ce443edd86335f4601a6814e09f4f80e2849ee5589cf16ff49",
+      "bytes": 2854
+    },
+    {
+      "path": "Docs/CommanderFix/baseline-reproduction-2026-10-06.json",
+      "sha256": "be39fc809dd925547e253b3521cfa42d8d7c171de163080bd7d46b0da36317a3",
+      "bytes": 4242
+    },
+    {
+      "path": "Docs/CommanderFix/clarification-state.md",
+      "sha256": "b259679edcfc4bf41a4c9695c57d1bdc5599268e821516693ba0f84270312ab4",
+      "bytes": 3667
+    },
+    {
+      "path": "Docs/CommanderFix/economy-clarification-design.md",
+      "sha256": "d2f7d2ed19e6e886a02fae2cb0712ec80a2c80dbf30b84d246525bc053437729",
+      "bytes": 17887
+    },
+    {
+      "path": "Docs/CommanderFix/economy-clarification-implementation-plan.md",
+      "sha256": "a47977239cd9ab287213b78b867169f3985178d221ebc26773b2499a1638ea8b",
+      "bytes": 31622
+    },
+    {
+      "path": "Docs/CommanderFix/economy-clarification-root-cause.md",
+      "sha256": "103720032e6f69fa177b6b076139e9c4989063dadb3d8c4ad28d3720bff974c3",
+      "bytes": 11585
+    },
+    {
+      "path": "Docs/CommanderFix/economy-semantic-schema.md",
+      "sha256": "0da2b7a65dcc12d368a76b3a53ed84e209eadbb3b2b65ff34b717ea6455dbc96",
+      "bytes": 6279
+    },
+    {
+      "path": "Docs/CommanderFix/execution-progress.md",
+      "sha256": "5c157d1a796ac3ae3799d94a94faaca3f8e9557c2641a83e7dce1d95912f3c53",
+      "bytes": 13268
+    },
+    {
+      "path": "Docs/CommanderFix/expanded-worker-green-8c2d5362e3c84bb68d255d634c3604a7.xml",
+      "sha256": "fe9b617dd8c6029ccc4833518b240956cc6324da2e730b67bcc431e32ff6e147",
+      "bytes": 10968
+    },
+    {
+      "path": "Docs/CommanderFix/fix-report.md",
+      "sha256": "8419acda50e2356655e258d3ab4374fdb2c0fd2c6b4cbb6650f3e91cef744c56",
+      "bytes": 7815
+    },
+    {
+      "path": "Docs/CommanderFix/focused-editmode-final-green-04861f19c80b4a4f8c06fd3c8e13098c.xml",
+      "sha256": "d4c168a7113ea52465679785c926b815b85bfeb3700b5073536837a2ebf8ac73",
+      "bytes": 35152
+    },
+    {
+      "path": "Docs/CommanderFix/focused-expanded-1620af27c0234086979151d1f1f37468-failures.xml",
+      "sha256": "4173fd15973f2f8e98392309d051a732a557929d43d68eeb5e7a834b21936681",
+      "bytes": 31119
+    },
+    {
+      "path": "Docs/CommanderFix/focused-playmode-green-72342bb4cce24dcbafb53bd899e8dc26.xml",
+      "sha256": "d9e33e5393d5f625644c9a7a949a4b2b0258c35621216b5b2d32b83fd741187d",
+      "bytes": 11657
+    },
+    {
+      "path": "Docs/CommanderFix/focused-test-evidence.md",
+      "sha256": "65e6dab633d45347a97e18d149b11351e35125e6ce463606029c0d7fda83aeeb",
+      "bytes": 8640
+    },
+    {
+      "path": "Docs/CommanderFix/full-editmode-final-d057b3e7b584423d9ccbee5ec166d8a7.xml",
+      "sha256": "34c5ef4561afa7711a3f3e97091b8a3a9b295c639a30c1b0c0391f8e1f569c03",
+      "bytes": 1150979
+    },
+    {
+      "path": "Docs/CommanderFix/full-playmode-final-f05d455496f54e44ab79141d10d01bcb.xml",
+      "sha256": "5e1a55b0f7ca5333782efd018bc2cdf301ec9e9fdf0bca48382fb891260e85ff",
+      "bytes": 772062
+    },
+    {
+      "path": "Docs/CommanderFix/lifecycle-narrow-red-d3f8e8cee7b54e858762ce4916fca4a0.xml",
+      "sha256": "53cb0d4a56a9a55ba0596f8618521c87a5f87d3e54331f1291727a7f9038ecd3",
+      "bytes": 7095
+    },
+    {
+      "path": "Docs/CommanderFix/live-luna-economy-2026-10-06.json",
+      "sha256": "c99953f394d23fae82ee06b33b9f4d92ad66d9999dead59965cbce18519395ca",
+      "bytes": 11151
+    },
+    {
+      "path": "Docs/CommanderFix/narrow-disposal-placement-green-0b8b8d6c4ced416bb826c7e0f48491d9.xml",
+      "sha256": "7d6a6a0c4c27ef4b18278f9dfd47e3ee9dd1b04787f2a216f2e7ca4f8c39d2a7",
+      "bytes": 5474
+    },
+    {
+      "path": "Docs/CommanderFix/post-fix-runtime-probes.json",
+      "sha256": "42e14b7a60c070ff0ded767751364d82b425fd879bbb5170c04566c83bbab749",
+      "bytes": 437
+    },
+    {
+      "path": "Docs/CommanderFix/post-lifecycle-editmode-green-ef23e98d21024d5495859b7a81a9a96e.xml",
+      "sha256": "cbacfedad366a6f1164dc5f21d737ebf50d61d74bf6763d48c45692d16a40b02",
+      "bytes": 60099
+    },
+    {
+      "path": "Docs/CommanderFix/post-lifecycle-playmode-green-2ebbbf151b9342129211913496a5f987.xml",
+      "sha256": "38e6ff000fe180c829377aa518c59145c6dd5fd140fe94a9cb04fa02069c102b",
+      "bytes": 32474
+    },
+    {
+      "path": "Docs/CommanderFix/post-lifecycle-playmode-impact-11243795b0ab4dbf93f91bcdb5d47825.xml",
+      "sha256": "fcc44a8809e3eca67c3afd58d52f3fe1439e6dd114cca547f79a8d2202b09fd9",
+      "bytes": 32474
+    },
+    {
+      "path": "Docs/CommanderFix/relevant-commander-green-0b2cd7fc4a834dffb099180fb294f7c5.xml",
+      "sha256": "1b4be4809732eddac2ad55423898eb98bcbc6bda8caf05d1cc45561fc5e9b1db",
+      "bytes": 206665
+    },
+    {
+      "path": "Docs/CommanderFix/requirements-matrix.md",
+      "sha256": "1fc016b6fdc7ffd0d8f84284e0630be78e3bf78d221fffa323627602442a81ed",
+      "bytes": 5886
+    },
+    {
+      "path": "Docs/CommanderFix/review-correction-red-81a19daa870c4036ba11c9b5d71d1f4a.xml",
+      "sha256": "224f1cace9afa7262c840cb01b32a15d6fd4da74ea98544d9d1dfbbe7deedc85",
+      "bytes": 5371
+    },
+    {
+      "path": "Docs/CommanderFix/review-redirect-red-f855752db04f47548e8207930c156856.xml",
+      "sha256": "be5e1e30e44f32714a5f95c9f835f1a72fddbda8e246e3464e2af7459b8104b0",
+      "bytes": 5130
+    },
+    {
+      "path": "Docs/CommanderFix/task1-green-6937f2ec288446b2b8f479eaf9534700.xml",
+      "sha256": "c171260891bbef6ded14f48708ba5df77333e87852a90f5f5b81b2f56bb0d31f",
+      "bytes": 5660
+    },
+    {
+      "path": "Docs/CommanderFix/task1-red-e5c0845b6415404382f4b6c750037168.xml",
+      "sha256": "9e045bc5536763f59615ab18466966dedf65cb067911dd329ae001c7bc8ba3c2",
+      "bytes": 6072
+    },
+    {
+      "path": "Docs/CommanderFix/task2-first-green-xml-launcher-anomaly.xml",
+      "sha256": "abbd077a7cad76eca623d51a3ef43c28548ff69a9c4cee3e3f4dace050039847",
+      "bytes": 9216
+    },
+    {
+      "path": "Docs/CommanderFix/task2-red-1374c4690cc44439a5c44355ab48aa97.xml",
+      "sha256": "1eb71f17b86e410bc1311703f443c9956570c4eb60f068f1143d540fc39f22c5",
+      "bytes": 10515
+    },
+    {
+      "path": "Docs/CommanderFix/task2-runtime-gate-sheep-to-berries-red.xml",
+      "sha256": "964d4306bdaa76dec342e410df8d0dd05252c4b27e7407b22c50da01e92846ac",
+      "bytes": 9269
+    },
+    {
+      "path": "Docs/CommanderFix/task3-green-a1d479650d0144fd8d85d7b4cab3311e.xml",
+      "sha256": "6dd595184e49d81a3fcf02c2dd38696e2de1e360d94c16286d74d310638e5291",
+      "bytes": 11196
+    },
+    {
+      "path": "Docs/CommanderFix/task3-green-xml-launcher-anomaly.xml",
+      "sha256": "4bf458900231043d7a4abbfe1e92253071a5af5a479d6e18380d6dad6e3515a9",
+      "bytes": 11196
+    },
+    {
+      "path": "Docs/CommanderFix/task3-red-existing-command-path.xml",
+      "sha256": "b7b94ccaae2e939de97c3e3a1fff4c65f73c36c2213e05e8465e4166569e9527",
+      "bytes": 11026
+    },
+    {
+      "path": "Docs/CommanderFix/task4-red-b4ec3009b6c44f4ca885a89d9d7f2f55.xml",
+      "sha256": "0765a3ab3dccc26e64d2512951342d2202c5280f7347b295c87c076a7b85deaf",
+      "bytes": 11508
+    },
+    {
+      "path": "Docs/CommanderFix/task5-red-8ffe1afa09eb45a5b5ef31e4a364a45d.xml",
+      "sha256": "32adb2632a1a1434130bd8f6c05e81dcae20680394de37d66a3266fef2f78081",
+      "bytes": 10889
+    },
+    {
+      "path": "Docs/CommanderFix/tasks1-4-green-b93cefec44b44d399dd40f157c9a6c38.xml",
+      "sha256": "1f236b9de1886e2f6e51cb5bfb447269ee5ea0707cde9993c6c5c7a5eccfa164",
+      "bytes": 25348
+    },
+    {
+      "path": "Docs/CommanderPhase4G/implemented-capabilities.md",
+      "sha256": "c290ac3966651322e7cbd0ca2053eba673af8865a69f69eeab61f2cfa8a83217",
+      "bytes": 5405
+    },
+    {
+      "path": "Docs/CommanderPhase4G/known-limitations.md",
+      "sha256": "738ffb23cd8d5a2399e98df06f3209c8d0661f15d66eb1c3853a298eebe7bea2",
+      "bytes": 5110
+    },
+    {
+      "path": "Packages/manifest.json",
+      "sha256": "4169965381b1bd0b4df6d3ac9c42ffb9a420ea34e32998cef0ff8a989fed7809",
+      "bytes": 2558
+    },
+    {
+      "path": "Packages/packages-lock.json",
+      "sha256": "f6724f0f8e08424119074aad77c9a0d29b6eb186b292c22fc4d99599bdf43dff",
+      "bytes": 16008
+    },
+    {
+      "path": "remaining_work.md",
+      "sha256": "3a2a21b90fb4f4d711339f72717bcbbcd26f72b5808e1efee35b34ca3d902fc1",
+      "bytes": 57123
+    }
+  ]
+}

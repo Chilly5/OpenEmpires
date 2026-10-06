@@ -1,0 +1,71 @@
+{
+  "stage": "pre-fix reproduction",
+  "date": "2026-10-06",
+  "unityInstance": "Open Empires@6d7310c7",
+  "unityVersion": "6000.5.9f1",
+  "mode": "EditMode ephemeral CommanderChatUI host; real SubmitMessageAsync and real OpenRouter transport; no manager ticks/gameplay execution",
+  "model": "openai/gpt-6-luna",
+  "providerRequests": 4,
+  "scope": "Failure A; Failure B and count follow-up; Failure C",
+  "completed": true,
+  "providerRows": [
+    {
+      "player": "gather food from sheep",
+      "submission": "",
+      "transcript": "Commander:\r\nOpenRouter Luna configured. Availability is checked on your first request.\r\n\r\nPlayer:\r\ngather food from sheep\r\n\r\nCommander:\r\nI can’t specify gathering from sheep with the available actions.",
+      "semanticMemory": "[]",
+      "trace": "utc=2026-10-06T07:25:42.0557337Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=3352\nassistantContent=extracted;characters=102;finish=stop\nsemantic=Unsupported;nodes=0\n"
+    },
+    {
+      "player": "gather food",
+      "submission": "",
+      "transcript": "Player:\r\ngather food\r\n\r\nCommander:\r\nHow many Villagers should gather Food?",
+      "semanticMemory": "[{\"kind\":\"Clarification\",\"unit\":\"\",\"targetTotal\":0,\"structure\":\"\",\"count\":0,\"anchor\":\"\",\"relation\":\"\",\"clearGapTiles\":null,\"message\":\"How many Villagers should gather Food?\"}]",
+      "trace": "utc=2026-10-06T07:25:45.5122732Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=1891\nassistantContent=extracted;characters=72;finish=stop\nsemantic=Clarify;nodes=0\n"
+    },
+    {
+      "player": "4",
+      "submission": "Understood.\nPreparing 4 villagers.",
+      "transcript": "Player:\r\ngather food\r\n\r\nCommander:\r\nHow many Villagers should gather Food?\r\n\r\nPlayer:\r\n4\r\n\r\nCommander:\r\nUnderstood.\nPreparing 4 villagers.",
+      "semanticMemory": "[{\"kind\":\"Clarification\",\"unit\":\"\",\"targetTotal\":0,\"structure\":\"\",\"count\":0,\"anchor\":\"\",\"relation\":\"\",\"clearGapTiles\":null,\"message\":\"How many Villagers should gather Food?\"},{\"kind\":\"AcceptedUnitCount\",\"unit\":\"Villager\",\"targetTotal\":4,\"structure\":\"\",\"count\":0,\"anchor\":\"\",\"relation\":\"\",\"clearGapTiles\":null,\"message\":\"\"}]",
+      "trace": "utc=2026-10-06T07:25:47.4711531Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=2174\nassistantContent=extracted;characters=86;finish=stop\nsemantic=Request;nodes=1\n"
+    },
+    {
+      "player": "gather food with four idle villagers",
+      "submission": "Understood. I will assign at least 4 villagers to food.",
+      "transcript": "Player:\r\ngather food with four idle villagers\r\n\r\nCommander:\r\nUnderstood. I will assign at least 4 villagers to food.",
+      "semanticMemory": "[]",
+      "trace": "utc=2026-10-06T07:25:49.8042025Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=1775\nassistantContent=extracted;characters=92;finish=stop\nsemantic=Request;nodes=1\n"
+    }
+  ],
+  "schemaProbes": [
+    {
+      "input": "{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"SetResourceAllocation\",\"resource\":\"Food\",\"count\":4}]}",
+      "valid": true,
+      "outcome": "Request",
+      "nodes": 1
+    },
+    {
+      "input": "{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"SetResourceAllocation\",\"resource\":\"Food\",\"count\":4,\"workerState\":\"Idle\"}]}",
+      "valid": false,
+      "outcome": "Unsupported",
+      "nodes": 0
+    },
+    {
+      "input": "{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"SetResourceAllocation\",\"resource\":\"Food\",\"count\":4,\"sourceKind\":\"Sheep\"}]}",
+      "valid": false,
+      "outcome": "Unsupported",
+      "nodes": 0
+    },
+    {
+      "input": "{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"SetResourceAllocation\",\"resource\":\"Gold\",\"count\":3,\"currentResource\":\"Wood\"}]}",
+      "valid": false,
+      "outcome": "Unsupported",
+      "nodes": 0
+    }
+  ],
+  "credentialsLogged": false,
+  "costAndUsage": "Not measured by current provider trace; no monetary or token-usage claim",
+  "cleanup": "Ephemeral host, dispatcher, manager and SimulationConfig disposed; live editor idle; zero console errors"
+}
+

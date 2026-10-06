@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Failed(Child)" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 08:40:44Z" end-time="2026-10-06 08:40:50Z" duration="6.2415938">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="996" result="Failed" site="Child" start-time="2026-10-06 08:40:44Z" end-time="2026-10-06 08:40:50Z" duration="6.241594" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2123" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="996" result="Failed" site="Child" start-time="2026-10-06 08:40:44Z" end-time="2026-10-06 08:40:50Z" duration="6.135220" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="10180" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2124" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="996" result="Failed" site="Child" start-time="2026-10-06 08:40:44Z" end-time="2026-10-06 08:40:50Z" duration="6.040666" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2125" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="996" result="Failed" site="Child" start-time="2026-10-06 08:40:44Z" end-time="2026-10-06 08:40:50Z" duration="5.930705" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1002" name="CommanderEconomyClarificationTests" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" testcasecount="13" result="Failed" site="Child" start-time="2026-10-06 08:40:44Z" end-time="2026-10-06 08:40:50Z" duration="5.818757" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderEconomyClarification" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1003" name="CountReplies_FillPendingSlotsWithoutProduction" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.CountReplies_FillPendingSlotsWithoutProduction" methodname="CountReplies_FillPendingSlotsWithoutProduction" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1836549594" result="Failed" start-time="2026-10-06 08:40:44Z" end-time="2026-10-06 08:40:47Z" duration="2.116992" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Clarification must retain a detached executable-intent draft, not just text.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderEconomyClarificationTests.CountReplies_FillPendingSlotsWithoutProduction () [0x000ed] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.Chat.cs:20
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+]]></output>
+            </test-case>
+            <test-case id="1005" name="IndependentProduction_SupersedesWorkerClarification" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.IndependentProduction_SupersedesWorkerClarification" methodname="IndependentProduction_SupersedesWorkerClarification" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="748374180" result="Failed" start-time="2026-10-06 08:40:47Z" end-time="2026-10-06 08:40:48Z" duration="1.191452" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderEconomyClarificationTests.IndependentProduction_SupersedesWorkerClarification () [0x000b7] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.Chat.cs:68
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+]]></output>
+            </test-case>
+            <test-case id="1004" name="MultiFieldReplies_CancelOrBoundAmbiguousContinuation" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.MultiFieldReplies_CancelOrBoundAmbiguousContinuation" methodname="MultiFieldReplies_CancelOrBoundAmbiguousContinuation" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="837260238" result="Failed" label="Error" start-time="2026-10-06 08:40:48Z" end-time="2026-10-06 08:40:49Z" duration="1.193387" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.ArgumentException : The actual value must be an IEnumerable
+Parameter name: actual]]></message>
+                <stack-trace><![CDATA[  at NUnit.Framework.Constraints.CollectionConstraint.ApplyTo (System.Object actual) [0x00010] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at NUnit.Framework.Constraints.ContainsConstraint.ApplyTo (System.Object actual) [0x0004c] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x0000e] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression) [0x00001] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at OpenEmpires.Tests.CommanderEconomyClarificationTests.MultiFieldReplies_CancelOrBoundAmbiguousContinuation () [0x0014e] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.Chat.cs:43 
+  at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31 
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44 ]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+]]></output>
+            </test-case>
+            <test-case id="1006" name="ResetRuntimeAndLateReply_CannotResumeOldPending" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.ResetRuntimeAndLateReply_CannotResumeOldPending" methodname="ResetRuntimeAndLateReply_CannotResumeOldPending" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="2033843944" result="Failed" start-time="2026-10-06 08:40:49Z" end-time="2026-10-06 08:40:50Z" duration="1.181650" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderEconomyClarificationTests.ResetRuntimeAndLateReply_CannotResumeOldPending () [0x000c5] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.Chat.cs:80
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 08:49:39Z" end-time="2026-10-06 08:49:43Z" duration="4.162474">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="998" result="Failed" site="Child" start-time="2026-10-06 08:49:39Z" end-time="2026-10-06 08:49:43Z" duration="4.162474" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2125" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="998" result="Failed" site="Child" start-time="2026-10-06 08:49:39Z" end-time="2026-10-06 08:49:43Z" duration="4.061744" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="10180" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2126" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="998" result="Failed" site="Child" start-time="2026-10-06 08:49:39Z" end-time="2026-10-06 08:49:43Z" duration="3.971468" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2127" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="998" result="Failed" site="Child" start-time="2026-10-06 08:49:39Z" end-time="2026-10-06 08:49:43Z" duration="3.862282" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1002" name="CommanderEconomyClarificationTests" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" testcasecount="15" result="Failed" site="Child" start-time="2026-10-06 08:49:40Z" end-time="2026-10-06 08:49:43Z" duration="3.749049" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderEconomyClarification" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1012" name="ProviderProjectionAndSchema_ExposeAllEconomyFields" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.ProviderProjectionAndSchema_ExposeAllEconomyFields" methodname="ProviderProjectionAndSchema_ExposeAllEconomyFields" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1587918183" result="Failed" start-time="2026-10-06 08:49:40Z" end-time="2026-10-06 08:49:41Z" duration="1.644185" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "AllocateWorkers" and containing "workerCounts"
+  But was:  "{"age":1,"population":1,"populationCap":0,"ownedUnitCounts":{"Archer":0,"Knight":0,"Scout":0,"Spearman":0,"Villager":1},"ownedBuildingCounts":{"ArcheryRange":0,"Barracks":0,"House":0,"Mill":0,"Stables":0,"Tower":0,"TownCenter":0},"unitCapabilities":["Villager","Spearman","Archer","Scout","Knight"],"structureCapabilities":["House","Barracks","ArcheryRange","Stables","Mill","Tower","TownCenter"],"resourceCapabilities":["Food","Wood","Gold","Stone"],"strategyCapabilities":["AttackPreparation","DefensivePreparation","EconomicExpansion","MilitaryReinforcement","RangedReinforcement","DefensiveTurtle"],"actionCapabilities":["MoveUnits","ScoutArea","PatrolArea","SetRallyPoint","AttackTarget","DefendArea","RetreatUnits","RepairTarget","ResearchTechnology"],"selectorCapabilities":{"units":["Military","Scout","Villagers","Spearman","Archer","Knight","DamagedMilitary"],"locations":["PlayerBase","WorkedResource","VisibleResource","VisibleEnemy","RelativeToSelectedUnits"]},"knowledge":{"units":[{"id":"unit:0","name":"Villager","age":1,"producer":"building:TownCenter","cost":{"food":50,"wood":0,"gold":0,"stone":0}},{"id":"unit:1","name":"Spearman","age":1,"producer":"building:Barracks","cost":{"food":60,"wood":20,"gold":0,"stone":0}},{"id":"unit:10","name":"Longbowman","age":1,"producer":"building:ArcheryRange","cost":{"food":30,"wood":50,"gold":0,"stone":0}},{"id":"unit:11","name":"Gendarme","age":1,"producer":"building:Stables","cost":{"food":100,"wood":20,"gold":0,"stone":0}},{"id":"unit:12","name":"Landsknecht","age":1,"producer":"building:Barracks","cost":{"food":60,"wood":20,"gold":0,"stone":0}},{"id":"unit:13","name":"Battering Ram","age":3,"producer":"building:SiegeWorkshop","cost":{"food":0,"wood":200,"gold":100,"stone":0}},{"id":"unit:14","name":"Mangonel","age":3,"producer":"building:SiegeWorkshop","cost":{"food":0,"wood":250,"gold":150,"stone":0}},{"id":"unit:15","name":"Trebuchet","age":3,"producer":"building:SiegeWorkshop","cost":{"food":0,"wood":300,"gold":200,"stone":0}},{"id":"unit:16","name":"King","age":2,"producer":"building:Landmark","cost":{"food":150,"wood":0,"gold":150,"stone":0}},{"id":"unit:2","name":"Archer","age":1,"producer":"building:ArcheryRange","cost":{"food":30,"wood":50,"gold":0,"stone":0}},{"id":"unit:3","name":"Horseman","age":1,"producer":"building:Stables","cost":{"food":100,"wood":20,"gold":0,"stone":0}},{"id":"unit:4","name":"Scout","age":1,"producer":"building:Stables","cost":{"food":80,"wood":0,"gold":0,"stone":0}}],"buildings":[],"technologies":[]}}"
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderEconomyClarificationTests.ProviderProjectionAndSchema_ExposeAllEconomyFields () [0x00088] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.Provider.cs:21
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1013" name="SharedTextAndRegressionRoutes_PreserveExistingBehavior" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.SharedTextAndRegressionRoutes_PreserveExistingBehavior" methodname="SharedTextAndRegressionRoutes_PreserveExistingBehavior" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1413382308" result="Failed" label="Error" start-time="2026-10-06 08:49:41Z" end-time="2026-10-06 08:49:43Z" duration="1.967046" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.InvalidOperationException : Sequence contains no elements]]></message>
+                <stack-trace><![CDATA[  at System.Linq.Enumerable.Single[TSource] (System.Collections.Generic.IEnumerable`1[T] source) [0x0004a] in <fe644d7ad1cf499ebe4e7ad937bc03bf>:0 
+  at OpenEmpires.Tests.CommanderEconomyClarificationTests.SharedTextAndRegressionRoutes_PreserveExistingBehavior () [0x00310] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.Provider.cs:47 
+  at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31 
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44 ]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] intent=admitted;goal-submitted=True
+[Commander] intent=admitted;goal-submitted=True
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] Goal #2 submitted: EnsureUnitCount
+[Commander] Goal #2 submitted: EnsureUnitCount
+[Commander] intent=admitted;goal-submitted=True
+[Commander] intent=admitted;goal-submitted=True
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] Goal #3 submitted: EnsureUnitCount
+[Commander] Goal #3 submitted: EnsureUnitCount
+[Commander] intent=admitted;goal-submitted=True
+[Commander] intent=admitted;goal-submitted=True
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] failed-stage=intent-admission;exception=ArgumentException
+[Commander] failed-stage=intent-admission;exception=ArgumentException
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

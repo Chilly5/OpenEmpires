@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="5" result="Failed(Child)" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 08:10:50Z" end-time="2026-10-06 08:10:51Z" duration="1.2208867">
+  <test-suite type="TestSuite" id="2128" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="990" result="Failed" site="Child" start-time="2026-10-06 08:10:50Z" end-time="2026-10-06 08:10:51Z" duration="1.220887" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2117" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="990" result="Failed" site="Child" start-time="2026-10-06 08:10:50Z" end-time="2026-10-06 08:10:51Z" duration="1.218815" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="10180" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2118" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="990" result="Failed" site="Child" start-time="2026-10-06 08:10:50Z" end-time="2026-10-06 08:10:51Z" duration="1.218668" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2119" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="990" result="Failed" site="Child" start-time="2026-10-06 08:10:50Z" end-time="2026-10-06 08:10:51Z" duration="1.218565" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1002" name="CommanderEconomyClarificationTests" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" testcasecount="7" result="Failed" site="Child" start-time="2026-10-06 08:10:50Z" end-time="2026-10-06 08:10:51Z" duration="1.216864" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderEconomyClarification" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1007" name="HumanTakeover_InterruptsWithoutReclaimAfterLease" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.HumanTakeover_InterruptsWithoutReclaimAfterLease" methodname="HumanTakeover_InterruptsWithoutReclaimAfterLease" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="715780286" result="Failed" start-time="2026-10-06 08:10:50Z" end-time="2026-10-06 08:10:50Z" duration="0.242066" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  The Commander intent type is not recognized.
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderEconomyClarificationTests+EconomyFixture.Submit (System.String[] values) [0x00061] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.Execution.cs:179
+at OpenEmpires.Tests.CommanderEconomyClarificationTests.HumanTakeover_InterruptsWithoutReclaimAfterLease () [0x00022] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.Execution.cs:134
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1003" name="QuantityModes_KeepBaselineTransferAndAllMatchingDistinct" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.QuantityModes_KeepBaselineTransferAndAllMatchingDistinct" methodname="QuantityModes_KeepBaselineTransferAndAllMatchingDistinct" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="112843047" result="Failed" start-time="2026-10-06 08:10:50Z" end-time="2026-10-06 08:10:50Z" duration="0.244044" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  The Commander intent type is not recognized.
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderEconomyClarificationTests+EconomyFixture.Submit (System.String[] values) [0x00061] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.Execution.cs:179
+at OpenEmpires.Tests.CommanderEconomyClarificationTests.QuantityModes_KeepBaselineTransferAndAllMatchingDistinct () [0x000b2] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.Execution.cs:21
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1006" name="ReservationPreflight_DistributesCapacityOrIssuesNothing" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.ReservationPreflight_DistributesCapacityOrIssuesNothing" methodname="ReservationPreflight_DistributesCapacityOrIssuesNothing" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1066385461" result="Failed" start-time="2026-10-06 08:10:50Z" end-time="2026-10-06 08:10:51Z" duration="0.242190" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  The Commander intent type is not recognized.
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderEconomyClarificationTests+EconomyFixture.Submit (System.String[] values) [0x00061] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.Execution.cs:179
+at OpenEmpires.Tests.CommanderEconomyClarificationTests.ReservationPreflight_DistributesCapacityOrIssuesNothing () [0x0002d] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.Execution.cs:102
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1005" name="TargetResolution_RejectsUnknownExhaustedUnreachableAndWrongSources" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.TargetResolution_RejectsUnknownExhaustedUnreachableAndWrongSources" methodname="TargetResolution_RejectsUnknownExhaustedUnreachableAndWrongSources" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="2030077167" result="Failed" start-time="2026-10-06 08:10:51Z" end-time="2026-10-06 08:10:51Z" duration="0.242920" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  The Commander intent type is not recognized.
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderEconomyClarificationTests+EconomyFixture.Submit (System.String[] values) [0x00061] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.Execution.cs:179
+at OpenEmpires.Tests.CommanderEconomyClarificationTests.TargetResolution_RejectsUnknownExhaustedUnreachableAndWrongSources () [0x00125] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.Execution.cs:90
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1004" name="WorkerSelection_RespectsOwnershipAuthorityAndCurrentResource" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.WorkerSelection_RespectsOwnershipAuthorityAndCurrentResource" methodname="WorkerSelection_RespectsOwnershipAuthorityAndCurrentResource" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="331034532" result="Failed" start-time="2026-10-06 08:10:51Z" end-time="2026-10-06 08:10:51Z" duration="0.243686" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  The Commander intent type is not recognized.
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderEconomyClarificationTests+EconomyFixture.Submit (System.String[] values) [0x00061] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.Execution.cs:179
+at OpenEmpires.Tests.CommanderEconomyClarificationTests.WorkerSelection_RespectsOwnershipAuthorityAndCurrentResource () [0x000e4] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.Execution.cs:56
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

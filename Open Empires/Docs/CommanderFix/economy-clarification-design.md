@@ -110,7 +110,7 @@ Example:
     "workers": { "state": "Any" },
     "destination": { "resource": "Food", "sourceKind": "Any" }
   },
-  "missingFields": ["count"]
+  "missingFields": ["Count"]
 }
 ```
 

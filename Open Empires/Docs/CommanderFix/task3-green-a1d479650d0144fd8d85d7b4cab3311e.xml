@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="7" result="Passed" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 08:27:25Z" end-time="2026-10-06 08:27:29Z" duration="3.5015195">
+  <test-suite type="TestSuite" id="2128" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="990" result="Passed" start-time="2026-10-06 08:27:25Z" end-time="2026-10-06 08:27:29Z" duration="3.501520" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="2117" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="990" result="Passed" start-time="2026-10-06 08:27:25Z" end-time="2026-10-06 08:27:29Z" duration="3.499043" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="10180" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="2118" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="990" result="Passed" start-time="2026-10-06 08:27:25Z" end-time="2026-10-06 08:27:29Z" duration="3.498812" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="2119" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="990" result="Passed" start-time="2026-10-06 08:27:25Z" end-time="2026-10-06 08:27:29Z" duration="3.498678" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1002" name="CommanderEconomyClarificationTests" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-06 08:27:25Z" end-time="2026-10-06 08:27:29Z" duration="3.489487" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderEconomyClarification" />
+            </properties>
+            <test-case id="1007" name="HumanTakeover_InterruptsWithoutReclaimAfterLease" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.HumanTakeover_InterruptsWithoutReclaimAfterLease" methodname="HumanTakeover_InterruptsWithoutReclaimAfterLease" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="102364567" result="Passed" start-time="2026-10-06 08:27:25Z" end-time="2026-10-06 08:27:26Z" duration="0.244846" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[Commander] Goal #1: status=Blocked owned=0 queued=0; The player took control of a selected worker; this request will not reclaim or replace it.
+]]></output>
+            </test-case>
+            <test-case id="1009" name="InvalidAllocationSchema_RejectsBoundsFieldsAndIncompatibleSources" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.InvalidAllocationSchema_RejectsBoundsFieldsAndIncompatibleSources" methodname="InvalidAllocationSchema_RejectsBoundsFieldsAndIncompatibleSources" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="927065874" result="Passed" start-time="2026-10-06 08:27:26Z" end-time="2026-10-06 08:27:26Z" duration="0.000575" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1003" name="QuantityModes_KeepBaselineTransferAndAllMatchingDistinct" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.QuantityModes_KeepBaselineTransferAndAllMatchingDistinct" methodname="QuantityModes_KeepBaselineTransferAndAllMatchingDistinct" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1641378731" result="Passed" start-time="2026-10-06 08:27:26Z" end-time="2026-10-06 08:27:27Z" duration="0.983047" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[Commander] Goal #1: status=Executing owned=0 queued=0; Waiting for the issued worker command to be processed.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[Commander] Goal #1: status=Executing owned=0 queued=0; Waiting for the issued worker command to be processed.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Completed owned=6 queued=0; The requested worker total is already satisfied.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[Commander] Goal #1: status=Executing owned=0 queued=0; Waiting for the issued worker command to be processed.
+]]></output>
+            </test-case>
+            <test-case id="1006" name="ReservationPreflight_DistributesCapacityOrIssuesNothing" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.ReservationPreflight_DistributesCapacityOrIssuesNothing" methodname="ReservationPreflight_DistributesCapacityOrIssuesNothing" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="20961804" result="Passed" start-time="2026-10-06 08:27:27Z" end-time="2026-10-06 08:27:27Z" duration="0.488281" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Blocked owned=0 queued=0; Only 2 eligible workers are available; 4 are required.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=1 checksum=E0A36539
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=2 checksum=A2D3DF58
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=3 checksum=65045977
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=4 checksum=2734D396
+]]></output>
+            </test-case>
+            <test-case id="1008" name="SemanticMappings_PreserveWorkerAndSourceCriteria" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.SemanticMappings_PreserveWorkerAndSourceCriteria" methodname="SemanticMappings_PreserveWorkerAndSourceCriteria" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="774803740" result="Passed" start-time="2026-10-06 08:27:27Z" end-time="2026-10-06 08:27:27Z" duration="0.001693" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1005" name="TargetResolution_RejectsUnknownExhaustedUnreachableAndWrongSources" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.TargetResolution_RejectsUnknownExhaustedUnreachableAndWrongSources" methodname="TargetResolution_RejectsUnknownExhaustedUnreachableAndWrongSources" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="547328713" result="Passed" start-time="2026-10-06 08:27:27Z" end-time="2026-10-06 08:27:28Z" duration="1.272144" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible Sheep/Food source is known.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible Sheep/Food source is known.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible Sheep/Food source is known.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Blocked owned=0 queued=0; Insufficient legal source capacity or no known reachable route in the bounded candidate search; no workers were assigned.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible Sheep/Food source is known.
+]]></output>
+            </test-case>
+            <test-case id="1004" name="WorkerSelection_RespectsOwnershipAuthorityAndCurrentResource" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.WorkerSelection_RespectsOwnershipAuthorityAndCurrentResource" methodname="WorkerSelection_RespectsOwnershipAuthorityAndCurrentResource" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="2068873257" result="Passed" start-time="2026-10-06 08:27:28Z" end-time="2026-10-06 08:27:29Z" duration="0.496530" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Gold.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

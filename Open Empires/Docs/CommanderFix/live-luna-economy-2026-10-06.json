@@ -1,0 +1,324 @@
+{
+  "stage": "Live Luna / real SubmitMessageAsync with controlled EditMode simulation and ordinary command processing",
+  "date": "2026-10-06",
+  "model": "openai/gpt-6-luna",
+  "httpRequests": 5,
+  "paidRetryCount": 0,
+  "billedTokens": null,
+  "billedCost": null,
+  "scope": "Four explicit requests plus gather food -> four locally; completion proves assignment commands/current targets, not resource deposits or native UI/standalone.",
+  "records": [
+    {
+      "request": "put four idle villagers on food",
+      "initialPending": false,
+      "initialTranscript": "Commander:\r\nOpenRouter Luna configured. Availability is checked on your first request.\r\n\r\nPlayer:\r\nput four idle villagers on food\r\n\r\nCommander:\r\nUnderstood. I will assign exactly 4 selected eligible villagers to food.",
+      "finalTranscript": "Commander:\r\nOpenRouter Luna configured. Availability is checked on your first request.\r\n\r\nPlayer:\r\nput four idle villagers on food\r\n\r\nCommander:\r\nUnderstood. I will assign exactly 4 selected eligible villagers to food.",
+      "success": true,
+      "trace": "utc=2026-10-06T10:04:13.2550827Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=13763\nassistantContent=extracted;characters=191;finish=stop\nsemantic=Request;nodes=1\n",
+      "traceUnchangedAfterLocalCount": true,
+      "allocation": {
+        "Mode": 2,
+        "CountMode": 0,
+        "Count": 4,
+        "Workers": {
+          "State": 1,
+          "CurrentResource": null
+        },
+        "Destination": {
+          "Resource": 0,
+          "SourceKind": 0
+        }
+      },
+      "status": "Completed",
+      "blocker": "The 4 selected workers have matching assignments.",
+      "commandTypes": [
+        "SlaughterSheep"
+      ],
+      "workerIds": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "nativeAssignments": [
+        {
+          "workerId": 1,
+          "state": "MovingToSlaughter",
+          "targetNodeId": -1,
+          "combatTargetId": 5,
+          "sourceKind": "Any"
+        },
+        {
+          "workerId": 2,
+          "state": "MovingToSlaughter",
+          "targetNodeId": -1,
+          "combatTargetId": 5,
+          "sourceKind": "Any"
+        },
+        {
+          "workerId": 3,
+          "state": "MovingToSlaughter",
+          "targetNodeId": -1,
+          "combatTargetId": 5,
+          "sourceKind": "Any"
+        },
+        {
+          "workerId": 4,
+          "state": "MovingToSlaughter",
+          "targetNodeId": -1,
+          "combatTargetId": 5,
+          "sourceKind": "Any"
+        }
+      ],
+      "productionGoals": 0
+    },
+    {
+      "request": "gather food from sheep with four idle villagers",
+      "initialPending": false,
+      "initialTranscript": "Commander:\r\nOpenRouter Luna configured. Availability is checked on your first request.\r\n\r\nPlayer:\r\ngather food from sheep with four idle villagers\r\n\r\nCommander:\r\nUnderstood. I will assign exactly 4 selected eligible villagers to food from sheep.",
+      "finalTranscript": "Commander:\r\nOpenRouter Luna configured. Availability is checked on your first request.\r\n\r\nPlayer:\r\ngather food from sheep with four idle villagers\r\n\r\nCommander:\r\nUnderstood. I will assign exactly 4 selected eligible villagers to food from sheep.",
+      "success": true,
+      "trace": "utc=2026-10-06T10:04:27.3325404Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=1600\nassistantContent=extracted;characters=193;finish=stop\nsemantic=Request;nodes=1\n",
+      "traceUnchangedAfterLocalCount": true,
+      "allocation": {
+        "Mode": 2,
+        "CountMode": 0,
+        "Count": 4,
+        "Workers": {
+          "State": 1,
+          "CurrentResource": null
+        },
+        "Destination": {
+          "Resource": 0,
+          "SourceKind": 1
+        }
+      },
+      "status": "Completed",
+      "blocker": "The 4 selected workers have matching assignments.",
+      "commandTypes": [
+        "SlaughterSheep"
+      ],
+      "workerIds": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "nativeAssignments": [
+        {
+          "workerId": 1,
+          "state": "MovingToSlaughter",
+          "targetNodeId": -1,
+          "combatTargetId": 5,
+          "sourceKind": "Sheep"
+        },
+        {
+          "workerId": 2,
+          "state": "MovingToSlaughter",
+          "targetNodeId": -1,
+          "combatTargetId": 5,
+          "sourceKind": "Sheep"
+        },
+        {
+          "workerId": 3,
+          "state": "MovingToSlaughter",
+          "targetNodeId": -1,
+          "combatTargetId": 5,
+          "sourceKind": "Sheep"
+        },
+        {
+          "workerId": 4,
+          "state": "MovingToSlaughter",
+          "targetNodeId": -1,
+          "combatTargetId": 5,
+          "sourceKind": "Sheep"
+        }
+      ],
+      "productionGoals": 0
+    },
+    {
+      "request": "move three villagers from wood to gold",
+      "initialPending": false,
+      "initialTranscript": "Commander:\r\nOpenRouter Luna configured. Availability is checked on your first request.\r\n\r\nPlayer:\r\nmove three villagers from wood to gold\r\n\r\nCommander:\r\nUnderstood. I will assign exactly 3 selected eligible villagers to gold.",
+      "finalTranscript": "Commander:\r\nOpenRouter Luna configured. Availability is checked on your first request.\r\n\r\nPlayer:\r\nmove three villagers from wood to gold\r\n\r\nCommander:\r\nUnderstood. I will assign exactly 3 selected eligible villagers to gold.",
+      "success": true,
+      "trace": "utc=2026-10-06T10:04:29.2058036Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=1588\nassistantContent=extracted;characters=221;finish=stop\nsemantic=Request;nodes=1\n",
+      "traceUnchangedAfterLocalCount": true,
+      "allocation": {
+        "Mode": 2,
+        "CountMode": 0,
+        "Count": 3,
+        "Workers": {
+          "State": 2,
+          "CurrentResource": 1
+        },
+        "Destination": {
+          "Resource": 2,
+          "SourceKind": 0
+        }
+      },
+      "status": "Completed",
+      "blocker": "The 3 selected workers have matching assignments.",
+      "commandTypes": [
+        "Gather"
+      ],
+      "workerIds": [
+        0,
+        1,
+        2
+      ],
+      "nativeAssignments": [
+        {
+          "workerId": 0,
+          "state": "MovingToGather",
+          "targetNodeId": 2,
+          "combatTargetId": -1,
+          "sourceKind": "Any"
+        },
+        {
+          "workerId": 1,
+          "state": "MovingToGather",
+          "targetNodeId": 2,
+          "combatTargetId": -1,
+          "sourceKind": "Any"
+        },
+        {
+          "workerId": 2,
+          "state": "MovingToGather",
+          "targetNodeId": 2,
+          "combatTargetId": -1,
+          "sourceKind": "Any"
+        }
+      ],
+      "productionGoals": 0
+    },
+    {
+      "request": "gather food with four idle villagers",
+      "initialPending": false,
+      "initialTranscript": "Commander:\r\nOpenRouter Luna configured. Availability is checked on your first request.\r\n\r\nPlayer:\r\ngather food with four idle villagers\r\n\r\nCommander:\r\nUnderstood. I will assign exactly 4 selected eligible villagers to food.",
+      "finalTranscript": "Commander:\r\nOpenRouter Luna configured. Availability is checked on your first request.\r\n\r\nPlayer:\r\ngather food with four idle villagers\r\n\r\nCommander:\r\nUnderstood. I will assign exactly 4 selected eligible villagers to food.",
+      "success": true,
+      "trace": "utc=2026-10-06T10:04:31.0769151Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=1418\nassistantContent=extracted;characters=191;finish=stop\nsemantic=Request;nodes=1\n",
+      "traceUnchangedAfterLocalCount": true,
+      "allocation": {
+        "Mode": 2,
+        "CountMode": 0,
+        "Count": 4,
+        "Workers": {
+          "State": 1,
+          "CurrentResource": null
+        },
+        "Destination": {
+          "Resource": 0,
+          "SourceKind": 0
+        }
+      },
+      "status": "Completed",
+      "blocker": "The 4 selected workers have matching assignments.",
+      "commandTypes": [
+        "SlaughterSheep"
+      ],
+      "workerIds": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "nativeAssignments": [
+        {
+          "workerId": 1,
+          "state": "MovingToSlaughter",
+          "targetNodeId": -1,
+          "combatTargetId": 5,
+          "sourceKind": "Any"
+        },
+        {
+          "workerId": 2,
+          "state": "MovingToSlaughter",
+          "targetNodeId": -1,
+          "combatTargetId": 5,
+          "sourceKind": "Any"
+        },
+        {
+          "workerId": 3,
+          "state": "MovingToSlaughter",
+          "targetNodeId": -1,
+          "combatTargetId": 5,
+          "sourceKind": "Any"
+        },
+        {
+          "workerId": 4,
+          "state": "MovingToSlaughter",
+          "targetNodeId": -1,
+          "combatTargetId": 5,
+          "sourceKind": "Any"
+        }
+      ],
+      "productionGoals": 0
+    },
+    {
+      "request": "gather food",
+      "initialPending": true,
+      "initialTranscript": "Commander:\r\nOpenRouter Luna configured. Availability is checked on your first request.\r\n\r\nPlayer:\r\ngather food\r\n\r\nCommander:\r\nHow many villagers?",
+      "finalTranscript": "Commander:\r\nOpenRouter Luna configured. Availability is checked on your first request.\r\n\r\nPlayer:\r\ngather food\r\n\r\nCommander:\r\nHow many villagers?\r\n\r\nPlayer:\r\nfour\r\n\r\nCommander:\r\nUnderstood. I will assign exactly 4 selected eligible villagers to food.",
+      "success": true,
+      "trace": "utc=2026-10-06T10:04:32.8156438Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=1582\nassistantContent=extracted;characters=238;finish=stop\nsemantic=Clarify;nodes=0\n",
+      "traceUnchangedAfterLocalCount": true,
+      "allocation": {
+        "Mode": 2,
+        "CountMode": 0,
+        "Count": 4,
+        "Workers": {
+          "State": 0,
+          "CurrentResource": null
+        },
+        "Destination": {
+          "Resource": 0,
+          "SourceKind": 0
+        }
+      },
+      "status": "Completed",
+      "blocker": "The 4 selected workers have matching assignments.",
+      "commandTypes": [
+        "SlaughterSheep"
+      ],
+      "workerIds": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "nativeAssignments": [
+        {
+          "workerId": 1,
+          "state": "MovingToSlaughter",
+          "targetNodeId": -1,
+          "combatTargetId": 5,
+          "sourceKind": "Any"
+        },
+        {
+          "workerId": 2,
+          "state": "MovingToSlaughter",
+          "targetNodeId": -1,
+          "combatTargetId": 5,
+          "sourceKind": "Any"
+        },
+        {
+          "workerId": 3,
+          "state": "MovingToSlaughter",
+          "targetNodeId": -1,
+          "combatTargetId": 5,
+          "sourceKind": "Any"
+        },
+        {
+          "workerId": 4,
+          "state": "MovingToSlaughter",
+          "targetNodeId": -1,
+          "combatTargetId": 5,
+          "sourceKind": "Any"
+        }
+      ],
+      "productionGoals": 0
+    }
+  ]
+}

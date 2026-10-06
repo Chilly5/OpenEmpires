@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 10:05:30Z" end-time="2026-10-06 10:05:30Z" duration="0.3771062">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="998" result="Failed" site="Child" start-time="2026-10-06 10:05:30Z" end-time="2026-10-06 10:05:30Z" duration="0.377106" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2125" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="998" result="Failed" site="Child" start-time="2026-10-06 10:05:30Z" end-time="2026-10-06 10:05:30Z" duration="0.366472" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="13564" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2126" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="998" result="Failed" site="Child" start-time="2026-10-06 10:05:30Z" end-time="2026-10-06 10:05:30Z" duration="0.365814" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2127" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="998" result="Failed" site="Child" start-time="2026-10-06 10:05:30Z" end-time="2026-10-06 10:05:30Z" duration="0.365516" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1002" name="CommanderEconomyClarificationTests" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" testcasecount="15" result="Failed" site="Child" start-time="2026-10-06 10:05:30Z" end-time="2026-10-06 10:05:30Z" duration="0.363703" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderEconomyClarification" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1015" name="SourceConstraints_SurviveFallbackDepletionAndClearOnHumanOrder" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.SourceConstraints_SurviveFallbackDepletionAndClearOnHumanOrder" methodname="SourceConstraints_SurviveFallbackDepletionAndClearOnHumanOrder" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1318998312" result="Failed" start-time="2026-10-06 10:05:30Z" end-time="2026-10-06 10:05:30Z" duration="0.347994" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Automatic redirect must not clear the active player constraint.
+  Expected: Sheep
+  But was:  Any
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderEconomyClarificationTests.SourceConstraints_SurviveFallbackDepletionAndClearOnHumanOrder () [0x000fa] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.Source.cs:71
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[SyncCheck] tick=0 PRE-CMD=11808F91 cmds=1
+[SyncCheck] tick=0 POST-CMD=11808F93
+[SyncCheck] tick=0 PRE-AI-EXEC=11808F93 aiCmds=0
+[SyncCheck] INIT tick=1 checksum=9B573E84 systemDetail=11808F93,119BC711,119BC711,119BC711,119BC711,119BC711,119BC711,119BC711,119BC711
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

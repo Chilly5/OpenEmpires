@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Passed" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 08:36:44Z" end-time="2026-10-06 08:36:44Z" duration="0.4257568">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="992" result="Passed" start-time="2026-10-06 08:36:44Z" end-time="2026-10-06 08:36:44Z" duration="0.425757" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="2119" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="992" result="Passed" start-time="2026-10-06 08:36:44Z" end-time="2026-10-06 08:36:44Z" duration="0.417280" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="10180" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="2120" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="992" result="Passed" start-time="2026-10-06 08:36:44Z" end-time="2026-10-06 08:36:44Z" duration="0.416833" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="2121" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="992" result="Passed" start-time="2026-10-06 08:36:44Z" end-time="2026-10-06 08:36:44Z" duration="0.416667" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1002" name="CommanderEconomyClarificationTests" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-06 08:36:44Z" end-time="2026-10-06 08:36:44Z" duration="0.415222" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderEconomyClarification" />
+            </properties>
+            <test-case id="1008" name="SourceConstraints_RoundtripJsonBinaryQueuedAndLegacyDefaults" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.SourceConstraints_RoundtripJsonBinaryQueuedAndLegacyDefaults" methodname="SourceConstraints_RoundtripJsonBinaryQueuedAndLegacyDefaults" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="424200755" result="Passed" start-time="2026-10-06 08:36:44Z" end-time="2026-10-06 08:36:44Z" duration="0.031266" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[CommandSerializer] Failed to parse Gather: Invalid resource source kind.
+[CommandSerializer] Failed to parse Gather: Invalid resource source kind.
+[CommandSerializer] Failed to parse Gather: Invalid resource source kind.
+[CommandSerializer] Failed to parse Gather: Invalid resource source kind.
+[CommandSerializer] Failed to parse Gather: Invalid resource source kind.
+]]></output>
+            </test-case>
+            <test-case id="1009" name="SourceConstraints_SurviveFallbackDepletionAndClearOnHumanOrder" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.SourceConstraints_SurviveFallbackDepletionAndClearOnHumanOrder" methodname="SourceConstraints_SurviveFallbackDepletionAndClearOnHumanOrder" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1292876499" result="Passed" start-time="2026-10-06 08:36:44Z" end-time="2026-10-06 08:36:44Z" duration="0.373373" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=0 PRE-CMD=11808F91 cmds=1
+[SyncCheck] tick=0 POST-CMD=11808F93
+[SyncCheck] tick=0 PRE-AI-EXEC=11808F93 aiCmds=0
+[SyncCheck] INIT tick=1 checksum=B5ECB68B systemDetail=11808F93,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B
+[SyncCheck] tick=2 checksum=8CBF8E84
+[SyncCheck] tick=3 checksum=6392667D
+[SyncCheck] tick=4 checksum=3A653E76
+[SyncCheck] tick=5 checksum=1138166F
+[SyncCheck] tick=6 checksum=E80AEE68
+[SyncCheck] tick=7 checksum=BEDDC661
+[SyncCheck] tick=8 checksum=95B09E5A
+[SyncCheck] tick=9 checksum=6C837653
+[SyncCheck] tick=10 checksum=43564E4C
+[SyncCheck] tick=11 checksum=1A292645
+[SyncCheck] tick=12 checksum=F0FBFE3E
+[SyncCheck] tick=13 checksum=C7CED637
+[SyncCheck] tick=14 checksum=9EA1AE30
+[SyncCheck] tick=15 checksum=75748629
+[SyncCheck] tick=16 checksum=4C475E22
+[SyncCheck] tick=17 checksum=231A361B
+[SyncCheck] tick=18 checksum=F9ED0E14
+[SyncCheck] tick=19 checksum=D0BFE60D
+[SyncCheck] tick=20 checksum=A792BE06
+[SyncCheck] tick=21 checksum=7E6595FF
+[SyncCheck] tick=22 checksum=55386DF8
+[SyncCheck] tick=23 checksum=2C0B45F1
+[SyncCheck] tick=24 checksum=02DE1DEA
+[SyncCheck] tick=25 checksum=D9B0F5E3
+[SyncCheck] tick=26 checksum=B083CDDC
+[SyncCheck] tick=27 checksum=8756A5D5
+[SyncCheck] tick=28 checksum=5E297DCE
+[SyncCheck] tick=29 checksum=34FC55C7
+[SyncCheck] tick=30 checksum=0BCF2DC0
+[SyncCheck] tick=31 checksum=E2A205B9
+[SyncCheck] tick=32 checksum=B974DDB2
+[SyncCheck] tick=33 checksum=9047B5AB
+[SyncCheck] tick=34 checksum=671A8DA4
+[SyncCheck] tick=35 checksum=3DED659D
+[SyncCheck] tick=36 checksum=14C03D96
+[SyncCheck] tick=37 checksum=F9A6D2D6
+[SyncCheck] tick=38 checksum=F3A89F72
+[SyncCheck] tick=39 checksum=063C3AA6
+[SyncCheck] tick=40 checksum=1D3028B2
+[SyncCheck] tick=41 checksum=A2B3F1B5
+[SyncCheck] tick=42 checksum=9A058DF1
+[SyncCheck] tick=43 checksum=6A168D43
+[SyncCheck] tick=44 checksum=8054700C
+[SyncCheck] tick=45 checksum=46EEBE6B
+[SyncCheck] tick=46 checksum=3F847481
+[SyncCheck] tick=47 checksum=BCD5A66B
+[SyncCheck] tick=48 checksum=D651C82B
+[SyncCheck] tick=49 checksum=E1F6E620
+[SyncCheck] tick=50 checksum=5E260429
+[SyncCheck] tick=51 checksum=227C2AC6
+[SyncCheck] tick=52 checksum=432AD5B7
+[SyncCheck] tick=53 checksum=1630115B
+[SyncCheck] tick=54 checksum=1D2AD9D3
+[SyncCheck] tick=55 checksum=D67C32FE
+[SyncCheck] tick=56 checksum=16832D1A
+[SyncCheck] tick=57 checksum=E07DC069
+[SyncCheck] tick=58 checksum=76890169
+[SyncCheck] tick=59 checksum=4D5BD962
+[SyncCheck] tick=60 checksum=242EB15B
+[SyncCheck] tick=61 checksum=FB018954
+[SyncCheck] tick=62 checksum=D1D4614D
+[SyncCheck] tick=63 checksum=A8A73946
+[SyncCheck] tick=64 checksum=7F7A113F
+[SyncCheck] tick=65 checksum=564CE938
+[SyncCheck] tick=66 checksum=2D1FC131
+[SyncCheck] tick=67 checksum=03F2992A
+[SyncCheck] tick=68 checksum=DAC57123
+[SyncCheck] tick=69 checksum=B198491C
+[SyncCheck] tick=70 checksum=886B2115
+[SyncCheck] tick=71 checksum=5F3DF90E
+[SyncCheck] tick=72 checksum=3610D107
+[SyncCheck] tick=73 checksum=0CE3A900
+[SyncCheck] tick=74 checksum=E3B680F9
+[SyncCheck] tick=75 checksum=0A59D8A9
+[SyncCheck] tick=76 checksum=4D3FF8D0
+[SyncCheck] tick=77 checksum=DA6BFFD4
+[SyncCheck] tick=78 checksum=DF790294
+[SyncCheck] tick=79 checksum=A17189F1
+[SyncCheck] tick=80 checksum=E3C122AB
+[SyncCheck] tick=81 checksum=69D35982
+[SyncCheck] tick=82 checksum=F713BB36
+[SyncCheck] tick=83 checksum=E4BE4C68
+[SyncCheck] tick=84 checksum=DECF25D6
+[SyncCheck] tick=85 checksum=6311543F
+[SyncCheck] tick=86 checksum=39E42C38
+[SyncCheck] tick=87 checksum=10B70431
+[SyncCheck] tick=88 checksum=E789DC2A
+[SyncCheck] tick=89 checksum=BE5CB423
+[SyncCheck] tick=90 checksum=952F8C1C
+[SyncCheck] tick=91 checksum=6C026415
+[SyncCheck] tick=92 checksum=42D53C0E
+[SyncCheck] tick=93 checksum=19A81407
+[SyncCheck] tick=94 checksum=370F952C
+[SyncCheck] tick=95 checksum=1CB93823
+[SyncCheck] tick=96 checksum=A0F7F7C2
+[SyncCheck] tick=97 checksum=525B58F6
+[SyncCheck] tick=98 checksum=EB13D06E
+[SyncCheck] tick=99 checksum=CEB6D65B
+[SyncCheck] tick=100 checksum=A589AE54
+[Commander] Goal #1: status=Completed owned=1 queued=0; The 1 selected workers have matching assignments.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

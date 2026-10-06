@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="13" result="Passed" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 08:45:10Z" end-time="2026-10-06 08:45:43Z" duration="33.4107107">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="996" result="Passed" start-time="2026-10-06 08:45:10Z" end-time="2026-10-06 08:45:43Z" duration="33.410711" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="2123" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="996" result="Passed" start-time="2026-10-06 08:45:10Z" end-time="2026-10-06 08:45:43Z" duration="33.309920" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="10180" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="2124" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="996" result="Passed" start-time="2026-10-06 08:45:10Z" end-time="2026-10-06 08:45:43Z" duration="33.211852" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="2125" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="996" result="Passed" start-time="2026-10-06 08:45:10Z" end-time="2026-10-06 08:45:43Z" duration="33.102211" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1002" name="CommanderEconomyClarificationTests" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-10-06 08:45:10Z" end-time="2026-10-06 08:45:43Z" duration="32.987738" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderEconomyClarification" />
+            </properties>
+            <test-case id="1003" name="CountReplies_FillPendingSlotsWithoutProduction" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.CountReplies_FillPendingSlotsWithoutProduction" methodname="CountReplies_FillPendingSlotsWithoutProduction" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1564125908" result="Passed" start-time="2026-10-06 08:45:10Z" end-time="2026-10-06 08:45:15Z" duration="4.554265" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] intent=admitted;goal-submitted=True
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] intent=admitted;goal-submitted=True
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] intent=admitted;goal-submitted=True
+]]></output>
+            </test-case>
+            <test-case id="1011" name="HumanTakeover_InterruptsWithoutReclaimAfterLease" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.HumanTakeover_InterruptsWithoutReclaimAfterLease" methodname="HumanTakeover_InterruptsWithoutReclaimAfterLease" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="120325449" result="Passed" start-time="2026-10-06 08:45:15Z" end-time="2026-10-06 08:45:16Z" duration="1.141223" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[Commander] Goal #1: status=Blocked owned=0 queued=0; The player took control of a selected worker; this request will not reclaim or replace it.
+]]></output>
+            </test-case>
+            <test-case id="1005" name="IndependentProduction_SupersedesWorkerClarification" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.IndependentProduction_SupersedesWorkerClarification" methodname="IndependentProduction_SupersedesWorkerClarification" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1158985975" result="Passed" start-time="2026-10-06 08:45:16Z" end-time="2026-10-06 08:45:17Z" duration="1.255150" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] intent=admitted;goal-submitted=True
+]]></output>
+            </test-case>
+            <test-case id="1015" name="InvalidAllocationSchema_RejectsBoundsFieldsAndIncompatibleSources" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.InvalidAllocationSchema_RejectsBoundsFieldsAndIncompatibleSources" methodname="InvalidAllocationSchema_RejectsBoundsFieldsAndIncompatibleSources" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="129502921" result="Passed" start-time="2026-10-06 08:45:17Z" end-time="2026-10-06 08:45:17Z" duration="0.013674" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1004" name="MultiFieldReplies_CancelOrBoundAmbiguousContinuation" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.MultiFieldReplies_CancelOrBoundAmbiguousContinuation" methodname="MultiFieldReplies_CancelOrBoundAmbiguousContinuation" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1652669743" result="Passed" start-time="2026-10-06 08:45:17Z" end-time="2026-10-06 08:45:23Z" duration="5.551759" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] intent=admitted;goal-submitted=True
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+]]></output>
+            </test-case>
+            <test-case id="1007" name="QuantityModes_KeepBaselineTransferAndAllMatchingDistinct" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.QuantityModes_KeepBaselineTransferAndAllMatchingDistinct" methodname="QuantityModes_KeepBaselineTransferAndAllMatchingDistinct" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1354435314" result="Passed" start-time="2026-10-06 08:45:23Z" end-time="2026-10-06 08:45:27Z" duration="4.011034" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[Commander] Goal #1: status=Executing owned=0 queued=0; Waiting for the issued worker command to be processed.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[Commander] Goal #1: status=Executing owned=0 queued=0; Waiting for the issued worker command to be processed.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Completed owned=6 queued=0; The requested worker total is already satisfied.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[Commander] Goal #1: status=Executing owned=0 queued=0; Waiting for the issued worker command to be processed.
+]]></output>
+            </test-case>
+            <test-case id="1010" name="ReservationPreflight_DistributesCapacityOrIssuesNothing" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.ReservationPreflight_DistributesCapacityOrIssuesNothing" methodname="ReservationPreflight_DistributesCapacityOrIssuesNothing" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1060867210" result="Passed" start-time="2026-10-06 08:45:27Z" end-time="2026-10-06 08:45:29Z" duration="2.231613" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Blocked owned=0 queued=0; Only 2 eligible workers are available; 4 are required.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=1 checksum=E0A36539
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=2 checksum=A2D3DF58
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=3 checksum=65045977
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=4 checksum=2734D396
+]]></output>
+            </test-case>
+            <test-case id="1006" name="ResetRuntimeAndLateReply_CannotResumeOldPending" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.ResetRuntimeAndLateReply_CannotResumeOldPending" methodname="ResetRuntimeAndLateReply_CannotResumeOldPending" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="311739268" result="Passed" start-time="2026-10-06 08:45:29Z" end-time="2026-10-06 08:45:30Z" duration="1.214620" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+]]></output>
+            </test-case>
+            <test-case id="1014" name="SemanticMappings_PreserveWorkerAndSourceCriteria" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.SemanticMappings_PreserveWorkerAndSourceCriteria" methodname="SemanticMappings_PreserveWorkerAndSourceCriteria" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1645262436" result="Passed" start-time="2026-10-06 08:45:30Z" end-time="2026-10-06 08:45:30Z" duration="0.058166" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1012" name="SourceConstraints_RoundtripJsonBinaryQueuedAndLegacyDefaults" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.SourceConstraints_RoundtripJsonBinaryQueuedAndLegacyDefaults" methodname="SourceConstraints_RoundtripJsonBinaryQueuedAndLegacyDefaults" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="2144385285" result="Passed" start-time="2026-10-06 08:45:30Z" end-time="2026-10-06 08:45:30Z" duration="0.079265" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[CommandSerializer] Failed to parse Gather: Invalid resource source kind.
+[CommandSerializer] Failed to parse Gather: Invalid resource source kind.
+[CommandSerializer] Failed to parse Gather: Invalid resource source kind.
+[CommandSerializer] Failed to parse Gather: Invalid resource source kind.
+[CommandSerializer] Failed to parse Gather: Invalid resource source kind.
+]]></output>
+            </test-case>
+            <test-case id="1013" name="SourceConstraints_SurviveFallbackDepletionAndClearOnHumanOrder" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.SourceConstraints_SurviveFallbackDepletionAndClearOnHumanOrder" methodname="SourceConstraints_SurviveFallbackDepletionAndClearOnHumanOrder" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="101583958" result="Passed" start-time="2026-10-06 08:45:30Z" end-time="2026-10-06 08:45:36Z" duration="5.751163" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=0 PRE-CMD=11808F91 cmds=1
+[SyncCheck] tick=0 POST-CMD=11808F93
+[SyncCheck] tick=0 PRE-AI-EXEC=11808F93 aiCmds=0
+[SyncCheck] INIT tick=1 checksum=B5ECB68B systemDetail=11808F93,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B
+[SyncCheck] tick=2 checksum=8CBF8E84
+[SyncCheck] tick=3 checksum=6392667D
+[SyncCheck] tick=4 checksum=3A653E76
+[SyncCheck] tick=5 checksum=1138166F
+[SyncCheck] tick=6 checksum=E80AEE68
+[SyncCheck] tick=7 checksum=BEDDC661
+[SyncCheck] tick=8 checksum=95B09E5A
+[SyncCheck] tick=9 checksum=6C837653
+[SyncCheck] tick=10 checksum=43564E4C
+[SyncCheck] tick=11 checksum=1A292645
+[SyncCheck] tick=12 checksum=F0FBFE3E
+[SyncCheck] tick=13 checksum=C7CED637
+[SyncCheck] tick=14 checksum=9EA1AE30
+[SyncCheck] tick=15 checksum=75748629
+[SyncCheck] tick=16 checksum=4C475E22
+[SyncCheck] tick=17 checksum=231A361B
+[SyncCheck] tick=18 checksum=F9ED0E14
+[SyncCheck] tick=19 checksum=D0BFE60D
+[SyncCheck] tick=20 checksum=A792BE06
+[SyncCheck] tick=21 checksum=7E6595FF
+[SyncCheck] tick=22 checksum=55386DF8
+[SyncCheck] tick=23 checksum=2C0B45F1
+[SyncCheck] tick=24 checksum=02DE1DEA
+[SyncCheck] tick=25 checksum=D9B0F5E3
+[SyncCheck] tick=26 checksum=B083CDDC
+[SyncCheck] tick=27 checksum=8756A5D5
+[SyncCheck] tick=28 checksum=5E297DCE
+[SyncCheck] tick=29 checksum=34FC55C7
+[SyncCheck] tick=30 checksum=0BCF2DC0
+[SyncCheck] tick=31 checksum=E2A205B9
+[SyncCheck] tick=32 checksum=B974DDB2
+[SyncCheck] tick=33 checksum=9047B5AB
+[SyncCheck] tick=34 checksum=671A8DA4
+[SyncCheck] tick=35 checksum=3DED659D
+[SyncCheck] tick=36 checksum=14C03D96
+[SyncCheck] tick=37 checksum=F9A6D2D6
+[SyncCheck] tick=38 checksum=F3A89F72
+[SyncCheck] tick=39 checksum=063C3AA6
+[SyncCheck] tick=40 checksum=1D3028B2
+[SyncCheck] tick=41 checksum=A2B3F1B5
+[SyncCheck] tick=42 checksum=9A058DF1
+[SyncCheck] tick=43 checksum=6A168D43
+[SyncCheck] tick=44 checksum=8054700C
+[SyncCheck] tick=45 checksum=46EEBE6B
+[SyncCheck] tick=46 checksum=3F847481
+[SyncCheck] tick=47 checksum=BCD5A66B
+[SyncCheck] tick=48 checksum=D651C82B
+[SyncCheck] tick=49 checksum=E1F6E620
+[SyncCheck] tick=50 checksum=5E260429
+[SyncCheck] tick=51 checksum=227C2AC6
+[SyncCheck] tick=52 checksum=432AD5B7
+[SyncCheck] tick=53 checksum=1630115B
+[SyncCheck] tick=54 checksum=1D2AD9D3
+[SyncCheck] tick=55 checksum=D67C32FE
+[SyncCheck] tick=56 checksum=16832D1A
+[SyncCheck] tick=57 checksum=E07DC069
+[SyncCheck] tick=58 checksum=76890169
+[SyncCheck] tick=59 checksum=4D5BD962
+[SyncCheck] tick=60 checksum=242EB15B
+[SyncCheck] tick=61 checksum=FB018954
+[SyncCheck] tick=62 checksum=D1D4614D
+[SyncCheck] tick=63 checksum=A8A73946
+[SyncCheck] tick=64 checksum=7F7A113F
+[SyncCheck] tick=65 checksum=564CE938
+[SyncCheck] tick=66 checksum=2D1FC131
+[SyncCheck] tick=67 checksum=03F2992A
+[SyncCheck] tick=68 checksum=DAC57123
+[SyncCheck] tick=69 checksum=B198491C
+[SyncCheck] tick=70 checksum=886B2115
+[SyncCheck] tick=71 checksum=5F3DF90E
+[SyncCheck] tick=72 checksum=3610D107
+[SyncCheck] tick=73 checksum=0CE3A900
+[SyncCheck] tick=74 checksum=E3B680F9
+[SyncCheck] tick=75 checksum=0A59D8A9
+[SyncCheck] tick=76 checksum=4D3FF8D0
+[SyncCheck] tick=77 checksum=DA6BFFD4
+[SyncCheck] tick=78 checksum=DF790294
+[SyncCheck] tick=79 checksum=A17189F1
+[SyncCheck] tick=80 checksum=E3C122AB
+[SyncCheck] tick=81 checksum=69D35982
+[SyncCheck] tick=82 checksum=F713BB36
+[SyncCheck] tick=83 checksum=E4BE4C68
+[SyncCheck] tick=84 checksum=DECF25D6
+[SyncCheck] tick=85 checksum=6311543F
+[SyncCheck] tick=86 checksum=39E42C38
+[SyncCheck] tick=87 checksum=10B70431
+[SyncCheck] tick=88 checksum=E789DC2A
+[SyncCheck] tick=89 checksum=BE5CB423
+[SyncCheck] tick=90 checksum=952F8C1C
+[SyncCheck] tick=91 checksum=6C026415
+[SyncCheck] tick=92 checksum=42D53C0E
+[SyncCheck] tick=93 checksum=19A81407
+[SyncCheck] tick=94 checksum=370F952C
+[SyncCheck] tick=95 checksum=1CB93823
+[SyncCheck] tick=96 checksum=A0F7F7C2
+[SyncCheck] tick=97 checksum=525B58F6
+[SyncCheck] tick=98 checksum=EB13D06E
+[SyncCheck] tick=99 checksum=CEB6D65B
+[SyncCheck] tick=100 checksum=A589AE54
+[Commander] Goal #1: status=Completed owned=1 queued=0; The 1 selected workers have matching assignments.
+[SyncCheck] tick=0 PRE-CMD=11808F91 cmds=2
+[SyncCheck] tick=0 POST-CMD=11808F92
+[SyncCheck] tick=0 PRE-AI-EXEC=11808F92 aiCmds=0
+[SyncCheck] INIT tick=1 checksum=CECBBE3A systemDetail=11808F92,11A0961A,11A0961A,11A0961A,11A0961A,11A0961A,11A0961A,11A0961A,11A0961A
+[SyncCheck] tick=2 checksum=64A44CD1
+[SyncCheck] tick=3 checksum=FA7CDB68
+[SyncCheck] tick=4 checksum=905569FF
+[SyncCheck] tick=5 checksum=262DF896
+[SyncCheck] tick=6 checksum=BC06872D
+[SyncCheck] tick=7 checksum=51DF15C4
+[SyncCheck] tick=8 checksum=E7B7A45B
+[SyncCheck] tick=9 checksum=7D9032F2
+[SyncCheck] tick=10 checksum=1368C189
+[SyncCheck] tick=11 checksum=A9415020
+[SyncCheck] tick=12 checksum=3F19DEB7
+[SyncCheck] tick=13 checksum=D4F26D4E
+[SyncCheck] tick=14 checksum=6ACAFBE5
+[SyncCheck] tick=15 checksum=00A38A7C
+[SyncCheck] tick=16 checksum=967C1913
+[SyncCheck] tick=17 checksum=2C54A7AA
+[SyncCheck] tick=18 checksum=C22D3641
+[SyncCheck] tick=19 checksum=0CA627DF
+[SyncCheck] tick=20 checksum=817B7943
+[SyncCheck] tick=21 checksum=936E5525
+[SyncCheck] tick=22 checksum=1385EBC3
+[SyncCheck] tick=23 checksum=2BEB8A3E
+[SyncCheck] tick=24 checksum=9B06ED56
+[SyncCheck] tick=25 checksum=1F3FD1CB
+[SyncCheck] tick=26 checksum=76FDF45D
+[SyncCheck] tick=27 checksum=E2480DED
+[SyncCheck] tick=28 checksum=32254EB9
+[SyncCheck] tick=29 checksum=8F5559C6
+[SyncCheck] tick=30 checksum=252DE85D
+[SyncCheck] tick=31 checksum=BB0676F4
+[SyncCheck] tick=32 checksum=50DF058B
+[SyncCheck] tick=33 checksum=E6B79422
+[SyncCheck] tick=34 checksum=7C9022B9
+[SyncCheck] tick=35 checksum=1268B150
+[SyncCheck] tick=36 checksum=A8413FE7
+[SyncCheck] tick=37 checksum=3E19CE7E
+[SyncCheck] tick=38 checksum=22E27C35
+[SyncCheck] tick=39 checksum=A493EAC6
+[SyncCheck] tick=40 checksum=F3AA83DE
+[SyncCheck] tick=41 checksum=C5DE408D
+[SyncCheck] tick=42 checksum=21E0D85F
+[SyncCheck] tick=43 checksum=87612216
+[SyncCheck] tick=44 checksum=F4BCD16F
+[SyncCheck] tick=45 checksum=B3123F44
+[SyncCheck] tick=46 checksum=48EACDDB
+[SyncCheck] tick=47 checksum=9B7EAB4F
+[SyncCheck] tick=48 checksum=64B92CE5
+[SyncCheck] tick=49 checksum=D2AEA70C
+[SyncCheck] tick=50 checksum=EEE06063
+[SyncCheck] tick=51 checksum=18F75E99
+[SyncCheck] tick=52 checksum=BC84FA89
+[SyncCheck] tick=53 checksum=088FBA4F
+[SyncCheck] tick=54 checksum=04579ECD
+[SyncCheck] tick=55 checksum=FB9E9D10
+[SyncCheck] tick=56 checksum=1C76374B
+[SyncCheck] tick=56 PRE-CMD=19028F93 cmds=1
+[SyncCheck] tick=56 POST-CMD=19028F91
+[SyncCheck] tick=56 PRE-AI-EXEC=19028F91 aiCmds=0
+[SyncCheck] tick=57 checksum=C965447C
+[SyncCheck] tick=0 PRE-CMD=492DD370 cmds=1
+[SyncCheck] tick=0 POST-CMD=49D6ED7C
+[SyncCheck] tick=0 PRE-AI-EXEC=49D6ED7C aiCmds=0
+[SyncCheck] INIT tick=1 checksum=AC17F927 systemDetail=49D6ED7C,495819FD,495819FD,495819FD,495819FD,495819FD,495819FD,495819FD,495819FD
+[SyncCheck] tick=0 PRE-CMD=11808F91 cmds=1
+[SyncCheck] tick=0 POST-CMD=11808F93
+[SyncCheck] tick=0 PRE-AI-EXEC=11808F93 aiCmds=0
+[SyncCheck] INIT tick=1 checksum=DF364DAA systemDetail=11808F93,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B
+[SyncCheck] tick=0 PRE-CMD=11808F91 cmds=1
+[SyncCheck] tick=0 POST-CMD=11808F93
+[SyncCheck] tick=0 PRE-AI-EXEC=11808F93 aiCmds=0
+[SyncCheck] INIT tick=1 checksum=DF364DAA systemDetail=11808F93,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B
+]]></output>
+            </test-case>
+            <test-case id="1009" name="TargetResolution_RejectsUnknownExhaustedUnreachableAndWrongSources" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.TargetResolution_RejectsUnknownExhaustedUnreachableAndWrongSources" methodname="TargetResolution_RejectsUnknownExhaustedUnreachableAndWrongSources" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1796473259" result="Passed" start-time="2026-10-06 08:45:36Z" end-time="2026-10-06 08:45:41Z" duration="4.979339" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible Sheep/Food source is known.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible Sheep/Food source is known.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible Sheep/Food source is known.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Blocked owned=0 queued=0; Insufficient legal source capacity or no known reachable route in the bounded candidate search; no workers were assigned.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible Sheep/Food source is known.
+]]></output>
+            </test-case>
+            <test-case id="1008" name="WorkerSelection_RespectsOwnershipAuthorityAndCurrentResource" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.WorkerSelection_RespectsOwnershipAuthorityAndCurrentResource" methodname="WorkerSelection_RespectsOwnershipAuthorityAndCurrentResource" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="25206006" result="Passed" start-time="2026-10-06 08:45:41Z" end-time="2026-10-06 08:45:43Z" duration="1.995960" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Gold.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

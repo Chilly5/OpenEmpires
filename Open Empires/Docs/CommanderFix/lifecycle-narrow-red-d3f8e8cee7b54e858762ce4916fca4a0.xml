@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 10:14:57Z" end-time="2026-10-06 10:14:58Z" duration="0.2788283">
+  <test-suite type="TestSuite" id="2380" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="194" result="Failed" site="Child" start-time="2026-10-06 10:14:57Z" end-time="2026-10-06 10:14:58Z" duration="0.278828" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2372" name="OpenEmpires.PlayModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.PlayModeTests.dll" runstate="Runnable" testcasecount="194" result="Failed" site="Child" start-time="2026-10-06 10:14:57Z" end-time="2026-10-06 10:14:58Z" duration="0.276368" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="13564" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2373" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="194" result="Failed" site="Child" start-time="2026-10-06 10:14:57Z" end-time="2026-10-06 10:14:58Z" duration="0.274984" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2374" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="194" result="Failed" site="Child" start-time="2026-10-06 10:14:57Z" end-time="2026-10-06 10:14:58Z" duration="0.270987" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="2252" name="CommanderPhase4D1HostPlayModeTests" fullname="OpenEmpires.Tests.CommanderPhase4D1HostPlayModeTests" classname="OpenEmpires.Tests.CommanderPhase4D1HostPlayModeTests" runstate="Runnable" testcasecount="11" result="Failed" site="Child" start-time="2026-10-06 10:14:57Z" end-time="2026-10-06 10:14:58Z" duration="0.266944" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase4D1Host" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="2261" name="AppliedLifecycleMutation_InvalidatesInFlightInterpretation" fullname="OpenEmpires.Tests.CommanderPhase4D1HostPlayModeTests.AppliedLifecycleMutation_InvalidatesInFlightInterpretation" methodname="AppliedLifecycleMutation_InvalidatesInFlightInterpretation" classname="OpenEmpires.Tests.CommanderPhase4D1HostPlayModeTests" runstate="Runnable" seed="1618818992" result="Failed" start-time="2026-10-06 10:14:57Z" end-time="2026-10-06 10:14:58Z" duration="0.262642" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: Paused
+  But was:  Active
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4D1HostPlayModeTests+<AppliedLifecycleMutation_InvalidatesInFlightInterpretation>d__19.MoveNext () [0x000cd] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\PlayMode\CommanderPhase4D1HostPlayModeTests.cs:229
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
