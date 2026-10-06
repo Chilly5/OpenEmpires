@@ -68,6 +68,10 @@ namespace OpenEmpires
                 return ValidateEnsureUnitCount(ensure, simulation.Config.MaxPopulation);
             if (intent is SetResourceAllocationIntent allocation)
                 return ValidateResourceAllocation(allocation, simulation.Config.MaxPopulation);
+            if (intent is AllocateWorkersIntent workers)
+                return workers.Allocation != null && workers.Allocation.IsValid(simulation.Config.MaxPopulation)
+                    ? CommanderIntentValidationResult.Valid()
+                    : Invalid(CommanderIntentErrorCode.AmountOutOfRange, "Invalid worker count or allocation criteria.");
             if (intent is BuildStructureIntent build)
                 return ValidateBuildStructure(build);
             if (intent is ReachAgeIntent reachAge)

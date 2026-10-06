@@ -1,6 +1,6 @@
 # Targeted economy and clarification repair — design specification
 
-Date: 2026-10-06. Status: architecture and concrete specification approved. Implementation plan awaits review. Not implemented or verified yet.
+Date: 2026-10-06. Status: implementation approved with user amendments: ordinary counted orders use SelectedCount; native/network source restriction is conditional on runtime proof. Execution in progress, not verified yet.
 
 ## 1. Purpose and boundary
 
@@ -44,7 +44,8 @@ These are semantic enums/projections, not a duplicate canonical gameplay databas
 
 | Player meaning | Mode and deterministic behavior |
 | --- | --- |
-| Put 4 villagers on food, no explicit worker eligibility | TargetTotal/Exact: ensure at least four owned workers assigned to matching destination, using the existing desired-total convention. Do not remove surplus workers. |
+| Put 4 villagers on food, no explicit worker eligibility | SelectedCount/Exact: select and assign exactly four eligible workers for this request, even when six workers are already gathering Food. |
+| Make sure I have / keep 4 villagers on food | TargetTotal/Exact: desired total, using the existing at-least convention; do not remove surplus workers. |
 | Put 4 more villagers on food | Additional/Exact: assign four additional eligible workers not already assigned to the matching destination. Capture the baseline once game-side; retries cannot repeatedly add four. |
 | Put four idle villagers on food | SelectedCount/Exact: select and assign four eligible idle workers; existing busy Food workers cannot satisfy the requested four idle workers. |
 | Move three villagers from wood to gold | SelectedCount/Exact with Gathering/Wood: transfer three matching workers, not Food workers or arbitrary idle workers. |
@@ -52,7 +53,7 @@ These are semantic enums/projections, not a duplicate canonical gameplay databas
 | Put more villagers on food | Additional/Exact draft with missing count: ask how many additional villagers. Do not invent a quantity. |
 | Send idle villagers to work | AllMatching Idle draft with missing destination: ask which resource. Preserve the all-idle meaning; do not invent an economy distribution. |
 
-Additional and SelectedCount do not select workers already assigned to the same destination/source; a different requested Food subtype can require a transfer. TargetTotal counts living owned active assignments to the requested destination, including assignments it must not take over. It never gains control of those existing workers merely by counting them.
+Additional excludes workers already assigned to the same destination/source. SelectedCount selects exactly the requested number of eligible workers, and may reassign eligible workers already on that destination; it never becomes a target-total no-op. A different requested Food subtype can require a transfer. TargetTotal counts living owned active assignments to the requested destination, including assignments it must not take over. It never gains control of those existing workers merely by counting them.
 
 AllMatching captures its eligible set once, not an ongoing policy that commandeers future idle workers. If the matching set exceeds the bound, block and explain the bound rather than silently truncating it. An empty set produces an explicit no-eligible-workers result, not a numeric clarification.
 
@@ -86,9 +87,9 @@ Model farm capacity and reserved assignments during preflight so workers can be 
 
 ### Execution-time source fidelity
 
-Current native gather/retarget code can redirect by coarse ResourceType. Selecting a Sheep/Farm node beforehand alone is therefore insufficient.
+Current native gather/retarget code can redirect by coarse ResourceType. First implement the semantic path with existing ordinary gather/slaughter commands, then test runtime source fidelity, including depletion/retargeting. Static suspicion alone does not authorize native/network changes.
 
-Carry an optional bounded source restriction through the existing gather/slaughter command path and the active worker order. Default unrestricted behavior preserves legacy/manual commands. Restricted orders filter execution-time redirection, farm substitution, depletion retargeting and sheep-to-carcass continuation by the same canonical source projection. If no matching legal source remains, stop/wait with an explicit blocker rather than silently using berries instead of sheep.
+Only if runtime evidence proves existing machinery cannot preserve an explicit source constraint, carry the smallest necessary bounded restriction through the existing gather/slaughter command path and active worker order. Default unrestricted behavior preserves legacy/manual commands. Restricted orders filter execution-time redirection, farm substitution, depletion retargeting and sheep-to-carcass continuation by the same canonical source projection. If no matching legal source remains, stop/wait with an explicit blocker rather than silently using berries instead of sheep.
 
 This is a narrowly guarded extension of existing commands, not a new direct-mutation path or global gather-policy rewrite. Any added command field must roundtrip through both existing serializer forms and queued-command handling; maintain an explicit compatible default for legacy payloads. Clear/replace restrictions when a later human order takes control, following normal queue/override semantics. If the existing binary protocol needs version handling, make that change explicit and cover it; never silently reinterpret old packets. These changes trigger the final shared-infrastructure regression gate.
 
@@ -104,7 +105,7 @@ Example:
   "message": "How many villagers should I put on food?",
   "pending": {
     "type": "AllocateWorkers",
-    "mode": "TargetTotal",
+    "mode": "SelectedCount",
     "countMode": "Exact",
     "workers": { "state": "Any" },
     "destination": { "resource": "Food", "sourceKind": "Any" }

@@ -28,7 +28,8 @@ namespace OpenEmpires
         SetResourceAllocation,
         BuildStructure,
         ReachAge,
-        CapabilityAction
+        CapabilityAction,
+        AllocateWorkers
     }
 
     public enum CommanderConstraintType

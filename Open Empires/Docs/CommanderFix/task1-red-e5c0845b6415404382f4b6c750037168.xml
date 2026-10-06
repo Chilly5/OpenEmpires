@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 07:59:48Z" end-time="2026-10-06 07:59:48Z" duration="0.0353699">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="985" result="Failed" site="Child" start-time="2026-10-06 07:59:48Z" end-time="2026-10-06 07:59:48Z" duration="0.035370" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2112" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="985" result="Failed" site="Child" start-time="2026-10-06 07:59:48Z" end-time="2026-10-06 07:59:48Z" duration="0.027577" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="10180" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2113" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="985" result="Failed" site="Child" start-time="2026-10-06 07:59:48Z" end-time="2026-10-06 07:59:48Z" duration="0.027238" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2114" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="985" result="Failed" site="Child" start-time="2026-10-06 07:59:48Z" end-time="2026-10-06 07:59:48Z" duration="0.027091" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1002" name="CommanderEconomyClarificationTests" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-06 07:59:48Z" end-time="2026-10-06 07:59:48Z" duration="0.025684" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderEconomyClarification" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1004" name="InvalidAllocationSchema_RejectsBoundsFieldsAndIncompatibleSources" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.InvalidAllocationSchema_RejectsBoundsFieldsAndIncompatibleSources" methodname="InvalidAllocationSchema_RejectsBoundsFieldsAndIncompatibleSources" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1675058198" result="Failed" start-time="2026-10-06 07:59:48Z" end-time="2026-10-06 07:59:48Z" duration="0.014512" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderEconomyClarificationTests.InvalidAllocationSchema_RejectsBoundsFieldsAndIncompatibleSources () [0x002c9] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.cs:68
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1003" name="SemanticMappings_PreserveWorkerAndSourceCriteria" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.SemanticMappings_PreserveWorkerAndSourceCriteria" methodname="SemanticMappings_PreserveWorkerAndSourceCriteria" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="94275783" result="Failed" start-time="2026-10-06 07:59:48Z" end-time="2026-10-06 07:59:48Z" duration="0.000868" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  {"type":"AllocateWorkers","mode":"SelectedCount","countMode":"Exact","count":4,"workers":{"state":"Any"},"destination":{"resource":"Food","sourceKind":"Any"}}
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderEconomyClarificationTests.SemanticMappings_PreserveWorkerAndSourceCriteria () [0x001eb] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.cs:29
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

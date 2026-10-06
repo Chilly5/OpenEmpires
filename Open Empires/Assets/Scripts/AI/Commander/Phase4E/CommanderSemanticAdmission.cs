@@ -52,6 +52,11 @@ namespace OpenEmpires
                     dto.amount = node.Count.Value;
                     break;
 
+                case CommanderSemanticNodeType.AllocateWorkers:
+                    if (node.WorkerAllocation == null || !node.WorkerAllocation.IsValid(context.MaximumPopulation)) return false;
+                    dto = CommanderIntentDtoCodec.FromIntent(new AllocateWorkersIntent(context.PlayerId, node.WorkerAllocation));
+                    break;
+
                 case CommanderSemanticNodeType.ReachAge:
                     if (!node.AgeTarget.HasValue || node.UnitType.HasValue || node.BuildingType.HasValue
                         || node.ResourceType.HasValue || node.Count.HasValue
