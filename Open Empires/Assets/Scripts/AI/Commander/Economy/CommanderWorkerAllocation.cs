@@ -51,17 +51,7 @@ namespace OpenEmpires
             }
             else if (Count.HasValue || Mode != CommanderWorkerAllocationMode.SelectedCount
                 || Workers.State == CommanderWorkerState.Any) return false;
-            switch (Destination.SourceKind)
-            {
-                case ResourceSourceKind.Any: return true;
-                case ResourceSourceKind.Sheep:
-                case ResourceSourceKind.Berries:
-                case ResourceSourceKind.Farm: return Destination.Resource == ResourceType.Food;
-                case ResourceSourceKind.Tree: return Destination.Resource == ResourceType.Wood;
-                case ResourceSourceKind.GoldMine: return Destination.Resource == ResourceType.Gold;
-                case ResourceSourceKind.StoneMine: return Destination.Resource == ResourceType.Stone;
-                default: return false;
-            }
+            return ResourceSourceRules.IsCompatible(Destination.Resource, Destination.SourceKind);
         }
     }
 }

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace OpenEmpires
@@ -11,6 +13,7 @@ namespace OpenEmpires
 
         public static (string commandType, string payload) ToJson(ICommand command)
         {
+            ValidateSourceKind(SourceKindOf(command));
             string commandType = command.Type.ToString();
             string payload;
 
@@ -239,7 +242,7 @@ namespace OpenEmpires
         private static GatherCommand ParseGatherCommand(string payload, int playerId)
         {
             var data = JsonUtility.FromJson<GatherPayload>(payload);
-            var cmd = new GatherCommand(playerId, data.unitIds, data.resourceNodeId);
+            var cmd = new GatherCommand(playerId, data.unitIds, data.resourceNodeId, ReadJsonSourceKind(payload));
             cmd.IsQueued = data.isQueued;
             return cmd;
         }
@@ -477,6 +480,7 @@ namespace OpenEmpires
             public int[] unitIds;
             public int resourceNodeId;
             public bool isQueued;
+            public int sourceKind;
 
             public GatherPayload() { }
 
@@ -484,6 +488,7 @@ namespace OpenEmpires
             {
                 unitIds = cmd.UnitIds;
                 resourceNodeId = cmd.ResourceNodeId;
+                sourceKind = (int)cmd.SourceKind;
                 isQueued = cmd.IsQueued;
             }
         }
@@ -910,6 +915,7 @@ namespace OpenEmpires
             public int[] villagerIds;
             public int sheepUnitId;
             public bool isQueued;
+            public int sourceKind;
 
             public SlaughterSheepPayload() { }
 
@@ -917,6 +923,7 @@ namespace OpenEmpires
             {
                 villagerIds = cmd.VillagerIds;
                 sheepUnitId = cmd.SheepUnitId;
+                sourceKind = (int)cmd.SourceKind;
                 isQueued = cmd.IsQueued;
             }
         }
@@ -929,6 +936,7 @@ namespace OpenEmpires
                 PlayerId = playerId,
                 VillagerIds = data.villagerIds,
                 SheepUnitId = data.sheepUnitId,
+                SourceKind = ReadJsonSourceKind(payload),
                 IsQueued = data.isQueued
             };
         }
@@ -1201,9 +1209,15 @@ namespace OpenEmpires
 
         public static byte[] Serialize(List<ICommand> commands, int tick)
         {
+            if (tick < 0) throw new InvalidDataException("Simulation ticks must be nonnegative.");
+            bool restricted = commands.Any(c => SourceKindOf(c) != ResourceSourceKind.Any);
+            foreach (var command in commands) ValidateSourceKind(SourceKindOf(command));
             using (var ms = new MemoryStream())
             using (var w = new BinaryWriter(ms))
             {
+                // Legacy bytes are unchanged for an unrestricted batch. Old receivers
+                // cannot enforce restrictions: versioned batches require updated peers.
+                if (restricted) { w.Write(int.MinValue); w.Write((byte)1); }
                 w.Write(tick);
                 w.Write(commands.Count);
                 foreach (var cmd in commands)
@@ -1236,6 +1250,7 @@ namespace OpenEmpires
                             WriteIntArray(w, gather.UnitIds);
                             w.Write(gather.ResourceNodeId);
                             w.Write(gather.IsQueued);
+                            if (restricted) w.Write((byte)gather.SourceKind);
                             break;
                         case StopCommand stop:
                             WriteIntArray(w, stop.UnitIds);
@@ -1360,6 +1375,7 @@ namespace OpenEmpires
                             WriteIntArray(w, slaughter.VillagerIds);
                             w.Write(slaughter.SheepUnitId);
                             w.Write(slaughter.IsQueued);
+                            if (restricted) w.Write((byte)slaughter.SourceKind);
                             break;
                         case FollowUnitCommand follow:
                             WriteIntArray(w, follow.UnitIds);
@@ -1419,7 +1435,16 @@ namespace OpenEmpires
             using (var r = new BinaryReader(ms))
             {
                 int tick = r.ReadInt32();
+                bool restricted = tick == int.MinValue;
+                if (restricted)
+                {
+                    if (r.ReadByte() != 1) throw new InvalidDataException("Unsupported restricted command version.");
+                    tick = r.ReadInt32();
+                }
+                if (tick < 0) throw new InvalidDataException("Invalid simulation tick.");
                 int count = r.ReadInt32();
+                if (count < 0 || count > (ms.Length - ms.Position) / 5)
+                    throw new InvalidDataException("Invalid command count.");
                 for (int i = 0; i < count; i++)
                 {
                     var type = (CommandType)r.ReadByte();
@@ -1457,6 +1482,7 @@ namespace OpenEmpires
                             int resourceNodeId = r.ReadInt32();
                             bool isGatherQueued = r.ReadBoolean();
                             var gatherCmd = new GatherCommand(playerId, gatherUnitIds, resourceNodeId);
+                            if (restricted) gatherCmd.SourceKind = ReadSourceKind(r);
                             gatherCmd.IsQueued = isGatherQueued;
                             commands.Add(gatherCmd);
                             break;
@@ -1649,6 +1675,7 @@ namespace OpenEmpires
                                 PlayerId = playerId,
                                 VillagerIds = slaughterVillagerIds,
                                 SheepUnitId = slaughterSheepId,
+                                SourceKind = restricted ? ReadSourceKind(r) : ResourceSourceKind.Any,
                                 IsQueued = slaughterIsQueued
                             });
                             break;
@@ -1696,8 +1723,12 @@ namespace OpenEmpires
                             int resTechType = r.ReadInt32();
                             commands.Add(new ResearchCommand(playerId, resBuildingId, (TechnologyType)resTechType));
                             break;
+                        default:
+                            if (restricted) throw new InvalidDataException("Unknown restricted command type.");
+                            break;
                     }
                 }
+                if (restricted && ms.Position != ms.Length) throw new InvalidDataException("Unexpected restricted command data.");
                 return (tick, commands);
             }
         }
@@ -1712,10 +1743,36 @@ namespace OpenEmpires
         private static int[] ReadIntArray(BinaryReader r)
         {
             int len = r.ReadInt32();
+            if (len < 0 || len > (r.BaseStream.Length - r.BaseStream.Position) / 4)
+                throw new InvalidDataException("Invalid command array length.");
             int[] arr = new int[len];
             for (int i = 0; i < len; i++)
                 arr[i] = r.ReadInt32();
             return arr;
+        }
+
+        private static ResourceSourceKind SourceKindOf(ICommand command) => command is GatherCommand gather
+            ? gather.SourceKind : command is SlaughterSheepCommand sheep ? sheep.SourceKind : ResourceSourceKind.Any;
+
+        private static void ValidateSourceKind(ResourceSourceKind kind)
+        {
+            if (!ResourceSourceRules.IsDefined(kind)) throw new InvalidDataException("Invalid resource source kind.");
+        }
+
+        private static ResourceSourceKind ReadSourceKind(BinaryReader reader)
+        {
+            var kind = (ResourceSourceKind)reader.ReadByte(); ValidateSourceKind(kind); return kind;
+        }
+
+        private static ResourceSourceKind ReadJsonSourceKind(string payload)
+        {
+            var root = JObject.Parse(payload, new JsonLoadSettings { DuplicatePropertyNameHandling = DuplicatePropertyNameHandling.Error });
+            if (root.Property("sourceKind") == null) return ResourceSourceKind.Any;
+            var token = root["sourceKind"];
+            if (token.Type != JTokenType.Integer) throw new InvalidDataException("Invalid resource source kind.");
+            long value = token.Value<long>();
+            if (value < 0 || value > (int)ResourceSourceKind.StoneMine) throw new InvalidDataException("Invalid resource source kind.");
+            return (ResourceSourceKind)value;
         }
 
         private static void WriteFixedVector3(BinaryWriter w, FixedVector3 v)

@@ -26,6 +26,7 @@ namespace OpenEmpires
         public IReadOnlyList<CommanderVisibleEnemyMilitarySnapshot> VisibleEnemyMilitary { get; }
         // Bounded detached knowledge slice; contains no simulation/runtime references.
         public string KnowledgeContext { get; }
+        public int IdleVillagers { get; }
         public string EnemyAwarenessPolicy =>
             "Currently visible enemy military aggregates only; no hidden, explored-only, or predicted enemy data.";
         public string ToJson() => Newtonsoft.Json.JsonConvert.SerializeObject(this,
@@ -39,7 +40,7 @@ namespace OpenEmpires
             List<CommanderUnitOptionSnapshot> unitOptions,
             List<CommanderWorkerAllocationSnapshot> workerAllocation,
             List<CommanderVisibleEnemyMilitarySnapshot> visibleEnemyMilitary,
-            string knowledgeContext = null)
+            string knowledgeContext = null, int idleVillagers = 0)
         {
             PlayerId = playerId; SnapshotTick = tick; Resources = resources;
             Population = population; PopulationCap = cap; MaximumPopulation = maximum;
@@ -51,6 +52,7 @@ namespace OpenEmpires
             WorkerAllocation = workerAllocation.AsReadOnly();
             VisibleEnemyMilitary = visibleEnemyMilitary.AsReadOnly();
             KnowledgeContext = knowledgeContext ?? string.Empty;
+            IdleVillagers = Math.Max(0, idleVillagers);
         }
     }
 

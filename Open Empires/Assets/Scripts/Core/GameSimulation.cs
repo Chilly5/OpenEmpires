@@ -637,6 +637,11 @@ namespace OpenEmpires
                 hash = hash * 31 + (uint)unit.CarriedResourceType;
                 hash = hash * 31 + (uint)unit.CarriedResourceAmount;
                 hash = hash * 31 + (uint)unit.TargetResourceNodeId;
+                if (unit.GatherSourceKind != ResourceSourceKind.Any)
+                    hash = hash * 31 + (uint)unit.GatherSourceKind;
+                for (int q = 0; q < unit.CommandQueue.Count; q++)
+                    if (unit.CommandQueue[q].SourceKind != ResourceSourceKind.Any)
+                        hash = hash * 31 + (uint)unit.CommandQueue[q].SourceKind;
                 hash = hash * 31 + (uint)unit.GatherTimer.Raw;
                 hash = hash * 31 + (uint)unit.AttackCooldownRemaining;
                 hash = hash * 31 + (uint)unit.CurrentPathIndex;
@@ -1487,6 +1492,8 @@ namespace OpenEmpires
             while (unit.HasQueuedCommands)
             {
                 var qc = unit.DequeueCommand();
+                if (qc.Type != QueuedCommandType.Gather && qc.Type != QueuedCommandType.Slaughter)
+                    unit.GatherSourceKind = ResourceSourceKind.Any;
 
                 if (qc.Type == QueuedCommandType.Construct)
                 {
@@ -1509,7 +1516,7 @@ namespace OpenEmpires
                 else if (qc.Type == QueuedCommandType.Gather)
                 {
                     var node = MapData.GetResourceNode(qc.ResourceNodeId);
-                    if (node == null || node.IsDepleted)
+                    if (node == null || node.IsDepleted || !ResourceSourceRules.MatchesOwnedSource(node, qc.SourceKind, unit.PlayerId, BuildingRegistry))
                         continue; // skip depleted, try next
 
                     unit.ClearSavedPath();
@@ -1518,6 +1525,7 @@ namespace OpenEmpires
                     unit.CombatTargetBuildingId = -1;
                     unit.ConstructionTargetBuildingId = -1;
                     unit.TargetResourceNodeId = qc.ResourceNodeId;
+                    unit.GatherSourceKind = qc.SourceKind;
                     unit.GatherTimer = Fixed32.Zero;
                     unit.PlayerCommanded = true;
                     unit.IsAttackMoving = false;
@@ -1589,12 +1597,14 @@ namespace OpenEmpires
                 {
                     int sheepId = qc.ResourceNodeId; // reused field
                     var sheep = UnitRegistry.GetUnit(sheepId);
-                    if (sheep == null || sheep.State == UnitState.Dead || !sheep.IsSheep)
+                    if (sheep == null || sheep.State == UnitState.Dead || !sheep.IsSheep || sheep.PlayerId != unit.PlayerId
+                        || (qc.SourceKind != ResourceSourceKind.Any && qc.SourceKind != ResourceSourceKind.Sheep))
                         continue;
 
                     unit.ClearSavedPath();
                     unit.ClearFormation();
                     unit.CombatTargetId = sheepId;
+                    unit.GatherSourceKind = qc.SourceKind;
                     unit.CombatTargetBuildingId = -1;
                     unit.TargetResourceNodeId = -1;
                     unit.ConstructionTargetBuildingId = -1;
@@ -1849,6 +1859,7 @@ namespace OpenEmpires
 
         private void ProcessSlaughterSheepCommand(SlaughterSheepCommand cmd)
         {
+            if (cmd.SourceKind != ResourceSourceKind.Any && cmd.SourceKind != ResourceSourceKind.Sheep) return;
             var sheep = UnitRegistry.GetUnit(cmd.SheepUnitId);
             if (sheep == null || sheep.State == UnitState.Dead || !sheep.IsSheep) return;
             if (sheep.PlayerId != cmd.PlayerId) return; // can only slaughter own sheep
@@ -1862,7 +1873,7 @@ namespace OpenEmpires
 
                 if (cmd.IsQueued)
                 {
-                    var qc = QueuedCommand.SlaughterWaypoint(sheep.SimPosition, cmd.SheepUnitId);
+                    var qc = QueuedCommand.SlaughterWaypoint(sheep.SimPosition, cmd.SheepUnitId, cmd.SourceKind);
                     unit.CommandQueue.Add(qc);
                     if (unit.State == UnitState.Idle)
                         PopAndExecuteNextQueuedCommand(unit);
@@ -1874,6 +1885,7 @@ namespace OpenEmpires
                 unit.ClearFormation();
                 unit.ClearPatrol();
                 unit.CombatTargetId = cmd.SheepUnitId;
+                unit.GatherSourceKind = cmd.SourceKind;
                 unit.CombatTargetBuildingId = -1;
                 unit.TargetResourceNodeId = -1;
                 unit.ConstructionTargetBuildingId = -1;
@@ -2767,6 +2779,7 @@ namespace OpenEmpires
 
         private void TryAutoSlaughterFromIdle(UnitData unit)
         {
+            if (unit.GatherSourceKind != ResourceSourceKind.Any && unit.GatherSourceKind != ResourceSourceKind.Sheep) return;
             Fixed32 range = Fixed32.FromInt(7);
             Fixed32 rangeSq = range * range;
             UnitData bestSheep = null;
@@ -3277,7 +3290,7 @@ namespace OpenEmpires
         private void ProcessGatherCommand(GatherCommand cmd)
         {
             var node = MapData.GetResourceNode(cmd.ResourceNodeId);
-            if (node == null || node.IsDepleted) return;
+            if (node == null || node.IsDepleted || !ResourceSourceRules.MatchesOwnedSource(node, cmd.SourceKind, cmd.PlayerId, BuildingRegistry)) return;
 
             Vector2Int nodeOrigin = new Vector2Int(node.TileX, node.TileZ);
             // Pre-populate occupiedTiles from existing gatherers at the target node
@@ -3309,7 +3322,7 @@ namespace OpenEmpires
 
                 if (cmd.IsQueued)
                 {
-                    var qc = QueuedCommand.GatherWaypoint(node.Position, cmd.ResourceNodeId);
+                    var qc = QueuedCommand.GatherWaypoint(node.Position, cmd.ResourceNodeId, cmd.SourceKind);
                     unit.CommandQueue.Add(qc);
 
                     if (unit.State == UnitState.Idle)
@@ -3318,6 +3331,7 @@ namespace OpenEmpires
                 else
                 {
                     unit.ClearCommandQueue();
+                    unit.GatherSourceKind = cmd.SourceKind;
                     Vector2Int startTile = MapData.WorldToTile(unit.SimPosition);
                     bool assigned = false;
 
@@ -3329,7 +3343,7 @@ namespace OpenEmpires
 
                         // If taken, find a nearby unoccupied farm
                         if (farmTaken)
-                            targetNodeId = FindNearbyUnoccupiedFarm(unit.SimPosition, takenFarmNodeIds);
+                            targetNodeId = FindNearbyUnoccupiedFarm(unit.SimPosition, takenFarmNodeIds, unit);
 
                         if (targetNodeId >= 0)
                         {
@@ -3448,7 +3462,7 @@ namespace OpenEmpires
             return false;
         }
 
-        private int FindNearbyUnoccupiedFarm(FixedVector3 searchPos, HashSet<int> additionalTaken)
+        private int FindNearbyUnoccupiedFarm(FixedVector3 searchPos, HashSet<int> additionalTaken, UnitData requester = null)
         {
             Fixed32 searchRange = Fixed32.FromInt(30);
             int bestId = -1;
@@ -3457,6 +3471,7 @@ namespace OpenEmpires
             foreach (var candidate in MapData.GetAllResourceNodes())
             {
                 if (!candidate.IsFarmNode || candidate.IsDepleted) continue;
+                if (requester != null && !ResourceSourceRules.MatchesOwnedSource(candidate, requester.GatherSourceKind, requester.PlayerId, BuildingRegistry)) continue;
                 if (additionalTaken != null && additionalTaken.Contains(candidate.Id)) continue;
                 if (IsFarmNodeOccupied(candidate.Id, null)) continue;
 
@@ -6163,6 +6178,7 @@ namespace OpenEmpires
             {
                 if (candidate.Id == excludeNodeId || candidate.IsDepleted || candidate.Type != type)
                     continue;
+                if (!ResourceSourceRules.MatchesOwnedSource(candidate, unit.GatherSourceKind, unit.PlayerId, BuildingRegistry)) continue;
 
                 FixedVector3 diff = candidate.Position - searchCenter;
                 // Overflow guard: skip if axis distance exceeds search range
@@ -6199,7 +6215,10 @@ namespace OpenEmpires
 
             if (bestNodeId < 0 || bestPath == null) return false;
 
+            // This is an automatic redirect of the same order, not a human replacement.
+            ResourceSourceKind sourceKind = unit.GatherSourceKind;
             unit.ClearCommandQueue();
+            unit.GatherSourceKind = sourceKind;
             AssignUnitToGather(unit, bestNodeId, bestPath, bestAdjTile);
             return true;
         }

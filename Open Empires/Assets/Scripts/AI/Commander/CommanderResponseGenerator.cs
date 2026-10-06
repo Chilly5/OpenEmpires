@@ -24,6 +24,8 @@ namespace OpenEmpires
 
             if (resolution.Intent is BuildStructureIntent build)
                 return $"Understood. I will construct {build.Count} {CommanderIntentCatalog.GetStructureDisplayName(build.StructureType).ToLowerInvariant()}.";
+            if (resolution.Intent is AllocateWorkersIntent workers)
+                return "Understood. " + DescribeAllocation(workers.Allocation);
             if (resolution.Goal is ResourceAllocationGoal allocation)
                 return $"Understood. I will assign at least {allocation.TargetWorkers} villagers to {allocation.Resource.ToString().ToLowerInvariant()}.";
             if (resolution.Intent is ReachAgeIntent reachAge)
@@ -49,6 +51,8 @@ namespace OpenEmpires
                             : $"The {build.Count} requested structures are complete.";
                     if (goalEvent.Goal is ResourceAllocationGoal allocation)
                         return $"At least {allocation.TargetWorkers} villagers are assigned to {allocation.Resource.ToString().ToLowerInvariant()}.";
+                    if (goalEvent.Goal is AllocateWorkersGoal workers)
+                        return workers.StatusReason;
                     if (goalEvent.Goal is ReachAgeGoal reachAge)
                         return $"We have reached age {reachAge.TargetAge}.";
                     return null;
@@ -66,6 +70,19 @@ namespace OpenEmpires
                 default:
                     return null;
             }
+        }
+
+        private static string DescribeAllocation(CommanderWorkerAllocation allocation)
+        {
+            string target = allocation.Destination.Resource.ToString().ToLowerInvariant();
+            if (allocation.Destination.SourceKind != ResourceSourceKind.Any)
+                target += " from " + allocation.Destination.SourceKind.ToString().ToLowerInvariant();
+            if (allocation.CountMode == CommanderWorkerCountMode.AllMatching)
+                return $"I will assign a one-time snapshot of all matching eligible villagers to {target}.";
+            if (allocation.Mode == CommanderWorkerAllocationMode.TargetTotal)
+                return $"I will ensure at least {allocation.Count} villagers are assigned to {target}.";
+            string additional = allocation.Mode == CommanderWorkerAllocationMode.Additional ? " additional" : " selected";
+            return $"I will assign exactly {allocation.Count}{additional} eligible villagers to {target}.";
         }
     }
 }

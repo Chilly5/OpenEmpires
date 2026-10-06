@@ -52,6 +52,10 @@ namespace OpenEmpires
             if (intent is EnsureUnitCountIntent ensure)
                 return ResolveEnsureUnitCount(ensure, goalManager);
 
+            if (intent is AllocateWorkersIntent workers)
+                return Created(intent, goalManager.SubmitWorkerAllocation(workers.Allocation,
+                    constraints: intent.Constraints));
+
             if (intent is SetResourceAllocationIntent allocation)
             {
                 try
@@ -71,7 +75,8 @@ namespace OpenEmpires
                     placementAnchorSelector: build.PlacementAnchorSelector,
                     placementAnchorOrdinal: build.PlacementAnchorOrdinal,
                     placementRelation: build.PlacementRelation,
-                    clearGapTiles: build.ClearGapTiles));
+                    clearGapTiles: build.ClearGapTiles,
+                    placementResourceType: build.PlacementResourceType));
             if (intent is ReachAgeIntent reachAge)
                 return Created(intent, goalManager.SubmitReachAge(reachAge.RequestedTarget,
                     constraints: intent.Constraints));

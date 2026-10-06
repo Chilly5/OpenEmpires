@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace OpenEmpires.Tests
 {
     [Category("CommanderEconomyClarification")]
-    public sealed class CommanderEconomyClarificationTests
+    public sealed partial class CommanderEconomyClarificationTests
     {
         // Catches loss of count/state/source or conversion of an ordinary counted order into a total.
         [Test]

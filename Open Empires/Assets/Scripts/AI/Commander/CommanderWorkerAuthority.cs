@@ -38,6 +38,21 @@ namespace OpenEmpires
             return true;
         }
 
+        public bool TryReserveWorkers(IReadOnlyList<int> workers, int goalId, int currentTick)
+        {
+            // Preflight the entire selected set before acquiring any reservation.
+            for (int i = 0; i < workers.Count; i++)
+            {
+                var unit = simulation.UnitRegistry.GetUnit(workers[i]);
+                if (goalId <= 0 || unit == null || unit.PlayerId != playerId || !unit.IsVillager
+                    || unit.CurrentHealth <= 0 || unit.State == UnitState.Dead || unit.CommandQueue.Count > 0
+                    || !CanUseWorker(unit.Id, goalId, currentTick)) return false;
+            }
+            for (int i = 0; i < workers.Count; i++)
+                TryReserve(workers[i], goalId, CommanderWorkerReservationType.Gatherer, currentTick);
+            return true;
+        }
+
         public bool TryReserveCommand(CommanderGoal goal, ICommand command, int currentTick)
         {
             int[] workers = GetSubjectUnitIds(command);
@@ -50,7 +65,7 @@ namespace OpenEmpires
                     || unit.State == UnitState.Dead || unit.CommandQueue.Count > 0
                     || !CanUseUnit(unit.Id, goal.GoalId, currentTick)) return false;
             }
-            var role = command is GatherCommand ? CommanderWorkerReservationType.Gatherer : CommanderWorkerReservationType.Builder;
+            var role = command is GatherCommand || command is SlaughterSheepCommand ? CommanderWorkerReservationType.Gatherer : CommanderWorkerReservationType.Builder;
             for (int i = 0; i < workers.Length; i++)
             {
                 UnitData unit = simulation.UnitRegistry.GetUnit(workers[i]);

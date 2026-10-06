@@ -129,7 +129,7 @@ namespace OpenEmpires
                     continue;
                 }
 
-                if (node == null || node.IsDepleted)
+                if (node == null || node.IsDepleted || !ResourceSourceRules.MatchesOwnedSource(node, unit.GatherSourceKind, unit.PlayerId, buildingRegistry))
                 {
                     // Node gone — try to find nearby same-type node within vision
                     FixedVector3 searchPos = node != null ? node.Position : unit.SimPosition;
@@ -365,7 +365,7 @@ namespace OpenEmpires
 
             // Auto drop-off: return to resource node
             var node = mapData.GetResourceNode(unit.TargetResourceNodeId);
-            if (node == null || node.IsDepleted)
+            if (node == null || node.IsDepleted || !ResourceSourceRules.MatchesOwnedSource(node, unit.GatherSourceKind, unit.PlayerId, buildingRegistry))
             {
                 // Original node depleted — search near its position for another same-type
                 FixedVector3 searchPos = node != null ? node.Position : unit.SimPosition;
@@ -539,7 +539,7 @@ namespace OpenEmpires
                     }
                 }
             }
-            int newNodeId = FindNearestSameTypeNode(searchPos, type, unit.DetectionRange, mapData, sortPos, occupiedTilesByNode);
+            int newNodeId = FindNearestSameTypeNode(searchPos, type, unit.DetectionRange, mapData, sortPos, occupiedTilesByNode, unit, buildingRegistry);
             if (newNodeId < 0) return false;
 
             var newNode = mapData.GetResourceNode(newNodeId);
@@ -578,7 +578,7 @@ namespace OpenEmpires
             return true;
         }
 
-        private int FindNearestSameTypeNode(FixedVector3 searchPos, ResourceType type, Fixed32 visionRange, MapData mapData, FixedVector3 sortPos = default, Dictionary<int, HashSet<Vector2Int>> occupiedTilesByNode = null)
+        private int FindNearestSameTypeNode(FixedVector3 searchPos, ResourceType type, Fixed32 visionRange, MapData mapData, FixedVector3 sortPos = default, Dictionary<int, HashSet<Vector2Int>> occupiedTilesByNode = null, UnitData requester = null, BuildingRegistry buildings = null)
         {
             // sortPos determines ranking; searchPos determines vision filter
             if (sortPos.x == Fixed32.Zero && sortPos.z == Fixed32.Zero)
@@ -591,7 +591,9 @@ namespace OpenEmpires
             {
                 if (node.IsDepleted) continue;
                 if (node.Type != type) continue;
-                if (node.IsFarmNode) continue; // don't auto-reassign to farms
+                if (node.IsFarmNode && (requester == null || requester.GatherSourceKind != ResourceSourceKind.Farm)) continue;
+                if (requester != null && (!ResourceSourceRules.MatchesOwnedSource(node, requester.GatherSourceKind, requester.PlayerId, buildings)
+                    || (node.IsFarmNode && IsFarmNodeOccupied(node.Id, requester)))) continue;
 
                 // Vision range filter uses searchPos (depleted tree position)
                 FixedVector3 filterDiff = node.Position - searchPos;
@@ -627,6 +629,7 @@ namespace OpenEmpires
             foreach (var candidate in mapData.GetAllResourceNodes())
             {
                 if (!candidate.IsFarmNode || candidate.IsDepleted) continue;
+                if (!ResourceSourceRules.MatchesOwnedSource(candidate, unit.GatherSourceKind, unit.PlayerId, buildingRegistry)) continue;
                 if (candidate.Id == unit.TargetResourceNodeId) continue;
                 if (IsFarmNodeOccupied(candidate.Id, unit)) continue;
 
@@ -716,6 +719,7 @@ namespace OpenEmpires
 
         private bool TryAutoSlaughterNearbySheep(UnitData unit, FixedVector3 searchPos, UnitRegistry unitRegistry, MapData mapData, BuildingRegistry buildingRegistry, Fixed32 overrideRange = default)
         {
+            if (unit.GatherSourceKind != ResourceSourceKind.Any && unit.GatherSourceKind != ResourceSourceKind.Sheep) return false;
             Fixed32 searchRange = overrideRange.Raw > 0 ? overrideRange : unit.DetectionRange;
             Fixed32 searchRangeSq = searchRange * searchRange;
             UnitData bestSheep = null;

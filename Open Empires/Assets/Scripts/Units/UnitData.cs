@@ -35,6 +35,7 @@ namespace OpenEmpires
 
         // Gathering
         public int TargetResourceNodeId = -1;
+        public ResourceSourceKind GatherSourceKind;
         public Fixed32 GatherTimer;
 
         // Carrying (resource drop-off)
@@ -257,6 +258,7 @@ namespace OpenEmpires
         public void ClearCommandQueue()
         {
             CommandQueue.Clear();
+            GatherSourceKind = ResourceSourceKind.Any;
         }
 
         public void StorePreviousPosition()

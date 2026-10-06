@@ -7,5 +7,6 @@ namespace OpenEmpires
         public int[] VillagerIds;
         public int SheepUnitId;
         public bool IsQueued;
+        public ResourceSourceKind SourceKind;
     }
 }

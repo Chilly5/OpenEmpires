@@ -10,6 +10,7 @@ namespace OpenEmpires
         public int BuildingId;      // -1 if not construct
         public FixedVector3 FacingDirection;
         public bool HasFacing;
+        public ResourceSourceKind SourceKind;
 
         public static QueuedCommand MoveWaypoint(FixedVector3 targetPos)
         {
@@ -50,11 +51,12 @@ namespace OpenEmpires
             };
         }
 
-        public static QueuedCommand GatherWaypoint(FixedVector3 targetPos, int resourceNodeId)
+        public static QueuedCommand GatherWaypoint(FixedVector3 targetPos, int resourceNodeId, ResourceSourceKind sourceKind = ResourceSourceKind.Any)
         {
             return new QueuedCommand
             {
                 Type = QueuedCommandType.Gather,
+                SourceKind = sourceKind,
                 TargetPosition = targetPos,
                 ResourceNodeId = resourceNodeId,
                 BuildingId = -1,
@@ -102,11 +104,12 @@ namespace OpenEmpires
             };
         }
 
-        public static QueuedCommand SlaughterWaypoint(FixedVector3 targetPos, int sheepUnitId)
+        public static QueuedCommand SlaughterWaypoint(FixedVector3 targetPos, int sheepUnitId, ResourceSourceKind sourceKind = ResourceSourceKind.Any)
         {
             return new QueuedCommand
             {
                 Type = QueuedCommandType.Slaughter,
+                SourceKind = sourceKind,
                 TargetPosition = targetPos,
                 ResourceNodeId = sheepUnitId, // Reuse field to hold sheep unit ID
                 BuildingId = -1,
