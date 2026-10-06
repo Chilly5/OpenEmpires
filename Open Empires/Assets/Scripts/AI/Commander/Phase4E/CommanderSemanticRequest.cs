@@ -7,7 +7,8 @@ namespace OpenEmpires
     {
         Request,
         Clarify,
-        Unsupported
+        Unsupported,
+        Answer // Read-only conversation result; never admitted as a gameplay node.
     }
 
     public enum CommanderSemanticNodeType
@@ -25,7 +26,8 @@ namespace OpenEmpires
         RetreatUnits,
         RepairTarget,
         ResearchTechnology,
-        StrategicObjective
+        StrategicObjective,
+        AllocateWorkers
     }
 
     // Provider-facing age vocabulary. Numeric game ages remain game-side data.
@@ -94,6 +96,7 @@ namespace OpenEmpires
         public IReadOnlyList<int> DependsOn { get; }
         public int? ProducerFromNode { get; }
         public int? ResultFromNode { get; }
+        public CommanderWorkerAllocation WorkerAllocation { get; }
 
         internal CommanderSemanticNode(CommanderSemanticNodeType type, int? unitType = null,
             BuildingType? buildingType = null, ResourceType? resourceType = null,
@@ -108,7 +111,8 @@ namespace OpenEmpires
             TechnologyType? technology = null,
             IReadOnlyList<int> dependsOn = null,
             int? producerFromNode = null,
-            int? resultFromNode = null)
+            int? resultFromNode = null,
+            CommanderWorkerAllocation workerAllocation = null)
         {
             Type = type;
             UnitType = unitType;
@@ -126,6 +130,7 @@ namespace OpenEmpires
             Technology = technology;
             ProducerFromNode = producerFromNode;
             ResultFromNode = resultFromNode;
+            WorkerAllocation = workerAllocation;
             var normalizedDependencies = dependsOn != null
                 ? new List<int>(dependsOn)
                 : new List<int>();
@@ -141,14 +146,16 @@ namespace OpenEmpires
         public CommanderSemanticOutcome Outcome { get; }
         public IReadOnlyList<CommanderSemanticNode> Nodes { get; }
         public string SafeExplanation { get; }
+        public CommanderWorkerAllocationDraft PendingDraft { get; }
 
         private CommanderSemanticResult(bool isValid, CommanderSemanticOutcome outcome,
-            IReadOnlyList<CommanderSemanticNode> nodes, string safeExplanation)
+            IReadOnlyList<CommanderSemanticNode> nodes, string safeExplanation, CommanderWorkerAllocationDraft pendingDraft = null)
         {
             IsValid = isValid;
             Outcome = outcome;
             Nodes = nodes ?? Array.Empty<CommanderSemanticNode>();
             SafeExplanation = safeExplanation ?? string.Empty;
+            PendingDraft = pendingDraft;
         }
     }
 }

@@ -1,6 +1,18 @@
 # Phase 4G implemented capabilities
 
+## Targeted economy/clarification repair, 2026-10-06
+
+The earlier coarse SetResourceAllocation entry did not provide generic direct worker orders: Idle/current-resource/source-kind criteria and typed clarification were missing. The targeted repair now adds AllocateWorkers with SelectedCount (ordinary exactly-N assignment), Additional, explicit TargetTotal and one-time AllMatching modes. Unity selects/reserves actual owned eligible workers and legal visible sources, then uses ordinary Gather/Slaughter commands. Explicit source fidelity required the approved conditional native restriction after actual Sheep-to-Berries depletion was reproduced. Restricted binary version1 packets require updated peers; unrestricted legacy bytes remain unchanged.
+
+Evidence: `../CommanderFix/` includes 15/15 focused EditMode, 204/204 relevant existing Commander tests, three controlled PlayMode scenarios and five live Luna requests including local count continuation. Single final full EditMode is 998/998; full PlayMode closeout is tracked in that folder. This is not a new phase, standalone build or hostile-audit acceptance. Historical Phase4G rows below retain their original verification scope.
+
 Status: implementation complete for the bounded Phase 4G scope; exhaustive regression and hostile verification belong to AntiGravity.
+
+## Narrow refresh, 2026-10-06
+
+This refresh changes only production-result binding and its existing adapters. It adds explicit simulation/manager identity checks, immutable unit-result copies, civilization-resolved type matching, and result-specific human-override retention. A dependent rally action no longer needs unrelated military units and infers its structure type from the exact bound structure when the semantic request omits the type. Scout production is explicitly enabled through the existing canonical production path; catalog discovery alone still grants no authority.
+
+The current verification boundary is nine selected EditMode cases and one controlled PlayMode scenario, not every capability listed below. Older evidence in this file/report is historical; use `narrow-verification-2026-10-06.json` for this source refresh.
 
 | Capability | Semantic support | Game-side resolution/execution | Result-binding status | Evidence |
 |---|---|---|---|---|

@@ -24,7 +24,7 @@ namespace OpenEmpires
         }
     }
 
-    internal sealed class CommanderPlanner
+    internal sealed partial class CommanderPlanner
     {
         public const int DefaultPathValidationCandidates = 4;
         public const int MinimumPathValidationCandidates = 3;
@@ -50,6 +50,7 @@ namespace OpenEmpires
 
         public CommanderPlan Plan(CommanderGoal goal, int currentTick)
         {
+            if (goal is AllocateWorkersGoal workers) return PlanWorkerAllocation(workers, currentTick);
             if (goal is EnsureUnitCountGoal units) return PlanUnits(units, currentTick);
             if (goal is BuildStructureGoal building) return PlanStructure(building, currentTick);
             if (goal is ResourceAllocationGoal resource) return PlanAllocation(resource, currentTick);
@@ -60,6 +61,20 @@ namespace OpenEmpires
 
         private CommanderPlan PlanCapability(CommanderCapabilityGoal goal, int currentTick)
         {
+            if (goal.ResultHumanOverride)
+                return new CommanderPlan(CommanderGoalStatus.Blocked,
+                    "The player took control of a required producer result; this dependent action will not reclaim it.", 0, 0);
+            if (goal.RequiresResultBinding && goal.ResultSourceGoal == null)
+                return new CommanderPlan(CommanderGoalStatus.Blocked,
+                    "The required producer result is missing; no selector fallback is allowed.", 0, 0);
+            if (goal.ResultSourceGoal != null && (goal.RuntimeOwner == null
+                || goal.RuntimeOwner.IsDisposed
+                || !ReferenceEquals(goal.ResultSourceGoal.RuntimeOwner, goal.RuntimeOwner)
+                || !ReferenceEquals(goal.RuntimeOwner.Simulation, simulation)
+                || !goal.Dependencies.Contains(goal.ResultSourceGoal)
+                || goal.ResultSourceGoal.Status != CommanderGoalStatus.Completed))
+                return new CommanderPlan(CommanderGoalStatus.Blocked,
+                    "The referenced producer is unavailable in this Commander runtime; no fallback is allowed.", 0, 0);
             if (goal.CommandIssued)
                 return ObserveCapability(goal, currentTick);
             var executor = new CommanderCapabilityExecutor(simulation);
@@ -71,7 +86,7 @@ namespace OpenEmpires
                     return new CommanderPlan(CommanderGoalStatus.WaitingForProduction,
                         "Waiting for the referenced producer result; no unrelated unit may substitute.", 0, 0);
                 binding = CommanderResultBinding.ForUnits(units.ResultUnitIds,
-                    units.GoalId, units.CreatedTick);
+                    units.GoalId, units.CreatedTick, simulation, goal.RuntimeOwner);
             }
             else if (goal.ResultSourceGoal is BuildStructureGoal building)
             {
@@ -80,7 +95,7 @@ namespace OpenEmpires
                     return new CommanderPlan(CommanderGoalStatus.WaitingForConstruction,
                         "Waiting for the referenced structure result; no unrelated building may substitute.", 0, 0);
                 binding = CommanderResultBinding.ForBuilding(building.ResultBuildingIds[0],
-                    building.GoalId, building.CreatedTick);
+                    building.GoalId, building.CreatedTick, simulation, goal.RuntimeOwner);
             }
             ICommand command;
             string reason;

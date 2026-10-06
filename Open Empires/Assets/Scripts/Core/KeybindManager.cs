@@ -42,6 +42,7 @@ namespace OpenEmpires
         private static readonly ActionDef[] CommunicationActionDefs =
         {
             new ActionDef("NotifyPing", "Notification Ping", "<Keyboard>/leftAlt"),
+            new ActionDef("CommanderPTT", "Commander Push-To-Talk", "<Keyboard>/v"),
         };
 
         public static string[] ActionNames

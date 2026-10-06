@@ -2,6 +2,48 @@
 
 Codex ran only the bounded focused evidence listed in the implementation report. AntiGravity owns the independent audit and must not treat this document as already-passed evidence.
 
+## Current entry point — 2026-10-06
+
+Audit the current working tree, not only Git HEAD or the older accepted executable. Current narrow evidence is nine selected EditMode cases (`d1766219a9b34da3b5ab637ec73bc976`) and one controlled PlayMode case (`974e325de24b421f8d35af8f393887eb`). These do not supersede full independent acceptance. Read `known-limitations.md` and `source-consistency.md` before running anything.
+
+Do not undo the existing Phase 4H or provider/UI work merely to reconstruct an older snapshot. Keep audit findings attributable: record both Phase 4G defects and unrelated integration defects, then make only authorized small final fixes. No secrets, `.env` contents or authorization headers belong in evidence.
+
+## Priority acceptance contracts
+
+1. **Exact new Spearmen:** start with at least one old Spearman; issue `patrol my goldmine with 3 new spearmen you build from a barracks`. The semantic producer total must equal observed owned total + 3, and the patrol count must be 3 with `dependsOn` and `resultFromNode` referencing that producer. Require three real spawns via normal TrainUnitCommand, source completion, and exact new IDs in PatrolCommand. Old Spearmen are forbidden even if nearest/idle. Repeat with no Barracks and ordinary resource shortages to exercise legitimate prerequisite construction/economy.
+2. **Exact structure:** start with an existing Barracks and construct a second. Dependent rally must target the new completed building. Run with zero living military to catch irrelevant unit-selector coupling. Test absent and explicit matching structure types, mismatch, destruction, construction stall and incomplete foundation. No lowest-ID/nearest-building replacement.
+3. **Exact Scout:** start with one Scout, ensure total 2, then ScoutArea count 1 with `resultFromNode`. Build Stables through the existing producer dependency if needed. The new Scout, never the old one or another military unit, must be the subject of the normal MoveCommand. Check canonical age/cost/queue behavior and current-visible location semantics; map-west is not camera-left.
+4. **Human control:** move one bound unit before dependent issuance, after issuance, and before capture. Wait past 900 ticks, then past blocked retries. The invalidated action must not reissue/reclaim or substitute. Check all-unit and partial takeovers; already-issued orders on untouched units need not be undone. A new explicit request is the only intended reauthorization path.
+5. **Runtime/lifecycle:** create identical numeric IDs in another simulation, another manager on the same simulation, and a reset runtime. Reusing a handle must reject. Exercise default/empty handles, copied arrays mutated by the caller, missing source pointer, source cancellation/failure, disposed manager, goal archive eviction and stale creation anchors. A semantic plan may be newly admitted in a fresh runtime; it must create fresh local results, never reuse old results.
+
+## Highest-risk attribution cases — mandatory
+
+Current capture uses baseline exclusion, not training-queue provenance. Treat the following as acceptance gates, not presumed passes:
+
+- Pre-existing same-type queued units finish after graph submission.
+- Player queues the same type during the producer goal, in the same and a different building.
+- Two result-consuming producer graphs overlap for the same type; no ID may be incorrectly attributed to both.
+- A different goal completes a same-type building while the referenced source is still constructing.
+- Auto-production, producer destruction, queue cancellation/reordering, rejected train commands, dead results and population-cap changes occur between issued orders and capture.
+- Units die while producing; count satisfaction and the required exact new set must both be observed correctly. A zero-new result cannot borrow old units.
+
+If any case consumes unrelated post-baseline results, report a production-attribution defect and implement a small fail-closed fix or explicit causal tracking before accepting. Do not waive it because the controlled three-Spearman case passes.
+
+## Evidence procedure for each gameplay case
+
+Record seed, civilization, age, existing/queued entity sets, resources, map/fog state and source hashes. Keep setup mutations clearly separated from commander execution. Capture player text, bounded provider JSON (redacted), admitted graph, source/consumer goal IDs, creation/capture ticks, statuses, every emitted command and final subject IDs. Require normal simulation mutation after CommandBuffer, not direct test mutation as proof of completion.
+
+Run controlled semantic-fixture cases first, then equivalent real-provider typed-chat requests in Unity and the fresh standalone. Provider success, graph admission, command enqueue, simulation application and observed gameplay are separate gates. A source-level check or parser green result cannot stand in for a gameplay gate.
+
+## Suggested independent run order
+
+1. Import/reload and verify current compilation/manifest; enumerate the entire current suite rather than copying old test totals.
+2. Rerun the nine selected cases and single exact-result scenario, then the Phase 4G hostile cases, provider tests and nearby authority/graph/spatial tests.
+3. Complete the priority runtime/lifecycle/attribution scenarios above and the broader capability matrix below.
+4. Run full EditMode and full PlayMode separately; retain complete XML and exact job IDs. Re-run only affected suites after fixes, then regenerate final hashes and full final evidence as your independent acceptance process requires.
+5. Build/launch a current standalone, inspect fresh Player.log, and perform normal player-command and minimal multiplayer/determinism smoke. Record any unavailable gate as not run, never passed.
+6. Publish an independent verdict plus actionable remaining issues. Stop after that report; no automatic feature-phase expansion.
+
 ## Audit gates
 
 1. Refresh/import the current working tree in a healthy Unity editor. Record Unity version, MCP/package state, compiler output, current branch, and the SHA-256 source manifest.

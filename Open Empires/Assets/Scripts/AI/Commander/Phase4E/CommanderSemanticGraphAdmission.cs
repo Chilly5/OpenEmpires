@@ -228,6 +228,7 @@ namespace OpenEmpires
                 case 0: return producer == BuildingType.TownCenter;
                 case 1: return producer == BuildingType.Barracks;
                 case 2: return producer == BuildingType.ArcheryRange;
+                case 4: return producer == BuildingType.Stables;
                 case 7: return producer == BuildingType.Stables;
                 default: return false;
             }

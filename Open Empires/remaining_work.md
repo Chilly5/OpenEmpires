@@ -1,10 +1,61 @@
 # OpenEmpires AI Commander — Remaining Phases Handoff
 
+## Targeted economy/clarification repair — 2026-10-06
 
+**READY FOR FINALIZATION AUDIT**, subject to the exact source/evidence records in `Docs/CommanderFix` (not a release acceptance or new phase).
 
-Recorded: 2026-10-04
+- Generic AllocateWorkers now preserves exact ordinary counts, Idle/current-resource criteria, explicit canonical source kinds and bounded all-idle snapshots. Legacy desired-state/strategic economy policy is unchanged. Deterministic game-side selection, full preflight/reservation and normal Gather/Slaughter commands retain human authority.
+- Structured pending clarification preserves Food/Sheep/worker criteria; `gather food → four` fills locally and creates no production goal. Explicit corrections are guarded; cancelled/reset/late old-runtime state cannot resume.
+- Native restriction/version1 restricted command encoding was conditional: an actual Sheep carcass depletion retarget to berries proved it necessary. Unrestricted binary legacy bytes are unchanged; restricted commands require updated peers.
+- Final focused economy EditMode: 15/15. Relevant Commander suites: 204/204. Five real Luna requests: all HTTP200/finish stop with expected typed output, no retries; bare count completion made no additional API call.
+- Full suites were run once each: EditMode998/998; PlayMode193/194, with one existing strategic lifecycle busy-guard failure. That failure was reproduced and repaired narrowly. Post-repair affected checks: PlayMode16/16 and EditMode38/38 (including economy/chat/host/voice/result-binding). Original failed full XML is retained; do not call the final full PlayMode snapshot green or assume an exhaustive post-repair rerun occurred.
+- No standalone build, native Computer Use, live two-editor multiplayer or hostile audit was done in this targeted fix. Independent finalization audit should verify the complete final checkout and those applicable release gates, plus existing producer-attribution/Scout/exact-structure priorities.
+- Source checkpoint097f01b and manifest include preserved dirty integrated hooks; HEAD alone is not the tested source. Do not reset/overwrite the existing Phase4G/4H/provider/UI/package work. Gemini configuration was not deleted.
+- Stop here. Do not begin Phase4I automatically. The older Phase4G/4H acceptance and narrower result-binding records below are historical evidence, not certification of this changed snapshot.
 
+Recorded: 2026-10-05
 
+## Current narrow Phase 4G refresh — 2026-10-06
+
+**READY FOR ANTIGRAVITY AUDIT** for the refreshed result-binding implementation. Stop here; no automatic next phase.
+
+- Added explicit simulation/source-manager identity and mandatory-result checks, immutable result IDs, civilization-resolved selection, explicit Scout production adapters, exact-building rally without unrelated-unit selection, and sticky result-bound human override.
+- Fresh selected EditMode: 9/9, zero failures/skips, job `d1766219a9b34da3b5ab637ec73bc976` (3.8637103s).
+- Fresh single PlayMode: 1/1, zero failures/skips, job `974e325de24b421f8d35af8f393887eb` (0.7476932s). New Spearmen 7,8,9 patrolled; existing Spearman 6 excluded, tick 901.
+- Documentation and the current source manifest/consistency record are in `Docs/CommanderPhase4G`. This controlled semantic-fixture proof is not live provider, standalone, or native UI acceptance.
+- AntiGravity owns exhaustive regression, independent hostile testing, standalone verification and small final fixes. Priority cases: concurrent/queued producer attribution, actual Scout-to-scouting, constructed-building-to-rally, disposed/evicted/cross-manager references, override timing and partial takeover.
+- No full suites, hostile audit or standalone build were run by this refresh. Existing provider/UI/voice and package working-tree changes were preserved and are outside its verification claim.
+
+The acceptance/build records below are historical snapshots from 2026-10-05. They remain intact, but do not certify the current changed source. The immediate next step is independent audit of this refresh, not automatic release finalization or a new feature phase.
+
+## Phase 4H Closeout — AntiGravity Hostile Audit Passed (2026-10-05)
+
+Phase 4H is **ACCEPTED / FROZEN**. Final AntiGravity hostile audit, local Whisper integration, real audio fixture verification, and full regression battery passed completely.
+
+Verified totals:
+```text
+EditMode full: 969 / 969 passed (job `7bfcf1e4674f4067a9de92e4490d524e`, duration 196.73s)
+PlayMode full: 190 / 190 passed (job `ff08847d590f4b73a954cac6b185b996`, duration 113.30s)
+Phase 4H unit tests: 12 / 12 passed
+Phase 4H audio fixture tests: 4 / 4 passed (whisper.unity local inference)
+Phase 4H PlayMode tests: 6 / 6 passed (job `9e1e55c176a743339f96ac1fff0ac0d9`, duration 1.62s)
+Total Phase 4H tests: 22 / 22 passed
+Combined engine regression: 1,159 / 1,159 passed (0 failed, 0 skipped)
+Windows build: `Builds/Windows/OpenEmpires.exe`, job `build-2f1418ff23`, succeeded (0 errors, 74 warnings, 706.08 MB)
+OpenEmpires.exe SHA-256: 36C5C9F13481406382A8E9EF8FC0EA7CDF055C43BB12FC8FD545B07C199CD277
+OpenEmpires.Runtime.dll SHA-256: D1DFDF284217D3D684AB0A2F278885FDB3E7DF05901933B47573CCE00B8C1823
+com.whisper.unity.dll SHA-256: 02C6C797FEDF95A6348B0B0A7BD77D550971E5AA8DD5B13209A9E3B4A2BC2AEB
+libwhisper.dll SHA-256: 63C782F7A8D2EB3EE7F0CC41508DD53E1BF14DAD9165BE89B10AA5207A1DF687
+ggml-tiny.bin SHA-256: BE07E048E1E599AD46341C8D2A135645097A538221678B7ACDD1B1919C6E1B21
+Standalone launch: verified clean engine/player startup; 0 exceptions in Player.log
+```
+
+Phase 4H verdict is **READY FOR RELEASE CANDIDATE / FINALIZATION**.
+Phase 4E is ACCEPTED / FROZEN.
+Phase 4F is ACCEPTED / FROZEN.
+Phase 4G is ACCEPTED / FROZEN.
+Phase 4H is ACCEPTED / FROZEN.
+NEXT: **Release Candidate / Finalization**.
 
 ## Phase 4G Closeout — AntiGravity Hostile Audit Passed (2026-10-05)
 
@@ -21,12 +72,6 @@ Windows build: `Builds/Windows/OpenEmpires.exe`, job `build-85dbe438d4`, succeed
 SHA-256: 36C5C9F13481406382A8E9EF8FC0EA7CDF055C43BB12FC8FD545B07C199CD277
 Standalone launch: verified clean engine/player startup; 0 exceptions in Player.log
 ```
-
-Phase 4G verdict is **READY FOR PHASE 4H**.
-Phase 4E is ACCEPTED / FROZEN.
-Phase 4F is ACCEPTED / FROZEN.
-Phase 4G is ACCEPTED / FROZEN.
-Phase 4H is NEXT (Local Whisper Voice / Speech-to-Text Input). Phase 4H remains frozen until explicitly directed.
 
 
 

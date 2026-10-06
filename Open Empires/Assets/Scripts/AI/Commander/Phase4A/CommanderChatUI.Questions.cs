@@ -10,11 +10,20 @@ namespace OpenEmpires
     {
         private bool TryHandleQuestionQuery(string message, string normalized)
         {
+            if (!TryObserveQuestionAnswer(normalized, out string answer)) return false;
+            AppendLine("Player", (message ?? string.Empty).Trim(), false);
+            AppendLine("Commander", answer, false);
+            Conversation?.Memory.RecordExplanation(answer);
+            return true;
+        }
+
+        // Existing question logic, now also available as a detached read-only provider observation.
+        private bool TryObserveQuestionAnswer(string normalized, out string answer)
+        {
+            answer = null;
             GameSimulation sim = semanticSimulation ?? advisorySimulation;
             int playerId = Conversation?.PlayerId ?? 0;
             if (sim == null) return false;
-
-            string answer = null;
 
             // 1. Counter questions: "what counters spearmen", "what counters archers", etc.
             Match counterMatch = Regex.Match(normalized, @"^what counters? (.+)$", RegexOptions.CultureInvariant);
@@ -98,12 +107,7 @@ namespace OpenEmpires
                 }
             }
 
-            if (answer == null) return false;
-
-            AppendLine("Player", (message ?? string.Empty).Trim(), false);
-            AppendLine("Commander", answer, false);
-            Conversation?.Memory.RecordExplanation(answer);
-            return true;
+            return answer != null;
         }
 
         private static string AnswerCounterQuestion(GameSimulation sim, int playerId, string target)

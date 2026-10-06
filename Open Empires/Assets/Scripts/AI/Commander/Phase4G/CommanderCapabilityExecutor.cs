@@ -32,6 +32,19 @@ namespace OpenEmpires
             }
 
             CommanderResultBinding resolvedBinding = binding.GetValueOrDefault();
+            if (binding.HasValue && (!ReferenceEquals(resolvedBinding.Runtime, simulation)
+                || resolvedBinding.SourceGoalId < 1 || resolvedBinding.SourceCreatedTick < 0
+                || resolvedBinding.SourceCreatedTick > simulation.CurrentTick
+                || (resolvedBinding.SourceOwner != null
+                    && (resolvedBinding.SourceOwner.IsDisposed
+                        || !ReferenceEquals(resolvedBinding.SourceOwner.Simulation, simulation)
+                        || resolvedBinding.SourceOwner.GetGoal(resolvedBinding.SourceGoalId) == null
+                        || resolvedBinding.SourceOwner.GetGoal(resolvedBinding.SourceGoalId).CreatedTick != resolvedBinding.SourceCreatedTick
+                        || resolvedBinding.SourceOwner.GetGoal(resolvedBinding.SourceGoalId).Status != CommanderGoalStatus.Completed))))
+            {
+                reason = "The referenced producer result is missing, stale, or belongs to another runtime.";
+                return false;
+            }
             if (binding.HasValue && resolvedBinding.Kind == CommanderResultKind.Building
                 && intent.ActionType != CommanderCapabilityActionType.SetRallyPoint)
             {
@@ -52,10 +65,12 @@ namespace OpenEmpires
                         ? resolvedBinding.UnitIds : null,
                     out command, out reason);
 
-            if (!TryResolveUnits(intent.PlayerId, intent.UnitSelector,
+            int[] unitIds = Array.Empty<int>();
+            if (intent.ActionType != CommanderCapabilityActionType.SetRallyPoint
+                && !TryResolveUnits(intent.PlayerId, intent.UnitSelector,
                 binding.HasValue && resolvedBinding.Kind == CommanderResultKind.Units
                     ? resolvedBinding.UnitIds : null,
-                out int[] unitIds))
+                out unitIds))
             {
                 reason = "No eligible owned units match the requested selector.";
                 return false;
@@ -137,7 +152,8 @@ namespace OpenEmpires
                 {
                     case CommanderUnitSelectorKind.Scout: match = unit.UnitType == 4; break;
                     case CommanderUnitSelectorKind.Villagers: match = unit.IsVillager; break;
-                    case CommanderUnitSelectorKind.UnitType: match = unit.UnitType == selector.UnitType; break;
+                    case CommanderUnitSelectorKind.UnitType:
+                        match = unit.UnitType == simulation.ResolveCivUnitType(playerId, selector.UnitType); break;
                     case CommanderUnitSelectorKind.DamagedMilitary:
                         match = !unit.IsVillager && unit.UnitType != 4 && unit.CurrentHealth < unit.MaxHealth; break;
                     default: match = !unit.IsVillager && !unit.IsSheep && unit.UnitType != 4; break;
@@ -150,13 +166,14 @@ namespace OpenEmpires
             return true;
         }
 
-        private static bool MatchesSelector(UnitData unit, CommanderUnitSelector selector)
+        private bool MatchesSelector(UnitData unit, CommanderUnitSelector selector)
         {
             switch (selector.Kind)
             {
                 case CommanderUnitSelectorKind.Scout: return unit.UnitType == 4;
                 case CommanderUnitSelectorKind.Villagers: return unit.IsVillager;
-                case CommanderUnitSelectorKind.UnitType: return unit.UnitType == selector.UnitType;
+                case CommanderUnitSelectorKind.UnitType:
+                    return unit.UnitType == simulation.ResolveCivUnitType(unit.PlayerId, selector.UnitType);
                 case CommanderUnitSelectorKind.DamagedMilitary:
                     return !unit.IsVillager && !unit.IsSheep && unit.UnitType != 4
                         && unit.CurrentHealth < unit.MaxHealth;
@@ -246,7 +263,10 @@ namespace OpenEmpires
             ResourceNodeData resource, int boundBuildingId, out ICommand command, out string reason)
         {
             command = null;
-            BuildingType type = requestedType ?? BuildingType.Barracks;
+            BuildingData boundBuilding = boundBuildingId >= 0
+                ? simulation.BuildingRegistry.GetBuilding(boundBuildingId) : null;
+            BuildingType type = requestedType ?? (boundBuilding != null
+                ? simulation.GetEffectiveBuildingType(boundBuilding) : BuildingType.Barracks);
             BuildingData building = boundBuildingId >= 0
                 ? simulation.BuildingRegistry.GetBuilding(boundBuildingId)
                 : simulation.BuildingRegistry.GetAllBuildings()

@@ -61,6 +61,23 @@ namespace OpenEmpires.Tests
             Assert.That(result.Interpretation.Intent.PlayerId, Is.EqualTo(0));
         }
 
+        [Test]
+        public void VoiceBar_HasSeparateSpaceFromStrategyControls()
+        {
+            var chat = CreateChat(new FakeSemanticProvider(Unit(3)));
+            var voice = chat.GetComponentsInChildren<RectTransform>(true).Single(x => x.name == "VoiceBar");
+            var pause = chat.GetComponentsInChildren<RectTransform>(true).Single(x => x.name == "Pause");
+            pause.gameObject.SetActive(true);
+            pause.parent.gameObject.SetActive(true);
+            var panel = voice.parent.GetComponent<RectTransform>();
+            UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(panel);
+            var voiceCorners = new Vector3[4];
+            var pauseCorners = new Vector3[4];
+            voice.GetWorldCorners(voiceCorners);
+            pause.GetWorldCorners(pauseCorners);
+            Assert.That(voiceCorners[1].y, Is.LessThanOrEqualTo(pauseCorners[0].y));
+        }
+
         [TestCase("{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"BuildStructure\",\"structure\":\"Barracks\",\"count\":1}]}", typeof(BuildStructureGoal))]
         [TestCase("{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"SetResourceAllocation\",\"resource\":\"Food\",\"count\":2}]}", typeof(ResourceAllocationGoal))]
         public async Task SemanticProvider_AdmitsOtherTacticalNodes(string json, Type goalType)
@@ -254,7 +271,32 @@ namespace OpenEmpires.Tests
             Assert.That(reason, Is.Not.Empty);
         }
 
-        private CommanderChatUI CreateChat(FakeSemanticProvider provider)
+        [Test]
+        public async Task LunaQuestion_RejectsExecutableResponseWithoutMutatingGoals()
+        {
+            var transport = new QuestionTransport();
+            var chat = CreateChat(new OpenRouterCommanderProvider("test-only-key", transport));
+            var submission = await chat.SubmitMessageAsync("what counters spearmen?");
+            Assert.That(transport.Calls, Is.EqualTo(1));
+            Assert.That(submission, Is.Null);
+            Assert.That(goals.Goals, Is.Empty);
+            Assert.That(simulation.CommandBuffer.FlushCommands(), Is.Empty);
+        }
+
+        private sealed class QuestionTransport : ICommanderHttpTransport
+        {
+            public int Calls;
+            public Task<CommanderHttpResponse> PostJsonAsync(Uri uri, string body,
+                IReadOnlyDictionary<string, string> headers, CancellationToken token)
+            {
+                Calls++;
+                string encoded = Unit(3).Replace("\"", "\\\"");
+                return Task.FromResult(new CommanderHttpResponse(200,
+                    "{\"choices\":[{\"finish_reason\":\"stop\",\"message\":{\"content\":\"" + encoded + "\"}}]}"));
+            }
+        }
+
+        private CommanderChatUI CreateChat(ICommanderAIProvider provider)
         {
             var gameObject = new GameObject("CommanderPhase4E1Chat");
             objects.Add(gameObject);

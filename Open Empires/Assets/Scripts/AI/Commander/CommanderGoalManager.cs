@@ -32,6 +32,7 @@ namespace OpenEmpires
         public void ResetDiagnosticPathCheckCount() => planner.ResetDiagnosticPathCheckCount();
         public int PlayerId => playerId;
         internal GameSimulation Simulation => simulation;
+        internal bool IsDisposed => disposed;
         public int CurrentTick => simulation.CurrentTick;
         public CommanderGoal ActiveGoal { get; private set; }
         public event Action<CommanderGoal> GoalStatusChanged;
@@ -163,6 +164,14 @@ namespace OpenEmpires
             return Register(new ResourceAllocationGoal(playerId, resource, target, maxDurationTicks), constraints);
         }
 
+        public AllocateWorkersGoal SubmitWorkerAllocation(CommanderWorkerAllocation allocation,
+            int maxDurationTicks = 36000, IReadOnlyList<CommanderConstraint> constraints = null)
+        {
+            if (allocation == null || !allocation.IsValid(simulation.Config.MaxPopulation))
+                throw new ArgumentException("Invalid worker allocation criteria.", nameof(allocation));
+            return Register(new AllocateWorkersGoal(playerId, allocation, maxDurationTicks), constraints);
+        }
+
         public ReachAgeGoal SubmitReachAge(CommanderSemanticAgeTarget requestedTarget,
             int maxDurationTicks = 36000, IReadOnlyList<CommanderConstraint> constraints = null)
         {
@@ -230,6 +239,10 @@ namespace OpenEmpires
                             structureGoal.TargetTotal = Math.Max(structureGoal.TargetTotal,
                                 earlier.TargetTotal + build.Count);
                 }
+                else if (node.Intent is AllocateWorkersIntent workers)
+                {
+                    goal = new AllocateWorkersGoal(playerId, workers.Allocation, maxDurationTicks);
+                }
                 else if (node.Intent is SetResourceAllocationIntent allocation)
                 {
                     int target = allocation.Mode == ResourceAllocationMode.Increase
@@ -277,6 +290,7 @@ namespace OpenEmpires
                     CommanderGoal source = byIndex[node.ResultFromNode.Value];
                     if (capability == null) throw new ArgumentException(
                         "Only capability actions may consume a result reference.", nameof(plan));
+                    capability.RequiresResultBinding = true;
                     if (source is EnsureUnitCountGoal units)
                     {
                         units.HasResultConsumer = true;
@@ -297,6 +311,7 @@ namespace OpenEmpires
             {
                 CommanderGoal goal = pending[i];
                 goal.GoalId = nextGoalId++;
+                goal.RuntimeOwner = this;
                 goal.CreatedTick = simulation.CurrentTick;
                 goals.Add(goal);
                 activeGoals.Add(goal);
@@ -350,6 +365,7 @@ namespace OpenEmpires
                 throw new InvalidOperationException(
                     $"The active Commander goal limit of {MaxActiveGoals} has been reached.");
             goal.GoalId = nextGoalId++;
+            goal.RuntimeOwner = this;
             goal.CreatedTick = simulation.CurrentTick;
             planner.CaptureConstraints(goal, constraints);
             goals.Add(goal);
@@ -464,6 +480,13 @@ namespace OpenEmpires
                         continue;
                     }
                     CommanderPlan plan = planner.Plan(goal, currentTick);
+                    if (plan.Command != null && goal is AllocateWorkersGoal workers && !workers.ReservationsAcquired)
+                    {
+                        if (workerAuthority.TryReserveWorkers(workers.SelectedWorkerIds, goal.GoalId, currentTick))
+                            workers.ReservationsAcquired = true;
+                        else plan = new CommanderPlan(CommanderGoalStatus.Blocked,
+                            "The full selected worker set could not be reserved; no assignments were issued.", 0, 0);
+                    }
                     if (plan.Command != null && !workerAuthority.TryReserveCommand(goal, plan.Command, currentTick))
                         plan = new CommanderPlan(CommanderGoalStatus.Blocked,
                             "Worker is protected or reserved by another goal.", plan.OwnedCount, plan.QueuedCount);
@@ -507,6 +530,11 @@ namespace OpenEmpires
                             reachAge.AgeUpIssuedSimulationTick = simulation.CurrentTick;
                         }
                         simulation.CommandBuffer.EnqueueCommand(plan.Command, CommandEnqueueSource.Commander);
+                        if (goal is AllocateWorkersGoal allocation)
+                        {
+                            allocation.NextCommandGroup++;
+                            allocation.LastIssuedSimulationTick = simulation.CurrentTick;
+                        }
                         if (goal is CommanderCapabilityGoal capability)
                         {
                             capability.CommandIssued = true;
@@ -586,6 +614,40 @@ namespace OpenEmpires
         private void HandleCommandEnqueued(ICommand command, CommandEnqueueSource source)
         {
             workerAuthority.ObserveEnqueuedCommand(command, source, simulation.CurrentTick);
+            if (source == CommandEnqueueSource.Commander || command.PlayerId != playerId) return;
+            int[] subjects = CommanderWorkerAuthority.GetSubjectUnitIds(command);
+            if (subjects == null) return;
+            for (int i = 0; i < activeGoals.Count; i++)
+            {
+                if (!(activeGoals[i] is AllocateWorkersGoal allocation) || allocation.IsTerminal) continue;
+                for (int s = 0; s < subjects.Length; s++)
+                {
+                    if (!allocation.SelectedWorkerIds.Contains(subjects[s])) continue;
+                    allocation.HumanInterrupted = true;
+                    workerAuthority.ReleaseGoal(allocation.GoalId);
+                    break;
+                }
+            }
+            for (int i = 0; i < activeGoals.Count; i++)
+            {
+                if (!(activeGoals[i] is CommanderCapabilityGoal capability) || capability.IsTerminal
+                    || !capability.RequiresResultBinding
+                    || !(capability.ResultSourceGoal is EnsureUnitCountGoal producer)) continue;
+                for (int s = 0; s < subjects.Length; s++)
+                {
+                    UnitData unit = simulation.UnitRegistry.GetUnit(subjects[s]);
+                    if (unit == null || unit.PlayerId != playerId) continue;
+                    bool result = false;
+                    if (producer.ResultCaptureTick >= 0)
+                    {
+                        for (int r = 0; r < producer.ResultUnitIds.Count; r++)
+                            if (producer.ResultUnitIds[r] == unit.Id) { result = true; break; }
+                    }
+                    else result = !producer.BaselineUnitIds.Contains(unit.Id)
+                        && unit.UnitType == simulation.ResolveCivUnitType(playerId, producer.RequestedUnitType);
+                    if (result) { capability.ResultHumanOverride = true; break; }
+                }
+            }
         }
 
         private void HandleBuildingPlacedFromCommand(ICommand command, BuildingData created)

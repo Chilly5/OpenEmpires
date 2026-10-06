@@ -201,6 +201,7 @@ namespace OpenEmpires
 
         private void LateUpdate()
         {
+            RefreshPanelSize();
             ScanOwnedAdvisories();
             StrategicPlanner planner = strategicPipeline?.StrategicPlanner;
             if (planner == null || currentPlanStatusText == null || selectedPlanId == 0) return;
@@ -539,10 +540,18 @@ namespace OpenEmpires
 
         private void SetHostButtons(bool select, bool pause, bool resume, bool cancel)
         {
-            if (selectPlanButton != null) selectPlanButton.interactable = select;
-            if (pausePlanButton != null) pausePlanButton.interactable = pause;
-            if (resumePlanButton != null) resumePlanButton.interactable = resume;
-            if (cancelPlanButton != null) cancelPlanButton.interactable = cancel;
+            if (strategicHostRow != null) strategicHostRow.SetActive(select || pause || resume || cancel);
+            SetVisibleHostButton(selectPlanButton, select);
+            SetVisibleHostButton(pausePlanButton, pause);
+            SetVisibleHostButton(resumePlanButton, resume);
+            SetVisibleHostButton(cancelPlanButton, cancel);
+        }
+
+        private void SetVisibleHostButton(Button button, bool relevant)
+        {
+            if (button == null) return;
+            button.gameObject.SetActive(relevant);
+            button.interactable = relevant && !submitting;
         }
     }
 }

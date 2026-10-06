@@ -1,0 +1,76 @@
+{
+  "date": "2026-10-06",
+  "scope": "Phase 4G narrow result-binding refresh",
+  "verdict": "READY FOR ANTIGRAVITY AUDIT",
+  "unity": "6000.5.9f1",
+  "editMode": {
+    "jobId": "d1766219a9b34da3b5ab637ec73bc976",
+    "total": 9,
+    "passed": 9,
+    "failed": 0,
+    "skipped": 0,
+    "durationSeconds": 3.8637103,
+    "testNames": [
+      "OpenEmpires.Tests.CommanderPhase4GCapabilityTests.ParsesWorkedResourcePatrolWithoutConcreteTargetData",
+      "OpenEmpires.Tests.CommanderPhase4GCapabilityTests.RejectsWorkedResourceActionWithoutResourceType",
+      "OpenEmpires.Tests.CommanderPhase4GCapabilityTests.ParsesResearchTechnologyAsBoundedSemanticAction",
+      "OpenEmpires.Tests.CommanderPhase4GCapabilityTests.ParsesMillNearWorkedFoodWithNoCoordinateAuthority",
+      "OpenEmpires.Tests.CommanderPhase4GCapabilityTests.CapabilityNodeAdmitsThroughExistingGameSideGraphBoundary",
+      "OpenEmpires.Tests.CommanderPhase4GCapabilityTests.CapabilityActionIntent_DtoRoundTripsSemanticSelectors",
+      "OpenEmpires.Tests.CommanderPhase4GCapabilityTests.CapabilityValidator_RejectsRepairWithMilitarySelector",
+      "OpenEmpires.Tests.CommanderPhase4GCapabilityTests.ResultBinding_UsesOnlyTheExactProducedUnitSet",
+      "OpenEmpires.Tests.CommanderPhase4GCapabilityTests.ResultBinding_RejectsIncompatibleDependency"
+    ]
+  },
+  "playMode": {
+    "jobId": "974e325de24b421f8d35af8f393887eb",
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "durationSeconds": 0.7476932,
+    "testName": "OpenEmpires.Tests.CommanderPhase4GResultBindingPlayModeTests.BuildProduceThenPatrol_UsesExactProducedSpearmen",
+    "playerRequest": "patrol my goldmine with 3 new spearmen you build from a barracks",
+    "inputBoundary": "Deterministic semantic JSON fixture, not real provider/UI",
+    "setup": "Controlled terrain/fog/resources, existing completed Barracks #1, six villagers and pre-existing Spearman #6",
+    "producerDesiredTotal": 4,
+    "baselineLivingSpearmen": 1,
+    "producedIds": [
+      7,
+      8,
+      9
+    ],
+    "patrolIds": [
+      7,
+      8,
+      9
+    ],
+    "excludedExistingId": 6,
+    "completionTick": 901,
+    "consumerStatus": "Executing"
+  },
+  "diagnostics": {
+    "crossRuntimeRedJob": "f7ab3f1c6a004c20b771f26c0bd71cd2",
+    "civilizationRedJob": "858b55014910427aadca23d9a914c04f",
+    "combinedBindingRedJob": "2eff2dc1a7ee482b82435b318f54cda1",
+    "humanOverrideRedJob": "1381934912b54b88a7957d2c8505a70c",
+    "notes": "Repetitions of the same one focused binding case; stale/import and NUnit compatibility attempts are not passing evidence."
+  },
+  "notRun": [
+    "Full EditMode",
+    "Full PlayMode",
+    "Hostile suite/audit",
+    "Standalone build/launch",
+    "Live provider",
+    "Native UI/voice",
+    "Complete Scout/building dependent gameplay scenarios"
+  ],
+  "priorityAuditGate": "Concurrent/pre-queued same-type production and construction attribution: baseline exclusion is not queue-token provenance.",
+  "unchangedBoundaries": [
+    "Canonical gameplay data",
+    "ICommand/CommandBuffer/GameSimulation authority",
+    "Strategic approval",
+    "General worker protection"
+  ],
+  "historicalAcceptance": "Older audit/build records are retained but do not certify this source refresh."
+}

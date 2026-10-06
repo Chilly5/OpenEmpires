@@ -165,7 +165,7 @@ namespace OpenEmpires.Tests
             var intent = new CapabilityActionIntent(0, CommanderCapabilityActionType.PatrolArea,
                 new CommanderUnitSelector(CommanderUnitSelectorKind.UnitType, 3, 1),
                 new CommanderLocationSelector(CommanderLocationSelectorKind.PlayerBase));
-            var binding = CommanderResultBinding.ForUnits(units, 10, 0);
+            var binding = CommanderResultBinding.ForUnits(units, 10, 0, simulation);
             var executor = new CommanderCapabilityExecutor(simulation);
 
             bool ok = executor.TryCreateCommand(intent, binding, out ICommand cmd, out string reason);
@@ -199,7 +199,7 @@ namespace OpenEmpires.Tests
             var intent = new CapabilityActionIntent(0, CommanderCapabilityActionType.PatrolArea,
                 new CommanderUnitSelector(CommanderUnitSelectorKind.UnitType, 3, 1),
                 new CommanderLocationSelector(CommanderLocationSelectorKind.PlayerBase));
-            var binding = CommanderResultBinding.ForUnits(units, 10, 0);
+            var binding = CommanderResultBinding.ForUnits(units, 10, 0, simulation);
             var executor = new CommanderCapabilityExecutor(simulation);
 
             bool ok = executor.TryCreateCommand(intent, binding, out ICommand cmd, out string reason);
@@ -230,7 +230,7 @@ namespace OpenEmpires.Tests
             var intent = new CapabilityActionIntent(0, CommanderCapabilityActionType.PatrolArea,
                 new CommanderUnitSelector(CommanderUnitSelectorKind.UnitType, 3, 1),
                 new CommanderLocationSelector(CommanderLocationSelectorKind.PlayerBase));
-            var binding = CommanderResultBinding.ForUnits(units, 10, 0);
+            var binding = CommanderResultBinding.ForUnits(units, 10, 0, simulation);
             var executor = new CommanderCapabilityExecutor(simulation);
 
             bool ok = executor.TryCreateCommand(intent, binding, out _, out _);

@@ -53,11 +53,18 @@ namespace OpenEmpires
                     case "Request": outcome = CommanderSemanticOutcome.Request; break;
                     case "Clarify": outcome = CommanderSemanticOutcome.Clarify; break;
                     case "Unsupported": outcome = CommanderSemanticOutcome.Unsupported; break;
+                    case "Answer": outcome = CommanderSemanticOutcome.Answer; break;
                     default: throw new JsonException();
                 }
 
                 if (outcome != CommanderSemanticOutcome.Request)
                 {
+                    if (outcome == CommanderSemanticOutcome.Clarify && root.Property("pending") != null)
+                    {
+                        CheckFields(root, "outcome", "message", "pending", "missingFields");
+                        return new CommanderSemanticResult(true, outcome, Array.Empty<CommanderSemanticNode>(),
+                            OptionalExplanation(root), ParsePendingDraft(root));
+                    }
                     CheckFields(root, "outcome", "message");
                     string message = OptionalExplanation(root);
                     return new CommanderSemanticResult(true, outcome,
@@ -98,6 +105,7 @@ namespace OpenEmpires
                         case "Villager": unit = 0; break;
                         case "Spearman": unit = 1; break;
                         case "Archer": unit = 2; break;
+                        case "Scout": unit = 4; break;
                         case "Knight": unit = 7; break;
                         default: throw new JsonException();
                     }
@@ -169,6 +177,10 @@ namespace OpenEmpires
                     return new CommanderSemanticNode(CommanderSemanticNodeType.SetResourceAllocation,
                         resourceType: ParseResource(RequiredString(node, "resource")),
                         count: RequiredCount(node, 0, 200), dependsOn: dependsOn);
+
+                case "AllocateWorkers":
+                    return new CommanderSemanticNode(CommanderSemanticNodeType.AllocateWorkers,
+                        workerAllocation: ParseWorkerAllocation(node), dependsOn: dependsOn);
 
                 case "ReachAge":
                     CheckFields(node, "type", "targetAge", "dependsOn");
@@ -370,6 +382,7 @@ namespace OpenEmpires
                 case 0: return producer == BuildingType.TownCenter;
                 case 1: return producer == BuildingType.Barracks;
                 case 2: return producer == BuildingType.ArcheryRange;
+                case 4: return producer == BuildingType.Stables;
                 case 7: return producer == BuildingType.Stables;
                 default: return false;
             }

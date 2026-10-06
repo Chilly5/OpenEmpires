@@ -1,0 +1,184 @@
+{
+  "phase": "Phase 4H",
+  "title": "Local Voice / Speech-to-Text Input",
+  "branch": "unit_models_and_voice_control",
+  "unity_version": "6000.5.9f1",
+  "platform": "Windows x64",
+  "stt_engine": "whisper.cpp via com.whisper.unity (commit e951e4a4c6e44c781b1d36bb8dc5bf1b7bae9687)",
+  "whisper_model": "ggml-tiny.bin (77,691,713 bytes)",
+  "production_source": [
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderAudioData.cs",
+      "size_bytes": 988,
+      "sha256": "AFE3723517A94925B3C055856BD1FCA01159893C93C4ECD59753672402A99359"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderAudioConverter.cs",
+      "size_bytes": 3552,
+      "sha256": "0624CDC05083650324B76E95E206CD49DAF574EAB6D6AC4400370DF4535C3975"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderSpeechToTextResult.cs",
+      "size_bytes": 2547,
+      "sha256": "C96949ED239660044E9B84CC2E4A561322FA00321FF15BCF7F722FA697ABC921"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/ICommanderSpeechToTextProvider.cs",
+      "size_bytes": 847,
+      "sha256": "FB0C48A1B38F197249067FB0CA0825E7DB11611036B6FB9006C8F075AF42F119"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/WhisperModelLocator.cs",
+      "size_bytes": 2833,
+      "sha256": "68ABEF27C9C997488FDB2CF2B50C1446BEA0B2C9688D691439BEA883C004690B"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/WhisperCommanderSpeechToTextProvider.cs",
+      "size_bytes": 7650,
+      "sha256": "2546A8A00AF744294625A8CA44E26A01D92210CD6F7BEA8A6BF7EDF763AAB608"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/MockCommanderSpeechToTextProvider.cs",
+      "size_bytes": 2987,
+      "sha256": "5F9D106FAB9FEBFF7D362C2D0D537B2A9C05DF728348CAF5083AB2F0D55B9E1A"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/ICommanderAudioCapture.cs",
+      "size_bytes": 525,
+      "sha256": "5A682DD1DFF6D132DCC89D0DB55B52D49FF617A5998897E9C3A9882C06914372"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/UnityMicrophoneAudioCapture.cs",
+      "size_bytes": 6278,
+      "sha256": "8F9B11463D3082CABFF4183F0318E0B4FE3C2216775AD942C36A9C6D208E22CD"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderVoiceState.cs",
+      "size_bytes": 273,
+      "sha256": "43AB4C7A40FCDA2CBD68C6AC8490CA1EE2C550E6FE117C4281133D48FCB607A6"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderVoiceSettings.cs",
+      "size_bytes": 3098,
+      "sha256": "5759DC71FBA7B1E95FC5688C19D9C437E75CEE8FC4733E3DE54D00862A36EB4C"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderVoiceInputController.cs",
+      "size_bytes": 9189,
+      "sha256": "B8B69CF1DE3C9838327EC8FA95BCBC9A273EEA73381865216E688A87434B6019"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs",
+      "size_bytes": 54456,
+      "sha256": "E1C38679B2A311195B37C240E29C24035B907A417DB89638E00C655A33711736"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderChatUI.Voice.cs",
+      "size_bytes": 12302,
+      "sha256": "794FAB9FC13360453AF7600EB10DAD8EEC3ED754FBE125D56B69FD29AFCC3E9F"
+    },
+    {
+      "path": "Assets/Scripts/Core/KeybindManager.cs",
+      "size_bytes": 9229,
+      "sha256": "8B36FDDE836F7C3D423DB55C9BC1A2C27B2EF39F965CE8CC94F663EC870C5B45"
+    },
+    {
+      "path": "Assets/Scripts/OpenEmpires.Runtime.asmdef",
+      "size_bytes": 605,
+      "sha256": "4F671DC21784016F135A5C030A12E968A748851184DB0DCE5B97763F49DE4C31"
+    }
+  ],
+  "configuration_and_packages": [
+    {
+      "path": "Packages/manifest.json",
+      "size_bytes": 2558,
+      "sha256": "4169965381B1BD0B4DF6D3AC9C42FFB9A420EA34E32998CEF0FF8A989FED7809"
+    },
+    {
+      "path": "Packages/packages-lock.json",
+      "size_bytes": 16008,
+      "sha256": "F6724F0F8E08424119074AAD77C9A0D29B6EB186B292C22FC4D99599BDF43DFF"
+    },
+    {
+      "path": ".gitignore",
+      "size_bytes": 66,
+      "sha256": "FA7B66876BF46225602AAA7FF1D040ADF6A42B7E5EEFB6840764BE03829DA403"
+    }
+  ],
+  "test_source_and_fixtures": [
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4HVoiceTests.cs",
+      "size_bytes": 15284,
+      "sha256": "FB571F8C66BCA2AE8AD57345E3D61E0F84057A0001222B55F588809F1ECB3371"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4HAudioFixtureTests.cs",
+      "size_bytes": 5410,
+      "sha256": "2EAB83E5B46D2E4819E101BB158C94789BB2753D5A900F2755076878361F7B95"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase4HVoicePlayModeTests.cs",
+      "size_bytes": 12759,
+      "sha256": "518B56D1087C7BDB692BE955FCDB7F8CF5F1F577E807257DBC93E868E93F2C5E"
+    },
+    {
+      "path": "Assets/Tests/Fixtures/Audio/make_ten_spearmen.wav",
+      "size_bytes": 85344,
+      "sha256": "552501AB58C50436311E064B81688B521F18C88457D0DC732B030D47DA03F07E"
+    },
+    {
+      "path": "Assets/Tests/Fixtures/Audio/build_mill.wav",
+      "size_bytes": 159416,
+      "sha256": "B072B0B5D5AB3240E227F31EC10375324A0D1FAF680B8CEE54276C16F0E1C1A7"
+    },
+    {
+      "path": "Assets/Tests/Fixtures/Audio/what_counters_spearmen.wav",
+      "size_bytes": 92620,
+      "sha256": "FB0C725B586620370C62ECA04C33A842B44CF6BC15E09850440EB48C9D28ADDC"
+    },
+    {
+      "path": "Assets/Tests/Fixtures/Audio/jfk.wav",
+      "size_bytes": 352078,
+      "sha256": "59DFB9A4ACB36FE2A2AFFC14BACBEE2920FF435CB13CC314A08C13F66BA7860E"
+    }
+  ],
+  "standalone_build_artifacts": [
+    {
+      "path": "Builds/Windows/OpenEmpires.exe",
+      "size_bytes": 667648,
+      "sha256": "36C5C9F13481406382A8E9EF8FC0EA7CDF055C43BB12FC8FD545B07C199CD277"
+    },
+    {
+      "path": "Builds/Windows/OpenEmpires_Data/Managed/OpenEmpires.Runtime.dll",
+      "size_bytes": 1582080,
+      "sha256": "D1DFDF284217D3D684AB0A2F278885FDB3E7DF05901933B47573CCE00B8C1823"
+    },
+    {
+      "path": "Builds/Windows/OpenEmpires_Data/Managed/com.whisper.unity.dll",
+      "size_bytes": 55808,
+      "sha256": "02C6C797FEDF95A6348B0B0A7BD77D550971E5AA8DD5B13209A9E3B4A2BC2AEB"
+    },
+    {
+      "path": "Builds/Windows/OpenEmpires_Data/Plugins/x86_64/libwhisper.dll",
+      "size_bytes": 455680,
+      "sha256": "63C782F7A8D2EB3EE7F0CC41508DD53E1BF14DAD9165BE89B10AA5207A1DF687"
+    },
+    {
+      "path": "Builds/Windows/OpenEmpires_Data/StreamingAssets/Whisper/ggml-tiny.bin",
+      "size_bytes": 77691713,
+      "sha256": "BE07E048E1E599AD46341C8D2A135645097A538221678B7ACDD1B1919C6E1B21"
+    }
+  ],
+  "verification_summary": {
+    "phase_tests_passed": 22,
+    "phase_tests_failed": 0,
+    "full_editmode_passed": 969,
+    "full_editmode_failed": 0,
+    "full_playmode_passed": 190,
+    "full_playmode_failed": 0,
+    "total_regression_passed": 1159,
+    "total_regression_failed": 0,
+    "total_regression_skipped": 0,
+    "final_verdict": "READY FOR RELEASE CANDIDATE / FINALIZATION"
+  }
+}

@@ -202,6 +202,7 @@ namespace OpenEmpires.Tests
                     new CommanderLocationSelector(CommanderLocationSelectorKind.VisibleEnemy));
                 var executor = new CommanderCapabilityExecutor(simulation);
 
+
                 Assert.That(executor.TryCreateCommand(intent, out _, out _), Is.False);
             }
             finally
@@ -310,8 +311,22 @@ namespace OpenEmpires.Tests
                 var intent = new CapabilityActionIntent(0, CommanderCapabilityActionType.PatrolArea,
                     new CommanderUnitSelector(CommanderUnitSelectorKind.UnitType, 3, 1),
                     new CommanderLocationSelector(CommanderLocationSelectorKind.PlayerBase));
-                var binding = CommanderResultBinding.ForUnits(produced, 7, 11);
+                var binding = CommanderResultBinding.ForUnits(produced, 7, 0, simulation);
                 var executor = new CommanderCapabilityExecutor(simulation);
+
+                var foreignSimulation = new GameSimulation(config, 1, new[] { 0 }, System.Array.Empty<int>());
+                foreignSimulation.CreateBuilding(0, BuildingType.TownCenter, x, z, false, true);
+                for (int i = 0; i < 4; i++)
+                {
+                    UnitData duplicateId = foreignSimulation.UnitRegistry.CreateUnit(0,
+                        foreignSimulation.MapData.TileToWorldFixed(x + 2 + i, z + 2), Fixed32.One,
+                        Fixed32.FromFloat(.4f), Fixed32.One);
+                    duplicateId.UnitType = i == 0 ? 2 : 1;
+                    duplicateId.MaxHealth = duplicateId.CurrentHealth = 100;
+                }
+                Assert.That(new CommanderCapabilityExecutor(foreignSimulation)
+                    .TryCreateCommand(intent, binding, out _, out _), Is.False,
+                    "A result from another simulation must not bind coincidentally identical IDs.");
 
                 Assert.That(executor.TryCreateCommand(intent, binding, out ICommand command, out string reason),
                     Is.True, reason);
@@ -319,6 +334,60 @@ namespace OpenEmpires.Tests
                 Assert.That(((PatrolCommand)command).UnitIds, Is.EqualTo(produced.ToArray()));
                 Assert.That(System.Array.IndexOf(((PatrolCommand)command).UnitIds, unrelated.Id),
                     Is.EqualTo(-1));
+
+                simulation.SetPlayerCivilizations(new[] { Civilization.HolyRomanEmpire });
+                foreach (int id in produced) simulation.UnitRegistry.GetUnit(id).UnitType = 12;
+                bool civBound = executor.TryCreateCommand(intent, binding, out _, out string civReason);
+
+                CommanderSemanticResult scout = CommanderSemanticJson.Parse(
+                    "{\"outcome\":\"Request\",\"nodes\":[" +
+                    "{\"type\":\"EnsureUnitCount\",\"unit\":\"Scout\",\"count\":2}," +
+                    "{\"type\":\"ScoutArea\",\"unitSelector\":\"Scout\",\"count\":1," +
+                    "\"location\":\"PlayerBase\",\"dependsOn\":[0],\"resultFromNode\":0}]}");
+                bool scoutAdmitted = CommanderSemanticGraphAdmission.TryAdmit(scout, CreateContext(0), out _, out _);
+
+                foreach (UnitData unit in simulation.UnitRegistry.GetAllUnits()) unit.CurrentHealth = 0;
+                BuildingData mill = simulation.CreateBuilding(0, BuildingType.Mill, x - 6, z, false);
+                var rally = new CapabilityActionIntent(0, CommanderCapabilityActionType.SetRallyPoint,
+                    new CommanderUnitSelector(CommanderUnitSelectorKind.Military),
+                    new CommanderLocationSelector(CommanderLocationSelectorKind.PlayerBase));
+                bool structureBound = executor.TryCreateCommand(rally,
+                    CommanderResultBinding.ForBuilding(mill.Id, 8, 0, simulation), out command, out reason);
+                Assert.That(civBound && scout.IsValid && scoutAdmitted
+                    && CommanderIntentCatalog.IsSupportedUnit(4) && structureBound, Is.True,
+                    $"civ={civBound} ({civReason}); Scout parsed={scout.IsValid}, admitted={scoutAdmitted}; structure={structureBound} ({reason})");
+                Assert.That(((SetRallyPointCommand)command).BuildingId, Is.EqualTo(mill.Id));
+
+                using (var manager = new CommanderGoalManager(simulation, 0))
+                {
+                    CommanderSemanticResult graph = CommanderSemanticJson.Parse(
+                        "{\"outcome\":\"Request\",\"nodes\":[" +
+                        "{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":3}," +
+                        "{\"type\":\"PatrolArea\",\"unitSelector\":\"Spearman\",\"count\":3," +
+                        "\"location\":\"PlayerBase\",\"dependsOn\":[0],\"resultFromNode\":0}]}");
+                    Assert.That(CommanderSemanticGraphAdmission.TryAdmit(graph, CreateContext(0), out var plan, out _), Is.True);
+                    var goals = manager.SubmitSemanticGraph(plan);
+                    var newIds = new List<int>();
+                    for (int i = 0; i < 3; i++)
+                    {
+                        UnitData unit = simulation.UnitRegistry.CreateUnit(0,
+                            simulation.MapData.TileToWorldFixed(x + 2 + i, z + 3), Fixed32.One,
+                            Fixed32.FromFloat(.4f), Fixed32.One);
+                        unit.UnitType = 12;
+                        unit.MaxHealth = unit.CurrentHealth = 100;
+                        newIds.Add(unit.Id);
+                    }
+                    ((EnsureUnitCountGoal)goals[0]).CaptureUnitResult(newIds, 0);
+                    goals[0].SetStatus(CommanderGoalStatus.Completed, "Focused result fixture");
+                    simulation.CommandBuffer.EnqueueCommand(new MoveCommand(0, new[] { newIds[0] },
+                        simulation.MapData.TileToWorldFixed(x + 9, z + 9)));
+                    simulation.CommandBuffer.FlushCommands();
+                    manager.Tick(0);
+                    manager.Tick(1050);
+                    Assert.That(goals[1].Status, Is.EqualTo(CommanderGoalStatus.Blocked),
+                        "A result-bound goal must not reclaim manually overridden results after the ordinary protection timeout.");
+                    Assert.That(simulation.CommandBuffer.FlushCommands(), Has.None.TypeOf<PatrolCommand>());
+                }
             }
             finally
             {
@@ -331,7 +400,7 @@ namespace OpenEmpires.Tests
         {
             CommanderSemanticResult result = CommanderSemanticJson.Parse(
                 "{\"outcome\":\"Request\",\"nodes\":[" +
-                "{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"amount\":3}," +
+                "{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":3}," +
                 "{\"type\":\"PatrolArea\",\"unitSelector\":\"Archer\",\"count\":3," +
                 "\"location\":\"PlayerBase\",\"dependsOn\":[0],\"resultFromNode\":0}]}" );
 

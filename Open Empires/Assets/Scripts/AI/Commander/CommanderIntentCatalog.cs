@@ -9,6 +9,7 @@ namespace OpenEmpires
         public const int VillagerUnitType = 0;
         public const int SpearmanUnitType = 1;
         public const int ArcherUnitType = 2;
+        public const int ScoutUnitType = 4;
         public const int KnightUnitType = 7;
 
         private static readonly Dictionary<string, int> UnitAliases = CreateUnitAliases();
@@ -39,6 +40,7 @@ namespace OpenEmpires
             return unitType == VillagerUnitType
                 || unitType == SpearmanUnitType
                 || unitType == ArcherUnitType
+                || unitType == ScoutUnitType
                 || unitType == KnightUnitType;
         }
 
@@ -60,6 +62,7 @@ namespace OpenEmpires
                 case VillagerUnitType: return plural ? "villagers" : "Villager";
                 case SpearmanUnitType: return plural ? "spearmen" : "Spearman";
                 case ArcherUnitType: return plural ? "archers" : "Archer";
+                case ScoutUnitType: return plural ? "scouts" : "Scout";
                 case KnightUnitType: return plural ? "knights" : "Knight";
                 default: return "unit " + unitType;
             }
@@ -104,6 +107,8 @@ namespace OpenEmpires
             aliases["builders"] = VillagerUnitType;
             aliases["spearmen"] = SpearmanUnitType;
             aliases["archers"] = ArcherUnitType;
+            aliases["scout"] = ScoutUnitType;
+            aliases["scouts"] = ScoutUnitType;
             aliases["knights"] = KnightUnitType;
             return aliases;
         }

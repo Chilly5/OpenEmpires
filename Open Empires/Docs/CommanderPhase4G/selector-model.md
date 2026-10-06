@@ -24,3 +24,13 @@ An action may add `resultFromNode` to consume a prior producer node. This is not
 5. The dependent executor requires the exact bound count/ID or exact building ID and rechecks ownership, liveness, completion and human protection.
 
 If the result is missing, stale, destroyed, manually controlled, or from another manager/runtime, the action is blocked. The resolver never silently replaces a bound Spearman with another military unit or a bound Barracks with another production building. Ordinary selector fallback is available only when the semantic action omits `resultFromNode`.
+
+## 2026-10-06 clarifications
+
+Typed unit selectors compare against `ResolveCivUnitType(player, semanticType)` for both ordinary and result-bound resolution, rather than comparing a base type directly to a civilization replacement. Scout remains Scout, not generic military.
+
+For “new units, then use those units”, the semantic graph must explicitly retain `resultFromNode` and its dependency edge. An ordinary existing-unit selector without that reference is a different semantic request, not an automatic recovery policy for a missing result. No `allowFallback` extension was added.
+
+Result-bound manual override is sticky for the dependent action. Before result capture, a human command to a post-baseline matching unit conservatively invalidates that consumer; after capture, only the captured IDs trigger the override. A partial takeover blocks the dependent action without shrinking/substituting its required exact set. Already-issued gameplay orders on other units are not undone.
+
+Source and handle identities are in-memory object identities, not randomized IDs and not multiplayer gameplay state. They add no nondeterministic simulation decision or new network command format.

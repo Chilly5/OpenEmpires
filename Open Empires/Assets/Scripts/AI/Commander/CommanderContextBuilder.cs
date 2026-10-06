@@ -16,12 +16,14 @@ namespace OpenEmpires
             var counts = new SortedDictionary<int, int>();
             var queued = new SortedDictionary<int, int>();
             var workerAllocation = new SortedDictionary<ResourceType, int>();
+            int idleVillagers = 0;
             foreach (ResourceType resourceType in Enum.GetValues(typeof(ResourceType)))
                 workerAllocation.Add(resourceType, 0);
             foreach (var unit in simulation.UnitRegistry.GetAllUnits())
             {
                 if (unit.PlayerId == player && unit.CurrentHealth > 0 && unit.State != UnitState.Dead)
                 {
+                    if (unit.IsVillager && !unit.IsSheep && unit.State == UnitState.Idle && unit.CommandQueue.Count == 0) idleVillagers++;
                     counts[unit.UnitType] = counts.TryGetValue(unit.UnitType, out int count) ? count + 1 : 1;
                     if ((unit.IsVillager || unit.UnitType == 0)
                         && IsGatheringAssignment(unit.State)
@@ -94,6 +96,7 @@ namespace OpenEmpires
                 if (goal is EnsureUnitCountGoal ensure) { target = CommanderIntentCatalog.GetUnitDisplayName(ensure.RequestedUnitType); amount = ensure.TargetTotal; }
                 if (goal is BuildStructureGoal build) { target = build.StructureType.ToString(); amount = build.TargetTotal; }
                 if (goal is ResourceAllocationGoal allocation) { target = allocation.Resource.ToString(); amount = allocation.TargetWorkers; }
+                if (goal is AllocateWorkersGoal workers) { target = workers.Allocation.Destination.Resource + "/" + workers.Allocation.Destination.SourceKind; amount = workers.Allocation.Count ?? workers.SelectedWorkerIds.Count; }
                 if (goal is ReachAgeGoal reachAge) { target = reachAge.TargetAge.ToString(); amount = reachAge.TargetAge; }
                 goals.Add(new CommanderGoalSnapshot(goal.GoalId, goal.GoalType.ToString(), goal.Status.ToString(), target, amount,
                     goal.PlayerId, goal.CreatedTick, goal.Priority, goal.ParentGoalId, goal.Lifecycle.ToString()));
@@ -104,7 +107,7 @@ namespace OpenEmpires
                 if (!node.IsDepleted && simulation.FogOfWar.GetVisibility(player, node.TileX, node.TileZ) == TileVisibility.Visible)
                     visibleResources.Add(new CommanderVisibleResourceSnapshot(node.Type.ToString(), node.TileX, node.TileZ, node.RemainingAmount));
             var options = new List<CommanderUnitOptionSnapshot>();
-            foreach (int type in new[] { 1, 2, 7 })
+            foreach (int type in new[] { 1, 2, 4, 7 })
             {
                 int resolved = simulation.ResolveCivUnitType(player, type);
                 options.Add(new CommanderUnitOptionSnapshot(CommanderIntentCatalog.GetUnitDisplayName(type), resolved,
@@ -125,7 +128,7 @@ namespace OpenEmpires
                 simulation.GetPopulation(player), simulation.GetPopulationCap(player), simulation.Config.MaxPopulation,
                 simulation.GetPlayerAge(player), simulation.GetPlayerCivilization(player).ToString(),
                 buildings, units, production, technologies, goals, visibleResources, options,
-                workerAllocationSnapshots, visibleEnemyMilitary, knowledgeContext);
+                workerAllocationSnapshots, visibleEnemyMilitary, knowledgeContext, idleVillagers);
         }
 
         private static bool IsGatheringAssignment(UnitState state)

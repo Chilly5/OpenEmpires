@@ -91,31 +91,38 @@ namespace OpenEmpires
         public int BuildingId { get; }
         public int SourceGoalId { get; }
         public int SourceCreatedTick { get; }
+        public GameSimulation Runtime { get; }
+        public CommanderGoalManager SourceOwner { get; }
 
         private CommanderResultBinding(CommanderResultKind kind, IReadOnlyList<int> unitIds,
-            int buildingId, int sourceGoalId, int sourceCreatedTick)
+            int buildingId, int sourceGoalId, int sourceCreatedTick,
+            GameSimulation runtime, CommanderGoalManager sourceOwner)
         {
             Kind = kind;
             UnitIds = unitIds;
             BuildingId = buildingId;
             SourceGoalId = sourceGoalId;
             SourceCreatedTick = sourceCreatedTick;
+            Runtime = runtime ?? throw new ArgumentNullException(nameof(runtime));
+            SourceOwner = sourceOwner;
         }
 
         public static CommanderResultBinding ForUnits(IReadOnlyList<int> unitIds,
-            int sourceGoalId, int sourceCreatedTick)
+            int sourceGoalId, int sourceCreatedTick, GameSimulation runtime,
+            CommanderGoalManager sourceOwner = null)
         {
             return new CommanderResultBinding(CommanderResultKind.Units,
-                unitIds ?? throw new ArgumentNullException(nameof(unitIds)), -1,
-                sourceGoalId, sourceCreatedTick);
+                Array.AsReadOnly(new List<int>(unitIds ?? throw new ArgumentNullException(nameof(unitIds))).ToArray()), -1,
+                sourceGoalId, sourceCreatedTick, runtime, sourceOwner);
         }
 
         public static CommanderResultBinding ForBuilding(int buildingId,
-            int sourceGoalId, int sourceCreatedTick)
+            int sourceGoalId, int sourceCreatedTick, GameSimulation runtime,
+            CommanderGoalManager sourceOwner = null)
         {
             if (buildingId < 0) throw new ArgumentOutOfRangeException(nameof(buildingId));
             return new CommanderResultBinding(CommanderResultKind.Building, null, buildingId,
-                sourceGoalId, sourceCreatedTick);
+                sourceGoalId, sourceCreatedTick, runtime, sourceOwner);
         }
     }
 }

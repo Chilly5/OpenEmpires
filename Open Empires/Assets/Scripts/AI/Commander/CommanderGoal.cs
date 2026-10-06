@@ -9,7 +9,8 @@ namespace OpenEmpires
         BuildStructure,
         ResourceAllocation,
         ReachAge,
-        CapabilityAction
+        CapabilityAction,
+        AllocateWorkers
     }
 
     public enum CommanderGoalStatus
@@ -78,6 +79,7 @@ namespace OpenEmpires
     {
         private readonly List<CommanderGoal> dependencies = new List<CommanderGoal>();
         public int GoalId { get; internal set; }
+        internal CommanderGoalManager RuntimeOwner { get; set; }
         public int PlayerId { get; }
         public CommanderGoalType GoalType { get; }
         public CommanderGoalStatus Status { get; private set; }
@@ -275,6 +277,8 @@ namespace OpenEmpires
         // Runtime-only typed result source. This prevents provider node indices from
         // becoming entity references and prevents cross-manager/stale-result reuse.
         internal CommanderGoal ResultSourceGoal { get; set; }
+        internal bool RequiresResultBinding { get; set; }
+        internal bool ResultHumanOverride { get; set; }
 
         public CommanderCapabilityGoal(CapabilityActionIntent action, int maxDurationTicks = 36000)
             : base(action?.PlayerId ?? throw new ArgumentNullException(nameof(action)),

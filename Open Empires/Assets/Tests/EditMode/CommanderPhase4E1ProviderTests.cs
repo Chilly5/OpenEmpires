@@ -66,6 +66,18 @@ namespace OpenEmpires.Tests
         }
 
         [Test]
+        public void StartingScout_ContextSerializesWithExplicitProductionCapability()
+        {
+            var request = new CommanderSemanticProviderRequest("make 3 spearman",
+                Context(new List<CommanderUnitSnapshot> { new CommanderUnitSnapshot(4, 1, 0) }));
+            Assert.That(request.SerializedContext, Does.Contain("\"Scout\":1"));
+            Assert.That(request.SerializedContext,
+                Does.Contain("\"unitCapabilities\":[\"Villager\",\"Spearman\",\"Archer\",\"Scout\",\"Knight\"]"));
+            Assert.That(request.SerializedContext.Length,
+                Is.LessThanOrEqualTo(CommanderSemanticProviderRequest.MaximumContextCharacters));
+        }
+
+        [Test]
         public void CivilizationResolvedUnits_AreCountedUnderSemanticCapabilities()
         {
             var english = new CommanderSemanticProviderRequest("archers",
@@ -186,13 +198,76 @@ namespace OpenEmpires.Tests
             Assert.That(result.SafeExplanation.Length, Is.LessThan(200));
         }
 
+        [TestCase(400, "request was rejected")]
+        [TestCase(401, "authentication")]
+        [TestCase(402, "credits")]
+        [TestCase(403, "forbidden")]
+        [TestCase(404, "model unavailable")]
+        [TestCase(408, "timed out")]
+        [TestCase(429, "rate-limited")]
+        [TestCase(503, "provider unavailable")]
+        public async Task HttpFailures_AreDistinctAndDoNotEchoUpstream(int status, string expected)
+        {
+            var result = await new OpenRouterCommanderProvider(DummyKey,
+                new FakeTransport(new CommanderHttpResponse(status, "private " + DummyKey)))
+                .TranslateSemanticAsync(new CommanderSemanticProviderRequest("make 3 spearman", Context()),
+                    CancellationToken.None);
+            Assert.That(result.IsValid, Is.False);
+            Assert.That(result.Nodes, Is.Empty);
+            Assert.That(result.SafeExplanation, Does.Contain(expected));
+            Assert.That(result.SafeExplanation, Does.Not.Contain(DummyKey));
+            Assert.That(result.SafeExplanation, Does.Not.Contain("private"));
+        }
+
+        [Test]
+        public async Task OneCompleteJsonFence_ParsesButAmbiguousPayloadDoesNot()
+        {
+            var request = new CommanderSemanticProviderRequest("make 3 spearman", Context());
+            var fenced = await new OpenRouterCommanderProvider(DummyKey,
+                new FakeTransport(Completion(200, "```json\n" + UnitJson + "\n```")))
+                .TranslateSemanticAsync(request, CancellationToken.None);
+            Assert.That(fenced.IsValid, Is.True);
+            var ambiguous = await new OpenRouterCommanderProvider(DummyKey,
+                new FakeTransport(Completion(200, UnitJson + UnitJson)))
+                .TranslateSemanticAsync(request, CancellationToken.None);
+            Assert.That(ambiguous.IsValid, Is.False);
+        }
+
+        [Test]
+        public async Task LengthFinishReason_RejectsEvenIfContentLooksValid()
+        {
+            string body = JsonUtility.ToJson(new CompletionBody { choices = new[] {
+                new CompletionChoice { finish_reason = "length", message = new ChatMessage { content = UnitJson } }
+            }});
+            var result = await new OpenRouterCommanderProvider(DummyKey,
+                new FakeTransport(new CommanderHttpResponse(200, body))).TranslateSemanticAsync(
+                    new CommanderSemanticProviderRequest("make 3 spearman", Context()), CancellationToken.None);
+            Assert.That(result.IsValid, Is.False);
+            Assert.That(result.SafeExplanation, Does.Contain("truncated"));
+        }
+
+        [Test]
+        public async Task ReadOnlyAnswer_ReturnsNoExecutableNodes()
+        {
+            var result = await new OpenRouterCommanderProvider(DummyKey,
+                new FakeTransport(Completion(200,
+                    "{\"outcome\":\"Answer\",\"message\":\"Archers counter Spearmen.\"}")))
+                .TranslateSemanticAsync(new CommanderSemanticProviderRequest("what counters spearmen?", Context()),
+                    CancellationToken.None);
+            Assert.That(result.IsValid, Is.True);
+            Assert.That(result.Nodes, Is.Empty);
+            Assert.That(result.SafeExplanation, Is.EqualTo("Archers counter Spearmen."));
+            Assert.That(CommanderSemanticJson.Parse(
+                "{\"outcome\":\"Answer\",\"message\":\"Answer\",\"nodes\":[]}").IsValid, Is.False);
+        }
+
         private static CommanderHttpResponse Completion(int code, string text)
         {
             return new CommanderHttpResponse(code, JsonUtility.ToJson(new CompletionBody
             {
                 choices = new[] { new CompletionChoice
                 {
-                    message = new ChatMessage { content = text }
+                    message = new ChatMessage { content = text }, finish_reason = "stop"
                 } }
             }));
         }
@@ -260,7 +335,7 @@ namespace OpenEmpires.Tests
 
         [Serializable] private sealed class ChatMessage { public string role; public string content; }
         [Serializable] private sealed class ChatBody { public string model; public ChatMessage[] messages; }
-        [Serializable] private sealed class CompletionChoice { public ChatMessage message; }
+        [Serializable] private sealed class CompletionChoice { public ChatMessage message; public string finish_reason; }
         [Serializable] private sealed class CompletionBody { public CompletionChoice[] choices; }
     }
 }

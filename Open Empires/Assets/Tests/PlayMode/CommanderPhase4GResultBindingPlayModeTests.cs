@@ -52,11 +52,16 @@ namespace OpenEmpires.Tests
                     if (i == 0) villager.TargetResourceNodeId = gold.Id;
                 }
 
+                UnitData existing = simulation.UnitRegistry.CreateUnit(0,
+                    simulation.MapData.TileToWorldFixed(x + 2, z + 4), Fixed32.One,
+                    Fixed32.FromFloat(.4f), Fixed32.One);
+                existing.UnitType = 1;
+                existing.CurrentHealth = existing.MaxHealth = 100;
                 manager = new CommanderGoalManager(simulation, 0);
                 CommanderContext context = new CommanderContextBuilder().Build(simulation, manager);
                 CommanderSemanticResult parsed = CommanderSemanticJson.Parse(
                     "{\"outcome\":\"Request\",\"nodes\":[" +
-                    "{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":3}," +
+                    "{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":4}," +
                     "{\"type\":\"PatrolArea\",\"unitSelector\":\"Spearman\",\"count\":3," +
                     "\"location\":\"WorkedResource\",\"resource\":\"Gold\",\"dependsOn\":[0],\"resultFromNode\":0}]}" );
                 Assert.That(parsed.IsValid, Is.True, parsed.SafeExplanation);
@@ -84,6 +89,7 @@ namespace OpenEmpires.Tests
                 Assert.That(producedGoal.ResultUnitIds.Count, Is.EqualTo(3));
                 Assert.That(patrol.HasValue, Is.True, patrolGoal.StatusReason);
                 Assert.That(patrol.Value.UnitIds, Is.EqualTo(producedGoal.ResultUnitIds));
+                Assert.That(patrol.Value.UnitIds, Has.No.Member(existing.Id));
                 Assert.That(patrolGoal.Status, Is.EqualTo(CommanderGoalStatus.Executing));
                 Debug.Log($"[Phase4G Runtime] PASS exact result binding: tick={simulation.CurrentTick}, " +
                     $"spearmen={string.Join(",", producedGoal.ResultUnitIds)}, patrol={patrolGoal.Status}.");
