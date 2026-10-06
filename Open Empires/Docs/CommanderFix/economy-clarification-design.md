@@ -1,6 +1,6 @@
 # Targeted economy and clarification repair — design specification
 
-Date: 2026-10-06. Status: architecture approved; this concrete specification awaits review. Not implemented or verified yet.
+Date: 2026-10-06. Status: architecture and concrete specification approved. Implementation plan awaits review. Not implemented or verified yet.
 
 ## 1. Purpose and boundary
 
