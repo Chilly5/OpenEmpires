@@ -162,6 +162,8 @@ namespace OpenEmpires.Tests
                 Assert.That(CommanderSemanticGraphAdmission.TryAdmit(result, context,
                     out CommanderSemanticGraphPlan plan, out string reason), Is.True, reason);
 
+                plan = manager.ApproveActionPlan(manager.PrepareActionPlan(result,
+                    "Trusted fixture approves build and follow-up.", 0), 0);
                 IReadOnlyList<CommanderGoal> submitted = manager.SubmitSemanticGraph(plan);
                 Assert.That(submitted[1].Dependencies, Has.Count.EqualTo(1));
                 Assert.That(submitted[1].Dependencies[0], Is.SameAs(submitted[0]));
@@ -366,6 +368,8 @@ namespace OpenEmpires.Tests
                         "{\"type\":\"PatrolArea\",\"unitSelector\":\"Spearman\",\"count\":3," +
                         "\"location\":\"PlayerBase\",\"dependsOn\":[0],\"resultFromNode\":0}]}");
                     Assert.That(CommanderSemanticGraphAdmission.TryAdmit(graph, CreateContext(0), out var plan, out _), Is.True);
+                    plan = manager.ApproveActionPlan(manager.PrepareActionPlan(graph,
+                        "Trusted fixture approves new units and exact patrol.", 0), 0);
                     var goals = manager.SubmitSemanticGraph(plan);
                     var newIds = new List<int>();
                     for (int i = 0; i < 3; i++)

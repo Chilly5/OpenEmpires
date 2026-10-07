@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Passed" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 14:57:53Z" end-time="2026-10-06 14:57:56Z" duration="2.5548492">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1015" result="Passed" start-time="2026-10-06 14:57:53Z" end-time="2026-10-06 14:57:56Z" duration="2.554849" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="2146" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1015" result="Passed" start-time="2026-10-06 14:57:53Z" end-time="2026-10-06 14:57:56Z" duration="2.447568" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="6620" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="2147" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1015" result="Passed" start-time="2026-10-06 14:57:53Z" end-time="2026-10-06 14:57:56Z" duration="2.356762" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="2148" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1015" result="Passed" start-time="2026-10-06 14:57:53Z" end-time="2026-10-06 14:57:56Z" duration="2.251695" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="2112" name="CommanderPhase5AIntentAuthorityTests" fullname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" classname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-06 14:57:53Z" end-time="2026-10-06 14:57:56Z" duration="2.132368" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <test-case id="2120" name="NoConstruction_UsesCompletedCapacityOrBlocksWithoutBuildingPrerequisites" fullname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.NoConstruction_UsesCompletedCapacityOrBlocksWithoutBuildingPrerequisites" methodname="NoConstruction_UsesCompletedCapacityOrBlocksWithoutBuildingPrerequisites" classname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" runstate="Runnable" seed="2110637539" result="Passed" start-time="2026-10-06 14:57:54Z" end-time="2026-10-06 14:57:56Z" duration="2.000544" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #1: status=Blocked owned=0 queued=0; This request forbids construction. An eligible existing completed building or population capacity is required.
+[Commander] Goal #1: status=Blocked owned=0 queued=0; This request forbids construction, including resuming an unfinished prerequisite. Use completed capacity or wait for independent work.
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

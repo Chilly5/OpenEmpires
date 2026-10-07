@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 13:52:47Z" end-time="2026-10-06 13:52:50Z" duration="3.1317868">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1010" result="Failed" site="Child" start-time="2026-10-06 13:52:47Z" end-time="2026-10-06 13:52:50Z" duration="3.131787" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2141" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1010" result="Failed" site="Child" start-time="2026-10-06 13:52:47Z" end-time="2026-10-06 13:52:50Z" duration="3.029963" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="17228" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2142" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1010" result="Failed" site="Child" start-time="2026-10-06 13:52:47Z" end-time="2026-10-06 13:52:50Z" duration="2.940338" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2143" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1010" result="Failed" site="Child" start-time="2026-10-06 13:52:47Z" end-time="2026-10-06 13:52:50Z" duration="2.830243" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="2112" name="CommanderPhase5AIntentAuthorityTests" fullname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" classname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-06 13:52:47Z" end-time="2026-10-06 13:52:50Z" duration="2.717832" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="2115" name="ParsedGraph_CannotBypassConfirmationAtManagerBoundary" fullname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.ParsedGraph_CannotBypassConfirmationAtManagerBoundary" methodname="ParsedGraph_CannotBypassConfirmationAtManagerBoundary" classname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" runstate="Runnable" seed="274221007" result="Failed" start-time="2026-10-06 13:52:47Z" end-time="2026-10-06 13:52:50Z" duration="2.568062" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: <System.InvalidOperationException>
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.ParsedGraph_CannotBypassConfirmationAtManagerBoundary () [0x00046] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AIntentAuthorityTests.cs:93
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: EnsureUnitCount
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

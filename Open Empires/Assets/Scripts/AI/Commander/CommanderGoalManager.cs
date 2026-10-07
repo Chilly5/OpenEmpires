@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace OpenEmpires
 {
-    public sealed class CommanderGoalManager : IDisposable
+    public sealed partial class CommanderGoalManager : IDisposable
     {
         public const int MaxActiveGoals = 64;
         public const int MaxArchivedGoals = 50;
@@ -109,6 +109,9 @@ namespace OpenEmpires
             workerAuthority = new CommanderWorkerAuthority(simulation, playerId);
             simulation.CommandBuffer.CommandEnqueued += HandleCommandEnqueued;
             simulation.OnBuildingPlacedFromCommand += HandleBuildingPlacedFromCommand;
+            simulation.TrainingOrderAccepted += HandleTrainingAccepted;
+            simulation.TrackedUnitProduced += HandleTrackedUnitProduced;
+            simulation.TrainingOriginLost += HandleTrainingOriginLost;
             planner = new CommanderPlanner(simulation, workerAuthority,
                 pathValidationCandidates);
         }
@@ -202,8 +205,10 @@ namespace OpenEmpires
         {
             ThrowIfDisposed();
             if (plan == null || plan.Nodes == null || plan.Nodes.Count < 1
-                || plan.Nodes.Count > CommanderSemanticGraphAdmission.MaximumNodes)
+                || plan.Nodes.Count > (plan.DynamicProgram != null ? CommanderDynamicPlan.MaximumNodes : CommanderSemanticGraphAdmission.MaximumNodes))
                 throw new ArgumentException("The semantic graph is unavailable.", nameof(plan));
+            if (plan.Authorization == null || !plan.Authorization.CanCommit(this, plan))
+                throw new InvalidOperationException("The exact compound candidate requires trusted player confirmation.");
             if (activeGoals.Count > MaxActiveGoals - plan.Nodes.Count)
                 throw new InvalidOperationException("The active Commander goal limit has been reached.");
 
@@ -224,6 +229,11 @@ namespace OpenEmpires
                         if (ensure.Constraints[i] is MaximumQueueConstraint queue) maxQueue = queue.MaximumQueue;
                     goal = new EnsureUnitCountGoal(playerId, ensure.UnitType, ensure.TargetTotal,
                         maxQueue, maxDurationTicks: maxDurationTicks);
+                    if (ensure.NewProductionCount.HasValue)
+                    {
+                        ((EnsureUnitCountGoal)goal).HasResultConsumer = true;
+                        ((EnsureUnitCountGoal)goal).RequiredNewProductionCount = ensure.NewProductionCount.Value;
+                    }
                 }
                 else if (node.Intent is BuildStructureIntent build)
                 {
@@ -261,6 +271,7 @@ namespace OpenEmpires
                 }
                 else throw new ArgumentException("Unsupported compound intent.", nameof(plan));
                 planner.CaptureConstraints(goal, node.Intent.Constraints);
+                goal.ConstructionForbidden |= plan.ConstructionForbidden;
                 pending.Add(goal);
                 byIndex.Add(index, goal);
             }
@@ -282,6 +293,7 @@ namespace OpenEmpires
                     var producer = byIndex[node.ProducerFromNode.Value] as BuildStructureGoal;
                     if (dependent == null || producer == null)
                         throw new ArgumentException("The producer link is invalid.", nameof(plan));
+                    producer.HasResultConsumer = true;
                     dependent.RequiredProducerGoal = producer;
                 }
                 if (node.ResultFromNode.HasValue)
@@ -305,7 +317,34 @@ namespace OpenEmpires
                 }
             }
 
+            PrepareDynamicWorkerBindings(plan, byIndex);
+            PrepareDynamicLocationBindings(plan, byIndex);
             CaptureResultBaselines(pending);
+            // Preflight and reserve the complete shared snapshot only after all nodes
+            // validate. Roll back these local leases if any acquisition/commit fails.
+            var reservedInitialGoals = new List<int>();
+            try
+            {
+                for (int i = 0; i < pending.Count; i++)
+                {
+                    var goal = pending[i];
+                    if (goal.FrozenWorkerIds == null) continue;
+                    int provisionalId = checked(nextGoalId + i);
+                    reservedInitialGoals.Add(provisionalId);
+                    foreach (int id in goal.FrozenWorkerIds)
+                        if (!workerAuthority.TryReserve(id, provisionalId,
+                            goal is BuildStructureGoal ? CommanderWorkerReservationType.Builder
+                                : CommanderWorkerReservationType.Gatherer, simulation.CurrentTick))
+                            throw new InvalidOperationException("The complete request-bound worker selection is unavailable; no goals were admitted.");
+                }
+                if (!plan.Authorization.Consume(this, plan))
+                    throw new InvalidOperationException("Action plan approval is stale or already consumed.");
+            }
+            catch
+            {
+                foreach (int id in reservedInitialGoals) workerAuthority.ReleaseGoal(id);
+                throw;
+            }
 
             for (int i = 0; i < pending.Count; i++)
             {
@@ -313,15 +352,18 @@ namespace OpenEmpires
                 goal.GoalId = nextGoalId++;
                 goal.RuntimeOwner = this;
                 goal.CreatedTick = simulation.CurrentTick;
+                goal.RequestAuthority = plan.Authorization;
+                goal.RequestNodeIndex = plan.TopologicalOrder[i];
                 goals.Add(goal);
                 activeGoals.Add(goal);
             }
             if (ActiveGoal == null || ActiveGoal.IsTerminal) ActiveGoal = pending[0];
+            TraceActionPlan(plan.Authorization, "goal-admitted");
             for (int i = 0; i < pending.Count; i++)
             {
                 CommanderGoal goal = pending[i];
                 Debug.Log($"[Commander] Goal #{goal.GoalId} submitted: {goal.GoalType}");
-                PublishEvent(CommanderGoalEventType.GoalStarted, goal, simulation.CurrentTick);
+                PublishCommittedGraphEvent(goal);
             }
             return pending.AsReadOnly();
         }
@@ -342,6 +384,8 @@ namespace OpenEmpires
                             && unit.State != UnitState.Dead)
                             units.BaselineUnitIds.Add(unit.Id);
                     }
+                    if (units.RequiredNewProductionCount < 0)
+                        units.RequiredNewProductionCount = Math.Max(0, units.TargetTotal - units.BaselineUnitIds.Count);
                 }
                 else if (pending[i] is BuildStructureGoal building && building.HasResultConsumer)
                 {
@@ -364,6 +408,7 @@ namespace OpenEmpires
             if (activeGoals.Count >= MaxActiveGoals)
                 throw new InvalidOperationException(
                     $"The active Commander goal limit of {MaxActiveGoals} has been reached.");
+            BindKnownAuthorityAtRegistration(goal);
             goal.GoalId = nextGoalId++;
             goal.RuntimeOwner = this;
             goal.CreatedTick = simulation.CurrentTick;
@@ -372,7 +417,8 @@ namespace OpenEmpires
             activeGoals.Add(goal);
             if (ActiveGoal == null || ActiveGoal.IsTerminal) ActiveGoal = goal;
             Debug.Log($"[Commander] Goal #{goal.GoalId} submitted: {goal.GoalType}");
-            PublishEvent(CommanderGoalEventType.GoalStarted, goal, simulation.CurrentTick);
+            if (goal.RequestAuthority != null) PublishCommittedGraphEvent(goal);
+            else PublishEvent(CommanderGoalEventType.GoalStarted, goal, simulation.CurrentTick);
             return goal;
         }
 
@@ -415,6 +461,7 @@ namespace OpenEmpires
                 if (goal is ReachAgeGoal cancelledAge)
                     cancelledAge.PendingAgeUpCommand = null;
                 goal.SetStatus(CommanderGoalStatus.Cancelled, "Cancelled by the owning player.");
+                ReleaseGoalTrainingOrigins(goal);
                 workerAuthority.ReleaseGoal(goal.GoalId);
                 ArchiveGoal(goal);
                 if (ActiveGoal == goal) ActiveGoal = null;
@@ -513,7 +560,7 @@ namespace OpenEmpires
                     }
                     if (plan.Command != null && !goal.IsTerminal)
                     {
-                        if (goal is BuildStructureGoal spatial && spatial.HasSemanticPlacement
+                        if (goal is BuildStructureGoal spatial
                             && plan.Command is PlaceBuildingCommand placement)
                         {
                             spatial.PlacedTileX = placement.TileX;
@@ -529,7 +576,11 @@ namespace OpenEmpires
                             reachAge.PendingAgeUpCommand = plan.Command;
                             reachAge.AgeUpIssuedSimulationTick = simulation.CurrentTick;
                         }
+                        TrackIssuedTraining(goal, plan.Command);
                         simulation.CommandBuffer.EnqueueCommand(plan.Command, CommandEnqueueSource.Commander);
+                        planner.ObservePreparationCommand(goal, plan.Command);
+                        if (RequestTracingEnabled && goal.RequestAuthority != null)
+                            Debug.Log($"[Commander] request={goal.RequestAuthority.RequestId};root={goal.RequestNodeIndex};goal={goal.GoalId};dispatch={plan.Command.GetType().Name}");
                         if (goal is AllocateWorkersGoal allocation)
                         {
                             allocation.NextCommandGroup++;
@@ -576,6 +627,7 @@ namespace OpenEmpires
         private void FailGoal(CommanderGoal goal, string reason, int currentTick)
         {
             goal.SetStatus(CommanderGoalStatus.Failed, reason);
+            ReleaseGoalTrainingOrigins(goal);
             if (goal is BuildStructureGoal failedBuild)
                 failedBuild.PendingPlacementCommand = null;
             if (goal is ReachAgeGoal failedAge)
@@ -617,6 +669,25 @@ namespace OpenEmpires
             if (source == CommandEnqueueSource.Commander || command.PlayerId != playerId) return;
             int[] subjects = CommanderWorkerAuthority.GetSubjectUnitIds(command);
             if (subjects == null) return;
+            foreach (var boundGoal in activeGoals)
+            {
+                foreach (var preparation in boundGoal.PreparationAllocators.Values)
+                    foreach (int subject in subjects)
+                        if (preparation.SelectedWorkerIds.Contains(subject))
+                        {
+                            preparation.HumanInterrupted = true;
+                            workerAuthority.ReleaseGoal(boundGoal.GoalId);
+                            break;
+                        }
+                if (boundGoal.IsTerminal || boundGoal.FrozenWorkerIds == null) continue;
+                foreach (int subject in subjects)
+                    if (System.Linq.Enumerable.Contains(boundGoal.FrozenWorkerIds, subject))
+                    {
+                        boundGoal.FrozenWorkerHumanOverride = true;
+                        workerAuthority.ReleaseGoal(boundGoal.GoalId);
+                        break;
+                    }
+            }
             for (int i = 0; i < activeGoals.Count; i++)
             {
                 if (!(activeGoals[i] is AllocateWorkersGoal allocation) || allocation.IsTerminal) continue;
@@ -643,8 +714,7 @@ namespace OpenEmpires
                         for (int r = 0; r < producer.ResultUnitIds.Count; r++)
                             if (producer.ResultUnitIds[r] == unit.Id) { result = true; break; }
                     }
-                    else result = !producer.BaselineUnitIds.Contains(unit.Id)
-                        && unit.UnitType == simulation.ResolveCivUnitType(playerId, producer.RequestedUnitType);
+                    else result = producer.AttributedUnitIds.Contains(unit.Id);
                     if (result) { capability.ResultHumanOverride = true; break; }
                 }
             }
@@ -665,7 +735,7 @@ namespace OpenEmpires
                         ageGoal.AgeUpBuildingId = created.Id;
                     return;
                 }
-                if (!(activeGoals[i] is BuildStructureGoal goal) || !goal.HasSemanticPlacement
+                if (!(activeGoals[i] is BuildStructureGoal goal)
                     || goal.IsTerminal || !ReferenceEquals(goal.PendingPlacementCommand, command))
                     continue;
                 goal.PendingPlacementCommand = null;
@@ -673,7 +743,10 @@ namespace OpenEmpires
                     && simulation.GetEffectiveBuildingType(created) == goal.StructureType
                     && created.OriginTileX == goal.PlacedTileX
                     && created.OriginTileZ == goal.PlacedTileZ)
+                {
                     goal.PlacedBuildingId = created.Id;
+                    if (!goal.AttributedBuildingIds.Contains(created.Id)) goal.AttributedBuildingIds.Add(created.Id);
+                }
                 return;
             }
         }
@@ -681,6 +754,26 @@ namespace OpenEmpires
         private void PublishEvent(CommanderGoalEventType type, CommanderGoal goal, int tick)
         {
             GoalEventPublished?.Invoke(new CommanderGoalEvent(type, tick, goal));
+        }
+
+        private void PublishCommittedGraphEvent(CommanderGoal goal)
+        {
+            var handlers = GoalEventPublished;
+            if (handlers == null) return;
+            var notification = new CommanderGoalEvent(CommanderGoalEventType.GoalStarted,
+                simulation.CurrentTick, goal);
+            // Initial admission has already committed all goals. An observer fault is
+            // not a failed transaction and must not prevent other observers seeing it.
+            foreach (Action<CommanderGoalEvent> handler in handlers.GetInvocationList())
+            {
+                if (disposed) break;
+                try { handler(notification); }
+                catch (Exception error)
+                {
+                    Debug.LogWarning("[Commander] Committed graph observer failed; work remains admitted; type="
+                        + error.GetType().Name);
+                }
+            }
         }
 
         private static CommanderGoalEventType GetEventType(CommanderGoalStatus status)
@@ -699,6 +792,7 @@ namespace OpenEmpires
         {
             if (disposed) return;
             disposed = true;
+            ReleaseTrainingObservations();
             simulation.CommandBuffer.CommandEnqueued -= HandleCommandEnqueued;
             simulation.OnBuildingPlacedFromCommand -= HandleBuildingPlacedFromCommand;
             for (int i = 0; i < activeGoals.Count; i++)

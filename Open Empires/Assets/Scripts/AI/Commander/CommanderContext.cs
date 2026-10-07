@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenEmpires
 {
@@ -26,6 +27,8 @@ namespace OpenEmpires
         public IReadOnlyList<CommanderVisibleEnemyMilitarySnapshot> VisibleEnemyMilitary { get; }
         // Bounded detached knowledge slice; contains no simulation/runtime references.
         public string KnowledgeContext { get; }
+        public IReadOnlyList<string> CanonicalUnitIds { get; }
+        public IReadOnlyList<string> CanonicalBuildingIds { get; }
         public int IdleVillagers { get; }
         public string EnemyAwarenessPolicy =>
             "Currently visible enemy military aggregates only; no hidden, explored-only, or predicted enemy data.";
@@ -40,7 +43,8 @@ namespace OpenEmpires
             List<CommanderUnitOptionSnapshot> unitOptions,
             List<CommanderWorkerAllocationSnapshot> workerAllocation,
             List<CommanderVisibleEnemyMilitarySnapshot> visibleEnemyMilitary,
-            string knowledgeContext = null, int idleVillagers = 0)
+            string knowledgeContext = null, int idleVillagers = 0,
+            IEnumerable<string> canonicalUnitIds = null, IEnumerable<string> canonicalBuildingIds = null)
         {
             PlayerId = playerId; SnapshotTick = tick; Resources = resources;
             Population = population; PopulationCap = cap; MaximumPopulation = maximum;
@@ -52,8 +56,15 @@ namespace OpenEmpires
             WorkerAllocation = workerAllocation.AsReadOnly();
             VisibleEnemyMilitary = visibleEnemyMilitary.AsReadOnly();
             KnowledgeContext = knowledgeContext ?? string.Empty;
+            CanonicalUnitIds = FreezeCanonicalIds(canonicalUnitIds);
+            CanonicalBuildingIds = FreezeCanonicalIds(canonicalBuildingIds);
             IdleVillagers = Math.Max(0, idleVillagers);
         }
+
+        private static IReadOnlyList<string> FreezeCanonicalIds(IEnumerable<string> values)
+            => Array.AsReadOnly((values ?? Array.Empty<string>())
+                .Where(id => !string.IsNullOrEmpty(id) && id.Length <= 64)
+                .Distinct(StringComparer.Ordinal).OrderBy(id => id, StringComparer.Ordinal).Take(32).ToArray());
     }
 
     public sealed class CommanderResourceSnapshot

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 21:10:08Z" end-time="2026-10-06 21:10:15Z" duration="6.7948855">
+  <test-suite type="TestSuite" id="1243" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="201" result="Failed" site="Child" start-time="2026-10-06 21:10:08Z" end-time="2026-10-06 21:10:15Z" duration="6.794886" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1237" name="OpenEmpires.PlayModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.PlayModeTests.dll" runstate="Runnable" testcasecount="201" result="Failed" site="Child" start-time="2026-10-06 21:10:08Z" end-time="2026-10-06 21:10:15Z" duration="6.776953" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="1780" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1238" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="201" result="Failed" site="Child" start-time="2026-10-06 21:10:08Z" end-time="2026-10-06 21:10:15Z" duration="6.774352" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1239" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="201" result="Failed" site="Child" start-time="2026-10-06 21:10:08Z" end-time="2026-10-06 21:10:15Z" duration="6.770849" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1228" name="CommanderPhase5ALiveRuntimePlayModeTests" fullname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests" classname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests" runstate="Runnable" testcasecount="6" result="Failed" site="Child" start-time="2026-10-06 21:10:08Z" end-time="2026-10-06 21:10:15Z" duration="6.767284" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5ALiveRuntime" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1229" name="FourFarms_RealLunaApprovalNativeCostFootprintAndFoodNodes" fullname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests.FourFarms_RealLunaApprovalNativeCostFootprintAndFoodNodes" methodname="FourFarms_RealLunaApprovalNativeCostFootprintAndFoodNodes" classname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests" runstate="Runnable" seed="278982541" result="Failed" start-time="2026-10-06 21:10:08Z" end-time="2026-10-06 21:10:15Z" duration="6.733879" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Native lifecycle deadline reached at tick 6000;goals=BuildStructureGoal:Completed:Mill construction complete (4/4).
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests+<TickUntil>d__23.MoveNext () [0x000a5] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\PlayMode\CommanderPhase5ALiveRuntimePlayModeTests.cs:294
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[DotEnv] Loaded .env from D:\unity_projects\OpenEmpires\Open Empires\.env
+[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-06T21:10:09.6101801Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[Commander] Goal #1 submitted: BuildStructure
+[Commander] intent=admitted;goal-submitted=True
+[Phase5A live] scenario=four-farms;input=make 4 farms;providerOutcome=Request;semanticNodes=BuildStructure:Mill:count=4:unit=:anchor=:relation=;preview=False
+[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Mill at (126,134) with villager #0.
+[SyncCheck] tick=1 checksum=F28D305C
+[SyncCheck] tick=2 checksum=D2ED89B3
+[SyncCheck] tick=3 checksum=B34DE30A
+[SyncCheck] tick=4 checksum=93AE3C61
+[SyncCheck] tick=5 checksum=740E95B8
+[SyncCheck] tick=6 checksum=546EEF0F
+[SyncCheck] tick=7 checksum=647F2866
+[SyncCheck] tick=8 checksum=FE4945BD
+[SyncCheck] tick=9 checksum=C64DFF14
+[SyncCheck] tick=10 checksum=E5D7606B
+[SyncCheck] tick=11 checksum=3AFFD9C2
+[SyncCheck] tick=12 checksum=7B251F19
+[SyncCheck] tick=13 checksum=183EF070
+[SyncCheck] tick=14 checksum=38D869C7
+[SyncCheck] tick=15 checksum=C4E9A71E
+[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Construction: villager #0 is travelling to building #3.
+[SyncCheck] tick=16 checksum=BD1D9475
+[SyncCheck] tick=17 checksum=50F879CC
+[SyncCheck] tick=18 checksum=07F49F23
+[SyncCheck] tick=19 checksum=BC6B687A
+[SyncCheck] tick=20 checksum=195D89D1
+[SyncCheck] tick=21 checksum=EE703728
+[SyncCheck] tick=22 checksum=6DEC6C7F
+[SyncCheck] tick=23 checksum=C22AADD6
+[SyncCheck] tick=24 checksum=707C3B2D
+[SyncCheck] tick=25 checksum=3D7F8C84
+[SyncCheck] tick=26 checksum=6830D1DB
+[SyncCheck] tick=27 checksum=CFC5A332
+[SyncCheck] tick=28 checksum=E7F72489
+[SyncCheck] tick=29 checksum=97CDCDE0
+[SyncCheck] tick=30 checksum=AEBEB737
+[SyncCheck] tick=31 checksum=8DE5C48E
+[SyncCheck] tick=32 checksum=7C115DE5
+[SyncCheck] tick=33 checksum=BC4C7F3C
+[SyncCheck] tick=34 checksum=EEF47893
+[SyncCheck] tick=35 checksum=85E769EA
+[SyncCheck] tick=36 checksum=E3256F41
+[SyncCheck] tick=37 checksum=B9DEA498
+[SyncCheck] tick=38 checksum=3F5985EF
+[SyncCheck] tick=39 checksum=C3CA9746
+[SyncCheck] tick=40 checksum=466E609D
+[SyncCheck] tick=41 checksum=89384DF4
+[SyncCheck] tick=42 checksum=87E35F4B
+[SyncCheck] tick=43 checksum=1B35CCA2
+[SyncCheck] tick=44 checksum=C9E74DF9
+[SyncCheck] tick=45 checksum=53C81750
+[SyncCheck] tick=46 checksum=49C2BCA7
+[SyncCheck] tick=47 checksum=3799DDFE
+[SyncCheck] tick=48 checksum=71F48B55
+[SyncCheck] tick=49 checksum=B8B6E8AC
+[SyncCheck] tick=50 checksum=CF51BE03
+[SyncCheck] tick=51 checksum=12EAB35A
+[SyncCheck] tick=52 checksum=4A8B48B1
+[SyncCheck] tick=53 checksum=28991208
+[SyncCheck] tick=54 checksum=0C960B5F
+[SyncCheck] tick=55 checksum=0D19E4B6
+[SyncCheck] tick=56 checksum=EAE10A0D
+[SyncCheck] tick=57 checksum=C1D11F64
+[SyncCheck] tick=58 checksum=9B6798BB
+[SyncCheck] tick=59 checksum=F137F612
+[SyncCheck] tick=60 checksum=4EB93769
+[SyncCheck] tick=61 checksum=35E184C0
+[SyncCheck] tick=62 checksum=50DA8A17
+[SyncCheck] tick=63 checksum=90A7E36E
+[SyncCheck] tick=64 checksum=E73944C5
+[SyncCheck] tick=65 checksum=8BE1561C
+[SyncCheck] tick=66 checksum=CC103373
+[SyncCheck] tick=67 checksum=07DBBCCA
+[SyncCheck] tick=68 checksum=1EDCEA21
+[SyncCheck] tick=69 checksum=35D72F78
+[SyncCheck] tick=70 checksum=922910CF
+[SyncCheck] tick=71 checksum=54E57A26
+[SyncCheck] tick=72 checksum=44B6AF7D
+[SyncCheck] tick=73 checksum=4DF8D8D4
+[SyncCheck] tick=74 checksum=BC184E2B
+[SyncCheck] tick=75 checksum=6AB73B82
+[SyncCheck] tick=76 checksum=C6FF88D9
+[SyncCheck] tick=77 checksum=F6919E30
+[SyncCheck] tick=78 checksum=A588C387
+[SyncCheck] tick=79 checksum=3CE444DE
+[SyncCheck] tick=80 checksum=F57D7235
+[SyncCheck] tick=81 checksum=DFF5E78C
+[SyncCheck] tick=82 checksum=A713D4E3
+[SyncCheck] tick=83 checksum=97A07A3A
+[SyncCheck] tick=84 checksum=53520791
+[SyncCheck] tick=85 checksum=E41AD8E8
+[SyncCheck] tick=86 checksum=94DBAE3F
+[SyncCheck] tick=87 checksum=AE9AB796
+[SyncCheck] tick=88 checksum=551C8CED
+[SyncCheck] tick=89 checksum=50FD7644
+[SyncCheck] tick=90 checksum=91445B9B
+[SyncCheck] tick=91 checksum=A768DCF2
+[SyncCheck] tick=92 checksum=32F5240F
+[SyncCheck] tick=93 checksum=993096DF
+[SyncCheck] tick=94 checksum=0C56EFD9
+[SyncCheck] tick=95 checksum=DB288600
+[SyncCheck] tick=96 checksum=04FD2AF0
+[SyncCheck] tick=97 checksum=BD757DAB
+[SyncCheck] tick=98 checksum=A85C9378
+[SyncCheck] tick=99 checksum=7F7F82B1
+[SyncCheck] tick=100 checksum=F8493F9F
+[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Construction: building #3 is advancing with villager #0.
+[Commander] Goal #1: status=Executing owned=1 queued=0; Placing Mill at (130,134) with villager #0.
+[Commander] Goal #1: status=WaitingForConstruction owned=1 queued=1; Construction: villager #0 is travelling to building #4.
+[Commander] Goal #1: status=WaitingForConstruction owned=1 queued=1; Construction: building #4 is advancing with villager #0.
+[Commander] Goal #1: status=Executing owned=2 queued=0; Placing Mill at (134,126) with villager #0.
+[Commander] Goal #1: status=WaitingForConstruction owned=2 queued=1; Construction: villager #0 is travelling to building #5.
+[Commander] Goal #1: status=WaitingForConstruction owned=2 queued=1; Construction: building #5 is advancing with villager #0.
+[Commander] Goal #1: status=Executing owned=3 queued=0; Placing Mill at (134,130) with villager #0.
+[Commander] Goal #1: status=WaitingForConstruction owned=3 queued=1; Construction: villager #0 is travelling to building #6.
+[Commander] Goal #1: status=WaitingForConstruction owned=3 queued=1; Construction: building #6 is advancing with villager #0.
+[Commander] Goal #1: status=Completed owned=4 queued=0; Mill construction complete (4/4).
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

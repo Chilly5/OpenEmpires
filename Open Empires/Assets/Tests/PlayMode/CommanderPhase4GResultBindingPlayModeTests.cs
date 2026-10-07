@@ -68,6 +68,8 @@ namespace OpenEmpires.Tests
                 Assert.That(CommanderSemanticGraphAdmission.TryAdmit(parsed, context,
                     out CommanderSemanticGraphPlan plan, out string admissionReason),
                     Is.True, admissionReason);
+                plan = manager.ApproveActionPlan(manager.PrepareActionPlan(parsed,
+                    "Trusted fixture approves newly produced Spearmen then patrol.", 0), 0);
                 IReadOnlyList<CommanderGoal> goals = manager.SubmitSemanticGraph(plan);
                 var producedGoal = (EnsureUnitCountGoal)goals[0];
                 var patrolGoal = (CommanderCapabilityGoal)goals[1];

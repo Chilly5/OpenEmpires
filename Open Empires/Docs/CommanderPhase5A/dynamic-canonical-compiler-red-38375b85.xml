@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 17:41:06Z" end-time="2026-10-06 17:41:07Z" duration="0.7979833">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1023" result="Failed" site="Child" start-time="2026-10-06 17:41:06Z" end-time="2026-10-06 17:41:07Z" duration="0.797983" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2156" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1023" result="Failed" site="Child" start-time="2026-10-06 17:41:06Z" end-time="2026-10-06 17:41:07Z" duration="0.698683" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="1780" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2157" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1023" result="Failed" site="Child" start-time="2026-10-06 17:41:06Z" end-time="2026-10-06 17:41:07Z" duration="0.603114" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2158" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1023" result="Failed" site="Child" start-time="2026-10-06 17:41:06Z" end-time="2026-10-06 17:41:07Z" duration="0.502149" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="2112" name="CommanderPhase5ADynamicPlanTests" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests" classname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests" runstate="Runnable" testcasecount="6" result="Failed" site="Child" start-time="2026-10-06 17:41:06Z" end-time="2026-10-06 17:41:07Z" duration="0.401054" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="2119" name="DynamicCandidate_CompilesCanonicalFarmWithoutInitialWork" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests.DynamicCandidate_CompilesCanonicalFarmWithoutInitialWork" methodname="DynamicCandidate_CompilesCanonicalFarmWithoutInitialWork" classname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests" runstate="Runnable" seed="55883959" result="Failed" start-time="2026-10-06 17:41:06Z" end-time="2026-10-06 17:41:07Z" duration="0.294234" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: No Exception to be thrown
+  But was:  <System.ArgumentException: The compound semantic order was rejected by Commander validation.
+  at OpenEmpires.CommanderGoalManager.PrepareActionPlan (OpenEmpires.CommanderSemanticResult interpretation, System.String originalInput, System.Int32 generation, OpenEmpires.StrategicPipeline strategicSource, System.Func`1[TResult] isCurrentRequest) [0x00078] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Scripts\AI\Commander\Phase5A\CommanderGoalManager.Requests.cs:23 
+  at OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests+<>c__DisplayClass6_0.<DynamicCandidate_CompilesCanonicalFarmWithoutInitialWork>b__0 () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ADynamicPlanTests.cs:84 
+  at NUnit.Framework.Constraints.ThrowsConstraint+VoidInvocationDescriptor.Invoke () [0x00001] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at NUnit.Framework.Constraints.ThrowsConstraint+ExceptionInterceptor.Intercept (System.Object invocation) [0x00050] in <8b63e8ac0a4746599ed207982825ae6c>:0 >
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests.DynamicCandidate_CompilesCanonicalFarmWithoutInitialWork () [0x00039] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ADynamicPlanTests.cs:84
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

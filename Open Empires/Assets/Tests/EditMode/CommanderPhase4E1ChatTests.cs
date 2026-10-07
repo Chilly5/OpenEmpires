@@ -123,8 +123,10 @@ namespace OpenEmpires.Tests
 
             CommanderAIChatSubmission result = await chat.SubmitMessageAsync("Build and train these.");
 
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Success, Is.True, result?.DisplayText);
+            Assert.That(result, Is.Null);
+            Assert.That(goals.Goals, Is.Empty, "Compound preview cannot commit before player consent.");
+            Assert.That(chat.PendingActionPlan, Is.Not.Null);
+            await chat.SubmitMessageAsync("approve plan");
             Assert.That(goals.Goals, Has.Count.EqualTo(2));
             Assert.That(simulation.CommandBuffer.FlushCommands(), Is.Empty);
         }

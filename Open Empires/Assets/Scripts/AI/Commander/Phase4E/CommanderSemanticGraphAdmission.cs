@@ -12,28 +12,40 @@ namespace OpenEmpires
         public IReadOnlyList<int> DependsOn { get; }
         public int? ProducerFromNode { get; }
         public int? ResultFromNode { get; }
+        internal string DynamicNodeId { get; }
 
         internal CommanderSemanticGraphNode(int index, CommanderIntent intent,
-            IReadOnlyList<int> dependsOn, int? producerFromNode, int? resultFromNode)
+            IReadOnlyList<int> dependsOn, int? producerFromNode, int? resultFromNode, string dynamicNodeId = null)
         {
             Index = index;
             Intent = intent;
             DependsOn = dependsOn ?? Array.Empty<int>();
             ProducerFromNode = producerFromNode;
             ResultFromNode = resultFromNode;
+            DynamicNodeId = dynamicNodeId;
         }
     }
 
     public sealed class CommanderSemanticGraphPlan
     {
+        internal CommanderActionPlanCandidate Authorization { get; set; }
+        public bool ConstructionForbidden { get; }
         public IReadOnlyList<CommanderSemanticGraphNode> Nodes { get; }
         public IReadOnlyList<int> TopologicalOrder { get; }
+        internal CommanderDynamicPlan DynamicProgram { get; }
 
         internal CommanderSemanticGraphPlan(IReadOnlyList<CommanderSemanticGraphNode> nodes,
-            IReadOnlyList<int> topologicalOrder)
+            IReadOnlyList<int> topologicalOrder, CommanderDynamicPlan dynamicProgram = null)
         {
             Nodes = nodes ?? Array.Empty<CommanderSemanticGraphNode>();
             TopologicalOrder = topologicalOrder ?? Array.Empty<int>();
+            DynamicProgram = dynamicProgram;
+            if (dynamicProgram != null)
+                foreach (var constraint in dynamicProgram.Constraints)
+                    if (constraint is NoConstructionConstraint) ConstructionForbidden = true;
+            foreach (var node in Nodes)
+                foreach (var constraint in node.Intent.Constraints)
+                    if (constraint is NoConstructionConstraint) ConstructionForbidden = true;
         }
     }
 
@@ -78,6 +90,20 @@ namespace OpenEmpires
                 if (totalReferences > CommanderSemanticJson.MaximumDependencyReferences) return false;
                 admitted.Add(new CommanderSemanticGraphNode(index, intent,
                     dependencies.AsReadOnly(), node.ProducerFromNode, node.ResultFromNode));
+            }
+
+            bool forbidsConstruction = false;
+            bool containsConstructionRoot = false;
+            foreach (var node in admitted)
+            {
+                containsConstructionRoot |= node.Intent is BuildStructureIntent;
+                foreach (var constraint in node.Intent.Constraints)
+                    if (constraint is NoConstructionConstraint) forbidsConstruction = true;
+            }
+            if (forbidsConstruction && containsConstructionRoot)
+            {
+                safeReason = "This request forbids construction, but the candidate includes a building effect. Nothing started.";
+                return false;
             }
 
             // The parser already performs this check, but admission repeats it at the
@@ -181,7 +207,8 @@ namespace OpenEmpires
                     return false;
                 CommanderSemanticNode producer = nodes[producerIndex];
                 if (producer.Type != CommanderSemanticNodeType.BuildStructure
-                    || !producer.BuildingType.HasValue || producer.Count != 1
+                    || !producer.BuildingType.HasValue || producer.Count < 1
+                    || producer.Count > CommanderIntentValidator.MaximumStructureCount
                     || !node.UnitType.HasValue || !CanProduce(producer.BuildingType.Value, node.UnitType.Value))
                     return false;
             }

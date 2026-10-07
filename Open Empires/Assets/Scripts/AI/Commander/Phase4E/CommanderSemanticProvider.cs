@@ -68,6 +68,10 @@ namespace OpenEmpires
                 ["House"] = 0, ["Barracks"] = 0, ["ArcheryRange"] = 0,
                 ["Stables"] = 0, ["Mill"] = 0, ["Tower"] = 0, ["TownCenter"] = 0
             };
+            var structureNames = context.CanonicalBuildingIds
+                .Where(id => id.StartsWith("building:", StringComparison.Ordinal))
+                .Select(id => id.Substring("building:".Length)).OrderBy(name => name, StringComparer.Ordinal).ToArray();
+            foreach (string name in structureNames) buildingCounts[name] = 0;
             foreach (CommanderBuildingSnapshot building in context.Buildings)
                 if (building.Type != null && buildingCounts.ContainsKey(building.Type))
                     buildingCounts[building.Type] = Math.Min(200, buildingCounts[building.Type] + 1);
@@ -77,11 +81,13 @@ namespace OpenEmpires
                 ["age"] = Math.Max(0, context.Age),
                 ["population"] = Math.Max(0, context.Population),
                 ["populationCap"] = Math.Max(0, context.PopulationCap),
+                ["canonicalUnitIds"] = new JArray(context.CanonicalUnitIds),
+                ["canonicalBuildingIds"] = new JArray(context.CanonicalBuildingIds),
                 ["ownedUnitCounts"] = JObject.FromObject(unitCounts),
                 ["ownedBuildingCounts"] = JObject.FromObject(buildingCounts),
                 ["unitCapabilities"] = new JArray("Villager", "Spearman", "Archer", "Scout", "Knight"),
-                ["structureCapabilities"] = new JArray("House", "Barracks", "ArcheryRange",
-                    "Stables", "Mill", "Tower", "TownCenter"),
+                ["structureCapabilities"] = structureNames.Length > 0 ? new JArray(structureNames)
+                    : new JArray("House", "Barracks", "ArcheryRange", "Stables", "Mill", "Tower", "TownCenter"),
                 ["resourceCapabilities"] = new JArray("Food", "Wood", "Gold", "Stone"),
                 ["strategyCapabilities"] = new JArray("AttackPreparation", "DefensivePreparation",
                     "EconomicExpansion", "MilitaryReinforcement", "RangedReinforcement",

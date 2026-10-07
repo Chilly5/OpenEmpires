@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Failed(Child)" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 17:03:01Z" end-time="2026-10-06 17:03:01Z" duration="0.6212242">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1020" result="Failed" site="Child" start-time="2026-10-06 17:03:01Z" end-time="2026-10-06 17:03:01Z" duration="0.621224" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2153" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1020" result="Failed" site="Child" start-time="2026-10-06 17:03:01Z" end-time="2026-10-06 17:03:01Z" duration="0.525945" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="1780" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2154" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1020" result="Failed" site="Child" start-time="2026-10-06 17:03:01Z" end-time="2026-10-06 17:03:01Z" duration="0.428823" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2155" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1020" result="Failed" site="Child" start-time="2026-10-06 17:03:01Z" end-time="2026-10-06 17:03:01Z" duration="0.328887" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="2112" name="CommanderPhase5ADynamicPlanTests" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests" classname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-06 17:03:01Z" end-time="2026-10-06 17:03:01Z" duration="0.227095" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="ParameterizedMethod" id="2116" name="ExistingSemanticEntry_ParsesTypedCompositionWithoutAuthority" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests.ExistingSemanticEntry_ParsesTypedCompositionWithoutAuthority" classname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-06 17:03:01Z" end-time="2026-10-06 17:03:01Z" duration="0.126023" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="2113" name="ExistingSemanticEntry_ParsesTypedCompositionWithoutAuthority(&quot;{\&quot;outcome\&quot;:\&quot;DynamicPlan\&quot;,\&quot;version\&quot;:1,\&quot;nodes\&quot;:[{\&quot;id\&quot;:\&quot;farms\&quot;,\&quot;mechanic\&quot;:\&quot;build\&quot;,\&quot;parameters\&quot;:{\&quot;building\&quot;:\&quot;building:Farm\&quot;,\&quot;count\&quot;:4},\&quot;inputs\&quot;:{},\&quot;dependsOn\&quot;:[]}]}&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests.ExistingSemanticEntry_ParsesTypedCompositionWithoutAuthority(&quot;{\&quot;outcome\&quot;:\&quot;DynamicPlan\&quot;,\&quot;version\&quot;:1,\&quot;nodes\&quot;:[{\&quot;id\&quot;:\&quot;farms\&quot;,\&quot;mechanic\&quot;:\&quot;build\&quot;,\&quot;parameters\&quot;:{\&quot;building\&quot;:\&quot;building:Farm\&quot;,\&quot;count\&quot;:4},\&quot;inputs\&quot;:{},\&quot;dependsOn\&quot;:[]}]}&quot;)" methodname="ExistingSemanticEntry_ParsesTypedCompositionWithoutAuthority" classname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests" runstate="Runnable" seed="289771450" result="Failed" start-time="2026-10-06 17:03:01Z" end-time="2026-10-06 17:03:01Z" duration="0.019262" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Typed composition is a real semantic outcome, not executable code.
+  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests.ExistingSemanticEntry_ParsesTypedCompositionWithoutAuthority (System.String json) [0x00007] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ADynamicPlanTests.cs:26
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="2114" name="ExistingSemanticEntry_ParsesTypedCompositionWithoutAuthority(&quot;{\&quot;outcome\&quot;:\&quot;DynamicPlan\&quot;,\&quot;version\&quot;:1,\&quot;nodes\&quot;:[{\&quot;id\&quot;:\&quot;berries\&quot;,\&quot;mechanic\&quot;:\&quot;select-resources\&quot;,\&quot;parameters\&quot;:{\&quot;resource\&quot;:\&quot;Food\&quot;,\&quot;sourceKind\&quot;:\&quot;Berries\&quot;,\&quot;mode\&quot;:\&quot;Visible\&quot;,\&quot;count\&quot;:1},\&quot;inputs\&quot;:{},\&quot;dependsOn\&quot;:[]},{\&quot;id\&quot;:\&quot;site\&quot;,\&quot;mechanic\&quot;:\&quot;resolve-location\&quot;,\&quot;parameters\&quot;:{\&quot;relation\&quot;:\&quot;Near\&quot;,\&quot;clearGapTiles\&quot;:1},\&quot;inputs\&quot;:{\&quot;resources\&quot;:\&quot;berries\&quot;},\&quot;dependsOn\&quot;:[\&quot;berries\&quot;]},{\&quot;id\&quot;:\&quot;mill\&quot;,\&quot;mechanic\&quot;:\&quot;build\&quot;,\&quot;parameters\&quot;:{\&quot;building\&quot;:\&quot;building:Mill\&quot;,\&quot;count\&quot;:1},\&quot;inputs\&quot;:{\&quot;location\&quot;:\&quot;site\&quot;},\&quot;dependsOn\&quot;:[\&quot;site\&quot;]}]}&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests.ExistingSemanticEntry_ParsesTypedCompositionWithoutAuthority(&quot;{\&quot;outcome\&quot;:\&quot;DynamicPlan\&quot;,\&quot;version\&quot;:1,\&quot;nodes\&quot;:[{\&quot;id\&quot;:\&quot;berries\&quot;,\&quot;mechanic\&quot;:\&quot;select-resources\&quot;,\&quot;parameters\&quot;:{\&quot;resource\&quot;:\&quot;Food\&quot;,\&quot;sourceKind\&quot;:\&quot;Berries\&quot;,\&quot;mode\&quot;:\&quot;Visible\&quot;,\&quot;count\&quot;:1},\&quot;inputs\&quot;:{},\&quot;dependsOn\&quot;:[]},{\&quot;id\&quot;:\&quot;site\&quot;,\&quot;mechanic\&quot;:\&quot;resolve-location\&quot;,\&quot;parameters\&quot;:{\&quot;relation\&quot;:\&quot;Near\&quot;,\&quot;clearGapTiles\&quot;:1},\&quot;inputs\&quot;:{\&quot;resources\&quot;:\&quot;berries\&quot;},\&quot;dependsOn\&quot;:[\&quot;berries\&quot;]},{\&quot;id\&quot;:\&quot;mill\&quot;,\&quot;mechanic\&quot;:\&quot;build\&quot;,\&quot;parameters\&quot;:{\&quot;building\&quot;:\&quot;building:Mill\&quot;,\&quot;count\&quot;:1},\&quot;inputs\&quot;:{\&quot;location\&quot;:\&quot;site\&quot;},\&quot;dependsOn\&quot;:[\&quot;site\&quot;]}]}&quot;)" methodname="ExistingSemanticEntry_ParsesTypedCompositionWithoutAuthority" classname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests" runstate="Runnable" seed="1156807867" result="Failed" start-time="2026-10-06 17:03:01Z" end-time="2026-10-06 17:03:01Z" duration="0.000459" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Typed composition is a real semantic outcome, not executable code.
+  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests.ExistingSemanticEntry_ParsesTypedCompositionWithoutAuthority (System.String json) [0x00007] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ADynamicPlanTests.cs:26
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="2115" name="ExistingSemanticEntry_ParsesTypedCompositionWithoutAuthority(&quot;{\&quot;outcome\&quot;:\&quot;DynamicPlan\&quot;,\&quot;version\&quot;:1,\&quot;nodes\&quot;:[{\&quot;id\&quot;:\&quot;barracks\&quot;,\&quot;mechanic\&quot;:\&quot;build\&quot;,\&quot;parameters\&quot;:{\&quot;building\&quot;:\&quot;building:Barracks\&quot;,\&quot;count\&quot;:2},\&quot;inputs\&quot;:{},\&quot;dependsOn\&quot;:[]},{\&quot;id\&quot;:\&quot;spears\&quot;,\&quot;mechanic\&quot;:\&quot;produce\&quot;,\&quot;parameters\&quot;:{\&quot;unit\&quot;:\&quot;unit:1\&quot;,\&quot;count\&quot;:10,\&quot;quantityMode\&quot;:\&quot;New\&quot;},\&quot;inputs\&quot;:{\&quot;producers\&quot;:\&quot;barracks\&quot;},\&quot;dependsOn\&quot;:[\&quot;barracks\&quot;]}]}&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests.ExistingSemanticEntry_ParsesTypedCompositionWithoutAuthority(&quot;{\&quot;outcome\&quot;:\&quot;DynamicPlan\&quot;,\&quot;version\&quot;:1,\&quot;nodes\&quot;:[{\&quot;id\&quot;:\&quot;barracks\&quot;,\&quot;mechanic\&quot;:\&quot;build\&quot;,\&quot;parameters\&quot;:{\&quot;building\&quot;:\&quot;building:Barracks\&quot;,\&quot;count\&quot;:2},\&quot;inputs\&quot;:{},\&quot;dependsOn\&quot;:[]},{\&quot;id\&quot;:\&quot;spears\&quot;,\&quot;mechanic\&quot;:\&quot;produce\&quot;,\&quot;parameters\&quot;:{\&quot;unit\&quot;:\&quot;unit:1\&quot;,\&quot;count\&quot;:10,\&quot;quantityMode\&quot;:\&quot;New\&quot;},\&quot;inputs\&quot;:{\&quot;producers\&quot;:\&quot;barracks\&quot;},\&quot;dependsOn\&quot;:[\&quot;barracks\&quot;]}]}&quot;)" methodname="ExistingSemanticEntry_ParsesTypedCompositionWithoutAuthority" classname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests" runstate="Runnable" seed="1118502386" result="Failed" start-time="2026-10-06 17:03:01Z" end-time="2026-10-06 17:03:01Z" duration="0.000460" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Typed composition is a real semantic outcome, not executable code.
+  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests.ExistingSemanticEntry_ParsesTypedCompositionWithoutAuthority (System.String json) [0x00007] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ADynamicPlanTests.cs:26
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

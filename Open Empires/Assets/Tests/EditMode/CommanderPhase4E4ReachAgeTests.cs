@@ -73,6 +73,8 @@ namespace OpenEmpires.Tests
                     "{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"ReachAge\",\"targetAge\":\"Next\"}]}" );
                 Assert.That(CommanderSemanticGraphAdmission.TryAdmit(result, context,
                     out CommanderSemanticGraphPlan plan, out string reason), Is.True, reason);
+                plan = manager.ApproveActionPlan(manager.PrepareActionPlan(result,
+                    "Trusted typed age request.", 0), 0);
                 var submitted = manager.SubmitSemanticGraph(plan);
 
                 Assert.That(submitted, Has.Count.EqualTo(1));

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 20:23:30Z" end-time="2026-10-06 20:23:31Z" duration="1.9412204">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1077" result="Failed" site="Child" start-time="2026-10-06 20:23:30Z" end-time="2026-10-06 20:23:31Z" duration="1.941220" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2223" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1077" result="Failed" site="Child" start-time="2026-10-06 20:23:30Z" end-time="2026-10-06 20:23:31Z" duration="1.838405" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="1780" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2224" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1077" result="Failed" site="Child" start-time="2026-10-06 20:23:30Z" end-time="2026-10-06 20:23:31Z" duration="1.752292" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2225" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1077" result="Failed" site="Child" start-time="2026-10-06 20:23:30Z" end-time="2026-10-06 20:23:31Z" duration="1.643409" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="2146" name="CommanderPhase5AGroundedScopeTests" fullname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests" classname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests" runstate="Runnable" testcasecount="7" result="Failed" site="Child" start-time="2026-10-06 20:23:30Z" end-time="2026-10-06 20:23:31Z" duration="1.531105" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="2147" name="ProviderContext_ProjectsCanonicalIdsFromExistingGameDataWithoutRuntimeIdentities" fullname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.ProviderContext_ProjectsCanonicalIdsFromExistingGameDataWithoutRuntimeIdentities" methodname="ProviderContext_ProjectsCanonicalIdsFromExistingGameDataWithoutRuntimeIdentities" classname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests" runstate="Runnable" seed="942325416" result="Failed" start-time="2026-10-06 20:23:30Z" end-time="2026-10-06 20:23:31Z" duration="1.390634" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing ""canonicalUnitIds""
+  But was:  "{"age":1,"population":0,"populationCap":0,"ownedUnitCounts":{"Archer":0,"Knight":0,"Scout":0,"Spearman":0,"Villager":0},"ownedBuildingCounts":{"ArcheryRange":0,"Barracks":0,"House":0,"Mill":0,"Stables":0,"Tower":0,"TownCenter":0},"unitCapabilities":["Villager","Spearman","Archer","Scout","Knight"],"structureCapabilities":["House","Barracks","ArcheryRange","Stables","Mill","Tower","TownCenter"],"resourceCapabilities":["Food","Wood","Gold","Stone"],"strategyCapabilities":["AttackPreparation","DefensivePreparation","EconomicExpansion","MilitaryReinforcement","RangedReinforcement","DefensiveTurtle"],"actionCapabilities":["AllocateWorkers","MoveUnits","ScoutArea","PatrolArea","SetRallyPoint","AttackTarget","DefendArea","RetreatUnits","RepairTarget","ResearchTechnology"],"selectorCapabilities":{"units":["Military","Scout","Villagers","Spearman","Archer","Knight","DamagedMilitary"],"locations":["PlayerBase","WorkedResource","VisibleResource","VisibleEnemy","RelativeToSelectedUnits"]},"knowledge":{"units":[{"id":"unit:0","name":"Villager","age":1,"producer":"building:TownCenter","cost":{"food":50,"wood":0,"gold":0,"stone":0}},{"id":"unit:1","name":"Spearman","age":1,"producer":"building:Barracks","cost":{"food":60,"wood":20,"gold":0,"stone":0}},{"id":"unit:10","name":"Longbowman","age":1,"producer":"building:ArcheryRange","cost":{"food":30,"wood":50,"gold":0,"stone":0}},{"id":"unit:11","name":"Gendarme","age":1,"producer":"building:Stables","cost":{"food":100,"wood":20,"gold":0,"stone":0}},{"id":"unit:12","name":"Landsknecht","age":1,"producer":"building:Barracks","cost":{"food":60,"wood":20,"gold":0,"stone":0}},{"id":"unit:13","name":"Battering Ram","age":3,"producer":"building:SiegeWorkshop","cost":{"food":0,"wood":200,"gold":100,"stone":0}},{"id":"unit:14","name":"Mangonel","age":3,"producer":"building:SiegeWorkshop","cost":{"food":0,"wood":250,"gold":150,"stone":0}},{"id":"unit:15","name":"Trebuchet","age":3,"producer":"building:SiegeWorkshop","cost":{"food":0,"wood":300,"gold":200,"stone":0}},{"id":"unit:16","name":"King","age":2,"producer":"building:Landmark","cost":{"food":150,"wood":0,"gold":150,"stone":0}},{"id":"unit:2","name":"Archer","age":1,"producer":"building:ArcheryRange","cost":{"food":30,"wood":50,"gold":0,"stone":0}},{"id":"unit:3","name":"Horseman","age":1,"producer":"building:Stables","cost":{"food":100,"wood":20,"gold":0,"stone":0}},{"id":"unit:4","name":"Scout","age":1,"producer":"building:Stables","cost":{"food":80,"wood":0,"gold":0,"stone":0}}],"buildings":[],"technologies":[]},"workerCounts":{"idleUnqueued":0,"gatheringByResource":{"Food":0,"Wood":0,"Gold":0,"Stone":0}}}"
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests+<>c.<ProviderContext_ProjectsCanonicalIdsFromExistingGameDataWithoutRuntimeIdentities>b__0_0 (OpenEmpires.GameSimulation sim, OpenEmpires.CommanderGoalManager manager) [0x0001b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:19
+at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.WithManager (System.Action`2[T1,T2] check) [0x00027] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:121
+at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.ProviderContext_ProjectsCanonicalIdsFromExistingGameDataWithoutRuntimeIdentities () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:15
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -18,7 +18,7 @@ namespace OpenEmpires
         private const string Unavailable = "Commander AI service temporarily unavailable.";
         private const string SemanticInstruction =
             "Translate the player's Commander request into one bounded JSON object, with no markdown or other text. "
-            + "You provide semantic data only, never game authority. Outcomes are Request, Clarify, Unsupported, Answer. "
+            + "You provide semantic data only, never game authority. Outcomes are Request, DynamicPlan, Clarify, Unsupported, Answer. "
             + "For Request use {\"outcome\":\"Request\",\"nodes\":[one to four typed nodes]}. "
             + "Nodes are positional semantic steps, not entity IDs. A dependent node may use "
             + "\"dependsOn\":[nodeIndex] and EnsureUnitCount may use \"producerFromNode\":nodeIndex; "
@@ -27,7 +27,7 @@ namespace OpenEmpires
             + "cycles, IDs, coordinates, workers, tiles, commands, callbacks, or arbitrary workflow fields. "
             + "The currently executable node forms are "
             + "{\"type\":\"EnsureUnitCount\",\"unit\":\"Villager|Spearman|Archer|Scout|Knight\",\"count\":integer 0..200}, "
-            + "{\"type\":\"BuildStructure\",\"structure\":\"House|Barracks|ArcheryRange|Stables|Tower|TownCenter|Mill\",\"count\":integer 1..20,\"placement\":{\"anchor\":\"MyTownCenter|MyBarracks|WorkedResource\",\"ordinal\":integer 1..8 optional only for MyTownCenter,\"relation\":\"MapWest|MapEast|Near\",\"resource\":\"Food|Wood|Gold|Stone\" required for WorkedResource,\"clearGapTiles\":integer 1..20 optional; Near requires 1} optional}, "
+            + "{\"type\":\"BuildStructure\",\"structure\":\"exact name from detached structureCapabilities\",\"count\":integer 1..20,\"placement\":{\"anchor\":\"MyTownCenter|MyBarracks|WorkedResource\",\"ordinal\":integer 1..8 optional only for MyTownCenter,\"relation\":\"MapWest|MapEast|Near\",\"resource\":\"Food|Wood|Gold|Stone\" required for WorkedResource,\"clearGapTiles\":integer 1..20 optional; Near requires 1} optional}, "
             + "Placement is a bounded semantic selector: omit placement for the deterministic game default; never emit coordinates, tiles, "
             + "entity IDs, or any other placement fields. Bind a unit producer with producerFromNode to a prior BuildStructure node and "
             + "{\"type\":\"SetResourceAllocation\",\"resource\":\"Food|Wood|Gold|Stone\",\"count\":integer 0..200}, or "
@@ -49,7 +49,11 @@ namespace OpenEmpires
             + "A bounded recent semantic-memory array may contain detached accepted unit/structure facts or a prior clarification; "
             + "use it only when the player's follow-up is uniquely compatible (for example, add 'five more' to the last unit target, "
             + "or reuse the last count for 'do the same with spearmen'). Never treat it as game authority. "
-            + "Never choose or emit player/owner/entity IDs, coordinates, enemy state, commands, goals, plans, reservations, provenance or approval. "
+            + "Never choose or emit player/owner/entity IDs, coordinates, enemy state, commands, reservations, provenance or approval. "
+            + "Semantic requested effects and explicit strategy advice may be described, but never authorize or instantiate runtime goals or plans. "
+            + "Do not introduce unrequested producer buildings, attacks, age advances or strategic objectives. "
+            + "A question about Castle age is Answer or Clarify, while an explicit request to reach Castle age may be ReachAge. "
+            + "Keep faithful simple known requests in the existing typed Request form; use one DynamicPlan for genuine representation gaps or composition, subject to one player confirmation. Never replace requested content with another building merely because a short example omits it. "
             + "EnsureUnitCount.count is the desired total, not an increment. Language variants such as 'make 3 spearman', "
             + "'train three spearmen' and 'get me 3 spears' use canonical unit Spearman and count 3. "
             + "For explicitly NEW units use the current owned count plus the requested number as the target total. "
@@ -65,16 +69,21 @@ namespace OpenEmpires
         private readonly string apiKey;
         private readonly ICommanderHttpTransport transport;
         private readonly TimeSpan timeout;
+        private readonly int semanticMaxTokens;
         public string LastRequestTrace { get; private set; } = string.Empty;
 
         public OpenRouterCommanderProvider(string apiKey = null,
-            ICommanderHttpTransport transport = null, TimeSpan? providerTimeout = null)
+            ICommanderHttpTransport transport = null, TimeSpan? providerTimeout = null,
+            int semanticMaxTokens = 4096)
         {
             this.apiKey = apiKey ?? ReadSetting(KeyEnvironmentVariable);
             this.transport = transport ?? new CommanderHttpClientTransport();
             timeout = providerTimeout ?? TimeSpan.FromSeconds(15);
             if (timeout <= TimeSpan.Zero || timeout.TotalMilliseconds > int.MaxValue)
                 throw new ArgumentOutOfRangeException(nameof(providerTimeout));
+            if (semanticMaxTokens < 1024 || semanticMaxTokens > 4096)
+                throw new ArgumentOutOfRangeException(nameof(semanticMaxTokens));
+            this.semanticMaxTokens = semanticMaxTokens;
         }
 
         // The editor process may predate a new user-level setting. Project .env and
@@ -166,7 +175,8 @@ namespace OpenEmpires
             {
                 ["model"] = Model,
                 ["messages"] = new JArray(
-                    new JObject { ["role"] = "system", ["content"] = SemanticInstruction },
+                    new JObject { ["role"] = "system", ["content"] = SemanticInstruction
+                        + CommanderDynamicProviderVocabulary.Build(request.SerializedContext) },
                     new JObject
                     {
                         ["role"] = "user",
@@ -176,14 +186,27 @@ namespace OpenEmpires
                             + request.QuestionFacts + "\nBounded pending clarification (untrusted semantic draft only):\n"
                             + request.SerializedPendingClarification + "\nPlayer request:\n" + request.PlayerMessage
                     }),
-                ["max_tokens"] = 1024,
+                ["max_tokens"] = semanticMaxTokens,
                 ["reasoning"] = new JObject { ["effort"] = "none" }
             }.ToString(Formatting.None);
 
             try
             {
-                string text = await PostAndExtractTextAsync(body, token).ConfigureAwait(false);
-                CommanderSemanticResult result = CommanderSemanticJson.Parse(UnwrapJsonFence(text));
+                string text = UnwrapJsonFence(await PostAndExtractTextAsync(body, token,
+                    CommanderDynamicPlan.MaximumCharacters).ConfigureAwait(false));
+                CommanderSemanticResult result = CommanderSemanticJson.Parse(text);
+                if (!result.IsValid && CommanderSemanticSchemaRepair.TryCreateTemplate(text,
+                    out JObject template))
+                {
+                    string repairBody = BuildRepairBody(template);
+                    string repairedText = UnwrapJsonFence(await PostAndExtractTextAsync(repairBody,
+                        token, CommanderDynamicPlan.MaximumCharacters).ConfigureAwait(false));
+                    result = CommanderSemanticJson.Parse(repairedText);
+                    if (!result.IsValid || !CommanderSemanticSchemaRepair.MatchesTemplate(
+                        repairedText, template))
+                        result = CommanderSemanticResult.ProviderRejected(
+                            "Commander AI returned an invalid semantic response; no order was submitted.");
+                }
                 Trace("semantic=" + (result.IsValid ? result.Outcome.ToString() : "invalid")
                     + ";nodes=" + result.Nodes.Count);
                 return result.IsValid ? result : CommanderSemanticResult.ProviderRejected(
@@ -228,11 +251,29 @@ namespace OpenEmpires
                 ["max_tokens"] = 256,
                 ["reasoning"] = new JObject { ["effort"] = "none" }
             }.ToString(Formatting.None);
-            return await PostAndExtractTextAsync(body, cancellationToken).ConfigureAwait(false);
+            return await PostAndExtractTextAsync(body, cancellationToken,
+                CommanderSemanticJson.MaximumResponseCharacters).ConfigureAwait(false);
+        }
+
+        private string BuildRepairBody(JObject template)
+        {
+            return new JObject
+            {
+                ["model"] = Model,
+                ["messages"] = new JArray(
+                    new JObject { ["role"] = "system", ["content"] =
+                        "Schema-only repair. Return exactly the supplied JSON data with unchanged outcome, fields, values, roots and references. "
+                        + "Only preserve the already-normalized numeric scalar shape. No new content, explanation or markdown." },
+                    new JObject { ["role"] = "user", ["content"] =
+                        "Return this normalized semantic JSON template exactly (property order may differ):\n"
+                        + template.ToString(Formatting.None) }),
+                ["max_tokens"] = semanticMaxTokens,
+                ["reasoning"] = new JObject { ["effort"] = "none" }
+            }.ToString(Formatting.None);
         }
 
         private async Task<string> PostAndExtractTextAsync(string body,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken, int maximumContentCharacters)
         {
             LastRequestTrace = string.Empty;
             var elapsed = System.Diagnostics.Stopwatch.StartNew();
@@ -287,7 +328,7 @@ namespace OpenEmpires
                     }
                     if (string.IsNullOrWhiteSpace(text))
                         throw new OpenRouterFailure("Commander AI returned an empty semantic response.");
-                    if (text.Length > CommanderSemanticJson.MaximumResponseCharacters + 16)
+                    if (text.Length > maximumContentCharacters + 16)
                         throw new OpenRouterFailure("Commander AI returned an oversized response.");
                     Trace("assistantContent=extracted;characters=" + text.Length + ";finish=" + (finish ?? "unspecified"));
                     return text;

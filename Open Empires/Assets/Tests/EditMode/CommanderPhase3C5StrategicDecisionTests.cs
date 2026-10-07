@@ -241,6 +241,17 @@ namespace OpenEmpires.Tests
                 new[] { Recommendation(1, StrategicObjectiveType.AttackPreparation, 100) });
 
             AssertNoExecution();
+
+            // Unapproved recommendation cannot commit on human player slot.
+            StrategicIntentSubmission unapprovedSubmission = planner.SubmitIntent(decision.SelectedIntent);
+            Assert.That(unapprovedSubmission.Status,
+                Is.EqualTo(StrategicIntentSubmissionStatus.Rejected));
+            Assert.That(unapprovedSubmission.Plan, Is.Null);
+            Assert.That(planner.Plans, Is.Empty);
+
+            // Once authorized with game-owned credentials, StrategicPlanner commits and creates the plan.
+            planner.IntentIds.TryRegister(decision.SelectedIntent);
+            decision.SelectedIntent.Authorize(planner.IntentIds, "Trusted player approval.");
             StrategicIntentSubmission submission = planner.SubmitIntent(decision.SelectedIntent);
 
             Assert.That(submission.Status,

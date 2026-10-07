@@ -1,0 +1,336 @@
+{
+  "schema": "openempires-phase5a-reconciliation-playmode-evidence@1",
+  "recorded_date": "2026-10-07",
+  "source_snapshot": {
+    "branch": "unit_models_and_voice_control",
+    "head": "4b0ebc3d7fefa7eb970f1446baff3a4c1c0331ca",
+    "unity_version": "6000.5.9f1",
+    "unity_instance": "Open Empires@6d7310c7"
+  },
+  "individual_reconciled_playmode_suites": [
+    {
+      "group": "OpenEmpires.Tests.CommanderPhase4B2PlayModeTests",
+      "job_id": "a5a42b917c73484b8b3e24330a81748c",
+      "status": "succeeded",
+      "init_timeout_ms": 120000,
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 2.8319265,
+      "result_state": "Passed"
+    },
+    {
+      "group": "OpenEmpires.Tests.CommanderPhase4C1PlayModeTests",
+      "job_id": "331e5c0cc8d54300998062510f2d5345",
+      "status": "succeeded",
+      "init_timeout_ms": 120000,
+      "total": 17,
+      "passed": 17,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 4.6800478,
+      "result_state": "Passed"
+    },
+    {
+      "group": "OpenEmpires.Tests.CommanderPhase4C2PlayModeTests",
+      "job_id": "47b941aa9f1b44e08993462ea2768218",
+      "status": "succeeded",
+      "init_timeout_ms": 120000,
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 1.9001846,
+      "result_state": "Passed"
+    },
+    {
+      "group": "OpenEmpires.Tests.CommanderPhase4D4HostPlayModeTests",
+      "job_id": "e96a20696fca4973b58d9e566aea5e03",
+      "status": "succeeded",
+      "init_timeout_ms": 120000,
+      "total": 12,
+      "passed": 12,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 3.7856023,
+      "result_state": "Passed"
+    }
+  ],
+  "individual_suite_aggregate": {
+    "total": 39,
+    "passed": 39,
+    "failed": 0,
+    "skipped": 0
+  },
+  "full_playmode_attempt": {
+    "job_id": "d957a71711a14314a727b6b1da4a4f5f",
+    "status": "failed",
+    "mode": "PlayMode",
+    "init_timeout_ms": 120000,
+    "started_utc": "2026-10-07T13:40:34.632Z",
+    "finished_utc": "2026-10-07T13:42:36.025Z",
+    "elapsed_wall_seconds": 121.393,
+    "progress": {
+      "completed": 201,
+      "total": 201,
+      "failures_capped": false
+    },
+    "summary": {
+      "total": 201,
+      "passed": null,
+      "failed": 1,
+      "skipped": null,
+      "unclassified_completed": 200,
+      "reason": "Unity MCP returned result=null for the failed job; the passed/skipped split was not available."
+    },
+    "failures": [
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests.MillNearVisibleBerries_RealLunaNativeConstruction",
+        "assertion_message": "Native lifecycle deadline reached at tick 6000;goals=\r\nExpected: True\r\nBut was: False",
+        "assertion_source": "Assets/Tests/PlayMode/CommanderPhase5ALiveRuntimePlayModeTests.cs:296",
+        "stack_trace": null,
+        "actual": "No completed Mill was observed before native tick 6000; the assertion message contained an empty goal list.",
+        "expected": "A Mill built through the normal Commander command path near the visible berry resource worked by the player's villager.",
+        "classification": "Unresolved live-provider-dependent runtime failure. The test passed its provider submission checks and reached the game-side lifecycle assertion, but the Unity MCP response did not retain the semantic result/output needed to distinguish a non-effectful valid provider outcome from a goal-admission or execution defect. No production regression is established by the available evidence."
+      }
+    ],
+    "xml_artifact": null,
+    "evidence_note": "Unity MCP reported progress and the failing assertion message but exposed no XML path, stack trace, or result summary for this failed job."
+  },
+  "isolated_live_test_followup": {
+    "job_id": "85ee4be76f8248aa8b21324ed367a811",
+    "status": "failed_in_setup",
+    "test": "OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests.MillNearVisibleBerries_RealLunaNativeConstruction",
+    "setup_message": "The six-call live evidence cap was exhausted. Expected: less than 6; But was: 6.",
+    "test_body_entered": false,
+    "provider_request_issued": false,
+    "reason": "The full PlayMode run had already consumed the fixture's six-call cap in the current Unity test domain."
+  },
+  "live_provider_handling": {
+    "provider_configuration_present": true,
+    "credential_values_read_or_recorded": false,
+    "additional_provider_call_after_full_run": false,
+    "historical_same_scenario_artifact": "Docs/CommanderPhase5A/live-five-attempts-1d933713.xml",
+    "historical_artifact_status": "Passed on 2026-10-06; retained as historical evidence, not a current rerun result."
+  },
+  "accepted_evidence_not_rerun": {
+    "full_editmode": {
+      "job_id": "1ae64b169f774fa2ba628520cf8334d5",
+      "total": 1124,
+      "passed": 1124,
+      "failed": 0,
+      "skipped": 0
+    },
+    "phase5a_hostile": {
+      "job_id": "7bfcf00db9274c728fe6237bd5f5e8fa",
+      "total": 26,
+      "passed": 26
+    },
+    "phase5a_authority_playmode": {
+      "job_id": "0528cea78fda4b7c8121c37950c576d0",
+      "total": 1,
+      "passed": 1
+    },
+    "standalone_sha256_matches_accepted_audit": {
+      "OpenEmpires.exe": "36C5C9F13481406382A8E9EF8FC0EA7CDF055C43BB12FC8FD545B07C199CD277",
+      "OpenEmpires.Runtime.dll": "D205F3FCDFB88BE1B0BFE4E1ADDA7157B15990FC51B81E8FC2D049CD9E27536D"
+    },
+    "standalone_player_log": "Historical clean startup evidence; the executable was not relaunched in this continuation."
+  },
+  "evidence_format_note": "The four passing job summaries are captured from Unity MCP get_test_job responses. The connector exposed no NUnit XML artifact path for these new jobs; this JSON preserves the structured summaries and explicitly records the missing failed-job detail.",
+  "live_luna_mill_diagnostic": {
+    "recorded_date": "2026-10-07",
+    "source_snapshot": {
+      "branch": "unit_models_and_voice_control",
+      "head": "4b0ebc3d7fefa7eb970f1446baff3a4c1c0331ca",
+      "unity_version": "6000.5.9f1",
+      "unity_instance": "Open Empires@6d7310c7"
+    },
+    "fresh_domain": {
+      "reset_method": "Unity MCP forced scripts refresh with compile request; editor state then reported a new domain reload",
+      "provider_calls_before_attempts": 0,
+      "provider_calls_after_attempts": 2,
+      "test_source_modified": false
+    },
+    "test": {
+      "full_name": "OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests.MillNearVisibleBerries_RealLunaNativeConstruction",
+      "init_timeout_ms": 120000,
+      "input": "Build a mill near the berries my villager is working.",
+      "provider_call_limit_per_domain": 6,
+      "fixture": {
+        "human_player_id": 0,
+        "simulation_players": [0, 1],
+        "simulation_ai_players": [],
+        "civilizations": ["French", "French"],
+        "starting_resources_per_type": 10000,
+        "town_centers": 1,
+        "houses": 2,
+        "idle_construction_candidates": 4,
+        "worked_berry_node_amount": 20000,
+        "idle_worker_origin": ["x-7", "z+5"],
+        "berry_node_position": ["x+9", "z+6"],
+        "gatherer_position": ["x+8", "z+8"],
+        "berry_gatherer": {
+          "state": "Gathering",
+          "target_resource_node": "worked berry node"
+        },
+        "map_region": "visible legal grass; resource nodes cleared except the added worked berry node"
+      },
+      "test_expected_semantics": {
+        "outcome": "Request",
+        "nodes": [
+          {
+            "type": "BuildStructure",
+            "building_type": "Mill",
+            "count": 1,
+            "placement_anchor_selector": "WorkedResource",
+            "placement_relation": "Near"
+          }
+        ],
+        "confirmation": "No preview or approval is expected for the observed single-node Request."
+      },
+      "test_contract_gap": "The test's Submit helper asserts one provider call and IsValid, but not this expected outcome/node. It then waits for a completed Mill, conditionally approving only when PendingActionPlan is non-null.",
+      "tick_loop": "CommanderGoalManager.Tick runs when CurrentTick is divisible by 15, simulation.Tick advances each loop, the coroutine yields every 100 iterations, and the deadline is 6000 native ticks.",
+      "completion_predicate": "A new player-0 Mill is no longer under construction before 6000 native ticks; then exactly one Mill, one Commander-origin PlaceBuildingCommand, distance under 15 tiles from the worked berry, and canonical Mill wood cost are asserted."
+    },
+    "isolated_attempts": [
+      {
+        "job_id": "0a3a0151df9843a1a82b0a5946c60cba",
+        "status": "succeeded",
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0,
+        "test_duration_seconds": 16.4613369,
+        "provider_calls": 1,
+        "provider": {
+          "model": "openai/gpt-6-luna",
+          "http_status": 200,
+          "http_duration_ms": 14776,
+          "assistant_content_characters": 180,
+          "finish_reason": "stop",
+          "raw_provider_text_retained": false
+        },
+        "semantic": {
+          "is_valid": true,
+          "outcome": "Request",
+          "node_count": 1,
+          "node": "BuildStructure:Mill:count=1:anchor=WorkedResource:relation=Near",
+          "preview": false
+        },
+        "admission_and_lifecycle": {
+          "goal_admitted": true,
+          "goal_id": 1,
+          "goal_type": "BuildStructure",
+          "request_ticket_id": "not_logged",
+          "request_tracing_enabled": false,
+          "selected_worker_id": 0,
+          "worked_berry_node_id": 0,
+          "resolved_placement": [134, 133],
+          "commander_place_building_commands": 1,
+          "command_buffer_source": "Commander",
+          "building_id": 3,
+          "construction_progress_observed": true,
+          "progress_observation": "Goal status reported building #3 advancing with villager #0 after the SyncCheck tick-100 log.",
+          "completed_before_deadline": true,
+          "exact_completion_tick": null,
+          "completion_assertions_passed": true
+        }
+      },
+      {
+        "job_id": "fa99d068d2124d3e9e9df496fd6e6404",
+        "status": "succeeded",
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0,
+        "test_duration_seconds": 3.5675909,
+        "provider_calls": 1,
+        "provider": {
+          "model": "openai/gpt-6-luna",
+          "http_status": 200,
+          "http_duration_ms": 3020,
+          "assistant_content_characters": 180,
+          "finish_reason": "stop",
+          "raw_provider_text_retained": false
+        },
+        "semantic": {
+          "is_valid": true,
+          "outcome": "Request",
+          "node_count": 1,
+          "node": "BuildStructure:Mill:count=1:anchor=WorkedResource:relation=Near",
+          "preview": false
+        },
+        "admission_and_lifecycle": {
+          "goal_admitted": true,
+          "goal_id": 1,
+          "goal_type": "BuildStructure",
+          "request_ticket_id": "not_logged",
+          "request_tracing_enabled": false,
+          "selected_worker_id": 0,
+          "worked_berry_node_id": 0,
+          "resolved_placement": [134, 133],
+          "commander_place_building_commands": 1,
+          "command_buffer_source": "Commander",
+          "building_id": 3,
+          "construction_progress_observed": true,
+          "progress_observation": "Goal status reported building #3 advancing with villager #0 after the SyncCheck tick-100 log.",
+          "completed_before_deadline": true,
+          "exact_completion_tick": null,
+          "completion_assertions_passed": true
+        }
+      }
+    ],
+    "historical_comparison": {
+      "artifact": "Docs/CommanderPhase5A/live-five-attempts-1d933713.xml",
+      "date": "2026-10-06",
+      "status": "Passed",
+      "input_match": true,
+      "normalized_semantic_match": true,
+      "observed_path": "Request BuildStructure:Mill near WorkedResource; goal admitted; placement (134,133); villager #0 travelled to building #3; progress and completion reported for building #3/berry node #0. The same test assertions validated one Commander-origin PlaceBuildingCommand, cost, distance, and completed state.",
+      "http_status_finish_reason_raw_text_request_ticket_and_exact_completion_tick": "Not retained in historical XML."
+    },
+    "original_full_playmode_failure": {
+      "job_id": "d957a71711a14314a727b6b1da4a4f5f",
+      "status": "failed",
+      "total_completed": 201,
+      "failure": "Native lifecycle deadline reached at tick 6000;goals=; Expected True but was False.",
+      "result_payload": null,
+      "nunit_xml": null,
+      "stack_trace": null,
+      "source_flow_inference": {
+        "provider_call_count": 1,
+        "provider_result_non_null": true,
+        "provider_result_is_valid": true,
+        "basis": "The reported failure is TickUntil's assertion, which occurs after Submit's call-count, non-null-result, and IsValid checks; invalid/provider-blocker cases fail or become inconclusive earlier."
+      },
+      "at_deadline": {
+        "active_goals": [],
+        "ever_admitted_goal": null
+      },
+      "unavailable": [
+        "HTTP status and finish reason",
+        "sanitized semantic outcome and node",
+        "exact tactical-admission result",
+        "preview and confirmation path",
+        "request-ticket identity",
+        "worker and worked-berry binding",
+        "placement and Commander command",
+        "construction entity/progress trace"
+      ],
+      "persisted_output_search": "No matching XML/log/text result was found in project Library, Logs, or Temp, or in the default Unity Editor.log."
+    },
+    "diagnosis": {
+      "classification": "UNCLASSIFIED",
+      "candidate_bucket": "A provider semantic variability is plausible; C/D semantic/admission behavior is not excluded.",
+      "production_defect_confirmed": false,
+      "production_defect_ruled_out": false,
+      "test_infrastructure_issue": true,
+      "test_harness_reliability_finding": "Valid Answer, Clarify, and Unsupported semantic results are accepted by the parser and create no gameplay goal, while this live Mill test only checks IsValid before waiting for construction. The original result does not show whether one of those outcomes occurred.",
+      "sol_production_fix_handoff": false,
+      "recommended_followup": "A later Codex Sol review may improve live-test outcome classification and failed-job diagnostic retention without weakening the required effect expectation.",
+      "phase5b_started": false
+    }
+  }
+}

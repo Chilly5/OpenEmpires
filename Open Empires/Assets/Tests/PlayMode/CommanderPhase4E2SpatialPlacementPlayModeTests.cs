@@ -135,6 +135,8 @@ namespace OpenEmpires.Tests
             CommanderContext context = new CommanderContextBuilder().Build(simulation, goals);
             Assert.That(CommanderSemanticGraphAdmission.TryAdmit(parsed, context,
                 out CommanderSemanticGraphPlan plan, out string reason), Is.True, reason);
+            plan = goals.ApproveActionPlan(goals.PrepareActionPlan(parsed,
+                "Trusted fixture approves west Barracks and constrained production.", 0), 0);
             var submitted = goals.SubmitSemanticGraph(plan);
             var build = submitted[0] as BuildStructureGoal;
             var units = submitted[1] as EnsureUnitCountGoal;
@@ -191,6 +193,8 @@ namespace OpenEmpires.Tests
             CommanderContext context = new CommanderContextBuilder().Build(simulation, goals);
             Assert.That(CommanderSemanticGraphAdmission.TryAdmit(parsed, context,
                 out CommanderSemanticGraphPlan plan, out string reason), Is.True, reason);
+            plan = goals.ApproveActionPlan(goals.PrepareActionPlan(parsed,
+                "Trusted fixture approves west Barracks and constrained production.", 0), 0);
             var submitted = goals.SubmitSemanticGraph(plan);
             var build = submitted[0] as BuildStructureGoal;
             var units = submitted[1] as EnsureUnitCountGoal;

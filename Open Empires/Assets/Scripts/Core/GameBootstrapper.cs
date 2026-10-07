@@ -38,6 +38,7 @@ namespace OpenEmpires
         private float tickAccumulator;
         private List<ICommand> localCommandsThisTick = new List<ICommand>();
         private readonly List<ICommand> tickCommandsBuffer = new List<ICommand>();
+        private readonly CommanderCommandOriginLedger commandOriginLedger = new CommanderCommandOriginLedger();
         private static readonly List<ICommand> emptyCommandList = new List<ICommand>();
         private int sentCommandsForTick = -1;
 
@@ -64,6 +65,7 @@ namespace OpenEmpires
 
         public void DisposeCommanderSystems()
         {
+            commandOriginLedger.Clear(Simulation);
             if (CommanderDispatcher != null)
             {
                 CommanderDispatcher.Dispose();
@@ -324,6 +326,9 @@ namespace OpenEmpires
                 Commander?.Tick(currentTick);
                 localCommandsThisTick.Clear();
                 localCommandsThisTick.AddRange(Simulation.CommandBuffer.FlushCommands());
+                // SetCommandPlayerId reboxes structs. Preserve each original box
+                // before stamping so a verified relay replay can recover its origin.
+                var originalCommands = new List<ICommand>(localCommandsThisTick);
 
                 // Stamp player ID onto commands
                 int localPlayerId = networkManager.LocalPlayerId;
@@ -334,6 +339,8 @@ namespace OpenEmpires
                     localCommandsThisTick[i] = cmd;
                 }
 
+                commandOriginLedger.Record(commandTick, localPlayerId,
+                    originalCommands, localCommandsThisTick, Simulation);
                 networkManager.SendCommands(localCommandsThisTick, commandTick);
                 sentCommandsForTick = commandTick;
                 pendingTicks.Add(commandTick);
@@ -381,7 +388,18 @@ namespace OpenEmpires
             }
 
             pendingTicks.Remove(currentTick);
-            Simulation.Tick(tickCommandsBuffer);
+            IReadOnlyDictionary<ICommand, ICommand> verifiedOriginals = commandOriginLedger.Consume(
+                currentTick, networkManager.LocalPlayerId, tickCommandsBuffer, Simulation);
+            try
+            {
+                Simulation.Tick(tickCommandsBuffer, verifiedOriginals);
+            }
+            finally
+            {
+                // A match-ending or aborted tick must not retain unused candidates.
+                foreach (ICommand original in verifiedOriginals.Values)
+                    Simulation.DiscardTrainingOrigin(original);
+            }
             return true; // Tick executed successfully
         }
 

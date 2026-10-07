@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Failed(Child)" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 21:32:33Z" end-time="2026-10-06 21:32:58Z" duration="25.220302">
+  <test-suite type="TestSuite" id="2487" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="201" result="Failed" site="Child" start-time="2026-10-06 21:32:33Z" end-time="2026-10-06 21:32:58Z" duration="25.220302" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2481" name="OpenEmpires.PlayModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.PlayModeTests.dll" runstate="Runnable" testcasecount="201" result="Failed" site="Child" start-time="2026-10-06 21:32:33Z" end-time="2026-10-06 21:32:58Z" duration="25.217249" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="1780" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2482" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="201" result="Failed" site="Child" start-time="2026-10-06 21:32:33Z" end-time="2026-10-06 21:32:58Z" duration="25.214225" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2483" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="201" result="Failed" site="Child" start-time="2026-10-06 21:32:33Z" end-time="2026-10-06 21:32:58Z" duration="25.211724" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="2472" name="CommanderPhase5ALiveRuntimePlayModeTests" fullname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests" classname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests" runstate="Runnable" testcasecount="6" result="Failed" site="Child" start-time="2026-10-06 21:32:33Z" end-time="2026-10-06 21:32:58Z" duration="25.209569" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5ALiveRuntime" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="2477" name="SimpleKnownAllocation_RemainsImmediateWithoutPreviewOrExtraEffect" fullname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests.SimpleKnownAllocation_RemainsImmediateWithoutPreviewOrExtraEffect" methodname="SimpleKnownAllocation_RemainsImmediateWithoutPreviewOrExtraEffect" classname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests" runstate="Runnable" seed="770592033" result="Passed" start-time="2026-10-06 21:32:33Z" end-time="2026-10-06 21:32:48Z" duration="15.362611" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[DotEnv] Loaded .env from D:\unity_projects\OpenEmpires\Open Empires\.env
+[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-06T21:32:33.5896456Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] intent=admitted;goal-submitted=True
+[Phase5A live] scenario=known-allocation;input=Put four idle villagers on berries.;providerOutcome=Request;semanticNodes=AllocateWorkers::count=:unit=:anchor=:relation=;preview=False
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=1 checksum=11D876F5
+[Phase5A live] scenario=known-allocation;preview=false;goal=AllocateWorkers;gatherWorkers=0,1,2,3
+]]></output>
+            </test-case>
+            <test-case id="2475" name="ThreeIdleWorkers_TwoSheepThirdMill_DisjointOrdinaryCommands" fullname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests.ThreeIdleWorkers_TwoSheepThirdMill_DisjointOrdinaryCommands" methodname="ThreeIdleWorkers_TwoSheepThirdMill_DisjointOrdinaryCommands" classname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests" runstate="Runnable" seed="1507190048" result="Passed" start-time="2026-10-06 21:32:48Z" end-time="2026-10-06 21:32:53Z" duration="4.734579" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-06T21:32:48.7902635Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[Phase5A live] scenario=split-sheep-mill;input=Use exactly three idle villagers: send two to the sheep and have the third build a mill near the berries being worked.;providerOutcome=DynamicPlan;semanticNodes=SelectWorkers,PartitionWorkers,PartitionWorkers,SelectResources,ResolveLocation,Build,AllocateWorkers;preview=True
+[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: AllocateWorkers
+[Phase5A live] scenario=split-sheep-mill;approved=true;compiledGoals=BuildStructureGoal,AllocateWorkersGoal
+[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Mill at (134,133) from its exact semantic anchor with villager #2.
+[SyncCheck] tick=1 checksum=3A0E6052
+[SyncCheck] tick=2 checksum=69D96B1D
+[SyncCheck] tick=3 checksum=C1A871E1
+[SyncCheck] tick=4 checksum=A04D25AB
+[SyncCheck] tick=5 checksum=11E7F555
+[SyncCheck] tick=6 checksum=92146A76
+[SyncCheck] tick=7 checksum=4AC69DCD
+[SyncCheck] tick=8 checksum=3BFE8F5A
+[SyncCheck] tick=9 checksum=65BC3F1D
+[SyncCheck] tick=10 checksum=9E0B9457
+[SyncCheck] tick=11 checksum=E4EC8F08
+[SyncCheck] tick=12 checksum=645347EF
+[SyncCheck] tick=13 checksum=1C3FBF0C
+[SyncCheck] tick=14 checksum=0CB1F45F
+[SyncCheck] tick=15 checksum=8E64EA2A
+[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (134,133): villager #2 is travelling to building #3.
+[Commander] Goal #2: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=16 checksum=72A057D9
+[SyncCheck] tick=17 checksum=BC7F26ED
+[SyncCheck] tick=18 checksum=8384B531
+[SyncCheck] tick=19 checksum=BBA65FE4
+[SyncCheck] tick=20 checksum=414A4586
+[SyncCheck] tick=21 checksum=E6B812DA
+[SyncCheck] tick=22 checksum=36DCD11D
+[SyncCheck] tick=23 checksum=70A489CD
+[SyncCheck] tick=24 checksum=3335711C
+[SyncCheck] tick=25 checksum=0457FDE2
+[SyncCheck] tick=26 checksum=EF31EE61
+[SyncCheck] tick=27 checksum=26263FBA
+[SyncCheck] tick=28 checksum=3CE447E7
+[SyncCheck] tick=29 checksum=5C961D2A
+[SyncCheck] tick=30 checksum=AA46D767
+[Commander] Goal #2: status=Completed owned=2 queued=0; The 2 selected workers have matching assignments.
+[SyncCheck] tick=31 checksum=EF6F5EFD
+[SyncCheck] tick=32 checksum=19A1F2CD
+[SyncCheck] tick=33 checksum=4E8FBEF7
+[SyncCheck] tick=34 checksum=F7F4CA5B
+[SyncCheck] tick=35 checksum=05BE50BA
+[SyncCheck] tick=36 checksum=B101F8D3
+[SyncCheck] tick=37 checksum=7F2FD18A
+[SyncCheck] tick=38 checksum=0A8C697F
+[SyncCheck] tick=39 checksum=6A88870F
+[SyncCheck] tick=40 checksum=AFF23D1F
+[SyncCheck] tick=41 checksum=6CF0AE69
+[SyncCheck] tick=42 checksum=C254212E
+[SyncCheck] tick=43 checksum=4FCB476E
+[SyncCheck] tick=44 checksum=A475FA09
+[SyncCheck] tick=45 checksum=ACA2E0C0
+[SyncCheck] tick=46 checksum=8BD64192
+[SyncCheck] tick=47 checksum=A25CD69C
+[SyncCheck] tick=48 checksum=F69194BB
+[SyncCheck] tick=49 checksum=1596FAD3
+[SyncCheck] tick=50 checksum=82EDC4BD
+[SyncCheck] tick=51 checksum=715E0143
+[SyncCheck] tick=52 checksum=3B070321
+[SyncCheck] tick=53 checksum=8D43D45A
+[SyncCheck] tick=54 checksum=9706D4EC
+[SyncCheck] tick=55 checksum=F229A3ED
+[SyncCheck] tick=56 checksum=6657682D
+[SyncCheck] tick=57 checksum=DA852C6D
+[SyncCheck] tick=58 checksum=EBED798C
+[SyncCheck] tick=59 checksum=BB322DC5
+[SyncCheck] tick=60 checksum=2342BDD7
+[SyncCheck] tick=61 checksum=D684D575
+[SyncCheck] tick=62 checksum=A584747B
+[SyncCheck] tick=63 checksum=A9A20077
+[SyncCheck] tick=64 checksum=1F8C5752
+[SyncCheck] tick=65 checksum=432D4744
+[SyncCheck] tick=66 checksum=AE9E8D8F
+[SyncCheck] tick=67 checksum=62551FDB
+[SyncCheck] tick=68 checksum=BEBC05CD
+[SyncCheck] tick=69 checksum=BECAF1D7
+[SyncCheck] tick=70 checksum=204A2E63
+[SyncCheck] tick=71 checksum=6BE2D2DD
+[SyncCheck] tick=72 checksum=608E1E2C
+[SyncCheck] tick=73 checksum=41B23CDE
+[SyncCheck] tick=74 checksum=226DCBCB
+[SyncCheck] tick=75 checksum=B4CFB6E0
+[SyncCheck] tick=76 checksum=DA450D37
+[SyncCheck] tick=77 checksum=2B446BDB
+[SyncCheck] tick=78 checksum=FBA16362
+[SyncCheck] tick=79 checksum=68CA6C79
+[SyncCheck] tick=80 checksum=978A36BD
+[SyncCheck] tick=81 checksum=3CC12C19
+[SyncCheck] tick=82 checksum=74910FEA
+[SyncCheck] tick=83 checksum=859D47DF
+[SyncCheck] tick=84 checksum=19421D87
+[SyncCheck] tick=85 checksum=94C1FF6A
+[SyncCheck] tick=86 checksum=9301CBEB
+[SyncCheck] tick=87 checksum=E83BEC2A
+[SyncCheck] tick=88 checksum=EF817296
+[SyncCheck] tick=89 checksum=E435C136
+[SyncCheck] tick=90 checksum=04A4D0CB
+[SyncCheck] tick=91 checksum=2CF73C8F
+[SyncCheck] tick=92 checksum=774D1A4D
+[SyncCheck] tick=93 checksum=47184995
+[SyncCheck] tick=94 checksum=B2B993BB
+[SyncCheck] tick=95 checksum=8187AF84
+[SyncCheck] tick=96 checksum=9FE1D20F
+[SyncCheck] tick=97 checksum=40D25AA4
+[SyncCheck] tick=98 checksum=CC5DA3B5
+[SyncCheck] tick=99 checksum=63AC3533
+[SyncCheck] tick=100 checksum=DDB961B7
+[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (134,133): building #3 is advancing with villager #2.
+[Phase5A live] scenario=split-sheep-mill;sheepWorkers=0,1;millWorker=2;millIds=3
+]]></output>
+            </test-case>
+            <test-case id="2476" name="TwoNewBarracksThenTenNewSpearmen_OnlyThoseProducers" fullname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests.TwoNewBarracksThenTenNewSpearmen_OnlyThoseProducers" methodname="TwoNewBarracksThenTenNewSpearmen_OnlyThoseProducers" classname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests" runstate="Runnable" seed="462878737" result="Failed" label="Error" start-time="2026-10-06 21:32:53Z" end-time="2026-10-06 21:32:58Z" duration="5.101015" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.ArgumentException : Property Count was not found
+Parameter name: name]]></message>
+                <stack-trace><![CDATA[  at NUnit.Framework.Constraints.PropertyConstraint.ApplyTo (System.Object actual) [0x00050] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x0000e] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression) [0x00001] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests+<TwoNewBarracksThenTenNewSpearmen_OnlyThoseProducers>d__18.MoveNext () [0x001ef] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\PlayMode\CommanderPhase5ALiveRuntimePlayModeTests.cs:200 
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44 ]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-06T21:32:53.5224008Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[Phase5A live] scenario=barracks-spears;input=Build two new barracks near my town center, then train exactly ten new spearmen using only those new barracks.;providerOutcome=DynamicPlan;semanticNodes=ResolveLocation,Build,Produce;preview=True
+[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: EnsureUnitCount
+[Phase5A live] scenario=barracks-spears;approved=true;compiledGoals=BuildStructureGoal,EnsureUnitCountGoal
+[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Barracks at (123,128) from its exact semantic anchor with villager #0.
+[SyncCheck] tick=1 checksum=FF60ED13
+[SyncCheck] tick=2 checksum=C63626A3
+[SyncCheck] tick=3 checksum=AF328EEE
+[SyncCheck] tick=4 checksum=70295371
+[SyncCheck] tick=5 checksum=E63A27AE
+[SyncCheck] tick=6 checksum=DCFD1F65
+[SyncCheck] tick=7 checksum=6B9ED3B4
+[SyncCheck] tick=8 checksum=870F26D7
+[SyncCheck] tick=9 checksum=3E594344
+[SyncCheck] tick=10 checksum=21477C10
+[SyncCheck] tick=11 checksum=D891987D
+[SyncCheck] tick=12 checksum=0D2310AB
+[SyncCheck] tick=13 checksum=F0114977
+[SyncCheck] tick=14 checksum=A75B65E4
+[SyncCheck] tick=15 checksum=8A499EB0
+[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Barracks at (123,128): villager #0 is travelling to building #3.
+[SyncCheck] tick=16 checksum=EA7F333D
+[SyncCheck] tick=17 checksum=A1C94FAA
+[SyncCheck] tick=18 checksum=84B78876
+[SyncCheck] tick=19 checksum=B94900A4
+[SyncCheck] tick=20 checksum=9C373970
+[SyncCheck] tick=21 checksum=7F25723C
+[SyncCheck] tick=22 checksum=35222BA7
+[SyncCheck] tick=23 checksum=BF7AC8B3
+[SyncCheck] tick=24 checksum=C71AC180
+[SyncCheck] tick=25 checksum=51735E8C
+[SyncCheck] tick=26 checksum=15734D02
+[SyncCheck] tick=27 checksum=4E2F712A
+[SyncCheck] tick=28 checksum=268A5AEB
+[SyncCheck] tick=29 checksum=5204C5C9
+[SyncCheck] tick=30 checksum=4F1A0F82
+[SyncCheck] tick=31 checksum=28932C58
+[SyncCheck] tick=32 checksum=78D96A29
+[SyncCheck] tick=33 checksum=A1CA4517
+[SyncCheck] tick=34 checksum=3DCF0B00
+[SyncCheck] tick=35 checksum=DBB6B767
+[SyncCheck] tick=36 checksum=FAA661BC
+[SyncCheck] tick=37 checksum=B0A31B27
+[SyncCheck] tick=38 checksum=B84313F4
+[SyncCheck] tick=39 checksum=6E3FCD5F
+[SyncCheck] tick=40 checksum=A183E28B
+[SyncCheck] tick=41 checksum=57809BF6
+[SyncCheck] tick=42 checksum=5F2094C3
+[SyncCheck] tick=43 checksum=C37A0ECC
+[SyncCheck] tick=44 checksum=CB1A0799
+[SyncCheck] tick=45 checksum=DF7D9E67
+[SyncCheck] tick=46 checksum=45B53A39
+[SyncCheck] tick=47 checksum=20AF11AC
+[SyncCheck] tick=48 checksum=8EDE0354
+[SyncCheck] tick=49 checksum=02F32EE0
+[SyncCheck] tick=50 checksum=96BACF71
+[SyncCheck] tick=51 checksum=785BA53B
+[SyncCheck] tick=52 checksum=9D6AA208
+[SyncCheck] tick=53 checksum=141CDE37
+[SyncCheck] tick=54 checksum=F26B2C9E
+[SyncCheck] tick=55 checksum=DE5720F0
+[SyncCheck] tick=56 checksum=5F2F0286
+[SyncCheck] tick=57 checksum=59C3B622
+[SyncCheck] tick=58 checksum=4A9EB342
+[SyncCheck] tick=59 checksum=6628F6B7
+[SyncCheck] tick=60 checksum=CED3939B
+[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Barracks at (123,128): building #3 is advancing with villager #0.
+[SyncCheck] tick=61 checksum=CDD34C5B
+[SyncCheck] tick=62 checksum=11094A3C
+[SyncCheck] tick=63 checksum=808C51C1
+[SyncCheck] tick=64 checksum=B58106C9
+[SyncCheck] tick=65 checksum=8FE1B3BB
+[SyncCheck] tick=66 checksum=23F4A039
+[SyncCheck] tick=67 checksum=1C1D3DAA
+[SyncCheck] tick=68 checksum=3D1638A5
+[SyncCheck] tick=69 checksum=52E86C03
+[SyncCheck] tick=70 checksum=0B9E6790
+[SyncCheck] tick=71 checksum=1E6B8A27
+[SyncCheck] tick=72 checksum=05A2A0E3
+[SyncCheck] tick=73 checksum=7136ECE1
+[SyncCheck] tick=74 checksum=7DE8D429
+[SyncCheck] tick=75 checksum=DA0F83A8
+[SyncCheck] tick=76 checksum=FE89D008
+[SyncCheck] tick=77 checksum=3D417B87
+[SyncCheck] tick=78 checksum=3493FD07
+[SyncCheck] tick=79 checksum=8D7F9EA6
+[SyncCheck] tick=80 checksum=42BD5FC5
+[SyncCheck] tick=81 checksum=FD2F4F85
+[SyncCheck] tick=82 checksum=BCE83FE4
+[SyncCheck] tick=83 checksum=7C97C744
+[SyncCheck] tick=84 checksum=418E4F43
+[SyncCheck] tick=85 checksum=37DDA30D
+[SyncCheck] tick=86 checksum=53E8B2EC
+[SyncCheck] tick=87 checksum=18D5D1EC
+[SyncCheck] tick=88 checksum=34E0E1CB
+[SyncCheck] tick=89 checksum=A800798A
+[SyncCheck] tick=90 checksum=C402206A
+[SyncCheck] tick=91 checksum=3721B829
+[SyncCheck] tick=92 checksum=53235F09
+[SyncCheck] tick=93 checksum=C642F6C8
+[SyncCheck] tick=94 checksum=E2449DA8
+[SyncCheck] tick=95 checksum=55643567
+[SyncCheck] tick=96 checksum=F9DC98F1
+[SyncCheck] tick=97 checksum=6CFC30B0
+[SyncCheck] tick=98 checksum=E01BC86F
+[SyncCheck] tick=99 checksum=FC1D6F4F
+[SyncCheck] tick=100 checksum=6F3D070E
+[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Barracks at (128,123) from its exact semantic anchor with villager #0.
+[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Barracks at (128,123): villager #0 is travelling to building #4.
+[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Barracks at (128,123): building #4 is advancing with villager #0.
+[Commander] Goal #1: status=Completed owned=2 queued=0; Completed 2 distinct exact semantic placements.
+[Commander] Goal #2: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #3.
+[Commander] Goal #2: status=Executing owned=0 queued=1; Queueing Spearman at Barracks #4.
+[Commander] Goal #2: status=Executing owned=0 queued=2; Queueing Spearman at Barracks #3.
+[Commander] Goal #2: status=Executing owned=0 queued=3; Queueing Spearman at Barracks #4.
+[Commander] Goal #2: status=Executing owned=0 queued=4; Queueing Spearman at Barracks #3.
+[Commander] Goal #2: status=Executing owned=0 queued=5; Queueing Spearman at Barracks #4.
+[Commander] Goal #2: status=WaitingForProduction owned=0 queued=6; All exact requested producer queues are at Commander limit 3.
+[Commander] Goal #2: status=Executing owned=1 queued=5; Queueing Spearman at Barracks #3.
+[Commander] Goal #2: status=Executing owned=2 queued=5; Queueing Spearman at Barracks #4.
+[Commander] Goal #2: status=WaitingForProduction owned=2 queued=6; All exact requested producer queues are at Commander limit 3.
+[Commander] Goal #2: status=Executing owned=3 queued=5; Queueing Spearman at Barracks #3.
+[Commander] Goal #2: status=Executing owned=4 queued=5; Queueing Spearman at Barracks #4.
+[Commander] Goal #2: status=WaitingForProduction owned=4 queued=6; Owned 4, queued 6, target 10.
+[Commander] Goal #2: status=WaitingForProduction owned=5 queued=5; Owned 5, queued 5, target 10.
+[Commander] Goal #2: status=WaitingForProduction owned=6 queued=4; Owned 6, queued 4, target 10.
+[Commander] Goal #2: status=WaitingForProduction owned=7 queued=3; Owned 7, queued 3, target 10.
+[Commander] Goal #2: status=WaitingForProduction owned=8 queued=2; Owned 8, queued 2, target 10.
+[Commander] Goal #2: status=WaitingForProduction owned=9 queued=1; Owned 9, queued 1, target 10.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

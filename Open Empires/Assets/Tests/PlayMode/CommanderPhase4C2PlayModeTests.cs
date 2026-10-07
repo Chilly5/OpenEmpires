@@ -372,6 +372,7 @@ namespace OpenEmpires.Tests
                 planner.IntentIds);
             StrategicIntent defense = new MockStrategicAIProvider()
                 .InterpretStrategicIntentAsync(request, default).Result.Intent;
+            defense.Authorize(planner.IntentIds, "Trusted emergency defense setup.");
             StrategicIntentSubmission submission = planner.SubmitIntent(defense, true, false);
             Assert.That(submission.CreatedPlan, Is.True, submission.Reason);
             return submission.Plan;

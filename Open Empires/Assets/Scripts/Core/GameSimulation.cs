@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace OpenEmpires
 {
-    public class GameSimulation
+    public partial class GameSimulation
     {
         public event Action<int> OnUnitDied;
         public event Action<int> OnBuildingDestroyed;
@@ -958,6 +958,14 @@ namespace OpenEmpires
         /// <summary>Multiplayer tick: accepts an explicit, pre-sorted command list. AI runs deterministically on all clients.</summary>
         public void Tick(List<ICommand> commands)
         {
+            Tick(commands, null);
+        }
+
+        // Correlation is local to this one tick. Unverified network commands still
+        // execute but cannot inherit a locally issued command's receipt.
+        internal void Tick(List<ICommand> commands,
+            IReadOnlyDictionary<ICommand, ICommand> verifiedOriginalCommands)
+        {
             if (isMatchOver) return;
 
             foreach (var unit in UnitRegistry.GetAllUnits())
@@ -972,7 +980,7 @@ namespace OpenEmpires
             }
 
             foreach (var command in commands)
-                ProcessCommand(command);
+                ProcessCommand(command, VerifiedOriginal(command, verifiedOriginalCommands));
 
             if (earlyTick || DebugSyncHashes)
             {
@@ -1206,7 +1214,7 @@ namespace OpenEmpires
                 var building = BuildingRegistry.GetBuilding(c.BuildingId);
                 if (building == null) continue;
 
-                SpawnTrainedUnit(building, c.UnitType, c.PlayerId);
+                SpawnTrainedUnit(building, c.UnitType, c.PlayerId, c.Receipt);
             }
 
             // Only update fog every 3rd tick (visual feature, 100ms delay imperceptible)
@@ -1688,7 +1696,7 @@ namespace OpenEmpires
             }
         }
 
-        private void ProcessCommand(ICommand command)
+        private void ProcessCommand(ICommand command, ICommand verifiedOriginal = null)
         {
             switch (command)
             {
@@ -1708,13 +1716,13 @@ namespace OpenEmpires
                     ProcessAttackUnitCommand(attackUnit);
                     break;
                 case TrainUnitCommand train:
-                    ProcessTrainUnitCommand(train);
+                    ProcessTrainUnitCommand(train, verifiedOriginal ?? command);
                     break;
                 case SetRallyPointCommand rally:
                     ProcessSetRallyPointCommand(rally);
                     break;
                 case PlaceBuildingCommand place:
-                    ProcessPlaceBuildingCommand(place, command);
+                    ProcessPlaceBuildingCommand(place, verifiedOriginal ?? command);
                     break;
                 case ConstructBuildingCommand construct:
                     ProcessConstructBuildingCommand(construct);
@@ -3858,8 +3866,9 @@ namespace OpenEmpires
             }
         }
 
-        private void ProcessTrainUnitCommand(TrainUnitCommand cmd)
+        private void ProcessTrainUnitCommand(TrainUnitCommand cmd, ICommand originalCommand)
         {
+            TrainingOrigin origin = ConsumeTrainingOrigin(originalCommand, cmd);
             var building = BuildingRegistry.GetBuilding(cmd.BuildingId);
             if (building == null || building.IsDestroyed) return;
             if (building.PlayerId != cmd.PlayerId) return;
@@ -3884,7 +3893,10 @@ namespace OpenEmpires
             resources.Food -= foodCost;
             resources.Wood -= woodCost;
             resources.Gold -= goldCost;
-            building.EnqueueTraining(resolvedUnitType, trainTime);
+            TrainingOrderReceipt receipt = NewTrainingReceipt(origin, building.Id,
+                cmd.PlayerId, resolvedUnitType);
+            building.EnqueueTrainingTracked(resolvedUnitType, trainTime, receipt);
+            PublishTrainingAccepted(receipt);
         }
 
         private void ProcessCancelTrainCommand(CancelTrainCommand cmd)
@@ -3908,7 +3920,7 @@ namespace OpenEmpires
                 resources.Gold += goldCost;
             }
 
-            building.TrainingQueue.RemoveAt(cmd.QueueIndex);
+            building.RemoveTrainingAt(cmd.QueueIndex);
 
             if (cmd.QueueIndex == 0)
             {
@@ -5494,13 +5506,15 @@ namespace OpenEmpires
             }
         }
 
-        private void SpawnTrainedUnit(BuildingData building, int unitType, int playerId)
+        private void SpawnTrainedUnit(BuildingData building, int unitType, int playerId,
+            TrainingOrderReceipt receipt)
         {
             FixedVector3 spawnRef = building.HasRallyPoint ? building.RallyPoint : building.SimPosition;
             Vector2Int spawnTile = FindNearestWalkableAdjacentTile(building, spawnRef);
             FixedVector3 spawnPos = MapData.TileToWorldFixed(spawnTile.x, spawnTile.y);
             var unitData = CreateTrainedUnit(playerId, unitType, spawnPos);
             OnUnitTrained?.Invoke(unitData.Id, unitType, playerId);
+            PublishTrackedUnitProduced(receipt, unitData.Id);
 
             // Auto-move to rally point
             if (building.HasRallyPoint)

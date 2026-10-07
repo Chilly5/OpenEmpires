@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Failed(Child)" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 13:49:42Z" end-time="2026-10-06 13:49:47Z" duration="5.1430813">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1009" result="Failed" site="Child" start-time="2026-10-06 13:49:42Z" end-time="2026-10-06 13:49:47Z" duration="5.143081" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2140" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1009" result="Failed" site="Child" start-time="2026-10-06 13:49:42Z" end-time="2026-10-06 13:49:47Z" duration="5.043041" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="17228" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2141" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1009" result="Failed" site="Child" start-time="2026-10-06 13:49:42Z" end-time="2026-10-06 13:49:47Z" duration="4.953324" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2142" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1009" result="Failed" site="Child" start-time="2026-10-06 13:49:42Z" end-time="2026-10-06 13:49:47Z" duration="4.844367" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="2100" name="CommanderPhase5AAuthorityTests" fullname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests" classname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-06 13:49:42Z" end-time="2026-10-06 13:49:44Z" duration="1.734058" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <test-case id="2111" name="ApprovalRequiresDisplayedSingleUseCredential_NotJustIdentityOrLabel" fullname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests.ApprovalRequiresDisplayedSingleUseCredential_NotJustIdentityOrLabel" methodname="ApprovalRequiresDisplayedSingleUseCredential_NotJustIdentityOrLabel" classname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests" runstate="Runnable" seed="373746358" result="Passed" start-time="2026-10-06 13:49:42Z" end-time="2026-10-06 13:49:44Z" duration="1.595838" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: MilitaryReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'MilitaryReinforcement' and started plan #1: MilitaryReinforcement.
+[StrategicPlanner] Reservation #1 created for plan #1: 200 Wood.
+[StrategicPlanner] Plan #1 milestone active: Production Capacity.
+[Commander] Goal #1 submitted: BuildStructure
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2112" name="CommanderPhase5AIntentAuthorityTests" fullname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" classname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-06 13:49:44Z" end-time="2026-10-06 13:49:47Z" duration="2.994836" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="2114" name="ResetOrCancelPendingCompound_LeavesNoExecutablePrefix" fullname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.ResetOrCancelPendingCompound_LeavesNoExecutablePrefix" methodname="ResetOrCancelPendingCompound_LeavesNoExecutablePrefix" classname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" runstate="Runnable" seed="345963214" result="Failed" start-time="2026-10-06 13:49:44Z" end-time="2026-10-06 13:49:45Z" duration="1.695004" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: <empty>
+  But was:  < <OpenEmpires.BuildStructureGoal>, <OpenEmpires.EnsureUnitCountGoal> >
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.ResetOrCancelPendingCompound_LeavesNoExecutablePrefix () [0x0008e] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AIntentAuthorityTests.cs:74
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: EnsureUnitCount
+[Commander] graph=admitted;goal-submitted=True
+]]></output>
+            </test-case>
+            <test-case id="2113" name="UngroundedCompound_PreviewsAllEffects_ThenCommitsOnce" fullname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.UngroundedCompound_PreviewsAllEffects_ThenCommitsOnce" methodname="UngroundedCompound_PreviewsAllEffects_ThenCommitsOnce" classname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" runstate="Runnable" seed="1550979485" result="Failed" start-time="2026-10-06 13:49:45Z" end-time="2026-10-06 13:49:47Z" duration="1.288608" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  A parsed compound is not player authorization.
+  Expected: <empty>
+  But was:  < <OpenEmpires.BuildStructureGoal>, <OpenEmpires.EnsureUnitCountGoal> >
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.UngroundedCompound_PreviewsAllEffects_ThenCommitsOnce () [0x00086] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AIntentAuthorityTests.cs:56
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: EnsureUnitCount
+[Commander] graph=admitted;goal-submitted=True
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

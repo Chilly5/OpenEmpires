@@ -122,6 +122,7 @@ namespace OpenEmpires.Tests
         {
             var request = new StrategicAIRequest("prepare defenses", pipeline.CaptureContext(), planner.IntentIds);
             var defense = new MockStrategicAIProvider().InterpretStrategicIntentAsync(request, default).Result;
+            defense.Intent.Authorize(planner.IntentIds, "Trusted emergency defense setup.");
             var emergency = planner.SubmitIntent(defense.Intent, true, false).Plan;
             var translation = chat.SubmitMessageAsync("prepare cavalry attack");
             while (!translation.IsCompleted) yield return null;

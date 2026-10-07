@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Passed" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 17:05:55Z" end-time="2026-10-06 17:05:57Z" duration="1.2851096">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1020" result="Passed" start-time="2026-10-06 17:05:55Z" end-time="2026-10-06 17:05:57Z" duration="1.285110" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="2153" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1020" result="Passed" start-time="2026-10-06 17:05:55Z" end-time="2026-10-06 17:05:57Z" duration="1.278570" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="1780" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="2154" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1020" result="Passed" start-time="2026-10-06 17:05:55Z" end-time="2026-10-06 17:05:57Z" duration="1.181627" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="2155" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1020" result="Passed" start-time="2026-10-06 17:05:55Z" end-time="2026-10-06 17:05:57Z" duration="1.081521" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="2112" name="CommanderPhase5ADynamicPlanTests" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests" classname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-06 17:05:56Z" end-time="2026-10-06 17:05:57Z" duration="0.981825" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <test-suite type="ParameterizedMethod" id="2116" name="ExistingSemanticEntry_ParsesTypedCompositionWithoutAuthority" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests.ExistingSemanticEntry_ParsesTypedCompositionWithoutAuthority" classname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-06 17:05:56Z" end-time="2026-10-06 17:05:57Z" duration="0.881016" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="2113" name="ExistingSemanticEntry_ParsesTypedCompositionWithoutAuthority(&quot;{\&quot;outcome\&quot;:\&quot;DynamicPlan\&quot;,\&quot;version\&quot;:1,\&quot;nodes\&quot;:[{\&quot;id\&quot;:\&quot;farms\&quot;,\&quot;mechanic\&quot;:\&quot;build\&quot;,\&quot;parameters\&quot;:{\&quot;building\&quot;:\&quot;building:Farm\&quot;,\&quot;count\&quot;:4},\&quot;inputs\&quot;:{},\&quot;dependsOn\&quot;:[]}]}&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests.ExistingSemanticEntry_ParsesTypedCompositionWithoutAuthority(&quot;{\&quot;outcome\&quot;:\&quot;DynamicPlan\&quot;,\&quot;version\&quot;:1,\&quot;nodes\&quot;:[{\&quot;id\&quot;:\&quot;farms\&quot;,\&quot;mechanic\&quot;:\&quot;build\&quot;,\&quot;parameters\&quot;:{\&quot;building\&quot;:\&quot;building:Farm\&quot;,\&quot;count\&quot;:4},\&quot;inputs\&quot;:{},\&quot;dependsOn\&quot;:[]}]}&quot;)" methodname="ExistingSemanticEntry_ParsesTypedCompositionWithoutAuthority" classname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests" runstate="Runnable" seed="615741234" result="Passed" start-time="2026-10-06 17:05:56Z" end-time="2026-10-06 17:05:56Z" duration="0.301810" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="2114" name="ExistingSemanticEntry_ParsesTypedCompositionWithoutAuthority(&quot;{\&quot;outcome\&quot;:\&quot;DynamicPlan\&quot;,\&quot;version\&quot;:1,\&quot;nodes\&quot;:[{\&quot;id\&quot;:\&quot;berries\&quot;,\&quot;mechanic\&quot;:\&quot;select-resources\&quot;,\&quot;parameters\&quot;:{\&quot;resource\&quot;:\&quot;Food\&quot;,\&quot;sourceKind\&quot;:\&quot;Berries\&quot;,\&quot;mode\&quot;:\&quot;Visible\&quot;,\&quot;count\&quot;:1},\&quot;inputs\&quot;:{},\&quot;dependsOn\&quot;:[]},{\&quot;id\&quot;:\&quot;site\&quot;,\&quot;mechanic\&quot;:\&quot;resolve-location\&quot;,\&quot;parameters\&quot;:{\&quot;relation\&quot;:\&quot;Near\&quot;,\&quot;clearGapTiles\&quot;:1},\&quot;inputs\&quot;:{\&quot;resources\&quot;:\&quot;berries\&quot;},\&quot;dependsOn\&quot;:[\&quot;berries\&quot;]},{\&quot;id\&quot;:\&quot;mill\&quot;,\&quot;mechanic\&quot;:\&quot;build\&quot;,\&quot;parameters\&quot;:{\&quot;building\&quot;:\&quot;building:Mill\&quot;,\&quot;count\&quot;:1},\&quot;inputs\&quot;:{\&quot;location\&quot;:\&quot;site\&quot;},\&quot;dependsOn\&quot;:[\&quot;site\&quot;]}]}&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests.ExistingSemanticEntry_ParsesTypedCompositionWithoutAuthority(&quot;{\&quot;outcome\&quot;:\&quot;DynamicPlan\&quot;,\&quot;version\&quot;:1,\&quot;nodes\&quot;:[{\&quot;id\&quot;:\&quot;berries\&quot;,\&quot;mechanic\&quot;:\&quot;select-resources\&quot;,\&quot;parameters\&quot;:{\&quot;resource\&quot;:\&quot;Food\&quot;,\&quot;sourceKind\&quot;:\&quot;Berries\&quot;,\&quot;mode\&quot;:\&quot;Visible\&quot;,\&quot;count\&quot;:1},\&quot;inputs\&quot;:{},\&quot;dependsOn\&quot;:[]},{\&quot;id\&quot;:\&quot;site\&quot;,\&quot;mechanic\&quot;:\&quot;resolve-location\&quot;,\&quot;parameters\&quot;:{\&quot;relation\&quot;:\&quot;Near\&quot;,\&quot;clearGapTiles\&quot;:1},\&quot;inputs\&quot;:{\&quot;resources\&quot;:\&quot;berries\&quot;},\&quot;dependsOn\&quot;:[\&quot;berries\&quot;]},{\&quot;id\&quot;:\&quot;mill\&quot;,\&quot;mechanic\&quot;:\&quot;build\&quot;,\&quot;parameters\&quot;:{\&quot;building\&quot;:\&quot;building:Mill\&quot;,\&quot;count\&quot;:1},\&quot;inputs\&quot;:{\&quot;location\&quot;:\&quot;site\&quot;},\&quot;dependsOn\&quot;:[\&quot;site\&quot;]}]}&quot;)" methodname="ExistingSemanticEntry_ParsesTypedCompositionWithoutAuthority" classname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests" runstate="Runnable" seed="1127187233" result="Passed" start-time="2026-10-06 17:05:56Z" end-time="2026-10-06 17:05:56Z" duration="0.238108" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="2115" name="ExistingSemanticEntry_ParsesTypedCompositionWithoutAuthority(&quot;{\&quot;outcome\&quot;:\&quot;DynamicPlan\&quot;,\&quot;version\&quot;:1,\&quot;nodes\&quot;:[{\&quot;id\&quot;:\&quot;barracks\&quot;,\&quot;mechanic\&quot;:\&quot;build\&quot;,\&quot;parameters\&quot;:{\&quot;building\&quot;:\&quot;building:Barracks\&quot;,\&quot;count\&quot;:2},\&quot;inputs\&quot;:{},\&quot;dependsOn\&quot;:[]},{\&quot;id\&quot;:\&quot;spears\&quot;,\&quot;mechanic\&quot;:\&quot;produce\&quot;,\&quot;parameters\&quot;:{\&quot;unit\&quot;:\&quot;unit:1\&quot;,\&quot;count\&quot;:10,\&quot;quantityMode\&quot;:\&quot;New\&quot;},\&quot;inputs\&quot;:{\&quot;producers\&quot;:\&quot;barracks\&quot;},\&quot;dependsOn\&quot;:[\&quot;barracks\&quot;]}]}&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests.ExistingSemanticEntry_ParsesTypedCompositionWithoutAuthority(&quot;{\&quot;outcome\&quot;:\&quot;DynamicPlan\&quot;,\&quot;version\&quot;:1,\&quot;nodes\&quot;:[{\&quot;id\&quot;:\&quot;barracks\&quot;,\&quot;mechanic\&quot;:\&quot;build\&quot;,\&quot;parameters\&quot;:{\&quot;building\&quot;:\&quot;building:Barracks\&quot;,\&quot;count\&quot;:2},\&quot;inputs\&quot;:{},\&quot;dependsOn\&quot;:[]},{\&quot;id\&quot;:\&quot;spears\&quot;,\&quot;mechanic\&quot;:\&quot;produce\&quot;,\&quot;parameters\&quot;:{\&quot;unit\&quot;:\&quot;unit:1\&quot;,\&quot;count\&quot;:10,\&quot;quantityMode\&quot;:\&quot;New\&quot;},\&quot;inputs\&quot;:{\&quot;producers\&quot;:\&quot;barracks\&quot;},\&quot;dependsOn\&quot;:[\&quot;barracks\&quot;]}]}&quot;)" methodname="ExistingSemanticEntry_ParsesTypedCompositionWithoutAuthority" classname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests" runstate="Runnable" seed="1217337940" result="Passed" start-time="2026-10-06 17:05:56Z" end-time="2026-10-06 17:05:57Z" duration="0.237438" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -91,8 +91,15 @@ namespace OpenEmpires.Tests
                 + objective + "\"}", request).Intent;
         }
 
-        private StrategicApprovalResult Approve(StrategicIntent intent) =>
-            new StrategicApprovalLayer().Evaluate(Context(), intent, intent.Source);
+        private StrategicApprovalResult Approve(StrategicIntent intent)
+        {
+            var result = new StrategicApprovalLayer().Evaluate(Context(), intent, intent != null ? intent.Source : StrategicIntentSource.AIRecommendation);
+            if (result.Approved && intent != null && intent.AuthorizationOwner == null)
+            {
+                intent.Authorize(planner.IntentIds, "Single-use approval of the displayed strategic recommendation.");
+            }
+            return result;
+        }
         private const string AttackJson = "{\"intentCategory\":\"Strategic\",\"objectiveType\":\"AttackPreparation\",\"parameters\":{\"focus\":\"cavalry\"}}";
 
         [Test]
@@ -202,8 +209,7 @@ namespace OpenEmpires.Tests
         public void PlayerIntent_ReceivesOverrideAfterApproval()
         {
             RichWorld();
-            var intent = new StrategicIntent(planner.IntentIds.Allocate(), 0,
-                StrategicObjectiveType.AttackPreparation, 0);
+            var intent = planner.CreateIntent(StrategicObjectiveType.AttackPreparation);
             var result = Approve(intent);
             Assert.That(result.Approved, Is.True, result.Reason);
             Assert.That(result.Authority, Is.EqualTo(StrategicPlanAuthority.PlayerOverride));
@@ -247,7 +253,9 @@ namespace OpenEmpires.Tests
         public void AIRecommendation_RejectedDuringEmergency()
         {
             RichWorld();
-            var defense = planner.SubmitIntent(AI(StrategicObjectiveType.DefensivePreparation), true, false);
+            var defenseIntent = AI(StrategicObjectiveType.DefensivePreparation);
+            Approve(defenseIntent);
+            var defense = planner.SubmitIntent(defenseIntent, true, false);
             Assert.That(defense.CreatedPlan, Is.True, defense.Reason);
             var result = Approve(AI());
             Assert.That(result.Approved, Is.False);
@@ -320,7 +328,9 @@ namespace OpenEmpires.Tests
         public void PlayerIntent_OverridesAIRecommendation()
         {
             RichWorld();
-            var defense = planner.SubmitIntent(AI(StrategicObjectiveType.DefensivePreparation));
+            var defenseIntent = AI(StrategicObjectiveType.DefensivePreparation);
+            Approve(defenseIntent);
+            var defense = planner.SubmitIntent(defenseIntent);
             using var pipeline = new StrategicPipeline(simulation, goals, planner);
             var result = Admit(pipeline, Approve(planner.CreateIntent(StrategicObjectiveType.AttackPreparation)));
             Assert.That(result.Submission?.CreatedPlan, Is.True, result.Outcome);
@@ -332,7 +342,9 @@ namespace OpenEmpires.Tests
         public void PlayerOverride_CanReplacePlan()
         {
             RichWorld();
-            var defense = planner.SubmitIntent(AI(StrategicObjectiveType.DefensivePreparation), true, false);
+            var defenseIntent = AI(StrategicObjectiveType.DefensivePreparation);
+            Approve(defenseIntent);
+            var defense = planner.SubmitIntent(defenseIntent, true, false);
             using var pipeline = new StrategicPipeline(simulation, goals, planner);
             var result = Admit(pipeline, Approve(planner.CreateIntent(StrategicObjectiveType.AttackPreparation)));
             Assert.That(result.Submission?.CreatedPlan, Is.True, result.Outcome);
@@ -343,7 +355,9 @@ namespace OpenEmpires.Tests
         public void StaleApproval_RechecksResourcesWithoutCancellingExistingPlan()
         {
             RichWorld();
-            var defense = planner.SubmitIntent(AI(StrategicObjectiveType.DefensivePreparation));
+            var defenseIntent = AI(StrategicObjectiveType.DefensivePreparation);
+            Approve(defenseIntent);
+            var defense = planner.SubmitIntent(defenseIntent);
             var approval = Approve(planner.CreateIntent(StrategicObjectiveType.AttackPreparation));
             Assert.That(approval.Approved, Is.True, approval.Reason);
             simulation.ResourceManager.GetPlayerResources(0).Gold = 0;
@@ -378,6 +392,7 @@ namespace OpenEmpires.Tests
             var intent = new StrategicIntent(planner.IntentIds.Allocate(), 0, objective, 0,
                 null, null, StrategicIntentSource.AIConfirmedPlayerCommand);
             planner.IntentIds.BindAllocated(intent.IntentId, intent);
+            intent.Authorize(planner.IntentIds, "Explicit confirmation of the displayed strategic candidate.");
             return intent;
         }
 
@@ -545,7 +560,9 @@ namespace OpenEmpires.Tests
         public void ConfirmedCommand_ReplacesEmergencyButNotDirectPlayer()
         {
             RichWorld();
-            var emergency = planner.SubmitIntent(AI(StrategicObjectiveType.DefensivePreparation), true, false);
+            var emergencyIntent = AI(StrategicObjectiveType.DefensivePreparation);
+            Approve(emergencyIntent);
+            var emergency = planner.SubmitIntent(emergencyIntent, true, false);
             using var pipeline = new StrategicPipeline(simulation, goals, planner);
             var intent = Confirmed(StrategicObjectiveType.AttackPreparation);
             var result = Admit(pipeline, Approve(intent));
@@ -568,6 +585,11 @@ namespace OpenEmpires.Tests
         [Test]
         public void RuleBasedPipeline_AllocatesSharedRecommendationIdentity()
         {
+            planner?.Dispose();
+            goals?.Dispose();
+            simulation = new GameSimulation(config, 2, Array.Empty<int>(), new[] { 0, 1 });
+            goals = new CommanderGoalManager(simulation, 0);
+            planner = new StrategicPlanner(goals, CurrentResource);
             RichWorld();
             var pending = new StrategicAIRequest("prepare defenses", Context(), planner.IntentIds);
             using var pipeline = new StrategicPipeline(simulation, goals, planner);

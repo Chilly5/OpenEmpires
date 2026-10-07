@@ -118,6 +118,7 @@ namespace OpenEmpires
             EnsureLocalSurface();
             runtimeGeneration++;
             pendingClarification = null;
+            ClearActionPlanPreview();
             ClearStrategicPreview();
             lifetime.Cancel();
             lifetime.Dispose();
@@ -218,6 +219,8 @@ namespace OpenEmpires
                 return null;
             }
             if (HandlePendingControl(trimmed)) return null;
+            if (HandleActionPlanControl(trimmed)) return null;
+            ClearActionPlanPreview(); // An independent player turn supersedes an unapproved candidate.
             // Any new player turn dismisses an adaptation, while no-plan recommendations
             // retain the established preference/explanation query behavior.
             if (pendingAdaptationProposal != null)
@@ -323,7 +326,7 @@ namespace OpenEmpires
                         if (sourceCount == 1)
                         {
                             StrategicAdaptationProposal proposal = StrategicAdaptationProposalBuilder.Build(
-                                source, pending, null, "Player-requested strategic change.");
+                                source, pending, null, "Suggested strategic change — not started.");
                             if (proposal == null || !StrategicAdaptationProposalBuilder.IsFresh(proposal, fresh))
                             {
                                 RejectStaleStrategicPreview();
@@ -406,6 +409,13 @@ namespace OpenEmpires
                 request.CancelAfter(semanticProviderTimeout);
                 try
                 {
+                    bool IsCurrentScope() => this != null && runtimeGeneration == generation
+                        && !lifetime.IsCancellationRequested
+                        && ReferenceEquals(semanticGoalManager, manager)
+                        && ReferenceEquals(semanticSimulation, simulation)
+                        && ReferenceEquals(semanticDispatcher, dispatcher)
+                        && ReferenceEquals(semanticProvider, provider);
+                    var requestTicket = manager.BeginSemanticRequest(message, generation, IsCurrentScope);
                     semanticStage = "context-projection";
                     CommanderContext context = new CommanderContextBuilder().Build(simulation, manager);
                     if (context.PlayerId != owner)
@@ -458,13 +468,16 @@ namespace OpenEmpires
                             ? result.SafeExplanation : "I couldn't understand that request safely.");
                         return null;
                     }
-                    if (!string.IsNullOrEmpty(questionFacts) && result.Outcome == CommanderSemanticOutcome.Request)
+                    manager.TraceRequest(requestTicket, "interpreted-" + result.Outcome);
+                    if (!string.IsNullOrEmpty(questionFacts)
+                        && (result.Outcome == CommanderSemanticOutcome.Request || result.Outcome == CommanderSemanticOutcome.DynamicPlan))
                     {
                         AppendLine("Commander", "You asked for information; no gameplay order was submitted.");
                         Debug.Log("[Commander] question=read-only;executable-response=rejected");
                         return null;
                     }
-                    if (result.Outcome != CommanderSemanticOutcome.Request)
+                    if (result.Outcome != CommanderSemanticOutcome.Request
+                        && result.Outcome != CommanderSemanticOutcome.DynamicPlan)
                     {
                         if (HandleClarificationResult(result, capturedPending, message, generation)) return null;
                         if (result.Outcome == CommanderSemanticOutcome.Clarify)
@@ -475,6 +488,15 @@ namespace OpenEmpires
                         return null;
                     }
                     if (HandleClarificationResult(result, capturedPending, message, generation)) return null;
+                    if (result.Outcome == CommanderSemanticOutcome.DynamicPlan)
+                    {
+                        semanticStage = "dynamic-admission";
+                        pendingActionPlan = manager.PrepareActionPlan(result, message, generation,
+                            strategicPipeline, IsCurrentScope, requestTicket);
+                        AppendLine("Commander", pendingActionPlan.Preview);
+                        UpdateStrategicControls();
+                        return null;
+                    }
                     if (result.Nodes == null || result.Nodes.Count < 1
                         || result.Nodes.Count > CommanderSemanticGraphAdmission.MaximumNodes)
                     {
@@ -490,26 +512,11 @@ namespace OpenEmpires
                             AppendLine("Commander", graphReason);
                             return null;
                         }
-                        CommanderIntentSubmission graphSubmission;
-                        try { graphSubmission = dispatcher.SubmitSemanticGraph(graph); }
-                        catch (System.InvalidOperationException)
-                        {
-                            AppendLine("Commander", "The compound Commander order could not be admitted safely.");
-                            return null;
-                        }
-                        string graphDisplay = string.IsNullOrWhiteSpace(graphSubmission?.Response)
-                            ? "Compound Commander order submitted." : graphSubmission.Response;
-                        CommanderIntent graphIntent = graph.Nodes[graph.TopologicalOrder[0]].Intent;
-                        CommanderAIProviderResult graphProviderResult = CommanderAIProviderResult.Accepted(
-                            CommanderIntentDtoCodec.FromIntent(graphIntent), string.Empty, graphDisplay);
-                        var graphChatSubmission = new CommanderAIChatSubmission(graphProviderResult,
-                            graphSubmission.Interpretation, graphSubmission, graphDisplay);
-                        LatestSubmission = graphChatSubmission;
-                        Debug.Log("[Commander] graph=admitted;goal-submitted=" + graphSubmission.CreatedGoal);
-                        if (graphSubmission.CreatedGoal)
-                            RecordAcceptedSemanticNodes(result.Nodes);
-                        AppendLine("Commander", graphDisplay);
-                        return graphChatSubmission;
+                        pendingActionPlan = manager.PrepareActionPlan(result, message, generation,
+                            strategicPipeline, IsCurrentScope, requestTicket);
+                        AppendLine("Commander", pendingActionPlan.Preview);
+                        UpdateStrategicControls();
+                        return null;
                     }
                     CommanderSemanticNode node = result.Nodes[0];
                     if (node.Type == CommanderSemanticNodeType.StrategicObjective)
@@ -548,7 +555,7 @@ namespace OpenEmpires
                         if (sourceCount == 1)
                         {
                             StrategicAdaptationProposal proposal = StrategicAdaptationProposalBuilder.Build(
-                                source, pending, null, "Player-requested strategic change.");
+                                source, pending, null, "Suggested strategic change — not started.");
                             if (proposal == null || !StrategicAdaptationProposalBuilder.IsFresh(proposal, fresh))
                             {
                                 RejectStaleStrategicPreview();
@@ -579,7 +586,10 @@ namespace OpenEmpires
                         AppendLine("Commander", reason);
                         return null;
                     }
-                    CommanderIntentSubmission submission = dispatcher.SubmitIntent(intent);
+                    var knownScope = manager.PrepareKnownIntentScope(result, requestTicket,
+                        strategicPipeline, capturedPending != null);
+                    CommanderIntentSubmission submission = manager.SubmitKnownScopedIntent(knownScope, intent,
+                        () => dispatcher.SubmitIntent(intent));
                     string display = string.IsNullOrWhiteSpace(submission?.Response)
                         ? "Commander order submitted." : submission.Response;
                     CommanderIntentInterpretation interpretation = submission?.Interpretation
@@ -758,6 +768,7 @@ namespace OpenEmpires
 
         public void ResetConversation()
         {
+            ClearActionPlanPreview();
             pendingClarification = null;
             runtimeGeneration++;
             ClearStrategicPreview();
@@ -790,12 +801,18 @@ namespace OpenEmpires
 
         private void UpdateStrategicControls()
         {
+            bool actionAvailable = !submitting && pendingActionPlan != null;
             bool available = !submitting && strategicBridge?.PendingIntent != null;
             if (approveStrategyButton != null)
-                approveStrategyButton.interactable = available && pendingAdaptationProposal == null;
-            if (confirmStrategyButton != null) confirmStrategyButton.interactable = available;
-            if (dismissStrategyButton != null) dismissStrategyButton.interactable = available;
-            if (strategicApprovalRow != null) strategicApprovalRow.SetActive(strategicBridge?.PendingIntent != null);
+                approveStrategyButton.interactable = actionAvailable || available && pendingAdaptationProposal == null;
+            if (confirmStrategyButton != null) confirmStrategyButton.interactable = available && !actionAvailable;
+            if (dismissStrategyButton != null) dismissStrategyButton.interactable = available || actionAvailable;
+            if (approveStrategyButton != null)
+            {
+                var label = approveStrategyButton.GetComponentInChildren<TMP_Text>();
+                if (label != null) label.text = actionAvailable ? "Approve plan" : "Approve strategy";
+            }
+            if (strategicApprovalRow != null) strategicApprovalRow.SetActive(actionAvailable || strategicBridge?.PendingIntent != null);
             UpdateStrategicHostControls();
         }
 
@@ -898,6 +915,7 @@ namespace OpenEmpires
             if (destroyCleanupComplete) return;
             destroyCleanupComplete = true;
             pendingClarification = null;
+            ClearActionPlanPreview();
             ClearStrategicPreview();
             if (bootstrapWait != null) StopCoroutine(bootstrapWait);
             lifetime?.Cancel();
@@ -1038,11 +1056,11 @@ namespace OpenEmpires
             SetRect(buttonText.rectTransform, Vector2.zero, Vector2.one,
                 Vector2.zero, Vector2.zero);
             approveStrategyButton = StrategyButton(panel.transform, "Approve strategy", 10, 130,
-                () => ApproveStrategicRecommendation());
+                () => { if (pendingActionPlan != null) HandleActionPlanControl("approve plan"); else ApproveStrategicRecommendation(); });
             confirmStrategyButton = StrategyButton(panel.transform, "Confirm as command", 145, 170,
                 () => ConfirmStrategicCommand());
             dismissStrategyButton = StrategyButton(panel.transform, "Dismiss", 320, 100,
-                DismissStrategicRecommendation);
+                () => { if (pendingActionPlan != null) HandleActionPlanControl("cancel plan"); else DismissStrategicRecommendation(); });
             BuildStrategicHostControls(panel.transform);
             BuildVoiceUI(panel.transform);
             ArrangeCommanderPanel(panel.transform, title, scrollObject, inputObject, buttonObject);

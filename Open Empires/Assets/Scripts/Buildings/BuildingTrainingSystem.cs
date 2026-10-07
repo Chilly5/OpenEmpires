@@ -8,6 +8,7 @@ namespace OpenEmpires
         public int BuildingId;
         public int UnitType;
         public int PlayerId;
+        internal TrainingOrderReceipt Receipt;
     }
 
     public class BuildingTrainingSystem
@@ -42,12 +43,13 @@ namespace OpenEmpires
                         continue;
                     }
 
-                    int unitType = building.DequeueTraining();
+                    int unitType = building.DequeueTrainingTracked(out TrainingOrderReceipt receipt);
                     completions.Add(new TrainingCompletion
                     {
                         BuildingId = building.Id,
                         UnitType = unitType,
-                        PlayerId = building.PlayerId
+                        PlayerId = building.PlayerId,
+                        Receipt = receipt
                     });
 
                     if (pendingSpawns == null)

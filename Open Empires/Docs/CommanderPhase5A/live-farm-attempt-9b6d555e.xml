@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 21:16:39Z" end-time="2026-10-06 21:16:43Z" duration="3.7559595">
+  <test-suite type="TestSuite" id="1243" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="201" result="Failed" site="Child" start-time="2026-10-06 21:16:39Z" end-time="2026-10-06 21:16:43Z" duration="3.755960" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1237" name="OpenEmpires.PlayModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.PlayModeTests.dll" runstate="Runnable" testcasecount="201" result="Failed" site="Child" start-time="2026-10-06 21:16:39Z" end-time="2026-10-06 21:16:43Z" duration="3.733693" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="1780" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1238" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="201" result="Failed" site="Child" start-time="2026-10-06 21:16:39Z" end-time="2026-10-06 21:16:43Z" duration="3.731331" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1239" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="201" result="Failed" site="Child" start-time="2026-10-06 21:16:39Z" end-time="2026-10-06 21:16:43Z" duration="3.728976" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1228" name="CommanderPhase5ALiveRuntimePlayModeTests" fullname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests" classname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests" runstate="Runnable" testcasecount="6" result="Failed" site="Child" start-time="2026-10-06 21:16:39Z" end-time="2026-10-06 21:16:43Z" duration="3.724709" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5ALiveRuntime" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1229" name="FourFarms_RealLunaApprovalNativeCostFootprintAndFoodNodes" fullname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests.FourFarms_RealLunaApprovalNativeCostFootprintAndFoodNodes" methodname="FourFarms_RealLunaApprovalNativeCostFootprintAndFoodNodes" classname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests" runstate="Runnable" seed="1571347779" result="Failed" start-time="2026-10-06 21:16:39Z" end-time="2026-10-06 21:16:43Z" duration="3.699254" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[four-farms: real semantic response failed validation (safe category: invalid semantic response).]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests+<Submit>d__21.MoveNext () [0x0011e] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\PlayMode\CommanderPhase5ALiveRuntimePlayModeTests.cs:263
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[DotEnv] Loaded .env from D:\unity_projects\OpenEmpires\Open Empires\.env
+[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-06T21:16:40.5403310Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

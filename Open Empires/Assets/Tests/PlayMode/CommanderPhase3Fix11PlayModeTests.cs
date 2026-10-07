@@ -66,8 +66,26 @@ namespace OpenEmpires.Tests
             Assert.That(pipeline.LastContext, Is.Not.Null);
             Assert.That(pipeline.LastRecommendations, Is.Not.Empty);
             Assert.That(pipeline.LastDecision.HasSelection, Is.True);
-            Assert.That(pipeline.LastSubmission.CreatedPlan, Is.True);
-            Debug.Log("[Phase3 Fix 1.1 Runtime] PASS Scenario 1: context, evaluator, decision policy, commitment, and planner executed end-to-end.");
+            Assert.That(pipeline.LastSubmission?.CreatedPlan ?? false, Is.False);
+            Assert.That(strategicPlanner.Plans, Is.Empty);
+            Assert.That(strategicPlanner.Reservations, Is.Empty);
+            Assert.That(goalManager.Goals, Is.Empty);
+            // Preserve the original autonomous control contract on an explicitly
+            // configured computer, separately from the human fixture above.
+            var computerSim = new GameSimulation(config, 2, new[] { 0, 1 }, new[] { 1 });
+            var computerResources = computerSim.ResourceManager.GetPlayerResources(1);
+            computerResources.Food = computerResources.Wood = computerResources.Gold = computerResources.Stone = 5000;
+            computerSim.CreateBuilding(1, BuildingType.TownCenter, x, z, false, true);
+            computerSim.CreateBuilding(1, BuildingType.House, x + 12, z, false);
+            using var computerGoals = new CommanderGoalManager(computerSim, 1);
+            using var computerPlanner = new StrategicPlanner(computerGoals, _ => 5000);
+            using var computerPipeline = new StrategicPipeline(computerSim, computerGoals, computerPlanner);
+            computerPipeline.EvaluationTrigger.FireTrigger(StrategicEvaluationTriggerType.StrategicEvent,
+                "Explicit computer-controlled runtime evaluation.");
+            computerPipeline.Tick(0);
+            Assert.That(computerPipeline.LastSubmission?.CreatedPlan, Is.True);
+            Assert.That(computerGoals.Goals, Is.Not.Empty);
+            Debug.Log("[Phase5A] human recommendation advisory; explicit computer evaluation still executes end-to-end.");
             yield return null;
         }
 

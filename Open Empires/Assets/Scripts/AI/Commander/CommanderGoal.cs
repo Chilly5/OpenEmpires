@@ -77,9 +77,13 @@ namespace OpenEmpires
 
     public abstract class CommanderGoal
     {
+        internal IReadOnlyList<int> FrozenWorkerIds { get; set; }
+        internal bool FrozenWorkerHumanOverride { get; set; }
         private readonly List<CommanderGoal> dependencies = new List<CommanderGoal>();
         public int GoalId { get; internal set; }
         internal CommanderGoalManager RuntimeOwner { get; set; }
+        internal CommanderActionPlanCandidate RequestAuthority { get; set; }
+        internal int RequestNodeIndex { get; set; } = -1;
         public int PlayerId { get; }
         public CommanderGoalType GoalType { get; }
         public CommanderGoalStatus Status { get; private set; }
@@ -104,7 +108,10 @@ namespace OpenEmpires
         public int LastEconomyCommandTick { get; internal set; } = int.MinValue / 2;
         public int MaxDurationTicks { get; }
         public bool UseIdleWorkersOnly { get; internal set; }
+        public bool ConstructionForbidden { get; internal set; }
         internal readonly Dictionary<ResourceType, int> ProtectedWorkerMinimums = new Dictionary<ResourceType, int>();
+        internal readonly Dictionary<ResourceType, ResourceSourceKind> ResourceSourceRestrictions = new Dictionary<ResourceType, ResourceSourceKind>();
+        internal readonly Dictionary<ResourceType, AllocateWorkersGoal> PreparationAllocators = new Dictionary<ResourceType, AllocateWorkersGoal>();
         internal int ObservedConstructionBuildingId { get; set; } = -1;
         internal int LastConstructionTicksRemaining { get; set; } = -1;
         internal int LastConstructionProgressTick { get; set; }
@@ -168,9 +175,11 @@ namespace OpenEmpires
         // Result-binding state is captured by the game-side manager, never by the provider.
         internal bool HasResultConsumer { get; set; }
         internal readonly HashSet<int> BaselineBuildingIds = new HashSet<int>();
+        internal readonly List<int> AttributedBuildingIds = new List<int>();
+        internal CommanderBoundLocation DynamicLocation { get; set; }
         internal IReadOnlyList<int> ResultBuildingIds { get; private set; } = Array.Empty<int>();
         internal int ResultCaptureTick { get; private set; } = -1;
-        public bool HasSemanticPlacement => PlacementAnchorSelector.HasValue;
+        public bool HasSemanticPlacement => PlacementAnchorSelector.HasValue || DynamicLocation != null;
 
         internal void CaptureBuildingResult(IReadOnlyList<int> buildingIds, int tick)
         {
@@ -223,6 +232,11 @@ namespace OpenEmpires
         // A result consumer receives only units created after this goal was submitted.
         internal bool HasResultConsumer { get; set; }
         internal readonly HashSet<int> BaselineUnitIds = new HashSet<int>();
+        internal bool TrainingAttributionUnavailable { get; set; }
+        internal IReadOnlyList<int> BoundProducerBuildingIds { get; set; }
+        internal int RequiredNewProductionCount { get; set; } = -1;
+        internal readonly List<TrainingOrderReceipt> TrackedTrainingOrders = new List<TrainingOrderReceipt>();
+        internal readonly List<int> AttributedUnitIds = new List<int>();
         internal IReadOnlyList<int> ResultUnitIds { get; private set; } = Array.Empty<int>();
         internal int ResultCaptureTick { get; private set; } = -1;
 

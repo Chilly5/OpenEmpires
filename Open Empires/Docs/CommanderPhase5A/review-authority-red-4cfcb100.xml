@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 14:42:36Z" end-time="2026-10-06 14:42:43Z" duration="6.4920562">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1013" result="Failed" site="Child" start-time="2026-10-06 14:42:36Z" end-time="2026-10-06 14:42:43Z" duration="6.492056" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2144" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1013" result="Failed" site="Child" start-time="2026-10-06 14:42:37Z" end-time="2026-10-06 14:42:43Z" duration="6.325865" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="6620" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2145" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1013" result="Failed" site="Child" start-time="2026-10-06 14:42:37Z" end-time="2026-10-06 14:42:43Z" duration="6.316601" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2146" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1013" result="Failed" site="Child" start-time="2026-10-06 14:42:37Z" end-time="2026-10-06 14:42:43Z" duration="6.296549" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="2112" name="CommanderPhase5AIntentAuthorityTests" fullname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" classname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" runstate="Runnable" testcasecount="6" result="Failed" site="Child" start-time="2026-10-06 14:42:37Z" end-time="2026-10-06 14:42:43Z" duration="6.258322" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="2118" name="RetainedApprovedUiGraph_CannotCommitAfterHostGenerationReset" fullname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.RetainedApprovedUiGraph_CannotCommitAfterHostGenerationReset" methodname="RetainedApprovedUiGraph_CannotCommitAfterHostGenerationReset" classname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" runstate="Runnable" seed="1591164887" result="Failed" start-time="2026-10-06 14:42:37Z" end-time="2026-10-06 14:42:42Z" duration="4.266071" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: <System.InvalidOperationException>
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.RetainedApprovedUiGraph_CannotCommitAfterHostGenerationReset () [0x00104] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AIntentAuthorityTests.cs:150
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: EnsureUnitCount
+]]></output>
+            </test-case>
+            <test-case id="2117" name="ThrowingAdmissionObserver_DoesNotMisreportCommittedGraphAsFailure" fullname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.ThrowingAdmissionObserver_DoesNotMisreportCommittedGraphAsFailure" methodname="ThrowingAdmissionObserver_DoesNotMisreportCommittedGraphAsFailure" classname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" runstate="Runnable" seed="1238652681" result="Failed" start-time="2026-10-06 14:42:42Z" end-time="2026-10-06 14:42:43Z" duration="1.409754" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: No Exception to be thrown
+  But was:  <System.InvalidOperationException: test observer failure
+  at OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests+<>c.<ThrowingAdmissionObserver_DoesNotMisreportCommittedGraphAsFailure>b__15_0 (OpenEmpires.CommanderGoalEvent _) [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AIntentAuthorityTests.cs:129 
+  at (wrapper delegate-invoke) System.Action`1[OpenEmpires.CommanderGoalEvent].invoke_void_T(OpenEmpires.CommanderGoalEvent)
+  at OpenEmpires.CommanderGoalManager.PublishEvent (OpenEmpires.CommanderGoalEventType type, OpenEmpires.CommanderGoal goal, System.Int32 tick) [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Scripts\AI\Commander\CommanderGoalManager.cs:692 
+  at OpenEmpires.CommanderGoalManager.SubmitSemanticGraph (OpenEmpires.CommanderSemanticGraphPlan plan, System.Int32 maxDurationTicks) [0x0066b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Scripts\AI\Commander\CommanderGoalManager.cs:331 
+  at OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests+<>c__DisplayClass15_0.<ThrowingAdmissionObserver_DoesNotMisreportCommittedGraphAsFailure>b__2 () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AIntentAuthorityTests.cs:131 
+  at NUnit.Framework.Constraints.ThrowsConstraint+VoidInvocationDescriptor.Invoke () [0x00001] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at NUnit.Framework.Constraints.ThrowsConstraint+ExceptionInterceptor.Intercept (System.Object invocation) [0x00050] in <8b63e8ac0a4746599ed207982825ae6c>:0 >
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.ThrowingAdmissionObserver_DoesNotMisreportCommittedGraphAsFailure () [0x00086] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AIntentAuthorityTests.cs:131
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] Goal #1 submitted: BuildStructure
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

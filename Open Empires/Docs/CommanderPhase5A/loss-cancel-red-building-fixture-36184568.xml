@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Failed(Child)" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 18:35:13Z" end-time="2026-10-06 18:35:17Z" duration="4.216163">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1032" result="Failed" site="Child" start-time="2026-10-06 18:35:13Z" end-time="2026-10-06 18:35:17Z" duration="4.216163" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2168" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1032" result="Failed" site="Child" start-time="2026-10-06 18:35:13Z" end-time="2026-10-06 18:35:17Z" duration="4.114261" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="1780" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2169" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1032" result="Failed" site="Child" start-time="2026-10-06 18:35:13Z" end-time="2026-10-06 18:35:17Z" duration="4.022823" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2170" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1032" result="Failed" site="Child" start-time="2026-10-06 18:35:13Z" end-time="2026-10-06 18:35:17Z" duration="3.914517" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="2131" name="CommanderPhase5AProductionBindingTests" fullname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests" classname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-10-06 18:35:13Z" end-time="2026-10-06 18:35:17Z" duration="3.803086" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="ParameterizedMethod" id="2135" name="CancelledOrderOrLostProducedUnit_IsNotSilentlyReplaced" fullname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests.CancelledOrderOrLostProducedUnit_IsNotSilentlyReplaced" classname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-06 18:35:13Z" end-time="2026-10-06 18:35:16Z" duration="2.718128" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="2133" name="CancelledOrderOrLostProducedUnit_IsNotSilentlyReplaced(False)" fullname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests.CancelledOrderOrLostProducedUnit_IsNotSilentlyReplaced(False)" methodname="CancelledOrderOrLostProducedUnit_IsNotSilentlyReplaced" classname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests" runstate="Runnable" seed="1858244149" result="Failed" start-time="2026-10-06 18:35:13Z" end-time="2026-10-06 18:35:15Z" duration="1.550058" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  A cancelled/missing exact result is a blocker, not authorization for replacement production.
+  Expected: <empty>
+  But was:  < OpenEmpires.TrainUnitCommand >
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5AProductionBindingTests.CancelledOrderOrLostProducedUnit_IsNotSilentlyReplaced (System.Boolean destroyUnit) [0x00148] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AProductionBindingTests.cs:94
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #2 submitted: CapabilityAction
+[Commander] Goal #2 submitted: CapabilityAction
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+[SyncCheck] tick=1 checksum=75B25D2F
+[SyncCheck] tick=1 checksum=75B25D2F
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+]]></output>
+              </test-case>
+              <test-case id="2134" name="CancelledOrderOrLostProducedUnit_IsNotSilentlyReplaced(True)" fullname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests.CancelledOrderOrLostProducedUnit_IsNotSilentlyReplaced(True)" methodname="CancelledOrderOrLostProducedUnit_IsNotSilentlyReplaced" classname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests" runstate="Runnable" seed="446823504" result="Failed" start-time="2026-10-06 18:35:15Z" end-time="2026-10-06 18:35:16Z" duration="1.041089" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  A cancelled/missing exact result is a blocker, not authorization for replacement production.
+  Expected: <empty>
+  But was:  < OpenEmpires.TrainUnitCommand >
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5AProductionBindingTests.CancelledOrderOrLostProducedUnit_IsNotSilentlyReplaced (System.Boolean destroyUnit) [0x00148] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AProductionBindingTests.cs:94
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #2 submitted: CapabilityAction
+[Commander] Goal #2 submitted: CapabilityAction
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+[SyncCheck] tick=1 checksum=75B25D2F
+[SyncCheck] tick=1 checksum=75B25D2F
+[SyncCheck] tick=2 checksum=724430B0
+[SyncCheck] tick=2 checksum=724430B0
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-case id="2132" name="StructureResult_ContainsOnlyThisRootsActualPlacementCommands" fullname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests.StructureResult_ContainsOnlyThisRootsActualPlacementCommands" methodname="StructureResult_ContainsOnlyThisRootsActualPlacementCommands" classname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests" runstate="Runnable" seed="970230699" result="Failed" start-time="2026-10-06 18:35:16Z" end-time="2026-10-06 18:35:17Z" duration="0.970182" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  I couldn't understand that request safely.
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5AProductionBindingTests.StructureResult_ContainsOnlyThisRootsActualPlacementCommands () [0x00164] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AProductionBindingTests.cs:42
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

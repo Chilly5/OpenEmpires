@@ -30,13 +30,13 @@ namespace OpenEmpires
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(raw) || raw.Length > CommanderSemanticJson.MaximumResponseCharacters)
+                if (string.IsNullOrWhiteSpace(raw) || raw.Length > CommanderDynamicPlan.MaximumCharacters)
                     throw new JsonException();
                 CheckStrictSyntax(raw);
 
                 JObject root;
                 using (var reader = new JsonTextReader(new StringReader(raw))
-                    { MaxDepth = 8, DateParseHandling = DateParseHandling.None })
+                    { MaxDepth = 12, DateParseHandling = DateParseHandling.None })
                 {
                     root = JObject.Load(reader, new JsonLoadSettings
                     {
@@ -47,6 +47,18 @@ namespace OpenEmpires
                 }
 
                 string outcomeName = RequiredString(root, "outcome");
+                if (outcomeName == "DynamicPlan")
+                {
+                    if (!ParseDynamicTrusted(raw, out var dynamicPlan)) throw new JsonException();
+                    return new CommanderSemanticResult(true, CommanderSemanticOutcome.DynamicPlan,
+                        Array.Empty<CommanderSemanticNode>(), "Action plan requires validation and player confirmation.",
+                        dynamicPlan: dynamicPlan);
+                }
+                if (raw.Length > CommanderSemanticJson.MaximumResponseCharacters) throw new JsonException();
+                // Preserve the legacy boundary even though the common envelope loader
+                // must allow the separately bounded DynamicPlan's deeper typed data.
+                using (var legacyDepth = new JsonTextReader(new StringReader(raw)) { MaxDepth = 8 })
+                    while (legacyDepth.Read()) { }
                 CommanderSemanticOutcome outcome;
                 switch (outcomeName)
                 {
@@ -98,7 +110,7 @@ namespace OpenEmpires
             switch (RequiredString(node, "type"))
             {
                 case "EnsureUnitCount":
-                    CheckFields(node, "type", "unit", "count", "dependsOn", "producerFromNode");
+                    CheckFields(node, "type", "unit", "count", "dependsOn", "producerFromNode", "constraints");
                     int unit;
                     switch (RequiredString(node, "unit"))
                     {
@@ -111,10 +123,10 @@ namespace OpenEmpires
                     }
                     return new CommanderSemanticNode(CommanderSemanticNodeType.EnsureUnitCount,
                         unitType: unit, count: RequiredCount(node, 0, 200), dependsOn: dependsOn,
-                        producerFromNode: ParseOptionalNodeIndex(node, "producerFromNode"));
+                        producerFromNode: ParseOptionalNodeIndex(node, "producerFromNode"), constraints: ParseConstraints(node));
 
                 case "BuildStructure":
-                    CheckFields(node, "type", "structure", "count", "placement", "dependsOn");
+                    CheckFields(node, "type", "structure", "count", "placement", "dependsOn", "constraints");
                     CommanderSemanticAnchorSelector? anchor = null;
                     int? ordinal = null;
                     CommanderSemanticPlacementRelation? relation = null;
@@ -170,7 +182,7 @@ namespace OpenEmpires
                         placementRelation: relation,
                         clearGapTiles: clearGapTiles,
                         resourceType: placementResource,
-                        dependsOn: dependsOn);
+                        dependsOn: dependsOn, constraints: ParseConstraints(node));
 
                 case "SetResourceAllocation":
                     CheckFields(node, "type", "resource", "count", "dependsOn");
@@ -183,10 +195,10 @@ namespace OpenEmpires
                         workerAllocation: ParseWorkerAllocation(node), dependsOn: dependsOn);
 
                 case "ReachAge":
-                    CheckFields(node, "type", "targetAge", "dependsOn");
+                    CheckFields(node, "type", "targetAge", "dependsOn", "constraints");
                     return new CommanderSemanticNode(CommanderSemanticNodeType.ReachAge,
                         ageTarget: ParseAgeTarget(RequiredString(node, "targetAge")),
-                        dependsOn: dependsOn);
+                        dependsOn: dependsOn, constraints: ParseConstraints(node));
 
                 case "MoveUnits":
                 case "ScoutArea":
@@ -317,7 +329,9 @@ namespace OpenEmpires
                         || producer == i || nodes[producer].Type != CommanderSemanticNodeType.BuildStructure)
                         throw new JsonException();
                     BuildingType producerType = nodes[producer].BuildingType.Value;
-                    if (nodes[producer].Count != 1 || !CanProduce(producerType, node.UnitType.Value))
+                    if (nodes[producer].Count < 1
+                        || nodes[producer].Count > CommanderIntentValidator.MaximumStructureCount
+                        || !CanProduce(producerType, node.UnitType.Value))
                         throw new JsonException();
                 }
                 if (node.ResultFromNode.HasValue)
@@ -391,19 +405,13 @@ namespace OpenEmpires
 
         private static BuildingType ParseBuilding(string name)
         {
-            // Exact currently supported structure names only. Context-specific legality still
-            // belongs to admission, but unsupported structure types fail at the JSON boundary.
-            switch (name)
-            {
-                case "House": return BuildingType.House;
-                case "Barracks": return BuildingType.Barracks;
-                case "ArcheryRange": return BuildingType.ArcheryRange;
-                case "Stables": return BuildingType.Stables;
-                case "Tower": return BuildingType.Tower;
-                case "TownCenter": return BuildingType.TownCenter;
-                case "Mill": return BuildingType.Mill;
-                default: throw new JsonException();
-            }
+            // One trusted adapter catalog, not a second parser-only content whitelist.
+            // Exact enum spelling rejects numeric/default-enum strings; discovery alone
+            // still cannot make an unsupported construction mechanic executable.
+            if (Enum.TryParse(name, false, out BuildingType structure)
+                && Enum.IsDefined(typeof(BuildingType), structure) && structure.ToString() == name
+                && CommanderIntentCatalog.IsSupportedStructure(structure)) return structure;
+            throw new JsonException();
         }
 
         private static ResourceType ParseResource(string name)

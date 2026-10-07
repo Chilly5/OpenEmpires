@@ -310,6 +310,8 @@ namespace OpenEmpires.Tests
                 "{\"type\":\"PatrolArea\",\"unitSelector\":\"Spearman\",\"count\":3," +
                 "\"location\":\"PlayerBase\",\"dependsOn\":[0],\"resultFromNode\":0}]}");
             Assert.That(CommanderSemanticGraphAdmission.TryAdmit(parsed, context, out var plan, out _), Is.True);
+            plan = manager.ApproveActionPlan(manager.PrepareActionPlan(parsed,
+                "Trusted fixture approves production and exact patrol.", 0), 0);
             var goals = manager.SubmitSemanticGraph(plan);
 
             // Plan ticker at tick 0 before any production occurs

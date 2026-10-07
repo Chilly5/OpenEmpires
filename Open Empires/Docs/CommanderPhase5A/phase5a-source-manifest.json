@@ -1,0 +1,2548 @@
+{
+    "schema":  "openempires-phase5a-source-manifest@1",
+    "generated_utc":  "2026-10-07T14:32:07.7680283Z",
+    "workspace":  "D:\\unity_projects\\OpenEmpires\\Open Empires",
+    "git_root":  "D:/unity_projects/OpenEmpires",
+    "branch":  "unit_models_and_voice_control",
+    "head":  "4b0ebc3d7fefa7eb970f1446baff3a4c1c0331ca",
+    "dirty_worktree":  true,
+    "unity_version":  "6000.5.9f1",
+    "unity_instance":  "Open Empires@6d7310c7",
+    "verification_scope":  "Phase 5A source/hash snapshot plus 2026-10-07 post-acceptance verification: full EditMode 1124/1124, four reconciled PlayMode groups 39/39, and a full PlayMode attempt with one live Luna construction failure (201 completed). The isolated Mill scenario then passed twice with the same valid Request and completed native lifecycle; the original failed-run semantic output remains unavailable, so that failure is unclassified. Existing hostile/authority and standalone evidence remain historical. See antigravity-final-audit.md and reconciliation-playmode-evidence-2026-10-07.json; this hash snapshot is not complete release certification.",
+    "source_files":  [
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/CommanderContext.cs",
+                             "bytes":  8363,
+                             "sha256":  "202097ab448b4f8347f96ea5d468c05a2b6b0b7f4b644b7a1385565b2124e6e6"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/CommanderContextBuilder.cs",
+                             "bytes":  10504,
+                             "sha256":  "9e5f9685f3967fc3d7520eb1ce57a983cda13f14354d924ffb7fc47711e59f76"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/CommanderGoal.cs",
+                             "bytes":  13605,
+                             "sha256":  "c29095cf238ac6ec3eb90ecbe6a8ed405b18c6bad1a4fa4b7d309f6391c1046f"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/CommanderGoalManager.cs",
+                             "bytes":  44164,
+                             "sha256":  "7b9dce622e5c4e9f427a5911c2cf17dbf8b92ebe67e633cfeb9ce71382714c8b"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/CommanderIntent.cs",
+                             "bytes":  8744,
+                             "sha256":  "4c9f498503c739b9fb1891f355e8c56597ce6eb7ac39db906becbda879b5d01f"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/CommanderIntentCatalog.cs",
+                             "bytes":  8352,
+                             "sha256":  "ea325702f4c6b5c4b98dbbcc856082693f3143dc6898a0a91eb496ac9f10fb12"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/CommanderIntentDto.cs",
+                             "bytes":  39105,
+                             "sha256":  "caa2f5b2cc83ffe779bc6d9d9ec23755da2e642c375c7023bd94993bcac5169d"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/CommanderIntentValidator.cs",
+                             "bytes":  15667,
+                             "sha256":  "c3446124752167e40a94cc1152a79edb8d9b350a65b82f6af9bc985d165afc44"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/CommanderPlanner.cs",
+                             "bytes":  95826,
+                             "sha256":  "053f630707330105951323c9f94ba4b38c18557e3b53452c4b22cd32eb6090a1"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs",
+                             "bytes":  63948,
+                             "sha256":  "f35a4e2532d3310d29561795aaba2989d93a2c36ca3b08f672c30d42b7d57c68"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Phase4A/OpenRouterCommanderProvider.cs",
+                             "bytes":  26289,
+                             "sha256":  "5158be552d1dd228b87c80b32047571500f9ab24e24d39632bf24cc1a15a3d36"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Phase4B2/StrategicAIApprovalBridge.cs",
+                             "bytes":  16667,
+                             "sha256":  "d330aa40a1a8a477a368caae8217fb1048372b08e80e62e9c2f5fffd97fff7f3"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticAdmission.cs",
+                             "bytes":  7841,
+                             "sha256":  "a28bbb41cc511c377dcff6a4a457f64e6f462db5180cd2a42e285e223c29448d"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticGraphAdmission.cs",
+                             "bytes":  12488,
+                             "sha256":  "5abc95946e1b7e765df8f059ac6cbfc4385314632bd1f1c61213de068d812c7b"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticJson.cs",
+                             "bytes":  30164,
+                             "sha256":  "e3b35184466314087b8526a38de9cf4b15fd4b68a32a91e6c57fc6d07a655dcf"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticProvider.cs",
+                             "bytes":  7610,
+                             "sha256":  "d5e0212a93b70e253fdc7f506301d12aa9be10c88c4fa3f5fe9f86d7db9ea773"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticRequest.cs",
+                             "bytes":  6269,
+                             "sha256":  "3d74e777b36e80ed19b6cb96d68b7aac900274506da5624b0572dbd0f48d31d4"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderActionPlanCandidate.cs",
+                             "bytes":  13858,
+                             "sha256":  "555f734600723a3bd6d9e6795467e0956c2465efecb05bcdf264baaa8a6d7bcb"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderBoundLocation.cs",
+                             "bytes":  10510,
+                             "sha256":  "5e6e7ec61f2679bcf4afa6adccec697d45d97f3462b15b200538aa15ed8dbadc"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderChatUI.ActionPlans.cs",
+                             "bytes":  3327,
+                             "sha256":  "53adc798d689ffe011bcd596860c11994296d31205a5d2139120c40517d98c91"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderDynamicCompiler.cs",
+                             "bytes":  20246,
+                             "sha256":  "eddcb7f3a8915e361e681712eb7b745b84fc839a8edce8503557ad572c498ff8"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderDynamicPlan.cs",
+                             "bytes":  9944,
+                             "sha256":  "639005446d8347f620c0616617c9ec4a31f423ea27ccc19ce40e93085c71a2a9"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderDynamicPlanParser.cs",
+                             "bytes":  16927,
+                             "sha256":  "fd283726dd078f2e61793fc2d192d17f50b916b0446df7002ec43009f50f0054"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderDynamicProviderVocabulary.cs",
+                             "bytes":  12733,
+                             "sha256":  "3de2bd668a050519582f48b227442286048cd9b069820cffa8e0242ffe0dfdbc"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderGoalManager.DynamicLocations.cs",
+                             "bytes":  12921,
+                             "sha256":  "f2a83930f391dfec3a6304a55ba1f36fb057eb7486e06de60ccd7d88c4e468b9"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderGoalManager.DynamicWorkers.cs",
+                             "bytes":  6784,
+                             "sha256":  "9f33ed484a0161ae782ac04553dbfa385ebee8be93a2ad1d30122c1a49275d86"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderGoalManager.Production.cs",
+                             "bytes":  4103,
+                             "sha256":  "6a452f58a5077d52892a6e91490c2ff2fdbc8eabc89b2e8fe1cbde1a289d4255"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderGoalManager.Requests.cs",
+                             "bytes":  13007,
+                             "sha256":  "033ce0a480b270a421d3bb2b8ea62be833c3f9c41da5929a17bf2f7246572475"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderPlanner.DynamicPlacement.cs",
+                             "bytes":  3195,
+                             "sha256":  "41f46c84120c151b94bbd129088d6499a3f8f869d84fed83ee17a20a27407a24"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderPlanner.PreparationSources.cs",
+                             "bytes":  3311,
+                             "sha256":  "2bf9873c6121dbba51fb349cbc8174bd130d2660a407776d610c92ba7cf82e15"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderRequestTicket.cs",
+                             "bytes":  1449,
+                             "sha256":  "66b717bb4af89db4a6f55406a89f6a66ede6d2945d8469a6a0b0975561b8a8ca"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderSemanticResult.Constraints.cs",
+                             "bytes":  3317,
+                             "sha256":  "54ea81ef80bb016076562bbbb6592431134c8a44024d4b9c8f5dd15765ddd5c5"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderSemanticSchemaRepair.cs",
+                             "bytes":  9623,
+                             "sha256":  "032a4aa7460363a54e7a109303e03894d98b6b0d9b24de5a6b3d4c3a8c59419b"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Strategic/StrategicIntent.cs",
+                             "bytes":  9136,
+                             "sha256":  "471bbb94df521b7b5c93836aa875973616bf9618116f12157864ba82343da4a0"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Strategic/StrategicPipeline.cs",
+                             "bytes":  17707,
+                             "sha256":  "48f339bf49636600dfb924c4feda856cd2be54dc4aa1d81c921a67ddc09cf472"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Authority.cs",
+                             "bytes":  1663,
+                             "sha256":  "a7c5702315ea12ed9eee182de0d2bb51b547ab24244db5229c6c6192c9afb354"
+                         },
+                         {
+                             "path":  "Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.cs",
+                             "bytes":  64584,
+                             "sha256":  "7cf3fe90096043e996ef9c9e92a05c14a315c7a87a1bd2381ace1d80176c5993"
+                         },
+                         {
+                             "path":  "Assets/Scripts/Buildings/BuildingData.cs",
+                             "bytes":  9625,
+                             "sha256":  "f5fd4d54e917a0684d23dbfb0a78364eb222f74c037d67a30cdfa6a9234e3a26"
+                         },
+                         {
+                             "path":  "Assets/Scripts/Buildings/BuildingTrainingSystem.cs",
+                             "bytes":  4035,
+                             "sha256":  "267f4af5ba72d9fdf0d6b3ae188c9b8851f67094eb0c4ba7723c704b72fb4807"
+                         },
+                         {
+                             "path":  "Assets/Scripts/Buildings/TrainingOrderReceipt.cs",
+                             "bytes":  1438,
+                             "sha256":  "357529b151c442ac8e63f7af67588c2b06343bf40249dd333d5af3f47953a1cf"
+                         },
+                         {
+                             "path":  "Assets/Scripts/Buildings/TrainingQueueCollection.cs",
+                             "bytes":  3524,
+                             "sha256":  "486d68ba5039303577b0137febcab1fdd34feed60db21a1366d799f9026bef71"
+                         },
+                         {
+                             "path":  "Assets/Scripts/Core/CommanderCommandOriginLedger.cs",
+                             "bytes":  9553,
+                             "sha256":  "f78dd1e408996582a5c599104d466159480c7434262db93a6e092a2b46a04e45"
+                         },
+                         {
+                             "path":  "Assets/Scripts/Core/GameBootstrapper.cs",
+                             "bytes":  27696,
+                             "sha256":  "51ff94b2ec3e33dd503a37ac98813c14d3b29803429d291272584614aa49bac8"
+                         },
+                         {
+                             "path":  "Assets/Scripts/Core/GameSimulation.cs",
+                             "bytes":  336350,
+                             "sha256":  "3a72e493e3407af9592e54cea12a76c557e18887f8dfc1ccfe535919bedbf0c9"
+                         },
+                         {
+                             "path":  "Assets/Scripts/Core/GameSimulation.TrainingObservation.cs",
+                             "bytes":  6608,
+                             "sha256":  "a619aca6a633ec63d9e9ae278f59a0c1e691fe08894353d6fa7926be32974bf8"
+                         },
+                         {
+                             "path":  "Assets/Tests/EditMode/CommanderPhase3C5StrategicDecisionTests.cs",
+                             "bytes":  14041,
+                             "sha256":  "54ac1a6c6c01e5d232c51c511e202d85bace524e7674242980af99fdf88758bb"
+                         },
+                         {
+                             "path":  "Assets/Tests/EditMode/CommanderPhase3Fix11Tests.cs",
+                             "bytes":  22452,
+                             "sha256":  "80647101ecea8f6688d28860620062aaeb14dc2c795111e32144d0807ce587d3"
+                         },
+                         {
+                             "path":  "Assets/Tests/EditMode/CommanderPhase3Fix12Tests.cs",
+                             "bytes":  25354,
+                             "sha256":  "bf375791bab03303fd7c6b354617a10077904778d2b86e716e8babf19fb9d229"
+                         },
+                         {
+                             "path":  "Assets/Tests/EditMode/CommanderPhase3Fix13Tests.cs",
+                             "bytes":  16914,
+                             "sha256":  "c890767627c83fb857d4004f0bd5207c240a111c849ac4d4361f2b4d61c36c8d"
+                         },
+                         {
+                             "path":  "Assets/Tests/EditMode/CommanderPhase3FixTests.cs",
+                             "bytes":  25451,
+                             "sha256":  "e4c075cd09505c5ee3f8099e7dd72f96ebeb7d00c7315ba9ad9b37dc9e9d04f4"
+                         },
+                         {
+                             "path":  "Assets/Tests/EditMode/CommanderPhase4B2Tests.cs",
+                             "bytes":  37224,
+                             "sha256":  "aa45602552b6d7d863c58117df655b28313f6d13161cf18c17fb0df9246968f7"
+                         },
+                         {
+                             "path":  "Assets/Tests/EditMode/CommanderPhase4E1ChatTests.cs",
+                             "bytes":  17118,
+                             "sha256":  "1e5557157246618ad1ebbad5b72271c3b834a30df55fcd92886e3d3c88b69d0e"
+                         },
+                         {
+                             "path":  "Assets/Tests/EditMode/CommanderPhase4E1ProviderTests.cs",
+                             "bytes":  17596,
+                             "sha256":  "fb7d1ff44cd6151668a3acc36106aae0b276e270cadf1e5350ef33a5fedf97ad"
+                         },
+                         {
+                             "path":  "Assets/Tests/EditMode/CommanderPhase4E3GraphAdmissionTests.cs",
+                             "bytes":  6646,
+                             "sha256":  "d59b996a46dca0a7f78b6aec1af25c6eab993e719f8aaa084c671bf6d7e1ba60"
+                         },
+                         {
+                             "path":  "Assets/Tests/EditMode/CommanderPhase4E4ReachAgeTests.cs",
+                             "bytes":  5557,
+                             "sha256":  "c31385d48d488034fdaac5dda2e7fe13bc8cabf65c04ee6c48289913affef9af"
+                         },
+                         {
+                             "path":  "Assets/Tests/EditMode/CommanderPhase4GCapabilityTests.cs",
+                             "bytes":  23761,
+                             "sha256":  "9623db1773005d1839cc9ac524251bc2698f535458405e8fbeb6c2c392193fb9"
+                         },
+                         {
+                             "path":  "Assets/Tests/EditMode/CommanderPhase4GHostileAuditTests.cs",
+                             "bytes":  38580,
+                             "sha256":  "1dbd7b2860da29a4c5bbdac7281095ef06c07fe8039dcf0ca82d5063a06b927f"
+                         },
+                         {
+                             "path":  "Assets/Tests/EditMode/CommanderPhase5AAntiGravityHostileAuditTests.cs",
+                             "bytes":  23403,
+                             "sha256":  "47da2a94d7ec92e6806f121665cdf3df9a5e0a7da78ad3fd7f993119fea030bb"
+                         },
+                         {
+                             "path":  "Assets/Tests/EditMode/CommanderPhase5AAuthorityTests.cs",
+                             "bytes":  9474,
+                             "sha256":  "1625bed91bdec5aac5787c18de5c9aebb3a36fc7855856a0843286f68aa7fc4a"
+                         },
+                         {
+                             "path":  "Assets/Tests/EditMode/CommanderPhase5ACommandOriginLedgerTests.cs",
+                             "bytes":  14387,
+                             "sha256":  "e5c30e2abdea7f5be2368e0ef27297e9a4244131005ed8bd2a3abbdcbd0b603d"
+                         },
+                         {
+                             "path":  "Assets/Tests/EditMode/CommanderPhase5ADynamicCompilerTests.cs",
+                             "bytes":  7009,
+                             "sha256":  "24f20a0a6feb07139c092a74b8911c7d68cbf2d5695307ce207e74fb6ca41b36"
+                         },
+                         {
+                             "path":  "Assets/Tests/EditMode/CommanderPhase5ADynamicPlanTests.cs",
+                             "bytes":  6454,
+                             "sha256":  "430b62f0c229d519fba5f9e080a0eb8ef5259805cd12a01a7aecb4b50a2ddca8"
+                         },
+                         {
+                             "path":  "Assets/Tests/EditMode/CommanderPhase5ADynamicRuntimeTests.cs",
+                             "bytes":  29663,
+                             "sha256":  "a811c130753d42ba82d565170ba1a2cfc7194645f2f2da94dcf9fdfce785f974"
+                         },
+                         {
+                             "path":  "Assets/Tests/EditMode/CommanderPhase5AGroundedScopeTests.cs",
+                             "bytes":  7945,
+                             "sha256":  "ab580e9fb17dab3e515b78386080e2ecfbbdbc7e960371f925f566ac63de4984"
+                         },
+                         {
+                             "path":  "Assets/Tests/EditMode/CommanderPhase5AIntentAuthorityTests.cs",
+                             "bytes":  18402,
+                             "sha256":  "ae28fd85e449477c35cd16c443a49c5b7ff0d342851d7294f5bedb87631158f1"
+                         },
+                         {
+                             "path":  "Assets/Tests/EditMode/CommanderPhase5AProductionBindingTests.cs",
+                             "bytes":  14446,
+                             "sha256":  "71a0ac632087f01be06923947e00f6ad1af072482c7f90cc328fed380223ec6e"
+                         },
+                         {
+                             "path":  "Assets/Tests/EditMode/CommanderPhase5AProviderContractTests.cs",
+                             "bytes":  14871,
+                             "sha256":  "16e0b45830f1c5b8b842896e1f641c079dd744eac0b0454973d2f065851a24b0"
+                         },
+                         {
+                             "path":  "Assets/Tests/EditMode/CommanderPhase5ATrainingObservationTests.cs",
+                             "bytes":  9990,
+                             "sha256":  "b98c9e03f5fdbcb2862e33e8cc5086c3cc6cc0dfa4756034e55e4af439a23934"
+                         },
+                         {
+                             "path":  "Assets/Tests/PlayMode/CommanderPhase3Fix11PlayModeTests.cs",
+                             "bytes":  9187,
+                             "sha256":  "e867e5560156ae800087635db230b387e13bb8c0cd6bebc59c5a332025c63c6e"
+                         },
+                         {
+                             "path":  "Assets/Tests/PlayMode/CommanderPhase4B2PlayModeTests.cs",
+                             "bytes":  12495,
+                             "sha256":  "520f09a77c577d4b48a0ddbc877d2b448ea7c537d3582823c4e1514f1de77392"
+                         },
+                         {
+                             "path":  "Assets/Tests/PlayMode/CommanderPhase4C1PlayModeTests.cs",
+                             "bytes":  30842,
+                             "sha256":  "2777ed8face2bc268ef5ba6d917b1536216e0da3ded4d49573c04ed12dab15cd"
+                         },
+                         {
+                             "path":  "Assets/Tests/PlayMode/CommanderPhase4C2PlayModeTests.cs",
+                             "bytes":  25769,
+                             "sha256":  "fb9b3cbe1e0e3ea64026f06dd5b5b82f79e08e9c4e9e01b3506611068115e08b"
+                         },
+                         {
+                             "path":  "Assets/Tests/PlayMode/CommanderPhase4D3HostPlayModeTests.cs",
+                             "bytes":  38635,
+                             "sha256":  "12032190f683ff14708c9056ac891fc8cc0ac6648912f7a91e69cd4de769ddff"
+                         },
+                         {
+                             "path":  "Assets/Tests/PlayMode/CommanderPhase4D4HostPlayModeTests.cs",
+                             "bytes":  26385,
+                             "sha256":  "0a36c1a42df1a6d23d699230e160613ae93dba9ca9fc36e4f29183ce319f54db"
+                         },
+                         {
+                             "path":  "Assets/Tests/PlayMode/CommanderPhase4E2SpatialPlacementPlayModeTests.cs",
+                             "bytes":  13603,
+                             "sha256":  "61fc24e4fc8886f3d477f3e84dbd3379f02023fc36e41fa4b35823a776f5b2b8"
+                         },
+                         {
+                             "path":  "Assets/Tests/PlayMode/CommanderPhase4GResultBindingPlayModeTests.cs",
+                             "bytes":  5834,
+                             "sha256":  "bad5beef4e02014b0e9b87d54e8b38b8e6cfb90932d6c82d021a4e4d479b2502"
+                         },
+                         {
+                             "path":  "Assets/Tests/PlayMode/CommanderPhase5AAuthorityPlayModeTests.cs",
+                             "bytes":  5774,
+                             "sha256":  "c7cf712be235ebfffc95542990542dc977b0b515efa47c8401011d8db5621e97"
+                         },
+                         {
+                             "path":  "Assets/Tests/PlayMode/CommanderPhase5ALiveRuntimePlayModeTests.cs",
+                             "bytes":  23016,
+                             "sha256":  "a1b55727c3b68f1d9b5ba4182783f1874efaa7fd2d0224b5d21766690feed344"
+                         }
+                     ],
+    "changed_files":  [
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/CommanderContext.cs",
+                              "bytes":  8363,
+                              "sha256":  "202097ab448b4f8347f96ea5d468c05a2b6b0b7f4b644b7a1385565b2124e6e6"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/CommanderContextBuilder.cs",
+                              "bytes":  10504,
+                              "sha256":  "9e5f9685f3967fc3d7520eb1ce57a983cda13f14354d924ffb7fc47711e59f76"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/CommanderGoal.cs",
+                              "bytes":  13605,
+                              "sha256":  "c29095cf238ac6ec3eb90ecbe6a8ed405b18c6bad1a4fa4b7d309f6391c1046f"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/CommanderGoalManager.cs",
+                              "bytes":  44164,
+                              "sha256":  "7b9dce622e5c4e9f427a5911c2cf17dbf8b92ebe67e633cfeb9ce71382714c8b"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/CommanderIntent.cs",
+                              "bytes":  8744,
+                              "sha256":  "4c9f498503c739b9fb1891f355e8c56597ce6eb7ac39db906becbda879b5d01f"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/CommanderIntentCatalog.cs",
+                              "bytes":  8352,
+                              "sha256":  "ea325702f4c6b5c4b98dbbcc856082693f3143dc6898a0a91eb496ac9f10fb12"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/CommanderIntentDto.cs",
+                              "bytes":  39105,
+                              "sha256":  "caa2f5b2cc83ffe779bc6d9d9ec23755da2e642c375c7023bd94993bcac5169d"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/CommanderIntentValidator.cs",
+                              "bytes":  15667,
+                              "sha256":  "c3446124752167e40a94cc1152a79edb8d9b350a65b82f6af9bc985d165afc44"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/CommanderPlanner.cs",
+                              "bytes":  95826,
+                              "sha256":  "053f630707330105951323c9f94ba4b38c18557e3b53452c4b22cd32eb6090a1"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs",
+                              "bytes":  63948,
+                              "sha256":  "f35a4e2532d3310d29561795aaba2989d93a2c36ca3b08f672c30d42b7d57c68"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase4A/OpenRouterCommanderProvider.cs",
+                              "bytes":  26289,
+                              "sha256":  "5158be552d1dd228b87c80b32047571500f9ab24e24d39632bf24cc1a15a3d36"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase4B2/StrategicAIApprovalBridge.cs",
+                              "bytes":  16667,
+                              "sha256":  "d330aa40a1a8a477a368caae8217fb1048372b08e80e62e9c2f5fffd97fff7f3"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticAdmission.cs",
+                              "bytes":  7841,
+                              "sha256":  "a28bbb41cc511c377dcff6a4a457f64e6f462db5180cd2a42e285e223c29448d"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticGraphAdmission.cs",
+                              "bytes":  12488,
+                              "sha256":  "5abc95946e1b7e765df8f059ac6cbfc4385314632bd1f1c61213de068d812c7b"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticJson.cs",
+                              "bytes":  30164,
+                              "sha256":  "e3b35184466314087b8526a38de9cf4b15fd4b68a32a91e6c57fc6d07a655dcf"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticProvider.cs",
+                              "bytes":  7610,
+                              "sha256":  "d5e0212a93b70e253fdc7f506301d12aa9be10c88c4fa3f5fe9f86d7db9ea773"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticRequest.cs",
+                              "bytes":  6269,
+                              "sha256":  "3d74e777b36e80ed19b6cb96d68b7aac900274506da5624b0572dbd0f48d31d4"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A.meta",
+                              "bytes":  172,
+                              "sha256":  "d3ed5bb74a814b8b5bc21f37e80eaeb84b544809a7c00f446cbd9803aa151a8d"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderActionPlanCandidate.cs",
+                              "bytes":  13858,
+                              "sha256":  "555f734600723a3bd6d9e6795467e0956c2465efecb05bcdf264baaa8a6d7bcb"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderActionPlanCandidate.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "029a73d4354ba85510374a977d5aec8421c261b7d1c62107778360068eaa1f47"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderBoundLocation.cs",
+                              "bytes":  10510,
+                              "sha256":  "5e6e7ec61f2679bcf4afa6adccec697d45d97f3462b15b200538aa15ed8dbadc"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderBoundLocation.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "570e345c36531ec09d0282b5e9a84dd63707dda6daf6f552f4f8c8c1e5f9ffb3"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderChatUI.ActionPlans.cs",
+                              "bytes":  3327,
+                              "sha256":  "53adc798d689ffe011bcd596860c11994296d31205a5d2139120c40517d98c91"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderChatUI.ActionPlans.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "9490023a00643f1f9d602f7075af79543ebe22186c533709c8bed7411a910da9"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderDynamicCompiler.cs",
+                              "bytes":  20246,
+                              "sha256":  "eddcb7f3a8915e361e681712eb7b745b84fc839a8edce8503557ad572c498ff8"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderDynamicCompiler.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "5b024edf63300dd9dbae04e0f399e1139d2084bfb485f4ca251a58b736fc300b"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderDynamicPlan.cs",
+                              "bytes":  9944,
+                              "sha256":  "639005446d8347f620c0616617c9ec4a31f423ea27ccc19ce40e93085c71a2a9"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderDynamicPlan.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "e9cf444502dbbc0f98a99d9789454c9cff35e8925c0372291212f02e449a993a"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderDynamicPlanParser.cs",
+                              "bytes":  16927,
+                              "sha256":  "fd283726dd078f2e61793fc2d192d17f50b916b0446df7002ec43009f50f0054"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderDynamicPlanParser.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "748380144f0f38bf214e1592daf037e9cdb33d3ab53850279c536d211db7577c"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderDynamicProviderVocabulary.cs",
+                              "bytes":  12733,
+                              "sha256":  "3de2bd668a050519582f48b227442286048cd9b069820cffa8e0242ffe0dfdbc"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderDynamicProviderVocabulary.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "02b48d8e336948b286e935dfac452cfc491d80ede11c971fa8abef92bc59357c"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderGoalManager.DynamicLocations.cs",
+                              "bytes":  12921,
+                              "sha256":  "f2a83930f391dfec3a6304a55ba1f36fb057eb7486e06de60ccd7d88c4e468b9"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderGoalManager.DynamicLocations.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "6e2c00028a718c29a00d0651a00c4ea78b7e20035bc0db3de2126d5836ca32c1"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderGoalManager.DynamicWorkers.cs",
+                              "bytes":  6784,
+                              "sha256":  "9f33ed484a0161ae782ac04553dbfa385ebee8be93a2ad1d30122c1a49275d86"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderGoalManager.DynamicWorkers.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "3087ec6a83f280dee342ff9d6ea663aeb9a936a9fbeb2b6ee691be999de2d983"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderGoalManager.Production.cs",
+                              "bytes":  4103,
+                              "sha256":  "6a452f58a5077d52892a6e91490c2ff2fdbc8eabc89b2e8fe1cbde1a289d4255"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderGoalManager.Production.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "69c71f284180b6c3c70bf5757969e79fd025c3b59eed4847685d96bc041c8fe8"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderGoalManager.Requests.cs",
+                              "bytes":  13007,
+                              "sha256":  "033ce0a480b270a421d3bb2b8ea62be833c3f9c41da5929a17bf2f7246572475"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderGoalManager.Requests.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "fec923d97f71bcef77cef23df7aafbd0a38bfba928aac3661b2bddaf8b1697a1"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderPlanner.DynamicPlacement.cs",
+                              "bytes":  3195,
+                              "sha256":  "41f46c84120c151b94bbd129088d6499a3f8f869d84fed83ee17a20a27407a24"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderPlanner.DynamicPlacement.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "f8ffe96215a7c71bb33c21909936d5aaf5f7f424d4376b0e204e17f466f57840"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderPlanner.PreparationSources.cs",
+                              "bytes":  3311,
+                              "sha256":  "2bf9873c6121dbba51fb349cbc8174bd130d2660a407776d610c92ba7cf82e15"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderPlanner.PreparationSources.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "24f677a7ae0242989c1da2d0d509c00400a84d20f18b9674f5de49a22e88b0f4"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderRequestTicket.cs",
+                              "bytes":  1449,
+                              "sha256":  "66b717bb4af89db4a6f55406a89f6a66ede6d2945d8469a6a0b0975561b8a8ca"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderRequestTicket.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "9f2cae4ed0e8f3ef6ccb57447d212f51f912b34ca756b0a9b8f89d1aed258d00"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderSemanticResult.Constraints.cs",
+                              "bytes":  3317,
+                              "sha256":  "54ea81ef80bb016076562bbbb6592431134c8a44024d4b9c8f5dd15765ddd5c5"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderSemanticResult.Constraints.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "c798dac0c5a8601fbc0cb8f1d748a0d20d981246574d38f0e08c779e1679bb18"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderSemanticSchemaRepair.cs",
+                              "bytes":  9623,
+                              "sha256":  "032a4aa7460363a54e7a109303e03894d98b6b0d9b24de5a6b3d4c3a8c59419b"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Phase5A/CommanderSemanticSchemaRepair.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "5885b493fa81b4e25d4b2c1107b1815a6b80678b93e6e41adf1e2e5a6d7fcc27"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Strategic/StrategicIntent.cs",
+                              "bytes":  9136,
+                              "sha256":  "471bbb94df521b7b5c93836aa875973616bf9618116f12157864ba82343da4a0"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Strategic/StrategicPipeline.cs",
+                              "bytes":  17707,
+                              "sha256":  "48f339bf49636600dfb924c4feda856cd2be54dc4aa1d81c921a67ddc09cf472"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Authority.cs",
+                              "bytes":  1663,
+                              "sha256":  "a7c5702315ea12ed9eee182de0d2bb51b547ab24244db5229c6c6192c9afb354"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Authority.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "59376b4fffb88acea86724e571b0e64fe4302cc24fdc2a7c678b596a7ab6eaf1"
+                          },
+                          {
+                              "path":  "Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.cs",
+                              "bytes":  64584,
+                              "sha256":  "7cf3fe90096043e996ef9c9e92a05c14a315c7a87a1bd2381ace1d80176c5993"
+                          },
+                          {
+                              "path":  "Assets/Scripts/Buildings/BuildingData.cs",
+                              "bytes":  9625,
+                              "sha256":  "f5fd4d54e917a0684d23dbfb0a78364eb222f74c037d67a30cdfa6a9234e3a26"
+                          },
+                          {
+                              "path":  "Assets/Scripts/Buildings/BuildingTrainingSystem.cs",
+                              "bytes":  4035,
+                              "sha256":  "267f4af5ba72d9fdf0d6b3ae188c9b8851f67094eb0c4ba7723c704b72fb4807"
+                          },
+                          {
+                              "path":  "Assets/Scripts/Buildings/TrainingOrderReceipt.cs",
+                              "bytes":  1438,
+                              "sha256":  "357529b151c442ac8e63f7af67588c2b06343bf40249dd333d5af3f47953a1cf"
+                          },
+                          {
+                              "path":  "Assets/Scripts/Buildings/TrainingOrderReceipt.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "ad91b4d07e2b4fad0254b9d61e0dd4035c10fcc2122f1ff6032fb06dd50be194"
+                          },
+                          {
+                              "path":  "Assets/Scripts/Buildings/TrainingQueueCollection.cs",
+                              "bytes":  3524,
+                              "sha256":  "486d68ba5039303577b0137febcab1fdd34feed60db21a1366d799f9026bef71"
+                          },
+                          {
+                              "path":  "Assets/Scripts/Buildings/TrainingQueueCollection.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "41eaa2fd123fa6e7a37c0219172b3f771dbf63fb5501a5eaf983fd82ed5c27ec"
+                          },
+                          {
+                              "path":  "Assets/Scripts/Core/CommanderCommandOriginLedger.cs",
+                              "bytes":  9553,
+                              "sha256":  "f78dd1e408996582a5c599104d466159480c7434262db93a6e092a2b46a04e45"
+                          },
+                          {
+                              "path":  "Assets/Scripts/Core/CommanderCommandOriginLedger.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "9f4ef162dcd76cf81f235fdeae56dace36131bef01a51f424043fc4de5fd3ac1"
+                          },
+                          {
+                              "path":  "Assets/Scripts/Core/GameBootstrapper.cs",
+                              "bytes":  27696,
+                              "sha256":  "51ff94b2ec3e33dd503a37ac98813c14d3b29803429d291272584614aa49bac8"
+                          },
+                          {
+                              "path":  "Assets/Scripts/Core/GameSimulation.cs",
+                              "bytes":  336350,
+                              "sha256":  "3a72e493e3407af9592e54cea12a76c557e18887f8dfc1ccfe535919bedbf0c9"
+                          },
+                          {
+                              "path":  "Assets/Scripts/Core/GameSimulation.TrainingObservation.cs",
+                              "bytes":  6608,
+                              "sha256":  "a619aca6a633ec63d9e9ae278f59a0c1e691fe08894353d6fa7926be32974bf8"
+                          },
+                          {
+                              "path":  "Assets/Scripts/Core/GameSimulation.TrainingObservation.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "b98c359b240f97f78889c0eb482ff6e1ed3a8dcac8526d2091e3e2d099bea9db"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase3C5StrategicDecisionTests.cs",
+                              "bytes":  14041,
+                              "sha256":  "54ac1a6c6c01e5d232c51c511e202d85bace524e7674242980af99fdf88758bb"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase3Fix11Tests.cs",
+                              "bytes":  22452,
+                              "sha256":  "80647101ecea8f6688d28860620062aaeb14dc2c795111e32144d0807ce587d3"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase3Fix12Tests.cs",
+                              "bytes":  25354,
+                              "sha256":  "bf375791bab03303fd7c6b354617a10077904778d2b86e716e8babf19fb9d229"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase3Fix13Tests.cs",
+                              "bytes":  16914,
+                              "sha256":  "c890767627c83fb857d4004f0bd5207c240a111c849ac4d4361f2b4d61c36c8d"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase3FixTests.cs",
+                              "bytes":  25451,
+                              "sha256":  "e4c075cd09505c5ee3f8099e7dd72f96ebeb7d00c7315ba9ad9b37dc9e9d04f4"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase4B2Tests.cs",
+                              "bytes":  37224,
+                              "sha256":  "aa45602552b6d7d863c58117df655b28313f6d13161cf18c17fb0df9246968f7"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase4E1ChatTests.cs",
+                              "bytes":  17118,
+                              "sha256":  "1e5557157246618ad1ebbad5b72271c3b834a30df55fcd92886e3d3c88b69d0e"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase4E1ProviderTests.cs",
+                              "bytes":  17596,
+                              "sha256":  "fb7d1ff44cd6151668a3acc36106aae0b276e270cadf1e5350ef33a5fedf97ad"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase4E3GraphAdmissionTests.cs",
+                              "bytes":  6646,
+                              "sha256":  "d59b996a46dca0a7f78b6aec1af25c6eab993e719f8aaa084c671bf6d7e1ba60"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase4E4ReachAgeTests.cs",
+                              "bytes":  5557,
+                              "sha256":  "c31385d48d488034fdaac5dda2e7fe13bc8cabf65c04ee6c48289913affef9af"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase4GCapabilityTests.cs",
+                              "bytes":  23761,
+                              "sha256":  "9623db1773005d1839cc9ac524251bc2698f535458405e8fbeb6c2c392193fb9"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase4GHostileAuditTests.cs",
+                              "bytes":  38580,
+                              "sha256":  "1dbd7b2860da29a4c5bbdac7281095ef06c07fe8039dcf0ca82d5063a06b927f"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase5AAntiGravityHostileAuditTests.cs",
+                              "bytes":  23403,
+                              "sha256":  "47da2a94d7ec92e6806f121665cdf3df9a5e0a7da78ad3fd7f993119fea030bb"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase5AAntiGravityHostileAuditTests.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "ef2cb5f883647b19319f871ac72ba84c0b7b7517074d8f2708f847f6006a1d1d"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase5AAuthorityTests.cs",
+                              "bytes":  9474,
+                              "sha256":  "1625bed91bdec5aac5787c18de5c9aebb3a36fc7855856a0843286f68aa7fc4a"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase5AAuthorityTests.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "a828a272db45b72717d0e9da102ae03dad28ca57edb8beaaf66964219793dfe4"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase5ACommandOriginLedgerTests.cs",
+                              "bytes":  14387,
+                              "sha256":  "e5c30e2abdea7f5be2368e0ef27297e9a4244131005ed8bd2a3abbdcbd0b603d"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase5ACommandOriginLedgerTests.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "d0843d5682e05020cff631b413078ffb47d757f3782a0f1a1dd1aac605338739"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase5ADynamicCompilerTests.cs",
+                              "bytes":  7009,
+                              "sha256":  "24f20a0a6feb07139c092a74b8911c7d68cbf2d5695307ce207e74fb6ca41b36"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase5ADynamicCompilerTests.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "4ea9ca1f66a151352743be1d673cfcd3e0e18ae301c7f795c7269d1d941350a8"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase5ADynamicPlanTests.cs",
+                              "bytes":  6454,
+                              "sha256":  "430b62f0c229d519fba5f9e080a0eb8ef5259805cd12a01a7aecb4b50a2ddca8"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase5ADynamicPlanTests.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "5298dfcd312639b6f9254c10550a3f7c168be4cf058ab5445b0d9c39de46de58"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase5ADynamicRuntimeTests.cs",
+                              "bytes":  29663,
+                              "sha256":  "a811c130753d42ba82d565170ba1a2cfc7194645f2f2da94dcf9fdfce785f974"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase5ADynamicRuntimeTests.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "be36fae36f73f39e2b0960abeb0f5dd9ea9c7ddb12c69b0716e2a21be0021c0a"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase5AGroundedScopeTests.cs",
+                              "bytes":  7945,
+                              "sha256":  "ab580e9fb17dab3e515b78386080e2ecfbbdbc7e960371f925f566ac63de4984"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase5AGroundedScopeTests.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "b7407209f0958c97c4abfef196fe4788fb5bc077f1022495cd72570e80391707"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase5AIntentAuthorityTests.cs",
+                              "bytes":  18402,
+                              "sha256":  "ae28fd85e449477c35cd16c443a49c5b7ff0d342851d7294f5bedb87631158f1"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase5AIntentAuthorityTests.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "b99909c35eaecb9ef07fb5b85305122e7505e93f0b9c9229515796a42dca2f7f"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase5AProductionBindingTests.cs",
+                              "bytes":  14446,
+                              "sha256":  "71a0ac632087f01be06923947e00f6ad1af072482c7f90cc328fed380223ec6e"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase5AProductionBindingTests.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "534139d4a9794306b0f53293012c1dbd8ec6f065882db515859deacd9701b256"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase5AProviderContractTests.cs",
+                              "bytes":  14871,
+                              "sha256":  "16e0b45830f1c5b8b842896e1f641c079dd744eac0b0454973d2f065851a24b0"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase5AProviderContractTests.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "ef807bf4ff2f6268b7653bc0a38e118dea184b1258444dfb58b3e80cc3f0ec70"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase5ATrainingObservationTests.cs",
+                              "bytes":  9990,
+                              "sha256":  "b98c9e03f5fdbcb2862e33e8cc5086c3cc6cc0dfa4756034e55e4af439a23934"
+                          },
+                          {
+                              "path":  "Assets/Tests/EditMode/CommanderPhase5ATrainingObservationTests.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "bc9bed106c87ea1b89de7f5600b9000c8c42360ba67a558b2a6ecaac7bb9309d"
+                          },
+                          {
+                              "path":  "Assets/Tests/PlayMode/CommanderPhase3Fix11PlayModeTests.cs",
+                              "bytes":  9187,
+                              "sha256":  "e867e5560156ae800087635db230b387e13bb8c0cd6bebc59c5a332025c63c6e"
+                          },
+                          {
+                              "path":  "Assets/Tests/PlayMode/CommanderPhase4B2PlayModeTests.cs",
+                              "bytes":  12495,
+                              "sha256":  "520f09a77c577d4b48a0ddbc877d2b448ea7c537d3582823c4e1514f1de77392"
+                          },
+                          {
+                              "path":  "Assets/Tests/PlayMode/CommanderPhase4C1PlayModeTests.cs",
+                              "bytes":  30842,
+                              "sha256":  "2777ed8face2bc268ef5ba6d917b1536216e0da3ded4d49573c04ed12dab15cd"
+                          },
+                          {
+                              "path":  "Assets/Tests/PlayMode/CommanderPhase4C2PlayModeTests.cs",
+                              "bytes":  25769,
+                              "sha256":  "fb9b3cbe1e0e3ea64026f06dd5b5b82f79e08e9c4e9e01b3506611068115e08b"
+                          },
+                          {
+                              "path":  "Assets/Tests/PlayMode/CommanderPhase4D3HostPlayModeTests.cs",
+                              "bytes":  38635,
+                              "sha256":  "12032190f683ff14708c9056ac891fc8cc0ac6648912f7a91e69cd4de769ddff"
+                          },
+                          {
+                              "path":  "Assets/Tests/PlayMode/CommanderPhase4D4HostPlayModeTests.cs",
+                              "bytes":  26385,
+                              "sha256":  "0a36c1a42df1a6d23d699230e160613ae93dba9ca9fc36e4f29183ce319f54db"
+                          },
+                          {
+                              "path":  "Assets/Tests/PlayMode/CommanderPhase4E2SpatialPlacementPlayModeTests.cs",
+                              "bytes":  13603,
+                              "sha256":  "61fc24e4fc8886f3d477f3e84dbd3379f02023fc36e41fa4b35823a776f5b2b8"
+                          },
+                          {
+                              "path":  "Assets/Tests/PlayMode/CommanderPhase4GResultBindingPlayModeTests.cs",
+                              "bytes":  5834,
+                              "sha256":  "bad5beef4e02014b0e9b87d54e8b38b8e6cfb90932d6c82d021a4e4d479b2502"
+                          },
+                          {
+                              "path":  "Assets/Tests/PlayMode/CommanderPhase5AAuthorityPlayModeTests.cs",
+                              "bytes":  5774,
+                              "sha256":  "c7cf712be235ebfffc95542990542dc977b0b515efa47c8401011d8db5621e97"
+                          },
+                          {
+                              "path":  "Assets/Tests/PlayMode/CommanderPhase5AAuthorityPlayModeTests.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "871d26df6b479409cfcbaf902b4ba74f9000d9fdfa9db902b0884ec8902aa0c6"
+                          },
+                          {
+                              "path":  "Assets/Tests/PlayMode/CommanderPhase5ALiveRuntimePlayModeTests.cs",
+                              "bytes":  23016,
+                              "sha256":  "a1b55727c3b68f1d9b5ba4182783f1874efaa7fd2d0224b5d21766690feed344"
+                          },
+                          {
+                              "path":  "Assets/Tests/PlayMode/CommanderPhase5ALiveRuntimePlayModeTests.cs.meta",
+                              "bytes":  59,
+                              "sha256":  "18265fcddc6d87e4bab273693977505cdf85771dff63cdb48c9c0f54f301a926"
+                          },
+                          {
+                              "path":  "Docs/Commander/guideline.md",
+                              "bytes":  6455,
+                              "sha256":  "25ef068b2c6297212ba6b6e960089e700810d6c81e724ad8aac1b9dad8a089cd"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/antigravity-final-audit.md",
+                              "bytes":  33045,
+                              "sha256":  "312b0d17a1912842bbc5583562faac263db9955aaa28d5f427a7339595a5c892"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/antigravity-test-plan.md",
+                              "bytes":  6779,
+                              "sha256":  "cb2f406d6aba0292ee75a8a4ff1abbaa9d6d7037cdbb33a232f857e6e3d919a2"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/authority-affected-green-29bc2d2f.xml",
+                              "bytes":  38167,
+                              "sha256":  "fffefc3f38917e669f2f0bb225b77b6e4284e4de1ecf374008d9390898a16ba0"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/authority-affected-red-b0c6b3b3.xml",
+                              "bytes":  39411,
+                              "sha256":  "32c38f66eb1445b623c9f3e38c0b22d1c39c8bfd3fe59354bb0a3bce2b7b65c2"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/authority-approval-fixture-red-7f179706.xml",
+                              "bytes":  6524,
+                              "sha256":  "28b1d3384531714076ab3833acb15808cf7c180c79c468960dc21a772bf403d1"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/authority-compound-affected-green-c0b915c2.xml",
+                              "bytes":  47275,
+                              "sha256":  "d936568b414082b238f51b61316abb93f211edd0fff26d52fdcc1d20b63d80fa"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/authority-green-2f819e83.xml",
+                              "bytes":  10422,
+                              "sha256":  "1b3a1ed634110f13b12ede972ea31cdfe83d13e1a07d1749a27aca996cca5be9"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/authority-play-green-2d387862.xml",
+                              "bytes":  8094,
+                              "sha256":  "a1b9059bc587e94327275824af5ed0cda2f8ab77e98132f1a9a1bd4284b799d5"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/authority-red-5a3d406b.xml",
+                              "bytes":  17316,
+                              "sha256":  "8dd855258c2668ba89ee16306ae00c427a6ab40b2938593296ae8a413f7b7fa9"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/authority-result-placement-play-green-3e85bdd1.xml",
+                              "bytes":  13358,
+                              "sha256":  "6fae8cf6b3124b5ea6b89c6386fa935498e8216b8c9be3423bd491675a84d449"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/canonical-adapter-provider-green-ef90681e.xml",
+                              "bytes":  62220,
+                              "sha256":  "808fd4d0712b591c189733d6e3cd333174228b5b689a1f162a6568dd01cf5442"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/canonical-base-unavailable-07e82a53.xml",
+                              "bytes":  5690,
+                              "sha256":  "fd9afadff77ae72da6ab7fabb9de4387d865501b1ab9a2066e8e8c2250b413bb"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/canonical-effective-selector-red-b5f8101c.xml",
+                              "bytes":  40747,
+                              "sha256":  "d9394c94d4bd2270458e5073799189abd8fed6aa6b33c2b21c9e79c228cd167b"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/canonical-preview-red-517cfb2b.xml",
+                              "bytes":  5396,
+                              "sha256":  "5c8e0374fc9e0155098efdbb762cba79505d31b2d41cb5049907f11570508528"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/canonical-provider-context-red-4de51bb3.xml",
+                              "bytes":  8078,
+                              "sha256":  "ea45c5fa5356b18b433dd572b9cd0fffb6dabfd4f55e04e5561159ddc7451a4c"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/canonical-trace-green-f4d1d5ab.xml",
+                              "bytes":  63592,
+                              "sha256":  "930e43b9ebdfc9c6cad57a2956051075757cb2a086a5a8a67ff1f7eb0a2d8d09"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/capability-primitives-audit.md",
+                              "bytes":  3470,
+                              "sha256":  "288fc57bde059c97af3905183dafb06278815b21afb9879f7836584257dda025"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/compiler-and-placement-red-74d8ca14.xml",
+                              "bytes":  15596,
+                              "sha256":  "c767cf47076c6898ed81490b5ed1fbe145bfcb0b7b2add072260eea24282a739"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/compiler-ledger-production-green-c5c53694.xml",
+                              "bytes":  28779,
+                              "sha256":  "afaa25f005a381803349f4002d9cf3458881b0b311d8c3e8976a27583d6e2811"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/composition-prompt-integration-087673a9.xml",
+                              "bytes":  24492,
+                              "sha256":  "d19511ca26cbf15bd6a74fca00b7f950fb023514706d66c13e525ed91e03075e"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/composition-prompt-red-0deea77f.xml",
+                              "bytes":  28630,
+                              "sha256":  "28f83dd15106ad6455c49edc4c126caf8b83a056796081c6f3baafeca90c6e7a"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/composition-provider-green-34e559cd.xml",
+                              "bytes":  22900,
+                              "sha256":  "a0e048df198f97fb2613dcafa59194409dac9fbdf25c980d174132e7d5943e9b"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/compound-authority-green-xml-only.xml",
+                              "bytes":  14675,
+                              "sha256":  "f4dcdf39204fe0a3ae1815b38851db31129ff31c98473497edc642e65ebfc82a"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/compound-consent-red-0cc43454.xml",
+                              "bytes":  9106,
+                              "sha256":  "8877db2deeb32830b6be3cc6fe2fc2e3f077ac172064114a189aa8542b0ee171"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/compound-manager-red-85e8059d.xml",
+                              "bytes":  4879,
+                              "sha256":  "79fbd7220d31e568c40489841b10f20b46edb83c9e6fb8cd416e332fcc50dd7c"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/current-source-authority-result-voice-economy-green-0cde2f04.xml",
+                              "bytes":  20448,
+                              "sha256":  "95a963e7134aa0d647e155a4f5e69f45a65790f5d84d69caebc227373090efd1"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/drafts/draft-notes.md",
+                              "bytes":  3130,
+                              "sha256":  "b9407bc83432619f2e84c25bf515d570cec02506f1f2c09648bd2182064a26be"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/drafts/dynamic-parser-proposed.patch",
+                              "bytes":  27027,
+                              "sha256":  "b2dd0581c1601af43e87377f7b6fafb485fa26fdf79cc7b7d288fce0838a52e3"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/drafts/training-receipt-design.md",
+                              "bytes":  12325,
+                              "sha256":  "454fac9f6fadd411e6be3af405c9ca2348bc17bad696f3af785da8084c4583db"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/dynamic-bound-red-9ae0fa48.xml",
+                              "bytes":  5461,
+                              "sha256":  "7316a161ad76d9e91f919c9810e689ae5317e9708132b44d32de56bba5d78f53"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/dynamic-canonical-compiler-red-38375b85.xml",
+                              "bytes":  5786,
+                              "sha256":  "ee9fc0166f96e2882648b9331eaea6d09400fcbc42d46e3da9520a7ca7e7b3cc"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/dynamic-global-constraints-green-ad385b3e.xml",
+                              "bytes":  26745,
+                              "sha256":  "66d2470d01e48b69fced207d8e3ea33a6e447f8cdb9f17bef27ee19aa3e3e63c"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/dynamic-global-constraints-red-d5b8151b.xml",
+                              "bytes":  11758,
+                              "sha256":  "a8a7868f05466e30bc36157cd097918c8a3e967132a48dd2a977ffdbc864bfd2"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/dynamic-plan-compiler.md",
+                              "bytes":  4740,
+                              "sha256":  "c5413a7ec098a2d5e9623ec3df2c2050496f23d27fef7e15d5e735d8d9581145"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/dynamic-plan-schema.md",
+                              "bytes":  5535,
+                              "sha256":  "cf311217caff4b4fd965878c92fd8ef47eccafdfb2ce65330a5ddb071dd54fdf"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/dynamic-plan-validator.md",
+                              "bytes":  5264,
+                              "sha256":  "a0b22ba70d7393f481b98446ddc2b1440f76c1535ac45de0f739dc6a195c6bbc"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/dynamic-structural-bounds-green-08650c25.xml",
+                              "bytes":  11288,
+                              "sha256":  "7aedc97b241156ec35e26c95d685a088f9bfcb441beb7393ee73647150bab740"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/dynamic-structural-green-0bc8fab0.xml",
+                              "bytes":  9869,
+                              "sha256":  "abe1140d230c1410779b7a2c1bd1eb43c7d1ebe09a3f9c2c58e947f45152f5b7"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/dynamic-structural-red-22d94f9f.xml",
+                              "bytes":  12246,
+                              "sha256":  "59593253048a6f017629645a1f17528f7b20394b4bdd3a8802579dc7879d36b0"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/exact-producer-red-3f407237.xml",
+                              "bytes":  7174,
+                              "sha256":  "51a164b24e54470b112595d758ec98aeaf7f14e0a1aa11e680319a79b25af9eb"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/execution-authority-policy.md",
+                              "bytes":  5463,
+                              "sha256":  "f71361c235b437e8d425a88d5fc8b268fe805a58dc60c3030574e4480444ed59"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/execution-progress.md",
+                              "bytes":  46534,
+                              "sha256":  "00f9681eeb0f5ae9136f81f5bccbe717332d8b5df2e0dffe7032aac0eee6b1b9"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/farm-parser-provider-green-25d8cb86.xml",
+                              "bytes":  38556,
+                              "sha256":  "df75480735a7daf406cd9564473a85a6ada5d6a21e919088dc8cc7adffb511ef"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/farm-vocabulary-provider-green-e1610198.xml",
+                              "bytes":  22102,
+                              "sha256":  "268ce1cc5c00f08b791994dae678f4a5ec4c51b282ba0eccbb2ec70ee32e175a"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/farm-vocabulary-red-e8c42b54.xml",
+                              "bytes":  5506,
+                              "sha256":  "33de17415561b1a9a28497251acf4238f525717ee881c19b6ce8ddd0fb81424b"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/final-focused-edit-green-866e8777.xml",
+                              "bytes":  63594,
+                              "sha256":  "7e219824024bc25d418334105e47749e828a20edec50884f049b8a9f18cfc1b6"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/final-focused-play-green-8d930473.xml",
+                              "bytes":  20446,
+                              "sha256":  "9ed7f4414dda879c8c217baa579a77a4cef0bca5c76203b943f376e1c78c0549"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/final-source-play-green-3284c57a.xml",
+                              "bytes":  20449,
+                              "sha256":  "052c141d13e920d1961810f448904a5f7310e3826b055082933fe582bbb635ad"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/four-constraints-red-xml-only.xml",
+                              "bytes":  4884,
+                              "sha256":  "e29a2037e06dec95bd0ed6a0423b84db12fec50e0d15015b9ea783aa6b36a0f1"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/grounded-scope-and-preview-green-661922eb.xml",
+                              "bytes":  11860,
+                              "sha256":  "7c0f726c639312c137cf029bd3c3a6a16380cc79ef2ac16c59a94988eab3c3ed"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/grounded-scope-and-preview-red-4c665ea8.xml",
+                              "bytes":  18143,
+                              "sha256":  "25a5c3733ad1ca3ac11fcd068b39560176a63791455b6ca1de9dd4764b642792"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/implemented-primitives.md",
+                              "bytes":  5177,
+                              "sha256":  "1e6ab2c6ddc94aa8c4f1f3d75bb9c3d66f4f44c0586591bfa5b18e6dd8b34fe0"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/intent-fidelity-and-provenance.md",
+                              "bytes":  5293,
+                              "sha256":  "fc32d879d91c66c9f50bb8729f4f3e905542ab58047a9bbf388f0b2bb6190480"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/known-farm-parser-red-558ceef7.xml",
+                              "bytes":  5384,
+                              "sha256":  "aaec3d8111f7090813038d0f64a412287c88578698d6e1adb80c0f7eb1beba08"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/known-limitations.md",
+                              "bytes":  3997,
+                              "sha256":  "3254efb3a875085f410b80ecf63b8e6286ceeddeefa759464838e28a9a9e7d2d"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/ledger-and-result-green-2b824491.xml",
+                              "bytes":  16544,
+                              "sha256":  "12ed50aa819d43cb5a2b818c19396b806e4b6479583019d5aa18cd0917165ded"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/ledger-red-loss-green-building-red-xml-only.xml",
+                              "bytes":  23218,
+                              "sha256":  "316ce8535ec129ad902f406621585d10cb68bcebd23c198c9fa790d48f16ec8b"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/lifecycle-integration-c44ba6e1.xml",
+                              "bytes":  42270,
+                              "sha256":  "0bb91bfbd4fb34225de0074cf3a09f7bf1ad277eaa1a47935c53459ac7c2a18a"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/lifecycle-observation-green-5412842e.xml",
+                              "bytes":  40002,
+                              "sha256":  "f34e88a51394181347bb427e282a47adc358bd45f09a1a71d50f8ea9d059f64a"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/lifecycle-review-red-47355c5d.xml",
+                              "bytes":  9021,
+                              "sha256":  "42b7fa079fb1a71bebb155ad2c067231ac659b722ccf766b4f858be9bbe121a2"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/live-farm-attempt-70bcc9f7.xml",
+                              "bytes":  11088,
+                              "sha256":  "c220f3f009a9ce9b5f205cd9cca0b98b8251f8efb69d3171824567af84153642"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/live-farm-attempt-844aa71f.xml",
+                              "bytes":  5517,
+                              "sha256":  "dd10e66ab5575f060f04814c45e1447d82aea0d5e2f76c044176969c6402eafa"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/live-farm-attempt-9b6d555e.xml",
+                              "bytes":  5372,
+                              "sha256":  "2dee37e549a54b687a03ca8bf775108461e2d9ed2ceb36c281981757703751bf"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/live-farms-green-9ecf1cce.xml",
+                              "bytes":  9558,
+                              "sha256":  "0480fa693262c252581d15307112c3d01cb12ec5551ba01ab4c77db68111793c"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/live-five-attempts-1d933713.xml",
+                              "bytes":  24964,
+                              "sha256":  "7d3ad405eeb88fbee00af69bb57d9eab2f37083fafc5b09ea481d76c470172e4"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/live-new-producers-green-901016eb.xml",
+                              "bytes":  11198,
+                              "sha256":  "558385d4633711b83303451a24f71a153deb08b7e2e2e7c84b48d278b9e72dbc"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/live-three-attempts-c7cadee4.xml",
+                              "bytes":  20673,
+                              "sha256":  "8e0d23119ca517dbd433c022e1088eceae9532d803c9500d1152886f73732a4b"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/location-integration-fe07e444.xml",
+                              "bytes":  19889,
+                              "sha256":  "db2264cb0cbdccd493d9c1f3b6ad786c03ba20dc5c8cbbb371a82f028f674dbb"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/location-runtime-red-4d7cad01.xml",
+                              "bytes":  10470,
+                              "sha256":  "4c97c6dd3c206572e85da6dd50e6b773eedcee3e11a04f1c14f5aeca8f2f87fb"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/location-worker-producer-green-1872a087.xml",
+                              "bytes":  19385,
+                              "sha256":  "1529fe478d53e835d924703a284be8e094a2681e3cd5eab0ecb4f2fc4cb1eace"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/loss-cancel-red-building-fixture-36184568.xml",
+                              "bytes":  9892,
+                              "sha256":  "5ca334a608457d6ce16d3812138f613f85e9f6c08e2840cbab9120672e107166"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/native-five-green-binding-red-26559a09-callback-anomaly.xml",
+                              "bytes":  12603,
+                              "sha256":  "15db7b5451fe58285912b7749c5e9be2523b547b4637d535c8398fab037a943c"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/native-training-observation-red-e1f9cee1.xml",
+                              "bytes":  10522,
+                              "sha256":  "3c3a7c14a7c044b6500c437620db8acab34a54e5a6c54d81d05ba7fa1f2a3e3b"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/negative-constraints-green-d19006a0.xml",
+                              "bytes":  5672,
+                              "sha256":  "902d5440efc95eeaf379ff3bd5b8903937e5886edbf6cb07c1e3b5ef59c31403"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/no-construction-global-red-7e2771e0.xml",
+                              "bytes":  4812,
+                              "sha256":  "54382c120c3df0c98848ef00d101a3b5f2630644214069e284a1c9a716a55739"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/no-construction-green-7fdded11.xml",
+                              "bytes":  4224,
+                              "sha256":  "ffd0d59f92f641ff2670bbe240f08da4695297cd98f7d59675506b7baf211b48"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/no-construction-red-9a35ff31-callback-anomaly.xml",
+                              "bytes":  5097,
+                              "sha256":  "8ccb17146e85be84c4b49152c121a8648e0297432a2e275d68433ff09291a059"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/phase5a-implementation-plan.md",
+                              "bytes":  6956,
+                              "sha256":  "eefe8855e3cf17340478b9954417a37c928abdc00d4c874d5002b507a826b0ab"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/phase5a-implementation-report.md",
+                              "bytes":  17301,
+                              "sha256":  "e021841209862748397159618863aead96d8f55a88b9545b6da6add7d2f722b7"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/phase5a-specification.md",
+                              "bytes":  9962,
+                              "sha256":  "6d1aa90b4a535400a761231c2b0a684d21e653e1541c48a1837811444da6d421"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/preparation-preserve-green-337a21c9.xml",
+                              "bytes":  37948,
+                              "sha256":  "10d6a40c74ca4e62fe1087c91e52080fe24713d60edb58b0ac52ca5db575b903"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/preparation-preserve-red-caa32063.xml",
+                              "bytes":  5337,
+                              "sha256":  "0c1723ffad294edd8adacb5f9ce981fc67bff9e44529895fd5cf3ceef7b46176"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/preparation-source-dto-takeover-green-9045d7dc.xml",
+                              "bytes":  36728,
+                              "sha256":  "b57f8d69d6cb8f83972165226113b684d85d6df1aa23af539389e1768bd46616"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/preparation-source-red-28d48300.xml",
+                              "bytes":  6908,
+                              "sha256":  "ef57d3ad84905bfe3d83876939655b79dde64f10f32386e61a4433c04858f4b1"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/pre-phase5a-intent-fidelity-investigation.md",
+                              "bytes":  19659,
+                              "sha256":  "17ed559c8b04111c8ad62f2293d0c8fa4eae6a801c020cfd12a2676c56ca209b"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/primitive-catalog.md",
+                              "bytes":  4860,
+                              "sha256":  "b9fc802b91096ef7b701dc0fbbc96239039fcc0da10f9573fcc4422f87044ace"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/production-attribution-focused-87d5fcbc.xml",
+                              "bytes":  12658,
+                              "sha256":  "43a81fff7c56c5400a42542348f626456dabe06a874eab9797b43aa69303d8be"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/production-binding-count-fixture-red-b8c0d9ef.xml",
+                              "bytes":  16130,
+                              "sha256":  "5c3bf949440faafae2feb7f850e2e37fe04dd2916ca031549688ef5bb7a90da9"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/progress-source-snapshot-1872a087.json",
+                              "bytes":  10436,
+                              "sha256":  "b1d6cf8c390f32f4e0e6648ebe210fb118f8bb714aeafa3990959d96fe159cf4"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/provider-integration.md",
+                              "bytes":  3859,
+                              "sha256":  "f309b499fff6008f8b51c87b6f5596fb0d2bc251d8d3b195b04bf136c5900f33"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/provider-ui-affected-8c54109e.xml",
+                              "bytes":  68540,
+                              "sha256":  "bf4e27c0f55a388660e2251db0fa1b7db9ae366be89a49297efbda352a59e1ac"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/provider-ui-affected-green-6e680daa.xml",
+                              "bytes":  90505,
+                              "sha256":  "bae411fd21b31edfd0e7cd9ce5948bb5b44cac1ed989558fb7c3d5288ffd1ef6"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/provider-ui-integration-0f165154.xml",
+                              "bytes":  34495,
+                              "sha256":  "82d4f20dacbca1ebd0c266ac2bdb8fa61d83c207c4154b2ef25b86c1b70833fd"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/provider-ui-red-f16875d9.xml",
+                              "bytes":  31484,
+                              "sha256":  "5ee790b464c41942d9dc60e01bfd3736bb3ae412df8e503cc68ce311b365f041"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/reconciliation-playmode-evidence-2026-10-07.json",
+                              "bytes":  14598,
+                              "sha256":  "52cc53b4b67edffff30b524e7970005dd852c3add0e4f546c43c25722eb8bef6"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/refresh-source-manifest.ps1",
+                              "bytes":  7452,
+                              "sha256":  "2d4fa16528451536426b9af15aa78e6dd117a5f5890fc321b2a7a2e7ea669df0"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/request-trace-red-62c4f0f3.xml",
+                              "bytes":  5193,
+                              "sha256":  "c746339c06a45d0519c71ca8836938c95bbf5ce6ce28d5f4967fe2984d52f155"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/review-api-surface-red-c1f099bc.xml",
+                              "bytes":  4916,
+                              "sha256":  "0ecd51e722a906c4e8d4c420e148d2e7843e1f74e8d928c4444e4dc26d3f8a75"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/review-authority-red-4cfcb100.xml",
+                              "bytes":  8249,
+                              "sha256":  "55fc8f0d62347d9daf2dd36c4a8fbfdf35539eb7e3b03c3bd8dfa1efd64833c0"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/review-fixes-affected-green-946a0ffb.xml",
+                              "bytes":  49920,
+                              "sha256":  "bcf8b446a7faf14c0d1bb0a1c6cb6c1ef2090472205d9b9b3d680ab8dc93ea6b"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/shared-worker-runtime-red-f379ecdb.xml",
+                              "bytes":  6279,
+                              "sha256":  "a61d4fd8d7ad16602e3b36996a81937b5d6f439310e22030f13d1c15b3fcd9c4"
+                          },
+                          {
+                              "path":  "Docs/CommanderPhase5A/shared-workers-and-producers-green-eb7b753c.xml",
+                              "bytes":  13378,
+                              "sha256":  "bd89aa9ea0d403c7d13748798e18e483e0c19fac01a77485cdea2b884956b038"
+                          },
+                          {
+                              "path":  "remaining_work.md",
+                              "bytes":  71187,
+                              "sha256":  "a6e148419438c8bf129c9b3814b9e5d832a0e664dbfc7730056387c3a532fe5c"
+                          }
+                      ],
+    "protected_boundaries":  [
+                                 {
+                                     "path":  "Assets/Scripts/Network/CommandSerializer.cs",
+                                     "bytes":  78745,
+                                     "sha256":  "9ad46d031d792039ffa28614559aa02021245787466085d556db4a42f86a20a9",
+                                     "changed_in_phase5a":  false,
+                                     "explanation":  "Unchanged in Phase5A; pre-existing restricted economy versioned packets still require compatible peers."
+                                 },
+                                 {
+                                     "path":  "Assets/Scripts/Commands/CommandBuffer.cs",
+                                     "bytes":  1109,
+                                     "sha256":  "b226514893c7cb7eca479775cb68d1ee5e1b73450679eb26096753577a9afbbe",
+                                     "changed_in_phase5a":  false,
+                                     "explanation":  "Unchanged ordinary enqueue/dispatch authority; local observer source tags reused."
+                                 },
+                                 {
+                                     "path":  "Assets/Scripts/Commands/GatherCommand.cs",
+                                     "bytes":  671,
+                                     "sha256":  "f8f1f893dd859f19576deadffbbae711b239e506598cf5990d15697f36d95371",
+                                     "changed_in_phase5a":  false,
+                                     "explanation":  "Unchanged existing source restriction encoding and ordinary execution."
+                                 },
+                                 {
+                                     "path":  "Assets/Scripts/Commands/SlaughterSheepCommand.cs",
+                                     "bytes":  348,
+                                     "sha256":  "130024c4729fd9d0058a661efcf7a564400bd611e4e7f5ab5456ff9498ad3f50",
+                                     "changed_in_phase5a":  false,
+                                     "explanation":  "Unchanged existing source restriction encoding and ordinary execution."
+                                 },
+                                 {
+                                     "path":  "Assets/Scripts/Resources/ResourceSourceKind.cs",
+                                     "bytes":  218,
+                                     "sha256":  "6c71eb9bec53089e40303fa49dd4022059bc4c7f05d131f353ac7ae7c65a976f",
+                                     "changed_in_phase5a":  false,
+                                     "explanation":  "Unchanged native source enum; new semantic constraint is not a network enum change."
+                                 },
+                                 {
+                                     "path":  "Assets/Scripts/Resources/ResourceSourceRules.cs",
+                                     "bytes":  2467,
+                                     "sha256":  "7d6c12f62287174868444d874064100015fcb2786bf23cc2cdd06f581e2d0c99",
+                                     "changed_in_phase5a":  false,
+                                     "explanation":  "Unchanged authoritative source compatibility/classification."
+                                 },
+                                 {
+                                     "path":  "Assets/Scripts/Core/GameSimulation.cs",
+                                     "bytes":  336350,
+                                     "sha256":  "3a72e493e3407af9592e54cea12a76c557e18887f8dfc1ccfe535919bedbf0c9",
+                                     "changed_in_phase5a":  true,
+                                     "explanation":  "Changed local training/placement acceptance and original-command observation; no new wire, balance or timing policy."
+                                 },
+                                 {
+                                     "path":  "Assets/Scripts/Core/GameBootstrapper.cs",
+                                     "bytes":  27696,
+                                     "sha256":  "51ff94b2ec3e33dd503a37ac98813c14d3b29803429d291272584614aa49bac8",
+                                     "changed_in_phase5a":  true,
+                                     "explanation":  "Changed bounded local-origin correlation for relay/replay and shutdown cleanup; no network payload redesign."
+                                 },
+                                 {
+                                     "path":  "Assets/Scripts/Core/GameSimulation.TrainingObservation.cs",
+                                     "bytes":  6608,
+                                     "sha256":  "a619aca6a633ec63d9e9ae278f59a0c1e691fe08894353d6fa7926be32974bf8",
+                                     "changed_in_phase5a":  true,
+                                     "explanation":  "New local receipts/spawn/origin-loss observer; issuer-scoped cleanup and fail-closed attribution."
+                                 },
+                                 {
+                                     "path":  "Assets/Scripts/Core/CommanderCommandOriginLedger.cs",
+                                     "bytes":  9553,
+                                     "sha256":  "f78dd1e408996582a5c599104d466159480c7434262db93a6e092a2b46a04e45",
+                                     "changed_in_phase5a":  true,
+                                     "explanation":  "New bounded local owner-batch origin ledger; ambiguous attribution cannot suppress normal commands."
+                                 },
+                                 {
+                                     "path":  "Assets/Scripts/Buildings/BuildingData.cs",
+                                     "bytes":  9625,
+                                     "sha256":  "f5fd4d54e917a0684d23dbfb0a78364eb222f74c037d67a30cdfa6a9234e3a26",
+                                     "changed_in_phase5a":  true,
+                                     "explanation":  "Changed queue storage wrapper preserves integer queue/timer behavior and invalidates observational receipts on mutation."
+                                 },
+                                 {
+                                     "path":  "Assets/Scripts/Buildings/BuildingTrainingSystem.cs",
+                                     "bytes":  4035,
+                                     "sha256":  "267f4af5ba72d9fdf0d6b3ae188c9b8851f67094eb0c4ba7723c704b72fb4807",
+                                     "changed_in_phase5a":  true,
+                                     "explanation":  "Changed accepted receipt completion/cancellation observation; native training duration/queue behavior retained."
+                                 },
+                                 {
+                                     "path":  "Assets/Scripts/Buildings/TrainingQueueCollection.cs",
+                                     "bytes":  3524,
+                                     "sha256":  "486d68ba5039303577b0137febcab1fdd34feed60db21a1366d799f9026bef71",
+                                     "changed_in_phase5a":  true,
+                                     "explanation":  "New integer IList queue adapter with local receipt sidecars, no serialized provenance."
+                                 },
+                                 {
+                                     "path":  "Assets/Scripts/Buildings/TrainingOrderReceipt.cs",
+                                     "bytes":  1438,
+                                     "sha256":  "357529b151c442ac8e63f7af67588c2b06343bf40249dd333d5af3f47953a1cf",
+                                     "changed_in_phase5a":  true,
+                                     "explanation":  "New immutable native training-order identity/status observation."
+                                 }
+                             ],
+    "test_artifacts":  [
+                           {
+                               "path":  "Docs/CommanderPhase5A/authority-affected-green-29bc2d2f.xml",
+                               "bytes":  38167,
+                               "sha256":  "fffefc3f38917e669f2f0bb225b77b6e4284e4de1ecf374008d9390898a16ba0",
+                               "result":  "Passed",
+                               "total":  "29",
+                               "passed":  "29",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 13:47:41Z",
+                               "end_time":  "2026-10-06 13:48:04Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/authority-affected-red-b0c6b3b3.xml",
+                               "bytes":  39411,
+                               "sha256":  "32c38f66eb1445b623c9f3e38c0b22d1c39c8bfd3fe59354bb0a3bce2b7b65c2",
+                               "result":  "Failed(Child)",
+                               "total":  "29",
+                               "passed":  "27",
+                               "failed":  "2",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 13:41:41Z",
+                               "end_time":  "2026-10-06 13:41:49Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/authority-approval-fixture-red-7f179706.xml",
+                               "bytes":  6524,
+                               "sha256":  "28b1d3384531714076ab3833acb15808cf7c180c79c468960dc21a772bf403d1",
+                               "result":  "Failed(Child)",
+                               "total":  "2",
+                               "passed":  "1",
+                               "failed":  "1",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 13:45:58Z",
+                               "end_time":  "2026-10-06 13:46:02Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/authority-compound-affected-green-c0b915c2.xml",
+                               "bytes":  47275,
+                               "sha256":  "d936568b414082b238f51b61316abb93f211edd0fff26d52fdcc1d20b63d80fa",
+                               "result":  "Passed",
+                               "total":  "40",
+                               "passed":  "40",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 14:00:52Z",
+                               "end_time":  "2026-10-06 14:01:48Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/authority-green-2f819e83.xml",
+                               "bytes":  10422,
+                               "sha256":  "1b3a1ed634110f13b12ede972ea31cdfe83d13e1a07d1749a27aca996cca5be9",
+                               "result":  "Passed",
+                               "total":  "8",
+                               "passed":  "8",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 13:37:22Z",
+                               "end_time":  "2026-10-06 13:37:32Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/authority-play-green-2d387862.xml",
+                               "bytes":  8094,
+                               "sha256":  "a1b9059bc587e94327275824af5ed0cda2f8ab77e98132f1a9a1bd4284b799d5",
+                               "result":  "Passed",
+                               "total":  "3",
+                               "passed":  "3",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 13:40:54Z",
+                               "end_time":  "2026-10-06 13:40:55Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/authority-red-5a3d406b.xml",
+                               "bytes":  17316,
+                               "sha256":  "8dd855258c2668ba89ee16306ae00c427a6ab40b2938593296ae8a413f7b7fa9",
+                               "result":  "Failed(Child)",
+                               "total":  "8",
+                               "passed":  "1",
+                               "failed":  "7",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 13:34:29Z",
+                               "end_time":  "2026-10-06 13:34:35Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/authority-result-placement-play-green-3e85bdd1.xml",
+                               "bytes":  13358,
+                               "sha256":  "6fae8cf6b3124b5ea6b89c6386fa935498e8216b8c9be3423bd491675a84d449",
+                               "result":  "Passed",
+                               "total":  "3",
+                               "passed":  "3",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 14:03:32Z",
+                               "end_time":  "2026-10-06 14:03:33Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/canonical-adapter-provider-green-ef90681e.xml",
+                               "bytes":  62220,
+                               "sha256":  "808fd4d0712b591c189733d6e3cd333174228b5b689a1f162a6568dd01cf5442",
+                               "result":  "Passed",
+                               "total":  "47",
+                               "passed":  "47",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 22:25:21Z",
+                               "end_time":  "2026-10-06 22:25:33Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/canonical-base-unavailable-07e82a53.xml",
+                               "bytes":  5690,
+                               "sha256":  "fd9afadff77ae72da6ab7fabb9de4387d865501b1ab9a2066e8e8c2250b413bb",
+                               "result":  "Failed(Child)",
+                               "total":  "1",
+                               "passed":  "0",
+                               "failed":  "1",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 22:21:20Z",
+                               "end_time":  "2026-10-06 22:21:20Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/canonical-effective-selector-red-b5f8101c.xml",
+                               "bytes":  40747,
+                               "sha256":  "d9394c94d4bd2270458e5073799189abd8fed6aa6b33c2b21c9e79c228cd167b",
+                               "result":  "Failed(Child)",
+                               "total":  "30",
+                               "passed":  "29",
+                               "failed":  "1",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 22:22:14Z",
+                               "end_time":  "2026-10-06 22:22:25Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/canonical-preview-red-517cfb2b.xml",
+                               "bytes":  5396,
+                               "sha256":  "5c8e0374fc9e0155098efdbb762cba79505d31b2d41cb5049907f11570508528",
+                               "result":  "Failed(Child)",
+                               "total":  "1",
+                               "passed":  "0",
+                               "failed":  "1",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 22:31:08Z",
+                               "end_time":  "2026-10-06 22:31:08Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/canonical-provider-context-red-4de51bb3.xml",
+                               "bytes":  8078,
+                               "sha256":  "ea45c5fa5356b18b433dd572b9cd0fffb6dabfd4f55e04e5561159ddc7451a4c",
+                               "result":  "Failed(Child)",
+                               "total":  "1",
+                               "passed":  "0",
+                               "failed":  "1",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 20:23:30Z",
+                               "end_time":  "2026-10-06 20:23:31Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/canonical-trace-green-f4d1d5ab.xml",
+                               "bytes":  63592,
+                               "sha256":  "930e43b9ebdfc9c6cad57a2956051075757cb2a086a5a8a67ff1f7eb0a2d8d09",
+                               "result":  "Passed",
+                               "total":  "48",
+                               "passed":  "48",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 22:27:00Z",
+                               "end_time":  "2026-10-06 22:27:12Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/compiler-and-placement-red-74d8ca14.xml",
+                               "bytes":  15596,
+                               "sha256":  "c767cf47076c6898ed81490b5ed1fbe145bfcb0b7b2add072260eea24282a739",
+                               "result":  "Failed(Child)",
+                               "total":  "5",
+                               "passed":  "0",
+                               "failed":  "5",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 19:14:53Z",
+                               "end_time":  "2026-10-06 19:14:59Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/compiler-ledger-production-green-c5c53694.xml",
+                               "bytes":  28779,
+                               "sha256":  "afaa25f005a381803349f4002d9cf3458881b0b311d8c3e8976a27583d6e2811",
+                               "result":  "Passed",
+                               "total":  "22",
+                               "passed":  "22",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 19:22:13Z",
+                               "end_time":  "2026-10-06 19:22:37Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/composition-prompt-integration-087673a9.xml",
+                               "bytes":  24492,
+                               "sha256":  "d19511ca26cbf15bd6a74fca00b7f950fb023514706d66c13e525ed91e03075e",
+                               "result":  "Failed(Child)",
+                               "total":  "14",
+                               "passed":  "13",
+                               "failed":  "1",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 21:30:52Z",
+                               "end_time":  "2026-10-06 21:30:52Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/composition-prompt-red-0deea77f.xml",
+                               "bytes":  28630,
+                               "sha256":  "28f83dd15106ad6455c49edc4c126caf8b83a056796081c6f3baafeca90c6e7a",
+                               "result":  "Failed(Child)",
+                               "total":  "2",
+                               "passed":  "0",
+                               "failed":  "2",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 21:28:08Z",
+                               "end_time":  "2026-10-06 21:28:08Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/composition-provider-green-34e559cd.xml",
+                               "bytes":  22900,
+                               "sha256":  "a0e048df198f97fb2613dcafa59194409dac9fbdf25c980d174132e7d5943e9b",
+                               "result":  "Passed",
+                               "total":  "14",
+                               "passed":  "14",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 21:32:04Z",
+                               "end_time":  "2026-10-06 21:32:04Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/compound-authority-green-xml-only.xml",
+                               "bytes":  14675,
+                               "sha256":  "f4dcdf39204fe0a3ae1815b38851db31129ff31c98473497edc642e65ebfc82a",
+                               "result":  "Passed",
+                               "total":  "12",
+                               "passed":  "12",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 13:56:13Z",
+                               "end_time":  "2026-10-06 13:56:27Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/compound-consent-red-0cc43454.xml",
+                               "bytes":  9106,
+                               "sha256":  "8877db2deeb32830b6be3cc6fe2fc2e3f077ac172064114a189aa8542b0ee171",
+                               "result":  "Failed(Child)",
+                               "total":  "3",
+                               "passed":  "1",
+                               "failed":  "2",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 13:49:42Z",
+                               "end_time":  "2026-10-06 13:49:47Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/compound-manager-red-85e8059d.xml",
+                               "bytes":  4879,
+                               "sha256":  "79fbd7220d31e568c40489841b10f20b46edb83c9e6fb8cd416e332fcc50dd7c",
+                               "result":  "Failed(Child)",
+                               "total":  "1",
+                               "passed":  "0",
+                               "failed":  "1",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 13:52:47Z",
+                               "end_time":  "2026-10-06 13:52:50Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/current-source-authority-result-voice-economy-green-0cde2f04.xml",
+                               "bytes":  20448,
+                               "sha256":  "95a963e7134aa0d647e155a4f5e69f45a65790f5d84d69caebc227373090efd1",
+                               "result":  "Passed",
+                               "total":  "5",
+                               "passed":  "5",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 21:57:09Z",
+                               "end_time":  "2026-10-06 21:57:12Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/dynamic-bound-red-9ae0fa48.xml",
+                               "bytes":  5461,
+                               "sha256":  "7316a161ad76d9e91f919c9810e689ae5317e9708132b44d32de56bba5d78f53",
+                               "result":  "Failed(Child)",
+                               "total":  "2",
+                               "passed":  "1",
+                               "failed":  "1",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 17:19:32Z",
+                               "end_time":  "2026-10-06 17:19:33Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/dynamic-canonical-compiler-red-38375b85.xml",
+                               "bytes":  5786,
+                               "sha256":  "ee9fc0166f96e2882648b9331eaea6d09400fcbc42d46e3da9520a7ca7e7b3cc",
+                               "result":  "Failed(Child)",
+                               "total":  "1",
+                               "passed":  "0",
+                               "failed":  "1",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 17:41:06Z",
+                               "end_time":  "2026-10-06 17:41:07Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/dynamic-global-constraints-green-ad385b3e.xml",
+                               "bytes":  26745,
+                               "sha256":  "66d2470d01e48b69fced207d8e3ea33a6e447f8cdb9f17bef27ee19aa3e3e63c",
+                               "result":  "Passed",
+                               "total":  "16",
+                               "passed":  "16",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 21:03:34Z",
+                               "end_time":  "2026-10-06 21:03:51Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/dynamic-global-constraints-red-d5b8151b.xml",
+                               "bytes":  11758,
+                               "sha256":  "a8a7868f05466e30bc36157cd097918c8a3e967132a48dd2a977ffdbc864bfd2",
+                               "result":  "Failed(Child)",
+                               "total":  "5",
+                               "passed":  "0",
+                               "failed":  "5",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 20:59:11Z",
+                               "end_time":  "2026-10-06 20:59:13Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/dynamic-structural-bounds-green-08650c25.xml",
+                               "bytes":  11288,
+                               "sha256":  "7aedc97b241156ec35e26c95d685a088f9bfcb441beb7393ee73647150bab740",
+                               "result":  "Passed",
+                               "total":  "5",
+                               "passed":  "5",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 17:32:38Z",
+                               "end_time":  "2026-10-06 17:32:40Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/dynamic-structural-green-0bc8fab0.xml",
+                               "bytes":  9869,
+                               "sha256":  "abe1140d230c1410779b7a2c1bd1eb43c7d1ebe09a3f9c2c58e947f45152f5b7",
+                               "result":  "Passed",
+                               "total":  "3",
+                               "passed":  "3",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 17:05:55Z",
+                               "end_time":  "2026-10-06 17:05:57Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/dynamic-structural-red-22d94f9f.xml",
+                               "bytes":  12246,
+                               "sha256":  "59593253048a6f017629645a1f17528f7b20394b4bdd3a8802579dc7879d36b0",
+                               "result":  "Failed(Child)",
+                               "total":  "3",
+                               "passed":  "0",
+                               "failed":  "3",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 17:03:01Z",
+                               "end_time":  "2026-10-06 17:03:01Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/exact-producer-red-3f407237.xml",
+                               "bytes":  7174,
+                               "sha256":  "51a164b24e54470b112595d758ec98aeaf7f14e0a1aa11e680319a79b25af9eb",
+                               "result":  "Failed(Child)",
+                               "total":  "2",
+                               "passed":  "0",
+                               "failed":  "2",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 19:13:32Z",
+                               "end_time":  "2026-10-06 19:13:35Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/farm-parser-provider-green-25d8cb86.xml",
+                               "bytes":  38556,
+                               "sha256":  "df75480735a7daf406cd9564473a85a6ada5d6a21e919088dc8cc7adffb511ef",
+                               "result":  "Passed",
+                               "total":  "26",
+                               "passed":  "26",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 21:19:48Z",
+                               "end_time":  "2026-10-06 21:19:53Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/farm-vocabulary-provider-green-e1610198.xml",
+                               "bytes":  22102,
+                               "sha256":  "268ce1cc5c00f08b791994dae678f4a5ec4c51b282ba0eccbb2ec70ee32e175a",
+                               "result":  "Passed",
+                               "total":  "13",
+                               "passed":  "13",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 21:14:53Z",
+                               "end_time":  "2026-10-06 21:14:58Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/farm-vocabulary-red-e8c42b54.xml",
+                               "bytes":  5506,
+                               "sha256":  "33de17415561b1a9a28497251acf4238f525717ee881c19b6ce8ddd0fb81424b",
+                               "result":  "Failed(Child)",
+                               "total":  "1",
+                               "passed":  "0",
+                               "failed":  "1",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 21:12:57Z",
+                               "end_time":  "2026-10-06 21:12:59Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/final-focused-edit-green-866e8777.xml",
+                               "bytes":  63594,
+                               "sha256":  "7e219824024bc25d418334105e47749e828a20edec50884f049b8a9f18cfc1b6",
+                               "result":  "Passed",
+                               "total":  "48",
+                               "passed":  "48",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 22:31:44Z",
+                               "end_time":  "2026-10-06 22:31:56Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/final-focused-play-green-8d930473.xml",
+                               "bytes":  20446,
+                               "sha256":  "9ed7f4414dda879c8c217baa579a77a4cef0bca5c76203b943f376e1c78c0549",
+                               "result":  "Passed",
+                               "total":  "5",
+                               "passed":  "5",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 22:19:26Z",
+                               "end_time":  "2026-10-06 22:19:29Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/final-source-play-green-3284c57a.xml",
+                               "bytes":  20449,
+                               "sha256":  "052c141d13e920d1961810f448904a5f7310e3826b055082933fe582bbb635ad",
+                               "result":  "Passed",
+                               "total":  "5",
+                               "passed":  "5",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 22:32:38Z",
+                               "end_time":  "2026-10-06 22:32:42Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/four-constraints-red-xml-only.xml",
+                               "bytes":  4884,
+                               "sha256":  "e29a2037e06dec95bd0ed6a0423b84db12fec50e0d15015b9ea783aa6b36a0f1",
+                               "result":  "Failed(Child)",
+                               "total":  "1",
+                               "passed":  "0",
+                               "failed":  "1",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 15:13:30Z",
+                               "end_time":  "2026-10-06 15:13:32Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/grounded-scope-and-preview-green-661922eb.xml",
+                               "bytes":  11860,
+                               "sha256":  "7c0f726c639312c137cf029bd3c3a6a16380cc79ef2ac16c59a94988eab3c3ed",
+                               "result":  "Passed",
+                               "total":  "9",
+                               "passed":  "9",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 20:00:32Z",
+                               "end_time":  "2026-10-06 20:00:42Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/grounded-scope-and-preview-red-4c665ea8.xml",
+                               "bytes":  18143,
+                               "sha256":  "25a5c3733ad1ca3ac11fcd068b39560176a63791455b6ca1de9dd4764b642792",
+                               "result":  "Failed(Child)",
+                               "total":  "6",
+                               "passed":  "0",
+                               "failed":  "6",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 19:58:55Z",
+                               "end_time":  "2026-10-06 19:59:03Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/known-farm-parser-red-558ceef7.xml",
+                               "bytes":  5384,
+                               "sha256":  "aaec3d8111f7090813038d0f64a412287c88578698d6e1adb80c0f7eb1beba08",
+                               "result":  "Failed(Child)",
+                               "total":  "1",
+                               "passed":  "0",
+                               "failed":  "1",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 21:18:43Z",
+                               "end_time":  "2026-10-06 21:18:43Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/ledger-and-result-green-2b824491.xml",
+                               "bytes":  16544,
+                               "sha256":  "12ed50aa819d43cb5a2b818c19396b806e4b6479583019d5aa18cd0917165ded",
+                               "result":  "Passed",
+                               "total":  "14",
+                               "passed":  "14",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 19:09:02Z",
+                               "end_time":  "2026-10-06 19:09:18Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/ledger-red-loss-green-building-red-xml-only.xml",
+                               "bytes":  23218,
+                               "sha256":  "316ce8535ec129ad902f406621585d10cb68bcebd23c198c9fa790d48f16ec8b",
+                               "result":  "Failed(Child)",
+                               "total":  "14",
+                               "passed":  "2",
+                               "failed":  "12",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 18:57:03Z",
+                               "end_time":  "2026-10-06 18:57:19Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/lifecycle-integration-c44ba6e1.xml",
+                               "bytes":  42270,
+                               "sha256":  "0bb91bfbd4fb34225de0074cf3a09f7bf1ad277eaa1a47935c53459ac7c2a18a",
+                               "result":  "Failed(Child)",
+                               "total":  "32",
+                               "passed":  "31",
+                               "failed":  "1",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 21:42:52Z",
+                               "end_time":  "2026-10-06 21:43:04Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/lifecycle-observation-green-5412842e.xml",
+                               "bytes":  40002,
+                               "sha256":  "f34e88a51394181347bb427e282a47adc358bd45f09a1a71d50f8ea9d059f64a",
+                               "result":  "Passed",
+                               "total":  "32",
+                               "passed":  "32",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 21:44:54Z",
+                               "end_time":  "2026-10-06 21:45:05Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/lifecycle-review-red-47355c5d.xml",
+                               "bytes":  9021,
+                               "sha256":  "42b7fa079fb1a71bebb155ad2c067231ac659b722ccf766b4f858be9bbe121a2",
+                               "result":  "Failed(Child)",
+                               "total":  "4",
+                               "passed":  "1",
+                               "failed":  "3",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 21:41:18Z",
+                               "end_time":  "2026-10-06 21:41:20Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/live-farm-attempt-70bcc9f7.xml",
+                               "bytes":  11088,
+                               "sha256":  "c220f3f009a9ce9b5f205cd9cca0b98b8251f8efb69d3171824567af84153642",
+                               "result":  "Failed(Child)",
+                               "total":  "1",
+                               "passed":  "0",
+                               "failed":  "1",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 21:10:08Z",
+                               "end_time":  "2026-10-06 21:10:15Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/live-farm-attempt-844aa71f.xml",
+                               "bytes":  5517,
+                               "sha256":  "dd10e66ab5575f060f04814c45e1447d82aea0d5e2f76c044176969c6402eafa",
+                               "result":  "Failed(Child)",
+                               "total":  "1",
+                               "passed":  "0",
+                               "failed":  "1",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 21:05:27Z",
+                               "end_time":  "2026-10-06 21:05:31Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/live-farm-attempt-9b6d555e.xml",
+                               "bytes":  5372,
+                               "sha256":  "2dee37e549a54b687a03ca8bf775108461e2d9ed2ceb36c281981757703751bf",
+                               "result":  "Failed(Child)",
+                               "total":  "1",
+                               "passed":  "0",
+                               "failed":  "1",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 21:16:39Z",
+                               "end_time":  "2026-10-06 21:16:43Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/live-farms-green-9ecf1cce.xml",
+                               "bytes":  9558,
+                               "sha256":  "0480fa693262c252581d15307112c3d01cb12ec5551ba01ab4c77db68111793c",
+                               "result":  "Passed",
+                               "total":  "1",
+                               "passed":  "1",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 21:20:26Z",
+                               "end_time":  "2026-10-06 21:20:42Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/live-five-attempts-1d933713.xml",
+                               "bytes":  24964,
+                               "sha256":  "7d3ad405eeb88fbee00af69bb57d9eab2f37083fafc5b09ea481d76c470172e4",
+                               "result":  "Failed(Child)",
+                               "total":  "5",
+                               "passed":  "2",
+                               "failed":  "3",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 21:21:40Z",
+                               "end_time":  "2026-10-06 21:21:53Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/live-new-producers-green-901016eb.xml",
+                               "bytes":  11198,
+                               "sha256":  "558385d4633711b83303451a24f71a153deb08b7e2e2e7c84b48d278b9e72dbc",
+                               "result":  "Passed",
+                               "total":  "1",
+                               "passed":  "1",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 21:34:58Z",
+                               "end_time":  "2026-10-06 21:35:04Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/live-three-attempts-c7cadee4.xml",
+                               "bytes":  20673,
+                               "sha256":  "8e0d23119ca517dbd433c022e1088eceae9532d803c9500d1152886f73732a4b",
+                               "result":  "Failed(Child)",
+                               "total":  "3",
+                               "passed":  "2",
+                               "failed":  "1",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 21:32:33Z",
+                               "end_time":  "2026-10-06 21:32:58Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/location-integration-fe07e444.xml",
+                               "bytes":  19889,
+                               "sha256":  "db2264cb0cbdccd493d9c1f3b6ad786c03ba20dc5c8cbbb371a82f028f674dbb",
+                               "result":  "Failed(Child)",
+                               "total":  "10",
+                               "passed":  "8",
+                               "failed":  "2",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 19:41:14Z",
+                               "end_time":  "2026-10-06 19:41:26Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/location-runtime-red-4d7cad01.xml",
+                               "bytes":  10470,
+                               "sha256":  "4c97c6dd3c206572e85da6dd50e6b773eedcee3e11a04f1c14f5aeca8f2f87fb",
+                               "result":  "Failed(Child)",
+                               "total":  "3",
+                               "passed":  "0",
+                               "failed":  "3",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 19:33:57Z",
+                               "end_time":  "2026-10-06 19:34:01Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/location-worker-producer-green-1872a087.xml",
+                               "bytes":  19385,
+                               "sha256":  "1529fe478d53e835d924703a284be8e094a2681e3cd5eab0ecb4f2fc4cb1eace",
+                               "result":  "Passed",
+                               "total":  "10",
+                               "passed":  "10",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 19:50:59Z",
+                               "end_time":  "2026-10-06 19:51:11Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/loss-cancel-red-building-fixture-36184568.xml",
+                               "bytes":  9892,
+                               "sha256":  "5ca334a608457d6ce16d3812138f613f85e9f6c08e2840cbab9120672e107166",
+                               "result":  "Failed(Child)",
+                               "total":  "3",
+                               "passed":  "0",
+                               "failed":  "3",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 18:35:13Z",
+                               "end_time":  "2026-10-06 18:35:17Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/native-five-green-binding-red-26559a09-callback-anomaly.xml",
+                               "bytes":  12603,
+                               "sha256":  "15db7b5451fe58285912b7749c5e9be2523b547b4637d535c8398fab037a943c",
+                               "result":  "Failed(Child)",
+                               "total":  "6",
+                               "passed":  "5",
+                               "failed":  "1",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 17:55:00Z",
+                               "end_time":  "2026-10-06 17:55:02Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/native-training-observation-red-e1f9cee1.xml",
+                               "bytes":  10522,
+                               "sha256":  "3c3a7c14a7c044b6500c437620db8acab34a54e5a6c54d81d05ba7fa1f2a3e3b",
+                               "result":  "Failed(Child)",
+                               "total":  "5",
+                               "passed":  "0",
+                               "failed":  "5",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 17:43:34Z",
+                               "end_time":  "2026-10-06 17:43:35Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/negative-constraints-green-d19006a0.xml",
+                               "bytes":  5672,
+                               "sha256":  "902d5440efc95eeaf379ff3bd5b8903937e5886edbf6cb07c1e3b5ef59c31403",
+                               "result":  "Passed",
+                               "total":  "3",
+                               "passed":  "3",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 15:24:59Z",
+                               "end_time":  "2026-10-06 15:25:04Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/no-construction-global-red-7e2771e0.xml",
+                               "bytes":  4812,
+                               "sha256":  "54382c120c3df0c98848ef00d101a3b5f2630644214069e284a1c9a716a55739",
+                               "result":  "Failed(Child)",
+                               "total":  "1",
+                               "passed":  "0",
+                               "failed":  "1",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 15:00:36Z",
+                               "end_time":  "2026-10-06 15:00:38Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/no-construction-green-7fdded11.xml",
+                               "bytes":  4224,
+                               "sha256":  "ffd0d59f92f641ff2670bbe240f08da4695297cd98f7d59675506b7baf211b48",
+                               "result":  "Passed",
+                               "total":  "1",
+                               "passed":  "1",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 14:57:53Z",
+                               "end_time":  "2026-10-06 14:57:56Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/no-construction-red-9a35ff31-callback-anomaly.xml",
+                               "bytes":  5097,
+                               "sha256":  "8ccb17146e85be84c4b49152c121a8648e0297432a2e275d68433ff09291a059",
+                               "result":  "Failed(Child)",
+                               "total":  "1",
+                               "passed":  "0",
+                               "failed":  "1",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 14:51:48Z",
+                               "end_time":  "2026-10-06 14:51:51Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/preparation-preserve-green-337a21c9.xml",
+                               "bytes":  37948,
+                               "sha256":  "10d6a40c74ca4e62fe1087c91e52080fe24713d60edb58b0ac52ca5db575b903",
+                               "result":  "Passed",
+                               "total":  "29",
+                               "passed":  "29",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 22:18:35Z",
+                               "end_time":  "2026-10-06 22:18:46Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/preparation-preserve-red-caa32063.xml",
+                               "bytes":  5337,
+                               "sha256":  "0c1723ffad294edd8adacb5f9ce981fc67bff9e44529895fd5cf3ceef7b46176",
+                               "result":  "Failed(Child)",
+                               "total":  "1",
+                               "passed":  "0",
+                               "failed":  "1",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 22:18:06Z",
+                               "end_time":  "2026-10-06 22:18:06Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/preparation-source-dto-takeover-green-9045d7dc.xml",
+                               "bytes":  36728,
+                               "sha256":  "b57f8d69d6cb8f83972165226113b684d85d6df1aa23af539389e1768bd46616",
+                               "result":  "Passed",
+                               "total":  "28",
+                               "passed":  "28",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 22:07:15Z",
+                               "end_time":  "2026-10-06 22:07:25Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/preparation-source-red-28d48300.xml",
+                               "bytes":  6908,
+                               "sha256":  "ef57d3ad84905bfe3d83876939655b79dde64f10f32386e61a4433c04858f4b1",
+                               "result":  "Failed(Child)",
+                               "total":  "2",
+                               "passed":  "0",
+                               "failed":  "2",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 21:58:37Z",
+                               "end_time":  "2026-10-06 21:58:38Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/production-attribution-focused-87d5fcbc.xml",
+                               "bytes":  12658,
+                               "sha256":  "43a81fff7c56c5400a42542348f626456dabe06a874eab9797b43aa69303d8be",
+                               "result":  "Passed",
+                               "total":  "6",
+                               "passed":  "6",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 18:04:13Z",
+                               "end_time":  "2026-10-06 18:04:14Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/production-binding-count-fixture-red-b8c0d9ef.xml",
+                               "bytes":  16130,
+                               "sha256":  "5c3bf949440faafae2feb7f850e2e37fe04dd2916ca031549688ef5bb7a90da9",
+                               "result":  "Failed(Child)",
+                               "total":  "7",
+                               "passed":  "6",
+                               "failed":  "1",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 18:02:17Z",
+                               "end_time":  "2026-10-06 18:02:19Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/provider-ui-affected-8c54109e.xml",
+                               "bytes":  68540,
+                               "sha256":  "bf4e27c0f55a388660e2251db0fa1b7db9ae366be89a49297efbda352a59e1ac",
+                               "result":  "Failed(Child)",
+                               "total":  "56",
+                               "passed":  "55",
+                               "failed":  "1",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 20:39:34Z",
+                               "end_time":  "2026-10-06 20:40:07Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/provider-ui-affected-green-6e680daa.xml",
+                               "bytes":  90505,
+                               "sha256":  "bae411fd21b31edfd0e7cd9ce5948bb5b44cac1ed989558fb7c3d5288ffd1ef6",
+                               "result":  "Passed",
+                               "total":  "79",
+                               "passed":  "79",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 20:44:52Z",
+                               "end_time":  "2026-10-06 20:45:56Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/provider-ui-integration-0f165154.xml",
+                               "bytes":  34495,
+                               "sha256":  "82d4f20dacbca1ebd0c266ac2bdb8fa61d83c207c4154b2ef25b86c1b70833fd",
+                               "result":  "Failed(Child)",
+                               "total":  "22",
+                               "passed":  "20",
+                               "failed":  "2",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 20:31:49Z",
+                               "end_time":  "2026-10-06 20:32:05Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/provider-ui-red-f16875d9.xml",
+                               "bytes":  31484,
+                               "sha256":  "5ee790b464c41942d9dc60e01bfd3736bb3ae412df8e503cc68ce311b365f041",
+                               "result":  "Failed(Child)",
+                               "total":  "15",
+                               "passed":  "8",
+                               "failed":  "7",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 20:10:13Z",
+                               "end_time":  "2026-10-06 20:10:22Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/request-trace-red-62c4f0f3.xml",
+                               "bytes":  5193,
+                               "sha256":  "c746339c06a45d0519c71ca8836938c95bbf5ce6ce28d5f4967fe2984d52f155",
+                               "result":  "Failed(Child)",
+                               "total":  "1",
+                               "passed":  "0",
+                               "failed":  "1",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 22:26:11Z",
+                               "end_time":  "2026-10-06 22:26:12Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/review-api-surface-red-c1f099bc.xml",
+                               "bytes":  4916,
+                               "sha256":  "0ecd51e722a906c4e8d4c420e148d2e7843e1f74e8d928c4444e4dc26d3f8a75",
+                               "result":  "Failed(Child)",
+                               "total":  "1",
+                               "passed":  "0",
+                               "failed":  "1",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 14:44:16Z",
+                               "end_time":  "2026-10-06 14:44:18Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/review-authority-red-4cfcb100.xml",
+                               "bytes":  8249,
+                               "sha256":  "55fc8f0d62347d9daf2dd36c4a8fbfdf35539eb7e3b03c3bd8dfa1efd64833c0",
+                               "result":  "Failed(Child)",
+                               "total":  "2",
+                               "passed":  "0",
+                               "failed":  "2",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 14:42:36Z",
+                               "end_time":  "2026-10-06 14:42:43Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/review-fixes-affected-green-946a0ffb.xml",
+                               "bytes":  49920,
+                               "sha256":  "bcf8b446a7faf14c0d1bb0a1c6cb6c1ef2090472205d9b9b3d680ab8dc93ea6b",
+                               "result":  "Passed",
+                               "total":  "43",
+                               "passed":  "43",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 14:46:41Z",
+                               "end_time":  "2026-10-06 14:47:32Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/shared-worker-runtime-red-f379ecdb.xml",
+                               "bytes":  6279,
+                               "sha256":  "a61d4fd8d7ad16602e3b36996a81937b5d6f439310e22030f13d1c15b3fcd9c4",
+                               "result":  "Failed(Child)",
+                               "total":  "2",
+                               "passed":  "0",
+                               "failed":  "2",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 19:29:11Z",
+                               "end_time":  "2026-10-06 19:29:15Z"
+                           },
+                           {
+                               "path":  "Docs/CommanderPhase5A/shared-workers-and-producers-green-eb7b753c.xml",
+                               "bytes":  13378,
+                               "sha256":  "bd89aa9ea0d403c7d13748798e18e483e0c19fac01a77485cdea2b884956b038",
+                               "result":  "Passed",
+                               "total":  "7",
+                               "passed":  "7",
+                               "failed":  "0",
+                               "skipped":  "0",
+                               "start_time":  "2026-10-06 19:31:12Z",
+                               "end_time":  "2026-10-06 19:31:21Z"
+                           }
+                       ],
+    "exclusions":  [
+                       "Credentials/environment contents are never read or recorded.",
+                       "Manifest excludes its own hash to avoid recursion.",
+                       "Initial historical investigation and accepted phase records remain historical.",
+                       "Unrelated ignored/generated workspace files are not included.",
+                       "The hash snapshot identifies bytes; it is not full regression certification."
+                   ]
+}

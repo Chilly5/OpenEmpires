@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 21:58:37Z" end-time="2026-10-06 21:58:38Z" duration="0.8324261">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1091" result="Failed" site="Child" start-time="2026-10-06 21:58:37Z" end-time="2026-10-06 21:58:38Z" duration="0.832426" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2240" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1091" result="Failed" site="Child" start-time="2026-10-06 21:58:37Z" end-time="2026-10-06 21:58:38Z" duration="0.813219" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="1780" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2241" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1091" result="Failed" site="Child" start-time="2026-10-06 21:58:37Z" end-time="2026-10-06 21:58:38Z" duration="0.812293" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2242" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1091" result="Failed" site="Child" start-time="2026-10-06 21:58:37Z" end-time="2026-10-06 21:58:38Z" duration="0.811709" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="2139" name="CommanderPhase5ADynamicRuntimeTests" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" testcasecount="16" result="Failed" site="Child" start-time="2026-10-06 21:58:37Z" end-time="2026-10-06 21:58:38Z" duration="0.810565" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="ParameterizedMethod" id="2142" name="ProductionFoodSourceRestriction_UsesOnlySheepOrReportsBlocker" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.ProductionFoodSourceRestriction_UsesOnlySheepOrReportsBlocker" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-06 21:58:37Z" end-time="2026-10-06 21:58:38Z" duration="0.805710" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="2140" name="ProductionFoodSourceRestriction_UsesOnlySheepOrReportsBlocker(False)" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.ProductionFoodSourceRestriction_UsesOnlySheepOrReportsBlocker(False)" methodname="ProductionFoodSourceRestriction_UsesOnlySheepOrReportsBlocker" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" seed="210228247" result="Failed" start-time="2026-10-06 21:58:37Z" end-time="2026-10-06 21:58:37Z" duration="0.435171" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  I couldn't understand that request safely.
+  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.ProductionFoodSourceRestriction_UsesOnlySheepOrReportsBlocker (System.Boolean sheepAvailable) [0x00115] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ADynamicRuntimeTests.cs:25
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="2141" name="ProductionFoodSourceRestriction_UsesOnlySheepOrReportsBlocker(True)" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.ProductionFoodSourceRestriction_UsesOnlySheepOrReportsBlocker(True)" methodname="ProductionFoodSourceRestriction_UsesOnlySheepOrReportsBlocker" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" seed="893393361" result="Failed" start-time="2026-10-06 21:58:37Z" end-time="2026-10-06 21:58:38Z" duration="0.357308" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  I couldn't understand that request safely.
+  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.ProductionFoodSourceRestriction_UsesOnlySheepOrReportsBlocker (System.Boolean sheepAvailable) [0x00115] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ADynamicRuntimeTests.cs:25
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -131,7 +131,7 @@ namespace OpenEmpires
             ContextUpdated?.Invoke(LastContext);
             LastRecommendations = evaluator.Evaluate(LastContext) ?? EmptyRecommendations;
             LastDecision = decisionPolicy.Decide(LastContext, LastRecommendations, playerIntent);
-            if (playerIntent == null && LastDecision.HasSelection)
+            if (playerIntent == null && LastDecision.HasSelection && strategicPlanner.HasComputerOwner)
                 LastDecision = StrategicDecisionResult.Selected(
                     strategicPlanner.MaterializeRecommendation(LastDecision.SelectedIntent),
                     LastDecision.SourceRecommendation, LastDecision.CreatedTick,
@@ -143,6 +143,13 @@ namespace OpenEmpires
             string outcome = LastDecision.Reason;
             if (LastDecision.HasSelection)
             {
+                if (!strategicPlanner.CanCommitIntent(LastDecision.SelectedIntent, out string authorityReason))
+                {
+                    transitionAllowed = false;
+                    outcome = authorityReason;
+                }
+                else
+                {
                 bool isEmergency = triggerType == StrategicEvaluationTriggerType.Emergency
                     || LastDecision.PriorityLevel == StrategicPriorityLevel.Emergency;
                 bool isPlayerOverride = playerIntent != null
@@ -160,6 +167,7 @@ namespace OpenEmpires
                 else
                 {
                     outcome = $"{LastDecision.Reason} Transition blocked: {transitionReason}";
+                }
                 }
             }
 
@@ -184,6 +192,8 @@ namespace OpenEmpires
                 fresh = StrategicApprovalResult.Reject(approval?.Reason ?? "Strategic approval is required.");
             else if (!strategicPlanner.IntentIds.Owns(approval.Intent))
                 fresh = StrategicApprovalResult.Reject("Strategic intent identity is not owned by this Commander.");
+            else if (!strategicPlanner.CanCommitIntent(approval.Intent, out string authorityReason))
+                fresh = StrategicApprovalResult.Reject(authorityReason);
             else
                 fresh = new StrategicApprovalLayer().Evaluate(LastContext, approval.Intent, approval.Intent.Source);
 

@@ -36,7 +36,9 @@ namespace OpenEmpires
     {
         ProtectedResource,
         PreferredWorkers,
-        MaximumQueue
+        MaximumQueue,
+        NoConstruction,
+        ResourceSource
     }
 
     public enum CommanderPreferredWorkerSource
@@ -96,6 +98,19 @@ namespace OpenEmpires
         }
     }
 
+    public sealed class NoConstructionConstraint : CommanderConstraint
+    {
+        public NoConstructionConstraint() : base(CommanderConstraintType.NoConstruction) { }
+    }
+
+    public sealed class ResourceSourceConstraint : CommanderConstraint
+    {
+        public ResourceType Resource { get; }
+        public ResourceSourceKind SourceKind { get; }
+        public ResourceSourceConstraint(ResourceType resource, ResourceSourceKind sourceKind)
+            : base(CommanderConstraintType.ResourceSource) { Resource = resource; SourceKind = sourceKind; }
+    }
+
     public abstract class CommanderIntent : ICommanderIntentRequest
     {
         private readonly List<CommanderConstraint> constraints;
@@ -103,7 +118,7 @@ namespace OpenEmpires
         public CommanderIntentType Type { get; }
         public int PlayerId { get; }
         public CommanderIntentLayer IntentLayer => CommanderIntentLayer.Tactical;
-        public IReadOnlyList<CommanderConstraint> Constraints => constraints;
+        public IReadOnlyList<CommanderConstraint> Constraints => constraints.AsReadOnly();
 
         protected CommanderIntent(CommanderIntentType type, int playerId,
             IEnumerable<CommanderConstraint> constraints = null)
@@ -120,13 +135,17 @@ namespace OpenEmpires
     {
         public int UnitType { get; }
         public int TargetTotal { get; }
+        internal int? NewProductionCount { get; }
 
         public EnsureUnitCountIntent(int playerId, int unitType, int targetTotal,
-            IEnumerable<CommanderConstraint> constraints = null)
+            IEnumerable<CommanderConstraint> constraints = null, int? newProductionCount = null)
             : base(CommanderIntentType.EnsureUnitCount, playerId, constraints)
         {
             UnitType = unitType;
             TargetTotal = targetTotal;
+            if (newProductionCount.HasValue && (newProductionCount.Value < 1 || newProductionCount.Value > 200))
+                throw new ArgumentOutOfRangeException(nameof(newProductionCount));
+            NewProductionCount = newProductionCount;
         }
     }
 

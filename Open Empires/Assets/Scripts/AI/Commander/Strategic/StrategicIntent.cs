@@ -34,6 +34,18 @@ namespace OpenEmpires
         public int CreatedTick { get; }
         public StrategicIntentSource Source { get; }
         internal bool NeedsPlayerIdentity { get; private set; }
+        // A descriptive source is not consent. Only game-owned input/approval paths
+        // mint this credential, bound to their runtime identity owner.
+        internal StrategicIntentIdProvider AuthorizationOwner { get; private set; }
+        internal string AuthorizationEvidence { get; private set; }
+        internal void Authorize(StrategicIntentIdProvider owner, string evidence)
+        {
+            if (owner == null || !owner.Owns(this) || Status != StrategicIntentStatus.Created
+                || string.IsNullOrEmpty(evidence))
+                throw new InvalidOperationException("A current owned strategic request is required.");
+            AuthorizationOwner = owner;
+            AuthorizationEvidence = evidence;
+        }
         public IReadOnlyDictionary<string, string> Parameters => parameters;
         public int? Priority { get; }
         public StrategicIntentStatus Status { get; internal set; }

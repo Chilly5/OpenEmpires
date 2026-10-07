@@ -89,12 +89,32 @@ namespace OpenEmpires.Tests
         [Test]
         public void StrategicPipeline_SubmitsAllowedIntent()
         {
+            // For human player: background evaluation creates advisory only; no active plan.
             pipeline.EvaluateNow(StrategicEvaluationTriggerType.StrategicEvent);
 
-            Assert.That(pipeline.LastSubmission.CreatedPlan, Is.True);
-            Assert.That(strategicPlanner.ActivePlans, Has.Count.EqualTo(1));
-            Assert.That(pipeline.DecisionHistory.History.Single().Submission,
-                Is.SameAs(pipeline.LastSubmission));
+            Assert.That(pipeline.LastSubmission, Is.Null);
+            Assert.That(strategicPlanner.ActivePlans, Is.Empty);
+            Assert.That(pipeline.DecisionHistory.History.Single().TransitionAllowed, Is.False);
+            StringAssert.Contains("suggested strategy — not started",
+                pipeline.DecisionHistory.History.Single().Outcome.ToLowerInvariant());
+
+            // Companion: For an explicitly simulation-controlled AI owner, autonomous submission creates plan.
+            var aiSim = new GameSimulation(config, 2, Array.Empty<int>(), new[] { 0, 1 });
+            aiSim.SetPlayerCivilizations(new[] { Civilization.French, Civilization.French });
+            aiSim.CreateBuilding(0, BuildingType.TownCenter, x + 12, z, false, true).AutoProduceVillagers = false;
+            aiSim.ResourceManager.GetPlayerResources(0).Food = 5000;
+            aiSim.ResourceManager.GetPlayerResources(0).Wood = 5000;
+            aiSim.ResourceManager.GetPlayerResources(0).Gold = 5000;
+            aiSim.ResourceManager.GetPlayerResources(0).Stone = 5000;
+            using var aiGoals = new CommanderGoalManager(aiSim, 0);
+            using var aiPlanner = new StrategicPlanner(aiGoals, CurrentResourceAmount);
+            using var aiPipeline = new StrategicPipeline(aiSim, aiGoals, aiPlanner);
+
+            aiPipeline.EvaluateNow(StrategicEvaluationTriggerType.StrategicEvent);
+            Assert.That(aiPipeline.LastSubmission?.CreatedPlan, Is.True);
+            Assert.That(aiPlanner.ActivePlans, Has.Count.EqualTo(1));
+            Assert.That(aiPipeline.DecisionHistory.History.Single().Submission,
+                Is.SameAs(aiPipeline.LastSubmission));
         }
 
         [Test]
@@ -104,6 +124,7 @@ namespace OpenEmpires.Tests
                 StrategicObjectiveType.AttackPreparation).Plan;
             ReplacePipeline(new FixedEvaluator(StrategicObjectiveType.MilitaryReinforcement));
 
+            // Background recommendation cannot commit on human player without consent.
             StrategicDecisionRecord record = pipeline.EvaluateNow(
                 StrategicEvaluationTriggerType.StrategicEvent);
 
@@ -111,16 +132,24 @@ namespace OpenEmpires.Tests
             Assert.That(record.TransitionAllowed, Is.False);
             Assert.That(pipeline.LastSubmission, Is.Null);
             Assert.That(strategicPlanner.ActivePlans, Has.Count.EqualTo(1));
-            StringAssert.Contains("blocked", record.Outcome.ToLowerInvariant());
+            StringAssert.Contains("suggested strategy — not started", record.Outcome.ToLowerInvariant());
         }
 
         [Test]
         public void StrategicPipeline_DoesNotCreateCommandsDirectly()
         {
+            // Background evaluation on human slot does not start plans or commands.
             pipeline.EvaluateNow(StrategicEvaluationTriggerType.StrategicEvent);
 
             Assert.That(sim.CommandBuffer.FlushCommands(), Is.Empty);
+            Assert.That(strategicPlanner.ActivePlans, Is.Empty);
+
+            // Even when an active plan is running, pipeline evaluation does not issue commands directly.
+            strategicPlanner.SubmitIntent(StrategicObjectiveType.AttackPreparation);
             Assert.That(strategicPlanner.ActivePlans, Is.Not.Empty);
+
+            pipeline.EvaluateNow(StrategicEvaluationTriggerType.StrategicEvent);
+            Assert.That(sim.CommandBuffer.FlushCommands(), Is.Empty);
         }
 
         [Test]
@@ -273,8 +302,8 @@ namespace OpenEmpires.Tests
         public void EmergencyOverridesCommitment()
         {
             strategicPlanner.SubmitIntent(StrategicObjectiveType.AttackPreparation);
-            var defense = new StrategicIntent(2, 0,
-                StrategicObjectiveType.DefensivePreparation, 0);
+            var defense = strategicPlanner.CreateIntent(
+                StrategicObjectiveType.DefensivePreparation);
 
             StrategicIntentSubmission allowed = strategicPlanner.SubmitIntent(
                 defense, isEmergency: true, isPlayerOverride: false);
@@ -286,8 +315,8 @@ namespace OpenEmpires.Tests
         public void PlayerOverrideBypassesCommitment()
         {
             strategicPlanner.SubmitIntent(StrategicObjectiveType.AttackPreparation);
-            var reinforcement = new StrategicIntent(2, 0,
-                StrategicObjectiveType.MilitaryReinforcement, 0);
+            var reinforcement = strategicPlanner.CreateIntent(
+                StrategicObjectiveType.MilitaryReinforcement);
 
             StrategicIntentSubmission allowed = strategicPlanner.SubmitIntent(
                 reinforcement, isEmergency: false, isPlayerOverride: true);
@@ -375,8 +404,7 @@ namespace OpenEmpires.Tests
             for (int i = 0; i < StrategicPlanner.MaxArchivedPlans + 5; i++)
             {
                 StrategicIntentSubmission submission = strategicPlanner.SubmitIntent(
-                    new StrategicIntent(i + 1, 0,
-                        StrategicObjectiveType.AttackPreparation, 0),
+                    strategicPlanner.CreateIntent(StrategicObjectiveType.AttackPreparation),
                     isEmergency: false, isPlayerOverride: true);
                 strategicPlanner.CompleteMilestoneAndAdvance(submission.Plan.StrategicPlanId);
                 strategicPlanner.CancelPlan(submission.Plan.StrategicPlanId);
@@ -399,8 +427,7 @@ namespace OpenEmpires.Tests
             for (int i = 0; i < 7; i++)
             {
                 StrategicIntentSubmission submission = strategicPlanner.SubmitIntent(
-                    new StrategicIntent(i + 1, 0,
-                        StrategicObjectiveType.DefensivePreparation, 0),
+                    strategicPlanner.CreateIntent(StrategicObjectiveType.DefensivePreparation),
                     isEmergency: false, isPlayerOverride: true);
                 strategicPlanner.CompleteMilestoneAndAdvance(submission.Plan.StrategicPlanId);
                 strategicPlanner.CancelPlan(submission.Plan.StrategicPlanId);

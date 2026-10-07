@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="7" result="Failed(Child)" total="7" passed="6" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 18:02:17Z" end-time="2026-10-06 18:02:19Z" duration="1.8823645">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1029" result="Failed" site="Child" start-time="2026-10-06 18:02:17Z" end-time="2026-10-06 18:02:19Z" duration="1.882365" total="7" passed="6" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2164" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1029" result="Failed" site="Child" start-time="2026-10-06 18:02:17Z" end-time="2026-10-06 18:02:19Z" duration="1.874868" total="7" passed="6" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="1780" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2165" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1029" result="Failed" site="Child" start-time="2026-10-06 18:02:17Z" end-time="2026-10-06 18:02:19Z" duration="1.874251" total="7" passed="6" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2166" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1029" result="Failed" site="Child" start-time="2026-10-06 18:02:17Z" end-time="2026-10-06 18:02:19Z" duration="1.873853" total="7" passed="6" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="2112" name="CommanderPhase5ADynamicPlanTests" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests" classname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-06 18:02:17Z" end-time="2026-10-06 18:02:18Z" duration="0.309145" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <test-case id="2119" name="DynamicCandidate_CompilesCanonicalFarmWithoutInitialWork" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests.DynamicCandidate_CompilesCanonicalFarmWithoutInitialWork" methodname="DynamicCandidate_CompilesCanonicalFarmWithoutInitialWork" classname="OpenEmpires.Tests.CommanderPhase5ADynamicPlanTests" runstate="Runnable" seed="1262912115" result="Passed" start-time="2026-10-06 18:02:17Z" end-time="2026-10-06 18:02:18Z" duration="0.299607" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: BuildStructure
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2131" name="CommanderPhase5AProductionBindingTests" fullname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests" classname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-10-06 18:02:18Z" end-time="2026-10-06 18:02:18Z" duration="0.338065" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="2132" name="PreExistingAndHumanTraining_DoNotFillGoalExclusiveUnitResult" fullname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests.PreExistingAndHumanTraining_DoNotFillGoalExclusiveUnitResult" methodname="PreExistingAndHumanTraining_DoNotFillGoalExclusiveUnitResult" classname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests" runstate="Runnable" seed="1591653495" result="Failed" label="Error" start-time="2026-10-06 18:02:18Z" end-time="2026-10-06 18:02:18Z" duration="0.336574" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.ArgumentException : Property Count was not found
+Parameter name: name]]></message>
+                <stack-trace><![CDATA[  at NUnit.Framework.Constraints.PropertyConstraint.ApplyTo (System.Object actual) [0x00050] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x0000e] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression) [0x00001] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at OpenEmpires.Tests.CommanderPhase5AProductionBindingTests.PreExistingAndHumanTraining_DoNotFillGoalExclusiveUnitResult () [0x00366] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AProductionBindingTests.cs:73 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <816f70bc2a9c4332b0bd119906a8d40e>:0 ]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #2 submitted: CapabilityAction
+[Commander] Goal #1: status=Executing owned=1 queued=1; Queueing Spearman at Barracks #1.
+[SyncCheck] tick=1 checksum=4EB1F2BC
+[SyncCheck] tick=2 checksum=CE126DFE
+[SyncCheck] tick=3 checksum=7F3ED822
+[Commander] Goal #1: status=Executing owned=3 queued=1; Queueing Spearman at Barracks #1.
+[SyncCheck] tick=4 checksum=97A8BC55
+[SyncCheck] tick=5 checksum=E8A25A6F
+[SyncCheck] tick=6 checksum=2E6A9B4E
+[SyncCheck] tick=7 checksum=8566742D
+[SyncCheck] tick=8 checksum=8985C90C
+[SyncCheck] tick=9 checksum=C44A8999
+[SyncCheck] tick=10 checksum=E68DE278
+[SyncCheck] tick=11 checksum=5650E525
+[SyncCheck] tick=12 checksum=45240AF7
+[SyncCheck] tick=13 checksum=A326540B
+[SyncCheck] tick=14 checksum=B54446F4
+[SyncCheck] tick=15 checksum=791538D8
+[SyncCheck] tick=16 checksum=24E6FB94
+[SyncCheck] tick=17 checksum=58575328
+[SyncCheck] tick=18 checksum=954700D2
+[SyncCheck] tick=19 checksum=0C8C57F3
+[SyncCheck] tick=20 checksum=B505A52A
+[SyncCheck] tick=21 checksum=7BBD6BD8
+[SyncCheck] tick=22 checksum=D6CED043
+[SyncCheck] tick=23 checksum=547F03EF
+[SyncCheck] tick=24 checksum=83133860
+[SyncCheck] tick=25 checksum=20627A7B
+[SyncCheck] tick=26 checksum=B834F148
+[SyncCheck] tick=27 checksum=DA8A99AC
+[SyncCheck] tick=28 checksum=7887EBA7
+[SyncCheck] tick=29 checksum=3D5041FB
+[SyncCheck] tick=30 checksum=5CB340A8
+[Commander] Goal #1: status=Completed owned=5 queued=0; Owned 5/3 living units.
+[Commander] Goal #2: status=Executing owned=0 queued=0; Resolved a bounded patrol around a visible game-side anchor.
+[SyncCheck] tick=31 checksum=9CFA6BC3
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2133" name="CommanderPhase5ATrainingObservationTests" fullname="OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests" classname="OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-06 18:02:18Z" end-time="2026-10-06 18:02:19Z" duration="1.225280" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="2135" name="CancelFrontQueueSlot_DiscardsOnlyThatReceipt" fullname="OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests.CancelFrontQueueSlot_DiscardsOnlyThatReceipt" methodname="CancelFrontQueueSlot_DiscardsOnlyThatReceipt" classname="OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests" runstate="Runnable" seed="1803949602" result="Passed" start-time="2026-10-06 18:02:18Z" end-time="2026-10-06 18:02:18Z" duration="0.253095" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[SyncCheck] tick=0 PRE-CMD=00000011 cmds=2
+[SyncCheck] tick=0 POST-CMD=00000011
+[SyncCheck] tick=0 PRE-AI-EXEC=00000011 aiCmds=0
+[SyncCheck] INIT tick=1 checksum=C3D9118F systemDetail=00000011,00000011,00000011,00000011,00000011,00000011,00000011,00000011,00000011
+[SyncCheck] tick=1 PRE-CMD=00000011 cmds=1
+[SyncCheck] tick=1 POST-CMD=00000011
+[SyncCheck] tick=1 PRE-AI-EXEC=00000011 aiCmds=0
+[SyncCheck] INIT tick=2 checksum=9081CBE2 systemDetail=00000011,00000011,00000011,00000011,00000011,00000011,00000011,00000011,00000011
+[SyncCheck] tick=2 PRE-CMD=00000011 cmds=0
+[SyncCheck] tick=2 POST-CMD=00000011
+[SyncCheck] tick=2 PRE-AI-EXEC=00000011 aiCmds=0
+[SyncCheck] tick=3 checksum=C1802941
+]]></output>
+            </test-case>
+            <test-case id="2137" name="DirectSameValueQueueMutation_InvalidatesOutstandingReceipt" fullname="OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests.DirectSameValueQueueMutation_InvalidatesOutstandingReceipt" methodname="DirectSameValueQueueMutation_InvalidatesOutstandingReceipt" classname="OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests" runstate="Runnable" seed="1147890873" result="Passed" start-time="2026-10-06 18:02:18Z" end-time="2026-10-06 18:02:18Z" duration="0.242333" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[SyncCheck] tick=0 PRE-CMD=00000011 cmds=1
+[SyncCheck] tick=0 POST-CMD=00000011
+[SyncCheck] tick=0 PRE-AI-EXEC=00000011 aiCmds=0
+[SyncCheck] INIT tick=1 checksum=03E1A0E1 systemDetail=00000011,00000011,00000011,00000011,00000011,00000011,00000011,00000011,00000011
+[SyncCheck] tick=1 PRE-CMD=00000011 cmds=0
+[SyncCheck] tick=1 POST-CMD=00000011
+[SyncCheck] tick=1 PRE-AI-EXEC=00000011 aiCmds=0
+[SyncCheck] INIT tick=2 checksum=3F357462 systemDetail=00000011,00000011,00000011,00000011,00000011,00000011,00000011,00000011,09848F91
+]]></output>
+            </test-case>
+            <test-case id="2134" name="PreExistingAndValueEqualOtherOrders_CreditOnlyTrackedActualSpawn" fullname="OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests.PreExistingAndValueEqualOtherOrders_CreditOnlyTrackedActualSpawn" methodname="PreExistingAndValueEqualOtherOrders_CreditOnlyTrackedActualSpawn" classname="OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests" runstate="Runnable" seed="959410963" result="Passed" start-time="2026-10-06 18:02:18Z" end-time="2026-10-06 18:02:19Z" duration="0.243583" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[SyncCheck] tick=0 PRE-CMD=00000011 cmds=2
+[SyncCheck] tick=0 POST-CMD=00000011
+[SyncCheck] tick=0 PRE-AI-EXEC=00000011 aiCmds=0
+[SyncCheck] INIT tick=1 checksum=B3D4376E systemDetail=00000011,00000011,00000011,00000011,00000011,00000011,00000011,00000011,00000011
+[SyncCheck] tick=1 PRE-CMD=00000011 cmds=0
+[SyncCheck] tick=1 POST-CMD=00000011
+[SyncCheck] tick=1 PRE-AI-EXEC=00000011 aiCmds=0
+[SyncCheck] INIT tick=2 checksum=B3BE06F0 systemDetail=00000011,00000011,00000011,00000011,00000011,00000011,00000011,00000011,09848F91
+[SyncCheck] tick=2 PRE-CMD=09848F91 cmds=0
+[SyncCheck] tick=2 POST-CMD=09848F91
+[SyncCheck] tick=2 PRE-AI-EXEC=09848F91 aiCmds=0
+[SyncCheck] tick=3 checksum=91EA21D5
+[SyncCheck] tick=3 PRE-CMD=9735D370 cmds=0
+[SyncCheck] tick=3 POST-CMD=9735D370
+[SyncCheck] tick=3 PRE-AI-EXEC=9735D370 aiCmds=0
+[SyncCheck] tick=4 checksum=37C39C81
+]]></output>
+            </test-case>
+            <test-case id="2136" name="RejectedTrainCommand_EmitsNoAcceptanceOrProduction" fullname="OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests.RejectedTrainCommand_EmitsNoAcceptanceOrProduction" methodname="RejectedTrainCommand_EmitsNoAcceptanceOrProduction" classname="OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests" runstate="Runnable" seed="345939727" result="Passed" start-time="2026-10-06 18:02:19Z" end-time="2026-10-06 18:02:19Z" duration="0.240445" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[SyncCheck] tick=0 PRE-CMD=00000011 cmds=1
+[SyncCheck] tick=0 POST-CMD=00000011
+[SyncCheck] tick=0 PRE-AI-EXEC=00000011 aiCmds=0
+[SyncCheck] INIT tick=1 checksum=FBD065F8 systemDetail=00000011,00000011,00000011,00000011,00000011,00000011,00000011,00000011,00000011
+]]></output>
+            </test-case>
+            <test-case id="2138" name="ReplayedValueEqualCommand_RequiresVerifiedOneTickOriginMap" fullname="OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests.ReplayedValueEqualCommand_RequiresVerifiedOneTickOriginMap" methodname="ReplayedValueEqualCommand_RequiresVerifiedOneTickOriginMap" classname="OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests" runstate="Runnable" seed="36797151" result="Passed" start-time="2026-10-06 18:02:19Z" end-time="2026-10-06 18:02:19Z" duration="0.242164" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[SyncCheck] tick=0 PRE-CMD=00000011 cmds=1
+[SyncCheck] tick=0 POST-CMD=00000011
+[SyncCheck] tick=0 PRE-AI-EXEC=00000011 aiCmds=0
+[SyncCheck] INIT tick=1 checksum=03E1A0E1 systemDetail=00000011,00000011,00000011,00000011,00000011,00000011,00000011,00000011,00000011
+[SyncCheck] tick=1 PRE-CMD=00000011 cmds=1
+[SyncCheck] tick=1 POST-CMD=00000011
+[SyncCheck] tick=1 PRE-AI-EXEC=00000011 aiCmds=0
+[SyncCheck] INIT tick=2 checksum=CF3CB7CF systemDetail=00000011,00000011,00000011,00000011,00000011,00000011,00000011,00000011,00000011
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

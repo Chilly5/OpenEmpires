@@ -80,6 +80,8 @@ namespace OpenEmpires.Tests
                 Assert.That(CommanderSemanticGraphAdmission.TryAdmit(result, context,
                     out CommanderSemanticGraphPlan plan, out string reason), Is.True, reason);
 
+                plan = manager.ApproveActionPlan(manager.PrepareActionPlan(result,
+                    "Trusted test confirms the full normalized compound.", 0), 0);
                 var submitted = manager.SubmitSemanticGraph(plan);
 
                 Assert.That(submitted, Has.Count.EqualTo(2));
@@ -115,6 +117,8 @@ namespace OpenEmpires.Tests
                 Assert.That(CommanderSemanticGraphAdmission.TryAdmit(result, context,
                     out CommanderSemanticGraphPlan plan, out string reason), Is.True, reason);
 
+                plan = manager.ApproveActionPlan(manager.PrepareActionPlan(result,
+                    "Trusted test confirms the full normalized compound.", 0), 0);
                 Assert.Throws< System.InvalidOperationException>(() => manager.SubmitSemanticGraph(plan));
                 Assert.That(manager.ActiveGoals, Has.Count.EqualTo(CommanderGoalManager.MaxActiveGoals));
             }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 21:18:43Z" end-time="2026-10-06 21:18:43Z" duration="0.4182906">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1083" result="Failed" site="Child" start-time="2026-10-06 21:18:43Z" end-time="2026-10-06 21:18:43Z" duration="0.418291" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2231" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1083" result="Failed" site="Child" start-time="2026-10-06 21:18:43Z" end-time="2026-10-06 21:18:43Z" duration="0.402784" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="1780" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2232" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1083" result="Failed" site="Child" start-time="2026-10-06 21:18:43Z" end-time="2026-10-06 21:18:43Z" duration="0.401881" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2233" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1083" result="Failed" site="Child" start-time="2026-10-06 21:18:43Z" end-time="2026-10-06 21:18:43Z" duration="0.401351" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="2153" name="CommanderPhase5AGroundedScopeTests" fullname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests" classname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests" runstate="Runnable" testcasecount="8" result="Failed" site="Child" start-time="2026-10-06 21:18:43Z" end-time="2026-10-06 21:18:43Z" duration="0.399899" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="2154" name="KnownFarmPayload_ReusesTheImplementedCanonicalConstructionAdapter" fullname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.KnownFarmPayload_ReusesTheImplementedCanonicalConstructionAdapter" methodname="KnownFarmPayload_ReusesTheImplementedCanonicalConstructionAdapter" classname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests" runstate="Runnable" seed="1582225088" result="Failed" start-time="2026-10-06 21:18:43Z" end-time="2026-10-06 21:18:43Z" duration="0.384182" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  I couldn't understand that request safely.
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests+<>c.<KnownFarmPayload_ReusesTheImplementedCanonicalConstructionAdapter>b__0_0 (OpenEmpires.GameSimulation sim, OpenEmpires.CommanderGoalManager manager) [0x0000b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:19
+at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.WithManager (System.Action`2[T1,T2] check) [0x00027] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:141
+at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.KnownFarmPayload_ReusesTheImplementedCanonicalConstructionAdapter () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:15
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

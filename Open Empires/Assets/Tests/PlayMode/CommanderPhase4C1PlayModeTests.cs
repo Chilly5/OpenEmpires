@@ -253,6 +253,7 @@ namespace OpenEmpires.Tests
                 planner.IntentIds);
             StrategicIntent defense = new MockStrategicAIProvider()
                 .InterpretStrategicIntentAsync(request, default).Result.Intent;
+            defense.Authorize(planner.IntentIds, "Trusted emergency defense setup.");
             StrategicPlan emergency = planner.SubmitIntent(defense, true, false).Plan;
             Task<CommanderAIChatSubmission> prepare = chat.SubmitMessageAsync("prepare cavalry attack");
             while (!prepare.IsCompleted) yield return null;

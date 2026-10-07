@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Passed" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 15:24:59Z" end-time="2026-10-06 15:25:04Z" duration="4.9320511">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1017" result="Passed" start-time="2026-10-06 15:24:59Z" end-time="2026-10-06 15:25:04Z" duration="4.932051" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="2148" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1017" result="Passed" start-time="2026-10-06 15:24:59Z" end-time="2026-10-06 15:25:04Z" duration="4.835049" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="6620" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="2149" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1017" result="Passed" start-time="2026-10-06 15:25:00Z" end-time="2026-10-06 15:25:04Z" duration="4.737961" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="2150" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1017" result="Passed" start-time="2026-10-06 15:25:00Z" end-time="2026-10-06 15:25:04Z" duration="4.633423" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="2112" name="CommanderPhase5AIntentAuthorityTests" fullname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" classname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-10-06 15:25:00Z" end-time="2026-10-06 15:25:04Z" duration="4.521476" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <test-case id="2122" name="FourTypedConstraints_RoundTrip_AndMalformedSemanticConstraintsReject" fullname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.FourTypedConstraints_RoundTrip_AndMalformedSemanticConstraintsReject" methodname="FourTypedConstraints_RoundTrip_AndMalformedSemanticConstraintsReject" classname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" runstate="Runnable" seed="1104929582" result="Passed" start-time="2026-10-06 15:25:00Z" end-time="2026-10-06 15:25:02Z" duration="1.927499" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2121" name="NoConstruction_CannotBeHiddenByAnExtraBuildRoot" fullname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.NoConstruction_CannotBeHiddenByAnExtraBuildRoot" methodname="NoConstruction_CannotBeHiddenByAnExtraBuildRoot" classname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" runstate="Runnable" seed="1445240712" result="Passed" start-time="2026-10-06 15:25:02Z" end-time="2026-10-06 15:25:03Z" duration="1.248091" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2120" name="NoConstruction_UsesCompletedCapacityOrBlocksWithoutBuildingPrerequisites" fullname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.NoConstruction_UsesCompletedCapacityOrBlocksWithoutBuildingPrerequisites" methodname="NoConstruction_UsesCompletedCapacityOrBlocksWithoutBuildingPrerequisites" classname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" runstate="Runnable" seed="1116802259" result="Passed" start-time="2026-10-06 15:25:03Z" end-time="2026-10-06 15:25:04Z" duration="1.206727" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #1: status=Blocked owned=0 queued=0; This request forbids construction. An eligible existing completed building or population capacity is required.
+[Commander] Goal #1: status=Blocked owned=0 queued=0; This request forbids construction, including resuming an unfinished prerequisite. Use completed capacity or wait for independent work.
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

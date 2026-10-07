@@ -51,6 +51,7 @@ namespace OpenEmpires
                 || structureType == BuildingType.ArcheryRange
                 || structureType == BuildingType.Stables
                 || structureType == BuildingType.Mill
+                || structureType == BuildingType.Farm
                 || structureType == BuildingType.Tower
                 || structureType == BuildingType.TownCenter;
         }
@@ -122,6 +123,8 @@ namespace OpenEmpires
             aliases[NormalizeName(BuildingType.ArcheryRange.ToString())] = BuildingType.ArcheryRange;
             aliases[NormalizeName(BuildingType.Tower.ToString())] = BuildingType.Tower;
             aliases[NormalizeName(BuildingType.Mill.ToString())] = BuildingType.Mill;
+            aliases[NormalizeName(BuildingType.Farm.ToString())] = BuildingType.Farm;
+            aliases["farms"] = BuildingType.Farm;
             aliases[NormalizeName(BuildingType.TownCenter.ToString())] = BuildingType.TownCenter;
             aliases["houses"] = BuildingType.House;
             aliases["barrack"] = BuildingType.Barracks;

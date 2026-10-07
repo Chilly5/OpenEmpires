@@ -600,6 +600,7 @@ namespace OpenEmpires.Tests
             var request = new StrategicAIRequest(phrase, pipeline.CaptureContext(), planner.IntentIds);
             StrategicIntent intent = new MockStrategicAIProvider()
                 .InterpretStrategicIntentAsync(request, CancellationToken.None).Result.Intent;
+            intent.Authorize(planner.IntentIds, "Trusted player strategic request.");
             StrategicIntentSubmission submitted = planner.SubmitIntent(intent);
             Assert.That(submitted.CreatedPlan, Is.True, submitted.Reason);
             return submitted.Plan;

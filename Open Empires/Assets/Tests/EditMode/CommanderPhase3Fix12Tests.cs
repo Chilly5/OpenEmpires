@@ -259,8 +259,8 @@ namespace OpenEmpires.Tests
                 Assert.That(validation.IsValid, Is.True, $"Template {template.TemplateId} should allow optional parameters: {validation.Reason}");
             }
 
-            var strategicIntent = new StrategicIntent(1, 0, StrategicObjectiveType.AttackPreparation, 10,
-                parameters: parameters);
+            var strategicIntent = strategicPlanner.CreateIntent(StrategicObjectiveType.AttackPreparation,
+                parameters: parameters, priority: 10);
             StrategicIntentSubmission submission = strategicPlanner.SubmitIntent(strategicIntent,
                 isEmergency: false, isPlayerOverride: true);
 
@@ -300,8 +300,8 @@ namespace OpenEmpires.Tests
             Assert.That(plan1.Status, Is.EqualTo(StrategicPlanStatus.Active));
             Assert.That(plan1.Authority, Is.EqualTo(StrategicPlanAuthority.Normal));
 
-            var overrideIntent = new StrategicIntent(2, 0,
-                StrategicObjectiveType.DefensivePreparation, 0);
+            var overrideIntent = strategicPlanner.CreateIntent(
+                StrategicObjectiveType.DefensivePreparation);
             StrategicIntentSubmission sub2 = strategicPlanner.SubmitIntent(
                 overrideIntent, isEmergency: false, isPlayerOverride: true);
 
@@ -324,8 +324,8 @@ namespace OpenEmpires.Tests
             Assert.That(plan1.Status, Is.EqualTo(StrategicPlanStatus.Active));
             Assert.That(plan1.Authority, Is.EqualTo(StrategicPlanAuthority.Normal));
 
-            var emergencyIntent = new StrategicIntent(2, 0,
-                StrategicObjectiveType.DefensivePreparation, 0);
+            var emergencyIntent = strategicPlanner.CreateIntent(
+                StrategicObjectiveType.DefensivePreparation);
             StrategicIntentSubmission sub2 = strategicPlanner.SubmitIntent(
                 emergencyIntent, isEmergency: true, isPlayerOverride: false);
 
@@ -338,15 +338,15 @@ namespace OpenEmpires.Tests
             Assert.That(strategicPlanner.ActivePlans.Contains(plan1), Is.False);
             Assert.That(strategicPlanner.ActivePlans.Contains(plan2), Is.True);
 
-            var overrideIntent = new StrategicIntent(3, 0,
-                StrategicObjectiveType.AttackPreparation, 0);
+            var overrideIntent = strategicPlanner.CreateIntent(
+                StrategicObjectiveType.AttackPreparation);
             StrategicIntentSubmission subOverride = strategicPlanner.SubmitIntent(
                 overrideIntent, isEmergency: false, isPlayerOverride: true);
             Assert.That(subOverride.CreatedPlan, Is.True);
             Assert.That(subOverride.Plan.Authority, Is.EqualTo(StrategicPlanAuthority.PlayerOverride));
 
-            var emergencyIntent2 = new StrategicIntent(4, 0,
-                StrategicObjectiveType.MilitaryReinforcement, 0);
+            var emergencyIntent2 = strategicPlanner.CreateIntent(
+                StrategicObjectiveType.MilitaryReinforcement);
             StrategicIntentSubmission sub3 = strategicPlanner.SubmitIntent(
                 emergencyIntent2, isEmergency: true, isPlayerOverride: false);
             Assert.That(sub3.CreatedPlan, Is.False, "Emergency cannot override an active PlayerOverride plan.");
@@ -363,8 +363,8 @@ namespace OpenEmpires.Tests
             int woodReserved = strategicPlanner.GetReservedAmount(ResourceType.Wood);
             Assert.That(woodReserved, Is.GreaterThan(0));
 
-            var overrideIntent = new StrategicIntent(2, 0,
-                StrategicObjectiveType.AttackPreparation, 0);
+            var overrideIntent = strategicPlanner.CreateIntent(
+                StrategicObjectiveType.AttackPreparation);
             strategicPlanner.SubmitIntent(overrideIntent, isEmergency: false, isPlayerOverride: true);
 
             Assert.That(plan.Status, Is.EqualTo(StrategicPlanStatus.Cancelled));
@@ -443,10 +443,22 @@ namespace OpenEmpires.Tests
             pipeline.EvaluationTrigger.FireTrigger(StrategicEvaluationTriggerType.Emergency, "Enemy raid detected at base");
             pipeline.Tick(0);
 
+            // For human player: Emergency recommendation does not automatically replace active plan without consent.
             StrategicPlan activeDefense = strategicPlanner.ActivePlans
                 .FirstOrDefault(p => p.PlanType == StrategicPlanType.DefensivePreparation);
-            Assert.That(activeDefense, Is.Not.Null, "Emergency defense plan should be initiated.");
-            Assert.That(activeDefense.Authority, Is.EqualTo(StrategicPlanAuthority.Emergency));
+            Assert.That(activeDefense, Is.Null, "Emergency defense must not replace active human plan without player consent.");
+            Assert.That(econSub.Plan.Status, Is.EqualTo(StrategicPlanStatus.Active));
+            Assert.That(pipeline.LastDecision.SelectedIntent?.ObjectiveType,
+                Is.EqualTo(StrategicObjectiveType.DefensivePreparation));
+
+            // Once the human player explicitly approves/authorizes the emergency defense, it initiates with Emergency authority.
+            var approvedDefense = strategicPlanner.CreateIntent(StrategicObjectiveType.DefensivePreparation);
+            var defenseSub = strategicPlanner.SubmitIntent(approvedDefense, isEmergency: true, isPlayerOverride: false);
+            Assert.That(defenseSub.CreatedPlan, Is.True);
+            Assert.That(defenseSub.Plan.Status, Is.EqualTo(StrategicPlanStatus.Active));
+            Assert.That(econSub.Plan.Status, Is.EqualTo(StrategicPlanStatus.Active));
+            Assert.That(strategicPlanner.ActivePlans, Contains.Item(defenseSub.Plan));
+            Assert.That(strategicPlanner.ActivePlans, Contains.Item(econSub.Plan));
         }
 
         [Test]

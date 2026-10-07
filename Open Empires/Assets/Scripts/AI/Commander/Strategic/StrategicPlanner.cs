@@ -114,6 +114,7 @@ namespace OpenEmpires
             var intent = new StrategicIntent(IntentIds.Allocate(), goalManager.PlayerId, objectiveType,
                 goalManager.CurrentTick, parameters, priority);
             IntentIds.BindAllocated(intent.IntentId, intent);
+            intent.Authorize(IntentIds, "Trusted direct strategic request.");
             RegisterIntent(intent);
             return intent;
         }
@@ -154,6 +155,9 @@ namespace OpenEmpires
                 intent, goalManager.PlayerId, planRegistry);
             if (!validation.IsValid)
                 return RejectIntent(intent, validation.Error, validation.Reason);
+            if (!CanCommitIntent(intent, out string authorityReason))
+                return new StrategicIntentSubmission(StrategicIntentSubmissionStatus.Rejected,
+                    intent, null, StrategicIntentValidationError.CommitmentBlocked, authorityReason);
             if (intent != null && intent.Status != StrategicIntentStatus.Created)
                 return RejectIntent(intent, StrategicIntentValidationError.DuplicateIntent,
                     "Only a newly created strategic intent can be submitted.");
@@ -340,6 +344,7 @@ namespace OpenEmpires
                 interpretation.ObjectiveType, interpretation.CreatedTick, parameters, interpretation.Priority);
             IntentIds.BindAllocated(intent.IntentId, intent);
             interpretation.Status = StrategicIntentStatus.Cancelled;
+            intent.Authorize(IntentIds, "Trusted interpreted player-input request.");
             interpretation.StatusReason = "Materialized as a trusted Commander request.";
             return intent;
         }
@@ -436,6 +441,11 @@ namespace OpenEmpires
         public void Tick(int currentTick)
         {
             ThrowIfDisposed();
+            var unauthorized = new List<StrategicPlan>();
+            for (int i = 0; i < activePlans.Count; i++)
+                if (!HasLiveRootAuthority(activePlans[i])) unauthorized.Add(activePlans[i]);
+            for (int i = 0; i < unauthorized.Count; i++)
+                CancelPlan(unauthorized[i].StrategicPlanId);
             if (currentTick == lastResourceRetryTick
                 || (lastResourceRetryTick >= 0
                     && currentTick - lastResourceRetryTick < ResourceRetryIntervalTicks))
@@ -778,6 +788,11 @@ namespace OpenEmpires
         {
             if (plan == null || milestone == null || plan.IsTerminal
                 || plan.Status == StrategicPlanStatus.Paused) return;
+            if (!HasLiveRootAuthority(plan))
+            {
+                CancelPlan(plan.StrategicPlanId);
+                return;
+            }
             if (!TryEnterRevisionCascade(plan, RemainingCascadeRevisionBudget(plan),
                 out bool ownsCascade)) return;
             try

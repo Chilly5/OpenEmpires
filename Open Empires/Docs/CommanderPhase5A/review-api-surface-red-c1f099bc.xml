@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 14:44:16Z" end-time="2026-10-06 14:44:18Z" duration="2.130581">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1014" result="Failed" site="Child" start-time="2026-10-06 14:44:16Z" end-time="2026-10-06 14:44:18Z" duration="2.130581" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2145" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1014" result="Failed" site="Child" start-time="2026-10-06 14:44:16Z" end-time="2026-10-06 14:44:18Z" duration="2.028740" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="6620" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2146" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1014" result="Failed" site="Child" start-time="2026-10-06 14:44:16Z" end-time="2026-10-06 14:44:18Z" duration="1.944662" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2147" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1014" result="Failed" site="Child" start-time="2026-10-06 14:44:16Z" end-time="2026-10-06 14:44:18Z" duration="1.837046" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="2112" name="CommanderPhase5AIntentAuthorityTests" fullname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" classname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" runstate="Runnable" testcasecount="7" result="Failed" site="Child" start-time="2026-10-06 14:44:16Z" end-time="2026-10-06 14:44:18Z" duration="1.726628" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="2116" name="ExternalRuntimeCallers_HaveNoPublicApprovalMintingSurface" fullname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.ExternalRuntimeCallers_HaveNoPublicApprovalMintingSurface" methodname="ExternalRuntimeCallers_HaveNoPublicApprovalMintingSurface" classname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" runstate="Runnable" seed="2130469560" result="Failed" start-time="2026-10-06 14:44:16Z" end-time="2026-10-06 14:44:18Z" duration="1.588438" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: null
+  But was:  <OpenEmpires.CommanderActionPlanCandidate PrepareActionPlan(OpenEmpires.CommanderSemanticResult, System.String, Int32, OpenEmpires.StrategicPipeline)>
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.ExternalRuntimeCallers_HaveNoPublicApprovalMintingSurface () [0x00003] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AIntentAuthorityTests.cs:104
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

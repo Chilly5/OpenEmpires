@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="43" result="Passed" total="43" passed="43" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 14:46:41Z" end-time="2026-10-06 14:47:32Z" duration="50.5895003">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1014" result="Passed" start-time="2026-10-06 14:46:41Z" end-time="2026-10-06 14:47:32Z" duration="50.589500" total="43" passed="43" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="2145" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1014" result="Passed" start-time="2026-10-06 14:46:42Z" end-time="2026-10-06 14:47:32Z" duration="50.480461" total="43" passed="43" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="6620" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="2146" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1014" result="Passed" start-time="2026-10-06 14:46:42Z" end-time="2026-10-06 14:47:32Z" duration="50.387244" total="43" passed="43" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="2147" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1014" result="Passed" start-time="2026-10-06 14:46:42Z" end-time="2026-10-06 14:47:32Z" duration="50.279006" total="43" passed="43" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1784" name="CommanderPhase4E1ChatTests" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" testcasecount="23" result="Passed" start-time="2026-10-06 14:46:42Z" end-time="2026-10-06 14:47:12Z" duration="30.019216" total="23" passed="23" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase4E1" />
+            </properties>
+            <test-case id="1803" name="BusyRequest_DoesNotStartSecondProviderCall_AndControlsRecover" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests.BusyRequest_DoesNotStartSecondProviderCall_AndControlsRecover" methodname="BusyRequest_DoesNotStartSecondProviderCall_AndControlsRecover" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" seed="1975599918" result="Passed" start-time="2026-10-06 14:46:42Z" end-time="2026-10-06 14:46:44Z" duration="2.351586" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] intent=admitted;goal-submitted=True
+]]></output>
+            </test-case>
+            <test-case id="1810" name="LunaQuestion_RejectsExecutableResponseWithoutMutatingGoals" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests.LunaQuestion_RejectsExecutableResponseWithoutMutatingGoals" methodname="LunaQuestion_RejectsExecutableResponseWithoutMutatingGoals" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" seed="631615248" result="Passed" start-time="2026-10-06 14:46:44Z" end-time="2026-10-06 14:46:45Z" duration="1.108285" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-06T14:46:45.9185043Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=7
+[CommanderProvider] assistantContent=extracted;characters=86;finish=stop
+[CommanderProvider] semantic=Request;nodes=1
+[Commander] question=read-only;executable-response=rejected
+]]></output>
+            </test-case>
+            <test-case id="1807" name="NonCooperativeProvider_TimeoutUnlocksControls_AndLateReplyCannotAdmit" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests.NonCooperativeProvider_TimeoutUnlocksControls_AndLateReplyCannotAdmit" methodname="NonCooperativeProvider_TimeoutUnlocksControls_AndLateReplyCannotAdmit" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" seed="60686498" result="Passed" start-time="2026-10-06 14:46:45Z" end-time="2026-10-06 14:46:47Z" duration="1.264790" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+]]></output>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1801" name="NonTacticalOrInvalidSemanticResult_CreatesNoGoal" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests.NonTacticalOrInvalidSemanticResult_CreatesNoGoal" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-06 14:46:47Z" end-time="2026-10-06 14:46:52Z" duration="4.791367" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1797" name="NonTacticalOrInvalidSemanticResult_CreatesNoGoal(&quot;{\&quot;outcome\&quot;:\&quot;Request\&quot;,\&quot;nodes\&quot;:[{\&quot;type\&quot;:\&quot;EnsureUnitCount\&quot;,\&quot;unit\&quot;:\&quot;Trebuchet\&quot;,\&quot;count\&quot;:10}]}&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests.NonTacticalOrInvalidSemanticResult_CreatesNoGoal(&quot;{\&quot;outcome\&quot;:\&quot;Request\&quot;,\&quot;nodes\&quot;:[{\&quot;type\&quot;:\&quot;EnsureUnitCount\&quot;,\&quot;unit\&quot;:\&quot;Trebuchet\&quot;,\&quot;count\&quot;:10}]}&quot;)" methodname="NonTacticalOrInvalidSemanticResult_CreatesNoGoal" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" seed="1811515066" result="Passed" start-time="2026-10-06 14:46:47Z" end-time="2026-10-06 14:46:48Z" duration="1.371530" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] context=projected;provider-request=started
+]]></output>
+              </test-case>
+              <test-case id="1798" name="NonTacticalOrInvalidSemanticResult_CreatesNoGoal(&quot;{\&quot;outcome\&quot;:\&quot;Clarify\&quot;,\&quot;message\&quot;:\&quot;Which unit?\&quot;}&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests.NonTacticalOrInvalidSemanticResult_CreatesNoGoal(&quot;{\&quot;outcome\&quot;:\&quot;Clarify\&quot;,\&quot;message\&quot;:\&quot;Which unit?\&quot;}&quot;)" methodname="NonTacticalOrInvalidSemanticResult_CreatesNoGoal" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" seed="916603257" result="Passed" start-time="2026-10-06 14:46:48Z" end-time="2026-10-06 14:46:49Z" duration="1.061820" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] context=projected;provider-request=started
+]]></output>
+              </test-case>
+              <test-case id="1799" name="NonTacticalOrInvalidSemanticResult_CreatesNoGoal(&quot;{\&quot;outcome\&quot;:\&quot;Unsupported\&quot;,\&quot;message\&quot;:\&quot;I cannot do that.\&quot;}&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests.NonTacticalOrInvalidSemanticResult_CreatesNoGoal(&quot;{\&quot;outcome\&quot;:\&quot;Unsupported\&quot;,\&quot;message\&quot;:\&quot;I cannot do that.\&quot;}&quot;)" methodname="NonTacticalOrInvalidSemanticResult_CreatesNoGoal" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" seed="1806664109" result="Passed" start-time="2026-10-06 14:46:49Z" end-time="2026-10-06 14:46:50Z" duration="1.112578" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] context=projected;provider-request=started
+]]></output>
+              </test-case>
+              <test-case id="1800" name="NonTacticalOrInvalidSemanticResult_CreatesNoGoal(&quot;{\&quot;outcome\&quot;:\&quot;Request\&quot;,\&quot;nodes\&quot;:[{\&quot;type\&quot;:\&quot;EnsureUnitCount\&quot;,\&quot;unit\&quot;:\&quot;Spearman\&quot;,\&quot;count\&quot;:10}]&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests.NonTacticalOrInvalidSemanticResult_CreatesNoGoal(&quot;{\&quot;outcome\&quot;:\&quot;Request\&quot;,\&quot;nodes\&quot;:[{\&quot;type\&quot;:\&quot;EnsureUnitCount\&quot;,\&quot;unit\&quot;:\&quot;Spearman\&quot;,\&quot;count\&quot;:10}]&quot;)" methodname="NonTacticalOrInvalidSemanticResult_CreatesNoGoal" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" seed="2092439391" result="Passed" start-time="2026-10-06 14:46:50Z" end-time="2026-10-06 14:46:52Z" duration="1.141143" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] context=projected;provider-request=started
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-case id="1808" name="OfflineStatus_BypassesSemanticProvider" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests.OfflineStatus_BypassesSemanticProvider" methodname="OfflineStatus_BypassesSemanticProvider" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" seed="310940451" result="Passed" start-time="2026-10-06 14:46:52Z" end-time="2026-10-06 14:46:53Z" duration="1.224161" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1806" name="ProviderFailure_LeavesControlsUsable_AndDoesNotEchoUnsafeText" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests.ProviderFailure_LeavesControlsUsable_AndDoesNotEchoUnsafeText" methodname="ProviderFailure_LeavesControlsUsable_AndDoesNotEchoUnsafeText" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" seed="524262745" result="Passed" start-time="2026-10-06 14:46:53Z" end-time="2026-10-06 14:46:54Z" duration="1.220687" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] failed-stage=provider-request;exception=InvalidOperationException
+]]></output>
+            </test-case>
+            <test-case id="1805" name="ReinitializeForDifferentRuntimeAndOwner_RejectsOldProviderResult" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests.ReinitializeForDifferentRuntimeAndOwner_RejectsOldProviderResult" methodname="ReinitializeForDifferentRuntimeAndOwner_RejectsOldProviderResult" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" seed="2036518289" result="Passed" start-time="2026-10-06 14:46:54Z" end-time="2026-10-06 14:46:56Z" duration="2.195757" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+]]></output>
+            </test-case>
+            <test-case id="1804" name="ResetWhileProviderPending_RejectsLateResultWithoutGoal" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests.ResetWhileProviderPending_RejectsLateResultWithoutGoal" methodname="ResetWhileProviderPending_RejectsLateResultWithoutGoal" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" seed="565356814" result="Passed" start-time="2026-10-06 14:46:56Z" end-time="2026-10-06 14:46:57Z" duration="1.127594" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+]]></output>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1796" name="SemanticProvider_AdmitsOtherTacticalNodes" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests.SemanticProvider_AdmitsOtherTacticalNodes" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-06 14:46:57Z" end-time="2026-10-06 14:47:00Z" duration="2.383371" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1794" name="SemanticProvider_AdmitsOtherTacticalNodes(&quot;{\&quot;outcome\&quot;:\&quot;Request\&quot;,\&quot;nodes\&quot;:[{\&quot;type\&quot;:\&quot;BuildStructure\&quot;,\&quot;structure\&quot;:\&quot;Barracks\&quot;,\&quot;count\&quot;:1}]}&quot;,OpenEmpires.BuildStructureGoal)" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests.SemanticProvider_AdmitsOtherTacticalNodes(&quot;{\&quot;outcome\&quot;:\&quot;Request\&quot;,\&quot;nodes\&quot;:[{\&quot;type\&quot;:\&quot;BuildStructure\&quot;,\&quot;structure\&quot;:\&quot;Barracks\&quot;,\&quot;count\&quot;:1}]}&quot;,OpenEmpires.BuildStructureGoal)" methodname="SemanticProvider_AdmitsOtherTacticalNodes" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" seed="1857857332" result="Passed" start-time="2026-10-06 14:46:57Z" end-time="2026-10-06 14:46:59Z" duration="1.212928" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: BuildStructure
+[Commander] intent=admitted;goal-submitted=True
+]]></output>
+              </test-case>
+              <test-case id="1795" name="SemanticProvider_AdmitsOtherTacticalNodes(&quot;{\&quot;outcome\&quot;:\&quot;Request\&quot;,\&quot;nodes\&quot;:[{\&quot;type\&quot;:\&quot;SetResourceAllocation\&quot;,\&quot;resource\&quot;:\&quot;Food\&quot;,\&quot;count\&quot;:2}]}&quot;,OpenEmpires.ResourceAllocationGoal)" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests.SemanticProvider_AdmitsOtherTacticalNodes(&quot;{\&quot;outcome\&quot;:\&quot;Request\&quot;,\&quot;nodes\&quot;:[{\&quot;type\&quot;:\&quot;SetResourceAllocation\&quot;,\&quot;resource\&quot;:\&quot;Food\&quot;,\&quot;count\&quot;:2}]}&quot;,OpenEmpires.ResourceAllocationGoal)" methodname="SemanticProvider_AdmitsOtherTacticalNodes" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" seed="1765347929" result="Passed" start-time="2026-10-06 14:46:59Z" end-time="2026-10-06 14:47:00Z" duration="1.064186" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] intent=admitted;goal-submitted=True
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1792" name="SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests.SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-06 14:47:00Z" end-time="2026-10-06 14:47:08Z" duration="8.739675" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1785" name="SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(&quot;Could you make sure we have ten spearmen?&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests.SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(&quot;Could you make sure we have ten spearmen?&quot;)" methodname="SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" seed="1160939761" result="Passed" start-time="2026-10-06 14:47:00Z" end-time="2026-10-06 14:47:01Z" duration="1.363638" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] intent=admitted;goal-submitted=True
+]]></output>
+              </test-case>
+              <test-case id="1786" name="SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(&quot;I'd like our spearman force to reach ten.&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests.SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(&quot;I'd like our spearman force to reach ten.&quot;)" methodname="SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" seed="1025124000" result="Passed" start-time="2026-10-06 14:47:01Z" end-time="2026-10-06 14:47:02Z" duration="1.178506" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] intent=admitted;goal-submitted=True
+]]></output>
+              </test-case>
+              <test-case id="1787" name="SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(&quot;We need a total of ten spearmen in the army.&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests.SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(&quot;We need a total of ten spearmen in the army.&quot;)" methodname="SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" seed="1264570501" result="Passed" start-time="2026-10-06 14:47:02Z" end-time="2026-10-06 14:47:04Z" duration="1.219614" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] intent=admitted;goal-submitted=True
+]]></output>
+              </test-case>
+              <test-case id="1788" name="SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(&quot;Please bring the spearmen count up to 10.&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests.SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(&quot;Please bring the spearmen count up to 10.&quot;)" methodname="SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" seed="1899829405" result="Passed" start-time="2026-10-06 14:47:04Z" end-time="2026-10-06 14:47:05Z" duration="1.314443" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] intent=admitted;goal-submitted=True
+]]></output>
+              </test-case>
+              <test-case id="1789" name="SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(&quot;Can we field ten spearmen?&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests.SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(&quot;Can we field ten spearmen?&quot;)" methodname="SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" seed="292016023" result="Passed" start-time="2026-10-06 14:47:05Z" end-time="2026-10-06 14:47:06Z" duration="1.236322" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] intent=admitted;goal-submitted=True
+]]></output>
+              </test-case>
+              <test-case id="1790" name="SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(&quot;Aim for a squad of ten spearmen.&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests.SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(&quot;Aim for a squad of ten spearmen.&quot;)" methodname="SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" seed="1508709670" result="Passed" start-time="2026-10-06 14:47:06Z" end-time="2026-10-06 14:47:07Z" duration="1.188060" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] intent=admitted;goal-submitted=True
+]]></output>
+              </test-case>
+              <test-case id="1791" name="SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(&quot;Get us to 10 spearmen when you can.&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests.SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate(&quot;Get us to 10 spearmen when you can.&quot;)" methodname="SemanticProvider_AdmitsSpearmanParaphrasesWithoutExactPhraseGate" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" seed="1245394638" result="Passed" start-time="2026-10-06 14:47:07Z" end-time="2026-10-06 14:47:08Z" duration="1.128625" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] intent=admitted;goal-submitted=True
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-case id="1809" name="TacticalAdmission_RejectsStrategicNodeWithoutConvertingToPlayerDirect" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests.TacticalAdmission_RejectsStrategicNodeWithoutConvertingToPlayerDirect" methodname="TacticalAdmission_RejectsStrategicNodeWithoutConvertingToPlayerDirect" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" seed="1855467177" result="Passed" start-time="2026-10-06 14:47:08Z" end-time="2026-10-06 14:47:10Z" duration="1.195993" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1802" name="TwoNodeResponse_IsAdmittedAtomically" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests.TwoNodeResponse_IsAdmittedAtomically" methodname="TwoNodeResponse_IsAdmittedAtomically" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" seed="649544947" result="Passed" start-time="2026-10-06 14:47:10Z" end-time="2026-10-06 14:47:11Z" duration="1.184330" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: EnsureUnitCount
+]]></output>
+            </test-case>
+            <test-case id="1793" name="VoiceBar_HasSeparateSpaceFromStrategyControls" fullname="OpenEmpires.Tests.CommanderPhase4E1ChatTests.VoiceBar_HasSeparateSpaceFromStrategyControls" methodname="VoiceBar_HasSeparateSpaceFromStrategyControls" classname="OpenEmpires.Tests.CommanderPhase4E1ChatTests" runstate="Runnable" seed="1287531007" result="Passed" start-time="2026-10-06 14:47:11Z" end-time="2026-10-06 14:47:12Z" duration="1.076227" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1970" name="CommanderPhase4E3GraphAdmissionTests" fullname="OpenEmpires.Tests.CommanderPhase4E3GraphAdmissionTests" classname="OpenEmpires.Tests.CommanderPhase4E3GraphAdmissionTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-06 14:47:12Z" end-time="2026-10-06 14:47:16Z" duration="4.176560" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase4E3" />
+            </properties>
+            <test-case id="1972" name="Admission_StrategicNodeInCompoundGraphIsRejectedWithoutMutation" fullname="OpenEmpires.Tests.CommanderPhase4E3GraphAdmissionTests.Admission_StrategicNodeInCompoundGraphIsRejectedWithoutMutation" methodname="Admission_StrategicNodeInCompoundGraphIsRejectedWithoutMutation" classname="OpenEmpires.Tests.CommanderPhase4E3GraphAdmissionTests" runstate="Runnable" seed="2044937747" result="Passed" start-time="2026-10-06 14:47:12Z" end-time="2026-10-06 14:47:13Z" duration="0.993159" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1971" name="Admission_ValidGraphProducesDependencyFirstPlanWithoutEntitySelection" fullname="OpenEmpires.Tests.CommanderPhase4E3GraphAdmissionTests.Admission_ValidGraphProducesDependencyFirstPlanWithoutEntitySelection" methodname="Admission_ValidGraphProducesDependencyFirstPlanWithoutEntitySelection" classname="OpenEmpires.Tests.CommanderPhase4E3GraphAdmissionTests" runstate="Runnable" seed="1735415022" result="Passed" start-time="2026-10-06 14:47:13Z" end-time="2026-10-06 14:47:14Z" duration="0.975123" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1973" name="SubmitSemanticGraph_CommitsBothGoalsAndBindsExactProducerGoal" fullname="OpenEmpires.Tests.CommanderPhase4E3GraphAdmissionTests.SubmitSemanticGraph_CommitsBothGoalsAndBindsExactProducerGoal" methodname="SubmitSemanticGraph_CommitsBothGoalsAndBindsExactProducerGoal" classname="OpenEmpires.Tests.CommanderPhase4E3GraphAdmissionTests" runstate="Runnable" seed="1288358488" result="Passed" start-time="2026-10-06 14:47:14Z" end-time="2026-10-06 14:47:15Z" duration="1.063566" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: EnsureUnitCount
+]]></output>
+            </test-case>
+            <test-case id="1974" name="SubmitSemanticGraph_WhenCapacityIsFullCreatesNoPartialGoals" fullname="OpenEmpires.Tests.CommanderPhase4E3GraphAdmissionTests.SubmitSemanticGraph_WhenCapacityIsFullCreatesNoPartialGoals" methodname="SubmitSemanticGraph_WhenCapacityIsFullCreatesNoPartialGoals" classname="OpenEmpires.Tests.CommanderPhase4E3GraphAdmissionTests" runstate="Runnable" seed="728533237" result="Passed" start-time="2026-10-06 14:47:15Z" end-time="2026-10-06 14:47:16Z" duration="1.136370" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #2 submitted: EnsureUnitCount
+[Commander] Goal #3 submitted: EnsureUnitCount
+[Commander] Goal #4 submitted: EnsureUnitCount
+[Commander] Goal #5 submitted: EnsureUnitCount
+[Commander] Goal #6 submitted: EnsureUnitCount
+[Commander] Goal #7 submitted: EnsureUnitCount
+[Commander] Goal #8 submitted: EnsureUnitCount
+[Commander] Goal #9 submitted: EnsureUnitCount
+[Commander] Goal #10 submitted: EnsureUnitCount
+[Commander] Goal #11 submitted: EnsureUnitCount
+[Commander] Goal #12 submitted: EnsureUnitCount
+[Commander] Goal #13 submitted: EnsureUnitCount
+[Commander] Goal #14 submitted: EnsureUnitCount
+[Commander] Goal #15 submitted: EnsureUnitCount
+[Commander] Goal #16 submitted: EnsureUnitCount
+[Commander] Goal #17 submitted: EnsureUnitCount
+[Commander] Goal #18 submitted: EnsureUnitCount
+[Commander] Goal #19 submitted: EnsureUnitCount
+[Commander] Goal #20 submitted: EnsureUnitCount
+[Commander] Goal #21 submitted: EnsureUnitCount
+[Commander] Goal #22 submitted: EnsureUnitCount
+[Commander] Goal #23 submitted: EnsureUnitCount
+[Commander] Goal #24 submitted: EnsureUnitCount
+[Commander] Goal #25 submitted: EnsureUnitCount
+[Commander] Goal #26 submitted: EnsureUnitCount
+[Commander] Goal #27 submitted: EnsureUnitCount
+[Commander] Goal #28 submitted: EnsureUnitCount
+[Commander] Goal #29 submitted: EnsureUnitCount
+[Commander] Goal #30 submitted: EnsureUnitCount
+[Commander] Goal #31 submitted: EnsureUnitCount
+[Commander] Goal #32 submitted: EnsureUnitCount
+[Commander] Goal #33 submitted: EnsureUnitCount
+[Commander] Goal #34 submitted: EnsureUnitCount
+[Commander] Goal #35 submitted: EnsureUnitCount
+[Commander] Goal #36 submitted: EnsureUnitCount
+[Commander] Goal #37 submitted: EnsureUnitCount
+[Commander] Goal #38 submitted: EnsureUnitCount
+[Commander] Goal #39 submitted: EnsureUnitCount
+[Commander] Goal #40 submitted: EnsureUnitCount
+[Commander] Goal #41 submitted: EnsureUnitCount
+[Commander] Goal #42 submitted: EnsureUnitCount
+[Commander] Goal #43 submitted: EnsureUnitCount
+[Commander] Goal #44 submitted: EnsureUnitCount
+[Commander] Goal #45 submitted: EnsureUnitCount
+[Commander] Goal #46 submitted: EnsureUnitCount
+[Commander] Goal #47 submitted: EnsureUnitCount
+[Commander] Goal #48 submitted: EnsureUnitCount
+[Commander] Goal #49 submitted: EnsureUnitCount
+[Commander] Goal #50 submitted: EnsureUnitCount
+[Commander] Goal #51 submitted: EnsureUnitCount
+[Commander] Goal #52 submitted: EnsureUnitCount
+[Commander] Goal #53 submitted: EnsureUnitCount
+[Commander] Goal #54 submitted: EnsureUnitCount
+[Commander] Goal #55 submitted: EnsureUnitCount
+[Commander] Goal #56 submitted: EnsureUnitCount
+[Commander] Goal #57 submitted: EnsureUnitCount
+[Commander] Goal #58 submitted: EnsureUnitCount
+[Commander] Goal #59 submitted: EnsureUnitCount
+[Commander] Goal #60 submitted: EnsureUnitCount
+[Commander] Goal #61 submitted: EnsureUnitCount
+[Commander] Goal #62 submitted: EnsureUnitCount
+[Commander] Goal #63 submitted: EnsureUnitCount
+[Commander] Goal #64 submitted: EnsureUnitCount
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2100" name="CommanderPhase5AAuthorityTests" fullname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests" classname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-06 14:47:16Z" end-time="2026-10-06 14:47:25Z" duration="8.991615" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <test-case id="2111" name="ApprovalRequiresDisplayedSingleUseCredential_NotJustIdentityOrLabel" fullname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests.ApprovalRequiresDisplayedSingleUseCredential_NotJustIdentityOrLabel" methodname="ApprovalRequiresDisplayedSingleUseCredential_NotJustIdentityOrLabel" classname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests" runstate="Runnable" seed="640040799" result="Passed" start-time="2026-10-06 14:47:16Z" end-time="2026-10-06 14:47:17Z" duration="1.340210" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: MilitaryReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'MilitaryReinforcement' and started plan #1: MilitaryReinforcement.
+[StrategicPlanner] Reservation #1 created for plan #1: 200 Wood.
+[StrategicPlanner] Plan #1 milestone active: Production Capacity.
+[Commander] Goal #1 submitted: BuildStructure
+]]></output>
+            </test-case>
+            <test-case id="2109" name="ExplicitComputerOwner_BackgroundStillCommits" fullname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests.ExplicitComputerOwner_BackgroundStillCommits" methodname="ExplicitComputerOwner_BackgroundStillCommits" classname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests" runstate="Runnable" seed="1601614925" result="Passed" start-time="2026-10-06 14:47:17Z" end-time="2026-10-06 14:47:18Z" duration="1.020311" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: MilitaryReinforcement for player 1.
+[StrategicPlanner] Intent #1 selected template 'MilitaryReinforcement' and started plan #1: MilitaryReinforcement.
+[StrategicPlanner] Reservation #1 created for plan #1: 200 Wood.
+[StrategicPlanner] Plan #1 milestone active: Production Capacity.
+[Commander] Goal #1 submitted: BuildStructure
+]]></output>
+            </test-case>
+            <test-case id="2108" name="ForgedPlayerDirectLabel_CannotCommit" fullname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests.ForgedPlayerDirectLabel_CannotCommit" methodname="ForgedPlayerDirectLabel_CannotCommit" classname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests" runstate="Runnable" seed="1736140859" result="Passed" start-time="2026-10-06 14:47:18Z" end-time="2026-10-06 14:47:19Z" duration="0.992795" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="2104" name="HumanBackground_IsAdvisoryWithoutWork" fullname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests.HumanBackground_IsAdvisoryWithoutWork" classname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-06 14:47:19Z" end-time="2026-10-06 14:47:22Z" duration="2.793152" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="2101" name="HumanBackground_IsAdvisoryWithoutWork(0,False)" fullname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests.HumanBackground_IsAdvisoryWithoutWork(0,False)" methodname="HumanBackground_IsAdvisoryWithoutWork" classname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests" runstate="Runnable" seed="2116066734" result="Passed" start-time="2026-10-06 14:47:19Z" end-time="2026-10-06 14:47:20Z" duration="0.930065" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="2102" name="HumanBackground_IsAdvisoryWithoutWork(1,False)" fullname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests.HumanBackground_IsAdvisoryWithoutWork(1,False)" methodname="HumanBackground_IsAdvisoryWithoutWork" classname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests" runstate="Runnable" seed="913152013" result="Passed" start-time="2026-10-06 14:47:20Z" end-time="2026-10-06 14:47:21Z" duration="0.831430" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="2103" name="HumanBackground_IsAdvisoryWithoutWork(0,True)" fullname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests.HumanBackground_IsAdvisoryWithoutWork(0,True)" methodname="HumanBackground_IsAdvisoryWithoutWork" classname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests" runstate="Runnable" seed="1717617314" result="Passed" start-time="2026-10-06 14:47:21Z" end-time="2026-10-06 14:47:22Z" duration="1.021247" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="2107" name="HumanRecommendation_DirectCommitRejectsEvenEmergency" fullname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests.HumanRecommendation_DirectCommitRejectsEvenEmergency" classname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-06 14:47:22Z" end-time="2026-10-06 14:47:24Z" duration="1.785494" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="2105" name="HumanRecommendation_DirectCommitRejectsEvenEmergency(False)" fullname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests.HumanRecommendation_DirectCommitRejectsEvenEmergency(False)" methodname="HumanRecommendation_DirectCommitRejectsEvenEmergency" classname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests" runstate="Runnable" seed="1657524989" result="Passed" start-time="2026-10-06 14:47:22Z" end-time="2026-10-06 14:47:23Z" duration="0.851658" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="2106" name="HumanRecommendation_DirectCommitRejectsEvenEmergency(True)" fullname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests.HumanRecommendation_DirectCommitRejectsEvenEmergency(True)" methodname="HumanRecommendation_DirectCommitRejectsEvenEmergency" classname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests" runstate="Runnable" seed="1627628890" result="Passed" start-time="2026-10-06 14:47:23Z" end-time="2026-10-06 14:47:24Z" duration="0.928133" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="2110" name="TrustedDirectRoot_SurvivesBackgroundEmergency" fullname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests.TrustedDirectRoot_SurvivesBackgroundEmergency" methodname="TrustedDirectRoot_SurvivesBackgroundEmergency" classname="OpenEmpires.Tests.CommanderPhase5AAuthorityTests" runstate="Runnable" seed="1251517164" result="Passed" start-time="2026-10-06 14:47:24Z" end-time="2026-10-06 14:47:25Z" duration="1.044285" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: MilitaryReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'MilitaryReinforcement' and started plan #1: MilitaryReinforcement.
+[StrategicPlanner] Reservation #1 created for plan #1: 200 Wood.
+[StrategicPlanner] Plan #1 milestone active: Production Capacity.
+[Commander] Goal #1 submitted: BuildStructure
+[StrategicPlanner] Strategic intent rejected: Only a newly created strategic intent can be submitted.
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2112" name="CommanderPhase5AIntentAuthorityTests" fullname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" classname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-06 14:47:25Z" end-time="2026-10-06 14:47:32Z" duration="6.979031" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <test-case id="2117" name="CandidateApproval_RejectsForeignRuntimeGenerationAndChangedMeaning" fullname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.CandidateApproval_RejectsForeignRuntimeGenerationAndChangedMeaning" methodname="CandidateApproval_RejectsForeignRuntimeGenerationAndChangedMeaning" classname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" runstate="Runnable" seed="803544075" result="Passed" start-time="2026-10-06 14:47:25Z" end-time="2026-10-06 14:47:26Z" duration="0.805203" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: EnsureUnitCount
+]]></output>
+            </test-case>
+            <test-case id="2116" name="ExternalRuntimeCallers_HaveNoPublicApprovalMintingSurface" fullname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.ExternalRuntimeCallers_HaveNoPublicApprovalMintingSurface" methodname="ExternalRuntimeCallers_HaveNoPublicApprovalMintingSurface" classname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" runstate="Runnable" seed="700255563" result="Passed" start-time="2026-10-06 14:47:26Z" end-time="2026-10-06 14:47:27Z" duration="0.771826" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2115" name="ParsedGraph_CannotBypassConfirmationAtManagerBoundary" fullname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.ParsedGraph_CannotBypassConfirmationAtManagerBoundary" methodname="ParsedGraph_CannotBypassConfirmationAtManagerBoundary" classname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" runstate="Runnable" seed="637044234" result="Passed" start-time="2026-10-06 14:47:27Z" end-time="2026-10-06 14:47:28Z" duration="0.988038" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2114" name="ResetOrCancelPendingCompound_LeavesNoExecutablePrefix" fullname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.ResetOrCancelPendingCompound_LeavesNoExecutablePrefix" methodname="ResetOrCancelPendingCompound_LeavesNoExecutablePrefix" classname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" runstate="Runnable" seed="1877752966" result="Passed" start-time="2026-10-06 14:47:28Z" end-time="2026-10-06 14:47:29Z" duration="1.052058" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+]]></output>
+            </test-case>
+            <test-case id="2119" name="RetainedApprovedUiGraph_CannotCommitAfterHostGenerationReset" fullname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.RetainedApprovedUiGraph_CannotCommitAfterHostGenerationReset" methodname="RetainedApprovedUiGraph_CannotCommitAfterHostGenerationReset" classname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" runstate="Runnable" seed="962002498" result="Passed" start-time="2026-10-06 14:47:29Z" end-time="2026-10-06 14:47:30Z" duration="1.120719" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+]]></output>
+            </test-case>
+            <test-case id="2118" name="ThrowingAdmissionObserver_DoesNotMisreportCommittedGraphAsFailure" fullname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.ThrowingAdmissionObserver_DoesNotMisreportCommittedGraphAsFailure" methodname="ThrowingAdmissionObserver_DoesNotMisreportCommittedGraphAsFailure" classname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" runstate="Runnable" seed="169443360" result="Passed" start-time="2026-10-06 14:47:30Z" end-time="2026-10-06 14:47:31Z" duration="1.016497" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: BuildStructure
+[Commander] Committed graph observer failed; work remains admitted; type=InvalidOperationException
+[Commander] Goal #2 submitted: EnsureUnitCount
+[Commander] Committed graph observer failed; work remains admitted; type=InvalidOperationException
+]]></output>
+            </test-case>
+            <test-case id="2113" name="UngroundedCompound_PreviewsAllEffects_ThenCommitsOnce" fullname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.UngroundedCompound_PreviewsAllEffects_ThenCommitsOnce" methodname="UngroundedCompound_PreviewsAllEffects_ThenCommitsOnce" classname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" runstate="Runnable" seed="921092444" result="Passed" start-time="2026-10-06 14:47:31Z" end-time="2026-10-06 14:47:32Z" duration="1.206954" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: EnsureUnitCount
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

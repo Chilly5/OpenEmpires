@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="5" result="Failed(Child)" total="5" passed="2" failed="3" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 21:21:40Z" end-time="2026-10-06 21:21:53Z" duration="13.6307835">
+  <test-suite type="TestSuite" id="2487" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="201" result="Failed" site="Child" start-time="2026-10-06 21:21:40Z" end-time="2026-10-06 21:21:53Z" duration="13.630784" total="5" passed="2" failed="3" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2479" name="OpenEmpires.PlayModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.PlayModeTests.dll" runstate="Runnable" testcasecount="201" result="Failed" site="Child" start-time="2026-10-06 21:21:40Z" end-time="2026-10-06 21:21:53Z" duration="13.628059" total="5" passed="2" failed="3" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="1780" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2480" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="201" result="Failed" site="Child" start-time="2026-10-06 21:21:40Z" end-time="2026-10-06 21:21:53Z" duration="13.213954" total="5" passed="2" failed="3" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2481" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="201" result="Failed" site="Child" start-time="2026-10-06 21:21:40Z" end-time="2026-10-06 21:21:53Z" duration="13.208139" total="5" passed="2" failed="3" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="2470" name="CommanderPhase5ALiveRuntimePlayModeTests" fullname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests" classname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests" runstate="Runnable" testcasecount="6" result="Failed" site="Child" start-time="2026-10-06 21:21:40Z" end-time="2026-10-06 21:21:53Z" duration="13.202978" total="5" passed="2" failed="3" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5ALiveRuntime" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="2476" name="CastleAgeInformation_RealLunaNoExecution" fullname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests.CastleAgeInformation_RealLunaNoExecution" methodname="CastleAgeInformation_RealLunaNoExecution" classname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests" runstate="Runnable" seed="255974322" result="Passed" start-time="2026-10-06 21:21:40Z" end-time="2026-10-06 21:21:43Z" duration="3.180359" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-06T21:21:40.9191472Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] utc=2026-10-06T21:21:40.9191472Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=sent
+[Phase5A live] scenario=castle-question;input=What do I need to reach Castle age? I am asking for information, not an order.;providerOutcome=Answer;semanticNodes=;preview=False
+[SyncCheck] tick=1 checksum=6D2829AC
+[SyncCheck] tick=1 checksum=6D2829AC
+[SyncCheck] tick=2 checksum=5F0DA94B
+[SyncCheck] tick=2 checksum=5F0DA94B
+[SyncCheck] tick=3 checksum=50F328EA
+[SyncCheck] tick=3 checksum=50F328EA
+[SyncCheck] tick=4 checksum=42D8A889
+[SyncCheck] tick=4 checksum=42D8A889
+[SyncCheck] tick=5 checksum=34BE2828
+[SyncCheck] tick=5 checksum=34BE2828
+[SyncCheck] tick=6 checksum=26A3A7C7
+[SyncCheck] tick=6 checksum=26A3A7C7
+[SyncCheck] tick=7 checksum=18892766
+[SyncCheck] tick=7 checksum=18892766
+[SyncCheck] tick=8 checksum=0A6EA705
+[SyncCheck] tick=8 checksum=0A6EA705
+[SyncCheck] tick=9 checksum=FC5426A4
+[SyncCheck] tick=9 checksum=FC5426A4
+[SyncCheck] tick=10 checksum=EE39A643
+[SyncCheck] tick=10 checksum=EE39A643
+[SyncCheck] tick=11 checksum=E01F25E2
+[SyncCheck] tick=11 checksum=E01F25E2
+[SyncCheck] tick=12 checksum=D204A581
+[SyncCheck] tick=12 checksum=D204A581
+[SyncCheck] tick=13 checksum=C3EA2520
+[SyncCheck] tick=13 checksum=C3EA2520
+[SyncCheck] tick=14 checksum=B5CFA4BF
+[SyncCheck] tick=14 checksum=B5CFA4BF
+[SyncCheck] tick=15 checksum=A7B5245E
+[SyncCheck] tick=15 checksum=A7B5245E
+[SyncCheck] tick=16 checksum=999AA3FD
+[SyncCheck] tick=16 checksum=999AA3FD
+[SyncCheck] tick=17 checksum=8B80239C
+[SyncCheck] tick=17 checksum=8B80239C
+[SyncCheck] tick=18 checksum=7D65A33B
+[SyncCheck] tick=18 checksum=7D65A33B
+[SyncCheck] tick=19 checksum=6F4B22DA
+[SyncCheck] tick=19 checksum=6F4B22DA
+[SyncCheck] tick=20 checksum=6130A279
+[SyncCheck] tick=20 checksum=6130A279
+[SyncCheck] tick=21 checksum=53162218
+[SyncCheck] tick=21 checksum=53162218
+[SyncCheck] tick=22 checksum=44FBA1B7
+[SyncCheck] tick=22 checksum=44FBA1B7
+[SyncCheck] tick=23 checksum=36E12156
+[SyncCheck] tick=23 checksum=36E12156
+[SyncCheck] tick=24 checksum=28C6A0F5
+[SyncCheck] tick=24 checksum=28C6A0F5
+[SyncCheck] tick=25 checksum=1AAC2094
+[SyncCheck] tick=25 checksum=1AAC2094
+[SyncCheck] tick=26 checksum=0C91A033
+[SyncCheck] tick=26 checksum=0C91A033
+[SyncCheck] tick=27 checksum=FE771FD2
+[SyncCheck] tick=27 checksum=FE771FD2
+[SyncCheck] tick=28 checksum=F05C9F71
+[SyncCheck] tick=28 checksum=F05C9F71
+[SyncCheck] tick=29 checksum=E2421F10
+[SyncCheck] tick=29 checksum=E2421F10
+[SyncCheck] tick=30 checksum=D4279EAF
+[SyncCheck] tick=30 checksum=D4279EAF
+[Phase5A live] scenario=castle-question;outcome=Answer;goals=0;commands=0
+]]></output>
+            </test-case>
+            <test-case id="2472" name="MillNearVisibleBerries_RealLunaNativeConstruction" fullname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests.MillNearVisibleBerries_RealLunaNativeConstruction" methodname="MillNearVisibleBerries_RealLunaNativeConstruction" classname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests" runstate="Runnable" seed="434185975" result="Passed" start-time="2026-10-06 21:21:43Z" end-time="2026-10-06 21:21:47Z" duration="3.470606" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-06T21:21:44.0340524Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] utc=2026-10-06T21:21:44.0340524Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=sent
+[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #1 submitted: BuildStructure
+[Commander] intent=admitted;goal-submitted=True
+[Commander] intent=admitted;goal-submitted=True
+[Phase5A live] scenario=mill-berries;input=Build a mill near the berries my villager is working.;providerOutcome=Request;semanticNodes=BuildStructure:Mill:count=1:unit=:anchor=WorkedResource:relation=Near;preview=False
+[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Mill near the worked Food node at (134,133) with villager #0.
+[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Mill near the worked Food node at (134,133) with villager #0.
+[SyncCheck] tick=1 checksum=4F7A5F13
+[SyncCheck] tick=1 checksum=4F7A5F13
+[SyncCheck] tick=2 checksum=04A1C69E
+[SyncCheck] tick=2 checksum=04A1C69E
+[SyncCheck] tick=3 checksum=FD2F9D6A
+[SyncCheck] tick=3 checksum=FD2F9D6A
+[SyncCheck] tick=4 checksum=1A194A47
+[SyncCheck] tick=4 checksum=1A194A47
+[SyncCheck] tick=5 checksum=3E16888E
+[SyncCheck] tick=5 checksum=3E16888E
+[SyncCheck] tick=6 checksum=6213C6D5
+[SyncCheck] tick=6 checksum=6213C6D5
+[SyncCheck] tick=7 checksum=0255251C
+[SyncCheck] tick=7 checksum=0255251C
+[SyncCheck] tick=8 checksum=2F521F63
+[SyncCheck] tick=8 checksum=2F521F63
+[SyncCheck] tick=9 checksum=AB4EFDAA
+[SyncCheck] tick=9 checksum=AB4EFDAA
+[SyncCheck] tick=10 checksum=FD0633F1
+[SyncCheck] tick=10 checksum=FD0633F1
+[SyncCheck] tick=11 checksum=2D475238
+[SyncCheck] tick=11 checksum=2D475238
+[SyncCheck] tick=12 checksum=6998247F
+[SyncCheck] tick=12 checksum=6998247F
+[SyncCheck] tick=13 checksum=10E8EAC6
+[SyncCheck] tick=13 checksum=10E8EAC6
+[SyncCheck] tick=14 checksum=7019090D
+[SyncCheck] tick=14 checksum=7019090D
+[SyncCheck] tick=15 checksum=8B7AE354
+[SyncCheck] tick=15 checksum=8B7AE354
+[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (134,133): villager #0 is travelling to building #3.
+[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (134,133): villager #0 is travelling to building #3.
+[SyncCheck] tick=16 checksum=50BC0D9B
+[SyncCheck] tick=16 checksum=50BC0D9B
+[SyncCheck] tick=17 checksum=1B733FE2
+[SyncCheck] tick=17 checksum=1B733FE2
+[SyncCheck] tick=18 checksum=0B813229
+[SyncCheck] tick=18 checksum=0B813229
+[SyncCheck] tick=19 checksum=C0D20070
+[SyncCheck] tick=19 checksum=C0D20070
+[SyncCheck] tick=20 checksum=B87E12B5
+[SyncCheck] tick=20 checksum=B87E12B5
+[SyncCheck] tick=21 checksum=58687CFC
+[SyncCheck] tick=21 checksum=58687CFC
+[SyncCheck] tick=22 checksum=CAFC5F43
+[SyncCheck] tick=22 checksum=CAFC5F43
+[SyncCheck] tick=23 checksum=E5D2B58A
+[SyncCheck] tick=23 checksum=E5D2B58A
+[SyncCheck] tick=24 checksum=3E123FD1
+[SyncCheck] tick=24 checksum=3E123FD1
+[SyncCheck] tick=25 checksum=B5098618
+[SyncCheck] tick=25 checksum=B5098618
+[SyncCheck] tick=26 checksum=3B4E585F
+[SyncCheck] tick=26 checksum=3B4E585F
+[SyncCheck] tick=27 checksum=96441EA6
+[SyncCheck] tick=27 checksum=96441EA6
+[SyncCheck] tick=28 checksum=E45F34ED
+[SyncCheck] tick=28 checksum=E45F34ED
+[SyncCheck] tick=29 checksum=AC442334
+[SyncCheck] tick=29 checksum=AC442334
+[SyncCheck] tick=30 checksum=02E6D17B
+[SyncCheck] tick=30 checksum=02E6D17B
+[SyncCheck] tick=31 checksum=C260DBC2
+[SyncCheck] tick=31 checksum=C260DBC2
+[SyncCheck] tick=32 checksum=00CADA09
+[SyncCheck] tick=32 checksum=00CADA09
+[SyncCheck] tick=33 checksum=68785050
+[SyncCheck] tick=33 checksum=68785050
+[SyncCheck] tick=34 checksum=F309EE97
+[SyncCheck] tick=34 checksum=F309EE97
+[SyncCheck] tick=35 checksum=B7ED94DE
+[SyncCheck] tick=35 checksum=B7ED94DE
+[SyncCheck] tick=36 checksum=9C834323
+[SyncCheck] tick=36 checksum=9C834323
+[SyncCheck] tick=37 checksum=5EBA256A
+[SyncCheck] tick=37 checksum=5EBA256A
+[SyncCheck] tick=38 checksum=0D0FDBB1
+[SyncCheck] tick=38 checksum=0D0FDBB1
+[SyncCheck] tick=39 checksum=63D15C2A
+[SyncCheck] tick=39 checksum=63D15C2A
+[SyncCheck] tick=40 checksum=AD25EFC8
+[SyncCheck] tick=40 checksum=AD25EFC8
+[SyncCheck] tick=41 checksum=40EC001C
+[SyncCheck] tick=41 checksum=40EC001C
+[SyncCheck] tick=42 checksum=DC0B69AB
+[SyncCheck] tick=42 checksum=DC0B69AB
+[SyncCheck] tick=43 checksum=96B23E6D
+[SyncCheck] tick=43 checksum=96B23E6D
+[SyncCheck] tick=44 checksum=6E25D86A
+[SyncCheck] tick=44 checksum=6E25D86A
+[SyncCheck] tick=45 checksum=30714C61
+[SyncCheck] tick=45 checksum=30714C61
+[SyncCheck] tick=46 checksum=60186F8B
+[SyncCheck] tick=46 checksum=60186F8B
+[SyncCheck] tick=47 checksum=2F7249AE
+[SyncCheck] tick=47 checksum=2F7249AE
+[SyncCheck] tick=48 checksum=C4A7F28A
+[SyncCheck] tick=48 checksum=C4A7F28A
+[SyncCheck] tick=49 checksum=B0999DDA
+[SyncCheck] tick=49 checksum=B0999DDA
+[SyncCheck] tick=50 checksum=1CF0A1A1
+[SyncCheck] tick=50 checksum=1CF0A1A1
+[SyncCheck] tick=51 checksum=2DFDF120
+[SyncCheck] tick=51 checksum=2DFDF120
+[SyncCheck] tick=52 checksum=DE758C8F
+[SyncCheck] tick=52 checksum=DE758C8F
+[SyncCheck] tick=53 checksum=99CB8077
+[SyncCheck] tick=53 checksum=99CB8077
+[SyncCheck] tick=54 checksum=E3A42D50
+[SyncCheck] tick=54 checksum=E3A42D50
+[SyncCheck] tick=55 checksum=D634DC5E
+[SyncCheck] tick=55 checksum=D634DC5E
+[SyncCheck] tick=56 checksum=2066AE65
+[SyncCheck] tick=56 checksum=2066AE65
+[SyncCheck] tick=57 checksum=3138BD38
+[SyncCheck] tick=57 checksum=3138BD38
+[SyncCheck] tick=58 checksum=D0510309
+[SyncCheck] tick=58 checksum=D0510309
+[SyncCheck] tick=59 checksum=24355F19
+[SyncCheck] tick=59 checksum=24355F19
+[SyncCheck] tick=60 checksum=4F449AB1
+[SyncCheck] tick=60 checksum=4F449AB1
+[SyncCheck] tick=61 checksum=F6E6AA06
+[SyncCheck] tick=61 checksum=F6E6AA06
+[SyncCheck] tick=62 checksum=5B712162
+[SyncCheck] tick=62 checksum=5B712162
+[SyncCheck] tick=63 checksum=35BBE584
+[SyncCheck] tick=63 checksum=35BBE584
+[SyncCheck] tick=64 checksum=67E81C1F
+[SyncCheck] tick=64 checksum=67E81C1F
+[SyncCheck] tick=65 checksum=99193EF6
+[SyncCheck] tick=65 checksum=99193EF6
+[SyncCheck] tick=66 checksum=D1537811
+[SyncCheck] tick=66 checksum=D1537811
+[SyncCheck] tick=67 checksum=367A5BA5
+[SyncCheck] tick=67 checksum=367A5BA5
+[SyncCheck] tick=68 checksum=24F19FA7
+[SyncCheck] tick=68 checksum=24F19FA7
+[SyncCheck] tick=69 checksum=246A7A33
+[SyncCheck] tick=69 checksum=246A7A33
+[SyncCheck] tick=70 checksum=D121D303
+[SyncCheck] tick=70 checksum=D121D303
+[SyncCheck] tick=71 checksum=FBB2D9F6
+[SyncCheck] tick=71 checksum=FBB2D9F6
+[SyncCheck] tick=72 checksum=4648C934
+[SyncCheck] tick=72 checksum=4648C934
+[SyncCheck] tick=73 checksum=071B61F7
+[SyncCheck] tick=73 checksum=071B61F7
+[SyncCheck] tick=74 checksum=86D818BE
+[SyncCheck] tick=74 checksum=86D818BE
+[SyncCheck] tick=75 checksum=EFC9BD63
+[SyncCheck] tick=75 checksum=EFC9BD63
+[SyncCheck] tick=76 checksum=9567EB57
+[SyncCheck] tick=76 checksum=9567EB57
+[SyncCheck] tick=77 checksum=C168D6D0
+[SyncCheck] tick=77 checksum=C168D6D0
+[SyncCheck] tick=78 checksum=133EC1FA
+[SyncCheck] tick=78 checksum=133EC1FA
+[SyncCheck] tick=79 checksum=7C02252A
+[SyncCheck] tick=79 checksum=7C02252A
+[SyncCheck] tick=80 checksum=D6A4019F
+[SyncCheck] tick=80 checksum=D6A4019F
+[SyncCheck] tick=81 checksum=4721447C
+[SyncCheck] tick=81 checksum=4721447C
+[SyncCheck] tick=82 checksum=5ABE18DD
+[SyncCheck] tick=82 checksum=5ABE18DD
+[SyncCheck] tick=83 checksum=EB6352C3
+[SyncCheck] tick=83 checksum=EB6352C3
+[SyncCheck] tick=84 checksum=53EC4DEC
+[SyncCheck] tick=84 checksum=53EC4DEC
+[SyncCheck] tick=85 checksum=185701BC
+[SyncCheck] tick=85 checksum=185701BC
+[SyncCheck] tick=86 checksum=EFCD089E
+[SyncCheck] tick=86 checksum=EFCD089E
+[SyncCheck] tick=87 checksum=7F506984
+[SyncCheck] tick=87 checksum=7F506984
+[SyncCheck] tick=88 checksum=DD064107
+[SyncCheck] tick=88 checksum=DD064107
+[SyncCheck] tick=89 checksum=3686CD1A
+[SyncCheck] tick=89 checksum=3686CD1A
+[SyncCheck] tick=90 checksum=4A957F71
+[SyncCheck] tick=90 checksum=4A957F71
+[SyncCheck] tick=91 checksum=21FF52FC
+[SyncCheck] tick=91 checksum=21FF52FC
+[SyncCheck] tick=92 checksum=CD9B580B
+[SyncCheck] tick=92 checksum=CD9B580B
+[SyncCheck] tick=93 checksum=B8BAB81D
+[SyncCheck] tick=93 checksum=B8BAB81D
+[SyncCheck] tick=94 checksum=934E569C
+[SyncCheck] tick=94 checksum=934E569C
+[SyncCheck] tick=95 checksum=849D199B
+[SyncCheck] tick=95 checksum=849D199B
+[SyncCheck] tick=96 checksum=E4FDDA1F
+[SyncCheck] tick=96 checksum=E4FDDA1F
+[SyncCheck] tick=97 checksum=899F3FE8
+[SyncCheck] tick=97 checksum=899F3FE8
+[SyncCheck] tick=98 checksum=A0096E9B
+[SyncCheck] tick=98 checksum=A0096E9B
+[SyncCheck] tick=99 checksum=1C16890F
+[SyncCheck] tick=99 checksum=1C16890F
+[SyncCheck] tick=100 checksum=76BC7C07
+[SyncCheck] tick=100 checksum=76BC7C07
+[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (134,133): building #3 is advancing with villager #0.
+[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (134,133): building #3 is advancing with villager #0.
+[Phase5A live] scenario=mill-berries;completedId=3;berryId=0
+]]></output>
+            </test-case>
+            <test-case id="2475" name="SimpleKnownAllocation_RemainsImmediateWithoutPreviewOrExtraEffect" fullname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests.SimpleKnownAllocation_RemainsImmediateWithoutPreviewOrExtraEffect" methodname="SimpleKnownAllocation_RemainsImmediateWithoutPreviewOrExtraEffect" classname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests" runstate="Runnable" seed="551521789" result="Failed" label="Error" start-time="2026-10-06 21:21:47Z" end-time="2026-10-06 21:21:49Z" duration="2.524624" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.ArgumentException : Property Count was not found
+Parameter name: name]]></message>
+                <stack-trace><![CDATA[  at NUnit.Framework.Constraints.PropertyConstraint.ApplyTo (System.Object actual) [0x00050] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x0000e] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression) [0x00001] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests+<SimpleKnownAllocation_RemainsImmediateWithoutPreviewOrExtraEffect>d__19.MoveNext () [0x000be] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\PlayMode\CommanderPhase5ALiveRuntimePlayModeTests.cs:217 
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44 ]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-06T21:21:47.5147603Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] utc=2026-10-06T21:21:47.5147603Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=sent
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] intent=admitted;goal-submitted=True
+[Commander] intent=admitted;goal-submitted=True
+[Phase5A live] scenario=known-allocation;input=Put four idle villagers on berries.;providerOutcome=Request;semanticNodes=AllocateWorkers::count=:unit=:anchor=:relation=;preview=False
+]]></output>
+            </test-case>
+            <test-case id="2473" name="ThreeIdleWorkers_TwoSheepThirdMill_DisjointOrdinaryCommands" fullname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests.ThreeIdleWorkers_TwoSheepThirdMill_DisjointOrdinaryCommands" methodname="ThreeIdleWorkers_TwoSheepThirdMill_DisjointOrdinaryCommands" classname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests" runstate="Runnable" seed="2068013774" result="Failed" start-time="2026-10-06 21:21:49Z" end-time="2026-10-06 21:21:51Z" duration="2.022730" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: DynamicPlan
+  But was:  Unsupported
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests+<ThreeIdleWorkers_TwoSheepThirdMill_DisjointOrdinaryCommands>d__17.MoveNext () [0x000f9] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\PlayMode\CommanderPhase5ALiveRuntimePlayModeTests.cs:160
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-06T21:21:50.0278603Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] utc=2026-10-06T21:21:50.0278603Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=sent
+[Phase5A live] scenario=split-sheep-mill;input=Use exactly three idle villagers: send two to the sheep and have the third build a mill near the berries being worked.;providerOutcome=Unsupported;semanticNodes=;preview=False
+]]></output>
+            </test-case>
+            <test-case id="2474" name="TwoNewBarracksThenTenNewSpearmen_OnlyThoseProducers" fullname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests.TwoNewBarracksThenTenNewSpearmen_OnlyThoseProducers" methodname="TwoNewBarracksThenTenNewSpearmen_OnlyThoseProducers" classname="OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests" runstate="Runnable" seed="1689856202" result="Failed" start-time="2026-10-06 21:21:51Z" end-time="2026-10-06 21:21:53Z" duration="1.999641" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: DynamicPlan
+  But was:  Request
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5ALiveRuntimePlayModeTests+<TwoNewBarracksThenTenNewSpearmen_OnlyThoseProducers>d__18.MoveNext () [0x000a9] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\PlayMode\CommanderPhase5ALiveRuntimePlayModeTests.cs:187
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-06T21:21:52.0502464Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] utc=2026-10-06T21:21:52.0502464Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=sent
+[Phase5A live] scenario=barracks-spears;input=Build two new barracks near my town center, then train exactly ten new spearmen using only those new barracks.;providerOutcome=Request;semanticNodes=BuildStructure:Barracks:count=2:unit=:anchor=MyTownCenter:relation=Near,EnsureUnitCount::count=10:unit=1:anchor=:relation=;preview=False
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

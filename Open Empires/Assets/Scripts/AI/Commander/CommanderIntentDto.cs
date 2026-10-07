@@ -38,6 +38,7 @@ namespace OpenEmpires
         public string type;
         public string mode;
         public string resource;
+        public string sourceKind;
         public int? amount;
     }
 
@@ -103,13 +104,13 @@ namespace OpenEmpires
                 }
                 if (root.TryGetValue("constraints", out JToken constraints))
                 {
-                    if (!(constraints is JArray array) || array.Count > 3) throw new JsonException("constraints must be an array of at most three objects.");
+                    if (!(constraints is JArray array) || array.Count > 4) throw new JsonException("constraints must be an array of at most four objects.");
                     foreach (var item in array)
                     {
                         if (!(item is JObject constraint)) throw new JsonException("Each constraint must be an object.");
-                        CheckFields(constraint, "type", "mode", "resource", "amount");
+                        CheckFields(constraint, "type", "mode", "resource", "amount", "sourceKind");
                         dto.constraints.Add(new CommanderConstraintDTO { type = ReadString(constraint, "type"),
-                            mode = ReadString(constraint, "mode"), resource = ReadString(constraint, "resource"), amount = ReadAmount(constraint, "amount") });
+                            mode = ReadString(constraint, "mode"), resource = ReadString(constraint, "resource"), amount = ReadAmount(constraint, "amount"), sourceKind = ReadString(constraint, "sourceKind") });
                     }
                 }
                 return ValidateAndConvert(dto, context);
@@ -167,14 +168,30 @@ namespace OpenEmpires
                 return UnexpectedFields();
             var constraints = new List<CommanderConstraint>();
             var seen = new HashSet<string>(StringComparer.Ordinal);
-            if (dto.constraints == null || dto.constraints.Count > 3)
+            if (dto.constraints == null || dto.constraints.Count > 4)
                 return Reject(CommanderIntentErrorCode.UnsupportedConstraint, "constraints", "Invalid constraint collection.");
             foreach (var constraint in dto.constraints)
             {
                 if (constraint == null || constraint.type == null || !seen.Add(constraint.type))
                     return Reject(CommanderIntentErrorCode.UnsupportedConstraint, "constraints", "Empty or duplicate constraint.");
+                if (constraint.sourceKind != null && constraint.type != "ResourceSource")
+                    return Reject(CommanderIntentErrorCode.UnsupportedConstraint, "constraints", "SourceKind belongs only to ResourceSource.");
                 switch (constraint.type)
                 {
+                    case "ResourceSource":
+                        if ((type != CommanderIntentType.EnsureUnitCount && type != CommanderIntentType.BuildStructure
+                                && type != CommanderIntentType.ReachAge)
+                            || constraint.mode != null || constraint.amount.HasValue
+                            || !NamedEnum(constraint.resource, out ResourceType sourceResource)
+                            || !NamedEnum(constraint.sourceKind, out ResourceSourceKind sourceKind)
+                            || !ResourceSourceRules.IsCompatible(sourceResource, sourceKind))
+                            return Reject(CommanderIntentErrorCode.UnsupportedConstraint, "constraints", "ResourceSource requires a compatible resource/source pair for preparation.");
+                        constraints.Add(new ResourceSourceConstraint(sourceResource, sourceKind)); break;
+                    case "NoConstruction":
+                        if ((type != CommanderIntentType.EnsureUnitCount && type != CommanderIntentType.ReachAge)
+                            || constraint.mode != null || constraint.resource != null || constraint.amount.HasValue)
+                            return Reject(CommanderIntentErrorCode.UnsupportedConstraint, "constraints", "NoConstruction forbids new and resumed construction and takes no parameters.");
+                        constraints.Add(new NoConstructionConstraint()); break;
                     case "PreferredWorkers":
                         if (constraint.mode != "IdleOnly" || constraint.resource != null || constraint.amount.HasValue)
                             return Reject(CommanderIntentErrorCode.UnsupportedConstraint, "constraints", "PreferredWorkers requires only mode IdleOnly.");
@@ -452,12 +469,7 @@ namespace OpenEmpires
             else throw new ArgumentException("Unsupported intent implementation.", nameof(intent));
             foreach (var constraint in intent.Constraints)
             {
-                var item = new CommanderConstraintDTO { type = constraint.Type.ToString() };
-                if (constraint is PreferredWorkersConstraint preferred) item.mode = preferred.WorkerSource.ToString();
-                else if (constraint is ProtectedResourceConstraint protectedResource) { item.resource = protectedResource.Resource.ToString(); item.amount = protectedResource.MinimumWorkers; }
-                else if (constraint is MaximumQueueConstraint queue) item.amount = queue.MaximumQueue;
-                else throw new ArgumentException("Unsupported constraint implementation.", nameof(intent));
-                dto.constraints.Add(item);
+                dto.constraints.Add(FromConstraint(constraint));
             }
             return dto;
         }
@@ -473,6 +485,18 @@ namespace OpenEmpires
                 parameters = intent.Parameters != null ? new Dictionary<string, string>(intent.Parameters) : null
             };
             return dto;
+        }
+
+        internal static CommanderConstraintDTO FromConstraint(CommanderConstraint constraint)
+        {
+            var item = new CommanderConstraintDTO { type = constraint.Type.ToString() };
+            if (constraint is PreferredWorkersConstraint preferred) item.mode = preferred.WorkerSource.ToString();
+            else if (constraint is ResourceSourceConstraint source) { item.resource = source.Resource.ToString(); item.sourceKind = source.SourceKind.ToString(); }
+            else if (constraint is ProtectedResourceConstraint resource) { item.resource = resource.Resource.ToString(); item.amount = resource.MinimumWorkers; }
+            else if (constraint is MaximumQueueConstraint queue) item.amount = queue.MaximumQueue;
+            else if (!(constraint is NoConstructionConstraint))
+                throw new ArgumentException("Unsupported constraint implementation.", nameof(constraint));
+            return item;
         }
 
         public static CommanderIntentDTO FromStrategicIntent(StrategicIntent intent) => FromIntent(intent);

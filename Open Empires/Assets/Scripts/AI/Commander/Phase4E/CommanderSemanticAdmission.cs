@@ -16,6 +16,8 @@ namespace OpenEmpires
             if (node == null || context == null || context.PlayerId < 0) return false;
 
             var dto = new CommanderIntentDTO { intentCategory = "Tactical" };
+            foreach (var constraint in node.Constraints)
+                dto.constraints.Add(CommanderIntentDtoCodec.FromConstraint(constraint));
             switch (node.Type)
             {
                 case CommanderSemanticNodeType.EnsureUnitCount:

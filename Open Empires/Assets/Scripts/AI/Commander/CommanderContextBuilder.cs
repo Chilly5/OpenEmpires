@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenEmpires
 {
@@ -121,14 +122,27 @@ namespace OpenEmpires
             foreach (KeyValuePair<int, int> entry in visibleEnemyCounts)
                 visibleEnemyMilitary.Add(new CommanderVisibleEnemyMilitarySnapshot(
                     entry.Key, entry.Value));
-            string knowledgeContext = GameKnowledgeCatalog.Build(simulation)
-                .Slice(string.Empty, 12).ToDeterministicJson();
+            var catalog = GameKnowledgeCatalog.Build(simulation);
+            string knowledgeContext = catalog.Slice(string.Empty, 12).ToDeterministicJson();
+            var civilization = catalog.Civilizations.FirstOrDefault(c =>
+                c.Civilization == simulation.GetPlayerCivilization(player));
+            // Detached projections over the same canonical data and implemented
+            // adapters used at compilation; no name-to-ID table or invented costs.
+            var canonicalUnits = civilization == null ? Array.Empty<string>() : catalog.Units
+                .Where(u => CommanderDynamicCompiler.TryResolveTrainingRequest(u, catalog, simulation, player, out _)
+                    && civilization.AvailableUnitIds.Contains(u.StableId))
+                .Select(u => u.StableId).ToArray();
+            var canonicalBuildings = civilization == null ? Array.Empty<string>() : catalog.Buildings
+                .Where(b => CommanderIntentCatalog.IsSupportedStructure(b.BuildingType)
+                    && civilization.AvailableBuildingIds.Contains(b.StableId))
+                .Select(b => b.StableId).ToArray();
             return new CommanderContext(player, simulation.CurrentTick,
                 new CommanderResourceSnapshot(resources.Food, resources.Wood, resources.Gold, resources.Stone),
                 simulation.GetPopulation(player), simulation.GetPopulationCap(player), simulation.Config.MaxPopulation,
                 simulation.GetPlayerAge(player), simulation.GetPlayerCivilization(player).ToString(),
                 buildings, units, production, technologies, goals, visibleResources, options,
-                workerAllocationSnapshots, visibleEnemyMilitary, knowledgeContext, idleVillagers);
+                workerAllocationSnapshots, visibleEnemyMilitary, knowledgeContext, idleVillagers,
+                canonicalUnits, canonicalBuildings);
         }
 
         private static bool IsGatheringAssignment(UnitState state)

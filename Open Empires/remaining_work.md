@@ -1,5 +1,85 @@
 # OpenEmpires AI Commander — Remaining Phases Handoff
 
+## Phase 5A Closeout & Test Reconciliation (2026-10-07)
+
+Phase 5A is **ACCEPTED / FROZEN** and its historical test-suite reconciliation is **COMPLETE**.
+The independent AntiGravity hostile acceptance audit verified all strategic authority repairs, intent fidelity / request-scoped authorization boundaries, confirmation integrity rules, DynamicPlan DSL bounds, and deterministic execution invariants.
+
+Primary acceptance question verified:
+> Can a human player naturally request reasonable combinations of supported OpenEmpires mechanics while the Commander remains unable to invent a new strategic goal, gain authority from provider output, access forbidden information, or bypass deterministic game-side execution?
+> **VERIFIED: YES.**
+
+Verified totals:
+```text
+EditMode full regression baseline: 1,124 / 1,124 passed (100% GREEN, 0 failed, 0 skipped)
+PlayMode historical suite reconciliation: 24 CommanderPhase4D3HostPlayModeTests + 4 Host/PlayMode suites resolved via trusted authorization fixtures
+AntiGravity hostile test suite: 26 / 26 passed (CommanderPhase5AAntiGravityHostileAuditTests)
+PlayMode authority verification: 1 / 1 passed (CommanderPhase5AAuthorityPlayModeTests)
+Modern suites (Phase 4C through 5A): 100% GREEN
+Production code modifications: 0 (Test-only reconciliation)
+Fresh Windows 64-bit standalone build: Builds/Windows/OpenEmpires.exe, succeeded (0 errors)
+Standalone execution: Clean D3D12 startup; 0 errors and 0 unhandled exceptions in Player.log
+Source manifest: sources=68; changed=206; artifacts=79 (refresh-source-manifest.ps1 -VerifyOnly passed)
+```
+
+Final report: `Docs/CommanderPhase5A/antigravity-final-audit.md`.  
+Phase 5A is **ACCEPTED / FROZEN**.  
+**STOP: Do not begin Phase 5B automatically.**
+
+### Post-acceptance verification continuation (2026-10-07)
+
+The four reconciled PlayMode suites passed individually: Phase4B2 3/3, Phase4C1 17/17, Phase4C2 7/7, and Phase4D4Host 12/12 (39/39 total). The full PlayMode attempt completed 201/201 tests but reported one actual failure in the live Luna scenario `MillNearVisibleBerries_RealLunaNativeConstruction` at its tick-6000 lifecycle assertion. Unity MCP omitted the failed job's result summary and stack trace, so the pass/skip split and root cause remain unknown. The isolated follow-up stopped during fixture setup because the six-call provider cap had already been consumed; it issued no provider request. The full PlayMode result is not green and no production regression is established by the available evidence.
+
+The accepted 1,124/1,124 EditMode run, 26/26 hostile suite, 1/1 authority PlayMode run, and clean standalone startup remain prior evidence and were not rerun here. Production C# hashes match the existing source manifest; no production code was changed during this verification continuation. Current standalone executable and runtime DLL hashes still match the accepted audit. Detailed job records are in `Docs/CommanderPhase5A/reconciliation-playmode-evidence-2026-10-07.json`. Keep Phase 5A frozen; do not begin Phase 5B.
+
+The updated manifest records 78 sources, 217 changed files, and 79 XML test artifacts; the final `-VerifyOnly` check passed after these documentation and evidence updates.
+
+### Live Luna Mill diagnostic continuation (2026-10-07)
+
+The earlier full PlayMode result remains failed: job d957a71711a14314a727b6b1da4a4f5f completed 201 tests and reported the Mill scenario's tick-6000 assertion. After a normal Unity domain reload reset the live-call counter to zero, the single failing test passed twice in isolation (jobs 0a3a0151df9843a1a82b0a5946c60cba and fa99d068d2124d3e9e9df496fd6e6404). Both provider responses were HTTP 200/finish=stop and normalized to the same valid Request for one Mill near the worked berry; both completed through the Commander command path.
+
+The failed full-run response, semantic mode/node, and request trace remain unavailable. Source flow proves that run returned a non-null IsValid result before the lifecycle assertion, but does not distinguish a valid non-effectful interpretation from tactical admission behavior. The live test accepts any IsValid semantic outcome before waiting for a Mill, so provider variability can surface as a lifecycle timeout; this is a harness classification/diagnostic concern, not evidence of a production defect. Final diagnostic: LIVE LUNA FAILURE STILL UNCLASSIFIED. No production code or tests were modified; no Sol production fix handoff is justified. A future Sol review may improve outcome-specific reporting without weakening the effect expectation. Do not begin Phase 5B.
+
+The complete trace comparison and evidence limitations are recorded in Section 12 of Docs/CommanderPhase5A/antigravity-final-audit.md and the live_luna_mill_diagnostic field in Docs/CommanderPhase5A/reconciliation-playmode-evidence-2026-10-07.json.
+
+## Phase 5A implementation handoff — 2026-10-07
+
+**READY FOR ANTIGRAVITY AUDIT** — implementation/focused-evidence handoff, not release acceptance. The earlier in-progress entries below are chronological history, superseded by this entry and Docs/CommanderPhase5A/phase5a-implementation-report.md.
+
+Baseline remains branch unit_models_and_voice_control, HEAD4b0ebc3d7fefa7eb970f1446baff3a4c1c0331ca; actual dirty/uncommitted Unity root is D:/unity_projects/OpenEmpires/Open Empires, Unity6000.5.9f1. Human background/emergency commitment is gated by actual consent; explicitly configured computer owners retain autonomy; authorized continuations remain. Local request/candidate authority, normalized single-use preview, existing KnownIntent fast paths, strict nine-primitive DynamicPlan/compiler, canonical Farm/Mill mechanics, frozen disjoint worker roles and exact producer/production results are implemented. Shared constraints reach implicit preparation; sticky takeover and cached Gold preservation are fixed. Canonical civilization replacements use the existing resolver and truthful preview names. Opt-in traces are bounded metadata, not authority/wire provenance.
+
+Final focused EditMode48/48 (866e8777) and final-source PlayMode5/5 (3284c57a) passed, zero failures/skips and zero console errors. Six required configured Luna/normal UI/native-command scenarios have scoped passing evidence; 13 submitted interpretations total, earlier failed attempts retained. No additional paid calls for closeout. Full source/protected/evidence hashes and fourteen documents are in Docs/CommanderPhase5A, with guideline updated. Do not sum overlapping focused runs or treat historical suite totals as tests of this source.
+
+Next owner: AntiGravity, following antigravity-test-plan.md. Still required for acceptance: full final EditMode/PlayMode, current Windows standalone build/Player.log, actual native UI/voice/reset/late-response checks, exhaustive hostile authority/graph/repair/result-concurrency/takeover matrix, all civilization/placement/source/modifier cases, and multiplayer owner/determinism/version-compatible peer checks where available. Historical economy/result-binding acceptance remains pending beyond the scoped refresh. Core/Buildings changes are local observational receipts/correlation; no new provenance wire bytes, but pre-existing restricted economy packets still require compatible updated peers.
+
+Supported limits: UnitSet has no new DynamicPlan effect consumer (existing KnownIntent follow-ups retained); only one ResourceSource per candidate and four shared constraints total; no conditions; Near gap exactly1; no deterministic English entailment. Unsupported constraints/mechanics must not be dropped or widened. Small localized audit fixes are AntiGravity's scope; architectural changes need an explicit fix phase. **Do not begin Phase5B automatically.**
+
+## Phase 5A implementation in progress — 2026-10-06
+
+Latest follow-up: allsixmandatoryrealLuna/native scenarios nowpass throughnormalUI/ordinarycommands (Farms, workedberryMill, shared3Idle2Sheep+thirdMill, 2newBarracks+10exactnewSpears, immediateKnown4berryworkers, nonexecutingCastlequestion). Failures retained;13total submittedliveinterpretations, paidchecks stopped. Targetedreview origin-lossreplacement/cancelcleanup/Neargap fixes pass32focusedcases, and canonicalmutation usesexistingvirtualBarrackscost (Farmcostreadonlyconstant, unchanged). Finalsource/constraint/result/voice/economy proof and documentation/manifest/guideline/requirementaudit stillopen; notREADY orcomplete.
+
+Latest 2026-10-07: shared dynamic constraints pass16 focused cases; duplicate KnownIntent building vocabulary/parser lists were aligned to existingcanonical construction support after realLuna Farm mismatches. RealLuna/native Farms, worked-berry Mill and read-only Castle question now pass. Simple allocation nativeproof, shared-worker composition and two-new-producer composition remain open after threefailed attempts (onefixtureassertion issue, twoproviderrepresentation gaps); no paidbrute-force retries. Nine total submitted live interpretations sofar, no billingclaim. Completeattempt/passXMLs retained. Fullgoal remains active; noREADYverdict/fullsuite/standalone/Phase5B.
+
+2026-10-07 update: independently typed effect scopes and complete symbolic previews, actual DynamicPlan UI confirmation, correlated KnownIntent admission before first publication, request-wide confirmed-plan cancellation, canonical content-ID projections, and bounded numeric-shape-only OpenRouter repair are implemented. Terminal79/79 affected focused EditMode checks pass (job6e680daa, no full regression). Real native lifecycle/Luna fixtures are being prepared; no paid/live provider call has yet been made. Dynamic prerequisite/negative-constraint completeness, result freshness/cleanup, mandatory live scenarios and final evidence/docs/review remain gates, not waived by these checks.
+
+Current baseline is `4b0ebc3d7fefa7eb970f1446baff3a4c1c0331ca` on `unit_models_and_voice_control`, live Unity root `D:/unity_projects/OpenEmpires/Open Empires`. Current implementation is dirty/uncommitted by explicit user instruction. Preserve the historical investigation and accepted-phase records below; none certify this changed snapshot.
+
+Checkpoint A authority repair has focused evidence: original authority RED8cases (7failures), initial GREEN8/8, affected Edit29/29, and Play3/3 including actual bootstrap qualifying human/advisory and explicit computer control. Human background/emergency recommendations cannot commit via StrategicPlanner; direct/consumed-approved runtime-bound roots retain execution/continuation. Source labels/priority alone do not grant consent. Ordinary opening-state/user-incident replay is not claimed.
+
+Checkpoint B partial implementation: normalized compound preview, one local single-use approval, manager-bound request/runtime/generation/revision sidecar, lower goal-manager unsigned-graph rejection, request/root dispatch correlation, and request-global NoConstruction (new and resumed construction) with strict four-constraint roundtrip. Later authority/observer/generation evidence is43/43 focused; negative constraints3/3 focused. Remaining B work includes independently grounded typed root/effect matching, full prerequisite/worker/source constraints and complete provenance/cancellation on simple/strategic paths.
+
+Checkpoint C partial implementation: strict immutable nine-primitive DynamicPlan schema/parser and side-effect-free canonical compiler; exact accepted training-order/spawn attribution and original native placement correlation; exact newly built producer collections; frozen atomic shared-worker selection/partition and sticky takeover guards. Terminal22/22 covers compiler3, local relay ledger13, result/producer6; subsequent7/7 covers static compiler3, producer2 and actual shared-worker admission/ordinary commands2. These are focused in-process proofs, not full suites, live Luna, standalone or multiplayer peer certification. Semantic location/runtime adapters are currently being integrated after expected REDs; that newer source is not yet verified.
+
+Latest location integration10/10 focused passed (job1872a087): one/two distinct exact Mills near a frozen visible berry source, three-worker atomic/disjoint role assignment, sticky human takeover, compiler and exact producer checks. Normal placement/cost/commands run, but foundations were explicitly completed to isolate attribution/placement from travel/construction duration. Complete XML and a dirty source-byte progress snapshot are retained. Full native lifecycle, live provider, standalone and multiplayer peers are not proven.
+
+Remaining C/D gates: actual canonical Farm lifecycle and canonical mutation/discovery proof, owned/future-result anchor and selected-producer loss/freshness cases, complete selector/constraint/quantity semantics, normalized preview of all symbolic restrictions, provider/UI integration/repair/truncation limits, all mandatory real Luna/UI/normal-command scenarios, final focused integration/review and complete AntiGravity documents/manifest. No final Phase5A verdict or release acceptance yet; goal remains active. Do not begin Phase5B/full regression/standalone/hostile audit here. Independent audit still owns historical economy/result-binding/standalone/multiplayer verification.
+
+Follow `Docs/CommanderPhase5A/phase5a-specification.md`, `phase5a-implementation-plan.md` and `execution-progress.md`. No commits, pushes, provider switches, credential disclosure or gameplay-network redesign authorized.
+
+## Pre-Phase-5A intent-fidelity investigation — 2026-10-06
+
+**Investigation complete; Phase 5A implementation not started.** A focused existing PlayMode test confirms that a background strategic evaluation with no player intent can select and submit a plan. The ordinary opening-state snapshot is not statically expected to meet the tested recommendation thresholds, and a full match-start reproduction or Luna response was not captured. No source code was changed. See `Docs/CommanderPhase5A/pre-phase5a-intent-fidelity-investigation.md` for the call graph, evidence limits, provider audit, and proposed Phase 5A invariant.
+
 ## Targeted economy/clarification repair — 2026-10-06
 
 **READY FOR FINALIZATION AUDIT**, subject to the exact source/evidence records in `Docs/CommanderFix` (not a release acceptance or new phase).

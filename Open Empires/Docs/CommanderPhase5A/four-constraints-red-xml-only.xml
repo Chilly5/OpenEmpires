@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 15:13:30Z" end-time="2026-10-06 15:13:32Z" duration="2.7360501">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1017" result="Failed" site="Child" start-time="2026-10-06 15:13:30Z" end-time="2026-10-06 15:13:32Z" duration="2.736050" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2148" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1017" result="Failed" site="Child" start-time="2026-10-06 15:13:30Z" end-time="2026-10-06 15:13:32Z" duration="2.637334" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="6620" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2149" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1017" result="Failed" site="Child" start-time="2026-10-06 15:13:30Z" end-time="2026-10-06 15:13:32Z" duration="2.545694" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2150" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1017" result="Failed" site="Child" start-time="2026-10-06 15:13:30Z" end-time="2026-10-06 15:13:32Z" duration="2.440146" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="2112" name="CommanderPhase5AIntentAuthorityTests" fullname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" classname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" runstate="Runnable" testcasecount="10" result="Failed" site="Child" start-time="2026-10-06 15:13:30Z" end-time="2026-10-06 15:13:32Z" duration="2.327889" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="2122" name="FourTypedConstraints_RoundTrip_AndMalformedSemanticConstraintsReject" fullname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.FourTypedConstraints_RoundTrip_AndMalformedSemanticConstraintsReject" methodname="FourTypedConstraints_RoundTrip_AndMalformedSemanticConstraintsReject" classname="OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests" runstate="Runnable" seed="1848216523" result="Failed" start-time="2026-10-06 15:13:30Z" end-time="2026-10-06 15:13:32Z" duration="2.190049" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  The shared legacy codec must retain all four typed constraints.
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.FourTypedConstraints_RoundTrip_AndMalformedSemanticConstraintsReject () [0x000ac] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AIntentAuthorityTests.cs:243
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

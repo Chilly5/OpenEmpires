@@ -57,7 +57,12 @@ namespace OpenEmpires.Tests
             Assert.That(sent, Does.Contain("RangedReinforcement"));
             Assert.That(sent, Does.Contain("population"));
             Assert.That(sent, Does.Not.Contain("PlayerId"));
-            Assert.That(sent, Does.Not.Contain("BuildingId"));
+            // Canonical building IDs are permitted content facts, not runtime identity.
+            // Keep rejecting both casing forms of the actual entity property and the
+            // distinctive fixture IDs below; substring matching mislabeled the new
+            // canonicalBuildingIds content array as a leak.
+            Assert.That(sent, Does.Not.Contain("\"BuildingId\""));
+            Assert.That(sent, Does.Not.Contain("\"buildingId\""));
             Assert.That(sent, Does.Not.Contain("TileX"));
             Assert.That(sent, Does.Not.Contain("VisibleEnemyMilitary"));
             Assert.That(sent, Does.Not.Contain("enemy-sentinel"));

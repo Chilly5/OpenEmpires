@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Passed" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 14:03:32Z" end-time="2026-10-06 14:03:33Z" duration="1.4215075">
+  <test-suite type="TestSuite" id="2389" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="195" result="Passed" start-time="2026-10-06 14:03:32Z" end-time="2026-10-06 14:03:33Z" duration="1.421508" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="2383" name="OpenEmpires.PlayModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.PlayModeTests.dll" runstate="Runnable" testcasecount="195" result="Passed" start-time="2026-10-06 14:03:32Z" end-time="2026-10-06 14:03:33Z" duration="1.419015" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="17228" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="2384" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="195" result="Passed" start-time="2026-10-06 14:03:32Z" end-time="2026-10-06 14:03:33Z" duration="1.416193" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="2385" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="195" result="Passed" start-time="2026-10-06 14:03:32Z" end-time="2026-10-06 14:03:33Z" duration="1.414302" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="2346" name="CommanderPhase4E2SpatialPlacementPlayModeTests" fullname="OpenEmpires.Tests.CommanderPhase4E2SpatialPlacementPlayModeTests" classname="OpenEmpires.Tests.CommanderPhase4E2SpatialPlacementPlayModeTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-06 14:03:32Z" end-time="2026-10-06 14:03:32Z" duration="0.309758" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase4E2" />
+            </properties>
+            <test-case id="2349" name="CompoundWestBuildThenSpearmen_UsesOnlyTheBoundNewBarracks" fullname="OpenEmpires.Tests.CommanderPhase4E2SpatialPlacementPlayModeTests.CompoundWestBuildThenSpearmen_UsesOnlyTheBoundNewBarracks" methodname="CompoundWestBuildThenSpearmen_UsesOnlyTheBoundNewBarracks" classname="OpenEmpires.Tests.CommanderPhase4E2SpatialPlacementPlayModeTests" runstate="Runnable" seed="1973850632" result="Passed" start-time="2026-10-06 14:03:32Z" end-time="2026-10-06 14:03:32Z" duration="0.306667" asserts="0">
+              <properties>
+                <property name="Category" value="CommanderPhase4E3" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: EnsureUnitCount
+[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Barracks at (120,128) using exact semantic placement with 5 clear-tile gap and villager #0.
+[SyncCheck] tick=1 checksum=0FC52C79
+[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Barracks at (120,128): villager #0 is travelling to building #2.
+[Commander] Goal #1: status=Completed owned=1 queued=0; Barracks construction complete at (120,128) as building #2.
+[Commander] Goal #2: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #2.
+[Commander] Goal #2: status=Blocked owned=0 queued=0; The requested producer is no longer owned, alive, or compatible.
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2369" name="CommanderPhase4GResultBindingPlayModeTests" fullname="OpenEmpires.Tests.CommanderPhase4GResultBindingPlayModeTests" classname="OpenEmpires.Tests.CommanderPhase4GResultBindingPlayModeTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-06 14:03:32Z" end-time="2026-10-06 14:03:33Z" duration="0.459720" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="2370" name="BuildProduceThenPatrol_UsesExactProducedSpearmen" fullname="OpenEmpires.Tests.CommanderPhase4GResultBindingPlayModeTests.BuildProduceThenPatrol_UsesExactProducedSpearmen" methodname="BuildProduceThenPatrol_UsesExactProducedSpearmen" classname="OpenEmpires.Tests.CommanderPhase4GResultBindingPlayModeTests" runstate="Runnable" seed="147407509" result="Passed" start-time="2026-10-06 14:03:32Z" end-time="2026-10-06 14:03:33Z" duration="0.455868" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #2 submitted: CapabilityAction
+[Commander] Goal #1: status=Executing owned=1 queued=0; Queueing Spearman at Barracks #1.
+[SyncCheck] tick=1 checksum=9FF71422
+[SyncCheck] tick=2 checksum=EDE58662
+[SyncCheck] tick=3 checksum=3BD3F8A2
+[SyncCheck] tick=4 checksum=89C26AE2
+[SyncCheck] tick=5 checksum=D7B0DD22
+[SyncCheck] tick=6 checksum=259F4F62
+[SyncCheck] tick=7 checksum=738DC1A2
+[SyncCheck] tick=8 checksum=C17C33E2
+[SyncCheck] tick=9 checksum=0F6AA622
+[SyncCheck] tick=10 checksum=5D591862
+[SyncCheck] tick=11 checksum=AB478AA2
+[SyncCheck] tick=12 checksum=F935FCE2
+[SyncCheck] tick=13 checksum=47246F22
+[SyncCheck] tick=14 checksum=9512E162
+[SyncCheck] tick=15 checksum=E30153A2
+[Commander] Goal #1: status=Executing owned=1 queued=1; Queueing Spearman at Barracks #1.
+[SyncCheck] tick=16 checksum=2ECBFC0A
+[SyncCheck] tick=17 checksum=9EABD1CA
+[SyncCheck] tick=18 checksum=0E8BA78A
+[SyncCheck] tick=19 checksum=7E6B7D4A
+[SyncCheck] tick=20 checksum=EE4B530A
+[SyncCheck] tick=21 checksum=5E2B28CA
+[SyncCheck] tick=22 checksum=CE0AFE8A
+[SyncCheck] tick=23 checksum=3DEAD44A
+[SyncCheck] tick=24 checksum=ADCAAA0A
+[SyncCheck] tick=25 checksum=1DAA7FCA
+[SyncCheck] tick=26 checksum=8D8A558A
+[SyncCheck] tick=27 checksum=FD6A2B4A
+[SyncCheck] tick=28 checksum=6D4A010A
+[SyncCheck] tick=29 checksum=DD29D6CA
+[SyncCheck] tick=30 checksum=4D09AC8A
+[Commander] Goal #1: status=Executing owned=1 queued=2; Queueing Spearman at Barracks #1.
+[SyncCheck] tick=31 checksum=256AD7F4
+[SyncCheck] tick=32 checksum=B185BA34
+[SyncCheck] tick=33 checksum=3DA09C74
+[SyncCheck] tick=34 checksum=C9BB7EB4
+[SyncCheck] tick=35 checksum=55D660F4
+[SyncCheck] tick=36 checksum=E1F14334
+[SyncCheck] tick=37 checksum=6E0C2574
+[SyncCheck] tick=38 checksum=FA2707B4
+[SyncCheck] tick=39 checksum=8641E9F4
+[SyncCheck] tick=40 checksum=125CCC34
+[SyncCheck] tick=41 checksum=9E77AE74
+[SyncCheck] tick=42 checksum=2A9290B4
+[SyncCheck] tick=43 checksum=B6AD72F4
+[SyncCheck] tick=44 checksum=42C85534
+[SyncCheck] tick=45 checksum=CEE33774
+[Commander] Goal #1: status=WaitingForProduction owned=1 queued=3; Owned 1, queued 3, target 4.
+[SyncCheck] tick=46 checksum=5AFE19B4
+[SyncCheck] tick=47 checksum=E718FBF4
+[SyncCheck] tick=48 checksum=7333DE34
+[SyncCheck] tick=49 checksum=FF4EC074
+[SyncCheck] tick=50 checksum=8B69A2B4
+[SyncCheck] tick=51 checksum=178484F4
+[SyncCheck] tick=52 checksum=A39F6734
+[SyncCheck] tick=53 checksum=2FBA4974
+[SyncCheck] tick=54 checksum=BBD52BB4
+[SyncCheck] tick=55 checksum=47F00DF4
+[SyncCheck] tick=56 checksum=D40AF034
+[SyncCheck] tick=57 checksum=6025D274
+[SyncCheck] tick=58 checksum=EC40B4B4
+[SyncCheck] tick=59 checksum=785B96F4
+[SyncCheck] tick=60 checksum=04767934
+[SyncCheck] tick=61 checksum=90915B74
+[SyncCheck] tick=62 checksum=1CAC3DB4
+[SyncCheck] tick=63 checksum=A8C71FF4
+[SyncCheck] tick=64 checksum=34E20234
+[SyncCheck] tick=65 checksum=C0FCE474
+[SyncCheck] tick=66 checksum=4D17C6B4
+[SyncCheck] tick=67 checksum=D932A8F4
+[SyncCheck] tick=68 checksum=654D8B34
+[SyncCheck] tick=69 checksum=F1686D74
+[SyncCheck] tick=70 checksum=7D834FB4
+[SyncCheck] tick=71 checksum=099E31F4
+[SyncCheck] tick=72 checksum=95B91434
+[SyncCheck] tick=73 checksum=21D3F674
+[SyncCheck] tick=74 checksum=ADEED8B4
+[SyncCheck] tick=75 checksum=3A09BAF4
+[SyncCheck] tick=76 checksum=C6249D34
+[SyncCheck] tick=77 checksum=523F7F74
+[SyncCheck] tick=78 checksum=DE5A61B4
+[SyncCheck] tick=79 checksum=6A7543F4
+[SyncCheck] tick=80 checksum=F6902634
+[SyncCheck] tick=81 checksum=82AB0874
+[SyncCheck] tick=82 checksum=0EC5EAB4
+[SyncCheck] tick=83 checksum=9AE0CCF4
+[SyncCheck] tick=84 checksum=26FBAF34
+[SyncCheck] tick=85 checksum=B3169174
+[SyncCheck] tick=86 checksum=3F3173B4
+[SyncCheck] tick=87 checksum=CB4C55F4
+[SyncCheck] tick=88 checksum=57673834
+[SyncCheck] tick=89 checksum=E3821A74
+[SyncCheck] tick=90 checksum=6F9CFCB4
+[SyncCheck] tick=91 checksum=FBB7DEF4
+[SyncCheck] tick=92 checksum=87D2C134
+[SyncCheck] tick=93 checksum=13EDA374
+[SyncCheck] tick=94 checksum=A00885B4
+[SyncCheck] tick=95 checksum=2C2367F4
+[SyncCheck] tick=96 checksum=B83E4A34
+[SyncCheck] tick=97 checksum=44592C74
+[SyncCheck] tick=98 checksum=D0740EB4
+[SyncCheck] tick=99 checksum=5C8EF0F4
+[SyncCheck] tick=100 checksum=E8A9D334
+[Commander] Goal #1: status=WaitingForProduction owned=2 queued=2; Owned 2, queued 2, target 4.
+[Commander] Goal #1: status=WaitingForProduction owned=3 queued=1; Owned 3, queued 1, target 4.
+[Commander] Goal #1: status=Completed owned=4 queued=0; Owned 4/4 living units.
+[Commander] Goal #2: status=Executing owned=0 queued=0; Resolved a bounded patrol around a visible game-side anchor.
+[Phase4G Runtime] PASS exact result binding: tick=901, spearmen=7,8,9, patrol=Executing.
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2379" name="CommanderPhase5AAuthorityPlayModeTests" fullname="OpenEmpires.Tests.CommanderPhase5AAuthorityPlayModeTests" classname="OpenEmpires.Tests.CommanderPhase5AAuthorityPlayModeTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-06 14:03:33Z" end-time="2026-10-06 14:03:33Z" duration="0.642687" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <test-case id="2380" name="QualifyingBootstrapStartup_AndLaterEmergencyRemainAdvisory" fullname="OpenEmpires.Tests.CommanderPhase5AAuthorityPlayModeTests.QualifyingBootstrapStartup_AndLaterEmergencyRemainAdvisory" methodname="QualifyingBootstrapStartup_AndLaterEmergencyRemainAdvisory" classname="OpenEmpires.Tests.CommanderPhase5AAuthorityPlayModeTests" runstate="Runnable" seed="577955501" result="Passed" start-time="2026-10-06 14:03:33Z" end-time="2026-10-06 14:03:33Z" duration="0.638469" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[SyncCheck] Map=Albion Lowlands MapSeed=42 Players=2 Teams=[0,1] AI=[]
+[SyncCheck] Tick0 Checksum=FA5362A4
+[SyncCheck] tick=0 units=0:00000000 blds=0:00000000 teams=00000001 resNodes=0:00000000 playerRes=00000000
+[SinglePlayerAnalytics] Session started: b2cf3ca7-e089-47ab-9d9f-1cbb3dc6c187
+[SyncCheck] tick=1 checksum=E8FC3B6A
+[Phase5A] actual bootstrap qualifying human: advisory exists; plans/goals/reservations/commands=0.
+[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.
+[StrategicPlanner] Plan #1 milestone active: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+[Phase5A] authorized direct root survives later emergency advisory with zero recommendation-attributable goal/plan deltas.
+[DotEnv] Loaded .env from D:\unity_projects\OpenEmpires\Open Empires\.env
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

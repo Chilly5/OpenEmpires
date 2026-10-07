@@ -1,6 +1,18 @@
-# Commander data-maintenance guideline (Phase 4F accepted)
+# Commander data-maintenance guideline
 
-Status: Accepted and verified by independent hostile audit. OpenEmpires canonical gameplay systems remain authoritative; GameKnowledgeCatalog provides detached read-only projections.
+Status: Phase 4F acceptance is historical. Phase 5A changes have focused evidence and await independent AntiGravity acceptance. OpenEmpires canonical gameplay systems remain authoritative; GameKnowledgeCatalog provides detached read-only projections.
+
+## Phase 5A maintenance rules
+
+The provider describes semantic effects, never grants authority. Preserve human strategy consent at StrategicPlanner.SubmitIntent, exact game-owned direct/approved credentials, and explicitly configured computer ownership. Emergency/background labels cannot create human consent. Keep authorized continuations working.
+
+For a new composition mechanic, register a strict bounded typed primitive only after adding a real deterministic adapter, whole-candidate validation, normalized preview, commit preflight, lifecycle cleanup and focused ordinary-command evidence. Do not add prompt-only stubs, executable code, runtime IDs, coordinates or provider approval fields. Existing single KnownIntent paths remain automatic; synthesized DynamicPlans/ungrounded compound effects need one exact local confirmation.
+
+Discover actual canonical IDs/civilization availability from GameKnowledgeCatalog. Map replacement units onto existing supported training requests through GameSimulation.ResolveCivUnitType, not a duplicate replacement table. Provider content slices and mechanic vocabulary must be derived from the same registries/adapters as compilation. Knowledge discovery is not execution capability. Farms use native footprint/tile/cost/construction/food-node rules, not invented influence requirements.
+
+Preserve count modes (SelectedCount, Additional, explicit TargetTotal, one-time AllMatching), frozen shared worker partitions, exact result/producer identity and sticky human takeover. Shared constraints currently allow at most four unique types from NoConstruction, PreferredWorkers/IdleOnly, MaximumQueue, ProtectedResource, ResourceSource; only one ResourceSource restriction per candidate. Unsupported combinations must not be silently dropped. Root restrictions apply to private prerequisite preparation as well as direct effects.
+
+Local training/placement receipts and request diagnostics are observations, not network authority. Do not add wire provenance or change multiplayer encoding for diagnostics. Pre-existing source-restricted economy packets retain their updated-peer/version requirements. Re-run affected focused checks after a source change; AntiGravity owns full final suites, standalone/Player.log, native UI/voice, hostile matrix and multiplayer compatibility. See Docs/CommanderPhase5A/antigravity-test-plan.md. No automatic Phase 5B.
 
 OpenEmpires gameplay definitions remain authoritative. The Commander consumes detached projections through `GameKnowledgeCatalog`; `CommanderCapabilityCatalog` separately controls what execution currently supports.
 

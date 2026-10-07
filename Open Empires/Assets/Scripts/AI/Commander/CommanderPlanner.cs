@@ -50,6 +50,17 @@ namespace OpenEmpires
 
         public CommanderPlan Plan(CommanderGoal goal, int currentTick)
         {
+            if (goal.FrozenWorkerHumanOverride)
+                return new CommanderPlan(CommanderGoalStatus.Blocked,
+                    "The player took control of a request-bound worker; no substitute or reclaim is authorized.", 0, 0);
+            if (goal.FrozenWorkerIds != null && goal.FrozenWorkerIds.Any(id =>
+            {
+                var worker = simulation.UnitRegistry.GetUnit(id);
+                return worker == null || worker.PlayerId != goal.PlayerId || !worker.IsVillager
+                    || worker.IsSheep || worker.CurrentHealth <= 0 || worker.State == UnitState.Dead;
+            }))
+                return new CommanderPlan(CommanderGoalStatus.Blocked,
+                    "A request-bound worker is missing, dead or foreign; no substitute is authorized.", 0, 0);
             if (goal is AllocateWorkersGoal workers) return PlanWorkerAllocation(workers, currentTick);
             if (goal is EnsureUnitCountGoal units) return PlanUnits(units, currentTick);
             if (goal is BuildStructureGoal building) return PlanStructure(building, currentTick);
@@ -244,6 +255,9 @@ namespace OpenEmpires
             if (constraints == null) return;
             for (int i = 0; i < constraints.Count; i++)
             {
+                if (constraints[i] is NoConstructionConstraint) goal.ConstructionForbidden = true;
+                if (constraints[i] is ResourceSourceConstraint source)
+                    goal.ResourceSourceRestrictions[source.Resource] = source.SourceKind;
                 if (constraints[i] is MaximumQueueConstraint queue && goal is EnsureUnitCountGoal units)
                     units.MaxQueueDepth = queue.MaximumQueue;
                 if (constraints[i] is PreferredWorkersConstraint workers)
@@ -279,6 +293,7 @@ namespace OpenEmpires
 
         private bool CanReassignWorker(CommanderGoal goal, UnitData worker)
         {
+            if (goal.FrozenWorkerIds != null && !goal.FrozenWorkerIds.Contains(worker.Id)) return false;
             var reservation = workerAuthority.GetReservation(worker.Id);
             if (reservation.HasValue && reservation.Value.GoalId != goal.GoalId) return false;
             if (goal.UseIdleWorkersOnly && worker.State != UnitState.Idle) return false;
@@ -295,6 +310,37 @@ namespace OpenEmpires
                 return new CommanderPlan(CommanderGoalStatus.Failed, "Unsupported structure.", 0, 0);
             if (goal.HasSemanticPlacement)
                 return PlanPlacedStructure(goal, currentTick);
+            if (goal.HasResultConsumer)
+            {
+                var completedResults = new List<int>();
+                BuildingData ownFoundation = null;
+                foreach (int id in goal.AttributedBuildingIds)
+                {
+                    var produced = simulation.BuildingRegistry.GetBuilding(id);
+                    if (produced == null || produced.IsDestroyed || produced.PlayerId != goal.PlayerId
+                        || simulation.GetEffectiveBuildingType(produced) != goal.StructureType)
+                        return new CommanderPlan(CommanderGoalStatus.Blocked,
+                            "An exact constructed result is missing or foreign; no unrelated building or replacement is permitted.", completedResults.Count, 0);
+                    if (produced.IsUnderConstruction) ownFoundation = ownFoundation ?? produced;
+                    else completedResults.Add(id);
+                }
+                if (completedResults.Count == goal.Count)
+                {
+                    goal.CaptureBuildingResult(completedResults.AsReadOnly(), currentTick);
+                    return new CommanderPlan(CommanderGoalStatus.Completed,
+                        $"Completed {goal.Count} exact requested {goal.StructureType} results.", goal.Count, 0);
+                }
+                if (ownFoundation != null)
+                    return PlanConstructionRecovery(goal, ownFoundation, currentTick, completedResults.Count, 1, "Requested construction");
+                if (goal.PendingPlacementCommand != null)
+                {
+                    if (simulation.CurrentTick <= goal.PlacementIssuedSimulationTick)
+                        return new CommanderPlan(CommanderGoalStatus.WaitingForConstruction,
+                            "Waiting for the exact placement command to be processed.", completedResults.Count, 0);
+                    goal.PendingPlacementCommand = null; // Rejected command: no result was created.
+                }
+                return PlanBuilding(goal, goal.StructureType, currentTick, completedResults.Count, 0);
+            }
             int completed = CountCompletedBuildings(goal.PlayerId, goal.StructureType);
             if (completed >= goal.TargetTotal)
             {
@@ -319,6 +365,34 @@ namespace OpenEmpires
         private CommanderPlan PlanPlacedStructure(BuildStructureGoal goal, int currentTick)
         {
             goal.PlacementBlocker = CommanderPlacementBlocker.None;
+            if (goal.HasResultConsumer && goal.Count > 1)
+            {
+                var completed = new List<int>();
+                foreach (int id in goal.AttributedBuildingIds)
+                {
+                    var result = simulation.BuildingRegistry.GetBuilding(id);
+                    if (result == null || result.IsDestroyed || result.PlayerId != goal.PlayerId
+                        || simulation.GetEffectiveBuildingType(result) != goal.StructureType)
+                        return new CommanderPlan(CommanderGoalStatus.Blocked,
+                            "An exact placed structure is missing or foreign; no replacement is authorized.", completed.Count, 0);
+                    if (!result.IsUnderConstruction) completed.Add(id);
+                }
+                if (completed.Count == goal.Count)
+                {
+                    goal.CaptureBuildingResult(completed.AsReadOnly(), currentTick);
+                    return new CommanderPlan(CommanderGoalStatus.Completed,
+                        $"Completed {goal.Count} distinct exact semantic placements.", goal.Count, 0);
+                }
+                var latest = simulation.BuildingRegistry.GetBuilding(goal.PlacedBuildingId);
+                if (latest != null && !latest.IsUnderConstruction)
+                {
+                    // Keep all previous attribution, but resolve a fresh legal tile for
+                    // the next structure against real current occupancy.
+                    goal.PlacedBuildingId = -1;
+                    goal.PendingPlacementCommand = null;
+                    goal.PlacementIssuedTick = -1;
+                }
+            }
             if (goal.PlacedBuildingId >= 0)
             {
                 BuildingData bound = simulation.BuildingRegistry.GetBuilding(goal.PlacedBuildingId);
@@ -377,6 +451,9 @@ namespace OpenEmpires
             }
 
             int nextAge = currentAge + 1;
+            if (goal.ConstructionForbidden)
+                return new CommanderPlan(CommanderGoalStatus.Blocked,
+                    "This request forbids construction of the required age-up landmark.", currentAge, 0);
             Civilization civ = simulation.GetPlayerCivilization(goal.PlayerId);
             if (!LandmarkDefinitions.HasChoices(civ, goal.TargetAge))
             {
@@ -518,24 +595,46 @@ namespace OpenEmpires
             int resolvedUnitType = simulation.ResolveCivUnitType(goal.PlayerId, goal.RequestedUnitType);
             int owned = CountOwnedLivingUnits(goal.PlayerId, resolvedUnitType);
             int queued = CountQueuedUnits(goal.PlayerId, resolvedUnitType);
+            if (goal.HasResultConsumer && goal.TrainingAttributionUnavailable)
+                return new CommanderPlan(CommanderGoalStatus.Blocked,
+                    "An issued exact production order lost attribution and may have executed; no substitute or replacement production is authorized.", owned, queued);
+            if (goal.HasResultConsumer && goal.TrackedTrainingOrders.Any(r => r.IsCancelled))
+                return new CommanderPlan(CommanderGoalStatus.Blocked,
+                    "A tracked production order was cancelled or invalidated; no replacement result is authorized.", owned, queued);
+            if (goal.HasResultConsumer && goal.AttributedUnitIds.Any(id =>
+            {
+                var unit = simulation.UnitRegistry.GetUnit(id);
+                return unit == null || unit.PlayerId != goal.PlayerId || unit.CurrentHealth <= 0
+                    || unit.State == UnitState.Dead || unit.UnitType != resolvedUnitType;
+            }))
+                return new CommanderPlan(CommanderGoalStatus.Blocked,
+                    "An exact produced unit is missing, dead or foreign; no substitute or replacement production is authorized.", owned, queued);
+            List<int> attributable = goal.HasResultConsumer
+                ? goal.AttributedUnitIds.Where(id =>
+                {
+                    var unit = simulation.UnitRegistry.GetUnit(id);
+                    return unit != null && unit.PlayerId == goal.PlayerId && unit.CurrentHealth > 0
+                        && unit.State != UnitState.Dead && unit.UnitType == resolvedUnitType;
+                }).ToList() : null;
+            int requiredNew = goal.RequiredNewProductionCount >= 0
+                ? goal.RequiredNewProductionCount : Math.Max(0, goal.TargetTotal - goal.BaselineUnitIds.Count);
+            int attributableQueued = goal.HasResultConsumer
+                ? goal.TrackedTrainingOrders.Count(r => r.IsQueued && !r.IsCancelled
+                    && simulation.BuildingRegistry.GetBuilding(r.ProducerId) is BuildingData producer
+                    && !producer.IsDestroyed && producer.PlayerId == goal.PlayerId) : 0;
 
-            if (owned >= goal.TargetTotal)
+            if (goal.HasResultConsumer ? attributable.Count >= requiredNew : owned >= goal.TargetTotal)
             {
                 if (goal.HasResultConsumer)
                 {
-                    int requiredNew = Math.Max(0, goal.TargetTotal - goal.BaselineUnitIds.Count);
-                    List<int> produced = FindNewLivingUnits(goal.PlayerId, resolvedUnitType, goal.BaselineUnitIds);
-                    if (produced.Count < requiredNew)
-                        return new CommanderPlan(CommanderGoalStatus.WaitingForProduction,
-                            "The requested count is met only by pre-existing units; waiting for the exact new result.",
-                            owned, queued);
-                    goal.CaptureUnitResult(produced.Take(requiredNew).ToArray(), currentTick);
+                    goal.CaptureUnitResult(attributable.Take(requiredNew).ToArray(), currentTick);
                 }
                 return new CommanderPlan(CommanderGoalStatus.Completed,
                     $"Owned {owned}/{goal.TargetTotal} living units.", owned, queued);
             }
 
-            int remainingOrders = goal.TargetTotal - owned - queued;
+            int remainingOrders = goal.HasResultConsumer
+                ? requiredNew - attributable.Count - attributableQueued : goal.TargetTotal - owned - queued;
             int totalQueuedPopulation = CountAllQueuedUnits(goal.PlayerId);
             int population = simulation.GetPopulation(goal.PlayerId);
             int populationCap = simulation.GetPopulationCap(goal.PlayerId);
@@ -572,29 +671,69 @@ namespace OpenEmpires
                 if (producerGoal.IsTerminal && producerGoal.Status != CommanderGoalStatus.Completed)
                     return new CommanderPlan(CommanderGoalStatus.Blocked,
                         "The requested producer goal is no longer available.", owned, queued);
-                if (producerGoal.PlacedBuildingId < 0)
+                if (!ReferenceEquals(producerGoal.RuntimeOwner, goal.RuntimeOwner)
+                    || producerGoal.PlayerId != goal.PlayerId)
+                    return new CommanderPlan(CommanderGoalStatus.Blocked,
+                        "The requested producer result belongs to a different runtime or owner.", owned, queued);
+                if (producerGoal.ResultCaptureTick < 0)
                 {
                     CommanderPlan preparation = PlanUnitResourcePreparation(goal, currentTick, owned, queued);
                     if (preparation.Command != null) return preparation;
                     return new CommanderPlan(CommanderGoalStatus.WaitingForPrerequisite,
-                        "Waiting for the requested new producer to be placed before training.", owned, queued);
+                        "Waiting for the complete exact new producer result before training.", owned, queued);
                 }
-                requiredProducer = FindBuildingById(goal.PlayerId, producerGoal.PlacedBuildingId);
-                if (requiredProducer == null || requiredProducer.IsDestroyed
-                    || requiredProducer.Type != requiredProducerType
-                    || !simulation.IsCompatibleProductionBuilding(goal.PlayerId, requiredProducer, goal.RequestedUnitType))
+                if (producerGoal.Status != CommanderGoalStatus.Completed
+                    || producerGoal.ResultBuildingIds.Count != producerGoal.Count
+                    || producerGoal.ResultBuildingIds.Distinct().Count() != producerGoal.Count)
                     return new CommanderPlan(CommanderGoalStatus.Blocked,
-                        "The requested producer is no longer owned, alive, or compatible.", owned, queued);
-                if (requiredProducer.IsUnderConstruction)
+                        "The exact producer result is missing or incomplete; no substitute is permitted.", owned, queued);
+                // Validate the entire captured collection before using any member. Loss
+                // of one constrained producer cannot silently widen or shrink the scope.
+                foreach (int producerId in producerGoal.ResultBuildingIds)
                 {
-                    CommanderPlan preparation = PlanUnitResourcePreparation(goal, currentTick, owned, queued);
-                    if (preparation.Command != null) return preparation;
-                    return PlanConstructionRecovery(goal, requiredProducer, currentTick, owned, queued,
-                        "Requested producer prerequisite");
+                    BuildingData candidate = FindBuildingById(goal.PlayerId, producerId);
+                    if (candidate == null || candidate.IsDestroyed || candidate.IsUnderConstruction
+                        || simulation.GetEffectiveBuildingType(candidate) != requiredProducerType
+                        || !simulation.IsCompatibleProductionBuilding(goal.PlayerId, candidate, goal.RequestedUnitType))
+                        return new CommanderPlan(CommanderGoalStatus.Blocked,
+                            "An exact requested producer is no longer owned, completed or compatible; no substitute is permitted.", owned, queued);
+                    if (candidate.TrainingQueue.Count < goal.MaxQueueDepth
+                        && (requiredProducer == null
+                            || candidate.TrainingQueue.Count < requiredProducer.TrainingQueue.Count
+                            || (candidate.TrainingQueue.Count == requiredProducer.TrainingQueue.Count
+                                && candidate.Id < requiredProducer.Id)))
+                        requiredProducer = candidate;
                 }
-                if (requiredProducer.TrainingQueue.Count >= goal.MaxQueueDepth)
+                if (requiredProducer == null)
                     return new CommanderPlan(CommanderGoalStatus.WaitingForProduction,
-                        $"The requested producer queue is at Commander limit {goal.MaxQueueDepth}.", owned, queued);
+                        $"All exact requested producer queues are at Commander limit {goal.MaxQueueDepth}.", owned, queued);
+            }
+
+            if (goal.BoundProducerBuildingIds != null)
+            {
+                if (goal.RequiredProducerGoal != null || goal.BoundProducerBuildingIds.Count == 0
+                    || goal.BoundProducerBuildingIds.Count > CommanderDynamicPlan.MaximumAggregateCount
+                    || goal.BoundProducerBuildingIds.Distinct().Count() != goal.BoundProducerBuildingIds.Count
+                    || !simulation.TryGetProductionBuildingType(goal.PlayerId, goal.RequestedUnitType,
+                        out var selectedProducerType))
+                    return new CommanderPlan(CommanderGoalStatus.Blocked,
+                        "The selected producer result is incompatible or ambiguous; no substitute is permitted.", owned, queued);
+                foreach (int id in goal.BoundProducerBuildingIds)
+                {
+                    var selected = FindBuildingById(goal.PlayerId, id);
+                    if (selected == null || selected.IsDestroyed || selected.IsUnderConstruction
+                        || simulation.GetEffectiveBuildingType(selected) != selectedProducerType
+                        || !simulation.IsCompatibleProductionBuilding(goal.PlayerId, selected, goal.RequestedUnitType))
+                        return new CommanderPlan(CommanderGoalStatus.Blocked,
+                            "An exact selected producer is missing, foreign or incompatible; no substitute is permitted.", owned, queued);
+                    if (selected.TrainingQueue.Count < goal.MaxQueueDepth
+                        && (requiredProducer == null || selected.TrainingQueue.Count < requiredProducer.TrainingQueue.Count
+                            || (selected.TrainingQueue.Count == requiredProducer.TrainingQueue.Count && selected.Id < requiredProducer.Id)))
+                        requiredProducer = selected;
+                }
+                if (requiredProducer == null)
+                    return new CommanderPlan(CommanderGoalStatus.WaitingForProduction,
+                        "All exact selected producer queues are full; unrelated capacity will not be used.", owned, queued);
             }
 
             BuildingData barracks = requiredProducer;
@@ -666,6 +805,9 @@ namespace OpenEmpires
         private CommanderPlan PlanConstructionRecovery(CommanderGoal goal, BuildingData building,
             int currentTick, int owned, int queued, string context)
         {
+            if (goal.ConstructionForbidden)
+                return new CommanderPlan(CommanderGoalStatus.Blocked,
+                    "This request forbids construction, including resuming an unfinished prerequisite. Use completed capacity or wait for independent work.", owned, queued);
             bool buildingChanged = goal.ObservedConstructionBuildingId != building.Id;
             bool progressed = !buildingChanged && goal.LastConstructionTicksRemaining >= 0
                 && building.ConstructionTicksRemaining < goal.LastConstructionTicksRemaining;
@@ -715,6 +857,9 @@ namespace OpenEmpires
         private CommanderPlan PlanBuilding(CommanderGoal goal, BuildingType type,
             int currentTick, int owned, int queued)
         {
+            if (goal.ConstructionForbidden)
+                return new CommanderPlan(CommanderGoalStatus.Blocked,
+                    "This request forbids construction. An eligible existing completed building or population capacity is required.", owned, queued);
             int requiredAge = LandmarkDefinitions.GetBuildingRequiredAge(type);
             if (simulation.GetPlayerAge(goal.PlayerId) < requiredAge)
                 return new CommanderPlan(CommanderGoalStatus.WaitingForPrerequisite,
@@ -762,6 +907,8 @@ namespace OpenEmpires
         private CommanderPlan PlanSemanticBuilding(BuildStructureGoal goal, BuildingType type,
             int currentTick, int owned, int queued)
         {
+            if (goal.DynamicLocation != null)
+                return PlanDynamicSemanticBuilding(goal, type, currentTick, owned, queued);
             var resolver = new CommanderSemanticReferenceResolver(simulation);
             if (goal.PlacementAnchorSelector == CommanderSemanticAnchorSelector.WorkedResource)
                 return PlanWorkedResourceBuilding(goal, type, resolver, currentTick, owned, queued);
@@ -919,6 +1066,9 @@ namespace OpenEmpires
             int currentTick, int owned, int queued, string reason,
             ResourceType? preserveGatherersOf = null)
         {
+            if (goal.ResourceSourceRestrictions.TryGetValue(resourceType, out var sourceKind)
+                && sourceKind != ResourceSourceKind.Any)
+                return PlanRestrictedPreparation(goal, resourceType, sourceKind, currentTick, owned, queued, reason, preserveGatherersOf);
             if (currentTick - goal.LastEconomyCommandTick < EconomyCommandCooldownTicks)
                 return new CommanderPlan(CommanderGoalStatus.WaitingForResources, reason, owned, queued);
 
@@ -1526,6 +1676,10 @@ namespace OpenEmpires
                     width = config.TownCenterFootprintWidth; height = config.TownCenterFootprintHeight; break;
                 case BuildingType.Landmark:
                     width = config.LandmarkFootprintWidth; height = config.LandmarkFootprintHeight; break;
+                case BuildingType.Farm:
+                    width = config.FarmFootprintWidth; height = config.FarmFootprintHeight; break;
+                case BuildingType.Mill:
+                    width = config.MillFootprintWidth; height = config.MillFootprintHeight; break;
                 default:
                     width = 2; height = 2; break;
             }

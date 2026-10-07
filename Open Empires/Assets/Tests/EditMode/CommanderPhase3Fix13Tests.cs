@@ -256,7 +256,7 @@ namespace OpenEmpires.Tests
         public void EconomicExpansion_DoesNotDeadlockOnTownCenterPrerequisite()
         {
             using var dispatcher = new CommanderIntentDispatcher(sim, goalManager, strategicPlanner: strategicPlanner);
-            var result = dispatcher.SubmitIntent(new StrategicIntent(1, 0, StrategicObjectiveType.EconomicExpansion, 0));
+            var result = dispatcher.SubmitIntent(strategicPlanner.CreateIntent(StrategicObjectiveType.EconomicExpansion));
             var plan = result.StrategicSubmission.Plan;
             StringAssert.Contains("age 2", result.Response);
             StringAssert.Contains("age 2", strategicPlanner.BuildContext(new CommanderContextBuilder().Build(sim, goalManager)).ActivePlans.Single().Reason);

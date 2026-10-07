@@ -82,7 +82,7 @@ namespace OpenEmpires
         public FixedVector3 LastDamageFromPos;
 
         // Training queue
-        public List<int> TrainingQueue;
+        public TrainingQueueCollection TrainingQueue { get; }
         public int TrainingTicksRemaining;
         public int TrainingTicksTotal;
         public bool IsTraining => TrainingQueue.Count > 0;
@@ -177,7 +177,7 @@ namespace OpenEmpires
             OriginTileZ = originTileZ;
             TileFootprintWidth = footprintWidth;
             TileFootprintHeight = footprintHeight;
-            TrainingQueue = new List<int>();
+            TrainingQueue = new TrainingQueueCollection();
             ResearchQueue = new List<TechnologyType>();
             UpgradeQueue = new List<TowerUpgradeType>();
             GarrisonedUnitIds = new List<int>();
@@ -185,7 +185,12 @@ namespace OpenEmpires
 
         public void EnqueueTraining(int unitType, int ticks)
         {
-            TrainingQueue.Add(unitType);
+            EnqueueTrainingTracked(unitType, ticks, null);
+        }
+
+        internal void EnqueueTrainingTracked(int unitType, int ticks, TrainingOrderReceipt receipt)
+        {
+            TrainingQueue.AppendNative(unitType, receipt);
             if (TrainingQueue.Count == 1)
             {
                 TrainingTicksRemaining = ticks;
@@ -195,9 +200,20 @@ namespace OpenEmpires
 
         public int DequeueTraining()
         {
-            if (TrainingQueue.Count == 0) return -1;
-            int unitType = TrainingQueue[0];
-            TrainingQueue.RemoveAt(0);
+            int unitType = DequeueTrainingTracked(out TrainingOrderReceipt receipt);
+            receipt?.MarkCancelled();
+            return unitType;
+        }
+
+        internal int DequeueTrainingTracked(out TrainingOrderReceipt receipt)
+        {
+            return TrainingQueue.DequeueNative(out receipt);
+        }
+
+        internal int RemoveTrainingAt(int index)
+        {
+            int unitType = TrainingQueue.RemoveAtNative(index, out TrainingOrderReceipt receipt);
+            receipt?.MarkCancelled();
             return unitType;
         }
 

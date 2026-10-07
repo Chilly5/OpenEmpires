@@ -55,9 +55,17 @@ namespace OpenEmpires
             if (!constraints.IsValid) return constraints;
             for (int i = 0; i < intent.Constraints.Count; i++)
             {
+                if (intent.Constraints[i] is NoConstructionConstraint
+                    && !(intent is EnsureUnitCountIntent) && !(intent is ReachAgeIntent))
+                    return Invalid(CommanderIntentErrorCode.UnsupportedConstraint,
+                        "A construction request contradicts NoConstruction; this constraint applies to production or age goals.");
                 if (intent.Constraints[i] is MaximumQueueConstraint && !(intent is EnsureUnitCountIntent))
                     return Invalid(CommanderIntentErrorCode.UnsupportedConstraint,
                         "A maximum queue constraint applies only to unit production.");
+                if (intent.Constraints[i] is ResourceSourceConstraint
+                    && !(intent is EnsureUnitCountIntent) && !(intent is BuildStructureIntent) && !(intent is ReachAgeIntent))
+                    return Invalid(CommanderIntentErrorCode.UnsupportedConstraint,
+                        "Preparation source restrictions apply to production, construction or age goals; worker allocation uses its explicit destination source.");
                 if (intent.Constraints[i] is ProtectedResourceConstraint resource
                     && resource.MinimumWorkers > simulation.Config.MaxPopulation)
                     return Invalid(CommanderIntentErrorCode.AmountOutOfRange,
@@ -206,8 +214,14 @@ namespace OpenEmpires
                     return Invalid(CommanderIntentErrorCode.UnsupportedConstraint,
                         "Duplicate or empty Commander constraints are not allowed.");
                 if (!(constraint is MaximumQueueConstraint) && !(constraint is ProtectedResourceConstraint)
-                    && !(constraint is PreferredWorkersConstraint))
+                    && !(constraint is PreferredWorkersConstraint) && !(constraint is NoConstructionConstraint)
+                    && !(constraint is ResourceSourceConstraint))
                     return Invalid(CommanderIntentErrorCode.UnsupportedConstraint, "Unknown constraint implementation.");
+                if (constraint is ResourceSourceConstraint source
+                    && (!Enum.IsDefined(typeof(ResourceType), source.Resource)
+                        || !ResourceSourceRules.IsDefined(source.SourceKind)
+                        || !ResourceSourceRules.IsCompatible(source.Resource, source.SourceKind)))
+                    return Invalid(CommanderIntentErrorCode.UnsupportedConstraint, "The preparation resource/source pair is incompatible.");
 
                 if (constraint is MaximumQueueConstraint maximumQueue
                     && (maximumQueue.MaximumQueue < 1

@@ -241,6 +241,7 @@ namespace OpenEmpires
                     || pending.Status != StrategicIntentStatus.Created || !identities.Owns(pending)) return null;
                 StrategicIntent result = pending;
                 pending = null;
+                result.Authorize(identities, "Single-use approval of the displayed strategic recommendation.");
                 return result;
             }
         }
@@ -257,6 +258,7 @@ namespace OpenEmpires
                     pending.ObjectiveType, pending.CreatedTick, parameters, null,
                     StrategicIntentSource.AIConfirmedPlayerCommand);
                 if (!identities.Transfer(intentId, pending, confirmed)) return null;
+                confirmed.Authorize(identities, "Explicit confirmation of the displayed strategic candidate.");
                 ClearPendingLocked();
                 return confirmed;
             }

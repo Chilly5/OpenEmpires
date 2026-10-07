@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 19:13:32Z" end-time="2026-10-06 19:13:35Z" duration="3.0228984">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1045" result="Failed" site="Child" start-time="2026-10-06 19:13:32Z" end-time="2026-10-06 19:13:35Z" duration="3.022898" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2184" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1045" result="Failed" site="Child" start-time="2026-10-06 19:13:32Z" end-time="2026-10-06 19:13:35Z" duration="2.923275" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="1780" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2185" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1045" result="Failed" site="Child" start-time="2026-10-06 19:13:32Z" end-time="2026-10-06 19:13:35Z" duration="2.827706" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2186" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1045" result="Failed" site="Child" start-time="2026-10-06 19:13:32Z" end-time="2026-10-06 19:13:35Z" duration="2.715546" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="2144" name="CommanderPhase5AProductionBindingTests" fullname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests" classname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests" runstate="Runnable" testcasecount="6" result="Failed" site="Child" start-time="2026-10-06 19:13:32Z" end-time="2026-10-06 19:13:35Z" duration="2.604977" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="ParameterizedMethod" id="2147" name="ProducerReference_UsesEveryExactNewProducerAndNeverExistingBarracks" fullname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests.ProducerReference_UsesEveryExactNewProducerAndNeverExistingBarracks" classname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-06 19:13:32Z" end-time="2026-10-06 19:13:35Z" duration="2.492617" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="2145" name="ProducerReference_UsesEveryExactNewProducerAndNeverExistingBarracks(1)" fullname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests.ProducerReference_UsesEveryExactNewProducerAndNeverExistingBarracks(1)" methodname="ProducerReference_UsesEveryExactNewProducerAndNeverExistingBarracks" classname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests" runstate="Runnable" seed="121819302" result="Failed" start-time="2026-10-06 19:13:33Z" end-time="2026-10-06 19:13:34Z" duration="1.390680" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  A producer dependency requires exact construction attribution, not a baseline heuristic.
+  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5AProductionBindingTests.ProducerReference_UsesEveryExactNewProducerAndNeverExistingBarracks (System.Int32 producerCount) [0x001fd] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AProductionBindingTests.cs:49
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: EnsureUnitCount
+]]></output>
+              </test-case>
+              <test-case id="2146" name="ProducerReference_UsesEveryExactNewProducerAndNeverExistingBarracks(2)" fullname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests.ProducerReference_UsesEveryExactNewProducerAndNeverExistingBarracks(2)" methodname="ProducerReference_UsesEveryExactNewProducerAndNeverExistingBarracks" classname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests" runstate="Runnable" seed="307292313" result="Failed" start-time="2026-10-06 19:13:34Z" end-time="2026-10-06 19:13:35Z" duration="0.971356" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  I couldn't understand that request safely.
+  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5AProductionBindingTests.ProducerReference_UsesEveryExactNewProducerAndNeverExistingBarracks (System.Int32 producerCount) [0x001a4] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AProductionBindingTests.cs:45
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

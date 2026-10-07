@@ -8,7 +8,8 @@ namespace OpenEmpires
         Request,
         Clarify,
         Unsupported,
-        Answer // Read-only conversation result; never admitted as a gameplay node.
+        Answer, // Read-only conversation result; never admitted as a gameplay node.
+        DynamicPlan
     }
 
     public enum CommanderSemanticNodeType
@@ -97,6 +98,7 @@ namespace OpenEmpires
         public int? ProducerFromNode { get; }
         public int? ResultFromNode { get; }
         public CommanderWorkerAllocation WorkerAllocation { get; }
+        public IReadOnlyList<CommanderConstraint> Constraints { get; }
 
         internal CommanderSemanticNode(CommanderSemanticNodeType type, int? unitType = null,
             BuildingType? buildingType = null, ResourceType? resourceType = null,
@@ -112,7 +114,8 @@ namespace OpenEmpires
             IReadOnlyList<int> dependsOn = null,
             int? producerFromNode = null,
             int? resultFromNode = null,
-            CommanderWorkerAllocation workerAllocation = null)
+            CommanderWorkerAllocation workerAllocation = null,
+            IReadOnlyList<CommanderConstraint> constraints = null)
         {
             Type = type;
             UnitType = unitType;
@@ -131,6 +134,7 @@ namespace OpenEmpires
             ProducerFromNode = producerFromNode;
             ResultFromNode = resultFromNode;
             WorkerAllocation = workerAllocation;
+            Constraints = new List<CommanderConstraint>(constraints ?? Array.Empty<CommanderConstraint>()).AsReadOnly();
             var normalizedDependencies = dependsOn != null
                 ? new List<int>(dependsOn)
                 : new List<int>();
@@ -147,15 +151,18 @@ namespace OpenEmpires
         public IReadOnlyList<CommanderSemanticNode> Nodes { get; }
         public string SafeExplanation { get; }
         public CommanderWorkerAllocationDraft PendingDraft { get; }
+        public CommanderDynamicPlan DynamicPlan { get; }
 
         private CommanderSemanticResult(bool isValid, CommanderSemanticOutcome outcome,
-            IReadOnlyList<CommanderSemanticNode> nodes, string safeExplanation, CommanderWorkerAllocationDraft pendingDraft = null)
+            IReadOnlyList<CommanderSemanticNode> nodes, string safeExplanation, CommanderWorkerAllocationDraft pendingDraft = null,
+            CommanderDynamicPlan dynamicPlan = null)
         {
             IsValid = isValid;
             Outcome = outcome;
             Nodes = nodes ?? Array.Empty<CommanderSemanticNode>();
             SafeExplanation = safeExplanation ?? string.Empty;
             PendingDraft = pendingDraft;
+            DynamicPlan = dynamicPlan;
         }
     }
 }

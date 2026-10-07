@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="5" result="Failed(Child)" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 19:14:53Z" end-time="2026-10-06 19:14:59Z" duration="6.5607775">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1050" result="Failed" site="Child" start-time="2026-10-06 19:14:53Z" end-time="2026-10-06 19:14:59Z" duration="6.560778" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2190" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1050" result="Failed" site="Child" start-time="2026-10-06 19:14:53Z" end-time="2026-10-06 19:14:59Z" duration="6.457525" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="1780" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2191" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1050" result="Failed" site="Child" start-time="2026-10-06 19:14:53Z" end-time="2026-10-06 19:14:59Z" duration="6.364118" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2192" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1050" result="Failed" site="Child" start-time="2026-10-06 19:14:53Z" end-time="2026-10-06 19:14:59Z" duration="6.252059" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="2112" name="CommanderPhase5ACommandOriginLedgerTests" fullname="OpenEmpires.Tests.CommanderPhase5ACommandOriginLedgerTests" classname="OpenEmpires.Tests.CommanderPhase5ACommandOriginLedgerTests" runstate="Runnable" testcasecount="13" result="Failed" site="Child" start-time="2026-10-06 19:14:53Z" end-time="2026-10-06 19:14:56Z" duration="2.642613" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="2126" name="EqualPlacePayloads_InvalidateWholeBatchWithoutBorrowingAnOrigin" fullname="OpenEmpires.Tests.CommanderPhase5ACommandOriginLedgerTests.EqualPlacePayloads_InvalidateWholeBatchWithoutBorrowingAnOrigin" methodname="EqualPlacePayloads_InvalidateWholeBatchWithoutBorrowingAnOrigin" classname="OpenEmpires.Tests.CommanderPhase5ACommandOriginLedgerTests" runstate="Runnable" seed="816060626" result="Failed" start-time="2026-10-06 19:14:53Z" end-time="2026-10-06 19:14:55Z" duration="1.464420" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  indistinguishable place origins invalidate the full local observation map
+  Expected: <empty>
+  But was:  < [OpenEmpires.TrainUnitCommand, OpenEmpires.TrainUnitCommand] >
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5ACommandOriginLedgerTests.EqualPlacePayloads_InvalidateWholeBatchWithoutBorrowingAnOrigin () [0x000f8] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ACommandOriginLedgerTests.cs:221
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[SyncCheck] tick=0 PRE-CMD=11DF8F91 cmds=3
+[SyncCheck] tick=0 POST-CMD=11DF8F95
+[SyncCheck] tick=0 PRE-AI-EXEC=11DF8F95 aiCmds=0
+[SyncCheck] INIT tick=1 checksum=0844BACE systemDetail=11DF8F95,11C14A4F,11C14A4F,11C14A4F,11C14A4F,11C14A4F,11C14A4F,11C14A4F,11C14A4F
+]]></output>
+            </test-case>
+            <test-case id="2125" name="ReconstructedPlaceCommand_PublishesVerifiedOriginalAtNativePlacement" fullname="OpenEmpires.Tests.CommanderPhase5ACommandOriginLedgerTests.ReconstructedPlaceCommand_PublishesVerifiedOriginalAtNativePlacement" methodname="ReconstructedPlaceCommand_PublishesVerifiedOriginalAtNativePlacement" classname="OpenEmpires.Tests.CommanderPhase5ACommandOriginLedgerTests" runstate="Runnable" seed="630818833" result="Failed" start-time="2026-10-06 19:14:55Z" end-time="2026-10-06 19:14:56Z" duration="1.040362" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  native result observation must receive the original issued box, not the relay box
+  Expected: same as OpenEmpires.PlaceBuildingCommand
+  But was:  OpenEmpires.PlaceBuildingCommand
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5ACommandOriginLedgerTests.ReconstructedPlaceCommand_PublishesVerifiedOriginalAtNativePlacement () [0x0010f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ACommandOriginLedgerTests.cs:191
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[SyncCheck] tick=0 PRE-CMD=11DF8F91 cmds=1
+[SyncCheck] tick=0 POST-CMD=11DF8F95
+[SyncCheck] tick=0 PRE-AI-EXEC=11DF8F95 aiCmds=0
+[SyncCheck] INIT tick=1 checksum=0844BACE systemDetail=11DF8F95,11C14A4F,11C14A4F,11C14A4F,11C14A4F,11C14A4F,11C14A4F,11C14A4F,11C14A4F
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2127" name="CommanderPhase5ADynamicCompilerTests" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicCompilerTests" classname="OpenEmpires.Tests.CommanderPhase5ADynamicCompilerTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-06 19:14:56Z" end-time="2026-10-06 19:14:59Z" duration="3.495564" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="2129" name="PrepareActionPlan_SharedIdleThreePartitionsTwoSheepOneMillWithoutWorkerIds" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicCompilerTests.PrepareActionPlan_SharedIdleThreePartitionsTwoSheepOneMillWithoutWorkerIds" methodname="PrepareActionPlan_SharedIdleThreePartitionsTwoSheepOneMillWithoutWorkerIds" classname="OpenEmpires.Tests.CommanderPhase5ADynamicCompilerTests" runstate="Runnable" seed="399448536" result="Failed" label="Error" start-time="2026-10-06 19:14:56Z" end-time="2026-10-06 19:14:57Z" duration="1.383414" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.ArgumentException : The action plan cannot be compiled by an implemented Commander mechanic.]]></message>
+                <stack-trace><![CDATA[  at OpenEmpires.CommanderGoalManager.PrepareActionPlan (OpenEmpires.CommanderSemanticResult interpretation, System.String originalInput, System.Int32 generation, OpenEmpires.StrategicPipeline strategicSource, System.Func`1[TResult] isCurrentRequest) [0x00068] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Scripts\AI\Commander\Phase5A\CommanderGoalManager.Requests.cs:22 
+  at OpenEmpires.Tests.CommanderPhase5ADynamicCompilerTests+<>c.<PrepareActionPlan_SharedIdleThreePartitionsTwoSheepOneMillWithoutWorkerIds>b__2_0 (OpenEmpires.GameSimulation sim, OpenEmpires.CommanderGoalManager goals) [0x0001b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ADynamicCompilerTests.cs:44 
+  at OpenEmpires.Tests.CommanderPhase5ADynamicCompilerTests.WithManager (System.Action`2[T1,T2] check) [0x00027] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ADynamicCompilerTests.cs:101 
+  at OpenEmpires.Tests.CommanderPhase5ADynamicCompilerTests.PrepareActionPlan_SharedIdleThreePartitionsTwoSheepOneMillWithoutWorkerIds () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ADynamicCompilerTests.cs:40 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <816f70bc2a9c4332b0bd119906a8d40e>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="2130" name="PrepareActionPlan_TwoNewBarracksProduceTenNewSpearmenFromExactProducerSet" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicCompilerTests.PrepareActionPlan_TwoNewBarracksProduceTenNewSpearmenFromExactProducerSet" methodname="PrepareActionPlan_TwoNewBarracksProduceTenNewSpearmenFromExactProducerSet" classname="OpenEmpires.Tests.CommanderPhase5ADynamicCompilerTests" runstate="Runnable" seed="680959107" result="Failed" label="Error" start-time="2026-10-06 19:14:57Z" end-time="2026-10-06 19:14:58Z" duration="1.035530" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.ArgumentException : The action plan cannot be compiled by an implemented Commander mechanic.]]></message>
+                <stack-trace><![CDATA[  at OpenEmpires.CommanderGoalManager.PrepareActionPlan (OpenEmpires.CommanderSemanticResult interpretation, System.String originalInput, System.Int32 generation, OpenEmpires.StrategicPipeline strategicSource, System.Func`1[TResult] isCurrentRequest) [0x00068] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Scripts\AI\Commander\Phase5A\CommanderGoalManager.Requests.cs:22 
+  at OpenEmpires.Tests.CommanderPhase5ADynamicCompilerTests+<>c.<PrepareActionPlan_TwoNewBarracksProduceTenNewSpearmenFromExactProducerSet>b__3_0 (OpenEmpires.GameSimulation sim, OpenEmpires.CommanderGoalManager goals) [0x0001b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ADynamicCompilerTests.cs:74 
+  at OpenEmpires.Tests.CommanderPhase5ADynamicCompilerTests.WithManager (System.Action`2[T1,T2] check) [0x00027] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ADynamicCompilerTests.cs:101 
+  at OpenEmpires.Tests.CommanderPhase5ADynamicCompilerTests.PrepareActionPlan_TwoNewBarracksProduceTenNewSpearmenFromExactProducerSet () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ADynamicCompilerTests.cs:70 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <816f70bc2a9c4332b0bd119906a8d40e>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="2128" name="PrepareActionPlan_VisibleBerriesLocationCompilesToSymbolicallyBoundMill" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicCompilerTests.PrepareActionPlan_VisibleBerriesLocationCompilesToSymbolicallyBoundMill" methodname="PrepareActionPlan_VisibleBerriesLocationCompilesToSymbolicallyBoundMill" classname="OpenEmpires.Tests.CommanderPhase5ADynamicCompilerTests" runstate="Runnable" seed="2093635044" result="Failed" label="Error" start-time="2026-10-06 19:14:58Z" end-time="2026-10-06 19:14:59Z" duration="1.063925" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.ArgumentException : The action plan cannot be compiled by an implemented Commander mechanic.]]></message>
+                <stack-trace><![CDATA[  at OpenEmpires.CommanderGoalManager.PrepareActionPlan (OpenEmpires.CommanderSemanticResult interpretation, System.String originalInput, System.Int32 generation, OpenEmpires.StrategicPipeline strategicSource, System.Func`1[TResult] isCurrentRequest) [0x00068] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Scripts\AI\Commander\Phase5A\CommanderGoalManager.Requests.cs:22 
+  at OpenEmpires.Tests.CommanderPhase5ADynamicCompilerTests+<>c.<PrepareActionPlan_VisibleBerriesLocationCompilesToSymbolicallyBoundMill>b__1_0 (OpenEmpires.GameSimulation sim, OpenEmpires.CommanderGoalManager goals) [0x0001b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ADynamicCompilerTests.cs:24 
+  at OpenEmpires.Tests.CommanderPhase5ADynamicCompilerTests.WithManager (System.Action`2[T1,T2] check) [0x00027] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ADynamicCompilerTests.cs:101 
+  at OpenEmpires.Tests.CommanderPhase5ADynamicCompilerTests.PrepareActionPlan_VisibleBerriesLocationCompilesToSymbolicallyBoundMill () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ADynamicCompilerTests.cs:20 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <816f70bc2a9c4332b0bd119906a8d40e>:0 ]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

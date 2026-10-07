@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="6" result="Failed(Child)" total="6" passed="0" failed="6" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 19:58:55Z" end-time="2026-10-06 19:59:03Z" duration="7.6431067">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1061" result="Failed" site="Child" start-time="2026-10-06 19:58:55Z" end-time="2026-10-06 19:59:03Z" duration="7.643107" total="6" passed="0" failed="6" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2205" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1061" result="Failed" site="Child" start-time="2026-10-06 19:58:55Z" end-time="2026-10-06 19:59:03Z" duration="7.542279" total="6" passed="0" failed="6" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="1780" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2206" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1061" result="Failed" site="Child" start-time="2026-10-06 19:58:55Z" end-time="2026-10-06 19:59:03Z" duration="7.449557" total="6" passed="0" failed="6" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2207" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1061" result="Failed" site="Child" start-time="2026-10-06 19:58:56Z" end-time="2026-10-06 19:59:03Z" duration="7.339275" total="6" passed="0" failed="6" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="2146" name="CommanderPhase5AGroundedScopeTests" fullname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests" classname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests" runstate="Runnable" testcasecount="6" result="Failed" site="Child" start-time="2026-10-06 19:58:56Z" end-time="2026-10-06 19:59:03Z" duration="7.228519" total="6" passed="0" failed="6" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="ParameterizedMethod" id="2150" name="IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects" fullname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects" classname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-06 19:58:56Z" end-time="2026-10-06 19:58:59Z" duration="3.633307" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="2147" name="IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects(&quot;{\&quot;type\&quot;:\&quot;AttackTarget\&quot;,\&quot;unitSelector\&quot;:\&quot;Spearman\&quot;,\&quot;count\&quot;:4,\&quot;location\&quot;:\&quot;VisibleEnemy\&quot;}&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects(&quot;{\&quot;type\&quot;:\&quot;AttackTarget\&quot;,\&quot;unitSelector\&quot;:\&quot;Spearman\&quot;,\&quot;count\&quot;:4,\&quot;location\&quot;:\&quot;VisibleEnemy\&quot;}&quot;)" methodname="IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects" classname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests" runstate="Runnable" seed="806392591" result="Failed" start-time="2026-10-06 19:58:56Z" end-time="2026-10-06 19:58:57Z" duration="1.464545" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Independent typed root scope must be enforced before candidate admission.
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.GroundedMethod () [0x00016] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:92
+at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests+<>c__DisplayClass0_0.<IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects>b__0 (OpenEmpires.GameSimulation sim, OpenEmpires.CommanderGoalManager manager) [0x00052] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:22
+at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.WithManager (System.Action`2[T1,T2] check) [0x00027] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:103
+at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects (System.String extra) [0x0000c] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:17
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="2148" name="IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects(&quot;{\&quot;type\&quot;:\&quot;ReachAge\&quot;,\&quot;targetAge\&quot;:\&quot;Castle\&quot;}&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects(&quot;{\&quot;type\&quot;:\&quot;ReachAge\&quot;,\&quot;targetAge\&quot;:\&quot;Castle\&quot;}&quot;)" methodname="IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects" classname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests" runstate="Runnable" seed="1845257843" result="Failed" start-time="2026-10-06 19:58:57Z" end-time="2026-10-06 19:58:58Z" duration="1.054961" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Independent typed root scope must be enforced before candidate admission.
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.GroundedMethod () [0x00016] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:92
+at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests+<>c__DisplayClass0_0.<IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects>b__0 (OpenEmpires.GameSimulation sim, OpenEmpires.CommanderGoalManager manager) [0x00052] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:22
+at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.WithManager (System.Action`2[T1,T2] check) [0x00027] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:103
+at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects (System.String extra) [0x0000c] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:17
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="2149" name="IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects(&quot;{\&quot;type\&quot;:\&quot;SetResourceAllocation\&quot;,\&quot;resource\&quot;:\&quot;Wood\&quot;,\&quot;count\&quot;:4}&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects(&quot;{\&quot;type\&quot;:\&quot;SetResourceAllocation\&quot;,\&quot;resource\&quot;:\&quot;Wood\&quot;,\&quot;count\&quot;:4}&quot;)" methodname="IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects" classname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests" runstate="Runnable" seed="1242844471" result="Failed" start-time="2026-10-06 19:58:58Z" end-time="2026-10-06 19:58:59Z" duration="0.973183" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Independent typed root scope must be enforced before candidate admission.
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.GroundedMethod () [0x00016] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:92
+at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests+<>c__DisplayClass0_0.<IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects>b__0 (OpenEmpires.GameSimulation sim, OpenEmpires.CommanderGoalManager manager) [0x00052] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:22
+at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.WithManager (System.Action`2[T1,T2] check) [0x00027] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:103
+at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects (System.String extra) [0x0000c] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:17
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-case id="2151" name="IndependentlyTypedRoot_RejectsDroppedNoConstructionConstraint" fullname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.IndependentlyTypedRoot_RejectsDroppedNoConstructionConstraint" methodname="IndependentlyTypedRoot_RejectsDroppedNoConstructionConstraint" classname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests" runstate="Runnable" seed="203880460" result="Failed" start-time="2026-10-06 19:58:59Z" end-time="2026-10-06 19:59:01Z" duration="1.145375" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: <System.Reflection.TargetInvocationException>
+  But was:  <NUnit.Framework.AssertionException:   Independent typed root scope must be enforced before candidate admission.
+  Expected: not null
+  But was:  null
+
+  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00044] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.GroundedMethod () [0x00016] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:92 
+  at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests+<>c__DisplayClass1_0.<IndependentlyTypedRoot_RejectsDroppedNoConstructionConstraint>b__1 () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:41 
+  at NUnit.Framework.Assert.Throws (NUnit.Framework.Constraints.IResolveConstraint expression, NUnit.Framework.TestDelegate code, System.String message, System.Object[] args) [0x00043] in <8b63e8ac0a4746599ed207982825ae6c>:0 >
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests+<>c.<IndependentlyTypedRoot_RejectsDroppedNoConstructionConstraint>b__1_0 (OpenEmpires.GameSimulation sim, OpenEmpires.CommanderGoalManager manager) [0x00042] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:41
+at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.WithManager (System.Action`2[T1,T2] check) [0x00027] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:103
+at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.IndependentlyTypedRoot_RejectsDroppedNoConstructionConstraint () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:35
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="2152" name="MatchingIndependentlyTypedRoot_CommitsExactlyOnceWithoutModelApproval" fullname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.MatchingIndependentlyTypedRoot_CommitsExactlyOnceWithoutModelApproval" methodname="MatchingIndependentlyTypedRoot_CommitsExactlyOnceWithoutModelApproval" classname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests" runstate="Runnable" seed="917606637" result="Failed" start-time="2026-10-06 19:59:01Z" end-time="2026-10-06 19:59:01Z" duration="0.987582" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Independent typed root scope must be enforced before candidate admission.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.GroundedMethod () [0x00016] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:92
+at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests+<>c.<MatchingIndependentlyTypedRoot_CommitsExactlyOnceWithoutModelApproval>b__2_0 (OpenEmpires.GameSimulation sim, OpenEmpires.CommanderGoalManager manager) [0x00018] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:56
+at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.WithManager (System.Action`2[T1,T2] check) [0x00027] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:103
+at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.MatchingIndependentlyTypedRoot_CommitsExactlyOnceWithoutModelApproval () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:52
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="2153" name="NormalizedDynamicPreview_ShowsSourcePartitionAndLocationRestrictions" fullname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.NormalizedDynamicPreview_ShowsSourcePartitionAndLocationRestrictions" methodname="NormalizedDynamicPreview_ShowsSourcePartitionAndLocationRestrictions" classname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests" runstate="Runnable" seed="980896394" result="Failed" start-time="2026-10-06 19:59:01Z" end-time="2026-10-06 19:59:03Z" duration="1.343502" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "Berries"
+  But was:  "Action plan — not started.
+1. Build 1 Mill
+Preparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan."
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests+<>c.<NormalizedDynamicPreview_ShowsSourcePartitionAndLocationRestrictions>b__3_0 (OpenEmpires.GameSimulation sim, OpenEmpires.CommanderGoalManager manager) [0x00018] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:75
+at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.WithManager (System.Action`2[T1,T2] check) [0x00027] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:103
+at OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.NormalizedDynamicPreview_ShowsSourcePartitionAndLocationRestrictions () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AGroundedScopeTests.cs:71
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

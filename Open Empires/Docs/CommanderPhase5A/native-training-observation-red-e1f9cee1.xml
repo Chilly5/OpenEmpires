@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="5" result="Failed(Child)" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-06 17:43:34Z" end-time="2026-10-06 17:43:35Z" duration="1.7207661">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1028" result="Failed" site="Child" start-time="2026-10-06 17:43:34Z" end-time="2026-10-06 17:43:35Z" duration="1.720766" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2162" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1028" result="Failed" site="Child" start-time="2026-10-06 17:43:34Z" end-time="2026-10-06 17:43:35Z" duration="1.621530" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="1780" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2163" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1028" result="Failed" site="Child" start-time="2026-10-06 17:43:34Z" end-time="2026-10-06 17:43:35Z" duration="1.527182" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2164" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1028" result="Failed" site="Child" start-time="2026-10-06 17:43:34Z" end-time="2026-10-06 17:43:35Z" duration="1.429455" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="2131" name="CommanderPhase5ATrainingObservationTests" fullname="OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests" classname="OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests" runstate="Runnable" testcasecount="5" result="Failed" site="Child" start-time="2026-10-06 17:43:34Z" end-time="2026-10-06 17:43:35Z" duration="1.330134" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="2133" name="CancelFrontQueueSlot_DiscardsOnlyThatReceipt" fullname="OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests.CancelFrontQueueSlot_DiscardsOnlyThatReceipt" methodname="CancelFrontQueueSlot_DiscardsOnlyThatReceipt" classname="OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests" runstate="Runnable" seed="1964823119" result="Failed" start-time="2026-10-06 17:43:34Z" end-time="2026-10-06 17:43:34Z" duration="0.264979" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[SetUp :   accepted training orders need an observation event
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests.SubscribeObservationEvents () [0x0002e] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ATrainingObservationTests.cs:180
+at OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests.SetUp () [0x000ed] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ATrainingObservationTests.cs:36
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="2135" name="DirectSameValueQueueMutation_InvalidatesOutstandingReceipt" fullname="OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests.DirectSameValueQueueMutation_InvalidatesOutstandingReceipt" methodname="DirectSameValueQueueMutation_InvalidatesOutstandingReceipt" classname="OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests" runstate="Runnable" seed="345138879" result="Failed" start-time="2026-10-06 17:43:34Z" end-time="2026-10-06 17:43:35Z" duration="0.237453" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[SetUp :   accepted training orders need an observation event
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests.SubscribeObservationEvents () [0x0002e] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ATrainingObservationTests.cs:180
+at OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests.SetUp () [0x000ed] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ATrainingObservationTests.cs:36
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="2132" name="PreExistingAndValueEqualOtherOrders_CreditOnlyTrackedActualSpawn" fullname="OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests.PreExistingAndValueEqualOtherOrders_CreditOnlyTrackedActualSpawn" methodname="PreExistingAndValueEqualOtherOrders_CreditOnlyTrackedActualSpawn" classname="OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests" runstate="Runnable" seed="666788363" result="Failed" start-time="2026-10-06 17:43:35Z" end-time="2026-10-06 17:43:35Z" duration="0.239249" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[SetUp :   accepted training orders need an observation event
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests.SubscribeObservationEvents () [0x0002e] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ATrainingObservationTests.cs:180
+at OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests.SetUp () [0x000ed] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ATrainingObservationTests.cs:36
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="2134" name="RejectedTrainCommand_EmitsNoAcceptanceOrProduction" fullname="OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests.RejectedTrainCommand_EmitsNoAcceptanceOrProduction" methodname="RejectedTrainCommand_EmitsNoAcceptanceOrProduction" classname="OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests" runstate="Runnable" seed="1032189460" result="Failed" start-time="2026-10-06 17:43:35Z" end-time="2026-10-06 17:43:35Z" duration="0.242764" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[SetUp :   accepted training orders need an observation event
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests.SubscribeObservationEvents () [0x0002e] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ATrainingObservationTests.cs:180
+at OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests.SetUp () [0x000ed] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ATrainingObservationTests.cs:36
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="2136" name="ReplayedValueEqualCommand_RequiresVerifiedOneTickOriginMap" fullname="OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests.ReplayedValueEqualCommand_RequiresVerifiedOneTickOriginMap" methodname="ReplayedValueEqualCommand_RequiresVerifiedOneTickOriginMap" classname="OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests" runstate="Runnable" seed="1942061396" result="Failed" start-time="2026-10-06 17:43:35Z" end-time="2026-10-06 17:43:35Z" duration="0.241219" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[SetUp :   accepted training orders need an observation event
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests.SubscribeObservationEvents () [0x0002e] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ATrainingObservationTests.cs:180
+at OpenEmpires.Tests.CommanderPhase5ATrainingObservationTests.SetUp () [0x000ed] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5ATrainingObservationTests.cs:36
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

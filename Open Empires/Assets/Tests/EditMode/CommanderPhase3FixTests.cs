@@ -258,7 +258,7 @@ namespace OpenEmpires.Tests
             using var dispatcher = new CommanderIntentDispatcher(sim, goalManager);
             var router = new IntentRouter(0, dispatcher, strategicPlanner);
 
-            var strategic = new StrategicIntent(1, 0, StrategicObjectiveType.AttackPreparation, 0);
+            var strategic = strategicPlanner.CreateIntent(StrategicObjectiveType.AttackPreparation);
             IntentRouteResult result = router.Route(strategic);
 
             Assert.That(result.Status, Is.EqualTo(IntentRouteStatus.Routed));
