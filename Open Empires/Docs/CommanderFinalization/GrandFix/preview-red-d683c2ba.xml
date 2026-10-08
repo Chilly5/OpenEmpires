@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="10" result="Failed(Child)" total="10" passed="0" failed="10" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 10:48:25Z" end-time="2026-10-08 10:48:37Z" duration="11.9942534">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1382" result="Failed" site="Child" start-time="2026-10-08 10:48:25Z" end-time="2026-10-08 10:48:37Z" duration="11.994253" total="10" passed="0" failed="10" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2590" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1382" result="Failed" site="Child" start-time="2026-10-08 10:48:26Z" end-time="2026-10-08 10:48:37Z" duration="11.892360" total="10" passed="0" failed="10" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="39992" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2591" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1382" result="Failed" site="Child" start-time="2026-10-08 10:48:26Z" end-time="2026-10-08 10:48:37Z" duration="11.798857" total="10" passed="0" failed="10" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2592" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1382" result="Failed" site="Child" start-time="2026-10-08 10:48:26Z" end-time="2026-10-08 10:48:37Z" duration="11.691942" total="10" passed="0" failed="10" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1181" name="CommanderGrandFixReadablePreviewTests" fullname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests" classname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests" runstate="Runnable" testcasecount="10" result="Failed" site="Child" start-time="2026-10-08 10:48:26Z" end-time="2026-10-08 10:48:37Z" duration="11.566659" total="10" passed="0" failed="10" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1189" name="AllMatchingWorkers_ExplainsOneTimeSnapshotNotMaintainedTarget" fullname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.AllMatchingWorkers_ExplainsOneTimeSnapshotNotMaintainedTarget" methodname="AllMatchingWorkers_ExplainsOneTimeSnapshotNotMaintainedTarget" classname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests" runstate="Runnable" seed="810872061" result="Failed" start-time="2026-10-08 10:48:26Z" end-time="2026-10-08 10:48:28Z" duration="1.251366" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "all currently eligible idle villagers"
+  But was:  "Action plan — not started.
+1. Allocate workers SelectedCount AllMatching ; Idle from  to Wood source Any
+Preparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan."
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.AllMatchingWorkers_ExplainsOneTimeSnapshotNotMaintainedTarget () [0x00032] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixReadablePreviewTests.cs:77
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1191" name="ExactResult_ExplainsNewUnitsAndNeverSubstitutesExistingUnits" fullname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.ExactResult_ExplainsNewUnitsAndNeverSubstitutesExistingUnits" methodname="ExactResult_ExplainsNewUnitsAndNeverSubstitutesExistingUnits" classname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests" runstate="Runnable" seed="1306373068" result="Failed" start-time="2026-10-08 10:48:28Z" end-time="2026-10-08 10:48:29Z" duration="1.312433" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "only the 3 new Spearman produced in step 1"
+  But was:  "Action plan — not started.
+1. Produce 3 new Spearman
+2. PatrolArea 3 UnitType unit type 1; location PlayerBase ; point patrol route (start to anchor); structure ; technology ; after 1; only exact result from step 1
+Preparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan."
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.ExactResult_ExplainsNewUnitsAndNeverSubstitutesExistingUnits () [0x0000b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixReadablePreviewTests.cs:93
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1184" name="Location_ExplainsVisibleResourceAndGapWithoutRawNodeIds" fullname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.Location_ExplainsVisibleResourceAndGapWithoutRawNodeIds" methodname="Location_ExplainsVisibleResourceAndGapWithoutRawNodeIds" classname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests" runstate="Runnable" seed="865188192" result="Failed" start-time="2026-10-08 10:48:29Z" end-time="2026-10-08 10:48:30Z" duration="1.169557" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "visible Food only from Berries"
+  But was:  "Action plan — not started.
+1. Build 1 Mill
+Symbolic restrictions (fixed by this plan):
+  berries: select-resources(count=1, mode=Visible, resource=Food, sourceKind=Berries)
+  site: resolve-location(clearGapTiles=1, relation=Near, resources=result:berries) after berries
+  mill: build(building=building:Mill, count=1, location=result:site) after site
+Worker selections are frozen once; partition roles cannot overlap. Locations use map directions and footprint-to-footprint clear gaps within bounded tolerance.
+Preparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan."
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.Location_ExplainsVisibleResourceAndGapWithoutRawNodeIds () [0x0000b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixReadablePreviewTests.cs:55
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1190" name="NamedAttack_SeparatesOwnedActorsFromVisibleEnemyFamily" fullname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.NamedAttack_SeparatesOwnedActorsFromVisibleEnemyFamily" methodname="NamedAttack_SeparatesOwnedActorsFromVisibleEnemyFamily" classname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests" runstate="Runnable" seed="1973109870" result="Failed" start-time="2026-10-08 10:48:30Z" end-time="2026-10-08 10:48:31Z" duration="1.064943" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "3 owned Spearman"
+  But was:  "Action plan — not started.
+1. AttackTarget 3 UnitType unit type 1; location VisibleEnemy ; structure ; technology ; target UnitType Archer
+Preparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan."
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.NamedAttack_SeparatesOwnedActorsFromVisibleEnemyFamily () [0x0005e] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixReadablePreviewTests.cs:86
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1192" name="NegativeAndPreparationConstraints_ArePlayerReadable" fullname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.NegativeAndPreparationConstraints_ArePlayerReadable" methodname="NegativeAndPreparationConstraints_ArePlayerReadable" classname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests" runstate="Runnable" seed="1148002888" result="Failed" start-time="2026-10-08 10:48:31Z" end-time="2026-10-08 10:48:32Z" duration="1.020700" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "use only idle villagers"
+  But was:  "Action plan — not started.
+1. Ensure Spearman total 4; construction forbidden (new and resumed); workers IdleOnly; protect Wood workers >= 2; maximum queue 1
+Preparation cannot construct buildings; use existing completed capacity or report a blocker. No unrelated strategy is authorized. Approve plan or cancel plan."
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.NegativeAndPreparationConstraints_ArePlayerReadable () [0x00055] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixReadablePreviewTests.cs:103
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1183" name="NewProducers_ExplainsNamedExactBuildingsWithoutFallback" fullname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.NewProducers_ExplainsNamedExactBuildingsWithoutFallback" methodname="NewProducers_ExplainsNamedExactBuildingsWithoutFallback" classname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests" runstate="Runnable" seed="695293231" result="Failed" start-time="2026-10-08 10:48:32Z" end-time="2026-10-08 10:48:33Z" duration="1.071602" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "only the Barracks built in step 1"
+  But was:  "Action plan — not started.
+1. Build 2 Barracks
+2. Produce 10 new Spearman; after 1; only new producer from step 1
+Symbolic restrictions (fixed by this plan):
+  barracks: build(building=building:Barracks, count=2)
+  spears: produce(count=10, quantityMode=New, unit=unit:1, producers=result:barracks) after barracks
+Worker selections are frozen once; partition roles cannot overlap. Locations use map directions and footprint-to-footprint clear gaps within bounded tolerance.
+Preparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan."
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.NewProducers_ExplainsNamedExactBuildingsWithoutFallback () [0x0001b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixReadablePreviewTests.cs:48
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1182" name="SharedWorkers_ExplainsFixedDisjointRolesWithoutSymbolicDump" fullname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.SharedWorkers_ExplainsFixedDisjointRolesWithoutSymbolicDump" methodname="SharedWorkers_ExplainsFixedDisjointRolesWithoutSymbolicDump" classname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests" runstate="Runnable" seed="570442623" result="Failed" start-time="2026-10-08 10:48:33Z" end-time="2026-10-08 10:48:34Z" duration="1.039595" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "3 eligible idle villagers"
+  But was:  "Action plan — not started.
+1. Allocate workers SelectedCount Exact 2; Idle from  to Food source Sheep
+2. Build 1 Mill
+Symbolic restrictions (fixed by this plan):
+  idle: select-workers(count=3, state=Idle)
+  sheepWorkers: partition-workers(count=2, offset=0, workers=result:idle) after idle
+  millWorker: partition-workers(count=1, offset=2, workers=result:idle) after idle
+  sheep: allocate-workers(resource=Food, sourceKind=Sheep, workers=result:sheepWorkers) after sheepWorkers
+  mill: build(building=building:Mill, count=1, workers=result:millWorker) after millWorker
+Worker selections are frozen once; partition roles cannot overlap. Locations use map directions and footprint-to-footprint clear gaps within bounded tolerance.
+Preparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan."
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.SharedWorkers_ExplainsFixedDisjointRolesWithoutSymbolicDump () [0x0000b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixReadablePreviewTests.cs:36
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1188" name="WorkerQuantityModes_HaveDistinctPlainMeanings" fullname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.WorkerQuantityModes_HaveDistinctPlainMeanings" classname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-08 10:48:34Z" end-time="2026-10-08 10:48:37Z" duration="3.152434" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1185" name="WorkerQuantityModes_HaveDistinctPlainMeanings(SelectedCount,&quot;Assign exactly 4 eligible idle villagers&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.WorkerQuantityModes_HaveDistinctPlainMeanings(SelectedCount,&quot;Assign exactly 4 eligible idle villagers&quot;)" methodname="WorkerQuantityModes_HaveDistinctPlainMeanings" classname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests" runstate="Runnable" seed="1047716091" result="Failed" start-time="2026-10-08 10:48:34Z" end-time="2026-10-08 10:48:35Z" duration="1.018881" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: String containing "Assign exactly 4 eligible idle villagers"
+  But was:  "Action plan — not started.
+1. Allocate workers SelectedCount Exact 4; Idle from  to Food source Sheep
+Preparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan."
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.WorkerQuantityModes_HaveDistinctPlainMeanings (OpenEmpires.CommanderWorkerAllocationMode mode, System.String expected) [0x00037] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixReadablePreviewTests.cs:68
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1186" name="WorkerQuantityModes_HaveDistinctPlainMeanings(Additional,&quot;Assign 4 additional eligible idle villagers&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.WorkerQuantityModes_HaveDistinctPlainMeanings(Additional,&quot;Assign 4 additional eligible idle villagers&quot;)" methodname="WorkerQuantityModes_HaveDistinctPlainMeanings" classname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests" runstate="Runnable" seed="929231272" result="Failed" start-time="2026-10-08 10:48:35Z" end-time="2026-10-08 10:48:36Z" duration="1.005342" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: String containing "Assign 4 additional eligible idle villagers"
+  But was:  "Action plan — not started.
+1. Allocate workers Additional Exact 4; Idle from  to Food source Sheep
+Preparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan."
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.WorkerQuantityModes_HaveDistinctPlainMeanings (OpenEmpires.CommanderWorkerAllocationMode mode, System.String expected) [0x00037] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixReadablePreviewTests.cs:68
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1187" name="WorkerQuantityModes_HaveDistinctPlainMeanings(TargetTotal,&quot;Target 4 villagers in total&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.WorkerQuantityModes_HaveDistinctPlainMeanings(TargetTotal,&quot;Target 4 villagers in total&quot;)" methodname="WorkerQuantityModes_HaveDistinctPlainMeanings" classname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests" runstate="Runnable" seed="1386820535" result="Failed" start-time="2026-10-08 10:48:36Z" end-time="2026-10-08 10:48:37Z" duration="1.060866" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: String containing "Target 4 villagers in total"
+  But was:  "Action plan — not started.
+1. Allocate workers TargetTotal Exact 4; Any from  to Food source Sheep
+Preparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan."
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.WorkerQuantityModes_HaveDistinctPlainMeanings (OpenEmpires.CommanderWorkerAllocationMode mode, System.String expected) [0x00037] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixReadablePreviewTests.cs:68
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

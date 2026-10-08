@@ -1,0 +1,54 @@
+{
+  "schema": "openempires-readable-preview-checkpoint@1",
+  "head": "8586764e644240f93c99e2afa1c7d41c697cc879",
+  "branch": "unit_models_and_voice_control",
+  "working_changes": true,
+  "edit": {
+    "job": "9be02e17ef7f4bf3b7cd115682290970",
+    "artifact": "preview-final-edit-9be02e17.xml",
+    "passed": 137,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 145.3924647
+  },
+  "additional_edit": {
+    "launched_job": "4e634fc5da244d76b2f1103432d78eeb",
+    "handle_state": "unknown after interruption/reload",
+    "artifact": "preview-core-recovered-4e634fc5.xml",
+    "evidence": "durable XML with requested three fixtures; XML does not encode MCP handle",
+    "passed": 39,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 38.4926345
+  },
+  "play": {
+    "job": "c90c75d2715e4f1689c9fe56625ac57f",
+    "artifact": "preview-final-play-c90c75d2.xml",
+    "passed": 6,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 2.5509765
+  },
+  "source_sha256": {
+    "Assets/Scripts/AI/Commander/Phase5A/CommanderActionPlanCandidate.cs": "2b03c6e01d13bef7d1490499e0b3be87d509d7d3ff928e50a17222960cdfc2c4",
+    "Assets/Scripts/AI/Commander/Phase5A/CommanderPlanPreview.Descriptions.cs": "60db0d346ec415a7a0eb3449bbcd0b3469a028bff00dc1f9f7a79f35b4cb61a7",
+    "Assets/Scripts/AI/Commander/Phase5A/CommanderScopeEquivalence.cs": "74ffc9f1b1348dbec9f3a87c50f8fb64e786152bcf244531bc6d6ea2dd3130d6",
+    "Assets/Tests/EditMode/CommanderGrandFixReadablePreviewTests.cs": "0679c92c45ccaaf0ce6426d65906f73cad256a738367df5ad9768b67921085d7",
+    "Assets/Tests/EditMode/CommanderPhase5AGroundedScopeTests.cs": "7709679f89876fb1d740ffe7374be975a2bc48c8feb45dab9f2419cea3b78d11",
+    "Assets/Tests/EditMode/CommanderGrandFixTargetTests.cs": "ece5373d094523a0068dfd19c74d58de826bbc6def2045150450301c627479d6",
+    "Assets/Tests/EditMode/CommanderGrandFixPresentationTests.cs": "b7075c2bdb76c8a11ab8c047b70d2e72c9270391b417ba1f59b3e5cfbf63548b"
+  },
+  "review": {
+    "task": "g07_readable_review",
+    "model": "gpt-6-sol",
+    "read_only": true,
+    "findings_fixed_red_green": true,
+    "re_review": false
+  },
+  "limitations": [
+    "No packaged/current served Web approval layout or physical input proof",
+    "No physical microphone/paid provider/online ASR use",
+    "No full historical regression or independent hostile audit"
+  ],
+  "next": "G14 persistent actual-transaction guard and stage diagnostics; full GrandFix remains active"
+}

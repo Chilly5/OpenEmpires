@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 16:39:00Z" end-time="2026-10-08 16:39:02Z" duration="1.2099693">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1456" result="Failed" site="Child" start-time="2026-10-08 16:39:00Z" end-time="2026-10-08 16:39:02Z" duration="1.209969" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2677" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1456" result="Failed" site="Child" start-time="2026-10-08 16:39:00Z" end-time="2026-10-08 16:39:02Z" duration="1.104380" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="27016" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2678" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1456" result="Failed" site="Child" start-time="2026-10-08 16:39:00Z" end-time="2026-10-08 16:39:02Z" duration="1.017262" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2679" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1456" result="Failed" site="Child" start-time="2026-10-08 16:39:01Z" end-time="2026-10-08 16:39:02Z" duration="0.915549" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1200" name="CommanderGrandFixProviderSetupTests" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" testcasecount="12" result="Failed" site="Child" start-time="2026-10-08 16:39:01Z" end-time="2026-10-08 16:39:02Z" duration="0.814652" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1214" name="ReplacingGateway_DisposesOnlyTheRetiredOwnedTransport" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.ReplacingGateway_DisposesOnlyTheRetiredOwnedTransport" methodname="ReplacingGateway_DisposesOnlyTheRetiredOwnedTransport" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="870166511" result="Failed" start-time="2026-10-08 16:39:01Z" end-time="2026-10-08 16:39:02Z" duration="0.706124" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Replacing a gateway must release its owned transport/session closure.
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.ReplacingGateway_DisposesOnlyTheRetiredOwnedTransport () [0x00070] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixProviderSetupTests.cs:123
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

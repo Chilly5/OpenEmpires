@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="8" result="Passed" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-07 20:06:16Z" end-time="2026-10-07 20:06:38Z" duration="22.0455484">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1181" result="Passed" start-time="2026-10-07 20:06:16Z" end-time="2026-10-07 20:06:38Z" duration="22.045548" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="2350" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1181" result="Passed" start-time="2026-10-07 20:06:16Z" end-time="2026-10-07 20:06:38Z" duration="21.940050" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="2351" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1181" result="Passed" start-time="2026-10-07 20:06:16Z" end-time="2026-10-07 20:06:38Z" duration="21.856309" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="2352" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1181" result="Passed" start-time="2026-10-07 20:06:16Z" end-time="2026-10-07 20:06:38Z" duration="21.748163" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1032" name="CommanderGrandFixNativeOwnershipTests" fullname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests" classname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-07 20:06:16Z" end-time="2026-10-07 20:06:19Z" duration="2.723665" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <test-case id="1034" name="ActiveContext_RejectsSecondContextUntilReleaseCompletes" fullname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.ActiveContext_RejectsSecondContextUntilReleaseCompletes" methodname="ActiveContext_RejectsSecondContextUntilReleaseCompletes" classname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests" runstate="Runnable" seed="835617587" result="Passed" start-time="2026-10-07 20:06:16Z" end-time="2026-10-07 20:06:17Z" duration="0.547922" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1036" name="DisposedDuringInitialization_DropsNewContextInsteadOfPublishingIt" fullname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.DisposedDuringInitialization_DropsNewContextInsteadOfPublishingIt" methodname="DisposedDuringInitialization_DropsNewContextInsteadOfPublishingIt" classname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests" runstate="Runnable" seed="1654414288" result="Passed" start-time="2026-10-07 20:06:17Z" end-time="2026-10-07 20:06:17Z" duration="0.519372" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1033" name="DisposeWhileNativeCallRuns_ReturnsAndFreesExactlyAfterCall" fullname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.DisposeWhileNativeCallRuns_ReturnsAndFreesExactlyAfterCall" methodname="DisposeWhileNativeCallRuns_ReturnsAndFreesExactlyAfterCall" classname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests" runstate="Runnable" seed="2046301200" result="Passed" start-time="2026-10-07 20:06:17Z" end-time="2026-10-07 20:06:18Z" duration="0.654693" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1035" name="FailedInferenceAndDisposedContext_DoNotDoubleFreeOrInvokeAgain" fullname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.FailedInferenceAndDisposedContext_DoNotDoubleFreeOrInvokeAgain" methodname="FailedInferenceAndDisposedContext_DoNotDoubleFreeOrInvokeAgain" classname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests" runstate="Runnable" seed="1106095722" result="Passed" start-time="2026-10-07 20:06:18Z" end-time="2026-10-07 20:06:19Z" duration="0.435470" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1037" name="RetryAfterBusy_ReportsActualInitializationFailureNotOldBusyStatus" fullname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.RetryAfterBusy_ReportsActualInitializationFailureNotOldBusyStatus" methodname="RetryAfterBusy_ReportsActualInitializationFailureNotOldBusyStatus" classname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests" runstate="Runnable" seed="73800249" result="Passed" start-time="2026-10-07 20:06:19Z" end-time="2026-10-07 20:06:19Z" duration="0.436386" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2155" name="CommanderPhase4HAudioFixtureTests" fullname="OpenEmpires.Tests.CommanderPhase4HAudioFixtureTests" classname="OpenEmpires.Tests.CommanderPhase4HAudioFixtureTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-07 20:06:19Z" end-time="2026-10-07 20:06:38Z" duration="18.909401" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="2157" name="AudioFixture_BuildMill_TranscribesAccurately" fullname="OpenEmpires.Tests.CommanderPhase4HAudioFixtureTests.AudioFixture_BuildMill_TranscribesAccurately" methodname="AudioFixture_BuildMill_TranscribesAccurately" classname="OpenEmpires.Tests.CommanderPhase4HAudioFixtureTests" runstate="Runnable" seed="1741901899" result="Passed" start-time="2026-10-07 20:06:19Z" end-time="2026-10-07 20:06:26Z" duration="7.072163" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Requesting default Whisper Context params...
+Default Whisper Context params generated!
+[Test] AudioFixture_BuildMill transcript: 'Build a mill near the berries my villagers are gathering.' in 5190ms
+]]></output>
+            </test-case>
+            <test-case id="2156" name="AudioFixture_MakeTenSpearmen_TranscribesAccurately" fullname="OpenEmpires.Tests.CommanderPhase4HAudioFixtureTests.AudioFixture_MakeTenSpearmen_TranscribesAccurately" methodname="AudioFixture_MakeTenSpearmen_TranscribesAccurately" classname="OpenEmpires.Tests.CommanderPhase4HAudioFixtureTests" runstate="Runnable" seed="1637970085" result="Passed" start-time="2026-10-07 20:06:26Z" end-time="2026-10-07 20:06:32Z" duration="5.919711" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Requesting default Whisper Context params...
+Default Whisper Context params generated!
+[Test] AudioFixture_MakeTenSpearmen transcript: 'Make 10 Spearman.' in 5160ms
+]]></output>
+            </test-case>
+            <test-case id="2158" name="AudioFixture_PureSilence_DoesNotProduceGarbageOrder" fullname="OpenEmpires.Tests.CommanderPhase4HAudioFixtureTests.AudioFixture_PureSilence_DoesNotProduceGarbageOrder" methodname="AudioFixture_PureSilence_DoesNotProduceGarbageOrder" classname="OpenEmpires.Tests.CommanderPhase4HAudioFixtureTests" runstate="Runnable" seed="654556995" result="Passed" start-time="2026-10-07 20:06:32Z" end-time="2026-10-07 20:06:38Z" duration="5.812347" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Requesting default Whisper Context params...
+Default Whisper Context params generated!
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

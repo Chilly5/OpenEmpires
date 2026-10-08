@@ -343,7 +343,7 @@ namespace OpenEmpires.Tests
 
                 CommanderSemanticResult scout = CommanderSemanticJson.Parse(
                     "{\"outcome\":\"Request\",\"nodes\":[" +
-                    "{\"type\":\"EnsureUnitCount\",\"unit\":\"Scout\",\"count\":2}," +
+                    "{\"type\":\"EnsureUnitCount\",\"unit\":\"Scout\",\"count\":1,\"quantityMode\":\"New\"}," +
                     "{\"type\":\"ScoutArea\",\"unitSelector\":\"Scout\",\"count\":1," +
                     "\"location\":\"PlayerBase\",\"dependsOn\":[0],\"resultFromNode\":0}]}");
                 bool scoutAdmitted = CommanderSemanticGraphAdmission.TryAdmit(scout, CreateContext(0), out _, out _);

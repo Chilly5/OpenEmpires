@@ -1,0 +1,25 @@
+{
+  "schema": "openempires-c2-input-dispatch-checkpoint@1",
+  "head": "8586764e644240f93c99e2afa1c7d41c697cc879",
+  "branch": "unit_models_and_voice_control",
+  "working_changes": true,
+  "scope": "Escape callback priority/deduplication, selected-editable attack/camera guards, active Commander pointer region using current Mouse state",
+  "edit": {"job":"2c7471c76dd3434ab71ac1e027cda9ca","artifact":"input-pointer-final-edit-20261008.xml","total":25,"passed":25,"failed":0,"skipped":0,"seconds":10.0995287},
+  "play": {"job":"8bc99601f2114b5f926b0dc7cd904fdf","init_timeout":120000,"artifact":"input-pointer-final-play-20261008.xml","total":9,"passed":9,"failed":0,"skipped":0,"seconds":3.8368664},
+  "play_evidence": "Two real callbacks with synthetic Input System devices plus seven existing voice mock/routing cases; not physical input or microphone acceptance",
+  "read_only_review": {"model":"gpt-6-luna","task":"c2_dispatch_readonly_review","finding":"No scoped blocker found","not_test_execution":true,"excluded":"Unrelated GrandFix work, packaging, physical input, native runtime, layout, Enter/PTT/rebinding/setup wording"},
+  "source_sha256": {
+    "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Presentation.cs":"a6f9d64c2abc28a50e99631e754ef790ec0ed53b77d1ff09c4177c2a01f56da1",
+    "Assets/Scripts/AI/Commander/Phase4A/CommanderUIInputGuard.cs":"d513c68852d302f306b4b96d744753e6e6f17dcb4e53e217cea22c8e09f8e5b8",
+    "Assets/Scripts/AI/Commander/Phase4H/CommanderChatUI.Voice.cs":"f29536ec2ca95876250bdc47a1b3f4c2bb218b4d049b5309e502a8cd0654f467",
+    "Assets/Scripts/Units/UnitSelectionManager.cs":"89a859ddb19ec7199f7324921327b85029fe03b38eb826ab694ad88402ad4388",
+    "Assets/Scripts/Camera/RTSCameraController.cs":"2ce5c1ef3121665779c21fb6f7261e5aed56d738f8916c0fe717c4e1d233f9e6",
+    "Assets/Tests/EditMode/CommanderGrandFixPresentationTests.cs":"f36e24be9a9a1ce47c3e38ffe1313b4303795d2d94f931514dd912953c9eb0f2",
+    "Assets/Tests/PlayMode/CommanderGrandFixInputDispatchPlayModeTests.cs":"d829db72efffac6ae30d98be06db663a2a82fa4d57605846ae03878222c92f2e",
+    "Assets/Tests/PlayMode/OpenEmpires.PlayModeTests.asmdef":"4537de0e386fd9238ce4d085c7c66f52f0da15a676c3ebeab7d9caff7414d777"
+  },
+  "not_verified": ["Rebuilt Web fixes","Packaged Windows fixes","Physical microphone/quality","Full browser/version matrix","Expanded layout","Complete Enter/PTT/rebinding/focus contract","Remaining GrandFix requirements"],
+  "paid_semantic_http":0,
+  "paid_asr_billable_seconds":0,
+  "goal_status":"active"
+}

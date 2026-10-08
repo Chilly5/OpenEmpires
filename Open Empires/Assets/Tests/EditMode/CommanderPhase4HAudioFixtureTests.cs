@@ -10,6 +10,22 @@ namespace OpenEmpires.Tests
     [TestFixture]
     public class CommanderPhase4HAudioFixtureTests
     {
+        private WhisperCommanderSpeechToTextProvider ownedProvider;
+        [TearDown]
+        public async Task AwaitOwnedNativeRelease()
+        {
+            if(ownedProvider==null)return;
+            ownedProvider.Dispose();
+            var property=typeof(WhisperCommanderSpeechToTextProvider).GetProperty("ReleaseCompletion",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic);
+            var release=(Task)property.GetValue(ownedProvider);
+            Assert.That(await Task.WhenAny(release,Task.Delay(10000)),Is.SameAs(release),"Fixture must await its actual native release before the next model begins.");
+            await release;ownedProvider=null;
+        }
+        private static string InitializationCategory(WhisperCommanderSpeechToTextProvider provider)
+        {
+            var context=typeof(WhisperCommanderSpeechToTextProvider).GetField("context",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic).GetValue(provider);
+            return (string)context.GetType().GetProperty("FailureCode",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic).GetValue(context);
+        }
         private static CommanderAudioData LoadWavFile(string relativePath)
         {
             string fullPath = Path.Combine(Application.dataPath, relativePath);
@@ -50,10 +66,10 @@ namespace OpenEmpires.Tests
             CommanderAudioData audio = LoadWavFile("Tests/Fixtures/Audio/make_ten_spearmen.wav");
             Assert.Greater(audio.Samples.Length, 0);
 
-            using (var provider = new WhisperCommanderSpeechToTextProvider())
+            using (var provider = ownedProvider = new WhisperCommanderSpeechToTextProvider())
             {
                 bool initialized = provider.Initialize();
-                Assert.IsTrue(initialized, "Whisper model must initialize successfully from StreamingAssets.");
+                Assert.IsTrue(initialized, "Verified provisioned model initialization failed; category="+InitializationCategory(provider));
 
                 using (var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30)))
                 {
@@ -76,10 +92,10 @@ namespace OpenEmpires.Tests
             CommanderAudioData audio = LoadWavFile("Tests/Fixtures/Audio/build_mill.wav");
             Assert.Greater(audio.Samples.Length, 0);
 
-            using (var provider = new WhisperCommanderSpeechToTextProvider())
+            using (var provider = ownedProvider = new WhisperCommanderSpeechToTextProvider())
             {
                 bool initialized = provider.Initialize();
-                Assert.IsTrue(initialized);
+                Assert.IsTrue(initialized,"Verified provisioned model initialization failed; category="+InitializationCategory(provider));
 
                 using (var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30)))
                 {
@@ -97,13 +113,30 @@ namespace OpenEmpires.Tests
         }
 
         [Test]
+        public async Task AudioFixture_BaseEnPureSilence_DoesNotHallucinateTranscript()
+        {
+            ownedProvider=new WhisperCommanderSpeechToTextProvider("ggml-base.en.bin");
+            Assert.That(ownedProvider.Initialize(),Is.True,
+                "Verified base.en candidate initialization failed; category="+InitializationCategory(ownedProvider));
+            using(var cts=new CancellationTokenSource(TimeSpan.FromSeconds(30)))
+            {
+                var result=await ownedProvider.TranscribeAsync(new CommanderAudioData(new float[32000],16000,1),cts.Token);
+                Assert.That(string.IsNullOrWhiteSpace(result.Transcript),Is.True,
+                    "A physically empty waveform must not become a sendable native-model hallucination.");
+                Assert.That(result.ErrorCode,Is.EqualTo("EMPTY_TRANSCRIPTION"),
+                    "Unavailable/busy/cancelled/failed inference is not proof of the no-speech guard.");
+                Assert.That(result.Success,Is.False);
+            }
+        }
+
+        [Test]
         public async Task AudioFixture_PureSilence_DoesNotProduceGarbageOrder()
         {
             // 2 seconds of pure silence (all 0.0f)
             float[] silentSamples = new float[16000 * 2];
             CommanderAudioData silentAudio = new CommanderAudioData(silentSamples, 16000, 1);
 
-            using (var provider = new WhisperCommanderSpeechToTextProvider())
+            using (var provider = ownedProvider = new WhisperCommanderSpeechToTextProvider())
             {
                 provider.Initialize();
                 using (var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10)))

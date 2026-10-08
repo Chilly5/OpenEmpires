@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="11" result="Failed(Child)" total="11" passed="2" failed="9" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 15:18:49Z" end-time="2026-10-08 15:18:54Z" duration="5.0091321">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1436" result="Failed" site="Child" start-time="2026-10-08 15:18:49Z" end-time="2026-10-08 15:18:54Z" duration="5.009132" total="11" passed="2" failed="9" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2653" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1436" result="Failed" site="Child" start-time="2026-10-08 15:18:49Z" end-time="2026-10-08 15:18:54Z" duration="4.903390" total="11" passed="2" failed="9" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="27016" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2654" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1436" result="Failed" site="Child" start-time="2026-10-08 15:18:49Z" end-time="2026-10-08 15:18:54Z" duration="4.816304" total="11" passed="2" failed="9" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2655" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1436" result="Failed" site="Child" start-time="2026-10-08 15:18:49Z" end-time="2026-10-08 15:18:54Z" duration="4.716046" total="11" passed="2" failed="9" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1244" name="CommanderGrandFixRetentionTests" fullname="OpenEmpires.Tests.CommanderGrandFixRetentionTests" classname="OpenEmpires.Tests.CommanderGrandFixRetentionTests" runstate="Runnable" testcasecount="11" result="Failed" site="Child" start-time="2026-10-08 15:18:49Z" end-time="2026-10-08 15:18:54Z" duration="4.613573" total="11" passed="2" failed="9" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1254" name="BulkExpiry_PrunesTemporaryLeasesButKeepsLiveCommanderControl" fullname="OpenEmpires.Tests.CommanderGrandFixRetentionTests.BulkExpiry_PrunesTemporaryLeasesButKeepsLiveCommanderControl" methodname="BulkExpiry_PrunesTemporaryLeasesButKeepsLiveCommanderControl" classname="OpenEmpires.Tests.CommanderGrandFixRetentionTests" runstate="Runnable" seed="1111327170" result="Failed" start-time="2026-10-08 15:18:50Z" end-time="2026-10-08 15:18:50Z" duration="0.407120" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: 0
+  But was:  1
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixRetentionTests.BulkExpiry_PrunesTemporaryLeasesButKeepsLiveCommanderControl () [0x00073] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixRetentionTests.cs:104
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1249" name="ConfirmationTransfer_PreservesNewOwnerButDismissesOldObject" fullname="OpenEmpires.Tests.CommanderGrandFixRetentionTests.ConfirmationTransfer_PreservesNewOwnerButDismissesOldObject" methodname="ConfirmationTransfer_PreservesNewOwnerButDismissesOldObject" classname="OpenEmpires.Tests.CommanderGrandFixRetentionTests" runstate="Runnable" seed="1402261023" result="Passed" start-time="2026-10-08 15:18:50Z" end-time="2026-10-08 15:18:50Z" duration="0.423087" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1253" name="DeadAndRemovedUnits_PruneAllFiveAuthorityStores" fullname="OpenEmpires.Tests.CommanderGrandFixRetentionTests.DeadAndRemovedUnits_PruneAllFiveAuthorityStores" methodname="DeadAndRemovedUnits_PruneAllFiveAuthorityStores" classname="OpenEmpires.Tests.CommanderGrandFixRetentionTests" runstate="Runnable" seed="1229154212" result="Failed" start-time="2026-10-08 15:18:50Z" end-time="2026-10-08 15:18:51Z" duration="0.394194" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  humanProtectedUntilTick
+  Expected: 0
+  But was:  1
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixRetentionTests.DeadAndRemovedUnits_PruneAllFiveAuthorityStores () [0x0016a] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixRetentionTests.cs:96
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1248" name="DismissedPendingRecommendations_RetireTheirClaims" fullname="OpenEmpires.Tests.CommanderGrandFixRetentionTests.DismissedPendingRecommendations_RetireTheirClaims" methodname="DismissedPendingRecommendations_RetireTheirClaims" classname="OpenEmpires.Tests.CommanderGrandFixRetentionTests" runstate="Runnable" seed="679470623" result="Failed" start-time="2026-10-08 15:18:51Z" end-time="2026-10-08 15:18:51Z" duration="0.396381" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixRetentionTests.DismissedPendingRecommendations_RetireTheirClaims () [0x00036] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixRetentionTests.cs:51
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1252" name="DisposedPlanner_ReleasesIdentityClaimsAndHistory" fullname="OpenEmpires.Tests.CommanderGrandFixRetentionTests.DisposedPlanner_ReleasesIdentityClaimsAndHistory" methodname="DisposedPlanner_ReleasesIdentityClaimsAndHistory" classname="OpenEmpires.Tests.CommanderGrandFixRetentionTests" runstate="Runnable" seed="598574099" result="Failed" start-time="2026-10-08 15:18:51Z" end-time="2026-10-08 15:18:52Z" duration="0.362401" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: 0
+  But was:  16
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixRetentionTests.DisposedPlanner_ReleasesIdentityClaimsAndHistory () [0x00046] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixRetentionTests.cs:84
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: EconomicExpansion for player 0.
+[StrategicPlanner] Strategic intent #2 created: EconomicExpansion for player 0.
+[StrategicPlanner] Strategic intent #3 created: EconomicExpansion for player 0.
+[StrategicPlanner] Strategic intent #4 created: EconomicExpansion for player 0.
+[StrategicPlanner] Strategic intent #5 created: EconomicExpansion for player 0.
+[StrategicPlanner] Strategic intent #6 created: EconomicExpansion for player 0.
+[StrategicPlanner] Strategic intent #7 created: EconomicExpansion for player 0.
+[StrategicPlanner] Strategic intent #8 created: EconomicExpansion for player 0.
+[StrategicPlanner] Strategic intent #9 created: EconomicExpansion for player 0.
+[StrategicPlanner] Strategic intent #10 created: EconomicExpansion for player 0.
+[StrategicPlanner] Strategic intent #11 created: EconomicExpansion for player 0.
+[StrategicPlanner] Strategic intent #12 created: EconomicExpansion for player 0.
+[StrategicPlanner] Strategic intent #13 created: EconomicExpansion for player 0.
+[StrategicPlanner] Strategic intent #14 created: EconomicExpansion for player 0.
+[StrategicPlanner] Strategic intent #15 created: EconomicExpansion for player 0.
+[StrategicPlanner] Strategic intent #16 created: EconomicExpansion for player 0.
+]]></output>
+            </test-case>
+            <test-case id="1247" name="FailedTranslationChurn_ReleasesOwnedRequestContexts" fullname="OpenEmpires.Tests.CommanderGrandFixRetentionTests.FailedTranslationChurn_ReleasesOwnedRequestContexts" methodname="FailedTranslationChurn_ReleasesOwnedRequestContexts" classname="OpenEmpires.Tests.CommanderGrandFixRetentionTests" runstate="Runnable" seed="828146821" result="Failed" start-time="2026-10-08 15:18:52Z" end-time="2026-10-08 15:18:52Z" duration="0.453522" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: 0
+  But was:  64
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixRetentionTests.FailedTranslationChurn_ReleasesOwnedRequestContexts () [0x000ca] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixRetentionTests.cs:42
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1255" name="GarrisonedLiveIdentity_KeepsProtectionWhileReservationsRelease" fullname="OpenEmpires.Tests.CommanderGrandFixRetentionTests.GarrisonedLiveIdentity_KeepsProtectionWhileReservationsRelease" methodname="GarrisonedLiveIdentity_KeepsProtectionWhileReservationsRelease" classname="OpenEmpires.Tests.CommanderGrandFixRetentionTests" runstate="Runnable" seed="2073919671" result="Passed" start-time="2026-10-08 15:18:52Z" end-time="2026-10-08 15:18:52Z" duration="0.363800" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1245" name="InvalidOwnedRequestConstruction_DoesNotLeakUnboundIdentity" fullname="OpenEmpires.Tests.CommanderGrandFixRetentionTests.InvalidOwnedRequestConstruction_DoesNotLeakUnboundIdentity" methodname="InvalidOwnedRequestConstruction_DoesNotLeakUnboundIdentity" classname="OpenEmpires.Tests.CommanderGrandFixRetentionTests" runstate="Runnable" seed="961060510" result="Failed" start-time="2026-10-08 15:18:52Z" end-time="2026-10-08 15:18:53Z" duration="0.361020" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: 0
+  But was:  1
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixRetentionTests.InvalidOwnedRequestConstruction_DoesNotLeakUnboundIdentity () [0x00012] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixRetentionTests.cs:31
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1246" name="RejectedIntentChurn_DoesNotOutliveBoundedPlannerHistory" fullname="OpenEmpires.Tests.CommanderGrandFixRetentionTests.RejectedIntentChurn_DoesNotOutliveBoundedPlannerHistory" methodname="RejectedIntentChurn_DoesNotOutliveBoundedPlannerHistory" classname="OpenEmpires.Tests.CommanderGrandFixRetentionTests" runstate="Runnable" seed="2094513139" result="Failed" start-time="2026-10-08 15:18:53Z" end-time="2026-10-08 15:18:53Z" duration="0.480404" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: 0
+  But was:  128
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixRetentionTests.RejectedIntentChurn_DoesNotOutliveBoundedPlannerHistory () [0x00067] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixRetentionTests.cs:37
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #2 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #3 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #4 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #5 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #6 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #7 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #8 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #9 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #10 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #11 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #12 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #13 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #14 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #15 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #16 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #17 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #18 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #19 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #20 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #21 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #22 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #23 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #24 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #25 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #26 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #27 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #28 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #29 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #30 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #31 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #32 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #33 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #34 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #35 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #36 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #37 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #38 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #39 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #40 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #41 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #42 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #43 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #44 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #45 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #46 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #47 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #48 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #49 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #50 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #51 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #52 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #53 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #54 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #55 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #56 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #57 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #58 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #59 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #60 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #61 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #62 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #63 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #64 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #65 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #66 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #67 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #68 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #69 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #70 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #71 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #72 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #73 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #74 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #75 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #76 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #77 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #78 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #79 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #80 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #81 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #82 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #83 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #84 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #85 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #86 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #87 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #88 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #89 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #90 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #91 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #92 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #93 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #94 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #95 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #96 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #97 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #98 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #99 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #100 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #101 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #102 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #103 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #104 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #105 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #106 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #107 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #108 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #109 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #110 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #111 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #112 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #113 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #114 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #115 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #116 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #117 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #118 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #119 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #120 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #121 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #122 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #123 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #124 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #125 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #126 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #127 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #128 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+]]></output>
+            </test-case>
+            <test-case id="1250" name="ResetDuringIgnoringTranslation_ReleasesClaimAndLateResultCannotBind" fullname="OpenEmpires.Tests.CommanderGrandFixRetentionTests.ResetDuringIgnoringTranslation_ReleasesClaimAndLateResultCannotBind" methodname="ResetDuringIgnoringTranslation_ReleasesClaimAndLateResultCannotBind" classname="OpenEmpires.Tests.CommanderGrandFixRetentionTests" runstate="Runnable" seed="1908514126" result="Failed" start-time="2026-10-08 15:18:53Z" end-time="2026-10-08 15:18:54Z" duration="0.494751" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: 0
+  But was:  1
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixRetentionTests.ResetDuringIgnoringTranslation_ReleasesClaimAndLateResultCannotBind () [0x000d4] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixRetentionTests.cs:65
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1251" name="RetiredIdentity_CannotRegisterSameOrReplacementObjectAgain" fullname="OpenEmpires.Tests.CommanderGrandFixRetentionTests.RetiredIdentity_CannotRegisterSameOrReplacementObjectAgain" methodname="RetiredIdentity_CannotRegisterSameOrReplacementObjectAgain" classname="OpenEmpires.Tests.CommanderGrandFixRetentionTests" runstate="Runnable" seed="1283914578" result="Failed" start-time="2026-10-08 15:18:54Z" end-time="2026-10-08 15:18:54Z" duration="0.366177" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Owned identity retirement is missing.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixRetentionTests.RetiredIdentity_CannotRegisterSameOrReplacementObjectAgain () [0x0002d] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixRetentionTests.cs:74
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: EconomicExpansion for player 0.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

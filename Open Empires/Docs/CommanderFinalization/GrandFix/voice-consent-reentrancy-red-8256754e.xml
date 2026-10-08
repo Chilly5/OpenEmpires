@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="8" result="Failed(Child)" total="8" passed="6" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-07 20:53:19Z" end-time="2026-10-07 20:53:20Z" duration="1.1880611">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1190" result="Failed" site="Child" start-time="2026-10-07 20:53:19Z" end-time="2026-10-07 20:53:20Z" duration="1.188061" total="8" passed="6" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2360" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1190" result="Failed" site="Child" start-time="2026-10-07 20:53:19Z" end-time="2026-10-07 20:53:20Z" duration="1.091737" total="8" passed="6" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2361" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1190" result="Failed" site="Child" start-time="2026-10-07 20:53:19Z" end-time="2026-10-07 20:53:20Z" duration="0.998216" total="8" passed="6" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2362" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1190" result="Failed" site="Child" start-time="2026-10-07 20:53:19Z" end-time="2026-10-07 20:53:20Z" duration="0.890735" total="8" passed="6" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1068" name="CommanderGrandFixVoiceConsentTests" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" testcasecount="8" result="Failed" site="Child" start-time="2026-10-07 20:53:20Z" end-time="2026-10-07 20:53:20Z" duration="0.779043" total="8" passed="6" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1073" name="ConsentRevocation_DuringIgnoringInferenceNeverDeliversText" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.ConsentRevocation_DuringIgnoringInferenceNeverDeliversText" methodname="ConsentRevocation_DuringIgnoringInferenceNeverDeliversText" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" seed="1517280119" result="Passed" start-time="2026-10-07 20:53:20Z" end-time="2026-10-07 20:53:20Z" duration="0.334305" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1072" name="ConsentRevocation_StopsRecordingAndRequiresFreshAction" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.ConsentRevocation_StopsRecordingAndRequiresFreshAction" methodname="ConsentRevocation_StopsRecordingAndRequiresFreshAction" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" seed="1496656877" result="Passed" start-time="2026-10-07 20:53:20Z" end-time="2026-10-07 20:53:20Z" duration="0.010193" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1074" name="Dispose_DetachesSessionInvalidationSubscription" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.Dispose_DetachesSessionInvalidationSubscription" methodname="Dispose_DetachesSessionInvalidationSubscription" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" seed="1850911876" result="Passed" start-time="2026-10-07 20:53:20Z" end-time="2026-10-07 20:53:20Z" duration="0.004589" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1076" name="EmptyCapture_DoesNotKeepAnUnusedFrozenOnlineJob" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.EmptyCapture_DoesNotKeepAnUnusedFrozenOnlineJob" methodname="EmptyCapture_DoesNotKeepAnUnusedFrozenOnlineJob" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" seed="223147696" result="Failed" start-time="2026-10-07 20:53:20Z" end-time="2026-10-07 20:53:20Z" duration="0.278545" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: 1
+  But was:  0
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.EmptyCapture_DoesNotKeepAnUnusedFrozenOnlineJob () [0x000b8] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixVoiceConsentTests.cs:64
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1071" name="FailedCapture_ReleasesFrozenProviderJob" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.FailedCapture_ReleasesFrozenProviderJob" methodname="FailedCapture_ReleasesFrozenProviderJob" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" seed="211759273" result="Passed" start-time="2026-10-07 20:53:20Z" end-time="2026-10-07 20:53:20Z" duration="0.001896" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1069" name="MissingOnlineConsent_DoesNotStartMicrophone" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.MissingOnlineConsent_DoesNotStartMicrophone" methodname="MissingOnlineConsent_DoesNotStartMicrophone" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" seed="936273786" result="Passed" start-time="2026-10-07 20:53:20Z" end-time="2026-10-07 20:53:20Z" duration="0.003908" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1070" name="RecordingGate_FreezesSessionBeforeCapture" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.RecordingGate_FreezesSessionBeforeCapture" methodname="RecordingGate_FreezesSessionBeforeCapture" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" seed="2004577579" result="Passed" start-time="2026-10-07 20:53:20Z" end-time="2026-10-07 20:53:20Z" duration="0.002648" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1075" name="SynchronousConsentInvalidation_DoesNotStartAfterRevocation" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.SynchronousConsentInvalidation_DoesNotStartAfterRevocation" methodname="SynchronousConsentInvalidation_DoesNotStartAfterRevocation" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" seed="1779623271" result="Failed" start-time="2026-10-07 20:53:20Z" end-time="2026-10-07 20:53:20Z" duration="0.005268" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.SynchronousConsentInvalidation_DoesNotStartAfterRevocation () [0x00025] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixVoiceConsentTests.cs:58
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Failed(Child)" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 05:19:28Z" end-time="2026-10-08 05:19:33Z" duration="4.5579087">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1330" result="Failed" site="Child" start-time="2026-10-08 05:19:28Z" end-time="2026-10-08 05:19:33Z" duration="4.557909" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2527" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1330" result="Failed" site="Child" start-time="2026-10-08 05:19:29Z" end-time="2026-10-08 05:19:33Z" duration="4.373691" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2528" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1330" result="Failed" site="Child" start-time="2026-10-08 05:19:29Z" end-time="2026-10-08 05:19:33Z" duration="4.370515" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2529" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1330" result="Failed" site="Child" start-time="2026-10-08 05:19:29Z" end-time="2026-10-08 05:19:33Z" duration="4.264999" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1155" name="CommanderGrandFixQuantityTests" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" testcasecount="20" result="Failed" site="Child" start-time="2026-10-08 05:19:29Z" end-time="2026-10-08 05:19:33Z" duration="4.157322" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="ParameterizedMethod" id="1179" name="DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-08 05:19:29Z" end-time="2026-10-08 05:19:33Z" duration="4.041214" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1176" name="DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit(False,1)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit(False,1)" methodname="DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="196960992" result="Failed" start-time="2026-10-08 05:19:29Z" end-time="2026-10-08 05:19:31Z" duration="1.832762" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixQuantityTests.DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit (System.Boolean newUnits, System.Int32 count) [0x000ef] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixQuantityTests.cs:197
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #2 submitted: CapabilityAction
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+]]></output>
+              </test-case>
+              <test-case id="1177" name="DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit(True,1)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit(True,1)" methodname="DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="1046695871" result="Failed" start-time="2026-10-08 05:19:31Z" end-time="2026-10-08 05:19:32Z" duration="1.052102" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixQuantityTests.DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit (System.Boolean newUnits, System.Int32 count) [0x000ef] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixQuantityTests.cs:197
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #2 submitted: CapabilityAction
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+]]></output>
+              </test-case>
+              <test-case id="1178" name="DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit(True,2)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit(True,2)" methodname="DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="867956477" result="Failed" start-time="2026-10-08 05:19:32Z" end-time="2026-10-08 05:19:33Z" duration="1.017652" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixQuantityTests.DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit (System.Boolean newUnits, System.Int32 count) [0x000ef] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixQuantityTests.cs:197
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #2 submitted: CapabilityAction
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

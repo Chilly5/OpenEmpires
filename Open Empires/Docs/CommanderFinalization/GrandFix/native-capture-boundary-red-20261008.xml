@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="18" result="Failed(Child)" total="18" passed="0" failed="18" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 00:46:57Z" end-time="2026-10-08 00:46:57Z" duration="0.0843196">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1246" result="Failed" site="Child" start-time="2026-10-08 00:46:57Z" end-time="2026-10-08 00:46:57Z" duration="0.084320" total="18" passed="0" failed="18" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2427" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1246" result="Failed" site="Child" start-time="2026-10-08 00:46:57Z" end-time="2026-10-08 00:46:57Z" duration="0.063015" total="18" passed="0" failed="18" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2428" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1246" result="Failed" site="Child" start-time="2026-10-08 00:46:57Z" end-time="2026-10-08 00:46:57Z" duration="0.062592" total="18" passed="0" failed="18" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2429" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1246" result="Failed" site="Child" start-time="2026-10-08 00:46:57Z" end-time="2026-10-08 00:46:57Z" duration="0.062402" total="18" passed="0" failed="18" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1043" name="CommanderGrandFixNativeCaptureTests" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" testcasecount="18" result="Failed" site="Child" start-time="2026-10-08 00:46:57Z" end-time="2026-10-08 00:46:57Z" duration="0.061033" total="18" passed="0" failed="18" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1044" name="ActualStereoClipRateAndExactPrefix_ArePreservedInsteadOfRequestedRate" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.ActualStereoClipRateAndExactPrefix_ArePreservedInsteadOfRequestedRate" methodname="ActualStereoClipRateAndExactPrefix_ArePreservedInsteadOfRequestedRate" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" seed="828590341" result="Failed" start-time="2026-10-08 00:46:57Z" end-time="2026-10-08 00:46:57Z" duration="0.015645" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  A typed native boundary must let tests exercise capture without opening a real microphone.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.Create () [0x00023] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:20
+at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.ActualStereoClipRateAndExactPrefix_ArePreservedInsteadOfRequestedRate () [0x00038] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:28
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1061" name="CancelAndRepeatedDispose_ReleaseExactlyOnceAndCannotStartAgain" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.CancelAndRepeatedDispose_ReleaseExactlyOnceAndCannotStartAgain" methodname="CancelAndRepeatedDispose_ReleaseExactlyOnceAndCannotStartAgain" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" seed="1874376172" result="Failed" start-time="2026-10-08 00:46:57Z" end-time="2026-10-08 00:46:57Z" duration="0.000668" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  A typed native boundary must let tests exercise capture without opening a real microphone.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.Create () [0x00023] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:20
+at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.CancelAndRepeatedDispose_ReleaseExactlyOnceAndCannotStartAgain () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:112
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1062" name="CaptureReadFailure_IsVisibleErrorAndNeverStartsSttOrSubmission" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.CaptureReadFailure_IsVisibleErrorAndNeverStartsSttOrSubmission" methodname="CaptureReadFailure_IsVisibleErrorAndNeverStartsSttOrSubmission" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" seed="198998311" result="Failed" start-time="2026-10-08 00:46:57Z" end-time="2026-10-08 00:46:57Z" duration="0.010428" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  A typed native boundary must let tests exercise capture without opening a real microphone.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.Create () [0x00023] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:20
+at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.CaptureReadFailure_IsVisibleErrorAndNeverStartsSttOrSubmission () [0x0004d] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:121
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1056" name="ConfiguredFractionalLimit_EndsCaptureAndKeepsExactlyVisibleDuration" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.ConfiguredFractionalLimit_EndsCaptureAndKeepsExactlyVisibleDuration" methodname="ConfiguredFractionalLimit_EndsCaptureAndKeepsExactlyVisibleDuration" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" seed="1147605529" result="Failed" start-time="2026-10-08 00:46:57Z" end-time="2026-10-08 00:46:57Z" duration="0.000689" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  A typed native boundary must let tests exercise capture without opening a real microphone.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.Create () [0x00023] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:20
+at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.ConfiguredFractionalLimit_EndsCaptureAndKeepsExactlyVisibleDuration () [0x0001c] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:78
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1050" name="DeviceCapabilityFailure_IsSafeAndDoesNotStartCapture" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.DeviceCapabilityFailure_IsSafeAndDoesNotStartCapture" methodname="DeviceCapabilityFailure_IsSafeAndDoesNotStartCapture" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" seed="826781259" result="Failed" start-time="2026-10-08 00:46:57Z" end-time="2026-10-08 00:46:57Z" duration="0.002777" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: No Exception to be thrown
+  But was:  <NUnit.Framework.AssertionException:   A typed native boundary must let tests exercise capture without opening a real microphone.
+  Expected: not null
+  But was:  null
+
+  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00044] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.Create () [0x00023] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:20 
+  at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests+<>c__DisplayClass10_0.<DeviceCapabilityFailure_IsSafeAndDoesNotStartCapture>b__0 () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:41 
+  at NUnit.Framework.Constraints.ThrowsConstraint+VoidInvocationDescriptor.Invoke () [0x00001] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at NUnit.Framework.Constraints.ThrowsConstraint+ExceptionInterceptor.Intercept (System.Object invocation) [0x00050] in <8b63e8ac0a4746599ed207982825ae6c>:0 >
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.DeviceCapabilityFailure_IsSafeAndDoesNotStartCapture () [0x0001f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:41
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1059" name="DeviceDisconnection_IsFailureWithoutReadingOrSwitchingDevices" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.DeviceDisconnection_IsFailureWithoutReadingOrSwitchingDevices" methodname="DeviceDisconnection_IsFailureWithoutReadingOrSwitchingDevices" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" seed="2139932044" result="Failed" start-time="2026-10-08 00:46:57Z" end-time="2026-10-08 00:46:57Z" duration="0.000611" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  A typed native boundary must let tests exercise capture without opening a real microphone.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.Create () [0x00023] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:20
+at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.DeviceDisconnection_IsFailureWithoutReadingOrSwitchingDevices () [0x00010] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:98
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1053" name="EarlyUnexpectedZeroEndpoint_IsFailureNotGuessedSilencePadding" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.EarlyUnexpectedZeroEndpoint_IsFailureNotGuessedSilencePadding" methodname="EarlyUnexpectedZeroEndpoint_IsFailureNotGuessedSilencePadding" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" seed="153511513" result="Failed" start-time="2026-10-08 00:46:57Z" end-time="2026-10-08 00:46:57Z" duration="0.000651" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  A typed native boundary must let tests exercise capture without opening a real microphone.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.Create () [0x00023] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:20
+at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.EarlyUnexpectedZeroEndpoint_IsFailureNotGuessedSilencePadding () [0x00010] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:58
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1058" name="ExactZeroSignal_DoesNotBecomeSpeechButQuietSignalIsNotAmplifiedOrDiscarded" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.ExactZeroSignal_DoesNotBecomeSpeechButQuietSignalIsNotAmplifiedOrDiscarded" methodname="ExactZeroSignal_DoesNotBecomeSpeechButQuietSignalIsNotAmplifiedOrDiscarded" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" seed="1703925337" result="Failed" start-time="2026-10-08 00:46:57Z" end-time="2026-10-08 00:46:57Z" duration="0.000669" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  A typed native boundary must let tests exercise capture without opening a real microphone.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.Create () [0x00023] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:20
+at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.ExactZeroSignal_DoesNotBecomeSpeechButQuietSignalIsNotAmplifiedOrDiscarded () [0x00025] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:90
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1045" name="ExplicitMissingDevice_DoesNotSilentlyRecordAnotherDevice" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.ExplicitMissingDevice_DoesNotSilentlyRecordAnotherDevice" methodname="ExplicitMissingDevice_DoesNotSilentlyRecordAnotherDevice" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" seed="974383814" result="Failed" start-time="2026-10-08 00:46:57Z" end-time="2026-10-08 00:46:57Z" duration="0.000653" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  A typed native boundary must let tests exercise capture without opening a real microphone.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.Create () [0x00023] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:20
+at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.ExplicitMissingDevice_DoesNotSilentlyRecordAnotherDevice () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:36
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1060" name="FailedNativeStop_DoesNotReadOrFreeClipInUseOrPermitReplacementCapture" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.FailedNativeStop_DoesNotReadOrFreeClipInUseOrPermitReplacementCapture" methodname="FailedNativeStop_DoesNotReadOrFreeClipInUseOrPermitReplacementCapture" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" seed="313523600" result="Failed" start-time="2026-10-08 00:46:57Z" end-time="2026-10-08 00:46:57Z" duration="0.000650" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  A typed native boundary must let tests exercise capture without opening a real microphone.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.Create () [0x00023] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:20
+at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.FailedNativeStop_DoesNotReadOrFreeClipInUseOrPermitReplacementCapture () [0x00010] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:104
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1049" name="InvalidDuration_IsRejectedBeforeMicrophoneStart" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.InvalidDuration_IsRejectedBeforeMicrophoneStart" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-08 00:46:57Z" end-time="2026-10-08 00:46:57Z" duration="0.003381" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1046" name="InvalidDuration_IsRejectedBeforeMicrophoneStart(float.NaN)" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.InvalidDuration_IsRejectedBeforeMicrophoneStart(float.NaN)" methodname="InvalidDuration_IsRejectedBeforeMicrophoneStart" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" seed="690575667" result="Failed" start-time="2026-10-08 00:46:57Z" end-time="2026-10-08 00:46:57Z" duration="0.000589" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  A typed native boundary must let tests exercise capture without opening a real microphone.
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.Create () [0x00023] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:20
+at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.InvalidDuration_IsRejectedBeforeMicrophoneStart (System.Single duration) [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:39
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1047" name="InvalidDuration_IsRejectedBeforeMicrophoneStart(float.PositiveInfinity)" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.InvalidDuration_IsRejectedBeforeMicrophoneStart(float.PositiveInfinity)" methodname="InvalidDuration_IsRejectedBeforeMicrophoneStart" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" seed="1878222556" result="Failed" start-time="2026-10-08 00:46:57Z" end-time="2026-10-08 00:46:57Z" duration="0.000273" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  A typed native boundary must let tests exercise capture without opening a real microphone.
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.Create () [0x00023] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:20
+at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.InvalidDuration_IsRejectedBeforeMicrophoneStart (System.Single duration) [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:39
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1048" name="InvalidDuration_IsRejectedBeforeMicrophoneStart(float.NegativeInfinity)" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.InvalidDuration_IsRejectedBeforeMicrophoneStart(float.NegativeInfinity)" methodname="InvalidDuration_IsRejectedBeforeMicrophoneStart" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" seed="1674595557" result="Failed" start-time="2026-10-08 00:46:57Z" end-time="2026-10-08 00:46:57Z" duration="0.000276" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  A typed native boundary must let tests exercise capture without opening a real microphone.
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.Create () [0x00023] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:20
+at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.InvalidDuration_IsRejectedBeforeMicrophoneStart (System.Single duration) [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:39
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-case id="1051" name="NoPositivePosition_IsOpeningNotListeningAndDoesNotInventFullAudio" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.NoPositivePosition_IsOpeningNotListeningAndDoesNotInventFullAudio" methodname="NoPositivePosition_IsOpeningNotListeningAndDoesNotInventFullAudio" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" seed="411130006" result="Failed" start-time="2026-10-08 00:46:57Z" end-time="2026-10-08 00:46:57Z" duration="0.000725" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  A typed native boundary must let tests exercise capture without opening a real microphone.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.Create () [0x00023] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:20
+at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.NoPositivePosition_IsOpeningNotListeningAndDoesNotInventFullAudio () [0x0000c] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1055" name="OpeningTimeout_StopsOwnedDeviceAndRequiresFreshAction" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.OpeningTimeout_StopsOwnedDeviceAndRequiresFreshAction" methodname="OpeningTimeout_StopsOwnedDeviceAndRequiresFreshAction" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" seed="2004940017" result="Failed" start-time="2026-10-08 00:46:57Z" end-time="2026-10-08 00:46:57Z" duration="0.000636" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  A typed native boundary must let tests exercise capture without opening a real microphone.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.Create () [0x00023] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:20
+at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.OpeningTimeout_StopsOwnedDeviceAndRequiresFreshAction () [0x0000c] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:72
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1054" name="PositionResetWhileStillRecording_FailsClosed" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.PositionResetWhileStillRecording_FailsClosed" methodname="PositionResetWhileStillRecording_FailsClosed" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" seed="903520750" result="Failed" start-time="2026-10-08 00:46:57Z" end-time="2026-10-08 00:46:57Z" duration="0.000592" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  A typed native boundary must let tests exercise capture without opening a real microphone.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.Create () [0x00023] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:20
+at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.PositionResetWhileStillRecording_FailsClosed () [0x00010] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:66
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1057" name="ReadFailure_ReturnsNoFabricatedZeroSamplesAndReleasesClip" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.ReadFailure_ReturnsNoFabricatedZeroSamplesAndReleasesClip" methodname="ReadFailure_ReturnsNoFabricatedZeroSamplesAndReleasesClip" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" seed="989204912" result="Failed" start-time="2026-10-08 00:46:57Z" end-time="2026-10-08 00:46:57Z" duration="0.000439" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  A typed native boundary must let tests exercise capture without opening a real microphone.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.Create () [0x00023] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:20
+at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.ReadFailure_ReturnsNoFabricatedZeroSamplesAndReleasesClip () [0x0001c] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:85
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1052" name="ZeroEndpointAfterObservedNearFullNonLoopRecording_PreservesFullTail" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.ZeroEndpointAfterObservedNearFullNonLoopRecording_PreservesFullTail" methodname="ZeroEndpointAfterObservedNearFullNonLoopRecording_PreservesFullTail" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" seed="628846398" result="Failed" start-time="2026-10-08 00:46:57Z" end-time="2026-10-08 00:46:57Z" duration="0.000586" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  A typed native boundary must let tests exercise capture without opening a real microphone.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.Create () [0x00023] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:20
+at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.ZeroEndpointAfterObservedNearFullNonLoopRecording_PreservesFullTail () [0x00010] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:50
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

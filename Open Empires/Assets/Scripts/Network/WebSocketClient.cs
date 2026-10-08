@@ -25,10 +25,13 @@ namespace OpenEmpires
         {
             public ServerMessage Message;
             public long ReceivedAtTicks;
+            public long ConnectionEpoch;
         }
 
         private Queue<TimestampedMessage> messageQueue = new Queue<TimestampedMessage>();
         private bool connecting;
+        private long connectionEpoch;
+        public long ConnectionEpoch => connectionEpoch;
 
 #if UNITY_WEBGL && !UNITY_EDITOR
 
@@ -48,6 +51,7 @@ namespace OpenEmpires
             if (webglConnected || connecting) return;
 
             connecting = true;
+            connectionEpoch++; messageQueue.Clear();
             Debug.Log($"[WebSocket] Connecting to {ServerUrl}...");
             WebSocketConnect(ServerUrl, gameObject.name);
             WebSocketRegisterVisibility("");
@@ -66,6 +70,7 @@ namespace OpenEmpires
 
         public void Disconnect()
         {
+            connectionEpoch++; messageQueue.Clear();
             if (webglConnected || connecting)
             {
                 WebSocketClose();
@@ -114,6 +119,7 @@ namespace OpenEmpires
                     {
                         Message = message,
                         ReceivedAtTicks = DateTime.UtcNow.Ticks
+                        ,ConnectionEpoch = connectionEpoch
                     });
                 }
             }
@@ -128,6 +134,7 @@ namespace OpenEmpires
             while (messageQueue.Count > 0)
             {
                 var tsMsg = messageQueue.Dequeue();
+                if(tsMsg.ConnectionEpoch!=connectionEpoch||!IsConnected)continue;
                 OnMessageReceived?.Invoke(tsMsg.Message, tsMsg.ReceivedAtTicks);
             }
         }
@@ -148,6 +155,8 @@ namespace OpenEmpires
             if (webSocket != null || connecting) return;
 
             connecting = true;
+            long epoch=++connectionEpoch;
+            lock(lockObj){messageQueue.Clear();sendQueue.Clear();}
             Debug.Log($"[WebSocket] Connecting to {ServerUrl}...");
 
             try
@@ -156,16 +165,18 @@ namespace OpenEmpires
                 webSocket = new ClientWebSocket();
 
                 await webSocket.ConnectAsync(new Uri(ServerUrl), cancellationTokenSource.Token);
+                if(epoch!=connectionEpoch)return;
 
                 Debug.Log("[WebSocket] Connected");
                 connecting = false;
                 OnConnected?.Invoke();
 
                 // Start receive loop
-                _ = ReceiveLoop();
+                if(epoch==connectionEpoch&&webSocket!=null)_ = ReceiveLoop(webSocket,cancellationTokenSource.Token,epoch);
             }
             catch (Exception e)
             {
+                if(epoch!=connectionEpoch)return;
                 Debug.LogError($"[WebSocket] Connection failed: {e.Message}");
                 connecting = false;
                 webSocket?.Dispose();
@@ -174,23 +185,23 @@ namespace OpenEmpires
             }
         }
 
-        private async Task ReceiveLoop()
+        private async Task ReceiveLoop(ClientWebSocket socket,CancellationToken token,long epoch)
         {
             var buffer = new byte[8192];
 
             try
             {
-                while (webSocket?.State == WebSocketState.Open)
+                while (epoch==connectionEpoch&&socket.State == WebSocketState.Open)
                 {
-                    var result = await webSocket.ReceiveAsync(
+                    var result = await socket.ReceiveAsync(
                         new ArraySegment<byte>(buffer),
-                        cancellationTokenSource.Token
+                        token
                     ).ConfigureAwait(false);
 
                     if (result.MessageType == WebSocketMessageType.Close)
                     {
                         Debug.Log("[WebSocket] Server initiated close");
-                        await webSocket.CloseAsync(
+                        await socket.CloseAsync(
                             WebSocketCloseStatus.NormalClosure,
                             "Closing",
                             CancellationToken.None
@@ -208,9 +219,9 @@ namespace OpenEmpires
                             var fullMessage = new StringBuilder(json);
                             while (!result.EndOfMessage)
                             {
-                                result = await webSocket.ReceiveAsync(
+                                result = await socket.ReceiveAsync(
                                     new ArraySegment<byte>(buffer),
-                                    cancellationTokenSource.Token
+                                    token
                                 ).ConfigureAwait(false);
                                 fullMessage.Append(Encoding.UTF8.GetString(buffer, 0, result.Count));
                             }
@@ -226,10 +237,11 @@ namespace OpenEmpires
                                 {
                                     Message = message,
                                     ReceivedAtTicks = DateTime.UtcNow.Ticks
+                                    ,ConnectionEpoch = epoch
                                 };
                                 lock (lockObj)
                                 {
-                                    messageQueue.Enqueue(timestamped);
+                                    if(epoch==connectionEpoch)messageQueue.Enqueue(timestamped);
                                 }
                             }
                         }
@@ -247,25 +259,29 @@ namespace OpenEmpires
             catch (Exception e)
             {
                 Debug.LogError($"[WebSocket] Receive error: {e.Message}");
-                OnError?.Invoke(e.Message);
+                if(epoch==connectionEpoch)OnError?.Invoke("WebSocket receive failed.");
             }
             finally
             {
-                OnDisconnected?.Invoke("Connection closed");
+                if(epoch==connectionEpoch)OnDisconnected?.Invoke("Connection closed");
             }
         }
 
         public async void Disconnect()
         {
-            if (webSocket != null)
+            connectionEpoch++;connecting=false;
+            lock(lockObj){messageQueue.Clear();sendQueue.Clear();}
+            var socket=webSocket;var cancellation=cancellationTokenSource;
+            webSocket=null;cancellationTokenSource=null;
+            if (socket != null)
             {
                 try
                 {
-                    cancellationTokenSource?.Cancel();
+                    cancellation?.Cancel();
 
-                    if (webSocket.State == WebSocketState.Open)
+                    if (socket.State == WebSocketState.Open)
                     {
-                        await webSocket.CloseAsync(
+                        await socket.CloseAsync(
                             WebSocketCloseStatus.NormalClosure,
                             "Client disconnecting",
                             CancellationToken.None
@@ -278,10 +294,7 @@ namespace OpenEmpires
                 }
                 finally
                 {
-                    webSocket?.Dispose();
-                    webSocket = null;
-                    cancellationTokenSource?.Dispose();
-                    cancellationTokenSource = null;
+                    socket.Dispose();cancellation?.Dispose();
                 }
             }
         }
@@ -350,6 +363,7 @@ namespace OpenEmpires
                 while (messageQueue.Count > 0)
                 {
                     var tsMsg = messageQueue.Dequeue();
+                    if(tsMsg.ConnectionEpoch!=connectionEpoch||!IsConnected)continue;
                     OnMessageReceived?.Invoke(tsMsg.Message, tsMsg.ReceivedAtTicks);
                 }
             }

@@ -154,15 +154,43 @@ namespace OpenEmpires
 
         private static string AnswerAgeQuestion(GameSimulation sim, int playerId, string ageName)
         {
-            string lower = ageName.ToLowerInvariant();
-            if (lower.Contains("feudal"))
-                return "Reaching Feudal Age requires a Town Center, then constructing a Feudal Age Landmark for 400 Food and 200 Gold.";
-            if (lower.Contains("castle"))
-                return "Reaching Castle Age requires Feudal Age, then constructing a Castle Age Landmark for 1200 Food and 600 Gold.";
-            if (lower.Contains("imperial"))
-                return "Reaching Imperial Age requires Castle Age, then constructing an Imperial Age Landmark for 2400 Food and 1200 Gold.";
-            return "Advancing ages requires constructing the appropriate Age Landmark with sufficient Food and Gold.";
+            int targetAge = ageName == "feudal" ? 2 : ageName == "castle" ? 3 : ageName == "imperial" ? 4 : 0;
+            if (targetAge == 0) return "Choose Feudal, Castle or Imperial Age for landmark advice.";
+            int currentAge = sim.GetPlayerAge(playerId);
+            string targetName = AgeDisplayName(targetAge);
+            if (currentAge >= targetAge) return $"You have already reached {targetName} Age.";
+            var civilization = sim.GetPlayerCivilization(playerId);
+            var transitions = new List<string>();
+            int totalFood = 0, totalGold = 0;
+            bool exactTotal = true;
+            for (int age = Math.Max(2, currentAge + 1); age <= targetAge; age++)
+            {
+                // GetChoices has an English fallback: never use it for an unavailable transition.
+                if (!LandmarkDefinitions.HasChoices(civilization, age))
+                    return $"{AgeDisplayName(age)} Age is not available for {civilization}: no canonical landmark choices are defined.";
+                var choices = LandmarkDefinitions.GetChoices(civilization, age);
+                var first = LandmarkDefinitions.Get(choices.a);
+                var second = LandmarkDefinitions.Get(choices.b);
+                string options = first.Name + " (" + LandmarkCost(first) + ") or "
+                    + second.Name + " (" + LandmarkCost(second) + ")";
+                transitions.Add($"{AgeDisplayName(age)} Age: build {options}");
+                totalFood += first.FoodCost;
+                totalGold += first.GoldCost;
+                exactTotal &= first.FoodCost == second.FoodCost && first.GoldCost == second.GoldCost;
+            }
+            string answer = $"For {civilization}, advance in order from your current {AgeDisplayName(currentAge)} Age: "
+                + string.Join("; ", transitions) + ". These are individual transition costs.";
+            if (transitions.Count > 1)
+                answer += exactTotal ? $" Reaching {targetName} from your current age requires {totalFood} Food and {totalGold} Gold total."
+                    : " The cumulative cost depends on which landmarks you choose.";
+            return answer;
         }
+
+        private static string LandmarkCost(LandmarkDefinition definition)
+            => $"{definition.FoodCost} Food and {definition.GoldCost} Gold";
+
+        private static string AgeDisplayName(int age)
+            => age == 1 ? "Dark" : age == 2 ? "Feudal" : age == 3 ? "Castle" : age == 4 ? "Imperial" : "unknown";
 
         private static string AnswerCostQuestion(GameSimulation sim, int playerId, string target)
         {
@@ -227,19 +255,7 @@ namespace OpenEmpires
         private static string AnswerLiveActivityQuestion(CommanderGoalManager manager)
         {
             if (manager == null) return "No active Commander goals are currently running.";
-            var active = manager.ActiveGoals;
-            if (active.Count == 0) return "No active Commander goals are currently running.";
-
-            var descriptions = new List<string>(active.Count);
-            for (int i = 0; i < active.Count; i++)
-            {
-                var g = active[i];
-                if (g != null && !g.IsTerminal)
-                    descriptions.Add($"Goal #{g.GoalId} ({g.GoalType}, status={g.Status})");
-            }
-            return descriptions.Count > 0
-                ? "Active Commander goals: " + string.Join("; ", descriptions) + "."
-                : "No active Commander goals are currently running.";
+            return CommanderTacticalStatusProjection.Observe(manager.Simulation,manager,"what are you doing").Answer();
         }
 
         private static string AnswerLiveCountQuestion(GameSimulation sim, int playerId, string target)

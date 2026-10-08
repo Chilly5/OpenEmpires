@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 20:59:57Z" end-time="2026-10-08 21:00:01Z" duration="3.9352661">
+  <test-suite type="TestSuite" id="2707" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1473" result="Failed" site="Child" start-time="2026-10-08 20:59:57Z" end-time="2026-10-08 21:00:01Z" duration="3.935266" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2696" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1473" result="Failed" site="Child" start-time="2026-10-08 20:59:57Z" end-time="2026-10-08 21:00:01Z" duration="3.931334" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="24412" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2697" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1473" result="Failed" site="Child" start-time="2026-10-08 20:59:57Z" end-time="2026-10-08 21:00:01Z" duration="3.831967" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2698" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1473" result="Failed" site="Child" start-time="2026-10-08 20:59:57Z" end-time="2026-10-08 21:00:01Z" duration="3.732532" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="2500" name="CommanderPhase4HAudioFixtureTests" fullname="OpenEmpires.Tests.CommanderPhase4HAudioFixtureTests" classname="OpenEmpires.Tests.CommanderPhase4HAudioFixtureTests" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-10-08 20:59:57Z" end-time="2026-10-08 21:00:01Z" duration="3.632870" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="2503" name="AudioFixture_BaseEnPureSilence_DoesNotHallucinateTranscript" fullname="OpenEmpires.Tests.CommanderPhase4HAudioFixtureTests.AudioFixture_BaseEnPureSilence_DoesNotHallucinateTranscript" methodname="AudioFixture_BaseEnPureSilence_DoesNotHallucinateTranscript" classname="OpenEmpires.Tests.CommanderPhase4HAudioFixtureTests" runstate="Runnable" seed="1506977968" result="Failed" start-time="2026-10-08 20:59:57Z" end-time="2026-10-08 21:00:01Z" duration="3.532276" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  A physically empty waveform must not become a sendable native-model hallucination.
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4HAudioFixtureTests.AudioFixture_BaseEnPureSilence_DoesNotHallucinateTranscript () [0x000f4] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4HAudioFixtureTests.cs:124
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[Requesting default Whisper Context params...
+Default Whisper Context params generated!
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

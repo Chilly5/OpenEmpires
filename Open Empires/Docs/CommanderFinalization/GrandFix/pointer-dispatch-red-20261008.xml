@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Failed(Child)" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 00:22:32Z" end-time="2026-10-08 00:22:33Z" duration="1.5761323">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1228" result="Failed" site="Child" start-time="2026-10-08 00:22:32Z" end-time="2026-10-08 00:22:33Z" duration="1.576132" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2407" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1228" result="Failed" site="Child" start-time="2026-10-08 00:22:32Z" end-time="2026-10-08 00:22:33Z" duration="1.557198" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2408" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1228" result="Failed" site="Child" start-time="2026-10-08 00:22:32Z" end-time="2026-10-08 00:22:33Z" duration="1.556674" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2409" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1228" result="Failed" site="Child" start-time="2026-10-08 00:22:32Z" end-time="2026-10-08 00:22:33Z" duration="1.556468" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1065" name="CommanderGrandFixPresentationTests" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" testcasecount="25" result="Failed" site="Child" start-time="2026-10-08 00:22:32Z" end-time="2026-10-08 00:22:33Z" duration="1.555041" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1094" name="CommanderPointerOwnership_InactiveHostCannotBlockGameplay" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.CommanderPointerOwnership_InactiveHostCannotBlockGameplay" methodname="CommanderPointerOwnership_InactiveHostCannotBlockGameplay" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="696724792" result="Failed" start-time="2026-10-08 00:22:32Z" end-time="2026-10-08 00:22:32Z" duration="0.769432" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixPresentationTests.CommanderPointerOwnership_InactiveHostCannotBlockGameplay () [0x00047] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixPresentationTests.cs:350
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1093" name="CommanderPointerOwnership_IsLimitedToCurrentlyVisiblePanel" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.CommanderPointerOwnership_IsLimitedToCurrentlyVisiblePanel" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-08 00:22:32Z" end-time="2026-10-08 00:22:33Z" duration="0.766062" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1091" name="CommanderPointerOwnership_IsLimitedToCurrentlyVisiblePanel(False)" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.CommanderPointerOwnership_IsLimitedToCurrentlyVisiblePanel(False)" methodname="CommanderPointerOwnership_IsLimitedToCurrentlyVisiblePanel" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="1455518602" result="Failed" start-time="2026-10-08 00:22:32Z" end-time="2026-10-08 00:22:33Z" duration="0.373975" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  A click on the visible Commander must not reach gameplay selection or camera control.
+  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixPresentationTests.CommanderPointerOwnership_IsLimitedToCurrentlyVisiblePanel (System.Boolean expanded) [0x0008e] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixPresentationTests.cs:340
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1092" name="CommanderPointerOwnership_IsLimitedToCurrentlyVisiblePanel(True)" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.CommanderPointerOwnership_IsLimitedToCurrentlyVisiblePanel(True)" methodname="CommanderPointerOwnership_IsLimitedToCurrentlyVisiblePanel" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="1003276830" result="Failed" start-time="2026-10-08 00:22:33Z" end-time="2026-10-08 00:22:33Z" duration="0.382703" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  A click on the visible Commander must not reach gameplay selection or camera control.
+  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixPresentationTests.CommanderPointerOwnership_IsLimitedToCurrentlyVisiblePanel (System.Boolean expanded) [0x0008e] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixPresentationTests.cs:340
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

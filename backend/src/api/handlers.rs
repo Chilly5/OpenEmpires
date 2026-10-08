@@ -1,6 +1,6 @@
 use axum::{
     extract::{ConnectInfo, State},
-    http::StatusCode,
+    http::{HeaderMap, StatusCode},
     response::IntoResponse,
     Json,
 };
@@ -45,6 +45,42 @@ pub struct LeaveQueueRequest {
 #[derive(Debug, Serialize)]
 pub struct MessageResponse {
     pub message: String,
+}
+
+#[derive(Serialize)]
+pub struct SessionIdentityResponse {
+    pub player_id: String,
+}
+
+// Read-only identity seam for the narrow Commander companion service. Origin
+// is not authentication; tokens remain server-minted, in-memory sessions.
+// Do not expose the token, username, matchmaking state or simulation state.
+pub async fn session_identity(
+    State(state): State<Arc<AppState>>,
+    headers: HeaderMap,
+) -> impl IntoResponse {
+    let token = headers.get("authorization")
+        .and_then(|value| value.to_str().ok())
+        .and_then(|value| value.strip_prefix("Bearer "));
+    let player_id = match token {
+        Some(token) if token.len() == 36 && uuid::Uuid::parse_str(token)
+            .map(|id| id.to_string() == token).unwrap_or(false) => {
+            state.players.read().await.get(token).map(|player| player.id)
+        }
+        _ => None,
+    };
+    match player_id {
+        Some(id) => (
+            StatusCode::OK,
+            [("cache-control", "no-store")],
+            Json(SessionIdentityResponse { player_id: id.to_string() }),
+        ).into_response(),
+        None => (
+            StatusCode::UNAUTHORIZED,
+            [("cache-control", "no-store")],
+            Json(MessageResponse { message: "Invalid session".to_string() }),
+        ).into_response(),
+    }
 }
 
 pub async fn login(

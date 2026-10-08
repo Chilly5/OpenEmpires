@@ -53,18 +53,56 @@ namespace OpenEmpires
         RelativeToSelectedUnits
     }
 
+    public enum CommanderTargetSelectorKind { UnitType, BuildingType }
+
+    // Content identity only. Actors and locations remain separate; no runtime IDs.
+    public readonly struct CommanderTargetSelector
+    {
+        public CommanderTargetSelectorKind Kind { get; }
+        public int UnitType { get; }
+        public BuildingType? StructureType { get; }
+
+        public CommanderTargetSelector(int unitType)
+        {
+            if (!CommanderIntentCatalog.IsSupportedUnit(unitType))
+                throw new ArgumentOutOfRangeException(nameof(unitType));
+            Kind = CommanderTargetSelectorKind.UnitType; UnitType = unitType; StructureType = null;
+        }
+
+        public CommanderTargetSelector(BuildingType structureType)
+        {
+            if (!Enum.IsDefined(typeof(BuildingType), structureType))
+                throw new ArgumentOutOfRangeException(nameof(structureType));
+            Kind = CommanderTargetSelectorKind.BuildingType; UnitType = -1; StructureType = structureType;
+        }
+
+        internal bool IsCompatible(CommanderCapabilityActionType action, CommanderLocationSelectorKind location)
+        {
+            bool valid = Kind == CommanderTargetSelectorKind.UnitType
+                ? CommanderIntentCatalog.IsSupportedUnit(UnitType) && !StructureType.HasValue
+                : Kind == CommanderTargetSelectorKind.BuildingType && UnitType == -1
+                    && StructureType.HasValue && Enum.IsDefined(typeof(BuildingType), StructureType.Value);
+            return valid && (action == CommanderCapabilityActionType.AttackTarget
+                && location == CommanderLocationSelectorKind.VisibleEnemy
+                || action == CommanderCapabilityActionType.RepairTarget
+                && location == CommanderLocationSelectorKind.PlayerBase && Kind == CommanderTargetSelectorKind.BuildingType);
+        }
+    }
+
     public readonly struct CommanderLocationSelector
     {
         public CommanderLocationSelectorKind Kind { get; }
         public ResourceType? ResourceType { get; }
-        public int RadiusTiles { get; }
+        // Null is a point anchor, not an invented four-tile area. Explicit area
+        // constraints are retained for fail-closed validation, never approximated.
+        public int? RadiusTiles { get; }
 
         public CommanderLocationSelector(CommanderLocationSelectorKind kind,
-            ResourceType? resourceType = null, int radiusTiles = 4)
+            ResourceType? resourceType = null, int? radiusTiles = null)
         {
             if (!Enum.IsDefined(typeof(CommanderLocationSelectorKind), kind))
                 throw new ArgumentOutOfRangeException(nameof(kind));
-            if (radiusTiles < 1 || radiusTiles > 20)
+            if (radiusTiles.HasValue && (radiusTiles.Value < 1 || radiusTiles.Value > 20))
                 throw new ArgumentOutOfRangeException(nameof(radiusTiles));
             if ((kind == CommanderLocationSelectorKind.WorkedResource
                 || kind == CommanderLocationSelectorKind.VisibleResource) && !resourceType.HasValue)
@@ -82,6 +120,21 @@ namespace OpenEmpires
     {
         Units,
         Building
+    }
+
+    // First game-side target resolution is sticky across blocked retries. Runtime
+    // object identity prevents destroyed/recycled IDs or another matching type from
+    // substituting. This receipt is never serialized to/from provider data.
+    internal sealed class CommanderTargetBinding
+    {
+        internal GameSimulation Runtime { get; }
+        internal UnitData Unit { get; }
+        internal BuildingData Building { get; }
+        internal int OriginalOwner { get; }
+        internal CommanderTargetBinding(GameSimulation runtime, UnitData unit)
+        { Runtime = runtime; Unit = unit; OriginalOwner = unit.PlayerId; }
+        internal CommanderTargetBinding(GameSimulation runtime, BuildingData building)
+        { Runtime = runtime; Building = building; OriginalOwner = building.PlayerId; }
     }
 
     internal readonly struct CommanderResultBinding

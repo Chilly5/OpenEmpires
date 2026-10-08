@@ -1,5 +1,134 @@
 # Commander data-maintenance guideline
 
+## Current player setup and finalization handoff — 2026-10-09
+
+Implementation goal is complete under the user's explicit scope amendment. Remaining
+physical capture, live-provider, representative-quality, interactive Windows startup/
+provisioning and operator credential-closeout gates belong to the next verification
+phase; they remain unverified. This is not RC or end-to-end voice certification.
+
+See the consolidated [single-player finishing report](../CommanderFinalization/GrandFix/grand-fix-implementation-report.md)
+for actual build/source identities, player quick start, limited focused evidence,
+cuts, operator/physical/quality gates and ordered next-AI verification. No multiplayer
+or Rust prerequisite for local gameplay or standalone service-session authentication.
+The narrow model comparison is not a quality winner; tiny stays default. Native
+exact digital silence fails closed; quiet/noisy speech and online VAD are not promised.
+Generic startup provider wording is not connectivity proof: read Text AI settings'
+actual setup/auth/network status before deliberately submitting a request.
+
+## Current release scope — single-player (2026-10-08)
+
+The user deferred Rust/backend/multiplayer repair and certification. Keep Commander
+observations, approval, planning and ordinary execution client/game-owned, with no
+matchmaking/relay prerequisite for local play. External Luna interpretation or
+explicit online transcription remains data-only and does not grant authority or
+mean a fully offline model. If needed, service authentication must stand independently
+of the multiplayer backend; do not remove authentication for convenience. Preserve
+historical partial network work and use the
+[future multiplayer checklist](../CommanderFinalization/GrandFix/single-player-scope-and-future-multiplayer-checklist.md).
+
+## GrandFix semantic setup (2026-10-08 checkpoint)
+
+Text AI configuration is separate from microphone permission, upload consent,
+transcript Send and plan approval. Windows key entry is masked/session-only;
+Web uses an authenticated operator gateway/session, never a persisted reusable key.
+Settings apply locally without paid validation and cannot claim connectivity.
+Use safe typed actual-request status; a failed replacement must not hide the current
+route's later auth/network error. Dispose only retired owned gateway transports,
+invalidate old callbacks, preserve approved goals and existing developer provisioning.
+Do not silently switch Luna/model or use a semantic key as ASR access. See
+[setup procedure, focused evidence and open deployment gates](../CommanderFinalization/GrandFix/provider-deployment-and-transport.md).
+
+## GrandFix retention (2026-10-08 checkpoint)
+
+Retire heavy identity owners only when their lifecycle ends; preserve active roots,
+reference-equal confirmation transfers and archived producer results needed by live
+consumers. Monotonic issued/observed IDs cannot re-register once missing: do not add
+an unbounded tombstone collection. Reset must close pending request ownership before
+late provider results. Terminal ownership commits before fallible observer cleanup.
+Disposal must stop child work/release reservations even at revision exhaustion;
+ordinary player-control revision preflight stays fail closed. Detach runtime graph
+references only on disposal. Prune all five worker-authority stores using trusted
+active/garrison identities; preserve live reservations and sticky goal takeover
+beyond temporary lease expiry. No network encoding changes. See
+[focused evidence and open peer gates](../CommanderFinalization/GrandFix/retention-and-peer-compatibility.md).
+
+## GrandFix approval presentation (2026-10-08 checkpoint)
+
+Keep structural scope/equality and candidate affinity independent of preview text.
+Render admitted typed values only, never inspect/select/mutate the world to explain
+a pending plan. Disclose total versus fixed-new production and current new-count
+quote, exact producer/result names/cardinality, dependencies, frozen non-overlapping
+worker roles, source/idle/protected-floor/queue/no-construction restrictions and
+placement gaps. Dynamic shared constraints need their own section even when an
+effect's lowerer does not attach them. Use numbered steps/selections/locations,
+not raw provider IDs or primitive/parameter syntax. Preserve the8KB bound and
+fail closed, not truncate. Default native+1 assignment and one-tile gap must appear;
+result-bound rally names the produced building, not default Barracks. Selected
+structures are owned, completed and visible. Compact Details opens information,
+never approves. [Evidence and limits](../CommanderFinalization/GrandFix/readable-approval-previews.md).
+
+## GrandFix spatial truth (2026-10-08 checkpoint)
+
+Point actions must not promise radius/perimeter coverage. Patrol is the ordinary
+start-to-anchor route; omitted radius is null, not a synthetic four-tile promise.
+Explicit typed radius rejects in validation and executor, and cannot be dropped
+by DTO projection. Tactical legacy parameters are a closed boundary: reject
+nonempty or malformed bags, preserve valid strategic parameters. Structural scope
+v4 compares radius presence/value independently from presentation. Keep map-west
+and footprint-to-footprint clear-gap building placement separate. Bridge, hidden
+base and rear-of-other-group anchors remain unsupported; do not invent coordinates.
+See [focused evidence and remaining gates](../CommanderFinalization/GrandFix/spatial-truth-and-point-patrol.md).
+
+## Read-only questions and status (GrandFix checkpoint)
+
+Information questions must not enter gameplay admission, grant authority, cancel an
+accepted request, or dismiss/approve an unrelated preview. Observe owned detached
+status rather than running the planner to obtain facts. Keep1536status/8192context/
+512question-fact bounds and whole-node omission markers. Use matched request/step
+and count where supported; ambiguity clarifies. Read actual quantities/receipt queues,
+producer state, resource shortfalls, dependencies and reservations; protection/suspension
+peeks must not mutate history. Hidden enemy targets cannot leak death/ownership/health
+through stale task status; generic issued-command targets need the same fog gate as
+typed targets. Preserve ordinary polite action routing. Render tactical answers from
+fresh observations, not invented provider prose, and retain local facts on provider
+failure. [Focused evidence / limits](../CommanderFinalization/GrandFix/tactical-status-and-read-only-questions.md).
+
+## GrandFix typed action targets (2026-10-08 checkpoint)
+
+Keep actor selection separate from optional target specificity. Repair targets use
+an exact canonical building name; attack targets use a canonical unit family or
+building name, never runtime IDs/coordinates. Use gameplay's effective building
+adapter and the **enemy owner's** civilization replacement resolver. A named
+repair selects the lowest-ID owned matching building before damage eligibility;
+a healthy first Town Center is not replaced by another. Named enemies select the
+nearest visible hostile matching type to the first owned Town Center, ties by ID.
+Once a runnable action resolves a target, retain and revalidate its exact runtime
+identity before dispatch; loss/ownership/type/visibility changes cannot substitute
+another matching entity on blocked retry. Dependencies resolve targets when ready,
+not at graph submission. Unknown/ambiguous selected groups clarify; ordinary combat
+after dispatch may retarget and is not a lasting only-type restriction. Preserve
+target fields in DTOs, preview and independent structural scope comparison v2.
+See [evidence and limits](../CommanderFinalization/GrandFix/named-target-fidelity.md).
+Full GrandFix and packaged cross-platform verification remain open.
+
+## GrandFix production quantities (2026-10-08 checkpoint)
+
+EnsureUnitCount defaults to TargetTotal; explicit New (including natural more/
+additional) means a fixed request-attributed new count. Preserve it through DTOs,
+the ordinary KnownIntent route and dynamic compilation. Existing/garrisoned units,
+eligible queues/in-flight Commander orders and guaranteed predecessor production
+inform the game-owned quote. Exact result consumers require the whole quoted new
+set, never old/human-produced units. Sequential totals must quote only the remaining
+deficit. Ambiguous effectful parallel total/result promises clarify atomically;
+already satisfied siblings do not block. Approval and commit reproject quantities
+and require new preview for material count changes; queue maturation and resource
+waiting alone do not invalidate unchanged effects. Count pending command origins
+before native acceptance for quantity, queue and population limits. Keep ordinary
+command objects/receipt identity, cancellation and human override intact; no new
+binary wire format. Scope comparison v3 includes the detached new-count quote.
+See [evidence and limits](../CommanderFinalization/GrandFix/production-quantity-preflight.md).
+
 Status: Phase 4F acceptance is historical. Phase 5A changes have focused evidence and await independent AntiGravity acceptance. OpenEmpires canonical gameplay systems remain authoritative; GameKnowledgeCatalog provides detached read-only projections.
 
 ## Phase 5A maintenance rules

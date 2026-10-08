@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="5" result="Failed(Child)" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 13:59:27Z" end-time="2026-10-08 13:59:29Z" duration="1.9572254">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1420" result="Failed" site="Child" start-time="2026-10-08 13:59:27Z" end-time="2026-10-08 13:59:29Z" duration="1.957225" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2634" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1420" result="Failed" site="Child" start-time="2026-10-08 13:59:28Z" end-time="2026-10-08 13:59:29Z" duration="1.859913" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="27016" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2635" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1420" result="Failed" site="Child" start-time="2026-10-08 13:59:28Z" end-time="2026-10-08 13:59:29Z" duration="1.771483" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2636" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1420" result="Failed" site="Child" start-time="2026-10-08 13:59:28Z" end-time="2026-10-08 13:59:29Z" duration="1.670308" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1025" name="CommanderGrandFixEvidenceIntegrationTests" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceIntegrationTests" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceIntegrationTests" runstate="Runnable" testcasecount="5" result="Failed" site="Child" start-time="2026-10-08 13:59:28Z" end-time="2026-10-08 13:59:29Z" duration="1.566025" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1027" name="ExhaustedSpeechBudget_BlocksBeforeUpload" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceIntegrationTests.ExhaustedSpeechBudget_BlocksBeforeUpload" methodname="ExhaustedSpeechBudget_BlocksBeforeUpload" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceIntegrationTests" runstate="Runnable" seed="1048698854" result="Failed" start-time="2026-10-08 13:59:28Z" end-time="2026-10-08 13:59:29Z" duration="0.580775" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Actual audio-upload boundary guard is missing.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixEvidenceIntegrationTests.Wrap (OpenEmpires.Tests.CommanderGrandFixEvidenceIntegrationTests+FakeGateway inner, System.Double minimum, System.Double quantum) [0x0000a] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceIntegrationTests.cs:22
+at OpenEmpires.Tests.CommanderGrandFixEvidenceIntegrationTests.ExhaustedSpeechBudget_BlocksBeforeUpload () [0x00043] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceIntegrationTests.cs:37
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1029" name="FailedSpeechAttempt_RemainsConsumedAcrossReload" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceIntegrationTests.FailedSpeechAttempt_RemainsConsumedAcrossReload" methodname="FailedSpeechAttempt_RemainsConsumedAcrossReload" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceIntegrationTests" runstate="Runnable" seed="668879136" result="Failed" start-time="2026-10-08 13:59:29Z" end-time="2026-10-08 13:59:29Z" duration="0.269844" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Actual audio-upload boundary guard is missing.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixEvidenceIntegrationTests.Wrap (OpenEmpires.Tests.CommanderGrandFixEvidenceIntegrationTests+FakeGateway inner, System.Double minimum, System.Double quantum) [0x0000a] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceIntegrationTests.cs:22
+at OpenEmpires.Tests.CommanderGrandFixEvidenceIntegrationTests.FailedSpeechAttempt_RemainsConsumedAcrossReload () [0x0001e] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceIntegrationTests.cs:49
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1028" name="MalformedAudio_NeverAllocatesBudgetOrUploads" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceIntegrationTests.MalformedAudio_NeverAllocatesBudgetOrUploads" methodname="MalformedAudio_NeverAllocatesBudgetOrUploads" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceIntegrationTests" runstate="Runnable" seed="1089056704" result="Failed" start-time="2026-10-08 13:59:29Z" end-time="2026-10-08 13:59:29Z" duration="0.297822" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Actual audio-upload boundary guard is missing.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixEvidenceIntegrationTests.Wrap (OpenEmpires.Tests.CommanderGrandFixEvidenceIntegrationTests+FakeGateway inner, System.Double minimum, System.Double quantum) [0x0000a] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceIntegrationTests.cs:22
+at OpenEmpires.Tests.CommanderGrandFixEvidenceIntegrationTests.MalformedAudio_NeverAllocatesBudgetOrUploads () [0x0001c] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceIntegrationTests.cs:43
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1030" name="RichArtifact_ContainsOnlyExplicitDiagnosticAndAttributionFields" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceIntegrationTests.RichArtifact_ContainsOnlyExplicitDiagnosticAndAttributionFields" methodname="RichArtifact_ContainsOnlyExplicitDiagnosticAndAttributionFields" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceIntegrationTests" runstate="Runnable" seed="407761698" result="Failed" start-time="2026-10-08 13:59:29Z" end-time="2026-10-08 13:59:29Z" duration="0.030455" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixEvidenceIntegrationTests.RichArtifact_ContainsOnlyExplicitDiagnosticAndAttributionFields () [0x0003c] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceIntegrationTests.cs:56
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1026" name="SpeechUpload_ReservesConfiguredMinimumBeforeForwarding" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceIntegrationTests.SpeechUpload_ReservesConfiguredMinimumBeforeForwarding" methodname="SpeechUpload_ReservesConfiguredMinimumBeforeForwarding" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceIntegrationTests" runstate="Runnable" seed="236035315" result="Failed" start-time="2026-10-08 13:59:29Z" end-time="2026-10-08 13:59:29Z" duration="0.268067" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Actual audio-upload boundary guard is missing.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixEvidenceIntegrationTests.Wrap (OpenEmpires.Tests.CommanderGrandFixEvidenceIntegrationTests+FakeGateway inner, System.Double minimum, System.Double quantum) [0x0000a] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceIntegrationTests.cs:22
+at OpenEmpires.Tests.CommanderGrandFixEvidenceIntegrationTests.SpeechUpload_ReservesConfiguredMinimumBeforeForwarding () [0x0001c] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceIntegrationTests.cs:27
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

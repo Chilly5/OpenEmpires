@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-07 20:09:48Z" end-time="2026-10-07 20:09:49Z" duration="0.8877534">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1182" result="Failed" site="Child" start-time="2026-10-07 20:09:48Z" end-time="2026-10-07 20:09:49Z" duration="0.887753" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2351" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1182" result="Failed" site="Child" start-time="2026-10-07 20:09:48Z" end-time="2026-10-07 20:09:49Z" duration="0.781029" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2352" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1182" result="Failed" site="Child" start-time="2026-10-07 20:09:48Z" end-time="2026-10-07 20:09:49Z" duration="0.696636" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2353" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1182" result="Failed" site="Child" start-time="2026-10-07 20:09:49Z" end-time="2026-10-07 20:09:49Z" duration="0.582979" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1032" name="CommanderGrandFixNativeOwnershipTests" fullname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests" classname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests" runstate="Runnable" testcasecount="6" result="Failed" site="Child" start-time="2026-10-07 20:09:49Z" end-time="2026-10-07 20:09:49Z" duration="0.468382" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1038" name="UnknownNativeReleaseFailure_FailsClosedInsteadOfAllocatingAnotherModel" fullname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.UnknownNativeReleaseFailure_FailsClosedInsteadOfAllocatingAnotherModel" methodname="UnknownNativeReleaseFailure_FailsClosedInsteadOfAllocatingAnotherModel" classname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests" runstate="Runnable" seed="1899365460" result="Failed" start-time="2026-10-07 20:09:49Z" end-time="2026-10-07 20:09:49Z" duration="0.335077" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Unknown native free outcome must not permit unbounded model replacements.
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.UnknownNativeReleaseFailure_FailsClosedInsteadOfAllocatingAnotherModel () [0x001b4] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeOwnershipTests.cs:110
+at OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.UnknownNativeReleaseFailure_FailsClosedInsteadOfAllocatingAnotherModel () [0x002c0] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeOwnershipTests.cs:122
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

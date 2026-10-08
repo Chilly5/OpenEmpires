@@ -11,6 +11,9 @@ namespace OpenEmpires
     public sealed class StrategicAIRequest
     {
         private readonly StrategicIntentIdProvider identityOwner;
+        private readonly object identitySync=new object();
+        private StrategicIntent boundIntent;
+        private bool ownershipClosed;
         public string PlayerMessage { get; }
         public StrategicContext Context { get; }
         public int IntentId { get; }
@@ -21,22 +24,40 @@ namespace OpenEmpires
             StrategicIntentIdProvider intentIds,
             IReadOnlyList<CommanderConversationMessage> conversationHistory = null,
             IReadOnlyList<MemoryEntry> memorySnapshot = null)
-            : this(playerMessage, context,
-                (intentIds ?? throw new ArgumentNullException(nameof(intentIds))).Allocate(),
-                conversationHistory, memorySnapshot)
+            : this(playerMessage, context, 0, conversationHistory, memorySnapshot,true)
         {
-            identityOwner = intentIds;
+            identityOwner = intentIds??throw new ArgumentNullException(nameof(intentIds));
+            IntentId=identityOwner.Allocate();
             identityOwner.BindAllocated(IntentId, this);
         }
 
-        internal bool BindIntent(StrategicIntent intent) => identityOwner == null
-            || identityOwner.Transfer(IntentId, this, intent);
+        internal bool BindIntent(StrategicIntent intent)
+        {
+            if(identityOwner==null)return true; // Detached legacy parser input owns no claim.
+            lock(identitySync)
+            {
+                if(ownershipClosed||!identityOwner.Transfer(IntentId,this,intent))return false;
+                boundIntent=intent;return true;
+            }
+        }
+        internal void CompleteOwnershipTransfer(){lock(identitySync){ownershipClosed=true;boundIntent=null;}}
+        internal void ReleaseOwnership()
+        {
+            if(identityOwner==null)return;
+            lock(identitySync)
+            {if(ownershipClosed)return;ownershipClosed=true;identityOwner.Retire(IntentId,(object)boundIntent??this);boundIntent=null;}
+        }
 
         public StrategicAIRequest(string playerMessage, StrategicContext context, int intentId,
             IReadOnlyList<CommanderConversationMessage> conversationHistory = null,
             IReadOnlyList<MemoryEntry> memorySnapshot = null)
+            :this(playerMessage,context,intentId,conversationHistory,memorySnapshot,false){}
+
+        private StrategicAIRequest(string playerMessage, StrategicContext context, int intentId,
+            IReadOnlyList<CommanderConversationMessage> conversationHistory,
+            IReadOnlyList<MemoryEntry> memorySnapshot,bool allowUnassigned)
         {
-            if (intentId < 1) throw new ArgumentOutOfRangeException(nameof(intentId));
+            if (!allowUnassigned&&intentId < 1) throw new ArgumentOutOfRangeException(nameof(intentId));
             Context = context ?? throw new ArgumentNullException(nameof(context));
             PlayerMessage = playerMessage ?? string.Empty;
             IntentId = intentId;

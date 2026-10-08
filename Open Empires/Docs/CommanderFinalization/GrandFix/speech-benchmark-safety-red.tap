@@ -1,0 +1,84 @@
+TAP version 13
+# Subtest: word edits count substitutions, deletions and insertions independently
+ok 1 - word edits count substitutions, deletions and insertions independently
+  ---
+  duration_ms: 5.3798
+  type: 'test'
+  ...
+# Subtest: critical count and negation scoring never repairs recognition text
+ok 2 - critical count and negation scoring never repairs recognition text
+  ---
+  duration_ms: 0.3
+  type: 'test'
+  ...
+# Subtest: weighted WER, safety losses and silence transcripts are explicit
+ok 3 - weighted WER, safety losses and silence transcripts are explicit
+  ---
+  duration_ms: 0.6042
+  type: 'test'
+  ...
+# Subtest: engine comparisons require exactly the same corpus, not cherry-picked successful attempts
+ok 4 - engine comparisons require exactly the same corpus, not cherry-picked successful attempts
+  ---
+  duration_ms: 0.3232
+  type: 'test'
+  ...
+# Subtest: small corpus and absent timing remain unverified rather than zero-latency success
+ok 5 - small corpus and absent timing remain unverified rather than zero-latency success
+  ---
+  duration_ms: 0.1839
+  type: 'test'
+  ...
+# Subtest: unbounded or malformed metadata is rejected before scoring
+ok 6 - unbounded or malformed metadata is rejected before scoring
+  ---
+  duration_ms: 0.1686
+  type: 'test'
+  ...
+# Subtest: missing unit is not falsely reported as a dropped negation
+not ok 7 - missing unit is not falsely reported as a dropped negation
+  ---
+  duration_ms: 2.0266
+  type: 'test'
+  location: 'D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\speech-benchmark.test.mjs:52:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/unity_projects/OpenEmpires/Open%20Empires/Docs/CommanderFinalization/GrandFix/speech-benchmark.test.mjs:57:48)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# Subtest: critical annotations must occur in reference and designated negations must be explicit
+not ok 8 - critical annotations must occur in reference and designated negations must be explicit
+  ---
+  duration_ms: 0.2997
+  type: 'test'
+  location: 'D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\speech-benchmark.test.mjs:59:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/unity_projects/OpenEmpires/Open%20Empires/Docs/CommanderFinalization/GrandFix/speech-benchmark.test.mjs:63:10)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 6
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 74.9052

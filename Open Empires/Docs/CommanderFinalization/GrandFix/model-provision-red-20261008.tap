@@ -1,0 +1,199 @@
+TAP version 13
+# Subtest: manual import verifies trusted size/hash before atomic promotion and preserves source
+not ok 1 - manual import verifies trusted size/hash before atomic promotion and preserves source
+  ---
+  duration_ms: 3.5549
+  type: 'test'
+  location: 'D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.test.mjs:4:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module 'D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.mjs' imported from D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.test.mjs"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:275:11)
+    moduleResolve (node:internal/modules/esm/resolve:866:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:719:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:736:38)
+    ModuleLoader.resolveSync (node:internal/modules/esm/loader:765:52)
+    #resolve (node:internal/modules/esm/loader:701:17)
+    ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:621:35)
+    onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:650:32)
+    TracingChannel.tracePromise (node:diagnostics_channel:350:14)
+  ...
+# Subtest: hash mismatch is rejected without installed model or partial leftover
+not ok 2 - hash mismatch is rejected without installed model or partial leftover
+  ---
+  duration_ms: 1.2809
+  type: 'test'
+  location: 'D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.test.mjs:9:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module 'D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.mjs' imported from D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.test.mjs"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:275:11)
+    moduleResolve (node:internal/modules/esm/resolve:866:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:719:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:736:38)
+    ModuleLoader.resolveSync (node:internal/modules/esm/loader:765:52)
+    #resolve (node:internal/modules/esm/loader:701:17)
+    ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:621:35)
+    onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:650:32)
+    TracingChannel.tracePromise (node:diagnostics_channel:350:14)
+  ...
+# Subtest: existing verified model is preserved and no unnecessary request occurs
+not ok 3 - existing verified model is preserved and no unnecessary request occurs
+  ---
+  duration_ms: 1.1339
+  type: 'test'
+  location: 'D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.test.mjs:15:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module 'D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.mjs' imported from D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.test.mjs"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:275:11)
+    moduleResolve (node:internal/modules/esm/resolve:866:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:719:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:736:38)
+    ModuleLoader.resolveSync (node:internal/modules/esm/loader:765:52)
+    #resolve (node:internal/modules/esm/loader:701:17)
+    ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:621:35)
+    onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:650:32)
+    TracingChannel.tracePromise (node:diagnostics_channel:350:14)
+  ...
+# Subtest: corrupt existing model is reported, not overwritten or silently accepted
+not ok 4 - corrupt existing model is reported, not overwritten or silently accepted
+  ---
+  duration_ms: 0.9552
+  type: 'test'
+  location: 'D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.test.mjs:21:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module 'D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.mjs' imported from D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.test.mjs"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:275:11)
+    moduleResolve (node:internal/modules/esm/resolve:866:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:719:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:736:38)
+    ModuleLoader.resolveSync (node:internal/modules/esm/loader:765:52)
+    #resolve (node:internal/modules/esm/loader:701:17)
+    ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:621:35)
+    onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:650:32)
+    TracingChannel.tracePromise (node:diagnostics_channel:350:14)
+  ...
+# Subtest: chunked oversize is stopped and never promoted
+not ok 5 - chunked oversize is stopped and never promoted
+  ---
+  duration_ms: 1.0096
+  type: 'test'
+  location: 'D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.test.mjs:25:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module 'D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.mjs' imported from D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.test.mjs"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:275:11)
+    moduleResolve (node:internal/modules/esm/resolve:866:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:719:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:736:38)
+    ModuleLoader.resolveSync (node:internal/modules/esm/loader:765:52)
+    #resolve (node:internal/modules/esm/loader:701:17)
+    ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:621:35)
+    onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:650:32)
+    TracingChannel.tracePromise (node:diagnostics_channel:350:14)
+  ...
+# Subtest: cancellation during streamed download cleans only owned temporary files
+not ok 6 - cancellation during streamed download cleans only owned temporary files
+  ---
+  duration_ms: 0.8522
+  type: 'test'
+  location: 'D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.test.mjs:30:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module 'D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.mjs' imported from D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.test.mjs"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:275:11)
+    moduleResolve (node:internal/modules/esm/resolve:866:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:719:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:736:38)
+    ModuleLoader.resolveSync (node:internal/modules/esm/loader:765:52)
+    #resolve (node:internal/modules/esm/loader:701:17)
+    ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:621:35)
+    onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:650:32)
+    TracingChannel.tracePromise (node:diagnostics_channel:350:14)
+  ...
+# Subtest: active root lock rejects replacement rather than creating another acquisition
+not ok 7 - active root lock rejects replacement rather than creating another acquisition
+  ---
+  duration_ms: 0.8396
+  type: 'test'
+  location: 'D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.test.mjs:35:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module 'D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.mjs' imported from D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.test.mjs"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:275:11)
+    moduleResolve (node:internal/modules/esm/resolve:866:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:719:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:736:38)
+    ModuleLoader.resolveSync (node:internal/modules/esm/loader:765:52)
+    #resolve (node:internal/modules/esm/loader:701:17)
+    ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:621:35)
+    onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:650:32)
+    TracingChannel.tracePromise (node:diagnostics_channel:350:14)
+  ...
+# Subtest: symlink/junction cache subdirectory cannot redirect writes outside the requested cache
+not ok 8 - symlink/junction cache subdirectory cannot redirect writes outside the requested cache
+  ---
+  duration_ms: 0.8555
+  type: 'test'
+  location: 'D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.test.mjs:39:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module 'D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.mjs' imported from D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.test.mjs"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:275:11)
+    moduleResolve (node:internal/modules/esm/resolve:866:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:719:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:736:38)
+    ModuleLoader.resolveSync (node:internal/modules/esm/loader:765:52)
+    #resolve (node:internal/modules/esm/loader:701:17)
+    ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:621:35)
+    onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:650:32)
+    TracingChannel.tracePromise (node:diagnostics_channel:350:14)
+  ...
+# Subtest: model traversal, unpinned revision and unsupported repository are rejected before I/O
+not ok 9 - model traversal, unpinned revision and unsupported repository are rejected before I/O
+  ---
+  duration_ms: 1.7827
+  type: 'test'
+  location: 'D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.test.mjs:43:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module 'D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.mjs' imported from D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.test.mjs"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:275:11)
+    moduleResolve (node:internal/modules/esm/resolve:866:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:719:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:736:38)
+    ModuleLoader.resolveSync (node:internal/modules/esm/loader:765:52)
+    #resolve (node:internal/modules/esm/loader:701:17)
+    ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:621:35)
+    onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:650:32)
+    TracingChannel.tracePromise (node:diagnostics_channel:350:14)
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 0
+# fail 9
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 102.2617

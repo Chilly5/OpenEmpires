@@ -52,6 +52,20 @@ namespace OpenEmpires
         internal bool HasPendingTrainingOrigin(ICommand original)
             => original != null && trainingOrigins.ContainsKey(original);
 
+        // Read-only game-owned in-flight orders. Count before native acceptance so
+        // lockstep/input delay cannot spend the same result/queue capacity twice.
+        internal int CountPendingTrainingOrders(object issuer = null, int producerId = -1,
+            int playerId = -1, int resolvedType = -1)
+        {
+            int count = 0;
+            foreach (var origin in trainingOrigins.Values)
+                if ((issuer == null || ReferenceEquals(origin.Issuer, issuer))
+                    && (producerId < 0 || origin.ProducerId == producerId)
+                    && (playerId < 0 || origin.PlayerId == playerId)
+                    && (resolvedType < 0 || ResolveCivUnitType(origin.PlayerId, origin.RequestedUnitType) == resolvedType)) count++;
+            return count;
+        }
+
         private TrainingOrigin ConsumeTrainingOrigin(ICommand original, TrainUnitCommand executing)
         {
             if (original == null || !trainingOrigins.TryGetValue(original, out TrainingOrigin origin))

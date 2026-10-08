@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="11" result="Failed(Child)" total="11" passed="0" failed="11" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 16:33:38Z" end-time="2026-10-08 16:33:44Z" duration="6.1146478">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1455" result="Failed" site="Child" start-time="2026-10-08 16:33:38Z" end-time="2026-10-08 16:33:44Z" duration="6.114648" total="11" passed="0" failed="11" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2676" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1455" result="Failed" site="Child" start-time="2026-10-08 16:33:38Z" end-time="2026-10-08 16:33:44Z" duration="6.015251" total="11" passed="0" failed="11" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="27016" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2677" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1455" result="Failed" site="Child" start-time="2026-10-08 16:33:38Z" end-time="2026-10-08 16:33:44Z" duration="5.925464" total="11" passed="0" failed="11" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2678" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1455" result="Failed" site="Child" start-time="2026-10-08 16:33:38Z" end-time="2026-10-08 16:33:44Z" duration="5.825001" total="11" passed="0" failed="11" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1200" name="CommanderGrandFixProviderSetupTests" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" testcasecount="11" result="Failed" site="Child" start-time="2026-10-08 16:33:38Z" end-time="2026-10-08 16:33:44Z" duration="5.724101" total="11" passed="0" failed="11" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="ParameterizedMethod" id="1209" name="ActualRequestFailures_ShowActionableSafeSetupStatus" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.ActualRequestFailures_ShowActionableSafeSetupStatus" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-08 16:33:39Z" end-time="2026-10-08 16:33:41Z" duration="2.157751" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1206" name="ActualRequestFailures_ShowActionableSafeSetupStatus(401,&quot;key&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.ActualRequestFailures_ShowActionableSafeSetupStatus(401,&quot;key&quot;)" methodname="ActualRequestFailures_ShowActionableSafeSetupStatus" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="1947305006" result="Failed" start-time="2026-10-08 16:33:39Z" end-time="2026-10-08 16:33:40Z" duration="0.895487" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Missing semantic setup action: ConfigureSessionOpenRouter
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.Call (System.String name, System.Object[] args) [0x00012] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixProviderSetupTests.cs:41
+at OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.ActualRequestFailures_ShowActionableSafeSetupStatus (System.Int32 status, System.String action) [0x00028] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixProviderSetupTests.cs:79
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1207" name="ActualRequestFailures_ShowActionableSafeSetupStatus(402,&quot;credits&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.ActualRequestFailures_ShowActionableSafeSetupStatus(402,&quot;credits&quot;)" methodname="ActualRequestFailures_ShowActionableSafeSetupStatus" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="377100662" result="Failed" start-time="2026-10-08 16:33:40Z" end-time="2026-10-08 16:33:40Z" duration="0.569457" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Missing semantic setup action: ConfigureSessionOpenRouter
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.Call (System.String name, System.Object[] args) [0x00012] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixProviderSetupTests.cs:41
+at OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.ActualRequestFailures_ShowActionableSafeSetupStatus (System.Int32 status, System.String action) [0x00028] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixProviderSetupTests.cs:79
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1208" name="ActualRequestFailures_ShowActionableSafeSetupStatus(429,&quot;wait&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.ActualRequestFailures_ShowActionableSafeSetupStatus(429,&quot;wait&quot;)" methodname="ActualRequestFailures_ShowActionableSafeSetupStatus" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="1499865484" result="Failed" start-time="2026-10-08 16:33:40Z" end-time="2026-10-08 16:33:41Z" duration="0.582753" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Missing semantic setup action: ConfigureSessionOpenRouter
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.Call (System.String name, System.Object[] args) [0x00012] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixProviderSetupTests.cs:41
+at OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.ActualRequestFailures_ShowActionableSafeSetupStatus (System.Int32 status, System.String action) [0x00028] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixProviderSetupTests.cs:79
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-case id="1211" name="DisableDuringIgnoringResponse_RejectsLateEffectAndPreservesAcceptedGoal" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.DisableDuringIgnoringResponse_RejectsLateEffectAndPreservesAcceptedGoal" methodname="DisableDuringIgnoringResponse_RejectsLateEffectAndPreservesAcceptedGoal" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="1415841453" result="Failed" start-time="2026-10-08 16:33:41Z" end-time="2026-10-08 16:33:41Z" duration="0.570722" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Missing semantic setup action: DisableSemanticTranslation
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.Call (System.String name, System.Object[] args) [0x00012] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixProviderSetupTests.cs:41
+at OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.DisableDuringIgnoringResponse_RejectsLateEffectAndPreservesAcceptedGoal () [0x0007c] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixProviderSetupTests.cs:95
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] context=projected;provider-request=started
+]]></output>
+            </test-case>
+            <test-case id="1212" name="GatewayTextSetup_DoesNotFetchAudioPolicyOrGrantRecordingConsent" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.GatewayTextSetup_DoesNotFetchAudioPolicyOrGrantRecordingConsent" methodname="GatewayTextSetup_DoesNotFetchAudioPolicyOrGrantRecordingConsent" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="384734221" result="Failed" start-time="2026-10-08 16:33:41Z" end-time="2026-10-08 16:33:42Z" duration="0.506450" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Missing semantic setup action: ConfigureSemanticGateway
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.Call (System.String name, System.Object[] args) [0x00012] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixProviderSetupTests.cs:41
+at OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.GatewayTextSetup_DoesNotFetchAudioPolicyOrGrantRecordingConsent () [0x0001f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixProviderSetupTests.cs:105
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1213" name="HideSetup_ClearsUnappliedSecretAndEscapeDoesNotTouchPlans" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.HideSetup_ClearsUnappliedSecretAndEscapeDoesNotTouchPlans" methodname="HideSetup_ClearsUnappliedSecretAndEscapeDoesNotTouchPlans" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="715813784" result="Failed" start-time="2026-10-08 16:33:42Z" end-time="2026-10-08 16:33:42Z" duration="0.374228" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Missing semantic setup action: ShowSemanticSetup
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.Call (System.String name, System.Object[] args) [0x00012] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixProviderSetupTests.cs:41
+at OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.HideSetup_ClearsUnappliedSecretAndEscapeDoesNotTouchPlans () [0x0001d] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixProviderSetupTests.cs:113
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+]]></output>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1205" name="InvalidKey_DoesNotReplaceProviderOrMakeRequest" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.InvalidKey_DoesNotReplaceProviderOrMakeRequest" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-08 16:33:42Z" end-time="2026-10-08 16:33:43Z" duration="1.147907" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1202" name="InvalidKey_DoesNotReplaceProviderOrMakeRequest(&quot;&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.InvalidKey_DoesNotReplaceProviderOrMakeRequest(&quot;&quot;)" methodname="InvalidKey_DoesNotReplaceProviderOrMakeRequest" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="529376019" result="Failed" start-time="2026-10-08 16:33:42Z" end-time="2026-10-08 16:33:43Z" duration="0.388866" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Missing semantic setup action: ConfigureSessionOpenRouter
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.Call (System.String name, System.Object[] args) [0x00012] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixProviderSetupTests.cs:41
+at OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.InvalidKey_DoesNotReplaceProviderOrMakeRequest (System.String invalid) [0x00028] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixProviderSetupTests.cs:71
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1203" name="InvalidKey_DoesNotReplaceProviderOrMakeRequest(&quot;invalid\nheader&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.InvalidKey_DoesNotReplaceProviderOrMakeRequest(&quot;invalid\nheader&quot;)" methodname="InvalidKey_DoesNotReplaceProviderOrMakeRequest" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="1620570144" result="Failed" start-time="2026-10-08 16:33:43Z" end-time="2026-10-08 16:33:43Z" duration="0.378478" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Missing semantic setup action: ConfigureSessionOpenRouter
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.Call (System.String name, System.Object[] args) [0x00012] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixProviderSetupTests.cs:41
+at OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.InvalidKey_DoesNotReplaceProviderOrMakeRequest (System.String invalid) [0x00028] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixProviderSetupTests.cs:71
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1204" name="InvalidKey_DoesNotReplaceProviderOrMakeRequest(&quot;contains space in credential&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.InvalidKey_DoesNotReplaceProviderOrMakeRequest(&quot;contains space in credential&quot;)" methodname="InvalidKey_DoesNotReplaceProviderOrMakeRequest" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="384285790" result="Failed" start-time="2026-10-08 16:33:43Z" end-time="2026-10-08 16:33:43Z" duration="0.376736" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Missing semantic setup action: ConfigureSessionOpenRouter
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.Call (System.String name, System.Object[] args) [0x00012] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixProviderSetupTests.cs:41
+at OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.InvalidKey_DoesNotReplaceProviderOrMakeRequest (System.String invalid) [0x00028] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixProviderSetupTests.cs:71
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-case id="1201" name="MaskedSessionKeyApply_PerformsNoValidationRequestAndClearsEntry" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.MaskedSessionKeyApply_PerformsNoValidationRequestAndClearsEntry" methodname="MaskedSessionKeyApply_PerformsNoValidationRequestAndClearsEntry" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="509385386" result="Failed" start-time="2026-10-08 16:33:43Z" end-time="2026-10-08 16:33:44Z" duration="0.371161" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Missing semantic setup action: ShowSemanticSetup
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.Call (System.String name, System.Object[] args) [0x00012] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixProviderSetupTests.cs:41
+at OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.MaskedSessionKeyApply_PerformsNoValidationRequestAndClearsEntry () [0x00006] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixProviderSetupTests.cs:58
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1210" name="NetworkFailure_ShowsConnectionActionWithoutEchoingException" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.NetworkFailure_ShowsConnectionActionWithoutEchoingException" methodname="NetworkFailure_ShowsConnectionActionWithoutEchoingException" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="2114077018" result="Failed" start-time="2026-10-08 16:33:44Z" end-time="2026-10-08 16:33:44Z" duration="0.491131" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Missing semantic setup action: ConfigureSessionOpenRouter
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.Call (System.String name, System.Object[] args) [0x00012] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixProviderSetupTests.cs:41
+at OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.NetworkFailure_ShowsConnectionActionWithoutEchoingException () [0x0001e] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixProviderSetupTests.cs:86
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

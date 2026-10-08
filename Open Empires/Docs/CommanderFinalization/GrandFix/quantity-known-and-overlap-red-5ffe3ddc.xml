@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Failed(Child)" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 05:11:19Z" end-time="2026-10-08 05:11:23Z" duration="4.2746763">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1327" result="Failed" site="Child" start-time="2026-10-08 05:11:19Z" end-time="2026-10-08 05:11:23Z" duration="4.274676" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2523" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1327" result="Failed" site="Child" start-time="2026-10-08 05:11:19Z" end-time="2026-10-08 05:11:23Z" duration="4.128184" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2524" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1327" result="Failed" site="Child" start-time="2026-10-08 05:11:19Z" end-time="2026-10-08 05:11:23Z" duration="4.075501" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2525" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1327" result="Failed" site="Child" start-time="2026-10-08 05:11:19Z" end-time="2026-10-08 05:11:23Z" duration="3.969227" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1155" name="CommanderGrandFixQuantityTests" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" testcasecount="17" result="Failed" site="Child" start-time="2026-10-08 05:11:19Z" end-time="2026-10-08 05:11:23Z" duration="3.852972" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1175" name="ParallelOverlappingTotalResultProducers_RejectUnfulfillableReceiptPromises" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.ParallelOverlappingTotalResultProducers_RejectUnfulfillableReceiptPromises" methodname="ParallelOverlappingTotalResultProducers_RejectUnfulfillableReceiptPromises" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="1073041394" result="Failed" start-time="2026-10-08 05:11:19Z" end-time="2026-10-08 05:11:21Z" duration="1.510225" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixQuantityTests.ParallelOverlappingTotalResultProducers_RejectUnfulfillableReceiptPromises () [0x0000a] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixQuantityTests.cs:177
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1174" name="SequentialTotalProduction_QuotesOnlyRemainingNewForItsDependentResult" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.SequentialTotalProduction_QuotesOnlyRemainingNewForItsDependentResult" methodname="SequentialTotalProduction_QuotesOnlyRemainingNewForItsDependentResult" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="739674008" result="Failed" label="Error" start-time="2026-10-08 05:11:21Z" end-time="2026-10-08 05:11:22Z" duration="0.977256" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.ArgumentException : The requested exact-new result does not match the production quantity. Nothing started; revise the count or request new units explicitly.]]></message>
+                <stack-trace><![CDATA[  at OpenEmpires.CommanderGoalManager.PrepareActionPlan (OpenEmpires.CommanderSemanticResult interpretation, System.String originalInput, System.Int32 generation, OpenEmpires.StrategicPipeline strategicSource, System.Func`1[TResult] isCurrentRequest, OpenEmpires.CommanderRequestTicket requestTicket) [0x000d0] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Scripts\AI\Commander\Phase5A\CommanderGoalManager.Requests.cs:90 
+  at OpenEmpires.Tests.CommanderGrandFixQuantityTests.SequentialTotalProduction_QuotesOnlyRemainingNewForItsDependentResult () [0x0000b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixQuantityTests.cs:164 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <816f70bc2a9c4332b0bd119906a8d40e>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1173" name="SingleKnownIntentNew_CarriesExactNewCountIntoOrdinaryRegistration" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.SingleKnownIntentNew_CarriesExactNewCountIntoOrdinaryRegistration" methodname="SingleKnownIntentNew_CarriesExactNewCountIntoOrdinaryRegistration" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="1117819415" result="Failed" start-time="2026-10-08 05:11:22Z" end-time="2026-10-08 05:11:23Z" duration="1.213781" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: 2
+  But was:  -1
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixQuantityTests.SingleKnownIntentNew_CarriesExactNewCountIntoOrdinaryRegistration () [0x000ce] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixQuantityTests.cs:153
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="77" result="Passed" total="77" passed="77" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 03:41:41Z" end-time="2026-10-08 03:42:32Z" duration="50.2078795">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1281" result="Passed" start-time="2026-10-08 03:41:41Z" end-time="2026-10-08 03:42:32Z" duration="50.207880" total="77" passed="77" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="2467" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1281" result="Passed" start-time="2026-10-08 03:41:42Z" end-time="2026-10-08 03:42:32Z" duration="50.068930" total="77" passed="77" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="2468" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1281" result="Passed" start-time="2026-10-08 03:41:42Z" end-time="2026-10-08 03:42:32Z" duration="50.002685" total="77" passed="77" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="2469" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1281" result="Passed" start-time="2026-10-08 03:41:42Z" end-time="2026-10-08 03:42:32Z" duration="49.893784" total="77" passed="77" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1043" name="CommanderGrandFixModelTrustTests" fullname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests" classname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-10-08 03:41:42Z" end-time="2026-10-08 03:41:42Z" duration="0.492933" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <test-case id="1044" name="CorrectTrustedBytes_AreAcceptedWithoutChangingTheFile" fullname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests.CorrectTrustedBytes_AreAcceptedWithoutChangingTheFile" methodname="CorrectTrustedBytes_AreAcceptedWithoutChangingTheFile" classname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests" runstate="Runnable" seed="1400325798" result="Passed" start-time="2026-10-08 03:41:42Z" end-time="2026-10-08 03:41:42Z" duration="0.222815" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1051" name="ExplicitMissingPath_DoesNotSilentlyFallbackToAnotherModelCopy" fullname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests.ExplicitMissingPath_DoesNotSilentlyFallbackToAnotherModelCopy" methodname="ExplicitMissingPath_DoesNotSilentlyFallbackToAnotherModelCopy" classname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests" runstate="Runnable" seed="127444702" result="Passed" start-time="2026-10-08 03:41:42Z" end-time="2026-10-08 03:41:42Z" duration="0.044921" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1047" name="MissingModel_IsRejected" fullname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests.MissingModel_IsRejected" methodname="MissingModel_IsRejected" classname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests" runstate="Runnable" seed="216129745" result="Passed" start-time="2026-10-08 03:41:42Z" end-time="2026-10-08 03:41:42Z" duration="0.018759" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1050" name="UnknownModelName_DoesNotGrantAnExplicitUnverifiedLoadPath" fullname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests.UnknownModelName_DoesNotGrantAnExplicitUnverifiedLoadPath" methodname="UnknownModelName_DoesNotGrantAnExplicitUnverifiedLoadPath" classname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests" runstate="Runnable" seed="305964032" result="Passed" start-time="2026-10-08 03:41:42Z" end-time="2026-10-08 03:41:42Z" duration="0.005052" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1049" name="UnsafeModelName_DoesNotResolveAnArbitraryExistingFile" fullname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests.UnsafeModelName_DoesNotResolveAnArbitraryExistingFile" methodname="UnsafeModelName_DoesNotResolveAnArbitraryExistingFile" classname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests" runstate="Runnable" seed="690726415" result="Passed" start-time="2026-10-08 03:41:42Z" end-time="2026-10-08 03:41:42Z" duration="0.005887" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1048" name="VerificationLease_PreventsMutationBetweenHashAndNativeLoad" fullname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests.VerificationLease_PreventsMutationBetweenHashAndNativeLoad" methodname="VerificationLease_PreventsMutationBetweenHashAndNativeLoad" classname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests" runstate="Runnable" seed="803432890" result="Passed" start-time="2026-10-08 03:41:42Z" end-time="2026-10-08 03:41:42Z" duration="0.011450" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1052" name="WebDistribution_NativeModelPayloadIsRejected" fullname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests.WebDistribution_NativeModelPayloadIsRejected" methodname="WebDistribution_NativeModelPayloadIsRejected" classname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests" runstate="Runnable" seed="2123608433" result="Passed" start-time="2026-10-08 03:41:42Z" end-time="2026-10-08 03:41:42Z" duration="0.010657" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1053" name="WebDistribution_WorkletWithoutNativePayloadIsAllowed" fullname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests.WebDistribution_WorkletWithoutNativePayloadIsAllowed" methodname="WebDistribution_WorkletWithoutNativePayloadIsAllowed" classname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests" runstate="Runnable" seed="1792286387" result="Passed" start-time="2026-10-08 03:41:42Z" end-time="2026-10-08 03:41:42Z" duration="0.011949" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1045" name="WrongHash_IsRejected" fullname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests.WrongHash_IsRejected" methodname="WrongHash_IsRejected" classname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests" runstate="Runnable" seed="1168161990" result="Passed" start-time="2026-10-08 03:41:42Z" end-time="2026-10-08 03:41:42Z" duration="0.007752" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1046" name="WrongSize_IsRejectedBeforeLoading" fullname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests.WrongSize_IsRejectedBeforeLoading" methodname="WrongSize_IsRejectedBeforeLoading" classname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests" runstate="Runnable" seed="1400827085" result="Passed" start-time="2026-10-08 03:41:42Z" end-time="2026-10-08 03:41:42Z" duration="0.006722" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1105" name="CommanderGrandFixPlayerModelProvisionTests" fullname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests" classname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests" runstate="Runnable" testcasecount="12" result="Passed" start-time="2026-10-08 03:41:42Z" end-time="2026-10-08 03:41:48Z" duration="5.240323" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <test-case id="1114" name="AbandonedLockFile_DoesNotPermanentlyBlockPlayerSetup" fullname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests.AbandonedLockFile_DoesNotPermanentlyBlockPlayerSetup" methodname="AbandonedLockFile_DoesNotPermanentlyBlockPlayerSetup" classname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests" runstate="Runnable" seed="629419803" result="Passed" start-time="2026-10-08 03:41:42Z" end-time="2026-10-08 03:41:43Z" duration="0.445851" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1117" name="CancelIgnoringTransport_RetainsActualSlotUntilItTerminates" fullname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests.CancelIgnoringTransport_RetainsActualSlotUntilItTerminates" methodname="CancelIgnoringTransport_RetainsActualSlotUntilItTerminates" classname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests" runstate="Runnable" seed="797016756" result="Passed" start-time="2026-10-08 03:41:43Z" end-time="2026-10-08 03:41:43Z" duration="0.657684" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1107" name="CorruptImport_IsRejectedWithNoPromotedModelOrPartial" fullname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests.CorruptImport_IsRejectedWithNoPromotedModelOrPartial" methodname="CorruptImport_IsRejectedWithNoPromotedModelOrPartial" classname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests" runstate="Runnable" seed="1835329212" result="Passed" start-time="2026-10-08 03:41:43Z" end-time="2026-10-08 03:41:44Z" duration="0.414547" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1111" name="CorruptInstalledModel_IsNotOverwrittenByAnotherImport" fullname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests.CorruptInstalledModel_IsNotOverwrittenByAnotherImport" methodname="CorruptInstalledModel_IsNotOverwrittenByAnotherImport" classname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests" runstate="Runnable" seed="1505149730" result="Passed" start-time="2026-10-08 03:41:44Z" end-time="2026-10-08 03:41:44Z" duration="0.434588" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1115" name="CrashLeftover_CleansOnlyOwnedStagingFilesAfterExclusiveLease" fullname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests.CrashLeftover_CleansOnlyOwnedStagingFilesAfterExclusiveLease" methodname="CrashLeftover_CleansOnlyOwnedStagingFilesAfterExclusiveLease" classname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests" runstate="Runnable" seed="1726773176" result="Passed" start-time="2026-10-08 03:41:44Z" end-time="2026-10-08 03:41:45Z" duration="0.437485" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1108" name="Download_UsesOnlyPinnedModelUrl_AndNeverSendsAuthorization" fullname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests.Download_UsesOnlyPinnedModelUrl_AndNeverSendsAuthorization" methodname="Download_UsesOnlyPinnedModelUrl_AndNeverSendsAuthorization" classname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests" runstate="Runnable" seed="2005930626" result="Passed" start-time="2026-10-08 03:41:45Z" end-time="2026-10-08 03:41:45Z" duration="0.433367" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1113" name="ExistingAcquisitionLock_IsNotStolenOrDeleted" fullname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests.ExistingAcquisitionLock_IsNotStolenOrDeleted" methodname="ExistingAcquisitionLock_IsNotStolenOrDeleted" classname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests" runstate="Runnable" seed="674949330" result="Passed" start-time="2026-10-08 03:41:45Z" end-time="2026-10-08 03:41:46Z" duration="0.443365" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1106" name="ManualImport_VerifiesAndPreservesSource_WithoutActivatingModel" fullname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests.ManualImport_VerifiesAndPreservesSource_WithoutActivatingModel" methodname="ManualImport_VerifiesAndPreservesSource_WithoutActivatingModel" classname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests" runstate="Runnable" seed="1178380298" result="Passed" start-time="2026-10-08 03:41:46Z" end-time="2026-10-08 03:41:46Z" duration="0.431291" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1110" name="OversizedResponse_IsRejectedBeforePromotion" fullname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests.OversizedResponse_IsRejectedBeforePromotion" methodname="OversizedResponse_IsRejectedBeforePromotion" classname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests" runstate="Runnable" seed="1503321298" result="Passed" start-time="2026-10-08 03:41:46Z" end-time="2026-10-08 03:41:47Z" duration="0.438633" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1112" name="PrecancelledOperation_ProducesNoFilesOrRequests" fullname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests.PrecancelledOperation_ProducesNoFilesOrRequests" methodname="PrecancelledOperation_ProducesNoFilesOrRequests" classname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests" runstate="Runnable" seed="1536704647" result="Passed" start-time="2026-10-08 03:41:47Z" end-time="2026-10-08 03:41:47Z" duration="0.325442" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1116" name="SafeNetworkCategory_DoesNotExposeRawExceptionOrUrl" fullname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests.SafeNetworkCategory_DoesNotExposeRawExceptionOrUrl" methodname="SafeNetworkCategory_DoesNotExposeRawExceptionOrUrl" classname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests" runstate="Runnable" seed="332756122" result="Passed" start-time="2026-10-08 03:41:47Z" end-time="2026-10-08 03:41:47Z" duration="0.436204" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1109" name="UnknownName_IsRejectedBeforeFileOrNetworkWork" fullname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests.UnknownName_IsRejectedBeforeFileOrNetworkWork" methodname="UnknownName_IsRejectedBeforeFileOrNetworkWork" classname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests" runstate="Runnable" seed="20376076" result="Passed" start-time="2026-10-08 03:41:47Z" end-time="2026-10-08 03:41:48Z" duration="0.322980" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1118" name="CommanderGrandFixPresentationTests" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" testcasecount="31" result="Passed" start-time="2026-10-08 03:41:48Z" end-time="2026-10-08 03:42:28Z" duration="40.780970" total="31" passed="31" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <test-suite type="ParameterizedMethod" id="1136" name="BrowserSafetyFailure_ShowsReasonWithoutTranscriptionOrOrders" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.BrowserSafetyFailure_ShowsReasonWithoutTranscriptionOrOrders" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-08 03:41:48Z" end-time="2026-10-08 03:41:51Z" duration="3.687030" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1134" name="BrowserSafetyFailure_ShowsReasonWithoutTranscriptionOrOrders(&quot;MIC_FOCUS_LOST&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.BrowserSafetyFailure_ShowsReasonWithoutTranscriptionOrOrders(&quot;MIC_FOCUS_LOST&quot;)" methodname="BrowserSafetyFailure_ShowsReasonWithoutTranscriptionOrOrders" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="1145864113" result="Passed" start-time="2026-10-08 03:41:48Z" end-time="2026-10-08 03:41:50Z" duration="2.438621" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1135" name="BrowserSafetyFailure_ShowsReasonWithoutTranscriptionOrOrders(&quot;MIC_OPEN_FAILED&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.BrowserSafetyFailure_ShowsReasonWithoutTranscriptionOrOrders(&quot;MIC_OPEN_FAILED&quot;)" methodname="BrowserSafetyFailure_ShowsReasonWithoutTranscriptionOrOrders" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="1868593513" result="Passed" start-time="2026-10-08 03:41:50Z" end-time="2026-10-08 03:41:51Z" duration="1.135294" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1143" name="CameraMiddleButton_IsInertWhileTypingAndDoesNotAcquirePointerLock" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.CameraMiddleButton_IsInertWhileTypingAndDoesNotAcquirePointerLock" methodname="CameraMiddleButton_IsInertWhileTypingAndDoesNotAcquirePointerLock" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="667743680" result="Passed" start-time="2026-10-08 03:41:51Z" end-time="2026-10-08 03:41:53Z" duration="1.206759" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1133" name="CancelledActivation_LatePermissionGrantCannotStartRecording" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.CancelledActivation_LatePermissionGrantCannotStartRecording" methodname="CancelledActivation_LatePermissionGrantCannotStartRecording" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="831582816" result="Passed" start-time="2026-10-08 03:41:53Z" end-time="2026-10-08 03:41:54Z" duration="1.331357" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1152" name="CaptureReadinessChange_RefreshesListeningIndicatorWithoutVoiceStateChange" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.CaptureReadinessChange_RefreshesListeningIndicatorWithoutVoiceStateChange" methodname="CaptureReadinessChange_RefreshesListeningIndicatorWithoutVoiceStateChange" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="1874763670" result="Passed" start-time="2026-10-08 03:41:54Z" end-time="2026-10-08 03:41:55Z" duration="1.244608" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1122" name="CollapsedRecordingAndTranscriptReview_DoNotSubmitOrApprove" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.CollapsedRecordingAndTranscriptReview_DoNotSubmitOrApprove" methodname="CollapsedRecordingAndTranscriptReview_DoNotSubmitOrApprove" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="103179335" result="Passed" start-time="2026-10-08 03:41:55Z" end-time="2026-10-08 03:41:57Z" duration="1.345823" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1147" name="CommanderPointerOwnership_InactiveHostCannotBlockGameplay" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.CommanderPointerOwnership_InactiveHostCannotBlockGameplay" methodname="CommanderPointerOwnership_InactiveHostCannotBlockGameplay" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="572266676" result="Passed" start-time="2026-10-08 03:41:57Z" end-time="2026-10-08 03:41:58Z" duration="1.271045" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1146" name="CommanderPointerOwnership_IsLimitedToCurrentlyVisiblePanel" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.CommanderPointerOwnership_IsLimitedToCurrentlyVisiblePanel" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-08 03:41:58Z" end-time="2026-10-08 03:42:00Z" duration="2.359074" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1144" name="CommanderPointerOwnership_IsLimitedToCurrentlyVisiblePanel(False)" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.CommanderPointerOwnership_IsLimitedToCurrentlyVisiblePanel(False)" methodname="CommanderPointerOwnership_IsLimitedToCurrentlyVisiblePanel" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="117204340" result="Passed" start-time="2026-10-08 03:41:58Z" end-time="2026-10-08 03:41:59Z" duration="1.150620" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1145" name="CommanderPointerOwnership_IsLimitedToCurrentlyVisiblePanel(True)" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.CommanderPointerOwnership_IsLimitedToCurrentlyVisiblePanel(True)" methodname="CommanderPointerOwnership_IsLimitedToCurrentlyVisiblePanel" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="565915545" result="Passed" start-time="2026-10-08 03:41:59Z" end-time="2026-10-08 03:42:00Z" duration="1.201337" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1139" name="CompactStrategicAction_RequiresExistingDetailedConfirmationControls" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.CompactStrategicAction_RequiresExistingDetailedConfirmationControls" methodname="CompactStrategicAction_RequiresExistingDetailedConfirmationControls" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="1705371002" result="Passed" start-time="2026-10-08 03:42:00Z" end-time="2026-10-08 03:42:02Z" duration="1.691749" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+]]></output>
+            </test-case>
+            <test-case id="1130" name="CompactVoiceSetup_IsHiddenInitiallyAndOpensWithoutConversationOrGoals" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.CompactVoiceSetup_IsHiddenInitiallyAndOpensWithoutConversationOrGoals" methodname="CompactVoiceSetup_IsHiddenInitiallyAndOpensWithoutConversationOrGoals" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="1867621490" result="Passed" start-time="2026-10-08 03:42:02Z" end-time="2026-10-08 03:42:03Z" duration="1.219364" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1120" name="DeliberateOpenThenMinimize_DoesNotCancelAcceptedWork" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.DeliberateOpenThenMinimize_DoesNotCancelAcceptedWork" methodname="DeliberateOpenThenMinimize_DoesNotCancelAcceptedWork" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="1948815385" result="Passed" start-time="2026-10-08 03:42:03Z" end-time="2026-10-08 03:42:04Z" duration="1.171067" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+]]></output>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1125" name="DiscardVoiceDraft_ClearsOnlyUnchangedOwnedText" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.DiscardVoiceDraft_ClearsOnlyUnchangedOwnedText" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-08 03:42:04Z" end-time="2026-10-08 03:42:07Z" duration="2.736664" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1123" name="DiscardVoiceDraft_ClearsOnlyUnchangedOwnedText(False)" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.DiscardVoiceDraft_ClearsOnlyUnchangedOwnedText(False)" methodname="DiscardVoiceDraft_ClearsOnlyUnchangedOwnedText" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="968510756" result="Passed" start-time="2026-10-08 03:42:04Z" end-time="2026-10-08 03:42:06Z" duration="1.358458" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1124" name="DiscardVoiceDraft_ClearsOnlyUnchangedOwnedText(True)" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.DiscardVoiceDraft_ClearsOnlyUnchangedOwnedText(True)" methodname="DiscardVoiceDraft_ClearsOnlyUnchangedOwnedText" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="1970535871" result="Passed" start-time="2026-10-08 03:42:06Z" end-time="2026-10-08 03:42:07Z" duration="1.369743" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1140" name="EditableFocus_SurvivesOtherChatClearingLegacyFocusFlag" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.EditableFocus_SurvivesOtherChatClearingLegacyFocusFlag" methodname="EditableFocus_SurvivesOtherChatClearingLegacyFocusFlag" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="1533220719" result="Passed" start-time="2026-10-08 03:42:07Z" end-time="2026-10-08 03:42:08Z" duration="1.321567" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1141" name="EscapeCallbackBeforeCommanderUpdate_MinimizesOnceWithoutOpeningSettings" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.EscapeCallbackBeforeCommanderUpdate_MinimizesOnceWithoutOpeningSettings" methodname="EscapeCallbackBeforeCommanderUpdate_MinimizesOnceWithoutOpeningSettings" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="1937367105" result="Passed" start-time="2026-10-08 03:42:08Z" end-time="2026-10-08 03:42:10Z" duration="1.235641" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+]]></output>
+            </test-case>
+            <test-case id="1142" name="GameplayAttackMoveCallback_IsInertWhileAnotherTextFieldOwnsKeyboard" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.GameplayAttackMoveCallback_IsInertWhileAnotherTextFieldOwnsKeyboard" methodname="GameplayAttackMoveCallback_IsInertWhileAnotherTextFieldOwnsKeyboard" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="1019813587" result="Passed" start-time="2026-10-08 03:42:10Z" end-time="2026-10-08 03:42:11Z" duration="1.228043" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1119" name="Initialize_StartsCollapsedWithLiveHostAndSmallLauncher" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.Initialize_StartsCollapsedWithLiveHostAndSmallLauncher" methodname="Initialize_StartsCollapsedWithLiveHostAndSmallLauncher" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="1046223257" result="Passed" start-time="2026-10-08 03:42:11Z" end-time="2026-10-08 03:42:12Z" duration="1.133395" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1132" name="MicrophoneActivation_IsASeparateActionAndNeverRecordsOrSubmits" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.MicrophoneActivation_IsASeparateActionAndNeverRecordsOrSubmits" methodname="MicrophoneActivation_IsASeparateActionAndNeverRecordsOrSubmits" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="2050027829" result="Passed" start-time="2026-10-08 03:42:12Z" end-time="2026-10-08 03:42:13Z" duration="1.327270" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1131" name="OnlinePolicyReviewAndExplicitConsent_DoNotRecordSubmitOrApprove" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.OnlinePolicyReviewAndExplicitConsent_DoNotRecordSubmitOrApprove" methodname="OnlinePolicyReviewAndExplicitConsent_DoNotRecordSubmitOrApprove" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="254061332" result="Passed" start-time="2026-10-08 03:42:13Z" end-time="2026-10-08 03:42:15Z" duration="1.270109" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1121" name="OrdinaryAnswerAndReset_DoNotReopenConversation" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.OrdinaryAnswerAndReset_DoNotReopenConversation" methodname="OrdinaryAnswerAndReset_DoNotReopenConversation" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="2030450130" result="Passed" start-time="2026-10-08 03:42:15Z" end-time="2026-10-08 03:42:16Z" duration="1.383107" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1126" name="OversizedTypedDraft_IsNotTruncatedOrSent" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.OversizedTypedDraft_IsNotTruncatedOrSent" methodname="OversizedTypedDraft_IsNotTruncatedOrSent" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="12200497" result="Passed" start-time="2026-10-08 03:42:16Z" end-time="2026-10-08 03:42:17Z" duration="1.313346" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1153" name="PlayerModelControls_AppearOnlyOnDeliberateSetupAndDoNotOpenMicrophone" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.PlayerModelControls_AppearOnlyOnDeliberateSetupAndDoNotOpenMicrophone" methodname="PlayerModelControls_AppearOnlyOnDeliberateSetupAndDoNotOpenMicrophone" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="455745976" result="Passed" start-time="2026-10-08 03:42:17Z" end-time="2026-10-08 03:42:18Z" duration="1.147490" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1129" name="ProviderModeSwitch_DiscardsOnlyUnchangedVoiceDraft" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.ProviderModeSwitch_DiscardsOnlyUnchangedVoiceDraft" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-08 03:42:18Z" end-time="2026-10-08 03:42:21Z" duration="2.706633" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1127" name="ProviderModeSwitch_DiscardsOnlyUnchangedVoiceDraft(False)" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.ProviderModeSwitch_DiscardsOnlyUnchangedVoiceDraft(False)" methodname="ProviderModeSwitch_DiscardsOnlyUnchangedVoiceDraft" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="517859542" result="Passed" start-time="2026-10-08 03:42:18Z" end-time="2026-10-08 03:42:20Z" duration="1.326188" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1128" name="ProviderModeSwitch_DiscardsOnlyUnchangedVoiceDraft(True)" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.ProviderModeSwitch_DiscardsOnlyUnchangedVoiceDraft(True)" methodname="ProviderModeSwitch_DiscardsOnlyUnchangedVoiceDraft" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="1472284564" result="Passed" start-time="2026-10-08 03:42:20Z" end-time="2026-10-08 03:42:21Z" duration="1.374319" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1138" name="SameFrameSendAndExpandedApproval_CannotConsumeTwoDecisions" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.SameFrameSendAndExpandedApproval_CannotConsumeTwoDecisions" methodname="SameFrameSendAndExpandedApproval_CannotConsumeTwoDecisions" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="1249021540" result="Passed" start-time="2026-10-08 03:42:21Z" end-time="2026-10-08 03:42:22Z" duration="1.328138" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+]]></output>
+            </test-case>
+            <test-case id="1154" name="SelectingUnmeasuredCandidate_DoesNotActivateItOrGrantGameplayAuthority" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.SelectingUnmeasuredCandidate_DoesNotActivateItOrGrantGameplayAuthority" methodname="SelectingUnmeasuredCandidate_DoesNotActivateItOrGrantGameplayAuthority" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="737511602" result="Passed" start-time="2026-10-08 03:42:22Z" end-time="2026-10-08 03:42:24Z" duration="1.141746" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1137" name="TranscriptSend_OnlyStagesCompoundApprovalWhileCollapsed" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.TranscriptSend_OnlyStagesCompoundApprovalWhileCollapsed" methodname="TranscriptSend_OnlyStagesCompoundApprovalWhileCollapsed" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="908403697" result="Passed" start-time="2026-10-08 03:42:24Z" end-time="2026-10-08 03:42:25Z" duration="1.224535" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+]]></output>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1151" name="VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-08 03:42:25Z" end-time="2026-10-08 03:42:28Z" duration="3.623876" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1148" name="VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange(3.0f,&quot;3 s&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange(3.0f,&quot;3 s&quot;)" methodname="VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="333114390" result="Passed" start-time="2026-10-08 03:42:25Z" end-time="2026-10-08 03:42:26Z" duration="1.178801" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1149" name="VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange(3.25f,&quot;3.25 s&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange(3.25f,&quot;3.25 s&quot;)" methodname="VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="930225619" result="Passed" start-time="2026-10-08 03:42:26Z" end-time="2026-10-08 03:42:27Z" duration="1.176179" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1150" name="VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange(3.123457f,&quot;3.1234567 s&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange(3.123457f,&quot;3.1234567 s&quot;)" methodname="VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="1070437046" result="Passed" start-time="2026-10-08 03:42:27Z" end-time="2026-10-08 03:42:28Z" duration="1.163554" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+          </test-suite>
+          <test-suite type="TestFixture" id="1171" name="CommanderGrandFixVoiceConsentTests" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" testcasecount="11" result="Passed" start-time="2026-10-08 03:42:28Z" end-time="2026-10-08 03:42:30Z" duration="1.327224" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <test-suite type="ParameterizedMethod" id="1182" name="ConfirmPreview_CallbackCancellationCannotSubmitOldText" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.ConfirmPreview_CallbackCancellationCannotSubmitOldText" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-08 03:42:28Z" end-time="2026-10-08 03:42:29Z" duration="0.648221" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1180" name="ConfirmPreview_CallbackCancellationCannotSubmitOldText(False)" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.ConfirmPreview_CallbackCancellationCannotSubmitOldText(False)" methodname="ConfirmPreview_CallbackCancellationCannotSubmitOldText" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" seed="1052479462" result="Passed" start-time="2026-10-08 03:42:28Z" end-time="2026-10-08 03:42:29Z" duration="0.318959" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1181" name="ConfirmPreview_CallbackCancellationCannotSubmitOldText(True)" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.ConfirmPreview_CallbackCancellationCannotSubmitOldText(True)" methodname="ConfirmPreview_CallbackCancellationCannotSubmitOldText" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" seed="28342847" result="Passed" start-time="2026-10-08 03:42:29Z" end-time="2026-10-08 03:42:29Z" duration="0.327024" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1176" name="ConsentRevocation_DuringIgnoringInferenceNeverDeliversText" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.ConsentRevocation_DuringIgnoringInferenceNeverDeliversText" methodname="ConsentRevocation_DuringIgnoringInferenceNeverDeliversText" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" seed="995130163" result="Passed" start-time="2026-10-08 03:42:29Z" end-time="2026-10-08 03:42:29Z" duration="0.325752" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1175" name="ConsentRevocation_StopsRecordingAndRequiresFreshAction" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.ConsentRevocation_StopsRecordingAndRequiresFreshAction" methodname="ConsentRevocation_StopsRecordingAndRequiresFreshAction" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" seed="237382562" result="Passed" start-time="2026-10-08 03:42:29Z" end-time="2026-10-08 03:42:29Z" duration="0.002427" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1177" name="Dispose_DetachesSessionInvalidationSubscription" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.Dispose_DetachesSessionInvalidationSubscription" methodname="Dispose_DetachesSessionInvalidationSubscription" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" seed="1958313130" result="Passed" start-time="2026-10-08 03:42:29Z" end-time="2026-10-08 03:42:29Z" duration="0.002270" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1183" name="Dispose_ReentrantIdleCallbackCleansEachOwnedResourceOnce" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.Dispose_ReentrantIdleCallbackCleansEachOwnedResourceOnce" methodname="Dispose_ReentrantIdleCallbackCleansEachOwnedResourceOnce" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" seed="1021198470" result="Passed" start-time="2026-10-08 03:42:29Z" end-time="2026-10-08 03:42:29Z" duration="0.002042" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1179" name="EmptyCapture_DoesNotKeepAnUnusedFrozenOnlineJob" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.EmptyCapture_DoesNotKeepAnUnusedFrozenOnlineJob" methodname="EmptyCapture_DoesNotKeepAnUnusedFrozenOnlineJob" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" seed="1381352960" result="Passed" start-time="2026-10-08 03:42:29Z" end-time="2026-10-08 03:42:30Z" duration="0.320059" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1174" name="FailedCapture_ReleasesFrozenProviderJob" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.FailedCapture_ReleasesFrozenProviderJob" methodname="FailedCapture_ReleasesFrozenProviderJob" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" seed="831022513" result="Passed" start-time="2026-10-08 03:42:30Z" end-time="2026-10-08 03:42:30Z" duration="0.002075" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1172" name="MissingOnlineConsent_DoesNotStartMicrophone" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.MissingOnlineConsent_DoesNotStartMicrophone" methodname="MissingOnlineConsent_DoesNotStartMicrophone" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" seed="142817401" result="Passed" start-time="2026-10-08 03:42:30Z" end-time="2026-10-08 03:42:30Z" duration="0.002656" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1173" name="RecordingGate_FreezesSessionBeforeCapture" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.RecordingGate_FreezesSessionBeforeCapture" methodname="RecordingGate_FreezesSessionBeforeCapture" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" seed="1494724963" result="Passed" start-time="2026-10-08 03:42:30Z" end-time="2026-10-08 03:42:30Z" duration="0.001885" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1178" name="SynchronousConsentInvalidation_DoesNotStartAfterRevocation" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.SynchronousConsentInvalidation_DoesNotStartAfterRevocation" methodname="SynchronousConsentInvalidation_DoesNotStartAfterRevocation" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" seed="2010453083" result="Passed" start-time="2026-10-08 03:42:30Z" end-time="2026-10-08 03:42:30Z" duration="0.001436" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2276" name="CommanderPhase4HVoiceTests" fullname="OpenEmpires.Tests.CommanderPhase4HVoiceTests" classname="OpenEmpires.Tests.CommanderPhase4HVoiceTests" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-10-08 03:42:30Z" end-time="2026-10-08 03:42:32Z" duration="1.935652" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="2278" name="AudioConversion_ClampsMaxDuration" fullname="OpenEmpires.Tests.CommanderPhase4HVoiceTests.AudioConversion_ClampsMaxDuration" methodname="AudioConversion_ClampsMaxDuration" classname="OpenEmpires.Tests.CommanderPhase4HVoiceTests" runstate="Runnable" seed="88953233" result="Passed" start-time="2026-10-08 03:42:30Z" end-time="2026-10-08 03:42:30Z" duration="0.007116" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2279" name="AudioConversion_EmptyAudio_ReturnsEmptyData" fullname="OpenEmpires.Tests.CommanderPhase4HVoiceTests.AudioConversion_EmptyAudio_ReturnsEmptyData" methodname="AudioConversion_EmptyAudio_ReturnsEmptyData" classname="OpenEmpires.Tests.CommanderPhase4HVoiceTests" runstate="Runnable" seed="82741446" result="Passed" start-time="2026-10-08 03:42:30Z" end-time="2026-10-08 03:42:30Z" duration="0.003440" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2277" name="AudioConversion_ProducesExpectedMono16kShape" fullname="OpenEmpires.Tests.CommanderPhase4HVoiceTests.AudioConversion_ProducesExpectedMono16kShape" methodname="AudioConversion_ProducesExpectedMono16kShape" classname="OpenEmpires.Tests.CommanderPhase4HVoiceTests" runstate="Runnable" seed="1577086166" result="Passed" start-time="2026-10-08 03:42:30Z" end-time="2026-10-08 03:42:30Z" duration="0.086793" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2282" name="CancelledTranscription_DoesNotSubmit" fullname="OpenEmpires.Tests.CommanderPhase4HVoiceTests.CancelledTranscription_DoesNotSubmit" methodname="CancelledTranscription_DoesNotSubmit" classname="OpenEmpires.Tests.CommanderPhase4HVoiceTests" runstate="Runnable" seed="1488776496" result="Passed" start-time="2026-10-08 03:42:30Z" end-time="2026-10-08 03:42:30Z" duration="0.212419" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2281" name="EmptyTranscript_DoesNotSubmit" fullname="OpenEmpires.Tests.CommanderPhase4HVoiceTests.EmptyTranscript_DoesNotSubmit" methodname="EmptyTranscript_DoesNotSubmit" classname="OpenEmpires.Tests.CommanderPhase4HVoiceTests" runstate="Runnable" seed="20356906" result="Passed" start-time="2026-10-08 03:42:30Z" end-time="2026-10-08 03:42:30Z" duration="0.327543" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2283" name="LateTranscriptAfterReset_IsDiscarded" fullname="OpenEmpires.Tests.CommanderPhase4HVoiceTests.LateTranscriptAfterReset_IsDiscarded" methodname="LateTranscriptAfterReset_IsDiscarded" classname="OpenEmpires.Tests.CommanderPhase4HVoiceTests" runstate="Runnable" seed="615486485" result="Passed" start-time="2026-10-08 03:42:30Z" end-time="2026-10-08 03:42:31Z" duration="0.325588" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2287" name="ModelLocator_ResolvesProvisionedModel" fullname="OpenEmpires.Tests.CommanderPhase4HVoiceTests.ModelLocator_ResolvesProvisionedModel" methodname="ModelLocator_ResolvesProvisionedModel" classname="OpenEmpires.Tests.CommanderPhase4HVoiceTests" runstate="Runnable" seed="1548666506" result="Passed" start-time="2026-10-08 03:42:31Z" end-time="2026-10-08 03:42:31Z" duration="0.002472" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2286" name="PreviewMode_RequiresExplicitConfirmToSubmit" fullname="OpenEmpires.Tests.CommanderPhase4HVoiceTests.PreviewMode_RequiresExplicitConfirmToSubmit" methodname="PreviewMode_RequiresExplicitConfirmToSubmit" classname="OpenEmpires.Tests.CommanderPhase4HVoiceTests" runstate="Runnable" seed="261213" result="Passed" start-time="2026-10-08 03:42:31Z" end-time="2026-10-08 03:42:31Z" duration="0.323001" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2284" name="ProviderFailure_DoesNotBreakTextCommander" fullname="OpenEmpires.Tests.CommanderPhase4HVoiceTests.ProviderFailure_DoesNotBreakTextCommander" methodname="ProviderFailure_DoesNotBreakTextCommander" classname="OpenEmpires.Tests.CommanderPhase4HVoiceTests" runstate="Runnable" seed="1241176742" result="Passed" start-time="2026-10-08 03:42:31Z" end-time="2026-10-08 03:42:31Z" duration="0.324277" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2288" name="SafeCleanTranscript_NormalizesWhitespaceAndArtifacts" fullname="OpenEmpires.Tests.CommanderPhase4HVoiceTests.SafeCleanTranscript_NormalizesWhitespaceAndArtifacts" methodname="SafeCleanTranscript_NormalizesWhitespaceAndArtifacts" classname="OpenEmpires.Tests.CommanderPhase4HVoiceTests" runstate="Runnable" seed="46718230" result="Passed" start-time="2026-10-08 03:42:31Z" end-time="2026-10-08 03:42:31Z" duration="0.000698" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2289" name="VoiceLayer_HasNoGameplayAuthority" fullname="OpenEmpires.Tests.CommanderPhase4HVoiceTests.VoiceLayer_HasNoGameplayAuthority" methodname="VoiceLayer_HasNoGameplayAuthority" classname="OpenEmpires.Tests.CommanderPhase4HVoiceTests" runstate="Runnable" seed="2095671572" result="Passed" start-time="2026-10-08 03:42:31Z" end-time="2026-10-08 03:42:31Z" duration="0.008428" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2285" name="VoiceState_DoesNotAllowConcurrentTransactions" fullname="OpenEmpires.Tests.CommanderPhase4HVoiceTests.VoiceState_DoesNotAllowConcurrentTransactions" methodname="VoiceState_DoesNotAllowConcurrentTransactions" classname="OpenEmpires.Tests.CommanderPhase4HVoiceTests" runstate="Runnable" seed="18173597" result="Passed" start-time="2026-10-08 03:42:31Z" end-time="2026-10-08 03:42:31Z" duration="0.004918" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[CommanderVoice] Cannot start recording while in state Recording.
+]]></output>
+            </test-case>
+            <test-case id="2280" name="VoiceTranscript_UsesExactExistingTextSubmissionPath" fullname="OpenEmpires.Tests.CommanderPhase4HVoiceTests.VoiceTranscript_UsesExactExistingTextSubmissionPath" methodname="VoiceTranscript_UsesExactExistingTextSubmissionPath" classname="OpenEmpires.Tests.CommanderPhase4HVoiceTests" runstate="Runnable" seed="497381821" result="Passed" start-time="2026-10-08 03:42:31Z" end-time="2026-10-08 03:42:32Z" duration="0.205437" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Failed(Child)" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 17:38:40Z" end-time="2026-10-08 17:38:42Z" duration="2.2003795">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1472" result="Failed" site="Child" start-time="2026-10-08 17:38:40Z" end-time="2026-10-08 17:38:42Z" duration="2.200380" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2695" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1472" result="Failed" site="Child" start-time="2026-10-08 17:38:40Z" end-time="2026-10-08 17:38:42Z" duration="2.098801" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="27016" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2696" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1472" result="Failed" site="Child" start-time="2026-10-08 17:38:40Z" end-time="2026-10-08 17:38:42Z" duration="2.006821" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2697" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1472" result="Failed" site="Child" start-time="2026-10-08 17:38:40Z" end-time="2026-10-08 17:38:42Z" duration="1.908202" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1134" name="CommanderGrandFixNetworkCompatibilityTests" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" testcasecount="13" result="Failed" site="Child" start-time="2026-10-08 17:38:41Z" end-time="2026-10-08 17:38:42Z" duration="1.804620" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1146" name="BrowserRuntimeSourceChanges_ChangeSourceIdentity" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.BrowserRuntimeSourceChanges_ChangeSourceIdentity" methodname="BrowserRuntimeSourceChanges_ChangeSourceIdentity" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="1616245771" result="Failed" start-time="2026-10-08 17:38:41Z" end-time="2026-10-08 17:38:41Z" duration="0.056777" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: not equal to "d888c69c9ed97fe219ca6ed39fd8615c3a338ea7cf1bd9ec66dcd0b5c1a64917"
+  But was:  "d888c69c9ed97fe219ca6ed39fd8615c3a338ea7cf1bd9ec66dcd0b5c1a64917"
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.BrowserRuntimeSourceChanges_ChangeSourceIdentity () [0x00114] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNetworkCompatibilityTests.cs:88
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1145" name="Disconnect_ClearsQueuedMessagesBeforeNextConnection" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.Disconnect_ClearsQueuedMessagesBeforeNextConnection" methodname="Disconnect_ClearsQueuedMessagesBeforeNextConnection" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="1286368889" result="Failed" start-time="2026-10-08 17:38:41Z" end-time="2026-10-08 17:38:41Z" duration="0.257700" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: <empty>
+  But was:  < OpenEmpires.WebSocketClient+TimestampedMessage >
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.Disconnect_ClearsQueuedMessagesBeforeNextConnection () [0x00060] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNetworkCompatibilityTests.cs:74
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1144" name="DuplicateAcknowledgement_CannotRewindInGameState" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.DuplicateAcknowledgement_CannotRewindInGameState" methodname="DuplicateAcknowledgement_CannotRewindInGameState" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="92861479" result="Failed" start-time="2026-10-08 17:38:41Z" end-time="2026-10-08 17:38:42Z" duration="0.928040" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: InGame
+  But was:  Authenticated
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.DuplicateAcknowledgement_CannotRewindInGameState () [0x00037] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNetworkCompatibilityTests.cs:65
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Matchmaking] State: Disconnected -> Authenticating
+[Matchmaking] Authenticated as fixture
+[Matchmaking] State: Authenticating -> Authenticated
+[Matchmaking] State: Authenticated -> InGame
+[Matchmaking] Authenticated as fixture
+[Matchmaking] State: InGame -> Authenticated
+]]></output>
+            </test-case>
+            <test-case id="1143" name="LateMatchingAcknowledgement_AfterDisconnectCannotReopenAdmission" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.LateMatchingAcknowledgement_AfterDisconnectCannotReopenAdmission" methodname="LateMatchingAcknowledgement_AfterDisconnectCannotReopenAdmission" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="551515157" result="Failed" start-time="2026-10-08 17:38:42Z" end-time="2026-10-08 17:38:42Z" duration="0.455755" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: Disconnected
+  But was:  Authenticated
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.LateMatchingAcknowledgement_AfterDisconnectCannotReopenAdmission () [0x0001b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNetworkCompatibilityTests.cs:59
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Matchmaking] Authenticated as fixture
+[Matchmaking] State: Disconnected -> Authenticated
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

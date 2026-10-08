@@ -1,0 +1,95 @@
+TAP version 13
+# Subtest: manual import verifies trusted size/hash before atomic promotion and preserves source
+ok 1 - manual import verifies trusted size/hash before atomic promotion and preserves source
+  ---
+  duration_ms: 38.6489
+  type: 'test'
+  ...
+# Subtest: hash mismatch is rejected without installed model or partial leftover
+ok 2 - hash mismatch is rejected without installed model or partial leftover
+  ---
+  duration_ms: 9.9837
+  type: 'test'
+  ...
+# Subtest: existing verified model is preserved and no unnecessary request occurs
+ok 3 - existing verified model is preserved and no unnecessary request occurs
+  ---
+  duration_ms: 14.6798
+  type: 'test'
+  ...
+# Subtest: corrupt existing model is reported, not overwritten or silently accepted
+ok 4 - corrupt existing model is reported, not overwritten or silently accepted
+  ---
+  duration_ms: 7.0593
+  type: 'test'
+  ...
+# Subtest: chunked oversize is stopped and never promoted
+ok 5 - chunked oversize is stopped and never promoted
+  ---
+  duration_ms: 51.2806
+  type: 'test'
+  ...
+# Subtest: cancellation during streamed download cleans only owned temporary files
+ok 6 - cancellation during streamed download cleans only owned temporary files
+  ---
+  duration_ms: 5.3463
+  type: 'test'
+  ...
+# Subtest: active root lock rejects replacement rather than creating another acquisition
+ok 7 - active root lock rejects replacement rather than creating another acquisition
+  ---
+  duration_ms: 2.9441
+  type: 'test'
+  ...
+# Subtest: symlink/junction cache subdirectory cannot redirect writes outside the requested cache
+ok 8 - symlink/junction cache subdirectory cannot redirect writes outside the requested cache
+  ---
+  duration_ms: 5.6333
+  type: 'test'
+  ...
+# Subtest: model traversal, unpinned revision and unsupported repository are rejected before I/O
+ok 9 - model traversal, unpinned revision and unsupported repository are rejected before I/O
+  ---
+  duration_ms: 1.0279
+  type: 'test'
+  ...
+# Subtest: transport failures retain a safe useful category without raw upstream errors
+not ok 10 - transport failures retain a safe useful category without raw upstream errors
+  ---
+  duration_ms: 6.899
+  type: 'test'
+  location: 'D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\model-provision.test.mjs:48:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /MODEL_NETWORK_FAILED/. Input:
+    
+    'Error: MODEL_PROVISION_FAILED'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: 'MODEL_PROVISION_FAILED'
+  stack: |-
+    error (file:///D:/unity_projects/OpenEmpires/Open%20Empires/Docs/CommanderFinalization/GrandFix/model-provision.mjs:3:29)
+    provisionModel (file:///D:/unity_projects/OpenEmpires/Open%20Empires/Docs/CommanderFinalization/GrandFix/model-provision.mjs:48:113)
+    async waitForActual (node:assert:646:5)
+    async strict.rejects (node:assert:769:25)
+    async TestContext.<anonymous> (file:///D:/unity_projects/OpenEmpires/Open%20Empires/Docs/CommanderFinalization/GrandFix/model-provision.test.mjs:50:2)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///D:/unity_projects/OpenEmpires/Open%20Empires/Docs/CommanderFinalization/GrandFix/model-provision.test.mjs:50:2)
+    async Test.run (node:internal/test_runner/test:1110:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 9
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 253.0778

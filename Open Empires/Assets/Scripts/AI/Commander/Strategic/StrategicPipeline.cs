@@ -127,15 +127,21 @@ namespace OpenEmpires
             int currentTick, StrategicEvaluationTriggerType triggerType, string reason,
             StrategicIntent playerIntent)
         {
+            StrategicIntent ownedRequest=playerIntent;
+            try
+            {
             LastContext = strategicPlanner.BuildContext(commanderContext);
             ContextUpdated?.Invoke(LastContext);
             LastRecommendations = evaluator.Evaluate(LastContext) ?? EmptyRecommendations;
             LastDecision = decisionPolicy.Decide(LastContext, LastRecommendations, playerIntent);
             if (playerIntent == null && LastDecision.HasSelection && strategicPlanner.HasComputerOwner)
+            {
                 LastDecision = StrategicDecisionResult.Selected(
                     strategicPlanner.MaterializeRecommendation(LastDecision.SelectedIntent),
                     LastDecision.SourceRecommendation, LastDecision.CreatedTick,
                     LastDecision.PriorityLevel, LastDecision.Reason);
+                ownedRequest=LastDecision.SelectedIntent;
+            }
             LastSubmission = null;
             evaluationTrigger.MarkEvaluated(currentTick);
 
@@ -178,11 +184,15 @@ namespace OpenEmpires
                 LastDecision, LastSubmission, transitionAllowed);
             EvaluationCompleted?.Invoke(record);
             return record;
+            }
+            finally{strategicPlanner.RetireUnusedOwnedIntent(ownedRequest);}
         }
 
         public StrategicDecisionRecord EvaluateApprovedIntentNow(StrategicApprovalResult approval)
         {
             ThrowIfDisposed();
+            try
+            {
             LastContext = strategicPlanner.BuildContext(commanderContextProvider());
             ContextUpdated?.Invoke(LastContext);
             LastRecommendations = evaluator.Evaluate(LastContext) ?? EmptyRecommendations;
@@ -229,6 +239,8 @@ namespace OpenEmpires
                 LastDecision, LastSubmission, allowed);
             EvaluationCompleted?.Invoke(record);
             return record;
+            }
+            finally{strategicPlanner.RetireUnusedOwnedIntent(approval?.Intent);}
         }
 
         public StrategicContext CaptureContext()

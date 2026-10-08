@@ -1,0 +1,4 @@
+2026-10-08 budget corruption RED: 2 tests / 2 failed (missing rejection).
+Negative/string owner counters and lost owner totals were accepted on load.
+These could reset/bypass per-owner quotas despite a persistent global file.
+Fail closed on malformed counters and mismatched global/owner totals.

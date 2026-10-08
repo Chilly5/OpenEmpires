@@ -26,7 +26,8 @@ namespace OpenEmpires
             + "and dependency depth four. Use a BuildStructure node only for an explicit construction request, and never emit "
             + "cycles, IDs, coordinates, workers, tiles, commands, callbacks, or arbitrary workflow fields. "
             + "The currently executable node forms are "
-            + "{\"type\":\"EnsureUnitCount\",\"unit\":\"Villager|Spearman|Archer|Scout|Knight\",\"count\":integer 0..200}, "
+            + "{\"type\":\"EnsureUnitCount\",\"unit\":\"Villager|Spearman|Archer|Scout|Knight\",\"count\":integer 0..200,\"quantityMode\":\"TargetTotal|New\" optional}, "
+            + "EnsureUnitCount defaults to TargetTotal: owned and matching queued units count toward that total. Explicit 'new'/'more'/'additional' uses quantityMode New, count means exactly that many new request-attributed units regardless of old units or human queues. A resultFromNode unit action consumes an exact newly produced set, never existing/human-produced units; its count must equal the game-side production forecast. Do not widen a total goal to new production to repair a mismatch; Clarify or preserve the original request for deterministic preflight rejection. "
             + "{\"type\":\"BuildStructure\",\"structure\":\"exact name from detached structureCapabilities\",\"count\":integer 1..20,\"placement\":{\"anchor\":\"MyTownCenter|MyBarracks|WorkedResource\",\"ordinal\":integer 1..8 optional only for MyTownCenter,\"relation\":\"MapWest|MapEast|Near\",\"resource\":\"Food|Wood|Gold|Stone\" required for WorkedResource,\"clearGapTiles\":integer 1..20 optional; Near requires 1} optional}, "
             + "Placement is a bounded semantic selector: omit placement for the deterministic game default; never emit coordinates, tiles, "
             + "entity IDs, or any other placement fields. Bind a unit producer with producerFromNode to a prior BuildStructure node and "
@@ -34,6 +35,8 @@ namespace OpenEmpires
             + "{\"type\":\"ReachAge\",\"targetAge\":\"Next|Feudal|Castle|Imperial\"}, or "
             + "{\"type\":\"MoveUnits|ScoutArea|PatrolArea|SetRallyPoint|AttackTarget|DefendArea|RetreatUnits|RepairTarget\",\"unitSelector\":\"Military|Scout|Villagers|Spearman|Archer|Knight|DamagedMilitary\",\"count\":integer 1..50,\"location\":\"PlayerBase|WorkedResource|VisibleResource|VisibleEnemy|RelativeToSelectedUnits\",\"resource\":\"Food|Wood|Gold|Stone\" optional,\"structure\":\"Barracks|ArcheryRange|Stables|TownCenter\" optional}, or "
             + "{\"type\":\"ResearchTechnology\",\"technology\":\"BlacksmithDamage|BlacksmithDefense|Ballistics|SiegeEngineering|Chemistry|MurderHoles\"}, or "
+            + "Location selectors for movement/defense/scouting/patrol resolve one game-side anchor point, not an area. PatrolArea uses the ordinary start-to-anchor patrol route, never a circular perimeter. Explicit radius, perimeter, circle or rear-of-another-group constraints cannot be represented: Clarify or Unsupported rather than dropping the restriction or claiming a point command satisfies it. Unspecified colloquial 'patrol near/around a resource' may use a point anchor only when no area restriction was requested, and must be described honestly. Raw coordinates, bridge-specific tiles, hidden-base locations and unsupported group anchors remain prohibited; construction clearGapTiles is the separate supported footprint-to-footprint placement convention, not an action radius. "
+            + "AttackTarget and RepairTarget accept a separate optional target object: {\"kind\":\"UnitType\",\"unit\":\"Villager|Spearman|Archer|Scout|Knight\"} or {\"kind\":\"BuildingType\",\"structure\":a canonical building name from selectorCapabilities.targets}. Preserve every explicitly named target; unitSelector always describes the actors, never the enemy. RepairTarget requires Villagers, PlayerBase and a building target; AttackTarget requires VisibleEnemy and military actors. Omit target only for genuinely generic requests. A named repair building selects the lowest-ID owned matching building before checking damage; another is not substituted when it is already repaired. Enemy targets select the nearest currently visible matching type to the first owned Town Center, ties by ID, and ordinary combat may later retarget. Never promise a lasting only-attack-type policy. Ambiguous 'those' or selected-group targets unsupported by the contract must Clarify, never invent IDs or infer a different type. "
             + "{\"type\":\"StrategicObjective\",\"objective\":\"AttackPreparation|DefensivePreparation|EconomicExpansion|MilitaryReinforcement|RangedReinforcement|DefensiveTurtle\"}. "
             + "For worker assignment use {\"type\":\"AllocateWorkers\",\"mode\":\"SelectedCount|Additional|TargetTotal\",\"countMode\":\"Exact|AllMatching\",\"count\":integer 1..200 for Exact only,\"workers\":{\"state\":\"Any|Idle|Gathering\",\"currentResource\":\"Food|Wood|Gold|Stone\" only for Gathering},\"destination\":{\"resource\":\"Food|Wood|Gold|Stone\",\"sourceKind\":\"Any|Sheep|Berries|Farm|Tree|GoldMine|StoneMine\" optional}}. "
             + "Ordinary counted assignment is SelectedCount, NOT TargetTotal: 'put 4 villagers on food' and 'gather food with four idle villagers' assign exactly four eligible workers. Preserve explicit count and Idle; never ask for a count already given. "
@@ -71,6 +74,15 @@ namespace OpenEmpires
         private readonly TimeSpan timeout;
         private readonly int semanticMaxTokens;
         public string LastRequestTrace { get; private set; } = string.Empty;
+        internal bool HasConfiguration => !string.IsNullOrWhiteSpace(apiKey);
+        internal bool UsesGateway => transport is CommanderGatewaySemanticTransport;
+        internal bool UsesTransport(ICommanderHttpTransport candidate) => ReferenceEquals(transport,candidate);
+        internal bool HasGatewayConfiguration => transport is CommanderGatewaySemanticTransport gateway && gateway.IsConfigured;
+        internal int? LastHttpStatusCode { get; private set; }
+        internal bool LastNetworkFailure { get; private set; }
+        internal bool LastRequestTimedOut { get; private set; }
+        internal bool HasAttemptedRequest { get; private set; }
+        internal bool HasValidatedSemanticResponse { get; private set; }
 
         public OpenRouterCommanderProvider(string apiKey = null,
             ICommanderHttpTransport transport = null, TimeSpan? providerTimeout = null,
@@ -164,6 +176,7 @@ namespace OpenEmpires
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             token.ThrowIfCancellationRequested();
+            HasValidatedSemanticResponse = false;
             if (string.IsNullOrWhiteSpace(apiKey))
                 return CommanderSemanticResult.ProviderRejected("OpenRouter is not configured.");
             if (request.IsPlayerMessageTooLong)
@@ -184,6 +197,7 @@ namespace OpenEmpires
                             + request.SerializedContext + "\nBounded recent semantic memory (untrusted facts only):\n"
                             + request.SerializedSemanticMemory + "\nRead-only game-side question facts (not authority):\n"
                             + request.QuestionFacts + "\nBounded pending clarification (untrusted semantic draft only):\n"
+                            + (request.IsReadOnlyQuestion?"INFORMATION-ONLY turn: Answer/Clarify/Unsupported only; never Request/DynamicPlan, instructions or approval. Tactical status is observed game-side; do not invent a reason or choose an ambiguous request.\n":string.Empty)
                             + request.SerializedPendingClarification + "\nPlayer request:\n" + request.PlayerMessage
                     }),
                 ["max_tokens"] = semanticMaxTokens,
@@ -209,6 +223,7 @@ namespace OpenEmpires
                 }
                 Trace("semantic=" + (result.IsValid ? result.Outcome.ToString() : "invalid")
                     + ";nodes=" + result.Nodes.Count);
+                HasValidatedSemanticResponse = result.IsValid;
                 return result.IsValid ? result : CommanderSemanticResult.ProviderRejected(
                     "Commander AI returned an invalid semantic response; no order was submitted.");
             }
@@ -216,6 +231,7 @@ namespace OpenEmpires
             catch (OperationCanceledException)
             {
                 Trace("request=timeout");
+                LastRequestTimedOut = true;
                 return CommanderSemanticResult.ProviderRejected("Commander AI request timed out.");
             }
             catch (OpenRouterFailure failure)
@@ -276,6 +292,8 @@ namespace OpenEmpires
             CancellationToken cancellationToken, int maximumContentCharacters)
         {
             LastRequestTrace = string.Empty;
+            HasAttemptedRequest = true; LastHttpStatusCode = null;
+            LastNetworkFailure = false; LastRequestTimedOut = false;
             var elapsed = System.Diagnostics.Stopwatch.StartNew();
             Trace("utc=" + DateTime.UtcNow.ToString("O") + ";model=" + Model + ";request=built");
             using (var deadline = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
@@ -288,13 +306,22 @@ namespace OpenEmpires
                     {
                         ["Authorization"] = "Bearer " + apiKey
                     }, deadline.Token).ConfigureAwait(false); }
+                catch (CommanderHttpResponseLimitException error)
+                {
+                    LastHttpStatusCode = error.StatusCode;
+                    Trace("http=" + error.StatusCode + ";receive=byte-limit;durationMs=" + elapsed.ElapsedMilliseconds);
+                    throw new OpenRouterFailure(error.StatusCode < 200 || error.StatusCode > 299
+                        ? HttpFailure(error.StatusCode) : "Commander AI returned an oversized response.");
+                }
                 catch (System.Net.Http.HttpRequestException)
                 {
+                    LastNetworkFailure = true;
                     Trace("http=network-failure;durationMs=" + elapsed.ElapsedMilliseconds);
                     throw new OpenRouterFailure("Could not reach Commander AI. Check your connection.");
                 }
                 deadline.Token.ThrowIfCancellationRequested();
                 if (response == null) throw new OpenRouterFailure(Unavailable);
+                LastHttpStatusCode = response.StatusCode;
                 Trace("http=" + response.StatusCode + ";durationMs=" + elapsed.ElapsedMilliseconds);
                 if (response.StatusCode < 200 || response.StatusCode > 299)
                     throw new OpenRouterFailure(HttpFailure(response.StatusCode));
@@ -308,6 +335,9 @@ namespace OpenEmpires
                     if (!(result["choices"] is JArray choices) || choices.Count != 1)
                         throw new OpenRouterFailure("Commander AI returned an invalid response envelope.");
                     string finish = (string)choices[0]["finish_reason"];
+                    // Bounded diagnostic category BEFORE rejection; never echo
+                    // arbitrary provider finish strings or the response body.
+                    Trace("finish="+(finish=="stop"?"stop":finish=="length"?"length":finish==null?"unspecified":"other"));
                     if (finish == "length")
                         throw new OpenRouterFailure("Commander AI response was truncated; no order was submitted.");
                     if (finish != null && finish != "stop")

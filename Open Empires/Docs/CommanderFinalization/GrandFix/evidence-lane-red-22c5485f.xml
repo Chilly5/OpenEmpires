@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="11" result="Failed(Child)" total="11" passed="0" failed="11" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 12:00:56Z" end-time="2026-10-08 12:00:58Z" duration="1.3034037">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1400" result="Failed" site="Child" start-time="2026-10-08 12:00:56Z" end-time="2026-10-08 12:00:58Z" duration="1.303404" total="11" passed="0" failed="11" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2610" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1400" result="Failed" site="Child" start-time="2026-10-08 12:00:56Z" end-time="2026-10-08 12:00:58Z" duration="1.193039" total="11" passed="0" failed="11" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35124" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2611" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1400" result="Failed" site="Child" start-time="2026-10-08 12:00:56Z" end-time="2026-10-08 12:00:58Z" duration="1.101620" total="11" passed="0" failed="11" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2612" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1400" result="Failed" site="Child" start-time="2026-10-08 12:00:57Z" end-time="2026-10-08 12:00:58Z" duration="0.996869" total="11" passed="0" failed="11" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1025" name="CommanderGrandFixEvidenceLaneTests" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" runstate="Runnable" testcasecount="11" result="Failed" site="Child" start-time="2026-10-08 12:00:57Z" end-time="2026-10-08 12:00:58Z" duration="0.887309" total="11" passed="0" failed="11" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1033" name="ActualRepairTransport_ConsumesTwoHttpReservationsAndNoRawData" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.ActualRepairTransport_ConsumesTwoHttpReservationsAndNoRawData" methodname="ActualRepairTransport_ConsumesTwoHttpReservationsAndNoRawData" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" runstate="Runnable" seed="183288707" result="Failed" start-time="2026-10-08 12:00:57Z" end-time="2026-10-08 12:00:57Z" duration="0.354204" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Persistent evidence-lane implementation is missing: EvidenceBudgetJournal
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.Feature (System.String name) [0x00016] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:32
+at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.Journal (System.Boolean create, System.String identity) [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:34
+at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.ActualRepairTransport_ConsumesTwoHttpReservationsAndNoRawData () [0x00012] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:94
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1031" name="CloudAudioBudget_IsSeparateAndRejectsInvalidDuration" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.CloudAudioBudget_IsSeparateAndRejectsInvalidDuration" methodname="CloudAudioBudget_IsSeparateAndRejectsInvalidDuration" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" runstate="Runnable" seed="1346820995" result="Failed" start-time="2026-10-08 12:00:57Z" end-time="2026-10-08 12:00:57Z" duration="0.010684" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Persistent evidence-lane implementation is missing: EvidenceBudgetJournal
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.Feature (System.String name) [0x00016] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:32
+at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.Journal (System.Boolean create, System.String identity) [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:34
+at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.CloudAudioBudget_IsSeparateAndRejectsInvalidDuration () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:79
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1029" name="ConcurrentReservations_CannotExceedRunWideHttpLimit" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.ConcurrentReservations_CannotExceedRunWideHttpLimit" methodname="ConcurrentReservations_CannotExceedRunWideHttpLimit" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" runstate="Runnable" seed="1695474752" result="Failed" start-time="2026-10-08 12:00:57Z" end-time="2026-10-08 12:00:57Z" duration="0.007583" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Persistent evidence-lane implementation is missing: EvidenceBudgetJournal
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.Feature (System.String name) [0x00016] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:32
+at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.Journal (System.Boolean create, System.String identity) [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:34
+at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.ConcurrentReservations_CannotExceedRunWideHttpLimit () [0x0000d] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:64
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1030" name="ForeignRunAndCorruptLedger_FailClosedWithoutReset" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.ForeignRunAndCorruptLedger_FailClosedWithoutReset" methodname="ForeignRunAndCorruptLedger_FailClosedWithoutReset" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" runstate="Runnable" seed="1401330459" result="Failed" start-time="2026-10-08 12:00:57Z" end-time="2026-10-08 12:00:57Z" duration="0.006480" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Persistent evidence-lane implementation is missing: EvidenceBudgetJournal
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.Feature (System.String name) [0x00016] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:32
+at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.Journal (System.Boolean create, System.String identity) [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:34
+at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.ForeignRunAndCorruptLedger_FailClosedWithoutReset () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:71
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1027" name="InitialAndRepair_AreSeparateFromOneSubmission" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.InitialAndRepair_AreSeparateFromOneSubmission" methodname="InitialAndRepair_AreSeparateFromOneSubmission" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" runstate="Runnable" seed="2118558969" result="Failed" start-time="2026-10-08 12:00:57Z" end-time="2026-10-08 12:00:57Z" duration="0.007726" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Persistent evidence-lane implementation is missing: EvidenceBudgetJournal
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.Feature (System.String name) [0x00016] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:32
+at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.Journal (System.Boolean create, System.String identity) [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:34
+at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.InitialAndRepair_AreSeparateFromOneSubmission () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:52
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1037" name="NonEffectfulValidMillResponse_FailsSemanticGate" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.NonEffectfulValidMillResponse_FailsSemanticGate" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-08 12:00:57Z" end-time="2026-10-08 12:00:57Z" duration="0.053545" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1034" name="NonEffectfulValidMillResponse_FailsSemanticGate(&quot;Answer&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.NonEffectfulValidMillResponse_FailsSemanticGate(&quot;Answer&quot;)" methodname="NonEffectfulValidMillResponse_FailsSemanticGate" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" runstate="Runnable" seed="553747823" result="Failed" start-time="2026-10-08 12:00:57Z" end-time="2026-10-08 12:00:57Z" duration="0.023072" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Persistent evidence-lane implementation is missing: EvidenceSemanticGate
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.Feature (System.String name) [0x00016] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:32
+at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.NonEffectfulValidMillResponse_FailsSemanticGate (System.String outcome) [0x00031] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:109
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1035" name="NonEffectfulValidMillResponse_FailsSemanticGate(&quot;Clarify&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.NonEffectfulValidMillResponse_FailsSemanticGate(&quot;Clarify&quot;)" methodname="NonEffectfulValidMillResponse_FailsSemanticGate" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" runstate="Runnable" seed="1152710201" result="Failed" start-time="2026-10-08 12:00:57Z" end-time="2026-10-08 12:00:57Z" duration="0.006140" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Persistent evidence-lane implementation is missing: EvidenceSemanticGate
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.Feature (System.String name) [0x00016] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:32
+at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.NonEffectfulValidMillResponse_FailsSemanticGate (System.String outcome) [0x00031] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:109
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1036" name="NonEffectfulValidMillResponse_FailsSemanticGate(&quot;Unsupported&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.NonEffectfulValidMillResponse_FailsSemanticGate(&quot;Unsupported&quot;)" methodname="NonEffectfulValidMillResponse_FailsSemanticGate" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" runstate="Runnable" seed="447026304" result="Failed" start-time="2026-10-08 12:00:57Z" end-time="2026-10-08 12:00:57Z" duration="0.005787" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Persistent evidence-lane implementation is missing: EvidenceSemanticGate
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.Feature (System.String name) [0x00016] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:32
+at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.NonEffectfulValidMillResponse_FailsSemanticGate (System.String outcome) [0x00031] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:109
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-case id="1032" name="SeventhHttp_IsBlockedBeforeOrdinaryTransport" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.SeventhHttp_IsBlockedBeforeOrdinaryTransport" methodname="SeventhHttp_IsBlockedBeforeOrdinaryTransport" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" runstate="Runnable" seed="839117970" result="Failed" start-time="2026-10-08 12:00:57Z" end-time="2026-10-08 12:00:58Z" duration="0.285700" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Persistent evidence-lane implementation is missing: EvidenceBudgetJournal
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.Feature (System.String name) [0x00016] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:32
+at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.Journal (System.Boolean create, System.String identity) [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:34
+at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.SeventhHttp_IsBlockedBeforeOrdinaryTransport () [0x0001a] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:86
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1026" name="SixSubmissions_SurviveReloadAndSeventhIsDenied" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.SixSubmissions_SurviveReloadAndSeventhIsDenied" methodname="SixSubmissions_SurviveReloadAndSeventhIsDenied" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" runstate="Runnable" seed="1408251909" result="Failed" start-time="2026-10-08 12:00:58Z" end-time="2026-10-08 12:00:58Z" duration="0.007815" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Persistent evidence-lane implementation is missing: EvidenceBudgetJournal
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.Feature (System.String name) [0x00016] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:32
+at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.Journal (System.Boolean create, System.String identity) [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:34
+at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.SixSubmissions_SurviveReloadAndSeventhIsDenied () [0x0000a] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:45
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1028" name="UnknownCompletion_RemainsConsumedAfterRestart" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.UnknownCompletion_RemainsConsumedAfterRestart" methodname="UnknownCompletion_RemainsConsumedAfterRestart" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" runstate="Runnable" seed="725451232" result="Failed" start-time="2026-10-08 12:00:58Z" end-time="2026-10-08 12:00:58Z" duration="0.012191" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Persistent evidence-lane implementation is missing: EvidenceBudgetJournal
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.Feature (System.String name) [0x00016] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:32
+at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.Journal (System.Boolean create, System.String identity) [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:34
+at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.UnknownCompletion_RemainsConsumedAfterRestart () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:58
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

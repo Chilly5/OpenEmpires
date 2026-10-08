@@ -84,6 +84,44 @@ namespace OpenEmpires.Tests
         }
 
         [Test]
+        public void RetiredRequestChurn_PreservesActiveRootAndContinuation()
+        {
+            StrategicPlan plan = StartPlan();
+            StrategicIntent root = planner.GetIntent(plan.SourceIntentId);
+            int children = plan.ChildGoalIds.Count;
+            for (int i = 0; i < 128; i++)
+                Assert.That(planner.SubmitIntent(planner.CreateIntent((StrategicObjectiveType)999)).CreatedPlan, Is.False);
+            Assert.That(planner.IntentIds.Owns(root), Is.True);
+            Assert.That(planner.IntentIds.TryRegister(root), Is.True);
+            AddGatherers(ResourceType.Food, 8, -20);
+            AddGatherers(ResourceType.Wood, 8, 2);
+            goals.Tick(15);
+            Assert.That(plan.Milestones[0].Status, Is.EqualTo(StrategicMilestoneStatus.Completed));
+            Assert.That(plan.ChildGoalIds.Count, Is.GreaterThan(children));
+            Assert.That(planner.IntentIds.Owns(root), Is.True);
+            Assert.That(planner.CancelPlan(plan.StrategicPlanId), Is.True);
+            Assert.That(planner.IntentIds.Owns(root), Is.False);
+            Assert.That(planner.IntentIds.TryRegister(root), Is.False);
+        }
+
+        [Test]
+        public void DisposalAtRevisionExhaustion_StopsOwnedChildrenAndReleasesReservations()
+        {
+            RichWorld();
+            StrategicPlan plan = planner.StartCavalryPressurePlan();
+            var children = plan.ChildGoalIds.Select(goals.GetGoal).Where(g => !g.IsTerminal).ToArray();
+            Assert.That(children, Is.Not.Empty);
+            Assert.That(planner.GetReservationsForPlan(plan.StrategicPlanId)
+                .Any(r => r.Status == StrategicResourceReservationStatus.Active), Is.True);
+            SetRevision(plan, int.MaxValue);
+            Assert.DoesNotThrow(() => planner.Dispose());
+            Assert.That(children.All(g => g.IsTerminal), Is.True, "Disposed planner must not leave live child work.");
+            Assert.That(planner.GetReservationsForPlan(plan.StrategicPlanId)
+                .All(r => r.Status != StrategicResourceReservationStatus.Active), Is.True);
+            Assert.That(plan.Status, Is.EqualTo(StrategicPlanStatus.Cancelled));
+        }
+
+        [Test]
         public void PausedChildCancellation_FailsPlanOnlyAfterResume()
         {
             StrategicPlan plan = StartPlan();
@@ -413,8 +451,10 @@ namespace OpenEmpires.Tests
                     throw new InvalidOperationException("Injected reservation observer failure.");
                 };
 
-            Assert.Throws<InvalidOperationException>(() => planner.SubmitIntent(planner.CreateIntent(
-                StrategicObjectiveType.DefensivePreparation), false, true));
+            var incoming=planner.CreateIntent(StrategicObjectiveType.DefensivePreparation);
+            Assert.Throws<InvalidOperationException>(() => planner.SubmitIntent(incoming, false, true));
+            Assert.That(planner.IntentIds.Owns(incoming),Is.False,
+                "A failed incoming submission cannot retain its uncommitted identity claim.");
 
             Assert.That(injected, Is.True);
             if (throwKind == 1) Assert.That(cancellationEventPublished, Is.True,
@@ -433,6 +473,15 @@ namespace OpenEmpires.Tests
             }
             Assert.That(planner.ActivePlans, Is.Empty);
             Assert.That(goals.ActiveGoals, Is.Empty);
+        }
+
+        [Test]public void TerminalCleanupObserverFailure_StillRetiresRootIdentity()
+        {
+            RichWorld();var plan=planner.StartCavalryPressurePlan();var root=planner.GetIntent(plan.SourceIntentId);
+            bool injected=false;planner.ReservationReleased+=reservation=>{if(!injected&&reservation.PlanId==plan.StrategicPlanId){injected=true;throw new InvalidOperationException("fixture terminal cleanup failure");}};
+            Assert.Throws<TargetInvocationException>(()=>InvokePlanner("CompletePlan",plan));
+            Assert.That(injected,Is.True);Assert.That(plan.Status,Is.EqualTo(StrategicPlanStatus.Completed));
+            Assert.That(planner.IntentIds.Owns(root),Is.False,"Terminal state must retire before fallible cleanup.");
         }
 
         private void AssertOldPlanUnchanged(StrategicPlan old, int revision,

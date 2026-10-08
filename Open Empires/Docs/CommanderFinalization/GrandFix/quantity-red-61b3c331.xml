@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="14" result="Failed(Child)" total="14" passed="1" failed="13" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 04:48:37Z" end-time="2026-10-08 04:48:52Z" duration="15.2456808">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1324" result="Failed" site="Child" start-time="2026-10-08 04:48:37Z" end-time="2026-10-08 04:48:52Z" duration="15.245681" total="14" passed="1" failed="13" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2520" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1324" result="Failed" site="Child" start-time="2026-10-08 04:48:37Z" end-time="2026-10-08 04:48:52Z" duration="15.100904" total="14" passed="1" failed="13" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2521" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1324" result="Failed" site="Child" start-time="2026-10-08 04:48:37Z" end-time="2026-10-08 04:48:52Z" duration="15.063328" total="14" passed="1" failed="13" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2522" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1324" result="Failed" site="Child" start-time="2026-10-08 04:48:37Z" end-time="2026-10-08 04:48:52Z" duration="14.953773" total="14" passed="1" failed="13" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1155" name="CommanderGrandFixQuantityTests" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" testcasecount="14" result="Failed" site="Child" start-time="2026-10-08 04:48:37Z" end-time="2026-10-08 04:48:52Z" duration="14.841929" total="14" passed="1" failed="13" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1163" name="ExplicitNew_PreservesFiveNewWithFourExistingAndHumanQueue" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.ExplicitNew_PreservesFiveNewWithFourExistingAndHumanQueue" methodname="ExplicitNew_PreservesFiveNewWithFourExistingAndHumanQueue" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="269628157" result="Failed" start-time="2026-10-08 04:48:38Z" end-time="2026-10-08 04:48:39Z" duration="1.183997" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  I couldn't understand that request safely.
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixQuantityTests.Candidate (System.Int32 count, System.Nullable`1[T] consumer, System.Boolean newUnits) [0x00009] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixQuantityTests.cs:50
+at OpenEmpires.Tests.CommanderGrandFixQuantityTests.ExplicitNew_PreservesFiveNewWithFourExistingAndHumanQueue () [0x00021] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixQuantityTests.cs:82
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1166" name="MaterialTotalBaselineChange_RequiresNewPreviewBeforeApproval" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.MaterialTotalBaselineChange_RequiresNewPreviewBeforeApproval" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-08 04:48:39Z" end-time="2026-10-08 04:48:41Z" duration="2.293239" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1164" name="MaterialTotalBaselineChange_RequiresNewPreviewBeforeApproval(False)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.MaterialTotalBaselineChange_RequiresNewPreviewBeforeApproval(False)" methodname="MaterialTotalBaselineChange_RequiresNewPreviewBeforeApproval" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="846042521" result="Failed" start-time="2026-10-08 04:48:39Z" end-time="2026-10-08 04:48:40Z" duration="1.292736" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Changed new-production effects cannot use the old preview even without a result consumer.
+  Expected: null
+  But was:  <OpenEmpires.CommanderSemanticGraphPlan>
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixQuantityTests.MaterialTotalBaselineChange_RequiresNewPreviewBeforeApproval (System.Boolean linked) [0x00024] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixQuantityTests.cs:95
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1165" name="MaterialTotalBaselineChange_RequiresNewPreviewBeforeApproval(True)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.MaterialTotalBaselineChange_RequiresNewPreviewBeforeApproval(True)" methodname="MaterialTotalBaselineChange_RequiresNewPreviewBeforeApproval" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="1721762335" result="Failed" start-time="2026-10-08 04:48:40Z" end-time="2026-10-08 04:48:41Z" duration="0.989906" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Changed new-production effects cannot use the old preview even without a result consumer.
+  Expected: null
+  But was:  <OpenEmpires.CommanderSemanticGraphPlan>
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixQuantityTests.MaterialTotalBaselineChange_RequiresNewPreviewBeforeApproval (System.Boolean linked) [0x00024] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixQuantityTests.cs:95
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1169" name="MaterialTotalBaselineChangeAfterApproval_RejectsCommitAtomically" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.MaterialTotalBaselineChangeAfterApproval_RejectsCommitAtomically" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-08 04:48:41Z" end-time="2026-10-08 04:48:43Z" duration="2.101407" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1167" name="MaterialTotalBaselineChangeAfterApproval_RejectsCommitAtomically(False)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.MaterialTotalBaselineChangeAfterApproval_RejectsCommitAtomically(False)" methodname="MaterialTotalBaselineChangeAfterApproval_RejectsCommitAtomically" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="1354204425" result="Failed" start-time="2026-10-08 04:48:41Z" end-time="2026-10-08 04:48:42Z" duration="1.079655" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: <System.InvalidOperationException>
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixQuantityTests.MaterialTotalBaselineChangeAfterApproval_RejectsCommitAtomically (System.Boolean linked) [0x00057] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixQuantityTests.cs:106
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: EnsureUnitCount
+]]></output>
+              </test-case>
+              <test-case id="1168" name="MaterialTotalBaselineChangeAfterApproval_RejectsCommitAtomically(True)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.MaterialTotalBaselineChangeAfterApproval_RejectsCommitAtomically(True)" methodname="MaterialTotalBaselineChangeAfterApproval_RejectsCommitAtomically" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="653495086" result="Failed" start-time="2026-10-08 04:48:42Z" end-time="2026-10-08 04:48:43Z" duration="1.014938" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: <System.InvalidOperationException>
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixQuantityTests.MaterialTotalBaselineChangeAfterApproval_RejectsCommitAtomically (System.Boolean linked) [0x00057] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixQuantityTests.cs:106
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: EnsureUnitCount
+[Commander] Goal #3 submitted: CapabilityAction
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-case id="1172" name="NewMode_SurvivesDtoRoundTripWithoutBecomingTargetTotal" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.NewMode_SurvivesDtoRoundTripWithoutBecomingTargetTotal" methodname="NewMode_SurvivesDtoRoundTripWithoutBecomingTargetTotal" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="137495671" result="Failed" start-time="2026-10-08 04:48:43Z" end-time="2026-10-08 04:48:44Z" duration="0.976957" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  I couldn't understand that request safely.
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixQuantityTests.NewMode_SurvivesDtoRoundTripWithoutBecomingTargetTotal () [0x0000e] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixQuantityTests.cs:134
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1170" name="QueueMaturationWithSameExpectedNewCount_DoesNotInvalidateApproval" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.QueueMaturationWithSameExpectedNewCount_DoesNotInvalidateApproval" methodname="QueueMaturationWithSameExpectedNewCount_DoesNotInvalidateApproval" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="997873725" result="Passed" start-time="2026-10-08 04:48:44Z" end-time="2026-10-08 04:48:45Z" duration="1.067358" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: EnsureUnitCount
+[Commander] Goal #3 submitted: CapabilityAction
+]]></output>
+            </test-case>
+            <test-case id="1171" name="ResourceWaitAndExplicitNewBaselineGrowth_DoNotInvalidateUnchangedEffects" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.ResourceWaitAndExplicitNewBaselineGrowth_DoNotInvalidateUnchangedEffects" methodname="ResourceWaitAndExplicitNewBaselineGrowth_DoNotInvalidateUnchangedEffects" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="1093899588" result="Failed" start-time="2026-10-08 04:48:45Z" end-time="2026-10-08 04:48:46Z" duration="0.981412" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  I couldn't understand that request safely.
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixQuantityTests.Candidate (System.Int32 count, System.Nullable`1[T] consumer, System.Boolean newUnits) [0x00009] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixQuantityTests.cs:50
+at OpenEmpires.Tests.CommanderGrandFixQuantityTests.ResourceWaitAndExplicitNewBaselineGrowth_DoNotInvalidateUnchangedEffects () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixQuantityTests.cs:124
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1162" name="TotalResult_AccountsForUnrelatedQueuedUnitsWithoutClaimingThemAsNewResults" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.TotalResult_AccountsForUnrelatedQueuedUnitsWithoutClaimingThemAsNewResults" methodname="TotalResult_AccountsForUnrelatedQueuedUnitsWithoutClaimingThemAsNewResults" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="1957652828" result="Failed" start-time="2026-10-08 04:48:46Z" end-time="2026-10-08 04:48:47Z" duration="0.995771" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: 1
+  But was:  2
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixQuantityTests.TotalResult_AccountsForUnrelatedQueuedUnitsWithoutClaimingThemAsNewResults () [0x0006c] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixQuantityTests.cs:74
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: EnsureUnitCount
+[Commander] Goal #3 submitted: CapabilityAction
+]]></output>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1161" name="TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" testcasecount="5" result="Failed" site="Child" start-time="2026-10-08 04:48:47Z" end-time="2026-10-08 04:48:52Z" duration="5.095666" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1156" name="TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction(4,0,5,5)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction(4,0,5,5)" methodname="TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="822422443" result="Failed" start-time="2026-10-08 04:48:47Z" end-time="2026-10-08 04:48:48Z" duration="1.010624" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  A total goal cannot promise an incompatible exact-new result.
+  Expected: False
+  But was:  True
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixQuantityTests.TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction (System.Int32 owned, System.Int32 queued, System.Int32 total, System.Int32 exact) [0x00048] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixQuantityTests.cs:61
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1157" name="TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction(3,1,5,2)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction(3,1,5,2)" methodname="TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="1882215707" result="Failed" start-time="2026-10-08 04:48:48Z" end-time="2026-10-08 04:48:49Z" duration="0.969681" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  A total goal cannot promise an incompatible exact-new result.
+  Expected: False
+  But was:  True
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixQuantityTests.TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction (System.Int32 owned, System.Int32 queued, System.Int32 total, System.Int32 exact) [0x00048] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixQuantityTests.cs:61
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1158" name="TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction(0,5,5,5)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction(0,5,5,5)" methodname="TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="1857806531" result="Failed" start-time="2026-10-08 04:48:49Z" end-time="2026-10-08 04:48:50Z" duration="0.995761" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  A total goal cannot promise an incompatible exact-new result.
+  Expected: False
+  But was:  True
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixQuantityTests.TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction (System.Int32 owned, System.Int32 queued, System.Int32 total, System.Int32 exact) [0x00048] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixQuantityTests.cs:61
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1159" name="TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction(0,0,5,4)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction(0,0,5,4)" methodname="TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="1877037075" result="Failed" start-time="2026-10-08 04:48:50Z" end-time="2026-10-08 04:48:51Z" duration="1.105387" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  A total goal cannot promise an incompatible exact-new result.
+  Expected: False
+  But was:  True
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixQuantityTests.TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction (System.Int32 owned, System.Int32 queued, System.Int32 total, System.Int32 exact) [0x00048] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixQuantityTests.cs:61
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1160" name="TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction(0,0,5,6)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction(0,0,5,6)" methodname="TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="1412480567" result="Failed" start-time="2026-10-08 04:48:51Z" end-time="2026-10-08 04:48:52Z" duration="0.994501" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  A total goal cannot promise an incompatible exact-new result.
+  Expected: False
+  But was:  True
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixQuantityTests.TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction (System.Int32 owned, System.Int32 queued, System.Int32 total, System.Int32 exact) [0x00048] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixQuantityTests.cs:61
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

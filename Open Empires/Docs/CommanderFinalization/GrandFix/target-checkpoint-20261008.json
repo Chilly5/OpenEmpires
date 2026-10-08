@@ -1,0 +1,52 @@
+{
+  "schema": "openempires-named-target-checkpoint@1",
+  "head": "8586764e644240f93c99e2afa1c7d41c697cc879",
+  "branch": "unit_models_and_voice_control",
+  "working_changes": true,
+  "scope_version": 2,
+  "edit": {
+    "job": "676ccf9f6cb845c987977b331c4eb895",
+    "artifact": "target-final-edit-676ccf9f.xml",
+    "passed": 104,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 95.9358964
+  },
+  "play": {
+    "job": "b2a386ec14c14075af66f1e7960a8cd0",
+    "artifact": "target-final-play-b2a386ec.xml",
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 2.190386
+  },
+  "read_only_review": {
+    "task": "g04_target_review",
+    "model": "gpt-6-sol",
+    "finding": "No confirmed authority defect; dependent-target resolution timing documented explicitly",
+    "not_runtime_certificate": true
+  },
+  "source_sha256": {
+    "Assets/Scripts/AI/Commander/CommanderIntent.cs": "dc55da266b9655bc1185b482096954e9caf4e916c53f7c21ef624f6a59def799",
+    "Assets/Scripts/AI/Commander/CommanderIntentDto.cs": "1268a84f129d06483b7cfed000aaa62fbf3021c77b8c4877c08273a55a89022c",
+    "Assets/Scripts/AI/Commander/CommanderIntentValidator.cs": "60ead43148b867040f1a62d41860a6cf07abf98d2af791ed3a458d15dd66cddc",
+    "Assets/Scripts/AI/Commander/CommanderGoal.cs": "4e6413c3debcb06365fcdf18d767f71af1808210cf0711379dd55f6d8d2cfb94",
+    "Assets/Scripts/AI/Commander/CommanderPlanner.cs": "d5a03ea3ba1ba1ec366a738767b4a59dfec05304fb9403288d40fdb8559845ef",
+    "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticRequest.cs": "be3972224ec66cee112cd86e8d5a610609ea5297799c7b39cd69dd057106e725",
+    "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticJson.cs": "ae876e9811a9749c250ce9f9215b4505798e7c002516c589d790c8a2486b7856",
+    "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticAdmission.cs": "f33316d52053879f7a55e78ff25924186d63b46baf694935e394014a3538a416",
+    "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticProvider.cs": "630d386bea76151a0af50d363f106e3a7a79ba2ca8c841aac7ae03c764f5875b",
+    "Assets/Scripts/AI/Commander/Phase4G/CommanderCapability.cs": "b670d64f3fca744a71d8ac22d73e72b932afc3c1b30bec0091b4663ff8555487",
+    "Assets/Scripts/AI/Commander/Phase4G/CommanderCapabilityExecutor.cs": "98f72690d67fe3635e7d187abff2b58bf0c18823d5c397b76b9977bdedd0cafb",
+    "Assets/Scripts/AI/Commander/Phase5A/CommanderScopeEquivalence.cs": "fadc5c8274b4dcb7428543e5d7f6a96476d7493c370a68e4d0bb0cea3ddd824a",
+    "Assets/Scripts/AI/Commander/Phase5A/CommanderActionPlanCandidate.cs": "29bf7eb34ab2c608d0b6fff9b97e9e8520cf27ac8235843b6f87edbe6b38ea04",
+    "Assets/Scripts/AI/Commander/Phase4A/OpenRouterCommanderProvider.cs": "45ff5aadc1955601118fcf8d42aa8e71120e4321e7f5fd7882ddae8749c51280",
+    "Assets/Tests/EditMode/CommanderGrandFixTargetTests.cs": "284b79c40e7e7ae1cd0de961bdbc458ec5e82f6fd1351c645e566b1c195caa18",
+    "Assets/Tests/PlayMode/CommanderGrandFixTargetPlayModeTests.cs": "79c5b6d09f6bf7d2e961c31c6fafc035f1556b4182734cc3960a8c6992b9307c"
+  },
+  "paid_semantic_http": 0,
+  "paid_asr_billable_seconds": 0,
+  "packaged_windows_verified": false,
+  "served_web_verified": false,
+  "goal_status": "active"
+}

@@ -22,6 +22,10 @@ namespace OpenEmpires
 
         public bool TryCreateCommand(CapabilityActionIntent intent, CommanderResultBinding? binding,
             out ICommand command, out string reason)
+            => TryCreateCommand(intent, binding, null, out command, out reason);
+
+        internal bool TryCreateCommand(CapabilityActionIntent intent, CommanderResultBinding? binding,
+            CommanderTargetBinding targetBinding, out ICommand command, out string reason)
         {
             command = null;
             reason = string.Empty;
@@ -30,8 +34,23 @@ namespace OpenEmpires
                 reason = "The owning player is unavailable.";
                 return false;
             }
+            if (intent.TargetSelector.HasValue && !intent.TargetSelector.Value.IsCompatible(intent.ActionType, intent.LocationSelector.Kind))
+            {
+                reason = "The requested target type is incompatible with this action.";
+                return false;
+            }
+            if (targetBinding != null && !IsTargetCurrent(intent, targetBinding))
+            {
+                reason = "The resolved target was lost, changed owner/type, became hidden or is no longer eligible; no substitute is allowed.";
+                return false;
+            }
 
             CommanderResultBinding resolvedBinding = binding.GetValueOrDefault();
+            if(intent.LocationSelector.RadiusTiles.HasValue)
+            {
+                reason="A radius or perimeter cannot be executed by this point action; no order was created.";
+                return false;
+            }
             if (binding.HasValue && (!ReferenceEquals(resolvedBinding.Runtime, simulation)
                 || resolvedBinding.SourceGoalId < 1 || resolvedBinding.SourceCreatedTick < 0
                 || resolvedBinding.SourceCreatedTick > simulation.CurrentTick
@@ -61,7 +80,7 @@ namespace OpenEmpires
             if (intent.ActionType == CommanderCapabilityActionType.ResearchTechnology)
                 return TryResearch(intent, out command, out reason);
             if (intent.ActionType == CommanderCapabilityActionType.RepairTarget)
-                return TryRepair(intent, binding.HasValue && resolvedBinding.Kind == CommanderResultKind.Units
+                return TryRepair(intent, targetBinding, binding.HasValue && resolvedBinding.Kind == CommanderResultKind.Units
                         ? resolvedBinding.UnitIds : null,
                     out command, out reason);
 
@@ -75,11 +94,13 @@ namespace OpenEmpires
                 reason = "No eligible owned units match the requested selector.";
                 return false;
             }
-            if (!TryResolveLocation(intent.PlayerId, intent.LocationSelector, unitIds,
+            if (!TryResolveLocation(intent.PlayerId, intent.LocationSelector, unitIds, intent.TargetSelector, targetBinding,
                 out FixedVector3 position, out ResourceNodeData resource,
                 out UnitData enemyUnit, out BuildingData enemyBuilding))
             {
-                reason = "No visible, legal target location matches the requested selector.";
+                reason = intent.TargetSelector.HasValue
+                    ? "No currently visible enemy of the requested type is available; no other target will substitute."
+                    : "No visible, legal target location matches the requested selector.";
                 return false;
             }
 
@@ -94,7 +115,7 @@ namespace OpenEmpires
                     return true;
                 case CommanderCapabilityActionType.PatrolArea:
                     command = new PatrolCommand(intent.PlayerId, unitIds, position);
-                    reason = "Resolved a bounded patrol around a visible game-side anchor.";
+                    reason = "Resolved a point patrol route from each selected unit's starting position to a visible game-side anchor.";
                     return true;
                 case CommanderCapabilityActionType.SetRallyPoint:
                     return TryRally(intent.PlayerId, intent.StructureType, position, resource,
@@ -182,6 +203,7 @@ namespace OpenEmpires
         }
 
         private bool TryResolveLocation(int playerId, CommanderLocationSelector selector, int[] selectedUnitIds,
+            CommanderTargetSelector? target, CommanderTargetBinding targetBinding,
             out FixedVector3 position, out ResourceNodeData resource,
             out UnitData enemyUnit, out BuildingData enemyBuilding)
         {
@@ -189,6 +211,12 @@ namespace OpenEmpires
             resource = null;
             enemyUnit = null;
             enemyBuilding = null;
+            if (targetBinding != null && selector.Kind == CommanderLocationSelectorKind.VisibleEnemy)
+            {
+                enemyUnit = targetBinding.Unit; enemyBuilding = targetBinding.Building;
+                position = enemyUnit != null ? enemyUnit.SimPosition : enemyBuilding.SimPosition;
+                return true; // Fresh identity/ownership/visibility checked before actors.
+            }
             BuildingData tc = simulation.BuildingRegistry.GetAllBuildings()
                 .Where(b => b != null && b.PlayerId == playerId && !b.IsDestroyed
                     && simulation.GetEffectiveBuildingType(b) == BuildingType.TownCenter)
@@ -243,7 +271,9 @@ namespace OpenEmpires
             if (tc == null) return false;
             enemyUnit = simulation.UnitRegistry.GetAllUnits()
                 .Where(u => u != null && u.PlayerId >= 0 && u.PlayerId != playerId
-                    && !simulation.AreAllies(playerId, u.PlayerId) && u.CurrentHealth > 0
+                    && !simulation.AreAllies(playerId, u.PlayerId) && u.CurrentHealth > 0 && u.State != UnitState.Dead
+                    && (!target.HasValue || target.Value.Kind == CommanderTargetSelectorKind.UnitType
+                        && u.UnitType == simulation.ResolveCivUnitType(u.PlayerId, target.Value.UnitType))
                     && simulation.FogOfWar.GetVisibility(playerId,
                         simulation.MapData.WorldToTile(u.SimPosition).x,
                         simulation.MapData.WorldToTile(u.SimPosition).y) == TileVisibility.Visible)
@@ -252,6 +282,8 @@ namespace OpenEmpires
             enemyBuilding = simulation.BuildingRegistry.GetAllBuildings()
                 .Where(b => b != null && b.PlayerId >= 0 && b.PlayerId != playerId
                     && !simulation.AreAllies(playerId, b.PlayerId) && !b.IsDestroyed
+                    && (!target.HasValue || target.Value.Kind == CommanderTargetSelectorKind.BuildingType
+                        && simulation.GetEffectiveBuildingType(b) == target.Value.StructureType)
                     && simulation.FogOfWar.GetVisibility(playerId, b.OriginTileX, b.OriginTileZ) == TileVisibility.Visible)
                 .OrderBy(b => DistanceSquared(tc.SimPosition, b.SimPosition)).ThenBy(b => b.Id).FirstOrDefault();
             if (enemyBuilding == null) return false;
@@ -282,7 +314,7 @@ namespace OpenEmpires
             return true;
         }
 
-        private bool TryRepair(CapabilityActionIntent intent, IReadOnlyList<int> boundUnitIds,
+        private bool TryRepair(CapabilityActionIntent intent, CommanderTargetBinding targetBinding, IReadOnlyList<int> boundUnitIds,
             out ICommand command, out string reason)
         {
             command = null;
@@ -291,16 +323,67 @@ namespace OpenEmpires
                 reason = "Repair requires an owned-villager selector.";
                 return false;
             }
-            BuildingData target = simulation.BuildingRegistry.GetAllBuildings()
-                .Where(b => b != null && b.PlayerId == intent.PlayerId && !b.IsDestroyed
-                    && !b.IsUnderConstruction && b.CurrentHealth < b.MaxHealth)
-                .OrderBy(b => b.Id).FirstOrDefault();
-            if (target == null) { reason = "No damaged owned building is available for repair."; return false; }
+            // An explicit building type resolves the first owned identity, then checks
+            // eligibility. A full/unfinished first TC is not replaced by another TC.
+            BuildingData target = targetBinding?.Building ?? FindRepairTarget(intent);
+            if (target == null || target.IsDestroyed || target.IsUnderConstruction || target.CurrentHealth >= target.MaxHealth)
+            { reason = "The requested owned building is unavailable, unfinished or already repaired; no other target will substitute."; return false; }
             if (!TryResolveUnits(intent.PlayerId, intent.UnitSelector, boundUnitIds, out int[] workers))
             { reason = "No eligible owned villagers are available for repair."; return false; }
             command = new RepairBuildingCommand(intent.PlayerId, workers, target.Id);
-            reason = "Resolved the nearest deterministic damaged-owned-building repair target.";
+            reason = "Resolved the lowest-ID owned building matching the requested repair target.";
             return true;
+        }
+
+        private BuildingData FindRepairTarget(CapabilityActionIntent intent)
+            => simulation.BuildingRegistry.GetAllBuildings()
+                .Where(b => b != null && b.PlayerId == intent.PlayerId
+                    && (intent.TargetSelector.HasValue
+                        ? simulation.GetEffectiveBuildingType(b) == intent.TargetSelector.Value.StructureType
+                        : !b.IsDestroyed && !b.IsUnderConstruction && b.CurrentHealth < b.MaxHealth))
+                .OrderBy(b => b.Id).FirstOrDefault();
+
+        internal bool TryBindTarget(CapabilityActionIntent intent, out CommanderTargetBinding binding)
+        {
+            binding = null;
+            if (!intent.TargetSelector.HasValue || !intent.TargetSelector.Value.IsCompatible(intent.ActionType, intent.LocationSelector.Kind)) return false;
+            if (intent.ActionType == CommanderCapabilityActionType.RepairTarget)
+            {
+                BuildingData building = FindRepairTarget(intent);
+                if (building != null) binding = new CommanderTargetBinding(simulation, building);
+            }
+            else if (TryResolveLocation(intent.PlayerId, intent.LocationSelector, Array.Empty<int>(), intent.TargetSelector, null,
+                out _, out _, out UnitData unit, out BuildingData building))
+                binding = unit != null ? new CommanderTargetBinding(simulation, unit) : new CommanderTargetBinding(simulation, building);
+            return binding != null;
+        }
+
+        internal bool IsTargetCurrent(CapabilityActionIntent intent, CommanderTargetBinding binding)
+        {
+            if (!ReferenceEquals(binding.Runtime, simulation) || !intent.TargetSelector.HasValue) return false;
+            var target = intent.TargetSelector.Value;
+            if (binding.Unit != null)
+            {
+                UnitData unit = binding.Unit;
+                var tile = simulation.MapData.WorldToTile(unit.SimPosition);
+                return target.Kind == CommanderTargetSelectorKind.UnitType
+                    && ReferenceEquals(simulation.UnitRegistry.GetUnit(unit.Id), unit)
+                    && unit.PlayerId == binding.OriginalOwner && unit.PlayerId >= 0 && unit.PlayerId != intent.PlayerId
+                    && !simulation.AreAllies(intent.PlayerId, unit.PlayerId)
+                    && unit.CurrentHealth > 0 && unit.State != UnitState.Dead
+                    && unit.UnitType == simulation.ResolveCivUnitType(unit.PlayerId, target.UnitType)
+                    && simulation.FogOfWar.GetVisibility(intent.PlayerId, tile.x, tile.y) == TileVisibility.Visible;
+            }
+            BuildingData building = binding.Building;
+            if (building == null || target.Kind != CommanderTargetSelectorKind.BuildingType
+                || !ReferenceEquals(simulation.BuildingRegistry.GetBuilding(building.Id), building)
+                || building.PlayerId != binding.OriginalOwner || building.IsDestroyed
+                || simulation.GetEffectiveBuildingType(building) != target.StructureType) return false;
+            if (intent.ActionType == CommanderCapabilityActionType.RepairTarget)
+                return building.PlayerId == intent.PlayerId && !building.IsUnderConstruction && building.CurrentHealth < building.MaxHealth;
+            return building.PlayerId >= 0 && building.PlayerId != intent.PlayerId
+                && !simulation.AreAllies(intent.PlayerId, building.PlayerId)
+                && simulation.FogOfWar.GetVisibility(intent.PlayerId, building.OriginTileX, building.OriginTileZ) == TileVisibility.Visible;
         }
 
         private bool TryResearch(CapabilityActionIntent intent, out ICommand command, out string reason)

@@ -1,0 +1,114 @@
+TAP version 13
+# Subtest: clean checkout inventory includes committed source, input/meta, Web bridge and backend
+not ok 1 - clean checkout inventory includes committed source, input/meta, Web bridge and backend
+  ---
+  duration_ms: 253.3905
+  type: 'test'
+  location: 'D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\manifest-generator.test.mjs:44:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The argument 'D:\unity_projects\OpenEmpires\Open Empires\Docs\CommanderFinalization\GrandFix\refresh-grand-fix-manifest.ps1' to the -File parameter does not exist. Provide the path to an existing '.ps1' file as an argument to the -File parameter.
+    
+    
+    4294770688 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 4294770688
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/unity_projects/OpenEmpires/Open%20Empires/Docs/CommanderFinalization/GrandFix/manifest-generator.test.mjs:45:65)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1103:25)
+    Test.start (node:internal/test_runner/test:1000:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)
+  ...
+# Subtest: staged, unstaged, untracked and deleted paths remain distinct and complete
+not ok 2 - staged, unstaged, untracked and deleted paths remain distinct and complete
+  ---
+  duration_ms: 264.5927
+  type: 'test'
+  location: 'D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\manifest-generator.test.mjs:55:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The argument 'D:\unity_projects\OpenEmpires\Open Empires\Docs\CommanderFinalization\GrandFix\refresh-grand-fix-manifest.ps1' to the -File parameter does not exist. Provide the path to an existing '.ps1' file as an argument to the -File parameter.
+    
+    
+    4294770688 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 4294770688
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/unity_projects/OpenEmpires/Open%20Empires/Docs/CommanderFinalization/GrandFix/manifest-generator.test.mjs:62:41)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1103:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:785:18)
+    Test.postRun (node:internal/test_runner/test:1232:19)
+    Test.run (node:internal/test_runner/test:1160:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+# Subtest: verify rejects changed bytes and newly untracked relevant source, without regenerating snapshot
+not ok 3 - verify rejects changed bytes and newly untracked relevant source, without regenerating snapshot
+  ---
+  duration_ms: 223.4557
+  type: 'test'
+  location: 'D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\manifest-generator.test.mjs:72:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    4294770688 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 4294770688
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/unity_projects/OpenEmpires/Open%20Empires/Docs/CommanderFinalization/GrandFix/manifest-generator.test.mjs:73:34)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1103:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:785:18)
+    Test.postRun (node:internal/test_runner/test:1232:19)
+    Test.run (node:internal/test_runner/test:1160:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+# Subtest: secret exclusion and recursive self-hash exclusion persist when output already exists
+not ok 4 - secret exclusion and recursive self-hash exclusion persist when output already exists
+  ---
+  duration_ms: 226.3859
+  type: 'test'
+  location: 'D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderFinalization\\GrandFix\\manifest-generator.test.mjs:83:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    4294770688 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 4294770688
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///D:/unity_projects/OpenEmpires/Open%20Empires/Docs/CommanderFinalization/GrandFix/manifest-generator.test.mjs:84:34)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1103:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:785:18)
+    Test.postRun (node:internal/test_runner/test:1232:19)
+    Test.run (node:internal/test_runner/test:1160:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:785:7)
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 0
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1051.7832

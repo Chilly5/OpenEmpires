@@ -89,11 +89,20 @@ namespace OpenEmpires
             if (goal.CommandIssued)
                 return ObserveCapability(goal, currentTick);
             var executor = new CommanderCapabilityExecutor(simulation);
+            // Bind before actor/resource reservation succeeds. A blocked retry may
+            // not reinterpret the named type as a replacement runtime identity.
+            if (goal.Action.TargetSelector.HasValue && goal.TargetBinding == null)
+            {
+                if (!executor.TryBindTarget(goal.Action, out var selectedTarget))
+                    return new CommanderPlan(CommanderGoalStatus.Blocked,
+                        "No eligible requested target is available; no other type will substitute.", 0, 0);
+                goal.TargetBinding = selectedTarget;
+            }
             CommanderResultBinding? binding = null;
             if (goal.ResultSourceGoal is EnsureUnitCountGoal units)
             {
                 if (units.ResultCaptureTick < 0 || units.ResultUnitIds == null
-                    || units.ResultUnitIds.Count < units.TargetTotal - units.BaselineUnitIds.Count)
+                    || units.ResultUnitIds.Count != units.RequiredNewProductionCount)
                     return new CommanderPlan(CommanderGoalStatus.WaitingForProduction,
                         "Waiting for the referenced producer result; no unrelated unit may substitute.", 0, 0);
                 binding = CommanderResultBinding.ForUnits(units.ResultUnitIds,
@@ -110,9 +119,7 @@ namespace OpenEmpires
             }
             ICommand command;
             string reason;
-            bool created = binding.HasValue
-                ? executor.TryCreateCommand(goal.Action, binding.Value, out command, out reason)
-                : executor.TryCreateCommand(goal.Action, out command, out reason);
+            bool created = executor.TryCreateCommand(goal.Action, binding, goal.TargetBinding, out command, out reason);
             if (!created)
                 return new CommanderPlan(CommanderGoalStatus.Blocked, reason, 0, 0);
             return new CommanderPlan(CommanderGoalStatus.Executing, reason, 0, 0, command);
@@ -621,10 +628,14 @@ namespace OpenEmpires
             int attributableQueued = goal.HasResultConsumer
                 ? goal.TrackedTrainingOrders.Count(r => r.IsQueued && !r.IsCancelled
                     && simulation.BuildingRegistry.GetBuilding(r.ProducerId) is BuildingData producer
-                    && !producer.IsDestroyed && producer.PlayerId == goal.PlayerId) : 0;
+                    && !producer.IsDestroyed && producer.PlayerId == goal.PlayerId)
+                    + simulation.CountPendingTrainingOrders(issuer: goal) : 0;
 
             if (goal.HasResultConsumer ? attributable.Count >= requiredNew : owned >= goal.TargetTotal)
             {
+                if (goal.HasResultConsumer && !goal.IsExplicitNewProduction && owned < goal.TargetTotal)
+                    return new CommanderPlan(CommanderGoalStatus.WaitingForProduction,
+                        "The exact new units are ready; waiting for the other queued units to satisfy the requested total.", owned, queued);
                 if (goal.HasResultConsumer)
                 {
                     goal.CaptureUnitResult(attributable.Take(requiredNew).ToArray(), currentTick);
@@ -635,6 +646,10 @@ namespace OpenEmpires
 
             int remainingOrders = goal.HasResultConsumer
                 ? requiredNew - attributable.Count - attributableQueued : goal.TargetTotal - owned - queued;
+            if (goal.HasResultConsumer && !goal.IsExplicitNewProduction && remainingOrders > 0
+                && (long)owned - attributable.Count + queued - attributableQueued != goal.ExpectedOtherUnitContribution)
+                return new CommanderPlan(CommanderGoalStatus.Blocked,
+                    "Existing or unrelated queued units changed the approved total/new quantity; request a revised plan. No extra production is authorized.", owned, queued);
             int totalQueuedPopulation = CountAllQueuedUnits(goal.PlayerId);
             int population = simulation.GetPopulation(goal.PlayerId);
             int populationCap = simulation.GetPopulationCap(goal.PlayerId);
@@ -697,10 +712,10 @@ namespace OpenEmpires
                         || !simulation.IsCompatibleProductionBuilding(goal.PlayerId, candidate, goal.RequestedUnitType))
                         return new CommanderPlan(CommanderGoalStatus.Blocked,
                             "An exact requested producer is no longer owned, completed or compatible; no substitute is permitted.", owned, queued);
-                    if (candidate.TrainingQueue.Count < goal.MaxQueueDepth
+                    if (ProductionQueueDepth(candidate) < goal.MaxQueueDepth
                         && (requiredProducer == null
-                            || candidate.TrainingQueue.Count < requiredProducer.TrainingQueue.Count
-                            || (candidate.TrainingQueue.Count == requiredProducer.TrainingQueue.Count
+                            || ProductionQueueDepth(candidate) < ProductionQueueDepth(requiredProducer)
+                            || (ProductionQueueDepth(candidate) == ProductionQueueDepth(requiredProducer)
                                 && candidate.Id < requiredProducer.Id)))
                         requiredProducer = candidate;
                 }
@@ -726,9 +741,9 @@ namespace OpenEmpires
                         || !simulation.IsCompatibleProductionBuilding(goal.PlayerId, selected, goal.RequestedUnitType))
                         return new CommanderPlan(CommanderGoalStatus.Blocked,
                             "An exact selected producer is missing, foreign or incompatible; no substitute is permitted.", owned, queued);
-                    if (selected.TrainingQueue.Count < goal.MaxQueueDepth
-                        && (requiredProducer == null || selected.TrainingQueue.Count < requiredProducer.TrainingQueue.Count
-                            || (selected.TrainingQueue.Count == requiredProducer.TrainingQueue.Count && selected.Id < requiredProducer.Id)))
+                    if (ProductionQueueDepth(selected) < goal.MaxQueueDepth
+                        && (requiredProducer == null || ProductionQueueDepth(selected) < ProductionQueueDepth(requiredProducer)
+                            || (ProductionQueueDepth(selected) == ProductionQueueDepth(requiredProducer) && selected.Id < requiredProducer.Id)))
                         requiredProducer = selected;
                 }
                 if (requiredProducer == null)
@@ -1129,18 +1144,7 @@ namespace OpenEmpires
         }
 
         private int CountOwnedLivingUnits(int playerId, int unitType)
-        {
-            int count = 0;
-            List<UnitData> units = simulation.UnitRegistry.GetAllUnits();
-            for (int i = 0; i < units.Count; i++)
-            {
-                UnitData unit = units[i];
-                if (unit.PlayerId == playerId && unit.UnitType == unitType
-                    && unit.CurrentHealth > 0 && unit.State != UnitState.Dead)
-                    count++;
-            }
-            return count;
-        }
+            => CommanderProductionProjection.LivingOwnedIds(simulation, playerId, unitType).Count;
 
         private List<int> FindNewLivingUnits(int playerId, int unitType, HashSet<int> baseline)
         {
@@ -1186,7 +1190,7 @@ namespace OpenEmpires
                 for (int q = 0; q < building.TrainingQueue.Count; q++)
                     if (building.TrainingQueue[q] == unitType) count++;
             }
-            return count;
+            return count + simulation.CountPendingTrainingOrders(playerId: playerId, resolvedType: unitType);
         }
 
         private int CountAllQueuedUnits(int playerId)
@@ -1196,8 +1200,11 @@ namespace OpenEmpires
             for (int i = 0; i < buildings.Count; i++)
                 if (buildings[i].PlayerId == playerId && !buildings[i].IsDestroyed)
                     count += buildings[i].TrainingQueue.Count;
-            return count;
+            return count + simulation.CountPendingTrainingOrders(playerId: playerId);
         }
+
+        private int ProductionQueueDepth(BuildingData building)
+            => building.TrainingQueue.Count + simulation.CountPendingTrainingOrders(producerId: building.Id, playerId: building.PlayerId);
 
         private BuildingData FindBestAvailableProductionBuilding(EnsureUnitCountGoal goal,
             out bool hasOperationalProducer)
@@ -1212,9 +1219,9 @@ namespace OpenEmpires
                     || !simulation.IsCompatibleProductionBuilding(goal.PlayerId, building,
                         goal.RequestedUnitType)) continue;
                 hasOperationalProducer = true;
-                if (building.TrainingQueue.Count >= goal.MaxQueueDepth) continue;
-                if (best == null || building.TrainingQueue.Count < best.TrainingQueue.Count
-                    || (building.TrainingQueue.Count == best.TrainingQueue.Count && building.Id < best.Id))
+                if (ProductionQueueDepth(building) >= goal.MaxQueueDepth) continue;
+                if (best == null || ProductionQueueDepth(building) < ProductionQueueDepth(best)
+                    || (ProductionQueueDepth(building) == ProductionQueueDepth(best) && building.Id < best.Id))
                     best = building;
             }
             return best;

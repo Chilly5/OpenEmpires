@@ -14,6 +14,7 @@ namespace OpenEmpires
         public string intentType;
         public string action;
         public string location;
+        public JObject target;
         public string technology;
         public int? unitType;
         public string objectiveType;
@@ -25,6 +26,7 @@ namespace OpenEmpires
         public string mode;
         public string targetAge;
         public string countMode;
+        public string quantityMode;
         public string workerState;
         public string currentResource;
         public string sourceKind;
@@ -72,7 +74,7 @@ namespace OpenEmpires
                     if (reader.Read()) throw new JsonException("Trailing JSON content is not allowed.");
                 }
                 NormalizeExternalJson(root);
-                CheckFields(root, "intentCategory", "intentType", "action", "location", "technology", "unitType", "objectiveType", "priority", "parameters", "unit", "structure", "resource", "mode", "targetAge", "amount", "constraints", "countMode", "workerState", "currentResource", "sourceKind");
+                CheckFields(root, "intentCategory", "intentType", "action", "location", "technology", "unitType", "objectiveType", "priority", "parameters", "unit", "structure", "resource", "mode", "targetAge", "amount", "constraints", "countMode", "workerState", "currentResource", "sourceKind", "target", "quantityMode");
                 var dto = new CommanderIntentDTO
                 {
                     intentCategory = ReadString(root, "intentCategory"),
@@ -89,13 +91,21 @@ namespace OpenEmpires
                     mode = ReadString(root, "mode"),
                     targetAge = ReadString(root, "targetAge"),
                     countMode = ReadString(root, "countMode"),
+                    quantityMode = ReadString(root, "quantityMode"),
                     workerState = ReadString(root, "workerState"),
                     currentResource = ReadString(root, "currentResource"),
                     sourceKind = ReadString(root, "sourceKind"),
                     amount = ReadAmount(root, "amount")
                 };
-                if (root.TryGetValue("parameters", out JToken paramsToken) && paramsToken is JObject paramsObj)
+                if (root.TryGetValue("target", out var targetToken))
                 {
+                    if (!(targetToken is JObject targetObject)) throw new JsonException();
+                    dto.target = targetObject;
+                }
+                if (root.TryGetValue("parameters", out JToken paramsToken))
+                {
+                    if (!(paramsToken is JObject paramsObj))
+                        throw new JsonException("parameters must be an object.");
                     dto.parameters = new Dictionary<string, string>();
                     foreach (var prop in paramsObj.Properties())
                     {
@@ -121,6 +131,10 @@ namespace OpenEmpires
 
         public static CommanderIntentInterpretation ValidateAndConvert(CommanderIntentDTO dto, CommanderContext context)
         {
+            if (dto?.target != null && (dto.intentType != nameof(CommanderIntentType.CapabilityAction)
+                || string.Equals(dto.intentCategory, "Strategic", StringComparison.OrdinalIgnoreCase))) return UnexpectedFields();
+            if (dto?.quantityMode != null && (dto.intentType != nameof(CommanderIntentType.EnsureUnitCount)
+                || string.Equals(dto.intentCategory, "Strategic", StringComparison.OrdinalIgnoreCase))) return UnexpectedFields();
             if (dto != null && dto.intentType != nameof(CommanderIntentType.AllocateWorkers)
                 && (dto.countMode != null || dto.workerState != null || dto.currentResource != null || dto.sourceKind != null))
                 return UnexpectedFields();
@@ -229,7 +243,9 @@ namespace OpenEmpires
                     }
                     if (dto.structure != null || dto.resource != null || dto.mode != null || dto.targetAge != null) return UnexpectedFields();
                     if (!InRange(dto.amount, 1, context.MaximumPopulation)) return InvalidAmount();
-                    intent = new EnsureUnitCountIntent(context.PlayerId, unitType, dto.amount.Value, constraints); break;
+                    if (dto.quantityMode != null && dto.quantityMode != "TargetTotal" && dto.quantityMode != "New") return UnexpectedFields();
+                    intent = new EnsureUnitCountIntent(context.PlayerId, unitType, dto.amount.Value, constraints,
+                        dto.quantityMode == "New" ? dto.amount : (int?)null); break;
                 case CommanderIntentType.BuildStructure:
                     BuildingType structure;
                     if (!NamedEnum(dto.structure, out structure) && !CommanderIntentCatalog.TryResolveStructure(dto.structure, out structure))
@@ -277,6 +293,11 @@ namespace OpenEmpires
                         return Reject(CommanderIntentErrorCode.AmountOutOfRange, "targetAge", "Age target is outside the supported range.");
                     intent = new ReachAgeIntent(context.PlayerId, requestedTarget, targetAge, constraints); break;
                 case CommanderIntentType.CapabilityAction:
+                    // Tactical selectors have a closed typed schema. A legacy strategic
+                    // parameter bag cannot silently add (and then lose) restrictions.
+                    if (dto.parameters != null && dto.parameters.Count != 0)
+                        return Reject(CommanderIntentErrorCode.UnsupportedConstraint, "parameters",
+                            "This action cannot preserve additional parameter restrictions. Use supported point selectors or clarify the request.");
                     if (!NamedEnum(dto.action, out CommanderCapabilityActionType action)
                         || !NamedEnum(dto.unit, out CommanderUnitSelectorKind unitKind)
                         || !NamedEnum(dto.location, out CommanderLocationSelectorKind locationKind))
@@ -318,10 +339,17 @@ namespace OpenEmpires
                     if (action != CommanderCapabilityActionType.ResearchTechnology && actionTechnology.HasValue)
                         return UnexpectedFields();
                     if (!InRange(dto.amount, 1, 50)) return InvalidAmount();
+                    CommanderTargetSelector? actionTarget = null;
+                    if (dto.target != null)
+                    {
+                        try { actionTarget = CommanderSemanticResult.ParseTargetSelector(dto.target); }
+                        catch (JsonException) { return UnexpectedFields(); }
+                        if (!actionTarget.Value.IsCompatible(action, locationKind)) return UnexpectedFields();
+                    }
                     intent = new CapabilityActionIntent(context.PlayerId, action,
                         new CommanderUnitSelector(unitKind, dto.amount.Value, dto.unitType ?? -1),
                         new CommanderLocationSelector(locationKind, actionResource), actionTechnology,
-                        actionStructure, constraints);
+                        actionStructure, constraints, actionTarget);
                     break;
                 default: return Reject(CommanderIntentErrorCode.UnknownCommand, "intentType", "Unknown intent type.");
             }
@@ -439,7 +467,12 @@ namespace OpenEmpires
                 intentCategory = "Tactical",
                 intentType = intent.Type.ToString()
             };
-            if (intent is EnsureUnitCountIntent ensure) { dto.unit = CommanderIntentCatalog.GetUnitDisplayName(ensure.UnitType); dto.amount = ensure.TargetTotal; }
+            if (intent is EnsureUnitCountIntent ensure)
+            {
+                dto.unit = CommanderIntentCatalog.GetUnitDisplayName(ensure.UnitType);
+                dto.amount = ensure.NewProductionCount ?? ensure.TargetTotal;
+                dto.quantityMode = ensure.NewProductionCount.HasValue ? "New" : "TargetTotal";
+            }
             else if (intent is BuildStructureIntent build) { dto.structure = build.StructureType.ToString(); dto.amount = build.Count; }
             else if (intent is ReachAgeIntent reachAge) { dto.targetAge = reachAge.RequestedTarget.ToString(); }
             else if (intent is SetResourceAllocationIntent allocation) { dto.resource = allocation.Resource.ToString(); dto.mode = allocation.Mode.ToString(); dto.amount = allocation.WorkerCount; }
@@ -456,11 +489,15 @@ namespace OpenEmpires
             }
             else if (intent is CapabilityActionIntent capability)
             {
+                if(capability.LocationSelector.RadiusTiles.HasValue)
+                    throw new ArgumentException("An unsupported radius/perimeter cannot be omitted from the tactical DTO.",nameof(intent));
                 dto.action = capability.ActionType.ToString();
                 dto.unit = capability.UnitSelector.Kind.ToString();
                 dto.unitType = capability.UnitSelector.Kind == CommanderUnitSelectorKind.UnitType
                     ? capability.UnitSelector.UnitType : (int?)null;
                 dto.location = capability.LocationSelector.Kind.ToString();
+                dto.target = capability.TargetSelector.HasValue
+                    ? CommanderSemanticResult.TargetSelectorJson(capability.TargetSelector.Value) : null;
                 dto.resource = capability.LocationSelector.ResourceType?.ToString();
                 dto.technology = capability.Technology?.ToString();
                 dto.structure = capability.StructureType?.ToString();

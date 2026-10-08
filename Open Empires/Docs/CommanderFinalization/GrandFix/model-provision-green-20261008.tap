@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: manual import verifies trusted size/hash before atomic promotion and preserves source
+ok 1 - manual import verifies trusted size/hash before atomic promotion and preserves source
+  ---
+  duration_ms: 29.3161
+  type: 'test'
+  ...
+# Subtest: hash mismatch is rejected without installed model or partial leftover
+ok 2 - hash mismatch is rejected without installed model or partial leftover
+  ---
+  duration_ms: 8.1832
+  type: 'test'
+  ...
+# Subtest: existing verified model is preserved and no unnecessary request occurs
+ok 3 - existing verified model is preserved and no unnecessary request occurs
+  ---
+  duration_ms: 11.0452
+  type: 'test'
+  ...
+# Subtest: corrupt existing model is reported, not overwritten or silently accepted
+ok 4 - corrupt existing model is reported, not overwritten or silently accepted
+  ---
+  duration_ms: 6.8944
+  type: 'test'
+  ...
+# Subtest: chunked oversize is stopped and never promoted
+ok 5 - chunked oversize is stopped and never promoted
+  ---
+  duration_ms: 25.5994
+  type: 'test'
+  ...
+# Subtest: cancellation during streamed download cleans only owned temporary files
+ok 6 - cancellation during streamed download cleans only owned temporary files
+  ---
+  duration_ms: 6.9719
+  type: 'test'
+  ...
+# Subtest: active root lock rejects replacement rather than creating another acquisition
+ok 7 - active root lock rejects replacement rather than creating another acquisition
+  ---
+  duration_ms: 3.7704
+  type: 'test'
+  ...
+# Subtest: symlink/junction cache subdirectory cannot redirect writes outside the requested cache
+ok 8 - symlink/junction cache subdirectory cannot redirect writes outside the requested cache
+  ---
+  duration_ms: 9.2484
+  type: 'test'
+  ...
+# Subtest: model traversal, unpinned revision and unsupported repository are rejected before I/O
+ok 9 - model traversal, unpinned revision and unsupported repository are rejected before I/O
+  ---
+  duration_ms: 1.1056
+  type: 'test'
+  ...
+# Subtest: transport failures retain a safe useful category without raw upstream errors
+ok 10 - transport failures retain a safe useful category without raw upstream errors
+  ---
+  duration_ms: 6.4578
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 199.0025

@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -29,7 +31,11 @@ namespace OpenEmpires
 
     internal sealed class CommanderHttpClientTransport : ICommanderHttpTransport
     {
-        private static readonly HttpClient Client = new HttpClient();
+        internal const int MaximumResponseBytes = 65536;
+        private static readonly HttpClient Client = new HttpClient(new HttpClientHandler
+        {
+            AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+        });
 
         public async Task<CommanderHttpResponse> PostJsonAsync(Uri uri, string json,
             IReadOnlyDictionary<string, string> headers, CancellationToken cancellationToken)
@@ -43,14 +49,39 @@ namespace OpenEmpires
                         request.Headers.TryAddWithoutValidation(header.Key, header.Value);
 
                 using (HttpResponseMessage response = await Client.SendAsync(
-                    request, HttpCompletionOption.ResponseContentRead, cancellationToken)
+                    request, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
                     .ConfigureAwait(false))
                 {
-                    string body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    int status = (int)response.StatusCode;
+                    if (response.Content.Headers.ContentLength > MaximumResponseBytes)
+                        throw new CommanderHttpResponseLimitException(status);
+                    using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                    using var received = new MemoryStream();
+                    var chunk = new byte[8192];
+                    while (true)
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+                        int count = await stream.ReadAsync(chunk, 0, chunk.Length, cancellationToken).ConfigureAwait(false);
+                        if (count == 0) break;
+                        // This applies to the decoded application-visible stream, including
+                        // chunked/decompressed/error bodies, BEFORE full-body allocation.
+                        if (received.Length + count > MaximumResponseBytes)
+                            throw new CommanderHttpResponseLimitException(status);
+                        received.Write(chunk, 0, count);
+                    }
+                    cancellationToken.ThrowIfCancellationRequested();
+                    string body = new UTF8Encoding(false, true).GetString(received.GetBuffer(), 0, (int)received.Length);
                     return new CommanderHttpResponse((int)response.StatusCode, body);
                 }
             }
         }
+    }
+
+    internal sealed class CommanderHttpResponseLimitException : IOException
+    {
+        internal int StatusCode { get; }
+        internal CommanderHttpResponseLimitException(int statusCode) : base("Commander AI returned an oversized response.")
+            => StatusCode = statusCode;
     }
 
     public sealed class GeminiAIProvider : ICommanderAIProvider
@@ -109,6 +140,17 @@ namespace OpenEmpires
                         body, headers, cancellationToken).ConfigureAwait(false);
                 }
                 catch (OperationCanceledException) { throw; }
+                catch (CommanderHttpResponseLimitException error)
+                {
+                    // Preserve known status categories even when the error body itself
+                    // exceeds the receive cap. Never retry a size failure with a new model.
+                    string message = error.StatusCode == 401 || error.StatusCode == 403
+                        ? "Commander AI authentication failed."
+                        : error.StatusCode == 429 ? "Commander AI quota exhausted. Please wait or use offline commands."
+                        : error.StatusCode >= 500 ? "Commander AI service temporarily unavailable."
+                        : "Commander AI returned an oversized response.";
+                    return CommanderAIProviderResult.Rejected(CommanderIntentErrorCode.ProviderFailure, message, message);
+                }
                 catch (Exception)
                 {
                     const string message = "Commander AI service temporarily unavailable.";
@@ -220,6 +262,11 @@ namespace OpenEmpires
     {
         public static ICommanderAIProvider CreateDefault()
         {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            // No desktop env/file key lookup or HttpClient assumption in Web.
+            // Explicit setup enables this SAME Luna semantic model via a server session.
+            return new OpenRouterCommanderProvider("gateway-session",new CommanderGatewaySemanticTransport("",()=>""));
+#else
             string preference = OpenRouterCommanderProvider.ReadSetting(
                 OpenRouterCommanderProvider.ProviderEnvironmentVariable);
             if (string.Equals(preference, "mock", StringComparison.OrdinalIgnoreCase))
@@ -231,6 +278,7 @@ namespace OpenEmpires
             if (!string.IsNullOrWhiteSpace(key))
                 return new GeminiAIProvider(key);
             return new MockAIProvider();
+#endif
         }
     }
 }

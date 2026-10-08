@@ -20,7 +20,8 @@ namespace OpenEmpires
         private static bool infoPanelSuppressed;
         private static bool settingsMenuOpen;
         private static bool chatFocused;
-        public static bool UIInputSuppressed => minimapSuppressed || infoPanelSuppressed || settingsMenuOpen || chatFocused;
+        public static bool UIInputSuppressed => minimapSuppressed || infoPanelSuppressed || settingsMenuOpen || chatFocused
+            || CommanderUIInputGuard.IsEditingText || CommanderUIInputGuard.IsPointerOverCommander;
         public static void SetMinimapSuppressed(bool value) { minimapSuppressed = value; }
         public static void SetInfoPanelSuppressed(bool value) { infoPanelSuppressed = value; }
         public static void SetSettingsMenuOpen(bool value) { settingsMenuOpen = value; }
@@ -3210,6 +3211,7 @@ namespace OpenEmpires
 
         private void OnAttackMovePerformed(InputAction.CallbackContext ctx)
         {
+            if (UIInputSuppressed) return;
             if (UnitInfoUI.BuildHotkeysActive) return;
             if (selectedUnits.Count > 0)
             {
@@ -3252,6 +3254,7 @@ namespace OpenEmpires
         private void OnEscapePressed(InputAction.CallbackContext ctx)
         {
             if (SettingsMenuUI.IsRebinding) return;
+            if (CommanderChatUI.TryHandleEscapeInput() || CommanderUIInputGuard.IsEditingText || chatFocused) return;
             if (UnitInfoUI.BuildHotkeysActive)
             {
                 // Build submenu is open. If a ghost is being placed (the submenu now stays

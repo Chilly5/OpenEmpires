@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="6" result="Passed" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 16:22:23Z" end-time="2026-10-08 16:22:28Z" duration="5.250392">
+  <test-suite type="TestSuite" id="2927" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="208" result="Passed" start-time="2026-10-08 16:22:23Z" end-time="2026-10-08 16:22:28Z" duration="5.250392" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="2921" name="OpenEmpires.PlayModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.PlayModeTests.dll" runstate="Runnable" testcasecount="208" result="Passed" start-time="2026-10-08 16:22:23Z" end-time="2026-10-08 16:22:28Z" duration="5.247973" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="27016" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="2922" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="208" result="Passed" start-time="2026-10-08 16:22:23Z" end-time="2026-10-08 16:22:28Z" duration="5.228723" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="2923" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="208" result="Passed" start-time="2026-10-08 16:22:23Z" end-time="2026-10-08 16:22:28Z" duration="5.225543" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="2681" name="CommanderGrandFixQuantityPlayModeTests" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityPlayModeTests" classname="OpenEmpires.Tests.CommanderGrandFixQuantityPlayModeTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-08 16:22:23Z" end-time="2026-10-08 16:22:25Z" duration="2.162984" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <test-case id="2683" name="SequentialTotals_TwoThenThree_UsesOnlySecondGoalsOneNewResult" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityPlayModeTests.SequentialTotals_TwoThenThree_UsesOnlySecondGoalsOneNewResult" methodname="SequentialTotals_TwoThenThree_UsesOnlySecondGoalsOneNewResult" classname="OpenEmpires.Tests.CommanderGrandFixQuantityPlayModeTests" runstate="Runnable" seed="167565609" result="Passed" start-time="2026-10-08 16:22:23Z" end-time="2026-10-08 16:22:24Z" duration="1.134981" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #2 submitted: EnsureUnitCount
+[Commander] Goal #3 submitted: CapabilityAction
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+[SyncCheck] tick=1 checksum=C79D341F
+[SyncCheck] tick=2 checksum=0A0BC5DF
+[SyncCheck] tick=3 checksum=4C7A579F
+[SyncCheck] tick=4 checksum=8EE8E95F
+[SyncCheck] tick=5 checksum=D1577B1F
+[SyncCheck] tick=6 checksum=13C60CDF
+[SyncCheck] tick=7 checksum=56349E9F
+[SyncCheck] tick=8 checksum=98A3305F
+[SyncCheck] tick=9 checksum=DB11C21F
+[SyncCheck] tick=10 checksum=1D8053DF
+[SyncCheck] tick=11 checksum=5FEEE59F
+[SyncCheck] tick=12 checksum=A25D775F
+[SyncCheck] tick=13 checksum=E4CC091F
+[SyncCheck] tick=14 checksum=273A9ADF
+[SyncCheck] tick=15 checksum=69A92C9F
+[Commander] Goal #1: status=Executing owned=0 queued=1; Queueing Spearman at Barracks #1.
+[SyncCheck] tick=16 checksum=326B628D
+[SyncCheck] tick=17 checksum=3DCF08CD
+[SyncCheck] tick=18 checksum=4932AF0D
+[SyncCheck] tick=19 checksum=5496554D
+[SyncCheck] tick=20 checksum=5FF9FB8D
+[SyncCheck] tick=21 checksum=6B5DA1CD
+[SyncCheck] tick=22 checksum=76C1480D
+[SyncCheck] tick=23 checksum=8224EE4D
+[SyncCheck] tick=24 checksum=8D88948D
+[SyncCheck] tick=25 checksum=98EC3ACD
+[SyncCheck] tick=26 checksum=A44FE10D
+[SyncCheck] tick=27 checksum=AFB3874D
+[SyncCheck] tick=28 checksum=BB172D8D
+[SyncCheck] tick=29 checksum=C67AD3CD
+[SyncCheck] tick=30 checksum=D1DE7A0D
+[Commander] Goal #1: status=WaitingForProduction owned=0 queued=2; Owned 0, queued 2, target 2.
+[SyncCheck] tick=31 checksum=DD42204D
+[SyncCheck] tick=32 checksum=E8A5C68D
+[SyncCheck] tick=33 checksum=F4096CCD
+[SyncCheck] tick=34 checksum=FF6D130D
+[SyncCheck] tick=35 checksum=0AD0B94D
+[SyncCheck] tick=36 checksum=16345F8D
+[SyncCheck] tick=37 checksum=219805CD
+[SyncCheck] tick=38 checksum=2CFBAC0D
+[SyncCheck] tick=39 checksum=385F524D
+[SyncCheck] tick=40 checksum=43C2F88D
+[SyncCheck] tick=41 checksum=4F269ECD
+[SyncCheck] tick=42 checksum=5A8A450D
+[SyncCheck] tick=43 checksum=65EDEB4D
+[SyncCheck] tick=44 checksum=7151918D
+[SyncCheck] tick=45 checksum=7CB537CD
+[SyncCheck] tick=46 checksum=8818DE0D
+[SyncCheck] tick=47 checksum=937C844D
+[SyncCheck] tick=48 checksum=9EE02A8D
+[SyncCheck] tick=49 checksum=AA43D0CD
+[SyncCheck] tick=50 checksum=B5A7770D
+[SyncCheck] tick=51 checksum=C10B1D4D
+[SyncCheck] tick=52 checksum=CC6EC38D
+[SyncCheck] tick=53 checksum=D7D269CD
+[SyncCheck] tick=54 checksum=E336100D
+[SyncCheck] tick=55 checksum=EE99B64D
+[SyncCheck] tick=56 checksum=F9FD5C8D
+[SyncCheck] tick=57 checksum=056102CD
+[SyncCheck] tick=58 checksum=10C4A90D
+[SyncCheck] tick=59 checksum=1C284F4D
+[SyncCheck] tick=60 checksum=278BF58D
+[SyncCheck] tick=61 checksum=32EF9BCD
+[SyncCheck] tick=62 checksum=3E53420D
+[SyncCheck] tick=63 checksum=49B6E84D
+[SyncCheck] tick=64 checksum=551A8E8D
+[SyncCheck] tick=65 checksum=607E34CD
+[SyncCheck] tick=66 checksum=6BE1DB0D
+[SyncCheck] tick=67 checksum=7745814D
+[SyncCheck] tick=68 checksum=82A9278D
+[SyncCheck] tick=69 checksum=8E0CCDCD
+[SyncCheck] tick=70 checksum=9970740D
+[SyncCheck] tick=71 checksum=A4D41A4D
+[SyncCheck] tick=72 checksum=B037C08D
+[SyncCheck] tick=73 checksum=BB9B66CD
+[SyncCheck] tick=74 checksum=C6FF0D0D
+[SyncCheck] tick=75 checksum=D262B34D
+[SyncCheck] tick=76 checksum=DDC6598D
+[SyncCheck] tick=77 checksum=E929FFCD
+[SyncCheck] tick=78 checksum=F48DA60D
+[SyncCheck] tick=79 checksum=FFF14C4D
+[SyncCheck] tick=80 checksum=0B54F28D
+[SyncCheck] tick=81 checksum=16B898CD
+[SyncCheck] tick=82 checksum=221C3F0D
+[SyncCheck] tick=83 checksum=2D7FE54D
+[SyncCheck] tick=84 checksum=38E38B8D
+[SyncCheck] tick=85 checksum=444731CD
+[SyncCheck] tick=86 checksum=4FAAD80D
+[SyncCheck] tick=87 checksum=5B0E7E4D
+[SyncCheck] tick=88 checksum=6672248D
+[SyncCheck] tick=89 checksum=71D5CACD
+[SyncCheck] tick=90 checksum=7D39710D
+[SyncCheck] tick=91 checksum=889D174D
+[SyncCheck] tick=92 checksum=9400BD8D
+[SyncCheck] tick=93 checksum=9F6463CD
+[SyncCheck] tick=94 checksum=AAC80A0D
+[SyncCheck] tick=95 checksum=B62BB04D
+[SyncCheck] tick=96 checksum=C18F568D
+[SyncCheck] tick=97 checksum=CCF2FCCD
+[SyncCheck] tick=98 checksum=D856A30D
+[SyncCheck] tick=99 checksum=E3BA494D
+[SyncCheck] tick=100 checksum=EF1DEF8D
+[Commander] Goal #1: status=WaitingForProduction owned=1 queued=1; Owned 1, queued 1, target 2.
+[Commander] Goal #1: status=Completed owned=2 queued=0; Owned 2/2 living units.
+[Commander] Goal #2: status=Executing owned=2 queued=0; Queueing Spearman at Barracks #1.
+[Commander] Goal #2: status=WaitingForProduction owned=2 queued=1; Owned 2, queued 1, target 3.
+[Commander] Goal #2: status=Completed owned=3 queued=0; Owned 3/3 living units.
+[Commander] Goal #3: status=Executing owned=0 queued=0; Resolved a point patrol route from each selected unit's starting position to a visible game-side anchor.
+]]></output>
+            </test-case>
+            <test-case id="2682" name="TotalWithOldAndHumanQueuedUnits_ProducesOnlyOneExactNewPatroller" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityPlayModeTests.TotalWithOldAndHumanQueuedUnits_ProducesOnlyOneExactNewPatroller" methodname="TotalWithOldAndHumanQueuedUnits_ProducesOnlyOneExactNewPatroller" classname="OpenEmpires.Tests.CommanderGrandFixQuantityPlayModeTests" runstate="Runnable" seed="1865427416" result="Passed" start-time="2026-10-08 16:22:24Z" end-time="2026-10-08 16:22:25Z" duration="1.022368" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[SyncCheck] tick=1 checksum=C8ECB24D
+[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #2 submitted: CapabilityAction
+[Commander] Goal #1: status=Executing owned=4 queued=1; Queueing Spearman at Barracks #1.
+[SyncCheck] tick=2 checksum=8767A29F
+[SyncCheck] tick=3 checksum=5E9A58DF
+[SyncCheck] tick=4 checksum=35CD0F1F
+[SyncCheck] tick=5 checksum=0CFFC55F
+[SyncCheck] tick=6 checksum=E4327B9F
+[SyncCheck] tick=7 checksum=BB6531DF
+[SyncCheck] tick=8 checksum=9297E81F
+[SyncCheck] tick=9 checksum=69CA9E5F
+[SyncCheck] tick=10 checksum=40FD549F
+[SyncCheck] tick=11 checksum=18300ADF
+[SyncCheck] tick=12 checksum=EF62C11F
+[SyncCheck] tick=13 checksum=C695775F
+[SyncCheck] tick=14 checksum=9DC82D9F
+[SyncCheck] tick=15 checksum=74FAE3DF
+[Commander] Goal #1: status=WaitingForProduction owned=4 queued=2; Owned 4, queued 2, target 6.
+[SyncCheck] tick=16 checksum=4C2D9A1F
+[SyncCheck] tick=17 checksum=2360505F
+[SyncCheck] tick=18 checksum=FA93069F
+[SyncCheck] tick=19 checksum=D1C5BCDF
+[SyncCheck] tick=20 checksum=A8F8731F
+[SyncCheck] tick=21 checksum=802B295F
+[SyncCheck] tick=22 checksum=575DDF9F
+[SyncCheck] tick=23 checksum=2E9095DF
+[SyncCheck] tick=24 checksum=05C34C1F
+[SyncCheck] tick=25 checksum=DCF6025F
+[SyncCheck] tick=26 checksum=B428B89F
+[SyncCheck] tick=27 checksum=8B5B6EDF
+[SyncCheck] tick=28 checksum=628E251F
+[SyncCheck] tick=29 checksum=39C0DB5F
+[SyncCheck] tick=30 checksum=10F3919F
+[SyncCheck] tick=31 checksum=E82647DF
+[SyncCheck] tick=32 checksum=BF58FE1F
+[SyncCheck] tick=33 checksum=968BB45F
+[SyncCheck] tick=34 checksum=6DBE6A9F
+[SyncCheck] tick=35 checksum=44F120DF
+[SyncCheck] tick=36 checksum=1C23D71F
+[SyncCheck] tick=37 checksum=F3568D5F
+[SyncCheck] tick=38 checksum=CA89439F
+[SyncCheck] tick=39 checksum=A1BBF9DF
+[SyncCheck] tick=40 checksum=78EEB01F
+[SyncCheck] tick=41 checksum=5021665F
+[SyncCheck] tick=42 checksum=27541C9F
+[SyncCheck] tick=43 checksum=FE86D2DF
+[SyncCheck] tick=44 checksum=D5B9891F
+[SyncCheck] tick=45 checksum=ACEC3F5F
+[SyncCheck] tick=46 checksum=841EF59F
+[SyncCheck] tick=47 checksum=5B51ABDF
+[SyncCheck] tick=48 checksum=3284621F
+[SyncCheck] tick=49 checksum=09B7185F
+[SyncCheck] tick=50 checksum=E0E9CE9F
+[SyncCheck] tick=51 checksum=B81C84DF
+[SyncCheck] tick=52 checksum=8F4F3B1F
+[SyncCheck] tick=53 checksum=6681F15F
+[SyncCheck] tick=54 checksum=3DB4A79F
+[SyncCheck] tick=55 checksum=14E75DDF
+[SyncCheck] tick=56 checksum=EC1A141F
+[SyncCheck] tick=57 checksum=C34CCA5F
+[SyncCheck] tick=58 checksum=9A7F809F
+[SyncCheck] tick=59 checksum=71B236DF
+[SyncCheck] tick=60 checksum=48E4ED1F
+[SyncCheck] tick=61 checksum=2017A35F
+[SyncCheck] tick=62 checksum=F74A599F
+[SyncCheck] tick=63 checksum=CE7D0FDF
+[SyncCheck] tick=64 checksum=A5AFC61F
+[SyncCheck] tick=65 checksum=7CE27C5F
+[SyncCheck] tick=66 checksum=5415329F
+[SyncCheck] tick=67 checksum=2B47E8DF
+[SyncCheck] tick=68 checksum=027A9F1F
+[SyncCheck] tick=69 checksum=D9AD555F
+[SyncCheck] tick=70 checksum=B0E00B9F
+[SyncCheck] tick=71 checksum=8812C1DF
+[SyncCheck] tick=72 checksum=5F45781F
+[SyncCheck] tick=73 checksum=36782E5F
+[SyncCheck] tick=74 checksum=0DAAE49F
+[SyncCheck] tick=75 checksum=E4DD9ADF
+[SyncCheck] tick=76 checksum=BC10511F
+[SyncCheck] tick=77 checksum=9343075F
+[SyncCheck] tick=78 checksum=6A75BD9F
+[SyncCheck] tick=79 checksum=41A873DF
+[SyncCheck] tick=80 checksum=18DB2A1F
+[SyncCheck] tick=81 checksum=F00DE05F
+[SyncCheck] tick=82 checksum=C740969F
+[SyncCheck] tick=83 checksum=9E734CDF
+[SyncCheck] tick=84 checksum=75A6031F
+[SyncCheck] tick=85 checksum=4CD8B95F
+[SyncCheck] tick=86 checksum=240B6F9F
+[SyncCheck] tick=87 checksum=FB3E25DF
+[SyncCheck] tick=88 checksum=D270DC1F
+[SyncCheck] tick=89 checksum=A9A3925F
+[SyncCheck] tick=90 checksum=80D6489F
+[SyncCheck] tick=91 checksum=5808FEDF
+[SyncCheck] tick=92 checksum=2F3BB51F
+[SyncCheck] tick=93 checksum=066E6B5F
+[SyncCheck] tick=94 checksum=DDA1219F
+[SyncCheck] tick=95 checksum=B4D3D7DF
+[SyncCheck] tick=96 checksum=8C068E1F
+[SyncCheck] tick=97 checksum=6339445F
+[SyncCheck] tick=98 checksum=3A6BFA9F
+[SyncCheck] tick=99 checksum=119EB0DF
+[SyncCheck] tick=100 checksum=E8D1671F
+[Commander] Goal #1: status=WaitingForProduction owned=5 queued=1; Owned 5, queued 1, target 6.
+[Commander] Goal #1: status=Completed owned=6 queued=0; Owned 6/6 living units.
+[Commander] Goal #2: status=Executing owned=0 queued=0; Resolved a point patrol route from each selected unit's starting position to a visible game-side anchor.
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2684" name="CommanderGrandFixStatusPlayModeTests" fullname="OpenEmpires.Tests.CommanderGrandFixStatusPlayModeTests" classname="OpenEmpires.Tests.CommanderGrandFixStatusPlayModeTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-08 16:22:25Z" end-time="2026-10-08 16:22:26Z" duration="0.499425" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <test-case id="2685" name="NativeTrainingContinuesWhileQuestionRemainsReadOnlyAndReportsActualProgress" fullname="OpenEmpires.Tests.CommanderGrandFixStatusPlayModeTests.NativeTrainingContinuesWhileQuestionRemainsReadOnlyAndReportsActualProgress" methodname="NativeTrainingContinuesWhileQuestionRemainsReadOnlyAndReportsActualProgress" classname="OpenEmpires.Tests.CommanderGrandFixStatusPlayModeTests" runstate="Runnable" seed="1676847241" result="Passed" start-time="2026-10-08 16:22:25Z" end-time="2026-10-08 16:22:26Z" duration="0.493864" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+[SyncCheck] tick=1 checksum=F51A7C73
+[SyncCheck] tick=2 checksum=37890E33
+[SyncCheck] tick=3 checksum=79F79FF3
+[SyncCheck] tick=4 checksum=BC6631B3
+[SyncCheck] tick=5 checksum=FED4C373
+[SyncCheck] tick=6 checksum=41435533
+[SyncCheck] tick=7 checksum=83B1E6F3
+[SyncCheck] tick=8 checksum=C62078B3
+[SyncCheck] tick=9 checksum=088F0A73
+[SyncCheck] tick=10 checksum=4AFD9C33
+[SyncCheck] tick=11 checksum=8D6C2DF3
+[SyncCheck] tick=12 checksum=CFDABFB3
+[SyncCheck] tick=13 checksum=12495173
+[SyncCheck] tick=14 checksum=54B7E333
+[SyncCheck] tick=15 checksum=972674F3
+[Commander] Goal #1: status=Blocked owned=0 queued=1; Need 20 wood for the next Spearman; have 0. No explored non-depleted Wood node is known.
+[SyncCheck] tick=16 checksum=D99506B3
+[SyncCheck] tick=17 checksum=1C039873
+[SyncCheck] tick=18 checksum=5E722A33
+[SyncCheck] tick=19 checksum=A0E0BBF3
+[SyncCheck] tick=20 checksum=E34F4DB3
+[SyncCheck] tick=21 checksum=25BDDF73
+[SyncCheck] tick=22 checksum=682C7133
+[SyncCheck] tick=23 checksum=AA9B02F3
+[SyncCheck] tick=24 checksum=ED0994B3
+[SyncCheck] tick=25 checksum=2F782673
+[SyncCheck] tick=26 checksum=71E6B833
+[SyncCheck] tick=27 checksum=B45549F3
+[SyncCheck] tick=28 checksum=F6C3DBB3
+[SyncCheck] tick=29 checksum=39326D73
+[SyncCheck] tick=30 checksum=7BA0FF33
+[SyncCheck] tick=31 checksum=BE0F90F3
+[SyncCheck] tick=32 checksum=007E22B3
+[SyncCheck] tick=33 checksum=42ECB473
+[SyncCheck] tick=34 checksum=855B4633
+[SyncCheck] tick=35 checksum=C7C9D7F3
+[SyncCheck] tick=36 checksum=0A3869B3
+[SyncCheck] tick=37 checksum=4CA6FB73
+[SyncCheck] tick=38 checksum=8F158D33
+[SyncCheck] tick=39 checksum=D1841EF3
+[SyncCheck] tick=40 checksum=13F2B0B3
+[SyncCheck] tick=41 checksum=56614273
+[SyncCheck] tick=42 checksum=98CFD433
+[SyncCheck] tick=43 checksum=DB3E65F3
+[SyncCheck] tick=44 checksum=1DACF7B3
+[SyncCheck] tick=45 checksum=601B8973
+[SyncCheck] tick=46 checksum=A28A1B33
+[SyncCheck] tick=47 checksum=E4F8ACF3
+[SyncCheck] tick=48 checksum=27673EB3
+[SyncCheck] tick=49 checksum=69D5D073
+[SyncCheck] tick=50 checksum=AC446233
+[SyncCheck] tick=51 checksum=EEB2F3F3
+[SyncCheck] tick=52 checksum=312185B3
+[SyncCheck] tick=53 checksum=73901773
+[SyncCheck] tick=54 checksum=B5FEA933
+[SyncCheck] tick=55 checksum=F86D3AF3
+[SyncCheck] tick=56 checksum=3ADBCCB3
+[SyncCheck] tick=57 checksum=7D4A5E73
+[SyncCheck] tick=58 checksum=BFB8F033
+[SyncCheck] tick=59 checksum=022781F3
+[SyncCheck] tick=60 checksum=449613B3
+[SyncCheck] tick=61 checksum=8704A573
+[SyncCheck] tick=62 checksum=C9733733
+[SyncCheck] tick=63 checksum=0BE1C8F3
+[SyncCheck] tick=64 checksum=4E505AB3
+[SyncCheck] tick=65 checksum=90BEEC73
+[SyncCheck] tick=66 checksum=D32D7E33
+[SyncCheck] tick=67 checksum=159C0FF3
+[SyncCheck] tick=68 checksum=580AA1B3
+[SyncCheck] tick=69 checksum=9A793373
+[SyncCheck] tick=70 checksum=DCE7C533
+[SyncCheck] tick=71 checksum=1F5656F3
+[SyncCheck] tick=72 checksum=61C4E8B3
+[SyncCheck] tick=73 checksum=A4337A73
+[SyncCheck] tick=74 checksum=E6A20C33
+[SyncCheck] tick=75 checksum=29109DF3
+[SyncCheck] tick=76 checksum=6B7F2FB3
+[SyncCheck] tick=77 checksum=ADEDC173
+[SyncCheck] tick=78 checksum=F05C5333
+[SyncCheck] tick=79 checksum=32CAE4F3
+[SyncCheck] tick=80 checksum=753976B3
+[SyncCheck] tick=81 checksum=B7A80873
+[SyncCheck] tick=82 checksum=FA169A33
+[SyncCheck] tick=83 checksum=3C852BF3
+[SyncCheck] tick=84 checksum=7EF3BDB3
+[SyncCheck] tick=85 checksum=C1624F73
+[SyncCheck] tick=86 checksum=03D0E133
+[SyncCheck] tick=87 checksum=463F72F3
+[SyncCheck] tick=88 checksum=88AE04B3
+[SyncCheck] tick=89 checksum=CB1C9673
+[SyncCheck] tick=90 checksum=0D8B2833
+[SyncCheck] tick=91 checksum=4FF9B9F3
+[SyncCheck] tick=92 checksum=92684BB3
+[SyncCheck] tick=93 checksum=D4D6DD73
+[SyncCheck] tick=94 checksum=17456F33
+[SyncCheck] tick=95 checksum=59B400F3
+[SyncCheck] tick=96 checksum=9C2292B3
+[SyncCheck] tick=97 checksum=DE912473
+[SyncCheck] tick=98 checksum=20FFB633
+[SyncCheck] tick=99 checksum=636E47F3
+[SyncCheck] tick=100 checksum=A5DCD9B3
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2686" name="CommanderGrandFixTargetPlayModeTests" fullname="OpenEmpires.Tests.CommanderGrandFixTargetPlayModeTests" classname="OpenEmpires.Tests.CommanderGrandFixTargetPlayModeTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-08 16:22:26Z" end-time="2026-10-08 16:22:27Z" duration="1.268705" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <test-case id="2688" name="NamedArcherAttack_UsesOrdinaryNativeCombatNotNearerVillager" fullname="OpenEmpires.Tests.CommanderGrandFixTargetPlayModeTests.NamedArcherAttack_UsesOrdinaryNativeCombatNotNearerVillager" methodname="NamedArcherAttack_UsesOrdinaryNativeCombatNotNearerVillager" classname="OpenEmpires.Tests.CommanderGrandFixTargetPlayModeTests" runstate="Runnable" seed="1085394985" result="Passed" start-time="2026-10-08 16:22:26Z" end-time="2026-10-08 16:22:26Z" duration="0.447372" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: CapabilityAction
+[Commander] Goal #1: status=Executing owned=0 queued=0; Resolved a visible enemy unit target.
+[SyncCheck] tick=1 checksum=D7B488FC
+[SyncCheck] tick=2 checksum=9F015444
+[SyncCheck] tick=3 checksum=DB1BCD0D
+[SyncCheck] tick=4 checksum=71B40356
+[SyncCheck] tick=5 checksum=0E3EC7C0
+[SyncCheck] tick=6 checksum=59623D0A
+[SyncCheck] tick=7 checksum=55607D5B
+[SyncCheck] tick=8 checksum=9A83502E
+[SyncCheck] tick=9 checksum=DAA15592
+[SyncCheck] tick=10 checksum=8B3F61C8
+[SyncCheck] tick=11 checksum=ECE13666
+[SyncCheck] tick=12 checksum=E6BF0453
+[SyncCheck] tick=13 checksum=4F7A4F4A
+[SyncCheck] tick=14 checksum=E4E2C7F6
+[SyncCheck] tick=15 checksum=A2FF7AFD
+[Commander] Goal #1: status=Executing owned=1 queued=0; Waiting for the resolved attack target to be destroyed.
+[SyncCheck] tick=16 checksum=3E5D0D12
+[SyncCheck] tick=17 checksum=39D9BFFE
+[SyncCheck] tick=18 checksum=F2E983AB
+[SyncCheck] tick=19 checksum=6AD6D59C
+[SyncCheck] tick=20 checksum=7949E198
+[SyncCheck] tick=21 checksum=0F8199B0
+[SyncCheck] tick=22 checksum=85E98CD3
+[SyncCheck] tick=23 checksum=6D4FE26F
+[SyncCheck] tick=24 checksum=9ADE5779
+[SyncCheck] tick=25 checksum=4973A607
+[SyncCheck] tick=26 checksum=533A842D
+[SyncCheck] tick=27 checksum=B9CA1F31
+[SyncCheck] tick=28 checksum=21763F9A
+[SyncCheck] tick=29 checksum=30E374D0
+[SyncCheck] tick=30 checksum=3C640CF5
+[SyncCheck] tick=31 checksum=F551D6A9
+[SyncCheck] tick=32 checksum=3289F941
+[SyncCheck] tick=33 checksum=BF566B82
+[SyncCheck] tick=34 checksum=59DB4FCE
+[SyncCheck] tick=35 checksum=190F2BC5
+[SyncCheck] tick=36 checksum=4CA04800
+[SyncCheck] tick=37 checksum=CBF74241
+[SyncCheck] tick=38 checksum=F4BB654F
+[SyncCheck] tick=39 checksum=436D0546
+[SyncCheck] tick=40 checksum=3E1DC0E2
+[SyncCheck] tick=41 checksum=1BFB0221
+[SyncCheck] tick=42 checksum=FA172C69
+[SyncCheck] tick=43 checksum=A0F91B0E
+[SyncCheck] tick=44 checksum=19E6F76F
+[SyncCheck] tick=45 checksum=FF163F06
+[SyncCheck] tick=46 checksum=AC92163A
+[SyncCheck] tick=47 checksum=D1C33F0E
+[SyncCheck] tick=48 checksum=77BDBFDF
+[SyncCheck] tick=49 checksum=895C2FE3
+[SyncCheck] tick=50 checksum=B4C23F06
+[SyncCheck] tick=51 checksum=6E4519E8
+[SyncCheck] tick=52 checksum=F80A8442
+[SyncCheck] tick=53 checksum=23BC8638
+[SyncCheck] tick=54 checksum=A1E8978B
+[SyncCheck] tick=55 checksum=C8789BEE
+[SyncCheck] tick=56 checksum=BCB7C9F2
+[SyncCheck] tick=57 checksum=FE0AA09D
+[SyncCheck] tick=58 checksum=72F400B0
+[SyncCheck] tick=59 checksum=C2AD50CB
+[SyncCheck] tick=60 checksum=24577BA7
+[SyncCheck] tick=61 checksum=303092C5
+[SyncCheck] tick=62 checksum=086647BF
+[SyncCheck] tick=63 checksum=8A1AFD34
+[SyncCheck] tick=64 checksum=E00F10B0
+[SyncCheck] tick=65 checksum=21E6534F
+[SyncCheck] tick=66 checksum=EC5C88CC
+[SyncCheck] tick=67 checksum=398764E4
+[SyncCheck] tick=68 checksum=CC715C66
+[SyncCheck] tick=69 checksum=CE692D4B
+[SyncCheck] tick=70 checksum=351760FB
+[SyncCheck] tick=71 checksum=D2927D8D
+[SyncCheck] tick=72 checksum=E4361983
+[SyncCheck] tick=73 checksum=63CFD34C
+[SyncCheck] tick=74 checksum=4E6F13AA
+[SyncCheck] tick=75 checksum=65D116D8
+[SyncCheck] tick=76 checksum=DE41AC9E
+[SyncCheck] tick=77 checksum=2F53006C
+[SyncCheck] tick=78 checksum=768E16D3
+[SyncCheck] tick=79 checksum=25C56B8E
+[SyncCheck] tick=80 checksum=7D2E05AB
+[SyncCheck] tick=81 checksum=9F86EFD6
+[SyncCheck] tick=82 checksum=DEF8F4A1
+[SyncCheck] tick=83 checksum=A7463CA6
+[SyncCheck] tick=84 checksum=211A544F
+[SyncCheck] tick=85 checksum=235E4097
+[SyncCheck] tick=86 checksum=5DC4B0FA
+[SyncCheck] tick=87 checksum=2018D649
+[SyncCheck] tick=88 checksum=1712252B
+[SyncCheck] tick=89 checksum=C2254A02
+[SyncCheck] tick=90 checksum=C93D5C63
+[SyncCheck] tick=91 checksum=F1A5C6B3
+[SyncCheck] tick=92 checksum=A6BF8731
+[SyncCheck] tick=93 checksum=38A3C790
+[SyncCheck] tick=94 checksum=040D95D0
+[SyncCheck] tick=95 checksum=599EB8C8
+[SyncCheck] tick=96 checksum=6AFD4ED5
+[SyncCheck] tick=97 checksum=61792D43
+[SyncCheck] tick=98 checksum=DC98A508
+[SyncCheck] tick=99 checksum=CE793184
+[SyncCheck] tick=100 checksum=1E0CEB21
+]]></output>
+            </test-case>
+            <test-case id="2687" name="NamedTownCenterRepair_UsesOrdinaryNativeRepairNotDamagedHouse" fullname="OpenEmpires.Tests.CommanderGrandFixTargetPlayModeTests.NamedTownCenterRepair_UsesOrdinaryNativeRepairNotDamagedHouse" methodname="NamedTownCenterRepair_UsesOrdinaryNativeRepairNotDamagedHouse" classname="OpenEmpires.Tests.CommanderGrandFixTargetPlayModeTests" runstate="Runnable" seed="958421793" result="Passed" start-time="2026-10-08 16:22:26Z" end-time="2026-10-08 16:22:27Z" duration="0.368497" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: CapabilityAction
+[Commander] Goal #1: status=Executing owned=0 queued=0; Resolved the lowest-ID owned building matching the requested repair target.
+[SyncCheck] tick=1 checksum=03A8D8C3
+[SyncCheck] tick=2 checksum=A40B5336
+[SyncCheck] tick=3 checksum=80F55FF0
+[SyncCheck] tick=4 checksum=FCD29EEC
+[SyncCheck] tick=5 checksum=F97C3053
+[SyncCheck] tick=6 checksum=8C14E18E
+[SyncCheck] tick=7 checksum=58EF6545
+[SyncCheck] tick=8 checksum=6BBB7748
+[SyncCheck] tick=9 checksum=D01320A4
+[SyncCheck] tick=10 checksum=A97B4E88
+[SyncCheck] tick=11 checksum=23B57DFD
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2900" name="CommanderPhase4GResultBindingPlayModeTests" fullname="OpenEmpires.Tests.CommanderPhase4GResultBindingPlayModeTests" classname="OpenEmpires.Tests.CommanderPhase4GResultBindingPlayModeTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-08 16:22:27Z" end-time="2026-10-08 16:22:28Z" duration="1.290376" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="2901" name="BuildProduceThenPatrol_UsesExactProducedSpearmen" fullname="OpenEmpires.Tests.CommanderPhase4GResultBindingPlayModeTests.BuildProduceThenPatrol_UsesExactProducedSpearmen" methodname="BuildProduceThenPatrol_UsesExactProducedSpearmen" classname="OpenEmpires.Tests.CommanderPhase4GResultBindingPlayModeTests" runstate="Runnable" seed="1235435521" result="Passed" start-time="2026-10-08 16:22:27Z" end-time="2026-10-08 16:22:28Z" duration="1.287364" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #2 submitted: CapabilityAction
+[Commander] Goal #1: status=Executing owned=1 queued=0; Queueing Spearman at Barracks #1.
+[SyncCheck] tick=1 checksum=9FF71422
+[SyncCheck] tick=2 checksum=EDE58662
+[SyncCheck] tick=3 checksum=3BD3F8A2
+[SyncCheck] tick=4 checksum=89C26AE2
+[SyncCheck] tick=5 checksum=D7B0DD22
+[SyncCheck] tick=6 checksum=259F4F62
+[SyncCheck] tick=7 checksum=738DC1A2
+[SyncCheck] tick=8 checksum=C17C33E2
+[SyncCheck] tick=9 checksum=0F6AA622
+[SyncCheck] tick=10 checksum=5D591862
+[SyncCheck] tick=11 checksum=AB478AA2
+[SyncCheck] tick=12 checksum=F935FCE2
+[SyncCheck] tick=13 checksum=47246F22
+[SyncCheck] tick=14 checksum=9512E162
+[SyncCheck] tick=15 checksum=E30153A2
+[Commander] Goal #1: status=Executing owned=1 queued=1; Queueing Spearman at Barracks #1.
+[SyncCheck] tick=16 checksum=2ECBFC0A
+[SyncCheck] tick=17 checksum=9EABD1CA
+[SyncCheck] tick=18 checksum=0E8BA78A
+[SyncCheck] tick=19 checksum=7E6B7D4A
+[SyncCheck] tick=20 checksum=EE4B530A
+[SyncCheck] tick=21 checksum=5E2B28CA
+[SyncCheck] tick=22 checksum=CE0AFE8A
+[SyncCheck] tick=23 checksum=3DEAD44A
+[SyncCheck] tick=24 checksum=ADCAAA0A
+[SyncCheck] tick=25 checksum=1DAA7FCA
+[SyncCheck] tick=26 checksum=8D8A558A
+[SyncCheck] tick=27 checksum=FD6A2B4A
+[SyncCheck] tick=28 checksum=6D4A010A
+[SyncCheck] tick=29 checksum=DD29D6CA
+[SyncCheck] tick=30 checksum=4D09AC8A
+[Commander] Goal #1: status=Executing owned=1 queued=2; Queueing Spearman at Barracks #1.
+[SyncCheck] tick=31 checksum=256AD7F4
+[SyncCheck] tick=32 checksum=B185BA34
+[SyncCheck] tick=33 checksum=3DA09C74
+[SyncCheck] tick=34 checksum=C9BB7EB4
+[SyncCheck] tick=35 checksum=55D660F4
+[SyncCheck] tick=36 checksum=E1F14334
+[SyncCheck] tick=37 checksum=6E0C2574
+[SyncCheck] tick=38 checksum=FA2707B4
+[SyncCheck] tick=39 checksum=8641E9F4
+[SyncCheck] tick=40 checksum=125CCC34
+[SyncCheck] tick=41 checksum=9E77AE74
+[SyncCheck] tick=42 checksum=2A9290B4
+[SyncCheck] tick=43 checksum=B6AD72F4
+[SyncCheck] tick=44 checksum=42C85534
+[SyncCheck] tick=45 checksum=CEE33774
+[Commander] Goal #1: status=WaitingForProduction owned=1 queued=3; Owned 1, queued 3, target 4.
+[SyncCheck] tick=46 checksum=5AFE19B4
+[SyncCheck] tick=47 checksum=E718FBF4
+[SyncCheck] tick=48 checksum=7333DE34
+[SyncCheck] tick=49 checksum=FF4EC074
+[SyncCheck] tick=50 checksum=8B69A2B4
+[SyncCheck] tick=51 checksum=178484F4
+[SyncCheck] tick=52 checksum=A39F6734
+[SyncCheck] tick=53 checksum=2FBA4974
+[SyncCheck] tick=54 checksum=BBD52BB4
+[SyncCheck] tick=55 checksum=47F00DF4
+[SyncCheck] tick=56 checksum=D40AF034
+[SyncCheck] tick=57 checksum=6025D274
+[SyncCheck] tick=58 checksum=EC40B4B4
+[SyncCheck] tick=59 checksum=785B96F4
+[SyncCheck] tick=60 checksum=04767934
+[SyncCheck] tick=61 checksum=90915B74
+[SyncCheck] tick=62 checksum=1CAC3DB4
+[SyncCheck] tick=63 checksum=A8C71FF4
+[SyncCheck] tick=64 checksum=34E20234
+[SyncCheck] tick=65 checksum=C0FCE474
+[SyncCheck] tick=66 checksum=4D17C6B4
+[SyncCheck] tick=67 checksum=D932A8F4
+[SyncCheck] tick=68 checksum=654D8B34
+[SyncCheck] tick=69 checksum=F1686D74
+[SyncCheck] tick=70 checksum=7D834FB4
+[SyncCheck] tick=71 checksum=099E31F4
+[SyncCheck] tick=72 checksum=95B91434
+[SyncCheck] tick=73 checksum=21D3F674
+[SyncCheck] tick=74 checksum=ADEED8B4
+[SyncCheck] tick=75 checksum=3A09BAF4
+[SyncCheck] tick=76 checksum=C6249D34
+[SyncCheck] tick=77 checksum=523F7F74
+[SyncCheck] tick=78 checksum=DE5A61B4
+[SyncCheck] tick=79 checksum=6A7543F4
+[SyncCheck] tick=80 checksum=F6902634
+[SyncCheck] tick=81 checksum=82AB0874
+[SyncCheck] tick=82 checksum=0EC5EAB4
+[SyncCheck] tick=83 checksum=9AE0CCF4
+[SyncCheck] tick=84 checksum=26FBAF34
+[SyncCheck] tick=85 checksum=B3169174
+[SyncCheck] tick=86 checksum=3F3173B4
+[SyncCheck] tick=87 checksum=CB4C55F4
+[SyncCheck] tick=88 checksum=57673834
+[SyncCheck] tick=89 checksum=E3821A74
+[SyncCheck] tick=90 checksum=6F9CFCB4
+[SyncCheck] tick=91 checksum=FBB7DEF4
+[SyncCheck] tick=92 checksum=87D2C134
+[SyncCheck] tick=93 checksum=13EDA374
+[SyncCheck] tick=94 checksum=A00885B4
+[SyncCheck] tick=95 checksum=2C2367F4
+[SyncCheck] tick=96 checksum=B83E4A34
+[SyncCheck] tick=97 checksum=44592C74
+[SyncCheck] tick=98 checksum=D0740EB4
+[SyncCheck] tick=99 checksum=5C8EF0F4
+[SyncCheck] tick=100 checksum=E8A9D334
+[Commander] Goal #1: status=WaitingForProduction owned=2 queued=2; Owned 2, queued 2, target 4.
+[Commander] Goal #1: status=WaitingForProduction owned=3 queued=1; Owned 3, queued 1, target 4.
+[Commander] Goal #1: status=Completed owned=4 queued=0; Owned 4/4 living units.
+[Commander] Goal #2: status=Executing owned=0 queued=0; Resolved a point patrol route from each selected unit's starting position to a visible game-side anchor.
+[Phase4G Runtime] PASS exact result binding: tick=901, spearmen=7,8,9, patrol=Executing.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

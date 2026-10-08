@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Failed(Child)" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 16:45:10Z" end-time="2026-10-08 16:45:12Z" duration="2.3222244">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1459" result="Failed" site="Child" start-time="2026-10-08 16:45:10Z" end-time="2026-10-08 16:45:12Z" duration="2.322224" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2680" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1459" result="Failed" site="Child" start-time="2026-10-08 16:45:10Z" end-time="2026-10-08 16:45:12Z" duration="2.309937" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="27016" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2681" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1459" result="Failed" site="Child" start-time="2026-10-08 16:45:10Z" end-time="2026-10-08 16:45:12Z" duration="2.215374" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2682" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1459" result="Failed" site="Child" start-time="2026-10-08 16:45:10Z" end-time="2026-10-08 16:45:12Z" duration="2.114550" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1200" name="CommanderGrandFixProviderSetupTests" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" testcasecount="15" result="Failed" site="Child" start-time="2026-10-08 16:45:10Z" end-time="2026-10-08 16:45:12Z" duration="2.013716" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1217" name="ChangedSessionToPaddedUuid_IsRejectedBeforeGatewayUpload" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.ChangedSessionToPaddedUuid_IsRejectedBeforeGatewayUpload" methodname="ChangedSessionToPaddedUuid_IsRejectedBeforeGatewayUpload" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="686052706" result="Failed" start-time="2026-10-08 16:45:11Z" end-time="2026-10-08 16:45:11Z" duration="0.888238" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  A changed credential must remain exactly bounded, not trimmed and forwarded.
+  Expected: 0
+  But was:  1
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.ChangedSessionToPaddedUuid_IsRejectedBeforeGatewayUpload () [0x000e3] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixProviderSetupTests.cs:146
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-08T16:45:11.8555461Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=3
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=40;finish=stop
+[CommanderProvider] semantic=Answer;nodes=0
+]]></output>
+            </test-case>
+            <test-case id="1216" name="GatewayNetworkError_ReportsConnectionActionNotInventedHttpServiceFailure" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.GatewayNetworkError_ReportsConnectionActionNotInventedHttpServiceFailure" methodname="GatewayNetworkError_ReportsConnectionActionNotInventedHttpServiceFailure" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="183605559" result="Failed" start-time="2026-10-08 16:45:11Z" end-time="2026-10-08 16:45:12Z" duration="0.503538" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "connection failed"
+  But was:  "Luna gateway service unavailable. Check gateway/provider setup and try again later."
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.GatewayNetworkError_ReportsConnectionActionNotInventedHttpServiceFailure () [0x000c4] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixProviderSetupTests.cs:139
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-08T16:45:12.3067623Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=503;durationMs=1
+]]></output>
+            </test-case>
+            <test-case id="1215" name="InvalidReplacementAttempt_DoesNotHideActualActiveRouteAuthenticationFailure" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.InvalidReplacementAttempt_DoesNotHideActualActiveRouteAuthenticationFailure" methodname="InvalidReplacementAttempt_DoesNotHideActualActiveRouteAuthenticationFailure" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="661675793" result="Failed" start-time="2026-10-08 16:45:12Z" end-time="2026-10-08 16:45:12Z" duration="0.507137" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "authentication failed"
+  But was:  "Enter a bounded OpenRouter semantic key, not a speech API key. No validation request was sent."
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.InvalidReplacementAttempt_DoesNotHideActualActiveRouteAuthenticationFailure () [0x000f0] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixProviderSetupTests.cs:132
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-08T16:45:12.8120925Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=401;durationMs=1
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,0 +1,1132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="117" result="Passed" total="117" passed="117" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 05:40:02Z" end-time="2026-10-08 05:41:46Z" duration="103.8719285">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1331" result="Passed" start-time="2026-10-08 05:40:02Z" end-time="2026-10-08 05:41:46Z" duration="103.871929" total="117" passed="117" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="2528" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1331" result="Passed" start-time="2026-10-08 05:40:02Z" end-time="2026-10-08 05:41:46Z" duration="103.712597" total="117" passed="117" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="2529" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1331" result="Passed" start-time="2026-10-08 05:40:02Z" end-time="2026-10-08 05:41:46Z" duration="103.672052" total="117" passed="117" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="2530" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1331" result="Passed" start-time="2026-10-08 05:40:02Z" end-time="2026-10-08 05:41:46Z" duration="103.563030" total="117" passed="117" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1155" name="CommanderGrandFixQuantityTests" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" testcasecount="21" result="Passed" start-time="2026-10-08 05:40:03Z" end-time="2026-10-08 05:40:25Z" duration="22.401710" total="21" passed="21" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <test-suite type="ParameterizedMethod" id="1179" name="DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-08 05:40:03Z" end-time="2026-10-08 05:40:07Z" duration="3.856333" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1176" name="DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit(False,1)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit(False,1)" methodname="DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="814215746" result="Passed" start-time="2026-10-08 05:40:03Z" end-time="2026-10-08 05:40:04Z" duration="1.730286" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #2 submitted: CapabilityAction
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+[Commander] Goal #1: status=WaitingForProduction owned=0 queued=1; Owned 0, queued 1, target 1.
+]]></output>
+              </test-case>
+              <test-case id="1177" name="DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit(True,1)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit(True,1)" methodname="DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="236466538" result="Passed" start-time="2026-10-08 05:40:04Z" end-time="2026-10-08 05:40:05Z" duration="0.991597" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #2 submitted: CapabilityAction
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+[Commander] Goal #1: status=WaitingForProduction owned=0 queued=1; Owned 0, queued 1, target 1.
+]]></output>
+              </test-case>
+              <test-case id="1178" name="DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit(True,2)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit(True,2)" methodname="DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="2004588943" result="Passed" start-time="2026-10-08 05:40:05Z" end-time="2026-10-08 05:40:06Z" duration="1.011361" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #2 submitted: CapabilityAction
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+[Commander] Goal #1: status=WaitingForProduction owned=0 queued=1; All compatible production queues are at Commander limit 1.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-case id="1163" name="ExplicitNew_PreservesFiveNewWithFourExistingAndHumanQueue" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.ExplicitNew_PreservesFiveNewWithFourExistingAndHumanQueue" methodname="ExplicitNew_PreservesFiveNewWithFourExistingAndHumanQueue" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="773946193" result="Passed" start-time="2026-10-08 05:40:07Z" end-time="2026-10-08 05:40:08Z" duration="1.075599" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: EnsureUnitCount
+[Commander] Goal #3 submitted: CapabilityAction
+]]></output>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1166" name="MaterialTotalBaselineChange_RequiresNewPreviewBeforeApproval" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.MaterialTotalBaselineChange_RequiresNewPreviewBeforeApproval" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-08 05:40:08Z" end-time="2026-10-08 05:40:10Z" duration="2.046073" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1164" name="MaterialTotalBaselineChange_RequiresNewPreviewBeforeApproval(False)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.MaterialTotalBaselineChange_RequiresNewPreviewBeforeApproval(False)" methodname="MaterialTotalBaselineChange_RequiresNewPreviewBeforeApproval" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="1022214526" result="Passed" start-time="2026-10-08 05:40:08Z" end-time="2026-10-08 05:40:09Z" duration="1.080922" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1165" name="MaterialTotalBaselineChange_RequiresNewPreviewBeforeApproval(True)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.MaterialTotalBaselineChange_RequiresNewPreviewBeforeApproval(True)" methodname="MaterialTotalBaselineChange_RequiresNewPreviewBeforeApproval" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="42209314" result="Passed" start-time="2026-10-08 05:40:09Z" end-time="2026-10-08 05:40:10Z" duration="0.954303" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1169" name="MaterialTotalBaselineChangeAfterApproval_RejectsCommitAtomically" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.MaterialTotalBaselineChangeAfterApproval_RejectsCommitAtomically" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-08 05:40:10Z" end-time="2026-10-08 05:40:12Z" duration="2.052489" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1167" name="MaterialTotalBaselineChangeAfterApproval_RejectsCommitAtomically(False)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.MaterialTotalBaselineChangeAfterApproval_RejectsCommitAtomically(False)" methodname="MaterialTotalBaselineChangeAfterApproval_RejectsCommitAtomically" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="2097794581" result="Passed" start-time="2026-10-08 05:40:10Z" end-time="2026-10-08 05:40:11Z" duration="1.025655" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1168" name="MaterialTotalBaselineChangeAfterApproval_RejectsCommitAtomically(True)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.MaterialTotalBaselineChangeAfterApproval_RejectsCommitAtomically(True)" methodname="MaterialTotalBaselineChangeAfterApproval_RejectsCommitAtomically" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="990972484" result="Passed" start-time="2026-10-08 05:40:11Z" end-time="2026-10-08 05:40:12Z" duration="1.021405" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1172" name="NewMode_SurvivesDtoRoundTripWithoutBecomingTargetTotal" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.NewMode_SurvivesDtoRoundTripWithoutBecomingTargetTotal" methodname="NewMode_SurvivesDtoRoundTripWithoutBecomingTargetTotal" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="306079822" result="Passed" start-time="2026-10-08 05:40:12Z" end-time="2026-10-08 05:40:13Z" duration="1.033125" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1180" name="ParallelAlreadySatisfiedTotal_DoesNotRejectAnOtherwiseExactNewResult" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.ParallelAlreadySatisfiedTotal_DoesNotRejectAnOtherwiseExactNewResult" methodname="ParallelAlreadySatisfiedTotal_DoesNotRejectAnOtherwiseExactNewResult" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="395280574" result="Passed" start-time="2026-10-08 05:40:13Z" end-time="2026-10-08 05:40:14Z" duration="1.074079" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #2 submitted: EnsureUnitCount
+[Commander] Goal #3 submitted: CapabilityAction
+]]></output>
+            </test-case>
+            <test-case id="1175" name="ParallelOverlappingTotalResultProducers_RejectUnfulfillableReceiptPromises" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.ParallelOverlappingTotalResultProducers_RejectUnfulfillableReceiptPromises" methodname="ParallelOverlappingTotalResultProducers_RejectUnfulfillableReceiptPromises" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="495855498" result="Passed" start-time="2026-10-08 05:40:14Z" end-time="2026-10-08 05:40:15Z" duration="0.940809" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1170" name="QueueMaturationWithSameExpectedNewCount_DoesNotInvalidateApproval" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.QueueMaturationWithSameExpectedNewCount_DoesNotInvalidateApproval" methodname="QueueMaturationWithSameExpectedNewCount_DoesNotInvalidateApproval" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="1742365156" result="Passed" start-time="2026-10-08 05:40:15Z" end-time="2026-10-08 05:40:16Z" duration="1.037962" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: EnsureUnitCount
+[Commander] Goal #3 submitted: CapabilityAction
+]]></output>
+            </test-case>
+            <test-case id="1171" name="ResourceWaitAndExplicitNewBaselineGrowth_DoNotInvalidateUnchangedEffects" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.ResourceWaitAndExplicitNewBaselineGrowth_DoNotInvalidateUnchangedEffects" methodname="ResourceWaitAndExplicitNewBaselineGrowth_DoNotInvalidateUnchangedEffects" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="100712875" result="Passed" start-time="2026-10-08 05:40:16Z" end-time="2026-10-08 05:40:17Z" duration="1.032477" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: EnsureUnitCount
+[Commander] Goal #3 submitted: CapabilityAction
+]]></output>
+            </test-case>
+            <test-case id="1174" name="SequentialTotalProduction_QuotesOnlyRemainingNewForItsDependentResult" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.SequentialTotalProduction_QuotesOnlyRemainingNewForItsDependentResult" methodname="SequentialTotalProduction_QuotesOnlyRemainingNewForItsDependentResult" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="379045737" result="Passed" start-time="2026-10-08 05:40:17Z" end-time="2026-10-08 05:40:18Z" duration="0.984473" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #2 submitted: EnsureUnitCount
+[Commander] Goal #3 submitted: CapabilityAction
+]]></output>
+            </test-case>
+            <test-case id="1173" name="SingleKnownIntentNew_CarriesExactNewCountIntoOrdinaryRegistration" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.SingleKnownIntentNew_CarriesExactNewCountIntoOrdinaryRegistration" methodname="SingleKnownIntentNew_CarriesExactNewCountIntoOrdinaryRegistration" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="2048076055" result="Passed" start-time="2026-10-08 05:40:18Z" end-time="2026-10-08 05:40:19Z" duration="1.179201" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+]]></output>
+            </test-case>
+            <test-case id="1162" name="TotalResult_AccountsForUnrelatedQueuedUnitsWithoutClaimingThemAsNewResults" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.TotalResult_AccountsForUnrelatedQueuedUnitsWithoutClaimingThemAsNewResults" methodname="TotalResult_AccountsForUnrelatedQueuedUnitsWithoutClaimingThemAsNewResults" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="1785508486" result="Passed" start-time="2026-10-08 05:40:19Z" end-time="2026-10-08 05:40:20Z" duration="0.981898" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: EnsureUnitCount
+[Commander] Goal #3 submitted: CapabilityAction
+]]></output>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1161" name="TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-08 05:40:20Z" end-time="2026-10-08 05:40:25Z" duration="4.989420" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1156" name="TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction(4,0,5,5)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction(4,0,5,5)" methodname="TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="152865051" result="Passed" start-time="2026-10-08 05:40:20Z" end-time="2026-10-08 05:40:21Z" duration="0.985376" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1157" name="TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction(3,1,5,2)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction(3,1,5,2)" methodname="TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="1618272148" result="Passed" start-time="2026-10-08 05:40:21Z" end-time="2026-10-08 05:40:22Z" duration="1.034892" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1158" name="TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction(0,5,5,5)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction(0,5,5,5)" methodname="TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="195356914" result="Passed" start-time="2026-10-08 05:40:22Z" end-time="2026-10-08 05:40:23Z" duration="0.939307" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1159" name="TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction(0,0,5,4)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction(0,0,5,4)" methodname="TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="940024470" result="Passed" start-time="2026-10-08 05:40:23Z" end-time="2026-10-08 05:40:24Z" duration="1.063516" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1160" name="TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction(0,0,5,6)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction(0,0,5,6)" methodname="TotalResultCardinalityMismatch_RejectsWholeGraphBeforeHouseOrProduction" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="1493961837" result="Passed" start-time="2026-10-08 05:40:24Z" end-time="2026-10-08 05:40:25Z" duration="0.954065" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+          </test-suite>
+          <test-suite type="TestFixture" id="1181" name="CommanderGrandFixScopeTests" fullname="OpenEmpires.Tests.CommanderGrandFixScopeTests" classname="OpenEmpires.Tests.CommanderGrandFixScopeTests" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-10-08 05:40:25Z" end-time="2026-10-08 05:40:26Z" duration="1.106656" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <test-suite type="ParameterizedMethod" id="1195" name="CapabilityScope_DistinguishesActorLocationTypeTechnologyAndRadius" fullname="OpenEmpires.Tests.CommanderGrandFixScopeTests.CapabilityScope_DistinguishesActorLocationTypeTechnologyAndRadius" classname="OpenEmpires.Tests.CommanderGrandFixScopeTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-08 05:40:25Z" end-time="2026-10-08 05:40:25Z" duration="0.007704" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1189" name="CapabilityScope_DistinguishesActorLocationTypeTechnologyAndRadius(0)" fullname="OpenEmpires.Tests.CommanderGrandFixScopeTests.CapabilityScope_DistinguishesActorLocationTypeTechnologyAndRadius(0)" methodname="CapabilityScope_DistinguishesActorLocationTypeTechnologyAndRadius" classname="OpenEmpires.Tests.CommanderGrandFixScopeTests" runstate="Runnable" seed="493638339" result="Passed" start-time="2026-10-08 05:40:25Z" end-time="2026-10-08 05:40:25Z" duration="0.002774" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1190" name="CapabilityScope_DistinguishesActorLocationTypeTechnologyAndRadius(1)" fullname="OpenEmpires.Tests.CommanderGrandFixScopeTests.CapabilityScope_DistinguishesActorLocationTypeTechnologyAndRadius(1)" methodname="CapabilityScope_DistinguishesActorLocationTypeTechnologyAndRadius" classname="OpenEmpires.Tests.CommanderGrandFixScopeTests" runstate="Runnable" seed="470237133" result="Passed" start-time="2026-10-08 05:40:25Z" end-time="2026-10-08 05:40:25Z" duration="0.000292" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1191" name="CapabilityScope_DistinguishesActorLocationTypeTechnologyAndRadius(2)" fullname="OpenEmpires.Tests.CommanderGrandFixScopeTests.CapabilityScope_DistinguishesActorLocationTypeTechnologyAndRadius(2)" methodname="CapabilityScope_DistinguishesActorLocationTypeTechnologyAndRadius" classname="OpenEmpires.Tests.CommanderGrandFixScopeTests" runstate="Runnable" seed="344867323" result="Passed" start-time="2026-10-08 05:40:25Z" end-time="2026-10-08 05:40:25Z" duration="0.000273" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1192" name="CapabilityScope_DistinguishesActorLocationTypeTechnologyAndRadius(3)" fullname="OpenEmpires.Tests.CommanderGrandFixScopeTests.CapabilityScope_DistinguishesActorLocationTypeTechnologyAndRadius(3)" methodname="CapabilityScope_DistinguishesActorLocationTypeTechnologyAndRadius" classname="OpenEmpires.Tests.CommanderGrandFixScopeTests" runstate="Runnable" seed="1510931433" result="Passed" start-time="2026-10-08 05:40:25Z" end-time="2026-10-08 05:40:25Z" duration="0.000240" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1193" name="CapabilityScope_DistinguishesActorLocationTypeTechnologyAndRadius(4)" fullname="OpenEmpires.Tests.CommanderGrandFixScopeTests.CapabilityScope_DistinguishesActorLocationTypeTechnologyAndRadius(4)" methodname="CapabilityScope_DistinguishesActorLocationTypeTechnologyAndRadius" classname="OpenEmpires.Tests.CommanderGrandFixScopeTests" runstate="Runnable" seed="751560075" result="Passed" start-time="2026-10-08 05:40:25Z" end-time="2026-10-08 05:40:25Z" duration="0.000407" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1194" name="CapabilityScope_DistinguishesActorLocationTypeTechnologyAndRadius(5)" fullname="OpenEmpires.Tests.CommanderGrandFixScopeTests.CapabilityScope_DistinguishesActorLocationTypeTechnologyAndRadius(5)" methodname="CapabilityScope_DistinguishesActorLocationTypeTechnologyAndRadius" classname="OpenEmpires.Tests.CommanderGrandFixScopeTests" runstate="Runnable" seed="420923946" result="Passed" start-time="2026-10-08 05:40:25Z" end-time="2026-10-08 05:40:25Z" duration="0.000271" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1182" name="EquivalentConstraintOrder_DoesNotDependOnPreviewFormatting" fullname="OpenEmpires.Tests.CommanderGrandFixScopeTests.EquivalentConstraintOrder_DoesNotDependOnPreviewFormatting" methodname="EquivalentConstraintOrder_DoesNotDependOnPreviewFormatting" classname="OpenEmpires.Tests.CommanderGrandFixScopeTests" runstate="Runnable" seed="1550685718" result="Passed" start-time="2026-10-08 05:40:25Z" end-time="2026-10-08 05:40:26Z" duration="1.074478" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+]]></output>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1188" name="ProductionScope_DistinguishesEveryCountTypeOwnerAndConstraintField" fullname="OpenEmpires.Tests.CommanderGrandFixScopeTests.ProductionScope_DistinguishesEveryCountTypeOwnerAndConstraintField" classname="OpenEmpires.Tests.CommanderGrandFixScopeTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-08 05:40:26Z" end-time="2026-10-08 05:40:26Z" duration="0.015270" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1183" name="ProductionScope_DistinguishesEveryCountTypeOwnerAndConstraintField(0)" fullname="OpenEmpires.Tests.CommanderGrandFixScopeTests.ProductionScope_DistinguishesEveryCountTypeOwnerAndConstraintField(0)" methodname="ProductionScope_DistinguishesEveryCountTypeOwnerAndConstraintField" classname="OpenEmpires.Tests.CommanderGrandFixScopeTests" runstate="Runnable" seed="1222062646" result="Passed" start-time="2026-10-08 05:40:26Z" end-time="2026-10-08 05:40:26Z" duration="0.002397" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1184" name="ProductionScope_DistinguishesEveryCountTypeOwnerAndConstraintField(1)" fullname="OpenEmpires.Tests.CommanderGrandFixScopeTests.ProductionScope_DistinguishesEveryCountTypeOwnerAndConstraintField(1)" methodname="ProductionScope_DistinguishesEveryCountTypeOwnerAndConstraintField" classname="OpenEmpires.Tests.CommanderGrandFixScopeTests" runstate="Runnable" seed="1524092548" result="Passed" start-time="2026-10-08 05:40:26Z" end-time="2026-10-08 05:40:26Z" duration="0.000349" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1185" name="ProductionScope_DistinguishesEveryCountTypeOwnerAndConstraintField(2)" fullname="OpenEmpires.Tests.CommanderGrandFixScopeTests.ProductionScope_DistinguishesEveryCountTypeOwnerAndConstraintField(2)" methodname="ProductionScope_DistinguishesEveryCountTypeOwnerAndConstraintField" classname="OpenEmpires.Tests.CommanderGrandFixScopeTests" runstate="Runnable" seed="251423494" result="Passed" start-time="2026-10-08 05:40:26Z" end-time="2026-10-08 05:40:26Z" duration="0.000252" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1186" name="ProductionScope_DistinguishesEveryCountTypeOwnerAndConstraintField(3)" fullname="OpenEmpires.Tests.CommanderGrandFixScopeTests.ProductionScope_DistinguishesEveryCountTypeOwnerAndConstraintField(3)" methodname="ProductionScope_DistinguishesEveryCountTypeOwnerAndConstraintField" classname="OpenEmpires.Tests.CommanderGrandFixScopeTests" runstate="Runnable" seed="1178559259" result="Passed" start-time="2026-10-08 05:40:26Z" end-time="2026-10-08 05:40:26Z" duration="0.000248" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1187" name="ProductionScope_DistinguishesEveryCountTypeOwnerAndConstraintField(4)" fullname="OpenEmpires.Tests.CommanderGrandFixScopeTests.ProductionScope_DistinguishesEveryCountTypeOwnerAndConstraintField(4)" methodname="ProductionScope_DistinguishesEveryCountTypeOwnerAndConstraintField" classname="OpenEmpires.Tests.CommanderGrandFixScopeTests" runstate="Runnable" seed="1485582971" result="Passed" start-time="2026-10-08 05:40:26Z" end-time="2026-10-08 05:40:26Z" duration="0.000253" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1196" name="Scope_RejectsUnknownIntentAndConstraintWithoutDisplayOrReflectionSerialization" fullname="OpenEmpires.Tests.CommanderGrandFixScopeTests.Scope_RejectsUnknownIntentAndConstraintWithoutDisplayOrReflectionSerialization" methodname="Scope_RejectsUnknownIntentAndConstraintWithoutDisplayOrReflectionSerialization" classname="OpenEmpires.Tests.CommanderGrandFixScopeTests" runstate="Runnable" seed="1850176759" result="Passed" start-time="2026-10-08 05:40:26Z" end-time="2026-10-08 05:40:26Z" duration="0.001548" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1197" name="CommanderGrandFixTargetTests" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" testcasecount="29" result="Passed" start-time="2026-10-08 05:40:26Z" end-time="2026-10-08 05:40:56Z" duration="29.569216" total="29" passed="29" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <test-case id="1231" name="ArcherTarget_UsesEnemyCivilizationReplacementNotActorsCivilization" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.ArcherTarget_UsesEnemyCivilizationReplacementNotActorsCivilization" methodname="ArcherTarget_UsesEnemyCivilizationReplacementNotActorsCivilization" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="49671227" result="Passed" start-time="2026-10-08 05:40:26Z" end-time="2026-10-08 05:40:27Z" duration="1.069086" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1230" name="AttackBlockedForActors_TargetLossDoesNotSelectAnotherArcher" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.AttackBlockedForActors_TargetLossDoesNotSelectAnotherArcher" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-08 05:40:27Z" end-time="2026-10-08 05:40:31Z" duration="4.044589" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1226" name="AttackBlockedForActors_TargetLossDoesNotSelectAnotherArcher(&quot;owner&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.AttackBlockedForActors_TargetLossDoesNotSelectAnotherArcher(&quot;owner&quot;)" methodname="AttackBlockedForActors_TargetLossDoesNotSelectAnotherArcher" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="1521526635" result="Passed" start-time="2026-10-08 05:40:27Z" end-time="2026-10-08 05:40:28Z" duration="0.971868" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] Goal #1 submitted: CapabilityAction
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No eligible owned units match the requested selector.
+[Commander] Goal #1: status=Blocked owned=0 queued=0; The resolved target was lost, changed owner/type, became hidden or is no longer eligible; no substitute is allowed.
+]]></output>
+              </test-case>
+              <test-case id="1227" name="AttackBlockedForActors_TargetLossDoesNotSelectAnotherArcher(&quot;hidden&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.AttackBlockedForActors_TargetLossDoesNotSelectAnotherArcher(&quot;hidden&quot;)" methodname="AttackBlockedForActors_TargetLossDoesNotSelectAnotherArcher" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="1379288581" result="Passed" start-time="2026-10-08 05:40:28Z" end-time="2026-10-08 05:40:29Z" duration="1.091909" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] Goal #1 submitted: CapabilityAction
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No eligible owned units match the requested selector.
+[Commander] Goal #1: status=Blocked owned=0 queued=0; The resolved target was lost, changed owner/type, became hidden or is no longer eligible; no substitute is allowed.
+]]></output>
+              </test-case>
+              <test-case id="1228" name="AttackBlockedForActors_TargetLossDoesNotSelectAnotherArcher(&quot;dead&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.AttackBlockedForActors_TargetLossDoesNotSelectAnotherArcher(&quot;dead&quot;)" methodname="AttackBlockedForActors_TargetLossDoesNotSelectAnotherArcher" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="54508060" result="Passed" start-time="2026-10-08 05:40:29Z" end-time="2026-10-08 05:40:30Z" duration="0.982851" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] Goal #1 submitted: CapabilityAction
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No eligible owned units match the requested selector.
+[Commander] Goal #1: status=Blocked owned=0 queued=0; The resolved target was lost, changed owner/type, became hidden or is no longer eligible; no substitute is allowed.
+]]></output>
+              </test-case>
+              <test-case id="1229" name="AttackBlockedForActors_TargetLossDoesNotSelectAnotherArcher(&quot;type&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.AttackBlockedForActors_TargetLossDoesNotSelectAnotherArcher(&quot;type&quot;)" methodname="AttackBlockedForActors_TargetLossDoesNotSelectAnotherArcher" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="1253837236" result="Passed" start-time="2026-10-08 05:40:30Z" end-time="2026-10-08 05:40:31Z" duration="0.989847" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] Goal #1 submitted: CapabilityAction
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No eligible owned units match the requested selector.
+[Commander] Goal #1: status=Blocked owned=0 queued=0; The resolved target was lost, changed owner/type, became hidden or is no longer eligible; no substitute is allowed.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-case id="1199" name="AttackNamedArchers_DoesNotChooseNearerDifferentTypeOrChangeActor" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.AttackNamedArchers_DoesNotChooseNearerDifferentTypeOrChangeActor" methodname="AttackNamedArchers_DoesNotChooseNearerDifferentTypeOrChangeActor" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="1837177883" result="Passed" start-time="2026-10-08 05:40:31Z" end-time="2026-10-08 05:40:32Z" duration="1.011631" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1219" name="IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-08 05:40:32Z" end-time="2026-10-08 05:40:38Z" duration="6.166767" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1213" name="IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals(&quot;RepairTarget&quot;,&quot;Villagers&quot;,&quot;{\&quot;kind\&quot;:\&quot;UnitType\&quot;,\&quot;unit\&quot;:\&quot;Archer\&quot;}&quot;,&quot;PlayerBase&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals(&quot;RepairTarget&quot;,&quot;Villagers&quot;,&quot;{\&quot;kind\&quot;:\&quot;UnitType\&quot;,\&quot;unit\&quot;:\&quot;Archer\&quot;}&quot;,&quot;PlayerBase&quot;)" methodname="IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="1044502009" result="Passed" start-time="2026-10-08 05:40:32Z" end-time="2026-10-08 05:40:33Z" duration="0.942256" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1214" name="IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals(&quot;MoveUnits&quot;,&quot;Military&quot;,&quot;{\&quot;kind\&quot;:\&quot;BuildingType\&quot;,\&quot;structure\&quot;:\&quot;TownCenter\&quot;}&quot;,&quot;PlayerBase&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals(&quot;MoveUnits&quot;,&quot;Military&quot;,&quot;{\&quot;kind\&quot;:\&quot;BuildingType\&quot;,\&quot;structure\&quot;:\&quot;TownCenter\&quot;}&quot;,&quot;PlayerBase&quot;)" methodname="IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="995776896" result="Passed" start-time="2026-10-08 05:40:33Z" end-time="2026-10-08 05:40:34Z" duration="1.083335" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1215" name="IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals(&quot;AttackTarget&quot;,&quot;Spearman&quot;,&quot;{\&quot;kind\&quot;:\&quot;UnitType\&quot;,\&quot;unit\&quot;:\&quot;Archer\&quot;}&quot;,&quot;PlayerBase&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals(&quot;AttackTarget&quot;,&quot;Spearman&quot;,&quot;{\&quot;kind\&quot;:\&quot;UnitType\&quot;,\&quot;unit\&quot;:\&quot;Archer\&quot;}&quot;,&quot;PlayerBase&quot;)" methodname="IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="1593693083" result="Passed" start-time="2026-10-08 05:40:34Z" end-time="2026-10-08 05:40:35Z" duration="0.946877" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1216" name="IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals(&quot;AttackTarget&quot;,&quot;Spearman&quot;,&quot;{\&quot;kind\&quot;:\&quot;UnitType\&quot;,\&quot;unit\&quot;:\&quot;Archer\&quot;,\&quot;id\&quot;:7}&quot;,&quot;VisibleEnemy&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals(&quot;AttackTarget&quot;,&quot;Spearman&quot;,&quot;{\&quot;kind\&quot;:\&quot;UnitType\&quot;,\&quot;unit\&quot;:\&quot;Archer\&quot;,\&quot;id\&quot;:7}&quot;,&quot;VisibleEnemy&quot;)" methodname="IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="104699361" result="Passed" start-time="2026-10-08 05:40:35Z" end-time="2026-10-08 05:40:36Z" duration="0.996117" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1217" name="IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals(&quot;AttackTarget&quot;,&quot;Spearman&quot;,&quot;{\&quot;kind\&quot;:\&quot;UnitType\&quot;,\&quot;unit\&quot;:\&quot;Unknown\&quot;}&quot;,&quot;VisibleEnemy&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals(&quot;AttackTarget&quot;,&quot;Spearman&quot;,&quot;{\&quot;kind\&quot;:\&quot;UnitType\&quot;,\&quot;unit\&quot;:\&quot;Unknown\&quot;}&quot;,&quot;VisibleEnemy&quot;)" methodname="IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="1528566487" result="Passed" start-time="2026-10-08 05:40:36Z" end-time="2026-10-08 05:40:37Z" duration="1.160925" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1218" name="IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals(&quot;AttackTarget&quot;,&quot;Spearman&quot;,&quot;{\&quot;kind\&quot;:\&quot;SelectedGroup\&quot;}&quot;,&quot;VisibleEnemy&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals(&quot;AttackTarget&quot;,&quot;Spearman&quot;,&quot;{\&quot;kind\&quot;:\&quot;SelectedGroup\&quot;}&quot;,&quot;VisibleEnemy&quot;)" methodname="IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="1690386610" result="Passed" start-time="2026-10-08 05:40:37Z" end-time="2026-10-08 05:40:38Z" duration="1.024373" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1205" name="MultipleTownCenters_SelectLowestOwnedIdBeforeDamageEligibility" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.MultipleTownCenters_SelectLowestOwnedIdBeforeDamageEligibility" methodname="MultipleTownCenters_SelectLowestOwnedIdBeforeDamageEligibility" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="831520134" result="Passed" start-time="2026-10-08 05:40:38Z" end-time="2026-10-08 05:40:40Z" duration="1.233396" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1212" name="NamedEnemyBuilding_DoesNotSubstituteVisibleEnemyUnit" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedEnemyBuilding_DoesNotSubstituteVisibleEnemyUnit" methodname="NamedEnemyBuilding_DoesNotSubstituteVisibleEnemyUnit" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="1553212239" result="Passed" start-time="2026-10-08 05:40:40Z" end-time="2026-10-08 05:40:41Z" duration="0.950751" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1211" name="NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-08 05:40:41Z" end-time="2026-10-08 05:40:46Z" duration="5.194293" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1206" name="NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding(&quot;missing&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding(&quot;missing&quot;)" methodname="NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="1069166213" result="Passed" start-time="2026-10-08 05:40:41Z" end-time="2026-10-08 05:40:42Z" duration="1.017219" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1207" name="NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding(&quot;dead&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding(&quot;dead&quot;)" methodname="NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="414548735" result="Passed" start-time="2026-10-08 05:40:42Z" end-time="2026-10-08 05:40:43Z" duration="1.059956" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1208" name="NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding(&quot;hidden&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding(&quot;hidden&quot;)" methodname="NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="115258989" result="Passed" start-time="2026-10-08 05:40:43Z" end-time="2026-10-08 05:40:44Z" duration="0.966635" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1209" name="NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding(&quot;ally&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding(&quot;ally&quot;)" methodname="NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="400125856" result="Passed" start-time="2026-10-08 05:40:44Z" end-time="2026-10-08 05:40:45Z" duration="1.121127" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1210" name="NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding(&quot;self&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding(&quot;self&quot;)" methodname="NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="760924868" result="Passed" start-time="2026-10-08 05:40:45Z" end-time="2026-10-08 05:40:46Z" duration="1.020598" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1204" name="NamedRepairUnavailable_DoesNotSubstituteDamagedHouse" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedRepairUnavailable_DoesNotSubstituteDamagedHouse" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-08 05:40:46Z" end-time="2026-10-08 05:40:50Z" duration="3.935987" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1200" name="NamedRepairUnavailable_DoesNotSubstituteDamagedHouse(&quot;missing&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedRepairUnavailable_DoesNotSubstituteDamagedHouse(&quot;missing&quot;)" methodname="NamedRepairUnavailable_DoesNotSubstituteDamagedHouse" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="590235657" result="Passed" start-time="2026-10-08 05:40:46Z" end-time="2026-10-08 05:40:47Z" duration="0.991388" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1201" name="NamedRepairUnavailable_DoesNotSubstituteDamagedHouse(&quot;repaired&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedRepairUnavailable_DoesNotSubstituteDamagedHouse(&quot;repaired&quot;)" methodname="NamedRepairUnavailable_DoesNotSubstituteDamagedHouse" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="1200002134" result="Passed" start-time="2026-10-08 05:40:47Z" end-time="2026-10-08 05:40:48Z" duration="0.990818" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1202" name="NamedRepairUnavailable_DoesNotSubstituteDamagedHouse(&quot;destroyed&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedRepairUnavailable_DoesNotSubstituteDamagedHouse(&quot;destroyed&quot;)" methodname="NamedRepairUnavailable_DoesNotSubstituteDamagedHouse" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="673945304" result="Passed" start-time="2026-10-08 05:40:48Z" end-time="2026-10-08 05:40:49Z" duration="0.961938" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1203" name="NamedRepairUnavailable_DoesNotSubstituteDamagedHouse(&quot;foreign&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedRepairUnavailable_DoesNotSubstituteDamagedHouse(&quot;foreign&quot;)" methodname="NamedRepairUnavailable_DoesNotSubstituteDamagedHouse" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="1975324619" result="Passed" start-time="2026-10-08 05:40:49Z" end-time="2026-10-08 05:40:50Z" duration="0.982915" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1225" name="RepairBlockedForActors_TargetLossDoesNotSelectAnotherTownCenter" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.RepairBlockedForActors_TargetLossDoesNotSelectAnotherTownCenter" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-08 05:40:50Z" end-time="2026-10-08 05:40:54Z" duration="3.967277" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1221" name="RepairBlockedForActors_TargetLossDoesNotSelectAnotherTownCenter(&quot;owner&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.RepairBlockedForActors_TargetLossDoesNotSelectAnotherTownCenter(&quot;owner&quot;)" methodname="RepairBlockedForActors_TargetLossDoesNotSelectAnotherTownCenter" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="944480309" result="Passed" start-time="2026-10-08 05:40:50Z" end-time="2026-10-08 05:40:51Z" duration="0.987183" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] Goal #1 submitted: CapabilityAction
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No eligible owned villagers are available for repair.
+[Commander] Goal #1: status=Blocked owned=0 queued=0; The resolved target was lost, changed owner/type, became hidden or is no longer eligible; no substitute is allowed.
+]]></output>
+              </test-case>
+              <test-case id="1222" name="RepairBlockedForActors_TargetLossDoesNotSelectAnotherTownCenter(&quot;repaired&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.RepairBlockedForActors_TargetLossDoesNotSelectAnotherTownCenter(&quot;repaired&quot;)" methodname="RepairBlockedForActors_TargetLossDoesNotSelectAnotherTownCenter" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="2107448382" result="Passed" start-time="2026-10-08 05:40:51Z" end-time="2026-10-08 05:40:52Z" duration="0.978530" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] Goal #1 submitted: CapabilityAction
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No eligible owned villagers are available for repair.
+[Commander] Goal #1: status=Blocked owned=0 queued=0; The resolved target was lost, changed owner/type, became hidden or is no longer eligible; no substitute is allowed.
+]]></output>
+              </test-case>
+              <test-case id="1223" name="RepairBlockedForActors_TargetLossDoesNotSelectAnotherTownCenter(&quot;destroyed&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.RepairBlockedForActors_TargetLossDoesNotSelectAnotherTownCenter(&quot;destroyed&quot;)" methodname="RepairBlockedForActors_TargetLossDoesNotSelectAnotherTownCenter" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="387177157" result="Passed" start-time="2026-10-08 05:40:52Z" end-time="2026-10-08 05:40:53Z" duration="1.016397" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] Goal #1 submitted: CapabilityAction
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No eligible owned villagers are available for repair.
+[Commander] Goal #1: status=Blocked owned=0 queued=0; The resolved target was lost, changed owner/type, became hidden or is no longer eligible; no substitute is allowed.
+]]></output>
+              </test-case>
+              <test-case id="1224" name="RepairBlockedForActors_TargetLossDoesNotSelectAnotherTownCenter(&quot;type&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.RepairBlockedForActors_TargetLossDoesNotSelectAnotherTownCenter(&quot;type&quot;)" methodname="RepairBlockedForActors_TargetLossDoesNotSelectAnotherTownCenter" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="1308150078" result="Passed" start-time="2026-10-08 05:40:53Z" end-time="2026-10-08 05:40:54Z" duration="0.978296" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] Goal #1 submitted: CapabilityAction
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No eligible owned villagers are available for repair.
+[Commander] Goal #1: status=Blocked owned=0 queued=0; The resolved target was lost, changed owner/type, became hidden or is no longer eligible; no substitute is allowed.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-case id="1198" name="RepairNamedTownCenter_DoesNotChooseEarlierDamagedHouse" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.RepairNamedTownCenter_DoesNotChooseEarlierDamagedHouse" methodname="RepairNamedTownCenter_DoesNotChooseEarlierDamagedHouse" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="1863655737" result="Passed" start-time="2026-10-08 05:40:54Z" end-time="2026-10-08 05:40:55Z" duration="0.970534" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1220" name="TargetSurvivesDtoRoundTripAndPreviewAndChangesAuthorizationScope" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.TargetSurvivesDtoRoundTripAndPreviewAndChangesAuthorizationScope" methodname="TargetSurvivesDtoRoundTripAndPreviewAndChangesAuthorizationScope" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="1246625527" result="Passed" start-time="2026-10-08 05:40:55Z" end-time="2026-10-08 05:40:56Z" duration="1.011441" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2276" name="CommanderPhase4GCapabilityTests" fullname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests" classname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests" runstate="Runnable" testcasecount="14" result="Passed" start-time="2026-10-08 05:40:56Z" end-time="2026-10-08 05:41:04Z" duration="8.415355" total="14" passed="14" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="2282" name="CapabilityActionIntent_DtoRoundTripsSemanticSelectors" fullname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests.CapabilityActionIntent_DtoRoundTripsSemanticSelectors" methodname="CapabilityActionIntent_DtoRoundTripsSemanticSelectors" classname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests" runstate="Runnable" seed="1021222365" result="Passed" start-time="2026-10-08 05:40:56Z" end-time="2026-10-08 05:40:56Z" duration="0.011105" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2286" name="CapabilityExecutor_DoesNotTreatAlliedVisibleUnitAsEnemy" fullname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests.CapabilityExecutor_DoesNotTreatAlliedVisibleUnitAsEnemy" methodname="CapabilityExecutor_DoesNotTreatAlliedVisibleUnitAsEnemy" classname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests" runstate="Runnable" seed="1349827808" result="Passed" start-time="2026-10-08 05:40:56Z" end-time="2026-10-08 05:40:57Z" duration="0.975253" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2288" name="CapabilityGoal_HumanOverrideBlocksWithoutFalseCompletion" fullname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests.CapabilityGoal_HumanOverrideBlocksWithoutFalseCompletion" methodname="CapabilityGoal_HumanOverrideBlocksWithoutFalseCompletion" classname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests" runstate="Runnable" seed="553599245" result="Passed" start-time="2026-10-08 05:40:57Z" end-time="2026-10-08 05:40:58Z" duration="1.086424" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: CapabilityAction
+[Commander] Goal #1: status=Executing owned=0 queued=0; Resolved a bounded owned-unit movement action.
+[Commander] Goal #1: status=Blocked owned=0 queued=0; The player took control of every eligible capability unit; Commander will not reclaim them.
+]]></output>
+            </test-case>
+            <test-case id="2287" name="CapabilityGoal_MilitaryCommandUsesNormalCommandBufferAndRemainsExecuting" fullname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests.CapabilityGoal_MilitaryCommandUsesNormalCommandBufferAndRemainsExecuting" methodname="CapabilityGoal_MilitaryCommandUsesNormalCommandBufferAndRemainsExecuting" classname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests" runstate="Runnable" seed="1024456638" result="Passed" start-time="2026-10-08 05:40:58Z" end-time="2026-10-08 05:40:59Z" duration="0.933773" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: CapabilityAction
+[Commander] Goal #1: status=Executing owned=0 queued=0; Resolved a bounded owned-unit movement action.
+]]></output>
+            </test-case>
+            <test-case id="2284" name="CapabilityIntentResolver_CreatesCapabilityGoalThroughNormalPath" fullname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests.CapabilityIntentResolver_CreatesCapabilityGoalThroughNormalPath" methodname="CapabilityIntentResolver_CreatesCapabilityGoalThroughNormalPath" classname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests" runstate="Runnable" seed="1436358432" result="Passed" start-time="2026-10-08 05:40:59Z" end-time="2026-10-08 05:41:00Z" duration="1.007275" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: CapabilityAction
+]]></output>
+            </test-case>
+            <test-case id="2281" name="CapabilityNodeAdmitsThroughExistingGameSideGraphBoundary" fullname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests.CapabilityNodeAdmitsThroughExistingGameSideGraphBoundary" methodname="CapabilityNodeAdmitsThroughExistingGameSideGraphBoundary" classname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests" runstate="Runnable" seed="1487472665" result="Passed" start-time="2026-10-08 05:41:00Z" end-time="2026-10-08 05:41:00Z" duration="0.002516" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2283" name="CapabilityValidator_RejectsRepairWithMilitarySelector" fullname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests.CapabilityValidator_RejectsRepairWithMilitarySelector" methodname="CapabilityValidator_RejectsRepairWithMilitarySelector" classname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests" runstate="Runnable" seed="1483782296" result="Passed" start-time="2026-10-08 05:41:00Z" end-time="2026-10-08 05:41:01Z" duration="1.221082" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2280" name="ParsesMillNearWorkedFoodWithNoCoordinateAuthority" fullname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests.ParsesMillNearWorkedFoodWithNoCoordinateAuthority" methodname="ParsesMillNearWorkedFoodWithNoCoordinateAuthority" classname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests" runstate="Runnable" seed="1510905144" result="Passed" start-time="2026-10-08 05:41:01Z" end-time="2026-10-08 05:41:01Z" duration="0.002209" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2279" name="ParsesResearchTechnologyAsBoundedSemanticAction" fullname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests.ParsesResearchTechnologyAsBoundedSemanticAction" methodname="ParsesResearchTechnologyAsBoundedSemanticAction" classname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests" runstate="Runnable" seed="1328935261" result="Passed" start-time="2026-10-08 05:41:01Z" end-time="2026-10-08 05:41:01Z" duration="0.002143" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2277" name="ParsesWorkedResourcePatrolWithoutConcreteTargetData" fullname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests.ParsesWorkedResourcePatrolWithoutConcreteTargetData" methodname="ParsesWorkedResourcePatrolWithoutConcreteTargetData" classname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests" runstate="Runnable" seed="1435481952" result="Passed" start-time="2026-10-08 05:41:01Z" end-time="2026-10-08 05:41:01Z" duration="0.002675" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2278" name="RejectsWorkedResourceActionWithoutResourceType" fullname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests.RejectsWorkedResourceActionWithoutResourceType" methodname="RejectsWorkedResourceActionWithoutResourceType" classname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests" runstate="Runnable" seed="1619484246" result="Passed" start-time="2026-10-08 05:41:01Z" end-time="2026-10-08 05:41:01Z" duration="0.000574" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2290" name="ResultBinding_RejectsIncompatibleDependency" fullname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests.ResultBinding_RejectsIncompatibleDependency" methodname="ResultBinding_RejectsIncompatibleDependency" classname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests" runstate="Runnable" seed="1404441362" result="Passed" start-time="2026-10-08 05:41:01Z" end-time="2026-10-08 05:41:01Z" duration="0.000536" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2289" name="ResultBinding_UsesOnlyTheExactProducedUnitSet" fullname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests.ResultBinding_UsesOnlyTheExactProducedUnitSet" methodname="ResultBinding_UsesOnlyTheExactProducedUnitSet" classname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests" runstate="Runnable" seed="2029705140" result="Passed" start-time="2026-10-08 05:41:01Z" end-time="2026-10-08 05:41:03Z" duration="2.115980" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #2 submitted: CapabilityAction
+[Commander] Goal #2: status=Blocked owned=0 queued=0; The player took control of a required producer result; this dependent action will not reclaim it.
+]]></output>
+            </test-case>
+            <test-case id="2285" name="SemanticGraph_StoresEveryDependencyForExecutionGating" fullname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests.SemanticGraph_StoresEveryDependencyForExecutionGating" methodname="SemanticGraph_StoresEveryDependencyForExecutionGating" classname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests" runstate="Runnable" seed="1142445850" result="Passed" start-time="2026-10-08 05:41:03Z" end-time="2026-10-08 05:41:04Z" duration="1.036299" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: CapabilityAction
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2407" name="CommanderPhase5ADynamicCompilerTests" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicCompilerTests" classname="OpenEmpires.Tests.CommanderPhase5ADynamicCompilerTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-08 05:41:04Z" end-time="2026-10-08 05:41:07Z" duration="3.179908" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <test-case id="2409" name="PrepareActionPlan_SharedIdleThreePartitionsTwoSheepOneMillWithoutWorkerIds" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicCompilerTests.PrepareActionPlan_SharedIdleThreePartitionsTwoSheepOneMillWithoutWorkerIds" methodname="PrepareActionPlan_SharedIdleThreePartitionsTwoSheepOneMillWithoutWorkerIds" classname="OpenEmpires.Tests.CommanderPhase5ADynamicCompilerTests" runstate="Runnable" seed="1899771743" result="Passed" start-time="2026-10-08 05:41:04Z" end-time="2026-10-08 05:41:05Z" duration="1.308251" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2410" name="PrepareActionPlan_TwoNewBarracksProduceTenNewSpearmenFromExactProducerSet" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicCompilerTests.PrepareActionPlan_TwoNewBarracksProduceTenNewSpearmenFromExactProducerSet" methodname="PrepareActionPlan_TwoNewBarracksProduceTenNewSpearmenFromExactProducerSet" classname="OpenEmpires.Tests.CommanderPhase5ADynamicCompilerTests" runstate="Runnable" seed="1809155359" result="Passed" start-time="2026-10-08 05:41:05Z" end-time="2026-10-08 05:41:06Z" duration="0.950216" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2408" name="PrepareActionPlan_VisibleBerriesLocationCompilesToSymbolicallyBoundMill" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicCompilerTests.PrepareActionPlan_VisibleBerriesLocationCompilesToSymbolicallyBoundMill" methodname="PrepareActionPlan_VisibleBerriesLocationCompilesToSymbolicallyBoundMill" classname="OpenEmpires.Tests.CommanderPhase5ADynamicCompilerTests" runstate="Runnable" seed="956279031" result="Passed" start-time="2026-10-08 05:41:06Z" end-time="2026-10-08 05:41:07Z" duration="0.911602" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2419" name="CommanderPhase5ADynamicRuntimeTests" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" testcasecount="23" result="Passed" start-time="2026-10-08 05:41:07Z" end-time="2026-10-08 05:41:32Z" duration="24.316140" total="23" passed="23" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <test-case id="2431" name="AmbiguousRelayTrainingOrigin_BlocksReplacementOfPotentiallyExecutedExactOrder" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.AmbiguousRelayTrainingOrigin_BlocksReplacementOfPotentiallyExecutedExactOrder" methodname="AmbiguousRelayTrainingOrigin_BlocksReplacementOfPotentiallyExecutedExactOrder" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" seed="395655560" result="Passed" start-time="2026-10-08 05:41:07Z" end-time="2026-10-08 05:41:09Z" duration="1.362999" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+[SyncCheck] tick=0 PRE-CMD=3921D370 cmds=3
+[SyncCheck] tick=0 POST-CMD=3921D370
+[SyncCheck] tick=0 PRE-AI-EXEC=3921D370 aiCmds=0
+[SyncCheck] INIT tick=1 checksum=F8EE462E systemDetail=3921D370,3921D370,3921D370,3921D370,3921D370,3921D370,3921D370,3921D370,3921D370
+[Commander] Goal #1: status=Blocked owned=0 queued=2; An issued exact production order lost attribution and may have executed; no substitute or replacement production is authorized.
+]]></output>
+            </test-case>
+            <test-case id="2432" name="CancelRequest_ReleasesItsPendingTrainingOriginsOnly" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.CancelRequest_ReleasesItsPendingTrainingOriginsOnly" methodname="CancelRequest_ReleasesItsPendingTrainingOriginsOnly" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" seed="427193808" result="Passed" start-time="2026-10-08 05:41:09Z" end-time="2026-10-08 05:41:10Z" duration="0.979368" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+[Commander] Goal #1 cancelled.
+]]></output>
+            </test-case>
+            <test-case id="2434" name="CanonicalCostMutation_FreshProjectionAndOrdinaryPlacementUseExistingVirtualGameData" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.CanonicalCostMutation_FreshProjectionAndOrdinaryPlacementUseExistingVirtualGameData" methodname="CanonicalCostMutation_FreshProjectionAndOrdinaryPlacementUseExistingVirtualGameData" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" seed="763527607" result="Passed" start-time="2026-10-08 05:41:10Z" end-time="2026-10-08 05:41:11Z" duration="1.165180" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Barracks at (126,134) with villager #0.
+[SyncCheck] tick=1 checksum=4087C8A5
+]]></output>
+            </test-case>
+            <test-case id="2421" name="CanonicalUnitSelection_UsesAvailableCivilizationIdsAndRejectsReplacedBaseId" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.CanonicalUnitSelection_UsesAvailableCivilizationIdsAndRejectsReplacedBaseId" methodname="CanonicalUnitSelection_UsesAvailableCivilizationIdsAndRejectsReplacedBaseId" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" seed="856863087" result="Passed" start-time="2026-10-08 05:41:11Z" end-time="2026-10-08 05:41:12Z" duration="0.998377" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: BuildStructure
+]]></output>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="2437" name="DynamicGlobalNoConstruction_ControlsProductionPrerequisites" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.DynamicGlobalNoConstruction_ControlsProductionPrerequisites" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-08 05:41:12Z" end-time="2026-10-08 05:41:14Z" duration="1.905488" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="2435" name="DynamicGlobalNoConstruction_ControlsProductionPrerequisites(False)" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.DynamicGlobalNoConstruction_ControlsProductionPrerequisites(False)" methodname="DynamicGlobalNoConstruction_ControlsProductionPrerequisites" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" seed="1001622159" result="Passed" start-time="2026-10-08 05:41:12Z" end-time="2026-10-08 05:41:13Z" duration="1.048702" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #1: status=Blocked owned=0 queued=0; This request forbids construction. An eligible existing completed building or population capacity is required.
+]]></output>
+              </test-case>
+              <test-case id="2436" name="DynamicGlobalNoConstruction_ControlsProductionPrerequisites(True)" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.DynamicGlobalNoConstruction_ControlsProductionPrerequisites(True)" methodname="DynamicGlobalNoConstruction_ControlsProductionPrerequisites" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" seed="1686538600" result="Passed" start-time="2026-10-08 05:41:13Z" end-time="2026-10-08 05:41:14Z" duration="0.847219" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-case id="2438" name="DynamicGlobalNoConstruction_RejectsContradictoryBuildBeforeAdmission" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.DynamicGlobalNoConstruction_RejectsContradictoryBuildBeforeAdmission" methodname="DynamicGlobalNoConstruction_RejectsContradictoryBuildBeforeAdmission" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" seed="1328769861" result="Passed" start-time="2026-10-08 05:41:14Z" end-time="2026-10-08 05:41:15Z" duration="0.937405" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="2441" name="DynamicGlobalWorkerConstraints_RejectEntireUnsafeSharedSelection" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.DynamicGlobalWorkerConstraints_RejectEntireUnsafeSharedSelection" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-08 05:41:15Z" end-time="2026-10-08 05:41:17Z" duration="2.057988" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="2439" name="DynamicGlobalWorkerConstraints_RejectEntireUnsafeSharedSelection(&quot;{\&quot;type\&quot;:\&quot;PreferredWorkers\&quot;,\&quot;mode\&quot;:\&quot;IdleOnly\&quot;}&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.DynamicGlobalWorkerConstraints_RejectEntireUnsafeSharedSelection(&quot;{\&quot;type\&quot;:\&quot;PreferredWorkers\&quot;,\&quot;mode\&quot;:\&quot;IdleOnly\&quot;}&quot;)" methodname="DynamicGlobalWorkerConstraints_RejectEntireUnsafeSharedSelection" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" seed="1429705482" result="Passed" start-time="2026-10-08 05:41:15Z" end-time="2026-10-08 05:41:16Z" duration="1.093713" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="2440" name="DynamicGlobalWorkerConstraints_RejectEntireUnsafeSharedSelection(&quot;{\&quot;type\&quot;:\&quot;ProtectedResource\&quot;,\&quot;resource\&quot;:\&quot;Wood\&quot;,\&quot;amount\&quot;:1}&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.DynamicGlobalWorkerConstraints_RejectEntireUnsafeSharedSelection(&quot;{\&quot;type\&quot;:\&quot;ProtectedResource\&quot;,\&quot;resource\&quot;:\&quot;Wood\&quot;,\&quot;amount\&quot;:1}&quot;)" methodname="DynamicGlobalWorkerConstraints_RejectEntireUnsafeSharedSelection" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" seed="353550255" result="Passed" start-time="2026-10-08 05:41:16Z" end-time="2026-10-08 05:41:17Z" duration="0.953192" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="2427" name="MalformedPreparationSource_RejectsWholePlan" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.MalformedPreparationSource_RejectsWholePlan" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-08 05:41:17Z" end-time="2026-10-08 05:41:20Z" duration="3.151976" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="2424" name="MalformedPreparationSource_RejectsWholePlan(&quot;{\&quot;type\&quot;:\&quot;ResourceSource\&quot;,\&quot;resource\&quot;:\&quot;Wood\&quot;,\&quot;sourceKind\&quot;:\&quot;Sheep\&quot;}&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.MalformedPreparationSource_RejectsWholePlan(&quot;{\&quot;type\&quot;:\&quot;ResourceSource\&quot;,\&quot;resource\&quot;:\&quot;Wood\&quot;,\&quot;sourceKind\&quot;:\&quot;Sheep\&quot;}&quot;)" methodname="MalformedPreparationSource_RejectsWholePlan" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" seed="942959693" result="Passed" start-time="2026-10-08 05:41:17Z" end-time="2026-10-08 05:41:18Z" duration="0.952074" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="2425" name="MalformedPreparationSource_RejectsWholePlan(&quot;{\&quot;type\&quot;:\&quot;ResourceSource\&quot;,\&quot;resource\&quot;:\&quot;Food\&quot;,\&quot;sourceKind\&quot;:0}&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.MalformedPreparationSource_RejectsWholePlan(&quot;{\&quot;type\&quot;:\&quot;ResourceSource\&quot;,\&quot;resource\&quot;:\&quot;Food\&quot;,\&quot;sourceKind\&quot;:0}&quot;)" methodname="MalformedPreparationSource_RejectsWholePlan" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" seed="215430551" result="Passed" start-time="2026-10-08 05:41:18Z" end-time="2026-10-08 05:41:19Z" duration="1.239591" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="2426" name="MalformedPreparationSource_RejectsWholePlan(&quot;{\&quot;type\&quot;:\&quot;ResourceSource\&quot;,\&quot;resource\&quot;:\&quot;Food\&quot;,\&quot;sourceKind\&quot;:\&quot;Sheep\&quot;,\&quot;approved\&quot;:true}&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.MalformedPreparationSource_RejectsWholePlan(&quot;{\&quot;type\&quot;:\&quot;ResourceSource\&quot;,\&quot;resource\&quot;:\&quot;Food\&quot;,\&quot;sourceKind\&quot;:\&quot;Sheep\&quot;,\&quot;approved\&quot;:true}&quot;)" methodname="MalformedPreparationSource_RejectsWholePlan" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" seed="1785329274" result="Passed" start-time="2026-10-08 05:41:19Z" end-time="2026-10-08 05:41:20Z" duration="0.953723" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="2420" name="OptInRequestTrace_CorrelatesApprovalAdmissionAndDispatchWithoutOriginalText" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.OptInRequestTrace_CorrelatesApprovalAdmissionAndDispatchWithoutOriginalText" methodname="OptInRequestTrace_CorrelatesApprovalAdmissionAndDispatchWithoutOriginalText" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" seed="328416533" result="Passed" start-time="2026-10-08 05:41:20Z" end-time="2026-10-08 05:41:21Z" duration="1.182862" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] request=1;stage=interpretation-started;owner=0;generation=1
+[Commander] request=1;stage=candidate-compiled;owner=0;generation=1
+[Commander] request=1;stage=approved;owner=0;generation=1;evidence=LocalPlanConfirmation
+[Commander] request=1;stage=goal-admitted;owner=0;generation=1;evidence=LocalPlanConfirmation
+[Commander] Goal #1 submitted: BuildStructure
+[Commander] request=1;root=0;goal=1;dispatch=PlaceBuildingCommand
+[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Farm at (126,126) with villager #0.
+]]></output>
+            </test-case>
+            <test-case id="2423" name="PreparationSourceDtoAndHumanTakeover_PreserveRestrictionWithoutReclaim" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.PreparationSourceDtoAndHumanTakeover_PreserveRestrictionWithoutReclaim" methodname="PreparationSourceDtoAndHumanTakeover_PreserveRestrictionWithoutReclaim" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" seed="3331154" result="Passed" start-time="2026-10-08 05:41:21Z" end-time="2026-10-08 05:41:22Z" duration="1.080728" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Need 60 food for the next Spearman; have 0. Source-restricted preparation: Assigning selected workers to Food.
+[SyncCheck] tick=1 checksum=03983657
+[Commander] Goal #1: status=Blocked owned=0 queued=0; Need 60 food for the next Spearman; have 0. Source-restricted preparation: The player took control of a selected worker; this request will not reclaim or replace it.
+]]></output>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="2430" name="ProductionFoodSourceRestriction_UsesOnlySheepOrReportsBlocker" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.ProductionFoodSourceRestriction_UsesOnlySheepOrReportsBlocker" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-08 05:41:22Z" end-time="2026-10-08 05:41:24Z" duration="2.131494" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="2428" name="ProductionFoodSourceRestriction_UsesOnlySheepOrReportsBlocker(False)" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.ProductionFoodSourceRestriction_UsesOnlySheepOrReportsBlocker(False)" methodname="ProductionFoodSourceRestriction_UsesOnlySheepOrReportsBlocker" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" seed="1828740266" result="Passed" start-time="2026-10-08 05:41:22Z" end-time="2026-10-08 05:41:23Z" duration="1.041823" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #1: status=Blocked owned=0 queued=0; Need 60 food for the next Spearman; have 0. Source-restricted preparation: No usable visible Sheep/Food source is known.
+]]></output>
+              </test-case>
+              <test-case id="2429" name="ProductionFoodSourceRestriction_UsesOnlySheepOrReportsBlocker(True)" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.ProductionFoodSourceRestriction_UsesOnlySheepOrReportsBlocker(True)" methodname="ProductionFoodSourceRestriction_UsesOnlySheepOrReportsBlocker" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" seed="1839500810" result="Passed" start-time="2026-10-08 05:41:23Z" end-time="2026-10-08 05:41:24Z" duration="1.075696" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Need 60 food for the next Spearman; have 0. Source-restricted preparation: Assigning selected workers to Food.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="2444" name="ResourceLocation_BuildsDistinctExactMillsNearTheFrozenVisibleBerries" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.ResourceLocation_BuildsDistinctExactMillsNearTheFrozenVisibleBerries" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-08 05:41:24Z" end-time="2026-10-08 05:41:26Z" duration="2.231447" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="2442" name="ResourceLocation_BuildsDistinctExactMillsNearTheFrozenVisibleBerries(1)" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.ResourceLocation_BuildsDistinctExactMillsNearTheFrozenVisibleBerries(1)" methodname="ResourceLocation_BuildsDistinctExactMillsNearTheFrozenVisibleBerries" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" seed="2044960048" result="Passed" start-time="2026-10-08 05:41:24Z" end-time="2026-10-08 05:41:25Z" duration="1.052746" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Mill at (140,132) from its exact semantic anchor with villager #0.
+[SyncCheck] tick=1 checksum=530E9399
+[Commander] Goal #1: status=Completed owned=1 queued=0; Mill construction complete at (140,132) as building #1.
+[SyncCheck] tick=2 checksum=EB0A165D
+[SyncCheck] tick=3 checksum=BA1B7C60
+[SyncCheck] tick=4 checksum=FA466321
+[SyncCheck] tick=5 checksum=3A7149E2
+[SyncCheck] tick=6 checksum=7A9C30A3
+[SyncCheck] tick=7 checksum=BAC71764
+[SyncCheck] tick=8 checksum=FAF1FE25
+[SyncCheck] tick=9 checksum=3B1CE4E6
+[SyncCheck] tick=10 checksum=7B47CBA7
+[SyncCheck] tick=11 checksum=BB72B268
+[SyncCheck] tick=12 checksum=FB9D9929
+[SyncCheck] tick=13 checksum=3BC87FEA
+[SyncCheck] tick=14 checksum=7BF366AB
+[SyncCheck] tick=15 checksum=BC1E4D6C
+[SyncCheck] tick=16 checksum=FC49342D
+[SyncCheck] tick=17 checksum=3C741AEE
+[SyncCheck] tick=18 checksum=7C9F01AF
+[SyncCheck] tick=19 checksum=BCC9E870
+[SyncCheck] tick=20 checksum=FCF4CF31
+]]></output>
+              </test-case>
+              <test-case id="2443" name="ResourceLocation_BuildsDistinctExactMillsNearTheFrozenVisibleBerries(2)" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.ResourceLocation_BuildsDistinctExactMillsNearTheFrozenVisibleBerries(2)" methodname="ResourceLocation_BuildsDistinctExactMillsNearTheFrozenVisibleBerries" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" seed="715382029" result="Passed" start-time="2026-10-08 05:41:25Z" end-time="2026-10-08 05:41:26Z" duration="1.169680" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Mill at (140,132) from its exact semantic anchor with villager #0.
+[SyncCheck] tick=1 checksum=530E9399
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No eligible owned villager is available to build Mill.
+[SyncCheck] tick=2 checksum=EB0A165D
+[SyncCheck] tick=3 checksum=BA1B7C60
+[SyncCheck] tick=4 checksum=FA466321
+[SyncCheck] tick=5 checksum=3A7149E2
+[SyncCheck] tick=6 checksum=7A9C30A3
+[SyncCheck] tick=7 checksum=BAC71764
+[SyncCheck] tick=8 checksum=FAF1FE25
+[SyncCheck] tick=9 checksum=3B1CE4E6
+[SyncCheck] tick=10 checksum=7B47CBA7
+[SyncCheck] tick=11 checksum=BB72B268
+[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Mill at (145,132) from its exact semantic anchor with villager #0.
+[SyncCheck] tick=12 checksum=DD04EB39
+[Commander] Goal #1: status=Completed owned=2 queued=0; Completed 2 distinct exact semantic placements.
+[SyncCheck] tick=13 checksum=00431B5E
+[SyncCheck] tick=14 checksum=CBFB19A1
+[SyncCheck] tick=15 checksum=18A94322
+[SyncCheck] tick=16 checksum=65576CA3
+[SyncCheck] tick=17 checksum=B2059624
+[SyncCheck] tick=18 checksum=FEB3BFA5
+[SyncCheck] tick=19 checksum=4B61E926
+[SyncCheck] tick=20 checksum=981012A7
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-case id="2422" name="RestrictedAgePreparation_PreservesGoldWorkersAddedAfterInitialBlocker" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.RestrictedAgePreparation_PreservesGoldWorkersAddedAfterInitialBlocker" methodname="RestrictedAgePreparation_PreservesGoldWorkersAddedAfterInitialBlocker" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" seed="1778034972" result="Passed" start-time="2026-10-08 05:41:26Z" end-time="2026-10-08 05:41:27Z" duration="0.966703" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: ReachAge
+[Commander] Goal #1: status=Blocked owned=1 queued=0; Need 400 food and 200 gold for age 2; preparing food. Source-restricted preparation: No usable visible Sheep/Food source is known.
+[Commander] Goal #1: status=Blocked owned=1 queued=0; Need 400 food and 200 gold for age 2; preparing food. Source-restricted preparation: Only 0 eligible workers are available; 1 are required.
+]]></output>
+            </test-case>
+            <test-case id="2447" name="SharedThreeWorkerSelection_FreezesDisjointRolesAndIgnoresFourthWorker" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.SharedThreeWorkerSelection_FreezesDisjointRolesAndIgnoresFourthWorker" methodname="SharedThreeWorkerSelection_FreezesDisjointRolesAndIgnoresFourthWorker" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" seed="1832292943" result="Passed" start-time="2026-10-08 05:41:27Z" end-time="2026-10-08 05:41:28Z" duration="1.065439" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #2 submitted: BuildStructure
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=0 PRE-CMD=8096CE47 cmds=1
+[SyncCheck] tick=0 POST-CMD=76B1845F
+[SyncCheck] tick=0 PRE-AI-EXEC=76B1845F aiCmds=0
+[SyncCheck] INIT tick=1 checksum=127179FB systemDetail=76B1845F,EC9FE33D,EC9FE33D,62A2D8BD,62A2D8BD,62A2D8BD,62A2D8BD,62A2D8BD,62A2D8BD
+[Commander] Goal #1: status=Completed owned=2 queued=0; The 2 selected workers have matching assignments.
+[Commander] Goal #2: status=Executing owned=0 queued=0; Placing Mill at (126,134) with villager #2.
+]]></output>
+            </test-case>
+            <test-case id="2446" name="SharedThreeWorkerSelection_UnavailableFullSetRejectsWithoutAnyAdmission" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.SharedThreeWorkerSelection_UnavailableFullSetRejectsWithoutAnyAdmission" methodname="SharedThreeWorkerSelection_UnavailableFullSetRejectsWithoutAnyAdmission" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" seed="927430368" result="Passed" start-time="2026-10-08 05:41:28Z" end-time="2026-10-08 05:41:29Z" duration="1.009487" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2445" name="SharedWorkerHumanTakeover_IsStickyAndDoesNotReplaceTheBoundBuilder" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.SharedWorkerHumanTakeover_IsStickyAndDoesNotReplaceTheBoundBuilder" methodname="SharedWorkerHumanTakeover_IsStickyAndDoesNotReplaceTheBoundBuilder" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" seed="609552321" result="Passed" start-time="2026-10-08 05:41:29Z" end-time="2026-10-08 05:41:30Z" duration="0.995872" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #2 submitted: BuildStructure
+[SyncCheck] tick=1 checksum=C72DBE90
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=2 checksum=5A337BD9
+[Commander] Goal #1: status=Completed owned=2 queued=0; The 2 selected workers have matching assignments.
+[Commander] Goal #2: status=Blocked owned=0 queued=0; The player took control of a request-bound worker; no substitute or reclaim is authorized.
+[SyncCheck] tick=3 checksum=C17B4823
+[SyncCheck] tick=4 checksum=0BA3B4D5
+]]></output>
+            </test-case>
+            <test-case id="2433" name="UnsupportedNearGap_RejectsBeforeOfferingApproval" fullname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.UnsupportedNearGap_RejectsBeforeOfferingApproval" methodname="UnsupportedNearGap_RejectsBeforeOfferingApproval" classname="OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests" runstate="Runnable" seed="476597593" result="Passed" start-time="2026-10-08 05:41:30Z" end-time="2026-10-08 05:41:32Z" duration="1.073748" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2448" name="CommanderPhase5AGroundedScopeTests" fullname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests" classname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-08 05:41:32Z" end-time="2026-10-08 05:41:40Z" duration="8.145537" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <test-suite type="ParameterizedMethod" id="2454" name="IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects" fullname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects" classname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-08 05:41:32Z" end-time="2026-10-08 05:41:35Z" duration="3.023759" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="2451" name="IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects(&quot;{\&quot;type\&quot;:\&quot;AttackTarget\&quot;,\&quot;unitSelector\&quot;:\&quot;Spearman\&quot;,\&quot;count\&quot;:4,\&quot;location\&quot;:\&quot;VisibleEnemy\&quot;}&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects(&quot;{\&quot;type\&quot;:\&quot;AttackTarget\&quot;,\&quot;unitSelector\&quot;:\&quot;Spearman\&quot;,\&quot;count\&quot;:4,\&quot;location\&quot;:\&quot;VisibleEnemy\&quot;}&quot;)" methodname="IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects" classname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests" runstate="Runnable" seed="1086976222" result="Passed" start-time="2026-10-08 05:41:32Z" end-time="2026-10-08 05:41:33Z" duration="0.973235" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="2452" name="IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects(&quot;{\&quot;type\&quot;:\&quot;ReachAge\&quot;,\&quot;targetAge\&quot;:\&quot;Castle\&quot;}&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects(&quot;{\&quot;type\&quot;:\&quot;ReachAge\&quot;,\&quot;targetAge\&quot;:\&quot;Castle\&quot;}&quot;)" methodname="IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects" classname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests" runstate="Runnable" seed="195819014" result="Passed" start-time="2026-10-08 05:41:33Z" end-time="2026-10-08 05:41:34Z" duration="0.988179" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="2453" name="IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects(&quot;{\&quot;type\&quot;:\&quot;SetResourceAllocation\&quot;,\&quot;resource\&quot;:\&quot;Wood\&quot;,\&quot;count\&quot;:4}&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects(&quot;{\&quot;type\&quot;:\&quot;SetResourceAllocation\&quot;,\&quot;resource\&quot;:\&quot;Wood\&quot;,\&quot;count\&quot;:4}&quot;)" methodname="IndependentlyTypedFourSpearmen_RejectsAdditionalProviderEffects" classname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests" runstate="Runnable" seed="467055535" result="Passed" start-time="2026-10-08 05:41:34Z" end-time="2026-10-08 05:41:35Z" duration="1.058084" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="2455" name="IndependentlyTypedRoot_RejectsDroppedNoConstructionConstraint" fullname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.IndependentlyTypedRoot_RejectsDroppedNoConstructionConstraint" methodname="IndependentlyTypedRoot_RejectsDroppedNoConstructionConstraint" classname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests" runstate="Runnable" seed="2070326495" result="Passed" start-time="2026-10-08 05:41:35Z" end-time="2026-10-08 05:41:36Z" duration="0.994458" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2449" name="KnownFarmPayload_ReusesTheImplementedCanonicalConstructionAdapter" fullname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.KnownFarmPayload_ReusesTheImplementedCanonicalConstructionAdapter" methodname="KnownFarmPayload_ReusesTheImplementedCanonicalConstructionAdapter" classname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests" runstate="Runnable" seed="1517153767" result="Passed" start-time="2026-10-08 05:41:36Z" end-time="2026-10-08 05:41:37Z" duration="1.050184" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2456" name="MatchingIndependentlyTypedRoot_CommitsExactlyOnceWithoutModelApproval" fullname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.MatchingIndependentlyTypedRoot_CommitsExactlyOnceWithoutModelApproval" methodname="MatchingIndependentlyTypedRoot_CommitsExactlyOnceWithoutModelApproval" classname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests" runstate="Runnable" seed="1785212032" result="Passed" start-time="2026-10-08 05:41:37Z" end-time="2026-10-08 05:41:38Z" duration="0.986123" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+]]></output>
+            </test-case>
+            <test-case id="2457" name="NormalizedDynamicPreview_ShowsSourcePartitionAndLocationRestrictions" fullname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.NormalizedDynamicPreview_ShowsSourcePartitionAndLocationRestrictions" methodname="NormalizedDynamicPreview_ShowsSourcePartitionAndLocationRestrictions" classname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests" runstate="Runnable" seed="1638340285" result="Passed" start-time="2026-10-08 05:41:38Z" end-time="2026-10-08 05:41:39Z" duration="1.010059" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2450" name="ProviderContext_ProjectsCanonicalIdsFromExistingGameDataWithoutRuntimeIdentities" fullname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests.ProviderContext_ProjectsCanonicalIdsFromExistingGameDataWithoutRuntimeIdentities" methodname="ProviderContext_ProjectsCanonicalIdsFromExistingGameDataWithoutRuntimeIdentities" classname="OpenEmpires.Tests.CommanderPhase5AGroundedScopeTests" runstate="Runnable" seed="368442935" result="Passed" start-time="2026-10-08 05:41:39Z" end-time="2026-10-08 05:41:40Z" duration="1.067202" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2472" name="CommanderPhase5AProductionBindingTests" fullname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests" classname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-08 05:41:40Z" end-time="2026-10-08 05:41:46Z" duration="6.312733" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <test-suite type="ParameterizedMethod" id="2479" name="CancelledOrderOrLostProducedUnit_IsNotSilentlyReplaced" fullname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests.CancelledOrderOrLostProducedUnit_IsNotSilentlyReplaced" classname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-08 05:41:40Z" end-time="2026-10-08 05:41:42Z" duration="2.083929" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="2477" name="CancelledOrderOrLostProducedUnit_IsNotSilentlyReplaced(False)" fullname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests.CancelledOrderOrLostProducedUnit_IsNotSilentlyReplaced(False)" methodname="CancelledOrderOrLostProducedUnit_IsNotSilentlyReplaced" classname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests" runstate="Runnable" seed="1012907511" result="Passed" start-time="2026-10-08 05:41:40Z" end-time="2026-10-08 05:41:41Z" duration="0.983754" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #2 submitted: CapabilityAction
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+[SyncCheck] tick=1 checksum=75B25D2F
+[Commander] Goal #1: status=Blocked owned=0 queued=0; A tracked production order was cancelled or invalidated; no replacement result is authorized.
+]]></output>
+              </test-case>
+              <test-case id="2478" name="CancelledOrderOrLostProducedUnit_IsNotSilentlyReplaced(True)" fullname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests.CancelledOrderOrLostProducedUnit_IsNotSilentlyReplaced(True)" methodname="CancelledOrderOrLostProducedUnit_IsNotSilentlyReplaced" classname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests" runstate="Runnable" seed="1441732537" result="Passed" start-time="2026-10-08 05:41:41Z" end-time="2026-10-08 05:41:42Z" duration="1.096748" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #2 submitted: CapabilityAction
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+[SyncCheck] tick=1 checksum=75B25D2F
+[SyncCheck] tick=2 checksum=724430B0
+[Commander] Goal #1: status=Blocked owned=0 queued=0; An exact produced unit is missing, dead or foreign; no substitute or replacement production is authorized.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-case id="2480" name="PreExistingAndHumanTraining_DoNotFillGoalExclusiveUnitResult" fullname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests.PreExistingAndHumanTraining_DoNotFillGoalExclusiveUnitResult" methodname="PreExistingAndHumanTraining_DoNotFillGoalExclusiveUnitResult" classname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests" runstate="Runnable" seed="681988979" result="Passed" start-time="2026-10-08 05:41:42Z" end-time="2026-10-08 05:41:43Z" duration="1.062022" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #2 submitted: CapabilityAction
+[Commander] Goal #1: status=Executing owned=1 queued=1; Queueing Spearman at Barracks #1.
+[SyncCheck] tick=1 checksum=4EB1F2BC
+[SyncCheck] tick=2 checksum=CE126DFE
+[SyncCheck] tick=3 checksum=7F3ED822
+[Commander] Goal #1: status=Executing owned=3 queued=1; Queueing Spearman at Barracks #1.
+[SyncCheck] tick=4 checksum=97A8BC55
+[SyncCheck] tick=5 checksum=E8A25A6F
+[SyncCheck] tick=6 checksum=2E6A9B4E
+[SyncCheck] tick=7 checksum=8566742D
+[SyncCheck] tick=8 checksum=8985C90C
+[SyncCheck] tick=9 checksum=C44A8999
+[SyncCheck] tick=10 checksum=E68DE278
+[SyncCheck] tick=11 checksum=5650E525
+[SyncCheck] tick=12 checksum=45240AF7
+[SyncCheck] tick=13 checksum=A326540B
+[SyncCheck] tick=14 checksum=B54446F4
+[SyncCheck] tick=15 checksum=791538D8
+[SyncCheck] tick=16 checksum=24E6FB94
+[SyncCheck] tick=17 checksum=58575328
+[SyncCheck] tick=18 checksum=954700D2
+[SyncCheck] tick=19 checksum=0C8C57F3
+[SyncCheck] tick=20 checksum=B505A52A
+[SyncCheck] tick=21 checksum=7BBD6BD8
+[SyncCheck] tick=22 checksum=D6CED043
+[SyncCheck] tick=23 checksum=547F03EF
+[SyncCheck] tick=24 checksum=83133860
+[SyncCheck] tick=25 checksum=20627A7B
+[SyncCheck] tick=26 checksum=B834F148
+[SyncCheck] tick=27 checksum=DA8A99AC
+[SyncCheck] tick=28 checksum=7887EBA7
+[SyncCheck] tick=29 checksum=3D5041FB
+[SyncCheck] tick=30 checksum=5CB340A8
+[Commander] Goal #1: status=Completed owned=5 queued=0; Owned 5/2 living units.
+[Commander] Goal #2: status=Executing owned=0 queued=0; Resolved a bounded patrol around a visible game-side anchor.
+[SyncCheck] tick=31 checksum=9CFA6BC3
+]]></output>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="2475" name="ProducerReference_UsesEveryExactNewProducerAndNeverExistingBarracks" fullname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests.ProducerReference_UsesEveryExactNewProducerAndNeverExistingBarracks" classname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-08 05:41:43Z" end-time="2026-10-08 05:41:45Z" duration="2.158817" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="2473" name="ProducerReference_UsesEveryExactNewProducerAndNeverExistingBarracks(1)" fullname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests.ProducerReference_UsesEveryExactNewProducerAndNeverExistingBarracks(1)" methodname="ProducerReference_UsesEveryExactNewProducerAndNeverExistingBarracks" classname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests" runstate="Runnable" seed="1472982329" result="Passed" start-time="2026-10-08 05:41:43Z" end-time="2026-10-08 05:41:44Z" duration="1.133335" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: EnsureUnitCount
+[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Barracks at (126,134) with villager #0.
+[SyncCheck] tick=1 checksum=D8CADC9E
+[Commander] Goal #1: status=Completed owned=1 queued=0; Completed 1 exact requested Barracks results.
+[Commander] Goal #2: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #2.
+[SyncCheck] tick=2 checksum=6E9DBB37
+[Commander] Goal #2: status=Executing owned=0 queued=1; Queueing Spearman at Barracks #2.
+[SyncCheck] tick=3 checksum=60FD9921
+[Commander] Goal #2: status=Executing owned=0 queued=2; Queueing Spearman at Barracks #2.
+[SyncCheck] tick=4 checksum=20110CC5
+[Commander] Goal #2: status=WaitingForProduction owned=0 queued=3; All exact requested producer queues are at Commander limit 3.
+[SyncCheck] tick=5 checksum=53CD2D45
+[SyncCheck] tick=6 checksum=87894DC5
+[SyncCheck] tick=7 checksum=BB456E45
+[SyncCheck] tick=8 checksum=EF018EC5
+[SyncCheck] tick=9 checksum=22BDAF45
+[SyncCheck] tick=10 checksum=5679CFC5
+[SyncCheck] tick=11 checksum=8A35F045
+[SyncCheck] tick=12 checksum=BDF210C5
+]]></output>
+              </test-case>
+              <test-case id="2474" name="ProducerReference_UsesEveryExactNewProducerAndNeverExistingBarracks(2)" fullname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests.ProducerReference_UsesEveryExactNewProducerAndNeverExistingBarracks(2)" methodname="ProducerReference_UsesEveryExactNewProducerAndNeverExistingBarracks" classname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests" runstate="Runnable" seed="918709265" result="Passed" start-time="2026-10-08 05:41:44Z" end-time="2026-10-08 05:41:45Z" duration="1.008266" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: EnsureUnitCount
+[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Barracks at (126,134) with villager #0.
+[SyncCheck] tick=1 checksum=D8CADC9E
+[Commander] Goal #1: status=Executing owned=1 queued=0; Placing Barracks at (131,134) with villager #0.
+[SyncCheck] tick=2 checksum=8F1EF29B
+[Commander] Goal #1: status=Completed owned=2 queued=0; Completed 2 exact requested Barracks results.
+[Commander] Goal #2: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #2.
+[SyncCheck] tick=3 checksum=868297D2
+[Commander] Goal #2: status=Executing owned=0 queued=1; Queueing Spearman at Barracks #3.
+[SyncCheck] tick=4 checksum=C4F3D91B
+[Commander] Goal #2: status=Executing owned=0 queued=2; Queueing Spearman at Barracks #2.
+[SyncCheck] tick=5 checksum=CB90CB7E
+[Commander] Goal #2: status=Executing owned=0 queued=3; Queueing Spearman at Barracks #3.
+[SyncCheck] tick=6 checksum=B2DD2727
+[Commander] Goal #2: status=WaitingForProduction owned=0 queued=4; Owned 0, queued 4, target 4.
+[SyncCheck] tick=7 checksum=231E27C8
+[SyncCheck] tick=8 checksum=935F2869
+[SyncCheck] tick=9 checksum=03A0290A
+[SyncCheck] tick=10 checksum=73E129AB
+[SyncCheck] tick=11 checksum=E4222A4C
+[SyncCheck] tick=12 checksum=54632AED
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-case id="2476" name="StructureResult_ContainsOnlyThisRootsActualPlacementCommands" fullname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests.StructureResult_ContainsOnlyThisRootsActualPlacementCommands" methodname="StructureResult_ContainsOnlyThisRootsActualPlacementCommands" classname="OpenEmpires.Tests.CommanderPhase5AProductionBindingTests" runstate="Runnable" seed="1239813095" result="Passed" start-time="2026-10-08 05:41:45Z" end-time="2026-10-08 05:41:46Z" duration="0.950390" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: CapabilityAction
+[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Barracks at (126,134) with villager #0.
+[SyncCheck] tick=1 checksum=150F4960
+[Commander] Goal #1: status=Blocked owned=1 queued=0; No owned living villager is available to build Barracks.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

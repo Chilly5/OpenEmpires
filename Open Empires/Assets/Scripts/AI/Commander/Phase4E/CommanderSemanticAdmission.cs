@@ -14,6 +14,8 @@ namespace OpenEmpires
             intent = null;
             safeReason = RejectedReason;
             if (node == null || context == null || context.PlayerId < 0) return false;
+            if (!Enum.IsDefined(typeof(CommanderProductionQuantityMode), node.QuantityMode)
+                || node.Type != CommanderSemanticNodeType.EnsureUnitCount && node.QuantityMode != CommanderProductionQuantityMode.TargetTotal) return false;
 
             var dto = new CommanderIntentDTO { intentCategory = "Tactical" };
             foreach (var constraint in node.Constraints)
@@ -28,6 +30,7 @@ namespace OpenEmpires
                     dto.intentType = nameof(CommanderIntentType.EnsureUnitCount);
                     dto.unit = CommanderIntentCatalog.GetUnitDisplayName(node.UnitType.Value);
                     dto.amount = node.Count.Value;
+                    dto.quantityMode = node.QuantityMode.ToString();
                     break;
 
                 case CommanderSemanticNodeType.BuildStructure:
@@ -80,10 +83,13 @@ namespace OpenEmpires
                         return false;
                     if (node.Type == CommanderSemanticNodeType.ResearchTechnology && !node.Technology.HasValue)
                         return false;
+                    if (node.TargetSelector.HasValue && !node.TargetSelector.Value.IsCompatible(ToCapabilityAction(node.Type),
+                        ToLocationSelector(node.LocationSelector.Value))) return false;
                     intent = new CapabilityActionIntent(context.PlayerId,
                         ToCapabilityAction(node.Type), ToUnitSelector(node.UnitSelector.Value, node.UnitType, node.Count),
                         new CommanderLocationSelector(ToLocationSelector(node.LocationSelector.Value),
-                            node.ResourceType), node.Technology, node.BuildingType);
+                            node.ResourceType), node.Technology, node.BuildingType,
+                        node.Constraints, node.TargetSelector);
                     safeReason = string.Empty;
                     return true;
 

@@ -1,0 +1,5 @@
+2026-10-08 initial host implementation5cases:4pass/1fail. Test incorrectly treated
+required template inline CSS permission as an unsafe SCRIPT allowance. Restrict the
+assertion to script-src directive: script nonces/wasm-unsafe-eval never permit
+unsafe-inline or ordinary unsafe-eval JavaScript. Document CSS allowance explicitly.
+No host server/library mutation was needed to weaken script policy.

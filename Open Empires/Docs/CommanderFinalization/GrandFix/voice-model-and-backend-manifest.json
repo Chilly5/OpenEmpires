@@ -1,0 +1,148 @@
+{
+  "schema": "openempires-grand-fix-voice-backends@1",
+  "status": "D3b player model import/download/verified selection and crash recovery focused-verified; packaged/physical/quality/browser-local and other GrandFix work incomplete",
+  "unity_version": "6000.5.9f1",
+  "binding": {
+    "package": "com.whisper.unity",
+    "version": "1.4.0",
+    "revision": "e951e4a4c6e44c781b1d36bb8dc5bf1b7bae9687",
+    "cache_fingerprint": "beef8df8314a64824ed134468dfc13ab8c7f9762",
+    "native_version_reported": "whisper.cpp 1.7.5; release metadata, not a new binary upgrade",
+    "layout_source": "pinned public WhisperNativeContextParams/WhisperNativeParams; no duplicate structs"
+  },
+  "application_adapter": {
+    "context": "Assets/Scripts/AI/Commander/Phase4H/CommanderWhisperContext.cs",
+    "native_api": "Assets/Scripts/AI/Commander/Phase4H/CommanderWhisperNativeApi.cs",
+    "provider": "Assets/Scripts/AI/Commander/Phase4H/WhisperCommanderSpeechToTextProvider.cs",
+    "native_callback_handles": 0,
+    "loaded_loading_releasing_context_limit": 1,
+    "queued_replacement_limit": 0,
+    "native_abort": "Not exposed by pinned managed ABI; UI cancel/deadline prompt, actual native call must finish; honest busy state",
+    "native_free": "worker-owned after load/inference/result-read returns; unknown free result quarantines slot"
+  },
+  "current_baseline": {
+    "model": "ggml-tiny.bin",
+    "family": "multilingual tiny",
+    "decoding_language": "en default, user-configurable",
+    "bytes": 77691713,
+    "sha256": "be07e048e1e599ad46341c8d2a135645097a538221678b7acdd1b1919c6e1b21",
+    "origin": "Public ggerganov/whisper.cpp revision 5359861c739e955e79d9a303bcbc70fb988958b1 Git LFS identity; existing source bytes match pin; verified cache outside Assets",
+    "strategy": "greedy",
+    "translate": false,
+    "no_context": true,
+    "single_segment": true,
+    "default_use_gpu": false,
+    "gpu_verified": false,
+    "confidence_probability": "unavailable; no calibrated score claim",
+    "quality_improvement_verified": false
+  },
+  "windows_native_binary_identity": [
+    {
+      "file": "libwhisper.dll",
+      "bytes": 455680,
+      "sha256": "63c782f7a8d2eb3ee7f0cc41508dd53e1bf14dad9165be89b10aa5207a1df687"
+    },
+    {
+      "file": "ggml-base.dll",
+      "bytes": 489984,
+      "sha256": "d672c25b6301ac2d74446d30e49ae405c2a5985b7f7e5e4f11f4a73ed0cdbc39"
+    },
+    {
+      "file": "ggml-cpu.dll",
+      "bytes": 446464,
+      "sha256": "b131d07b95af5b0f5c20e9ea3ede361bbabc7954847793f1994ced438b3cca44"
+    },
+    {
+      "file": "ggml.dll",
+      "bytes": 69120,
+      "sha256": "27d2c48496ceab50f62320d12d003883453d77f6cc45bb0d3ef5986453714fa1"
+    },
+    {
+      "file": "ggml-vulkan.dll",
+      "bytes": 21189120,
+      "sha256": "edb0a5da5db22f257b87db2292f08c601dd4294292c90390d8b7b66cd66021d0"
+    }
+  ],
+  "binary_identity_scope": "Observed installed bytes, not verified acquisition, GPU activation, new package build or quality certificate",
+  "native_evidence": {
+    "first_abi_run": "2ada943f24e049d29e800eb4c43a9164 8/8 (5 ownership +3 native fixture)",
+    "final_edit": "676a7b76af3d4188a64c1ddecca5f8cf 45/45",
+    "voice_play": "90fec1c555244cccab80923b70c5259a 7/7",
+    "physical_microphone": false,
+    "new_model_benchmark": false,
+    "fresh_windows_build": false,
+    "served_web_build": false,
+    "model_store_edit": "6d542902404b48cca03086597b00b44b 32/32,6.0312543s; three existing native fixture cases"
+  },
+  "planned_candidates": [
+    "verified base.en",
+    "verified small.en",
+    "stronger compatible local model where justified",
+    "configured consented gpt-transcribe online candidate",
+    "feasible pinned worker-local browser candidate"
+  ],
+  "gateway": {
+    "source": "backend/speech-gateway",
+    "server_code_delivered": true,
+    "node_focused_tests": "18/18 local HTTP fixtures",
+    "rust_session_identity_route_compiled": false,
+    "upstream_model": "gpt-transcribe rolling alias; candidate, NOT measured winner",
+    "operator_deployment_verified": false,
+    "paid_semantic_http": 0,
+    "cloud_asr_billable_seconds": 0
+  },
+  "shared_consent_gate": {
+    "source": "ICommanderVoiceSessionProvider + CommanderVoiceInputController + CommanderGatewaySpeechToTextProvider + CommanderChatUI.VoiceSetup",
+    "new_focused_tests": 11,
+    "online_provider_tests": 12,
+    "final_affected_edit": "a5acd3045c98409e936368f533649330 63/63",
+    "final_voice_play": "c07d9a5bfef847558c1162fa5866d244 7/7",
+    "affirmative_consent_ui_delivered": true,
+    "online_provider_delivered": true,
+    "actual_service_or_microphone_verified": false,
+    "consent_persistence": "session-only; no tokens/keys in prefs",
+    "capture_and_revocation_enforced_for_opt_in_session_providers": true
+  },
+  "web": {
+    "native_api_compiled": false,
+    "native_dll_loaded": false,
+    "browser_capture_adapter_delivered": true,
+    "online_gateway_delivered": false,
+    "browser_capture_source": "CommanderBrowserAudioCapture + CommanderMicrophone.jslib + StreamingAssets/CommanderVoice/commander-pcm-worklet.js",
+    "capture_path": "Project-owned getUserMedia/AudioWorklet PCM; installed Unity microphone implementation had late-start/track-cleanup gaps, SDK left untouched",
+    "browser_semantic_adapter_delivered": true,
+    "semantic_source": "CommanderGatewaySemanticTransport; same Luna provider/strict parser, explicit text+owned-context choice",
+    "browser_transport_source": "Assets/Plugins/WebGL/CommanderGateway.jslib + CommanderGatewayTransport.cs",
+    "browser_transport_node_tests": "10/10 controlled plugin/worklet NodeVM, NOT browser/link/microphone proof",
+    "final_affected_edit": "2584183b6a664cf4b6cbe8e2fcde6936 76/76",
+    "final_voice_play": "cce10c99c4124ee3a9dba79f42fde844 7/7",
+    "browser_transport_web_link_verified": true,
+    "primary_route_required": "authenticated consented online transcription independent of WebGPU",
+    "operationally_verified": false,
+    "link_evidence": "build-63b0c14d8e development probe; actual served local match; predates C2/D1c/D3a",
+    "native_payload_source_exclusion_gate_passed": true,
+    "final_same_source_build_verified": false
+  },
+  "security": "No audio captured/uploaded or paid requests; no reusable client key. Verified native weights acquired outside Assets, original preserved. Player provisioning/notices/deployment and package evidence still required.",
+  "model_store": {
+    "catalog": "Assets/Resources/CommanderVoice/whisper-models.json",
+    "developer_cli": "Docs/CommanderFinalization/GrandFix/model-provision.mjs",
+    "node_tests": "10/10 controlled fixtures,199.0025ms",
+    "native_verify_before_load": true,
+    "read_lease_across_native_create": true,
+    "player_cache": "Application.persistentDataPath/CommanderVoice/Models/<sha256>/<filename>",
+    "editor_cache": "LocalModels/Whisper/<sha256>/<filename>",
+    "original_tiny_preserved": "LocalModels/LegacyStreamingAssets",
+    "base_en_verified": true,
+    "small_en_verified": false,
+    "small_en_failure": "Two terminal download failures; last MODEL_NETWORK_FAILED; no promoted model",
+    "medium_en_downloaded": false,
+    "player_runtime_provision_ui_delivered": true,
+    "quality_winner_selected": false,
+    "player_source": "CommanderLocalModelProvisioner + CommanderChatUI.LocalModels",
+    "player_focused_edit": "67890779d689490786e474978c11c2b7 77/77,50.2078795s",
+    "player_focused_play": "e355266af34a41dbbe6c1dd7de78e9ab 9/9,3.6898111s",
+    "player_crash_recovery": "Actual exclusive file lease; bounded exact owned staging cleanup; installed/unrelated files preserved",
+    "actual_packaged_provision_ui_verified": false
+  }
+}

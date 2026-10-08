@@ -110,7 +110,7 @@ namespace OpenEmpires
             switch (RequiredString(node, "type"))
             {
                 case "EnsureUnitCount":
-                    CheckFields(node, "type", "unit", "count", "dependsOn", "producerFromNode", "constraints");
+                    CheckFields(node, "type", "unit", "count", "dependsOn", "producerFromNode", "constraints", "quantityMode");
                     int unit;
                     switch (RequiredString(node, "unit"))
                     {
@@ -121,9 +121,16 @@ namespace OpenEmpires
                         case "Knight": unit = 7; break;
                         default: throw new JsonException();
                     }
+                    var quantityMode = CommanderProductionQuantityMode.TargetTotal;
+                    if (node.Property("quantityMode") != null)
+                    {
+                        string quantity = RequiredString(node, "quantityMode");
+                        if (quantity == "New") quantityMode = CommanderProductionQuantityMode.New;
+                        else if (quantity != "TargetTotal") throw new JsonException();
+                    }
                     return new CommanderSemanticNode(CommanderSemanticNodeType.EnsureUnitCount,
                         unitType: unit, count: RequiredCount(node, 0, 200), dependsOn: dependsOn,
-                        producerFromNode: ParseOptionalNodeIndex(node, "producerFromNode"), constraints: ParseConstraints(node));
+                        producerFromNode: ParseOptionalNodeIndex(node, "producerFromNode"), constraints: ParseConstraints(node), quantityMode: quantityMode);
 
                 case "BuildStructure":
                     CheckFields(node, "type", "structure", "count", "placement", "dependsOn", "constraints");
@@ -230,7 +237,7 @@ namespace OpenEmpires
         private static CommanderSemanticNode ParseCapabilityNode(JObject node, string type,
             IReadOnlyList<int> dependsOn)
         {
-            CheckFields(node, "type", "unitSelector", "count", "location", "resource", "structure", "dependsOn", "resultFromNode");
+            CheckFields(node, "type", "unitSelector", "count", "location", "resource", "structure", "dependsOn", "resultFromNode", "target");
             CommanderSemanticUnitSelector unit = ParseUnitSelector(RequiredString(node, "unitSelector"));
             int count = RequiredCount(node, 1, 50);
             CommanderSemanticLocationSelector location = ParseLocationSelector(RequiredString(node, "location"));
@@ -248,11 +255,46 @@ namespace OpenEmpires
             }
             CommanderSemanticNodeType action;
             if (!Enum.TryParse(type, false, out action)) throw new JsonException();
+            CommanderTargetSelector? target = node.Property("target") == null ? (CommanderTargetSelector?)null
+                : ParseTargetSelector(node["target"]);
+            if (target.HasValue && !target.Value.IsCompatible(
+                (CommanderCapabilityActionType)Enum.Parse(typeof(CommanderCapabilityActionType), type),
+                (CommanderLocationSelectorKind)Enum.Parse(typeof(CommanderLocationSelectorKind), location.ToString())))
+                throw new JsonException();
             int? resultFromNode = ParseOptionalNodeIndex(node, "resultFromNode");
             return new CommanderSemanticNode(action, count: count, resourceType: resource,
                 buildingType: structure, unitSelector: unit, locationSelector: location,
-                dependsOn: dependsOn, resultFromNode: resultFromNode);
+                dependsOn: dependsOn, resultFromNode: resultFromNode, targetSelector: target);
         }
+
+        // Shared strict target vocabulary for both semantic requests and legacy DTOs.
+        internal static CommanderTargetSelector ParseTargetSelector(JToken token)
+        {
+            if (!(token is JObject target)) throw new JsonException();
+            string kind = RequiredString(target, "kind");
+            if (kind == "UnitType")
+            {
+                CheckFields(target, "kind", "unit");
+                string unit = RequiredString(target, "unit");
+                if (!CommanderIntentCatalog.TryResolveUnit(unit, out int type)
+                    || CommanderIntentCatalog.GetUnitDisplayName(type) != unit) throw new JsonException();
+                return new CommanderTargetSelector(type);
+            }
+            if (kind == "BuildingType")
+            {
+                CheckFields(target, "kind", "structure");
+                string name = RequiredString(target, "structure");
+                if (!Enum.TryParse(name, false, out BuildingType type)
+                    || !Enum.IsDefined(typeof(BuildingType), type) || type.ToString() != name) throw new JsonException();
+                return new CommanderTargetSelector(type);
+            }
+            throw new JsonException();
+        }
+
+        internal static JObject TargetSelectorJson(CommanderTargetSelector selector)
+            => selector.Kind == CommanderTargetSelectorKind.UnitType
+                ? new JObject { ["kind"] = "UnitType", ["unit"] = CommanderIntentCatalog.GetUnitDisplayName(selector.UnitType) }
+                : new JObject { ["kind"] = "BuildingType", ["structure"] = selector.StructureType.Value.ToString() };
 
         private static CommanderSemanticUnitSelector ParseUnitSelector(string name)
         {

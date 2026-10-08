@@ -105,6 +105,7 @@ namespace OpenEmpires
         public string StatusReason { get; private set; }
         public int LastObservedOwnedCount { get; internal set; }
         public int LastObservedQueuedCount { get; internal set; }
+        internal int LastPlannerObservationTick { get; set; } = -1;
         public int LastEconomyCommandTick { get; internal set; } = int.MinValue / 2;
         public int MaxDurationTicks { get; }
         public bool UseIdleWorkersOnly { get; internal set; }
@@ -152,6 +153,14 @@ namespace OpenEmpires
             if (requiredGoals == null) return;
             foreach (CommanderGoal required in requiredGoals)
                 if (required != null && !dependencies.Contains(required)) dependencies.Add(required);
+        }
+        internal void ReleaseRuntimeReferences()
+        {
+            RuntimeOwner=null;RequestAuthority=null;dependencies.Clear();PreparationAllocators.Clear();FrozenWorkerIds=null;
+            if(this is CommanderCapabilityGoal capability){capability.TargetBinding=null;capability.ResultSourceGoal=null;capability.IssuedCommand=null;}
+            if(this is EnsureUnitCountGoal units){units.RequiredProducerGoal=null;units.TrackedTrainingOrders.Clear();units.BaselineUnitIds.Clear();}
+            if(this is BuildStructureGoal build)build.PendingPlacementCommand=null;
+            if(this is ReachAgeGoal age)age.PendingAgeUpCommand=null;
         }
     }
 
@@ -235,6 +244,8 @@ namespace OpenEmpires
         internal bool TrainingAttributionUnavailable { get; set; }
         internal IReadOnlyList<int> BoundProducerBuildingIds { get; set; }
         internal int RequiredNewProductionCount { get; set; } = -1;
+        internal bool IsExplicitNewProduction { get; set; }
+        internal long ExpectedOtherUnitContribution { get; set; }
         internal readonly List<TrainingOrderReceipt> TrackedTrainingOrders = new List<TrainingOrderReceipt>();
         internal readonly List<int> AttributedUnitIds = new List<int>();
         internal IReadOnlyList<int> ResultUnitIds { get; private set; } = Array.Empty<int>();
@@ -284,6 +295,7 @@ namespace OpenEmpires
 
     public sealed class CommanderCapabilityGoal : CommanderGoal
     {
+        internal CommanderTargetBinding TargetBinding { get; set; }
         public CapabilityActionIntent Action { get; }
         internal bool CommandIssued { get; set; }
         internal ICommand IssuedCommand { get; set; }

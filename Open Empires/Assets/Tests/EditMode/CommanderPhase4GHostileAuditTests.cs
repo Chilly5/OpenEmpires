@@ -303,10 +303,11 @@ namespace OpenEmpires.Tests
             barracks.TrainingQueue.Add(1);
 
             CommanderContext context = new CommanderContextBuilder().Build(simulation, manager);
-            // Request 8 total Spearmen (3 new units required beyond the 5 baseline units)
+            // Explicitly request three new units. Older queue entries already count
+            // toward totals, but cannot be claimed as this request's exact result.
             CommanderSemanticResult parsed = CommanderSemanticJson.Parse(
                 "{\"outcome\":\"Request\",\"nodes\":[" +
-                "{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":8}," +
+                "{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":3,\"quantityMode\":\"New\"}," +
                 "{\"type\":\"PatrolArea\",\"unitSelector\":\"Spearman\",\"count\":3," +
                 "\"location\":\"PlayerBase\",\"dependsOn\":[0],\"resultFromNode\":0}]}");
             Assert.That(CommanderSemanticGraphAdmission.TryAdmit(parsed, context, out var plan, out _), Is.True);
@@ -617,7 +618,52 @@ namespace OpenEmpires.Tests
             Assert.That(submission, Is.Null);
             Assert.That(manager.Goals, Is.Empty);
             Assert.That(simulation.CommandBuffer.FlushCommands(), Is.Empty);
-            Assert.That(GetLastExplanation(chat), Does.Contain("1200 Food and 600 Gold"));
+            // Independent literals checked against both actual English Age3 landmarks.
+            Assert.That(GetLastExplanation(chat), Does.Contain("800 Food and 400 Gold"));
+            Assert.That(GetLastExplanation(chat), Does.Contain("1200 Food and 600 Gold total"),
+                "From Dark Age, separate cumulative prerequisite cost from the Castle transition.");
+        }
+
+        [TestCase(Civilization.English, "imperial", "1600 Food and 800 Gold")]
+        [TestCase(Civilization.French, "castle", "800 Food and 400 Gold")]
+        [TestCase(Civilization.HolyRomanEmpire, "castle", "800 Food and 400 Gold")]
+        public async Task QA_AgeAdvice_UsesAvailableCanonicalLandmarks(Civilization civilization,
+            string age, string transitionCost)
+        {
+            simulation.SetPlayerCivilizations(new[] { civilization, Civilization.English });
+            simulation.SetPlayerAge(0, 2);
+            var chat = CreateChat();
+            Assert.That(await chat.SubmitMessageAsync("How do I reach " + age + " age?"), Is.Null);
+            string explanation = GetLastExplanation(chat);
+            Assert.That(explanation, Does.Contain(transitionCost));
+            Assert.That(explanation, Does.Contain(civilization.ToString()));
+            Assert.That(manager.Goals, Is.Empty);
+            Assert.That(simulation.CommandBuffer.FlushCommands(), Is.Empty);
+        }
+
+        [TestCase(Civilization.French)]
+        [TestCase(Civilization.HolyRomanEmpire)]
+        public async Task QA_UnavailableImperialAge_DoesNotInventEnglishLandmarks(Civilization civilization)
+        {
+            simulation.SetPlayerCivilizations(new[] { civilization, Civilization.English });
+            simulation.SetPlayerAge(0, 3);
+            var chat = CreateChat();
+            await chat.SubmitMessageAsync("How do I reach imperial age?");
+            Assert.That(GetLastExplanation(chat), Does.Contain("not available"));
+            Assert.That(GetLastExplanation(chat), Does.Not.Contain("2400 Food"));
+            Assert.That(manager.Goals, Is.Empty);
+            Assert.That(simulation.CommandBuffer.FlushCommands(), Is.Empty);
+        }
+
+        [Test]
+        public async Task QA_AlreadyReachedAge_DoesNotAdviseAnotherLandmark()
+        {
+            simulation.SetPlayerAge(0, 3);
+            var chat = CreateChat();
+            await chat.SubmitMessageAsync("How do I reach castle age?");
+            Assert.That(GetLastExplanation(chat), Does.Contain("already reached"));
+            Assert.That(manager.Goals, Is.Empty);
+            Assert.That(simulation.CommandBuffer.FlushCommands(), Is.Empty);
         }
 
         [Test]

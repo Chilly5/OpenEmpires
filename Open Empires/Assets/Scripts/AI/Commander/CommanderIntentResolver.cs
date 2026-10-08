@@ -101,7 +101,8 @@ namespace OpenEmpires
             }
 
             EnsureUnitCountGoal goal = goalManager.SubmitEnsureUnitCount(
-                intent.UnitType, intent.TargetTotal, maximumQueue, constraints: intent.Constraints);
+                intent.UnitType, intent.TargetTotal, maximumQueue, constraints: intent.Constraints,
+                newProductionCount: intent.NewProductionCount);
             return Created(intent, goal);
         }
 

@@ -1,0 +1,60 @@
+{
+  "schema": "openempires-production-quantity-checkpoint@1",
+  "head": "8586764e644240f93c99e2afa1c7d41c697cc879",
+  "branch": "unit_models_and_voice_control",
+  "working_changes": true,
+  "scope_version": 3,
+  "edit": {
+    "job": "348cf45224c14bd7a3c2c48e39ad4245",
+    "artifact": "quantity-final-edit-348cf452.xml",
+    "passed": 117,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 103.8719285
+  },
+  "play": {
+    "job": "1643bf1a593748e6bf8849fd94711512",
+    "artifact": "quantity-final-play-1643bf1a.xml",
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 2.4855822
+  },
+  "read_only_review": {
+    "task": "g06_quantity_review",
+    "model": "gpt-6-sol",
+    "findings": "KnownIntent New loss; dependency forecast; delayed native acceptance duplicate. Reproduced RED and fixed, no re-review.",
+    "not_runtime_certificate": true
+  },
+  "source_sha256": {
+    "Assets/Scripts/AI/Commander/CommanderProductionExpectation.cs": "9448a755e4b3fdc45e062485b27d889933e7d762e68462cf84400d2c872ea5de",
+    "Assets/Scripts/AI/Commander/CommanderIntent.cs": "c706a6e22e560a30a723845b3f0e191a82df2b852fb6aac6c41f6cd4845802f7",
+    "Assets/Scripts/AI/Commander/CommanderIntentDto.cs": "1ac2bc1314f146ff1c62803e93cfc099a3e6049ac943abbe3e92b520fa8874ff",
+    "Assets/Scripts/AI/Commander/CommanderIntentResolver.cs": "56495b07607d90e6734527c37c11ffb2cb892c63cc9eaef7a846bf8846b6b5eb",
+    "Assets/Scripts/AI/Commander/CommanderContextBuilder.cs": "4d9abe44f069d2fa5179a29947615df956cd1480574a699789a279e6e4781d08",
+    "Assets/Scripts/AI/Commander/CommanderGoal.cs": "51f7fc4a4bf6162e0f533fa6a780b94df0ded9b2a4e00923ac656168001dadff",
+    "Assets/Scripts/AI/Commander/CommanderGoalManager.cs": "e575e9ae1d6713fb953ba5bac822b28236a72fde020654b9f15061f5984e1405",
+    "Assets/Scripts/AI/Commander/CommanderPlanner.cs": "337373bfbfa4b5a0a5759d115a6feb025928715c9a039ed4eaef7809b0a618b4",
+    "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticGraphAdmission.cs": "e41aba3b5681df380e02c3a8caf2e29a2aaf9be348fc4490315c006e3e66aa18",
+    "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticRequest.cs": "1cd029301592c3b8b6efe8f41fc35a0585f2a3c447f942c93074aafab2c08960",
+    "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticJson.cs": "b93211d46919576ee0e3a6c40f1a2708755a16eb8b348d0d98e1c97296acbba9",
+    "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticAdmission.cs": "31585a12f1d3437f8033a505ecaff351171130cb8ebe1747204a638da3aff2e0",
+    "Assets/Scripts/AI/Commander/Phase5A/CommanderDynamicCompiler.cs": "949c929d7332e2abc0e353de91313e7f263b7083fc25f4d01c75fda76a0a1899",
+    "Assets/Scripts/AI/Commander/Phase5A/CommanderScopeEquivalence.cs": "873ff9d48a19d4eda11dcac983254b16148fac97077db964bed051742db4365d",
+    "Assets/Scripts/AI/Commander/Phase5A/CommanderActionPlanCandidate.cs": "8e30fce9da6c2f85b5721585ecc04e58d3a2ac360ba5fb35b429123ad3125411",
+    "Assets/Scripts/AI/Commander/Phase5A/CommanderGoalManager.Requests.cs": "cccbd1e1a6613af1294f9f03c7abb72b03539c1f71130200958e493fbd4b0126",
+    "Assets/Scripts/AI/Commander/Phase5A/CommanderGoalManager.Production.cs": "1468d87223e54d0b4a83a919bda51de548d1e9e452b5dbbe7d69e10a04752d4a",
+    "Assets/Scripts/AI/Commander/Phase4A/OpenRouterCommanderProvider.cs": "b8e897a5c714a8a860975484e3599c5f7ddef4b5ce94301c8f468653802d3d2d",
+    "Assets/Scripts/Core/GameSimulation.TrainingObservation.cs": "53f56d82d070884b8d325501adcd5f15d5c9af13abe66381913311368bda0746",
+    "Assets/Tests/EditMode/CommanderGrandFixQuantityTests.cs": "8835143ba211f4cc3c56aebfb1a832f9cef6f4f7328ab132e226f03e50c91759",
+    "Assets/Tests/PlayMode/CommanderGrandFixQuantityPlayModeTests.cs": "0164d3b656e38ab31306629c0d53fbf913adfb88b4f19daf92c471fc1b34af23",
+    "Assets/Tests/EditMode/CommanderPhase4GCapabilityTests.cs": "b03d85520e9d6d42c1d01050dc270b29d8c2bfdacc09e643d1a529cbbbe06dcd",
+    "Assets/Tests/EditMode/CommanderPhase5AProductionBindingTests.cs": "78a15f79e43b05fcf99fd160f28a392791e2d58621ae2dee25abf4269be59e1e"
+  },
+  "paid_semantic_http": 0,
+  "paid_asr_billable_seconds": 0,
+  "packaged_windows_verified": false,
+  "served_web_verified": false,
+  "actual_peers_verified": false,
+  "goal_status": "active"
+}

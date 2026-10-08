@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="12" result="Failed(Child)" total="12" passed="0" failed="12" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-07 21:17:19Z" end-time="2026-10-07 21:17:24Z" duration="4.6682485">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1205" result="Failed" site="Child" start-time="2026-10-07 21:17:19Z" end-time="2026-10-07 21:17:24Z" duration="4.668249" total="12" passed="0" failed="12" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2379" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1205" result="Failed" site="Child" start-time="2026-10-07 21:17:19Z" end-time="2026-10-07 21:17:24Z" duration="4.562134" total="12" passed="0" failed="12" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2380" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1205" result="Failed" site="Child" start-time="2026-10-07 21:17:19Z" end-time="2026-10-07 21:17:24Z" duration="4.474599" total="12" passed="0" failed="12" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2381" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1205" result="Failed" site="Child" start-time="2026-10-07 21:17:19Z" end-time="2026-10-07 21:17:24Z" duration="4.362998" total="12" passed="0" failed="12" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1039" name="CommanderGrandFixOnlineVoiceTests" fullname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests" classname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests" runstate="Runnable" testcasecount="12" result="Failed" site="Child" start-time="2026-10-07 21:17:19Z" end-time="2026-10-07 21:17:24Z" duration="4.255097" total="12" passed="0" failed="12" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1043" name="CancelledIgnoringUpload_GlobalSlotPreventsReplacementAcrossProviders" fullname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.CancelledIgnoringUpload_GlobalSlotPreventsReplacementAcrossProviders" methodname="CancelledIgnoringUpload_GlobalSlotPreventsReplacementAcrossProviders" classname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests" runstate="Runnable" seed="1684246605" result="Failed" start-time="2026-10-07 21:17:19Z" end-time="2026-10-07 21:17:20Z" duration="0.331527" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  The actual shared online provider must exist; no fallback to native or mock.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.Create (OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests+FixtureTransport transport, System.Func`1[TResult] token) [0x00019] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixOnlineVoiceTests.cs:18
+at OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.CancelledIgnoringUpload_GlobalSlotPreventsReplacementAcrossProviders () [0x00017] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixOnlineVoiceTests.cs:52
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1052" name="ExactZeroAudio_ProducesNoSpeechWithoutUploading" fullname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.ExactZeroAudio_ProducesNoSpeechWithoutUploading" methodname="ExactZeroAudio_ProducesNoSpeechWithoutUploading" classname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests" runstate="Runnable" seed="787942541" result="Failed" start-time="2026-10-07 21:17:20Z" end-time="2026-10-07 21:17:20Z" duration="0.290306" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  The actual shared online provider must exist; no fallback to native or mock.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.Create (OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests+FixtureTransport transport, System.Func`1[TResult] token) [0x00019] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixOnlineVoiceTests.cs:18
+at OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.ExactZeroAudio_ProducesNoSpeechWithoutUploading () [0x00015] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixOnlineVoiceTests.cs:74
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1041" name="ExplicitConsent_BindsOneJobPolicyTokenAndExactPlainTranscript" fullname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.ExplicitConsent_BindsOneJobPolicyTokenAndExactPlainTranscript" methodname="ExplicitConsent_BindsOneJobPolicyTokenAndExactPlainTranscript" classname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests" runstate="Runnable" seed="1636274389" result="Failed" start-time="2026-10-07 21:17:20Z" end-time="2026-10-07 21:17:20Z" duration="0.327190" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  The actual shared online provider must exist; no fallback to native or mock.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.Create (OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests+FixtureTransport transport, System.Func`1[TResult] token) [0x00019] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixOnlineVoiceTests.cs:18
+at OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.ExplicitConsent_BindsOneJobPolicyTokenAndExactPlainTranscript () [0x00015] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixOnlineVoiceTests.cs:34
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1051" name="InvalidAudio_IsRejectedBeforeEncodingOrUpload" fullname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.InvalidAudio_IsRejectedBeforeEncodingOrUpload" classname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-07 21:17:20Z" end-time="2026-10-07 21:17:21Z" duration="0.762604" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1049" name="InvalidAudio_IsRejectedBeforeEncodingOrUpload(False)" fullname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.InvalidAudio_IsRejectedBeforeEncodingOrUpload(False)" methodname="InvalidAudio_IsRejectedBeforeEncodingOrUpload" classname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests" runstate="Runnable" seed="59292995" result="Failed" start-time="2026-10-07 21:17:21Z" end-time="2026-10-07 21:17:21Z" duration="0.326513" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  The actual shared online provider must exist; no fallback to native or mock.
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.Create (OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests+FixtureTransport transport, System.Func`1[TResult] token) [0x00019] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixOnlineVoiceTests.cs:18
+at OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.InvalidAudio_IsRejectedBeforeEncodingOrUpload (System.Boolean tooLong) [0x00015] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixOnlineVoiceTests.cs:67
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1050" name="InvalidAudio_IsRejectedBeforeEncodingOrUpload(True)" fullname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.InvalidAudio_IsRejectedBeforeEncodingOrUpload(True)" methodname="InvalidAudio_IsRejectedBeforeEncodingOrUpload" classname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests" runstate="Runnable" seed="313691814" result="Failed" start-time="2026-10-07 21:17:21Z" end-time="2026-10-07 21:17:21Z" duration="0.324402" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  The actual shared online provider must exist; no fallback to native or mock.
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.Create (OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests+FixtureTransport transport, System.Func`1[TResult] token) [0x00019] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixOnlineVoiceTests.cs:18
+at OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.InvalidAudio_IsRejectedBeforeEncodingOrUpload (System.Boolean tooLong) [0x00015] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixOnlineVoiceTests.cs:67
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-case id="1040" name="MissingConsent_DoesNotFreezeCaptureOrUploadAudio" fullname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.MissingConsent_DoesNotFreezeCaptureOrUploadAudio" methodname="MissingConsent_DoesNotFreezeCaptureOrUploadAudio" classname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests" runstate="Runnable" seed="1323681203" result="Failed" start-time="2026-10-07 21:17:21Z" end-time="2026-10-07 21:17:22Z" duration="0.321240" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  The actual shared online provider must exist; no fallback to native or mock.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.Create (OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests+FixtureTransport transport, System.Func`1[TResult] token) [0x00019] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixOnlineVoiceTests.cs:18
+at OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.MissingConsent_DoesNotFreezeCaptureOrUploadAudio () [0x00015] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixOnlineVoiceTests.cs:28
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1053" name="NewRecordingGetsNewJob_AndTokenChangeInvalidatesPendingResult" fullname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.NewRecordingGetsNewJob_AndTokenChangeInvalidatesPendingResult" methodname="NewRecordingGetsNewJob_AndTokenChangeInvalidatesPendingResult" classname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests" runstate="Runnable" seed="1864472377" result="Failed" start-time="2026-10-07 21:17:22Z" end-time="2026-10-07 21:17:22Z" duration="0.326592" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  The actual shared online provider must exist; no fallback to native or mock.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.Create (OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests+FixtureTransport transport, System.Func`1[TResult] token) [0x00019] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixOnlineVoiceTests.cs:18
+at OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.NewRecordingGetsNewJob_AndTokenChangeInvalidatesPendingResult () [0x00031] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixOnlineVoiceTests.cs:80
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1042" name="Revocation_CancelsActualUploadAndKeepsIgnoringLateTextInert" fullname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.Revocation_CancelsActualUploadAndKeepsIgnoringLateTextInert" methodname="Revocation_CancelsActualUploadAndKeepsIgnoringLateTextInert" classname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests" runstate="Runnable" seed="173735642" result="Failed" start-time="2026-10-07 21:17:22Z" end-time="2026-10-07 21:17:22Z" duration="0.342135" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  The actual shared online provider must exist; no fallback to native or mock.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.Create (OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests+FixtureTransport transport, System.Func`1[TResult] token) [0x00019] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixOnlineVoiceTests.cs:18
+at OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.Revocation_CancelsActualUploadAndKeepsIgnoringLateTextInert () [0x00017] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixOnlineVoiceTests.cs:45
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1048" name="UntrustedResponse_MustMatchJobPolicyAndPlainTextSchema" fullname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.UntrustedResponse_MustMatchJobPolicyAndPlainTextSchema" classname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-10-07 21:17:22Z" end-time="2026-10-07 21:17:24Z" duration="1.415027" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1044" name="UntrustedResponse_MustMatchJobPolicyAndPlainTextSchema(&quot;foreign&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.UntrustedResponse_MustMatchJobPolicyAndPlainTextSchema(&quot;foreign&quot;)" methodname="UntrustedResponse_MustMatchJobPolicyAndPlainTextSchema" classname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests" runstate="Runnable" seed="168901098" result="Failed" start-time="2026-10-07 21:17:22Z" end-time="2026-10-07 21:17:23Z" duration="0.324635" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  The actual shared online provider must exist; no fallback to native or mock.
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.Create (OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests+FixtureTransport transport, System.Func`1[TResult] token) [0x00019] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixOnlineVoiceTests.cs:18
+at OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.UntrustedResponse_MustMatchJobPolicyAndPlainTextSchema (System.String failure) [0x0001c] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixOnlineVoiceTests.cs:61
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1045" name="UntrustedResponse_MustMatchJobPolicyAndPlainTextSchema(&quot;policy&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.UntrustedResponse_MustMatchJobPolicyAndPlainTextSchema(&quot;policy&quot;)" methodname="UntrustedResponse_MustMatchJobPolicyAndPlainTextSchema" classname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests" runstate="Runnable" seed="98555080" result="Failed" start-time="2026-10-07 21:17:23Z" end-time="2026-10-07 21:17:23Z" duration="0.325775" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  The actual shared online provider must exist; no fallback to native or mock.
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.Create (OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests+FixtureTransport transport, System.Func`1[TResult] token) [0x00019] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixOnlineVoiceTests.cs:18
+at OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.UntrustedResponse_MustMatchJobPolicyAndPlainTextSchema (System.String failure) [0x0001c] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixOnlineVoiceTests.cs:61
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1046" name="UntrustedResponse_MustMatchJobPolicyAndPlainTextSchema(&quot;extra&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.UntrustedResponse_MustMatchJobPolicyAndPlainTextSchema(&quot;extra&quot;)" methodname="UntrustedResponse_MustMatchJobPolicyAndPlainTextSchema" classname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests" runstate="Runnable" seed="131235340" result="Failed" start-time="2026-10-07 21:17:23Z" end-time="2026-10-07 21:17:23Z" duration="0.322675" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  The actual shared online provider must exist; no fallback to native or mock.
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.Create (OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests+FixtureTransport transport, System.Func`1[TResult] token) [0x00019] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixOnlineVoiceTests.cs:18
+at OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.UntrustedResponse_MustMatchJobPolicyAndPlainTextSchema (System.String failure) [0x0001c] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixOnlineVoiceTests.cs:61
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1047" name="UntrustedResponse_MustMatchJobPolicyAndPlainTextSchema(&quot;typed-text&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.UntrustedResponse_MustMatchJobPolicyAndPlainTextSchema(&quot;typed-text&quot;)" methodname="UntrustedResponse_MustMatchJobPolicyAndPlainTextSchema" classname="OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests" runstate="Runnable" seed="944965085" result="Failed" start-time="2026-10-07 21:17:23Z" end-time="2026-10-07 21:17:24Z" duration="0.329088" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  The actual shared online provider must exist; no fallback to native or mock.
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.Create (OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests+FixtureTransport transport, System.Func`1[TResult] token) [0x00019] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixOnlineVoiceTests.cs:18
+at OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests.UntrustedResponse_MustMatchJobPolicyAndPlainTextSchema (System.String failure) [0x0001c] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixOnlineVoiceTests.cs:61
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

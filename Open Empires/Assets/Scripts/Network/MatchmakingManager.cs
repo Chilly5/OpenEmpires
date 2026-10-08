@@ -34,6 +34,7 @@ namespace OpenEmpires
         public string PlayerId { get; private set; }
         public string Username { get; private set; }
         public string AuthToken { get; private set; }
+        public bool CompatibilityAccepted { get; private set; }
         public int GamePlayerId { get; private set; }
         public string MatchId { get; private set; }
         public Team[] Teams { get; private set; }
@@ -155,7 +156,7 @@ namespace OpenEmpires
                 }
 
                 string responseJson = request.downloadHandler.text;
-                Debug.Log($"[Matchmaking] Login response: {responseJson}");
+                Debug.Log("[Matchmaking] Login response received; credential payload omitted.");
 
                 var response = JsonUtility.FromJson<LoginResponse>(responseJson);
                 PlayerId = response.player_id;
@@ -182,6 +183,8 @@ namespace OpenEmpires
 
         private void HandleWebSocketConnected()
         {
+            CompatibilityAccepted = false;
+            if (NetworkCompatibility.Current == null) { RejectCompatibility(); return; }
             Debug.Log("[Matchmaking] WebSocket connected, authenticating...");
             SetState(MatchmakingState.Authenticating);
             webSocketClient.Send(new AuthenticateMessage(AuthToken));
@@ -189,6 +192,7 @@ namespace OpenEmpires
 
         private void HandleWebSocketDisconnected(string reason)
         {
+            CompatibilityAccepted = false;
             Debug.Log($"[Matchmaking] WebSocket disconnected: {reason}");
             SetState(MatchmakingState.Disconnected);
         }
@@ -209,16 +213,24 @@ namespace OpenEmpires
 
         private void HandleServerMessage(ServerMessage message)
         {
+            if (!CompatibilityAccepted && (message is MatchFoundMessage || message is MatchStartingMessage || message is ServerGameCommandMessage
+                || message is QueueJoinedMessage || message is PlayerReadyMessage || message is PlayerJoinedMatchMessage))
+            { RejectCompatibility(); return; }
             switch (message)
             {
                 case AuthenticatedMessage auth:
+                    if (State != MatchmakingState.Authenticating) break;
+                    if (!NetworkCompatibility.Matches(NetworkCompatibility.Current, auth.compatibility))
+                    { RejectCompatibility(); break; }
+                    CompatibilityAccepted = true;
                     Debug.Log($"[Matchmaking] Authenticated as {auth.username}");
                     SetState(MatchmakingState.Authenticated);
                     break;
 
                 case AuthErrorMessage authError:
-                    Debug.LogError($"[Matchmaking] Auth error: {authError.message}");
-                    OnError?.Invoke(authError.message);
+                    CompatibilityAccepted = false;
+                    Debug.LogWarning("[Matchmaking] Authentication rejected; server payload omitted.");
+                    OnError?.Invoke("Sign-in or release compatibility was rejected. Use matching clients and backend; no gameplay started.");
                     SetState(MatchmakingState.Disconnected);
                     break;
 
@@ -268,6 +280,7 @@ namespace OpenEmpires
                     break;
 
                 case ServerGameCommandMessage gameCommand:
+                    if (State != MatchmakingState.InGame && State != MatchmakingState.MatchStarting) break;
                     OnGameCommandReceived?.Invoke(gameCommand);
                     break;
 
@@ -312,7 +325,7 @@ namespace OpenEmpires
 
         public void JoinQueue(GameMode gameMode, int civilization = 0)
         {
-            if (State != MatchmakingState.Authenticated)
+            if (!CompatibilityAccepted || State != MatchmakingState.Authenticated)
             {
                 Debug.LogWarning("[Matchmaking] Cannot join queue - not authenticated");
                 return;
@@ -338,6 +351,7 @@ namespace OpenEmpires
 
         public void SendReady()
         {
+            if (!CompatibilityAccepted) { RejectCompatibility(); return; }
             if (State != MatchmakingState.MatchFound && State != MatchmakingState.WaitingForPlayers)
             {
                 Debug.LogWarning("[Matchmaking] Cannot send ready - not in match");
@@ -351,6 +365,7 @@ namespace OpenEmpires
 
         public void SendGameCommand(int frame, string commandType, string payloadJson)
         {
+            if (!CompatibilityAccepted) return;
             if (State != MatchmakingState.InGame && State != MatchmakingState.MatchStarting)
             {
                 return;
@@ -368,6 +383,7 @@ namespace OpenEmpires
 
         public void StartGame()
         {
+            if (!CompatibilityAccepted) { RejectCompatibility(); return; }
             SetState(MatchmakingState.InGame);
         }
 
@@ -381,7 +397,8 @@ namespace OpenEmpires
 
         public void Disconnect()
         {
-            webSocketClient.Disconnect();
+            CompatibilityAccepted = false;
+            webSocketClient?.Disconnect();
             PlayerId = null;
             Username = null;
             AuthToken = null;
@@ -405,6 +422,14 @@ namespace OpenEmpires
                 State = newState;
                 OnStateChanged?.Invoke(newState);
             }
+        }
+        private void RejectCompatibility()
+        {
+            CompatibilityAccepted = false;
+            SetState(MatchmakingState.Disconnected);
+            Debug.LogWarning("[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.");
+            OnError?.Invoke("Multiplayer compatibility check failed. Use matching source/data builds and an updated compatible backend. Single-player remains available.");
+            webSocketClient?.Disconnect();
         }
 
         public void ResetSmoothedRTT()

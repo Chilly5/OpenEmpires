@@ -2,15 +2,16 @@
     "name": "OpenEmpires.EditModeTests",
     "rootNamespace": "OpenEmpires.Tests",
     "references": [
-        "OpenEmpires.Runtime"
+        "OpenEmpires.Runtime",
+        "OpenEmpires.TestSupport"
     ],
     "includePlatforms": [
         "Editor"
     ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
+    "overrideReferences": true,
+    "precompiledReferences": ["nunit.framework.dll", "Newtonsoft.Json.dll"],
     "autoReferenced": false,
     "defineConstraints": [
         "UNITY_INCLUDE_TESTS"

@@ -133,6 +133,7 @@ async fn main() {
     let app = Router::new()
         .route("/health", get(handlers::health))
         .route("/api/auth/login", post(handlers::login))
+        .route("/api/auth/session", get(handlers::session_identity))
         .route("/api/queue/join", post(handlers::join_queue))
         .route("/api/queue/leave", post(handlers::leave_queue))
         .route("/ws", get(ws::ws_handler))

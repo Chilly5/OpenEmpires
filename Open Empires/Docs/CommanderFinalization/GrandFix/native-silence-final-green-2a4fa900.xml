@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Passed" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 21:05:37Z" end-time="2026-10-08 21:05:45Z" duration="8.3507336">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1473" result="Passed" start-time="2026-10-08 21:05:37Z" end-time="2026-10-08 21:05:45Z" duration="8.350734" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="2696" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1473" result="Passed" start-time="2026-10-08 21:05:37Z" end-time="2026-10-08 21:05:45Z" duration="8.327474" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="24412" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="2697" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1473" result="Passed" start-time="2026-10-08 21:05:37Z" end-time="2026-10-08 21:05:45Z" duration="8.237968" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="2698" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1473" result="Passed" start-time="2026-10-08 21:05:37Z" end-time="2026-10-08 21:05:45Z" duration="8.136114" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="2500" name="CommanderPhase4HAudioFixtureTests" fullname="OpenEmpires.Tests.CommanderPhase4HAudioFixtureTests" classname="OpenEmpires.Tests.CommanderPhase4HAudioFixtureTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-08 21:05:37Z" end-time="2026-10-08 21:05:45Z" duration="8.035073" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="2503" name="AudioFixture_BaseEnPureSilence_DoesNotHallucinateTranscript" fullname="OpenEmpires.Tests.CommanderPhase4HAudioFixtureTests.AudioFixture_BaseEnPureSilence_DoesNotHallucinateTranscript" methodname="AudioFixture_BaseEnPureSilence_DoesNotHallucinateTranscript" classname="OpenEmpires.Tests.CommanderPhase4HAudioFixtureTests" runstate="Runnable" seed="1952791748" result="Passed" start-time="2026-10-08 21:05:37Z" end-time="2026-10-08 21:05:40Z" duration="2.269652" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Requesting default Whisper Context params...
+Default Whisper Context params generated!
+]]></output>
+            </test-case>
+            <test-case id="2502" name="AudioFixture_BuildMill_TranscribesAccurately" fullname="OpenEmpires.Tests.CommanderPhase4HAudioFixtureTests.AudioFixture_BuildMill_TranscribesAccurately" methodname="AudioFixture_BuildMill_TranscribesAccurately" classname="OpenEmpires.Tests.CommanderPhase4HAudioFixtureTests" runstate="Runnable" seed="1834607504" result="Passed" start-time="2026-10-08 21:05:40Z" end-time="2026-10-08 21:05:42Z" duration="2.169549" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Requesting default Whisper Context params...
+Default Whisper Context params generated!
+[Test] AudioFixture_BuildMill transcript: 'Build a mill near the berries my villagers are gathering.' in 646ms
+]]></output>
+            </test-case>
+            <test-case id="2501" name="AudioFixture_MakeTenSpearmen_TranscribesAccurately" fullname="OpenEmpires.Tests.CommanderPhase4HAudioFixtureTests.AudioFixture_MakeTenSpearmen_TranscribesAccurately" methodname="AudioFixture_MakeTenSpearmen_TranscribesAccurately" classname="OpenEmpires.Tests.CommanderPhase4HAudioFixtureTests" runstate="Runnable" seed="835809153" result="Passed" start-time="2026-10-08 21:05:42Z" end-time="2026-10-08 21:05:44Z" duration="2.200289" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Requesting default Whisper Context params...
+Default Whisper Context params generated!
+[Test] AudioFixture_MakeTenSpearmen transcript: 'Make 10 Spearman.' in 820ms
+]]></output>
+            </test-case>
+            <test-case id="2504" name="AudioFixture_PureSilence_DoesNotProduceGarbageOrder" fullname="OpenEmpires.Tests.CommanderPhase4HAudioFixtureTests.AudioFixture_PureSilence_DoesNotProduceGarbageOrder" methodname="AudioFixture_PureSilence_DoesNotProduceGarbageOrder" classname="OpenEmpires.Tests.CommanderPhase4HAudioFixtureTests" runstate="Runnable" seed="1892307619" result="Passed" start-time="2026-10-08 21:05:44Z" end-time="2026-10-08 21:05:45Z" duration="1.270090" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Requesting default Whisper Context params...
+Default Whisper Context params generated!
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

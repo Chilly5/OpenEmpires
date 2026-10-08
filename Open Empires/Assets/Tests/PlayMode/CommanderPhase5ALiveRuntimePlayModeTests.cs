@@ -8,18 +8,24 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
+using OpenEmpires.TestSupport;
 
 namespace OpenEmpires.Tests
 {
     // Opt-in paid evidence. This class is intentionally absent from the offline focused test filters.
     // Every translation delegates to the configured OpenRouter provider's normal constructor and HTTP path.
     [Category("CommanderPhase5ALiveRuntime")]
+    [Category("CommanderLiveProvider")]
     public sealed class CommanderPhase5ALiveRuntimePlayModeTests
     {
         private static readonly FieldInfo ChatInstanceField = typeof(CommanderChatUI).GetField(
             "instance", BindingFlags.NonPublic | BindingFlags.Static);
         private static string sharedProviderBlocker;
-        private static int submittedProviderCalls;
+        private bool initialized;
+        private ScenarioEvidenceRecorder evidence;
+        private string evidenceStage="setup";
+        private long evidenceRequest=-1;
+        private bool evidenceApproved;
 
         private SimulationConfig config;
         private GameSimulation simulation;
@@ -35,10 +41,20 @@ namespace OpenEmpires.Tests
         [SetUp]
         public void SetUp()
         {
+            initialized=false;
+            evidence=null;provider=null;simulation=null;manager=null;dispatcher=null;chat=null;config=null;
+            if(!EvidenceLivePolicy.Enabled)
+                Assert.Ignore("Paid live-provider lane disabled. Explicit Editor opt-in and the existing persistent GrandFix budget are required.");
+            evidenceStage="setup";evidenceRequest=-1;evidenceApproved=false;
+            evidence=new ScenarioEvidenceRecorder(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Application.dataPath),
+                "Docs","CommanderFinalization","GrandFix","live-evidence","scenario-"+Guid.NewGuid().ToString("N")+".json"),EvidenceLivePolicy.ApprovedRun);
+            EvidenceBudgetJournal journal;
+            try{journal=EvidenceLivePolicy.OpenApprovedJournal();}
+            catch(InvalidOperationException){Persist("setup","budget-unavailable");throw;}
             if (sharedProviderBlocker != null)
                 Assert.Inconclusive("Live provider blocked in an earlier scenario: " + sharedProviderBlocker);
-            Assert.That(submittedProviderCalls, Is.LessThan(6), "The six-call live evidence cap was exhausted.");
             previousChat = ChatInstanceField.GetValue(null) as CommanderChatUI;
+            initialized=true;
             ChatInstanceField.SetValue(null, null);
             ordinaryCommanderCommands.Clear();
             config = ScriptableObject.CreateInstance<SimulationConfig>();
@@ -70,21 +86,38 @@ namespace OpenEmpires.Tests
             manager = new CommanderGoalManager(simulation, 0);
             dispatcher = new CommanderIntentDispatcher(simulation, manager);
             simulation.CommandBuffer.CommandEnqueued += Capture;
-            provider = new RecordingLiveProvider(new OpenRouterCommanderProvider());
+            var transport=new BudgetedSemanticTransport(new CommanderHttpClientTransport(),journal);
+            provider = new RecordingLiveProvider(new OpenRouterCommanderProvider(transport:transport),transport);
             chat = new GameObject("Phase5ALiveRuntimeChat").AddComponent<CommanderChatUI>();
             chat.enabled = false; // Do not run Start's unrelated bootstrap coroutine.
             chat.Initialize(provider, simulation, manager, dispatcher, TimeSpan.FromSeconds(35));
+            Persist("setup","none");
         }
 
         [TearDown]
         public void TearDown()
         {
-            if (simulation != null) simulation.CommandBuffer.CommandEnqueued -= Capture;
-            if (chat != null) UnityEngine.Object.DestroyImmediate(chat.gameObject);
-            dispatcher?.Dispose();
-            manager?.Dispose();
-            if (config != null) UnityEngine.Object.DestroyImmediate(config);
-            ChatInstanceField.SetValue(null, previousChat);
+            try
+            {
+                if(evidence!=null)
+                {
+                    var status=TestContext.CurrentContext.Result.Outcome.Status;
+                    string category=status==NUnit.Framework.Interfaces.TestStatus.Passed?"none"
+                        :status==NUnit.Framework.Interfaces.TestStatus.Skipped||status==NUnit.Framework.Interfaces.TestStatus.Inconclusive?"external-gate":"test-failed";
+                    Persist(evidenceStage,category);Persist("terminal",category);
+                }
+            }
+            finally
+            {
+                if(initialized)
+                {
+                    if (simulation != null) simulation.CommandBuffer.CommandEnqueued -= Capture;
+                    if (chat != null) UnityEngine.Object.DestroyImmediate(chat.gameObject);
+                    dispatcher?.Dispose();manager?.Dispose();
+                    if (config != null) UnityEngine.Object.DestroyImmediate(config);
+                    ChatInstanceField.SetValue(null, previousChat);
+                }
+            }
         }
 
         [UnityTest]
@@ -133,6 +166,10 @@ namespace OpenEmpires.Tests
             int initialWood = simulation.ResourceManager.GetPlayerResources(0).Wood;
             var initialIds = BuildingIds();
             yield return Submit("Build a mill near the berries my villager is working.", "mill-berries");
+            bool expectedMill=EvidenceSemanticGate.HasOnlyStructureEffect(provider.LastResult,BuildingType.Mill,1);
+            Persist("semantic",expectedMill?"none":"unexpected-effect");
+            Assert.That(expectedMill,Is.True,
+                "Semantic stage requires exactly the requested Mill construction effect; valid Answer/Clarify/Unsupported is not construction acceptance.");
             if (chat.PendingActionPlan != null) yield return ApproveCandidate("mill-berries");
             yield return TickUntil(() => NewBuildings(initialIds, BuildingType.Mill)
                 .Any(b => !b.IsUnderConstruction), 6000);
@@ -246,23 +283,31 @@ namespace OpenEmpires.Tests
 
         private IEnumerator Submit(string input, string scenario)
         {
+            Persist("provider","none");
             Task<CommanderAIChatSubmission> task = chat.SubmitMessageAsync(input);
             while (!task.IsCompleted) yield return null;
+            if(provider.GuardFailure!=null)
+            {Persist("provider",provider.GuardFailure);Assert.Inconclusive(scenario+": "+provider.GuardFailure+"; no additional paid attempt is permitted.");}
+            Persist("semantic",task.IsFaulted?"provider-fault":"none");
             Assert.That(task.IsFaulted, Is.False, scenario + " UI submission faulted.");
             Assert.That(provider.Calls, Is.EqualTo(1), scenario + " must use one real semantic translation.");
             if (provider.LastResult == null)
-                Assert.Inconclusive(scenario + ": provider did not return before the UI timeout.");
+            {Persist("provider","provider-no-result");Assert.Inconclusive(scenario+": provider produced no observable result; timeout is not established.");}
             if (!provider.LastResult.IsValid)
             {
                 string safe = SafeBlocker(provider.LastResult.SafeExplanation);
                 if (safe != null)
                 {
                     sharedProviderBlocker = safe;
+                    Persist("semantic","provider-unavailable");
                     Assert.Inconclusive(scenario + ": " + safe);
                 }
-                Assert.Fail(scenario + ": real semantic response failed validation (safe category: invalid semantic response).");
+                Persist("semantic","invalid-semantic");Assert.Fail(scenario + ": real semantic response failed validation (safe category: invalid semantic response).");
             }
-            Report(scenario, "input=" + input + ";providerOutcome=" + provider.LastResult.Outcome
+            evidenceRequest=chat.PendingActionPlan?.RequestId??manager.Goals.Select(g=>g.RequestAuthority?.RequestId??-1L).Where(id=>id>=0).DefaultIfEmpty(-1L).First();
+            if(chat.PendingActionPlan==null&&manager.Goals.Count==0)evidenceRequest=-1;
+            Persist("semantic","none");
+            Report(scenario, "providerOutcome=" + provider.LastResult.Outcome
                 + ";semanticNodes=" + (provider.LastResult.DynamicPlan == null
                     ? string.Join(",", provider.LastResult.Nodes.Select(n => n.Type + ":" + n.BuildingType
                         + ":count=" + n.Count + ":unit=" + n.UnitType + ":anchor=" + n.PlacementAnchorSelector
@@ -273,6 +318,7 @@ namespace OpenEmpires.Tests
 
         private IEnumerator ApproveCandidate(string scenario)
         {
+            Persist("approval","none");
             Assert.That(chat.PendingActionPlan, Is.Not.Null, scenario + " needs an actual UI preview.");
             int priorCount = manager.Goals.Count;
             Task<CommanderAIChatSubmission> approval = chat.SubmitMessageAsync("approve plan");
@@ -281,19 +327,22 @@ namespace OpenEmpires.Tests
             Assert.That(chat.PendingActionPlan, Is.Null);
             Assert.That(manager.Goals.Count, Is.GreaterThan(priorCount));
             Assert.That(provider.Calls, Is.EqualTo(1), "Local approval must not call the provider.");
+            evidenceApproved=true;Persist("approval","none");
             Report(scenario, "approved=true;compiledGoals="
                 + string.Join(",", manager.Goals.Select(g => g.GetType().Name)));
         }
 
         private IEnumerator TickUntil(Func<bool> complete, int maxNativeTicks)
         {
+            Persist("native","none");
             for (int i = 0; i < maxNativeTicks && !complete(); i++)
             {
                 if (simulation.CurrentTick % 15 == 0) manager.Tick(simulation.CurrentTick);
                 simulation.Tick();
                 if (i % 100 == 0) yield return null;
             }
-            Assert.That(complete(), Is.True, "Native lifecycle deadline reached at tick "
+            bool finished=complete();Persist("native",finished?"none":"native-deadline");
+            Assert.That(finished, Is.True, "Native lifecycle deadline reached at tick "
                 + simulation.CurrentTick + ";goals=" + string.Join(",", manager.Goals.Select(g =>
                     g.GetType().Name + ":" + g.Status + ":" + g.StatusReason)));
         }
@@ -350,6 +399,28 @@ namespace OpenEmpires.Tests
                 && u.CurrentHealth > 0 && !before.Contains(u.Id)).ToList();
 
         private static string Ids(IEnumerable<int> values) => string.Join(",", values.OrderBy(v => v));
+        private void Persist(string stage,string category)
+        {
+            if(evidence==null)return;
+            if(stage!="terminal")evidenceStage=stage;
+            int native=-1;
+            if(manager!=null)
+            {
+                int buildings=manager.Goals.OfType<BuildStructureGoal>().SelectMany(g=>g.ResultBuildingIds).Distinct().Count();
+                int units=manager.Goals.OfType<EnsureUnitCountGoal>().SelectMany(g=>g.ResultUnitIds).Distinct().Count();
+                if(buildings+units>0)native=buildings+units;
+            }
+            if(provider!=null&&manager!=null)
+            {
+                string finish=provider.Trace.Contains("finish=length")?"length":provider.Trace.Contains("finish=other")?"other":provider.Trace.Contains("finish=stop")?"stop":"unavailable";
+                evidence.SetDiagnostics(provider.Transport.InitialHttpAttempts,provider.Transport.RepairHttpAttempts,provider.Transport.LastHttpStatus,finish,
+                    manager.Goals.Select(g=>g.GoalId).ToArray(),ordinaryCommanderCommands.Select(c=>c.GetType().Name).ToArray(),
+                    manager.Goals.OfType<BuildStructureGoal>().SelectMany(g=>g.ResultBuildingIds).Distinct().ToArray(),
+                    manager.Goals.OfType<EnsureUnitCountGoal>().SelectMany(g=>g.ResultUnitIds).Distinct().ToArray());
+            }
+            evidence.Record(stage,provider?.LastResult,category,evidenceRequest,evidenceApproved,
+                manager?.Goals.Count??0,ordinaryCommanderCommands.Count,native,simulation?.CurrentTick??-1);
+        }
         private static void Report(string scenario, string detail) =>
             TestContext.WriteLine("[Phase5A live] scenario=" + scenario + ";" + detail);
 
@@ -370,18 +441,33 @@ namespace OpenEmpires.Tests
         private sealed class RecordingLiveProvider : ICommanderAIProvider, ICommanderSemanticProvider
         {
             private readonly OpenRouterCommanderProvider inner;
+            private readonly BudgetedSemanticTransport transport;
             public int Calls { get; private set; }
             public CommanderSemanticResult LastResult { get; private set; }
-            public RecordingLiveProvider(OpenRouterCommanderProvider inner) { this.inner = inner; }
+            public string GuardFailure { get; private set; }
+            public BudgetedSemanticTransport Transport=>transport;
+            public string Trace=>inner.LastRequestTrace??string.Empty;
+            public RecordingLiveProvider(OpenRouterCommanderProvider inner,BudgetedSemanticTransport transport)
+            {this.inner=inner;this.transport=transport;}
             public Task<CommanderAIProviderResult> TranslateAsync(CommanderAIRequest request,
-                CancellationToken token) => inner.TranslateAsync(request, token);
+                CancellationToken token) => throw new InvalidOperationException("The paid evidence lane accepts only the bounded semantic route.");
             public async Task<CommanderSemanticResult> TranslateSemanticAsync(
                 CommanderSemanticProviderRequest request, CancellationToken token)
             {
-                Assert.That(submittedProviderCalls, Is.LessThan(6), "Paid semantic-call cap");
-                submittedProviderCalls++;
                 Calls++;
-                LastResult = await inner.TranslateSemanticAsync(request, token);
+                GuardFailure=null;
+                try
+                {
+                    using(transport.BeginSubmission())LastResult = await inner.TranslateSemanticAsync(request, token);
+                    GuardFailure=transport.LastGuardFailure;
+                }
+                catch(InvalidOperationException error)
+                {
+                    string code=error.Data["evidence_guard"] as string;
+                    GuardFailure=code=="budget-exhausted"||code=="scope-denied"||code=="budget-unavailable"?code:"provider-fault";throw;
+                }
+                catch(OperationCanceledException){GuardFailure="provider-cancelled";throw;}
+                catch(Exception){GuardFailure="provider-fault";throw;}
                 return LastResult;
             }
         }

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="7" result="Failed(Child)" total="7" passed="0" failed="7" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 01:01:42Z" end-time="2026-10-08 01:01:43Z" duration="1.1137618">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1253" result="Failed" site="Child" start-time="2026-10-08 01:01:42Z" end-time="2026-10-08 01:01:43Z" duration="1.113762" total="7" passed="0" failed="7" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2436" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1253" result="Failed" site="Child" start-time="2026-10-08 01:01:42Z" end-time="2026-10-08 01:01:43Z" duration="1.090377" total="7" passed="0" failed="7" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2437" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1253" result="Failed" site="Child" start-time="2026-10-08 01:01:42Z" end-time="2026-10-08 01:01:43Z" duration="1.089842" total="7" passed="0" failed="7" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2438" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1253" result="Failed" site="Child" start-time="2026-10-08 01:01:42Z" end-time="2026-10-08 01:01:43Z" duration="1.089619" total="7" passed="0" failed="7" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1043" name="CommanderGrandFixNativeCaptureTests" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" testcasecount="23" result="Failed" site="Child" start-time="2026-10-08 01:01:42Z" end-time="2026-10-08 01:01:42Z" duration="0.060441" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="ParameterizedMethod" id="1069" name="ControllerRejectsNonfiniteExplicitDuration_BeforeOpeningCapture" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.ControllerRejectsNonfiniteExplicitDuration_BeforeOpeningCapture" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-08 01:01:42Z" end-time="2026-10-08 01:01:42Z" duration="0.052335" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1066" name="ControllerRejectsNonfiniteExplicitDuration_BeforeOpeningCapture(float.NaN)" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.ControllerRejectsNonfiniteExplicitDuration_BeforeOpeningCapture(float.NaN)" methodname="ControllerRejectsNonfiniteExplicitDuration_BeforeOpeningCapture" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" seed="1284137607" result="Failed" start-time="2026-10-08 01:01:42Z" end-time="2026-10-08 01:01:42Z" duration="0.032895" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: 0
+  But was:  1
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.ControllerRejectsNonfiniteExplicitDuration_BeforeOpeningCapture (System.Single value) [0x00034] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:152
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1067" name="ControllerRejectsNonfiniteExplicitDuration_BeforeOpeningCapture(float.PositiveInfinity)" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.ControllerRejectsNonfiniteExplicitDuration_BeforeOpeningCapture(float.PositiveInfinity)" methodname="ControllerRejectsNonfiniteExplicitDuration_BeforeOpeningCapture" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" seed="1214013307" result="Failed" start-time="2026-10-08 01:01:42Z" end-time="2026-10-08 01:01:42Z" duration="0.000746" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: 0
+  But was:  1
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.ControllerRejectsNonfiniteExplicitDuration_BeforeOpeningCapture (System.Single value) [0x00034] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:152
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1068" name="ControllerRejectsNonfiniteExplicitDuration_BeforeOpeningCapture(float.NegativeInfinity)" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.ControllerRejectsNonfiniteExplicitDuration_BeforeOpeningCapture(float.NegativeInfinity)" methodname="ControllerRejectsNonfiniteExplicitDuration_BeforeOpeningCapture" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" seed="1541983598" result="Failed" start-time="2026-10-08 01:01:42Z" end-time="2026-10-08 01:01:42Z" duration="0.000542" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: 0
+  But was:  1
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.ControllerRejectsNonfiniteExplicitDuration_BeforeOpeningCapture (System.Single value) [0x00034] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:152
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1065" name="CorruptStoredDuration_IsNormalizedBeforeCapture" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.CorruptStoredDuration_IsNormalizedBeforeCapture" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-08 01:01:42Z" end-time="2026-10-08 01:01:42Z" duration="0.003778" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1063" name="CorruptStoredDuration_IsNormalizedBeforeCapture(float.NaN)" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.CorruptStoredDuration_IsNormalizedBeforeCapture(float.NaN)" methodname="CorruptStoredDuration_IsNormalizedBeforeCapture" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" seed="991379592" result="Failed" start-time="2026-10-08 01:01:42Z" end-time="2026-10-08 01:01:42Z" duration="0.001785" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.CorruptStoredDuration_IsNormalizedBeforeCapture (System.Single value) [0x00051] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:137
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1064" name="CorruptStoredDuration_IsNormalizedBeforeCapture(float.PositiveInfinity)" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.CorruptStoredDuration_IsNormalizedBeforeCapture(float.PositiveInfinity)" methodname="CorruptStoredDuration_IsNormalizedBeforeCapture" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" seed="1967964665" result="Failed" start-time="2026-10-08 01:01:42Z" end-time="2026-10-08 01:01:42Z" duration="0.001192" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.CorruptStoredDuration_IsNormalizedBeforeCapture (System.Single value) [0x00051] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:137
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+          </test-suite>
+          <test-suite type="TestFixture" id="1092" name="CommanderGrandFixPresentationTests" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" testcasecount="27" result="Failed" site="Child" start-time="2026-10-08 01:01:42Z" end-time="2026-10-08 01:01:43Z" duration="1.027100" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1123" name="CaptureReadinessChange_RefreshesListeningIndicatorWithoutVoiceStateChange" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.CaptureReadinessChange_RefreshesListeningIndicatorWithoutVoiceStateChange" methodname="CaptureReadinessChange_RefreshesListeningIndicatorWithoutVoiceStateChange" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="1706117982" result="Failed" start-time="2026-10-08 01:01:42Z" end-time="2026-10-08 01:01:43Z" duration="0.652251" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "Listening"
+  But was:  "Opening microphone — wait before speaking"
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixPresentationTests.CaptureReadinessChange_RefreshesListeningIndicatorWithoutVoiceStateChange () [0x0008d] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixPresentationTests.cs:394
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1122" name="VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange" methodname="VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="1793894126" result="Failed" start-time="2026-10-08 01:01:43Z" end-time="2026-10-08 01:01:43Z" duration="0.372205" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "3 s"
+  But was:  "Local mock translator ready.
+On device — hold V"
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixPresentationTests.VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange () [0x00048] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixPresentationTests.cs:369
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

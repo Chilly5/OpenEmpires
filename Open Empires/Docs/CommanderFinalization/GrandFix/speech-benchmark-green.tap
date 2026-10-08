@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: word edits count substitutions, deletions and insertions independently
+ok 1 - word edits count substitutions, deletions and insertions independently
+  ---
+  duration_ms: 3.8344
+  type: 'test'
+  ...
+# Subtest: critical count and negation scoring never repairs recognition text
+ok 2 - critical count and negation scoring never repairs recognition text
+  ---
+  duration_ms: 0.2846
+  type: 'test'
+  ...
+# Subtest: weighted WER, safety losses and silence transcripts are explicit
+ok 3 - weighted WER, safety losses and silence transcripts are explicit
+  ---
+  duration_ms: 0.6741
+  type: 'test'
+  ...
+# Subtest: engine comparisons require exactly the same corpus, not cherry-picked successful attempts
+ok 4 - engine comparisons require exactly the same corpus, not cherry-picked successful attempts
+  ---
+  duration_ms: 0.3098
+  type: 'test'
+  ...
+# Subtest: small corpus and absent timing remain unverified rather than zero-latency success
+ok 5 - small corpus and absent timing remain unverified rather than zero-latency success
+  ---
+  duration_ms: 0.1893
+  type: 'test'
+  ...
+# Subtest: unbounded or malformed metadata is rejected before scoring
+ok 6 - unbounded or malformed metadata is rejected before scoring
+  ---
+  duration_ms: 0.1898
+  type: 'test'
+  ...
+# Subtest: missing unit is not falsely reported as a dropped negation
+ok 7 - missing unit is not falsely reported as a dropped negation
+  ---
+  duration_ms: 0.1745
+  type: 'test'
+  ...
+# Subtest: critical annotations must occur in reference and designated negations must be explicit
+ok 8 - critical annotations must occur in reference and designated negations must be explicit
+  ---
+  duration_ms: 0.2221
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 66.1052

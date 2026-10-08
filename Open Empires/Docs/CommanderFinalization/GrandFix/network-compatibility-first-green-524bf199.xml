@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="27" result="Passed" total="27" passed="27" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 17:26:49Z" end-time="2026-10-08 17:27:01Z" duration="11.7788314">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1468" result="Passed" start-time="2026-10-08 17:26:49Z" end-time="2026-10-08 17:27:01Z" duration="11.778831" total="27" passed="27" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="2691" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1468" result="Passed" start-time="2026-10-08 17:26:50Z" end-time="2026-10-08 17:27:01Z" duration="11.679818" total="27" passed="27" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="27016" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="2692" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1468" result="Passed" start-time="2026-10-08 17:26:50Z" end-time="2026-10-08 17:27:01Z" duration="11.587021" total="27" passed="27" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="2693" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1468" result="Passed" start-time="2026-10-08 17:26:50Z" end-time="2026-10-08 17:27:01Z" duration="11.490416" total="27" passed="27" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1069" name="CommanderGrandFixGatewaySemanticTests" fullname="OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests" classname="OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-08 17:26:50Z" end-time="2026-10-08 17:26:51Z" duration="1.000803" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <test-case id="1072" name="ChangedBackendSession_RejectsLateSemanticResponse" fullname="OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests.ChangedBackendSession_RejectsLateSemanticResponse" methodname="ChangedBackendSession_RejectsLateSemanticResponse" classname="OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests" runstate="Runnable" seed="109195413" result="Passed" start-time="2026-10-08 17:26:50Z" end-time="2026-10-08 17:26:50Z" duration="0.302937" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1071" name="DifferentProviderUrl_IsRejectedWithoutSilentModelSwitchOrNetwork" fullname="OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests.DifferentProviderUrl_IsRejectedWithoutSilentModelSwitchOrNetwork" methodname="DifferentProviderUrl_IsRejectedWithoutSilentModelSwitchOrNetwork" classname="OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests" runstate="Runnable" seed="167092647" result="Passed" start-time="2026-10-08 17:26:50Z" end-time="2026-10-08 17:26:51Z" duration="0.275242" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1070" name="SemanticBody_UsesFixedGatewayAndBackendSessionNotClientProviderCredential" fullname="OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests.SemanticBody_UsesFixedGatewayAndBackendSessionNotClientProviderCredential" methodname="SemanticBody_UsesFixedGatewayAndBackendSessionNotClientProviderCredential" classname="OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests" runstate="Runnable" seed="463891153" result="Passed" start-time="2026-10-08 17:26:51Z" end-time="2026-10-08 17:26:51Z" duration="0.299897" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1134" name="CommanderGrandFixNetworkCompatibilityTests" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-08 17:26:51Z" end-time="2026-10-08 17:26:54Z" duration="3.396024" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <test-case id="1135" name="AuthenticatePacket_DeclaresSourceAndRestrictedCommandProfileWithoutUnsafeInterpolation" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.AuthenticatePacket_DeclaresSourceAndRestrictedCommandProfileWithoutUnsafeInterpolation" methodname="AuthenticatePacket_DeclaresSourceAndRestrictedCommandProfileWithoutUnsafeInterpolation" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="389402993" result="Passed" start-time="2026-10-08 17:26:51Z" end-time="2026-10-08 17:26:52Z" duration="0.696256" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1141" name="EachIncompatibleField_RejectsBeforeMatch" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-08 17:26:52Z" end-time="2026-10-08 17:26:54Z" duration="1.886832" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1137" name="EachIncompatibleField_RejectsBeforeMatch(&quot;protocol_revision&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch(&quot;protocol_revision&quot;)" methodname="EachIncompatibleField_RejectsBeforeMatch" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="1064031868" result="Passed" start-time="2026-10-08 17:26:52Z" end-time="2026-10-08 17:26:52Z" duration="0.459380" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.
+]]></output>
+              </test-case>
+              <test-case id="1138" name="EachIncompatibleField_RejectsBeforeMatch(&quot;source_sha256&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch(&quot;source_sha256&quot;)" methodname="EachIncompatibleField_RejectsBeforeMatch" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="236770682" result="Passed" start-time="2026-10-08 17:26:52Z" end-time="2026-10-08 17:26:53Z" duration="0.447999" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.
+]]></output>
+              </test-case>
+              <test-case id="1139" name="EachIncompatibleField_RejectsBeforeMatch(&quot;command_encoding&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch(&quot;command_encoding&quot;)" methodname="EachIncompatibleField_RejectsBeforeMatch" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="815272278" result="Passed" start-time="2026-10-08 17:26:53Z" end-time="2026-10-08 17:26:53Z" duration="0.452747" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.
+]]></output>
+              </test-case>
+              <test-case id="1140" name="EachIncompatibleField_RejectsBeforeMatch(&quot;recovery_policy&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch(&quot;recovery_policy&quot;)" methodname="EachIncompatibleField_RejectsBeforeMatch" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="1677903386" result="Passed" start-time="2026-10-08 17:26:53Z" end-time="2026-10-08 17:26:54Z" duration="0.524212" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-case id="1136" name="LegacyAuthenticationWithoutProfile_IsNotGameplayAdmission" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.LegacyAuthenticationWithoutProfile_IsNotGameplayAdmission" methodname="LegacyAuthenticationWithoutProfile_IsNotGameplayAdmission" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="823062910" result="Passed" start-time="2026-10-08 17:26:54Z" end-time="2026-10-08 17:26:54Z" duration="0.234261" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.
+]]></output>
+            </test-case>
+            <test-case id="1144" name="MalformedServerPayload_IsNotEchoedToDiagnostics" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.MalformedServerPayload_IsNotEchoedToDiagnostics" methodname="MalformedServerPayload_IsNotEchoedToDiagnostics" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="441815364" result="Passed" start-time="2026-10-08 17:26:54Z" end-time="2026-10-08 17:26:54Z" duration="0.002392" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[
+IgnoreFailingMessages:true
+[ServerMessageParser] Invalid server message rejected; payload omitted.
+
+IgnoreFailingMessages:false
+]]></output>
+            </test-case>
+            <test-case id="1142" name="MatchingServerAcknowledgement_EnablesAuthenticationOnly" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.MatchingServerAcknowledgement_EnablesAuthenticationOnly" methodname="MatchingServerAcknowledgement_EnablesAuthenticationOnly" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="1331564238" result="Passed" start-time="2026-10-08 17:26:54Z" end-time="2026-10-08 17:26:54Z" duration="0.481226" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Matchmaking] Authenticated as fixture
+[Matchmaking] State: Disconnected -> Authenticated
+]]></output>
+            </test-case>
+            <test-case id="1143" name="UnacknowledgedMatchAndCommands_AreNotPublishedToSimulation" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.UnacknowledgedMatchAndCommands_AreNotPublishedToSimulation" methodname="UnacknowledgedMatchAndCommands_AreNotPublishedToSimulation" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="222094354" result="Passed" start-time="2026-10-08 17:26:54Z" end-time="2026-10-08 17:26:54Z" duration="0.002510" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.
+[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.
+[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1211" name="CommanderGrandFixProviderSetupTests" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" testcasecount="15" result="Passed" start-time="2026-10-08 17:26:54Z" end-time="2026-10-08 17:27:01Z" duration="6.989771" total="15" passed="15" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <test-suite type="ParameterizedMethod" id="1220" name="ActualRequestFailures_ShowActionableSafeSetupStatus" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.ActualRequestFailures_ShowActionableSafeSetupStatus" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-08 17:26:54Z" end-time="2026-10-08 17:26:56Z" duration="1.813846" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1217" name="ActualRequestFailures_ShowActionableSafeSetupStatus(401,&quot;key&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.ActualRequestFailures_ShowActionableSafeSetupStatus(401,&quot;key&quot;)" methodname="ActualRequestFailures_ShowActionableSafeSetupStatus" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="2045573015" result="Passed" start-time="2026-10-08 17:26:54Z" end-time="2026-10-08 17:26:55Z" duration="0.847861" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-08T17:26:55.5968379Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=401;durationMs=1
+]]></output>
+              </test-case>
+              <test-case id="1218" name="ActualRequestFailures_ShowActionableSafeSetupStatus(402,&quot;credits&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.ActualRequestFailures_ShowActionableSafeSetupStatus(402,&quot;credits&quot;)" methodname="ActualRequestFailures_ShowActionableSafeSetupStatus" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="1045748286" result="Passed" start-time="2026-10-08 17:26:55Z" end-time="2026-10-08 17:26:56Z" duration="0.482822" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-08T17:26:56.0103100Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=402;durationMs=1
+]]></output>
+              </test-case>
+              <test-case id="1219" name="ActualRequestFailures_ShowActionableSafeSetupStatus(429,&quot;wait&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.ActualRequestFailures_ShowActionableSafeSetupStatus(429,&quot;wait&quot;)" methodname="ActualRequestFailures_ShowActionableSafeSetupStatus" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="624484924" result="Passed" start-time="2026-10-08 17:26:56Z" end-time="2026-10-08 17:26:56Z" duration="0.481966" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-08T17:26:56.4880870Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=429;durationMs=1
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-case id="1228" name="ChangedSessionToPaddedUuid_IsRejectedBeforeGatewayUpload" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.ChangedSessionToPaddedUuid_IsRejectedBeforeGatewayUpload" methodname="ChangedSessionToPaddedUuid_IsRejectedBeforeGatewayUpload" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="441664503" result="Passed" start-time="2026-10-08 17:26:56Z" end-time="2026-10-08 17:26:57Z" duration="0.483060" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-08T17:26:56.9778253Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=401;durationMs=1
+]]></output>
+            </test-case>
+            <test-case id="1222" name="DisableDuringIgnoringResponse_RejectsLateEffectAndPreservesAcceptedGoal" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.DisableDuringIgnoringResponse_RejectsLateEffectAndPreservesAcceptedGoal" methodname="DisableDuringIgnoringResponse_RejectsLateEffectAndPreservesAcceptedGoal" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="900608292" result="Passed" start-time="2026-10-08 17:26:57Z" end-time="2026-10-08 17:26:57Z" duration="0.484432" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] context=projected;provider-request=started
+]]></output>
+            </test-case>
+            <test-case id="1227" name="GatewayNetworkError_ReportsConnectionActionNotInventedHttpServiceFailure" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.GatewayNetworkError_ReportsConnectionActionNotInventedHttpServiceFailure" methodname="GatewayNetworkError_ReportsConnectionActionNotInventedHttpServiceFailure" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="1496364077" result="Passed" start-time="2026-10-08 17:26:57Z" end-time="2026-10-08 17:26:58Z" duration="0.481525" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-08T17:26:57.9419353Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=network-failure;durationMs=1
+]]></output>
+            </test-case>
+            <test-case id="1223" name="GatewayTextSetup_DoesNotFetchAudioPolicyOrGrantRecordingConsent" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.GatewayTextSetup_DoesNotFetchAudioPolicyOrGrantRecordingConsent" methodname="GatewayTextSetup_DoesNotFetchAudioPolicyOrGrantRecordingConsent" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="438831057" result="Passed" start-time="2026-10-08 17:26:58Z" end-time="2026-10-08 17:26:58Z" duration="0.482393" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-08T17:26:58.4262029Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=1
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=40;finish=stop
+[CommanderProvider] semantic=Answer;nodes=0
+]]></output>
+            </test-case>
+            <test-case id="1224" name="HideSetup_ClearsUnappliedSecretAndEscapeDoesNotTouchPlans" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.HideSetup_ClearsUnappliedSecretAndEscapeDoesNotTouchPlans" methodname="HideSetup_ClearsUnappliedSecretAndEscapeDoesNotTouchPlans" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="1410792129" result="Passed" start-time="2026-10-08 17:26:58Z" end-time="2026-10-08 17:26:58Z" duration="0.379844" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+]]></output>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1216" name="InvalidKey_DoesNotReplaceProviderOrMakeRequest" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.InvalidKey_DoesNotReplaceProviderOrMakeRequest" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-08 17:26:58Z" end-time="2026-10-08 17:27:00Z" duration="1.138729" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1213" name="InvalidKey_DoesNotReplaceProviderOrMakeRequest(&quot;&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.InvalidKey_DoesNotReplaceProviderOrMakeRequest(&quot;&quot;)" methodname="InvalidKey_DoesNotReplaceProviderOrMakeRequest" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="96491336" result="Passed" start-time="2026-10-08 17:26:58Z" end-time="2026-10-08 17:26:59Z" duration="0.377593" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1214" name="InvalidKey_DoesNotReplaceProviderOrMakeRequest(&quot;invalid\nheader&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.InvalidKey_DoesNotReplaceProviderOrMakeRequest(&quot;invalid\nheader&quot;)" methodname="InvalidKey_DoesNotReplaceProviderOrMakeRequest" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="1961412089" result="Passed" start-time="2026-10-08 17:26:59Z" end-time="2026-10-08 17:26:59Z" duration="0.379032" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1215" name="InvalidKey_DoesNotReplaceProviderOrMakeRequest(&quot;contains space in credential&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.InvalidKey_DoesNotReplaceProviderOrMakeRequest(&quot;contains space in credential&quot;)" methodname="InvalidKey_DoesNotReplaceProviderOrMakeRequest" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="1734385802" result="Passed" start-time="2026-10-08 17:26:59Z" end-time="2026-10-08 17:27:00Z" duration="0.379521" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1226" name="InvalidReplacementAttempt_DoesNotHideActualActiveRouteAuthenticationFailure" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.InvalidReplacementAttempt_DoesNotHideActualActiveRouteAuthenticationFailure" methodname="InvalidReplacementAttempt_DoesNotHideActualActiveRouteAuthenticationFailure" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="1527553918" result="Passed" start-time="2026-10-08 17:27:00Z" end-time="2026-10-08 17:27:00Z" duration="0.481082" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-08T17:27:00.4254519Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=401;durationMs=1
+]]></output>
+            </test-case>
+            <test-case id="1212" name="MaskedSessionKeyApply_PerformsNoValidationRequestAndClearsEntry" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.MaskedSessionKeyApply_PerformsNoValidationRequestAndClearsEntry" methodname="MaskedSessionKeyApply_PerformsNoValidationRequestAndClearsEntry" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="376317085" result="Passed" start-time="2026-10-08 17:27:00Z" end-time="2026-10-08 17:27:00Z" duration="0.379153" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1221" name="NetworkFailure_ShowsConnectionActionWithoutEchoingException" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.NetworkFailure_ShowsConnectionActionWithoutEchoingException" methodname="NetworkFailure_ShowsConnectionActionWithoutEchoingException" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="900207432" result="Passed" start-time="2026-10-08 17:27:00Z" end-time="2026-10-08 17:27:01Z" duration="0.479898" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-08T17:27:01.2838433Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=network-failure;durationMs=1
+]]></output>
+            </test-case>
+            <test-case id="1225" name="ReplacingGateway_DisposesOnlyTheRetiredOwnedTransport" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.ReplacingGateway_DisposesOnlyTheRetiredOwnedTransport" methodname="ReplacingGateway_DisposesOnlyTheRetiredOwnedTransport" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="1449152194" result="Passed" start-time="2026-10-08 17:27:01Z" end-time="2026-10-08 17:27:01Z" duration="0.380621" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

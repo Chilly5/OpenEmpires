@@ -27,28 +27,31 @@ namespace OpenEmpires
         public string QuestionFacts { get; }
         public string SerializedPendingClarification { get; }
         public bool IsPlayerMessageTooLong { get; }
+        public bool IsReadOnlyQuestion { get; }
 
         public CommanderSemanticProviderRequest(string playerMessage, CommanderContext context,
             IReadOnlyList<CommanderSemanticMemoryEntry> semanticMemory = null, string questionFacts = null,
-            CommanderPendingClarification pendingClarification = null)
+            CommanderPendingClarification pendingClarification = null,
+            CommanderTacticalStatusSnapshot tacticalStatus = null, bool readOnlyQuestion = false)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
             string text = playerMessage ?? string.Empty;
             IsPlayerMessageTooLong = text.Length > MaximumPlayerMessageCharacters;
             PlayerMessage = IsPlayerMessageTooLong ? string.Empty : text;
-            SerializedContext = SerializeContext(context);
+            SerializedContext = SerializeContext(context,tacticalStatus);
             SerializedPendingClarification = pendingClarification?.Serialize() ?? string.Empty;
             if (SerializedPendingClarification.Length > 4096)
                 throw new InvalidOperationException("Pending clarification exceeds its bound.");
-            string facts = questionFacts ?? string.Empty;
+            string facts = questionFacts ?? tacticalStatus?.Answer() ?? string.Empty;
             QuestionFacts = facts.Length > 512 ? facts.Substring(0, 512) : facts;
+            IsReadOnlyQuestion=readOnlyQuestion||tacticalStatus!=null||!string.IsNullOrEmpty(questionFacts);
             SerializedSemanticMemory = CommanderSemanticConversationMemory.Serialize(semanticMemory
                 ?? Array.Empty<CommanderSemanticMemoryEntry>());
             if (SerializedSemanticMemory.Length > MaximumSemanticMemoryCharacters)
                 throw new InvalidOperationException("Semantic conversation memory exceeded its limit.");
         }
 
-        private static string SerializeContext(CommanderContext context)
+        private static string SerializeContext(CommanderContext context,CommanderTacticalStatusSnapshot status)
         {
             var unitCounts = new SortedDictionary<string, int>(StringComparer.Ordinal)
             {
@@ -79,6 +82,8 @@ namespace OpenEmpires
             var root = new JObject
             {
                 ["age"] = Math.Max(0, context.Age),
+                ["civilization"]=context.Civilization,
+                ["resources"]=new JObject{["Food"]=context.Resources.Food,["Wood"]=context.Resources.Wood,["Gold"]=context.Resources.Gold,["Stone"]=context.Resources.Stone},
                 ["population"] = Math.Max(0, context.Population),
                 ["populationCap"] = Math.Max(0, context.PopulationCap),
                 ["canonicalUnitIds"] = new JArray(context.CanonicalUnitIds),
@@ -98,7 +103,10 @@ namespace OpenEmpires
                 ["selectorCapabilities"] = new JObject
                 {
                     ["units"] = new JArray("Military", "Scout", "Villagers", "Spearman", "Archer", "Knight", "DamagedMilitary"),
-                    ["locations"] = new JArray("PlayerBase", "WorkedResource", "VisibleResource", "VisibleEnemy", "RelativeToSelectedUnits")
+                    ["locations"] = new JArray("PlayerBase", "WorkedResource", "VisibleResource", "VisibleEnemy", "RelativeToSelectedUnits"),
+                    ["targets"] = new JObject {
+                        ["UnitType"] = new JArray("Villager", "Spearman", "Archer", "Scout", "Knight"),
+                        ["BuildingType"] = new JArray(Enum.GetNames(typeof(BuildingType))) }
                 },
                 ["knowledge"] = ParseKnowledge(context.KnowledgeContext)
             };
@@ -106,7 +114,13 @@ namespace OpenEmpires
             foreach (var allocation in context.WorkerAllocation.OrderBy(x => x.ResourceType))
                 gathering[allocation.ResourceType.ToString()] = Math.Min(200, allocation.AssignedWorkers);
             root["workerCounts"] = new JObject { ["idleUnqueued"] = Math.Min(200, context.IdleVillagers), ["gatheringByResource"] = gathering };
+            if(status!=null)root["tacticalStatus"]=status.Json();
             string serialized = root.ToString(Formatting.None);
+            if(status!=null&&serialized.Length>MaximumContextCharacters)
+            {
+                root["knowledge"]=new JObject{["omitted"]=true,["reason"]="Tactical status prioritized within unchanged context bound."};
+                serialized=root.ToString(Formatting.None);
+            }
             if (serialized.Length > MaximumContextCharacters)
                 throw new InvalidOperationException("Semantic context exceeded its limit.");
             return serialized;

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Failed(Child)" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-07 18:10:22Z" end-time="2026-10-07 18:10:26Z" duration="3.9571883">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1153" result="Failed" site="Child" start-time="2026-10-07 18:10:22Z" end-time="2026-10-07 18:10:26Z" duration="3.957188" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2315" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1153" result="Failed" site="Child" start-time="2026-10-07 18:10:22Z" end-time="2026-10-07 18:10:26Z" duration="3.861484" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2316" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1153" result="Failed" site="Child" start-time="2026-10-07 18:10:22Z" end-time="2026-10-07 18:10:26Z" duration="3.761349" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2317" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1153" result="Failed" site="Child" start-time="2026-10-07 18:10:22Z" end-time="2026-10-07 18:10:26Z" duration="3.651037" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1018" name="CommanderGrandFixHttpTests" fullname="OpenEmpires.Tests.CommanderGrandFixHttpTests" classname="OpenEmpires.Tests.CommanderGrandFixHttpTests" runstate="Runnable" testcasecount="10" result="Failed" site="Child" start-time="2026-10-07 18:10:22Z" end-time="2026-10-07 18:10:26Z" duration="3.540145" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1031" name="CancellationDuringBodyRead_DoesNotReturnPartialSuccess" fullname="OpenEmpires.Tests.CommanderGrandFixHttpTests.CancellationDuringBodyRead_DoesNotReturnPartialSuccess" methodname="CancellationDuringBodyRead_DoesNotReturnPartialSuccess" classname="OpenEmpires.Tests.CommanderGrandFixHttpTests" runstate="Runnable" seed="2091857021" result="Passed" start-time="2026-10-07 18:10:22Z" end-time="2026-10-07 18:10:23Z" duration="0.516644" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1030" name="OversizedErrorBody_PreservesProviderStatusWithoutBodyOrFallback" fullname="OpenEmpires.Tests.CommanderGrandFixHttpTests.OversizedErrorBody_PreservesProviderStatusWithoutBodyOrFallback" classname="OpenEmpires.Tests.CommanderGrandFixHttpTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-07 18:10:23Z" end-time="2026-10-07 18:10:26Z" duration="2.889684" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1028" name="OversizedErrorBody_PreservesProviderStatusWithoutBodyOrFallback(401,&quot;authentication&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixHttpTests.OversizedErrorBody_PreservesProviderStatusWithoutBodyOrFallback(401,&quot;authentication&quot;)" methodname="OversizedErrorBody_PreservesProviderStatusWithoutBodyOrFallback" classname="OpenEmpires.Tests.CommanderGrandFixHttpTests" runstate="Runnable" seed="999116595" result="Failed" start-time="2026-10-07 18:10:23Z" end-time="2026-10-07 18:10:25Z" duration="1.674264" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: String containing "authentication"
+  But was:  "commander ai service temporarily unavailable."
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixHttpTests.OversizedErrorBody_PreservesProviderStatusWithoutBodyOrFallback (System.Int32 status, System.String category) [0x0016a] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:77
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-07T18:10:24.9610082Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=401;receive=byte-limit;durationMs=9
+]]></output>
+              </test-case>
+              <test-case id="1029" name="OversizedErrorBody_PreservesProviderStatusWithoutBodyOrFallback(429,&quot;quota&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixHttpTests.OversizedErrorBody_PreservesProviderStatusWithoutBodyOrFallback(429,&quot;quota&quot;)" methodname="OversizedErrorBody_PreservesProviderStatusWithoutBodyOrFallback" classname="OpenEmpires.Tests.CommanderGrandFixHttpTests" runstate="Runnable" seed="246504876" result="Failed" start-time="2026-10-07 18:10:25Z" end-time="2026-10-07 18:10:26Z" duration="1.132217" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: String containing "quota"
+  But was:  "commander ai service temporarily unavailable."
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixHttpTests.OversizedErrorBody_PreservesProviderStatusWithoutBodyOrFallback (System.Int32 status, System.String category) [0x0016a] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:77
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-07T18:10:26.1770175Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=429;receive=byte-limit;durationMs=6
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

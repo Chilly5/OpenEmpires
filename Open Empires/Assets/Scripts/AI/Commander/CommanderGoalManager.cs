@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.ExceptionServices;
 using UnityEngine;
 
@@ -93,6 +94,8 @@ namespace OpenEmpires
         private static bool CanShift(int anchor, int delta) => (long)anchor + delta <= int.MaxValue;
 
         public CommanderWorkerReservation? GetWorkerReservation(int workerId) => workerAuthority.GetReservation(workerId);
+        internal bool ObserveHumanProtection(int unitId)=>workerAuthority.ObserveHumanProtection(unitId,simulation.CurrentTick);
+        internal bool ObserveGoalSuspended(int goalId)=>suspendedGoalIds.Contains(goalId);
 
         public bool TryReserveWorker(int goalId, int workerId, CommanderWorkerReservationType reservationType)
         {
@@ -118,10 +121,19 @@ namespace OpenEmpires
 
         public EnsureUnitCountGoal SubmitEnsureUnitCount(int requestedUnitType, int targetTotal,
             int maxQueueDepth = 3, int maxDurationTicks = 36000,
-            IReadOnlyList<CommanderConstraint> constraints = null)
+            IReadOnlyList<CommanderConstraint> constraints = null, int? newProductionCount = null)
         {
+            if (newProductionCount.HasValue && (newProductionCount.Value < 1 || newProductionCount.Value > simulation.Config.MaxPopulation))
+                throw new ArgumentOutOfRangeException(nameof(newProductionCount));
             var goal = new EnsureUnitCountGoal(playerId, requestedUnitType, targetTotal,
                 maxQueueDepth, maxDurationTicks: maxDurationTicks);
+            if (newProductionCount.HasValue)
+            {
+                goal.IsExplicitNewProduction = goal.HasResultConsumer = true;
+                goal.RequiredNewProductionCount = newProductionCount.Value;
+                goal.BaselineUnitIds.UnionWith(CommanderProductionProjection.LivingOwnedIds(simulation, playerId,
+                    simulation.ResolveCivUnitType(playerId, requestedUnitType)));
+            }
             return Register(goal, constraints);
         }
 
@@ -231,6 +243,7 @@ namespace OpenEmpires
                         maxQueue, maxDurationTicks: maxDurationTicks);
                     if (ensure.NewProductionCount.HasValue)
                     {
+                        ((EnsureUnitCountGoal)goal).IsExplicitNewProduction = true;
                         ((EnsureUnitCountGoal)goal).HasResultConsumer = true;
                         ((EnsureUnitCountGoal)goal).RequiredNewProductionCount = ensure.NewProductionCount.Value;
                     }
@@ -319,7 +332,7 @@ namespace OpenEmpires
 
             PrepareDynamicWorkerBindings(plan, byIndex);
             PrepareDynamicLocationBindings(plan, byIndex);
-            CaptureResultBaselines(pending);
+            CaptureResultBaselines(pending, plan);
             // Preflight and reserve the complete shared snapshot only after all nodes
             // validate. Roll back these local leases if any acquisition/commit fails.
             var reservedInitialGoals = new List<int>();
@@ -368,24 +381,18 @@ namespace OpenEmpires
             return pending.AsReadOnly();
         }
 
-        private void CaptureResultBaselines(IReadOnlyList<CommanderGoal> pending)
+        private void CaptureResultBaselines(IReadOnlyList<CommanderGoal> pending, CommanderSemanticGraphPlan plan)
         {
             for (int i = 0; i < pending.Count; i++)
             {
                 if (pending[i] is EnsureUnitCountGoal units && units.HasResultConsumer)
                 {
                     int resolvedType = simulation.ResolveCivUnitType(units.PlayerId, units.RequestedUnitType);
-                    List<UnitData> all = simulation.UnitRegistry.GetAllUnits();
-                    for (int u = 0; u < all.Count; u++)
-                    {
-                        UnitData unit = all[u];
-                        if (unit != null && unit.PlayerId == units.PlayerId
-                            && unit.UnitType == resolvedType && unit.CurrentHealth > 0
-                            && unit.State != UnitState.Dead)
-                            units.BaselineUnitIds.Add(unit.Id);
-                    }
-                    if (units.RequiredNewProductionCount < 0)
-                        units.RequiredNewProductionCount = Math.Max(0, units.TargetTotal - units.BaselineUnitIds.Count);
+                    units.BaselineUnitIds.UnionWith(CommanderProductionProjection.LivingOwnedIds(simulation, units.PlayerId, resolvedType));
+                    var quantity = plan.ProductionExpectations.FirstOrDefault(q => q.NodeIndex == plan.TopologicalOrder[i]);
+                    if (quantity == null) throw new InvalidOperationException("The approved production quantity is unavailable.");
+                    units.RequiredNewProductionCount = quantity.NewCount;
+                    units.ExpectedOtherUnitContribution = quantity.OtherContribution;
                 }
                 else if (pending[i] is BuildStructureGoal building && building.HasResultConsumer)
                 {
@@ -484,7 +491,7 @@ namespace OpenEmpires
             if (currentTick == lastEvaluatedTick) return;
             if (lastEvaluatedTick >= 0 && currentTick % PlanningIntervalTicks != 0) return;
             lastEvaluatedTick = currentTick;
-            workerAuthority.PruneUnavailableWorkers();
+            workerAuthority.PruneUnavailableWorkers(currentTick);
 
             isTicking = true;
             try
@@ -511,6 +518,7 @@ namespace OpenEmpires
                         && currentTick < goal.NextBlockedRetryTick)) continue;
                     if (!AreDependenciesReady(goal, out string dependencyReason, out bool dependencyFailed))
                     {
+                        goal.LastPlannerObservationTick=currentTick;
                         if (dependencyFailed)
                         {
                             FailGoal(goal, dependencyReason, currentTick);
@@ -538,6 +546,7 @@ namespace OpenEmpires
                         plan = new CommanderPlan(CommanderGoalStatus.Blocked,
                             "Worker is protected or reserved by another goal.", plan.OwnedCount, plan.QueuedCount);
                     goal.LastObservedOwnedCount = plan.OwnedCount;
+                    goal.LastPlannerObservationTick=currentTick;
                     goal.LastObservedQueuedCount = plan.QueuedCount;
                     if (plan.Status == CommanderGoalStatus.Blocked)
                     {
@@ -804,6 +813,9 @@ namespace OpenEmpires
                 workerAuthority.ReleaseGoal(activeGoals[i].GoalId);
             }
             suspendedGoalIds.Clear();
+            workerAuthority.Clear();
+            foreach(var goal in goals)goal.ReleaseRuntimeReferences();
+            goals.Clear();activeGoals.Clear();archivedGoals.Clear();ActiveGoal=null;
             GoalStatusChanged = null;
             GoalEventPublished = null;
         }

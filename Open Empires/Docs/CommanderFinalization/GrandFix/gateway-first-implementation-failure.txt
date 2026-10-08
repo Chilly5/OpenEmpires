@@ -1,0 +1,8 @@
+2026-10-08: local Node gateway focused checks, no vendor requests.
+6 tests: 5 passed, 1 failed.
+gateway.test.mjs:83 expected 400, received 409.
+Cause: the malicious URL test reused an already consumed successful job ID;
+the single-use duplicate guard correctly rejected it before schema validation.
+Fix only the fixture to use a fresh job; do not weaken the duplicate guard.
+The test titled restart did not yet restart the service; strengthen it before
+claiming restart persistence.

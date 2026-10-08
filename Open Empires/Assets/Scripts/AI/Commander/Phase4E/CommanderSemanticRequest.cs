@@ -92,6 +92,8 @@ namespace OpenEmpires
         public int? ClearGapTiles { get; }
         public CommanderSemanticUnitSelector? UnitSelector { get; }
         public CommanderSemanticLocationSelector? LocationSelector { get; }
+        public CommanderTargetSelector? TargetSelector { get; }
+        public CommanderProductionQuantityMode QuantityMode { get; }
         public TechnologyType? Technology { get; }
         // References are bounded semantic node indices, never game/entity IDs.
         public IReadOnlyList<int> DependsOn { get; }
@@ -115,7 +117,9 @@ namespace OpenEmpires
             int? producerFromNode = null,
             int? resultFromNode = null,
             CommanderWorkerAllocation workerAllocation = null,
-            IReadOnlyList<CommanderConstraint> constraints = null)
+            IReadOnlyList<CommanderConstraint> constraints = null,
+            CommanderTargetSelector? targetSelector = null,
+            CommanderProductionQuantityMode quantityMode = CommanderProductionQuantityMode.TargetTotal)
         {
             Type = type;
             UnitType = unitType;
@@ -130,6 +134,8 @@ namespace OpenEmpires
             AgeTarget = ageTarget;
             UnitSelector = unitSelector;
             LocationSelector = locationSelector;
+            TargetSelector = targetSelector;
+            QuantityMode = quantityMode;
             Technology = technology;
             ProducerFromNode = producerFromNode;
             ResultFromNode = resultFromNode;

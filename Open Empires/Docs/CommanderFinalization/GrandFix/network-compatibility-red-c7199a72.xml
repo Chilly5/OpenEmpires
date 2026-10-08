@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="9" result="Failed(Child)" total="9" passed="0" failed="9" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 17:20:49Z" end-time="2026-10-08 17:20:50Z" duration="0.5573464">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1468" result="Failed" site="Child" start-time="2026-10-08 17:20:49Z" end-time="2026-10-08 17:20:50Z" duration="0.557346" total="9" passed="0" failed="9" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2691" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1468" result="Failed" site="Child" start-time="2026-10-08 17:20:49Z" end-time="2026-10-08 17:20:50Z" duration="0.534804" total="9" passed="0" failed="9" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="27016" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2692" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1468" result="Failed" site="Child" start-time="2026-10-08 17:20:49Z" end-time="2026-10-08 17:20:50Z" duration="0.445101" total="9" passed="0" failed="9" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2693" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1468" result="Failed" site="Child" start-time="2026-10-08 17:20:49Z" end-time="2026-10-08 17:20:50Z" duration="0.346740" total="9" passed="0" failed="9" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1134" name="CommanderGrandFixNetworkCompatibilityTests" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" testcasecount="9" result="Failed" site="Child" start-time="2026-10-08 17:20:50Z" end-time="2026-10-08 17:20:50Z" duration="0.242323" total="9" passed="0" failed="9" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1135" name="AuthenticatePacket_DeclaresSourceAndRestrictedCommandProfileWithoutUnsafeInterpolation" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.AuthenticatePacket_DeclaresSourceAndRestrictedCommandProfileWithoutUnsafeInterpolation" methodname="AuthenticatePacket_DeclaresSourceAndRestrictedCommandProfileWithoutUnsafeInterpolation" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="1040825381" result="Failed" label="Error" start-time="2026-10-08 17:20:50Z" end-time="2026-10-08 17:20:50Z" duration="0.036342" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[Newtonsoft.Json.JsonReaderException : After parsing a value an unexpected character was encountered: q. Path 'data.token', line 1, position 49.]]></message>
+                <stack-trace><![CDATA[  at Newtonsoft.Json.JsonTextReader.ParsePostValue (System.Boolean ignoreComments) [0x0019a] in <761cf2a144514d2291a678c334d49e9b>:0 
+  at Newtonsoft.Json.JsonTextReader.Read () [0x0005a] in <761cf2a144514d2291a678c334d49e9b>:0 
+  at Newtonsoft.Json.Linq.JContainer.ReadContentFrom (Newtonsoft.Json.JsonReader r, Newtonsoft.Json.Linq.JsonLoadSettings settings) [0x001f2] in <761cf2a144514d2291a678c334d49e9b>:0 
+  at Newtonsoft.Json.Linq.JContainer.ReadTokenFrom (Newtonsoft.Json.JsonReader reader, Newtonsoft.Json.Linq.JsonLoadSettings options) [0x00030] in <761cf2a144514d2291a678c334d49e9b>:0 
+  at Newtonsoft.Json.Linq.JObject.Load (Newtonsoft.Json.JsonReader reader, Newtonsoft.Json.Linq.JsonLoadSettings settings) [0x0006a] in <761cf2a144514d2291a678c334d49e9b>:0 
+  at Newtonsoft.Json.Linq.JObject.Parse (System.String json, Newtonsoft.Json.Linq.JsonLoadSettings settings) [0x0000c] in <761cf2a144514d2291a678c334d49e9b>:0 
+  at Newtonsoft.Json.Linq.JObject.Parse (System.String json) [0x00000] in <761cf2a144514d2291a678c334d49e9b>:0 
+  at OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.AuthenticatePacket_DeclaresSourceAndRestrictedCommandProfileWithoutUnsafeInterpolation () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNetworkCompatibilityTests.cs:33 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <816f70bc2a9c4332b0bd119906a8d40e>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1141" name="EachIncompatibleField_RejectsBeforeMatch" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-10-08 17:20:50Z" end-time="2026-10-08 17:20:50Z" duration="0.067260" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1137" name="EachIncompatibleField_RejectsBeforeMatch(&quot;protocol_revision&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch(&quot;protocol_revision&quot;)" methodname="EachIncompatibleField_RejectsBeforeMatch" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="1343935859" result="Failed" start-time="2026-10-08 17:20:50Z" end-time="2026-10-08 17:20:50Z" duration="0.015284" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Source-matched compatibility identity is missing.
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.Current () [0x00019] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNetworkCompatibilityTests.cs:21
+at OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch (System.String field) [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNetworkCompatibilityTests.cs:47
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1138" name="EachIncompatibleField_RejectsBeforeMatch(&quot;source_sha256&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch(&quot;source_sha256&quot;)" methodname="EachIncompatibleField_RejectsBeforeMatch" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="110887781" result="Failed" start-time="2026-10-08 17:20:50Z" end-time="2026-10-08 17:20:50Z" duration="0.001350" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Source-matched compatibility identity is missing.
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.Current () [0x00019] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNetworkCompatibilityTests.cs:21
+at OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch (System.String field) [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNetworkCompatibilityTests.cs:47
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1139" name="EachIncompatibleField_RejectsBeforeMatch(&quot;command_encoding&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch(&quot;command_encoding&quot;)" methodname="EachIncompatibleField_RejectsBeforeMatch" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="849236220" result="Failed" start-time="2026-10-08 17:20:50Z" end-time="2026-10-08 17:20:50Z" duration="0.001111" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Source-matched compatibility identity is missing.
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.Current () [0x00019] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNetworkCompatibilityTests.cs:21
+at OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch (System.String field) [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNetworkCompatibilityTests.cs:47
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1140" name="EachIncompatibleField_RejectsBeforeMatch(&quot;recovery_policy&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch(&quot;recovery_policy&quot;)" methodname="EachIncompatibleField_RejectsBeforeMatch" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="1047018489" result="Failed" start-time="2026-10-08 17:20:50Z" end-time="2026-10-08 17:20:50Z" duration="0.001074" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Source-matched compatibility identity is missing.
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.Current () [0x00019] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNetworkCompatibilityTests.cs:21
+at OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch (System.String field) [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNetworkCompatibilityTests.cs:47
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-case id="1136" name="LegacyAuthenticationWithoutProfile_IsNotGameplayAdmission" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.LegacyAuthenticationWithoutProfile_IsNotGameplayAdmission" methodname="LegacyAuthenticationWithoutProfile_IsNotGameplayAdmission" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="1878396282" result="Failed" start-time="2026-10-08 17:20:50Z" end-time="2026-10-08 17:20:50Z" duration="0.011899" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: Disconnected
+  But was:  Authenticated
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.LegacyAuthenticationWithoutProfile_IsNotGameplayAdmission () [0x00021] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNetworkCompatibilityTests.cs:41
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Matchmaking] Authenticated as fixture
+[Matchmaking] State: Disconnected -> Authenticated
+]]></output>
+            </test-case>
+            <test-case id="1144" name="MalformedServerPayload_IsNotEchoedToDiagnostics" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.MalformedServerPayload_IsNotEchoedToDiagnostics" methodname="MalformedServerPayload_IsNotEchoedToDiagnostics" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="746291882" result="Failed" start-time="2026-10-08 17:20:50Z" end-time="2026-10-08 17:20:50Z" duration="0.005278" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: not String containing "fixture-credential-that-is-not-json"
+  But was:  "[ServerMessageParser] Failed to parse: Length cannot be less than zero.
+Parameter name: length
+JSON: fixture-credential-that-is-not-json"
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.MalformedServerPayload_IsNotEchoedToDiagnostics () [0x00044] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNetworkCompatibilityTests.cs:66
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[
+IgnoreFailingMessages:true
+[ServerMessageParser] Failed to parse: Length cannot be less than zero.
+Parameter name: length
+JSON: fixture-credential-that-is-not-json
+
+IgnoreFailingMessages:false
+]]></output>
+            </test-case>
+            <test-case id="1142" name="MatchingServerAcknowledgement_EnablesAuthenticationOnly" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.MatchingServerAcknowledgement_EnablesAuthenticationOnly" methodname="MatchingServerAcknowledgement_EnablesAuthenticationOnly" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="2046084767" result="Failed" start-time="2026-10-08 17:20:50Z" end-time="2026-10-08 17:20:50Z" duration="0.000642" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Source-matched compatibility identity is missing.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.Current () [0x00019] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNetworkCompatibilityTests.cs:21
+at OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.MatchingServerAcknowledgement_EnablesAuthenticationOnly () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNetworkCompatibilityTests.cs:52
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1143" name="UnacknowledgedMatchAndCommands_AreNotPublishedToSimulation" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.UnacknowledgedMatchAndCommands_AreNotPublishedToSimulation" methodname="UnacknowledgedMatchAndCommands_AreNotPublishedToSimulation" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="427738384" result="Failed" start-time="2026-10-08 17:20:50Z" end-time="2026-10-08 17:20:50Z" duration="0.003995" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: 0
+  But was:  3
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.UnacknowledgedMatchAndCommands_AreNotPublishedToSimulation () [0x00073] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNetworkCompatibilityTests.cs:59
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Matchmaking] Match found! ID: , Your player ID: 0
+[Matchmaking] State: Disconnected -> MatchFound
+[Matchmaking] Match starting: 
+[Matchmaking] State: MatchFound -> MatchStarting
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Passed" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 16:23:00Z" end-time="2026-10-08 16:23:02Z" duration="1.4547391">
+  <test-suite type="TestSuite" id="2928" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1444" result="Passed" start-time="2026-10-08 16:23:00Z" end-time="2026-10-08 16:23:02Z" duration="1.454739" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="2662" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1444" result="Passed" start-time="2026-10-08 16:23:00Z" end-time="2026-10-08 16:23:02Z" duration="1.452538" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="27016" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="2663" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1444" result="Passed" start-time="2026-10-08 16:23:01Z" end-time="2026-10-08 16:23:02Z" duration="1.351879" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="2664" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1444" result="Passed" start-time="2026-10-08 16:23:01Z" end-time="2026-10-08 16:23:02Z" duration="1.251666" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="2410" name="CommanderPhase4GCapabilityTests" fullname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests" classname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests" runstate="Runnable" testcasecount="14" result="Passed" start-time="2026-10-08 16:23:01Z" end-time="2026-10-08 16:23:02Z" duration="0.802113" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="2424" name="ResultBinding_RejectsIncompatibleDependency" fullname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests.ResultBinding_RejectsIncompatibleDependency" methodname="ResultBinding_RejectsIncompatibleDependency" classname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests" runstate="Runnable" seed="790633193" result="Passed" start-time="2026-10-08 16:23:01Z" end-time="2026-10-08 16:23:01Z" duration="0.000461" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2423" name="ResultBinding_UsesOnlyTheExactProducedUnitSet" fullname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests.ResultBinding_UsesOnlyTheExactProducedUnitSet" methodname="ResultBinding_UsesOnlyTheExactProducedUnitSet" classname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests" runstate="Runnable" seed="798910590" result="Passed" start-time="2026-10-08 16:23:01Z" end-time="2026-10-08 16:23:02Z" duration="0.703838" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #2 submitted: CapabilityAction
+[Commander] Goal #2 submitted: CapabilityAction
+[Commander] Goal #2: status=Blocked owned=0 queued=0; The player took control of a required producer result; this dependent action will not reclaim it.
+[Commander] Goal #2: status=Blocked owned=0 queued=0; The player took control of a required producer result; this dependent action will not reclaim it.
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2425" name="CommanderPhase4GHostileAuditTests" fullname="OpenEmpires.Tests.CommanderPhase4GHostileAuditTests" classname="OpenEmpires.Tests.CommanderPhase4GHostileAuditTests" runstate="Runnable" testcasecount="39" result="Passed" start-time="2026-10-08 16:23:02Z" end-time="2026-10-08 16:23:02Z" duration="0.347936" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="2437" name="ResultBinding_FailsClosedWhenGoalManagerDisposed" fullname="OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_FailsClosedWhenGoalManagerDisposed" methodname="ResultBinding_FailsClosedWhenGoalManagerDisposed" classname="OpenEmpires.Tests.CommanderPhase4GHostileAuditTests" runstate="Runnable" seed="475520035" result="Passed" start-time="2026-10-08 16:23:02Z" end-time="2026-10-08 16:23:02Z" duration="0.344761" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

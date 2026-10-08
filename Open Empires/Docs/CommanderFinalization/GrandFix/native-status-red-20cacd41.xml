@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-07 20:04:42Z" end-time="2026-10-07 20:04:43Z" duration="0.8850253">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1181" result="Failed" site="Child" start-time="2026-10-07 20:04:42Z" end-time="2026-10-07 20:04:43Z" duration="0.885025" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2350" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1181" result="Failed" site="Child" start-time="2026-10-07 20:04:42Z" end-time="2026-10-07 20:04:43Z" duration="0.784667" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2351" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1181" result="Failed" site="Child" start-time="2026-10-07 20:04:42Z" end-time="2026-10-07 20:04:43Z" duration="0.689891" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2352" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1181" result="Failed" site="Child" start-time="2026-10-07 20:04:43Z" end-time="2026-10-07 20:04:43Z" duration="0.580745" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1032" name="CommanderGrandFixNativeOwnershipTests" fullname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests" classname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests" runstate="Runnable" testcasecount="5" result="Failed" site="Child" start-time="2026-10-07 20:04:43Z" end-time="2026-10-07 20:04:43Z" duration="0.469497" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1037" name="RetryAfterBusy_ReportsActualInitializationFailureNotOldBusyStatus" fullname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.RetryAfterBusy_ReportsActualInitializationFailureNotOldBusyStatus" methodname="RetryAfterBusy_ReportsActualInitializationFailureNotOldBusyStatus" classname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests" runstate="Runnable" seed="448859645" result="Failed" start-time="2026-10-07 20:04:43Z" end-time="2026-10-07 20:04:43Z" duration="0.331535" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected string length 15 but was 8. Strings differ at index 4.
+  Expected: "STT_UNAVAILABLE"
+  But was:  "STT_BUSY"
+  ---------------^
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.RetryAfterBusy_ReportsActualInitializationFailureNotOldBusyStatus () [0x00201] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeOwnershipTests.cs:96
+at OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.RetryAfterBusy_ReportsActualInitializationFailureNotOldBusyStatus () [0x002fc] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeOwnershipTests.cs:98
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

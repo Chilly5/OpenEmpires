@@ -1,0 +1,53 @@
+{
+  "schema": "openempires-evidence-integration-checkpoint@1",
+  "head": "8586764e644240f93c99e2afa1c7d41c697cc879",
+  "branch": "unit_models_and_voice_control",
+  "working_changes": true,
+  "edit": {
+    "job": "ff2b7217255a4a00995a795ca1910a8c",
+    "artifact": "evidence-integration-final-edit-ff2b7217.xml",
+    "passed": 62,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 15.6842922
+  },
+  "play": {
+    "job": "212c50415b19402e80e7ac903c583ef6",
+    "artifact": "evidence-integration-play-disabled-212c5041.xml",
+    "passed": 6,
+    "failed": 0,
+    "skipped": 6,
+    "seconds": 4.6114789,
+    "aggregate": "Skipped:Ignored",
+    "no_live_evidence": true
+  },
+  "source_sha256": {
+    "Assets/Scripts/AI/Commander/Phase4A/OpenRouterCommanderProvider.cs": "ff34f80a43d04333ff1f4c8f355327c9069f2568da0d96f56a39a99c678a7f7d",
+    "Assets/Scripts/AssemblyInfo.cs": "2bcb68405b8b26c70d59728ec0c7c8ee49a8e793eb4144b34a5468ab81e319d2",
+    "Assets/Tests/Shared/OpenEmpires.TestSupport.asmdef": "c49fa08b504a961361168b83ea10cb7ed8a5e2839eb2f559e2c9c6b90d3b6f6e",
+    "Assets/Tests/Shared/EvidenceBudgetJournal.cs": "e58572ab416eb00b26c7f408b77b559273515c03214d673e8223398b58d26354",
+    "Assets/Tests/Shared/BudgetedSemanticTransport.cs": "e25849a79c1621b83be0f8eae50285e320bb76e851aa5d0e597e2a98c8e3aade",
+    "Assets/Tests/Shared/BudgetedSpeechTransport.cs": "b00444a5e82628a823d69aa59959ab9fa19d711fd0ef24f7f0d025e1bcac224d",
+    "Assets/Tests/Shared/EvidenceSemanticGate.cs": "ea7e1ff13e8c5eedf06543ec5519140e21464bb586553131db276fc0a4d7949e",
+    "Assets/Tests/Shared/EvidenceLivePolicy.cs": "cc7106550d147766e7596a04efdc260e457ede4ba1ad15c8422fab9cf47a4777",
+    "Assets/Tests/Shared/ScenarioEvidenceRecorder.cs": "aef952668724b0e186ce3905057992c844ec59e7ddf559278dab1f66305fd2e3",
+    "Assets/Tests/EditMode/OpenEmpires.EditModeTests.asmdef": "90db253d62c5df837ba4dd2708b66e03d0f3e76f9cd1143dc6c66ba7c3423001",
+    "Assets/Tests/PlayMode/OpenEmpires.PlayModeTests.asmdef": "bfb910ca192156603a44e655faed39d7d0687c718ab20ae86d1c893eadd99eed",
+    "Assets/Tests/EditMode/CommanderGrandFixEvidenceLaneTests.cs": "b3312f5b0f80884c7b02f0fe769a57589d6dd59bc44a12003c99a47485ef01c0",
+    "Assets/Tests/EditMode/CommanderGrandFixEvidenceIntegrationTests.cs": "a5159c58bdf0c2da245dfa6e8bc9940d7088af16b5fb34af66b74bf9b953ca27",
+    "Assets/Tests/PlayMode/CommanderPhase5ALiveRuntimePlayModeTests.cs": "826d1b42f03caee855377c722b36f6612b4d5830a134effb1a785ba36fe592e7"
+  },
+  "gates": [
+    "Real operator billing/minimum/quantum/provider-model proof and consented corpus",
+    "Enabled vendor/physical/peer evidence",
+    "Independent exhaustive regression/adversarial checks",
+    "Final package excludes test assemblies"
+  ],
+  "paid": {
+    "semantic_initial": 0,
+    "semantic_repair": 0,
+    "cloud_asr_seconds": 0,
+    "original_ledger_unchanged": true
+  },
+  "next": "G21/G22 retention; preserve active continuation, monotonic anti-replay and live human takeover"
+}

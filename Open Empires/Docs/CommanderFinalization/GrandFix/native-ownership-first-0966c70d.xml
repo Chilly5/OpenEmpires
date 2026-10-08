@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Passed" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-07 19:58:02Z" end-time="2026-10-07 19:58:05Z" duration="2.282189">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1180" result="Passed" start-time="2026-10-07 19:58:02Z" end-time="2026-10-07 19:58:05Z" duration="2.282189" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="2349" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1180" result="Passed" start-time="2026-10-07 19:58:02Z" end-time="2026-10-07 19:58:05Z" duration="2.169943" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="2350" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1180" result="Passed" start-time="2026-10-07 19:58:02Z" end-time="2026-10-07 19:58:05Z" duration="2.079258" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="2351" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1180" result="Passed" start-time="2026-10-07 19:58:03Z" end-time="2026-10-07 19:58:05Z" duration="1.970259" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1032" name="CommanderGrandFixNativeOwnershipTests" fullname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests" classname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-07 19:58:03Z" end-time="2026-10-07 19:58:05Z" duration="1.859149" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <test-case id="1034" name="ActiveContext_RejectsSecondContextUntilReleaseCompletes" fullname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.ActiveContext_RejectsSecondContextUntilReleaseCompletes" methodname="ActiveContext_RejectsSecondContextUntilReleaseCompletes" classname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests" runstate="Runnable" seed="360114464" result="Passed" start-time="2026-10-07 19:58:03Z" end-time="2026-10-07 19:58:03Z" duration="0.438103" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1036" name="DisposedDuringInitialization_DropsNewContextInsteadOfPublishingIt" fullname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.DisposedDuringInitialization_DropsNewContextInsteadOfPublishingIt" methodname="DisposedDuringInitialization_DropsNewContextInsteadOfPublishingIt" classname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests" runstate="Runnable" seed="1359379554" result="Passed" start-time="2026-10-07 19:58:03Z" end-time="2026-10-07 19:58:04Z" duration="0.397599" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1033" name="DisposeWhileNativeCallRuns_ReturnsAndFreesExactlyAfterCall" fullname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.DisposeWhileNativeCallRuns_ReturnsAndFreesExactlyAfterCall" methodname="DisposeWhileNativeCallRuns_ReturnsAndFreesExactlyAfterCall" classname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests" runstate="Runnable" seed="1660217705" result="Passed" start-time="2026-10-07 19:58:04Z" end-time="2026-10-07 19:58:04Z" duration="0.542344" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1035" name="FailedInferenceAndDisposedContext_DoNotDoubleFreeOrInvokeAgain" fullname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.FailedInferenceAndDisposedContext_DoNotDoubleFreeOrInvokeAgain" methodname="FailedInferenceAndDisposedContext_DoNotDoubleFreeOrInvokeAgain" classname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests" runstate="Runnable" seed="64688581" result="Passed" start-time="2026-10-07 19:58:04Z" end-time="2026-10-07 19:58:05Z" duration="0.329589" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

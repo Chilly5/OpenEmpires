@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="8" result="Failed(Child)" total="8" passed="1" failed="7" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-07 18:26:02Z" end-time="2026-10-07 18:26:13Z" duration="11.4530104">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1161" result="Failed" site="Child" start-time="2026-10-07 18:26:02Z" end-time="2026-10-07 18:26:13Z" duration="11.453010" total="8" passed="1" failed="7" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2325" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1161" result="Failed" site="Child" start-time="2026-10-07 18:26:02Z" end-time="2026-10-07 18:26:13Z" duration="11.348954" total="8" passed="1" failed="7" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2326" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1161" result="Failed" site="Child" start-time="2026-10-07 18:26:02Z" end-time="2026-10-07 18:26:13Z" duration="11.254833" total="8" passed="1" failed="7" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2327" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1161" result="Failed" site="Child" start-time="2026-10-07 18:26:02Z" end-time="2026-10-07 18:26:13Z" duration="11.141743" total="8" passed="1" failed="7" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1032" name="CommanderGrandFixPresentationTests" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" testcasecount="8" result="Failed" site="Child" start-time="2026-10-07 18:26:02Z" end-time="2026-10-07 18:26:13Z" duration="11.031351" total="8" passed="1" failed="7" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1036" name="CollapsedRecordingAndTranscriptReview_DoNotSubmitOrApprove" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.CollapsedRecordingAndTranscriptReview_DoNotSubmitOrApprove" methodname="CollapsedRecordingAndTranscriptReview_DoNotSubmitOrApprove" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="39291455" result="Failed" start-time="2026-10-07 18:26:03Z" end-time="2026-10-07 18:26:05Z" duration="2.112890" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixPresentationTests.CollapsedRecordingAndTranscriptReview_DoNotSubmitOrApprove () [0x00031] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixPresentationTests.cs:80
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1034" name="DeliberateOpenThenMinimize_DoesNotCancelAcceptedWork" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.DeliberateOpenThenMinimize_DoesNotCancelAcceptedWork" methodname="DeliberateOpenThenMinimize_DoesNotCancelAcceptedWork" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="67155418" result="Failed" start-time="2026-10-07 18:26:05Z" end-time="2026-10-07 18:26:06Z" duration="1.049850" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixPresentationTests.DeliberateOpenThenMinimize_DoesNotCancelAcceptedWork () [0x00044] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixPresentationTests.cs:64
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+]]></output>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1039" name="DiscardVoiceDraft_ClearsOnlyUnchangedOwnedText" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.DiscardVoiceDraft_ClearsOnlyUnchangedOwnedText" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-07 18:26:06Z" end-time="2026-10-07 18:26:08Z" duration="2.534750" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1037" name="DiscardVoiceDraft_ClearsOnlyUnchangedOwnedText(False)" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.DiscardVoiceDraft_ClearsOnlyUnchangedOwnedText(False)" methodname="DiscardVoiceDraft_ClearsOnlyUnchangedOwnedText" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="849554806" result="Failed" start-time="2026-10-07 18:26:06Z" end-time="2026-10-07 18:26:07Z" duration="1.262644" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected string length 0 but was 18. Strings differ at index 0.
+  Expected: <string.Empty>
+  But was:  "make four spearmen"
+  -----------^
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixPresentationTests.DiscardVoiceDraft_ClearsOnlyUnchangedOwnedText (System.Boolean edited) [0x000b6] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixPresentationTests.cs:93
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1038" name="DiscardVoiceDraft_ClearsOnlyUnchangedOwnedText(True)" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.DiscardVoiceDraft_ClearsOnlyUnchangedOwnedText(True)" methodname="DiscardVoiceDraft_ClearsOnlyUnchangedOwnedText" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="1952800679" result="Passed" start-time="2026-10-07 18:26:07Z" end-time="2026-10-07 18:26:08Z" duration="1.258493" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1033" name="Initialize_StartsCollapsedWithLiveHostAndSmallLauncher" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.Initialize_StartsCollapsedWithLiveHostAndSmallLauncher" methodname="Initialize_StartsCollapsedWithLiveHostAndSmallLauncher" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="210875159" result="Failed" start-time="2026-10-07 18:26:08Z" end-time="2026-10-07 18:26:09Z" duration="1.146379" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixPresentationTests.Initialize_StartsCollapsedWithLiveHostAndSmallLauncher () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixPresentationTests.cs:53
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1035" name="OrdinaryAnswerAndReset_DoNotReopenConversation" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.OrdinaryAnswerAndReset_DoNotReopenConversation" methodname="OrdinaryAnswerAndReset_DoNotReopenConversation" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="1913465829" result="Failed" start-time="2026-10-07 18:26:09Z" end-time="2026-10-07 18:26:11Z" duration="1.293133" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixPresentationTests.OrdinaryAnswerAndReset_DoNotReopenConversation () [0x00077] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixPresentationTests.cs:72
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1040" name="OversizedTypedDraft_IsNotTruncatedOrSent" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.OversizedTypedDraft_IsNotTruncatedOrSent" methodname="OversizedTypedDraft_IsNotTruncatedOrSent" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="1739428402" result="Failed" start-time="2026-10-07 18:26:11Z" end-time="2026-10-07 18:26:12Z" duration="1.309770" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected string length 1025 but was 0. Strings differ at index 0.
+  Expected: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..."
+  But was:  <string.Empty>
+  -----------^
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixPresentationTests.OversizedTypedDraft_IsNotTruncatedOrSent () [0x000db] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixPresentationTests.cs:102
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1041" name="TranscriptSend_OnlyStagesCompoundApprovalWhileCollapsed" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.TranscriptSend_OnlyStagesCompoundApprovalWhileCollapsed" methodname="TranscriptSend_OnlyStagesCompoundApprovalWhileCollapsed" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="386790781" result="Failed" start-time="2026-10-07 18:26:12Z" end-time="2026-10-07 18:26:13Z" duration="1.451548" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixPresentationTests.TranscriptSend_OnlyStagesCompoundApprovalWhileCollapsed () [0x0013b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixPresentationTests.cs:113
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,0 +1,27 @@
+{
+  "schema": "openempires-web-host-checkpoint@1",
+  "observed_at": "2026-10-08T03:24:54+03:30",
+  "head": "8586764e644240f93c99e2afa1c7d41c697cc879",
+  "branch": "unit_models_and_voice_control",
+  "working_changes": true,
+  "node_version": "24.13.1",
+  "test_command": "node --test --test-reporter=tap Docs/CommanderFinalization/GrandFix/web-host.test.mjs",
+  "test_scope": "Actual loopback HTTP serving synthetic fixtures, not Unity/browser/microphone acceptance",
+  "tests": { "passed": 5, "failed": 0, "skipped": 0, "duration_ms": 3380.7777 },
+  "sha256": {
+    "web-host.mjs": "a04fd4fa44b4a80b0ec76716eb49b42a74d291e942353ee6786b61c1297bcaba",
+    "web-host.test.mjs": "b74c161e291b071c92d1573e13d6f6008d7a7925460addde6d6a028f2c3588ab",
+    "web-host-green-20261008.tap": "5856c8718f2f4d2425263230ee8d22da51e317e6297b28ed673e13210fb47cb6"
+  },
+  "unity_build": {
+    "job": "build-63b0c14d8e",
+    "output": "Builds/WebGrandFixProbe-20261008",
+    "state": "In progress: native finalization/optimization; terminal report unavailable",
+    "release_build": false,
+    "intermediate_wasm_bytes": 196448975,
+    "physical_browser_evidence": false
+  },
+  "paid_semantic_http": 0,
+  "paid_asr_billable_seconds": 0,
+  "claim": "Slice identity and focused HTTP-host evidence only; not a complete source/build manifest or release verdict"
+}

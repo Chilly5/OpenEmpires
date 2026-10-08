@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Failed(Child)" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 00:15:08Z" end-time="2026-10-08 00:15:10Z" duration="1.8971371">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1225" result="Failed" site="Child" start-time="2026-10-08 00:15:08Z" end-time="2026-10-08 00:15:10Z" duration="1.897137" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2403" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1225" result="Failed" site="Child" start-time="2026-10-08 00:15:08Z" end-time="2026-10-08 00:15:10Z" duration="1.880766" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2404" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1225" result="Failed" site="Child" start-time="2026-10-08 00:15:08Z" end-time="2026-10-08 00:15:10Z" duration="1.879975" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2405" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1225" result="Failed" site="Child" start-time="2026-10-08 00:15:08Z" end-time="2026-10-08 00:15:10Z" duration="1.879715" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1065" name="CommanderGrandFixPresentationTests" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" testcasecount="22" result="Failed" site="Child" start-time="2026-10-08 00:15:08Z" end-time="2026-10-08 00:15:10Z" duration="1.876571" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1090" name="CameraMiddleButton_IsInertWhileTypingAndDoesNotAcquirePointerLock" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.CameraMiddleButton_IsInertWhileTypingAndDoesNotAcquirePointerLock" methodname="CameraMiddleButton_IsInertWhileTypingAndDoesNotAcquirePointerLock" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="599696731" result="Failed" start-time="2026-10-08 00:15:08Z" end-time="2026-10-08 00:15:09Z" duration="0.942393" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixPresentationTests.CameraMiddleButton_IsInertWhileTypingAndDoesNotAcquirePointerLock () [0x00033] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixPresentationTests.cs:314
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1088" name="EscapeCallbackBeforeCommanderUpdate_MinimizesOnceWithoutOpeningSettings" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.EscapeCallbackBeforeCommanderUpdate_MinimizesOnceWithoutOpeningSettings" methodname="EscapeCallbackBeforeCommanderUpdate_MinimizesOnceWithoutOpeningSettings" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="1101325542" result="Failed" start-time="2026-10-08 00:15:09Z" end-time="2026-10-08 00:15:10Z" duration="0.435451" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Input callbacks occur before MonoBehaviour.Update; Commander must own Escape first.
+  Expected: False
+  But was:  True
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixPresentationTests.EscapeCallbackBeforeCommanderUpdate_MinimizesOnceWithoutOpeningSettings () [0x000af] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixPresentationTests.cs:270
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+]]></output>
+            </test-case>
+            <test-case id="1089" name="GameplayAttackMoveCallback_IsInertWhileAnotherTextFieldOwnsKeyboard" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.GameplayAttackMoveCallback_IsInertWhileAnotherTextFieldOwnsKeyboard" methodname="GameplayAttackMoveCallback_IsInertWhileAnotherTextFieldOwnsKeyboard" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="794558690" result="Failed" start-time="2026-10-08 00:15:10Z" end-time="2026-10-08 00:15:10Z" duration="0.474228" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixPresentationTests.GameplayAttackMoveCallback_IsInertWhileAnotherTextFieldOwnsKeyboard () [0x0006f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixPresentationTests.cs:296
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

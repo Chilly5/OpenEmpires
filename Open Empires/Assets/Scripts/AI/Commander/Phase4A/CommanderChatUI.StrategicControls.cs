@@ -201,6 +201,7 @@ namespace OpenEmpires
 
         private void LateUpdate()
         {
+            UpdatePresentation();
             RefreshPanelSize();
             ScanOwnedAdvisories();
             StrategicPlanner planner = strategicPipeline?.StrategicPlanner;

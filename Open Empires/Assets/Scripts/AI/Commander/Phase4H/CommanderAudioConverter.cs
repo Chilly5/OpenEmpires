@@ -10,7 +10,7 @@ namespace OpenEmpires
     public static class CommanderAudioConverter
     {
         public const int TargetSampleRate = 16000;
-        public const float DefaultMaxDurationSeconds = 15f;
+        public const float DefaultMaxDurationSeconds = CommanderVoiceSettings.MaximumDurationSeconds;
 
         public static CommanderAudioData ConvertToMono16k(CommanderAudioData source, float maxDurationSeconds = DefaultMaxDurationSeconds)
         {
@@ -25,11 +25,17 @@ namespace OpenEmpires
             if (srcSamples == null || srcSamples.Length == 0 || srcSampleRate <= 0 || srcChannels <= 0)
                 return CommanderAudioData.Empty;
 
+            if (float.IsNaN(maxDurationSeconds) || float.IsInfinity(maxDurationSeconds)
+                || maxDurationSeconds <= 0f) return CommanderAudioData.Empty;
+            maxDurationSeconds = Math.Min(maxDurationSeconds, CommanderVoiceSettings.MaximumDurationSeconds);
+            int sourceFrames = Math.Min(srcSamples.Length / srcChannels,
+                (int)Math.Round(maxDurationSeconds * srcSampleRate));
+
             // 1. Downmix to mono if multi-channel
             float[] monoSamples;
             if (srcChannels > 1)
             {
-                int monoLength = srcSamples.Length / srcChannels;
+                int monoLength = sourceFrames;
                 monoSamples = new float[monoLength];
                 for (int i = 0; i < monoLength; i++)
                 {
@@ -42,7 +48,12 @@ namespace OpenEmpires
             }
             else
             {
-                monoSamples = srcSamples;
+                if (sourceFrames == srcSamples.Length) monoSamples = srcSamples;
+                else
+                {
+                    monoSamples = new float[sourceFrames];
+                    Array.Copy(srcSamples, monoSamples, sourceFrames);
+                }
             }
 
             // 2. Clamp duration if exceeds maximum

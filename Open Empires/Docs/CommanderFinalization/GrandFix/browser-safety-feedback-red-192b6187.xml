@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-07 22:45:54Z" end-time="2026-10-07 22:45:58Z" duration="3.8517632">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1222" result="Failed" site="Child" start-time="2026-10-07 22:45:54Z" end-time="2026-10-07 22:45:58Z" duration="3.851763" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2400" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1222" result="Failed" site="Child" start-time="2026-10-07 22:45:54Z" end-time="2026-10-07 22:45:58Z" duration="3.739434" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2401" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1222" result="Failed" site="Child" start-time="2026-10-07 22:45:54Z" end-time="2026-10-07 22:45:58Z" duration="3.657633" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2402" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1222" result="Failed" site="Child" start-time="2026-10-07 22:45:54Z" end-time="2026-10-07 22:45:58Z" duration="3.548009" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1065" name="CommanderGrandFixPresentationTests" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" testcasecount="19" result="Failed" site="Child" start-time="2026-10-07 22:45:54Z" end-time="2026-10-07 22:45:58Z" duration="3.436500" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="ParameterizedMethod" id="1083" name="BrowserSafetyFailure_ShowsReasonWithoutTranscriptionOrOrders" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.BrowserSafetyFailure_ShowsReasonWithoutTranscriptionOrOrders" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-07 22:45:54Z" end-time="2026-10-07 22:45:58Z" duration="3.321576" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1081" name="BrowserSafetyFailure_ShowsReasonWithoutTranscriptionOrOrders(&quot;MIC_FOCUS_LOST&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.BrowserSafetyFailure_ShowsReasonWithoutTranscriptionOrOrders(&quot;MIC_FOCUS_LOST&quot;)" methodname="BrowserSafetyFailure_ShowsReasonWithoutTranscriptionOrOrders" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="934534389" result="Failed" start-time="2026-10-07 22:45:54Z" end-time="2026-10-07 22:45:56Z" duration="2.096756" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: Error
+  But was:  Idle
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixPresentationTests.BrowserSafetyFailure_ShowsReasonWithoutTranscriptionOrOrders (System.String code) [0x0005f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixPresentationTests.cs:168
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1082" name="BrowserSafetyFailure_ShowsReasonWithoutTranscriptionOrOrders(&quot;MIC_OPEN_FAILED&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.BrowserSafetyFailure_ShowsReasonWithoutTranscriptionOrOrders(&quot;MIC_OPEN_FAILED&quot;)" methodname="BrowserSafetyFailure_ShowsReasonWithoutTranscriptionOrOrders" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="2067560573" result="Failed" start-time="2026-10-07 22:45:56Z" end-time="2026-10-07 22:45:57Z" duration="1.091773" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: Error
+  But was:  Idle
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixPresentationTests.BrowserSafetyFailure_ShowsReasonWithoutTranscriptionOrOrders (System.String code) [0x0005f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixPresentationTests.cs:168
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

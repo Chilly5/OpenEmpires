@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 14:15:52Z" end-time="2026-10-08 14:15:54Z" duration="1.6676588">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1424" result="Failed" site="Child" start-time="2026-10-08 14:15:52Z" end-time="2026-10-08 14:15:54Z" duration="1.667659" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2640" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1424" result="Failed" site="Child" start-time="2026-10-08 14:15:52Z" end-time="2026-10-08 14:15:54Z" duration="1.606171" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="27016" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2641" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1424" result="Failed" site="Child" start-time="2026-10-08 14:15:53Z" end-time="2026-10-08 14:15:54Z" duration="1.511739" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2642" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1424" result="Failed" site="Child" start-time="2026-10-08 14:15:53Z" end-time="2026-10-08 14:15:54Z" duration="1.412711" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1034" name="CommanderGrandFixEvidenceLaneTests" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" runstate="Runnable" testcasecount="28" result="Failed" site="Child" start-time="2026-10-08 14:15:53Z" end-time="2026-10-08 14:15:54Z" duration="1.311375" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="ParameterizedMethod" id="1067" name="RejectedCompletion_RecordsSafeFinishCategory" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.RejectedCompletion_RecordsSafeFinishCategory" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-08 14:15:53Z" end-time="2026-10-08 14:15:54Z" duration="1.211770" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1065" name="RejectedCompletion_RecordsSafeFinishCategory(&quot;length&quot;,&quot;length&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.RejectedCompletion_RecordsSafeFinishCategory(&quot;length&quot;,&quot;length&quot;)" methodname="RejectedCompletion_RecordsSafeFinishCategory" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" runstate="Runnable" seed="1344063454" result="Failed" start-time="2026-10-08 14:15:53Z" end-time="2026-10-08 14:15:54Z" duration="0.646152" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: String containing "finish=length"
+  But was:  "utc=2026-10-08T14:15:54.1037658Z;model=openai/gpt-6-luna;request=built
+http=sent
+http=200;durationMs=2
+"
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.RejectedCompletion_RecordsSafeFinishCategory (System.String finish, System.String expected) [0x00117] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:211
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-08T14:15:54.1037658Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=2
+]]></output>
+              </test-case>
+              <test-case id="1066" name="RejectedCompletion_RecordsSafeFinishCategory(&quot;private-finish-marker&quot;,&quot;other&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.RejectedCompletion_RecordsSafeFinishCategory(&quot;private-finish-marker&quot;,&quot;other&quot;)" methodname="RejectedCompletion_RecordsSafeFinishCategory" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" runstate="Runnable" seed="661701993" result="Failed" start-time="2026-10-08 14:15:54Z" end-time="2026-10-08 14:15:54Z" duration="0.459897" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: String containing "finish=other"
+  But was:  "utc=2026-10-08T14:15:54.5876792Z;model=openai/gpt-6-luna;request=built
+http=sent
+http=200;durationMs=1
+"
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.RejectedCompletion_RecordsSafeFinishCategory (System.String finish, System.String expected) [0x00117] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixEvidenceLaneTests.cs:211
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-08T14:15:54.5876792Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=1
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="20" result="Failed(Child)" total="20" passed="6" failed="14" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 04:12:02Z" end-time="2026-10-08 04:12:23Z" duration="20.0726604">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1301" result="Failed" site="Child" start-time="2026-10-08 04:12:02Z" end-time="2026-10-08 04:12:23Z" duration="20.072660" total="20" passed="6" failed="14" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2491" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1301" result="Failed" site="Child" start-time="2026-10-08 04:12:03Z" end-time="2026-10-08 04:12:23Z" duration="19.929687" total="20" passed="6" failed="14" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2492" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1301" result="Failed" site="Child" start-time="2026-10-08 04:12:03Z" end-time="2026-10-08 04:12:23Z" duration="19.880004" total="20" passed="6" failed="14" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2493" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1301" result="Failed" site="Child" start-time="2026-10-08 04:12:03Z" end-time="2026-10-08 04:12:23Z" duration="19.771557" total="20" passed="6" failed="14" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1171" name="CommanderGrandFixTargetTests" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" testcasecount="20" result="Failed" site="Child" start-time="2026-10-08 04:12:03Z" end-time="2026-10-08 04:12:23Z" duration="19.656918" total="20" passed="6" failed="14" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1173" name="AttackNamedArchers_DoesNotChooseNearerDifferentTypeOrChangeActor" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.AttackNamedArchers_DoesNotChooseNearerDifferentTypeOrChangeActor" methodname="AttackNamedArchers_DoesNotChooseNearerDifferentTypeOrChangeActor" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="1981710562" result="Failed" start-time="2026-10-08 04:12:03Z" end-time="2026-10-08 04:12:04Z" duration="1.168694" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  I couldn't understand that request safely.
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixTargetTests.Intent (System.String action, System.String actor, System.String target) [0x0000f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:52
+at OpenEmpires.Tests.CommanderGrandFixTargetTests.AttackNamedArchers_DoesNotChooseNearerDifferentTypeOrChangeActor () [0x00028] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:77
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1193" name="IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-08 04:12:04Z" end-time="2026-10-08 04:12:10Z" duration="5.542946" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1187" name="IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals(&quot;RepairTarget&quot;,&quot;Villagers&quot;,&quot;{\&quot;kind\&quot;:\&quot;UnitType\&quot;,\&quot;unit\&quot;:\&quot;Archer\&quot;}&quot;,&quot;PlayerBase&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals(&quot;RepairTarget&quot;,&quot;Villagers&quot;,&quot;{\&quot;kind\&quot;:\&quot;UnitType\&quot;,\&quot;unit\&quot;:\&quot;Archer\&quot;}&quot;,&quot;PlayerBase&quot;)" methodname="IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="1950517932" result="Passed" start-time="2026-10-08 04:12:04Z" end-time="2026-10-08 04:12:05Z" duration="1.055140" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1188" name="IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals(&quot;MoveUnits&quot;,&quot;Military&quot;,&quot;{\&quot;kind\&quot;:\&quot;BuildingType\&quot;,\&quot;structure\&quot;:\&quot;TownCenter\&quot;}&quot;,&quot;PlayerBase&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals(&quot;MoveUnits&quot;,&quot;Military&quot;,&quot;{\&quot;kind\&quot;:\&quot;BuildingType\&quot;,\&quot;structure\&quot;:\&quot;TownCenter\&quot;}&quot;,&quot;PlayerBase&quot;)" methodname="IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="1898126797" result="Passed" start-time="2026-10-08 04:12:05Z" end-time="2026-10-08 04:12:06Z" duration="1.036524" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1189" name="IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals(&quot;AttackTarget&quot;,&quot;Spearman&quot;,&quot;{\&quot;kind\&quot;:\&quot;UnitType\&quot;,\&quot;unit\&quot;:\&quot;Archer\&quot;}&quot;,&quot;PlayerBase&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals(&quot;AttackTarget&quot;,&quot;Spearman&quot;,&quot;{\&quot;kind\&quot;:\&quot;UnitType\&quot;,\&quot;unit\&quot;:\&quot;Archer\&quot;}&quot;,&quot;PlayerBase&quot;)" methodname="IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="27131859" result="Passed" start-time="2026-10-08 04:12:06Z" end-time="2026-10-08 04:12:07Z" duration="1.016797" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1190" name="IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals(&quot;AttackTarget&quot;,&quot;Spearman&quot;,&quot;{\&quot;kind\&quot;:\&quot;UnitType\&quot;,\&quot;unit\&quot;:\&quot;Archer\&quot;,\&quot;id\&quot;:7}&quot;,&quot;VisibleEnemy&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals(&quot;AttackTarget&quot;,&quot;Spearman&quot;,&quot;{\&quot;kind\&quot;:\&quot;UnitType\&quot;,\&quot;unit\&quot;:\&quot;Archer\&quot;,\&quot;id\&quot;:7}&quot;,&quot;VisibleEnemy&quot;)" methodname="IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="1662876882" result="Passed" start-time="2026-10-08 04:12:07Z" end-time="2026-10-08 04:12:08Z" duration="0.961878" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1191" name="IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals(&quot;AttackTarget&quot;,&quot;Spearman&quot;,&quot;{\&quot;kind\&quot;:\&quot;UnitType\&quot;,\&quot;unit\&quot;:\&quot;Unknown\&quot;}&quot;,&quot;VisibleEnemy&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals(&quot;AttackTarget&quot;,&quot;Spearman&quot;,&quot;{\&quot;kind\&quot;:\&quot;UnitType\&quot;,\&quot;unit\&quot;:\&quot;Unknown\&quot;}&quot;,&quot;VisibleEnemy&quot;)" methodname="IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="1123383849" result="Passed" start-time="2026-10-08 04:12:08Z" end-time="2026-10-08 04:12:09Z" duration="0.837007" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1192" name="IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals(&quot;AttackTarget&quot;,&quot;Spearman&quot;,&quot;{\&quot;kind\&quot;:\&quot;SelectedGroup\&quot;}&quot;,&quot;VisibleEnemy&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals(&quot;AttackTarget&quot;,&quot;Spearman&quot;,&quot;{\&quot;kind\&quot;:\&quot;SelectedGroup\&quot;}&quot;,&quot;VisibleEnemy&quot;)" methodname="IncompatibleOrUntrustedTarget_IsRejectedBeforeGoals" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="2122722410" result="Passed" start-time="2026-10-08 04:12:09Z" end-time="2026-10-08 04:12:10Z" duration="0.620643" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1179" name="MultipleTownCenters_SelectLowestOwnedIdBeforeDamageEligibility" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.MultipleTownCenters_SelectLowestOwnedIdBeforeDamageEligibility" methodname="MultipleTownCenters_SelectLowestOwnedIdBeforeDamageEligibility" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="1905948980" result="Failed" start-time="2026-10-08 04:12:10Z" end-time="2026-10-08 04:12:10Z" duration="0.465899" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  I couldn't understand that request safely.
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixTargetTests.Intent (System.String action, System.String actor, System.String target) [0x0000f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:52
+at OpenEmpires.Tests.CommanderGrandFixTargetTests.MultipleTownCenters_SelectLowestOwnedIdBeforeDamageEligibility () [0x00025] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:104
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1186" name="NamedEnemyBuilding_DoesNotSubstituteVisibleEnemyUnit" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedEnemyBuilding_DoesNotSubstituteVisibleEnemyUnit" methodname="NamedEnemyBuilding_DoesNotSubstituteVisibleEnemyUnit" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="1580124132" result="Failed" start-time="2026-10-08 04:12:10Z" end-time="2026-10-08 04:12:11Z" duration="0.642803" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  I couldn't understand that request safely.
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixTargetTests.Intent (System.String action, System.String actor, System.String target) [0x0000f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:52
+at OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedEnemyBuilding_DoesNotSubstituteVisibleEnemyUnit () [0x00029] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:133
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1185" name="NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" testcasecount="5" result="Failed" site="Child" start-time="2026-10-08 04:12:11Z" end-time="2026-10-08 04:12:16Z" duration="5.632489" total="5" passed="0" failed="5" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1180" name="NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding(&quot;missing&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding(&quot;missing&quot;)" methodname="NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="2046764919" result="Failed" start-time="2026-10-08 04:12:11Z" end-time="2026-10-08 04:12:12Z" duration="1.049148" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  I couldn't understand that request safely.
+  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixTargetTests.Intent (System.String action, System.String actor, System.String target) [0x0000f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:52
+at OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding (System.String loss) [0x00098] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:124
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1181" name="NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding(&quot;dead&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding(&quot;dead&quot;)" methodname="NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="333538987" result="Failed" start-time="2026-10-08 04:12:12Z" end-time="2026-10-08 04:12:13Z" duration="1.008178" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  I couldn't understand that request safely.
+  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixTargetTests.Intent (System.String action, System.String actor, System.String target) [0x0000f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:52
+at OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding (System.String loss) [0x00098] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:124
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1182" name="NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding(&quot;hidden&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding(&quot;hidden&quot;)" methodname="NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="1738686691" result="Failed" start-time="2026-10-08 04:12:13Z" end-time="2026-10-08 04:12:14Z" duration="1.070228" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  I couldn't understand that request safely.
+  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixTargetTests.Intent (System.String action, System.String actor, System.String target) [0x0000f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:52
+at OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding (System.String loss) [0x00098] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:124
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1183" name="NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding(&quot;ally&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding(&quot;ally&quot;)" methodname="NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="1314387043" result="Failed" start-time="2026-10-08 04:12:14Z" end-time="2026-10-08 04:12:16Z" duration="1.019731" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  I couldn't understand that request safely.
+  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixTargetTests.Intent (System.String action, System.String actor, System.String target) [0x0000f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:52
+at OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding (System.String loss) [0x00098] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:124
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1184" name="NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding(&quot;self&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding(&quot;self&quot;)" methodname="NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="620075637" result="Failed" start-time="2026-10-08 04:12:16Z" end-time="2026-10-08 04:12:16Z" duration="0.962798" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  I couldn't understand that request safely.
+  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixTargetTests.Intent (System.String action, System.String actor, System.String target) [0x0000f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:52
+at OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedEnemyUnavailable_DoesNotSubstituteOtherEnemyTypeOrBuilding (System.String loss) [0x00098] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:124
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1178" name="NamedRepairUnavailable_DoesNotSubstituteDamagedHouse" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedRepairUnavailable_DoesNotSubstituteDamagedHouse" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-10-08 04:12:16Z" end-time="2026-10-08 04:12:21Z" duration="4.050630" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1174" name="NamedRepairUnavailable_DoesNotSubstituteDamagedHouse(&quot;missing&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedRepairUnavailable_DoesNotSubstituteDamagedHouse(&quot;missing&quot;)" methodname="NamedRepairUnavailable_DoesNotSubstituteDamagedHouse" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="951163300" result="Failed" start-time="2026-10-08 04:12:17Z" end-time="2026-10-08 04:12:18Z" duration="1.001258" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  I couldn't understand that request safely.
+  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixTargetTests.Intent (System.String action, System.String actor, System.String target) [0x0000f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:52
+at OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedRepairUnavailable_DoesNotSubstituteDamagedHouse (System.String loss) [0x0006c] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:94
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1175" name="NamedRepairUnavailable_DoesNotSubstituteDamagedHouse(&quot;repaired&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedRepairUnavailable_DoesNotSubstituteDamagedHouse(&quot;repaired&quot;)" methodname="NamedRepairUnavailable_DoesNotSubstituteDamagedHouse" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="658743805" result="Failed" start-time="2026-10-08 04:12:18Z" end-time="2026-10-08 04:12:19Z" duration="0.976760" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  I couldn't understand that request safely.
+  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixTargetTests.Intent (System.String action, System.String actor, System.String target) [0x0000f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:52
+at OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedRepairUnavailable_DoesNotSubstituteDamagedHouse (System.String loss) [0x0006c] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:94
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1176" name="NamedRepairUnavailable_DoesNotSubstituteDamagedHouse(&quot;destroyed&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedRepairUnavailable_DoesNotSubstituteDamagedHouse(&quot;destroyed&quot;)" methodname="NamedRepairUnavailable_DoesNotSubstituteDamagedHouse" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="523316488" result="Failed" start-time="2026-10-08 04:12:19Z" end-time="2026-10-08 04:12:20Z" duration="1.014472" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  I couldn't understand that request safely.
+  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixTargetTests.Intent (System.String action, System.String actor, System.String target) [0x0000f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:52
+at OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedRepairUnavailable_DoesNotSubstituteDamagedHouse (System.String loss) [0x0006c] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:94
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1177" name="NamedRepairUnavailable_DoesNotSubstituteDamagedHouse(&quot;foreign&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedRepairUnavailable_DoesNotSubstituteDamagedHouse(&quot;foreign&quot;)" methodname="NamedRepairUnavailable_DoesNotSubstituteDamagedHouse" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="1909870224" result="Failed" start-time="2026-10-08 04:12:20Z" end-time="2026-10-08 04:12:21Z" duration="0.993503" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  I couldn't understand that request safely.
+  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixTargetTests.Intent (System.String action, System.String actor, System.String target) [0x0000f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:52
+at OpenEmpires.Tests.CommanderGrandFixTargetTests.NamedRepairUnavailable_DoesNotSubstituteDamagedHouse (System.String loss) [0x0006c] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:94
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-case id="1172" name="RepairNamedTownCenter_DoesNotChooseEarlierDamagedHouse" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.RepairNamedTownCenter_DoesNotChooseEarlierDamagedHouse" methodname="RepairNamedTownCenter_DoesNotChooseEarlierDamagedHouse" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="1730587858" result="Failed" start-time="2026-10-08 04:12:21Z" end-time="2026-10-08 04:12:22Z" duration="0.987217" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  I couldn't understand that request safely.
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixTargetTests.Intent (System.String action, System.String actor, System.String target) [0x0000f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:52
+at OpenEmpires.Tests.CommanderGrandFixTargetTests.RepairNamedTownCenter_DoesNotChooseEarlierDamagedHouse () [0x0002d] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:64
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1194" name="TargetSurvivesDtoRoundTripAndPreviewAndChangesAuthorizationScope" fullname="OpenEmpires.Tests.CommanderGrandFixTargetTests.TargetSurvivesDtoRoundTripAndPreviewAndChangesAuthorizationScope" methodname="TargetSurvivesDtoRoundTripAndPreviewAndChangesAuthorizationScope" classname="OpenEmpires.Tests.CommanderGrandFixTargetTests" runstate="Runnable" seed="246870061" result="Failed" start-time="2026-10-08 04:12:22Z" end-time="2026-10-08 04:12:23Z" duration="1.018174" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  I couldn't understand that request safely.
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixTargetTests.Intent (System.String action, System.String actor, System.String target) [0x0000f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:52
+at OpenEmpires.Tests.CommanderGrandFixTargetTests.TargetSurvivesDtoRoundTripAndPreviewAndChangesAuthorizationScope () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixTargetTests.cs:152
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

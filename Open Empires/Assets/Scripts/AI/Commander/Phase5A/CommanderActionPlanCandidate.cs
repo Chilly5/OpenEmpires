@@ -57,7 +57,7 @@ namespace OpenEmpires
                 || generation != Generation || !ReferenceEquals(currentStrategicSource, strategicSource)
                 || StrategyRevision(strategicSource) != strategicRevision) return false;
             if (!Owner.TryCompileActionPlan(Interpretation, out var current, out _)
-                || CommanderPlanPreview.Render(current) != Preview) return false;
+                || !CommanderScopeEquivalence.SameGraph(current, Graph)) return false;
             // These exact intents are read-only typed values; re-admission above prevents
             // e.g. a changed Next-age observation from silently repairing the approved plan.
             approved = true;
@@ -74,7 +74,9 @@ namespace OpenEmpires
                 && HasLiveRequestLease()
                 && ReferenceEquals(owner, Owner) && ReferenceEquals(graph, Graph)
                 && ReferenceEquals(Runtime, owner.Simulation)
-                && StrategyRevision(strategicSource) == strategicRevision;
+                && StrategyRevision(strategicSource) == strategicRevision
+                && Owner.TryCompileActionPlan(Interpretation, out var current, out _)
+                && CommanderScopeEquivalence.SameGraph(current, Graph);
 
         internal bool Consume(CommanderGoalManager owner, CommanderSemanticGraphPlan graph)
         {
@@ -121,7 +123,7 @@ namespace OpenEmpires
         }
     }
 
-    internal static class CommanderPlanPreview
+    internal static partial class CommanderPlanPreview
     {
         internal static string Render(CommanderSemanticGraphPlan graph)
         {
@@ -136,58 +138,39 @@ namespace OpenEmpires
                     canonicalUnitName = KeybindManager.GetUnitTypeDisplayName(int.Parse(
                         id.Substring("unit:".Length), System.Globalization.CultureInfo.InvariantCulture));
                 }
-                text.Append(node.Index + 1).Append(". ").Append(Describe(node.Intent, canonicalUnitName));
+                string resultBuildingName=node.ResultFromNode.HasValue&&graph.Nodes[node.ResultFromNode.Value].Intent is BuildStructureIntent boundBuilding
+                    ?Words(CommanderIntentCatalog.GetStructureDisplayName(boundBuilding.StructureType)):null;
+                text.Append(node.Index + 1).Append(". ").Append(Describe(node.Intent, canonicalUnitName,resultBuildingName));
+                if (node.Intent is EnsureUnitCountIntent units && !units.NewProductionCount.HasValue)
+                    foreach (var quote in graph.ProductionExpectations)
+                        if (quote.NodeIndex == node.Index)
+                            text.Append("; expected ").Append(quote.NewCount).Append(" newly produced (existing and queued count toward the total)");
                 if (node.DependsOn.Count > 0)
                 {
-                    text.Append("; after");
-                    foreach (int dependency in node.DependsOn) text.Append(' ').Append(dependency + 1);
+                    text.Append("; after ").Append(string.Join(", ",node.DependsOn.Select(d=>"step "+(d+1))));
                 }
                 if (node.ProducerFromNode.HasValue)
-                    text.Append("; only new producer from step ").Append(node.ProducerFromNode.Value + 1);
+                    text.Append("; ").Append(ProducerDescription(graph,node.ProducerFromNode.Value));
                 if (node.ResultFromNode.HasValue)
-                    text.Append("; only exact result from step ").Append(node.ResultFromNode.Value + 1);
+                    text.Append("; ").Append(ResultDescription(graph,node.ResultFromNode.Value));
+                if(dynamicSource!=null) AppendEffectBindings(text,graph,dynamicSource);
                 foreach (var constraint in node.Intent.Constraints)
                 {
-                    if (constraint is ProtectedResourceConstraint floor)
-                        text.Append("; protect ").Append(floor.Resource).Append(" workers >= ")
-                            .Append(floor.MinimumWorkers?.ToString() ?? "current count");
-                    else if (constraint is PreferredWorkersConstraint workers)
-                        text.Append("; workers ").Append(workers.WorkerSource);
-                    else if (constraint is MaximumQueueConstraint queue)
-                        text.Append("; maximum queue ").Append(queue.MaximumQueue);
-                    else if (constraint is NoConstructionConstraint)
-                        text.Append("; construction forbidden (new and resumed)");
-                    else if (constraint is ResourceSourceConstraint source)
-                        text.Append("; prepare ").Append(source.Resource).Append(" only from ").Append(source.SourceKind);
-                    else throw new ArgumentException("Unsupported preview constraint.");
+                    // Lowering retains the immutable shared constraint objects. Print
+                    // those once below, including ones not attached to this effect.
+                    if(graph.DynamicProgram?.Constraints.Contains(constraint)==true)continue;
+                    text.Append("; ").Append(ConstraintDescription(constraint));
                 }
                 text.Append('\n');
             }
             if (graph.DynamicProgram != null)
             {
-                text.Append("Symbolic restrictions (fixed by this plan):\n");
-                foreach (var node in graph.DynamicProgram.Nodes)
+                AppendSelections(text,graph);
+                if(graph.DynamicProgram.Constraints.Count>0)
                 {
-                    text.Append("  ").Append(node.Id).Append(": ").Append(node.Primitive.Id).Append('(');
-                    bool separator = false;
-                    foreach (var parameter in node.Parameters.OrderBy(p => p.Key, StringComparer.Ordinal))
-                    {
-                        if (separator) text.Append(", ");
-                        separator = true;
-                        text.Append(parameter.Key).Append('=').Append(parameter.Value is int amount
-                            ? amount.ToString(System.Globalization.CultureInfo.InvariantCulture)
-                            : (string)parameter.Value);
-                    }
-                    foreach (var input in node.Inputs.OrderBy(p => p.Key, StringComparer.Ordinal))
-                    {
-                        if (separator) text.Append(", ");
-                        separator = true;
-                        text.Append(input.Key).Append("=result:").Append(input.Value);
-                    }
-                    text.Append(')');
-                    if (node.DependsOn.Count > 0)
-                        text.Append(" after ").Append(string.Join(",", node.DependsOn));
-                    text.Append('\n');
+                    text.Append("Shared restrictions:\n");
+                    foreach(var constraint in graph.DynamicProgram.Constraints)
+                        text.Append("  ").Append(ConstraintDescription(constraint)).Append('\n');
                 }
                 text.Append("Worker selections are frozen once; partition roles cannot overlap. "
                     + "Locations use map directions and footprint-to-footprint clear gaps within bounded tolerance.\n");
@@ -209,33 +192,40 @@ namespace OpenEmpires
                 Array.AsReadOnly(new[] { new CommanderSemanticGraphNode(0, intent, Array.Empty<int>(), null, null) }),
                 Array.AsReadOnly(new[] { 0 })));
 
-        private static string Describe(CommanderIntent intent, string canonicalUnitName = null)
+        private static string Describe(CommanderIntent intent, string canonicalUnitName = null,string resultBuildingName=null)
         {
             if (intent is EnsureUnitCountIntent units)
                 return units.NewProductionCount.HasValue
                     ? "Produce " + units.NewProductionCount.Value + " new " + (canonicalUnitName ?? CommanderIntentCatalog.GetUnitDisplayName(units.UnitType))
                     : "Ensure " + (canonicalUnitName ?? CommanderIntentCatalog.GetUnitDisplayName(units.UnitType)) + " total " + units.TargetTotal;
             if (intent is BuildStructureIntent build)
-                return "Build " + build.Count + " " + build.StructureType
-                    + (build.PlacementAnchorSelector.HasValue ? "; " + build.PlacementRelation
-                        + " " + build.PlacementAnchorSelector + " ordinal " + build.PlacementAnchorOrdinal
-                        + "; footprint gap " + build.ClearGapTiles + "; resource " + build.PlacementResourceType : "");
+                return "Build " + build.Count + " " + Words(CommanderIntentCatalog.GetStructureDisplayName(build.StructureType))
+                    + (build.PlacementAnchorSelector.HasValue ? "; " + Relation(build.PlacementRelation?.ToString())
+                        + " " + Anchor(build.PlacementAnchorSelector.Value.ToString())
+                        + (build.PlacementAnchorOrdinal.HasValue?" number "+build.PlacementAnchorOrdinal:"")
+                        + "; " + (build.ClearGapTiles??1) + "-tile clear gap between footprints"
+                        + (build.PlacementResourceType.HasValue?" ("+build.PlacementResourceType+")":"") : "");
             if (intent is AllocateWorkersIntent workers)
             {
                 var a = workers.Allocation;
-                return "Allocate workers " + a.Mode + " " + a.CountMode + " " + a.Count
-                    + "; " + a.Workers.State + " from " + a.Workers.CurrentResource
-                    + " to " + a.Destination.Resource + " source " + a.Destination.SourceKind;
+                string selection=WorkerDescription(a.Workers.State.ToString(),a.Workers.CurrentResource?.ToString());
+                string quantity=a.CountMode==CommanderWorkerCountMode.AllMatching
+                    ? "Assign all currently "+selection+" (one-time snapshot)"
+                    : a.Mode==CommanderWorkerAllocationMode.TargetTotal?"Target "+a.Count+" villagers in total"
+                    : a.Mode==CommanderWorkerAllocationMode.Additional?"Assign "+a.Count+" additional "+selection
+                    : "Assign exactly "+a.Count+" "+selection;
+                return quantity+" to gather "+Destination(a.Destination.Resource,a.Destination.SourceKind);
             }
             if (intent is SetResourceAllocationIntent allocation)
-                return "Allocate " + allocation.WorkerCount + " workers " + allocation.Mode + " " + allocation.Resource;
+                return (allocation.Mode==ResourceAllocationMode.Increase?"Assign ":"Target ")
+                    + (allocation.WorkerCount??(allocation.Mode==ResourceAllocationMode.Increase?1:throw new ArgumentException("Missing exact worker count.")))
+                    + (allocation.Mode==ResourceAllocationMode.Increase?" additional villagers":" villagers in total")
+                    + " to gather " + allocation.Resource;
             if (intent is ReachAgeIntent age)
-                return "Reach " + age.RequestedTarget + " (resolved age " + age.TargetAge + ")";
+                return "Reach " + (age.RequestedTarget==CommanderSemanticAgeTarget.Next?"the next age: ":"")
+                    + ((CommanderSemanticAgeTarget)age.TargetAge) + " Age";
             if (intent is CapabilityActionIntent action)
-                return action.ActionType + " " + action.UnitSelector.Count + " " + action.UnitSelector.Kind
-                    + " unit type " + action.UnitSelector.UnitType + "; location " + action.LocationSelector.Kind
-                    + " " + action.LocationSelector.ResourceType + "; radius " + action.LocationSelector.RadiusTiles
-                    + "; structure " + action.StructureType + "; technology " + action.Technology;
+                return DescribeAction(action,resultBuildingName);
             throw new ArgumentException("Unsupported preview effect.");
         }
     }

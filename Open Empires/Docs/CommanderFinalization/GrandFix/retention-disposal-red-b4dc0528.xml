@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 16:16:11Z" end-time="2026-10-08 16:16:12Z" duration="1.4547297">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1444" result="Failed" site="Child" start-time="2026-10-08 16:16:11Z" end-time="2026-10-08 16:16:12Z" duration="1.454730" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2662" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1444" result="Failed" site="Child" start-time="2026-10-08 16:16:11Z" end-time="2026-10-08 16:16:12Z" duration="1.351750" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="27016" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2663" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1444" result="Failed" site="Child" start-time="2026-10-08 16:16:11Z" end-time="2026-10-08 16:16:12Z" duration="1.264359" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2664" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1444" result="Failed" site="Child" start-time="2026-10-08 16:16:11Z" end-time="2026-10-08 16:16:12Z" duration="1.164863" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="2023" name="CommanderPhase4D1Tests" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" testcasecount="53" result="Failed" site="Child" start-time="2026-10-08 16:16:11Z" end-time="2026-10-08 16:16:12Z" duration="1.062995" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase4D1" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="2027" name="DisposalAtRevisionExhaustion_StopsOwnedChildrenAndReleasesReservations" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.DisposalAtRevisionExhaustion_StopsOwnedChildrenAndReleasesReservations" methodname="DisposalAtRevisionExhaustion_StopsOwnedChildrenAndReleasesReservations" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="1277484640" result="Failed" start-time="2026-10-08 16:16:11Z" end-time="2026-10-08 16:16:12Z" duration="0.453759" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Disposed planner must not leave live child work.
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4D1Tests.DisposalAtRevisionExhaustion_StopsOwnedChildrenAndReleasesReservations () [0x000c2] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4D1Tests.cs:118
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.
+[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.
+[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.
+[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.
+[StrategicPlanner] Plan #1 milestone active: Economic Foundation.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[Commander] Goal #3 submitted: ResourceAllocation
+]]></output>
+            </test-case>
+            <test-case id="2026" name="RetiredRequestChurn_PreservesActiveRootAndContinuation" fullname="OpenEmpires.Tests.CommanderPhase4D1Tests.RetiredRequestChurn_PreservesActiveRootAndContinuation" methodname="RetiredRequestChurn_PreservesActiveRootAndContinuation" classname="OpenEmpires.Tests.CommanderPhase4D1Tests" runstate="Runnable" seed="996836594" result="Passed" start-time="2026-10-08 16:16:12Z" end-time="2026-10-08 16:16:12Z" duration="0.499493" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.
+[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.
+[StrategicPlanner] Plan #1 milestone active: Economy.
+[Commander] Goal #1 submitted: ResourceAllocation
+[Commander] Goal #2 submitted: ResourceAllocation
+[StrategicPlanner] Strategic intent #2 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #3 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #4 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #5 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #6 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #7 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #8 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #9 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #10 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #11 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #12 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #13 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #14 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #15 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #16 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #17 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #18 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #19 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #20 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #21 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #22 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #23 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #24 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #25 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #26 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #27 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #28 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #29 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #30 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #31 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #32 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #33 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #34 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #35 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #36 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #37 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #38 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #39 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #40 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #41 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #42 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #43 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #44 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #45 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #46 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #47 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #48 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #49 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #50 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #51 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #52 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #53 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #54 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #55 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #56 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #57 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #58 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #59 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #60 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #61 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #62 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #63 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #64 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #65 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #66 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #67 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #68 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #69 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #70 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #71 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #72 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #73 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #74 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #75 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #76 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #77 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #78 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #79 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #80 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #81 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #82 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #83 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #84 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #85 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #86 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #87 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #88 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #89 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #90 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #91 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #92 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #93 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #94 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #95 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #96 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #97 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #98 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #99 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #100 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #101 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #102 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #103 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #104 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #105 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #106 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #107 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #108 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #109 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #110 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #111 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #112 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #113 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #114 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #115 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #116 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #117 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #118 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #119 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #120 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #121 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #122 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #123 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #124 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #125 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #126 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #127 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #128 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[StrategicPlanner] Strategic intent #129 created: 999 for player 0.
+[StrategicPlanner] Strategic intent rejected: The strategic objective type is not recognized.
+[Commander] Goal #1: status=Completed owned=8 queued=0; 8/4 villagers assigned to Food.
+[Commander] Goal #2: status=Completed owned=8 queued=0; 8/4 villagers assigned to Wood.
+[StrategicPlanner] Plan #1 milestone completed: Economy.
+[StrategicPlanner] Reservation #1 created for plan #1: 150 Wood.
+[StrategicPlanner] Plan #1 milestone active: Production.
+[Commander] Goal #3 submitted: BuildStructure
+[Commander] Goal #3: status=Blocked owned=0 queued=0; No visible, reachable buildable location was found for ArcheryRange.
+[Commander] Goal #3 cancelled.
+[StrategicPlanner] Reservation #1 cancelled for plan #1.
+[StrategicPlanner] Plan #1 cancelled.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

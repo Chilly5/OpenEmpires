@@ -23,7 +23,7 @@ namespace OpenEmpires
 
         private void TrackIssuedTraining(CommanderGoal goal, ICommand command)
         {
-            if (!(goal is EnsureUnitCountGoal units) || !units.HasResultConsumer
+            if (!(goal is EnsureUnitCountGoal units)
                 || !(command is TrainUnitCommand train)) return;
             pendingTrainingOrigins.RemoveAll(c => !simulation.HasPendingTrainingOrigin(c));
             if (pendingTrainingOrigins.Count >= 512)

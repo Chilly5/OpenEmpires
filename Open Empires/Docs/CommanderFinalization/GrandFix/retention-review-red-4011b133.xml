@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Failed(Child)" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 15:39:51Z" end-time="2026-10-08 15:39:53Z" duration="2.0436089">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1440" result="Failed" site="Child" start-time="2026-10-08 15:39:51Z" end-time="2026-10-08 15:39:53Z" duration="2.043609" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2658" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1440" result="Failed" site="Child" start-time="2026-10-08 15:39:51Z" end-time="2026-10-08 15:39:53Z" duration="1.943180" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="27016" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2659" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1440" result="Failed" site="Child" start-time="2026-10-08 15:39:51Z" end-time="2026-10-08 15:39:53Z" duration="1.857479" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2660" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1440" result="Failed" site="Child" start-time="2026-10-08 15:39:51Z" end-time="2026-10-08 15:39:53Z" duration="1.757923" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1244" name="CommanderGrandFixRetentionTests" fullname="OpenEmpires.Tests.CommanderGrandFixRetentionTests" classname="OpenEmpires.Tests.CommanderGrandFixRetentionTests" runstate="Runnable" testcasecount="15" result="Failed" site="Child" start-time="2026-10-08 15:39:51Z" end-time="2026-10-08 15:39:53Z" duration="1.655956" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1256" name="ConstructorFailureInTrustedFactory_ReleasesUnboundSlot" fullname="OpenEmpires.Tests.CommanderGrandFixRetentionTests.ConstructorFailureInTrustedFactory_ReleasesUnboundSlot" methodname="ConstructorFailureInTrustedFactory_ReleasesUnboundSlot" classname="OpenEmpires.Tests.CommanderGrandFixRetentionTests" runstate="Runnable" seed="1598334912" result="Failed" start-time="2026-10-08 15:39:51Z" end-time="2026-10-08 15:39:52Z" duration="0.405225" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: 0
+  But was:  1
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixRetentionTests.ConstructorFailureInTrustedFactory_ReleasesUnboundSlot () [0x00012] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixRetentionTests.cs:119
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1259" name="DeniedPipelineDecisions_RetireIncomingOwnedClaims" fullname="OpenEmpires.Tests.CommanderGrandFixRetentionTests.DeniedPipelineDecisions_RetireIncomingOwnedClaims" classname="OpenEmpires.Tests.CommanderGrandFixRetentionTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-08 15:39:52Z" end-time="2026-10-08 15:39:52Z" duration="0.778861" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1257" name="DeniedPipelineDecisions_RetireIncomingOwnedClaims(False)" fullname="OpenEmpires.Tests.CommanderGrandFixRetentionTests.DeniedPipelineDecisions_RetireIncomingOwnedClaims(False)" methodname="DeniedPipelineDecisions_RetireIncomingOwnedClaims" classname="OpenEmpires.Tests.CommanderGrandFixRetentionTests" runstate="Runnable" seed="1368144812" result="Failed" start-time="2026-10-08 15:39:52Z" end-time="2026-10-08 15:39:52Z" duration="0.419714" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixRetentionTests.DeniedPipelineDecisions_RetireIncomingOwnedClaims (System.Boolean approved) [0x00065] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixRetentionTests.cs:129
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: EconomicExpansion for player 0.
+]]></output>
+              </test-case>
+              <test-case id="1258" name="DeniedPipelineDecisions_RetireIncomingOwnedClaims(True)" fullname="OpenEmpires.Tests.CommanderGrandFixRetentionTests.DeniedPipelineDecisions_RetireIncomingOwnedClaims(True)" methodname="DeniedPipelineDecisions_RetireIncomingOwnedClaims" classname="OpenEmpires.Tests.CommanderGrandFixRetentionTests" runstate="Runnable" seed="871554619" result="Failed" start-time="2026-10-08 15:39:52Z" end-time="2026-10-08 15:39:52Z" duration="0.355925" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixRetentionTests.DeniedPipelineDecisions_RetireIncomingOwnedClaims (System.Boolean approved) [0x00065] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixRetentionTests.cs:129
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[[StrategicPlanner] Strategic intent #1 created: EconomicExpansion for player 0.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-case id="1260" name="GarrisonedReservedWorker_RetainsClaimUntilGoalRelease" fullname="OpenEmpires.Tests.CommanderGrandFixRetentionTests.GarrisonedReservedWorker_RetainsClaimUntilGoalRelease" methodname="GarrisonedReservedWorker_RetainsClaimUntilGoalRelease" classname="OpenEmpires.Tests.CommanderGrandFixRetentionTests" runstate="Runnable" seed="52775042" result="Failed" start-time="2026-10-08 15:39:52Z" end-time="2026-10-08 15:39:53Z" duration="0.363789" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: 7
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixRetentionTests.GarrisonedReservedWorker_RetainsClaimUntilGoalRelease () [0x0004a] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixRetentionTests.cs:138
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

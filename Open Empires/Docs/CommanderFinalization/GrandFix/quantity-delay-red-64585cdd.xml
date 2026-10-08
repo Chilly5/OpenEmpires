@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Failed(Child)" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 05:26:04Z" end-time="2026-10-08 05:26:09Z" duration="4.5382229">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1330" result="Failed" site="Child" start-time="2026-10-08 05:26:04Z" end-time="2026-10-08 05:26:09Z" duration="4.538223" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2527" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1330" result="Failed" site="Child" start-time="2026-10-08 05:26:04Z" end-time="2026-10-08 05:26:09Z" duration="4.375850" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2528" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1330" result="Failed" site="Child" start-time="2026-10-08 05:26:04Z" end-time="2026-10-08 05:26:09Z" duration="4.333587" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2529" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1330" result="Failed" site="Child" start-time="2026-10-08 05:26:05Z" end-time="2026-10-08 05:26:09Z" duration="4.225423" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1155" name="CommanderGrandFixQuantityTests" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" testcasecount="20" result="Failed" site="Child" start-time="2026-10-08 05:26:05Z" end-time="2026-10-08 05:26:09Z" duration="4.111468" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="ParameterizedMethod" id="1179" name="DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-08 05:26:05Z" end-time="2026-10-08 05:26:09Z" duration="4.002167" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1176" name="DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit(False,1)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit(False,1)" methodname="DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="1036087999" result="Failed" start-time="2026-10-08 05:26:05Z" end-time="2026-10-08 05:26:07Z" duration="1.800445" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  An in-flight order consumes both new-result and producer queue capacity.
+  Expected: <empty>
+  But was:  < OpenEmpires.TrainUnitCommand >
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixQuantityTests.DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit (System.Boolean newUnits, System.Int32 count) [0x0013b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixQuantityTests.cs:201
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #2 submitted: CapabilityAction
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+]]></output>
+              </test-case>
+              <test-case id="1177" name="DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit(True,1)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit(True,1)" methodname="DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="970505608" result="Failed" start-time="2026-10-08 05:26:07Z" end-time="2026-10-08 05:26:08Z" duration="0.992544" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  An in-flight order consumes both new-result and producer queue capacity.
+  Expected: <empty>
+  But was:  < OpenEmpires.TrainUnitCommand >
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixQuantityTests.DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit (System.Boolean newUnits, System.Int32 count) [0x0013b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixQuantityTests.cs:201
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #2 submitted: CapabilityAction
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+]]></output>
+              </test-case>
+              <test-case id="1178" name="DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit(True,2)" fullname="OpenEmpires.Tests.CommanderGrandFixQuantityTests.DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit(True,2)" methodname="DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit" classname="OpenEmpires.Tests.CommanderGrandFixQuantityTests" runstate="Runnable" seed="1787345211" result="Failed" start-time="2026-10-08 05:26:08Z" end-time="2026-10-08 05:26:09Z" duration="1.070563" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  An in-flight order consumes both new-result and producer queue capacity.
+  Expected: <empty>
+  But was:  < OpenEmpires.TrainUnitCommand >
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixQuantityTests.DelayedTrainingAcceptance_DoesNotDuplicateExactCountOrExceedQueueLimit (System.Boolean newUnits, System.Int32 count) [0x0013b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixQuantityTests.cs:201
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #2 submitted: CapabilityAction
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+[Commander] Goal #1: status=Executing owned=0 queued=0; Queueing Spearman at Barracks #1.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

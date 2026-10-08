@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Failed(Child)" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-07 19:49:23Z" end-time="2026-10-07 19:49:25Z" duration="1.8263146">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1180" result="Failed" site="Child" start-time="2026-10-07 19:49:23Z" end-time="2026-10-07 19:49:25Z" duration="1.826315" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2349" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1180" result="Failed" site="Child" start-time="2026-10-07 19:49:23Z" end-time="2026-10-07 19:49:25Z" duration="1.714634" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2350" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1180" result="Failed" site="Child" start-time="2026-10-07 19:49:23Z" end-time="2026-10-07 19:49:25Z" duration="1.636090" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2351" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1180" result="Failed" site="Child" start-time="2026-10-07 19:49:23Z" end-time="2026-10-07 19:49:25Z" duration="1.527053" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1032" name="CommanderGrandFixNativeOwnershipTests" fullname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests" classname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-10-07 19:49:23Z" end-time="2026-10-07 19:49:25Z" duration="1.416945" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1034" name="ActiveContext_RejectsSecondContextUntilReleaseCompletes" fullname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.ActiveContext_RejectsSecondContextUntilReleaseCompletes" methodname="ActiveContext_RejectsSecondContextUntilReleaseCompletes" classname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests" runstate="Runnable" seed="1233831135" result="Failed" start-time="2026-10-07 19:49:23Z" end-time="2026-10-07 19:49:24Z" duration="0.326732" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Native context needs explicit call-owned, bounded, nonblocking lifetime.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.Context (System.Func`1[TResult] create, System.Func`3[T1,T2,TResult] infer, System.Action`1[T] free) [0x00019] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeOwnershipTests.cs:15
+at OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.ActiveContext_RejectsSecondContextUntilReleaseCompletes () [0x0005e] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeOwnershipTests.cs:44
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1036" name="DisposedDuringInitialization_DropsNewContextInsteadOfPublishingIt" fullname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.DisposedDuringInitialization_DropsNewContextInsteadOfPublishingIt" methodname="DisposedDuringInitialization_DropsNewContextInsteadOfPublishingIt" classname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests" runstate="Runnable" seed="749871457" result="Failed" start-time="2026-10-07 19:49:24Z" end-time="2026-10-07 19:49:24Z" duration="0.294343" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Native context needs explicit call-owned, bounded, nonblocking lifetime.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.Context (System.Func`1[TResult] create, System.Func`3[T1,T2,TResult] infer, System.Action`1[T] free) [0x00019] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeOwnershipTests.cs:15
+at OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.DisposedDuringInitialization_DropsNewContextInsteadOfPublishingIt () [0x00053] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeOwnershipTests.cs:75
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1033" name="DisposeWhileNativeCallRuns_ReturnsAndFreesExactlyAfterCall" fullname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.DisposeWhileNativeCallRuns_ReturnsAndFreesExactlyAfterCall" methodname="DisposeWhileNativeCallRuns_ReturnsAndFreesExactlyAfterCall" classname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests" runstate="Runnable" seed="1774628009" result="Failed" start-time="2026-10-07 19:49:24Z" end-time="2026-10-07 19:49:24Z" duration="0.323630" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Native context needs explicit call-owned, bounded, nonblocking lifetime.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.Context (System.Func`1[TResult] create, System.Func`3[T1,T2,TResult] infer, System.Action`1[T] free) [0x00019] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeOwnershipTests.cs:15
+at OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.DisposeWhileNativeCallRuns_ReturnsAndFreesExactlyAfterCall () [0x0005f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeOwnershipTests.cs:26
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1035" name="FailedInferenceAndDisposedContext_DoNotDoubleFreeOrInvokeAgain" fullname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.FailedInferenceAndDisposedContext_DoNotDoubleFreeOrInvokeAgain" methodname="FailedInferenceAndDisposedContext_DoNotDoubleFreeOrInvokeAgain" classname="OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests" runstate="Runnable" seed="1932230375" result="Failed" start-time="2026-10-07 19:49:24Z" end-time="2026-10-07 19:49:25Z" duration="0.326134" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Native context needs explicit call-owned, bounded, nonblocking lifetime.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.Context (System.Func`1[TResult] create, System.Func`3[T1,T2,TResult] infer, System.Action`1[T] free) [0x00019] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeOwnershipTests.cs:15
+at OpenEmpires.Tests.CommanderGrandFixNativeOwnershipTests.FailedInferenceAndDisposedContext_DoNotDoubleFreeOrInvokeAgain () [0x00037] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeOwnershipTests.cs:60
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

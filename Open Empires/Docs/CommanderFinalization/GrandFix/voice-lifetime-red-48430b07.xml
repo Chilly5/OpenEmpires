@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="7" result="Failed(Child)" total="7" passed="0" failed="7" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-07 19:12:51Z" end-time="2026-10-07 19:12:59Z" duration="8.0003091">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1171" result="Failed" site="Child" start-time="2026-10-07 19:12:51Z" end-time="2026-10-07 19:12:59Z" duration="8.000309" total="7" passed="0" failed="7" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2337" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1171" result="Failed" site="Child" start-time="2026-10-07 19:12:52Z" end-time="2026-10-07 19:12:59Z" duration="7.899444" total="7" passed="0" failed="7" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2338" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1171" result="Failed" site="Child" start-time="2026-10-07 19:12:52Z" end-time="2026-10-07 19:12:59Z" duration="7.808777" total="7" passed="0" failed="7" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2339" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1171" result="Failed" site="Child" start-time="2026-10-07 19:12:52Z" end-time="2026-10-07 19:12:59Z" duration="7.699639" total="7" passed="0" failed="7" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1061" name="CommanderGrandFixVoiceLifetimeTests" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceLifetimeTests" classname="OpenEmpires.Tests.CommanderGrandFixVoiceLifetimeTests" runstate="Runnable" testcasecount="7" result="Failed" site="Child" start-time="2026-10-07 19:12:52Z" end-time="2026-10-07 19:12:59Z" duration="7.585671" total="7" passed="0" failed="7" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1062" name="CancelIgnoringProvider_ReturnsPromptlyAndKeepsLateResultInert" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceLifetimeTests.CancelIgnoringProvider_ReturnsPromptlyAndKeepsLateResultInert" methodname="CancelIgnoringProvider_ReturnsPromptlyAndKeepsLateResultInert" classname="OpenEmpires.Tests.CommanderGrandFixVoiceLifetimeTests" runstate="Runnable" seed="428959804" result="Failed" start-time="2026-10-07 19:12:52Z" end-time="2026-10-07 19:12:53Z" duration="0.597503" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Cancellation must not await a provider that ignores the token.
+  Expected: same as <System.Threading.Tasks.Task`1[OpenEmpires.CommanderSpeechToTextResult]>
+  But was:  <System.Threading.Tasks.Task+DelayPromise>
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixVoiceLifetimeTests.CancelIgnoringProvider_ReturnsPromptlyAndKeepsLateResultInert () [0x00186] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixVoiceLifetimeTests.cs:25
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[CommanderVoice] Discarding stale transcription from previous session.
+]]></output>
+            </test-case>
+            <test-case id="1065" name="CancelledUnfinishedInference_RejectsReplacementCaptureInsteadOfQueuingWork" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceLifetimeTests.CancelledUnfinishedInference_RejectsReplacementCaptureInsteadOfQueuingWork" methodname="CancelledUnfinishedInference_RejectsReplacementCaptureInsteadOfQueuingWork" classname="OpenEmpires.Tests.CommanderGrandFixVoiceLifetimeTests" runstate="Runnable" seed="984278437" result="Failed" start-time="2026-10-07 19:12:53Z" end-time="2026-10-07 19:12:53Z" duration="0.187312" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixVoiceLifetimeTests.CancelledUnfinishedInference_RejectsReplacementCaptureInsteadOfQueuingWork () [0x000d2] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixVoiceLifetimeTests.cs:60
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[CommanderVoice] Discarding stale transcription from previous session.
+]]></output>
+            </test-case>
+            <test-case id="1066" name="Conversion_DefaultPolicyPreservesThirtySecondTail" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceLifetimeTests.Conversion_DefaultPolicyPreservesThirtySecondTail" methodname="Conversion_DefaultPolicyPreservesThirtySecondTail" classname="OpenEmpires.Tests.CommanderGrandFixVoiceLifetimeTests" runstate="Runnable" seed="1189766029" result="Failed" start-time="2026-10-07 19:12:53Z" end-time="2026-10-07 19:12:53Z" duration="0.077741" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: 480000
+  But was:  240000
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixVoiceLifetimeTests.Conversion_DefaultPolicyPreservesThirtySecondTail () [0x0002c] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixVoiceLifetimeTests.cs:67
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1063" name="DeadlineIgnoringProvider_DoesNotSubmitSuccessfulLateText" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceLifetimeTests.DeadlineIgnoringProvider_DoesNotSubmitSuccessfulLateText" methodname="DeadlineIgnoringProvider_DoesNotSubmitSuccessfulLateText" classname="OpenEmpires.Tests.CommanderGrandFixVoiceLifetimeTests" runstate="Runnable" seed="616982149" result="Failed" start-time="2026-10-07 19:12:53Z" end-time="2026-10-07 19:12:53Z" duration="0.576285" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: same as <System.Threading.Tasks.Task`1[OpenEmpires.CommanderSpeechToTextResult]>
+  But was:  <System.Threading.Tasks.Task+DelayPromise>
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixVoiceLifetimeTests.DeadlineIgnoringProvider_DoesNotSubmitSuccessfulLateText () [0x001a3] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixVoiceLifetimeTests.cs:38
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1064" name="Dispose_CancelsTokenAndDefersProviderReleaseUntilActualInferenceEnds" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceLifetimeTests.Dispose_CancelsTokenAndDefersProviderReleaseUntilActualInferenceEnds" methodname="Dispose_CancelsTokenAndDefersProviderReleaseUntilActualInferenceEnds" classname="OpenEmpires.Tests.CommanderGrandFixVoiceLifetimeTests" runstate="Runnable" seed="1974068192" result="Failed" start-time="2026-10-07 19:12:53Z" end-time="2026-10-07 19:12:54Z" duration="0.229990" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixVoiceLifetimeTests.Dispose_CancelsTokenAndDefersProviderReleaseUntilActualInferenceEnds () [0x00183] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixVoiceLifetimeTests.cs:50
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[CommanderVoice] Discarding stale transcription from previous session.
+]]></output>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1069" name="PublicInitialize_InvalidatesInFlightVoiceBeforeAdoptingRuntime" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceLifetimeTests.PublicInitialize_InvalidatesInFlightVoiceBeforeAdoptingRuntime" classname="OpenEmpires.Tests.CommanderGrandFixVoiceLifetimeTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-07 19:12:54Z" end-time="2026-10-07 19:12:59Z" duration="5.758508" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1067" name="PublicInitialize_InvalidatesInFlightVoiceBeforeAdoptingRuntime(False)" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceLifetimeTests.PublicInitialize_InvalidatesInFlightVoiceBeforeAdoptingRuntime(False)" methodname="PublicInitialize_InvalidatesInFlightVoiceBeforeAdoptingRuntime" classname="OpenEmpires.Tests.CommanderGrandFixVoiceLifetimeTests" runstate="Runnable" seed="1610273640" result="Failed" start-time="2026-10-07 19:12:54Z" end-time="2026-10-07 19:12:57Z" duration="3.165335" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: <empty>
+  But was:  "make four spearmen"
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixVoiceLifetimeTests.PublicInitialize_InvalidatesInFlightVoiceBeforeAdoptingRuntime (System.Boolean auto) [0x00245] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixVoiceLifetimeTests.cs:89
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1068" name="PublicInitialize_InvalidatesInFlightVoiceBeforeAdoptingRuntime(True)" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceLifetimeTests.PublicInitialize_InvalidatesInFlightVoiceBeforeAdoptingRuntime(True)" methodname="PublicInitialize_InvalidatesInFlightVoiceBeforeAdoptingRuntime" classname="OpenEmpires.Tests.CommanderGrandFixVoiceLifetimeTests" runstate="Runnable" seed="2118161139" result="Failed" start-time="2026-10-07 19:12:57Z" end-time="2026-10-07 19:12:59Z" duration="2.489102" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: 0
+  But was:  1
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixVoiceLifetimeTests.PublicInitialize_InvalidatesInFlightVoiceBeforeAdoptingRuntime (System.Boolean auto) [0x00230] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixVoiceLifetimeTests.cs:89
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] intent=admitted;goal-submitted=True
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

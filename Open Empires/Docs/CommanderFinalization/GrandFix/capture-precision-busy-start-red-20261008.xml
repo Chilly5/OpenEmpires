@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="5" result="Failed(Child)" total="5" passed="1" failed="4" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 01:17:45Z" end-time="2026-10-08 01:17:47Z" duration="2.1674251">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1257" result="Failed" site="Child" start-time="2026-10-08 01:17:45Z" end-time="2026-10-08 01:17:47Z" duration="2.167425" total="5" passed="1" failed="4" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2441" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1257" result="Failed" site="Child" start-time="2026-10-08 01:17:45Z" end-time="2026-10-08 01:17:47Z" duration="2.035769" total="5" passed="1" failed="4" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2442" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1257" result="Failed" site="Child" start-time="2026-10-08 01:17:46Z" end-time="2026-10-08 01:17:47Z" duration="1.968643" total="5" passed="1" failed="4" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2443" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1257" result="Failed" site="Child" start-time="2026-10-08 01:17:46Z" end-time="2026-10-08 01:17:47Z" duration="1.857723" total="5" passed="1" failed="4" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1043" name="CommanderGrandFixNativeCaptureTests" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" testcasecount="25" result="Failed" site="Child" start-time="2026-10-08 01:17:46Z" end-time="2026-10-08 01:17:46Z" duration="0.274426" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1071" name="NativeOpeningMayInitiallyReportNotRecording_ThenBecomesListening" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.NativeOpeningMayInitiallyReportNotRecording_ThenBecomesListening" methodname="NativeOpeningMayInitiallyReportNotRecording_ThenBecomesListening" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" seed="1176160179" result="Failed" start-time="2026-10-08 01:17:46Z" end-time="2026-10-08 01:17:46Z" duration="0.092442" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  A pending native start is not an early terminal capture.
+  Expected: False
+  But was:  True
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.NativeOpeningMayInitiallyReportNotRecording_ThenBecomesListening () [0x0002e] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:174
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1070" name="QuarantinedNativeStop_IsExplainedAsBusyNotWrongConnection" fullname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.QuarantinedNativeStop_IsExplainedAsBusyNotWrongConnection" methodname="QuarantinedNativeStop_IsExplainedAsBusyNotWrongConnection" classname="OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests" runstate="Runnable" seed="400259176" result="Failed" start-time="2026-10-08 01:17:46Z" end-time="2026-10-08 01:17:46Z" duration="0.049599" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "finishing"
+  But was:  "Could not start recording. Check microphone connection."
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixNativeCaptureTests.QuarantinedNativeStop_IsExplainedAsBusyNotWrongConnection () [0x000be] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixNativeCaptureTests.cs:167
+]]></stack-trace>
+              </failure>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1094" name="CommanderGrandFixPresentationTests" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" testcasecount="29" result="Failed" site="Child" start-time="2026-10-08 01:17:46Z" end-time="2026-10-08 01:17:47Z" duration="1.470054" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="ParameterizedMethod" id="1127" name="VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-08 01:17:46Z" end-time="2026-10-08 01:17:47Z" duration="1.441762" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1124" name="VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange(3.0f,&quot;3 s&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange(3.0f,&quot;3 s&quot;)" methodname="VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="924975774" result="Passed" start-time="2026-10-08 01:17:46Z" end-time="2026-10-08 01:17:47Z" duration="0.685348" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1125" name="VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange(3.25f,&quot;3.25 s&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange(3.25f,&quot;3.25 s&quot;)" methodname="VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="866817535" result="Failed" start-time="2026-10-08 01:17:47Z" end-time="2026-10-08 01:17:47Z" duration="0.370389" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: String containing "3.25 s"
+  But was:  "Local mock translator ready.
+On device — hold V (3.3 s limit)"
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixPresentationTests.VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange (System.Single requested, System.String displayed) [0x00044] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixPresentationTests.cs:369
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1126" name="VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange(3.123457f,&quot;3.1234567 s&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange(3.123457f,&quot;3.1234567 s&quot;)" methodname="VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="486523594" result="Failed" start-time="2026-10-08 01:17:47Z" end-time="2026-10-08 01:17:47Z" duration="0.372014" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: String containing "3.1234567 s"
+  But was:  "Local mock translator ready.
+On device — hold V (3.1 s limit)"
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixPresentationTests.VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange (System.Single requested, System.String displayed) [0x00044] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixPresentationTests.cs:369
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

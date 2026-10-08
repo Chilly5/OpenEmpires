@@ -1,0 +1,24 @@
+{
+  "scope": "Offline Editor/Windows-native CPU comparison; two existing speech fixtures and generated two-second silence per model; no microphone, upload, semantic or gameplay call",
+  "binding": "whisper.unity 1.4.0 / e951e4a4c6e44c781b1d36bb8dc5bf1b7bae9687; whisper.cpp 1.7.5",
+  "language": "en",
+  "gpu": false,
+  "machine": {"processor":"13th Gen Intel(R) Core(TM) i5-13450HX","logicalProcessors":16,"memoryMB":16091,"graphics":"NVIDIA GeForce RTX 5050 Laptop GPU","os":"Windows 11 (10.0.26100)","note":"GPU listed for environment only; native comparison used CPU. Fresh-context load is not cold OS-cache evidence."},
+  "model_hashes": {"ggml-tiny.bin":"be07e048e1e599ad46341c8d2a135645097a538221678b7acdd1b1919c6e1b21","ggml-base.en.bin":"a03779c86df3323075f5e796cb2ce5029f00ec8869eee3fdfb897afe36c6d002"},
+  "speech_fixture_provenance": "Existing repository files; not a new labeled held-out human corpus, not upload-consented",
+  "wer": null,
+  "fps_memory_physical_capture": "not measured",
+  "results": [
+    {"model":"ggml-tiny.bin","initialized":true,"coldLoadMs":1848,"outputs":[
+      {"clip":"make_ten_spearmen.wav","success":true,"transcript":"Make 10 Spearman.","inferenceMs":709},
+      {"clip":"build_mill.wav","success":true,"transcript":"Build a mill near the berries my villagers are gathering.","inferenceMs":737},
+      {"clip":"generated_2s_silence","success":false,"transcript":"","inferenceMs":701}
+    ]},
+    {"model":"ggml-base.en.bin","initialized":true,"coldLoadMs":1744,"outputs":[
+      {"clip":"make_ten_spearmen.wav","success":true,"transcript":"Make 10 Spearman","inferenceMs":1339},
+      {"clip":"build_mill.wav","success":true,"transcript":"Build a mill near the berries my villagers are gathering.","inferenceMs":1354},
+      {"clip":"generated_2s_silence","success":true,"transcript":"you","inferenceMs":1357}
+    ]}
+  ],
+  "interpretation": "No demonstrated speech improvement on these two fixtures; base.en was slower and hallucinated silence. Keep tiny default; add narrow exact-zero waveform fail-closed guard. No general model-quality winner claim. Native contexts were released sequentially."
+}

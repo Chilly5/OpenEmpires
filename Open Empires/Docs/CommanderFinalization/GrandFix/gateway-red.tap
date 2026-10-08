@@ -1,0 +1,136 @@
+TAP version 13
+# Subtest: authenticated consented bounded WAV returns only correlated transcript data
+not ok 1 - authenticated consented bounded WAV returns only correlated transcript data
+  ---
+  duration_ms: 1.2656
+  type: 'test'
+  location: 'D:\\unity_projects\\OpenEmpires\\backend\\speech-gateway\\gateway.test.mjs:36:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module 'D:\\unity_projects\\OpenEmpires\\backend\\speech-gateway\\gateway.mjs' imported from D:\\unity_projects\\OpenEmpires\\backend\\speech-gateway\\gateway.test.mjs"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:275:11)
+    moduleResolve (node:internal/modules/esm/resolve:866:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:719:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:736:38)
+    ModuleLoader.resolveSync (node:internal/modules/esm/loader:765:52)
+    #resolve (node:internal/modules/esm/loader:701:17)
+    ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:621:35)
+    onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:650:32)
+    TracingChannel.tracePromise (node:diagnostics_channel:350:14)
+  ...
+# Subtest: no auth, wrong origin and missing/old consent reject before transcription
+not ok 2 - no auth, wrong origin and missing/old consent reject before transcription
+  ---
+  duration_ms: 1.1769
+  type: 'test'
+  location: 'D:\\unity_projects\\OpenEmpires\\backend\\speech-gateway\\gateway.test.mjs:43:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module 'D:\\unity_projects\\OpenEmpires\\backend\\speech-gateway\\gateway.mjs' imported from D:\\unity_projects\\OpenEmpires\\backend\\speech-gateway\\gateway.test.mjs"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:275:11)
+    moduleResolve (node:internal/modules/esm/resolve:866:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:719:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:736:38)
+    ModuleLoader.resolveSync (node:internal/modules/esm/loader:765:52)
+    #resolve (node:internal/modules/esm/loader:701:17)
+    ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:621:35)
+    onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:650:32)
+    TracingChannel.tracePromise (node:diagnostics_channel:350:14)
+  ...
+# Subtest: malformed container, invalid decoded duration and oversized upload never reach provider
+not ok 3 - malformed container, invalid decoded duration and oversized upload never reach provider
+  ---
+  duration_ms: 0.3947
+  type: 'test'
+  location: 'D:\\unity_projects\\OpenEmpires\\backend\\speech-gateway\\gateway.test.mjs:51:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module 'D:\\unity_projects\\OpenEmpires\\backend\\speech-gateway\\gateway.mjs' imported from D:\\unity_projects\\OpenEmpires\\backend\\speech-gateway\\gateway.test.mjs"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:275:11)
+    moduleResolve (node:internal/modules/esm/resolve:866:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:719:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:736:38)
+    ModuleLoader.resolveSync (node:internal/modules/esm/loader:765:52)
+    #resolve (node:internal/modules/esm/loader:701:17)
+    ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:621:35)
+    onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:650:32)
+    TracingChannel.tracePromise (node:diagnostics_channel:350:14)
+  ...
+# Subtest: duplicate job is single-use by authenticated owner and does not retranscribe
+not ok 4 - duplicate job is single-use by authenticated owner and does not retranscribe
+  ---
+  duration_ms: 0.3607
+  type: 'test'
+  location: 'D:\\unity_projects\\OpenEmpires\\backend\\speech-gateway\\gateway.test.mjs:59:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module 'D:\\unity_projects\\OpenEmpires\\backend\\speech-gateway\\gateway.mjs' imported from D:\\unity_projects\\OpenEmpires\\backend\\speech-gateway\\gateway.test.mjs"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:275:11)
+    moduleResolve (node:internal/modules/esm/resolve:866:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:719:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:736:38)
+    ModuleLoader.resolveSync (node:internal/modules/esm/loader:765:52)
+    #resolve (node:internal/modules/esm/loader:701:17)
+    ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:621:35)
+    onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:650:32)
+    TracingChannel.tracePromise (node:diagnostics_channel:350:14)
+  ...
+# Subtest: owner/global quota persisted across restart; no reset or unbounded new owner admission
+not ok 5 - owner/global quota persisted across restart; no reset or unbounded new owner admission
+  ---
+  duration_ms: 0.6197
+  type: 'test'
+  location: 'D:\\unity_projects\\OpenEmpires\\backend\\speech-gateway\\gateway.test.mjs:68:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module 'D:\\unity_projects\\OpenEmpires\\backend\\speech-gateway\\gateway.mjs' imported from D:\\unity_projects\\OpenEmpires\\backend\\speech-gateway\\gateway.test.mjs"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:275:11)
+    moduleResolve (node:internal/modules/esm/resolve:866:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:719:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:736:38)
+    ModuleLoader.resolveSync (node:internal/modules/esm/loader:765:52)
+    #resolve (node:internal/modules/esm/loader:701:17)
+    ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:621:35)
+    onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:650:32)
+    TracingChannel.tracePromise (node:diagnostics_channel:350:14)
+  ...
+# Subtest: semantic route rejects caller endpoint/model and bounds envelope while preserving Luna
+not ok 6 - semantic route rejects caller endpoint/model and bounds envelope while preserving Luna
+  ---
+  duration_ms: 0.3243
+  type: 'test'
+  location: 'D:\\unity_projects\\OpenEmpires\\backend\\speech-gateway\\gateway.test.mjs:76:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot find module 'D:\\unity_projects\\OpenEmpires\\backend\\speech-gateway\\gateway.mjs' imported from D:\\unity_projects\\OpenEmpires\\backend\\speech-gateway\\gateway.test.mjs"
+  code: 'ERR_MODULE_NOT_FOUND'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:275:11)
+    moduleResolve (node:internal/modules/esm/resolve:866:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:719:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:736:38)
+    ModuleLoader.resolveSync (node:internal/modules/esm/loader:765:52)
+    #resolve (node:internal/modules/esm/loader:701:17)
+    ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:621:35)
+    onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:650:32)
+    TracingChannel.tracePromise (node:diagnostics_channel:350:14)
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 0
+# fail 6
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 81.1524

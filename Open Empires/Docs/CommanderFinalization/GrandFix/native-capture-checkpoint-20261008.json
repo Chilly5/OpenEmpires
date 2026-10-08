@@ -1,0 +1,24 @@
+{
+  "schema":"openempires-native-capture-checkpoint@1",
+  "head":"8586764e644240f93c99e2afa1c7d41c697cc879",
+  "branch":"unit_models_and_voice_control",
+  "working_changes":true,
+  "edit":{"job":"60c3716758f74f05a86cb8527904e7aa","artifact":"native-capture-final-edit-20261008.xml","total":96,"passed":96,"failed":0,"skipped":0,"seconds":13.2677272},
+  "play":{"job":"9fb6b63129bd4831b9b164c6cebe59ea","artifact":"native-capture-final-play-20261008.xml","total":9,"passed":9,"failed":0,"skipped":0,"seconds":3.6225978},
+  "test_scope":"Affected offline suites; scripted native backend with actual synthetic AudioClips; PlayMode synthetic input devices and existing voice mocks",
+  "read_only_review":{"model":"gpt-6-sol","task":"native_capture_readonly_review","finding":"One fractional UI precision gap; RED and final GREEN included","physical_proof":false},
+  "source_sha256":{
+    "Assets/Scripts/AI/Commander/Phase4H/UnityMicrophoneAudioCapture.cs":"1903af13082c7e2ce7e6cacbf19bb69eccb311c4f4bd38a1e14bc3f00dba82fe",
+    "Assets/Scripts/AI/Commander/Phase4H/ICommanderMicrophoneBackend.cs":"0a8bfe2365c7515fa164f6b9e9b1c7612d939af57f4e652e7edd4777cb9b3b87",
+    "Assets/Scripts/AI/Commander/Phase4H/CommanderVoiceInputController.cs":"04450bc8e9977b3a8753f5b63f0071ea367d7a2703d84f3ca600aa8453c078c7",
+    "Assets/Scripts/AI/Commander/Phase4H/CommanderVoiceSettings.cs":"b37b043d4763b11782be10ceb2a7203aa82d51020e8268c1a8de10b5449ac593",
+    "Assets/Scripts/AI/Commander/Phase4H/CommanderChatUI.Voice.cs":"980fd74ea43dcb3b5f2e68a3675ef9a88a9494b65a67520ba2b5bad870276a96",
+    "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Presentation.cs":"17506ef48ea80273babf924c4c1cbd22335f9bb2f04620dcf2f35c55fbc1d212",
+    "Assets/Tests/EditMode/CommanderGrandFixNativeCaptureTests.cs":"0ffdcccc871c7f57bb8eafdae621818077fe540139e07dbdc6ee491e169c79f7",
+    "Assets/Tests/EditMode/CommanderGrandFixPresentationTests.cs":"62acfb060d516d2527c797e3a7026a76ad84262b10b4b041cf85fe0c9377b608"
+  },
+  "not_verified":["Physical mic/full-end driver policy","Live signal calibration and real capture performance","Meaningful stronger recognition comparison","Current packaged Windows and served Web source match","Complete GrandFix scope"],
+  "paid_semantic_http":0,
+  "paid_asr_billable_seconds":0,
+  "goal_status":"active"
+}

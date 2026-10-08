@@ -1,0 +1,21 @@
+{
+  "schema": "openempires-web-probe-artifacts@1",
+  "job": "build-63b0c14d8e",
+  "report": "web-probe-build-report-20261008.json",
+  "result": "succeeded",
+  "unity_version": "6000.5.9f1",
+  "head": "8586764e644240f93c99e2afa1c7d41c697cc879",
+  "dirty_runtime_source": true,
+  "development_probe_only": true,
+  "source_cut": "After browser capture/semantic 76 EditMode + 7 PlayMode checkpoint; before C2 input-leak repairs/new tests",
+  "artifacts": [
+    {"path":"index.html","bytes":1980,"sha256":"33f3fe6592087306b9ad0a60ec43e2cc72556ec70a6bfb2558a11d2956b1ffe3"},
+    {"path":"Build/WebGrandFixProbe-20261008.data","bytes":132884819,"sha256":"35f463ceddb3949e5b22dc3dbda07615a72c38f68db1908935d71c7240a5f411"},
+    {"path":"Build/WebGrandFixProbe-20261008.framework.js","bytes":985319,"sha256":"0e8f3b0b111147a108b87a5e3de98af85965e0b9a896b7f662cc43eeff17c9d7"},
+    {"path":"Build/WebGrandFixProbe-20261008.loader.js","bytes":58343,"sha256":"ebcfa3c6720ea65dab0c45121503e417a2af6d112afca88d4459395949d875cc"},
+    {"path":"Build/WebGrandFixProbe-20261008.wasm","bytes":196449583,"sha256":"ae61a6838a9190bd175b5f91491b35c35d09a15cfa83e3c08f9b495e3d6a7576"},
+    {"path":"StreamingAssets/CommanderVoice/commander-pcm-worklet.js","bytes":1436,"sha256":"0023750a13969b66f44054d1df84aa6baff5107b4ed74ffdd52eb87a4fdb3573"},
+    {"path":"StreamingAssets/Whisper/ggml-tiny.bin","bytes":77691713,"sha256":"be07e048e1e599ad46341c8d2a135645097a538221678b7acdd1b1919c6e1b21"}
+  ],
+  "exclusions": "Not final packaging: native tiny model remains included. No physical capture, cloud quality, semantic HTTP or complete browser matrix acceptance."
+}

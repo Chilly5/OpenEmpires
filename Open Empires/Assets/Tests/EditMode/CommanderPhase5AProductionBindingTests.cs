@@ -189,7 +189,7 @@ namespace OpenEmpires.Tests
                 barracks.EnqueueTraining(1, 2); // An older order, not this request's production.
                 manager = new CommanderGoalManager(sim, 0);
                 var parsed = CommanderSemanticJson.Parse("{\"outcome\":\"Request\",\"nodes\":["
-                    + "{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":3},"
+                    + "{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":2,\"quantityMode\":\"New\"},"
                     + "{\"type\":\"PatrolArea\",\"unitSelector\":\"Spearman\",\"count\":2,"
                     + "\"location\":\"PlayerBase\",\"dependsOn\":[0],\"resultFromNode\":0}]}" );
                 var candidate = manager.PrepareActionPlan(parsed, "Produce two new Spearmen, then patrol with them.", 1);

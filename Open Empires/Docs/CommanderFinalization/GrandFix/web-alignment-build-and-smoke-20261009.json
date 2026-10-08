@@ -1,0 +1,39 @@
+{
+  "job_id":"build-892e36f4d0",
+  "result":"succeeded",
+  "platform":"WebGL",
+  "unity_version":"6000.5.9f1",
+  "output_path":"Builds/SinglePlayerRelease-Web-20261009",
+  "development":false,
+  "compression":"gzip with Unity decompression fallback",
+  "started_at":"2026-10-08T20:37:06.4448690Z",
+  "completed_at":"2026-10-08T20:43:23.7153502Z",
+  "job_duration_seconds":377.2704812,
+  "native_report_duration_seconds":377.1893261,
+  "bytes":136049881,
+  "errors":0,
+  "warnings":79,
+  "warning_categories_by_message_rule":{"deprecated-api":48,"serialization":25,"unclassified":6},
+  "served_smoke":{
+    "browser":"Codex in-app browser; exact engine/version unavailable through supported read scope",
+    "origin":"http://127.0.0.1:8088",
+    "canvas":{"width":1536,"height":864},
+    "observed":["menu/local1v1 load","starts compact","launcher order","expanded HUD clearance","unsent typing","Escape minimizes without settings menu","voice disclosure/setup card","gateway-only Text AI setup with missing-session status"],
+    "evidence":"Visible browser screenshots in task tool history, not falsely labeled as saved repository screenshots",
+    "not_tested":["microphone permission","audio recording/upload","actual provider","transcript submission/plan approval","physical voice quality","general browser certification"],
+    "cleanup":"Owned browser tab closed and local host session53275 stopped"
+  },
+  "package_inspection":{
+    "decoded_data_bytes":146373723,
+    "decoded_wasm_bytes":81393644,
+    "validated_unity_data_entries":8,
+    "native_weight_paths":[],
+    "env_paths":[],
+    "raw_wasm_key_candidate_matching_lines":0,
+    "raw_data_candidate":"One generic sk- pattern at metadata-relative698173/length92; crosses13separate string literals, none contains it. Not a credential literal.",
+    "metadata_format":"107, verified against installed libil2cpp GlobalMetadataFileInternals.h and GlobalMetadata.cpp",
+    "values_printed":false,
+    "limitations":"No nested compressed-asset/history/credential-invalidation clearance claim"
+  },
+  "source_scope":"Includes alignment/gzip; predates subsequent exact-zero native-silence guard. Historical checkpoint, not final-current-source build."
+}

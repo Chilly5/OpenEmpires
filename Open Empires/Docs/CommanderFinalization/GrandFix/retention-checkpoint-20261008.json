@@ -1,0 +1,62 @@
+{
+  "schema": "openempires-retention-checkpoint@1",
+  "head": "8586764e644240f93c99e2afa1c7d41c697cc879",
+  "branch": "unit_models_and_voice_control",
+  "working_changes": true,
+  "edit": {
+    "job": "c84fdb7130df45098c12c55eac76bd7c",
+    "artifact": "retention-final-edit-c84fdb71.xml",
+    "passed": 174,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 66.7791766
+  },
+  "binding": {
+    "job": "2e023782b1ef4ee491828bdeb6a48b0e",
+    "artifact": "retention-binding-edit-2e023782.xml",
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 1.4547391,
+    "test_names": [
+      "OpenEmpires.Tests.CommanderPhase4GCapabilityTests.ResultBinding_UsesOnlyTheExactProducedUnitSet",
+      "OpenEmpires.Tests.CommanderPhase4GCapabilityTests.ResultBinding_RejectsIncompatibleDependency",
+      "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_FailsClosedWhenGoalManagerDisposed"
+    ]
+  },
+  "play": {
+    "job": "c8647893ec1644e49c2c9bca1a364b0d",
+    "artifact": "retention-native-play-c8647893.xml",
+    "passed": 6,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 5.250392
+  },
+  "source_sha256": {
+    "Assets/Scripts/AI/Commander/Strategic/StrategicIntentIdProvider.cs": "500a8352add4bfa9f8d813db8380fd436678aac06f18b4e8ecb1bec32eb3fcee",
+    "Assets/Scripts/AI/Commander/Phase4B1/StrategicAIInterpreter.cs": "2c719b42bcf5abdd1ccb689e36bd9048ae6930adccedce1a790b549e667d56dd",
+    "Assets/Scripts/AI/Commander/Phase4B2/StrategicAIApprovalBridge.cs": "2405aa187284d88e21a9ccd65aca7a9e26d5fa75c66d2987335b914ec8d9121a",
+    "Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.cs": "34d985468665154be49742d505ef66a3ccab937a3bc9adb56249ca3830ed000e",
+    "Assets/Scripts/AI/Commander/Strategic/StrategicPipeline.cs": "b3f185234fe37b3b71074cc7c84ceff8d7f02ac64d49c550acb81785ad5b4896",
+    "Assets/Scripts/AI/Commander/CommanderWorkerAuthority.cs": "a4a1a21f36aea5f0ea2b790e587e858b7c42c1c77abb88373f718a77bb315c64",
+    "Assets/Scripts/AI/Commander/CommanderGoal.cs": "59c8e169cbdb90eb7f4e5c5347925533685a66528a6d6e48796f67457a23aca0",
+    "Assets/Scripts/AI/Commander/CommanderGoalManager.cs": "f0b4499d93bcfa5b82ab6767a5ff0dcd7321f3b2350ee3ed99005fda5e8f253a",
+    "Assets/Tests/EditMode/CommanderGrandFixRetentionTests.cs": "49f559516cd8f0b5df051f4c8c1b5a30e8f773e8cdd6300411b49444231e80eb",
+    "Assets/Tests/EditMode/CommanderGrandFixRetentionTests.cs.meta": "13c371383e0db5ccb07a1085a5ab7cbd273baf0039597e6f9a909463f544f351",
+    "Assets/Tests/EditMode/CommanderPhase4D1Tests.cs": "e9d71c976bbf4219b3a69891b0bdb7f44fe4938a77bccd0108de399e5f206c6d",
+    "Assets/Tests/EditMode/CommanderPhase4GCapabilityTests.cs": "b03d85520e9d6d42c1d01050dc270b29d8c2bfdacc09e643d1a529cbbbe06dcd",
+    "Docs/CommanderFinalization/GrandFix/retention-and-peer-compatibility.md": "098a0ca2ffbb07e36f7ea743c9486f732c2de44991f985dfd03f40e3b00df374"
+  },
+  "gates": [
+    "independent full/hostile regression",
+    "current Windows and served Web releases",
+    "physical/quality recognition acceptance",
+    "G11/G12 protocol and genuine peer verification",
+    "G23 bounded safe relay/reconnect implementation",
+    "G26 measured memory/frame/latency workloads"
+  ],
+  "paid_semantic_http": 0,
+  "cloud_asr_seconds": 0,
+  "physical_microphone_sessions": 0,
+  "remote_deployments": 0
+}

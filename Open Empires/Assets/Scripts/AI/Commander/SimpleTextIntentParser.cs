@@ -44,6 +44,12 @@ namespace OpenEmpires
         private static readonly Regex TrailingConnectorPattern = new Regex(
             @"\s*(?:,|\b(?:but|and)\b)\s*$", PatternOptions);
 
+        // Syntax-only observation: do not construct an intent/strategic ID when
+        // deciding whether a question mark belongs to an explicit order.
+        internal static bool IsExplicitOrderForm(string input)
+            => UnitPattern.IsMatch(input) || ExactResourcePattern.IsMatch(input) || MoreResourcePattern.IsMatch(input)
+                || BuildingPattern.IsMatch(input) || StrategicPattern.IsMatch(input);
+
         public CommanderIntentInterpretation Interpret(string playerInput, int playerId)
         {
             if (string.IsNullOrWhiteSpace(playerInput))

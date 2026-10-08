@@ -1,0 +1,40 @@
+{
+  "schema": "openempires-read-only-status-checkpoint@1",
+  "head": "8586764e644240f93c99e2afa1c7d41c697cc879",
+  "branch": "unit_models_and_voice_control",
+  "working_changes": true,
+  "edit": {
+    "job": "a7fba9a6d550407ab7b90cf7896b00c6",
+    "artifact": "status-final-edit-a7fba9a6.xml",
+    "passed": 100,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 104.5547094
+  },
+  "play": null,
+  "g03_disposition": "PARTIAL - deeper matrix and native/package proof pending",
+  "read_only_review": {
+    "task": "g03_status_review",
+    "model": "gpt-6-sol",
+    "findings": "Six focused selection/fallback/syntax/provenance findings reproduced RED and fixed; no re-review"
+  },
+  "source_sha256": {
+    "Assets/Scripts/AI/Commander/CommanderTacticalStatusSnapshot.cs": "8cc67e9d8282a3fe2c30c7327ebb2cd6514b540dfd67d6dc87d9942ebca88c5c",
+    "Assets/Scripts/AI/Commander/SimpleTextIntentParser.cs": "d83ce350190380fd8f722a8f76370320cb8bf7def892cab2607de2cf9b698112",
+    "Assets/Scripts/AI/Commander/CommanderWorkerAuthority.cs": "7b04f147ee406659b76d42df00a8e4b5a22b2d656ab43eccf12a022cc203ad43",
+    "Assets/Scripts/AI/Commander/CommanderGoal.cs": "2544098e1007f6b690e2d41961e10c9b6b438108918221741c26ab65d099db88",
+    "Assets/Scripts/AI/Commander/CommanderGoalManager.cs": "1001fce018df7f9a456b708c1378b0a461759fc6c82ff93499b0273258c43ce1",
+    "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticProvider.cs": "3c0b4f27cdf9c2541bc84bcc430ede07ad69d77588c662ceca6e4b89c5c45c00",
+    "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs": "47b03759d9e7f8d82d5d258e4679d655e1904c0519a3ca2b219c98c46c7c40bf",
+    "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Questions.cs": "6ec81d984d70393786d04f87eef2c83ae8766f546e67bfb9a3427f25c634ffcc",
+    "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.ReadOnlyQuestions.cs": "e92a08a5598023a4088be3cb9cc44d6441703f9bb5a2a42a8cb633fec3514bc1",
+    "Assets/Scripts/AI/Commander/Phase4A/OpenRouterCommanderProvider.cs": "6c59cbf950de6e9a6bc5b923ad2ec852fc01b60544db7d2b86d3efcd4b7d3957",
+    "Assets/Tests/EditMode/CommanderGrandFixStatusTests.cs": "b54a5eff795c6a668b1ff1f7a606e883e43890cdb23eee042e65dffccf55db52",
+    "Assets/Tests/EditMode/CommanderPhase4GHostileAuditTests.cs": "917366229cffe252226369681bfee2d8eb888e62ae5765bbea2abce1ea4f07b9"
+  },
+  "paid_semantic_http": 0,
+  "paid_asr_billable_seconds": 0,
+  "packaged_windows_verified": false,
+  "served_web_verified": false,
+  "goal_status": "active"
+}

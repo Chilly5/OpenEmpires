@@ -116,6 +116,7 @@ namespace OpenEmpires
             // Awake is not invoked for a MonoBehaviour added by an EditMode test.
             // Keeping initialization idempotent also makes programmatic local hosts safe.
             EnsureLocalSurface();
+            ResetVoiceControls(); // Invalidate old voice work before replacing ANY runtime affinity.
             runtimeGeneration++;
             pendingClarification = null;
             ClearActionPlanPreview();
@@ -138,6 +139,7 @@ namespace OpenEmpires
             adapter = new CommanderAIIntentAdapter(provider, simulation, goalManager, dispatcher,
                 null, providerTimeout);
             semanticProvider = provider as ICommanderSemanticProvider;
+            ObserveSemanticProviderSetup(provider);
             semanticSimulation = simulation;
             semanticGoalManager = goalManager;
             semanticDispatcher = dispatcher;
@@ -151,6 +153,7 @@ namespace OpenEmpires
             sendButton.interactable = true;
             canvasRoot.SetActive(true);
             InitializeVoiceControls();
+            InitializePresentation();
             if (transcript.Length == 0)
                 AppendLine("Commander", provider is GeminiAIProvider
                     ? "Gemini translator ready."
@@ -210,6 +213,21 @@ namespace OpenEmpires
         {
             string trimmed = (message ?? string.Empty).Trim();
             if (trimmed.Length == 0) return null;
+            if(CommanderTacticalStatusProjection.IsInformationQuestion(trimmed))
+            {
+                if(trimmed.Length>CommanderSemanticProviderRequest.MaximumPlayerMessageCharacters)
+                {AppendLine("Commander","That question is too long; please shorten it.",false);return null;}
+                string informationForm=NormalizeExplanationWholeForm(trimmed);
+                if(informationForm=="strategy status"||informationForm=="current strategy status")
+                {
+                    AppendLine("Player",trimmed,false);
+                    AppendLine("Commander",strategicPipeline!=null&&Conversation!=null&&strategicPipeline.StrategicPlanner.PlayerId==Conversation.PlayerId
+                        ?CurrentPlansStatus(strategicPipeline,Conversation.PlayerId):"Strategic Commander is not ready.",false);
+                    return null;
+                }
+                if(TryHandleExplanationQuery(trimmed))return null;
+                return await SubmitReadOnlyQuestionAsync(trimmed);
+            }
             if (submitting)
             {
                 // Explicit strategic controls may invalidate an in-flight translation;
@@ -230,6 +248,8 @@ namespace OpenEmpires
             }
             if (TryHandleStrategicLifecycle(trimmed)) return null;
             if (TryHandleExplanationQuery(trimmed)) return null;
+            if (semanticSetupMode == SemanticSetupMode.Disabled)
+            { AppendLine("Commander", SemanticSetupStatus, false); return null; }
             if (adapter == null)
             {
                 LatestSubmission = null;
@@ -432,7 +452,7 @@ namespace OpenEmpires
                     Debug.Log("[Commander] context=projected;provider-request=started");
                     CommanderSemanticResult localCount = LocalCountContinuation(capturedPending, message);
                     Task<CommanderSemanticResult> translation = localCount == null
-                        ? provider.TranslateSemanticAsync(providerRequest, request.Token)
+                        ? RequestSemanticTranslation(provider, providerRequest, request.Token)
                         : Task.FromResult(localCount);
                     // A provider may ignore cancellation. Keep the host usable and observe
                     // any late fault without ever admitting its late response.
@@ -820,6 +840,12 @@ namespace OpenEmpires
         {
             if (submitting) return null;
             string text = InputText;
+            if (text.Length > CommanderSemanticProviderRequest.MaximumPlayerMessageCharacters)
+            {
+                SetCommanderStatus("This request is too long. Shorten it to 1024 characters before sending.",true);
+                UpdatePresentation();
+                return null;
+            }
             if (voiceController?.State == CommanderVoiceState.Preview) voiceController.Cancel();
             CommanderAIChatSubmission result = await SubmitMessageAsync(text);
             if (!submitting && InputText == text) InputText = string.Empty;
@@ -828,6 +854,7 @@ namespace OpenEmpires
 
         private async void SubmitFromUI()
         {
+            if (!ClaimPresentationAction()) return;
             await SubmitCurrentInputAsync();
         }
 
@@ -927,6 +954,8 @@ namespace OpenEmpires
             ResetExplanationState();
             adapter?.ResetHistory();
             semanticProvider = null;
+            adapter = null;
+            HideSemanticSetup();
             semanticSimulation = null;
             semanticGoalManager = null;
             semanticDispatcher = null;
@@ -956,7 +985,7 @@ namespace OpenEmpires
             RectTransform panelRect = panel.GetComponent<RectTransform>();
             panelRect.anchorMin = panelRect.anchorMax = new Vector2(0, 1);
             panelRect.pivot = new Vector2(0, 1);
-            panelRect.anchoredPosition = new Vector2(16, -72);
+            panelRect.anchoredPosition = new Vector2(280, -72);
             panelRect.sizeDelta = new Vector2(460, 540);
             commanderPanel = panelRect;
             Image panelImage = panel.AddComponent<Image>();
@@ -1013,7 +1042,9 @@ namespace OpenEmpires
             inputField = inputObject.AddComponent<TMP_InputField>();
             inputField.targetGraphic = inputImage;
             inputField.lineType = TMP_InputField.LineType.SingleLine;
-            inputField.characterLimit = 240;
+            // Do not silently truncate paste/voice text. Explicit validation retains the
+            // entire draft and prevents sending above the semantic1024-character bound.
+            inputField.characterLimit = 0;
             inputField.interactable = false;
             inputField.navigation = new Navigation { mode = Navigation.Mode.None };
 
@@ -1065,6 +1096,7 @@ namespace OpenEmpires
             BuildVoiceUI(panel.transform);
             ArrangeCommanderPanel(panel.transform, title, scrollObject, inputObject, buttonObject);
             RefreshPanelSize();
+            BuildPresentationUI();
         }
 
         private void SetCommanderStatus(string message, bool error)
@@ -1073,6 +1105,7 @@ namespace OpenEmpires
             string firstLine = (message ?? string.Empty).Split('\n')[0].Trim();
             commanderStatusText.text = firstLine.Length > 120 ? firstLine.Substring(0, 117) + "..." : firstLine;
             commanderStatusText.color = error ? new Color(1f, .6f, .5f) : new Color(.7f, .83f, 1f);
+            UpdatePresentation();
         }
 
         private static void PanelElement(GameObject obj, float height, bool flexible = false)
@@ -1140,9 +1173,13 @@ namespace OpenEmpires
             var canvasRect = canvasRoot.GetComponent<RectTransform>();
             commanderPanel.sizeDelta = new Vector2(Mathf.Min(460, Mathf.Max(320, canvasRect.rect.width - 32)),
                 Mathf.Min(540, Mathf.Max(400, canvasRect.rect.height - 96)));
+            // The existing player-list HUD ends at267 reference pixels in local
+            // play. Keep it visible, without pushing Commander off the right edge.
+            commanderPanel.anchoredPosition = new Vector2(
+                Mathf.Clamp(canvasRect.rect.width-commanderPanel.sizeDelta.x-16,16,280),-72);
         }
 
-        private static Button StrategyButton(Transform parent, string label, float left, float width,
+        private Button StrategyButton(Transform parent, string label, float left, float width,
             UnityEngine.Events.UnityAction action)
         {
             GameObject obj = UIObject(label, parent);
@@ -1153,7 +1190,7 @@ namespace OpenEmpires
             var button = obj.AddComponent<Button>();
             button.targetGraphic = image;
             button.interactable = false;
-            button.onClick.AddListener(action);
+            button.onClick.AddListener(() => { if (ClaimPresentationAction()) action(); });
             var text = Text("Label", obj.transform, label, 11, TextAlignmentOptions.Center);
             SetRect(text.rectTransform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
             return button;

@@ -60,7 +60,7 @@ namespace OpenEmpires
                 var effect = graph.Nodes[i];
                 if (effect.DependsOn.Count != 0 || effect.ProducerFromNode.HasValue || effect.ResultFromNode.HasValue
                     || effect.Intent.GetType() != roots[i].GetType()
-                    || CommanderPlanPreview.RenderIntent(effect.Intent) != CommanderPlanPreview.RenderIntent(roots[i]))
+                    || !CommanderScopeEquivalence.SameIntent(effect.Intent, roots[i]))
                     throw new ArgumentException("The interpretation changed a trusted root, constraint or binding.");
             }
             candidate.SetTrustedTypedRoots(this, Array.AsReadOnly(roots));
@@ -113,7 +113,7 @@ namespace OpenEmpires
                 || scope.Graph.Nodes.Count != 1
                 || (scope.AuthorizationEvidence != "KnownIntentAutomatic"
                     && scope.AuthorizationEvidence != "ClarifiedKnownIntentAutomatic")
-                || CommanderPlanPreview.RenderIntent(intent) != CommanderPlanPreview.RenderIntent(scope.Graph.Nodes[0].Intent))
+                || !CommanderScopeEquivalence.SameIntent(intent, scope.Graph.Nodes[0].Intent))
                 throw new InvalidOperationException("The narrow KnownIntent scope is unavailable or changed.");
             pendingKnownAuthority = scope;
             try { return submit(); }
@@ -128,6 +128,9 @@ namespace OpenEmpires
             bool matches = goal.PlayerId == intent.PlayerId && (
                 intent is EnsureUnitCountIntent unit && goal is EnsureUnitCountGoal produced
                     && produced.RequestedUnitType == unit.UnitType && produced.TargetTotal == unit.TargetTotal
+                    && produced.IsExplicitNewProduction == unit.NewProductionCount.HasValue
+                    && (!unit.NewProductionCount.HasValue || produced.HasResultConsumer
+                        && produced.RequiredNewProductionCount == unit.NewProductionCount.Value)
                 || intent is BuildStructureIntent build && goal is BuildStructureGoal structure
                     && structure.StructureType == build.StructureType && structure.Count == build.Count
                     && structure.PlacementAnchorSelector == build.PlacementAnchorSelector
@@ -136,8 +139,7 @@ namespace OpenEmpires
                     && structure.PlacementResourceType == build.PlacementResourceType
                     && structure.ClearGapTiles == (build.ClearGapTiles ?? 1)
                 || intent is AllocateWorkersIntent allocation && goal is AllocateWorkersGoal assigned
-                    && CommanderPlanPreview.RenderIntent(new AllocateWorkersIntent(playerId, assigned.Allocation, intent.Constraints))
-                        == CommanderPlanPreview.RenderIntent(allocation)
+                    && CommanderScopeEquivalence.SameIntent(new AllocateWorkersIntent(playerId, assigned.Allocation, intent.Constraints), allocation)
                 || intent is SetResourceAllocationIntent resources && goal is ResourceAllocationGoal gathering
                     && gathering.Resource == resources.Resource
                     && gathering.TargetWorkers == (resources.Mode == ResourceAllocationMode.Increase
@@ -146,7 +148,7 @@ namespace OpenEmpires
                 || intent is ReachAgeIntent age && goal is ReachAgeGoal reached
                     && reached.RequestedTarget == age.RequestedTarget && reached.TargetAge == age.TargetAge
                 || intent is CapabilityActionIntent action && goal is CommanderCapabilityGoal capability
-                    && CommanderPlanPreview.RenderIntent(capability.Action) == CommanderPlanPreview.RenderIntent(action));
+                    && CommanderScopeEquivalence.SameIntent(capability.Action, action));
             if (!matches || !scope.Consume(this, scope.Graph))
                 throw new InvalidOperationException("The registered goal changed the admitted KnownIntent scope.");
             goal.RequestAuthority = scope;

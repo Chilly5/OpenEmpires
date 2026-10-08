@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 19:13:09Z" end-time="2026-10-08 19:13:10Z" duration="0.8608113">
+  <test-suite type="TestSuite" id="1255" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="209" result="Failed" site="Child" start-time="2026-10-08 19:13:09Z" end-time="2026-10-08 19:13:10Z" duration="0.860811" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1249" name="OpenEmpires.PlayModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.PlayModeTests.dll" runstate="Runnable" testcasecount="209" result="Failed" site="Child" start-time="2026-10-08 19:13:09Z" end-time="2026-10-08 19:13:10Z" duration="0.847453" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="27016" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1250" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="209" result="Failed" site="Child" start-time="2026-10-08 19:13:09Z" end-time="2026-10-08 19:13:10Z" duration="0.843365" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1251" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="209" result="Failed" site="Child" start-time="2026-10-08 19:13:09Z" end-time="2026-10-08 19:13:10Z" duration="0.838737" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1005" name="CommanderGrandFixInputDispatchPlayModeTests" fullname="OpenEmpires.Tests.CommanderGrandFixInputDispatchPlayModeTests" classname="OpenEmpires.Tests.CommanderGrandFixInputDispatchPlayModeTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-08 19:13:09Z" end-time="2026-10-08 19:13:10Z" duration="0.831510" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1008" name="SetupCards_StayOnScreenAndExposeScrollableControlsWithoutGameplay" fullname="OpenEmpires.Tests.CommanderGrandFixInputDispatchPlayModeTests.SetupCards_StayOnScreenAndExposeScrollableControlsWithoutGameplay" methodname="SetupCards_StayOnScreenAndExposeScrollableControlsWithoutGameplay" classname="OpenEmpires.Tests.CommanderGrandFixInputDispatchPlayModeTests" runstate="Runnable" seed="2023864494" result="Failed" start-time="2026-10-08 19:13:09Z" end-time="2026-10-08 19:13:10Z" duration="0.795207" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Voice/model setup must not hide its bottom below the screen.
+  Expected: greater than or equal to 8
+  But was:  -98.5281296f
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixInputDispatchPlayModeTests+<SetupCards_StayOnScreenAndExposeScrollableControlsWithoutGameplay>d__19.MoveNext () [0x0009f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\PlayMode\CommanderGrandFixInputDispatchPlayModeTests.cs:101
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

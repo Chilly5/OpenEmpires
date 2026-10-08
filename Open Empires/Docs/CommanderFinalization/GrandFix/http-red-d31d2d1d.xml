@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="7" result="Failed(Child)" total="7" passed="1" failed="6" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-07 18:07:01Z" end-time="2026-10-07 18:07:05Z" duration="4.1909518">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1150" result="Failed" site="Child" start-time="2026-10-07 18:07:01Z" end-time="2026-10-07 18:07:05Z" duration="4.190952" total="7" passed="1" failed="6" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2311" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1150" result="Failed" site="Child" start-time="2026-10-07 18:07:01Z" end-time="2026-10-07 18:07:05Z" duration="4.091334" total="7" passed="1" failed="6" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2312" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1150" result="Failed" site="Child" start-time="2026-10-07 18:07:01Z" end-time="2026-10-07 18:07:05Z" duration="3.996641" total="7" passed="1" failed="6" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2313" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1150" result="Failed" site="Child" start-time="2026-10-07 18:07:01Z" end-time="2026-10-07 18:07:05Z" duration="3.890627" total="7" passed="1" failed="6" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1018" name="CommanderGrandFixHttpTests" fullname="OpenEmpires.Tests.CommanderGrandFixHttpTests" classname="OpenEmpires.Tests.CommanderGrandFixHttpTests" runstate="Runnable" testcasecount="7" result="Failed" site="Child" start-time="2026-10-07 18:07:01Z" end-time="2026-10-07 18:07:05Z" duration="3.779644" total="7" passed="1" failed="6" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="ParameterizedMethod" id="1027" name="BoundedUtf8Body_PreservesStatusAndText" fullname="OpenEmpires.Tests.CommanderGrandFixHttpTests.BoundedUtf8Body_PreservesStatusAndText" classname="OpenEmpires.Tests.CommanderGrandFixHttpTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-07 18:07:01Z" end-time="2026-10-07 18:07:02Z" duration="1.377640" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1025" name="BoundedUtf8Body_PreservesStatusAndText(False)" fullname="OpenEmpires.Tests.CommanderGrandFixHttpTests.BoundedUtf8Body_PreservesStatusAndText(False)" methodname="BoundedUtf8Body_PreservesStatusAndText" classname="OpenEmpires.Tests.CommanderGrandFixHttpTests" runstate="Runnable" seed="1893469626" result="Passed" start-time="2026-10-07 18:07:01Z" end-time="2026-10-07 18:07:02Z" duration="0.848622" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1026" name="BoundedUtf8Body_PreservesStatusAndText(True)" fullname="OpenEmpires.Tests.CommanderGrandFixHttpTests.BoundedUtf8Body_PreservesStatusAndText(True)" methodname="BoundedUtf8Body_PreservesStatusAndText" classname="OpenEmpires.Tests.CommanderGrandFixHttpTests" runstate="Runnable" seed="1195049336" result="Failed" start-time="2026-10-07 18:07:02Z" end-time="2026-10-07 18:07:02Z" duration="0.383602" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected string length 28 but was 50. Strings differ at index 0.
+  Expected: "{"message":"bounded 界 text"}"
+  But was:  "\u001f�\b\0\0\0\0\0\0\n�V�M-.NLOU�RJ�/�KIMQx>�G�$��D�\u0016\0�X, \u001e\0\0\0"
+  -----------^
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixHttpTests+<>c.<BoundedUtf8Body_PreservesStatusAndText>b__3_0 (System.Uri uri) [0x0008a] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:55
+at OpenEmpires.Tests.CommanderGrandFixHttpTests.WithResponse (System.String body, System.Int32 status, System.Boolean chunked, System.Boolean compressed, System.Func`2[T,TResult] assertion) [0x0010f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:124
+at OpenEmpires.Tests.CommanderGrandFixHttpTests.WithResponse (System.String body, System.Int32 status, System.Boolean chunked, System.Boolean compressed, System.Func`2[T,TResult] assertion) [0x002ab] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:135
+at OpenEmpires.Tests.CommanderGrandFixHttpTests.BoundedUtf8Body_PreservesStatusAndText (System.Boolean compressed) [0x0004e] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:51
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-case id="1023" name="ByteLimit_IsIndependentOfDecodedCharacterCount" fullname="OpenEmpires.Tests.CommanderGrandFixHttpTests.ByteLimit_IsIndependentOfDecodedCharacterCount" methodname="ByteLimit_IsIndependentOfDecodedCharacterCount" classname="OpenEmpires.Tests.CommanderGrandFixHttpTests" runstate="Runnable" seed="862583600" result="Failed" start-time="2026-10-07 18:07:02Z" end-time="2026-10-07 18:07:03Z" duration="0.430612" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Oversized application-visible response must fail during receive.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixHttpTests.ExpectOversized (System.Uri uri) [0x0008d] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:70
+at OpenEmpires.Tests.CommanderGrandFixHttpTests+<>c.<ByteLimit_IsIndependentOfDecodedCharacterCount>b__1_0 (System.Uri uri) [0x00024] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:34
+at OpenEmpires.Tests.CommanderGrandFixHttpTests.WithResponse (System.String body, System.Int32 status, System.Boolean chunked, System.Boolean compressed, System.Func`2[T,TResult] assertion) [0x0010f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:124
+at OpenEmpires.Tests.CommanderGrandFixHttpTests.WithResponse (System.String body, System.Int32 status, System.Boolean chunked, System.Boolean compressed, System.Func`2[T,TResult] assertion) [0x002ab] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:135
+at OpenEmpires.Tests.CommanderGrandFixHttpTests.ByteLimit_IsIndependentOfDecodedCharacterCount () [0x00053] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:32
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1024" name="CompressedBody_IsBoundedAfterDecompression" fullname="OpenEmpires.Tests.CommanderGrandFixHttpTests.CompressedBody_IsBoundedAfterDecompression" methodname="CompressedBody_IsBoundedAfterDecompression" classname="OpenEmpires.Tests.CommanderGrandFixHttpTests" runstate="Runnable" seed="193362955" result="Failed" start-time="2026-10-07 18:07:03Z" end-time="2026-10-07 18:07:03Z" duration="0.436171" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Oversized application-visible response must fail during receive.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixHttpTests.ExpectOversized (System.Uri uri) [0x0008d] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:70
+at OpenEmpires.Tests.CommanderGrandFixHttpTests+<>c.<CompressedBody_IsBoundedAfterDecompression>b__2_0 (System.Uri uri) [0x00024] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:43
+at OpenEmpires.Tests.CommanderGrandFixHttpTests.WithResponse (System.String body, System.Int32 status, System.Boolean chunked, System.Boolean compressed, System.Func`2[T,TResult] assertion) [0x0010f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:124
+at OpenEmpires.Tests.CommanderGrandFixHttpTests.WithResponse (System.String body, System.Int32 status, System.Boolean chunked, System.Boolean compressed, System.Func`2[T,TResult] assertion) [0x002ab] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:135
+at OpenEmpires.Tests.CommanderGrandFixHttpTests.CompressedBody_IsBoundedAfterDecompression () [0x00050] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:41
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1022" name="OversizedDeclaredChunkedAndErrorBodies_AreRejectedDuringReceive" fullname="OpenEmpires.Tests.CommanderGrandFixHttpTests.OversizedDeclaredChunkedAndErrorBodies_AreRejectedDuringReceive" classname="OpenEmpires.Tests.CommanderGrandFixHttpTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-07 18:07:03Z" end-time="2026-10-07 18:07:05Z" duration="1.418265" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1019" name="OversizedDeclaredChunkedAndErrorBodies_AreRejectedDuringReceive(False,200)" fullname="OpenEmpires.Tests.CommanderGrandFixHttpTests.OversizedDeclaredChunkedAndErrorBodies_AreRejectedDuringReceive(False,200)" methodname="OversizedDeclaredChunkedAndErrorBodies_AreRejectedDuringReceive" classname="OpenEmpires.Tests.CommanderGrandFixHttpTests" runstate="Runnable" seed="2045231354" result="Failed" start-time="2026-10-07 18:07:03Z" end-time="2026-10-07 18:07:04Z" duration="0.433315" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Oversized application-visible response must fail during receive.
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixHttpTests.ExpectOversized (System.Uri uri) [0x0008d] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:70
+at OpenEmpires.Tests.CommanderGrandFixHttpTests+<>c.<OversizedDeclaredChunkedAndErrorBodies_AreRejectedDuringReceive>b__0_0 (System.Uri uri) [0x00024] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:23
+at OpenEmpires.Tests.CommanderGrandFixHttpTests.WithResponse (System.String body, System.Int32 status, System.Boolean chunked, System.Boolean compressed, System.Func`2[T,TResult] assertion) [0x0010f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:124
+at OpenEmpires.Tests.CommanderGrandFixHttpTests.WithResponse (System.String body, System.Int32 status, System.Boolean chunked, System.Boolean compressed, System.Func`2[T,TResult] assertion) [0x002ab] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:135
+at OpenEmpires.Tests.CommanderGrandFixHttpTests.OversizedDeclaredChunkedAndErrorBodies_AreRejectedDuringReceive (System.Boolean chunked, System.Int32 status) [0x00056] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:21
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1020" name="OversizedDeclaredChunkedAndErrorBodies_AreRejectedDuringReceive(True,200)" fullname="OpenEmpires.Tests.CommanderGrandFixHttpTests.OversizedDeclaredChunkedAndErrorBodies_AreRejectedDuringReceive(True,200)" methodname="OversizedDeclaredChunkedAndErrorBodies_AreRejectedDuringReceive" classname="OpenEmpires.Tests.CommanderGrandFixHttpTests" runstate="Runnable" seed="474803988" result="Failed" start-time="2026-10-07 18:07:04Z" end-time="2026-10-07 18:07:04Z" duration="0.436825" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Oversized application-visible response must fail during receive.
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixHttpTests.ExpectOversized (System.Uri uri) [0x0008d] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:70
+at OpenEmpires.Tests.CommanderGrandFixHttpTests+<>c.<OversizedDeclaredChunkedAndErrorBodies_AreRejectedDuringReceive>b__0_0 (System.Uri uri) [0x00024] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:23
+at OpenEmpires.Tests.CommanderGrandFixHttpTests.WithResponse (System.String body, System.Int32 status, System.Boolean chunked, System.Boolean compressed, System.Func`2[T,TResult] assertion) [0x0010f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:124
+at OpenEmpires.Tests.CommanderGrandFixHttpTests.WithResponse (System.String body, System.Int32 status, System.Boolean chunked, System.Boolean compressed, System.Func`2[T,TResult] assertion) [0x002ab] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:135
+at OpenEmpires.Tests.CommanderGrandFixHttpTests.OversizedDeclaredChunkedAndErrorBodies_AreRejectedDuringReceive (System.Boolean chunked, System.Int32 status) [0x00056] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:21
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1021" name="OversizedDeclaredChunkedAndErrorBodies_AreRejectedDuringReceive(True,500)" fullname="OpenEmpires.Tests.CommanderGrandFixHttpTests.OversizedDeclaredChunkedAndErrorBodies_AreRejectedDuringReceive(True,500)" methodname="OversizedDeclaredChunkedAndErrorBodies_AreRejectedDuringReceive" classname="OpenEmpires.Tests.CommanderGrandFixHttpTests" runstate="Runnable" seed="1145303897" result="Failed" start-time="2026-10-07 18:07:04Z" end-time="2026-10-07 18:07:05Z" duration="0.436895" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Oversized application-visible response must fail during receive.
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixHttpTests.ExpectOversized (System.Uri uri) [0x0008d] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:70
+at OpenEmpires.Tests.CommanderGrandFixHttpTests+<>c.<OversizedDeclaredChunkedAndErrorBodies_AreRejectedDuringReceive>b__0_0 (System.Uri uri) [0x00024] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:23
+at OpenEmpires.Tests.CommanderGrandFixHttpTests.WithResponse (System.String body, System.Int32 status, System.Boolean chunked, System.Boolean compressed, System.Func`2[T,TResult] assertion) [0x0010f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:124
+at OpenEmpires.Tests.CommanderGrandFixHttpTests.WithResponse (System.String body, System.Int32 status, System.Boolean chunked, System.Boolean compressed, System.Func`2[T,TResult] assertion) [0x002ab] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:135
+at OpenEmpires.Tests.CommanderGrandFixHttpTests.OversizedDeclaredChunkedAndErrorBodies_AreRejectedDuringReceive (System.Boolean chunked, System.Int32 status) [0x00056] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixHttpTests.cs:21
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

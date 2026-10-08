@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Failed(Child)" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-07 21:01:08Z" end-time="2026-10-07 21:01:09Z" duration="1.3016729">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1193" result="Failed" site="Child" start-time="2026-10-07 21:01:08Z" end-time="2026-10-07 21:01:09Z" duration="1.301673" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2364" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1193" result="Failed" site="Child" start-time="2026-10-07 21:01:08Z" end-time="2026-10-07 21:01:09Z" duration="1.193716" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2365" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1193" result="Failed" site="Child" start-time="2026-10-07 21:01:08Z" end-time="2026-10-07 21:01:09Z" duration="1.104447" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2366" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1193" result="Failed" site="Child" start-time="2026-10-07 21:01:08Z" end-time="2026-10-07 21:01:09Z" duration="0.998128" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1068" name="CommanderGrandFixVoiceConsentTests" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" testcasecount="11" result="Failed" site="Child" start-time="2026-10-07 21:01:08Z" end-time="2026-10-07 21:01:09Z" duration="0.885833" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="ParameterizedMethod" id="1079" name="ConfirmPreview_CallbackCancellationCannotSubmitOldText" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.ConfirmPreview_CallbackCancellationCannotSubmitOldText" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-07 21:01:08Z" end-time="2026-10-07 21:01:09Z" duration="0.763179" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1077" name="ConfirmPreview_CallbackCancellationCannotSubmitOldText(False)" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.ConfirmPreview_CallbackCancellationCannotSubmitOldText(False)" methodname="ConfirmPreview_CallbackCancellationCannotSubmitOldText" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" seed="741698711" result="Failed" start-time="2026-10-07 21:01:09Z" end-time="2026-10-07 21:01:09Z" duration="0.335837" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: 0
+  But was:  1
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.ConfirmPreview_CallbackCancellationCannotSubmitOldText (System.Boolean dispose) [0x001ba] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixVoiceConsentTests.cs:73
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1078" name="ConfirmPreview_CallbackCancellationCannotSubmitOldText(True)" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.ConfirmPreview_CallbackCancellationCannotSubmitOldText(True)" methodname="ConfirmPreview_CallbackCancellationCannotSubmitOldText" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" seed="1225639691" result="Failed" start-time="2026-10-07 21:01:09Z" end-time="2026-10-07 21:01:09Z" duration="0.297850" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: 0
+  But was:  1
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.ConfirmPreview_CallbackCancellationCannotSubmitOldText (System.Boolean dispose) [0x001ba] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixVoiceConsentTests.cs:73
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-case id="1080" name="Dispose_ReentrantIdleCallbackCleansEachOwnedResourceOnce" fullname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.Dispose_ReentrantIdleCallbackCleansEachOwnedResourceOnce" methodname="Dispose_ReentrantIdleCallbackCleansEachOwnedResourceOnce" classname="OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests" runstate="Runnable" seed="1221576507" result="Failed" start-time="2026-10-07 21:01:09Z" end-time="2026-10-07 21:01:09Z" duration="0.008938" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: 1
+  But was:  2
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixVoiceConsentTests.Dispose_ReentrantIdleCallbackCleansEachOwnedResourceOnce () [0x0006b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixVoiceConsentTests.cs:80
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

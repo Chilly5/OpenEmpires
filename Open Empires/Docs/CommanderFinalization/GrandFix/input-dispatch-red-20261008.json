@@ -1,0 +1,42 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "0cf93c06024248cfa0edf82c76f6e361",
+    "status": "failed",
+    "mode": "EditMode",
+    "started_unix_ms": 1791418507646,
+    "finished_unix_ms": 1791418510747,
+    "last_update_unix_ms": 1791418510747,
+    "progress": {
+      "completed": 3,
+      "total": 3,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791418510204,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.GameplayAttackMoveCallback_IsInertWhileAnotherTextFieldOwnsKeyboard",
+      "last_finished_unix_ms": 1791418510679,
+      "stuck_suspected": false,
+      "editor_is_focused": true,
+      "blocked_reason": null,
+      "failures_so_far": [
+        {
+          "full_name": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.CameraMiddleButton_IsInertWhileTypingAndDoesNotAcquirePointerLock",
+          "message": "  Expected: False\r\n  But was:  True\r\n"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.EscapeCallbackBeforeCommanderUpdate_MinimizesOnceWithoutOpeningSettings",
+          "message": "  Input callbacks occur before MonoBehaviour.Update; Commander must own Escape first.\r\n  Expected: False\r\n  But was:  True\r\n"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.GameplayAttackMoveCallback_IsInertWhileAnotherTextFieldOwnsKeyboard",
+          "message": "  Expected: False\r\n  But was:  True\r\n"
+        }
+      ],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": null
+  },
+  "hint": null
+}

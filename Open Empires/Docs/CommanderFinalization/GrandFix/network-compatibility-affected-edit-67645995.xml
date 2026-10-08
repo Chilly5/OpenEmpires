@@ -1,0 +1,836 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="46" result="Passed" total="46" passed="46" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 17:42:44Z" end-time="2026-10-08 17:43:15Z" duration="31.2433458">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1472" result="Passed" start-time="2026-10-08 17:42:44Z" end-time="2026-10-08 17:43:15Z" duration="31.243346" total="46" passed="46" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="2695" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1472" result="Passed" start-time="2026-10-08 17:42:44Z" end-time="2026-10-08 17:43:15Z" duration="31.141224" total="46" passed="46" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="27016" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="2696" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1472" result="Passed" start-time="2026-10-08 17:42:44Z" end-time="2026-10-08 17:43:15Z" duration="31.053189" total="46" passed="46" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="2697" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1472" result="Passed" start-time="2026-10-08 17:42:44Z" end-time="2026-10-08 17:43:15Z" duration="30.953430" total="46" passed="46" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1002" name="CommanderEconomyClarificationTests" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" testcasecount="15" result="Passed" start-time="2026-10-08 17:42:44Z" end-time="2026-10-08 17:43:04Z" duration="19.467764" total="15" passed="15" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderEconomyClarification" />
+            </properties>
+            <test-case id="1003" name="CountReplies_FillPendingSlotsWithoutProduction" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.CountReplies_FillPendingSlotsWithoutProduction" methodname="CountReplies_FillPendingSlotsWithoutProduction" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1329223200" result="Passed" start-time="2026-10-08 17:42:44Z" end-time="2026-10-08 17:42:46Z" duration="1.787861" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] intent=admitted;goal-submitted=True
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] intent=admitted;goal-submitted=True
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] intent=admitted;goal-submitted=True
+]]></output>
+            </test-case>
+            <test-case id="1011" name="HumanTakeover_InterruptsWithoutReclaimAfterLease" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.HumanTakeover_InterruptsWithoutReclaimAfterLease" methodname="HumanTakeover_InterruptsWithoutReclaimAfterLease" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1746504657" result="Passed" start-time="2026-10-08 17:42:46Z" end-time="2026-10-08 17:42:47Z" duration="0.398745" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[Commander] Goal #1: status=Blocked owned=0 queued=0; The player took control of a selected worker; this request will not reclaim or replace it.
+]]></output>
+            </test-case>
+            <test-case id="1005" name="IndependentProduction_SupersedesWorkerClarification" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.IndependentProduction_SupersedesWorkerClarification" methodname="IndependentProduction_SupersedesWorkerClarification" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="268827604" result="Passed" start-time="2026-10-08 17:42:47Z" end-time="2026-10-08 17:42:47Z" duration="0.400601" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] intent=admitted;goal-submitted=True
+]]></output>
+            </test-case>
+            <test-case id="1017" name="InvalidAllocationSchema_RejectsBoundsFieldsAndIncompatibleSources" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.InvalidAllocationSchema_RejectsBoundsFieldsAndIncompatibleSources" methodname="InvalidAllocationSchema_RejectsBoundsFieldsAndIncompatibleSources" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1193331946" result="Passed" start-time="2026-10-08 17:42:47Z" end-time="2026-10-08 17:42:47Z" duration="0.004442" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1004" name="MultiFieldReplies_CancelOrBoundAmbiguousContinuation" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.MultiFieldReplies_CancelOrBoundAmbiguousContinuation" methodname="MultiFieldReplies_CancelOrBoundAmbiguousContinuation" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1606506546" result="Passed" start-time="2026-10-08 17:42:47Z" end-time="2026-10-08 17:42:50Z" duration="3.303572" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] intent=admitted;goal-submitted=True
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] intent=admitted;goal-submitted=True
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] intent=admitted;goal-submitted=True
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] intent=admitted;goal-submitted=True
+]]></output>
+            </test-case>
+            <test-case id="1012" name="ProviderProjectionAndSchema_ExposeAllEconomyFields" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.ProviderProjectionAndSchema_ExposeAllEconomyFields" methodname="ProviderProjectionAndSchema_ExposeAllEconomyFields" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1292852045" result="Passed" start-time="2026-10-08 17:42:50Z" end-time="2026-10-08 17:42:51Z" duration="0.501704" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[CommanderProvider] utc=2026-10-08T17:42:51.3695294Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=1
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=241;finish=stop
+[CommanderProvider] semantic=Clarify;nodes=0
+]]></output>
+            </test-case>
+            <test-case id="1007" name="QuantityModes_KeepBaselineTransferAndAllMatchingDistinct" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.QuantityModes_KeepBaselineTransferAndAllMatchingDistinct" methodname="QuantityModes_KeepBaselineTransferAndAllMatchingDistinct" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="2004039757" result="Passed" start-time="2026-10-08 17:42:51Z" end-time="2026-10-08 17:42:53Z" duration="2.602463" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[Commander] Goal #1: status=Executing owned=0 queued=0; Waiting for the issued worker command to be processed.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[Commander] Goal #1: status=Executing owned=0 queued=0; Waiting for the issued worker command to be processed.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Completed owned=6 queued=0; The requested worker total is already satisfied.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[Commander] Goal #1: status=Executing owned=0 queued=0; Waiting for the issued worker command to be processed.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No eligible workers matched the one-time snapshot.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Blocked owned=0 queued=0; The matching worker snapshot exceeds the allowed bound.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=0 PRE-CMD=52102DCE cmds=1
+[SyncCheck] tick=0 POST-CMD=7AB53AD4
+[SyncCheck] tick=0 PRE-AI-EXEC=7AB53AD4 aiCmds=0
+[SyncCheck] INIT tick=1 checksum=DC446167 systemDetail=7AB53AD4,1C035B56,1C035B56,1C035B56,1C035B56,1C035B56,1C035B56,F98DE140,F98DE140
+[Commander] Goal #1: status=Completed owned=3 queued=0; The 3 selected workers have matching assignments.
+]]></output>
+            </test-case>
+            <test-case id="1010" name="ReservationPreflight_DistributesCapacityOrIssuesNothing" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.ReservationPreflight_DistributesCapacityOrIssuesNothing" methodname="ReservationPreflight_DistributesCapacityOrIssuesNothing" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1276914325" result="Passed" start-time="2026-10-08 17:42:53Z" end-time="2026-10-08 17:42:54Z" duration="0.724422" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Blocked owned=0 queued=0; Only 2 eligible workers are available; 4 are required.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=0 PRE-CMD=86871A4B cmds=1
+[SyncCheck] tick=0 POST-CMD=86871A4D
+[SyncCheck] tick=0 PRE-AI-EXEC=86871A4D aiCmds=0
+[SyncCheck] INIT tick=1 checksum=D376250A systemDetail=86871A4D,869D4B4B,869D4B4B,869D4B4B,869D4B4B,869D4B4B,869D4B4B,869D4B4B,869D4B4B
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=1 PRE-CMD=869D4B4B cmds=1
+[SyncCheck] tick=1 POST-CMD=86B97A4D
+[SyncCheck] tick=1 PRE-AI-EXEC=86B97A4D aiCmds=0
+[SyncCheck] INIT tick=2 checksum=AEEC7CC6 systemDetail=86B97A4D,82BB054D,82BB054D,82BB054D,82BB054D,82BB054D,82BB054D,82BB054D,82BB054D
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=2 PRE-CMD=82BB054D cmds=1
+[SyncCheck] tick=2 POST-CMD=AB43E34F
+[SyncCheck] tick=2 PRE-AI-EXEC=AB43E34F aiCmds=0
+[SyncCheck] tick=3 checksum=CE497CF6
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=3 PRE-CMD=7A9CB69A cmds=1
+[SyncCheck] tick=3 POST-CMD=57A2C39C
+[SyncCheck] tick=3 PRE-AI-EXEC=57A2C39C aiCmds=0
+[SyncCheck] tick=4 checksum=4ADF793B
+]]></output>
+            </test-case>
+            <test-case id="1006" name="ResetRuntimeAndLateReply_CannotResumeOldPending" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.ResetRuntimeAndLateReply_CannotResumeOldPending" methodname="ResetRuntimeAndLateReply_CannotResumeOldPending" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="646803751" result="Passed" start-time="2026-10-08 17:42:54Z" end-time="2026-10-08 17:42:57Z" duration="2.954340" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+]]></output>
+            </test-case>
+            <test-case id="1016" name="SemanticMappings_PreserveWorkerAndSourceCriteria" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.SemanticMappings_PreserveWorkerAndSourceCriteria" methodname="SemanticMappings_PreserveWorkerAndSourceCriteria" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="305323300" result="Passed" start-time="2026-10-08 17:42:57Z" end-time="2026-10-08 17:42:57Z" duration="0.015910" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1013" name="SharedTextAndRegressionRoutes_PreserveExistingBehavior" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.SharedTextAndRegressionRoutes_PreserveExistingBehavior" methodname="SharedTextAndRegressionRoutes_PreserveExistingBehavior" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="332717580" result="Passed" start-time="2026-10-08 17:42:57Z" end-time="2026-10-08 17:42:58Z" duration="0.524080" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] intent=admitted;goal-submitted=True
+[Commander] context=projected;provider-request=started
+[Commander] Goal #2 submitted: EnsureUnitCount
+[Commander] intent=admitted;goal-submitted=True
+[Commander] context=projected;provider-request=started
+[Commander] Goal #3 submitted: EnsureUnitCount
+[Commander] intent=admitted;goal-submitted=True
+[Commander] context=projected;provider-request=started
+[Commander] Goal #4 submitted: BuildStructure
+[Commander] intent=admitted;goal-submitted=True
+]]></output>
+            </test-case>
+            <test-case id="1014" name="SourceConstraints_RoundtripJsonBinaryQueuedAndLegacyDefaults" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.SourceConstraints_RoundtripJsonBinaryQueuedAndLegacyDefaults" methodname="SourceConstraints_RoundtripJsonBinaryQueuedAndLegacyDefaults" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1036618158" result="Passed" start-time="2026-10-08 17:42:58Z" end-time="2026-10-08 17:42:58Z" duration="0.025402" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[CommandSerializer] Failed to parse Gather: Invalid resource source kind.
+[CommandSerializer] Failed to parse Gather: Invalid resource source kind.
+[CommandSerializer] Failed to parse Gather: Invalid resource source kind.
+[CommandSerializer] Failed to parse Gather: Invalid resource source kind.
+[CommandSerializer] Failed to parse Gather: Invalid resource source kind.
+]]></output>
+            </test-case>
+            <test-case id="1015" name="SourceConstraints_SurviveFallbackDepletionAndClearOnHumanOrder" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.SourceConstraints_SurviveFallbackDepletionAndClearOnHumanOrder" methodname="SourceConstraints_SurviveFallbackDepletionAndClearOnHumanOrder" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1427832181" result="Passed" start-time="2026-10-08 17:42:58Z" end-time="2026-10-08 17:43:00Z" duration="2.240707" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[SyncCheck] tick=0 PRE-CMD=11808F91 cmds=1
+[SyncCheck] tick=0 POST-CMD=11808F93
+[SyncCheck] tick=0 PRE-AI-EXEC=11808F93 aiCmds=0
+[SyncCheck] INIT tick=1 checksum=0D3411E1 systemDetail=11808F93,119BC711,119BC711,119BC711,119BC711,119BC711,119BC711,119BC711,119BC711
+[SyncCheck] tick=2 checksum=CCDE6682
+[SyncCheck] tick=3 checksum=8C88BB23
+[SyncCheck] tick=4 checksum=4C330FC4
+[SyncCheck] tick=5 checksum=E79EE026
+[SyncCheck] tick=6 checksum=A74934C7
+[SyncCheck] tick=7 checksum=66F38968
+[SyncCheck] tick=8 checksum=269DDE09
+[SyncCheck] tick=9 checksum=E64832AA
+[SyncCheck] tick=10 checksum=A5F2874B
+[SyncCheck] tick=11 checksum=659CDBEC
+[SyncCheck] tick=12 checksum=2547308D
+[SyncCheck] tick=13 checksum=E4F1852E
+[SyncCheck] tick=14 checksum=082DDD70
+[SyncCheck] tick=15 checksum=64462E70
+[SyncCheck] tick=16 checksum=878286B2
+[SyncCheck] tick=17 checksum=472CDB53
+[SyncCheck] tick=18 checksum=06D72FF4
+[SyncCheck] tick=19 checksum=C6818495
+[SyncCheck] tick=20 checksum=862BD936
+[SyncCheck] tick=21 checksum=45D62DD7
+[SyncCheck] tick=22 checksum=05808278
+[SyncCheck] tick=23 checksum=C52AD719
+[SyncCheck] tick=24 checksum=84D52BBA
+[SyncCheck] tick=25 checksum=447F805B
+[SyncCheck] tick=26 checksum=0429D4FC
+[SyncCheck] tick=27 checksum=C3D4299D
+[SyncCheck] tick=28 checksum=837E7E3E
+[SyncCheck] tick=29 checksum=4328D2DF
+[SyncCheck] tick=30 checksum=02D32780
+[SyncCheck] tick=31 checksum=C27D7C21
+[SyncCheck] tick=32 checksum=5DE94C83
+[SyncCheck] tick=33 checksum=1D93A124
+[SyncCheck] tick=34 checksum=DD3DF5C5
+[SyncCheck] tick=35 checksum=9CE84A66
+[SyncCheck] tick=36 checksum=5C929F07
+[SyncCheck] tick=37 checksum=1C3CF3A8
+[SyncCheck] tick=38 checksum=DBE74849
+[SyncCheck] tick=39 checksum=9B919CEA
+[SyncCheck] tick=40 checksum=5B3BF18B
+[SyncCheck] tick=41 checksum=1AE6462C
+[SyncCheck] tick=42 checksum=DA909ACD
+[SyncCheck] tick=43 checksum=9A3AEF6E
+[SyncCheck] tick=44 checksum=59E5440F
+[SyncCheck] tick=45 checksum=198F98B0
+[SyncCheck] tick=46 checksum=D939ED51
+[SyncCheck] tick=47 checksum=98E441F2
+[SyncCheck] tick=48 checksum=5783CA08
+[SyncCheck] tick=49 checksum=66951CAD
+[SyncCheck] tick=50 checksum=0152A9B8
+[SyncCheck] tick=51 checksum=D8CC49E8
+[SyncCheck] tick=52 checksum=ADB2E5BC
+[SyncCheck] tick=53 checksum=22E79856
+[SyncCheck] tick=54 checksum=4DFA7576
+[SyncCheck] tick=55 checksum=EEA9C65A
+[SyncCheck] tick=56 checksum=E1A9A604
+[SyncCheck] tick=57 checksum=6E847DB1
+[SyncCheck] tick=58 checksum=29715FE5
+[SyncCheck] tick=59 checksum=A86B2A3C
+[SyncCheck] tick=60 checksum=79B58359
+[SyncCheck] tick=61 checksum=4E6043FB
+[SyncCheck] tick=62 checksum=6EE874A0
+[SyncCheck] tick=63 checksum=84229C4B
+[SyncCheck] tick=64 checksum=248DB35B
+[SyncCheck] tick=65 checksum=5618BDD0
+[SyncCheck] tick=66 checksum=6FF39C88
+[SyncCheck] tick=67 checksum=0650FA26
+[SyncCheck] tick=68 checksum=CA40AF69
+[SyncCheck] tick=69 checksum=043FC4CF
+[SyncCheck] tick=70 checksum=CF63357B
+[SyncCheck] tick=71 checksum=1096064A
+[SyncCheck] tick=72 checksum=1BCD92FE
+[SyncCheck] tick=73 checksum=8E660F56
+[SyncCheck] tick=74 checksum=CB034793
+[SyncCheck] tick=75 checksum=0B73D3B4
+[SyncCheck] tick=76 checksum=D6959C58
+[SyncCheck] tick=77 checksum=E4DE3842
+[SyncCheck] tick=78 checksum=6F29A030
+[SyncCheck] tick=79 checksum=99B65861
+[SyncCheck] tick=80 checksum=404A4477
+[SyncCheck] tick=81 checksum=62E0FC91
+[SyncCheck] tick=82 checksum=017EE890
+[SyncCheck] tick=83 checksum=55000132
+[SyncCheck] tick=84 checksum=D6865DD8
+[SyncCheck] tick=85 checksum=7081EAC2
+[SyncCheck] tick=86 checksum=D4F51FF0
+[SyncCheck] tick=87 checksum=EE4B81C1
+[SyncCheck] tick=88 checksum=ADDB0797
+[SyncCheck] tick=89 checksum=37DDCDD0
+[SyncCheck] tick=90 checksum=7C80CC8E
+[SyncCheck] tick=91 checksum=3C2B212F
+[SyncCheck] tick=92 checksum=FBD575D0
+[SyncCheck] tick=93 checksum=1F11CE12
+[SyncCheck] tick=94 checksum=DEBC22B3
+[SyncCheck] tick=95 checksum=9E667754
+[SyncCheck] tick=96 checksum=5E10CBF5
+[SyncCheck] tick=97 checksum=1DBB2096
+[SyncCheck] tick=98 checksum=DD657537
+[SyncCheck] tick=99 checksum=78D14599
+[SyncCheck] tick=100 checksum=387B9A3A
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=0 PRE-CMD=11808F91 cmds=1
+[SyncCheck] tick=0 POST-CMD=11808F93
+[SyncCheck] tick=0 PRE-AI-EXEC=11808F93 aiCmds=0
+[SyncCheck] INIT tick=1 checksum=B5ECB68B systemDetail=11808F93,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B
+[SyncCheck] tick=2 checksum=8CBF8E84
+[SyncCheck] tick=3 checksum=6392667D
+[SyncCheck] tick=4 checksum=3A653E76
+[SyncCheck] tick=5 checksum=1138166F
+[SyncCheck] tick=6 checksum=E80AEE68
+[SyncCheck] tick=7 checksum=BEDDC661
+[SyncCheck] tick=8 checksum=95B09E5A
+[SyncCheck] tick=9 checksum=6C837653
+[SyncCheck] tick=10 checksum=43564E4C
+[SyncCheck] tick=11 checksum=1A292645
+[SyncCheck] tick=12 checksum=F0FBFE3E
+[SyncCheck] tick=13 checksum=C7CED637
+[SyncCheck] tick=14 checksum=9EA1AE30
+[SyncCheck] tick=15 checksum=75748629
+[SyncCheck] tick=16 checksum=4C475E22
+[SyncCheck] tick=17 checksum=231A361B
+[SyncCheck] tick=18 checksum=F9ED0E14
+[SyncCheck] tick=19 checksum=D0BFE60D
+[SyncCheck] tick=20 checksum=A792BE06
+[SyncCheck] tick=21 checksum=7E6595FF
+[SyncCheck] tick=22 checksum=55386DF8
+[SyncCheck] tick=23 checksum=2C0B45F1
+[SyncCheck] tick=24 checksum=02DE1DEA
+[SyncCheck] tick=25 checksum=D9B0F5E3
+[SyncCheck] tick=26 checksum=B083CDDC
+[SyncCheck] tick=27 checksum=8756A5D5
+[SyncCheck] tick=28 checksum=5E297DCE
+[SyncCheck] tick=29 checksum=34FC55C7
+[SyncCheck] tick=30 checksum=0BCF2DC0
+[SyncCheck] tick=31 checksum=E2A205B9
+[SyncCheck] tick=32 checksum=B974DDB2
+[SyncCheck] tick=33 checksum=9047B5AB
+[SyncCheck] tick=34 checksum=671A8DA4
+[SyncCheck] tick=35 checksum=3DED659D
+[SyncCheck] tick=36 checksum=14C03D96
+[SyncCheck] tick=37 checksum=F9A6D2D6
+[SyncCheck] tick=38 checksum=F3A89F72
+[SyncCheck] tick=39 checksum=063C3AA6
+[SyncCheck] tick=40 checksum=1D3028B2
+[SyncCheck] tick=41 checksum=A2B3F1B5
+[SyncCheck] tick=42 checksum=9A058DF1
+[SyncCheck] tick=43 checksum=6A168D43
+[SyncCheck] tick=44 checksum=8054700C
+[SyncCheck] tick=45 checksum=46EEBE6B
+[SyncCheck] tick=46 checksum=3F847481
+[SyncCheck] tick=47 checksum=BCD5A66B
+[SyncCheck] tick=48 checksum=D651C82B
+[SyncCheck] tick=49 checksum=E1F6E620
+[SyncCheck] tick=50 checksum=5E260429
+[SyncCheck] tick=51 checksum=227C2AC6
+[SyncCheck] tick=52 checksum=432AD5B7
+[SyncCheck] tick=53 checksum=1630115B
+[SyncCheck] tick=54 checksum=1D2AD9D3
+[SyncCheck] tick=55 checksum=D67C32FE
+[SyncCheck] tick=56 checksum=16832D1A
+[SyncCheck] tick=57 checksum=E07DC069
+[SyncCheck] tick=58 checksum=76890169
+[SyncCheck] tick=59 checksum=4D5BD962
+[SyncCheck] tick=60 checksum=242EB15B
+[SyncCheck] tick=61 checksum=FB018954
+[SyncCheck] tick=62 checksum=D1D4614D
+[SyncCheck] tick=63 checksum=A8A73946
+[SyncCheck] tick=64 checksum=7F7A113F
+[SyncCheck] tick=65 checksum=564CE938
+[SyncCheck] tick=66 checksum=2D1FC131
+[SyncCheck] tick=67 checksum=03F2992A
+[SyncCheck] tick=68 checksum=DAC57123
+[SyncCheck] tick=69 checksum=B198491C
+[SyncCheck] tick=70 checksum=886B2115
+[SyncCheck] tick=71 checksum=5F3DF90E
+[SyncCheck] tick=72 checksum=3610D107
+[SyncCheck] tick=73 checksum=0CE3A900
+[SyncCheck] tick=74 checksum=E3B680F9
+[SyncCheck] tick=75 checksum=0A59D8A9
+[SyncCheck] tick=76 checksum=4D3FF8D0
+[SyncCheck] tick=77 checksum=DA6BFFD4
+[SyncCheck] tick=78 checksum=DF790294
+[SyncCheck] tick=79 checksum=A17189F1
+[SyncCheck] tick=80 checksum=E3C122AB
+[SyncCheck] tick=81 checksum=69D35982
+[SyncCheck] tick=82 checksum=F713BB36
+[SyncCheck] tick=83 checksum=E4BE4C68
+[SyncCheck] tick=84 checksum=DECF25D6
+[SyncCheck] tick=85 checksum=6311543F
+[SyncCheck] tick=86 checksum=39E42C38
+[SyncCheck] tick=87 checksum=10B70431
+[SyncCheck] tick=88 checksum=E789DC2A
+[SyncCheck] tick=89 checksum=BE5CB423
+[SyncCheck] tick=90 checksum=952F8C1C
+[SyncCheck] tick=91 checksum=6C026415
+[SyncCheck] tick=92 checksum=42D53C0E
+[SyncCheck] tick=93 checksum=19A81407
+[SyncCheck] tick=94 checksum=370F952C
+[SyncCheck] tick=95 checksum=1CB93823
+[SyncCheck] tick=96 checksum=A0F7F7C2
+[SyncCheck] tick=97 checksum=525B58F6
+[SyncCheck] tick=98 checksum=EB13D06E
+[SyncCheck] tick=99 checksum=CEB6D65B
+[SyncCheck] tick=100 checksum=A589AE54
+[Commander] Goal #1: status=Completed owned=1 queued=0; The 1 selected workers have matching assignments.
+[SyncCheck] tick=0 PRE-CMD=11808F91 cmds=2
+[SyncCheck] tick=0 POST-CMD=11808F92
+[SyncCheck] tick=0 PRE-AI-EXEC=11808F92 aiCmds=0
+[SyncCheck] INIT tick=1 checksum=CECBBE3A systemDetail=11808F92,11A0961A,11A0961A,11A0961A,11A0961A,11A0961A,11A0961A,11A0961A,11A0961A
+[SyncCheck] tick=2 checksum=64A44CD1
+[SyncCheck] tick=3 checksum=FA7CDB68
+[SyncCheck] tick=4 checksum=905569FF
+[SyncCheck] tick=5 checksum=262DF896
+[SyncCheck] tick=6 checksum=BC06872D
+[SyncCheck] tick=7 checksum=51DF15C4
+[SyncCheck] tick=8 checksum=E7B7A45B
+[SyncCheck] tick=9 checksum=7D9032F2
+[SyncCheck] tick=10 checksum=1368C189
+[SyncCheck] tick=11 checksum=A9415020
+[SyncCheck] tick=12 checksum=3F19DEB7
+[SyncCheck] tick=13 checksum=D4F26D4E
+[SyncCheck] tick=14 checksum=6ACAFBE5
+[SyncCheck] tick=15 checksum=00A38A7C
+[SyncCheck] tick=16 checksum=967C1913
+[SyncCheck] tick=17 checksum=2C54A7AA
+[SyncCheck] tick=18 checksum=C22D3641
+[SyncCheck] tick=19 checksum=0CA627DF
+[SyncCheck] tick=20 checksum=817B7943
+[SyncCheck] tick=21 checksum=936E5525
+[SyncCheck] tick=22 checksum=1385EBC3
+[SyncCheck] tick=23 checksum=2BEB8A3E
+[SyncCheck] tick=24 checksum=9B06ED56
+[SyncCheck] tick=25 checksum=1F3FD1CB
+[SyncCheck] tick=26 checksum=76FDF45D
+[SyncCheck] tick=27 checksum=E2480DED
+[SyncCheck] tick=28 checksum=32254EB9
+[SyncCheck] tick=29 checksum=8F5559C6
+[SyncCheck] tick=30 checksum=252DE85D
+[SyncCheck] tick=31 checksum=BB0676F4
+[SyncCheck] tick=32 checksum=50DF058B
+[SyncCheck] tick=33 checksum=E6B79422
+[SyncCheck] tick=34 checksum=7C9022B9
+[SyncCheck] tick=35 checksum=1268B150
+[SyncCheck] tick=36 checksum=A8413FE7
+[SyncCheck] tick=37 checksum=3E19CE7E
+[SyncCheck] tick=38 checksum=22E27C35
+[SyncCheck] tick=39 checksum=A493EAC6
+[SyncCheck] tick=40 checksum=F3AA83DE
+[SyncCheck] tick=41 checksum=C5DE408D
+[SyncCheck] tick=42 checksum=21E0D85F
+[SyncCheck] tick=43 checksum=87612216
+[SyncCheck] tick=44 checksum=F4BCD16F
+[SyncCheck] tick=45 checksum=B3123F44
+[SyncCheck] tick=46 checksum=48EACDDB
+[SyncCheck] tick=47 checksum=9B7EAB4F
+[SyncCheck] tick=48 checksum=64B92CE5
+[SyncCheck] tick=49 checksum=D2AEA70C
+[SyncCheck] tick=50 checksum=EEE06063
+[SyncCheck] tick=51 checksum=18F75E99
+[SyncCheck] tick=52 checksum=BC84FA89
+[SyncCheck] tick=53 checksum=088FBA4F
+[SyncCheck] tick=54 checksum=04579ECD
+[SyncCheck] tick=55 checksum=FB9E9D10
+[SyncCheck] tick=56 checksum=1C76374B
+[SyncCheck] tick=56 PRE-CMD=19028F93 cmds=1
+[SyncCheck] tick=56 POST-CMD=19028F91
+[SyncCheck] tick=56 PRE-AI-EXEC=19028F91 aiCmds=0
+[SyncCheck] tick=57 checksum=C965447C
+[SyncCheck] tick=0 PRE-CMD=492DD370 cmds=1
+[SyncCheck] tick=0 POST-CMD=49D6ED7C
+[SyncCheck] tick=0 PRE-AI-EXEC=49D6ED7C aiCmds=0
+[SyncCheck] INIT tick=1 checksum=AC17F927 systemDetail=49D6ED7C,495819FD,495819FD,495819FD,495819FD,495819FD,495819FD,495819FD,495819FD
+[SyncCheck] tick=0 PRE-CMD=11808F91 cmds=1
+[SyncCheck] tick=0 POST-CMD=11808F93
+[SyncCheck] tick=0 PRE-AI-EXEC=11808F93 aiCmds=0
+[SyncCheck] INIT tick=1 checksum=DF364DAA systemDetail=11808F93,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B
+[SyncCheck] tick=0 PRE-CMD=11808F91 cmds=1
+[SyncCheck] tick=0 POST-CMD=11808F93
+[SyncCheck] tick=0 PRE-AI-EXEC=11808F93 aiCmds=0
+[SyncCheck] INIT tick=1 checksum=DF364DAA systemDetail=11808F93,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B
+]]></output>
+            </test-case>
+            <test-case id="1009" name="TargetResolution_RejectsUnknownExhaustedUnreachableAndWrongSources" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.TargetResolution_RejectsUnknownExhaustedUnreachableAndWrongSources" methodname="TargetResolution_RejectsUnknownExhaustedUnreachableAndWrongSources" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1801583881" result="Passed" start-time="2026-10-08 17:43:00Z" end-time="2026-10-08 17:43:02Z" duration="2.446413" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible Sheep/Food source is known.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible Sheep/Food source is known.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible Sheep/Food source is known.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Blocked owned=0 queued=0; Insufficient legal source capacity or no known reachable route in the bounded candidate search; no workers were assigned.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible Sheep/Food source is known.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible Sheep/Food source is known.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible Sheep/Food source is known.
+]]></output>
+            </test-case>
+            <test-case id="1008" name="WorkerSelection_RespectsOwnershipAuthorityAndCurrentResource" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.WorkerSelection_RespectsOwnershipAuthorityAndCurrentResource" methodname="WorkerSelection_RespectsOwnershipAuthorityAndCurrentResource" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="344338240" result="Passed" start-time="2026-10-08 17:43:02Z" end-time="2026-10-08 17:43:04Z" duration="1.425038" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: AllocateWorkers
+[Commander] Goal #2: status=Blocked owned=0 queued=0; Only 0 eligible workers are available; 1 are required.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Gold.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Blocked owned=0 queued=0; Only 2 eligible workers are available; 3 are required.
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1069" name="CommanderGrandFixGatewaySemanticTests" fullname="OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests" classname="OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-08 17:43:04Z" end-time="2026-10-08 17:43:05Z" duration="0.799798" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <test-case id="1072" name="ChangedBackendSession_RejectsLateSemanticResponse" fullname="OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests.ChangedBackendSession_RejectsLateSemanticResponse" methodname="ChangedBackendSession_RejectsLateSemanticResponse" classname="OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests" runstate="Runnable" seed="1098218819" result="Passed" start-time="2026-10-08 17:43:04Z" end-time="2026-10-08 17:43:04Z" duration="0.198918" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1071" name="DifferentProviderUrl_IsRejectedWithoutSilentModelSwitchOrNetwork" fullname="OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests.DifferentProviderUrl_IsRejectedWithoutSilentModelSwitchOrNetwork" methodname="DifferentProviderUrl_IsRejectedWithoutSilentModelSwitchOrNetwork" classname="OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests" runstate="Runnable" seed="1175936787" result="Passed" start-time="2026-10-08 17:43:04Z" end-time="2026-10-08 17:43:04Z" duration="0.298729" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1070" name="SemanticBody_UsesFixedGatewayAndBackendSessionNotClientProviderCredential" fullname="OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests.SemanticBody_UsesFixedGatewayAndBackendSessionNotClientProviderCredential" methodname="SemanticBody_UsesFixedGatewayAndBackendSessionNotClientProviderCredential" classname="OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests" runstate="Runnable" seed="29756060" result="Passed" start-time="2026-10-08 17:43:04Z" end-time="2026-10-08 17:43:05Z" duration="0.298988" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1134" name="CommanderGrandFixNetworkCompatibilityTests" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-10-08 17:43:05Z" end-time="2026-10-08 17:43:08Z" duration="3.508729" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <test-case id="1135" name="AuthenticatePacket_DeclaresSourceAndRestrictedCommandProfileWithoutUnsafeInterpolation" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.AuthenticatePacket_DeclaresSourceAndRestrictedCommandProfileWithoutUnsafeInterpolation" methodname="AuthenticatePacket_DeclaresSourceAndRestrictedCommandProfileWithoutUnsafeInterpolation" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="1712059972" result="Passed" start-time="2026-10-08 17:43:05Z" end-time="2026-10-08 17:43:06Z" duration="0.792110" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1146" name="BrowserRuntimeSourceChanges_ChangeSourceIdentity" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.BrowserRuntimeSourceChanges_ChangeSourceIdentity" methodname="BrowserRuntimeSourceChanges_ChangeSourceIdentity" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="150029114" result="Passed" start-time="2026-10-08 17:43:06Z" end-time="2026-10-08 17:43:06Z" duration="0.027407" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1145" name="Disconnect_ClearsQueuedMessagesBeforeNextConnection" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.Disconnect_ClearsQueuedMessagesBeforeNextConnection" methodname="Disconnect_ClearsQueuedMessagesBeforeNextConnection" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="1637269906" result="Passed" start-time="2026-10-08 17:43:06Z" end-time="2026-10-08 17:43:06Z" duration="0.236509" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1144" name="DuplicateAcknowledgement_CannotRewindInGameState" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.DuplicateAcknowledgement_CannotRewindInGameState" methodname="DuplicateAcknowledgement_CannotRewindInGameState" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="242535122" result="Passed" start-time="2026-10-08 17:43:06Z" end-time="2026-10-08 17:43:06Z" duration="0.676354" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Matchmaking] State: Disconnected -> Authenticating
+[Matchmaking] Authenticated as fixture
+[Matchmaking] State: Authenticating -> Authenticated
+[Matchmaking] State: Authenticated -> InGame
+]]></output>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1141" name="EachIncompatibleField_RejectsBeforeMatch" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-08 17:43:06Z" end-time="2026-10-08 17:43:07Z" duration="0.942645" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1137" name="EachIncompatibleField_RejectsBeforeMatch(&quot;protocol_revision&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch(&quot;protocol_revision&quot;)" methodname="EachIncompatibleField_RejectsBeforeMatch" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="427052412" result="Passed" start-time="2026-10-08 17:43:06Z" end-time="2026-10-08 17:43:07Z" duration="0.236417" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1138" name="EachIncompatibleField_RejectsBeforeMatch(&quot;source_sha256&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch(&quot;source_sha256&quot;)" methodname="EachIncompatibleField_RejectsBeforeMatch" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="1384582246" result="Passed" start-time="2026-10-08 17:43:07Z" end-time="2026-10-08 17:43:07Z" duration="0.235053" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1139" name="EachIncompatibleField_RejectsBeforeMatch(&quot;command_encoding&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch(&quot;command_encoding&quot;)" methodname="EachIncompatibleField_RejectsBeforeMatch" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="401848207" result="Passed" start-time="2026-10-08 17:43:07Z" end-time="2026-10-08 17:43:07Z" duration="0.232372" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1140" name="EachIncompatibleField_RejectsBeforeMatch(&quot;recovery_policy&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch(&quot;recovery_policy&quot;)" methodname="EachIncompatibleField_RejectsBeforeMatch" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="1421078927" result="Passed" start-time="2026-10-08 17:43:07Z" end-time="2026-10-08 17:43:07Z" duration="0.235605" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1143" name="LateMatchingAcknowledgement_AfterDisconnectCannotReopenAdmission" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.LateMatchingAcknowledgement_AfterDisconnectCannotReopenAdmission" methodname="LateMatchingAcknowledgement_AfterDisconnectCannotReopenAdmission" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="216490290" result="Passed" start-time="2026-10-08 17:43:07Z" end-time="2026-10-08 17:43:08Z" duration="0.233726" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1136" name="LegacyAuthenticationWithoutProfile_IsNotGameplayAdmission" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.LegacyAuthenticationWithoutProfile_IsNotGameplayAdmission" methodname="LegacyAuthenticationWithoutProfile_IsNotGameplayAdmission" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="523421649" result="Passed" start-time="2026-10-08 17:43:08Z" end-time="2026-10-08 17:43:08Z" duration="0.000658" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1148" name="MalformedServerPayload_IsNotEchoedToDiagnostics" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.MalformedServerPayload_IsNotEchoedToDiagnostics" methodname="MalformedServerPayload_IsNotEchoedToDiagnostics" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="1471997636" result="Passed" start-time="2026-10-08 17:43:08Z" end-time="2026-10-08 17:43:08Z" duration="0.002356" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[
+IgnoreFailingMessages:true
+[ServerMessageParser] Invalid server message rejected; payload omitted.
+
+IgnoreFailingMessages:false
+]]></output>
+            </test-case>
+            <test-case id="1142" name="MatchingServerAcknowledgement_EnablesAuthenticationOnly" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.MatchingServerAcknowledgement_EnablesAuthenticationOnly" methodname="MatchingServerAcknowledgement_EnablesAuthenticationOnly" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="1832555606" result="Passed" start-time="2026-10-08 17:43:08Z" end-time="2026-10-08 17:43:08Z" duration="0.491660" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Matchmaking] State: Disconnected -> Authenticating
+[Matchmaking] Authenticated as fixture
+[Matchmaking] State: Authenticating -> Authenticated
+]]></output>
+            </test-case>
+            <test-case id="1147" name="UnacknowledgedMatchAndCommands_AreNotPublishedToSimulation" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.UnacknowledgedMatchAndCommands_AreNotPublishedToSimulation" methodname="UnacknowledgedMatchAndCommands_AreNotPublishedToSimulation" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="196074850" result="Passed" start-time="2026-10-08 17:43:08Z" end-time="2026-10-08 17:43:08Z" duration="0.002730" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.
+[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.
+[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1215" name="CommanderGrandFixProviderSetupTests" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" testcasecount="15" result="Passed" start-time="2026-10-08 17:43:08Z" end-time="2026-10-08 17:43:15Z" duration="7.076081" total="15" passed="15" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <test-suite type="ParameterizedMethod" id="1224" name="ActualRequestFailures_ShowActionableSafeSetupStatus" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.ActualRequestFailures_ShowActionableSafeSetupStatus" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-08 17:43:08Z" end-time="2026-10-08 17:43:10Z" duration="1.610771" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1221" name="ActualRequestFailures_ShowActionableSafeSetupStatus(401,&quot;key&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.ActualRequestFailures_ShowActionableSafeSetupStatus(401,&quot;key&quot;)" methodname="ActualRequestFailures_ShowActionableSafeSetupStatus" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="152409715" result="Passed" start-time="2026-10-08 17:43:08Z" end-time="2026-10-08 17:43:09Z" duration="0.592749" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-08T17:43:09.1670366Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=401;durationMs=1
+]]></output>
+              </test-case>
+              <test-case id="1222" name="ActualRequestFailures_ShowActionableSafeSetupStatus(402,&quot;credits&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.ActualRequestFailures_ShowActionableSafeSetupStatus(402,&quot;credits&quot;)" methodname="ActualRequestFailures_ShowActionableSafeSetupStatus" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="697785774" result="Passed" start-time="2026-10-08 17:43:09Z" end-time="2026-10-08 17:43:09Z" duration="0.495158" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-08T17:43:09.6418788Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=402;durationMs=1
+]]></output>
+              </test-case>
+              <test-case id="1223" name="ActualRequestFailures_ShowActionableSafeSetupStatus(429,&quot;wait&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.ActualRequestFailures_ShowActionableSafeSetupStatus(429,&quot;wait&quot;)" methodname="ActualRequestFailures_ShowActionableSafeSetupStatus" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="1183568568" result="Passed" start-time="2026-10-08 17:43:09Z" end-time="2026-10-08 17:43:10Z" duration="0.521359" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-08T17:43:10.1640378Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=429;durationMs=1
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-case id="1232" name="ChangedSessionToPaddedUuid_IsRejectedBeforeGatewayUpload" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.ChangedSessionToPaddedUuid_IsRejectedBeforeGatewayUpload" methodname="ChangedSessionToPaddedUuid_IsRejectedBeforeGatewayUpload" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="567160323" result="Passed" start-time="2026-10-08 17:43:10Z" end-time="2026-10-08 17:43:10Z" duration="0.503468" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-08T17:43:10.6736926Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=401;durationMs=1
+]]></output>
+            </test-case>
+            <test-case id="1226" name="DisableDuringIgnoringResponse_RejectsLateEffectAndPreservesAcceptedGoal" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.DisableDuringIgnoringResponse_RejectsLateEffectAndPreservesAcceptedGoal" methodname="DisableDuringIgnoringResponse_RejectsLateEffectAndPreservesAcceptedGoal" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="1891454488" result="Passed" start-time="2026-10-08 17:43:10Z" end-time="2026-10-08 17:43:11Z" duration="0.534048" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] context=projected;provider-request=started
+]]></output>
+            </test-case>
+            <test-case id="1231" name="GatewayNetworkError_ReportsConnectionActionNotInventedHttpServiceFailure" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.GatewayNetworkError_ReportsConnectionActionNotInventedHttpServiceFailure" methodname="GatewayNetworkError_ReportsConnectionActionNotInventedHttpServiceFailure" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="1979816624" result="Passed" start-time="2026-10-08 17:43:11Z" end-time="2026-10-08 17:43:11Z" duration="0.525755" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-08T17:43:11.7308289Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=network-failure;durationMs=2
+]]></output>
+            </test-case>
+            <test-case id="1227" name="GatewayTextSetup_DoesNotFetchAudioPolicyOrGrantRecordingConsent" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.GatewayTextSetup_DoesNotFetchAudioPolicyOrGrantRecordingConsent" methodname="GatewayTextSetup_DoesNotFetchAudioPolicyOrGrantRecordingConsent" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="708009225" result="Passed" start-time="2026-10-08 17:43:11Z" end-time="2026-10-08 17:43:12Z" duration="0.506622" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-08T17:43:12.2381882Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=1
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=40;finish=stop
+[CommanderProvider] semantic=Answer;nodes=0
+]]></output>
+            </test-case>
+            <test-case id="1228" name="HideSetup_ClearsUnappliedSecretAndEscapeDoesNotTouchPlans" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.HideSetup_ClearsUnappliedSecretAndEscapeDoesNotTouchPlans" methodname="HideSetup_ClearsUnappliedSecretAndEscapeDoesNotTouchPlans" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="19931472" result="Passed" start-time="2026-10-08 17:43:12Z" end-time="2026-10-08 17:43:12Z" duration="0.404422" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+]]></output>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1220" name="InvalidKey_DoesNotReplaceProviderOrMakeRequest" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.InvalidKey_DoesNotReplaceProviderOrMakeRequest" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-08 17:43:12Z" end-time="2026-10-08 17:43:13Z" duration="1.169668" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1217" name="InvalidKey_DoesNotReplaceProviderOrMakeRequest(&quot;&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.InvalidKey_DoesNotReplaceProviderOrMakeRequest(&quot;&quot;)" methodname="InvalidKey_DoesNotReplaceProviderOrMakeRequest" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="91343148" result="Passed" start-time="2026-10-08 17:43:12Z" end-time="2026-10-08 17:43:13Z" duration="0.386420" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1218" name="InvalidKey_DoesNotReplaceProviderOrMakeRequest(&quot;invalid\nheader&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.InvalidKey_DoesNotReplaceProviderOrMakeRequest(&quot;invalid\nheader&quot;)" methodname="InvalidKey_DoesNotReplaceProviderOrMakeRequest" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="296678550" result="Passed" start-time="2026-10-08 17:43:13Z" end-time="2026-10-08 17:43:13Z" duration="0.393612" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1219" name="InvalidKey_DoesNotReplaceProviderOrMakeRequest(&quot;contains space in credential&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.InvalidKey_DoesNotReplaceProviderOrMakeRequest(&quot;contains space in credential&quot;)" methodname="InvalidKey_DoesNotReplaceProviderOrMakeRequest" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="1100105803" result="Passed" start-time="2026-10-08 17:43:13Z" end-time="2026-10-08 17:43:13Z" duration="0.386886" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1230" name="InvalidReplacementAttempt_DoesNotHideActualActiveRouteAuthenticationFailure" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.InvalidReplacementAttempt_DoesNotHideActualActiveRouteAuthenticationFailure" methodname="InvalidReplacementAttempt_DoesNotHideActualActiveRouteAuthenticationFailure" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="1897713553" result="Passed" start-time="2026-10-08 17:43:13Z" end-time="2026-10-08 17:43:14Z" duration="0.502179" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-08T17:43:14.3182901Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=401;durationMs=1
+]]></output>
+            </test-case>
+            <test-case id="1216" name="MaskedSessionKeyApply_PerformsNoValidationRequestAndClearsEntry" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.MaskedSessionKeyApply_PerformsNoValidationRequestAndClearsEntry" methodname="MaskedSessionKeyApply_PerformsNoValidationRequestAndClearsEntry" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="1211027664" result="Passed" start-time="2026-10-08 17:43:14Z" end-time="2026-10-08 17:43:14Z" duration="0.404317" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1225" name="NetworkFailure_ShowsConnectionActionWithoutEchoingException" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.NetworkFailure_ShowsConnectionActionWithoutEchoingException" methodname="NetworkFailure_ShowsConnectionActionWithoutEchoingException" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="403508061" result="Passed" start-time="2026-10-08 17:43:14Z" end-time="2026-10-08 17:43:15Z" duration="0.499130" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-08T17:43:15.2162527Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=network-failure;durationMs=1
+]]></output>
+            </test-case>
+            <test-case id="1229" name="ReplacingGateway_DisposesOnlyTheRetiredOwnedTransport" fullname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests.ReplacingGateway_DisposesOnlyTheRetiredOwnedTransport" methodname="ReplacingGateway_DisposesOnlyTheRetiredOwnedTransport" classname="OpenEmpires.Tests.CommanderGrandFixProviderSetupTests" runstate="Runnable" seed="634674564" result="Passed" start-time="2026-10-08 17:43:15Z" end-time="2026-10-08 17:43:15Z" duration="0.408730" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

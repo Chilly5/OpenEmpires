@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 00:25:55Z" end-time="2026-10-08 00:25:57Z" duration="1.0615075">
+  <test-suite type="TestSuite" id="1246" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="203" result="Failed" site="Child" start-time="2026-10-08 00:25:55Z" end-time="2026-10-08 00:25:57Z" duration="1.061508" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1240" name="OpenEmpires.PlayModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.PlayModeTests.dll" runstate="Runnable" testcasecount="203" result="Failed" site="Child" start-time="2026-10-08 00:25:55Z" end-time="2026-10-08 00:25:57Z" duration="1.041970" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1241" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="203" result="Failed" site="Child" start-time="2026-10-08 00:25:56Z" end-time="2026-10-08 00:25:57Z" duration="1.038488" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1242" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="203" result="Failed" site="Child" start-time="2026-10-08 00:25:56Z" end-time="2026-10-08 00:25:57Z" duration="1.034192" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1005" name="CommanderGrandFixInputDispatchPlayModeTests" fullname="OpenEmpires.Tests.CommanderGrandFixInputDispatchPlayModeTests" classname="OpenEmpires.Tests.CommanderGrandFixInputDispatchPlayModeTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-08 00:25:56Z" end-time="2026-10-08 00:25:57Z" duration="1.030001" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1006" name="EscapeEventBeforeUiUpdate_MinimizesWithoutOpeningSettings_ThenNormalEscapeStillWorks" fullname="OpenEmpires.Tests.CommanderGrandFixInputDispatchPlayModeTests.EscapeEventBeforeUiUpdate_MinimizesWithoutOpeningSettings_ThenNormalEscapeStillWorks" methodname="EscapeEventBeforeUiUpdate_MinimizesWithoutOpeningSettings_ThenNormalEscapeStillWorks" classname="OpenEmpires.Tests.CommanderGrandFixInputDispatchPlayModeTests" runstate="Runnable" seed="938769478" result="Passed" start-time="2026-10-08 00:25:56Z" end-time="2026-10-08 00:25:56Z" duration="0.607843" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1007" name="PointerPressBeforeVirtualCursorUpdate_CannotStartWorldSelectionThroughCommander" fullname="OpenEmpires.Tests.CommanderGrandFixInputDispatchPlayModeTests.PointerPressBeforeVirtualCursorUpdate_CannotStartWorldSelectionThroughCommander" methodname="PointerPressBeforeVirtualCursorUpdate_CannotStartWorldSelectionThroughCommander" classname="OpenEmpires.Tests.CommanderGrandFixInputDispatchPlayModeTests" runstate="Runnable" seed="164672628" result="Failed" start-time="2026-10-08 00:25:56Z" end-time="2026-10-08 00:25:57Z" duration="0.399935" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  The input callback must use current pointer state, not the prior MonoBehaviour.Update position.
+  Expected: False
+  But was:  True
+
+TearDown : Unhandled log message: '[Exception] NullReferenceException: Object reference not set to an instance of an object'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+                <stack-trace><![CDATA[OpenEmpires.UnitSelectionManager.ClickSelect () (at Assets/Scripts/Units/UnitSelectionManager.cs:1951)
+OpenEmpires.UnitSelectionManager.OnSelectCanceled (UnityEngine.InputSystem.InputAction+CallbackContext ctx) (at Assets/Scripts/Units/UnitSelectionManager.cs:1941)
+UnityEngine.InputSystem.Utilities.DelegateHelpers.InvokeCallbacksSafe[TValue] (UnityEngine.InputSystem.Utilities.CallbackArray`1[System.Action`1[TValue]]& callbacks, TValue argument, System.String callbackName, System.Object context) (at ./Library/PackageCache/com.unity.inputsystem@7a4e1a2a8194/InputSystem/Runtime/Utilities/DelegateHelpers.cs:47)
+UnityEngine.InputSystem.InputAction:Disable()
+OpenEmpires.RTSActions:Disable() (at Assets/Scripts/RTSInputActions.cs:96)
+OpenEmpires.UnitSelectionManager:OnDisable() (at Assets/Scripts/Units/UnitSelectionManager.cs:395)
+UnityEngine.Object:DestroyImmediate(Object)
+OpenEmpires.Tests.CommanderGrandFixInputDispatchPlayModeTests:TearDown() (at Assets/Tests/PlayMode/CommanderGrandFixInputDispatchPlayModeTests.cs:55)
+System.Reflection.MethodBase:Invoke(Object, Object[])
+NUnit.Framework.Internal.Reflect:InvokeMethod(MethodInfo, Object, Object[])
+NUnit.Framework.Internal.Reflect:InvokeMethod(MethodInfo, Object)
+UnityEngine.SetupCoroutine:InvokeMoveNext(IEnumerator, IntPtr)
+
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[NullReferenceException: Object reference not set to an instance of an object
+OpenEmpires.UnitSelectionManager.ClickSelect () (at Assets/Scripts/Units/UnitSelectionManager.cs:1951)
+OpenEmpires.UnitSelectionManager.OnSelectCanceled (UnityEngine.InputSystem.InputAction+CallbackContext ctx) (at Assets/Scripts/Units/UnitSelectionManager.cs:1941)
+UnityEngine.InputSystem.Utilities.DelegateHelpers.InvokeCallbacksSafe[TValue] (UnityEngine.InputSystem.Utilities.CallbackArray`1[System.Action`1[TValue]]& callbacks, TValue argument, System.String callbackName, System.Object context) (at ./Library/PackageCache/com.unity.inputsystem@7a4e1a2a8194/InputSystem/Runtime/Utilities/DelegateHelpers.cs:47)
+UnityEngine.InputSystem.InputAction:Disable()
+OpenEmpires.RTSActions:Disable() (at Assets/Scripts/RTSInputActions.cs:96)
+OpenEmpires.UnitSelectionManager:OnDisable() (at Assets/Scripts/Units/UnitSelectionManager.cs:395)
+UnityEngine.Object:DestroyImmediate(Object)
+OpenEmpires.Tests.CommanderGrandFixInputDispatchPlayModeTests:TearDown() (at Assets/Tests/PlayMode/CommanderGrandFixInputDispatchPlayModeTests.cs:55)
+System.Reflection.MethodBase:Invoke(Object, Object[])
+NUnit.Framework.Internal.Reflect:InvokeMethod(MethodInfo, Object, Object[])
+NUnit.Framework.Internal.Reflect:InvokeMethod(MethodInfo, Object)
+UnityEngine.SetupCoroutine:InvokeMoveNext(IEnumerator, IntPtr)
+
+NullReferenceException while executing 'canceled' callbacks of 'Select[/Mouse/leftButton,/Mouse1/leftButton]'
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

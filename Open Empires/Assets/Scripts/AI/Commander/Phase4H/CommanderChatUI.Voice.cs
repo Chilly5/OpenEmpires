@@ -27,8 +27,10 @@ namespace OpenEmpires
 
         public void SetVoiceProvider(ICommanderSpeechToTextProvider provider, ICommanderAudioCapture capture = null)
         {
+            CancelPendingVoiceSetup();
             if (voiceController != null)
             {
+                voiceController.Cancel(); // Preserve edited input, remove only unchanged owned voice draft.
                 voiceController.StateChanged -= OnVoiceStateChanged;
                 voiceController.TranscriptPreviewReady -= OnVoiceTranscriptPreviewReady;
                 voiceController.ErrorOccurred -= OnVoiceErrorOccurred;
@@ -37,7 +39,7 @@ namespace OpenEmpires
             }
 
             voiceProvider = provider;
-            voiceAudioCapture = capture ?? new UnityMicrophoneAudioCapture();
+            voiceAudioCapture = capture ?? CommanderAudioCaptureFactory.Create();
 
             if (voiceProvider != null)
             {
@@ -66,7 +68,7 @@ namespace OpenEmpires
 
             if (voiceAudioCapture == null)
             {
-                voiceAudioCapture = new UnityMicrophoneAudioCapture();
+                voiceAudioCapture = CommanderAudioCaptureFactory.Create();
             }
 
             voiceController = new CommanderVoiceInputController(
@@ -97,12 +99,16 @@ namespace OpenEmpires
 
         private void ResetVoiceControls()
         {
+            HideVoiceSetup();
             voiceController?.ResetSession();
+            InitializePresentation();
             UpdateVoiceUI();
         }
 
         private void DestroyVoiceControls()
         {
+            gatewaySemanticTransport?.Dispose();gatewaySemanticTransport=null;
+            CancelPendingVoiceSetup();
             if (voiceController != null)
             {
                 voiceController.StateChanged -= OnVoiceStateChanged;
@@ -118,13 +124,22 @@ namespace OpenEmpires
 
         private void Update()
         {
-            if (voiceController == null || !CommanderVoiceSettings.VoiceEnabled) return;
+            if(Keyboard.current!=null&&Keyboard.current.escapeKey.wasPressedThisFrame
+                && TryHandleEscapeInput()) return;
+            (voiceProvider as CommanderGatewaySpeechToTextProvider)?.RefreshSessionBinding();
+            UpdateLocalModelProgress();
+            if (voiceController == null) return;
+            if (!CommanderVoiceSettings.VoiceEnabled){if(VoiceState!=CommanderVoiceState.Idle)voiceController.Cancel();return;}
+            if(VoiceState==CommanderVoiceState.Recording&&voiceAudioCapture is ICommanderCaptureReadiness readiness&&readiness.CaptureEnded){
+                if(!string.IsNullOrEmpty(readiness.CaptureError))voiceController.ReportCaptureFailure(readiness.CaptureError);
+                else _=voiceController.StopRecordingAndTranscribeAsync();return;}
+            if (VoiceState == CommanderVoiceState.Recording) UpdateVoiceUI();
 
             // Poll keyboard input if not focused on typing in the text box
             var keyboard = Keyboard.current;
             if (keyboard == null) return;
 
-            bool isChatInputFocused = inputField != null && inputField.isFocused;
+            bool isChatInputFocused = inputField != null && inputField.isFocused || CommanderUIInputGuard.IsEditingText;
 
             // Push-To-Talk hotkey ('V' by default, or configured binding)
             Key pttKey = ResolvePttKey();
@@ -135,7 +150,7 @@ namespace OpenEmpires
                 if (!isChatInputFocused && !submitting && pttKeyControl.wasPressedThisFrame
                     && (voiceController.State == CommanderVoiceState.Idle || voiceController.State == CommanderVoiceState.Error))
                 {
-                    voiceController.StartRecording();
+                    StartVoiceRecordingFromUI(true);
                 }
                 else if (pttKeyControl.wasReleasedThisFrame && voiceController.State == CommanderVoiceState.Recording)
                 {
@@ -143,16 +158,6 @@ namespace OpenEmpires
                 }
             }
 
-            // Cancel on Escape key
-            if (keyboard.escapeKey.wasPressedThisFrame)
-            {
-                if (voiceController.State == CommanderVoiceState.Recording ||
-                    voiceController.State == CommanderVoiceState.Transcribing ||
-                    voiceController.State == CommanderVoiceState.Preview)
-                {
-                    voiceController.Cancel();
-                }
-            }
         }
 
         private Key ResolvePttKey()
@@ -196,7 +201,7 @@ namespace OpenEmpires
             voicePttButtonText = Text("Label", pttButtonObj.transform, "Record voice", 12, TextAlignmentOptions.Center);
             SetRect(voicePttButtonText.rectTransform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
 
-            voicePttButton.onClick.AddListener(OnPttButtonClicked);
+            voicePttButton.onClick.AddListener(() => { if (ClaimPresentationAction()) OnPttButtonClicked(); });
 
             // Cancel button
             GameObject cancelObj = UIObject("VoiceCancel", voiceRootObject.transform);
@@ -210,7 +215,7 @@ namespace OpenEmpires
             var cancelText = Text("Label", cancelObj.transform, "Cancel", 11, TextAlignmentOptions.Center);
             SetRect(cancelText.rectTransform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
 
-            voiceCancelButton.onClick.AddListener(OnVoiceCancelClicked);
+            voiceCancelButton.onClick.AddListener(() => { if (ClaimPresentationAction()) OnVoiceCancelClicked(); });
             voiceCancelButton.gameObject.SetActive(false);
 
             UpdateVoiceUI();
@@ -219,10 +224,13 @@ namespace OpenEmpires
         private void OnPttButtonClicked()
         {
             if (voiceController == null || submitting) return;
+#if UNITY_WEBGL && !UNITY_EDITOR
+            if(voiceProvider is WhisperCommanderSpeechToTextProvider){ShowVoiceSetup();return;}
+#endif
 
             if (voiceController.State == CommanderVoiceState.Idle || voiceController.State == CommanderVoiceState.Error)
             {
-                voiceController.StartRecording();
+                StartVoiceRecordingFromUI();
             }
             else if (voiceController.State == CommanderVoiceState.Recording)
             {
@@ -234,6 +242,31 @@ namespace OpenEmpires
             }
         }
 
+        private void StartVoiceRecordingFromUI(bool keyboardHeld=false)
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            if(voiceProvider is WhisperCommanderSpeechToTextProvider){ShowVoiceSetup();return;}
+#endif
+            if(voiceProvider is CommanderGatewaySpeechToTextProvider online&&!online.HasConsent){ShowVoiceSetup();return;}
+            if(voiceAudioCapture is ICommanderCaptureReadiness readiness){
+                if(!readiness.PermissionReady){ShowVoiceSetup();VoiceSetupMessage("Enable microphone explicitly, then use a fresh Record/hold-key action. Microphone permission is not online consent.");return;}
+                string key=ResolvePttKey().ToString();readiness.SetHeldKey(keyboardHeld?(key.Length==1?"Key"+key.ToUpperInvariant():key):"");}
+            voiceController?.StartRecording();
+        }
+
+        private string CurrentVoiceModeLabel
+        {
+            get{
+                if(!CommanderVoiceSettings.VoiceEnabled)return "Text only";
+                if(voiceProvider is CommanderGatewaySpeechToTextProvider online)return online.HasConsent?"Online — audio sent":"Online consent required";
+#if UNITY_WEBGL && !UNITY_EDITOR
+                return "Voice setup required";
+#else
+                return "On device";
+#endif
+            }
+        }
+
         private void OnVoiceCancelClicked()
         {
             voiceController?.Cancel();
@@ -241,12 +274,15 @@ namespace OpenEmpires
 
         private void OnVoiceStateChanged(CommanderVoiceState state)
         {
+            if (state != CommanderVoiceState.Preview) ReleaseVoiceDraft();
             UpdateVoiceUI();
         }
 
         private void OnVoiceTranscriptPreviewReady(string transcript)
         {
+            voiceOwnedDraft = transcript;
             InputText = transcript;
+            voiceDraftRevision = inputRevision;
             UpdateVoiceUI();
         }
 
@@ -263,14 +299,14 @@ namespace OpenEmpires
             switch (state)
             {
                 case CommanderVoiceState.Idle:
-                    voiceStatusText.text = submitting ? "Commander is interpreting..." : "Voice: Hold V to talk (or click Record)";
+                    voiceStatusText.text = submitting ? "Commander is interpreting..." : CurrentVoiceModeLabel+". Hold " + ResolvePttKey() + " to talk (or click Record; " + VoiceCaptureLimitLabel + ")";
                     voiceStatusText.color = new Color(0.7f, 0.8f, 0.95f);
                     if (voicePttButtonText != null) voicePttButtonText.text = "Record voice";
                     if (voiceCancelButton != null) voiceCancelButton.gameObject.SetActive(false);
                     break;
 
                 case CommanderVoiceState.Recording:
-                    voiceStatusText.text = "Recording... release V (or click Stop)";
+                    voiceStatusText.text = VoiceCaptureActivityLabel;
                     voiceStatusText.color = new Color(1f, 0.35f, 0.35f);
                     if (voicePttButtonText != null) voicePttButtonText.text = "Stop recording";
                     if (voiceCancelButton != null) voiceCancelButton.gameObject.SetActive(true);
@@ -300,6 +336,7 @@ namespace OpenEmpires
             }
             if (voicePttButton != null) voicePttButton.interactable = !submitting
                 && state != CommanderVoiceState.Transcribing && CommanderVoiceSettings.VoiceEnabled;
+            UpdatePresentation();
         }
     }
 }

@@ -1,5 +1,228 @@
 # OpenEmpires AI Commander — Remaining Phases Handoff
 
+## Latest implementation handoff — 2026-10-09
+
+**IMPLEMENTATION GOAL COMPLETE under the user-approved 2026-10-09 scope amendment;
+next-phase acceptance remains unverified, not passed.**
+Full delivered changes, limited tests, package results, cuts and next-AI checklist:
+[finishing report](Docs/CommanderFinalization/GrandFix/grand-fix-implementation-report.md).
+Final Windows `build-50c3dac169` succeeded0errors/75warnings; final Web
+`build-b3217372f0` succeeded0errors/78warnings, same stable runtime source. Final Web
+served local-match/compact/open/HUD-clearance/Escape smoke observed; owned browser/
+host ended. Exact-zero native silence bug fixed1RED→4finalGREEN; UI5Play verified.
+No full regression, physical capture, paid provider or comparative quality winner.
+
+The user explicitly moved the remaining gates to the next phase and requested this
+goal be marked done. Next-phase checklist: physical Windows/browser capture→review→
+separate approval→gameplay; private live-provider/service setup and consented validation;
+representative speech-quality acceptance; interactive Windows startup/storage and native
+provisioning (headless preference-write failure disclosed); operator credential
+invalidation/expiry confirmation. Exact procedures and evidence are in the report.
+Broad campaigns/full-hostile tests, secondary browser-local work and minor polish
+are user-cut future items; multiplayer/Rust/peers and optional product expansions
+remain separate/deferred. Do not automatically start another phase or claim complete
+voice-quality/RC/multiplayer readiness. Historical ACTIVE/NEXT entries below are
+superseded chronology, not instructions to rerun implementation or duplicate jobs.
+
+## Grand Release Finalization — implementation ACTIVE (2026-10-08)
+
+## Latest user scope: SINGLE-PLAYER, CLIENT-OWNED COMMANDER
+
+Important service-independence checkpoint: Node gateway now supports standalone
+expiring capability sessions without Rust/matchmaking.26Node/41clientEdit checks
+pass; Windows ACL/startup/revocation and budgets/consent preserved. Setup/evidence
+are in the finishing report and gateway README. No actual vendor/mic/deploy proof.
+Latest release checkpoint: required dependency notices/setup and bounded scrollable
+cards are implemented; final focused69Edit/10Play checks passed. Windows release
+`build-081a743443` succeeded (0errors/75warnings), with limited startup/package checks.
+Web attempt `build-43208daff8` interrupted by user-reported Editor crash; output retained.
+Retry `build-78071ea797` interrupted too; user confirmed restarting the unresponsive-
+looking Editor. Both incomplete Web folders preserved. User's subsequent narrow
+alignment fix is implemented: expanded panel clears player/resource HUD; compact
+controls ordered consistently;2RED→5GREEN Play and actual local-match screenshots.
+Final Windows `build-ca7d6705ec` now succeeded81.314889s,0errors/75warnings.
+Final Web `build-892e36f4d0` is ACTIVE in `Builds/SinglePlayerRelease-Web-20261009`,
+gzip/fallback, same stabilized runtime source. Leave Unity open during blocking
+link/packaging; do not treat observation timeout as failure or launch a duplicate.
+Next: exact terminal Web result, bounded served UI smoke, final documentation/manifest.
+Fresh Windows headless probe has a preference-write exception (not clean startup
+acceptance); interactive packaged/microphone/vendor/quality gates remain explicit.
+Do not restart multiplayer/broad campaigns.
+
+Later checkpoint: alignment Web `build-892e36f4d0` succeeded0errors/79warnings and
+served local-match/UI smoke passed without mic/provider/Send. Tiny/base.en offline
+comparison then found base.en's exact-zero silence hallucination. Native all-zero
+guard added without quiet-speech heuristics or model/default/authority changes;
+1RED→4finalGREEN Edit8.3507336s, Sol recheck clean in narrow scope. Those alignment
+builds are now historical; current final Windows `build-50c3dac169` is ACTIVE at
+`Builds/SinglePlayerRelease-Windows-20261009-Final/OpenEmpires.exe`. Runtime Assets
+frozen; one final Web artifact/served check and identity closeout follow. No general
+quality improvement/physical/vendor/full regression pass is inferred.
+
+Further user direction: prioritize very important/important work and finish quickly.
+Do not resume minor polish, broad browser/DPI/benchmark/performance campaigns,
+full historical/hostile testing or a large duplicate acceptance package. Cuts and
+future resumption items are recorded in the
+[finishing report](Docs/CommanderFinalization/GrandFix/grand-fix-implementation-report.md).
+Retain authority/correctness/privacy, a usable single-player voice/text route,
+essential UI/setup/notices, focused changed-area checks and fresh builds. Standalone
+service independence is already implemented/tested; next is the Web release and
+closeout. Unmeasured quality/physical
+proof is a disclosed gate, not a pass. Goal remains active until important work is done.
+
+The user explicitly deferred Rust/backend/multiplayer work and certification.
+Do not install Rust or continue G11/G12/G23 in this goal. Preserve partial work,
+record it as incomplete future work, and focus on single-player readiness.
+[Future player and operator checklist](Docs/CommanderFinalization/GrandFix/single-player-scope-and-future-multiplayer-checklist.md).
+Commander observes/plans/approves/executes locally through the normal simulation;
+OpenRouter semantic interpretation and optional online transcription may still be
+external services. Local play must not require matchmaking or relay. Windows/Web
+single-player release/runtime evidence still needs completion; voice quality/physical
+provider proof remains unverified. Gateway standalone service auth is implemented,
+not deployed or physically certified. Historical "next backend" entries below are
+superseded, not silently completed.
+
+Latest G12 client foundation is PARTIAL: bounded generated source/data identity,
+strict acknowledgement before multiplayer traffic, late/duplicate/old-socket guards,
+escaped authentication and safe payload-free diagnostics.46affected+13tightened
+Edit/2mock-plugin checks passed. Ordinary command encoding unchanged. See
+[client checkpoint and backend/relay next steps](Docs/CommanderFinalization/GrandFix/network-compatibility-client-checkpoint.md).
+Backend handshake/replay cap/cleanup and real-peer/native-socket proof are NOT delivered.
+No Rust compiler was available via inspected routes; source work can continue but
+Rust compilation must be proved separately. Existing deployed legacy backend lacks
+acknowledgement: new client refuses it explicitly until matching backend is delivered.
+Next: backend counterpart + G23, then peer tooling, UI/notices/browser-local ASR,
+quality comparison and fresh same-source releases. No completion/commit/deployment.
+
+Latest G10 checkpoint: separate Text AI settings, masked session-only Windows
+OpenRouter entry, Web authenticated gateway/session-only selection, Disable and
+safe actual-request status now have123Edit/9offline Play proof. No paid setup call,
+key persistence, microphone consent or authority change. Sol review fixes cover
+retired transport cleanup and status truthfulness; padded changed sessions reject.
+See [setup evidence and open deployment gates](Docs/CommanderFinalization/GrandFix/provider-deployment-and-transport.md).
+Next executable work: protocol/relay safeguards and peer tooling (G11/G12/G23),
+notices/UI/browser-local recognition, meaningful quality comparisons and fresh
+same-source Windows/Web builds. Actual hosted/auth/vendor/physical gates remain.
+
+Latest G21/G22 checkpoint: ended ownership claims and all five worker-history stores
+now have focused lifecycle cleanup, monotonic anti-replay, garrison/sticky-takeover
+preservation and revision-exhausted disposal proof.174Edit+3exact-binding/6native
+Play passed on the checkpoint source; original RED artifacts retained. See
+[retention and open peer requirements](Docs/CommanderFinalization/GrandFix/retention-and-peer-compatibility.md).
+No full regression, genuine peers, packaged/served acceptance or performance claim.
+Next after that checkpoint was session setup (now delivered above), compatibility/relay bounds, notices/UI/browser-local
+ASR, meaningful quality comparisons and same-source Windows/Web release evidence.
+Goal remains ACTIVE; do not begin Phase5B or mistake this checkpoint for completion.
+
+The approved Revision2 grand-fix brief supersedes the older audit-only STOP below.
+This is not Phase5B. HEAD8586764 is preserved; source/tests/docs are now dirty and
+historical acceptance does not certify the changed bytes. No commits/push/deploy.
+
+Focused checkpoints delivered: canonical age Q&A; structural authorization equality
+(readable previews now have focused proof); bounded desktop HTTP receive; minimized live-host
+presentation/draft guards; voice controller and owned native-context lifetime;
+local authenticated gateway code and fixed STT/Luna upstream adapters. Gateway has
+18/18 focused Node tests, but Rust identity route is NOT compiled/verified.
+The shared online provider and explicit compact policy/consent UI are now delivered
+with focused evidence. Browser capture and Web semantic source wiring now exist:
+76Edit/7mock Play/10plugin-worklet NodeVM checks. Web development probe now builds
+(0errors/118warnings) and loads a real local1v1 match in the in-app browser. That
+probe exposed Escape double-dispatch; C2 dispatch/pointer fixes now have25Edit/9Play
+focused proof, but the old probe predates those fixes. Full packaged, physical,
+quality, service and browser-version-matrix proofs are NOT delivered yet.
+
+Native capture fidelity/visible limit now has96Edit/9Play focused proof, including
+actual clip metadata, checked reads, device/readiness/end handling and ownership.
+This does not certify a physical mic or stronger recognition; see D1c report.
+Trusted model pins/developer importer/native pre-load verification and source Web
+payload exclusion now have10Node/32Edit focused proof. Tiny is preserved outside
+Assets and base.en is verified; small.en acquisition failed, no winner was selected.
+Runtime player import/download/verified-selection controls now have77Edit/9Play
+focused proof, including actual-work ownership and abandoned-lock recovery. Packaged
+provisioning/layout/network and final package exclusion proof remain incomplete.
+Named repair/enemy targets now have104Edit/3native Play focused proof, including
+separate actor/target types, enemy civilization matching, scope v2, sticky target
+identity on blocked retries and actual TC repair/Archer combat. See
+[target checkpoint](Docs/CommanderFinalization/GrandFix/named-target-fidelity.md).
+This is not fresh packaged Windows/served Web evidence.
+Total/new quantity compatibility now has117Edit/5native Play focused proof, including
+whole-graph rejection, sequential production forecasts, explicit New through the
+ordinary path, fresh approval/commit and pending training/queue/population accounting.
+Native old/human-queued training yields only the authorized exact-new patroller.
+See [quantity checkpoint](Docs/CommanderFinalization/GrandFix/production-quantity-preflight.md).
+Actual peers and fresh packaged Windows/served Web quantity proof remain separate.
+Read-only natural question routing and initial owned tactical status projection now
+have109Edit/6native Play focused proof. Questions preserve gameplay previews, reject
+executable provider replies and render actual status instead of invented blockers.
+The boundedness/count/protection/paused/exact-producer/hidden-target matrix and
+native progress question now pass. Independent and packaged Windows/served Web
+checks remain. See [status checkpoint](Docs/CommanderFinalization/GrandFix/tactical-status-and-read-only-questions.md).
+Spatial truth now has113Edit/6native Play focused proof: point patrol is not a
+perimeter, explicit radius rejects before commands, and direct DTO parameter bags
+cannot silently drop a restriction. Building clear-gap placement is unchanged.
+See [spatial checkpoint](Docs/CommanderFinalization/GrandFix/spatial-truth-and-point-patrol.md).
+Provider natural-language extraction and fresh packaged/served proof remain open.
+Readable typed approval previews now have137+39Edit/6native Play focused proof,
+including fixed disjoint roles, exact new producer/result names and cardinality,
+shared restrictions, default+1/one-tile semantics and whole scroll-card content.
+Details does not approve; structural equality/affinity remains independent.
+See [preview checkpoint](Docs/CommanderFinalization/GrandFix/readable-approval-previews.md).
+Actual packaged/served legibility/input and independent verification remain open.
+G14 now has62Edit focused checks plus6native Play parity and6explicit ignored live
+cases: persistent6-submission/6-HTTP reservation guard counts real initial/repair
+boundaries, binds logical caller ownership, and never resets on reload/unknown
+completion. Mill rejects non-effectful outcomes; first-stage bounded artifacts are
+written before failure/teardown. No paid calls, original ledger unchanged atzero.
+See [evidence lanes](Docs/CommanderFinalization/GrandFix/test-lanes-and-evidence.md).
+The actual audio upload wrapper, supplied minimum/quantum/basis metadata, rich
+HTTP/finish/goal/command/native fields and configured question-route proof now pass.
+Real vendor billing/access/corpus, enabled live evidence, package exclusion and
+independent checks remain explicit gates, not claimed from synthetic tests.
+Next: G21/G22 identity/worker retention and remaining input/layout/setup accuracy,
+candidate acquisition and measured Windows/Web benchmarks. Core tactical
+packaged approval presentation, input details,
+paid-test evidence guard, retention/peer work and same-source Windows/Web builds
+remain required. Physical capture/corpus, online access/hosting, browser/peer proof
+and historical credential invalidation are explicit external verification gates.
+Optional formations/frontier/world saves remain deferred, not implementation fixes.
+
+Current roadmap/evidence:
+[progress](Docs/CommanderFinalization/GrandFix/execution-progress.md),
+[gap ledger](Docs/CommanderFinalization/GrandFix/gap-closure-matrix.md),
+[plan](Docs/CommanderFinalization/GrandFix/grand-fix-implementation-plan.md).
+Goal remains ACTIVE. Paid semantic HTTP0/6; online audio0/600sec.
+
+## Current state — Product Completeness / Release Finalization Audit (2026-10-07)
+
+**VERDICT: READY FOR RELEASE FINALIZATION WORK**
+
+Phase 4E, 4F, 4G, 4H, and **Phase 5A: ACCEPTED / FROZEN**.
+
+**Next: Release Finalization. Phase 5B is not required for the current bounded Commander release.**
+
+Current source was inspected on unit_models_and_voice_control at HEAD 8586764e644240f93c99e2afa1c7d41c697cc879 (phase5A), with a clean starting working tree. The historical Phase5A manifest's recorded file bytes matched, while its older HEAD did not. This audit changed documentation/evidence only and preserved the historical manifest. It did not run tests, use paid provider calls, change source/tests, commit, push, or implement fixes.
+
+The existing Request graph covers production followed by unit actions and construction followed by exact bound production; the nine-primitive DynamicPlan covers its accepted worker/build/production scope. Missing general dynamic tactical consumers, arbitrary map targets, behind-group positioning, autonomous exploration, and world saves do not justify a mandatory feature phase under the current release contract.
+
+Release Candidate readiness is not established. Current-source finalization findings include incorrect canonical age Q&A, ungrounded natural tactical blocker answers, named repair/enemy target fidelity, total-versus-new result quantity preflight, readable complete approval previews, voice provisioning/lifecycle/hardware proof, public provider credential setup, live-test diagnostic retention, multiplayer compatibility/actual-peer certification, and specific match-lifetime retention. The prior live Mill full-suite failure remains historical/unclassified; two later isolated passes do not rewrite it as green or prove a deterministic defect.
+
+Authoritative audit outputs:
+
+- [Product completeness audit](Docs/CommanderFinalization/product-completeness-audit.md): capability/request/composition matrices, architecture review, scoped evidence, and six precise work packages.
+- [Release gap matrix](Docs/CommanderFinalization/release-gap-matrix.md): fixed severity/owner, user/architecture impact, RC/public gates, code requirement, solution and small/medium/large scope.
+- [Current audit source manifest](Docs/CommanderFinalization/audit-source-manifest.json): current committed source/configuration and audit artifact hashes; not a release certificate.
+
+Follow-up Sol packages after review:
+
+1. Truthful questions, progress and approval.
+2. Faithful action targets and compound quantities.
+3. Voice lifecycle, provisioning and physical hardware acceptance.
+4. Provider distribution and bounded transport.
+5. Trustworthy acceptance lanes and mode-specific multiplayer gates.
+6. Bounded ownership and match-lifetime retention.
+
+**STOP AFTER THE AUDIT. Do not implement these packages yet. Do not begin Phase 5B.**
+
 ## Phase 5A Closeout & Test Reconciliation (2026-10-07)
 
 Phase 5A is **ACCEPTED / FROZEN** and its historical test-suite reconciliation is **COMPLETE**.

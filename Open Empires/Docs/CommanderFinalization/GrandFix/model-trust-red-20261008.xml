@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="8" result="Failed(Child)" total="8" passed="0" failed="8" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 01:54:23Z" end-time="2026-10-08 01:54:24Z" duration="0.7380587">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1265" result="Failed" site="Child" start-time="2026-10-08 01:54:23Z" end-time="2026-10-08 01:54:24Z" duration="0.738059" total="8" passed="0" failed="8" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2450" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1265" result="Failed" site="Child" start-time="2026-10-08 01:54:23Z" end-time="2026-10-08 01:54:24Z" duration="0.640522" total="8" passed="0" failed="8" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2451" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1265" result="Failed" site="Child" start-time="2026-10-08 01:54:23Z" end-time="2026-10-08 01:54:24Z" duration="0.572819" total="8" passed="0" failed="8" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2452" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1265" result="Failed" site="Child" start-time="2026-10-08 01:54:23Z" end-time="2026-10-08 01:54:24Z" duration="0.463295" total="8" passed="0" failed="8" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1043" name="CommanderGrandFixModelTrustTests" fullname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests" classname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests" runstate="Runnable" testcasecount="8" result="Failed" site="Child" start-time="2026-10-08 01:54:23Z" end-time="2026-10-08 01:54:24Z" duration="0.350601" total="8" passed="0" failed="8" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1044" name="CorrectTrustedBytes_AreAcceptedWithoutChangingTheFile" fullname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests.CorrectTrustedBytes_AreAcceptedWithoutChangingTheFile" methodname="CorrectTrustedBytes_AreAcceptedWithoutChangingTheFile" classname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests" runstate="Runnable" seed="1590958574" result="Failed" start-time="2026-10-08 01:54:23Z" end-time="2026-10-08 01:54:23Z" duration="0.104020" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Native model loading requires a bounded trusted-verification lease.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixModelTrustTests.Open (System.String path, System.Int64 bytes, System.String sha) [0x0002d] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixModelTrustTests.cs:19
+at OpenEmpires.Tests.CommanderGrandFixModelTrustTests.CorrectTrustedBytes_AreAcceptedWithoutChangingTheFile () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixModelTrustTests.cs:23
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1051" name="ExplicitMissingPath_DoesNotSilentlyFallbackToAnotherModelCopy" fullname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests.ExplicitMissingPath_DoesNotSilentlyFallbackToAnotherModelCopy" methodname="ExplicitMissingPath_DoesNotSilentlyFallbackToAnotherModelCopy" classname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests" runstate="Runnable" seed="153858594" result="Failed" start-time="2026-10-08 01:54:23Z" end-time="2026-10-08 01:54:23Z" duration="0.012329" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixModelTrustTests.ExplicitMissingPath_DoesNotSilentlyFallbackToAnotherModelCopy () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixModelTrustTests.cs:34
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1047" name="MissingModel_IsRejected" fullname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests.MissingModel_IsRejected" methodname="MissingModel_IsRejected" classname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests" runstate="Runnable" seed="539473154" result="Failed" start-time="2026-10-08 01:54:23Z" end-time="2026-10-08 01:54:23Z" duration="0.045135" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: <System.IO.FileNotFoundException>
+  But was:  <NUnit.Framework.AssertionException:   Native model loading requires a bounded trusted-verification lease.
+  Expected: not null
+  But was:  null
+
+  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00044] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at OpenEmpires.Tests.CommanderGrandFixModelTrustTests.Open (System.String path, System.Int64 bytes, System.String sha) [0x0002d] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixModelTrustTests.cs:19 
+  at OpenEmpires.Tests.CommanderGrandFixModelTrustTests.<MissingModel_IsRejected>b__9_0 () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixModelTrustTests.cs:26 
+  at NUnit.Framework.Assert.Throws (NUnit.Framework.Constraints.IResolveConstraint expression, NUnit.Framework.TestDelegate code, System.String message, System.Object[] args) [0x00043] in <8b63e8ac0a4746599ed207982825ae6c>:0 >
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixModelTrustTests.MissingModel_IsRejected () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixModelTrustTests.cs:26
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1050" name="UnknownModelName_DoesNotGrantAnExplicitUnverifiedLoadPath" fullname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests.UnknownModelName_DoesNotGrantAnExplicitUnverifiedLoadPath" methodname="UnknownModelName_DoesNotGrantAnExplicitUnverifiedLoadPath" classname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests" runstate="Runnable" seed="1042596757" result="Failed" start-time="2026-10-08 01:54:23Z" end-time="2026-10-08 01:54:23Z" duration="0.008408" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixModelTrustTests.UnknownModelName_DoesNotGrantAnExplicitUnverifiedLoadPath () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixModelTrustTests.cs:32
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1049" name="UnsafeModelName_DoesNotResolveAnArbitraryExistingFile" fullname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests.UnsafeModelName_DoesNotResolveAnArbitraryExistingFile" methodname="UnsafeModelName_DoesNotResolveAnArbitraryExistingFile" classname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests" runstate="Runnable" seed="547059465" result="Failed" start-time="2026-10-08 01:54:23Z" end-time="2026-10-08 01:54:23Z" duration="0.007464" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixModelTrustTests.UnsafeModelName_DoesNotResolveAnArbitraryExistingFile () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixModelTrustTests.cs:30
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1048" name="VerificationLease_PreventsMutationBetweenHashAndNativeLoad" fullname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests.VerificationLease_PreventsMutationBetweenHashAndNativeLoad" methodname="VerificationLease_PreventsMutationBetweenHashAndNativeLoad" classname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests" runstate="Runnable" seed="1207323283" result="Failed" start-time="2026-10-08 01:54:23Z" end-time="2026-10-08 01:54:23Z" duration="0.007570" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Native model loading requires a bounded trusted-verification lease.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixModelTrustTests.Open (System.String path, System.Int64 bytes, System.String sha) [0x0002d] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixModelTrustTests.cs:19
+at OpenEmpires.Tests.CommanderGrandFixModelTrustTests.VerificationLease_PreventsMutationBetweenHashAndNativeLoad () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixModelTrustTests.cs:28
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1045" name="WrongHash_IsRejected" fullname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests.WrongHash_IsRejected" methodname="WrongHash_IsRejected" classname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests" runstate="Runnable" seed="744521008" result="Failed" start-time="2026-10-08 01:54:23Z" end-time="2026-10-08 01:54:23Z" duration="0.007886" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: <System.IO.InvalidDataException>
+  But was:  <NUnit.Framework.AssertionException:   Native model loading requires a bounded trusted-verification lease.
+  Expected: not null
+  But was:  null
+
+  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00044] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at OpenEmpires.Tests.CommanderGrandFixModelTrustTests.Open (System.String path, System.Int64 bytes, System.String sha) [0x0002d] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixModelTrustTests.cs:19 
+  at OpenEmpires.Tests.CommanderGrandFixModelTrustTests.<WrongHash_IsRejected>b__7_0 () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixModelTrustTests.cs:24 
+  at NUnit.Framework.Assert.Throws (NUnit.Framework.Constraints.IResolveConstraint expression, NUnit.Framework.TestDelegate code, System.String message, System.Object[] args) [0x00043] in <8b63e8ac0a4746599ed207982825ae6c>:0 >
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixModelTrustTests.WrongHash_IsRejected () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixModelTrustTests.cs:24
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1046" name="WrongSize_IsRejectedBeforeLoading" fullname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests.WrongSize_IsRejectedBeforeLoading" methodname="WrongSize_IsRejectedBeforeLoading" classname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests" runstate="Runnable" seed="1009500752" result="Failed" start-time="2026-10-08 01:54:23Z" end-time="2026-10-08 01:54:23Z" duration="0.008810" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: <System.IO.InvalidDataException>
+  But was:  <NUnit.Framework.AssertionException:   Native model loading requires a bounded trusted-verification lease.
+  Expected: not null
+  But was:  null
+
+  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00044] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at OpenEmpires.Tests.CommanderGrandFixModelTrustTests.Open (System.String path, System.Int64 bytes, System.String sha) [0x0002d] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixModelTrustTests.cs:19 
+  at OpenEmpires.Tests.CommanderGrandFixModelTrustTests.<WrongSize_IsRejectedBeforeLoading>b__8_0 () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixModelTrustTests.cs:25 
+  at NUnit.Framework.Assert.Throws (NUnit.Framework.Constraints.IResolveConstraint expression, NUnit.Framework.TestDelegate code, System.String message, System.Object[] args) [0x00043] in <8b63e8ac0a4746599ed207982825ae6c>:0 >
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixModelTrustTests.WrongSize_IsRejectedBeforeLoading () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixModelTrustTests.cs:25
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

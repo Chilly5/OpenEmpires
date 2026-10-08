@@ -1,0 +1,70 @@
+{
+  "schema": "openempires-network-client-checkpoint@1",
+  "status": "PARTIAL - client only",
+  "head": "8586764e644240f93c99e2afa1c7d41c697cc879",
+  "branch": "unit_models_and_voice_control",
+  "working_changes": true,
+  "affected": {
+    "job": "67645995d5904372b652c47ebe559231",
+    "artifact": "network-compatibility-affected-edit-67645995.xml",
+    "passed": 46,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 31.2433458
+  },
+  "final": {
+    "job": "71233c7423aa405598ee2cd60c45bc57",
+    "artifact": "network-compatibility-final-edit-71233c74.xml",
+    "passed": 13,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 5.1680873,
+    "test_names": [
+      "OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests"
+    ]
+  },
+  "node": {
+    "command": "node --test Docs/CommanderFinalization/GrandFix/websocket-affinity.test.mjs",
+    "red_failed": 2,
+    "green_passed": 2,
+    "mocked": true
+  },
+  "identity": {
+    "protocol_revision": 2,
+    "source_sha256": "ae4b1521058981b844d8d403ff14f0af5638c4b3ac4fbb20fd578e3ebcca7325",
+    "command_encoding": "legacy-or-sourcekind-v1",
+    "recovery_policy": "bounded-full-history-v1",
+    "expected_policy_not_backend_proof": true
+  },
+  "source_sha256": {
+    "Assets/Scripts/Network/NetworkCompatibility.cs": "30994d5a80a7eac117fc789bde68653693605d56bbdcc91ab64aeaf3730587dd",
+    "Assets/Scripts/Network/NetworkCompatibility.cs.meta": "e3d6d5642cc18664db21ab6c9196c3fb8062d44a6b7479a1b3e17043998fb975",
+    "Assets/Editor/NetworkCompatibilityBuildGuard.cs": "be2fa53c8ea268d8e9731a97075be029917ffaa0a06f61656db556cdf83b901f",
+    "Assets/Editor/NetworkCompatibilityBuildGuard.cs.meta": "0bc7acfbac9650bcd6b5600aaf6ffb6e9bad15a27c8424418ecfec3df25fef4c",
+    "Assets/Scripts/Network/MatchmakingManager.cs": "752f58d9eb2857658c0d6c777b69deda45c601cbd3486d68f5a512a69f3192c5",
+    "Assets/Scripts/Network/ServerMessages.cs": "3591cd21c5ae09850b902a674a43896f080b3e412b8998ef41721ceafbd71ab5",
+    "Assets/Scripts/Network/WebSocketClient.cs": "c9505530c36fcb6eb8b8af1b8f9376f3174489974a8e2937b01d04dc828aff53",
+    "Assets/Plugins/WebGL/WebSocket.jslib": "3276d831a29d90c3eae204f253f5248e853ecaf958c0a7d57e18e7208d777411",
+    "Assets/Tests/EditMode/CommanderGrandFixNetworkCompatibilityTests.cs": "ec2e57153c2a2f1d8af3fe045ae8e0972c194e7da410d502ad9afaadccf9f211",
+    "Assets/Tests/EditMode/CommanderGrandFixNetworkCompatibilityTests.cs.meta": "c86493ecabca3446f0a9e3cb846fd3b74e9afe0e420c617e61175c6b692a46d9",
+    "Assets/Tests/EditMode/OpenEmpires.EditModeTests.asmdef": "5b65fbe098750fa0454e2551b39053ae6b4650cfa7f61354628b92e324d22832",
+    "Assets/Resources/Network/LockstepCompatibility.json": "5169d0f34f492889ae0d89266b7edb7ff6d4ab49b0f6f0e2d1c47dbc11b0291a",
+    "Assets/Resources/Network/LockstepCompatibility.json.meta": "8857e59e0fb67ed7dd45430c88f8843d71adc4524aa96f579a60f020361d7316",
+    "Docs/CommanderFinalization/GrandFix/websocket-affinity.test.mjs": "94e44626b00645cf6c257a7609b65d50eef8c3d699c063c099abf78d04a4aa62",
+    "Docs/CommanderFinalization/GrandFix/network-compatibility-client-checkpoint.md": "edf4af40d5b8bf0ce4befb38024bfadef663b4e76b2b287f6c031e1996c38be3"
+  },
+  "gates": [
+    "Rust backend profile counterpart and compile",
+    "G23 retained history and reconnect/cleanup repair",
+    "actual local socket lifetime/fragment/send proof",
+    "genuine Windows/Web matched/mismatched peers",
+    "fresh stabilized Windows/Web release identities",
+    "independent full/hostile regression"
+  ],
+  "no_backend_changes": true,
+  "no_peer_or_socket_run": true,
+  "paid_semantic_http": 0,
+  "cloud_asr_seconds": 0,
+  "physical_microphone_sessions": 0,
+  "remote_deployments": 0
+}

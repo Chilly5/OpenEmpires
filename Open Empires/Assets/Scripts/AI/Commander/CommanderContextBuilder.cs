@@ -82,6 +82,13 @@ namespace OpenEmpires
                 if (snapshot.CanProduce && snapshot.IsCompleted) production.Add(snapshot);
             }
             var units = new List<CommanderUnitSnapshot>();
+            // Same pending-origin observation as native planning. These are issued
+            // Commander orders, not assumed future acceptance of arbitrary human data.
+            for (int type = 0; type <= 15; type++)
+            {
+                int pending = simulation.CountPendingTrainingOrders(playerId: player, resolvedType: type);
+                if (pending > 0) queued[type] = (queued.TryGetValue(type, out int count) ? count : 0) + pending;
+            }
             foreach (int type in queued.Keys) if (!counts.ContainsKey(type)) counts[type] = 0;
             foreach (var entry in counts)
                 units.Add(new CommanderUnitSnapshot(entry.Key, entry.Value,

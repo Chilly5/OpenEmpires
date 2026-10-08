@@ -158,6 +158,7 @@ namespace OpenEmpires
 
         private void BeginMouseControl(InputAction.CallbackContext context)
         {
+            if (UnitSelectionManager.UIInputSuppressed) return;
             rotateEnabled = true;
             mousePanEnabled = true;
 
@@ -202,6 +203,13 @@ namespace OpenEmpires
 
         private void HandlePan()
         {
+            if (UnitSelectionManager.UIInputSuppressed)
+            {
+                panInput = Vector2.zero;
+                mousePanDelta = Vector2.zero;
+                EndMouseControl(default);
+                return;
+            }
             Vector3 totalMove = Vector3.zero;
             Vector3 forward = pivot.forward;
             Vector3 right = pivot.right;
@@ -283,6 +291,12 @@ namespace OpenEmpires
 
         private void HandleRotation()
         {
+            if (UnitSelectionManager.UIInputSuppressed)
+            {
+                rotateDelta = Vector2.zero;
+                EndMouseControl(default);
+                return;
+            }
             if (!rotateEnabled) return;
             targetYaw += rotateDelta.x * rotateSpeed;
         }

@@ -111,11 +111,9 @@ namespace OpenEmpires
             IDictionary<string, string> parameters = null, int? priority = null)
         {
             ThrowIfDisposed();
-            var intent = new StrategicIntent(IntentIds.Allocate(), goalManager.PlayerId, objectiveType,
-                goalManager.CurrentTick, parameters, priority);
-            IntentIds.BindAllocated(intent.IntentId, intent);
+            var intent = AllocateOwnedIntent(goalManager.PlayerId,objectiveType,goalManager.CurrentTick,parameters,priority,StrategicIntentSource.PlayerDirect);
             intent.Authorize(IntentIds, "Trusted direct strategic request.");
-            RegisterIntent(intent);
+            try{RegisterIntent(intent);}catch{RetireUnusedOwnedIntent(intent);throw;}
             return intent;
         }
 
@@ -141,6 +139,7 @@ namespace OpenEmpires
                 {
                     intent.Status = StrategicIntentStatus.Rejected;
                     intent.StatusReason = reason;
+                    IntentIds.Retire(intent.IntentId,intent);
                     TrimIntentHistory();
                 }
                 return new StrategicIntentSubmission(StrategicIntentSubmissionStatus.Rejected,
@@ -317,17 +316,14 @@ namespace OpenEmpires
                 StartOrWaitForMilestone(plan, milestone);
                 return CreatedSubmission(intent, plan);
             }
-            finally { committingSubmission = false; }
+            finally { committingSubmission = false;RetireUnusedOwnedIntent(intent); }
         }
 
         internal StrategicIntent MaterializeRecommendation(StrategicIntent selected)
         {
             var parameters = new Dictionary<string, string>();
             foreach (var pair in selected.Parameters) parameters.Add(pair.Key, pair.Value);
-            var intent = new StrategicIntent(IntentIds.Allocate(), selected.PlayerId,
-                selected.ObjectiveType, selected.CreatedTick, parameters, selected.Priority,
-                StrategicIntentSource.AIRecommendation);
-            IntentIds.BindAllocated(intent.IntentId, intent);
+            var intent = AllocateOwnedIntent(selected.PlayerId,selected.ObjectiveType,selected.CreatedTick,parameters,selected.Priority,StrategicIntentSource.AIRecommendation);
             return intent;
         }
 
@@ -340,10 +336,9 @@ namespace OpenEmpires
                 return interpretation;
             var parameters = new Dictionary<string, string>();
             foreach (var pair in interpretation.Parameters) parameters.Add(pair.Key, pair.Value);
-            var intent = new StrategicIntent(IntentIds.Allocate(), interpretation.PlayerId,
-                interpretation.ObjectiveType, interpretation.CreatedTick, parameters, interpretation.Priority);
-            IntentIds.BindAllocated(intent.IntentId, intent);
+            var intent = AllocateOwnedIntent(interpretation.PlayerId,interpretation.ObjectiveType,interpretation.CreatedTick,parameters,interpretation.Priority,StrategicIntentSource.PlayerDirect);
             interpretation.Status = StrategicIntentStatus.Cancelled;
+            IntentIds.Retire(interpretation.IntentId,interpretation);
             intent.Authorize(IntentIds, "Trusted interpreted player-input request.");
             interpretation.StatusReason = "Materialized as a trusted Commander request.";
             return intent;
@@ -418,14 +413,31 @@ namespace OpenEmpires
         public void Dispose()
         {
             if (disposed) return;
+            Exception cleanupError=null;
+            foreach(var plan in activePlans.ToArray())
+            {
+                // Teardown is not a new player control transition. Revision exhaustion
+                // must not leave child goals executing after their authority is gone.
+                plan.Status = StrategicPlanStatus.Cancelled;
+                if (CanAdvanceRevision(plan, 1L + CountActiveReservations(plan)))
+                    plan.AdvanceRevision();
+                plan.OutcomeMessage = plan.CancellationMessage;
+                activePlans.Remove(plan);
+                try { ArchivePlan(plan); }
+                catch(Exception error) { if(cleanupError==null)cleanupError=error; }
+                FinishPlanCancellation(plan, ref cleanupError);
+            }
             Pipeline?.Dispose();
             disposed = true;
+            IntentIds.Dispose();
             goalManager.GoalEventPublished -= HandleGoalEvent;
             reservationManager.ReservationCreated -= HandleReservationCreated;
             reservationManager.ReservationReleased -= HandleReservationReleased;
             reservationManager.ReservationConflictDetected -= HandleReservationConflict;
             deferredTerminalGoalEvents.Clear();
             preflightedRevisionCascades.Clear();
+            intents.Clear();intentsById.Clear();intentsByPlanId.Clear();
+            plans.Clear();activePlans.Clear();archivedPlans.Clear();childGoalLinks.Clear();
             StrategicIntentCreated = null;
             StrategicIntentStatusChanged = null;
             StrategicIntentRejected = null;
@@ -436,6 +448,7 @@ namespace OpenEmpires
             ReservationCreated = null;
             ReservationReleased = null;
             ReservationConflictDetected = null;
+            if(cleanupError!=null)ExceptionDispatchInfo.Capture(cleanupError).Throw();
         }
 
         public void Tick(int currentTick)
@@ -1133,6 +1146,14 @@ namespace OpenEmpires
 
         private void ArchivePlan(StrategicPlan plan)
         {
+            // Commit terminal ownership before cleanup/event publication, which
+            // may throw. A terminal plan can no longer authorize continuation.
+            if(plan.IsTerminal&&intentsByPlanId.TryGetValue(plan.StrategicPlanId,out var root))
+            {
+                root.Status=plan.Status==StrategicPlanStatus.Completed?StrategicIntentStatus.Completed
+                    :plan.Status==StrategicPlanStatus.Failed?StrategicIntentStatus.Failed:StrategicIntentStatus.Cancelled;
+                root.StatusReason=plan.OutcomeMessage??string.Empty;IntentIds.Retire(root.IntentId,root);
+            }
             if (archivedPlans.Contains(plan)) return;
             if (archivedPlans.Count >= MaxArchivedPlans)
             {
@@ -1255,8 +1276,21 @@ namespace OpenEmpires
             if (intent == null) return;
             intent.Status = status;
             intent.StatusReason = reason ?? string.Empty;
-            StrategicIntentStatusChanged?.Invoke(intent);
-            TrimIntentHistory();
+            if(intent.IsTerminal)IntentIds.Retire(intent.IntentId,intent);
+            try{StrategicIntentStatusChanged?.Invoke(intent);}finally{TrimIntentHistory();}
+        }
+        private StrategicIntent AllocateOwnedIntent(int playerId,StrategicObjectiveType objective,int tick,IDictionary<string,string> parameters,int? priority,StrategicIntentSource source)
+        {
+            int id=IntentIds.Allocate();
+            try{var intent=new StrategicIntent(id,playerId,objective,tick,parameters,priority,source);IntentIds.BindAllocated(id,intent);return intent;}
+            catch{IntentIds.ReleaseUnbound(id);throw;}
+        }
+        internal void RetireUnusedOwnedIntent(StrategicIntent intent)
+        {
+            if(intent==null||intent.Status!=StrategicIntentStatus.Created||!IntentIds.Owns(intent))return;
+            intent.Status=StrategicIntentStatus.Rejected;
+            intent.StatusReason="The owned request ended without an admitted plan.";
+            IntentIds.Retire(intent.IntentId,intent);TrimIntentHistory();
         }
 
         private void TrimIntentHistory()

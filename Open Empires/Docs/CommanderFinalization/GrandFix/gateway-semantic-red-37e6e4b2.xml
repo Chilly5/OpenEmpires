@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Failed(Child)" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-07 22:35:45Z" end-time="2026-10-07 22:35:46Z" duration="1.5057426">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1220" result="Failed" site="Child" start-time="2026-10-07 22:35:45Z" end-time="2026-10-07 22:35:46Z" duration="1.505743" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2397" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1220" result="Failed" site="Child" start-time="2026-10-07 22:35:45Z" end-time="2026-10-07 22:35:46Z" duration="1.392464" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2398" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1220" result="Failed" site="Child" start-time="2026-10-07 22:35:45Z" end-time="2026-10-07 22:35:46Z" duration="1.307493" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2399" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1220" result="Failed" site="Child" start-time="2026-10-07 22:35:45Z" end-time="2026-10-07 22:35:46Z" duration="1.204133" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1025" name="CommanderGrandFixGatewaySemanticTests" fullname="OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests" classname="OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-07 22:35:45Z" end-time="2026-10-07 22:35:46Z" duration="1.093037" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1028" name="ChangedBackendSession_RejectsLateSemanticResponse" fullname="OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests.ChangedBackendSession_RejectsLateSemanticResponse" methodname="ChangedBackendSession_RejectsLateSemanticResponse" classname="OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests" runstate="Runnable" seed="1322318524" result="Failed" start-time="2026-10-07 22:35:45Z" end-time="2026-10-07 22:35:45Z" duration="0.334991" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests.Create (OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests+Fixture transport, System.Func`1[TResult] token) [0x00019] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixGatewaySemanticTests.cs:17
+at OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests.ChangedBackendSession_RejectsLateSemanticResponse () [0x0002b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixGatewaySemanticTests.cs:38
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1027" name="DifferentProviderUrl_IsRejectedWithoutSilentModelSwitchOrNetwork" fullname="OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests.DifferentProviderUrl_IsRejectedWithoutSilentModelSwitchOrNetwork" methodname="DifferentProviderUrl_IsRejectedWithoutSilentModelSwitchOrNetwork" classname="OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests" runstate="Runnable" seed="1447891841" result="Failed" start-time="2026-10-07 22:35:45Z" end-time="2026-10-07 22:35:46Z" duration="0.293082" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests.Create (OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests+Fixture transport, System.Func`1[TResult] token) [0x00019] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixGatewaySemanticTests.cs:17
+at OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests.DifferentProviderUrl_IsRejectedWithoutSilentModelSwitchOrNetwork () [0x00015] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixGatewaySemanticTests.cs:32
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1026" name="SemanticBody_UsesFixedGatewayAndBackendSessionNotClientProviderCredential" fullname="OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests.SemanticBody_UsesFixedGatewayAndBackendSessionNotClientProviderCredential" methodname="SemanticBody_UsesFixedGatewayAndBackendSessionNotClientProviderCredential" classname="OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests" runstate="Runnable" seed="1123608301" result="Failed" start-time="2026-10-07 22:35:46Z" end-time="2026-10-07 22:35:46Z" duration="0.323347" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests.Create (OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests+Fixture transport, System.Func`1[TResult] token) [0x00019] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixGatewaySemanticTests.cs:17
+at OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests.SemanticBody_UsesFixedGatewayAndBackendSessionNotClientProviderCredential () [0x00015] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixGatewaySemanticTests.cs:22
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

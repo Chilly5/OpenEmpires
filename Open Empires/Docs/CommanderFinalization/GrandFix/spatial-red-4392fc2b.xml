@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="11" result="Failed(Child)" total="11" passed="4" failed="7" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 08:13:50Z" end-time="2026-10-08 08:14:02Z" duration="12.0968666">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1365" result="Failed" site="Child" start-time="2026-10-08 08:13:50Z" end-time="2026-10-08 08:14:02Z" duration="12.096867" total="11" passed="4" failed="7" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2569" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1365" result="Failed" site="Child" start-time="2026-10-08 08:13:50Z" end-time="2026-10-08 08:14:02Z" duration="11.863240" total="11" passed="4" failed="7" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2570" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1365" result="Failed" site="Child" start-time="2026-10-08 08:13:50Z" end-time="2026-10-08 08:14:02Z" duration="11.838949" total="11" passed="4" failed="7" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2571" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1365" result="Failed" site="Child" start-time="2026-10-08 08:13:50Z" end-time="2026-10-08 08:14:02Z" duration="11.726908" total="11" passed="4" failed="7" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1197" name="CommanderGrandFixSpatialTruthTests" fullname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests" classname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests" runstate="Runnable" testcasecount="11" result="Failed" site="Child" start-time="2026-10-08 08:13:51Z" end-time="2026-10-08 08:14:02Z" duration="11.617631" total="11" passed="4" failed="7" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1210" name="BuildingFootprintGap_RemainsSeparateFromUnsupportedActionRadius" fullname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.BuildingFootprintGap_RemainsSeparateFromUnsupportedActionRadius" methodname="BuildingFootprintGap_RemainsSeparateFromUnsupportedActionRadius" classname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests" runstate="Runnable" seed="778202076" result="Passed" start-time="2026-10-08 08:13:51Z" end-time="2026-10-08 08:13:52Z" duration="1.324947" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1198" name="DefaultPatrolPreview_DescribesPointRouteAndNeverInventsRadius" fullname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.DefaultPatrolPreview_DescribesPointRouteAndNeverInventsRadius" methodname="DefaultPatrolPreview_DescribesPointRouteAndNeverInventsRadius" classname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests" runstate="Runnable" seed="1962264340" result="Failed" start-time="2026-10-08 08:13:52Z" end-time="2026-10-08 08:13:53Z" duration="1.139363" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: not String containing "radius"
+  But was:  "action plan — not started.
+1. patrolarea 1 military unit type -1; location playerbase ; radius 4; structure ; technology 
+preparation may include canonical required buildings, population and resources within these effects. no unrelated strategy is authorized. approve plan or cancel plan."
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.DefaultPatrolPreview_DescribesPointRouteAndNeverInventsRadius () [0x00010] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixSpatialTruthTests.cs:32
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1203" name="ExplicitLegacyFour_IsNotEquivalentToOmittedPointSemantics" fullname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.ExplicitLegacyFour_IsNotEquivalentToOmittedPointSemantics" methodname="ExplicitLegacyFour_IsNotEquivalentToOmittedPointSemantics" classname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests" runstate="Runnable" seed="1062628369" result="Failed" start-time="2026-10-08 08:13:53Z" end-time="2026-10-08 08:13:54Z" duration="0.961186" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.ExplicitLegacyFour_IsNotEquivalentToOmittedPointSemantics () [0x00025] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixSpatialTruthTests.cs:50
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1202" name="ExplicitRadius_IsRejectedByValidationAndExecutorBeforeEffects" fullname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.ExplicitRadius_IsRejectedByValidationAndExecutorBeforeEffects" classname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-08 08:13:54Z" end-time="2026-10-08 08:13:57Z" duration="3.009033" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1199" name="ExplicitRadius_IsRejectedByValidationAndExecutorBeforeEffects(PatrolArea)" fullname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.ExplicitRadius_IsRejectedByValidationAndExecutorBeforeEffects(PatrolArea)" methodname="ExplicitRadius_IsRejectedByValidationAndExecutorBeforeEffects" classname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests" runstate="Runnable" seed="1429490396" result="Failed" start-time="2026-10-08 08:13:54Z" end-time="2026-10-08 08:13:55Z" duration="1.083922" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.ExplicitRadius_IsRejectedByValidationAndExecutorBeforeEffects (OpenEmpires.CommanderCapabilityActionType action) [0x0001a] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixSpatialTruthTests.cs:41
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1200" name="ExplicitRadius_IsRejectedByValidationAndExecutorBeforeEffects(MoveUnits)" fullname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.ExplicitRadius_IsRejectedByValidationAndExecutorBeforeEffects(MoveUnits)" methodname="ExplicitRadius_IsRejectedByValidationAndExecutorBeforeEffects" classname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests" runstate="Runnable" seed="801375850" result="Failed" start-time="2026-10-08 08:13:55Z" end-time="2026-10-08 08:13:56Z" duration="0.960331" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.ExplicitRadius_IsRejectedByValidationAndExecutorBeforeEffects (OpenEmpires.CommanderCapabilityActionType action) [0x0001a] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixSpatialTruthTests.cs:41
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1201" name="ExplicitRadius_IsRejectedByValidationAndExecutorBeforeEffects(DefendArea)" fullname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.ExplicitRadius_IsRejectedByValidationAndExecutorBeforeEffects(DefendArea)" methodname="ExplicitRadius_IsRejectedByValidationAndExecutorBeforeEffects" classname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests" runstate="Runnable" seed="1553367487" result="Failed" start-time="2026-10-08 08:13:56Z" end-time="2026-10-08 08:13:57Z" duration="0.949910" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.ExplicitRadius_IsRejectedByValidationAndExecutorBeforeEffects (OpenEmpires.CommanderCapabilityActionType action) [0x0001a] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixSpatialTruthTests.cs:41
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-case id="1205" name="PointPatrol_UsesNormalPatrolCommandWithNoAroundPromise" fullname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.PointPatrol_UsesNormalPatrolCommandWithNoAroundPromise" methodname="PointPatrol_UsesNormalPatrolCommandWithNoAroundPromise" classname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests" runstate="Runnable" seed="928785322" result="Failed" start-time="2026-10-08 08:13:57Z" end-time="2026-10-08 08:13:58Z" duration="1.041101" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: not String containing "around"
+  But was:  "resolved a bounded patrol around a visible game-side anchor."
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.PointPatrol_UsesNormalPatrolCommandWithNoAroundPromise () [0x0002f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixSpatialTruthTests.cs:57
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1209" name="ProviderExplicitSpatialRestrictions_RejectRatherThanDropUnknownConstraint" fullname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.ProviderExplicitSpatialRestrictions_RejectRatherThanDropUnknownConstraint" classname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-08 08:13:58Z" end-time="2026-10-08 08:14:01Z" duration="3.000762" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1206" name="ProviderExplicitSpatialRestrictions_RejectRatherThanDropUnknownConstraint(&quot;radius&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.ProviderExplicitSpatialRestrictions_RejectRatherThanDropUnknownConstraint(&quot;radius&quot;)" methodname="ProviderExplicitSpatialRestrictions_RejectRatherThanDropUnknownConstraint" classname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests" runstate="Runnable" seed="1164908478" result="Passed" start-time="2026-10-08 08:13:58Z" end-time="2026-10-08 08:13:59Z" duration="0.951743" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1207" name="ProviderExplicitSpatialRestrictions_RejectRatherThanDropUnknownConstraint(&quot;radiusTiles&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.ProviderExplicitSpatialRestrictions_RejectRatherThanDropUnknownConstraint(&quot;radiusTiles&quot;)" methodname="ProviderExplicitSpatialRestrictions_RejectRatherThanDropUnknownConstraint" classname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests" runstate="Runnable" seed="625214308" result="Passed" start-time="2026-10-08 08:13:59Z" end-time="2026-10-08 08:14:00Z" duration="1.069787" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1208" name="ProviderExplicitSpatialRestrictions_RejectRatherThanDropUnknownConstraint(&quot;perimeter&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.ProviderExplicitSpatialRestrictions_RejectRatherThanDropUnknownConstraint(&quot;perimeter&quot;)" methodname="ProviderExplicitSpatialRestrictions_RejectRatherThanDropUnknownConstraint" classname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests" runstate="Runnable" seed="797381758" result="Passed" start-time="2026-10-08 08:14:00Z" end-time="2026-10-08 08:14:01Z" duration="0.973268" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1204" name="UnsupportedRadius_CannotDisappearDuringDtoProjection" fullname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.UnsupportedRadius_CannotDisappearDuringDtoProjection" methodname="UnsupportedRadius_CannotDisappearDuringDtoProjection" classname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests" runstate="Runnable" seed="1104305713" result="Failed" start-time="2026-10-08 08:14:01Z" end-time="2026-10-08 08:14:02Z" duration="0.975931" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: <System.ArgumentException>
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.UnsupportedRadius_CannotDisappearDuringDtoProjection () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixSpatialTruthTests.cs:53
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

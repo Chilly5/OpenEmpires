@@ -1,0 +1,23 @@
+{
+  "schema":"openempires-player-model-checkpoint@1",
+  "head":"8586764e644240f93c99e2afa1c7d41c697cc879",
+  "branch":"unit_models_and_voice_control",
+  "working_changes":true,
+  "edit":{"job":"67890779d689490786e474978c11c2b7","artifact":"player-model-final-edit-20261008.xml","passed":77,"failed":0,"skipped":0,"seconds":50.2078795},
+  "play":{"job":"e355266af34a41dbbe6c1dd7de78e9ab","artifact":"player-model-final-play-20261008.xml","passed":9,"failed":0,"skipped":0,"seconds":3.6898111},
+  "read_only_review":{"task":"player_model_readonly_review","model":"gpt-6-sol","finding":"Abandoned lock marker blocks setup; fixed with actual lease plus RED/GREEN recovery cases","not_runtime_certificate":true},
+  "source_sha256":{
+    "Assets/Scripts/AI/Commander/Phase4H/CommanderLocalModelProvisioner.cs":"9d57711e5509c10301d684df98294e6821828d8d0e4ac3f58754e520d304bb21",
+    "Assets/Scripts/AI/Commander/Phase4H/CommanderChatUI.LocalModels.cs":"621c4f0823412d49fd5d94cfaa845679078daeefdb0a54cafb3daed3a129edc7",
+    "Assets/Scripts/AI/Commander/Phase4H/CommanderChatUI.VoiceSetup.cs":"ce1adaecb3e78aaaca8c02e6569c3262420a838f8a1d520803251d9802b20e49",
+    "Assets/Scripts/AI/Commander/Phase4H/CommanderChatUI.Voice.cs":"9c363632f4aa1a6e2868e16cbb41b8c34f448503b48c1d92a1094f7e7e057dc1",
+    "Assets/Tests/EditMode/CommanderGrandFixPlayerModelProvisionTests.cs":"886981cedd9148c7917f556803f3e21f7570267b2c5bba37d56809e1f02ab8fb",
+    "Assets/Tests/EditMode/CommanderGrandFixPresentationTests.cs":"d427894bd9beffff7403ac77e77f763460544ceedbe1384da30fa81a134a2e9f"
+  },
+  "paid_semantic_http":0,
+  "paid_asr_billable_seconds":0,
+  "physical_microphone_verified":false,
+  "packaged_ui_verified":false,
+  "quality_winner_selected":false,
+  "goal_status":"active"
+}

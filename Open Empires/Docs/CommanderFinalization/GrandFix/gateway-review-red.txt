@@ -1,0 +1,9 @@
+2026-10-08 bounded Luna read-only review identified missing durable job dedup.
+Genuine RED restart-preserves-job: 1 fail, repeated completed job returned200
+instead of409 after recreating the server against the same ledger. Persist a
+bounded120sec job tombstone with the quota reservation, never a transcript.
+Other review findings: correct example/default port collision; document loopback
+TLS proxy, pseudonymous operator enrollment and manual stale process-lock recovery.
+Client consent UI and Rust compile/live auth remain required integration gates.
+Manifest RED:1 fail, secret-free gateway template was excluded. Explicitly hash
+only that known template; still exclude all real .env/private-state stores.

@@ -8,6 +8,7 @@ namespace OpenEmpires
     /// </summary>
     public static class CommanderVoiceSettings
     {
+        public const float MaximumDurationSeconds = 60f;
         private const string PrefKeyEnabled = "voice_commander_enabled";
         private const string PrefKeyAutoSubmit = "voice_commander_autosubmit";
         private const string PrefKeyDevice = "voice_commander_device";
@@ -67,13 +68,16 @@ namespace OpenEmpires
 
         public static float MaxDurationSeconds
         {
-            get => PlayerPrefs.GetFloat(PrefKeyMaxDuration, 15f);
+            get => NormalizeDuration(PlayerPrefs.GetFloat(PrefKeyMaxDuration, 15f));
             set
             {
-                PlayerPrefs.SetFloat(PrefKeyMaxDuration, Mathf.Clamp(value, 3f, 60f));
+                PlayerPrefs.SetFloat(PrefKeyMaxDuration, NormalizeDuration(value));
                 PlayerPrefs.Save();
             }
         }
+
+        private static float NormalizeDuration(float value)
+            => float.IsNaN(value) || float.IsInfinity(value) ? 15f : Mathf.Clamp(value, 3f, MaximumDurationSeconds);
 
         public static string PttBindingPath => KeybindManager.GetBinding("CommanderPTT");
 

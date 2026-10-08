@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json.Linq;
 
 namespace OpenEmpires
 {
@@ -79,7 +80,9 @@ namespace OpenEmpires
 
         public override string ToJson()
         {
-            return $"{{\"type\":\"Authenticate\",\"data\":{{\"token\":\"{token}\"}}}}";
+            return new JObject { ["type"] = "Authenticate", ["data"] = new JObject
+                { ["token"] = token, ["compatibility"] = NetworkCompatibility.Current == null
+                    ? JValue.CreateNull() : JObject.FromObject(NetworkCompatibility.Current) } }.ToString(Newtonsoft.Json.Formatting.None);
         }
     }
 
@@ -227,6 +230,7 @@ namespace OpenEmpires
         public override string Type => "Authenticated";
         public string player_id;
         public string username;
+        public NetworkCompatibilityProfile compatibility;
     }
 
     [Serializable]
@@ -455,9 +459,9 @@ namespace OpenEmpires
                     _ => null
                 };
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Debug.LogError($"[ServerMessageParser] Failed to parse: {e.Message}\nJSON: {json}");
+                Debug.LogWarning("[ServerMessageParser] Invalid server message rejected; payload omitted.");
                 return null;
             }
         }
@@ -465,6 +469,8 @@ namespace OpenEmpires
         private static AuthenticatedMessage ParseAuthenticated(string json)
         {
             var msg = JsonUtility.FromJson<AuthenticatedMessage>(json);
+            var profile = JObject.Parse(json)["compatibility"];
+            msg.compatibility = NetworkCompatibility.Parse(profile?.ToString(Newtonsoft.Json.Formatting.None));
             return msg;
         }
 

@@ -1,85 +1,42 @@
+using System;
 using System.IO;
 using UnityEngine;
 
 namespace OpenEmpires
 {
-    /// <summary>
-    /// Locates Whisper model binaries on disk according to documented search hierarchy.
-    /// Safely handles both Editor and Windows Standalone builds without assuming Editor-only paths.
-    /// </summary>
     public static class WhisperModelLocator
     {
         public const string DefaultModelName = "ggml-tiny.bin";
-
-        public static bool TryResolveModelPath(string modelName, out string resolvedPath, string explicitPath = null)
+        public static string WritableModelRoot => Path.Combine(Application.persistentDataPath,"CommanderVoice","Models");
+        public static string CachePath(string root,WhisperTrustedModel model) => Path.Combine(Path.GetFullPath(root),model.Sha256,model.FileName);
+        public static bool TryResolveModelPath(string modelName,out string resolvedPath,string explicitPath=null)
         {
-            resolvedPath = null;
-            string targetName = string.IsNullOrWhiteSpace(modelName) ? DefaultModelName : modelName.Trim();
-
-            // 1. Explicit configured path
-            if (!string.IsNullOrWhiteSpace(explicitPath))
-            {
-                string explicitFullPath = Path.GetFullPath(explicitPath);
-                if (File.Exists(explicitFullPath))
-                {
-                    resolvedPath = explicitFullPath;
-                    return true;
-                }
-            }
-
-            // 2. Packaged model location (StreamingAssets)
-            try
-            {
-                string streamingPath = Path.Combine(Application.streamingAssetsPath, "Whisper", targetName);
-                if (File.Exists(streamingPath))
-                {
-                    resolvedPath = streamingPath;
-                    return true;
-                }
-
-                // If targetName contains a directory or full path
-                if (File.Exists(Path.Combine(Application.streamingAssetsPath, targetName)))
-                {
-                    resolvedPath = Path.Combine(Application.streamingAssetsPath, targetName);
-                    return true;
-                }
-            }
-            catch
-            {
-                // StreamingAssets path evaluation guard
-            }
-
-            // 3. Persistent application model cache
-            try
-            {
-                string persistentPath = Path.Combine(Application.persistentDataPath, "Whisper", targetName);
-                if (File.Exists(persistentPath))
-                {
-                    resolvedPath = persistentPath;
-                    return true;
-                }
-            }
-            catch
-            {
-                // Persistent path evaluation guard
-            }
-
-            // 4. Development fallback under project root / Assets
-            try
-            {
-                string devPath = Path.Combine(Application.dataPath, "StreamingAssets", "Whisper", targetName);
-                if (File.Exists(devPath))
-                {
-                    resolvedPath = devPath;
-                    return true;
-                }
-            }
-            catch
-            {
-                // Dev path guard
-            }
-
+            resolvedPath=null;
+#if UNITY_WEBGL && !UNITY_EDITOR
             return false;
+#else
+            if(!WhisperModelCatalog.TryGet(modelName,out var model))return false;
+            try
+            {
+                // An explicit missing choice is not permission to downgrade/fallback.
+                if(!string.IsNullOrWhiteSpace(explicitPath))
+                {
+                    string chosen=Path.GetFullPath(explicitPath);
+                    if(Path.GetExtension(chosen)!=".bin"||!File.Exists(chosen))return false;
+                    resolvedPath=chosen;return true;
+                }
+                string persistent=CachePath(WritableModelRoot,model);
+                if(File.Exists(persistent)){resolvedPath=persistent;return true;}
+#if UNITY_EDITOR
+                string developer=CachePath(Path.Combine(Path.GetDirectoryName(Application.dataPath),"LocalModels","Whisper"),model);
+                if(File.Exists(developer)){resolvedPath=developer;return true;}
+#endif
+                // No native payload is required in shared StreamingAssets. Cheap
+                // resolution is not verification; the worker verifies before load.
+                return false;
+            }
+            catch{return false;}
+#endif
         }
     }
 }

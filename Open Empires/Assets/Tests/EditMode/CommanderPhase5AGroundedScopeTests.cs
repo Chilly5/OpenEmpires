@@ -111,13 +111,13 @@ namespace OpenEmpires.Tests
                 var mill = manager.PrepareActionPlan(CommanderSemanticJson.Parse(CommanderPhase5ADynamicPlanTests.Mill),
                     "make a mill", 1);
                 Assert.That(mill.Preview, Does.Contain("Berries"));
-                Assert.That(mill.Preview, Does.Contain("Visible"));
+                Assert.That(mill.Preview, Does.Contain("visible"));
                 Assert.That(mill.Preview, Does.Contain("Near"));
                 var shared = manager.PrepareActionPlan(CommanderSemanticJson.Parse(CommanderPhase5ADynamicCompilerTests.SharedWorkers),
                     "share three idle villagers", 1);
-                Assert.That(shared.Preview, Does.Contain("select-workers"));
-                Assert.That(shared.Preview, Does.Contain("partition-workers"));
-                Assert.That(shared.Preview, Does.Contain("offset=2"));
+                Assert.That(shared.Preview, Does.Contain("3 eligible idle villagers"));
+                Assert.That(shared.Preview, Does.Contain("villagers 1–2"));
+                Assert.That(shared.Preview, Does.Contain("villager 3"));
                 Assert.That(manager.Goals, Is.Empty);
                 Assert.That(sim.CommandBuffer.FlushCommands(), Is.Empty);
             });

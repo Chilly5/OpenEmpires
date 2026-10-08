@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 02:03:10Z" end-time="2026-10-08 02:03:11Z" duration="0.0897326">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1267" result="Failed" site="Child" start-time="2026-10-08 02:03:10Z" end-time="2026-10-08 02:03:11Z" duration="0.089733" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2452" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1267" result="Failed" site="Child" start-time="2026-10-08 02:03:11Z" end-time="2026-10-08 02:03:11Z" duration="0.058296" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2453" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1267" result="Failed" site="Child" start-time="2026-10-08 02:03:11Z" end-time="2026-10-08 02:03:11Z" duration="0.057662" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2454" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1267" result="Failed" site="Child" start-time="2026-10-08 02:03:11Z" end-time="2026-10-08 02:03:11Z" duration="0.057404" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1043" name="CommanderGrandFixModelTrustTests" fullname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests" classname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests" runstate="Runnable" testcasecount="10" result="Failed" site="Child" start-time="2026-10-08 02:03:11Z" end-time="2026-10-08 02:03:11Z" duration="0.055418" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1052" name="WebDistribution_NativeModelPayloadIsRejected" fullname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests.WebDistribution_NativeModelPayloadIsRejected" methodname="WebDistribution_NativeModelPayloadIsRejected" classname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests" runstate="Runnable" seed="1570269288" result="Failed" start-time="2026-10-08 02:03:11Z" end-time="2026-10-08 02:03:11Z" duration="0.029176" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: <System.IO.InvalidDataException>
+  But was:  <NUnit.Framework.AssertionException:   Web packaging needs a native payload exclusion gate.
+  Expected: not null
+  But was:  null
+
+  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00044] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at OpenEmpires.Tests.CommanderGrandFixModelTrustTests.CheckWebDistribution () [0x0002d] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixModelTrustTests.cs:39 
+  at NUnit.Framework.Assert.Throws (NUnit.Framework.Constraints.IResolveConstraint expression, NUnit.Framework.TestDelegate code, System.String message, System.Object[] args) [0x00043] in <8b63e8ac0a4746599ed207982825ae6c>:0 >
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixModelTrustTests.WebDistribution_NativeModelPayloadIsRejected () [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixModelTrustTests.cs:42
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1053" name="WebDistribution_WorkletWithoutNativePayloadIsAllowed" fullname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests.WebDistribution_WorkletWithoutNativePayloadIsAllowed" methodname="WebDistribution_WorkletWithoutNativePayloadIsAllowed" classname="OpenEmpires.Tests.CommanderGrandFixModelTrustTests" runstate="Runnable" seed="184459515" result="Failed" start-time="2026-10-08 02:03:11Z" end-time="2026-10-08 02:03:11Z" duration="0.003638" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: No Exception to be thrown
+  But was:  <NUnit.Framework.AssertionException:   Web packaging needs a native payload exclusion gate.
+  Expected: not null
+  But was:  null
+
+  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00044] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at OpenEmpires.Tests.CommanderGrandFixModelTrustTests.CheckWebDistribution () [0x0002d] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixModelTrustTests.cs:39 
+  at NUnit.Framework.Constraints.ThrowsConstraint+VoidInvocationDescriptor.Invoke () [0x00001] in <8b63e8ac0a4746599ed207982825ae6c>:0 
+  at NUnit.Framework.Constraints.ThrowsConstraint+ExceptionInterceptor.Intercept (System.Object invocation) [0x00050] in <8b63e8ac0a4746599ed207982825ae6c>:0 >
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixModelTrustTests.WebDistribution_WorkletWithoutNativePayloadIsAllowed () [0x00025] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixModelTrustTests.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

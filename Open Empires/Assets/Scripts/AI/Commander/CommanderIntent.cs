@@ -131,6 +131,8 @@ namespace OpenEmpires
         }
     }
 
+    public enum CommanderProductionQuantityMode { TargetTotal, New }
+
     public sealed class EnsureUnitCountIntent : CommanderIntent
     {
         public int UnitType { get; }
@@ -222,10 +224,13 @@ namespace OpenEmpires
         public TechnologyType? Technology { get; }
         public BuildingType? StructureType { get; }
 
+        public CommanderTargetSelector? TargetSelector { get; }
+
         public CapabilityActionIntent(int playerId, CommanderCapabilityActionType actionType,
             CommanderUnitSelector unitSelector, CommanderLocationSelector locationSelector,
             TechnologyType? technology = null, BuildingType? structureType = null,
-            IEnumerable<CommanderConstraint> constraints = null)
+            IEnumerable<CommanderConstraint> constraints = null,
+            CommanderTargetSelector? targetSelector = null)
             : base(CommanderIntentType.CapabilityAction, playerId, constraints)
         {
             if (!Enum.IsDefined(typeof(CommanderCapabilityActionType), actionType))
@@ -235,6 +240,7 @@ namespace OpenEmpires
             LocationSelector = locationSelector;
             Technology = technology;
             StructureType = structureType;
+            TargetSelector = targetSelector;
         }
     }
 }

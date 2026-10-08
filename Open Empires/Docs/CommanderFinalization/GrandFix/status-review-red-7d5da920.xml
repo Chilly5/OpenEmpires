@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="14" result="Failed(Child)" total="14" passed="8" failed="6" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 07:01:12Z" end-time="2026-10-08 07:01:32Z" duration="20.3265503">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1345" result="Failed" site="Child" start-time="2026-10-08 07:01:12Z" end-time="2026-10-08 07:01:32Z" duration="20.326550" total="14" passed="8" failed="6" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2544" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1345" result="Failed" site="Child" start-time="2026-10-08 07:01:12Z" end-time="2026-10-08 07:01:32Z" duration="20.162887" total="14" passed="8" failed="6" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2545" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1345" result="Failed" site="Child" start-time="2026-10-08 07:01:12Z" end-time="2026-10-08 07:01:32Z" duration="20.128513" total="14" passed="8" failed="6" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2546" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1345" result="Failed" site="Child" start-time="2026-10-08 07:01:12Z" end-time="2026-10-08 07:01:32Z" duration="20.015013" total="14" passed="8" failed="6" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1197" name="CommanderGrandFixStatusTests" fullname="OpenEmpires.Tests.CommanderGrandFixStatusTests" classname="OpenEmpires.Tests.CommanderGrandFixStatusTests" runstate="Runnable" testcasecount="14" result="Failed" site="Child" start-time="2026-10-08 07:01:12Z" end-time="2026-10-08 07:01:32Z" duration="19.899703" total="14" passed="8" failed="6" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1203" name="AmbiguousArmyQuestion_ShowsOwnedChoicesRatherThanSelectingFirstGoal" fullname="OpenEmpires.Tests.CommanderGrandFixStatusTests.AmbiguousArmyQuestion_ShowsOwnedChoicesRatherThanSelectingFirstGoal" methodname="AmbiguousArmyQuestion_ShowsOwnedChoicesRatherThanSelectingFirstGoal" classname="OpenEmpires.Tests.CommanderGrandFixStatusTests" runstate="Runnable" seed="112776964" result="Passed" start-time="2026-10-08 07:01:13Z" end-time="2026-10-08 07:01:16Z" duration="3.524479" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #1: status=Blocked owned=0 queued=0; Need 20 wood for the next Spearman; have 0. No explored non-depleted Wood node is known.
+[Commander] Goal #2 submitted: EnsureUnitCount
+]]></output>
+            </test-case>
+            <test-case id="1212" name="CancellationReason_IsNotMisrepresentedAsAPlannerDecision" fullname="OpenEmpires.Tests.CommanderGrandFixStatusTests.CancellationReason_IsNotMisrepresentedAsAPlannerDecision" methodname="CancellationReason_IsNotMisrepresentedAsAPlannerDecision" classname="OpenEmpires.Tests.CommanderGrandFixStatusTests" runstate="Runnable" seed="86585495" result="Failed" start-time="2026-10-08 07:01:16Z" end-time="2026-10-08 07:01:17Z" duration="1.204225" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: not String containing "Last planning check: Cancelled"
+  But was:  "[{"sequence":1,"kind":"Explanation","text":"4 new Spearman: 0/4 new completed, 0 attributable queued or in flight. Last planning check: Cancelled by the owning player.","cavalryPreference":null,"status":"","intentId":null,"planId":null,"objective":""}]"
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixStatusTests.CancellationReason_IsNotMisrepresentedAsAPlannerDecision () [0x000a6] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixStatusTests.cs:181
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #1: status=Blocked owned=0 queued=0; Need 20 wood for the next Spearman; have 0. No explored non-depleted Wood node is known.
+[Commander] Goal #1 cancelled.
+]]></output>
+            </test-case>
+            <test-case id="1202" name="FactsCarryActualReasonCountsDeficitAndProducerWithoutTrustingInventedAnswer" fullname="OpenEmpires.Tests.CommanderGrandFixStatusTests.FactsCarryActualReasonCountsDeficitAndProducerWithoutTrustingInventedAnswer" methodname="FactsCarryActualReasonCountsDeficitAndProducerWithoutTrustingInventedAnswer" classname="OpenEmpires.Tests.CommanderGrandFixStatusTests" runstate="Runnable" seed="440392435" result="Passed" start-time="2026-10-08 07:01:17Z" end-time="2026-10-08 07:01:18Z" duration="1.128495" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #1: status=Blocked owned=0 queued=0; Need 20 wood for the next Spearman; have 0. No explored non-depleted Wood node is known.
+]]></output>
+            </test-case>
+            <test-case id="1209" name="FailedProvider_StillDisplaysAvailableGroundedStatus" fullname="OpenEmpires.Tests.CommanderGrandFixStatusTests.FailedProvider_StillDisplaysAvailableGroundedStatus" methodname="FailedProvider_StillDisplaysAvailableGroundedStatus" classname="OpenEmpires.Tests.CommanderGrandFixStatusTests" runstate="Runnable" seed="1785581775" result="Failed" start-time="2026-10-08 07:01:18Z" end-time="2026-10-08 07:01:20Z" duration="1.163349" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "wood"
+  But was:  "[]"
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixStatusTests.FailedProvider_StillDisplaysAvailableGroundedStatus () [0x000a6] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixStatusTests.cs:161
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #1: status=Blocked owned=0 queued=0; Need 20 wood for the next Spearman; have 0. No explored non-depleted Wood node is known.
+]]></output>
+            </test-case>
+            <test-case id="1211" name="GenericEconomicWhy_IsNotReplacedWithUnrelatedArmyStatus" fullname="OpenEmpires.Tests.CommanderGrandFixStatusTests.GenericEconomicWhy_IsNotReplacedWithUnrelatedArmyStatus" methodname="GenericEconomicWhy_IsNotReplacedWithUnrelatedArmyStatus" classname="OpenEmpires.Tests.CommanderGrandFixStatusTests" runstate="Runnable" seed="2128831787" result="Failed" start-time="2026-10-08 07:01:20Z" end-time="2026-10-08 07:01:21Z" duration="1.070749" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: not String containing "tacticalStatus"
+  But was:  "{"age":3,"population":0,"populationCap":10,"canonicalUnitIds":["unit:0","unit:1","unit:2","unit:4","unit:7"],"canonicalBuildingIds":["building:ArcheryRange","building:Barracks","building:Farm","building:House","building:Mill","building:Stables","building:Tower","building:TownCenter"],"ownedUnitCounts":{"Archer":0,"Knight":0,"Scout":0,"Spearman":0,"Villager":0},"ownedBuildingCounts":{"ArcheryRange":0,"Barracks":1,"Farm":0,"House":0,"Mill":0,"Stables":0,"Tower":0,"TownCenter":1},"unitCapabilities":["Villager","Spearman","Archer","Scout","Knight"],"structureCapabilities":["ArcheryRange","Barracks","Farm","House","Mill","Stables","Tower","TownCenter"],"resourceCapabilities":["Food","Wood","Gold","Stone"],"strategyCapabilities":["AttackPreparation","DefensivePreparation","EconomicExpansion","MilitaryReinforcement","RangedReinforcement","DefensiveTurtle"],"actionCapabilities":["AllocateWorkers","MoveUnits","ScoutArea","PatrolArea","SetRallyPoint","AttackTarget","DefendArea","RetreatUnits","RepairTarget","ResearchTechnology"],"selectorCapabilities":{"units":["Military","Scout","Villagers","Spearman","Archer","Knight","DamagedMilitary"],"locations":["PlayerBase","WorkedResource","VisibleResource","VisibleEnemy","RelativeToSelectedUnits"],"targets":{"UnitType":["Villager","Spearman","Archer","Scout","Knight"],"BuildingType":["House","Barracks","TownCenter","Wall","Mill","LumberYard","Mine","ArcheryRange","Stables","Farm","Tower","Monastery","Landmark","Blacksmith","Market","University","SiegeWorkshop","Keep","StoneWall","StoneGate","WoodGate","Wonder"]}},"knowledge":{"units":[{"id":"unit:0","name":"Villager","age":1,"producer":"building:TownCenter","cost":{"food":50,"wood":0,"gold":0,"stone":0}},{"id":"unit:1","name":"Spearman","age":1,"producer":"building:Barracks","cost":{"food":60,"wood":20,"gold":0,"stone":0}},{"id":"unit:10","name":"Longbowman","age":1,"producer":"building:ArcheryRange","cost":{"food":30,"wood":50,"gold":0,"stone":0}},{"id":"unit:11","name":"Gendarme","age":1,"producer":"building:Stables","cost":{"food":100,"wood":20,"gold":0,"stone":0}},{"id":"unit:12","name":"Landsknecht","age":1,"producer":"building:Barracks","cost":{"food":60,"wood":20,"gold":0,"stone":0}},{"id":"unit:13","name":"Battering Ram","age":3,"producer":"building:SiegeWorkshop","cost":{"food":0,"wood":200,"gold":100,"stone":0}},{"id":"unit:14","name":"Mangonel","age":3,"producer":"building:SiegeWorkshop","cost":{"food":0,"wood":250,"gold":150,"stone":0}},{"id":"unit:15","name":"Trebuchet","age":3,"producer":"building:SiegeWorkshop","cost":{"food":0,"wood":300,"gold":200,"stone":0}},{"id":"unit:16","name":"King","age":2,"producer":"building:Landmark","cost":{"food":150,"wood":0,"gold":150,"stone":0}},{"id":"unit:2","name":"Archer","age":1,"producer":"building:ArcheryRange","cost":{"food":30,"wood":50,"gold":0,"stone":0}},{"id":"unit:3","name":"Horseman","age":1,"producer":"building:Stables","cost":{"food":100,"wood":20,"gold":0,"stone":0}},{"id":"unit:4","name":"Scout","age":1,"producer":"building:Stables","cost":{"food":80,"wood":0,"gold":0,"stone":0}}],"buildings":[],"technologies":[]},"workerCounts":{"idleUnqueued":0,"gatheringByResource":{"Food":0,"Wood":0,"Gold":0,"Stone":0}},"tacticalStatus":{"selection":"One","tick":0,"population":0,"populationCap":10,"queuedPopulation":0,"maximumPopulation":200,"truncated":false,"requests":[{"label":"4 new Spearman","steps":[{"label":"4 new Spearman","state":"Blocked","reason":"Need 20 wood for the next Spearman; have 0. No explored non-depleted Wood node is known.","requested":4,"requestedNew":4,"owned":0,"produced":0,"queued":0,"attributableQueued":0,"pending":0,"producerReady":1,"producerUnfinished":0,"unmetDependencies":0,"failedDependency":false,"humanOverride":false,"targetAvailable":null,"deficits":{"Food":0,"Wood":20,"Gold":0,"Stone":0},"reservedWorkers":0,"protectedWorkers":0,"lastPlannerTick":0}]}]}}"
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixStatusTests.GenericEconomicWhy_IsNotReplacedWithUnrelatedArmyStatus () [0x000a0] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixStatusTests.cs:174
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #1: status=Blocked owned=0 queued=0; Need 20 wood for the next Spearman; have 0. No explored non-depleted Wood node is known.
+]]></output>
+            </test-case>
+            <test-case id="1208" name="NamedAbsentRequest_DoesNotFallbackToUnrelatedSpearmen" fullname="OpenEmpires.Tests.CommanderGrandFixStatusTests.NamedAbsentRequest_DoesNotFallbackToUnrelatedSpearmen" methodname="NamedAbsentRequest_DoesNotFallbackToUnrelatedSpearmen" classname="OpenEmpires.Tests.CommanderGrandFixStatusTests" runstate="Runnable" seed="1227765665" result="Failed" start-time="2026-10-08 07:01:21Z" end-time="2026-10-08 07:01:22Z" duration="1.303225" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected string length 4 but was 3. Strings differ at index 0.
+  Expected: "None"
+  But was:  "One"
+  -----------^
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixStatusTests.NamedAbsentRequest_DoesNotFallbackToUnrelatedSpearmen () [0x000ae] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixStatusTests.cs:155
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #1: status=Blocked owned=0 queued=0; Need 20 wood for the next Spearman; have 0. No explored non-depleted Wood node is known.
+]]></output>
+            </test-case>
+            <test-case id="1207" name="NamedLaterCompoundStep_IsPrioritizedOverUnrelatedBlockedConstruction" fullname="OpenEmpires.Tests.CommanderGrandFixStatusTests.NamedLaterCompoundStep_IsPrioritizedOverUnrelatedBlockedConstruction" methodname="NamedLaterCompoundStep_IsPrioritizedOverUnrelatedBlockedConstruction" classname="OpenEmpires.Tests.CommanderGrandFixStatusTests" runstate="Runnable" seed="1715589607" result="Failed" start-time="2026-10-08 07:01:22Z" end-time="2026-10-08 07:01:23Z" duration="1.400455" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: 4
+  But was:  0
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixStatusTests.NamedLaterCompoundStep_IsPrioritizedOverUnrelatedBlockedConstruction () [0x00105] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixStatusTests.cs:149
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: EnsureUnitCount
+[Commander] Goal #1: status=Blocked owned=0 queued=0; Need 50 wood for House; have 0. No explored non-depleted Wood node is known.
+[Commander] Goal #2: status=Blocked owned=0 queued=0; Need 20 wood for the next Spearman; have 0. No explored non-depleted Wood node is known.
+]]></output>
+            </test-case>
+            <test-case id="1204" name="NamedStatusQuestion_SelectsRelevantRequestAndIgnoresForeignOrHiddenFacts" fullname="OpenEmpires.Tests.CommanderGrandFixStatusTests.NamedStatusQuestion_SelectsRelevantRequestAndIgnoresForeignOrHiddenFacts" methodname="NamedStatusQuestion_SelectsRelevantRequestAndIgnoresForeignOrHiddenFacts" classname="OpenEmpires.Tests.CommanderGrandFixStatusTests" runstate="Runnable" seed="865062943" result="Passed" start-time="2026-10-08 07:01:23Z" end-time="2026-10-08 07:01:25Z" duration="1.259563" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #1: status=Blocked owned=0 queued=0; Need 20 wood for the next Spearman; have 0. No explored non-depleted Wood node is known.
+[Commander] Goal #2 submitted: EnsureUnitCount
+]]></output>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1201" name="NaturalInformationQuestion_RejectsExecutableReplyWithoutNewWork" fullname="OpenEmpires.Tests.CommanderGrandFixStatusTests.NaturalInformationQuestion_RejectsExecutableReplyWithoutNewWork" classname="OpenEmpires.Tests.CommanderGrandFixStatusTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-08 07:01:25Z" end-time="2026-10-08 07:01:28Z" duration="3.764354" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1198" name="NaturalInformationQuestion_RejectsExecutableReplyWithoutNewWork(&quot;Why haven't you finished making my army?&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixStatusTests.NaturalInformationQuestion_RejectsExecutableReplyWithoutNewWork(&quot;Why haven't you finished making my army?&quot;)" methodname="NaturalInformationQuestion_RejectsExecutableReplyWithoutNewWork" classname="OpenEmpires.Tests.CommanderGrandFixStatusTests" runstate="Runnable" seed="1391153322" result="Passed" start-time="2026-10-08 07:01:25Z" end-time="2026-10-08 07:01:26Z" duration="1.144322" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #1: status=Blocked owned=0 queued=0; Need 20 wood for the next Spearman; have 0. No explored non-depleted Wood node is known.
+]]></output>
+              </test-case>
+              <test-case id="1199" name="NaturalInformationQuestion_RejectsExecutableReplyWithoutNewWork(&quot;Tell me why my Spearmen are still waiting.&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixStatusTests.NaturalInformationQuestion_RejectsExecutableReplyWithoutNewWork(&quot;Tell me why my Spearmen are still waiting.&quot;)" methodname="NaturalInformationQuestion_RejectsExecutableReplyWithoutNewWork" classname="OpenEmpires.Tests.CommanderGrandFixStatusTests" runstate="Runnable" seed="667666420" result="Passed" start-time="2026-10-08 07:01:26Z" end-time="2026-10-08 07:01:27Z" duration="1.268714" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #1: status=Blocked owned=0 queued=0; Need 20 wood for the next Spearman; have 0. No explored non-depleted Wood node is known.
+]]></output>
+              </test-case>
+              <test-case id="1200" name="NaturalInformationQuestion_RejectsExecutableReplyWithoutNewWork(&quot;How is my request progressing?&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixStatusTests.NaturalInformationQuestion_RejectsExecutableReplyWithoutNewWork(&quot;How is my request progressing?&quot;)" methodname="NaturalInformationQuestion_RejectsExecutableReplyWithoutNewWork" classname="OpenEmpires.Tests.CommanderGrandFixStatusTests" runstate="Runnable" seed="1252387861" result="Passed" start-time="2026-10-08 07:01:27Z" end-time="2026-10-08 07:01:28Z" duration="1.245882" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #1: status=Blocked owned=0 queued=0; Need 20 wood for the next Spearman; have 0. No explored non-depleted Wood node is known.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-case id="1206" name="NewMatch_DropsLateReadOnlyAnswerWithoutGameplayOrDisclosure" fullname="OpenEmpires.Tests.CommanderGrandFixStatusTests.NewMatch_DropsLateReadOnlyAnswerWithoutGameplayOrDisclosure" methodname="NewMatch_DropsLateReadOnlyAnswerWithoutGameplayOrDisclosure" classname="OpenEmpires.Tests.CommanderGrandFixStatusTests" runstate="Runnable" seed="907100971" result="Passed" start-time="2026-10-08 07:01:28Z" end-time="2026-10-08 07:01:30Z" duration="1.360132" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #1: status=Blocked owned=0 queued=0; Need 20 wood for the next Spearman; have 0. No explored non-depleted Wood node is known.
+]]></output>
+            </test-case>
+            <test-case id="1205" name="Question_DoesNotDismissOrApprovePendingCompoundPreview" fullname="OpenEmpires.Tests.CommanderGrandFixStatusTests.Question_DoesNotDismissOrApprovePendingCompoundPreview" methodname="Question_DoesNotDismissOrApprovePendingCompoundPreview" classname="OpenEmpires.Tests.CommanderGrandFixStatusTests" runstate="Runnable" seed="1434791381" result="Passed" start-time="2026-10-08 07:01:30Z" end-time="2026-10-08 07:01:31Z" duration="1.279464" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+]]></output>
+            </test-case>
+            <test-case id="1210" name="TellUnitsToAttack_IsNotMistakenForTellMeInformation" fullname="OpenEmpires.Tests.CommanderGrandFixStatusTests.TellUnitsToAttack_IsNotMistakenForTellMeInformation" methodname="TellUnitsToAttack_IsNotMistakenForTellMeInformation" classname="OpenEmpires.Tests.CommanderGrandFixStatusTests" runstate="Runnable" seed="783335133" result="Failed" start-time="2026-10-08 07:01:31Z" end-time="2026-10-08 07:01:32Z" duration="1.284889" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixStatusTests.TellUnitsToAttack_IsNotMistakenForTellMeInformation () [0x0008a] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixStatusTests.cs:168
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

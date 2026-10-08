@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Failed(Child)" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 11:05:23Z" end-time="2026-10-08 11:05:28Z" duration="4.9852">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1389" result="Failed" site="Child" start-time="2026-10-08 11:05:23Z" end-time="2026-10-08 11:05:28Z" duration="4.985200" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2597" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1389" result="Failed" site="Child" start-time="2026-10-08 11:05:23Z" end-time="2026-10-08 11:05:28Z" duration="4.870121" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="39992" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2598" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1389" result="Failed" site="Child" start-time="2026-10-08 11:05:23Z" end-time="2026-10-08 11:05:28Z" duration="4.780647" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2599" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1389" result="Failed" site="Child" start-time="2026-10-08 11:05:23Z" end-time="2026-10-08 11:05:28Z" duration="4.672335" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1182" name="CommanderGrandFixReadablePreviewTests" fullname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests" classname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests" runstate="Runnable" testcasecount="16" result="Failed" site="Child" start-time="2026-10-08 11:05:23Z" end-time="2026-10-08 11:05:28Z" duration="4.554714" total="4" passed="0" failed="4" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1197" name="DynamicSharedSourceRestriction_IsDisclosedEvenWithoutProduction" fullname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.DynamicSharedSourceRestriction_IsDisclosedEvenWithoutProduction" methodname="DynamicSharedSourceRestriction_IsDisclosedEvenWithoutProduction" classname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests" runstate="Runnable" seed="92858677" result="Failed" start-time="2026-10-08 11:05:23Z" end-time="2026-10-08 11:05:25Z" duration="1.391264" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "Shared restrictions"
+  But was:  "Action plan — not started.
+1. Assign exactly 1 eligible idle villagers to gather Food; use only the frozen villagers from selection 1; requires selection 1
+Selections and placement (fixed for this plan):
+  selection 1: Choose 1 eligible idle villagers once
+Worker selections are frozen once; partition roles cannot overlap. Locations use map directions and footprint-to-footprint clear gaps within bounded tolerance.
+Preparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan."
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.DynamicSharedSourceRestriction_IsDisclosedEvenWithoutProduction () [0x0000b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixReadablePreviewTests.cs:128
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1184" name="NewProducers_ExplainsNamedExactBuildingsWithoutFallback" fullname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.NewProducers_ExplainsNamedExactBuildingsWithoutFallback" methodname="NewProducers_ExplainsNamedExactBuildingsWithoutFallback" classname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests" runstate="Runnable" seed="689092749" result="Failed" start-time="2026-10-08 11:05:25Z" end-time="2026-10-08 11:05:26Z" duration="1.026940" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "all 2 buildings from that step"
+  But was:  "Action plan — not started.
+1. Build 2 Barracks
+2. Produce 10 new Spearman; after step 1; only the Barracks built in step 1; no other producer substitutes; requires step 1
+Selections and placement (fixed for this plan):
+Worker selections are frozen once; partition roles cannot overlap. Locations use map directions and footprint-to-footprint clear gaps within bounded tolerance.
+Preparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan."
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.NewProducers_ExplainsNamedExactBuildingsWithoutFallback () [0x0002b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixReadablePreviewTests.cs:49
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1199" name="SelectedExistingProducers_DiscloseVisibleCompletedOwnedRequirement" fullname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.SelectedExistingProducers_DiscloseVisibleCompletedOwnedRequirement" methodname="SelectedExistingProducers_DiscloseVisibleCompletedOwnedRequirement" classname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests" runstate="Runnable" seed="822077540" result="Failed" start-time="2026-10-08 11:05:26Z" end-time="2026-10-08 11:05:27Z" duration="1.004673" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "visible completed owned Barracks"
+  But was:  "Action plan — not started.
+1. Produce 2 new Spearman; use only the Barracks chosen in selection 1; no other producer substitutes; requires selection 1
+Selections and placement (fixed for this plan):
+  selection 1: Choose 1 eligible owned Barracks once
+Worker selections are frozen once; partition roles cannot overlap. Locations use map directions and footprint-to-footprint clear gaps within bounded tolerance.
+Preparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan."
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.SelectedExistingProducers_DiscloseVisibleCompletedOwnedRequirement () [0x0000b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixReadablePreviewTests.cs:143
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1198" name="TypedPlacementOmittedGap_DisclosesActualDefaultOneTile" fullname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.TypedPlacementOmittedGap_DisclosesActualDefaultOneTile" methodname="TypedPlacementOmittedGap_DisclosesActualDefaultOneTile" classname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests" runstate="Runnable" seed="1870476078" result="Failed" start-time="2026-10-08 11:05:27Z" end-time="2026-10-08 11:05:28Z" duration="0.992988" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "1-tile clear gap between footprints"
+  But was:  "Action plan — not started.
+1. Build 1 Barracks; map-west (left) of your Town Center; -tile clear gap between footprints
+Preparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan."
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.TypedPlacementOmittedGap_DisclosesActualDefaultOneTile () [0x0005b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixReadablePreviewTests.cs:137
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,0 +1,41 @@
+{
+  "schema": "openempires-status-matrix-checkpoint@1",
+  "head": "8586764e644240f93c99e2afa1c7d41c697cc879",
+  "branch": "unit_models_and_voice_control",
+  "working_changes": true,
+  "edit": {
+    "job": "0ae9492fd4474a2ab441accac94b0e1b",
+    "artifact": "status-final-edit-0ae9492f.xml",
+    "passed": 109,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 115.6938584
+  },
+  "play": {
+    "job": "d9492d3197bd449cb274e2387d808acc",
+    "artifact": "status-final-play-d9492d31.xml",
+    "passed": 6,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 4.435137
+  },
+  "read_only_consistency": {
+    "task": "g03_detached_check",
+    "model": "gpt-6-luna",
+    "live_world_references_found": false,
+    "not_runtime_certificate": true
+  },
+  "source_sha256": {
+    "Assets/Scripts/AI/Commander/CommanderTacticalStatusSnapshot.cs": "bcb2413bdd8b9611d7cc533e828e0946236413a247a14d56551fec91f89df1b8",
+    "Assets/Scripts/AI/Commander/CommanderGoalManager.cs": "2bac1b775b2cd48e1a48e3dfb26be416b9d0e2523ad8b58c07527408edaefeaf",
+    "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.ReadOnlyQuestions.cs": "e92a08a5598023a4088be3cb9cc44d6441703f9bb5a2a42a8cb633fec3514bc1",
+    "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticProvider.cs": "3c0b4f27cdf9c2541bc84bcc430ede07ad69d77588c662ceca6e4b89c5c45c00",
+    "Assets/Tests/EditMode/CommanderGrandFixStatusTests.cs": "0ee814ae64168f8bb30c25459e3c01dd30ed2f99f346881a06a343581886bb3f",
+    "Assets/Tests/PlayMode/CommanderGrandFixStatusPlayModeTests.cs": "3d7a5a64940c3c3fc43425a6c7c06057145a10d1b71672c089e8af7a8df9f9ae"
+  },
+  "paid_semantic_http": 0,
+  "paid_asr_billable_seconds": 0,
+  "packaged_windows_verified": false,
+  "served_web_verified": false,
+  "goal_status": "active"
+}

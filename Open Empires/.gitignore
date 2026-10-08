@@ -2,3 +2,6 @@
 *.bin
 *.bin.meta
 Assets/StreamingAssets/Whisper/*.bin
+# Acquired/imported native voice models and acquisition lock/temp state.
+# These are outside Assets so they cannot enter Unity Web StreamingAssets.
+/LocalModels/

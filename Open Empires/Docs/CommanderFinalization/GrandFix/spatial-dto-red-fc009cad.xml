@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="7" result="Failed(Child)" total="7" passed="2" failed="5" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 10:35:10Z" end-time="2026-10-08 10:35:21Z" duration="10.6626549">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1372" result="Failed" site="Child" start-time="2026-10-08 10:35:10Z" end-time="2026-10-08 10:35:21Z" duration="10.662655" total="7" passed="2" failed="5" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2578" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1372" result="Failed" site="Child" start-time="2026-10-08 10:35:10Z" end-time="2026-10-08 10:35:21Z" duration="10.564614" total="7" passed="2" failed="5" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="39992" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2579" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1372" result="Failed" site="Child" start-time="2026-10-08 10:35:11Z" end-time="2026-10-08 10:35:21Z" duration="10.480293" total="7" passed="2" failed="5" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2580" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1372" result="Failed" site="Child" start-time="2026-10-08 10:35:11Z" end-time="2026-10-08 10:35:21Z" duration="10.377155" total="7" passed="2" failed="5" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1197" name="CommanderGrandFixSpatialTruthTests" fullname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests" classname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests" runstate="Runnable" testcasecount="18" result="Failed" site="Child" start-time="2026-10-08 10:35:11Z" end-time="2026-10-08 10:35:21Z" duration="10.273772" total="7" passed="2" failed="5" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1218" name="DirectDtoEmptyTacticalParameters_PreservePointPatrol" fullname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.DirectDtoEmptyTacticalParameters_PreservePointPatrol" methodname="DirectDtoEmptyTacticalParameters_PreservePointPatrol" classname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests" runstate="Runnable" seed="1517482258" result="Passed" start-time="2026-10-08 10:35:11Z" end-time="2026-10-08 10:35:12Z" duration="1.578290" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1217" name="DirectDtoMalformedParameters_RejectInsteadOfBecomingPointPatrol" fullname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.DirectDtoMalformedParameters_RejectInsteadOfBecomingPointPatrol" classname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-08 10:35:12Z" end-time="2026-10-08 10:35:15Z" duration="2.267637" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1215" name="DirectDtoMalformedParameters_RejectInsteadOfBecomingPointPatrol(&quot;[]&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.DirectDtoMalformedParameters_RejectInsteadOfBecomingPointPatrol(&quot;[]&quot;)" methodname="DirectDtoMalformedParameters_RejectInsteadOfBecomingPointPatrol" classname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests" runstate="Runnable" seed="1733219440" result="Failed" start-time="2026-10-08 10:35:12Z" end-time="2026-10-08 10:35:14Z" duration="1.113654" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.DirectDtoMalformedParameters_RejectInsteadOfBecomingPointPatrol (System.String value) [0x0002d] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixSpatialTruthTests.cs:85
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1216" name="DirectDtoMalformedParameters_RejectInsteadOfBecomingPointPatrol(&quot;\&quot;radius 5\&quot;&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.DirectDtoMalformedParameters_RejectInsteadOfBecomingPointPatrol(&quot;\&quot;radius 5\&quot;&quot;)" methodname="DirectDtoMalformedParameters_RejectInsteadOfBecomingPointPatrol" classname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests" runstate="Runnable" seed="374170254" result="Failed" start-time="2026-10-08 10:35:14Z" end-time="2026-10-08 10:35:15Z" duration="1.133447" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.DirectDtoMalformedParameters_RejectInsteadOfBecomingPointPatrol (System.String value) [0x0002d] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixSpatialTruthTests.cs:85
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-case id="1219" name="DirectDtoStrategicParameters_ArePreservedWithoutGameplayEffects" fullname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.DirectDtoStrategicParameters_ArePreservedWithoutGameplayEffects" methodname="DirectDtoStrategicParameters_ArePreservedWithoutGameplayEffects" classname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests" runstate="Runnable" seed="54670280" result="Passed" start-time="2026-10-08 10:35:15Z" end-time="2026-10-08 10:35:16Z" duration="1.118414" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1214" name="DirectDtoTacticalParameters_RejectInsteadOfLosingRestriction" fullname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.DirectDtoTacticalParameters_RejectInsteadOfLosingRestriction" classname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-08 10:35:16Z" end-time="2026-10-08 10:35:21Z" duration="5.159577" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1211" name="DirectDtoTacticalParameters_RejectInsteadOfLosingRestriction(&quot;radius&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.DirectDtoTacticalParameters_RejectInsteadOfLosingRestriction(&quot;radius&quot;)" methodname="DirectDtoTacticalParameters_RejectInsteadOfLosingRestriction" classname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests" runstate="Runnable" seed="1452168885" result="Failed" start-time="2026-10-08 10:35:16Z" end-time="2026-10-08 10:35:17Z" duration="1.659787" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.DirectDtoTacticalParameters_RejectInsteadOfLosingRestriction (System.String field) [0x0002d] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixSpatialTruthTests.cs:77
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1212" name="DirectDtoTacticalParameters_RejectInsteadOfLosingRestriction(&quot;radiusTiles&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.DirectDtoTacticalParameters_RejectInsteadOfLosingRestriction(&quot;radiusTiles&quot;)" methodname="DirectDtoTacticalParameters_RejectInsteadOfLosingRestriction" classname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests" runstate="Runnable" seed="1683313932" result="Failed" start-time="2026-10-08 10:35:17Z" end-time="2026-10-08 10:35:19Z" duration="1.952290" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.DirectDtoTacticalParameters_RejectInsteadOfLosingRestriction (System.String field) [0x0002d] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixSpatialTruthTests.cs:77
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1213" name="DirectDtoTacticalParameters_RejectInsteadOfLosingRestriction(&quot;perimeter&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.DirectDtoTacticalParameters_RejectInsteadOfLosingRestriction(&quot;perimeter&quot;)" methodname="DirectDtoTacticalParameters_RejectInsteadOfLosingRestriction" classname="OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests" runstate="Runnable" seed="569439222" result="Failed" start-time="2026-10-08 10:35:19Z" end-time="2026-10-08 10:35:21Z" duration="1.535399" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixSpatialTruthTests.DirectDtoTacticalParameters_RejectInsteadOfLosingRestriction (System.String field) [0x0002d] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixSpatialTruthTests.cs:77
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

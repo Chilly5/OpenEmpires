@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="7" result="Passed" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-07 21:03:00Z" end-time="2026-10-07 21:03:02Z" duration="1.8717848">
+  <test-suite type="TestSuite" id="2618" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="201" result="Passed" start-time="2026-10-07 21:03:00Z" end-time="2026-10-07 21:03:02Z" duration="1.871785" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="2612" name="OpenEmpires.PlayModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.PlayModeTests.dll" runstate="Runnable" testcasecount="201" result="Passed" start-time="2026-10-07 21:03:00Z" end-time="2026-10-07 21:03:02Z" duration="1.869276" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="2613" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="201" result="Passed" start-time="2026-10-07 21:03:00Z" end-time="2026-10-07 21:03:02Z" duration="1.867419" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="2614" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="201" result="Passed" start-time="2026-10-07 21:03:00Z" end-time="2026-10-07 21:03:02Z" duration="1.864716" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="2593" name="CommanderPhase4HVoicePlayModeTests" fullname="OpenEmpires.Tests.CommanderPhase4HVoicePlayModeTests" classname="OpenEmpires.Tests.CommanderPhase4HVoicePlayModeTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-07 21:03:00Z" end-time="2026-10-07 21:03:02Z" duration="1.862978" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase4H" />
+            </properties>
+            <test-case id="2594" name="EditedPreview_NormalSendConsumesVoicePreviewExactlyOnce" fullname="OpenEmpires.Tests.CommanderPhase4HVoicePlayModeTests.EditedPreview_NormalSendConsumesVoicePreviewExactlyOnce" methodname="EditedPreview_NormalSendConsumesVoicePreviewExactlyOnce" classname="OpenEmpires.Tests.CommanderPhase4HVoicePlayModeTests" runstate="Runnable" seed="187945565" result="Passed" start-time="2026-10-07 21:03:00Z" end-time="2026-10-07 21:03:00Z" duration="0.280613" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] intent=admitted;goal-submitted=True
+]]></output>
+            </test-case>
+            <test-case id="2596" name="ScenarioA_PreviewMode_PopulatesInputField_AndSubmitsOnConfirmation" fullname="OpenEmpires.Tests.CommanderPhase4HVoicePlayModeTests.ScenarioA_PreviewMode_PopulatesInputField_AndSubmitsOnConfirmation" methodname="ScenarioA_PreviewMode_PopulatesInputField_AndSubmitsOnConfirmation" classname="OpenEmpires.Tests.CommanderPhase4HVoicePlayModeTests" runstate="Runnable" seed="1827345732" result="Passed" start-time="2026-10-07 21:03:00Z" end-time="2026-10-07 21:03:01Z" duration="0.266195" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] intent=admitted;goal-submitted=True
+]]></output>
+            </test-case>
+            <test-case id="2595" name="ScenarioA_VoiceTranscript_SubmitsThroughNormalCommanderPath" fullname="OpenEmpires.Tests.CommanderPhase4HVoicePlayModeTests.ScenarioA_VoiceTranscript_SubmitsThroughNormalCommanderPath" methodname="ScenarioA_VoiceTranscript_SubmitsThroughNormalCommanderPath" classname="OpenEmpires.Tests.CommanderPhase4HVoicePlayModeTests" runstate="Runnable" seed="789262727" result="Passed" start-time="2026-10-07 21:03:01Z" end-time="2026-10-07 21:03:01Z" duration="0.262190" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] intent=admitted;goal-submitted=True
+]]></output>
+            </test-case>
+            <test-case id="2597" name="ScenarioB_LateTranscriptAfterReset_IsSafelyDiscarded" fullname="OpenEmpires.Tests.CommanderPhase4HVoicePlayModeTests.ScenarioB_LateTranscriptAfterReset_IsSafelyDiscarded" methodname="ScenarioB_LateTranscriptAfterReset_IsSafelyDiscarded" classname="OpenEmpires.Tests.CommanderPhase4HVoicePlayModeTests" runstate="Runnable" seed="1080632903" result="Passed" start-time="2026-10-07 21:03:01Z" end-time="2026-10-07 21:03:01Z" duration="0.258767" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="2598" name="ScenarioC_STTFailure_DoesNotBreakKeyboardCommander" fullname="OpenEmpires.Tests.CommanderPhase4HVoicePlayModeTests.ScenarioC_STTFailure_DoesNotBreakKeyboardCommander" methodname="ScenarioC_STTFailure_DoesNotBreakKeyboardCommander" classname="OpenEmpires.Tests.CommanderPhase4HVoicePlayModeTests" runstate="Runnable" seed="1265740671" result="Passed" start-time="2026-10-07 21:03:01Z" end-time="2026-10-07 21:03:01Z" duration="0.258992" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] intent=admitted;goal-submitted=True
+]]></output>
+            </test-case>
+            <test-case id="2599" name="ScenarioD_MixedConversation_VoiceThenTyped_SharesMemory" fullname="OpenEmpires.Tests.CommanderPhase4HVoicePlayModeTests.ScenarioD_MixedConversation_VoiceThenTyped_SharesMemory" methodname="ScenarioD_MixedConversation_VoiceThenTyped_SharesMemory" classname="OpenEmpires.Tests.CommanderPhase4HVoicePlayModeTests" runstate="Runnable" seed="1594088900" result="Passed" start-time="2026-10-07 21:03:01Z" end-time="2026-10-07 21:03:02Z" duration="0.270041" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] intent=admitted;goal-submitted=True
+[Commander] context=projected;provider-request=started
+[Commander] Goal #2 submitted: EnsureUnitCount
+[Commander] intent=admitted;goal-submitted=True
+]]></output>
+            </test-case>
+            <test-case id="2600" name="ScenarioE_VoiceQA_CounterQuery_ExecutesCleanly" fullname="OpenEmpires.Tests.CommanderPhase4HVoicePlayModeTests.ScenarioE_VoiceQA_CounterQuery_ExecutesCleanly" methodname="ScenarioE_VoiceQA_CounterQuery_ExecutesCleanly" classname="OpenEmpires.Tests.CommanderPhase4HVoicePlayModeTests" runstate="Runnable" seed="865646267" result="Passed" start-time="2026-10-07 21:03:02Z" end-time="2026-10-07 21:03:02Z" duration="0.261674" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

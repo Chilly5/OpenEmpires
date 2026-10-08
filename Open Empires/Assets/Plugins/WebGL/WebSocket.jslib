@@ -18,22 +18,26 @@ mergeInto(LibraryManager.library,
 
         ws.onopen = function()
         {
+            if(window._oeWebSocket!==ws)return;
             SendMessage(goName, 'OnWebGLOpen', '');
         };
 
         ws.onerror = function()
         {
+            if(window._oeWebSocket!==ws)return;
             SendMessage(goName, 'OnWebGLError', 'WebSocket error');
         };
 
         ws.onclose = function(event)
         {
+            if(window._oeWebSocket!==ws)return;
             window._oeWebSocket = null;
             SendMessage(goName, 'OnWebGLClose', event.reason || 'Connection closed');
         };
 
         ws.onmessage = function(event)
         {
+            if(window._oeWebSocket!==ws)return;
             SendMessage(goName, 'OnWebGLMessage', event.data);
         };
     },

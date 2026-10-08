@@ -86,7 +86,9 @@ namespace OpenEmpires
                     dependencies.AsReadOnly(), producer, null, source.Id));
             }
             if (!TryStableOrder(effects, out var order)) return false;
-            graph = new CommanderSemanticGraphPlan(effects.AsReadOnly(), order, program);
+            if (!CommanderProductionProjection.TryProject(effects, new CommanderContextBuilder().Build(simulation, manager),
+                out var quantities, out reason)) return false;
+            graph = new CommanderSemanticGraphPlan(effects.AsReadOnly(), order, program, quantities);
             reason = string.Empty;
             return true;
         }

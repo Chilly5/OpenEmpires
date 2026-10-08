@@ -17,6 +17,7 @@ namespace OpenEmpires
         private readonly Func<IReadOnlyList<MemoryEntry>> memorySnapshotProvider;
         private readonly CommanderConversationHistory history = new CommanderConversationHistory();
         private CancellationTokenSource activeRequest;
+        private StrategicAIRequest activeIdentityRequest;
         private StrategicIntent pending;
         private bool busy;
         private bool disposed;
@@ -106,6 +107,8 @@ namespace OpenEmpires
             }
 
             var request = new StrategicAIRequest(string.Empty, context, identities);
+            try
+            {
             var intent = new StrategicIntent(request.IntentId, context.PlayerId, objective,
                 context.SnapshotTick, parameters, null, StrategicIntentSource.AIRecommendation);
             var validation = new StrategicIntentValidator().Validate(intent, expectedOwner,
@@ -124,10 +127,13 @@ namespace OpenEmpires
                     || generation != expectedGeneration)
                     return StrategicAIProviderResult.Rejected("Strategic response is stale.");
                 pending = intent;
+                request.CompleteOwnershipTransfer();
                 history.Append(CommanderConversationRole.Commander,
                     objective + " recommendation ready for review.");
             }
             return StrategicAIProviderResult.Accepted(dto, intent, json);
+            }
+            finally{request.ReleaseOwnership();}
         }
 
         private static string SerializeParameters(IReadOnlyDictionary<string, string> parameters)
@@ -155,6 +161,7 @@ namespace OpenEmpires
                 requestHistory = memorySnapshotProvider == null
                     ? history.Snapshot() : Array.Empty<CommanderConversationMessage>();
             }
+            StrategicAIRequest request=null;
             try
             {
                 deadline.CancelAfter(timeout);
@@ -167,12 +174,13 @@ namespace OpenEmpires
                 if (IsGenericAttack(message) && !HasCavalryPreference(memory))
                     return StrategicAIProviderResult.Rejected(
                         "Choose the supported attack focus first: focus cavalry.");
-                var request = new StrategicAIRequest(message, contextProvider(), identities,
+                request = new StrategicAIRequest(message, contextProvider(), identities,
                     requestHistory, memory);
                 lock (sync)
                 {
                     if (disposed || generation != requestGeneration || deadline.IsCancellationRequested)
                         return StrategicAIProviderResult.Rejected("Strategic translation was cancelled.");
+                    activeIdentityRequest=request;
                     history.Append(CommanderConversationRole.Player, message);
                 }
                 Task<StrategicAIProviderResult> translation = interpreter.InterpretStrategicIntentAsync(request, deadline.Token);
@@ -203,6 +211,7 @@ namespace OpenEmpires
                     if (disposed || generation != requestGeneration || deadline.IsCancellationRequested)
                         return StrategicAIProviderResult.Rejected("Strategic translation was cancelled.");
                     pending = intent;
+                    request.CompleteOwnershipTransfer();
                     history.Append(CommanderConversationRole.Commander,
                         intent.ObjectiveType + " recommendation ready for review.");
                 }
@@ -220,8 +229,10 @@ namespace OpenEmpires
             }
             finally
             {
+                request?.ReleaseOwnership();
                 lock (sync)
                 {
+                    if(ReferenceEquals(activeIdentityRequest,request))activeIdentityRequest=null;
                     if (ReferenceEquals(activeRequest, deadline))
                     {
                         activeRequest = null;
@@ -270,6 +281,7 @@ namespace OpenEmpires
             {
                 ++generation;
                 ClearPendingLocked();
+                activeIdentityRequest?.ReleaseOwnership();activeIdentityRequest=null;
                 activeRequest?.Cancel();
             }
         }
@@ -281,6 +293,7 @@ namespace OpenEmpires
                 ++generation;
                 history.Clear();
                 ClearPendingLocked();
+                activeIdentityRequest?.ReleaseOwnership();activeIdentityRequest=null;
                 activeRequest?.Cancel();
                 activeRequest = null;
                 busy = false;
@@ -320,7 +333,10 @@ namespace OpenEmpires
         private void ClearPendingLocked()
         {
             if (pending != null && pending.Status == StrategicIntentStatus.Created)
+            {
                 pending.Status = StrategicIntentStatus.Cancelled;
+                identities.Retire(pending.IntentId,pending);
+            }
             pending = null;
         }
 
@@ -333,6 +349,7 @@ namespace OpenEmpires
                 ++generation;
                 history.Clear();
                 ClearPendingLocked();
+                activeIdentityRequest?.ReleaseOwnership();activeIdentityRequest=null;
                 activeRequest?.Cancel();
                 activeRequest = null;
                 busy = false;

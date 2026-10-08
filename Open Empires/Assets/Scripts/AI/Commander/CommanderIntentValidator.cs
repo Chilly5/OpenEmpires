@@ -174,6 +174,9 @@ namespace OpenEmpires
 
         private static CommanderIntentValidationResult ValidateCapabilityAction(CapabilityActionIntent intent)
         {
+            if(intent.LocationSelector.RadiusTiles.HasValue)
+                return Invalid(CommanderIntentErrorCode.UnsupportedConstraint,
+                    "This action supports a point target, not a radius or perimeter. Request a point route or revise the spatial constraint.");
             if (!Enum.IsDefined(typeof(CommanderCapabilityActionType), intent.ActionType))
                 return Invalid(CommanderIntentErrorCode.UnknownCommand, "Unknown Commander capability action.");
             if (intent.UnitSelector.Count < 1 || intent.UnitSelector.Count > 50)
@@ -184,6 +187,8 @@ namespace OpenEmpires
             if (intent.UnitSelector.Kind == CommanderUnitSelectorKind.UnitType
                 && !CommanderIntentCatalog.IsSupportedUnit(intent.UnitSelector.UnitType))
                 return Invalid(CommanderIntentErrorCode.UnknownUnit, "The requested unit selector is not supported.");
+            if (intent.TargetSelector.HasValue && !intent.TargetSelector.Value.IsCompatible(intent.ActionType, intent.LocationSelector.Kind))
+                return Invalid(CommanderIntentErrorCode.UnknownCommand, "The requested target type is incompatible with this action.");
             if (intent.ActionType == CommanderCapabilityActionType.RepairTarget
                 && intent.UnitSelector.Kind != CommanderUnitSelectorKind.Villagers)
                 return Invalid(CommanderIntentErrorCode.UnknownCommand,

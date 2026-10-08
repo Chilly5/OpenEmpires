@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="13" result="Passed" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 17:48:33Z" end-time="2026-10-08 17:48:38Z" duration="5.1680873">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1472" result="Passed" start-time="2026-10-08 17:48:33Z" end-time="2026-10-08 17:48:38Z" duration="5.168087" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="2695" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1472" result="Passed" start-time="2026-10-08 17:48:33Z" end-time="2026-10-08 17:48:38Z" duration="5.068028" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="27016" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="2696" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1472" result="Passed" start-time="2026-10-08 17:48:33Z" end-time="2026-10-08 17:48:38Z" duration="4.972340" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="2697" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1472" result="Passed" start-time="2026-10-08 17:48:33Z" end-time="2026-10-08 17:48:38Z" duration="4.872865" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1134" name="CommanderGrandFixNetworkCompatibilityTests" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-10-08 17:48:33Z" end-time="2026-10-08 17:48:38Z" duration="4.770582" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <test-case id="1135" name="AuthenticatePacket_DeclaresSourceAndRestrictedCommandProfileWithoutUnsafeInterpolation" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.AuthenticatePacket_DeclaresSourceAndRestrictedCommandProfileWithoutUnsafeInterpolation" methodname="AuthenticatePacket_DeclaresSourceAndRestrictedCommandProfileWithoutUnsafeInterpolation" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="846042990" result="Passed" start-time="2026-10-08 17:48:33Z" end-time="2026-10-08 17:48:34Z" duration="0.822795" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1146" name="BrowserRuntimeSourceChanges_ChangeSourceIdentity" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.BrowserRuntimeSourceChanges_ChangeSourceIdentity" methodname="BrowserRuntimeSourceChanges_ChangeSourceIdentity" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="1222586135" result="Passed" start-time="2026-10-08 17:48:34Z" end-time="2026-10-08 17:48:34Z" duration="0.030182" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1145" name="Disconnect_ClearsQueuedMessagesBeforeNextConnection" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.Disconnect_ClearsQueuedMessagesBeforeNextConnection" methodname="Disconnect_ClearsQueuedMessagesBeforeNextConnection" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="1230850223" result="Passed" start-time="2026-10-08 17:48:34Z" end-time="2026-10-08 17:48:34Z" duration="0.243115" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1144" name="DuplicateAcknowledgement_CannotRewindInGameState" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.DuplicateAcknowledgement_CannotRewindInGameState" methodname="DuplicateAcknowledgement_CannotRewindInGameState" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="1794521784" result="Passed" start-time="2026-10-08 17:48:34Z" end-time="2026-10-08 17:48:35Z" duration="0.702293" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Matchmaking] State: Disconnected -> Authenticating
+[Matchmaking] Authenticated as fixture
+[Matchmaking] State: Authenticating -> Authenticated
+[Matchmaking] State: Authenticated -> InGame
+]]></output>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1141" name="EachIncompatibleField_RejectsBeforeMatch" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-08 17:48:35Z" end-time="2026-10-08 17:48:37Z" duration="1.951151" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1137" name="EachIncompatibleField_RejectsBeforeMatch(&quot;protocol_revision&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch(&quot;protocol_revision&quot;)" methodname="EachIncompatibleField_RejectsBeforeMatch" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="1239997189" result="Passed" start-time="2026-10-08 17:48:35Z" end-time="2026-10-08 17:48:35Z" duration="0.482419" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Matchmaking] State: Disconnected -> Authenticating
+[Matchmaking] State: Authenticating -> Disconnected
+[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.
+]]></output>
+              </test-case>
+              <test-case id="1138" name="EachIncompatibleField_RejectsBeforeMatch(&quot;source_sha256&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch(&quot;source_sha256&quot;)" methodname="EachIncompatibleField_RejectsBeforeMatch" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="603083030" result="Passed" start-time="2026-10-08 17:48:35Z" end-time="2026-10-08 17:48:36Z" duration="0.463089" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Matchmaking] State: Disconnected -> Authenticating
+[Matchmaking] State: Authenticating -> Disconnected
+[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.
+]]></output>
+              </test-case>
+              <test-case id="1139" name="EachIncompatibleField_RejectsBeforeMatch(&quot;command_encoding&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch(&quot;command_encoding&quot;)" methodname="EachIncompatibleField_RejectsBeforeMatch" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="226210344" result="Passed" start-time="2026-10-08 17:48:36Z" end-time="2026-10-08 17:48:36Z" duration="0.458154" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Matchmaking] State: Disconnected -> Authenticating
+[Matchmaking] State: Authenticating -> Disconnected
+[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.
+]]></output>
+              </test-case>
+              <test-case id="1140" name="EachIncompatibleField_RejectsBeforeMatch(&quot;recovery_policy&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch(&quot;recovery_policy&quot;)" methodname="EachIncompatibleField_RejectsBeforeMatch" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="1245097773" result="Passed" start-time="2026-10-08 17:48:36Z" end-time="2026-10-08 17:48:37Z" duration="0.542296" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Matchmaking] State: Disconnected -> Authenticating
+[Matchmaking] State: Authenticating -> Disconnected
+[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-case id="1143" name="LateMatchingAcknowledgement_AfterDisconnectCannotReopenAdmission" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.LateMatchingAcknowledgement_AfterDisconnectCannotReopenAdmission" methodname="LateMatchingAcknowledgement_AfterDisconnectCannotReopenAdmission" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="871029749" result="Passed" start-time="2026-10-08 17:48:37Z" end-time="2026-10-08 17:48:37Z" duration="0.233881" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1136" name="LegacyAuthenticationWithoutProfile_IsNotGameplayAdmission" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.LegacyAuthenticationWithoutProfile_IsNotGameplayAdmission" methodname="LegacyAuthenticationWithoutProfile_IsNotGameplayAdmission" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="639056159" result="Passed" start-time="2026-10-08 17:48:37Z" end-time="2026-10-08 17:48:37Z" duration="0.230657" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Matchmaking] State: Disconnected -> Authenticating
+[Matchmaking] State: Authenticating -> Disconnected
+[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.
+]]></output>
+            </test-case>
+            <test-case id="1148" name="MalformedServerPayload_IsNotEchoedToDiagnostics" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.MalformedServerPayload_IsNotEchoedToDiagnostics" methodname="MalformedServerPayload_IsNotEchoedToDiagnostics" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="1969805501" result="Passed" start-time="2026-10-08 17:48:37Z" end-time="2026-10-08 17:48:37Z" duration="0.003191" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[
+IgnoreFailingMessages:true
+[ServerMessageParser] Invalid server message rejected; payload omitted.
+
+IgnoreFailingMessages:false
+]]></output>
+            </test-case>
+            <test-case id="1142" name="MatchingServerAcknowledgement_EnablesAuthenticationOnly" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.MatchingServerAcknowledgement_EnablesAuthenticationOnly" methodname="MatchingServerAcknowledgement_EnablesAuthenticationOnly" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="1610854572" result="Passed" start-time="2026-10-08 17:48:37Z" end-time="2026-10-08 17:48:38Z" duration="0.441889" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Matchmaking] State: Disconnected -> Authenticating
+[Matchmaking] Authenticated as fixture
+[Matchmaking] State: Authenticating -> Authenticated
+]]></output>
+            </test-case>
+            <test-case id="1147" name="UnacknowledgedMatchAndCommands_AreNotPublishedToSimulation" fullname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.UnacknowledgedMatchAndCommands_AreNotPublishedToSimulation" methodname="UnacknowledgedMatchAndCommands_AreNotPublishedToSimulation" classname="OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests" runstate="Runnable" seed="486675927" result="Passed" start-time="2026-10-08 17:48:38Z" end-time="2026-10-08 17:48:38Z" duration="0.003650" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.
+[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.
+[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

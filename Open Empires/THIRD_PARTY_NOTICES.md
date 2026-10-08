@@ -1,0 +1,77 @@
+# Third-party notices — Commander release additions
+
+This notice accompanies the changed Commander voice/JSON paths. Preserve the project's
+LICENSE and Unity/package notices as well; this is not an exhaustive asset-store audit.
+
+## MIT components and copyright notices
+
+- whisper.unity 1.4.0, commit e951e4a4c6e44c781b1d36bb8dc5bf1b7bae9687:
+  Copyright (c) 2023 Macoron.
+  Source/license: https://github.com/Macoron/whisper.unity/blob/e951e4a4c6e44c781b1d36bb8dc5bf1b7bae9687/LICENSE.MD
+- whisper.cpp / ggml native implementation, release reported by the pinned binding as1.7.5:
+  Copyright (c) 2023-2024 The ggml authors.
+  Source/license: https://github.com/ggml-org/whisper.cpp/blob/v1.7.5/LICENSE
+  Windows package libraries: libwhisper.dll, ggml.dll, ggml-base.dll,
+  ggml-cpu.dll and ggml-vulkan.dll. Package binaries remain unchanged.
+- OpenAI Whisper code and model weights:
+  Copyright (c) 2022 OpenAI.
+  Source/license: https://github.com/openai/whisper/blob/main/LICENSE
+  Upstream states code and weights use MIT: https://github.com/openai/whisper#license
+  GGML conversion/download mirror: ggerganov/whisper.cpp, revision
+  5359861c739e955e79d9a303bcbc70fb988958b1.
+  Exact sizes/hashes/languages: Assets/Resources/CommanderVoice/whisper-models.json.
+  Native weights are separately provisioned into a writable verified cache, not
+  promised as part of the mandatory Web download. No model accuracy/GPU guarantee.
+- Newtonsoft.Json13.0.2, supplied by Unity package com.unity.nuget.newtonsoft-json3.2.2:
+  Copyright (c) 2007 James Newton-King.
+- Json.Net.Unity3D: Copyright (c) Copyright (c) 2016 SaladLab.
+- Newtonsoft.Json-for-Unity: Copyright (c) Copyright (c) 2019 Kalle Jillheden (jilleJr).
+- com.newtonsoft.json: Copyright (c) 2019 Mike Wuetherick.
+  These four JSON notices are reproduced from the installed package's
+  Third Party Notices.md. Unity's package wrapper notice is retained below.
+
+## MIT License (applies separately to each MIT component listed above)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+## Unity Newtonsoft package wrapper notice
+
+Nuget.Newtonsoft.Json copyright © 2022 Unity Technologies ApS
+
+Licensed under the Unity Companion License for Unity-dependent projects--see
+https://www.unity3d.com/legal/licenses/Unity_Companion_License
+
+Unless expressly provided otherwise, the Software under this license is made
+available strictly on an “AS IS” BASIS WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED. Please review the license for details on these and other terms and conditions.
+
+## Platform/service distinction
+
+Unity runtime and other existing project dependencies retain their own licenses.
+Editor-only MCP and test assemblies are not intended player components.
+Node.js is an operator-installed optional service runtime, not bundled here.
+OpenRouter/OpenAI online services have separate operator terms; model licenses do
+not grant service access or imply zero upstream retention.
+
+Windows native imports require Microsoft VC14 runtime libraries (including OpenMP)
+and Vulkan's vulkan-1.dll loader even if CPU inference is selected in this pinned
+bundle. Obtain runtime/graphics prerequisites from official vendors; do not copy
+arbitrary system DLLs into the game. No CUDA, Rust, Python or compiler is required
+for ordinary player model import/use.
+

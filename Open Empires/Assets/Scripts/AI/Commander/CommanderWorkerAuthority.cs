@@ -97,12 +97,21 @@ namespace OpenEmpires
             for (int i = 0; i < releaseScratch.Count; i++) commanderUnitReservations.Remove(releaseScratch[i]);
         }
 
-        public void PruneUnavailableWorkers()
+        public void PruneUnavailableWorkers(int? currentTick=null)
         {
+            int tick=currentTick??simulation.CurrentTick;
+            bool Live(int id,bool workerOnly=false)
+            {var unit=simulation.UnitRegistry.GetUnit(id)??simulation.UnitRegistry.GetGarrisonedUnit(id);return unit!=null&&unit.PlayerId==playerId&&unit.CurrentHealth>0&&unit.State!=UnitState.Dead&&(!workerOnly||unit.IsVillager);}
+            releaseScratch.Clear();foreach(var pair in humanProtectedUntilTick)if(!Live(pair.Key)||pair.Value<=tick)releaseScratch.Add(pair.Key);
+            releaseScratch.Sort();foreach(int id in releaseScratch)humanProtectedUntilTick.Remove(id);
+            releaseScratch.Clear();foreach(int id in commanderControlledWorkers)if(!Live(id,true))releaseScratch.Add(id);
+            releaseScratch.Sort();foreach(int id in releaseScratch)commanderControlledWorkers.Remove(id);
+            releaseScratch.Clear();foreach(var pair in commanderGatherUntilTick)if(!Live(pair.Key,true)||pair.Value<=tick)releaseScratch.Add(pair.Key);
+            releaseScratch.Sort();foreach(int id in releaseScratch)commanderGatherUntilTick.Remove(id);
             releaseScratch.Clear();
             foreach (var pair in reservations)
             {
-                var unit = simulation.UnitRegistry.GetUnit(pair.Key);
+                var unit = simulation.UnitRegistry.GetUnit(pair.Key)??simulation.UnitRegistry.GetGarrisonedUnit(pair.Key);
                 if (unit == null || unit.PlayerId != playerId || !unit.IsVillager || unit.CurrentHealth <= 0 || unit.State == UnitState.Dead)
                     releaseScratch.Add(pair.Key);
             }
@@ -111,13 +120,14 @@ namespace OpenEmpires
             releaseScratch.Clear();
             foreach (var pair in commanderUnitReservations)
             {
-                var unit = simulation.UnitRegistry.GetUnit(pair.Key);
+                var unit = simulation.UnitRegistry.GetUnit(pair.Key)??simulation.UnitRegistry.GetGarrisonedUnit(pair.Key);
                 if (unit == null || unit.PlayerId != playerId || unit.CurrentHealth <= 0 || unit.State == UnitState.Dead)
                     releaseScratch.Add(pair.Key);
             }
             releaseScratch.Sort();
             for (int i = 0; i < releaseScratch.Count; i++) commanderUnitReservations.Remove(releaseScratch[i]);
         }
+        internal void Clear(){humanProtectedUntilTick.Clear();commanderControlledWorkers.Clear();commanderGatherUntilTick.Clear();reservations.Clear();commanderUnitReservations.Clear();releaseScratch.Clear();}
 
         public CommanderWorkerAuthority(GameSimulation simulation, int playerId)
         {
@@ -164,6 +174,9 @@ namespace OpenEmpires
             humanProtectedUntilTick.Remove(unitId);
             return false;
         }
+
+        internal bool ObserveHumanProtection(int unitId,int currentTick)
+            => humanProtectedUntilTick.TryGetValue(unitId,out int until)&&currentTick<until;
 
         public bool IsCommanderControlled(int unitId)
         {

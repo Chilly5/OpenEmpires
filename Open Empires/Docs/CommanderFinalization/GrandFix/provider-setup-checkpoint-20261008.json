@@ -1,0 +1,71 @@
+{
+  "schema": "openempires-provider-setup-checkpoint@1",
+  "head": "8586764e644240f93c99e2afa1c7d41c697cc879",
+  "branch": "unit_models_and_voice_control",
+  "working_changes": true,
+  "unity": "6000.5.9f1",
+  "edit": {
+    "job": "adedb3a572e94892b11a22cbd77dbb5c",
+    "artifact": "provider-setup-final-edit-adedb3a5.xml",
+    "passed": 123,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 46.8411323,
+    "test_names": [
+      "OpenEmpires.Tests.CommanderGrandFixProviderSetupTests",
+      "OpenEmpires.Tests.CommanderGrandFixGatewaySemanticTests",
+      "OpenEmpires.Tests.CommanderGrandFixPresentationTests",
+      "OpenEmpires.Tests.CommanderPhase4E1ProviderTests",
+      "OpenEmpires.Tests.CommanderPhase5AProviderContractTests",
+      "OpenEmpires.Tests.CommanderGrandFixOnlineVoiceTests",
+      "OpenEmpires.Tests.CommanderGrandFixStatusTests"
+    ]
+  },
+  "play": {
+    "job": "902e533a3c614374aa2aa4526106a0ed",
+    "artifact": "provider-setup-play-902e533a.xml",
+    "passed": 9,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 3.7770314,
+    "test_names": [
+      "OpenEmpires.Tests.CommanderPhase4HVoicePlayModeTests",
+      "OpenEmpires.Tests.CommanderGrandFixInputDispatchPlayModeTests"
+    ],
+    "physical_evidence": false
+  },
+  "review": {
+    "model": "gpt-6-sol",
+    "read_only": true,
+    "important_findings_fixed": [
+      "retired owned gateway transport disposal",
+      "stale setup-error precedence",
+      "gateway network category"
+    ],
+    "additional_fix": "changed padded session must remain exactly bounded"
+  },
+  "source_sha256": {
+    "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.ProviderSetup.cs": "a6c97dbccc2769c8f15073a316b3e2056140a550a9080896f89d7595f4c6ed38",
+    "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.ProviderSetup.cs.meta": "3f6a1a222acbfa255a088f0e2a69ea82dbe87d027e88fdb5692688345505dcd8",
+    "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs": "4f86541863d15ac43f7941c381d5dfb34bf4775846244cf1be355d9eac30f780",
+    "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.ReadOnlyQuestions.cs": "7558b52fae520311e8c85d901046cb84ae3476705e18c4fa106d1e3f9be9ba71",
+    "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Presentation.cs": "195099899f5bfe671501bc4b2afd6690c8a04fbb1e90b41bf04066a4b2859c13",
+    "Assets/Scripts/AI/Commander/Phase4A/OpenRouterCommanderProvider.cs": "a0822491b16f4e04697f9af056adf3dbc86a5ad92f10269af8f1ef0a963721a7",
+    "Assets/Scripts/AI/Commander/Phase4H/CommanderChatUI.VoiceSetup.cs": "9760d4326470a54a134c1f65e0e85b1e1ec886e81754a78bf7c26afa0a5076e7",
+    "Assets/Scripts/AI/Commander/Phase4H/CommanderGatewaySemanticTransport.cs": "c6728590e30eb10ca5334225860917fd0d62017ae7cf704b7fc8661c81d2953c",
+    "Assets/Tests/EditMode/CommanderGrandFixProviderSetupTests.cs": "371041ec430e1bf60387f82fa8b21dd6061af5f10e13e426f7a73a8304629928",
+    "Assets/Tests/EditMode/CommanderGrandFixProviderSetupTests.cs.meta": "9f083619daa5008d954a7be7d22fa3a0b8d438396d675e272ecad18d13d300b6",
+    "Docs/CommanderFinalization/GrandFix/provider-deployment-and-transport.md": "093319fe1d62858b2ff6a6d5768b38a2210666ad58ca08b4d79b829d07891443"
+  },
+  "gates": [
+    "fresh Windows and served Web setup/layout/focus",
+    "compiled backend identity and actual signed-in session",
+    "configured hosted gateway/vendor",
+    "independent full/hostile regression",
+    "final package secret/model inventory"
+  ],
+  "paid_semantic_http": 0,
+  "cloud_asr_seconds": 0,
+  "physical_microphone_sessions": 0,
+  "remote_deployments": 0
+}

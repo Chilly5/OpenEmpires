@@ -272,10 +272,10 @@ namespace OpenEmpires.Tests
         }
 
         [Test]
-        public void ModelLocator_ResolvesStreamingAssetsModel()
+        public void ModelLocator_ResolvesProvisionedModel()
         {
             bool found = WhisperModelLocator.TryResolveModelPath("ggml-tiny.bin", out string path);
-            Assert.IsTrue(found, "WhisperModelLocator should resolve ggml-tiny.bin in StreamingAssets");
+            Assert.IsTrue(found, "WhisperModelLocator should resolve a provisioned ggml-tiny.bin outside shared StreamingAssets");
             Assert.IsTrue(File.Exists(path), $"Resolved path must exist: {path}");
         }
 

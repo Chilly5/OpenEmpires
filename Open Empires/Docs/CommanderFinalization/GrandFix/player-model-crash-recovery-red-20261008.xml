@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 03:35:48Z" end-time="2026-10-08 03:35:49Z" duration="1.4226502">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1281" result="Failed" site="Child" start-time="2026-10-08 03:35:48Z" end-time="2026-10-08 03:35:49Z" duration="1.422650" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2467" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1281" result="Failed" site="Child" start-time="2026-10-08 03:35:48Z" end-time="2026-10-08 03:35:49Z" duration="1.277477" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2468" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1281" result="Failed" site="Child" start-time="2026-10-08 03:35:48Z" end-time="2026-10-08 03:35:49Z" duration="1.219224" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2469" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1281" result="Failed" site="Child" start-time="2026-10-08 03:35:48Z" end-time="2026-10-08 03:35:49Z" duration="1.108015" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1105" name="CommanderGrandFixPlayerModelProvisionTests" fullname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests" classname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests" runstate="Runnable" testcasecount="12" result="Failed" site="Child" start-time="2026-10-08 03:35:48Z" end-time="2026-10-08 03:35:49Z" duration="0.997918" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1114" name="AbandonedLockFile_DoesNotPermanentlyBlockPlayerSetup" fullname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests.AbandonedLockFile_DoesNotPermanentlyBlockPlayerSetup" methodname="AbandonedLockFile_DoesNotPermanentlyBlockPlayerSetup" classname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests" runstate="Runnable" seed="1186248251" result="Failed" start-time="2026-10-08 03:35:49Z" end-time="2026-10-08 03:35:49Z" duration="0.463579" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests.AbandonedLockFile_DoesNotPermanentlyBlockPlayerSetup () [0x000b1] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixPlayerModelProvisionTests.cs:55
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1115" name="CrashLeftover_CleansOnlyOwnedStagingFilesAfterExclusiveLease" fullname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests.CrashLeftover_CleansOnlyOwnedStagingFilesAfterExclusiveLease" methodname="CrashLeftover_CleansOnlyOwnedStagingFilesAfterExclusiveLease" classname="OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests" runstate="Runnable" seed="331596492" result="Failed" start-time="2026-10-08 03:35:49Z" end-time="2026-10-08 03:35:49Z" duration="0.391805" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixPlayerModelProvisionTests.CrashLeftover_CleansOnlyOwnedStagingFilesAfterExclusiveLease () [0x00109] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixPlayerModelProvisionTests.cs:60
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

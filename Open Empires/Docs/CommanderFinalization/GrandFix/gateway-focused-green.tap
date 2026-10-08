@@ -1,0 +1,118 @@
+TAP version 13
+# Subtest: corrupt owner counters never bypass a persistent global or owner quota
+ok 1 - corrupt owner counters never bypass a persistent global or owner quota
+  ---
+  duration_ms: 3.8696
+  type: 'test'
+  ...
+# Subtest: lost owner accounting cannot reset the per-owner budget on restart
+ok 2 - lost owner accounting cannot reset the per-owner budget on restart
+  ---
+  duration_ms: 1.068
+  type: 'test'
+  ...
+# Subtest: gateway is disabled by default and cannot enable paid routes with absent ceiling or keys
+ok 3 - gateway is disabled by default and cannot enable paid routes with absent ceiling or keys
+  ---
+  duration_ms: 2.7004
+  type: 'test'
+  ...
+# Subtest: enabled configuration rejects insecure remote auth, wildcard origins and pricing that cannot cap spending
+ok 4 - enabled configuration rejects insecure remote auth, wildcard origins and pricing that cannot cap spending
+  ---
+  duration_ms: 1.5257
+  type: 'test'
+  ...
+# Subtest: authenticated consented bounded WAV returns only correlated transcript data
+ok 5 - authenticated consented bounded WAV returns only correlated transcript data
+  ---
+  duration_ms: 53.2788
+  type: 'test'
+  ...
+# Subtest: no auth, wrong origin and missing/old consent reject before transcription
+ok 6 - no auth, wrong origin and missing/old consent reject before transcription
+  ---
+  duration_ms: 11.7317
+  type: 'test'
+  ...
+# Subtest: malformed container, invalid decoded duration and oversized upload never reach provider
+ok 7 - malformed container, invalid decoded duration and oversized upload never reach provider
+  ---
+  duration_ms: 19.5822
+  type: 'test'
+  ...
+# Subtest: duplicate job is single-use by authenticated owner and does not retranscribe
+ok 8 - duplicate job is single-use by authenticated owner and does not retranscribe
+  ---
+  duration_ms: 12.9583
+  type: 'test'
+  ...
+# Subtest: restart preserves short-lived job identity, without retaining its transcript
+ok 9 - restart preserves short-lived job identity, without retaining its transcript
+  ---
+  duration_ms: 10.68
+  type: 'test'
+  ...
+# Subtest: owner/global quota persisted across restart; no reset or unbounded new owner admission
+ok 10 - owner/global quota persisted across restart; no reset or unbounded new owner admission
+  ---
+  duration_ms: 10.2086
+  type: 'test'
+  ...
+# Subtest: rejected origin never receives permission to read a gateway response
+ok 11 - rejected origin never receives permission to read a gateway response
+  ---
+  duration_ms: 2.8685
+  type: 'test'
+  ...
+# Subtest: deadline answers promptly but reserves capacity until ignoring provider actually stops
+ok 12 - deadline answers promptly but reserves capacity until ignoring provider actually stops
+  ---
+  duration_ms: 97.5234
+  type: 'test'
+  ...
+# Subtest: semantic route rejects caller endpoint/model and bounds envelope while preserving Luna
+ok 13 - semantic route rejects caller endpoint/model and bounds envelope while preserving Luna
+  ---
+  duration_ms: 11.1023
+  type: 'test'
+  ...
+# Subtest: fixed audio endpoint sends server-owned multipart settings and admits only bounded plain text
+ok 14 - fixed audio endpoint sends server-owned multipart settings and admits only bounded plain text
+  ---
+  duration_ms: 32.2259
+  type: 'test'
+  ...
+# Subtest: authentication verifies backend session and never treats an origin as identity
+ok 15 - authentication verifies backend session and never treats an origin as identity
+  ---
+  duration_ms: 6.5426
+  type: 'test'
+  ...
+# Subtest: upstream chunked/error bodies are bounded and raw provider failures are never surfaced
+ok 16 - upstream chunked/error bodies are bounded and raw provider failures are never surfaced
+  ---
+  duration_ms: 5.1176
+  type: 'test'
+  ...
+# Subtest: chunked success exceeding decoded response cap is rejected before JSON materialization
+ok 17 - chunked success exceeding decoded response cap is rejected before JSON materialization
+  ---
+  duration_ms: 7.8071
+  type: 'test'
+  ...
+# Subtest: absent server credential is fail-closed without an upstream request
+ok 18 - absent server credential is fail-closed without an upstream request
+  ---
+  duration_ms: 0.3927
+  type: 'test'
+  ...
+1..18
+# tests 18
+# suites 0
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 304.7438

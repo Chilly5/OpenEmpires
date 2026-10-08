@@ -33,13 +33,16 @@ namespace OpenEmpires
         public IReadOnlyList<CommanderSemanticGraphNode> Nodes { get; }
         public IReadOnlyList<int> TopologicalOrder { get; }
         internal CommanderDynamicPlan DynamicProgram { get; }
+        internal IReadOnlyList<CommanderProductionExpectation> ProductionExpectations { get; }
 
         internal CommanderSemanticGraphPlan(IReadOnlyList<CommanderSemanticGraphNode> nodes,
-            IReadOnlyList<int> topologicalOrder, CommanderDynamicPlan dynamicProgram = null)
+            IReadOnlyList<int> topologicalOrder, CommanderDynamicPlan dynamicProgram = null,
+            IReadOnlyList<CommanderProductionExpectation> productionExpectations = null)
         {
             Nodes = nodes ?? Array.Empty<CommanderSemanticGraphNode>();
             TopologicalOrder = topologicalOrder ?? Array.Empty<int>();
             DynamicProgram = dynamicProgram;
+            ProductionExpectations = productionExpectations ?? Array.Empty<CommanderProductionExpectation>();
             if (dynamicProgram != null)
                 foreach (var constraint in dynamicProgram.Constraints)
                     if (constraint is NoConstructionConstraint) ConstructionForbidden = true;
@@ -112,8 +115,8 @@ namespace OpenEmpires
             if (!ValidateProducerLinks(result.Nodes)) return false;
             if (!ValidateResultLinks(admitted)) return false;
             if (!TryTopologicalOrder(admitted, out var order)) return false;
-
-            plan = new CommanderSemanticGraphPlan(admitted.AsReadOnly(), order);
+            if (!CommanderProductionProjection.TryProject(admitted, context, out var quantities, out safeReason)) return false;
+            plan = new CommanderSemanticGraphPlan(admitted.AsReadOnly(), order, productionExpectations: quantities);
             safeReason = string.Empty;
             return true;
         }

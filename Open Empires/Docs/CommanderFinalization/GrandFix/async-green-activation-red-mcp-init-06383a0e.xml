@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="8" result="Failed(Child)" total="8" passed="6" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-07 22:28:34Z" end-time="2026-10-07 22:28:40Z" duration="6.4786317">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1217" result="Failed" site="Child" start-time="2026-10-07 22:28:34Z" end-time="2026-10-07 22:28:40Z" duration="6.478632" total="8" passed="6" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2393" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1217" result="Failed" site="Child" start-time="2026-10-07 22:28:34Z" end-time="2026-10-07 22:28:40Z" duration="6.367924" total="8" passed="6" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="35956" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2394" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1217" result="Failed" site="Child" start-time="2026-10-07 22:28:34Z" end-time="2026-10-07 22:28:40Z" duration="6.285412" total="8" passed="6" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2395" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1217" result="Failed" site="Child" start-time="2026-10-07 22:28:34Z" end-time="2026-10-07 22:28:40Z" duration="6.175312" total="8" passed="6" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1018" name="CommanderGrandFixAsyncCaptureTests" fullname="OpenEmpires.Tests.CommanderGrandFixAsyncCaptureTests" classname="OpenEmpires.Tests.CommanderGrandFixAsyncCaptureTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-07 22:28:34Z" end-time="2026-10-07 22:28:36Z" duration="2.072717" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <test-case id="1019" name="AsyncStop_LoadsFinalAudioBeforeAnyProviderCall" fullname="OpenEmpires.Tests.CommanderGrandFixAsyncCaptureTests.AsyncStop_LoadsFinalAudioBeforeAnyProviderCall" methodname="AsyncStop_LoadsFinalAudioBeforeAnyProviderCall" classname="OpenEmpires.Tests.CommanderGrandFixAsyncCaptureTests" runstate="Runnable" seed="1324225733" result="Passed" start-time="2026-10-07 22:28:34Z" end-time="2026-10-07 22:28:35Z" duration="0.335974" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1020" name="CancellationDuringLoad_ReturnsPromptlyAndSuppressesLateAudio" fullname="OpenEmpires.Tests.CommanderGrandFixAsyncCaptureTests.CancellationDuringLoad_ReturnsPromptlyAndSuppressesLateAudio" methodname="CancellationDuringLoad_ReturnsPromptlyAndSuppressesLateAudio" classname="OpenEmpires.Tests.CommanderGrandFixAsyncCaptureTests" runstate="Runnable" seed="2025071349" result="Passed" start-time="2026-10-07 22:28:35Z" end-time="2026-10-07 22:28:35Z" duration="0.292930" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1022" name="DisposeDuringLoad_RejectsLateCompletion" fullname="OpenEmpires.Tests.CommanderGrandFixAsyncCaptureTests.DisposeDuringLoad_RejectsLateCompletion" methodname="DisposeDuringLoad_RejectsLateCompletion" classname="OpenEmpires.Tests.CommanderGrandFixAsyncCaptureTests" runstate="Runnable" seed="1913456006" result="Passed" start-time="2026-10-07 22:28:35Z" end-time="2026-10-07 22:28:35Z" duration="0.326247" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1024" name="EmptyAsyncRead_IsNoSpeechAndNeverCallsProvider" fullname="OpenEmpires.Tests.CommanderGrandFixAsyncCaptureTests.EmptyAsyncRead_IsNoSpeechAndNeverCallsProvider" methodname="EmptyAsyncRead_IsNoSpeechAndNeverCallsProvider" classname="OpenEmpires.Tests.CommanderGrandFixAsyncCaptureTests" runstate="Runnable" seed="1764625502" result="Passed" start-time="2026-10-07 22:28:35Z" end-time="2026-10-07 22:28:36Z" duration="0.324837" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1023" name="FailedAsyncRead_DoesNotTranscribeZeroOrStaleBuffer" fullname="OpenEmpires.Tests.CommanderGrandFixAsyncCaptureTests.FailedAsyncRead_DoesNotTranscribeZeroOrStaleBuffer" methodname="FailedAsyncRead_DoesNotTranscribeZeroOrStaleBuffer" classname="OpenEmpires.Tests.CommanderGrandFixAsyncCaptureTests" runstate="Runnable" seed="1299730759" result="Passed" start-time="2026-10-07 22:28:36Z" end-time="2026-10-07 22:28:36Z" duration="0.325430" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1021" name="IgnoringCancelledLoad_BlocksReplacementCaptureUntilActualCompletion" fullname="OpenEmpires.Tests.CommanderGrandFixAsyncCaptureTests.IgnoringCancelledLoad_BlocksReplacementCaptureUntilActualCompletion" methodname="IgnoringCancelledLoad_BlocksReplacementCaptureUntilActualCompletion" classname="OpenEmpires.Tests.CommanderGrandFixAsyncCaptureTests" runstate="Runnable" seed="50246870" result="Passed" start-time="2026-10-07 22:28:36Z" end-time="2026-10-07 22:28:36Z" duration="0.327427" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1061" name="CommanderGrandFixPresentationTests" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" testcasecount="17" result="Failed" site="Child" start-time="2026-10-07 22:28:36Z" end-time="2026-10-07 22:28:40Z" duration="3.986651" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1076" name="CancelledActivation_LatePermissionGrantCannotStartRecording" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.CancelledActivation_LatePermissionGrantCannotStartRecording" methodname="CancelledActivation_LatePermissionGrantCannotStartRecording" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="640168027" result="Failed" start-time="2026-10-07 22:28:36Z" end-time="2026-10-07 22:28:39Z" duration="2.540200" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixPresentationTests.CancelledActivation_LatePermissionGrantCannotStartRecording () [0x00050] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixPresentationTests.cs:149
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1075" name="MicrophoneActivation_IsASeparateActionAndNeverRecordsOrSubmits" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.MicrophoneActivation_IsASeparateActionAndNeverRecordsOrSubmits" methodname="MicrophoneActivation_IsASeparateActionAndNeverRecordsOrSubmits" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="2044067132" result="Failed" start-time="2026-10-07 22:28:39Z" end-time="2026-10-07 22:28:40Z" duration="1.344615" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixPresentationTests.MicrophoneActivation_IsASeparateActionAndNeverRecordsOrSubmits () [0x00049] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixPresentationTests.cs:141
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

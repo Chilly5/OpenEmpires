@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Failed(Child)" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-08 11:00:50Z" end-time="2026-10-08 11:00:57Z" duration="6.613075">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1386" result="Failed" site="Child" start-time="2026-10-08 11:00:50Z" end-time="2026-10-08 11:00:57Z" duration="6.613075" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="2594" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1386" result="Failed" site="Child" start-time="2026-10-08 11:00:50Z" end-time="2026-10-08 11:00:57Z" duration="6.501881" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="39992" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="2595" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1386" result="Failed" site="Child" start-time="2026-10-08 11:00:50Z" end-time="2026-10-08 11:00:57Z" duration="6.407536" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="2596" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1386" result="Failed" site="Child" start-time="2026-10-08 11:00:50Z" end-time="2026-10-08 11:00:57Z" duration="6.301314" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1118" name="CommanderGrandFixPresentationTests" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" testcasecount="32" result="Passed" start-time="2026-10-08 11:00:50Z" end-time="2026-10-08 11:00:53Z" duration="2.938069" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <test-case id="1139" name="ReadableApprovalCard_PreservesWholeScrollableTextAndDetailsDoesNotApprove" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.ReadableApprovalCard_PreservesWholeScrollableTextAndDetailsDoesNotApprove" methodname="ReadableApprovalCard_PreservesWholeScrollableTextAndDetailsDoesNotApprove" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="1772580597" result="Passed" start-time="2026-10-08 11:00:51Z" end-time="2026-10-08 11:00:53Z" duration="2.801336" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1182" name="CommanderGrandFixReadablePreviewTests" fullname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests" classname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests" runstate="Runnable" testcasecount="13" result="Failed" site="Child" start-time="2026-10-08 11:00:53Z" end-time="2026-10-08 11:00:57Z" duration="3.251545" total="3" passed="0" failed="3" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1196" name="ExactResultRally_UsesTheBuiltStructureTypeNotDefaultBarracks" fullname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.ExactResultRally_UsesTheBuiltStructureTypeNotDefaultBarracks" methodname="ExactResultRally_UsesTheBuiltStructureTypeNotDefaultBarracks" classname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests" runstate="Runnable" seed="1928244850" result="Failed" start-time="2026-10-08 11:00:53Z" end-time="2026-10-08 11:00:54Z" duration="1.152512" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "rally point of the exact Archery Range"
+  But was:  "Action plan — not started.
+1. Build 1 ArcheryRange
+2. Set the rally point of your Barracks at a point at your base; after step 1; only the exact ArcheryRange built in step 1; no existing building substitutes
+Preparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan."
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.ExactResultRally_UsesTheBuiltStructureTypeNotDefaultBarracks () [0x0000b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixReadablePreviewTests.cs:121
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1194" name="LegacyIncreaseWithoutCount_DisclosesActualDefaultOne" fullname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.LegacyIncreaseWithoutCount_DisclosesActualDefaultOne" methodname="LegacyIncreaseWithoutCount_DisclosesActualDefaultOne" classname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests" runstate="Runnable" seed="652063249" result="Failed" start-time="2026-10-08 11:00:54Z" end-time="2026-10-08 11:00:56Z" duration="1.033996" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "Assign 1 additional villagers"
+  But was:  "Action plan — not started.
+1. Assign  additional villagers to gather Wood
+Preparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan."
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.LegacyIncreaseWithoutCount_DisclosesActualDefaultOne () [0x00017] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixReadablePreviewTests.cs:110
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1195" name="RelativePoint_DisclosesSelectedGroupCenterNotAnotherGroupRear" fullname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.RelativePoint_DisclosesSelectedGroupCenterNotAnotherGroupRear" methodname="RelativePoint_DisclosesSelectedGroupCenterNotAnotherGroupRear" classname="OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests" runstate="Runnable" seed="1550961368" result="Failed" start-time="2026-10-08 11:00:56Z" end-time="2026-10-08 11:00:57Z" duration="1.056713" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "the center of the selected units"
+  But was:  "Action plan — not started.
+1. Move 2 owned military units to a point near the selected units
+Preparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan."
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixReadablePreviewTests.RelativePoint_DisclosesSelectedGroupCenterNotAnotherGroupRear () [0x00049] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixReadablePreviewTests.cs:116
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

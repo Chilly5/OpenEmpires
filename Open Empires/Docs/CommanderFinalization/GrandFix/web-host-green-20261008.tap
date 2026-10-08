@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: HTML uses response-specific nonces, narrow CSP and no default cross-origin isolation
+ok 1 - HTML uses response-specific nonces, narrow CSP and no default cross-origin isolation
+  ---
+  duration_ms: 54.3987
+  type: 'test'
+  ...
+# Subtest: gzip and brotli assets preserve compression and actual decoded MIME; unityweb stays loader-managed
+ok 2 - gzip and brotli assets preserve compression and actual decoded MIME; unityweb stays loader-managed
+  ---
+  duration_ms: 3085.59
+  type: 'test'
+  ...
+# Subtest: private/config/model files and encoded traversal are denied before any data disclosure
+ok 3 - private/config/model files and encoded traversal are denied before any data disclosure
+  ---
+  duration_ms: 28.5762
+  type: 'test'
+  ...
+# Subtest: symlink escape is refused and unknown Host cannot turn loopback server into an exposed origin
+ok 4 - symlink escape is refused and unknown Host cannot turn loopback server into an exposed origin
+  ---
+  duration_ms: 25.9946
+  type: 'test'
+  ...
+# Subtest: isolation and external connect origins are enabled only by explicit supported configuration
+ok 5 - isolation and external connect origins are enabled only by explicit supported configuration
+  ---
+  duration_ms: 19.2944
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3380.7777
