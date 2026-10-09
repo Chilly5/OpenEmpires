@@ -5,15 +5,64 @@ using UnityEngine;
 
 namespace OpenEmpires
 {
+    // Local observation only; never serialized or consulted by simulation decisions.
+    internal sealed class ProducerBirthObservation
+    {
+        internal GameSimulation Runtime { get; }
+        internal BuildingData Producer { get; }
+        internal int ProducerId { get; }
+        internal int PlayerId { get; }
+        internal int UnitType { get; }
+        internal int UnitId { get; }
+        internal int Tick { get; }
+        internal long BirthOrdinal { get; }
+
+        internal ProducerBirthObservation(GameSimulation runtime, BuildingData producer,
+            int playerId, int unitType, int unitId, int tick, long birthOrdinal = 0)
+        {
+            Runtime = runtime;
+            Producer = producer;
+            ProducerId = producer?.Id ?? -1;
+            PlayerId = playerId;
+            UnitType = unitType;
+            UnitId = unitId;
+            Tick = tick;
+            BirthOrdinal = birthOrdinal;
+        }
+    }
+
     public partial class GameSimulation
     {
+        internal event Action<ProducerBirthObservation> ProducerUnitProduced;
         internal event Action<TrainingOrderReceipt> TrainingOrderAccepted;
         internal event Action<TrainingOrderReceipt, int> TrackedUnitProduced;
         internal event Action<ICommand, object> TrainingOriginLost;
+        internal event Action<ICommand> LocalActionCommandProcessed;
 
         private readonly Dictionary<ICommand, TrainingOrigin> trainingOrigins =
             new Dictionary<ICommand, TrainingOrigin>(CommandObjectComparer.Instance);
+        private readonly HashSet<ICommand> suppressedLocalActions =
+            new HashSet<ICommand>(CommandObjectComparer.Instance);
+        private long lastProducerBirthOrdinal;
+        internal long LastProducerBirthOrdinal => lastProducerBirthOrdinal;
         private long nextTrainingOrderOrdinal = 1;
+
+        private void PublishProducerUnitProduced(BuildingData producer, int playerId,
+            int unitType, int unitId)
+        {
+            // Local observation revision, not simulation authority or serialized state.
+            // Saturation fails closed: later births cannot reuse a fresh ordinal.
+            if (lastProducerBirthOrdinal < long.MaxValue) lastProducerBirthOrdinal++;
+            var handlers = ProducerUnitProduced;
+            if (handlers == null) return;
+            var observation = new ProducerBirthObservation(this, producer, playerId,
+                unitType, unitId, CurrentTick, lastProducerBirthOrdinal);
+            foreach (Action<ProducerBirthObservation> observer in handlers.GetInvocationList())
+            {
+                try { observer(observation); }
+                catch (Exception error) { ReportTrainingObservationError(error); }
+            }
+        }
 
         internal void RegisterTrainingOrigin(ICommand original, object issuer, Func<bool> isCurrent)
         {
@@ -120,6 +169,25 @@ namespace OpenEmpires
             if (typeName.Length > 64) typeName = typeName.Substring(0, 64);
             Debug.LogWarning($"[TrainingObservation] Callback failed ({typeName}).");
         }
+
+        private void PublishLocalActionCommandProcessed(ICommand command)
+        {
+            var handlers = LocalActionCommandProcessed;
+            if (handlers == null) return;
+            foreach (Action<ICommand> observer in handlers.GetInvocationList())
+            {
+                try { observer(command); }
+                catch (Exception error) { ReportTrainingObservationError(error); }
+            }
+        }
+
+        internal void SuppressUnprocessedLocalAction(ICommand command)
+        {
+            if (command != null) suppressedLocalActions.Add(command);
+        }
+
+        private bool ConsumeSuppressedLocalAction(ICommand command)
+            => command != null && suppressedLocalActions.Remove(command);
 
         private static ICommand VerifiedOriginal(ICommand replayed,
             IReadOnlyDictionary<ICommand, ICommand> originals)

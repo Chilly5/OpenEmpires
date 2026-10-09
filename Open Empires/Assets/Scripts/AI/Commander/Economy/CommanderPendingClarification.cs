@@ -15,11 +15,15 @@ namespace OpenEmpires
         public int? Count { get; }
         public CommanderWorkerSelector Workers { get; }
         public CommanderResourceDestination Destination { get; }
+        public int? ResourceAmount { get; }
+        public CommanderResourceAmountMode? ResourceAmountMode { get; }
         public IReadOnlyList<CommanderClarificationField> MissingFields { get; }
         internal CommanderWorkerAllocationDraft(CommanderWorkerAllocationMode mode, CommanderWorkerCountMode countMode,
-            int? count, CommanderWorkerSelector workers, CommanderResourceDestination destination)
+            int? count, CommanderWorkerSelector workers, CommanderResourceDestination destination,
+            int? resourceAmount = null, CommanderResourceAmountMode? resourceAmountMode = null)
         {
             Mode = mode; CountMode = countMode; Count = count; Workers = workers; Destination = destination;
+            ResourceAmount = resourceAmount; ResourceAmountMode = resourceAmountMode;
             var missing = new List<CommanderClarificationField>();
             if (countMode == CommanderWorkerCountMode.Exact && !count.HasValue) missing.Add(CommanderClarificationField.Count);
             if (destination == null) missing.Add(CommanderClarificationField.Destination);
@@ -31,10 +35,12 @@ namespace OpenEmpires
             if (Workers.CurrentResource.HasValue) worker["currentResource"] = Workers.CurrentResource.Value.ToString();
             var result = new JObject { ["type"] = "AllocateWorkers", ["mode"] = Mode.ToString(), ["countMode"] = CountMode.ToString(), ["workers"] = worker };
             if (Count.HasValue) result["count"] = Count.Value;
+            if (ResourceAmount.HasValue) result["resourceAmount"] = ResourceAmount.Value;
+            if (ResourceAmountMode.HasValue) result["resourceAmountMode"] = ResourceAmountMode.Value.ToString();
             if (Destination != null) result["destination"] = new JObject { ["resource"] = Destination.Resource.ToString(), ["sourceKind"] = Destination.SourceKind.ToString() };
             return result;
         }
-        internal CommanderWorkerAllocationDraft WithCount(int count) => new CommanderWorkerAllocationDraft(Mode, CountMode, count, Workers, Destination);
+        internal CommanderWorkerAllocationDraft WithCount(int count) => new CommanderWorkerAllocationDraft(Mode, CountMode, count, Workers, Destination, ResourceAmount, ResourceAmountMode);
         internal CommanderSemanticResult CompleteResult() => CommanderSemanticJson.Parse(
             new JObject { ["outcome"] = "Request", ["nodes"] = new JArray(ToJson()) }.ToString(Formatting.None));
     }
@@ -47,11 +53,14 @@ namespace OpenEmpires
         public int Turns { get; }
         internal int RuntimeGeneration { get; }
         internal long Sequence { get; }
+        internal CommanderRequestTicket RequestTicket { get; }
+        public long RequestId => RequestTicket?.Id ?? Sequence;
         internal CommanderPendingClarification(CommanderWorkerAllocationDraft draft, string original, string question,
-            int generation, long sequence, int turns = 0)
+            int generation, long sequence, int turns = 0, CommanderRequestTicket requestTicket = null)
         {
             Draft = draft; OriginalText = Bound(original, 1024); Question = Bound(question, 180);
             RuntimeGeneration = generation; Sequence = sequence; Turns = turns;
+            RequestTicket = requestTicket;
         }
         internal string Serialize()
         {

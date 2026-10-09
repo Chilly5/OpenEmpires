@@ -29,7 +29,8 @@ namespace OpenEmpires
         BuildStructure,
         ReachAge,
         CapabilityAction,
-        AllocateWorkers
+        AllocateWorkers,
+        WatchFutureUnits
     }
 
     public enum CommanderConstraintType
@@ -132,6 +133,33 @@ namespace OpenEmpires
     }
 
     public enum CommanderProductionQuantityMode { TargetTotal, New }
+
+    public enum CommanderFutureUnitAction { Gather, Patrol }
+
+    public sealed class WatchFutureUnitsIntent : CommanderIntent
+    {
+        public int UnitType { get; }
+        public int Count { get; }
+        public BuildingType ProducerType { get; }
+        public int? ProducerOrdinal { get; }
+        public CommanderFutureUnitAction Action { get; }
+        public ResourceType Resource { get; }
+        public ResourceSourceKind SourceKind { get; }
+
+        public WatchFutureUnitsIntent(int playerId, int unitType, int count, BuildingType producerType,
+            int? producerOrdinal, CommanderFutureUnitAction action, ResourceType resource,
+            ResourceSourceKind sourceKind)
+            : base(CommanderIntentType.WatchFutureUnits, playerId)
+        {
+            UnitType = unitType;
+            Count = count;
+            ProducerType = producerType;
+            ProducerOrdinal = producerOrdinal;
+            Action = action;
+            Resource = resource;
+            SourceKind = sourceKind;
+        }
+    }
 
     public sealed class EnsureUnitCountIntent : CommanderIntent
     {

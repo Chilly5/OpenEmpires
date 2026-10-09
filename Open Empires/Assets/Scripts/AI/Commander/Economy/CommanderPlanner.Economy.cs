@@ -18,8 +18,32 @@ namespace OpenEmpires
 
         private CommanderPlan PlanWorkerAllocation(AllocateWorkersGoal goal, int currentTick)
         {
+            if (goal.Allocation.ResourceAmount.HasValue)
+            {
+                var destination = goal.Allocation.Destination.Resource;
+                goal.ResourceProgress = goal.Allocation.ResourceAmountMode == CommanderResourceAmountMode.AdditionalGathered
+                    ? Math.Max(0L, simulation.ResourceManager.GetGatheredIncome(goal.PlayerId, destination) - goal.GatheredIncomeAtActivation)
+                    : StockpileAmount(simulation.ResourceManager.GetPlayerResources(goal.PlayerId), destination);
+                if (goal.ResourceProgress >= goal.Allocation.ResourceAmount.Value)
+                    return new CommanderPlan(CommanderGoalStatus.Completed,
+                        ResourceObjectiveDescription(goal) + " reached.", goal.SelectedWorkerIds.Count, 0);
+            }
             if (goal.HumanInterrupted) return AllocationBlocked("The player took control of a selected worker; this request will not reclaim or replace it.");
             if (!ReferenceEquals(goal.RuntimeOwner?.Simulation, simulation)) return AllocationBlocked("The worker request belongs to another runtime.");
+            if (goal.ResultSourceGoal != null)
+            {
+                var source = goal.ResultSourceGoal;
+                if (!ReferenceEquals(source.RuntimeOwner, goal.RuntimeOwner)
+                    || source.Status != CommanderGoalStatus.Completed
+                    || source.ResultCaptureTick < 0
+                    || source.ResultUnitIds.Count != goal.Allocation.Count)
+                    return AllocationBlocked("The exact new-villager result is unavailable; no existing worker will substitute.");
+                if (!goal.SnapshotCaptured)
+                {
+                    goal.SnapshotWorkerIds.AddRange(source.ResultUnitIds);
+                    goal.SnapshotCaptured = true;
+                }
+            }
             CommanderWorkerAllocation request = goal.Allocation;
             if (!goal.Prepared)
             {
@@ -35,10 +59,17 @@ namespace OpenEmpires
                     int current = simulation.UnitRegistry.GetAllUnits().Count(u => OwnedLivingWorker(u, goal.PlayerId)
                         && MatchesDestination(u, request.Destination));
                     requested = Math.Max(0, requested - current);
-                    if (requested == 0) return new CommanderPlan(CommanderGoalStatus.Completed, "The requested worker total is already satisfied.", current, 0);
+                    if (requested == 0) return goal.Allocation.ResourceAmount.HasValue
+                        ? ResourceObjectiveWaiting(goal, current)
+                        : new CommanderPlan(CommanderGoalStatus.Completed, "The requested worker total is already satisfied.", current, 0);
                 }
                 List<EconomyTarget> targets = VisibleEconomyTargets(goal);
                 List<UnitData> eligible = simulation.UnitRegistry.GetAllUnits().Where(u => EligibleAllocationWorker(goal, u, currentTick)).ToList();
+                if (goal.ResultSourceGoal != null)
+                {
+                    var exact = new HashSet<int>(goal.SnapshotWorkerIds);
+                    eligible.RemoveAll(u => !exact.Contains(u.Id));
+                }
                 eligible.Sort((a, b) => CompareEconomyWorkers(a, b, targets));
                 if (request.CountMode == CommanderWorkerCountMode.AllMatching)
                 {
@@ -103,9 +134,24 @@ namespace OpenEmpires
                     && MatchesDestination(u, request.Destination)) < request.Count.Value)
                 return AllocationBlocked("The observed total is below the requested worker total; the frozen selection will not be silently replaced.");
             return observed == goal.SelectedWorkerIds.Count
-                ? new CommanderPlan(CommanderGoalStatus.Completed, $"The {observed} selected workers have matching assignments.", observed, 0)
+                ? goal.Allocation.ResourceAmount.HasValue ? ResourceObjectiveWaiting(goal, observed)
+                    : new CommanderPlan(CommanderGoalStatus.Completed, $"The {observed} selected workers have matching assignments.", observed, 0)
                 : new CommanderPlan(CommanderGoalStatus.Blocked, $"Only {observed}/{goal.SelectedWorkerIds.Count} selected workers have matching assignments; no substitute will be used.", observed, 0);
         }
+
+        private static long StockpileAmount(PlayerResources resources, ResourceType type) => type switch
+        {
+            ResourceType.Food => resources.Food, ResourceType.Wood => resources.Wood,
+            ResourceType.Gold => resources.Gold, ResourceType.Stone => resources.Stone, _ => 0
+        };
+
+        private static string ResourceObjectiveDescription(AllocateWorkersGoal goal) =>
+            (goal.Allocation.ResourceAmountMode == CommanderResourceAmountMode.AdditionalGathered ? "Additional gathered " : "Stockpile ")
+            + goal.Allocation.Destination.Resource + ": " + goal.ResourceProgress + "/" + goal.Allocation.ResourceAmount;
+
+        private static CommanderPlan ResourceObjectiveWaiting(AllocateWorkersGoal goal, int workers) =>
+            new CommanderPlan(CommanderGoalStatus.WaitingForResources, ResourceObjectiveDescription(goal)
+                + "; worker assignments are in place, waiting for actual resources.", workers, 0);
 
         private static CommanderPlan AllocationBlocked(string reason) => new CommanderPlan(CommanderGoalStatus.Blocked, reason, 0, 0);
         private static bool OwnedLivingWorker(UnitData u, int player) => u != null && u.PlayerId == player && u.IsVillager && !u.IsSheep

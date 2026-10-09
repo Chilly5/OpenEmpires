@@ -4124,31 +4124,36 @@ namespace OpenEmpires
         //  Name helpers
         // =============================================================
 
-        private string GetUnitName(int unitType)
+        public static string GetUnitTypeDisplayName(int unitType)
         {
             if (unitType >= 0 && unitType < UnitTypeNames.Length) return UnitTypeNames[unitType];
             return "Unit";
         }
 
-        private string GetUnitPlural(int unitType)
+        public static string GetUnitTypePluralName(int unitType)
         {
             if (unitType >= 0 && unitType < UnitTypePlurals.Length) return UnitTypePlurals[unitType];
             return "Units";
         }
 
-        private string GetBuildingName(BuildingType type)
+        public static string GetBuildingTypeDisplayName(BuildingType type)
         {
             int idx = (int)type;
             if (idx >= 0 && idx < BuildingTypeNames.Length) return BuildingTypeNames[idx];
             return "Building";
         }
 
-        private string GetBuildingPlural(BuildingType type)
+        public static string GetBuildingTypePluralName(BuildingType type)
         {
             int idx = (int)type;
             if (idx >= 0 && idx < BuildingTypePlurals.Length) return BuildingTypePlurals[idx];
             return "Buildings";
         }
+
+        private string GetUnitName(int unitType) => GetUnitTypeDisplayName(unitType);
+        private string GetUnitPlural(int unitType) => GetUnitTypePluralName(unitType);
+        private string GetBuildingName(BuildingType type) => GetBuildingTypeDisplayName(type);
+        private string GetBuildingPlural(BuildingType type) => GetBuildingTypePluralName(type);
 
         private string GetResourceNodeName(ResourceType type)
         {

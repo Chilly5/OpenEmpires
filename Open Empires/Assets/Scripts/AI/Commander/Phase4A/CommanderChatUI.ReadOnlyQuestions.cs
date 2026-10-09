@@ -38,7 +38,7 @@ namespace OpenEmpires
                 cancellation.CancelAfter(semanticProviderTimeout);
                 try
                 {
-                    var request=new CommanderSemanticProviderRequest(message,new CommanderContextBuilder().Build(sim,manager),
+                    var request=new CommanderSemanticProviderRequest(message,new CommanderContextBuilder().Build(sim,manager,message),
                         Conversation.SemanticMemory.Snapshot(),facts,tacticalStatus:status,readOnlyQuestion:true);
                     var task=RequestSemanticTranslation(provider,request,cancellation.Token);
                     _=task.ContinueWith(t=>{var ignored=t.Exception;},CancellationToken.None,

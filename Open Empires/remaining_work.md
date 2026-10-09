@@ -1,5 +1,11 @@
 # OpenEmpires AI Commander — Remaining Phases Handoff
 
+## Phase 5B implemented — 2026-10-09
+
+The new user brief reopens implementation for clarification context, complete native content recognition, long-running request cards and finite future-unit orders. The earlier Grand Fix goal remains closed under its amended scope; its packages do not certify the changed Phase 5B source.
+
+Current work/evidence: [Phase 5B report](Docs/CommanderPhase5B/phase5b-implementation-report.md), [implementation plan](Docs/CommanderPhase5B/implementation-plan.md), [progress ledger](Docs/CommanderPhase5B/progress.md). **PHASE 5B IMPLEMENTED — READY FOR CODEX LUNA VERIFICATION.** Final104/104 focused EditMode +4/4 PlayMode; Windows `build-ef239ad274`0errors/75warnings; Web `build-e4976ada39`0errors/90warnings. Original Web job recovered without duplicate build/forced restart. Same368-record source identity verified; Web menu/local1v1/minimized/task-board/input/Escape smoke observed with no paid provider calls. Active target restoredWindows64. No required implementation work remains; Luna owns independent expanded/provider/standalone verification and newly found fixes. No new phase or broad regression started.
+
 ## Latest implementation handoff — 2026-10-09
 
 **IMPLEMENTATION GOAL COMPLETE under the user-approved 2026-10-09 scope amendment;

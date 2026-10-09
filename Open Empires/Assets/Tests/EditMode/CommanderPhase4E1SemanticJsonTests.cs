@@ -108,7 +108,6 @@ namespace OpenEmpires.Tests
         [TestCase("{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"BuildStructure\",\"structure\":\"Barracks\",\"count\":21}]}", TestName = "RejectsStructureCountAbove20")]
         [TestCase("{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"EnsureUnitCount\",\"unit\":\"Dragon\",\"count\":10}]}", TestName = "RejectsUnsupportedUnitEnum")]
         [TestCase("{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"StrategicObjective\",\"objective\":\"999\"}]}", TestName = "RejectsNumericEnumString")]
-        [TestCase("{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"EnsureUnitCount\",\"unit\":\"spearman\",\"count\":10}]}", TestName = "RejectsWrongEnumCase")]
         [TestCase("{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":10,\"resource\":\"Wood\"}]}", TestName = "RejectsWrongFieldForNodeType")]
         [TestCase("{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":10}],\"message\":\"hi\"}", TestName = "RejectsMessageForRequest")]
         [TestCase("{\"outcome\":\"Clarify\",\"nodes\":[]}", TestName = "RejectsNodesPropertyForClarify")]

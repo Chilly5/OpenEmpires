@@ -28,7 +28,8 @@ namespace OpenEmpires
         RepairTarget,
         ResearchTechnology,
         StrategicObjective,
-        AllocateWorkers
+        AllocateWorkers,
+        WatchFutureUnits
     }
 
     // Provider-facing age vocabulary. Numeric game ages remain game-side data.
@@ -100,6 +101,9 @@ namespace OpenEmpires
         public int? ProducerFromNode { get; }
         public int? ResultFromNode { get; }
         public CommanderWorkerAllocation WorkerAllocation { get; }
+        public int? ProducerOrdinal { get; }
+        public CommanderFutureUnitAction? FutureAction { get; }
+        public ResourceSourceKind? SourceKind { get; }
         public IReadOnlyList<CommanderConstraint> Constraints { get; }
 
         internal CommanderSemanticNode(CommanderSemanticNodeType type, int? unitType = null,
@@ -119,7 +123,10 @@ namespace OpenEmpires
             CommanderWorkerAllocation workerAllocation = null,
             IReadOnlyList<CommanderConstraint> constraints = null,
             CommanderTargetSelector? targetSelector = null,
-            CommanderProductionQuantityMode quantityMode = CommanderProductionQuantityMode.TargetTotal)
+            CommanderProductionQuantityMode quantityMode = CommanderProductionQuantityMode.TargetTotal,
+            int? producerOrdinal = null,
+            CommanderFutureUnitAction? futureAction = null,
+            ResourceSourceKind? sourceKind = null)
         {
             Type = type;
             UnitType = unitType;
@@ -136,6 +143,9 @@ namespace OpenEmpires
             LocationSelector = locationSelector;
             TargetSelector = targetSelector;
             QuantityMode = quantityMode;
+            ProducerOrdinal = producerOrdinal;
+            FutureAction = futureAction;
+            SourceKind = sourceKind;
             Technology = technology;
             ProducerFromNode = producerFromNode;
             ResultFromNode = resultFromNode;

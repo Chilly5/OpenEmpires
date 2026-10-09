@@ -10,7 +10,8 @@ namespace OpenEmpires
         ResourceAllocation,
         ReachAge,
         CapabilityAction,
-        AllocateWorkers
+        AllocateWorkers,
+        WatchFutureUnits
     }
 
     public enum CommanderGoalStatus
@@ -161,6 +162,8 @@ namespace OpenEmpires
             if(this is EnsureUnitCountGoal units){units.RequiredProducerGoal=null;units.TrackedTrainingOrders.Clear();units.BaselineUnitIds.Clear();}
             if(this is BuildStructureGoal build)build.PendingPlacementCommand=null;
             if(this is ReachAgeGoal age)age.PendingAgeUpCommand=null;
+            if(this is AllocateWorkersGoal boundAllocation)boundAllocation.ResultSourceGoal=null;
+            if(this is WatchFutureUnitsGoal future)future.ReleaseObservations();
         }
     }
 

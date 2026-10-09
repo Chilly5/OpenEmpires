@@ -8,7 +8,7 @@ namespace OpenEmpires
     // Runtime/owner/request/generation/revision/single-use affinity stays on the candidate.
     internal static class CommanderScopeEquivalence
     {
-        internal const int Version = 4;
+        internal const int Version = 6;
 
         internal static bool SameIntent(CommanderIntent a, CommanderIntent b)
         {
@@ -27,6 +27,10 @@ namespace OpenEmpires
             if (a is ReachAgeIntent age && b is ReachAgeIntent next)
                 return age.RequestedTarget == next.RequestedTarget && age.TargetAge == next.TargetAge;
             if (a is AllocateWorkersIntent w && b is AllocateWorkersIntent z) return SameAllocation(w.Allocation, z.Allocation);
+            if (a is WatchFutureUnitsIntent f && b is WatchFutureUnitsIntent g)
+                return f.UnitType == g.UnitType && f.Count == g.Count
+                    && f.ProducerType == g.ProducerType && f.ProducerOrdinal == g.ProducerOrdinal
+                    && f.Action == g.Action && f.Resource == g.Resource && f.SourceKind == g.SourceKind;
             if (a is CapabilityActionIntent c && b is CapabilityActionIntent d)
                 return c.ActionType == d.ActionType && c.Technology == d.Technology && c.StructureType == d.StructureType
                     && c.UnitSelector.Kind == d.UnitSelector.Kind && c.UnitSelector.UnitType == d.UnitSelector.UnitType
@@ -43,7 +47,8 @@ namespace OpenEmpires
         private static bool SameAllocation(CommanderWorkerAllocation a, CommanderWorkerAllocation b)
             => a != null && b != null && a.Workers != null && b.Workers != null
                 && a.Destination != null && b.Destination != null && a.Mode == b.Mode && a.CountMode == b.CountMode
-                && a.Count == b.Count && a.Workers.State == b.Workers.State && a.Workers.CurrentResource == b.Workers.CurrentResource
+                && a.Count == b.Count && a.ResourceAmount == b.ResourceAmount && a.ResourceAmountMode == b.ResourceAmountMode
+                && a.Workers.State == b.Workers.State && a.Workers.CurrentResource == b.Workers.CurrentResource
                 && a.Destination.Resource == b.Destination.Resource && a.Destination.SourceKind == b.Destination.SourceKind;
 
         private static bool SameConstraints(IReadOnlyList<CommanderConstraint> a, IReadOnlyList<CommanderConstraint> b)

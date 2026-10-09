@@ -22,6 +22,7 @@ namespace OpenEmpires
         private string knownIntentEvidence;
         public string AuthorizationEvidence { get; private set; } = "None";
         internal IReadOnlyList<CommanderIntent> AuthorizedRootEffects { get; private set; }
+        internal IReadOnlyDictionary<int, BuildingData> FutureProducerBindings { get; }
         public long RequestId { get; }
         public int PlayerId => Owner.PlayerId;
         public int Generation { get; }
@@ -32,7 +33,7 @@ namespace OpenEmpires
         internal CommanderActionPlanCandidate(long requestId, CommanderGoalManager owner,
             CommanderSemanticResult interpretation, CommanderSemanticGraphPlan graph,
             string originalInput, int generation, StrategicPipeline strategicSource,
-            Func<bool> isCurrentRequest)
+            Func<bool> isCurrentRequest, IReadOnlyDictionary<int, BuildingData> futureProducerBindings = null)
         {
             if (originalInput == null || originalInput.Length > 1024 || generation < 0)
                 throw new ArgumentException("The request envelope is outside its bounds.");
@@ -45,8 +46,17 @@ namespace OpenEmpires
             Generation = generation;
             this.strategicSource = strategicSource;
             this.isCurrentRequest = isCurrentRequest;
+            FutureProducerBindings = futureProducerBindings ?? new Dictionary<int, BuildingData>();
             strategicRevision = StrategyRevision(strategicSource);
-            Preview = CommanderPlanPreview.Render(graph);
+            var unitNames = new Dictionary<int, string>();
+            foreach (var node in graph.Nodes)
+            {
+                int? requested = node.Intent is EnsureUnitCountIntent units ? units.UnitType
+                    : node.Intent is WatchFutureUnitsIntent future ? future.UnitType : (int?)null;
+                if (requested.HasValue) unitNames[node.Index] = CommanderIntentCatalog.GetUnitDisplayName(
+                    Runtime.ResolveCivUnitType(PlayerId, requested.Value));
+            }
+            Preview = CommanderPlanPreview.Render(graph, unitNames);
         }
 
         internal bool TryApprove(CommanderGoalManager owner, int generation,
@@ -55,7 +65,8 @@ namespace OpenEmpires
             if (Cancelled || approved || committed || Owner.IsDisposed || !HasLiveRequestLease()
                 || !ReferenceEquals(owner, Owner) || !ReferenceEquals(Runtime, owner.Simulation)
                 || generation != Generation || !ReferenceEquals(currentStrategicSource, strategicSource)
-                || StrategyRevision(strategicSource) != strategicRevision) return false;
+                || StrategyRevision(strategicSource) != strategicRevision
+                || !Owner.AreFutureProducerBindingsCurrent(Graph, FutureProducerBindings)) return false;
             if (!Owner.TryCompileActionPlan(Interpretation, out var current, out _)
                 || !CommanderScopeEquivalence.SameGraph(current, Graph)) return false;
             // These exact intents are read-only typed values; re-admission above prevents
@@ -74,6 +85,7 @@ namespace OpenEmpires
                 && HasLiveRequestLease()
                 && ReferenceEquals(owner, Owner) && ReferenceEquals(graph, Graph)
                 && ReferenceEquals(Runtime, owner.Simulation)
+                && Owner.AreFutureProducerBindingsCurrent(Graph, FutureProducerBindings)
                 && StrategyRevision(strategicSource) == strategicRevision
                 && Owner.TryCompileActionPlan(Interpretation, out var current, out _)
                 && CommanderScopeEquivalence.SameGraph(current, Graph);
@@ -125,12 +137,13 @@ namespace OpenEmpires
 
     internal static partial class CommanderPlanPreview
     {
-        internal static string Render(CommanderSemanticGraphPlan graph)
+        internal static string Render(CommanderSemanticGraphPlan graph, IReadOnlyDictionary<int, string> canonicalUnitNames = null)
         {
             var text = new StringBuilder("Action plan — not started.\n");
             foreach (var node in graph.Nodes)
             {
                 string canonicalUnitName = null;
+                canonicalUnitNames?.TryGetValue(node.Index, out canonicalUnitName);
                 var dynamicSource = graph.DynamicProgram?.Nodes.FirstOrDefault(n => n.Id == node.DynamicNodeId);
                 if (dynamicSource?.Primitive.Mechanic == CommanderDynamicMechanic.Produce)
                 {
@@ -214,8 +227,18 @@ namespace OpenEmpires
                     : a.Mode==CommanderWorkerAllocationMode.TargetTotal?"Target "+a.Count+" villagers in total"
                     : a.Mode==CommanderWorkerAllocationMode.Additional?"Assign "+a.Count+" additional "+selection
                     : "Assign exactly "+a.Count+" "+selection;
-                return quantity+" to gather "+Destination(a.Destination.Resource,a.Destination.SourceKind);
+                return quantity+" to gather "+Destination(a.Destination.Resource,a.Destination.SourceKind)
+                    + (a.ResourceAmount.HasValue ? "; " + a.ResourceAmount.Value
+                        + (a.ResourceAmountMode == CommanderResourceAmountMode.AdditionalGathered ? " additional gathered income" : " stockpile target") : "");
             }
+            if (intent is WatchFutureUnitsIntent future)
+                return "Watch the next " + future.Count + " " + (canonicalUnitName ?? CommanderIntentCatalog.GetUnitDisplayName(future.UnitType))
+                    + " from " + CommanderIntentCatalog.GetStructureDisplayName(future.ProducerType)
+                    + (future.ProducerOrdinal.HasValue ? " number " + future.ProducerOrdinal.Value : " (only unambiguous owned producer)")
+                    + " and " + (future.Action == CommanderFutureUnitAction.Gather
+                        ? "gather " + future.Resource + " (" + future.SourceKind + ")"
+                        : "patrol the worked " + future.Resource)
+                    + "; no additional production";
             if (intent is SetResourceAllocationIntent allocation)
                 return (allocation.Mode==ResourceAllocationMode.Increase?"Assign ":"Target ")
                     + (allocation.WorkerCount??(allocation.Mode==ResourceAllocationMode.Increase?1:throw new ArgumentException("Missing exact worker count.")))

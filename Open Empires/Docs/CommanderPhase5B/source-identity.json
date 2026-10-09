@@ -1,0 +1,1480 @@
+{
+  "baselineHead": "35be7427503cdfe04c3a6ce5474fc50fabf247a6",
+  "recordCount": 368,
+  "aggregateSha256": "8fa3542c3df5de5026dbf1d7a9bdc52054130f7789ce23c980108b59f9ba4f8a",
+  "coverage": "Runtime scripts, project/package configuration, ScriptableObjects/scenes, Phase5B and economy-clarification tests. Hash equality is source identity only, not gameplay certification.",
+  "records": [
+    {
+      "path": "Assets/Scenes/SampleScene.unity",
+      "sha256": "fc3ed5aada6e0db768fbdeec30b0b323a9a3ca0233f99fcff18a611a354d28f8"
+    },
+    {
+      "path": "Assets/Scenes/Tests/SpearmanAnimationTest.unity",
+      "sha256": "1c0c5ae5ed9ab42609580d475f525b8ba35d465253814bfab40a1ac4c8f6f493"
+    },
+    {
+      "path": "Assets/ScriptableObjects/SimulationConfig.asset",
+      "sha256": "f63ebda91fc04b4b0d5b5a2192801f855fe0be0acbcf91f5eac9658be8624dba"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderContext.cs",
+      "sha256": "202097ab448b4f8347f96ea5d468c05a2b6b0b7f4b644b7a1385565b2124e6e6"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderContextBuilder.cs",
+      "sha256": "cbfe5e982f762a6fc66f1669d08293ba1db699c2dfdef7415fdf071b9d6970f8"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderGoal.cs",
+      "sha256": "51103f2d93b91664378cb695b60418ca85b04ae6f7bcfc0a05461d401f1a4484"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderGoalManager.cs",
+      "sha256": "f1de8e349f9566a5cae392970835d911f5ae79fd0252b429d5b0ffc75e319a24"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderIntent.cs",
+      "sha256": "66be876849c47ccc47a15b5ea9e8e545a3a421056abff11c0079c8e85d4d154d"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderIntentCatalog.cs",
+      "sha256": "5e44198769ec5fe899c9772bad9c3dc53c6bd4933e58e8616178210dbf5ca2f8"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderIntentDispatcher.cs",
+      "sha256": "c75ec5e9b119641e0b252c76b0457dda62d3186c0a510b160692a693e342228d"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderIntentDto.cs",
+      "sha256": "321e4b24ecd2e77ee9ba95b1498aceb4602d5b246e4ad7a58d066dea027f31a2"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderIntentInterpreter.cs",
+      "sha256": "36dbed8828883502711a7d4b767b5488923096857fc26ae365d950e27e65f0c1"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderIntentResolver.cs",
+      "sha256": "56495b07607d90e6734527c37c11ffb2cb892c63cc9eaef7a846bf8846b6b5eb"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderIntentValidator.cs",
+      "sha256": "23f5551120648c8529de333396a26dc1c6674cba25d377240eec332c987d1027"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderPlanner.cs",
+      "sha256": "44149dc84a2017dbbf0fa34bd1fbe7f5e1d6c06071eb8d10d6ab2aedab03f0e0"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderProductionExpectation.cs",
+      "sha256": "3b6f0d22d0d68196e331a29f12054d8fc4eda437ce0295d463a05e740e58832a"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderResponseGenerator.cs",
+      "sha256": "2bbe315c30ddae0890be30ebf01799bbcd1a4b67ced93387fac1c8f1bab88d81"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderTacticalStatusSnapshot.cs",
+      "sha256": "bcb2413bdd8b9611d7cc533e828e0946236413a247a14d56551fec91f89df1b8"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderWorkerAuthority.cs",
+      "sha256": "a4a1a21f36aea5f0ea2b790e587e858b7c42c1c77abb88373f718a77bb315c64"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderWorkerReservation.cs",
+      "sha256": "4768b709a2a1f83b4d27090abe8995d5519de6c3f8f17fe0b4e31d6a842f459a"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Economy/AllocateWorkersGoal.cs",
+      "sha256": "ad88d0f6468485f54252fd2aac2c23b3b7c3efe6c95b156c74ea10a5bcba5171"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Economy/AllocateWorkersIntent.cs",
+      "sha256": "3faecb15130a9c794abcda9351b6d9cf5d885486e2a89e7be2654b3a7316525b"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Economy/CommanderPendingClarification.cs",
+      "sha256": "19c73f60eaf636372608b399dd637ba68807c9929d526fb044341cb4c9676d9d"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Economy/CommanderPlanner.Economy.cs",
+      "sha256": "0c7e0fb26cae9eae7673f27cc01a60c5861d8143f07e4865dca5a9939423dab0"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Economy/CommanderSemanticResult.Clarification.cs",
+      "sha256": "c90c228e83574bd0e414dc3eb93d1ca00031a145bb9903e6d020aa01648e933c"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Economy/CommanderSemanticResult.Economy.cs",
+      "sha256": "ab9e19be6d098cd000e2482a87b77fe2f9093a3b0f249cddbe603e17075a1f05"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Economy/CommanderWorkerAllocation.cs",
+      "sha256": "be62dd749515bcd6a0d30a6f72e7b8a7b1f7d7c4d5854f00c1414d5ee5ed910d"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/IntentRouter.cs",
+      "sha256": "38d504fd57c9c58c43d0a65d33d30cfa50a88832bc2867408abf0d65450f3a80"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Knowledge/CommanderContentNameResolver.cs",
+      "sha256": "8fce0efc72ab7ebf391f260666ac80f4967f56f3f383da6074418dff4f4a1ed3"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Knowledge/CommanderKnowledgeCatalog.cs",
+      "sha256": "1024bf5f56f13a07de1ca280661a5fabeeaa7f55d952efa00849ca88d1259e8f"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/MockLlmIntentInterpreter.cs",
+      "sha256": "20bafc24265866d6d65665739e7afbb743be4597b21f815c12f078c8a21f1f89"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderAIIntentAdapter.cs",
+      "sha256": "a62459fe714f12536fde6b5a98042db1ea497e9a713599b26d3babf8b9c4cec6"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderAIProvider.cs",
+      "sha256": "8d892e3ec451cf96bffc3f1722d5bd99207f94e42482a8a83a5b6a8c42a804db"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Advisories.cs",
+      "sha256": "7055a0797a735a654edb013cf3d4b70d2842aa1ce00bbf1ebc8d3958e71e3ffc"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Clarification.cs",
+      "sha256": "27b26ac7a1900c67913467eb7e4950dc2d636f88104a585f517c69190fc6e7c5"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs",
+      "sha256": "bdde82cbf9d1dbf3ff3bb488bf0047eb046ba15ce99e5171cb0ebf8561f0dd7d"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Explanations.cs",
+      "sha256": "a3290f14bb74419db7ecccb6a06db5622e9f6383c751bda85ddaf14bd2563692"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Presentation.cs",
+      "sha256": "899fcb0f280787f6f70cefdcf5f472bba07e12aa65fdc76b5d1c7bc8f8de9e07"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.ProviderSetup.cs",
+      "sha256": "0c56d72d96c2067d7ac14e0a36416d98f8b1bb6242732593d056d283fb51953c"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Questions.cs",
+      "sha256": "6ec81d984d70393786d04f87eef2c83ae8766f546e67bfb9a3427f25c634ffcc"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.ReadOnlyQuestions.cs",
+      "sha256": "98aa788461f5d5820919f4437d88bdca699f70c09fabf2a7ee811c61df335835"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.StrategicControls.cs",
+      "sha256": "6a2f41b201542670ac1d283f96fbb1dc58dc43aea26f1b68fc8d824cee391b03"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/CommanderUIInputGuard.cs",
+      "sha256": "d513c68852d302f306b4b96d744753e6e6f17dcb4e53e217cea22c8e09f8e5b8"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/GeminiAIProvider.cs",
+      "sha256": "b1bce680530d6c9af03ceaa4cf7c3d51989a95865bb5769ec9e19665bdab10a9"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/MockAIProvider.cs",
+      "sha256": "fb24f17cdf04f32544f704aefe93178556b9240ba58239debd344994b966e830"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4A/OpenRouterCommanderProvider.cs",
+      "sha256": "1257a09df0a8189d2f1acfa313d23e12b8edca62e561742645b0e4173dcd08f0"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4B1/GeminiStrategicAIProvider.cs",
+      "sha256": "e93e5c1d78ac624091ffeb4425fbc46bfc1b71bf9f2454b0527e2175e4c1a5f9"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4B1/MockStrategicAIProvider.cs",
+      "sha256": "6b6edb3bc419f3574e2fa849e478cd574ec191db222dcdec5db0da4c7e7dc902"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4B1/StrategicAIContextSerializer.cs",
+      "sha256": "d6654713bd0bf03a119771f309530d4fb118069361d0aece050bface0f61c49a"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4B1/StrategicAIInterpreter.cs",
+      "sha256": "2c719b42bcf5abdd1ccb689e36bd9048ae6930adccedce1a790b549e667d56dd"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4B1/StrategicAIInterpreterFactory.cs",
+      "sha256": "5d30caa9b17dc859c08550a81545a486432c35002bebdd9252d20b264e6396c2"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4B1/StrategicAIJson.cs",
+      "sha256": "a5c7da74f45cc3ff9d2c580c11fdb2eafba062b7d346226f949a39aac8a49d9c"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4B2/CommanderIntentRouter.cs",
+      "sha256": "13b2668afdf09271d790e7873e5617f74029c496d41d3eae03a4f668505c7e5b"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4B2/StrategicAIApprovalBridge.cs",
+      "sha256": "2405aa187284d88e21a9ccd65aca7a9e26d5fa75c66d2987335b914ec8d9121a"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4B2/StrategicApprovalLayer.cs",
+      "sha256": "0d8a0b692ec89801142bcf3cceba7804c01bae0e33b454d883c4a81a192b6d64"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4C/CommanderExplanationService.cs",
+      "sha256": "02820aaf58cd193d35a2e448d711e4c9586e4d513c80a765cabd6ee2f2efca01"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4C/CommanderMemory.cs",
+      "sha256": "52d6114289be52a54543a3b141a44984699cd9650461061b19923c8daf775586"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4C/ConversationState.cs",
+      "sha256": "df81816faffc4a42eeae0d09ec0254a122b2f3f71fa29bc3eeb629af85a1f77c"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4C/ExplanationContext.cs",
+      "sha256": "a902f96fb5b18bd3dcc00bdb924a7bd67c180412d54ce6852e754ae3b10305ee"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4C/ExplanationResult.cs",
+      "sha256": "2c1e02410a1d98d855c623ae9c819e0f84b83861a11cd44b04de16ffc95d1d6d"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4C/MemoryEntry.cs",
+      "sha256": "2ccb2a1a34bb8a5540b52e36349312ae306abb1677f465dca88cd6dd0dd6ef8d"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4C/StrategicContextInsights.cs",
+      "sha256": "c10bf1a86a0734ccd9cbf29ed330d56e1a0eefee7dc45b9a9e76d847901c13c4"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4C/StrategicContextInsightsBuilder.cs",
+      "sha256": "dd1cfc39430e9c63efbe9485323e638c26cda862545fc887cda832dec42f3125"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticAdmission.cs",
+      "sha256": "f4d8ab22068d9aaf118abbc7c6619c247a1343871aa9c3193c1cd4c7747a3393"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticConversationMemory.cs",
+      "sha256": "97421b5094ed36cb2d94a5478b1d98fcf0e82030165e9155c11f24f843e754c0"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticGraphAdmission.cs",
+      "sha256": "40d54c94ecb8dbd36621b55356d29fb61619bf8315da17bfb92e2bb7a4ff8a4e"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticJson.cs",
+      "sha256": "524add51e0a413e3155aeabb8143aac21a40b3bc990ad5f3f029da44829702d1"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticPlacementCandidates.cs",
+      "sha256": "fd7662b2185234403eee421179542ebbbf4f8449be91ff225a5d177eaf006267"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticProvider.cs",
+      "sha256": "d1a71fc31d428a341ceb4a93cb7632b798cfcbb7353ae58de23e803a63042042"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticReferenceResolver.cs",
+      "sha256": "34c48cf7aeff9063d2d2ef17ce253a2fadc998676c0b6354b4a536849f58e720"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticRequest.cs",
+      "sha256": "244dc5f4ff8b233dbe7febc670b89c29b565cdac3eb3490a61e2d0ef2736a8b8"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4G/CommanderCapability.cs",
+      "sha256": "c3b2083bb7e556575fc8c3b36d4ae9d5d68298c07a173aa436b58212a01d43c5"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4G/CommanderCapabilityExecutor.cs",
+      "sha256": "27b12811a91a5daa7015afb2d1e362075035cb8654a29895fe8f0514440b21b5"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderAudioConverter.cs",
+      "sha256": "a033a55cb1ce0e69c42c4347cd909840db4eb069e6bddbf10f4800afdd51cc1f"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderAudioData.cs",
+      "sha256": "afe3723517a94925b3c055856bd1fca01159893c93c4ecd59753672402a99359"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderBrowserAudioCapture.cs",
+      "sha256": "6144cb457da6661bd5f8f16631ef38ae5e0f268b2a6ad7e706c4156d2c52aedc"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderChatUI.LocalModels.cs",
+      "sha256": "621c4f0823412d49fd5d94cfaa845679078daeefdb0a54cafb3daed3a129edc7"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderChatUI.Voice.cs",
+      "sha256": "9c363632f4aa1a6e2868e16cbb41b8c34f448503b48c1d92a1094f7e7e057dc1"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderChatUI.VoiceSetup.cs",
+      "sha256": "c8c49a36ee68bd15360737f4f1396eeb7c33080cdcd3db64c2bdde1e1aa45c94"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderGatewaySemanticTransport.cs",
+      "sha256": "c6728590e30eb10ca5334225860917fd0d62017ae7cf704b7fc8661c81d2953c"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderGatewaySpeechToTextProvider.cs",
+      "sha256": "e88cf35955df9b31dd3f46a44624767046e8c410d56f43fb56f01663fb471d2c"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderGatewayTransport.cs",
+      "sha256": "e6a19a7647d12a8154a0cf143cf3a79e065e97b27830d2454271a0dd0986d600"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderLocalModelProvisioner.cs",
+      "sha256": "9d57711e5509c10301d684df98294e6821828d8d0e4ac3f58754e520d304bb21"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderSpeechToTextResult.cs",
+      "sha256": "c96949ed239660044e9b84cc2e4a561322fa00321ff15bcf7f722fa697abc921"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderVoiceInputController.cs",
+      "sha256": "04450bc8e9977b3a8753f5b63f0071ea367d7a2703d84f3ca600aa8453c078c7"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderVoiceSettings.cs",
+      "sha256": "b37b043d4763b11782be10ceb2a7203aa82d51020e8268c1a8de10b5449ac593"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderVoiceState.cs",
+      "sha256": "43ab4c7a40fcda2cbd68c6ac8490ca1ee2c550e6fe117c4281133d48fcb607a6"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderWhisperContext.cs",
+      "sha256": "74b5d7116d14616758401937bd518b41e12a13ab6358a625dc95b62cf0a6b9ae"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/CommanderWhisperNativeApi.cs",
+      "sha256": "d2ac090626eaf7aac4037454e629aa8aa20ada6effc2fa899f47babc4bff73c2"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/ICommanderAsyncAudioCapture.cs",
+      "sha256": "f8cbb14b2dc81ae48497f3712bed60e2e8d93f0608efd86c992a548b1f66649d"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/ICommanderAudioCapture.cs",
+      "sha256": "5a682dd1dff6d132dcc89d0db55b52d49ff617a5998897e9c3a9882c06914372"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/ICommanderMicrophoneBackend.cs",
+      "sha256": "0a8bfe2365c7515fa164f6b9e9b1c7612d939af57f4e652e7edd4777cb9b3b87"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/ICommanderSpeechToTextProvider.cs",
+      "sha256": "fb0c48a1b38f197249067fb0ca0825e7db11611036b6fb9006c8f075af42f119"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/ICommanderVoiceSessionProvider.cs",
+      "sha256": "9129dded38acc3e564dc758ddb52926c95e206380440a33aefe182c7c4cb5128"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/MockCommanderSpeechToTextProvider.cs",
+      "sha256": "5f9d106fab9febff7d362c2d0d537b2a9c05df728348caf5083ab2f0d55b9e1a"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/UnityMicrophoneAudioCapture.cs",
+      "sha256": "1903af13082c7e2ce7e6cacbf19bb69eccb311c4f4bd38a1e14bc3f00dba82fe"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/WhisperCommanderSpeechToTextProvider.cs",
+      "sha256": "c916681b3f0ca3a3fe84acfa395e15eb05f6825d8ebc219a9d67e153d52b3e1d"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/WhisperDistributionPolicy.cs",
+      "sha256": "78ff043cd2d41d10ac32e14634d852d38bc20325e20cba76653c591e0140a1d2"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/WhisperModelCatalog.cs",
+      "sha256": "9712ee58888a496619ae81a6a7121dc99a235f73b45af0110453d34df5f64a03"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/WhisperModelLocator.cs",
+      "sha256": "e885f10e2ea88f401da036b597d9b78d2198e8b4bd7531fdc030ffc711554980"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase4H/WhisperModelVerifier.cs",
+      "sha256": "9015f021ba16c34185680ac1ece085766e2bf4957aba8151fd3ed004bf2e75f9"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase5A/CommanderActionPlanCandidate.cs",
+      "sha256": "5eea4459b3f0574850c91f508d72dcfa51c1f6ca90d65402fa37dc5c804a2144"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase5A/CommanderBoundLocation.cs",
+      "sha256": "5e6e7ec61f2679bcf4afa6adccec697d45d97f3462b15b200538aa15ed8dbadc"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase5A/CommanderChatUI.ActionPlans.cs",
+      "sha256": "53adc798d689ffe011bcd596860c11994296d31205a5d2139120c40517d98c91"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase5A/CommanderDynamicCompiler.cs",
+      "sha256": "949c929d7332e2abc0e353de91313e7f263b7083fc25f4d01c75fda76a0a1899"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase5A/CommanderDynamicPlan.cs",
+      "sha256": "639005446d8347f620c0616617c9ec4a31f423ea27ccc19ce40e93085c71a2a9"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase5A/CommanderDynamicPlanParser.cs",
+      "sha256": "fd283726dd078f2e61793fc2d192d17f50b916b0446df7002ec43009f50f0054"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase5A/CommanderDynamicProviderVocabulary.cs",
+      "sha256": "3de2bd668a050519582f48b227442286048cd9b069820cffa8e0242ffe0dfdbc"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase5A/CommanderGoalManager.DynamicLocations.cs",
+      "sha256": "f2a83930f391dfec3a6304a55ba1f36fb057eb7486e06de60ccd7d88c4e468b9"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase5A/CommanderGoalManager.DynamicWorkers.cs",
+      "sha256": "9f33ed484a0161ae782ac04553dbfa385ebee8be93a2ad1d30122c1a49275d86"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase5A/CommanderGoalManager.Production.cs",
+      "sha256": "1468d87223e54d0b4a83a919bda51de548d1e9e452b5dbbe7d69e10a04752d4a"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase5A/CommanderGoalManager.Requests.cs",
+      "sha256": "f2e7347eb8da0228999e602f680625ac1c932a720b5efd5940a2aa4e6f95da98"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase5A/CommanderPlanner.DynamicPlacement.cs",
+      "sha256": "41f46c84120c151b94bbd129088d6499a3f8f869d84fed83ee17a20a27407a24"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase5A/CommanderPlanner.PreparationSources.cs",
+      "sha256": "2bf9873c6121dbba51fb349cbc8174bd130d2660a407776d610c92ba7cf82e15"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase5A/CommanderPlanPreview.Descriptions.cs",
+      "sha256": "60db0d346ec415a7a0eb3449bbcd0b3469a028bff00dc1f9f7a79f35b4cb61a7"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase5A/CommanderRequestTicket.cs",
+      "sha256": "66b717bb4af89db4a6f55406a89f6a66ede6d2945d8469a6a0b0975561b8a8ca"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase5A/CommanderScopeEquivalence.cs",
+      "sha256": "4d7aeab00ba95ad30dff64f3ed52da95a586fa2867470a213473b21d2a441f48"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase5A/CommanderSemanticResult.Constraints.cs",
+      "sha256": "54ea81ef80bb016076562bbbb6592431134c8a44024d4b9c8f5dd15765ddd5c5"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase5A/CommanderSemanticSchemaRepair.cs",
+      "sha256": "032a4aa7460363a54e7a109303e03894d98b6b0d9b24de5a6b3d4c3a8c59419b"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase5B/CommanderChatUI.TaskBoard.cs",
+      "sha256": "e0b6791d75013864334533c4d8bf39c5e1085accc5c785b2638491df6e1126b4"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase5B/CommanderGoalManager.FutureUnits.cs",
+      "sha256": "0a9e99d1d877cb90bf634ebb33806009c9327b46806a67588f9b1d21cec8bd2c"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase5B/CommanderGoalManager.TaskBoard.cs",
+      "sha256": "cc760ffa583b522ff996eceb3c494cdb32700625e2a6d2b2837870bd5119da22"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase5B/CommanderKnowledgeRetrieval.cs",
+      "sha256": "43fc8c380e20172a39fe5206ef8e678429faf36a8b37981906bff9b40956be76"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase5B/CommanderPlanner.FutureUnits.cs",
+      "sha256": "d1ec81a93d35e37025426b867db409f5165f99291dd3fb9208b60b6a23c97758"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase5B/CommanderTaskBoardProjection.cs",
+      "sha256": "605a1862ecc3411f854cdec87dc5ed6ac3620b31c964e1f6fbd9ada22570f226"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase5B/WatchFutureUnitsGoal.cs",
+      "sha256": "1e9b25d8b1fc74e6b237c565f583517ae63c428941d423aa20780a2f4597dc5b"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/SimpleTextIntentParser.cs",
+      "sha256": "d83ce350190380fd8f722a8f76370320cb8bf7def892cab2607de2cf9b698112"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/DefensiveTurtlePlan.cs",
+      "sha256": "1f0c17947c36c1f136edf81dc6f949c67f53826ba99031f3142351575bb517b8"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/DefensiveTurtlePlanTemplate.cs",
+      "sha256": "77512134b11d0c9d39216aab077221b58661cd375233a2b525184bd3264d59f1"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/RangedReinforcementPlan.cs",
+      "sha256": "a518a67fc41172a2475f06ccdb85243576470f7d0c77663c447d72fec9d0636c"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/RangedReinforcementPlanTemplate.cs",
+      "sha256": "a5e4f16c9a1cc69a374e86ebe120e53bbfea4f9e5dab8da9e572a197249618ba"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/RecentDecisionHistory.cs",
+      "sha256": "73a6d8f9700752d5b9fee4aa495645a2a6180752006b3bddd0f627ebd38ed96a"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicAdaptationProposal.cs",
+      "sha256": "85111d1e1c77f4e08bf1ffc3f130dbda3f5d34d2bda4e88a548f2dd332aa754a"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicAdvisory.cs",
+      "sha256": "44b513aa877d2f2c80ea6a5175091afd41be077afa57ec8b0225eca7add11f67"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicCommitmentPolicy.cs",
+      "sha256": "d878743888c26d3196f3924ca61f4c5ef8b578573d1d128c18718e7dd984512d"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicContext.cs",
+      "sha256": "97d601611774f0b346370d6fdf167512be13eb83825ed33a1c2e886d5eeea9aa"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicContextBuilder.cs",
+      "sha256": "bc0d439ab4b485eb3875064e283e742ee39380af59b8b6bab65c3a54ad035f76"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicDecisionPolicy.cs",
+      "sha256": "664933152580d865ee7f28871fad8ca4f581bfd5c4720ed2267df133f2f00f20"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicDecisionResult.cs",
+      "sha256": "30e21de592ca67415359bb5f603397070a76956f0c6eeac0df95932781bf4f56"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicEvaluationTrigger.cs",
+      "sha256": "60ecdc22f9d5da148b0450c31b64e88acf0381ea1c645ec3e7f16d9dd0f00e16"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicEvaluator.cs",
+      "sha256": "f8f975b95fe7f38f363238c52187e441d132599798d0187d8a18224633805524"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicFeasibility.cs",
+      "sha256": "1ea3941538151c01b9a728be37e1101afb0293fe1938ca44c4cd172ea85095a1"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicIntent.cs",
+      "sha256": "471bbb94df521b7b5c93836aa875973616bf9618116f12157864ba82343da4a0"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicIntentIdProvider.cs",
+      "sha256": "500a8352add4bfa9f8d813db8380fd436678aac06f18b4e8ecb1bec32eb3fcee"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicIntentSource.cs",
+      "sha256": "bef9fe405261c795adc182584fa8f2cf500b6098de9a3c8c2a9ed544b5952c47"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicMilestone.cs",
+      "sha256": "38b86659501c10e97d22c5347d52498a96e33422e4539794bc025a332f81d27a"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicPipeline.cs",
+      "sha256": "b3f185234fe37b3b71074cc7c84ceff8d7f02ac64d49c550acb81785ad5b4896"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicPlan.cs",
+      "sha256": "d58a6c1ec366fd1e8765f56f4298be00c10fb42894c1e2e7ec12b7123a143c02"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicPlanControl.cs",
+      "sha256": "e71a1fb2e5c74dcd29f06093984ec81d1d4a386c6dd2b823ba4d110ad4299df3"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicPlanHealthSnapshot.cs",
+      "sha256": "a4d73120b5acaa8d5aedab24f48f8511dbf25432b0ba29fcd7735f1e0177a408"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Authority.cs",
+      "sha256": "a7c5702315ea12ed9eee182de0d2bb51b547ab24244db5229c6c6192c9afb354"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Controls.cs",
+      "sha256": "a6ddab7e636cfaf1bdd4cd0b9351fa6e96f462280654f14325acee8a3beac49f"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.cs",
+      "sha256": "34d985468665154be49742d505ef66a3ccab937a3bc9adb56249ca3830ed000e"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Feasibility.cs",
+      "sha256": "f736fdc674eb89c761fbdca7b7cbb41a5fa5228e519a94e2592c1a89778ea14a"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicPlanner.Health.cs",
+      "sha256": "eafdfc54c8b98757fbddc40554c6e60256a5100b23a34d6fad738aca7f88ec9b"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicPlanTemplate.cs",
+      "sha256": "29c046454d99f2a7f0cdff22ee65c83bd91e62d45156348d448450aa91468e9b"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicRecommendation.cs",
+      "sha256": "5a47e9978036d2d2774c23273e659760c7106e2776eb0fe65591e196e478f69d"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicResourceReservation.cs",
+      "sha256": "082dc89b94fedb5d4411caf4777de251d935d34dc9a78ab2998fec5b7093aea0"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Strategic/StrategicTacticalGoalRequest.cs",
+      "sha256": "a45e6f373bf755e5c6b51e3d6a0fb07769ccd21d1c402effae39281c4bd2b2c1"
+    },
+    {
+      "path": "Assets/Scripts/AI/DotEnvLoader.cs",
+      "sha256": "e877a9629eeb3a0fbc73e983307207551e8a583a353fd64ab92bc97ff2ede13c"
+    },
+    {
+      "path": "Assets/Scripts/AI/GameAudioCapture.cs",
+      "sha256": "5689b483eeef8ac3c461516cf596b54004c97a98aaed97bf18772bfd0fb9f725"
+    },
+    {
+      "path": "Assets/Scripts/AI/GameSnapshotCapture.cs",
+      "sha256": "098f7538f7b10302c5a7c3ddc8f40a42fce9e86a2daed8bcd651059254b318b3"
+    },
+    {
+      "path": "Assets/Scripts/AI/GeminiClient.cs",
+      "sha256": "9509ec94e1dcee99470404068ebab281e4a41c30f43102eb579970d2437a2887"
+    },
+    {
+      "path": "Assets/Scripts/AI/Json/LlmJson.cs",
+      "sha256": "bfb41d29a780b4c48d00f3efe04fc92addec6fc422cddf2d85b87977256b3a66"
+    },
+    {
+      "path": "Assets/Scripts/AI/LlmAiInitiator.cs",
+      "sha256": "a927e49775a07e08ae35c650073cbe36aa6748a4369b7031dfd0d87ce25ee1ab"
+    },
+    {
+      "path": "Assets/Scripts/AI/LlmConversationMemory.cs",
+      "sha256": "410f41aac86ef008d03f5b4442c3c3362eb64c56803f8586d83c6492424f5b7b"
+    },
+    {
+      "path": "Assets/Scripts/AI/LlmDebug.cs",
+      "sha256": "f68b1a5254130706dd83eb15f67503e13ca1b9789f62bd2cf4f60fa0c33b3b1c"
+    },
+    {
+      "path": "Assets/Scripts/AI/LlmIntentSchema.cs",
+      "sha256": "e16490615a104db6f8681f30626db0bf9205f5337bd5a859def915d8d0054247"
+    },
+    {
+      "path": "Assets/Scripts/AI/LlmStateExtractor.cs",
+      "sha256": "bab39e8912f31306107f69c876a449f005f0c85acc373f0a0c95c4a23d3745c1"
+    },
+    {
+      "path": "Assets/Scripts/AI/LlmTeammateController.cs",
+      "sha256": "c65b490edd6f8879a004d125e664678878e9f0f46eed1720312a9411f181547c"
+    },
+    {
+      "path": "Assets/Scripts/AI/LlmTool.cs",
+      "sha256": "d09837afc98ce996eff8c5692f9e7ea34ae778816e76ebb9075acfc7b292a23a"
+    },
+    {
+      "path": "Assets/Scripts/AI/LlmToolLoop.cs",
+      "sha256": "9b6dbd1f20dfa2832292c97587612a8306d5f5a74c3bfa953147e119d7fc9d6a"
+    },
+    {
+      "path": "Assets/Scripts/Analytics/SinglePlayerAnalytics.cs",
+      "sha256": "5c4fbd73a1f82f81b2ea12d54f5e1bd4485ffc6c9be67d686e9daa40eb94aa50"
+    },
+    {
+      "path": "Assets/Scripts/AssemblyInfo.cs",
+      "sha256": "2bcb68405b8b26c70d59728ec0c7c8ee49a8e793eb4144b34a5468ab81e319d2"
+    },
+    {
+      "path": "Assets/Scripts/Audio/MusicManager.cs",
+      "sha256": "2ebfd789ba58531294eee8332f7c91b27b31c1f3ce4c8a56bfde711b41e6d24b"
+    },
+    {
+      "path": "Assets/Scripts/Audio/SFXManager.cs",
+      "sha256": "191a32666f806f205d44b5a5e90ebb4829dc49c0220ab294363aa81b803130d2"
+    },
+    {
+      "path": "Assets/Scripts/Buildings/BuildingCombatSystem.cs",
+      "sha256": "9f7424b7ff7a854c0b4d3c0a02372d1cd5ac9ab4acb1f6540de319c06ca588ca"
+    },
+    {
+      "path": "Assets/Scripts/Buildings/BuildingConstructionSystem.cs",
+      "sha256": "479e26132f06ad7a46498baf62eb356e9067e54ab22363be5969be50c7384578"
+    },
+    {
+      "path": "Assets/Scripts/Buildings/BuildingData.cs",
+      "sha256": "f5fd4d54e917a0684d23dbfb0a78364eb222f74c037d67a30cdfa6a9234e3a26"
+    },
+    {
+      "path": "Assets/Scripts/Buildings/BuildingRegistry.cs",
+      "sha256": "3ff01fea645f58d06088438736137b4f048c1f9f8cd8ed9140246710808f7462"
+    },
+    {
+      "path": "Assets/Scripts/Buildings/BuildingRepairSystem.cs",
+      "sha256": "77c40edc4d87cccc7ebed184b4281915d63f230529b2ba47e7ad429a7ba78dfc"
+    },
+    {
+      "path": "Assets/Scripts/Buildings/BuildingTrainingSystem.cs",
+      "sha256": "267f4af5ba72d9fdf0d6b3ae188c9b8851f67094eb0c4ba7723c704b72fb4807"
+    },
+    {
+      "path": "Assets/Scripts/Buildings/BuildingView.cs",
+      "sha256": "4fc93f3d98e26f7d2ce17b2ac3ae7271c757d49711a63b9f4a315c532c47a359"
+    },
+    {
+      "path": "Assets/Scripts/Buildings/LandmarkDefinitions.cs",
+      "sha256": "714269686ad4777f4c56d28f316d7cc921909446bd672a2af113fde5a1ddbdaa"
+    },
+    {
+      "path": "Assets/Scripts/Buildings/ResearchSystem.cs",
+      "sha256": "cf01ef14f0f4db9446075b139ec920985eded3d32d0960029659eac3ca93b0a4"
+    },
+    {
+      "path": "Assets/Scripts/Buildings/SpinningAttackRangeRing.cs",
+      "sha256": "cff3c2b9fd227074a4d4b1fd47e5e35aa8c69d574857207599438d505deecb14"
+    },
+    {
+      "path": "Assets/Scripts/Buildings/TowerCombatSystem.cs",
+      "sha256": "ef6aaa7222a4aa8cd3c6f01fbcf089187ae8906bdde0f702117e34df56de9c1a"
+    },
+    {
+      "path": "Assets/Scripts/Buildings/TowerUpgradeSystem.cs",
+      "sha256": "5e2fdad9a6c7de3791004ecbdd4643c2ea7168708eac50ff3e948cee056b94fb"
+    },
+    {
+      "path": "Assets/Scripts/Buildings/TrainingOrderReceipt.cs",
+      "sha256": "357529b151c442ac8e63f7af67588c2b06343bf40249dd333d5af3f47953a1cf"
+    },
+    {
+      "path": "Assets/Scripts/Buildings/TrainingQueueCollection.cs",
+      "sha256": "486d68ba5039303577b0137febcab1fdd34feed60db21a1366d799f9026bef71"
+    },
+    {
+      "path": "Assets/Scripts/Buildings/WallLineHelper.cs",
+      "sha256": "20b693ff1e313ce7a6582f23ce6d3b23b0a576a0a8bd92d7ce5f7c5926662af5"
+    },
+    {
+      "path": "Assets/Scripts/Buildings/WallSegment.cs",
+      "sha256": "a20e2e7de582efb31a7986eb78a7e75e65eac6fac26808c8e5b139c4996c28cc"
+    },
+    {
+      "path": "Assets/Scripts/Camera/RTSCameraController.cs",
+      "sha256": "2ce5c1ef3121665779c21fb6f7261e5aed56d738f8916c0fe717c4e1d233f9e6"
+    },
+    {
+      "path": "Assets/Scripts/Commands/AiChatCommand.cs",
+      "sha256": "98ce2bc65fd3ceb0c4b7e807e08c263b1b79ed11a661676253fe0ababd5d2673"
+    },
+    {
+      "path": "Assets/Scripts/Commands/AiIntentCommand.cs",
+      "sha256": "6413354ae6926db78ea6e656c3ed99faf10d0f82da8ff84f3e78bacc5229885b"
+    },
+    {
+      "path": "Assets/Scripts/Commands/AttackBuildingCommand.cs",
+      "sha256": "40b21b1924a90cfca034402ad8d21e94d3c252a2306dfde340035ecd5fc0bfd8"
+    },
+    {
+      "path": "Assets/Scripts/Commands/AttackUnitCommand.cs",
+      "sha256": "6b3e1690d8aed31d47786bad62d62cddaa6aa2dbd943531beb2ae0aca01e1390"
+    },
+    {
+      "path": "Assets/Scripts/Commands/CancelTrainCommand.cs",
+      "sha256": "3200ada3e32a9200a3f8c924c933be16653a0cda2d5ebfa0bb5035c96550fda6"
+    },
+    {
+      "path": "Assets/Scripts/Commands/CancelUpgradeCommand.cs",
+      "sha256": "340a649e97d991d90204b8bc6b760eaaee77350442349404347ff56691d8b8a1"
+    },
+    {
+      "path": "Assets/Scripts/Commands/CheatConstructionCommand.cs",
+      "sha256": "a2741e07fc41de89403b93ae5d6de65e2192e535ebc99991a3396dfc5bda17f9"
+    },
+    {
+      "path": "Assets/Scripts/Commands/CheatGodModeCommand.cs",
+      "sha256": "15fc3236d2a5e8920f987003f306070008416c738d90bd1bca090c2433206515"
+    },
+    {
+      "path": "Assets/Scripts/Commands/CheatProductionCommand.cs",
+      "sha256": "3c62b604a4e53955f02bfc5684f8d6f897d0f29580351c1e3ab1b1daf53173c1"
+    },
+    {
+      "path": "Assets/Scripts/Commands/CheatResourceCommand.cs",
+      "sha256": "3ed0cf7d4024a4438bab63a2deaed1a8b7eb43e914de63f547426fa586a0083c"
+    },
+    {
+      "path": "Assets/Scripts/Commands/CheatSpawnUnitCommand.cs",
+      "sha256": "e9fa53c9387ea0b945846986b753c32dd38ec18458a9b0c4c88832c4038e0733"
+    },
+    {
+      "path": "Assets/Scripts/Commands/CheatVisionCommand.cs",
+      "sha256": "9cb307de71de39efa8664502c940308db7f9e77701fb8aadc85f4711ff0e0f15"
+    },
+    {
+      "path": "Assets/Scripts/Commands/CommandBuffer.cs",
+      "sha256": "d4e865f98e6e2c4a29a85ef92d8508604823a5d3ac0ca1d5e798849e1585e5a1"
+    },
+    {
+      "path": "Assets/Scripts/Commands/ConstructBuildingCommand.cs",
+      "sha256": "dd45cb81172d241c4e2ab9c42664555081a35dfcb2bffdca5dab060da779664f"
+    },
+    {
+      "path": "Assets/Scripts/Commands/ConvertToGateCommand.cs",
+      "sha256": "e051456f9caf9b806fdb896ae58fd683d6cf1d3b5b84a7503e05454e17159a86"
+    },
+    {
+      "path": "Assets/Scripts/Commands/DeleteBuildingCommand.cs",
+      "sha256": "aec5b98e35489193cf6f76d97a83054d55d69110702766273a0da200a70f47e8"
+    },
+    {
+      "path": "Assets/Scripts/Commands/DeleteUnitsCommand.cs",
+      "sha256": "832b80aa29651888376108fe201823297d96a82e50702fa42930b468614c23b9"
+    },
+    {
+      "path": "Assets/Scripts/Commands/DropOffCommand.cs",
+      "sha256": "09df676dfc6b950358ef76154cd83fc101a8ce1b060445b3c22b5ed6906755fc"
+    },
+    {
+      "path": "Assets/Scripts/Commands/FollowUnitCommand.cs",
+      "sha256": "c3611209d7f9876d759e60523819971436e27edb82c4c0c04f6621aedae9ad6b"
+    },
+    {
+      "path": "Assets/Scripts/Commands/GarrisonCommand.cs",
+      "sha256": "a4a87d2c6ef953d159459f0622d162579e7d6a4a6f2de2e94fd381fd292493f6"
+    },
+    {
+      "path": "Assets/Scripts/Commands/GatherCommand.cs",
+      "sha256": "f8f1f893dd859f19576deadffbbae711b239e506598cf5990d15697f36d95371"
+    },
+    {
+      "path": "Assets/Scripts/Commands/HealingRainCommand.cs",
+      "sha256": "6619b75184a3c83acc78e048ee5e74b15ab056d895cc4f969e535ba0fb655c6e"
+    },
+    {
+      "path": "Assets/Scripts/Commands/HealUnitCommand.cs",
+      "sha256": "716d1edbae4f49d6e6bd883c3a02d190d164036867c088daeb25b913f35eb3a0"
+    },
+    {
+      "path": "Assets/Scripts/Commands/ICommand.cs",
+      "sha256": "7878e5a41263542cc9910c8c3ef7bd770598ebfbb057cfb8635d04741723e6cf"
+    },
+    {
+      "path": "Assets/Scripts/Commands/LightningStormCommand.cs",
+      "sha256": "2caa7ddd6ded2a11b0946e648dd739d2d2f7dd9b62317869e735ee1cb8a20225"
+    },
+    {
+      "path": "Assets/Scripts/Commands/MarketTradeCommand.cs",
+      "sha256": "f3b705aa329362fadc26aa839137749aef24ca25af30a51b38e89e450763a5d1"
+    },
+    {
+      "path": "Assets/Scripts/Commands/MeteorStrikeCommand.cs",
+      "sha256": "adc99385b0899384727a35f5b18e6bfb47ceb06be8b624e420055100914f8bbb"
+    },
+    {
+      "path": "Assets/Scripts/Commands/MoveCommand.cs",
+      "sha256": "0b5b3576dffaf5723f9a1c165abcb8674d2693d1eb0dc26b70eafc0d34434161"
+    },
+    {
+      "path": "Assets/Scripts/Commands/NoopCommand.cs",
+      "sha256": "d5bb7b02a4c93c0f005e13bf0e957e87e62e2d2c8cffcfece046c37a25a1111a"
+    },
+    {
+      "path": "Assets/Scripts/Commands/PatrolCommand.cs",
+      "sha256": "e051af023191738ddb9ad9b7d480b492dd3dd488ed4c37eed9e91f7881e2e4f3"
+    },
+    {
+      "path": "Assets/Scripts/Commands/PingCommand.cs",
+      "sha256": "3880909e238734f5b7d0c63b46437dce8f0cac9abf571cdf1887a3ef74018894"
+    },
+    {
+      "path": "Assets/Scripts/Commands/PlaceBuildingCommand.cs",
+      "sha256": "1393646af0e3b1c2b1ee92e8bd8c306f1634b0bcc8fa0994d80b62e0ffab08a2"
+    },
+    {
+      "path": "Assets/Scripts/Commands/PlaceWallCommand.cs",
+      "sha256": "bae19b889d826765962336e8247796d3f2a579de9005f959109bb1a6bb7d8579"
+    },
+    {
+      "path": "Assets/Scripts/Commands/QueuedCommand.cs",
+      "sha256": "2e2885b7d4037e418e3a609aca5456278a6d50211f1c3fc3654f0c76b0aae433"
+    },
+    {
+      "path": "Assets/Scripts/Commands/RepairBuildingCommand.cs",
+      "sha256": "1070dd55021e19e89d4a4a5c00dc491c5d7ee4f1788cd0527a6108747f7e965e"
+    },
+    {
+      "path": "Assets/Scripts/Commands/ResearchCommand.cs",
+      "sha256": "5d20925380f4e2323ebc5a8ef6fc66060548c4cb50c8daefbbbdc55206248555"
+    },
+    {
+      "path": "Assets/Scripts/Commands/SetRallyPointCommand.cs",
+      "sha256": "ae27bd07df1358475638d5d2207ec7add7e53e3b3c6759799e9a2482af386de3"
+    },
+    {
+      "path": "Assets/Scripts/Commands/SlaughterSheepCommand.cs",
+      "sha256": "130024c4729fd9d0058a661efcf7a564400bd611e4e7f5ab5456ff9498ad3f50"
+    },
+    {
+      "path": "Assets/Scripts/Commands/StopCommand.cs",
+      "sha256": "b00eeff997579d19ff76879fc7a26bd53d87578725133807f2050f086cfb7646"
+    },
+    {
+      "path": "Assets/Scripts/Commands/SurrenderVoteCommand.cs",
+      "sha256": "64151e0b04c583c484cbc42e36a211006b6024e674b66d09d9ece666d858a7e7"
+    },
+    {
+      "path": "Assets/Scripts/Commands/ToggleAutoProduceCommand.cs",
+      "sha256": "befa52a58bfd27d57884a5a99b5ef934a0d662fd74001349aa7c91ea1585eef6"
+    },
+    {
+      "path": "Assets/Scripts/Commands/TrainUnitCommand.cs",
+      "sha256": "f10ba2e0a187a55e19717f1f98a42452ff9615013832da571b7e95a321544aad"
+    },
+    {
+      "path": "Assets/Scripts/Commands/TributeCommand.cs",
+      "sha256": "d6d13c151f2748292a98c2992901a2215d731819e4f7d23ab8e9a0c6c5b704f4"
+    },
+    {
+      "path": "Assets/Scripts/Commands/TsunamiCommand.cs",
+      "sha256": "58803248d79d3a84491813d75976d334f3b736b74c1e31df7bfd8b5106a81bd3"
+    },
+    {
+      "path": "Assets/Scripts/Commands/UngarrisonCommand.cs",
+      "sha256": "3cd971ec0b71d06118c814b0e75b6035fbc396824170f42cd4f6ed9b8154012f"
+    },
+    {
+      "path": "Assets/Scripts/Commands/UpgradeTowerCommand.cs",
+      "sha256": "c5ab2229d1513921092ba8a9b787c6cedfc95b81dd50bc9a7ff990aab47b8177"
+    },
+    {
+      "path": "Assets/Scripts/Core/AIPlayerSystem.cs",
+      "sha256": "5a84b513a9eeb7429034079410d2834e638a709fc79b2fe551f815b57ffad2bb"
+    },
+    {
+      "path": "Assets/Scripts/Core/CivilizationData.cs",
+      "sha256": "c8bf897f656fd8d5be1d2fe46752e8bdfe9156cb271516c89db26ea4534e2ab8"
+    },
+    {
+      "path": "Assets/Scripts/Core/CommanderCommandOriginLedger.cs",
+      "sha256": "f78dd1e408996582a5c599104d466159480c7434262db93a6e092a2b46a04e45"
+    },
+    {
+      "path": "Assets/Scripts/Core/FullscreenManager.cs",
+      "sha256": "5a322c163189cbe80360c0bd18448043ecceb740cdfc1b8e7ea831b0675911f8"
+    },
+    {
+      "path": "Assets/Scripts/Core/GameBootstrapper.cs",
+      "sha256": "51ff94b2ec3e33dd503a37ac98813c14d3b29803429d291272584614aa49bac8"
+    },
+    {
+      "path": "Assets/Scripts/Core/GameSetup.cs",
+      "sha256": "63aff6d012c64cb9d2424a65be23f027024ec4cddc7c177504f0cdfca967abd3"
+    },
+    {
+      "path": "Assets/Scripts/Core/GameSimulation.cs",
+      "sha256": "91a051a30fdb524f5cc4386a794de68d56b1f79099f5467073c9aea775916c32"
+    },
+    {
+      "path": "Assets/Scripts/Core/GameSimulation.TrainingObservation.cs",
+      "sha256": "d229b07f4f68fd8ed47ff1caade828e33a9e09c434032f07420bff36acc0f138"
+    },
+    {
+      "path": "Assets/Scripts/Core/KeybindManager.cs",
+      "sha256": "8b36fdde836f7c3d423db55c9bc1a2c27b2ef39f965ce8cc94f663ec870c5b45"
+    },
+    {
+      "path": "Assets/Scripts/Core/SimulationConfig.cs",
+      "sha256": "71c2572cb3d35d7ecbab8a8220e1e6d01605028a2d5cf0effed4eb8a7e93f016"
+    },
+    {
+      "path": "Assets/Scripts/Core/SpatialGrid.cs",
+      "sha256": "ba3aa3a1adeafebdf380c03c1507a8e49bcc39f1390ed31545560e4fb5396c0b"
+    },
+    {
+      "path": "Assets/Scripts/Core/TeamHelper.cs",
+      "sha256": "4bc5962f97bc2ee71c8b6cd0d2e9c22499b6c0889b5e335dfd9b541d85a7259d"
+    },
+    {
+      "path": "Assets/Scripts/Core/VirtualCursor.cs",
+      "sha256": "623c09a3ab5c327a43ab99cf2d4b3794e8fcc991250a2e7807f31d379f466256"
+    },
+    {
+      "path": "Assets/Scripts/FogOfWar/FogOfWarData.cs",
+      "sha256": "52509acdc5606f1278a0ff65bfeaec28fb56e4dbdc1dcdff09342880f910ec4d"
+    },
+    {
+      "path": "Assets/Scripts/FogOfWar/FogOfWarRenderer.cs",
+      "sha256": "44da2071e9c317ee2fc898d284b82bd87d6b9ead88f5dbf9830dfe8f89e8a9d2"
+    },
+    {
+      "path": "Assets/Scripts/FogOfWar/FogOfWarSystem.cs",
+      "sha256": "7ae9aa638e7fd358c554eebdf1c0a744939ef2a8df024155d0302616f57587db"
+    },
+    {
+      "path": "Assets/Scripts/Map/MapData.cs",
+      "sha256": "deb9dd7f2418120b2056dfe0fcd8b33a5850e4d9f0ef4758b5580c208882ffcd"
+    },
+    {
+      "path": "Assets/Scripts/Map/MapGenerator.cs",
+      "sha256": "cae25dc9a1dd49fa1443ea6cc95ab6104a6545fdb8f6acc2f143c15fe99cc383"
+    },
+    {
+      "path": "Assets/Scripts/Map/MapRenderer.cs",
+      "sha256": "049213f1d5ea5c3e42f9db0d418ad053f92e6bda706b3ac2e678ec1242122778"
+    },
+    {
+      "path": "Assets/Scripts/Map/ResourceNode.cs",
+      "sha256": "8dc4be333051d11ea225ee4999c6e5b1d7a475a0324f81e56e7d0f5501d02ac4"
+    },
+    {
+      "path": "Assets/Scripts/Map/ResourceNodeData.cs",
+      "sha256": "1ac9538095f762a815269714b8b86f3b4c9c99c907e548691f2ba7c98c141c99"
+    },
+    {
+      "path": "Assets/Scripts/Math/Fixed32.cs",
+      "sha256": "5043b210fb76442adb179e9abcad6017ed19a2a051d1904a54831d5c22e3790c"
+    },
+    {
+      "path": "Assets/Scripts/Math/FixedVector3.cs",
+      "sha256": "c1a20f80c4d46a05b9ce0a955867fbc24c11f37f43bf866146c0d59ac764e19d"
+    },
+    {
+      "path": "Assets/Scripts/Network/CommandSerializer.cs",
+      "sha256": "9ad46d031d792039ffa28614559aa02021245787466085d556db4a42f86a20a9"
+    },
+    {
+      "path": "Assets/Scripts/Network/MatchmakingManager.cs",
+      "sha256": "752f58d9eb2857658c0d6c777b69deda45c601cbd3486d68f5a512a69f3192c5"
+    },
+    {
+      "path": "Assets/Scripts/Network/NetworkCompatibility.cs",
+      "sha256": "30994d5a80a7eac117fc789bde68653693605d56bbdcc91ab64aeaf3730587dd"
+    },
+    {
+      "path": "Assets/Scripts/Network/NetworkDiagnostics.cs",
+      "sha256": "6e39fe2c5b8f131c9dcf5c89bf728f86954bab04e9b153371840d2b5022a8937"
+    },
+    {
+      "path": "Assets/Scripts/Network/NetworkManager.cs",
+      "sha256": "86754c8c3c16b200e288f37f9b19c25268cffd9be3326740649c40206621deef"
+    },
+    {
+      "path": "Assets/Scripts/Network/ServerMessages.cs",
+      "sha256": "3591cd21c5ae09850b902a674a43896f080b3e412b8998ef41721ceafbd71ab5"
+    },
+    {
+      "path": "Assets/Scripts/Network/WebSocketClient.cs",
+      "sha256": "c9505530c36fcb6eb8b8af1b8f9376f3174489974a8e2937b01d04dc828aff53"
+    },
+    {
+      "path": "Assets/Scripts/Pathfinding/GridPathfinder.cs",
+      "sha256": "1c78ef807e584c97c79787fd3154790ad624c094243820edc0f62bfcc8a80de7"
+    },
+    {
+      "path": "Assets/Scripts/Projectiles/ProjectileData.cs",
+      "sha256": "46d4ad8f3d9ae11742398b5d01f74a27f6393544769a797590929db871eb9177"
+    },
+    {
+      "path": "Assets/Scripts/Projectiles/ProjectileRegistry.cs",
+      "sha256": "78ab999036ced0c56afa2c6dfea7d3b0137037e63362faa4a129e5717d9e5a1a"
+    },
+    {
+      "path": "Assets/Scripts/Projectiles/ProjectileSystem.cs",
+      "sha256": "397deb9c7fbcee177c511960b8c290e458963ebdec3ac3f9073f64eae9ef97f0"
+    },
+    {
+      "path": "Assets/Scripts/Projectiles/ProjectileView.cs",
+      "sha256": "dee482043a6af17b6c5a8c788b6b43f92c0660d51751385b27f48e867783eab7"
+    },
+    {
+      "path": "Assets/Scripts/Rendering/AtmosphereController.cs",
+      "sha256": "add2bacc2a21b0443fe3f819ee1a8caad5ac393a1bb14cbed5e77ee64a0cca21"
+    },
+    {
+      "path": "Assets/Scripts/Rendering/GroundDustVisual.cs",
+      "sha256": "4a45d9ffbe19dbf28cd659e12aeafe479c875e2e36781385486ee23f9bbccf7b"
+    },
+    {
+      "path": "Assets/Scripts/Rendering/HealAuraVisual.cs",
+      "sha256": "95344541bca7397b8d43d9ce5504c16392f69f5f9355c73f014368acf5e24b66"
+    },
+    {
+      "path": "Assets/Scripts/Rendering/MeteorVisualManager.cs",
+      "sha256": "2074cabcea507ad240282e55a020bf87dc942d18f821407550e8ce1f7f5a2250"
+    },
+    {
+      "path": "Assets/Scripts/Rendering/SelectedUnitOcclusionFader.cs",
+      "sha256": "1bb9101b6060f38c3a55a70b326dfb4b153ffde1195ec85cb83331099721cecb"
+    },
+    {
+      "path": "Assets/Scripts/Rendering/ShadowSettings.cs",
+      "sha256": "1abb0b8886d47f0568993352eeb77b67e85075f6e3de4df53feae6e2026864a8"
+    },
+    {
+      "path": "Assets/Scripts/Rendering/UnitFootDustVisual.cs",
+      "sha256": "89658357b719f29176779e15a84f3ab990f3a5185e9199013492e69755b31900"
+    },
+    {
+      "path": "Assets/Scripts/Resources/ResourceGatheringSystem.cs",
+      "sha256": "8a954ad17bdf37426bd74f5dad4d16dece85d46656294ccc9c5080cdb111d194"
+    },
+    {
+      "path": "Assets/Scripts/Resources/ResourceManager.cs",
+      "sha256": "9f36afba1033b35404087d10637ca8c5c9ef0c0693dbc1289885904a34ff1a5b"
+    },
+    {
+      "path": "Assets/Scripts/Resources/ResourceSourceKind.cs",
+      "sha256": "6c71eb9bec53089e40303fa49dd4022059bc4c7f05d131f353ac7ae7c65a976f"
+    },
+    {
+      "path": "Assets/Scripts/Resources/ResourceSourceRules.cs",
+      "sha256": "7d6c12f62287174868444d874064100015fcb2786bf23cc2cdd06f581e2d0c99"
+    },
+    {
+      "path": "Assets/Scripts/RTSInputActions.cs",
+      "sha256": "0e9a9dc6459c8c58bb72b3ea98e88ad21e4a71356497ecdd6ebac33e9276b8b4"
+    },
+    {
+      "path": "Assets/Scripts/UI/BuildingIcons.cs",
+      "sha256": "e4df0243e5af22a7772e37782c8b30abd3f61fac6c141f9d004c78e0042801c1"
+    },
+    {
+      "path": "Assets/Scripts/UI/BuildingKeybindController.cs",
+      "sha256": "4734cdecd1208c6d30ffe10d597a97cde4fe605dd6627582202ef2efb3d16d87"
+    },
+    {
+      "path": "Assets/Scripts/UI/ChatManager.cs",
+      "sha256": "04f030eb4ce23fe4c083065c9382076ce8db834013c2842f85f04b649b5516d2"
+    },
+    {
+      "path": "Assets/Scripts/UI/ChatUI.cs",
+      "sha256": "cd00fd583a3680514bbec8b7fe31537bfb87b461353bf248c5207e9b37404d09"
+    },
+    {
+      "path": "Assets/Scripts/UI/CommandFlagMarker.cs",
+      "sha256": "7e6c6c97e6cb4cd81cc3823808c87c628069f3a4e686ab6cba104efa378fa611"
+    },
+    {
+      "path": "Assets/Scripts/UI/CommandIcons.cs",
+      "sha256": "68365098efddcf195eb9bdab8a0fe518bf8be51bf846c79652a6091cabdcef60"
+    },
+    {
+      "path": "Assets/Scripts/UI/CustomCursor.cs",
+      "sha256": "8bb645009f865aec07460c14ed82221b9a9de8a06f49ee77c67d8e062545db4c"
+    },
+    {
+      "path": "Assets/Scripts/UI/GodPowerBarUI.cs",
+      "sha256": "19d77d42015814cb559f9a5b90892049a1866b04b6cc5509f2dcc4ae5a3215fb"
+    },
+    {
+      "path": "Assets/Scripts/UI/MarkerFader.cs",
+      "sha256": "0f875ce12c1f24e245709a18398933948c291273de4c425402a534fd9df5778c"
+    },
+    {
+      "path": "Assets/Scripts/UI/MatchResultUI.cs",
+      "sha256": "6dec926c66cc622433b3ba77b2434988e2de5eb2effa445c55baed2af2beac3f"
+    },
+    {
+      "path": "Assets/Scripts/UI/MeteorCooldownUI.cs",
+      "sha256": "b37a84419f8ef4035d3bb7259ba6a0e6cfc403f34793cfe8b2e98b8dcf174a1a"
+    },
+    {
+      "path": "Assets/Scripts/UI/MinimapUI.cs",
+      "sha256": "8a4343ce5ab7358ed62ad4a5fe1e13d9d68544a5df558567337e179bd1ca9a9e"
+    },
+    {
+      "path": "Assets/Scripts/UI/NetworkDiagnosticsUI.cs",
+      "sha256": "1b421897303092fb7aa6f02883ab2bbc3e60e3d4db52c8009f028913ca82c0ba"
+    },
+    {
+      "path": "Assets/Scripts/UI/PeripheralAttackIndicators.cs",
+      "sha256": "83f19d4e19e2f5ca1169eb671d7d3de321e3a50f390bc0145735b98acdcced7f"
+    },
+    {
+      "path": "Assets/Scripts/UI/PlayerListUI.cs",
+      "sha256": "f0d3e808d83f9d3ad6a816e63aee34bbdefc48dbf5d5da46316d585ef811bfa0"
+    },
+    {
+      "path": "Assets/Scripts/UI/ResourceIcons.cs",
+      "sha256": "df210bd8f2f8ca4ac007afa71759fb0226b1a16c26404b9c6d12fd936eeead8e"
+    },
+    {
+      "path": "Assets/Scripts/UI/ResourceUI.cs",
+      "sha256": "6d168f0af3ce0cebe179e79ad5ca8f9a9363de7b859d0c7e515748090ee6d190"
+    },
+    {
+      "path": "Assets/Scripts/UI/SelectionBoxUI.cs",
+      "sha256": "26370eb6f7f5174c7e9942e0185965862e78113afec8a54b083a6d005a945473"
+    },
+    {
+      "path": "Assets/Scripts/UI/SettingsMenuUI.cs",
+      "sha256": "90f9af7ea781b2a5ab10f32bda6b97bb436b306089cac9ea18726c5637793770"
+    },
+    {
+      "path": "Assets/Scripts/UI/UnitIcons.cs",
+      "sha256": "f744b2900cc4b004f375ac95c2d3ee709148a5cb29c7ef7556dde0118678071e"
+    },
+    {
+      "path": "Assets/Scripts/UI/UnitInfoUI.cs",
+      "sha256": "0b362fc05c8b06265e46348b145fb0f0d9513728f2d93e3578fcd2cb9bf53f10"
+    },
+    {
+      "path": "Assets/Scripts/UI/UnitKeybindController.cs",
+      "sha256": "beeafac5f85728bf535754a6a0a6273d6deaf7b7cc584d9f4717b5800a46e859"
+    },
+    {
+      "path": "Assets/Scripts/UI/WorldOverlayCanvas.cs",
+      "sha256": "d67013977d960c64913aae3fd13c6be8fcfc0238dad0d5a97bae904df827d30e"
+    },
+    {
+      "path": "Assets/Scripts/UI/WorldPingMarker.cs",
+      "sha256": "b1c4f6e82b29c57386195f11dbb9ebcaaa7dd0b1bb562af4db09b8fa45993692"
+    },
+    {
+      "path": "Assets/Scripts/Units/SheepSystem.cs",
+      "sha256": "8ac2082420bf0a01e10273e8297dd6301ed4fadc35a0a0a4898792a1d190bdac"
+    },
+    {
+      "path": "Assets/Scripts/Units/SpearmanAnimationTestController.cs",
+      "sha256": "21f4211f9c4f3e04a918955d1f09e670128bf4ba639dc00e400b8dfca565494b"
+    },
+    {
+      "path": "Assets/Scripts/Units/UnitAnimatorVisualDriver.cs",
+      "sha256": "c752db914b8441bd018c1b585c49269bbf38cb566030d79fa1ed97b16bbe21a5"
+    },
+    {
+      "path": "Assets/Scripts/Units/UnitAttackVisualAnimator.cs",
+      "sha256": "6c0a6ecc24de46dbc1d3487bc15d992a8af87631dd74deeebc4ea0c92dfa3602"
+    },
+    {
+      "path": "Assets/Scripts/Units/UnitCombatSystem.cs",
+      "sha256": "08161c8c768523eebc29ee1c96b3b4a253f2ce812daef1a69149ef95c087f210"
+    },
+    {
+      "path": "Assets/Scripts/Units/UnitData.cs",
+      "sha256": "427d6f6ef7249508ebe261fc9bb5723af8731efa35230913c56b9ad5dfea2ad8"
+    },
+    {
+      "path": "Assets/Scripts/Units/UnitGallopVisualAnimator.cs",
+      "sha256": "74e2339d7ce3e96050770ea8a951eedbed3076d34f08e4763514144e049c1a85"
+    },
+    {
+      "path": "Assets/Scripts/Units/UnitHealingSystem.cs",
+      "sha256": "b3250aef694bb47fe1ecdf9387cdb68b1daf2a823b02647bec7af475045d78f3"
+    },
+    {
+      "path": "Assets/Scripts/Units/UnitMovementSystem.cs",
+      "sha256": "d093bf3040fbb5c473b2360dfe8570b5fcb7dc11b6b9687edb8a02a164d34bdf"
+    },
+    {
+      "path": "Assets/Scripts/Units/UnitRegistry.cs",
+      "sha256": "c092c7b47d3d6679c0486c4c2f31d8d480cae6d4a15417f1463ddc5569777779"
+    },
+    {
+      "path": "Assets/Scripts/Units/UnitSelectionManager.cs",
+      "sha256": "89a859ddb19ec7199f7324921327b85029fe03b38eb826ab694ad88402ad4388"
+    },
+    {
+      "path": "Assets/Scripts/Units/UnitSeparationSystem.cs",
+      "sha256": "f9b3ea4bf8567ef847450fa81ea54f4bba52f39d8b60b9b8edd021668b09f45b"
+    },
+    {
+      "path": "Assets/Scripts/Units/UnitView.cs",
+      "sha256": "5e5c87bb280a6e19ee3ae46bc5a6ff163343b5db430daff0c7bab3bd25957a32"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Chat.cs",
+      "sha256": "7fcba69a488b69d324ac5b6e2a0ce3d849e3a8c6579761115adc15d8e6f7e406"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.cs",
+      "sha256": "24e8c6cd62af3f36157a68543077baf1c4190ca63a7323615caba59d3225b1fa"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Execution.cs",
+      "sha256": "3efe4b8508a865000e40f3ec686c45b4e31be832728941b3e1d635bedfe48fae"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Provider.cs",
+      "sha256": "67c158f3dc304218610385c5de37598b8da7e15c097672539334d42e58419052"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Source.cs",
+      "sha256": "80665e0f66c9af4b28ce66d83d61784d2b096d84127b6c972855b8ee25e4facb"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase5BClarificationTests.cs",
+      "sha256": "f65727d4a3e791edd8948bfa5099a60b4934582e3050aaff1013c4860e61872b"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase5BContentExpansionTests.cs",
+      "sha256": "963126f0547de1565c45d0053125ec6631e32f22784174b52f6f9211d8bd849a"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase5BFutureOrdersTests.cs",
+      "sha256": "53adefe833595c13809b5cfb9f956bd2084330754691f256c145e98a0cae1be4"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase5BInterpretationTests.cs",
+      "sha256": "1584f5f11e27f682a14b43db6a70edd51726c3eb10d56505c88de769a6e6a229"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase5BLandmarkKnowledgeTests.cs",
+      "sha256": "a155978d9949637ecbbd83e6de899f80cf7196657d5e217d34ca5bdbe4b39d98"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase5BProviderContextTests.cs",
+      "sha256": "312449a43820a74f68f44289dbe39b7535ff42c5780bffaccc003ea7403d1958"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase5BTaskBoardTests.cs",
+      "sha256": "0d942132f25478a016d3b384058d461f90d377f436affaee8989c16890398d12"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderEconomyClarificationPlayModeTests.cs",
+      "sha256": "379132b225703305013ecf7e9c1b279a1d01ed34dfa477a2ff1157bbc6d2a30f"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase5BNativeObservationsPlayModeTests.cs",
+      "sha256": "784e0be6fd34415c41340dcbebd05342434c1728f798188e67f9b89a1e88e7bd"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/CommanderPhase5BTaskBoardPlayModeTests.cs",
+      "sha256": "71b3182df98b23101128ac7d6ada087c7cdc7334d09876dbed7a1d1de84c77f6"
+    },
+    {
+      "path": "Packages/manifest.json",
+      "sha256": "4169965381b1bd0b4df6d3ac9c42ffb9a420ea34e32998cef0ff8a989fed7809"
+    },
+    {
+      "path": "Packages/packages-lock.json",
+      "sha256": "f6724f0f8e08424119074aad77c9a0d29b6eb186b292c22fc4d99599bdf43dff"
+    },
+    {
+      "path": "ProjectSettings/AudioManager.asset",
+      "sha256": "282586eacd02fca9b7b803b93641647abee5a9d1a7369381025546f0c9808ccf"
+    },
+    {
+      "path": "ProjectSettings/ClusterInputManager.asset",
+      "sha256": "06a192320121e445dcff1ae8ddad2a948ff671ca134603c043d9f4e920427ea9"
+    },
+    {
+      "path": "ProjectSettings/com.arongranberg.astar/settings.asset",
+      "sha256": "41f5574d51d8b683818715acef74d565af2a45c382aea1f8fbc069455f4d7326"
+    },
+    {
+      "path": "ProjectSettings/DynamicsManager.asset",
+      "sha256": "7bf32032957eb76dea137d4521b8f057ffdb55259acbf130d0954c2d201eec68"
+    },
+    {
+      "path": "ProjectSettings/EditorBuildSettings.asset",
+      "sha256": "8d1712535531522f729d34e843ea20772c01d002227338f8f802f472d7e8d78e"
+    },
+    {
+      "path": "ProjectSettings/EditorSettings.asset",
+      "sha256": "b4c08fea9c6db7ad67634a84c258569354f4faacca43fefc16f9f6f1c18349a1"
+    },
+    {
+      "path": "ProjectSettings/EntitiesClientSettings.asset",
+      "sha256": "440747cc2795b64122061910cb9b2f1a20d563f53145898c4243056376475282"
+    },
+    {
+      "path": "ProjectSettings/GraphicsSettings.asset",
+      "sha256": "a02f06f07534a69fb00edd6715d5b4629f1e1e7934067a88b45858fef8bea1dc"
+    },
+    {
+      "path": "ProjectSettings/InputManager.asset",
+      "sha256": "776c8b6c71e1101973e1f3ab569cf9058b857372a8a19210b50b3c1c6a1a42a6"
+    },
+    {
+      "path": "ProjectSettings/MemorySettings.asset",
+      "sha256": "a660cb9890d880df92f3b80fa40723f183cc5ef2cb3ecc850b366191f05834c7"
+    },
+    {
+      "path": "ProjectSettings/MultiplayerManager.asset",
+      "sha256": "83ded116ca3ed35a6acac9b0fed830f04dfe5c008c185be50b1c132c88aea505"
+    },
+    {
+      "path": "ProjectSettings/NavMeshAreas.asset",
+      "sha256": "deca65f3094943a1af148cf64fd6c0deb503219d12de0e172b7f948d07a8e6a8"
+    },
+    {
+      "path": "ProjectSettings/PackageManagerSettings.asset",
+      "sha256": "2616a1a67a7ceef018e78d16c59a67969fa038fe39535c5a318a0701ce36f0b2"
+    },
+    {
+      "path": "ProjectSettings/Physics2DSettings.asset",
+      "sha256": "f8853353aac1bc6a33d1999b08ec2661abc374402ed4790a0b82eb64585b731e"
+    },
+    {
+      "path": "ProjectSettings/PhysicsCoreProjectSettings2D.asset",
+      "sha256": "6356ff823cf80282a698fe03796ea05f52ea16d948027399a638082e07469558"
+    },
+    {
+      "path": "ProjectSettings/PresetManager.asset",
+      "sha256": "6ba879310e2be2e5ba18702578cda93b26b030ecd88e883fef22ab456a9f9697"
+    },
+    {
+      "path": "ProjectSettings/ProjectAuditorSettings.asset",
+      "sha256": "5e40807b54a51f2fafb156c8deeba785328010ec5d296c089cfa74f146b751f4"
+    },
+    {
+      "path": "ProjectSettings/ProjectSettings.asset",
+      "sha256": "8a57718271ca69b86c66a2bdcb857ecc226a517b36d1d48b09a718ea441766e9"
+    },
+    {
+      "path": "ProjectSettings/QualitySettings.asset",
+      "sha256": "9d3eabef60f1f2c5e392916cf4285246637fdd28326130a814e8fedc20cdb86f"
+    },
+    {
+      "path": "ProjectSettings/SceneTemplateSettings.json",
+      "sha256": "e0cbb98bd0aa9449840ce663a4b81751ab0828f5d8d2bd37923644fee7095e62"
+    },
+    {
+      "path": "ProjectSettings/ShaderGraphSettings.asset",
+      "sha256": "cdba1e5d65bcf6e3269d76ed3e60b6c21f98322002996642c9d74f1eb89f6b91"
+    },
+    {
+      "path": "ProjectSettings/TagManager.asset",
+      "sha256": "82e9e71daccf83ae6508c3da9605010c2ecfc9796ed13a45296ddeac73560478"
+    },
+    {
+      "path": "ProjectSettings/TimeManager.asset",
+      "sha256": "6c320ee59ae1e55aa74558f012437f63cb9de59d69fda62fc321c4f1971c52cb"
+    },
+    {
+      "path": "ProjectSettings/UnityConnectSettings.asset",
+      "sha256": "edbc2c8b4e180ca0734f320b51d6f560342563862923509d94d15492b200ad27"
+    },
+    {
+      "path": "ProjectSettings/URPProjectSettings.asset",
+      "sha256": "c317fe22b9488785c0611f0642429922e5d324430d929bffb41648130f30c218"
+    },
+    {
+      "path": "ProjectSettings/VersionControlSettings.asset",
+      "sha256": "b693342eb84fb0378d21cd2a4557d900777709ad00c2ff5041c2d8451b6da246"
+    },
+    {
+      "path": "ProjectSettings/VFXManager.asset",
+      "sha256": "a8950860670c6fa8f83a43e37deb966beacfd7b535721c4cd9c2a7e5b46305e8"
+    },
+    {
+      "path": "ProjectSettings/XRSettings.asset",
+      "sha256": "71f175773593ba28d42bf1af0543b2a465e0316d3b8f435aebf48ea66b31b621"
+    }
+  ]
+}

@@ -14,6 +14,9 @@ namespace OpenEmpires
     public sealed class AllocateWorkersGoal : CommanderGoal
     {
         public CommanderWorkerAllocation Allocation { get; }
+        public long ResourceProgress { get; internal set; }
+        internal EnsureUnitCountGoal ResultSourceGoal;
+        internal long GatheredIncomeAtActivation;
         internal bool Prepared, ReservationsAcquired, SnapshotCaptured, BaselineCaptured, HumanInterrupted;
         internal int BaselineCount, NextCommandGroup, LastIssuedSimulationTick = -1;
         internal readonly List<int> SnapshotWorkerIds = new List<int>();

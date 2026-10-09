@@ -5,6 +5,29 @@ namespace OpenEmpires
     public class ResourceManager
     {
         private Dictionary<int, PlayerResources> playerResources = new Dictionary<int, PlayerResources>();
+        private readonly Dictionary<int, Dictionary<ResourceType, long>> gatheredIncome =
+            new Dictionary<int, Dictionary<ResourceType, long>>();
+
+        // Credits only at actual gathered-resource delivery points. Ordinary stockpile
+        // changes (starting resources, costs, refunds, cheats, and transfers) stay separate.
+        public long GetGatheredIncome(int playerId, ResourceType type)
+        {
+            return gatheredIncome.TryGetValue(playerId, out var byType)
+                && byType.TryGetValue(type, out long amount) ? amount : 0L;
+        }
+
+        internal void CreditGatheredIncome(int playerId, ResourceType type, int amount)
+        {
+            if (amount <= 0) return;
+            if (!gatheredIncome.TryGetValue(playerId, out var byType))
+            {
+                byType = new Dictionary<ResourceType, long>();
+                gatheredIncome.Add(playerId, byType);
+            }
+            byType.TryGetValue(type, out long current);
+            byType[type] = checked(current + amount);
+            AddResource(playerId, type, amount);
+        }
 
         public PlayerResources GetPlayerResources(int playerId)
         {

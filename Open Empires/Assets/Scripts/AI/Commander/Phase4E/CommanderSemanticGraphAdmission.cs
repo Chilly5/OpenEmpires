@@ -163,6 +163,16 @@ namespace OpenEmpires
                 if (sourceIndex < 0 || sourceIndex >= admitted.Count || sourceIndex == i)
                     return false;
                 CommanderIntent sourceIntent = admitted[sourceIndex].Intent;
+                if (node.Intent is AllocateWorkersIntent workers)
+                {
+                    if (!(sourceIntent is EnsureUnitCountIntent produced)
+                        || produced.UnitType != 0 || !produced.NewProductionCount.HasValue
+                        || workers.Allocation.Mode != CommanderWorkerAllocationMode.SelectedCount
+                        || workers.Allocation.CountMode != CommanderWorkerCountMode.Exact
+                        || workers.Allocation.Count != produced.NewProductionCount.Value)
+                        return false;
+                    continue;
+                }
                 if (!(node.Intent is CapabilityActionIntent action)) return false;
 
                 if (sourceIntent is EnsureUnitCountIntent ensure)

@@ -193,6 +193,7 @@ namespace OpenEmpires
             PanelElement(textSettings.gameObject,28);
             compactStatus = Text("Status",compactCommander.transform,"Preparing Commander…",12,TextAlignmentOptions.Left);
             compactStatus.richText = false; PanelElement(compactStatus.gameObject,38);
+            BuildTaskBoardUI();
             BuildVoiceSetupUI();
             BuildSemanticSetupUI();
             compactReview = ReviewCard("TranscriptReview","Review transcript — not submitted",out compactReviewText,
@@ -215,6 +216,7 @@ namespace OpenEmpires
         private void UpdatePresentation()
         {
             if (compactCommander == null) return;
+            RefreshTaskBoard();
             RefreshSemanticSetupStatus();
             if (commanderPanel != null) commanderPanel.gameObject.SetActive(expanded);
             compactCommander.SetActive(!expanded);

@@ -62,6 +62,7 @@ namespace OpenEmpires
                 return new CommanderPlan(CommanderGoalStatus.Blocked,
                     "A request-bound worker is missing, dead or foreign; no substitute is authorized.", 0, 0);
             if (goal is AllocateWorkersGoal workers) return PlanWorkerAllocation(workers, currentTick);
+            if (goal is WatchFutureUnitsGoal future) return PlanFutureUnits(future, currentTick);
             if (goal is EnsureUnitCountGoal units) return PlanUnits(units, currentTick);
             if (goal is BuildStructureGoal building) return PlanStructure(building, currentTick);
             if (goal is ResourceAllocationGoal resource) return PlanAllocation(resource, currentTick);
@@ -1681,6 +1682,22 @@ namespace OpenEmpires
                     width = config.TowerFootprintWidth; height = config.TowerFootprintHeight; break;
                 case BuildingType.TownCenter:
                     width = config.TownCenterFootprintWidth; height = config.TownCenterFootprintHeight; break;
+                case BuildingType.LumberYard:
+                    width = config.LumberYardFootprintWidth; height = config.LumberYardFootprintHeight; break;
+                case BuildingType.Mine:
+                    width = config.MineFootprintWidth; height = config.MineFootprintHeight; break;
+                case BuildingType.Monastery:
+                    width = config.MonasteryFootprintWidth; height = config.MonasteryFootprintHeight; break;
+                case BuildingType.Blacksmith:
+                    width = config.BlacksmithFootprintWidth; height = config.BlacksmithFootprintHeight; break;
+                case BuildingType.Market:
+                    width = config.MarketFootprintWidth; height = config.MarketFootprintHeight; break;
+                case BuildingType.University:
+                    width = config.UniversityFootprintWidth; height = config.UniversityFootprintHeight; break;
+                case BuildingType.SiegeWorkshop:
+                    width = config.SiegeWorkshopFootprintWidth; height = config.SiegeWorkshopFootprintHeight; break;
+                case BuildingType.Keep:
+                    width = config.KeepFootprintWidth; height = config.KeepFootprintHeight; break;
                 case BuildingType.Landmark:
                     width = config.LandmarkFootprintWidth; height = config.LandmarkFootprintHeight; break;
                 case BuildingType.Farm:

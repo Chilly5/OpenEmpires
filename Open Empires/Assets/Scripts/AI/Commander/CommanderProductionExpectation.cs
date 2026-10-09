@@ -66,7 +66,10 @@ namespace OpenEmpires
                 int count = ensure.NewProductionCount ?? (int)Math.Max(0L, (long)ensure.TargetTotal - otherContribution);
                 foreach (var consumer in nodes)
                     if (consumer.ResultFromNode == i
-                        && (!(consumer.Intent is CapabilityActionIntent action) || count < 1 || action.UnitSelector.Count != count))
+                        && (count < 1 || !(consumer.Intent is CapabilityActionIntent action
+                            && action.UnitSelector.Count == count
+                            || consumer.Intent is AllocateWorkersIntent allocation
+                                && allocation.Allocation.Count == count)))
                         return false;
                 quotes[i] = new CommanderProductionExpectation(i, owned, queued, count, otherContribution);
                 visiting.Remove(i); return true;

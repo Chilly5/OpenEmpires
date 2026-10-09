@@ -5,6 +5,7 @@ namespace OpenEmpires
     public enum CommanderWorkerAllocationMode { TargetTotal, Additional, SelectedCount }
     public enum CommanderWorkerCountMode { Exact, AllMatching }
     public enum CommanderWorkerState { Any, Idle, Gathering }
+    public enum CommanderResourceAmountMode { Stockpile, AdditionalGathered }
 
     public sealed class CommanderWorkerSelector
     {
@@ -30,12 +31,19 @@ namespace OpenEmpires
         public int? Count { get; }
         public CommanderWorkerSelector Workers { get; }
         public CommanderResourceDestination Destination { get; }
+        public int? ResourceAmount { get; }
+        public CommanderResourceAmountMode? ResourceAmountMode { get; }
         public CommanderWorkerAllocation(CommanderWorkerAllocationMode mode, CommanderWorkerCountMode countMode,
-            int? count, CommanderWorkerSelector workers, CommanderResourceDestination destination)
-        { Mode = mode; CountMode = countMode; Count = count; Workers = workers; Destination = destination; }
+            int? count, CommanderWorkerSelector workers, CommanderResourceDestination destination,
+            int? resourceAmount = null, CommanderResourceAmountMode? resourceAmountMode = null)
+        { Mode = mode; CountMode = countMode; Count = count; Workers = workers; Destination = destination;
+            ResourceAmount = resourceAmount; ResourceAmountMode = resourceAmountMode; }
 
         internal bool IsValid(int maximumPopulation)
         {
+            if (ResourceAmount.HasValue != ResourceAmountMode.HasValue
+                || ResourceAmount.HasValue && (ResourceAmount.Value < 1 || ResourceAmount.Value > 1000000
+                    || !Enum.IsDefined(typeof(CommanderResourceAmountMode), ResourceAmountMode.Value))) return false;
             if (!Enum.IsDefined(typeof(CommanderWorkerAllocationMode), Mode)
                 || !Enum.IsDefined(typeof(CommanderWorkerCountMode), CountMode)
                 || Workers == null || Destination == null

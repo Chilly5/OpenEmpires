@@ -77,17 +77,19 @@ namespace OpenEmpires
         public int FootprintHeight { get; private set; }
         public int MaxHealth { get; private set; }
         public int ConstructionTicks { get; private set; }
+        public LandmarkId? Landmark { get; private set; }
 
         public BuildingKnowledge(BuildingType type, string name, string[] aliases, int age,
-            KnowledgeCost cost, int width, int height, int hp, int constructionTicks = 0)
+            KnowledgeCost cost, int width, int height, int hp, int constructionTicks = 0, LandmarkId? landmarkId = null)
         {
-            BuildingType = type; StableId = "building:" + type; DisplayName = name;
+            BuildingType = type; StableId = landmarkId.HasValue ? "landmark:" + landmarkId.Value : "building:" + type; DisplayName = name;
+            Landmark = landmarkId;
             Aliases = Array.AsReadOnly((aliases ?? new string[0]).ToArray()); RequiredAge = age; Cost = cost;
             FootprintWidth = width; FootprintHeight = height; MaxHealth = hp; ConstructionTicks = constructionTicks;
         }
 
         public BuildingKnowledge Copy() => new BuildingKnowledge(BuildingType, DisplayName,
-            Aliases.ToArray(), RequiredAge, Cost.Copy(), FootprintWidth, FootprintHeight, MaxHealth, ConstructionTicks);
+            Aliases.ToArray(), RequiredAge, Cost.Copy(), FootprintWidth, FootprintHeight, MaxHealth, ConstructionTicks, Landmark);
     }
 
     [Serializable]
@@ -186,6 +188,8 @@ namespace OpenEmpires
 
         private static readonly List<UnitKnowledge> customUnits = new List<UnitKnowledge>();
         private static readonly List<BuildingKnowledge> customBuildings = new List<BuildingKnowledge>();
+        private static readonly object canonicalIdentityLock = new object();
+        private static GameKnowledgeCatalog canonicalIdentityCatalog;
 
         public static void RegisterCustomUnit(UnitKnowledge unit)
         {
@@ -203,6 +207,38 @@ namespace OpenEmpires
         {
             customUnits.Clear();
             customBuildings.Clear();
+        }
+
+        internal static GameKnowledgeCatalog BuildCanonicalIdentityCatalog()
+        {
+            if (canonicalIdentityCatalog != null) return canonicalIdentityCatalog;
+            lock (canonicalIdentityLock)
+            {
+                if (canonicalIdentityCatalog != null) return canonicalIdentityCatalog;
+                var units = new List<UnitKnowledge>();
+                foreach (int type in KeybindManager.BindableUnitTypes)
+                {
+                    BuildingType producer = GameSimulation.TryGetCanonicalProductionBuildingType(type, out var nativeProducer)
+                        ? nativeProducer : BuildingType.Landmark;
+                    units.Add(new UnitKnowledge(type, UnitInfoUI.GetUnitTypeDisplayName(type), BuildUnitAliases(type),
+                        LandmarkDefinitions.GetUnitRequiredAge(type), new KnowledgeCost(0, 0, 0), 0,
+                        (int)producer, 0, 0, 0f, 0f, 0, 0, false));
+                }
+                units.Add(new UnitKnowledge(5, UnitInfoUI.GetUnitTypeDisplayName(5), BuildUnitAliases(5),
+                    0, new KnowledgeCost(0, 0, 0), 0, -1, 0, 0, 0f, 0f, 0, 0, false));
+                var buildings = new List<BuildingKnowledge>();
+                foreach (BuildingType type in Enum.GetValues(typeof(BuildingType)))
+                {
+                    string name = UnitInfoUI.GetBuildingTypeDisplayName(type);
+                    buildings.Add(new BuildingKnowledge(type, name, BuildBuildingAliases(type, name),
+                        LandmarkDefinitions.GetBuildingRequiredAge(type), new KnowledgeCost(0, 0, 0), 0, 0, 0));
+                }
+                AppendNamedLandmarks(buildings);
+                canonicalIdentityCatalog = new GameKnowledgeCatalog(units, buildings,
+                    new List<TechnologyKnowledge>(), new List<CivilizationKnowledge>(), new List<AgeKnowledge>(),
+                    new List<ResourceKnowledge>());
+                return canonicalIdentityCatalog;
+            }
         }
 
         private GameKnowledgeCatalog(List<UnitKnowledge> units, List<BuildingKnowledge> buildings,
@@ -256,6 +292,7 @@ namespace OpenEmpires
             var baseCatalog = Build(simulation.Config);
             var buildings = baseCatalog.Buildings.Select(x =>
             {
+                if (x.Landmark.HasValue) return x.Copy();
                 var cost = new KnowledgeCost(simulation.GetBuildingFoodCost(x.BuildingType),
                     simulation.GetBuildingWoodCost(x.BuildingType), simulation.GetBuildingGoldCost(x.BuildingType),
                     simulation.GetBuildingStoneCost(x.BuildingType));
@@ -269,7 +306,7 @@ namespace OpenEmpires
                 return new TechnologyKnowledge(x.TechnologyType, x.DisplayName, age,
                     new KnowledgeCost(food, 0, gold), building, ticks);
             }).ToList();
-            var civs = BuildCivilizations(baseCatalog.Units.ToList(), buildings, simulation);
+            var civs = BuildCivilizations(baseCatalog.Units.ToList(), buildings);
             return new GameKnowledgeCatalog(baseCatalog.Units.Select(x => x.Copy()).ToList(), buildings,
                 technologies, civs, baseCatalog.Ages.Select(x => x.Copy()).ToList(),
                 baseCatalog.Resources.Select(x => x.Copy()).ToList());
@@ -350,34 +387,66 @@ namespace OpenEmpires
         private static bool Contains(string value, string key) => string.IsNullOrEmpty(key) || Normalize(value).Contains(key);
         private static string Normalize(string value) => (value ?? string.Empty).Trim().ToLowerInvariant().Replace(" ", string.Empty).Replace("-", string.Empty).Replace("_", string.Empty);
 
-        private static List<UnitKnowledge> BuildUnits(SimulationConfig c)
+        private static List<UnitKnowledge> BuildUnits(SimulationConfig c, bool includeCustom = true)
         {
             var list = new List<UnitKnowledge>();
-            AddUnit(list, c, 0, "Villager", new[] { "worker", "villagers" }, 1, new KnowledgeCost(c.VillagerFoodCost, 0, 0), c.VillagerTrainTimeTicks, (int)BuildingType.TownCenter, c.VillagerMaxHealth, c.VillagerAttackDamage, c.VillagerAttackRange, c.UnitMoveSpeed, c.VillagerMeleeArmor, c.VillagerRangedArmor, false);
-            AddUnit(list, c, 1, "Spearman", new[] { "spearmen", "spear" }, 1, new KnowledgeCost(c.SpearmanFoodCost, c.SpearmanWoodCost, 0), c.SpearmanTrainTimeTicks, (int)BuildingType.Barracks, c.SpearmanMaxHealth, c.SpearmanAttackDamage, c.SpearmanAttackRange, c.UnitMoveSpeed, c.SpearmanMeleeArmor, c.SpearmanRangedArmor, false);
-            AddUnit(list, c, 2, "Archer", new[] { "archers", "bowman" }, 1, new KnowledgeCost(c.ArcherFoodCost, c.ArcherWoodCost, 0), c.ArcherTrainTimeTicks, (int)BuildingType.ArcheryRange, c.ArcherMaxHealth, c.ArcherAttackDamage, c.ArcherAttackRange, c.ArcherMoveSpeed, c.ArcherMeleeArmor, c.ArcherRangedArmor, true);
-            AddUnit(list, c, 3, "Horseman", new[] { "horsemen", "cavalry" }, 1, new KnowledgeCost(c.HorsemanFoodCost, c.HorsemanWoodCost, 0), c.HorsemanTrainTimeTicks, (int)BuildingType.Stables, c.HorsemanMaxHealth, c.HorsemanAttackDamage, c.HorsemanAttackRange, c.HorsemanMoveSpeed, c.HorsemanMeleeArmor, c.HorsemanRangedArmor, false);
-            AddUnit(list, c, 4, "Scout", new[] { "scouts" }, 1, new KnowledgeCost(c.ScoutFoodCost, c.ScoutWoodCost, 0), c.ScoutTrainTimeTicks, (int)BuildingType.Stables, c.ScoutMaxHealth, c.ScoutAttackDamage, c.ScoutAttackRange, c.ScoutMoveSpeed, c.ScoutMeleeArmor, c.ScoutRangedArmor, false);
-            AddUnit(list, c, 6, "Man-at-Arms", new[] { "manatarms", "maa" }, 3, new KnowledgeCost(c.ManAtArmsFoodCost, 0, c.ManAtArmsGoldCost), c.ManAtArmsTrainTimeTicks, (int)BuildingType.Barracks, c.ManAtArmsMaxHealth, c.ManAtArmsAttackDamage, c.ManAtArmsAttackRange, c.ManAtArmsMoveSpeed, c.ManAtArmsMeleeArmor, c.ManAtArmsRangedArmor, false);
-            AddUnit(list, c, 7, "Knight", new[] { "knights" }, 3, new KnowledgeCost(c.KnightFoodCost, 0, c.KnightGoldCost), c.KnightTrainTimeTicks, (int)BuildingType.Stables, c.KnightMaxHealth, c.KnightAttackDamage, c.KnightAttackRange, c.KnightMoveSpeed, c.KnightMeleeArmor, c.KnightRangedArmor, false);
-            AddUnit(list, c, 8, "Crossbowman", new[] { "crossbowmen", "crossbow" }, 3, new KnowledgeCost(c.CrossbowmanFoodCost, 0, c.CrossbowmanGoldCost), c.CrossbowmanTrainTimeTicks, (int)BuildingType.ArcheryRange, c.CrossbowmanMaxHealth, c.CrossbowmanAttackDamage, c.CrossbowmanAttackRange, c.CrossbowmanMoveSpeed, c.CrossbowmanMeleeArmor, c.CrossbowmanRangedArmor, true);
-            AddUnit(list, c, 9, "Monk", new[] { "monks" }, 3, new KnowledgeCost(c.MonkFoodCost, 0, c.MonkGoldCost), c.MonkTrainTimeTicks, (int)BuildingType.Monastery, c.MonkMaxHealth, c.MonkAttackDamage, c.MonkAttackRange, c.MonkMoveSpeed, c.MonkMeleeArmor, c.MonkRangedArmor, false);
-            AddUnit(list, c, 10, "Longbowman", new[] { "longbowmen", "longbow" }, 1, new KnowledgeCost(c.LongbowmanFoodCost, c.LongbowmanWoodCost, 0), c.LongbowmanTrainTimeTicks, (int)BuildingType.ArcheryRange, c.LongbowmanMaxHealth, c.LongbowmanAttackDamage, c.LongbowmanAttackRange, c.LongbowmanMoveSpeed, c.LongbowmanMeleeArmor, c.LongbowmanRangedArmor, true);
-            AddUnit(list, c, 11, "Gendarme", new[] { "gendarmes" }, 1, new KnowledgeCost(c.GendarmeFoodCost, c.GendarmeWoodCost, 0), c.GendarmeTrainTimeTicks, (int)BuildingType.Stables, c.GendarmeMaxHealth, c.GendarmeAttackDamage, c.GendarmeAttackRange, c.GendarmeMoveSpeed, c.GendarmeMeleeArmor, c.GendarmeRangedArmor, false);
-            AddUnit(list, c, 12, "Landsknecht", new[] { "landsknechts" }, 1, new KnowledgeCost(c.LandsknechtFoodCost, c.LandsknechtWoodCost, 0), c.LandsknechtTrainTimeTicks, (int)BuildingType.Barracks, c.LandsknechtMaxHealth, c.LandsknechtAttackDamage, c.LandsknechtAttackRange, c.LandsknechtMoveSpeed, c.LandsknechtMeleeArmor, c.LandsknechtRangedArmor, false);
-            AddUnit(list, c, 13, "Battering Ram", new[] { "batteringrams", "ram" }, 3, new KnowledgeCost(0, c.BatteringRamWoodCost, c.BatteringRamGoldCost), c.BatteringRamTrainTimeTicks, (int)BuildingType.SiegeWorkshop, c.BatteringRamMaxHealth, c.BatteringRamAttackDamage, c.BatteringRamAttackRange, c.BatteringRamMoveSpeed, c.BatteringRamMeleeArmor, c.BatteringRamRangedArmor, false);
-            AddUnit(list, c, 14, "Mangonel", new[] { "mangonels" }, 3, new KnowledgeCost(0, c.MangonelWoodCost, c.MangonelGoldCost), c.MangonelTrainTimeTicks, (int)BuildingType.SiegeWorkshop, c.MangonelMaxHealth, c.MangonelAttackDamage, c.MangonelAttackRange, c.MangonelMoveSpeed, c.MangonelMeleeArmor, c.MangonelRangedArmor, true);
-            AddUnit(list, c, 15, "Trebuchet", new[] { "trebuchets" }, 3, new KnowledgeCost(0, c.TrebuchetWoodCost, c.TrebuchetGoldCost), c.TrebuchetTrainTimeTicks, (int)BuildingType.SiegeWorkshop, c.TrebuchetMaxHealth, c.TrebuchetAttackDamage, c.TrebuchetAttackRange, c.TrebuchetMoveSpeed, c.TrebuchetMeleeArmor, c.TrebuchetRangedArmor, true);
-            AddUnit(list, c, UnitData.KingUnitType, "King", new[] { "kings" }, 2, new KnowledgeCost(c.KingFoodCost, 0, c.KingGoldCost), c.KingTrainTimeTicks, (int)BuildingType.Landmark, c.KingMaxHealth, c.KingAttackDamage, c.KingAttackRange, c.KingMoveSpeed, c.KingMeleeArmor, c.KingRangedArmor, false);
-            for (int i = 0; i < customUnits.Count; i++)
-                list.Add(customUnits[i].Copy());
+            AddUnit(list, c, 0, "Villager", BuildUnitAliases(0), 1, new KnowledgeCost(c.VillagerFoodCost, 0, 0), c.VillagerTrainTimeTicks, (int)BuildingType.TownCenter, c.VillagerMaxHealth, c.VillagerAttackDamage, c.VillagerAttackRange, c.UnitMoveSpeed, c.VillagerMeleeArmor, c.VillagerRangedArmor, false);
+            AddUnit(list, c, 1, "Spearman", BuildUnitAliases(1), 1, new KnowledgeCost(c.SpearmanFoodCost, c.SpearmanWoodCost, 0), c.SpearmanTrainTimeTicks, (int)BuildingType.Barracks, c.SpearmanMaxHealth, c.SpearmanAttackDamage, c.SpearmanAttackRange, c.UnitMoveSpeed, c.SpearmanMeleeArmor, c.SpearmanRangedArmor, false);
+            AddUnit(list, c, 2, "Archer", BuildUnitAliases(2), 1, new KnowledgeCost(c.ArcherFoodCost, c.ArcherWoodCost, 0), c.ArcherTrainTimeTicks, (int)BuildingType.ArcheryRange, c.ArcherMaxHealth, c.ArcherAttackDamage, c.ArcherAttackRange, c.ArcherMoveSpeed, c.ArcherMeleeArmor, c.ArcherRangedArmor, true);
+            AddUnit(list, c, 3, "Horseman", BuildUnitAliases(3), 1, new KnowledgeCost(c.HorsemanFoodCost, c.HorsemanWoodCost, 0), c.HorsemanTrainTimeTicks, (int)BuildingType.Stables, c.HorsemanMaxHealth, c.HorsemanAttackDamage, c.HorsemanAttackRange, c.HorsemanMoveSpeed, c.HorsemanMeleeArmor, c.HorsemanRangedArmor, false);
+            AddUnit(list, c, 4, "Scout", BuildUnitAliases(4), 1, new KnowledgeCost(c.ScoutFoodCost, c.ScoutWoodCost, 0), c.ScoutTrainTimeTicks, (int)BuildingType.Stables, c.ScoutMaxHealth, c.ScoutAttackDamage, c.ScoutAttackRange, c.ScoutMoveSpeed, c.ScoutMeleeArmor, c.ScoutRangedArmor, false);
+            AddUnit(list, c, 5, "Sheep", BuildUnitAliases(5), 0, new KnowledgeCost(0, 0, 0), 0, -1, c.SheepMaxHealth, 0, 0f, c.SheepMoveSpeed, 0, 0, false);
+            AddUnit(list, c, 6, "Man-at-Arms", BuildUnitAliases(6), 3, new KnowledgeCost(c.ManAtArmsFoodCost, 0, c.ManAtArmsGoldCost), c.ManAtArmsTrainTimeTicks, (int)BuildingType.Barracks, c.ManAtArmsMaxHealth, c.ManAtArmsAttackDamage, c.ManAtArmsAttackRange, c.ManAtArmsMoveSpeed, c.ManAtArmsMeleeArmor, c.ManAtArmsRangedArmor, false);
+            AddUnit(list, c, 7, "Knight", BuildUnitAliases(7), 3, new KnowledgeCost(c.KnightFoodCost, 0, c.KnightGoldCost), c.KnightTrainTimeTicks, (int)BuildingType.Stables, c.KnightMaxHealth, c.KnightAttackDamage, c.KnightAttackRange, c.KnightMoveSpeed, c.KnightMeleeArmor, c.KnightRangedArmor, false);
+            AddUnit(list, c, 8, "Crossbowman", BuildUnitAliases(8), 3, new KnowledgeCost(c.CrossbowmanFoodCost, 0, c.CrossbowmanGoldCost), c.CrossbowmanTrainTimeTicks, (int)BuildingType.ArcheryRange, c.CrossbowmanMaxHealth, c.CrossbowmanAttackDamage, c.CrossbowmanAttackRange, c.CrossbowmanMoveSpeed, c.CrossbowmanMeleeArmor, c.CrossbowmanRangedArmor, true);
+            AddUnit(list, c, 9, "Monk", BuildUnitAliases(9), 3, new KnowledgeCost(c.MonkFoodCost, 0, c.MonkGoldCost), c.MonkTrainTimeTicks, (int)BuildingType.Monastery, c.MonkMaxHealth, c.MonkAttackDamage, c.MonkAttackRange, c.MonkMoveSpeed, c.MonkMeleeArmor, c.MonkRangedArmor, false);
+            AddUnit(list, c, 10, "Longbowman", BuildUnitAliases(10), 1, new KnowledgeCost(c.LongbowmanFoodCost, c.LongbowmanWoodCost, 0), c.LongbowmanTrainTimeTicks, (int)BuildingType.ArcheryRange, c.LongbowmanMaxHealth, c.LongbowmanAttackDamage, c.LongbowmanAttackRange, c.LongbowmanMoveSpeed, c.LongbowmanMeleeArmor, c.LongbowmanRangedArmor, true);
+            AddUnit(list, c, 11, "Gendarme", BuildUnitAliases(11), 1, new KnowledgeCost(c.GendarmeFoodCost, c.GendarmeWoodCost, 0), c.GendarmeTrainTimeTicks, (int)BuildingType.Stables, c.GendarmeMaxHealth, c.GendarmeAttackDamage, c.GendarmeAttackRange, c.GendarmeMoveSpeed, c.GendarmeMeleeArmor, c.GendarmeRangedArmor, false);
+            AddUnit(list, c, 12, "Landsknecht", BuildUnitAliases(12), 1, new KnowledgeCost(c.LandsknechtFoodCost, c.LandsknechtWoodCost, 0), c.LandsknechtTrainTimeTicks, (int)BuildingType.Barracks, c.LandsknechtMaxHealth, c.LandsknechtAttackDamage, c.LandsknechtAttackRange, c.LandsknechtMoveSpeed, c.LandsknechtMeleeArmor, c.LandsknechtRangedArmor, false);
+            AddUnit(list, c, 13, "Battering Ram", BuildUnitAliases(13), 3, new KnowledgeCost(0, c.BatteringRamWoodCost, c.BatteringRamGoldCost), c.BatteringRamTrainTimeTicks, (int)BuildingType.SiegeWorkshop, c.BatteringRamMaxHealth, c.BatteringRamAttackDamage, c.BatteringRamAttackRange, c.BatteringRamMoveSpeed, c.BatteringRamMeleeArmor, c.BatteringRamRangedArmor, false);
+            AddUnit(list, c, 14, "Mangonel", BuildUnitAliases(14), 3, new KnowledgeCost(0, c.MangonelWoodCost, c.MangonelGoldCost), c.MangonelTrainTimeTicks, (int)BuildingType.SiegeWorkshop, c.MangonelMaxHealth, c.MangonelAttackDamage, c.MangonelAttackRange, c.MangonelMoveSpeed, c.MangonelMeleeArmor, c.MangonelRangedArmor, true);
+            AddUnit(list, c, 15, "Trebuchet", BuildUnitAliases(15), 3, new KnowledgeCost(0, c.TrebuchetWoodCost, c.TrebuchetGoldCost), c.TrebuchetTrainTimeTicks, (int)BuildingType.SiegeWorkshop, c.TrebuchetMaxHealth, c.TrebuchetAttackDamage, c.TrebuchetAttackRange, c.TrebuchetMoveSpeed, c.TrebuchetMeleeArmor, c.TrebuchetRangedArmor, true);
+            AddUnit(list, c, UnitData.KingUnitType, "English King", BuildUnitAliases(UnitData.KingUnitType), 2, new KnowledgeCost(c.KingFoodCost, 0, c.KingGoldCost), c.KingTrainTimeTicks, (int)BuildingType.Landmark, c.KingMaxHealth, c.KingAttackDamage, c.KingAttackRange, c.KingMoveSpeed, c.KingMeleeArmor, c.KingRangedArmor, false);
+            if (includeCustom)
+                for (int i = 0; i < customUnits.Count; i++) list.Add(customUnits[i].Copy());
             return list.OrderBy(x => x.StableId, StringComparer.Ordinal).ToList();
         }
 
         private static void AddUnit(List<UnitKnowledge> list, SimulationConfig c, int type, string name, string[] aliases, int age, KnowledgeCost cost, int train, int producer, int hp, int attack, float range, float speed, int melee, int ranged, bool isRanged)
-        { list.Add(new UnitKnowledge(type, name, aliases, age, cost, train, producer, hp, attack, range, speed, melee, ranged, isRanged)); }
+        {
+            if (GameSimulation.TryGetCanonicalProductionBuildingType(type, out BuildingType nativeProducer))
+                producer = (int)nativeProducer;
+            if (type != 5) age = LandmarkDefinitions.GetUnitRequiredAge(type);
+            list.Add(new UnitKnowledge(type, UnitInfoUI.GetUnitTypeDisplayName(type), aliases, age, cost, train, producer, hp, attack, range, speed, melee, ranged, isRanged));
+        }
 
-        private static List<BuildingKnowledge> BuildBuildings(SimulationConfig c)
+        private static string[] BuildUnitAliases(int type)
+        {
+            var aliases = new List<string> { UnitInfoUI.GetUnitTypeDisplayName(type) };
+            switch (type)
+            {
+                case 0: aliases.AddRange(new[] { "villagers", "worker", "workers", "peasant", "peasants", "builder", "builders", "vil", "vils", "vill", "vills" }); break;
+                case 1: aliases.AddRange(new[] { "spearmen", "spear" }); break;
+                case 2: aliases.AddRange(new[] { "archers", "bowman" }); break;
+                case 3: aliases.Add("horsemen"); break;
+                case 4: aliases.Add("scouts"); break;
+                case 5: aliases.Add("sheep"); break;
+                case 6: aliases.AddRange(new[] { "manatarms", "maa" }); break;
+                case 7: aliases.Add("knights"); break;
+                case 8: aliases.AddRange(new[] { "crossbowmen", "crossbow" }); break;
+                case 9: aliases.Add("monks"); break;
+                case 10: aliases.AddRange(new[] { "longbowmen", "longbow" }); break;
+                case 11: aliases.Add("gendarmes"); break;
+                case 12: aliases.Add("landsknechts"); break;
+                case 13: aliases.AddRange(new[] { "batteringrams", "ram" }); break;
+                case 14: aliases.Add("mangonels"); break;
+                case 15: aliases.Add("trebuchets"); break;
+                case UnitData.KingUnitType: aliases.AddRange(new[] { "king", "kings" }); break;
+            }
+            return aliases.Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
+        }
+
+        private static List<BuildingKnowledge> BuildBuildings(SimulationConfig c, bool includeCustom = true)
         {
             var list = new List<BuildingKnowledge>();
             foreach (BuildingType type in Enum.GetValues(typeof(BuildingType)))
@@ -407,11 +476,73 @@ namespace OpenEmpires
                     case BuildingType.Wonder: width = c.WonderFootprintWidth; height = c.WonderFootprintHeight; wood = c.WonderWoodCost; break;
                     case BuildingType.Landmark: width = c.LandmarkFootprintWidth; height = c.LandmarkFootprintHeight; break;
                 }
-                list.Add(new BuildingKnowledge(type, type.ToString(), new[] { type.ToString().ToLowerInvariant() }, LandmarkDefinitions.GetBuildingRequiredAge(type), new KnowledgeCost(0, wood, 0, stone), width, height, hp));
+                string displayName = UnitInfoUI.GetBuildingTypeDisplayName(type);
+                list.Add(new BuildingKnowledge(type, displayName, BuildBuildingAliases(type, displayName), LandmarkDefinitions.GetBuildingRequiredAge(type), new KnowledgeCost(0, wood, 0, stone), width, height, hp));
             }
-            for (int i = 0; i < customBuildings.Count; i++)
-                list.Add(customBuildings[i].Copy());
+            AppendNamedLandmarks(list);
+            if (includeCustom)
+                for (int i = 0; i < customBuildings.Count; i++) list.Add(customBuildings[i].Copy());
             return list.OrderBy(x => x.StableId, StringComparer.Ordinal).ToList();
+        }
+
+        private static string[] BuildBuildingAliases(BuildingType type, string displayName)
+        {
+            var aliases = new List<string> { type.ToString(), displayName };
+            if (GameSimulation.IsDropOffBuilding(type))
+            {
+                aliases.AddRange(new[] { "dropoff", "drop-off", "dropoff building", "drop-off building" });
+                foreach (ResourceType resource in Enum.GetValues(typeof(ResourceType)))
+                {
+                    bool acceptsResource = GameSimulation.AcceptsResourceType(type, resource);
+                    if (!acceptsResource) continue;
+                    bool acceptsOtherResource = Enum.GetValues(typeof(ResourceType)).Cast<ResourceType>()
+                        .Any(other => other != resource && GameSimulation.AcceptsResourceType(type, other));
+                    if (!acceptsOtherResource)
+                    {
+                        string resourceName = resource.ToString().ToLowerInvariant();
+                        aliases.Add(resourceName + " dropoff");
+                        aliases.Add(resourceName + " drop-off");
+                        aliases.Add(resourceName + " dropoff building");
+                    }
+                }
+            }
+            switch (type)
+            {
+                case BuildingType.House: aliases.AddRange(new[] { "houses", "home" }); break;
+                case BuildingType.Barracks: aliases.Add("barrack"); break;
+                case BuildingType.Stables: aliases.Add("stable"); break;
+                case BuildingType.TownCenter: aliases.AddRange(new[] { "towncenter", "town centers", "tc", "tcs" }); break;
+                case BuildingType.ArcheryRange: aliases.AddRange(new[] { "archeryrange", "archery ranges" }); break;
+                case BuildingType.Tower: aliases.AddRange(new[] { "towers", "watchtower", "watch tower", "watchtowers", "watch towers", "guardtower", "guard tower", "guardtowers", "guard towers" }); break;
+                case BuildingType.Mill: aliases.Add("mills"); break;
+                case BuildingType.Farm: aliases.Add("farms"); break;
+                case BuildingType.LumberYard: aliases.AddRange(new[] { "lumberyard", "lumber yards", "lumber camp", "lumbercamp", "wood camp", "woodcamp" }); break;
+                case BuildingType.Mine: aliases.AddRange(new[] { "mining camp", "miningcamp", "mines" }); break;
+                case BuildingType.Monastery: aliases.Add("monasteries"); break;
+                case BuildingType.Blacksmith: aliases.Add("blacksmiths"); break;
+                case BuildingType.Market: aliases.Add("markets"); break;
+                case BuildingType.University: aliases.Add("universities"); break;
+                case BuildingType.SiegeWorkshop: aliases.AddRange(new[] { "siege workshop", "siege workshops", "siegeworkshop" }); break;
+                case BuildingType.Keep: aliases.Add("keeps"); break;
+                case BuildingType.StoneWall: aliases.Add("stone walls"); break;
+                case BuildingType.StoneGate: aliases.Add("stone gates"); break;
+                case BuildingType.WoodGate: aliases.AddRange(new[] { "wood gate", "wood gates" }); break;
+                case BuildingType.Wonder: aliases.Add("wonders"); break;
+            }
+            return aliases.Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
+        }
+
+        private static void AppendNamedLandmarks(List<BuildingKnowledge> buildings)
+        {
+            foreach (LandmarkId id in Enum.GetValues(typeof(LandmarkId)))
+            {
+                var definition = LandmarkDefinitions.Get(id);
+                buildings.Add(new BuildingKnowledge(BuildingType.Landmark, definition.Name,
+                    new[] { definition.Name, id.ToString() }, definition.TargetAge,
+                    new KnowledgeCost(definition.FoodCost, 0, definition.GoldCost),
+                    definition.FootprintWidth, definition.FootprintHeight, definition.MaxHealth,
+                    definition.ConstructionTicks, id));
+            }
         }
 
         private static List<TechnologyKnowledge> BuildTechnologies(SimulationConfig c)
@@ -427,38 +558,36 @@ namespace OpenEmpires
             }.OrderBy(x => x.StableId, StringComparer.Ordinal).ToList();
         }
 
-        private static List<CivilizationKnowledge> BuildCivilizations(List<UnitKnowledge> units, List<BuildingKnowledge> buildings, GameSimulation simulation = null)
+        private static List<CivilizationKnowledge> BuildCivilizations(List<UnitKnowledge> units, List<BuildingKnowledge> buildings)
         {
-            var allUnits = units.Select(x => x.StableId).ToArray();
-            var allBuildings = buildings.Select(x => x.StableId).ToArray();
-            return Enum.GetValues(typeof(Civilization)).Cast<Civilization>().OrderBy(x => (int)x)
+            var nativeUnits = units.Where(x => x.UnitType >= 0 && x.UnitType <= UnitData.KingUnitType
+                    && x.UnitType != 5 && x.UnitType != UnitData.KingUnitType).ToArray();
+            var civilizations = Enum.GetValues(typeof(Civilization)).Cast<Civilization>().ToArray();
+            var variantTypes = new HashSet<int>();
+            foreach (Civilization civ in civilizations)
+                foreach (UnitKnowledge unit in nativeUnits)
+                {
+                    int resolved = GameSimulation.ResolveCanonicalCivilizationUnitType(civ, unit.UnitType);
+                    if (resolved != unit.UnitType) variantTypes.Add(resolved);
+                }
+            var allBuildings = buildings.Where(x => Enum.IsDefined(typeof(BuildingType), x.BuildingType))
+                .Select(x => x.StableId).ToArray();
+            return civilizations.OrderBy(x => (int)x)
                 .Select(x =>
                 {
-                    var available = new HashSet<string>(allUnits, StringComparer.Ordinal);
-                    if (simulation != null)
+                    var available = new HashSet<string>(StringComparer.Ordinal);
+                    foreach (UnitKnowledge unit in nativeUnits)
                     {
-                        foreach (var unit in units)
-                        {
-                            int resolved = simulation.ResolveCivUnitType(x, unit.UnitType);
-                            if (resolved != unit.UnitType)
-                            {
-                                available.Remove(unit.StableId);
-                                available.Add("unit:" + resolved);
-                            }
-                        }
+                        int resolved = GameSimulation.ResolveCanonicalCivilizationUnitType(x, unit.UnitType);
+                        if (resolved == unit.UnitType && !variantTypes.Contains(unit.UnitType))
+                            available.Add(unit.StableId);
+                        else if (resolved != unit.UnitType)
+                            available.Add("unit:" + resolved);
                     }
-                    else
-                    {
-                        // Config-only construction is retained for editor tooling; runtime
-                        // projections use the canonical simulation resolver above.
-                        switch (x)
-                        {
-                            case Civilization.English: available.Remove("unit:2"); available.Add("unit:10"); break;
-                            case Civilization.French: available.Remove("unit:3"); available.Add("unit:11"); break;
-                            case Civilization.HolyRomanEmpire: available.Remove("unit:1"); available.Add("unit:12"); break;
-                        }
-                    }
-                    return new CivilizationKnowledge(x, available.OrderBy(v => v, StringComparer.Ordinal).ToArray(), (string[])allBuildings.Clone());
+                    var availableBuildings = buildings.Where(b => Enum.IsDefined(typeof(BuildingType), b.BuildingType)
+                        && (!b.Landmark.HasValue || LandmarkDefinitions.Get(b.Landmark.Value).Civ == x))
+                        .Select(b => b.StableId).OrderBy(v => v, StringComparer.Ordinal).ToArray();
+                    return new CivilizationKnowledge(x, available.OrderBy(v => v, StringComparer.Ordinal).ToArray(), availableBuildings);
                 }).ToList();
         }
     }

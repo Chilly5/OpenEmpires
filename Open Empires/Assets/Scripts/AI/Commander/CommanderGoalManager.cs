@@ -115,6 +115,8 @@ namespace OpenEmpires
             simulation.TrainingOrderAccepted += HandleTrainingAccepted;
             simulation.TrackedUnitProduced += HandleTrackedUnitProduced;
             simulation.TrainingOriginLost += HandleTrainingOriginLost;
+            simulation.ProducerUnitProduced += HandleFutureBirth;
+            simulation.LocalActionCommandProcessed += HandleFutureCommandProcessed;
             planner = new CommanderPlanner(simulation, workerAuthority,
                 pathValidationCandidates);
         }
@@ -266,6 +268,14 @@ namespace OpenEmpires
                 {
                     goal = new AllocateWorkersGoal(playerId, workers.Allocation, maxDurationTicks);
                 }
+                else if (node.Intent is WatchFutureUnitsIntent future)
+                {
+                    if (!plan.Authorization.FutureProducerBindings.TryGetValue(index, out var producer)
+                        || producer == null)
+                        throw new ArgumentException("The approved producer binding is unavailable.", nameof(plan));
+                    goal = new WatchFutureUnitsGoal(future, producer, maxDurationTicks,
+                        simulation.LastProducerBirthOrdinal);
+                }
                 else if (node.Intent is SetResourceAllocationIntent allocation)
                 {
                     int target = allocation.Mode == ResourceAllocationMode.Increase
@@ -313,6 +323,12 @@ namespace OpenEmpires
                 {
                     var capability = byIndex[i] as CommanderCapabilityGoal;
                     CommanderGoal source = byIndex[node.ResultFromNode.Value];
+                    if (byIndex[i] is AllocateWorkersGoal allocation && source is EnsureUnitCountGoal produced)
+                    {
+                        allocation.ResultSourceGoal = produced;
+                        produced.HasResultConsumer = true;
+                        continue;
+                    }
                     if (capability == null) throw new ArgumentException(
                         "Only capability actions may consume a result reference.", nameof(plan));
                     capability.RequiresResultBinding = true;
@@ -366,6 +382,7 @@ namespace OpenEmpires
                 goal.RuntimeOwner = this;
                 goal.CreatedTick = simulation.CurrentTick;
                 goal.RequestAuthority = plan.Authorization;
+                CaptureResourceObjectiveBaseline(goal);
                 goal.RequestNodeIndex = plan.TopologicalOrder[i];
                 goals.Add(goal);
                 activeGoals.Add(goal);
@@ -419,6 +436,7 @@ namespace OpenEmpires
             goal.GoalId = nextGoalId++;
             goal.RuntimeOwner = this;
             goal.CreatedTick = simulation.CurrentTick;
+            CaptureResourceObjectiveBaseline(goal);
             planner.CaptureConstraints(goal, constraints);
             goals.Add(goal);
             activeGoals.Add(goal);
@@ -427,6 +445,13 @@ namespace OpenEmpires
             if (goal.RequestAuthority != null) PublishCommittedGraphEvent(goal);
             else PublishEvent(CommanderGoalEventType.GoalStarted, goal, simulation.CurrentTick);
             return goal;
+        }
+
+        private void CaptureResourceObjectiveBaseline(CommanderGoal goal)
+        {
+            if (goal is AllocateWorkersGoal workers && workers.Allocation.ResourceAmount.HasValue)
+                workers.GatheredIncomeAtActivation = simulation.ResourceManager.GetGatheredIncome(playerId,
+                    workers.Allocation.Destination.Resource);
         }
 
         private void ArchiveGoal(CommanderGoal goal)
@@ -467,6 +492,11 @@ namespace OpenEmpires
                     cancelledBuild.PendingPlacementCommand = null;
                 if (goal is ReachAgeGoal cancelledAge)
                     cancelledAge.PendingAgeUpCommand = null;
+                if (goal is WatchFutureUnitsGoal cancelledFuture)
+                {
+                    SuppressFuturePendingActions(cancelledFuture);
+                    cancelledFuture.ReleaseObservations();
+                }
                 goal.SetStatus(CommanderGoalStatus.Cancelled, "Cancelled by the owning player.");
                 ReleaseGoalTrainingOrigins(goal);
                 workerAuthority.ReleaseGoal(goal.GoalId);
@@ -564,6 +594,11 @@ namespace OpenEmpires
                     bool changed = goal.SetStatus(plan.Status, plan.Reason);
                     if (goal.IsTerminal)
                     {
+                        if (goal is WatchFutureUnitsGoal terminalFuture)
+                        {
+                            SuppressFuturePendingActions(terminalFuture);
+                            terminalFuture.ReleaseObservations();
+                        }
                         workerAuthority.ReleaseGoal(goal.GoalId);
                         ArchiveGoal(goal);
                     }
@@ -601,6 +636,16 @@ namespace OpenEmpires
                             capability.IssuedCommand = plan.Command;
                             capability.CommandIssuedSimulationTick = simulation.CurrentTick;
                         }
+                        if (goal is WatchFutureUnitsGoal future)
+                        {
+                            int[] subjects = CommanderWorkerAuthority.GetSubjectUnitIds(plan.Command);
+                            if (subjects != null)
+                                foreach (int id in subjects)
+                                {
+                                    future.issuedUnitIds.Add(id);
+                                    future.pendingCommands[id] = plan.Command;
+                                }
+                        }
                         if (plan.Command is GatherCommand) goal.LastEconomyCommandTick = currentTick;
                         if (plan.Command is ConstructBuildingCommand)
                         {
@@ -636,6 +681,11 @@ namespace OpenEmpires
         private void FailGoal(CommanderGoal goal, string reason, int currentTick)
         {
             goal.SetStatus(CommanderGoalStatus.Failed, reason);
+            if (goal is WatchFutureUnitsGoal failedFuture)
+            {
+                SuppressFuturePendingActions(failedFuture);
+                failedFuture.ReleaseObservations();
+            }
             ReleaseGoalTrainingOrigins(goal);
             if (goal is BuildStructureGoal failedBuild)
                 failedBuild.PendingPlacementCommand = null;
@@ -678,6 +728,7 @@ namespace OpenEmpires
             if (source == CommandEnqueueSource.Commander || command.PlayerId != playerId) return;
             int[] subjects = CommanderWorkerAuthority.GetSubjectUnitIds(command);
             if (subjects == null) return;
+            ObserveFutureHumanOrder(subjects);
             foreach (var boundGoal in activeGoals)
             {
                 foreach (var preparation in boundGoal.PreparationAllocators.Values)
@@ -802,10 +853,14 @@ namespace OpenEmpires
             if (disposed) return;
             disposed = true;
             ReleaseTrainingObservations();
+            simulation.ProducerUnitProduced -= HandleFutureBirth;
+            simulation.LocalActionCommandProcessed -= HandleFutureCommandProcessed;
             simulation.CommandBuffer.CommandEnqueued -= HandleCommandEnqueued;
             simulation.OnBuildingPlacedFromCommand -= HandleBuildingPlacedFromCommand;
             for (int i = 0; i < activeGoals.Count; i++)
             {
+                if (activeGoals[i] is WatchFutureUnitsGoal future)
+                    SuppressFuturePendingActions(future);
                 if (activeGoals[i] is BuildStructureGoal spatial)
                     spatial.PendingPlacementCommand = null;
                 if (activeGoals[i] is ReachAgeGoal reachAge)

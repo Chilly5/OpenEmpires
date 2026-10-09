@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenEmpires
 {
@@ -73,7 +74,12 @@ namespace OpenEmpires
             }
 
             if (intent is EnsureUnitCountIntent ensure)
+            {
+                if (!IsUnitAvailableToCivilization(simulation, ensure.PlayerId, ensure.UnitType))
+                    return Invalid(CommanderIntentErrorCode.UnknownUnit,
+                        "This known unit is unavailable to the player's civilization; no different unit will substitute.");
                 return ValidateEnsureUnitCount(ensure, simulation.Config.MaxPopulation);
+            }
             if (intent is SetResourceAllocationIntent allocation)
                 return ValidateResourceAllocation(allocation, simulation.Config.MaxPopulation);
             if (intent is AllocateWorkersIntent workers)
@@ -86,9 +92,33 @@ namespace OpenEmpires
                 return ValidateReachAge(reachAge);
             if (intent is CapabilityActionIntent capability)
                 return ValidateCapabilityAction(capability);
+            if (intent is WatchFutureUnitsIntent future)
+            {
+                if (future.Count < 1 || future.Count > 50 || future.Count > simulation.Config.MaxPopulation
+                    || !Enum.IsDefined(typeof(CommanderFutureUnitAction), future.Action)
+                    || !Enum.IsDefined(typeof(ResourceType), future.Resource)
+                    || !Enum.IsDefined(typeof(ResourceSourceKind), future.SourceKind)
+                    || future.ProducerOrdinal.HasValue && (future.ProducerOrdinal < 1 || future.ProducerOrdinal > 8)
+                    || future.Action == CommanderFutureUnitAction.Gather && future.UnitType != 0
+                    || !simulation.TryGetProductionBuildingType(future.PlayerId, future.UnitType, out _)
+                    || !IsUnitAvailableToCivilization(simulation, future.PlayerId, future.UnitType))
+                    return Invalid(CommanderIntentErrorCode.UnknownCommand, "Invalid finite future-unit order.");
+                return CommanderIntentValidationResult.Valid();
+            }
 
             return Invalid(CommanderIntentErrorCode.UnknownCommand,
                 "The Commander intent type is not recognized.");
+        }
+
+        private static bool IsUnitAvailableToCivilization(GameSimulation simulation, int playerId, int requestedType)
+        {
+            int resolved = simulation.ResolveCivUnitType(playerId, requestedType);
+            var catalog = GameKnowledgeCatalog.Build(simulation);
+            var unit = catalog.FindUnitByType(resolved);
+            var civilization = catalog.Civilizations.FirstOrDefault(c =>
+                c.Civilization == simulation.GetPlayerCivilization(playerId));
+            return unit != null && civilization != null
+                && civilization.AvailableUnitIds.Contains(unit.StableId);
         }
 
         private static CommanderIntentValidationResult ValidateEnsureUnitCount(

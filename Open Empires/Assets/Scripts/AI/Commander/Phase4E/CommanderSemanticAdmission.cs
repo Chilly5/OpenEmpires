@@ -22,6 +22,20 @@ namespace OpenEmpires
                 dto.constraints.Add(CommanderIntentDtoCodec.FromConstraint(constraint));
             switch (node.Type)
             {
+                case CommanderSemanticNodeType.WatchFutureUnits:
+                    if (!node.UnitType.HasValue || !node.Count.HasValue || !node.BuildingType.HasValue
+                        || !node.FutureAction.HasValue || !node.ResourceType.HasValue
+                        || node.Count.Value < 1 || node.Count.Value > 50
+                        || node.ProducerOrdinal < 1 && node.ProducerOrdinal.HasValue
+                        || node.ProducerOrdinal > 8
+                        || node.FutureAction == CommanderFutureUnitAction.Gather && node.UnitType != 0)
+                        return false;
+                    intent = new WatchFutureUnitsIntent(context.PlayerId, node.UnitType.Value,
+                        node.Count.Value, node.BuildingType.Value, node.ProducerOrdinal,
+                        node.FutureAction.Value, node.ResourceType.Value,
+                        node.SourceKind ?? ResourceSourceKind.Any);
+                    safeReason = string.Empty;
+                    return true;
                 case CommanderSemanticNodeType.EnsureUnitCount:
                     if (!node.UnitType.HasValue || !node.Count.HasValue
                         || !CommanderIntentCatalog.IsSupportedUnit(node.UnitType.Value)

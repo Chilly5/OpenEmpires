@@ -117,6 +117,8 @@ namespace OpenEmpires
             // Keeping initialization idempotent also makes programmatic local hosts safe.
             EnsureLocalSurface();
             ResetVoiceControls(); // Invalidate old voice work before replacing ANY runtime affinity.
+            if (semanticGoalManager != null && !semanticGoalManager.IsDisposed)
+                semanticGoalManager.CancelFutureSubscriptions();
             runtimeGeneration++;
             pendingClarification = null;
             ClearActionPlanPreview();
@@ -435,9 +437,10 @@ namespace OpenEmpires
                         && ReferenceEquals(semanticSimulation, simulation)
                         && ReferenceEquals(semanticDispatcher, dispatcher)
                         && ReferenceEquals(semanticProvider, provider);
-                    var requestTicket = manager.BeginSemanticRequest(message, generation, IsCurrentScope);
+                    var requestTicket = capturedPending?.RequestTicket ?? manager.BeginSemanticRequest(message, generation, IsCurrentScope);
                     semanticStage = "context-projection";
-                    CommanderContext context = new CommanderContextBuilder().Build(simulation, manager);
+                    CommanderContext context = new CommanderContextBuilder().Build(simulation, manager,
+                        capturedPending?.OriginalText ?? message);
                     if (context.PlayerId != owner)
                     {
                         AppendLine("Commander", "Commander ownership changed; ask again.");
@@ -499,7 +502,7 @@ namespace OpenEmpires
                     if (result.Outcome != CommanderSemanticOutcome.Request
                         && result.Outcome != CommanderSemanticOutcome.DynamicPlan)
                     {
-                        if (HandleClarificationResult(result, capturedPending, message, generation)) return null;
+                        if (HandleClarificationResult(result, capturedPending, message, generation, requestTicket)) return null;
                         if (result.Outcome == CommanderSemanticOutcome.Clarify)
                             Conversation.SemanticMemory.RecordClarification(result.SafeExplanation);
                         AppendLine("Commander", string.IsNullOrWhiteSpace(result.SafeExplanation)
@@ -507,7 +510,7 @@ namespace OpenEmpires
                             : result.SafeExplanation);
                         return null;
                     }
-                    if (HandleClarificationResult(result, capturedPending, message, generation)) return null;
+                    if (HandleClarificationResult(result, capturedPending, message, generation, requestTicket)) return null;
                     if (result.Outcome == CommanderSemanticOutcome.DynamicPlan)
                     {
                         semanticStage = "dynamic-admission";
@@ -523,7 +526,7 @@ namespace OpenEmpires
                         AppendLine("Commander", "That compound Commander request is outside the bounded request limit.");
                         return null;
                     }
-                    if (result.Nodes.Count > 1)
+                    if (result.Nodes.Count > 1 || result.Nodes[0].Type == CommanderSemanticNodeType.WatchFutureUnits)
                     {
                         semanticStage = "graph-admission";
                         if (!CommanderSemanticGraphAdmission.TryAdmit(result, context,
@@ -788,6 +791,8 @@ namespace OpenEmpires
 
         public void ResetConversation()
         {
+            if (semanticGoalManager != null && !semanticGoalManager.IsDisposed)
+                semanticGoalManager.CancelFutureSubscriptions();
             ClearActionPlanPreview();
             pendingClarification = null;
             runtimeGeneration++;

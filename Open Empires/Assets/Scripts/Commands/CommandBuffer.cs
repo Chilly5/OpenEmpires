@@ -34,5 +34,18 @@ namespace OpenEmpires
             pendingCommands.Clear();
             return executingCommands;
         }
+
+        // Only an exact still-pending boxed command can be removed. This never
+        // changes an unrelated human order or a command already executed.
+        internal bool RemovePendingExact(ICommand command)
+        {
+            for (int i = 0; i < pendingCommands.Count; i++)
+                if (ReferenceEquals(pendingCommands[i], command))
+                {
+                    pendingCommands.RemoveAt(i);
+                    return true;
+                }
+            return false;
+        }
     }
 }

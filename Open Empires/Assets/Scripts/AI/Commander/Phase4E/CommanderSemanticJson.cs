@@ -111,16 +111,8 @@ namespace OpenEmpires
             {
                 case "EnsureUnitCount":
                     CheckFields(node, "type", "unit", "count", "dependsOn", "producerFromNode", "constraints", "quantityMode");
-                    int unit;
-                    switch (RequiredString(node, "unit"))
-                    {
-                        case "Villager": unit = 0; break;
-                        case "Spearman": unit = 1; break;
-                        case "Archer": unit = 2; break;
-                        case "Scout": unit = 4; break;
-                        case "Knight": unit = 7; break;
-                        default: throw new JsonException();
-                    }
+                    if (!CommanderIntentCatalog.TryResolveUnit(RequiredString(node, "unit"), out int unit)
+                        || !CommanderIntentCatalog.IsSupportedUnit(unit)) throw new JsonException();
                     var quantityMode = CommanderProductionQuantityMode.TargetTotal;
                     if (node.Property("quantityMode") != null)
                     {
@@ -199,7 +191,37 @@ namespace OpenEmpires
 
                 case "AllocateWorkers":
                     return new CommanderSemanticNode(CommanderSemanticNodeType.AllocateWorkers,
-                        workerAllocation: ParseWorkerAllocation(node), dependsOn: dependsOn);
+                        workerAllocation: ParseWorkerAllocation(node), dependsOn: dependsOn,
+                        resultFromNode: ParseOptionalNodeIndex(node, "resultFromNode"));
+
+                case "WatchFutureUnits":
+                    CheckFields(node, "type", "unit", "count", "producer", "producerOrdinal",
+                        "action", "resource", "sourceKind", "location", "dependsOn");
+                    if (!CommanderIntentCatalog.TryResolveUnit(RequiredString(node, "unit"), out int watchedUnit)
+                        || !CommanderIntentCatalog.IsSupportedUnit(watchedUnit)) throw new JsonException();
+                    BuildingType watchedProducer = ParseBuilding(RequiredString(node, "producer"));
+                    string actionName = RequiredString(node, "action");
+                    CommanderFutureUnitAction watchedAction;
+                    if (actionName == "Gather") watchedAction = CommanderFutureUnitAction.Gather;
+                    else if (actionName == "Patrol") watchedAction = CommanderFutureUnitAction.Patrol;
+                    else throw new JsonException();
+                    if (watchedAction == CommanderFutureUnitAction.Patrol
+                        && (RequiredString(node, "location") != "WorkedResource"
+                            || node.Property("sourceKind") != null)) throw new JsonException();
+                    if (watchedAction == CommanderFutureUnitAction.Gather && node.Property("location") != null)
+                        throw new JsonException();
+                    ResourceType watchedResource = ParseResource(RequiredString(node, "resource"));
+                    if (watchedAction == CommanderFutureUnitAction.Gather && watchedUnit != 0)
+                        throw new JsonException();
+                    ResourceSourceKind? watchedSource = node.Property("sourceKind") == null
+                        ? (ResourceSourceKind?)null : RequiredSemanticEnum<ResourceSourceKind>(node, "sourceKind");
+                    int? watchedOrdinal = node.Property("producerOrdinal") == null ? (int?)null
+                        : RequiredBoundedInteger(node, "producerOrdinal", 1, 8);
+                    if (!CanProduce(watchedProducer, watchedUnit)) throw new JsonException();
+                    return new CommanderSemanticNode(CommanderSemanticNodeType.WatchFutureUnits,
+                        unitType: watchedUnit, buildingType: watchedProducer, count: RequiredCount(node, 1, 50),
+                        resourceType: watchedResource, dependsOn: dependsOn,
+                        producerOrdinal: watchedOrdinal, futureAction: watchedAction, sourceKind: watchedSource);
 
                 case "ReachAge":
                     CheckFields(node, "type", "targetAge", "dependsOn", "constraints");
@@ -277,16 +299,17 @@ namespace OpenEmpires
                 CheckFields(target, "kind", "unit");
                 string unit = RequiredString(target, "unit");
                 if (!CommanderIntentCatalog.TryResolveUnit(unit, out int type)
-                    || CommanderIntentCatalog.GetUnitDisplayName(type) != unit) throw new JsonException();
+                    || !CommanderIntentCatalog.IsSupportedUnit(type)) throw new JsonException();
                 return new CommanderTargetSelector(type);
             }
             if (kind == "BuildingType")
             {
                 CheckFields(target, "kind", "structure");
                 string name = RequiredString(target, "structure");
-                if (!Enum.TryParse(name, false, out BuildingType type)
-                    || !Enum.IsDefined(typeof(BuildingType), type) || type.ToString() != name) throw new JsonException();
-                return new CommanderTargetSelector(type);
+                var building = CommanderContentNameResolver.ResolveBuilding(name,
+                    GameKnowledgeCatalog.BuildCanonicalIdentityCatalog(), Civilization.English);
+                if (building.Status != CommanderContentResolutionStatus.Resolved || building.Match.Landmark.HasValue) throw new JsonException();
+                return new CommanderTargetSelector(building.Match.BuildingType);
             }
             throw new JsonException();
         }
@@ -388,9 +411,13 @@ namespace OpenEmpires
                     bool compatible = false;
                     if (source.Type == CommanderSemanticNodeType.EnsureUnitCount)
                     {
-                        if (!source.UnitType.HasValue || !node.UnitSelector.HasValue)
-                            throw new JsonException();
-                        compatible = CanBindUnitResult(node.UnitSelector.Value, source.UnitType.Value);
+                        if (!source.UnitType.HasValue) throw new JsonException();
+                        compatible = node.Type == CommanderSemanticNodeType.AllocateWorkers
+                            ? source.UnitType.Value == 0 && source.QuantityMode == CommanderProductionQuantityMode.New
+                                && node.WorkerAllocation != null
+                                && node.WorkerAllocation.CountMode == CommanderWorkerCountMode.Exact
+                                && node.WorkerAllocation.Count == source.Count
+                            : node.UnitSelector.HasValue && CanBindUnitResult(node.UnitSelector.Value, source.UnitType.Value);
                     }
                     else if (source.Type == CommanderSemanticNodeType.BuildStructure)
                     {
@@ -421,27 +448,21 @@ namespace OpenEmpires
         {
             switch (selector)
             {
-                case CommanderSemanticUnitSelector.Spearman: return unitType == 1;
-                case CommanderSemanticUnitSelector.Archer: return unitType == 2;
+                case CommanderSemanticUnitSelector.Spearman: return unitType == 1 || unitType == 12;
+                case CommanderSemanticUnitSelector.Archer: return unitType == 2 || unitType == 10;
                 case CommanderSemanticUnitSelector.Knight: return unitType == 7;
                 case CommanderSemanticUnitSelector.Scout: return unitType == 4;
                 case CommanderSemanticUnitSelector.Villagers: return unitType == 0;
-                case CommanderSemanticUnitSelector.Military: return unitType != 0 && unitType != 4;
+                case CommanderSemanticUnitSelector.Military: return CommanderIntentCatalog.IsSupportedUnit(unitType) && unitType != 0 && unitType != 4;
                 default: return false;
             }
         }
 
         private static bool CanProduce(BuildingType producer, int unitType)
         {
-            switch (unitType)
-            {
-                case 0: return producer == BuildingType.TownCenter;
-                case 1: return producer == BuildingType.Barracks;
-                case 2: return producer == BuildingType.ArcheryRange;
-                case 4: return producer == BuildingType.Stables;
-                case 7: return producer == BuildingType.Stables;
-                default: return false;
-            }
+            UnitKnowledge unit = GameKnowledgeCatalog.BuildCanonicalIdentityCatalog().FindUnitByType(unitType);
+            return unit != null && CommanderIntentCatalog.IsSupportedUnit(unitType)
+                && (BuildingType)unit.ProductionBuildingType == producer;
         }
 
 
@@ -450,8 +471,7 @@ namespace OpenEmpires
             // One trusted adapter catalog, not a second parser-only content whitelist.
             // Exact enum spelling rejects numeric/default-enum strings; discovery alone
             // still cannot make an unsupported construction mechanic executable.
-            if (Enum.TryParse(name, false, out BuildingType structure)
-                && Enum.IsDefined(typeof(BuildingType), structure) && structure.ToString() == name
+            if (CommanderIntentCatalog.TryResolveStructure(name, out BuildingType structure)
                 && CommanderIntentCatalog.IsSupportedStructure(structure)) return structure;
             throw new JsonException();
         }

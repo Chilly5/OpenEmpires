@@ -98,13 +98,14 @@ namespace OpenEmpires.Tests
         }
 
         [Test]
-        public void CapabilityCatalog_DoesNotGrantUnsupportedDiscoveredContent()
+        public void CapabilityCatalog_ExecutesNativeRosterButNotCustomDiscoveredContent()
         {
             var capability = new CommanderCapabilityCatalog();
             Assert.IsNotNull(catalog.FindUnit("Spearman"));
-            Assert.IsFalse(capability.CanExecuteUnit(13));
-            UnitKnowledge ignored;
-            Assert.IsFalse(capability.TryResolveUnit(catalog, "unit:13", out ignored));
+            Assert.IsTrue(capability.CanExecuteUnit(13));
+            UnitKnowledge siege;
+            Assert.IsTrue(capability.TryResolveUnit(catalog, "unit:13", out siege));
+            Assert.AreEqual("Battering Ram", siege.DisplayName);
         }
 
         [Test]
@@ -173,9 +174,12 @@ namespace OpenEmpires.Tests
             foreach (Civilization civ in System.Enum.GetValues(typeof(Civilization)))
             {
                 var row = projected.Civilizations.Single(x => x.Civilization == civ);
-                foreach (var unit in projected.Units)
+                // Registered unique/reward/fauna content is known, but is not part
+                // of every civilization's trainable roster. Project base requests only.
+                foreach (int type in new[] { 0, 1, 2, 3, 4, 6, 7, 8, 9, 13, 14, 15 })
                 {
-                    int resolved = sim.ResolveCivUnitType(civ, unit.UnitType);
+                    var unit = projected.Units.Single(x => x.UnitType == type);
+                    int resolved = sim.ResolveCivUnitType(civ, type);
                     Assert.IsTrue(row.AvailableUnitIds.Contains("unit:" + resolved), civ + "/unit:" + resolved);
                     if (resolved != unit.UnitType)
                         Assert.IsFalse(row.AvailableUnitIds.Contains(unit.StableId), civ + "/replaced/" + unit.StableId);

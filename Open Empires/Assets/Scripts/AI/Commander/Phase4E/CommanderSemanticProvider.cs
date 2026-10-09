@@ -62,8 +62,11 @@ namespace OpenEmpires
             {
                 string name = UnitName(unit.UnitType);
                 if (name != null)
+                {
+                    unitCounts.TryGetValue(name, out int count);
                     unitCounts[name] = (int)Math.Min(200L,
-                        (long)unitCounts[name] + Math.Max(0, unit.Count));
+                        (long)count + Math.Max(0, unit.Count));
+                }
             }
 
             var buildingCounts = new SortedDictionary<string, int>(StringComparer.Ordinal)
@@ -90,7 +93,9 @@ namespace OpenEmpires
                 ["canonicalBuildingIds"] = new JArray(context.CanonicalBuildingIds),
                 ["ownedUnitCounts"] = JObject.FromObject(unitCounts),
                 ["ownedBuildingCounts"] = JObject.FromObject(buildingCounts),
-                ["unitCapabilities"] = new JArray("Villager", "Spearman", "Archer", "Scout", "Knight"),
+                ["unitCapabilities"] = new JArray(context.CanonicalUnitIds
+                    .Select(id => GameKnowledgeCatalog.BuildCanonicalIdentityCatalog().FindUnit(id)?.DisplayName)
+                    .Where(name => name != null).OrderBy(name => name, StringComparer.Ordinal)),
                 ["structureCapabilities"] = structureNames.Length > 0 ? new JArray(structureNames)
                     : new JArray("House", "Barracks", "ArcheryRange", "Stables", "Mill", "Tower", "TownCenter"),
                 ["resourceCapabilities"] = new JArray("Food", "Wood", "Gold", "Stone"),
@@ -134,19 +139,7 @@ namespace OpenEmpires
         }
 
         private static string UnitName(int type)
-        {
-            switch (type)
-            {
-                case 0: return "Villager";
-                case 1:
-                case 12: return "Spearman"; // HRE Landsknecht resolves from Spearman.
-                case 2:
-                case 10: return "Archer"; // English Longbowman resolves from Archer.
-                case 7: return "Knight";
-                case 4: return "Scout";
-                default: return null;
-            }
-        }
+            => GameKnowledgeCatalog.BuildCanonicalIdentityCatalog().FindUnitByType(type)?.DisplayName;
     }
 
     public sealed partial class CommanderSemanticResult

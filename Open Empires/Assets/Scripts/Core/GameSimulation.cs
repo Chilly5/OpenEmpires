@@ -128,6 +128,10 @@ namespace OpenEmpires
 
         /// <summary>Read-only civilization replacement query for detached planning projections.</summary>
         public int ResolveCivUnitType(Civilization civ, int baseUnitType)
+            => ResolveCanonicalCivilizationUnitType(civ, baseUnitType);
+
+        /// <summary>Static read-only adapter for canonical civilization replacement identity.</summary>
+        public static int ResolveCanonicalCivilizationUnitType(Civilization civ, int baseUnitType)
         {
             return (civ, baseUnitType) switch
             {
@@ -316,6 +320,20 @@ namespace OpenEmpires
                 if (value == BuildingType.Landmark) continue;
                 if (!CanBuildingTypeTrainUnit(value, requestedUnitType, resolved)) continue;
                 type = value;
+                return true;
+            }
+            type = default;
+            return false;
+        }
+
+        /// <summary>Pure native producer lookup for canonical unit identity projections.</summary>
+        public static bool TryGetCanonicalProductionBuildingType(int unitType, out BuildingType type)
+        {
+            foreach (BuildingType candidate in System.Enum.GetValues(typeof(BuildingType)))
+            {
+                if (candidate == BuildingType.Landmark) continue;
+                if (!CanBuildingTypeTrainUnit(candidate, unitType, unitType)) continue;
+                type = candidate;
                 return true;
             }
             type = default;
@@ -1698,6 +1716,7 @@ namespace OpenEmpires
 
         private void ProcessCommand(ICommand command, ICommand verifiedOriginal = null)
         {
+            if (ConsumeSuppressedLocalAction(command)) return;
             switch (command)
             {
                 case MoveCommand move:
@@ -1827,6 +1846,9 @@ namespace OpenEmpires
                     ProcessResearchCommand(research);
                     break;
             }
+            if (command is GatherCommand || command is PatrolCommand
+                || command is SlaughterSheepCommand)
+                PublishLocalActionCommandProcessed(command);
         }
 
         public void SpawnNeutralSheep()
@@ -3324,7 +3346,7 @@ namespace OpenEmpires
                 // Resource type switching: if carrying a different type, instantly deposit
                 if (unit.CarriedResourceAmount > 0 && unit.CarriedResourceType != node.Type)
                 {
-                    ResourceManager.AddResource(unit.PlayerId, unit.CarriedResourceType, unit.CarriedResourceAmount);
+                    ResourceManager.CreditGatheredIncome(unit.PlayerId, unit.CarriedResourceType, unit.CarriedResourceAmount);
                     unit.CarriedResourceAmount = 0;
                 }
 
@@ -4822,7 +4844,7 @@ namespace OpenEmpires
             if (unit.CarriedResourceAmount <= 0)
                 return;
 
-            ResourceManager.AddResource(unit.PlayerId, unit.CarriedResourceType, unit.CarriedResourceAmount);
+            ResourceManager.CreditGatheredIncome(unit.PlayerId, unit.CarriedResourceType, unit.CarriedResourceAmount);
             unit.CarriedResourceAmount = 0;
         }
 
@@ -5513,6 +5535,7 @@ namespace OpenEmpires
             Vector2Int spawnTile = FindNearestWalkableAdjacentTile(building, spawnRef);
             FixedVector3 spawnPos = MapData.TileToWorldFixed(spawnTile.x, spawnTile.y);
             var unitData = CreateTrainedUnit(playerId, unitType, spawnPos);
+            PublishProducerUnitProduced(building, playerId, unitData.UnitType, unitData.Id);
             OnUnitTrained?.Invoke(unitData.Id, unitType, playerId);
             PublishTrackedUnitProduced(receipt, unitData.Id);
 

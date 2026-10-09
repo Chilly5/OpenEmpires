@@ -31,6 +31,8 @@ namespace OpenEmpires
         public string currentResource;
         public string sourceKind;
         public int? amount;
+        public int? resourceAmount;
+        public string resourceAmountMode;
         public List<CommanderConstraintDTO> constraints = new List<CommanderConstraintDTO>();
     }
 
@@ -74,7 +76,7 @@ namespace OpenEmpires
                     if (reader.Read()) throw new JsonException("Trailing JSON content is not allowed.");
                 }
                 NormalizeExternalJson(root);
-                CheckFields(root, "intentCategory", "intentType", "action", "location", "technology", "unitType", "objectiveType", "priority", "parameters", "unit", "structure", "resource", "mode", "targetAge", "amount", "constraints", "countMode", "workerState", "currentResource", "sourceKind", "target", "quantityMode");
+                CheckFields(root, "intentCategory", "intentType", "action", "location", "technology", "unitType", "objectiveType", "priority", "parameters", "unit", "structure", "resource", "mode", "targetAge", "amount", "constraints", "countMode", "workerState", "currentResource", "sourceKind", "target", "quantityMode", "resourceAmount", "resourceAmountMode");
                 var dto = new CommanderIntentDTO
                 {
                     intentCategory = ReadString(root, "intentCategory"),
@@ -95,7 +97,9 @@ namespace OpenEmpires
                     workerState = ReadString(root, "workerState"),
                     currentResource = ReadString(root, "currentResource"),
                     sourceKind = ReadString(root, "sourceKind"),
-                    amount = ReadAmount(root, "amount")
+                    amount = ReadAmount(root, "amount"),
+                    resourceAmount = ReadAmount(root, "resourceAmount"),
+                    resourceAmountMode = ReadString(root, "resourceAmountMode")
                 };
                 if (root.TryGetValue("target", out var targetToken))
                 {
@@ -136,7 +140,8 @@ namespace OpenEmpires
             if (dto?.quantityMode != null && (dto.intentType != nameof(CommanderIntentType.EnsureUnitCount)
                 || string.Equals(dto.intentCategory, "Strategic", StringComparison.OrdinalIgnoreCase))) return UnexpectedFields();
             if (dto != null && dto.intentType != nameof(CommanderIntentType.AllocateWorkers)
-                && (dto.countMode != null || dto.workerState != null || dto.currentResource != null || dto.sourceKind != null))
+                && (dto.countMode != null || dto.workerState != null || dto.currentResource != null || dto.sourceKind != null
+                    || dto.resourceAmount.HasValue || dto.resourceAmountMode != null))
                 return UnexpectedFields();
             if (context == null) return Reject(CommanderIntentErrorCode.InvalidPlayer, "context", "Missing trusted player context.");
             if (dto == null) return Reject(CommanderIntentErrorCode.UnknownCommand, "intentType", "No intent DTO supplied.");
@@ -277,9 +282,15 @@ namespace OpenEmpires
                         if (!NamedEnum(dto.currentResource, out ResourceType parsedPrevious)) return UnexpectedFields();
                         previousResource = parsedPrevious;
                     }
+                    CommanderResourceAmountMode? amountMode = null;
+                    if (dto.resourceAmountMode != null)
+                    {
+                        if (!NamedEnum(dto.resourceAmountMode, out CommanderResourceAmountMode parsedAmountMode)) return UnexpectedFields();
+                        amountMode = parsedAmountMode;
+                    }
                     var workerAllocation = new CommanderWorkerAllocation(workerMode, countMode, dto.amount,
                         new CommanderWorkerSelector(workerState, previousResource),
-                        new CommanderResourceDestination(destinationResource, sourceKind));
+                        new CommanderResourceDestination(destinationResource, sourceKind), dto.resourceAmount, amountMode);
                     if (!workerAllocation.IsValid(context.MaximumPopulation)) return InvalidAmount();
                     intent = new AllocateWorkersIntent(context.PlayerId, workerAllocation, constraints); break;
                 case CommanderIntentType.ReachAge:
@@ -486,6 +497,8 @@ namespace OpenEmpires
                 dto.currentResource = workers.Allocation.Workers?.CurrentResource?.ToString();
                 dto.resource = workers.Allocation.Destination?.Resource.ToString();
                 dto.sourceKind = workers.Allocation.Destination?.SourceKind.ToString();
+                dto.resourceAmount = workers.Allocation.ResourceAmount;
+                dto.resourceAmountMode = workers.Allocation.ResourceAmountMode?.ToString();
             }
             else if (intent is CapabilityActionIntent capability)
             {

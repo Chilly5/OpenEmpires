@@ -9,7 +9,7 @@ namespace OpenEmpires
         private static CommanderWorkerAllocationDraft ParsePendingDraft(JObject root)
         {
             if (!(root["pending"] is JObject draft)) throw new JsonException();
-            CheckFields(draft, "type", "mode", "countMode", "count", "workers", "destination");
+            CheckFields(draft, "type", "mode", "countMode", "count", "workers", "destination", "resourceAmount", "resourceAmountMode");
             if (RequiredString(draft, "type") != "AllocateWorkers") throw new JsonException();
             // Validate all already-resolved criteria with the completed strict parser.
             // Fill only temporary validation placeholders; they never become draft facts.
@@ -19,7 +19,7 @@ namespace OpenEmpires
             CommanderWorkerAllocation allocation = ParseWorkerAllocation(probe);
             var result = new CommanderWorkerAllocationDraft(allocation.Mode, allocation.CountMode,
                 draft.Property("count") == null ? (int?)null : allocation.Count, allocation.Workers,
-                draft.Property("destination") == null ? null : allocation.Destination);
+                draft.Property("destination") == null ? null : allocation.Destination, allocation.ResourceAmount, allocation.ResourceAmountMode);
             if (result.MissingFields.Count == 0 || !(root["missingFields"] is JArray missing)
                 || missing.Count != result.MissingFields.Count) throw new JsonException();
             var seen = new System.Collections.Generic.HashSet<CommanderClarificationField>();

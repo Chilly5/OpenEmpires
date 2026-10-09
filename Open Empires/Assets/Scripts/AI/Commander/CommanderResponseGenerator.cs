@@ -18,7 +18,7 @@ namespace OpenEmpires
             if (resolution.Intent is EnsureUnitCountIntent ensure)
             {
                 string units = CommanderIntentCatalog.GetUnitDisplayName(
-                    ensure.UnitType, plural: ensure.TargetTotal != 1);
+                    ResolvedType(resolution.Goal, ensure), plural: ensure.TargetTotal != 1);
                 return $"Understood.\nPreparing {ensure.TargetTotal} {units}.";
             }
 
@@ -41,7 +41,7 @@ namespace OpenEmpires
                 case CommanderGoalEventType.GoalCompleted:
                     if (intent is EnsureUnitCountIntent ensure)
                     {
-                        string units = CommanderIntentCatalog.GetUnitDisplayName(ensure.UnitType, plural: ensure.TargetTotal != 1);
+                        string units = CommanderIntentCatalog.GetUnitDisplayName(ResolvedType(goalEvent.Goal, ensure), plural: ensure.TargetTotal != 1);
                         return ensure.TargetTotal == 1 ? $"Your 1 {units} is ready."
                             : $"Your {ensure.TargetTotal} {units} are ready.";
                     }
@@ -84,5 +84,8 @@ namespace OpenEmpires
             string additional = allocation.Mode == CommanderWorkerAllocationMode.Additional ? " additional" : " selected";
             return $"I will assign exactly {allocation.Count}{additional} eligible villagers to {target}.";
         }
+
+        private static int ResolvedType(CommanderGoal goal, EnsureUnitCountIntent intent)
+            => goal?.RuntimeOwner?.Simulation.ResolveCivUnitType(intent.PlayerId, intent.UnitType) ?? intent.UnitType;
     }
 }

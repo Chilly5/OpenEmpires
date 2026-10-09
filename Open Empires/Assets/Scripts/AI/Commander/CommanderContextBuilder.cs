@@ -8,6 +8,9 @@ namespace OpenEmpires
     {
         // Call once at submission on the simulation's owning (Unity main) thread.
         public CommanderContext Build(GameSimulation simulation, CommanderGoalManager manager)
+            => Build(simulation, manager, string.Empty);
+
+        public CommanderContext Build(GameSimulation simulation, CommanderGoalManager manager, string knowledgeQuery)
         {
             if (simulation == null) throw new ArgumentNullException(nameof(simulation));
             if (manager == null) throw new ArgumentNullException(nameof(manager));
@@ -130,7 +133,8 @@ namespace OpenEmpires
                 visibleEnemyMilitary.Add(new CommanderVisibleEnemyMilitarySnapshot(
                     entry.Key, entry.Value));
             var catalog = GameKnowledgeCatalog.Build(simulation);
-            string knowledgeContext = catalog.Slice(string.Empty, 12).ToDeterministicJson();
+            string knowledgeContext = CommanderKnowledgeRetrieval.Retrieve(catalog, knowledgeQuery,
+                simulation.GetPlayerCivilization(player));
             var civilization = catalog.Civilizations.FirstOrDefault(c =>
                 c.Civilization == simulation.GetPlayerCivilization(player));
             // Detached projections over the same canonical data and implemented

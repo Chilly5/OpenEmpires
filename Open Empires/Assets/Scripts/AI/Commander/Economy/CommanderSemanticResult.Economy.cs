@@ -8,7 +8,7 @@ namespace OpenEmpires
     {
         private static CommanderWorkerAllocation ParseWorkerAllocation(JObject node)
         {
-            CheckFields(node, "type", "mode", "countMode", "count", "workers", "destination", "dependsOn");
+            CheckFields(node, "type", "mode", "countMode", "count", "workers", "destination", "dependsOn", "resultFromNode", "resourceAmount", "resourceAmountMode");
             if (!(node["workers"] is JObject worker) || !(node["destination"] is JObject destination)) throw new JsonException();
             CheckFields(worker, "state", "currentResource");
             CheckFields(destination, "resource", "sourceKind");
@@ -22,7 +22,9 @@ namespace OpenEmpires
             var source = destination.Property("sourceKind") == null ? ResourceSourceKind.Any
                 : RequiredSemanticEnum<ResourceSourceKind>(destination, "sourceKind");
             var allocation = new CommanderWorkerAllocation(mode, countMode, count,
-                new CommanderWorkerSelector(state, current), new CommanderResourceDestination(resource, source));
+                new CommanderWorkerSelector(state, current), new CommanderResourceDestination(resource, source),
+                node.Property("resourceAmount") == null ? (int?)null : RequiredBoundedInteger(node, "resourceAmount", 1, 1000000),
+                node.Property("resourceAmountMode") == null ? (CommanderResourceAmountMode?)null : RequiredSemanticEnum<CommanderResourceAmountMode>(node, "resourceAmountMode"));
             if (!allocation.IsValid(200)) throw new JsonException();
             return allocation;
         }

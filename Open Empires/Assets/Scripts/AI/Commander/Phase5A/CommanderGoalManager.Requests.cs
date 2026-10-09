@@ -48,6 +48,8 @@ namespace OpenEmpires
             for (int i = 0; i < roots.Length; i++)
             {
                 roots[i] = independentlyTypedRoots[i];
+                if (roots[i] is WatchFutureUnitsIntent)
+                    throw new ArgumentException("A finite future-unit watcher requires its visible action-plan preview and player confirmation.");
                 var validation = validator.Validate(roots[i], simulation, playerId);
                 if (!validation.IsValid) throw new ArgumentException(validation.Reason);
             }
@@ -81,11 +83,13 @@ namespace OpenEmpires
                 throw new ArgumentException("The strategic runtime does not match this request.");
             if (!TryCompileActionPlan(interpretation, out var plan, out string reason))
                 throw new ArgumentException(reason);
+            if (!TryBindFutureProducers(plan, out var futureBindings, out reason))
+                throw new ArgumentException(reason);
             if (requestTicket != null && !requestTicket.Claim(this, originalInput, generation))
                 throw new ArgumentException("The request ticket is stale, foreign or already bound.");
             var candidate = new CommanderActionPlanCandidate(requestTicket?.Id ?? nextRequestId++, this,
                 interpretation, plan, originalInput, generation, strategicSource,
-                requestTicket != null ? requestTicket.IsCurrent : isCurrentRequest);
+                requestTicket != null ? requestTicket.IsCurrent : isCurrentRequest, futureBindings);
             TraceRequest(requestTicket, "candidate-compiled");
             return candidate;
         }
@@ -95,7 +99,8 @@ namespace OpenEmpires
         {
             if (interpretation?.IsValid != true || interpretation.Outcome != CommanderSemanticOutcome.Request
                 || interpretation.Nodes.Count != 1 || ticket == null
-                || interpretation.Nodes[0].Type == CommanderSemanticNodeType.StrategicObjective)
+                || interpretation.Nodes[0].Type == CommanderSemanticNodeType.StrategicObjective
+                || interpretation.Nodes[0].Type == CommanderSemanticNodeType.WatchFutureUnits)
                 throw new ArgumentException("Only the established narrow KnownIntent path can use automatic admission.");
             var candidate = PrepareActionPlan(interpretation, ticket.OriginalInput, ticket.Generation,
                 strategicSource, ticket.IsCurrent, ticket);

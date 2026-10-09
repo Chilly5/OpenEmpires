@@ -349,7 +349,7 @@ namespace OpenEmpires
                 unit.LastDepositTick = currentTick;
                 unit.LastDepositAmount = unit.CarriedResourceAmount;
                 unit.LastDepositResourceType = unit.CarriedResourceType;
-                resourceManager.AddResource(unit.PlayerId, unit.CarriedResourceType, unit.CarriedResourceAmount);
+                resourceManager.CreditGatheredIncome(unit.PlayerId, unit.CarriedResourceType, unit.CarriedResourceAmount);
                 unit.CarriedResourceAmount = 0;
             }
             unit.DropOffBuildingId = -1;
