@@ -15,6 +15,7 @@ namespace OpenEmpires
         public string action;
         public string location;
         public JObject target;
+        public JObject placement;
         public string technology;
         public int? unitType;
         public string objectiveType;
@@ -76,7 +77,7 @@ namespace OpenEmpires
                     if (reader.Read()) throw new JsonException("Trailing JSON content is not allowed.");
                 }
                 NormalizeExternalJson(root);
-                CheckFields(root, "intentCategory", "intentType", "action", "location", "technology", "unitType", "objectiveType", "priority", "parameters", "unit", "structure", "resource", "mode", "targetAge", "amount", "constraints", "countMode", "workerState", "currentResource", "sourceKind", "target", "quantityMode", "resourceAmount", "resourceAmountMode");
+                CheckFields(root, "intentCategory", "intentType", "action", "location", "technology", "unitType", "objectiveType", "priority", "parameters", "unit", "structure", "resource", "mode", "targetAge", "amount", "constraints", "countMode", "workerState", "currentResource", "sourceKind", "target", "quantityMode", "resourceAmount", "resourceAmountMode", "placement");
                 var dto = new CommanderIntentDTO
                 {
                     intentCategory = ReadString(root, "intentCategory"),
@@ -105,6 +106,11 @@ namespace OpenEmpires
                 {
                     if (!(targetToken is JObject targetObject)) throw new JsonException();
                     dto.target = targetObject;
+                }
+                if (root.TryGetValue("placement", out var placementToken))
+                {
+                    if (!(placementToken is JObject placementObject)) throw new JsonException();
+                    dto.placement = placementObject;
                 }
                 if (root.TryGetValue("parameters", out JToken paramsToken))
                 {
@@ -135,6 +141,9 @@ namespace OpenEmpires
 
         public static CommanderIntentInterpretation ValidateAndConvert(CommanderIntentDTO dto, CommanderContext context)
         {
+            if (dto?.placement != null && (dto.intentType != nameof(CommanderIntentType.BuildStructure)
+                || string.Equals(dto.intentCategory, "Strategic", StringComparison.OrdinalIgnoreCase)
+                || !string.IsNullOrEmpty(dto.objectiveType))) return UnexpectedFields();
             if (dto?.target != null && (dto.intentType != nameof(CommanderIntentType.CapabilityAction)
                 || string.Equals(dto.intentCategory, "Strategic", StringComparison.OrdinalIgnoreCase))) return UnexpectedFields();
             if (dto?.quantityMode != null && (dto.intentType != nameof(CommanderIntentType.EnsureUnitCount)
@@ -259,7 +268,25 @@ namespace OpenEmpires
                         return Reject(CommanderIntentErrorCode.UnknownStructure, "structure", "Unknown structure type.");
                     if (dto.unit != null || dto.resource != null || dto.mode != null || dto.targetAge != null) return UnexpectedFields();
                     if (!InRange(dto.amount, 1, CommanderIntentValidator.MaximumStructureCount)) return InvalidAmount();
-                    intent = new BuildStructureIntent(context.PlayerId, structure, dto.amount.Value, constraints); break;
+                    if (dto.placement != null)
+                    {
+                        // Reuse the strict semantic placement parser, not a second placement vocabulary.
+                        var semantic = CommanderSemanticJson.Parse(new JObject
+                        {
+                            ["outcome"] = "Request", ["nodes"] = new JArray(new JObject
+                            {
+                                ["type"] = "BuildStructure", ["structure"] = structure.ToString(),
+                                ["count"] = dto.amount.Value, ["placement"] = dto.placement.DeepClone()
+                            })
+                        }.ToString(Formatting.None));
+                        if (!semantic.IsValid || dto.amount != 1) return UnexpectedFields();
+                        var placed = semantic.Nodes[0];
+                        intent = new BuildStructureIntent(context.PlayerId, structure, dto.amount.Value, constraints,
+                            placed.PlacementAnchorSelector, placed.PlacementAnchorOrdinal, placed.PlacementRelation,
+                            placed.ClearGapTiles, placed.ResourceType, placed.SourceKind);
+                    }
+                    else intent = new BuildStructureIntent(context.PlayerId, structure, dto.amount.Value, constraints);
+                    break;
                 case CommanderIntentType.SetResourceAllocation:
                     if (!NamedEnum(dto.resource, out ResourceType resource)) return Reject(CommanderIntentErrorCode.UnknownResource, "resource", "Unknown resource type.");
                     if (!NamedEnum(dto.mode, out ResourceAllocationMode mode)) return Reject(CommanderIntentErrorCode.UnknownCommand, "mode", "Unknown allocation mode.");
@@ -484,7 +511,19 @@ namespace OpenEmpires
                 dto.amount = ensure.NewProductionCount ?? ensure.TargetTotal;
                 dto.quantityMode = ensure.NewProductionCount.HasValue ? "New" : "TargetTotal";
             }
-            else if (intent is BuildStructureIntent build) { dto.structure = build.StructureType.ToString(); dto.amount = build.Count; }
+            else if (intent is BuildStructureIntent build)
+            {
+                dto.structure = build.StructureType.ToString(); dto.amount = build.Count;
+                if (build.PlacementAnchorSelector.HasValue)
+                {
+                    dto.placement = new JObject { ["anchor"] = build.PlacementAnchorSelector.Value.ToString(),
+                        ["relation"] = build.PlacementRelation?.ToString() };
+                    if (build.PlacementAnchorOrdinal.HasValue) dto.placement["ordinal"] = build.PlacementAnchorOrdinal.Value;
+                    if (build.ClearGapTiles.HasValue) dto.placement["clearGapTiles"] = build.ClearGapTiles.Value;
+                    if (build.PlacementResourceType.HasValue) dto.placement["resource"] = build.PlacementResourceType.Value.ToString();
+                    if (build.PlacementSourceKind.HasValue) dto.placement["sourceKind"] = build.PlacementSourceKind.Value.ToString();
+                }
+            }
             else if (intent is ReachAgeIntent reachAge) { dto.targetAge = reachAge.RequestedTarget.ToString(); }
             else if (intent is SetResourceAllocationIntent allocation) { dto.resource = allocation.Resource.ToString(); dto.mode = allocation.Mode.ToString(); dto.amount = allocation.WorkerCount; }
             else if (intent is AllocateWorkersIntent workers)

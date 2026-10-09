@@ -205,6 +205,7 @@ namespace OpenEmpires
         public CommanderSemanticPlacementRelation? PlacementRelation { get; }
         public int? ClearGapTiles { get; }
         public ResourceType? PlacementResourceType { get; }
+        public ResourceSourceKind? PlacementSourceKind { get; }
 
         public BuildStructureIntent(int playerId, BuildingType structureType, int count = 1,
             IEnumerable<CommanderConstraint> constraints = null,
@@ -212,7 +213,8 @@ namespace OpenEmpires
             int? placementAnchorOrdinal = null,
             CommanderSemanticPlacementRelation? placementRelation = null,
             int? clearGapTiles = null,
-            ResourceType? placementResourceType = null)
+            ResourceType? placementResourceType = null,
+            ResourceSourceKind? placementSourceKind = null)
             : base(CommanderIntentType.BuildStructure, playerId, constraints)
         {
             StructureType = structureType;
@@ -222,6 +224,7 @@ namespace OpenEmpires
             PlacementRelation = placementRelation;
             ClearGapTiles = clearGapTiles;
             PlacementResourceType = placementResourceType;
+            PlacementSourceKind = placementSourceKind;
         }
     }
 

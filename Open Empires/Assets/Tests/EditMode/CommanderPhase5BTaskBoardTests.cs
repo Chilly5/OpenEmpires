@@ -45,7 +45,7 @@ namespace OpenEmpires.Tests
             Assert.That(Value<long>(cards[0], "RequestId"), Is.EqualTo(scope.RequestId));
             Assert.That(Value<string>(cards[0], "Objective"), Does.Contain("barracks"));
             Assert.That(((System.Collections.ICollection)Property(cards[0], "Steps")).Count, Is.EqualTo(2));
-            Assert.That(Property(cards[0], "Status").ToString(), Is.EqualTo("Waiting"));
+            Assert.That(Property(cards[0], "Status").ToString(), Is.EqualTo("Accepted"));
             Assert.That(Value<int>(snapshot, "ActiveCount"), Is.EqualTo(1));
         }
 

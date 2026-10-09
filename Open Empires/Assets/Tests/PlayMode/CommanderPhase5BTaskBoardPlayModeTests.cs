@@ -86,6 +86,34 @@ namespace OpenEmpires.Tests
                 "Reset must refresh the captured card token while preserving live ordinary goals.");
         }
 
+        [UnityTest]
+        public IEnumerator BlockedReason_FitsInFirstTaskViewportWithoutForcingChatOpen()
+        {
+            chat.enabled = true;
+            var goal = manager.SubmitBuildStructure(BuildingType.House);
+            goal.SetStatus(CommanderGoalStatus.Blocked, "No owned living villager is available.");
+            yield return null;
+
+            Assert.That(chat.IsExpanded, Is.False, "A blocker must not force the Commander open.");
+            chat.OpenCommander();
+            yield return null;
+            Canvas.ForceUpdateCanvases();
+
+            var viewport = chat.transform.Find("CommanderCanvas/Panel/TaskBoard/Viewport")
+                .GetComponent<RectTransform>();
+            var card = viewport.Find("Content/TaskCard");
+            Assert.That(card, Is.Not.Null);
+            Assert.That(card.GetChild(0).name, Is.EqualTo("Status"));
+            Assert.That(TextOf(card.GetChild(0)), Does.Contain("No owned living villager"));
+            var status = card.GetChild(0).GetComponent<RectTransform>();
+            var viewportCorners = new Vector3[4];
+            var statusCorners = new Vector3[4];
+            viewport.GetWorldCorners(viewportCorners);
+            status.GetWorldCorners(statusCorners);
+            Assert.That(statusCorners[0].y, Is.GreaterThanOrEqualTo(viewportCorners[0].y - 1f));
+            Assert.That(statusCorners[1].y, Is.LessThanOrEqualTo(viewportCorners[1].y + 1f));
+        }
+
         private static string TextOf(Transform transform)
         {
             var component = transform.GetComponents<Component>().FirstOrDefault(x => x.GetType().Name == "TextMeshProUGUI");

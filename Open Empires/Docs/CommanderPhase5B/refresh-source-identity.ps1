@@ -26,7 +26,9 @@ if ($VerifyOnly) {
     if ($saved.aggregateSha256 -ne $digest -or $saved.recordCount -ne $records.Count) { throw 'Phase 5B source identity changed.' }
     Write-Output "SOURCE_IDENTITY_VERIFIED records=$($records.Count) sha256=$digest"
 } else {
-    $payload = [ordered]@{ baselineHead = '35be7427503cdfe04c3a6ce5474fc50fabf247a6'; recordCount = $records.Count; aggregateSha256 = $digest;
+    $currentHead = (& git -c safe.directory=D:/unity_projects/OpenEmpires -C $projectRoot rev-parse HEAD).Trim()
+    if ($LASTEXITCODE -ne 0) { throw 'Cannot establish current source baseline HEAD.' }
+    $payload = [ordered]@{ baselineHead = $currentHead; originalImplementationBaselineHead = '35be7427503cdfe04c3a6ce5474fc50fabf247a6'; recordCount = $records.Count; aggregateSha256 = $digest;
         coverage = 'Runtime scripts, project/package configuration, ScriptableObjects/scenes, Phase5B and economy-clarification tests. Hash equality is source identity only, not gameplay certification.'; records = $records }
     [IO.File]::WriteAllText($identityPath, ($payload | ConvertTo-Json -Depth 6), [Text.UTF8Encoding]::new($false))
     Write-Output "SOURCE_IDENTITY_WRITTEN records=$($records.Count) sha256=$digest"

@@ -1,0 +1,60 @@
+{
+    "run_id": "ca6f2668-e566-4734-8847-242fb3294c5f",
+    "player_input": "Build a House near my Town Center, then assign one idle villager to wood",
+    "method": "Final production provider response followed by explicit game-side approval and normal native commands/ticks",
+    "source_identity": "a543a12367b4df80f776262b3a907a4d8105dc09dcaf26e4c2323f98b2a334e0",
+    "outcome": "Request",
+    "trace": "utc=2026-10-09T12:32:19.7643916Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=14426\nfinish=stop\nassistantContent=extracted;characters=409;finish=stop\nsemantic=Request;nodes=2\n",
+    "schema_diagnostic": "",
+    "stage": "terminal",
+    "http_initial": 1,
+    "http_repair": 0,
+    "http_status": 200,
+    "goal_count": 2,
+    "tick": 601,
+    "commandCount": 2,
+    "valid": true,
+    "nodes": [
+        {
+            "type": "BuildStructure",
+            "building": "House",
+            "anchor": "MyTownCenter",
+            "resource": "",
+            "sourceKind": "",
+            "workerState": "",
+            "workerDestination": "",
+            "count": 1,
+            "workerCount": 0,
+            "idleOnly": false,
+            "constraints": [],
+            "dependsOn": []
+        },
+        {
+            "type": "AllocateWorkers",
+            "building": "",
+            "anchor": "",
+            "resource": "",
+            "sourceKind": "",
+            "workerState": "Idle",
+            "workerDestination": "Wood",
+            "count": 0,
+            "workerCount": 1,
+            "idleOnly": false,
+            "constraints": [],
+            "dependsOn": [
+                0
+            ]
+        }
+    ],
+    "goalStatuses": [
+        "Completed",
+        "Completed"
+    ],
+    "commandTypes": [
+        "PlaceBuildingCommand",
+        "GatherCommand"
+    ],
+    "cardProgress": [
+        "Assigned workers: 1 / 1"
+    ]
+}

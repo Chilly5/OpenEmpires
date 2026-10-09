@@ -11,6 +11,13 @@ namespace OpenEmpires
         private ScrollRect taskBoardScroll;
         private RectTransform taskBoardContent;
         private string taskBoardFingerprint;
+        private int currentRequestGoalId;
+
+        private void TrackCurrentRequest(CommanderIntentSubmission submission)
+        {
+            currentRequestGoalId = submission?.CreatedGoal == true
+                ? submission.Resolution?.Goal?.GoalId ?? 0 : 0;
+        }
 
         private void BuildTaskBoardUI()
         {
@@ -58,6 +65,7 @@ namespace OpenEmpires
             if (taskBadgeText == null || taskBoardContent == null) return;
             var snapshot = CommanderTaskBoardProjection.Capture(semanticGoalManager,
                 strategicPipeline?.StrategicPlanner, runtimeGeneration);
+            RefreshCurrentRequestStatus(snapshot);
             taskBadgeText.text = snapshot.ActiveCount + " active task" + (snapshot.ActiveCount == 1 ? "" : "s");
             taskBadgeText.gameObject.SetActive(snapshot.ActiveCount > 0);
             string fingerprint = Fingerprint(snapshot);
@@ -76,6 +84,34 @@ namespace OpenEmpires
                 return;
             }
             foreach (var card in snapshot.Cards) RenderTaskCard(card);
+        }
+
+        private void RefreshCurrentRequestStatus(CommanderTaskBoardSnapshot snapshot)
+        {
+            if (commanderStatusText == null) return;
+            if (pendingActionPlan != null || strategicBridge?.PendingIntent != null)
+            {
+                commanderStatusText.text = "Awaiting approval — no gameplay started.";
+                commanderStatusText.color = new Color(.7f, .83f, 1f);
+                return;
+            }
+            if (currentRequestGoalId <= 0) return;
+            foreach (var card in snapshot.Cards)
+            {
+                bool belongsToCurrentRequest = false;
+                foreach (var step in card.Steps)
+                    if (step.GoalId == currentRequestGoalId) { belongsToCurrentRequest = true; break; }
+                if (!belongsToCurrentRequest) continue;
+                string detail = card.Status == CommanderTaskStatus.Blocked || card.Status == CommanderTaskStatus.Failed
+                    ? card.Blocker : card.Status == CommanderTaskStatus.Completed
+                        ? card.Progress : card.CurrentStep;
+                string message = card.Status + (string.IsNullOrWhiteSpace(detail) ? string.Empty : " — " + detail);
+                commanderStatusText.text = message.Length > 120 ? message.Substring(0, 117) + "..." : message;
+                commanderStatusText.color = card.Status == CommanderTaskStatus.Blocked
+                    || card.Status == CommanderTaskStatus.Failed
+                    ? new Color(1f, .6f, .5f) : new Color(.7f, .83f, 1f);
+                return;
+            }
         }
 
         private static string Fingerprint(CommanderTaskBoardSnapshot snapshot)
@@ -104,10 +140,13 @@ namespace OpenEmpires
             layout.childControlWidth = layout.childControlHeight = true;
             layout.childForceExpandWidth = true;
             layout.childForceExpandHeight = false;
+            string attention = card.Status == CommanderTaskStatus.Blocked || card.Status == CommanderTaskStatus.Failed
+                ? card.Blocker : string.Empty;
+            var status = Text("Status", root.transform, card.Status + " — "
+                + (string.IsNullOrWhiteSpace(attention) ? card.Progress : attention), 12, TextAlignmentOptions.Left);
+            status.richText = false; PanelElement(status.gameObject, 32);
             var title = Text("Objective", root.transform, card.Objective, 13, TextAlignmentOptions.Left);
             title.richText = false; PanelElement(title.gameObject, 34);
-            var status = Text("Status", root.transform, card.Status + " — " + card.Progress, 12, TextAlignmentOptions.Left);
-            status.richText = false; PanelElement(status.gameObject, 32);
             var stepText = Text("CurrentStep", root.transform,
                 "Current: " + card.CurrentStep + (string.IsNullOrEmpty(card.Blocker) ? "" : " — " + card.Blocker),
                 11, TextAlignmentOptions.Left);

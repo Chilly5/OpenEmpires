@@ -145,21 +145,22 @@ namespace OpenEmpires
             int? placementAnchorOrdinal = null,
             CommanderSemanticPlacementRelation? placementRelation = null,
             int? clearGapTiles = null,
-            ResourceType? placementResourceType = null)
+            ResourceType? placementResourceType = null,
+            ResourceSourceKind? placementSourceKind = null)
         {
             if (placementAnchorSelector.HasValue || placementAnchorOrdinal.HasValue
-                || placementRelation.HasValue || clearGapTiles.HasValue || placementResourceType.HasValue)
+                || placementRelation.HasValue || clearGapTiles.HasValue || placementResourceType.HasValue || placementSourceKind.HasValue)
             {
                 var placedIntent = new BuildStructureIntent(playerId, type, count, constraints,
                     placementAnchorSelector, placementAnchorOrdinal, placementRelation, clearGapTiles,
-                    placementResourceType);
+                    placementResourceType, placementSourceKind);
                 CommanderIntentValidationResult validation = new CommanderIntentValidator().Validate(
                     placedIntent, simulation, playerId);
                 if (!validation.IsValid) throw new ArgumentException(validation.Reason, nameof(placementAnchorSelector));
             }
             var goal = new BuildStructureGoal(playerId, type, count, maxDurationTicks,
                 placementAnchorSelector, placementAnchorOrdinal, placementRelation, clearGapTiles,
-                placementResourceType);
+                placementResourceType, placementSourceKind);
             goal.TargetTotal = planner.CountCompletedBuildings(playerId, type) + count;
             for (int i = 0; i < goals.Count; i++)
                 if (goals[i] is BuildStructureGoal earlier && !earlier.IsTerminal && earlier.StructureType == type)
@@ -254,7 +255,7 @@ namespace OpenEmpires
                 {
                     goal = new BuildStructureGoal(playerId, build.StructureType, build.Count,
                         maxDurationTicks, build.PlacementAnchorSelector, build.PlacementAnchorOrdinal,
-                        build.PlacementRelation, build.ClearGapTiles, build.PlacementResourceType);
+                        build.PlacementRelation, build.ClearGapTiles, build.PlacementResourceType, build.PlacementSourceKind);
                     var structureGoal = (BuildStructureGoal)goal;
                     structureGoal.TargetTotal = planner.CountCompletedBuildings(playerId, build.StructureType)
                         + build.Count;

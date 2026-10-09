@@ -362,8 +362,8 @@ namespace OpenEmpires.Tests
             dispatcher.SubmitText("make 10 spearmen");
             manager.Tick(0);
 
-            Assert.That(responses[0], Is.EqualTo("Understood.\nPreparing 10 spearmen."));
-            Assert.That(responses[1], Is.EqualTo("Your 10 spearmen are ready."));
+            Assert.That(responses[0], Is.EqualTo("Understood.\nPreparing 10 Spearmen."));
+            Assert.That(responses[1], Is.EqualTo("Your 10 Spearmen are ready."));
         }
 
         private sealed class CountingInterpreter : ISynchronousCommanderIntentInterpreter

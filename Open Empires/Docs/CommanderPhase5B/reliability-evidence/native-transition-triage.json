@@ -1,0 +1,34 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "265cdd6577fb455c9e86aa138459edfb",
+    "status": "failed",
+    "mode": "EditMode",
+    "started_unix_ms": 1791568660696,
+    "finished_unix_ms": 1791568686473,
+    "last_update_unix_ms": 1791568686473,
+    "progress": {
+      "completed": 3,
+      "total": 3,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791568673075,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5BReliabilityGatheringTests.HouseCompletionDependency_AssignsExistingWorkerOnlyAfterNativeHouseFinishes",
+      "last_finished_unix_ms": 1791568674267,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5BReliabilityGatheringTests.AdditionalFood400_RecoversOriginalFourWorkersFromNativeSheepDepletionToVisibleBerries",
+          "message": "  A native transition on the request's own sheep order is not an unrelated busy activity: tick=30; 0:MovingToSlaughter:sheep=4;1:Gathering:sheep=-1;2:Gathering:sheep=-1;3:MovingToSlaughter:sheep=4 | tick=31; 0:MovingToSlaughter:sheep=4;1:Gathering:sheep=-1;2:Gathering:sheep=-1;3:MovingToSlaughter:sheep=4 | tick=32; 0:MovingToSlaughter:sheep=4;1:Gathering:sheep=-1;2:Gathering:sheep=-1;3:MovingToSlaughter:sheep=4\r\n  Expected: <empty>\r\n  But was:  < \"tick=30; 0:MovingToSlaughter:sheep=4;1:Gathering:sheep=-1;2:Gathering:sheep=-1;3:MovingToSlaughter:sheep=4\", \"tick=31; 0:MovingToSlaughter:sheep=4;1:Gathering:sheep=-1;2:Gathering:sheep=-1;3:MovingToSlaughter:sheep=4\", \"tick=32; 0:MovingToSlaughter:sheep=4;1:Gathering:sheep=-1;2:Gathering:sheep=-1;3:MovingToSlaughter:sheep=4\", \"tick=33; 0:MovingToSlaughter:sheep=4;1:Gathering:sheep=-1;2:Gathering:sheep=-1;3:MovingToSlaughter:sheep=4\", \"tick=34; 0:MovingToSlaughter:sheep=4;1:Gathering:sheep=-1;2:Gathering:sheep=-1;3:MovingToSlaughter:sheep=4\", \"tick=35; 0:MovingToSlaughter:sheep=4;1:Gathering:sheep=-1;2:Gathering:sheep=-1;3:MovingToSlaughter:sheep=4\", \"tick=36; 0:MovingToSlaughter:sheep=4;1:Gathering:sheep=-1;2:Gathering:sheep=-1;3:MovingToSlaughter:sheep=4\", \"tick=37; 0:MovingToSlaughter:sheep=4;1:Gathering:sheep=-1;2:Gathering:sheep=-1;3:MovingToSlaughter:sheep=4\", \"tick=38; 0:MovingToSlaughter:sheep=4;1:Gathering:sheep=-1;2:Gathering:sheep=-1;3:MovingToSlaughter:sheep=4\", \"tick=39; 0:MovingToSlaughter:sheep=4;1:Gathering:sheep=-1;2:Gathering:sheep=-1;3:MovingToSlaughter:sheep=4\"... >\r\n"
+        }
+      ],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": null
+  },
+  "hint": null
+}

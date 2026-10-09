@@ -1,0 +1,68 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "141a4898100a452e964881e5ba2a80a9",
+    "status": "succeeded",
+    "mode": "PlayMode",
+    "started_unix_ms": 1791537143687,
+    "finished_unix_ms": 1791537152698,
+    "last_update_unix_ms": 1791537152698,
+    "progress": {
+      "completed": 3,
+      "total": 3,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791537152115,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5BTaskBoardPlayModeTests.ConversationReset_RebindsVisibleCancelToFreshCardWithoutOpeningChat",
+      "last_finished_unix_ms": 1791537152669,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": {
+      "mode": "PlayMode",
+      "summary": {
+        "total": 3,
+        "passed": 3,
+        "failed": 0,
+        "skipped": 0,
+        "durationSeconds": 1.548711,
+        "resultState": "Passed"
+      },
+      "results": [
+        {
+          "name": "ActiveGoal_UpdatesCollapsedBadgeWithoutOpeningChat_AndCancelUsesCardControl",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTaskBoardPlayModeTests.ActiveGoal_UpdatesCollapsedBadgeWithoutOpeningChat_AndCancelUsesCardControl",
+          "state": "Passed",
+          "durationSeconds": 0.4785536,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: ReachAge\r\n[Commander] Goal #1 cancelled.\r\n"
+        },
+        {
+          "name": "BlockedReason_FitsInFirstTaskViewportWithoutForcingChatOpen",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTaskBoardPlayModeTests.BlockedReason_FitsInFirstTaskViewportWithoutForcingChatOpen",
+          "state": "Passed",
+          "durationSeconds": 0.4897249,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n"
+        },
+        {
+          "name": "ConversationReset_RebindsVisibleCancelToFreshCardWithoutOpeningChat",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTaskBoardPlayModeTests.ConversationReset_RebindsVisibleCancelToFreshCardWithoutOpeningChat",
+          "state": "Passed",
+          "durationSeconds": 0.5543285,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: ReachAge\r\n[Commander] Goal #1 cancelled.\r\n"
+        }
+      ]
+    }
+  },
+  "hint": null
+}

@@ -1,0 +1,1157 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "23509fea74734a5794afb1a646e249af",
+    "status": "succeeded",
+    "mode": "EditMode",
+    "started_unix_ms": 1791557986290,
+    "finished_unix_ms": 1791558025250,
+    "last_update_unix_ms": 1791558025250,
+    "progress": {
+      "completed": 124,
+      "total": 124,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791558024884,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5BTruthfulStatusFixTests.PendingGoal_IsAcceptedButConstructionWaitIsWorking",
+      "last_finished_unix_ms": 1791558025160,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": {
+      "mode": "EditMode",
+      "summary": {
+        "total": 124,
+        "passed": 124,
+        "failed": 0,
+        "skipped": 0,
+        "durationSeconds": 35.1114036,
+        "resultState": "Passed"
+      },
+      "results": [
+        {
+          "name": "Cancellation_ReleasesCommanderWorkerAndUnitReservations",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.Cancellation_ReleasesCommanderWorkerAndUnitReservations",
+          "state": "Passed",
+          "durationSeconds": 0.2974621,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: CapabilityAction\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Resolved a bounded owned-unit movement action.\r\n[Commander] Goal #1 cancelled.\r\n"
+        },
+        {
+          "name": "ContextualConstruction_MillNearWorkedBerries_FailsClosedIfResourceDepletedOrUnworked",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ContextualConstruction_MillNearWorkedBerries_FailsClosedIfResourceDepletedOrUnworked",
+          "state": "Passed",
+          "durationSeconds": 0.2526413,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No visible resource node currently worked by an owned villager matches the request.\r\n"
+        },
+        {
+          "name": "ContextualConstruction_MillNearWorkedBerries_PlacesDeterministicLegalCommand",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ContextualConstruction_MillNearWorkedBerries_PlacesDeterministicLegalCommand",
+          "state": "Passed",
+          "durationSeconds": 0.2549624,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Mill near the worked Any/Food node at (135,125) with villager #0.\r\n"
+        },
+        {
+          "name": "Determinism_IdenticalGraphAndState_EmitsIdenticalCommand",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.Determinism_IdenticalGraphAndState_EmitsIdenticalCommand",
+          "state": "Passed",
+          "durationSeconds": 0.2474607,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "FogOfWar_AttackTarget_RejectsHiddenOrFoggedEnemy",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.FogOfWar_AttackTarget_RejectsHiddenOrFoggedEnemy",
+          "state": "Passed",
+          "durationSeconds": 0.2484074,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "FogOfWar_WorkedResource_RejectsFoggedResourceNode",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.FogOfWar_WorkedResource_RejectsFoggedResourceNode",
+          "state": "Passed",
+          "durationSeconds": 0.2421103,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "HumanOverride_Military_BlocksCommanderReclamation",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.HumanOverride_Military_BlocksCommanderReclamation",
+          "state": "Passed",
+          "durationSeconds": 0.24393,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: CapabilityAction\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Resolved a bounded owned-unit movement action.\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; The player took control of every eligible capability unit; Commander will not reclaim them.\r\n"
+        },
+        {
+          "name": "HumanOverride_Worker_ReleasesCommanderReservation",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.HumanOverride_Worker_ReleasesCommanderReservation",
+          "state": "Passed",
+          "durationSeconds": 0.2494426,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Assigning at least 1 villagers to Gold; currently 0. Reassigning villager #0 to Gold node #0.\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Assigning at least 1 villagers to Gold; currently 0.\r\n"
+        },
+        {
+          "name": "Ownership_AttackSelector_DoesNotTargetAlliesOrSelf",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.Ownership_AttackSelector_DoesNotTargetAlliesOrSelf",
+          "state": "Passed",
+          "durationSeconds": 0.2597365,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "Ownership_MoveSelector_DoesNotSelectAlliedUnits",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.Ownership_MoveSelector_DoesNotSelectAlliedUnits",
+          "state": "Passed",
+          "durationSeconds": 0.2626439,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "Ownership_RepairSelector_DoesNotRepairAlliedOrEnemyBuildings",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.Ownership_RepairSelector_DoesNotRepairAlliedOrEnemyBuildings",
+          "state": "Passed",
+          "durationSeconds": 0.276051,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "QA_AgeAdvice_UsesAvailableCanonicalLandmarks(English,\"imperial\",\"1600 Food and 800 Gold\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.QA_AgeAdvice_UsesAvailableCanonicalLandmarks(English,\"imperial\",\"1600 Food and 800 Gold\")",
+          "state": "Passed",
+          "durationSeconds": 0.7373201,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "QA_AgeAdvice_UsesAvailableCanonicalLandmarks(French,\"castle\",\"800 Food and 400 Gold\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.QA_AgeAdvice_UsesAvailableCanonicalLandmarks(French,\"castle\",\"800 Food and 400 Gold\")",
+          "state": "Passed",
+          "durationSeconds": 0.4429126,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "QA_AgeAdvice_UsesAvailableCanonicalLandmarks(HolyRomanEmpire,\"castle\",\"800 Food and 400 Gold\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.QA_AgeAdvice_UsesAvailableCanonicalLandmarks(HolyRomanEmpire,\"castle\",\"800 Food and 400 Gold\")",
+          "state": "Passed",
+          "durationSeconds": 0.4676083,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "QA_AlreadyReachedAge_DoesNotAdviseAnotherLandmark",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.QA_AlreadyReachedAge_DoesNotAdviseAnotherLandmark",
+          "state": "Passed",
+          "durationSeconds": 0.4583884,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "QA_CanMyCivilizationMakeKnights_ReturnsCivilizationCapabilityWithoutGameMutation",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.QA_CanMyCivilizationMakeKnights_ReturnsCivilizationCapabilityWithoutGameMutation",
+          "state": "Passed",
+          "durationSeconds": 0.4479831,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "QA_HowDoIReachCastleAge_ReturnsCanonicalAgeCostWithoutGameMutation",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.QA_HowDoIReachCastleAge_ReturnsCanonicalAgeCostWithoutGameMutation",
+          "state": "Passed",
+          "durationSeconds": 0.4465257,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "QA_HowManyVillagersDoIHave_ReturnsDetachedCountWithoutGameMutation",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.QA_HowManyVillagersDoIHave_ReturnsDetachedCountWithoutGameMutation",
+          "state": "Passed",
+          "durationSeconds": 0.4479546,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "QA_HowMuchDoesABarracksCost_ReturnsCanonicalCostWithoutGameMutation",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.QA_HowMuchDoesABarracksCost_ReturnsCanonicalCostWithoutGameMutation",
+          "state": "Passed",
+          "durationSeconds": 0.450579,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "QA_RoutingDistinction_QuestionVersusAction",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.QA_RoutingDistinction_QuestionVersusAction",
+          "state": "Passed",
+          "durationSeconds": 0.4443849,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: ReachAge\r\n"
+        },
+        {
+          "name": "QA_UnavailableImperialAge_DoesNotInventEnglishLandmarks(French)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.QA_UnavailableImperialAge_DoesNotInventEnglishLandmarks(French)",
+          "state": "Passed",
+          "durationSeconds": 0.447917,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "QA_UnavailableImperialAge_DoesNotInventEnglishLandmarks(HolyRomanEmpire)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.QA_UnavailableImperialAge_DoesNotInventEnglishLandmarks(HolyRomanEmpire)",
+          "state": "Passed",
+          "durationSeconds": 0.4464791,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "QA_WhatCountersSpearmen_ReturnsCanonicalCounterAdviceWithoutGameMutation",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.QA_WhatCountersSpearmen_ReturnsCanonicalCounterAdviceWithoutGameMutation",
+          "state": "Passed",
+          "durationSeconds": 0.4531229,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "QA_WhereDoITrainArchers_ReturnsProductionBuildingWithoutGameMutation",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.QA_WhereDoITrainArchers_ReturnsProductionBuildingWithoutGameMutation",
+          "state": "Passed",
+          "durationSeconds": 0.4773924,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "Research_ResearchTechnology_RejectsWhenLackingResourcesOrPrerequisites",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.Research_ResearchTechnology_RejectsWhenLackingResourcesOrPrerequisites",
+          "state": "Passed",
+          "durationSeconds": 0.2415403,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "Research_ResearchTechnology_UsesCanonicalAgeCostAndBuilding",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.Research_ResearchTechnology_UsesCanonicalAgeCostAndBuilding",
+          "state": "Passed",
+          "durationSeconds": 0.2466592,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ResultBinding_FailsClosedWhenBoundUnitIsDead",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_FailsClosedWhenBoundUnitIsDead",
+          "state": "Passed",
+          "durationSeconds": 0.2430784,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ResultBinding_FailsClosedWhenBoundUnitIsDestroyed",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_FailsClosedWhenBoundUnitIsDestroyed",
+          "state": "Passed",
+          "durationSeconds": 0.2443923,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ResultBinding_FailsClosedWhenBoundUnitIsHumanControlled",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_FailsClosedWhenBoundUnitIsHumanControlled",
+          "state": "Passed",
+          "durationSeconds": 0.2447396,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: CapabilityAction\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; Worker is protected or reserved by another goal.\r\n"
+        },
+        {
+          "name": "ResultBinding_FailsClosedWhenBoundUnitOwnershipTransferred",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_FailsClosedWhenBoundUnitOwnershipTransferred",
+          "state": "Passed",
+          "durationSeconds": 0.2438123,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ResultBinding_FailsClosedWhenGoalManagerDisposed",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_FailsClosedWhenGoalManagerDisposed",
+          "state": "Passed",
+          "durationSeconds": 0.2434902,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ResultBinding_NeverSubstitutesPreExistingUnitsWhenExplicitResultRequested",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_NeverSubstitutesPreExistingUnitsWhenExplicitResultRequested",
+          "state": "Passed",
+          "durationSeconds": 0.3180877,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #2 submitted: CapabilityAction\r\n[Commander] Goal #1: status=WaitingForProduction owned=5 queued=3; All compatible production queues are at Commander limit 3.\r\n"
+        },
+        {
+          "name": "ResultBinding_RejectsDependencyAbsentFromDependsOn",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_RejectsDependencyAbsentFromDependsOn",
+          "state": "Passed",
+          "durationSeconds": 0.2447447,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ResultBinding_RejectsDependencyCycles",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_RejectsDependencyCycles",
+          "state": "Passed",
+          "durationSeconds": 0.2493618,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ResultBinding_RejectsMissingSourceNodeIndex",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_RejectsMissingSourceNodeIndex",
+          "state": "Passed",
+          "durationSeconds": 0.2446615,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ResultBinding_RejectsNegativeSourceNodeIndex",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_RejectsNegativeSourceNodeIndex",
+          "state": "Passed",
+          "durationSeconds": 0.2420706,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ResultBinding_RejectsSelfReferentialSourceNode",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_RejectsSelfReferentialSourceNode",
+          "state": "Passed",
+          "durationSeconds": 0.2456344,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ResultBinding_RejectsStructureSourceWhenUnitsRequired",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_RejectsStructureSourceWhenUnitsRequired",
+          "state": "Passed",
+          "durationSeconds": 0.2444276,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ResultBinding_RejectsUnitSourceWhenStructureRequired",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_RejectsUnitSourceWhenStructureRequired",
+          "state": "Passed",
+          "durationSeconds": 0.2441103,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ConfirmationIntegrity_CancelInvalidatesCommitment",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ConfirmationIntegrity_CancelInvalidatesCommitment",
+          "state": "Passed",
+          "durationSeconds": 0.2612626,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ConfirmationIntegrity_CannotReplayOrCommitAcrossRuntimes",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ConfirmationIntegrity_CannotReplayOrCommitAcrossRuntimes",
+          "state": "Passed",
+          "durationSeconds": 0.2618542,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n"
+        },
+        {
+          "name": "EmergencyDefensivePreparation_CannotReplaceOrMutateActiveHumanAuthorizedPlan",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.EmergencyDefensivePreparation_CannotReplaceOrMutateActiveHumanAuthorizedPlan",
+          "state": "Passed",
+          "durationSeconds": 0.2812779,
+          "message": null,
+          "stackTrace": null,
+          "output": "[StrategicPlanner] Strategic intent #1 created: MilitaryReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'MilitaryReinforcement' and started plan #1: MilitaryReinforcement.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 200 Wood.\r\n[StrategicPlanner] Plan #1 milestone active: Production Capacity.\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1 cancelled.\r\n[StrategicPlanner] Reservation #1 cancelled for plan #1.\r\n[StrategicPlanner] Plan #1 cancelled.\r\n"
+        },
+        {
+          "name": "GraphAtomicity_PartialInvalid_ExecutesZeroNodes",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.GraphAtomicity_PartialInvalid_ExecutesZeroNodes",
+          "state": "Passed",
+          "durationSeconds": 0.2416571,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "HumanEvaluation_AllRecommendationFamilies_RemainAdvisoryWithoutWork",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.HumanEvaluation_AllRecommendationFamilies_RemainAdvisoryWithoutWork",
+          "state": "Passed",
+          "durationSeconds": 0.245126,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "OwnerMatrix_ComputerOwnershipGating(-1,False)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.OwnerMatrix_ComputerOwnershipGating(-1,False)",
+          "state": "Passed",
+          "durationSeconds": 0.2437808,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "OwnerMatrix_ComputerOwnershipGating(0,False)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.OwnerMatrix_ComputerOwnershipGating(0,False)",
+          "state": "Passed",
+          "durationSeconds": 0.2514055,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "OwnerMatrix_ComputerOwnershipGating(1,True)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.OwnerMatrix_ComputerOwnershipGating(1,True)",
+          "state": "Passed",
+          "durationSeconds": 0.2437317,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "OwnerMatrix_ComputerOwnershipGating(2,False)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.OwnerMatrix_ComputerOwnershipGating(2,False)",
+          "state": "Passed",
+          "durationSeconds": 0.2432179,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"approved\\\":true,\\\"nodes\\\":[]}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"approved\\\":true,\\\"nodes\\\":[]}\")",
+          "state": "Passed",
+          "durationSeconds": 0.0005148,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"playerAuthorized\\\":true,\\\"nodes\\\":[]}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"playerAuthorized\\\":true,\\\"nodes\\\":[]}\")",
+          "state": "Passed",
+          "durationSeconds": 0.0001661,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"emergencyOverride\\\":true,\\\"nodes\\\":[]}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"emergencyOverride\\\":true,\\\"nodes\\\":[]}\")",
+          "state": "Passed",
+          "durationSeconds": 0.0000824,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"ownerId\\\":0,\\\"nodes\\\":[]}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"ownerId\\\":0,\\\"nodes\\\":[]}\")",
+          "state": "Passed",
+          "durationSeconds": 0.0002086,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"trustedRoot\\\":true,\\\"nodes\\\":[]}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"trustedRoot\\\":true,\\\"nodes\\\":[]}\")",
+          "state": "Passed",
+          "durationSeconds": 0.0001014,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"requiredPrerequisite\\\":true,\\\"nodes\\\":[]}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"requiredPrerequisite\\\":true,\\\"nodes\\\":[]}\")",
+          "state": "Passed",
+          "durationSeconds": 0.0000708,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"n1\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Farm\\\",\\\"count\\\":1,\\\"playerDirect\\\":true},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"n1\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Farm\\\",\\\"count\\\":1,\\\"playerDirect\\\":true},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\")",
+          "state": "Passed",
+          "durationSeconds": 0.0000683,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"n1\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Farm\\\",\\\"count\\\":1,\\\"runtimeId\\\":12},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"n1\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Farm\\\",\\\"count\\\":1,\\\"runtimeId\\\":12},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\")",
+          "state": "Passed",
+          "durationSeconds": 0.0001462,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"n1\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Farm\\\",\\\"count\\\":1,\\\"tileX\\\":50},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"n1\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Farm\\\",\\\"count\\\":1,\\\"tileX\\\":50},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\")",
+          "state": "Passed",
+          "durationSeconds": 0.0001179,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"n1\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Farm\\\",\\\"count\\\":1,\\\"worldZ\\\":120.5},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"n1\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Farm\\\",\\\"count\\\":1,\\\"worldZ\\\":120.5},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\")",
+          "state": "Passed",
+          "durationSeconds": 0.0000706,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"n1\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Farm\\\",\\\"count\\\":1,\\\"command\\\":\\\"PlaceBuilding\\\"},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"n1\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Farm\\\",\\\"count\\\":1,\\\"command\\\":\\\"PlaceBuilding\\\"},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\")",
+          "state": "Passed",
+          "durationSeconds": 0.0001316,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"n1\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Farm\\\",\\\"count\\\":1,\\\"csharp\\\":\\\"System.Console.WriteLine()\\\"},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"n1\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Farm\\\",\\\"count\\\":1,\\\"csharp\\\":\\\"System.Console.WriteLine()\\\"},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\")",
+          "state": "Passed",
+          "durationSeconds": 0.0001195,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ParserHostileMatrix_StructuralAttacks_RejectWholeCandidate",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ParserHostileMatrix_StructuralAttacks_RejectWholeCandidate",
+          "state": "Passed",
+          "durationSeconds": 0.0041078,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "PrimitiveCatalog_ExactlyNineRegisteredPrimitives",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.PrimitiveCatalog_ExactlyNineRegisteredPrimitives",
+          "state": "Passed",
+          "durationSeconds": 0.0021271,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "Questions_AreNonEffectfulAndCreateZeroAttributableGoals",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.Questions_AreNonEffectfulAndCreateZeroAttributableGoals",
+          "state": "Passed",
+          "durationSeconds": 0.2442397,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "SubmissionBoundary_ForgedCredentials_FailClosed",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.SubmissionBoundary_ForgedCredentials_FailClosed",
+          "state": "Passed",
+          "durationSeconds": 0.2500325,
+          "message": null,
+          "stackTrace": null,
+          "output": "[StrategicPlanner] Strategic intent rejected: Ownership mismatch: Strategic intents can only target the local Commander.\r\n"
+        },
+        {
+          "name": "UnsupportedMechanics_CreateZeroGoalsAndZeroCommands",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.UnsupportedMechanics_CreateZeroGoalsAndZeroCommands",
+          "state": "Passed",
+          "durationSeconds": 0.2453842,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "DeclaredSequentialOrdering_RequiresCompletionDependency(False)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.DeclaredSequentialOrdering_RequiresCompletionDependency(False)",
+          "state": "Passed",
+          "durationSeconds": 0.2509615,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "DeclaredSequentialOrdering_RequiresCompletionDependency(True)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.DeclaredSequentialOrdering_RequiresCompletionDependency(True)",
+          "state": "Passed",
+          "durationSeconds": 0.25136,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ExplicitIdleBuilder_AdmissionPreservesEligibility",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.ExplicitIdleBuilder_AdmissionPreservesEligibility",
+          "state": "Passed",
+          "durationSeconds": 0.275102,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "InvalidConstraintMode_ReportsOnlySanitizedFieldDiagnostic",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.InvalidConstraintMode_ReportsOnlySanitizedFieldDiagnostic",
+          "state": "Passed",
+          "durationSeconds": 0.4425654,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-09T15:00:07.4381117Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=1\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=169;finish=stop\r\n[CommanderProvider] schema=field=nodes[0].constraints[0].mode;code=invalid-enum\r\n[CommanderProvider] semantic=invalid;nodes=0\r\n"
+        },
+        {
+          "name": "InvalidPlacement_IdentifiesFieldWithoutPrintingValue(\"anchor\",\"\\\"Woodline\\\"\",\"anchor\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.InvalidPlacement_IdentifiesFieldWithoutPrintingValue(\"anchor\",\"\\\"Woodline\\\"\",\"anchor\")",
+          "state": "Passed",
+          "durationSeconds": 0.3471043,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-09T15:00:07.8674863Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=1\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=380;finish=stop\r\n[CommanderProvider] schema=field=nodes[0].placement.anchor;code=invalid-enum\r\n[CommanderProvider] semantic=invalid;nodes=0\r\n"
+        },
+        {
+          "name": "InvalidPlacement_IdentifiesFieldWithoutPrintingValue(\"relation\",\"\\\"Nearest\\\"\",\"relation\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.InvalidPlacement_IdentifiesFieldWithoutPrintingValue(\"relation\",\"\\\"Nearest\\\"\",\"relation\")",
+          "state": "Passed",
+          "durationSeconds": 0.3521627,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-09T15:00:08.2173948Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=1\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=390;finish=stop\r\n[CommanderProvider] schema=field=nodes[0].placement.relation;code=invalid-enum\r\n[CommanderProvider] semantic=invalid;nodes=0\r\n"
+        },
+        {
+          "name": "InvalidPlacement_IdentifiesFieldWithoutPrintingValue(\"clearGapTiles\",\"5\",\"clearGapTiles\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.InvalidPlacement_IdentifiesFieldWithoutPrintingValue(\"clearGapTiles\",\"5\",\"clearGapTiles\")",
+          "state": "Passed",
+          "durationSeconds": 0.449741,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-09T15:00:08.6695282Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=1\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=416;finish=stop\r\n[CommanderProvider] schema=field=nodes[0].placement.clearGapTiles;code=conflicting-declarations\r\n[CommanderProvider] semantic=invalid;nodes=0\r\n"
+        },
+        {
+          "name": "InvalidPlacement_IdentifiesFieldWithoutPrintingValue(\"sourceKind\",\"\\\"Trees\\\"\",\"sourceKind\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.InvalidPlacement_IdentifiesFieldWithoutPrintingValue(\"sourceKind\",\"\\\"Trees\\\"\",\"sourceKind\")",
+          "state": "Passed",
+          "durationSeconds": 0.4440519,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-09T15:00:09.1171111Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=1\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=388;finish=stop\r\n[CommanderProvider] schema=field=nodes[0].placement.sourceKind;code=invalid-enum\r\n[CommanderProvider] semantic=invalid;nodes=0\r\n"
+        },
+        {
+          "name": "InvalidPlacement_IdentifiesFieldWithoutPrintingValue(\"resource\",\"\\\"Timber\\\"\",\"resource\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.InvalidPlacement_IdentifiesFieldWithoutPrintingValue(\"resource\",\"\\\"Timber\\\"\",\"resource\")",
+          "state": "Passed",
+          "durationSeconds": 0.4553045,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-09T15:00:09.6378073Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=2\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=389;finish=stop\r\n[CommanderProvider] schema=field=nodes[0].placement.resource;code=invalid-enum\r\n[CommanderProvider] semantic=invalid;nodes=0\r\n"
+        },
+        {
+          "name": "MissingBuilderDeclaration_ProviderRejectsRatherThanDefaulting(\"Lumber Yard\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.MissingBuilderDeclaration_ProviderRejectsRatherThanDefaulting(\"Lumber Yard\")",
+          "state": "Passed",
+          "durationSeconds": 0.5188806,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-09T15:00:10.2094294Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=1\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=93;finish=stop\r\n[CommanderProvider] schema=field=nodes[0].builders;code=missing-or-wrong-type\r\n[CommanderProvider] semantic=invalid;nodes=0\r\n"
+        },
+        {
+          "name": "MissingBuilderDeclaration_ProviderRejectsRatherThanDefaulting(\"Mill\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.MissingBuilderDeclaration_ProviderRejectsRatherThanDefaulting(\"Mill\")",
+          "state": "Passed",
+          "durationSeconds": 0.3912669,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-09T15:00:10.5944590Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=1\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=86;finish=stop\r\n[CommanderProvider] schema=field=nodes[0].builders;code=missing-or-wrong-type\r\n[CommanderProvider] semantic=invalid;nodes=0\r\n"
+        },
+        {
+          "name": "MissingBuilderDeclaration_ProviderRejectsRatherThanDefaulting(\"House\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.MissingBuilderDeclaration_ProviderRejectsRatherThanDefaulting(\"House\")",
+          "state": "Passed",
+          "durationSeconds": 0.5117512,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-09T15:00:11.1092804Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=1\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=87;finish=stop\r\n[CommanderProvider] schema=field=nodes[0].builders;code=missing-or-wrong-type\r\n[CommanderProvider] semantic=invalid;nodes=0\r\n"
+        },
+        {
+          "name": "MissingCompoundOrdering_ProviderRejectsRatherThanRunningBothImmediately",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.MissingCompoundOrdering_ProviderRejectsRatherThanRunningBothImmediately",
+          "state": "Passed",
+          "durationSeconds": 0.5297493,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-09T15:00:11.6299461Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=1\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=228;finish=stop\r\n[CommanderProvider] schema=field=executionOrder;code=missing-or-wrong-type\r\n[CommanderProvider] semantic=invalid;nodes=0\r\n"
+        },
+        {
+          "name": "NumericOnlyRepair_WithDeclarations_PreservesIntentAndUsesOnlyOneRepair",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.NumericOnlyRepair_WithDeclarations_PreservesIntentAndUsesOnlyOneRepair",
+          "state": "Passed",
+          "durationSeconds": 0.3951607,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-09T15:00:12.0274526Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=1\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=224;finish=stop\r\n[CommanderProvider] schema=field=nodes[0].count;code=missing-or-wrong-type\r\n[CommanderProvider] utc=2026-10-09T15:00:12.0341470Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=1\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=128;finish=stop\r\n[CommanderProvider] semantic=Request;nodes=1\r\n"
+        },
+        {
+          "name": "NumericStringWithoutDeclarations_DoesNotSpendARepairAttempt",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.NumericStringWithoutDeclarations_DoesNotSpendARepairAttempt",
+          "state": "Passed",
+          "durationSeconds": 0.3791898,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-09T15:00:12.4122985Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=1\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=143;finish=stop\r\n[CommanderProvider] schema=field=nodes[0].count;code=missing-or-wrong-type\r\n[CommanderProvider] semantic=invalid;nodes=0\r\n"
+        },
+        {
+          "name": "UnrepresentableBuilderCount_RejectsRatherThanChoosingOne",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.UnrepresentableBuilderCount_RejectsRatherThanChoosingOne",
+          "state": "Passed",
+          "durationSeconds": 0.277519,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "AuditReproduction_UnworkedWood_FailsAtAnchorBeforeBuilder(False)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.AuditReproduction_UnworkedWood_FailsAtAnchorBeforeBuilder(False)",
+          "state": "Passed",
+          "durationSeconds": 0.2621228,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No visible resource node currently worked by an owned villager matches the request.\r\nnormalized anchor=WorkedResource, relation=Near, resource=Wood, idleOnly=False; stage=AnchorUnavailable; reason=No visible resource node currently worked by an owned villager matches the request.\r\n"
+        },
+        {
+          "name": "AuditReproduction_UnworkedWood_FailsAtAnchorBeforeBuilder(True)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.AuditReproduction_UnworkedWood_FailsAtAnchorBeforeBuilder(True)",
+          "state": "Passed",
+          "durationSeconds": 0.2590564,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No visible resource node currently worked by an owned villager matches the request.\r\nnormalized anchor=WorkedResource, relation=Near, resource=Wood, idleOnly=True; stage=AnchorUnavailable; reason=No visible resource node currently worked by an owned villager matches the request.\r\n"
+        },
+        {
+          "name": "BerrySourceCannotSubstituteVisibleFarmOrCarcass",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.BerrySourceCannotSubstituteVisibleFarmOrCarcass",
+          "state": "Passed",
+          "durationSeconds": 0.2627646,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible Berries/Food resource matches the requested placement.\r\n"
+        },
+        {
+          "name": "CompoundBuildThenAllocate_CannotCompleteBeforeNativeBuilding",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.CompoundBuildThenAllocate_CannotCompleteBeforeNativeBuilding",
+          "state": "Passed",
+          "durationSeconds": 0.3707779,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #2 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Mill near the visible Berries/Food node at (137,136) with villager #0.\r\n[SyncCheck] tick=1 checksum=70D9229B\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (137,136): villager #0 is travelling to building #1.\r\n[SyncCheck] tick=2 checksum=116C9CEC\r\n[SyncCheck] tick=3 checksum=B200173D\r\n[SyncCheck] tick=4 checksum=5293918E\r\n[SyncCheck] tick=5 checksum=F3270BDF\r\n[SyncCheck] tick=6 checksum=93BA8630\r\n[SyncCheck] tick=7 checksum=344E0081\r\n[SyncCheck] tick=8 checksum=D4E17AD2\r\n[SyncCheck] tick=9 checksum=7574F523\r\n[SyncCheck] tick=10 checksum=D769E137\r\n[SyncCheck] tick=11 checksum=8E281DA1\r\n[SyncCheck] tick=12 checksum=CFEE92E5\r\n[SyncCheck] tick=13 checksum=482C4283\r\n[SyncCheck] tick=14 checksum=327752F9\r\n[SyncCheck] tick=15 checksum=D0037C85\r\n[SyncCheck] tick=16 checksum=7096F6D6\r\n[SyncCheck] tick=17 checksum=112A7127\r\n[SyncCheck] tick=18 checksum=B1BDEB78\r\n[SyncCheck] tick=19 checksum=525165C9\r\n[SyncCheck] tick=20 checksum=4BD0D26B\r\n[SyncCheck] tick=21 checksum=9F9B5536\r\n[SyncCheck] tick=22 checksum=3278094F\r\n[SyncCheck] tick=23 checksum=D30B83A0\r\n[SyncCheck] tick=24 checksum=739EFDF1\r\n[SyncCheck] tick=25 checksum=1D7D4A19\r\n[SyncCheck] tick=26 checksum=2007B8A2\r\n[SyncCheck] tick=27 checksum=B8FA7977\r\n[SyncCheck] tick=28 checksum=33C12C95\r\n[SyncCheck] tick=29 checksum=46E3430D\r\n[SyncCheck] tick=30 checksum=102130C8\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (137,136): building #1 is advancing with villager #0.\r\n[SyncCheck] tick=31 checksum=3126067D\r\n[SyncCheck] tick=32 checksum=E320BDC6\r\n[SyncCheck] tick=33 checksum=52751D7D\r\n[SyncCheck] tick=34 checksum=7BB6ACE6\r\n[SyncCheck] tick=35 checksum=CAC950B6\r\n[SyncCheck] tick=36 checksum=0EF7E765\r\n[SyncCheck] tick=37 checksum=B2A5ADAF\r\n[SyncCheck] tick=38 checksum=CA0EAB02\r\n[SyncCheck] tick=39 checksum=A51CDCC7\r\n[SyncCheck] tick=40 checksum=ED3904B7\r\n[SyncCheck] tick=41 checksum=B59267E2\r\n[SyncCheck] tick=42 checksum=4889436E\r\n[SyncCheck] tick=43 checksum=4DB602E6\r\n[SyncCheck] tick=44 checksum=092B8F5D\r\n[SyncCheck] tick=45 checksum=81E0470B\r\n[SyncCheck] tick=46 checksum=87D0AB87\r\n[SyncCheck] tick=47 checksum=E4D6902E\r\n[SyncCheck] tick=48 checksum=8C9E847D\r\n[SyncCheck] tick=49 checksum=E3571511\r\n[SyncCheck] tick=50 checksum=9F2E853E\r\n[SyncCheck] tick=51 checksum=6F5A8F99\r\n[SyncCheck] tick=52 checksum=D30F9AD5\r\n[SyncCheck] tick=53 checksum=08133BF2\r\n[SyncCheck] tick=54 checksum=9B22BB72\r\n[SyncCheck] tick=55 checksum=48F0CC31\r\n[SyncCheck] tick=56 checksum=F6BEDCF0\r\n[SyncCheck] tick=57 checksum=5B1CF251\r\n[SyncCheck] tick=58 checksum=DA3998F1\r\n[SyncCheck] tick=59 checksum=59563F91\r\n[SyncCheck] tick=60 checksum=BDB454F2\r\n[SyncCheck] tick=61 checksum=57D6D5A8\r\n[SyncCheck] tick=62 checksum=D6F37C48\r\n[SyncCheck] tick=63 checksum=3B5191A9\r\n[SyncCheck] tick=64 checksum=BA6E3849\r\n[SyncCheck] tick=65 checksum=398ADEE9\r\n[SyncCheck] tick=66 checksum=9DE8F44A\r\n[SyncCheck] tick=67 checksum=1D059AEA\r\n[SyncCheck] tick=68 checksum=9C22418A\r\n[SyncCheck] tick=69 checksum=008056EB\r\n[SyncCheck] tick=70 checksum=7F9CFD8B\r\n[SyncCheck] tick=71 checksum=FEB9A42B\r\n[SyncCheck] tick=72 checksum=7E1D93A2\r\n[SyncCheck] tick=73 checksum=FD3A3A42\r\n[SyncCheck] tick=74 checksum=7C56E0E2\r\n[SyncCheck] tick=75 checksum=E0B4F643\r\n[SyncCheck] tick=76 checksum=5FD19CE3\r\n[SyncCheck] tick=77 checksum=DEEE4383\r\n[SyncCheck] tick=78 checksum=434C58E4\r\n[SyncCheck] tick=79 checksum=C268FF84\r\n[SyncCheck] tick=80 checksum=4185A624\r\n[SyncCheck] tick=81 checksum=A5E3BB85\r\n[SyncCheck] tick=82 checksum=25006225\r\n[SyncCheck] tick=83 checksum=BF22E2DB\r\n[SyncCheck] tick=84 checksum=2380F83C\r\n[SyncCheck] tick=85 checksum=A29D9EDC\r\n[SyncCheck] tick=86 checksum=21BA457C\r\n[SyncCheck] tick=87 checksum=86185ADD\r\n[SyncCheck] tick=88 checksum=0535017D\r\n[SyncCheck] tick=89 checksum=8451A81D\r\n[SyncCheck] tick=90 checksum=E8AFBD7E\r\n[SyncCheck] tick=91 checksum=67CC641E\r\n[SyncCheck] tick=92 checksum=E6E90ABE\r\n[SyncCheck] tick=93 checksum=4B47201F\r\n[SyncCheck] tick=94 checksum=E569A0D5\r\n[SyncCheck] tick=95 checksum=64864775\r\n[SyncCheck] tick=96 checksum=C8E45CD6\r\n[SyncCheck] tick=97 checksum=48010376\r\n[SyncCheck] tick=98 checksum=C71DAA16\r\n[SyncCheck] tick=99 checksum=2B7BBF77\r\n[SyncCheck] tick=100 checksum=AA986617\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; Mill construction complete at (137,136) as building #1.\r\n[Commander] Goal #2: status=Executing owned=0 queued=0; Assigning selected workers to Food.\r\n[Commander] Goal #2: status=Completed owned=1 queued=0; The 1 selected workers have matching assignments.\r\n"
+        },
+        {
+          "name": "ConcurrentPlacedRequests_ReportTheirOwnNativeResults",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.ConcurrentPlacedRequests_ReportTheirOwnNativeResults",
+          "state": "Passed",
+          "durationSeconds": 0.3354956,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #2 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing LumberYard near the visible Tree/Wood node at (137,136) with villager #0.\r\n[SyncCheck] tick=1 checksum=E50614CB\r\n[SyncCheck] tick=2 checksum=1A740B1C\r\n[SyncCheck] tick=3 checksum=4FE2016D\r\n[SyncCheck] tick=4 checksum=854FF7BE\r\n[SyncCheck] tick=5 checksum=BABDEE0F\r\n[SyncCheck] tick=6 checksum=F02BE460\r\n[SyncCheck] tick=7 checksum=2599DAB1\r\n[SyncCheck] tick=8 checksum=5B07D102\r\n[SyncCheck] tick=9 checksum=9075C753\r\n[SyncCheck] tick=10 checksum=D8956367\r\n[SyncCheck] tick=11 checksum=C2B777D1\r\n[SyncCheck] tick=12 checksum=72B7DD15\r\n[SyncCheck] tick=13 checksum=DB9F94B3\r\n[SyncCheck] tick=14 checksum=571B4D29\r\n[SyncCheck] tick=15 checksum=23BE46B5\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed LumberYard at (137,136): villager #0 is travelling to building #1.\r\n[Commander] Goal #2: status=Executing owned=0 queued=0; Placing LumberYard near the visible Tree/Wood node at (142,136) with villager #1.\r\n[SyncCheck] tick=16 checksum=2A767A8B\r\n[SyncCheck] tick=17 checksum=4A6DD4AC\r\n[SyncCheck] tick=18 checksum=6A652ECD\r\n[SyncCheck] tick=19 checksum=8A5C88EE\r\n[SyncCheck] tick=20 checksum=11E56020\r\n[SyncCheck] tick=21 checksum=3CF88A3B\r\n[SyncCheck] tick=22 checksum=7CA1DA1F\r\n[SyncCheck] tick=23 checksum=AB889774\r\n[SyncCheck] tick=24 checksum=7265A07F\r\n[SyncCheck] tick=25 checksum=F0521196\r\n[SyncCheck] tick=26 checksum=CF342847\r\n[SyncCheck] tick=27 checksum=5D63C63D\r\n[SyncCheck] tick=28 checksum=8CC3E6F5\r\n[SyncCheck] tick=29 checksum=A8662F43\r\n[SyncCheck] tick=30 checksum=EB8887D1\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed LumberYard at (137,136): building #1 is advancing with villager #0.\r\n[Commander] Goal #2: status=WaitingForConstruction owned=0 queued=1; Placed LumberYard at (142,136): villager #1 is travelling to building #2.\r\n[SyncCheck] tick=31 checksum=2871E4D7\r\n[SyncCheck] tick=32 checksum=FF246AAE\r\n[SyncCheck] tick=33 checksum=36D62D34\r\n[SyncCheck] tick=34 checksum=7D765DEC\r\n[SyncCheck] tick=35 checksum=1C95504E\r\n[SyncCheck] tick=36 checksum=8DF21811\r\n[SyncCheck] tick=37 checksum=A5875BB3\r\n[SyncCheck] tick=38 checksum=F8E56123\r\n[SyncCheck] tick=39 checksum=9494D6CB\r\n[SyncCheck] tick=40 checksum=A10AE325\r\n[SyncCheck] tick=41 checksum=BB3BFB82\r\n[SyncCheck] tick=42 checksum=A9F0D188\r\n[SyncCheck] tick=43 checksum=A926FCF2\r\n[SyncCheck] tick=44 checksum=6F291DB9\r\n[SyncCheck] tick=45 checksum=07A1B8F7\r\n[SyncCheck] tick=46 checksum=0F57DB83\r\n[SyncCheck] tick=47 checksum=FD41187A\r\n[SyncCheck] tick=48 checksum=C1289719\r\n[SyncCheck] tick=49 checksum=5CD247BD\r\n[SyncCheck] tick=50 checksum=1BAF48BA\r\n[SyncCheck] tick=51 checksum=A9908E65\r\n[SyncCheck] tick=52 checksum=F8EEE7B1\r\n[SyncCheck] tick=53 checksum=2C13ED9E\r\n[SyncCheck] tick=54 checksum=3B2B6A2E\r\n[SyncCheck] tick=55 checksum=BD08353D\r\n[SyncCheck] tick=56 checksum=3EE5004C\r\n[SyncCheck] tick=57 checksum=31C3297D\r\n[SyncCheck] tick=58 checksum=9766A12D\r\n[SyncCheck] tick=59 checksum=FD0A18DD\r\n[SyncCheck] tick=60 checksum=FE674B51\r\n[SyncCheck] tick=61 checksum=56A390EF\r\n[SyncCheck] tick=62 checksum=5CB704D7\r\n[SyncCheck] tick=63 checksum=DD263FE5\r\n[SyncCheck] tick=64 checksum=1873EE99\r\n[SyncCheck] tick=65 checksum=B437EE36\r\n[SyncCheck] tick=66 checksum=8C41F902\r\n[SyncCheck] tick=67 checksum=FB695EFC\r\n[SyncCheck] tick=68 checksum=729CB669\r\n[SyncCheck] tick=69 checksum=DA0EC04C\r\n[SyncCheck] tick=70 checksum=13896A19\r\n[SyncCheck] tick=71 checksum=792CE1C9\r\n[SyncCheck] tick=72 checksum=5CBFE990\r\n[SyncCheck] tick=73 checksum=C2636140\r\n[SyncCheck] tick=74 checksum=2806D8F0\r\n[SyncCheck] tick=75 checksum=1AE50221\r\n[SyncCheck] tick=76 checksum=808879D1\r\n[SyncCheck] tick=77 checksum=E62BF181\r\n[SyncCheck] tick=78 checksum=D90A1AB2\r\n[SyncCheck] tick=79 checksum=F5D0FF7E\r\n[SyncCheck] tick=80 checksum=7A71B987\r\n[SyncCheck] tick=81 checksum=0FBC15ED\r\n[SyncCheck] tick=82 checksum=431299AA\r\n[SyncCheck] tick=83 checksum=F9306F16\r\n[SyncCheck] tick=84 checksum=C16058E7\r\n[SyncCheck] tick=85 checksum=2703D097\r\n[SyncCheck] tick=86 checksum=8CA74847\r\n[SyncCheck] tick=87 checksum=7F857178\r\n[SyncCheck] tick=88 checksum=E528E928\r\n[SyncCheck] tick=89 checksum=8FA611A1\r\n[SyncCheck] tick=90 checksum=05646262\r\n[Commander] Goal #2: status=WaitingForConstruction owned=0 queued=1; Placed LumberYard at (142,136): building #2 is advancing with villager #1.\r\n[SyncCheck] tick=91 checksum=83EE50E6\r\n[SyncCheck] tick=92 checksum=E991C896\r\n[SyncCheck] tick=93 checksum=8D72074A\r\n[SyncCheck] tick=94 checksum=427A8775\r\n[SyncCheck] tick=95 checksum=6192B72D\r\n[SyncCheck] tick=96 checksum=CD55CFCD\r\n[SyncCheck] tick=97 checksum=A95E403D\r\n[SyncCheck] tick=98 checksum=C3AB603A\r\n[SyncCheck] tick=99 checksum=7BD82AE0\r\n[SyncCheck] tick=100 checksum=AE7072E0\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; LumberYard construction complete at (137,136) as building #1.\r\n[Commander] Goal #2: status=Completed owned=1 queued=0; LumberYard construction complete at (142,136) as building #2.\r\n"
+        },
+        {
+          "name": "ExplicitlyWorkedResource_RemainsStrict",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.ExplicitlyWorkedResource_RemainsStrict",
+          "state": "Passed",
+          "durationSeconds": 0.2985704,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No visible resource node currently worked by an owned villager matches the request.\r\n[SyncCheck] tick=1 checksum=BF0487D5\r\n[SyncCheck] tick=2 checksum=0F06ECDA\r\n[SyncCheck] tick=3 checksum=1194CB69\r\n[SyncCheck] tick=4 checksum=0E4EE5E3\r\n[SyncCheck] tick=5 checksum=FEBDB62A\r\n[SyncCheck] tick=6 checksum=7962B7BE\r\n[SyncCheck] tick=7 checksum=9179B580\r\n[SyncCheck] tick=8 checksum=C7587CF2\r\n[SyncCheck] tick=9 checksum=EE7687D2\r\n[SyncCheck] tick=10 checksum=F7B76E24\r\n[SyncCheck] tick=11 checksum=20250946\r\n[SyncCheck] tick=12 checksum=E426EE1B\r\n[SyncCheck] tick=13 checksum=1ABC3962\r\n[SyncCheck] tick=14 checksum=0DC00F9E\r\n[SyncCheck] tick=15 checksum=023E12A4\r\n[SyncCheck] tick=16 checksum=4EF22530\r\n[SyncCheck] tick=17 checksum=8DF53421\r\n[SyncCheck] tick=18 checksum=DD5CF01A\r\n[SyncCheck] tick=19 checksum=37DF79DA\r\n[SyncCheck] tick=20 checksum=9262039A\r\n[SyncCheck] tick=21 checksum=ECE48D5A\r\n[SyncCheck] tick=22 checksum=4767171A\r\n[SyncCheck] tick=23 checksum=A1E9A0DA\r\n[SyncCheck] tick=24 checksum=FC6C2A9A\r\n[SyncCheck] tick=25 checksum=56EEB45A\r\n[SyncCheck] tick=26 checksum=B1713E1A\r\n[SyncCheck] tick=27 checksum=31D39DB8\r\n[SyncCheck] tick=28 checksum=8FDDCA79\r\n[SyncCheck] tick=29 checksum=EA605439\r\n[SyncCheck] tick=30 checksum=415B3AF8\r\n[SyncCheck] tick=31 checksum=9F6567B9\r\n[SyncCheck] tick=32 checksum=F6604E78\r\n[SyncCheck] tick=33 checksum=50E2D838\r\n[SyncCheck] tick=34 checksum=5848546C\r\n[SyncCheck] tick=35 checksum=F99C1C2C\r\n[SyncCheck] tick=36 checksum=7BF74923\r\n[SyncCheck] tick=37 checksum=70C8BBD3\r\n[SyncCheck] tick=38 checksum=2CDC10FE\r\n[SyncCheck] tick=39 checksum=F6250946\r\n[SyncCheck] tick=40 checksum=BB6484CE\r\n[SyncCheck] tick=41 checksum=C615E739\r\n[SyncCheck] tick=42 checksum=90E4A327\r\n[SyncCheck] tick=43 checksum=999D389B\r\n[SyncCheck] tick=44 checksum=B007D1A2\r\n[SyncCheck] tick=45 checksum=33F1D441\r\n[SyncCheck] tick=46 checksum=8E745E01\r\n[SyncCheck] tick=47 checksum=E8F6E7C1\r\n[SyncCheck] tick=48 checksum=6CE0EA60\r\n[SyncCheck] tick=49 checksum=C7637420\r\n[SyncCheck] tick=50 checksum=21E5FDE0\r\n[SyncCheck] tick=51 checksum=A5D0007F\r\n[SyncCheck] tick=52 checksum=00528A3F\r\n[SyncCheck] tick=53 checksum=51E8EA4C\r\n[SyncCheck] tick=54 checksum=D276AB95\r\n[SyncCheck] tick=55 checksum=3293E833\r\n[SyncCheck] tick=56 checksum=08F5E263\r\n[SyncCheck] tick=57 checksum=82062CA6\r\n[SyncCheck] tick=58 checksum=0841F0E3\r\n[SyncCheck] tick=59 checksum=F998B0A1\r\n[SyncCheck] tick=60 checksum=BE00547F\r\n[SyncCheck] tick=61 checksum=89773E5F\r\n[SyncCheck] tick=62 checksum=D00A88D1\r\n[SyncCheck] tick=63 checksum=04C2BE02\r\n[SyncCheck] tick=64 checksum=E6AA7928\r\n[SyncCheck] tick=65 checksum=6575D17E\r\n[SyncCheck] tick=66 checksum=5A54343D\r\n[SyncCheck] tick=67 checksum=9AB226EE\r\n[SyncCheck] tick=68 checksum=FBCBE0DC\r\n[SyncCheck] tick=69 checksum=BB3B4156\r\n[SyncCheck] tick=70 checksum=24032B43\r\n[SyncCheck] tick=71 checksum=7F1CFE2D\r\n[SyncCheck] tick=72 checksum=88AE0FE7\r\n[SyncCheck] tick=73 checksum=EEFC3836\r\n[SyncCheck] tick=74 checksum=D78CC573\r\n[SyncCheck] tick=75 checksum=5206A2BE\r\n[SyncCheck] tick=76 checksum=84D86A2B\r\n[SyncCheck] tick=77 checksum=DCCE96D1\r\n[SyncCheck] tick=78 checksum=24E86CFF\r\n[SyncCheck] tick=79 checksum=154FFBC1\r\n[SyncCheck] tick=80 checksum=5C78F5F2\r\n[SyncCheck] tick=81 checksum=9DA8A24B\r\n[SyncCheck] tick=82 checksum=2ACD65B8\r\n[SyncCheck] tick=83 checksum=316DDF38\r\n[SyncCheck] tick=84 checksum=9DE7EB11\r\n[SyncCheck] tick=85 checksum=455C0073\r\n[SyncCheck] tick=86 checksum=830890AE\r\n[SyncCheck] tick=87 checksum=20C649DF\r\n[SyncCheck] tick=88 checksum=B56529FE\r\n[SyncCheck] tick=89 checksum=B993F8A7\r\n[SyncCheck] tick=90 checksum=79126196\r\n[SyncCheck] tick=91 checksum=C369A5EA\r\n[SyncCheck] tick=92 checksum=EEF05A62\r\n[SyncCheck] tick=93 checksum=C7A81D1C\r\n[SyncCheck] tick=94 checksum=CD4EFBB6\r\n[SyncCheck] tick=95 checksum=8026E892\r\n[SyncCheck] tick=96 checksum=3A0E1B70\r\n[SyncCheck] tick=97 checksum=C706326E\r\n[SyncCheck] tick=98 checksum=80ED654C\r\n[SyncCheck] tick=99 checksum=0DE57C4A\r\n[SyncCheck] tick=100 checksum=C7CCAF28\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Mill near the worked Berries/Food node at (137,136) with villager #1.\r\n"
+        },
+        {
+          "name": "HiddenResource_DoesNotResolveOrPlace",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.HiddenResource_DoesNotResolveOrPlace",
+          "state": "Passed",
+          "durationSeconds": 0.2579936,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible Tree/Wood resource matches the requested placement.\r\n"
+        },
+        {
+          "name": "HumanProtectedIdleWorker_IsNotTakenForConstruction",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.HumanProtectedIdleWorker_IsNotTakenForConstruction",
+          "state": "Passed",
+          "durationSeconds": 0.2606164,
+          "message": null,
+          "stackTrace": null,
+          "output": "[SyncCheck] tick=1 checksum=5706F554\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No eligible owned living villager satisfies the builder restrictions for LumberYard.\r\n"
+        },
+        {
+          "name": "IdleOnlyRestriction_PersistsThroughBlockedRetry",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.IdleOnlyRestriction_PersistsThroughBlockedRetry",
+          "state": "Passed",
+          "durationSeconds": 0.2595864,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No eligible owned living villager satisfies the builder restrictions for LumberYard.\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing LumberYard near the visible Tree/Wood node at (137,136) with villager #1.\r\n[SyncCheck] tick=1 checksum=B32A2CF9\r\n"
+        },
+        {
+          "name": "InvalidResourcePlacement_FailsClosed(\"{\\\"anchor\\\":\\\"VisibleResource\\\",\\\"relation\\\":\\\"Near\\\"}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.InvalidResourcePlacement_FailsClosed(\"{\\\"anchor\\\":\\\"VisibleResource\\\",\\\"relation\\\":\\\"Near\\\"}\")",
+          "state": "Passed",
+          "durationSeconds": 0.2416067,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "InvalidResourcePlacement_FailsClosed(\"{\\\"anchor\\\":\\\"VisibleResource\\\",\\\"relation\\\":\\\"Near\\\",\\\"resource\\\":\\\"Wood\\\",\\\"sourceKind\\\":\\\"Berries\\\"}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.InvalidResourcePlacement_FailsClosed(\"{\\\"anchor\\\":\\\"VisibleResource\\\",\\\"relation\\\":\\\"Near\\\",\\\"resource\\\":\\\"Wood\\\",\\\"sourceKind\\\":\\\"Berries\\\"}\")",
+          "state": "Passed",
+          "durationSeconds": 0.2405576,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "InvalidResourcePlacement_FailsClosed(\"{\\\"anchor\\\":\\\"VisibleResource\\\",\\\"relation\\\":\\\"Near\\\",\\\"resource\\\":\\\"Wood\\\",\\\"x\\\":100}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.InvalidResourcePlacement_FailsClosed(\"{\\\"anchor\\\":\\\"VisibleResource\\\",\\\"relation\\\":\\\"Near\\\",\\\"resource\\\":\\\"Wood\\\",\\\"x\\\":100}\")",
+          "state": "Passed",
+          "durationSeconds": 0.2411858,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "InvalidResourcePlacement_FailsClosed(\"{\\\"anchor\\\":\\\"VisibleResource\\\",\\\"relation\\\":\\\"Near\\\",\\\"resource\\\":\\\"Wood\\\",\\\"ordinal\\\":1}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.InvalidResourcePlacement_FailsClosed(\"{\\\"anchor\\\":\\\"VisibleResource\\\",\\\"relation\\\":\\\"Near\\\",\\\"resource\\\":\\\"Wood\\\",\\\"ordinal\\\":1}\")",
+          "state": "Passed",
+          "durationSeconds": 0.240825,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "LivingBuilderControls_CompleteNatively(\"House\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.LivingBuilderControls_CompleteNatively(\"House\")",
+          "state": "Passed",
+          "durationSeconds": 0.3108039,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing House at (126,134) with villager #0.\r\n[SyncCheck] tick=1 checksum=FE179D19\r\n[SyncCheck] tick=2 checksum=92F44A88\r\n[SyncCheck] tick=3 checksum=27D0F7F7\r\n[SyncCheck] tick=4 checksum=BCADA566\r\n[SyncCheck] tick=5 checksum=518A52D5\r\n[SyncCheck] tick=6 checksum=E6670044\r\n[SyncCheck] tick=7 checksum=8262D56F\r\n[SyncCheck] tick=8 checksum=8142A073\r\n[SyncCheck] tick=9 checksum=10AAECCC\r\n[SyncCheck] tick=10 checksum=23F6EA7C\r\n[SyncCheck] tick=11 checksum=19AA9103\r\n[SyncCheck] tick=12 checksum=94630C23\r\n[SyncCheck] tick=13 checksum=877B8BDE\r\n[SyncCheck] tick=14 checksum=2F6B6D93\r\n[SyncCheck] tick=15 checksum=72E91146\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Construction: villager #0 is travelling to building #1.\r\n[SyncCheck] tick=16 checksum=0DDB42B5\r\n[SyncCheck] tick=17 checksum=963A5DA4\r\n[SyncCheck] tick=18 checksum=BB485DD3\r\n[SyncCheck] tick=19 checksum=2C473F02\r\n[SyncCheck] tick=20 checksum=8BD42CF3\r\n[SyncCheck] tick=21 checksum=AB3DBD87\r\n[SyncCheck] tick=22 checksum=39C5EC7E\r\n[SyncCheck] tick=23 checksum=FC167FBB\r\n[SyncCheck] tick=24 checksum=A17172FE\r\n[SyncCheck] tick=25 checksum=AA6757E8\r\n[SyncCheck] tick=26 checksum=16F82E79\r\n[SyncCheck] tick=27 checksum=89C12273\r\n[SyncCheck] tick=28 checksum=A9562888\r\n[SyncCheck] tick=29 checksum=3E32D5F7\r\n[SyncCheck] tick=30 checksum=D30F8366\r\n[SyncCheck] tick=31 checksum=67EC30D5\r\n[SyncCheck] tick=32 checksum=FCC8DE44\r\n[SyncCheck] tick=33 checksum=91A58BB3\r\n[SyncCheck] tick=34 checksum=26823922\r\n[SyncCheck] tick=35 checksum=BB5EE691\r\n[SyncCheck] tick=36 checksum=503B9400\r\n[SyncCheck] tick=37 checksum=E518416F\r\n[SyncCheck] tick=38 checksum=79F4EEDE\r\n[SyncCheck] tick=39 checksum=0ED19C4D\r\n[SyncCheck] tick=40 checksum=A3AE49BC\r\n[SyncCheck] tick=41 checksum=388AF72B\r\n[SyncCheck] tick=42 checksum=CD67A49A\r\n[SyncCheck] tick=43 checksum=62445209\r\n[SyncCheck] tick=44 checksum=F720FF78\r\n[SyncCheck] tick=45 checksum=B13EB1C2\r\n[SyncCheck] tick=46 checksum=EEAB5949\r\n[SyncCheck] tick=47 checksum=ABA413D1\r\n[SyncCheck] tick=48 checksum=47CDFC1C\r\n[SyncCheck] tick=49 checksum=3835F70F\r\n[SyncCheck] tick=50 checksum=DC811F6C\r\n[SyncCheck] tick=51 checksum=B6612A16\r\n[SyncCheck] tick=52 checksum=7639360F\r\n[SyncCheck] tick=53 checksum=BFC7925B\r\n[SyncCheck] tick=54 checksum=F2B159BC\r\n[SyncCheck] tick=55 checksum=90749DF4\r\n[SyncCheck] tick=56 checksum=25514B63\r\n[SyncCheck] tick=57 checksum=BA2DF8D2\r\n[SyncCheck] tick=58 checksum=4F0AA641\r\n[SyncCheck] tick=59 checksum=E3E753B0\r\n[SyncCheck] tick=60 checksum=78C4011F\r\n[SyncCheck] tick=61 checksum=0DA0AE8E\r\n[SyncCheck] tick=62 checksum=A27D5BFD\r\n[SyncCheck] tick=63 checksum=375A096C\r\n[SyncCheck] tick=64 checksum=C0F4387E\r\n[SyncCheck] tick=65 checksum=26949F07\r\n[SyncCheck] tick=66 checksum=DB8AFBEA\r\n[SyncCheck] tick=67 checksum=AC8AE0A7\r\n[SyncCheck] tick=68 checksum=F25C1D1B\r\n[SyncCheck] tick=69 checksum=C3DAE3E1\r\n[SyncCheck] tick=70 checksum=2A062731\r\n[SyncCheck] tick=71 checksum=90316A81\r\n[SyncCheck] tick=72 checksum=F65CADD1\r\n[SyncCheck] tick=73 checksum=5C87F121\r\n[SyncCheck] tick=74 checksum=433FD1A2\r\n[SyncCheck] tick=75 checksum=CDA421A5\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Construction: building #1 is advancing with villager #0.\r\n[SyncCheck] tick=76 checksum=BED61637\r\n[SyncCheck] tick=77 checksum=25015987\r\n[SyncCheck] tick=78 checksum=8B2C9CD7\r\n[SyncCheck] tick=79 checksum=D733B8E9\r\n[SyncCheck] tick=80 checksum=E7FFEDA1\r\n[SyncCheck] tick=81 checksum=FAAAC375\r\n[SyncCheck] tick=82 checksum=8459E746\r\n[SyncCheck] tick=83 checksum=6A4C9025\r\n[SyncCheck] tick=84 checksum=FE31C661\r\n[SyncCheck] tick=85 checksum=756041B1\r\n[SyncCheck] tick=86 checksum=6128153D\r\n[SyncCheck] tick=87 checksum=6E6E3FC4\r\n[SyncCheck] tick=88 checksum=83346CE0\r\n[SyncCheck] tick=89 checksum=738C00A3\r\n[SyncCheck] tick=90 checksum=AC2CD72B\r\n[SyncCheck] tick=91 checksum=986236D4\r\n[SyncCheck] tick=92 checksum=028EB14D\r\n[SyncCheck] tick=93 checksum=C7976D3F\r\n[SyncCheck] tick=94 checksum=904DF03E\r\n[SyncCheck] tick=95 checksum=54A4B684\r\n[SyncCheck] tick=96 checksum=236AC164\r\n[SyncCheck] tick=97 checksum=DF55AD58\r\n[SyncCheck] tick=98 checksum=BB00E6F8\r\n[SyncCheck] tick=99 checksum=2EF01EC2\r\n[SyncCheck] tick=100 checksum=AC7E22F3\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; House construction complete (1/1).\r\n"
+        },
+        {
+          "name": "LivingBuilderControls_CompleteNatively(\"Barracks\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.LivingBuilderControls_CompleteNatively(\"Barracks\")",
+          "state": "Passed",
+          "durationSeconds": 0.3241608,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Barracks at (126,134) with villager #0.\r\n[SyncCheck] tick=1 checksum=7D653803\r\n[SyncCheck] tick=2 checksum=C2A6B627\r\n[SyncCheck] tick=3 checksum=5F5CC207\r\n[SyncCheck] tick=4 checksum=18312186\r\n[SyncCheck] tick=5 checksum=6DB46645\r\n[SyncCheck] tick=6 checksum=5FE69044\r\n[SyncCheck] tick=7 checksum=40A6C705\r\n[SyncCheck] tick=8 checksum=BF370648\r\n[SyncCheck] tick=9 checksum=F0FF1830\r\n[SyncCheck] tick=10 checksum=4127C43B\r\n[SyncCheck] tick=11 checksum=96676A6D\r\n[SyncCheck] tick=12 checksum=7DF36C65\r\n[SyncCheck] tick=13 checksum=C91A6004\r\n[SyncCheck] tick=14 checksum=1A79710C\r\n[SyncCheck] tick=15 checksum=DA3948E8\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Construction: villager #0 is travelling to building #1.\r\n[SyncCheck] tick=16 checksum=6F15F657\r\n[SyncCheck] tick=17 checksum=03F2A3C6\r\n[SyncCheck] tick=18 checksum=98CF5135\r\n[SyncCheck] tick=19 checksum=2DABFEA4\r\n[SyncCheck] tick=20 checksum=C288AC13\r\n[SyncCheck] tick=21 checksum=57655982\r\n[SyncCheck] tick=22 checksum=EC4206F1\r\n[SyncCheck] tick=23 checksum=811EB460\r\n[SyncCheck] tick=24 checksum=15FB61CF\r\n[SyncCheck] tick=25 checksum=AAD80F3E\r\n[SyncCheck] tick=26 checksum=3FB4BCAD\r\n[SyncCheck] tick=27 checksum=D4916A1C\r\n[SyncCheck] tick=28 checksum=696E178B\r\n[SyncCheck] tick=29 checksum=FE4AC4FA\r\n[SyncCheck] tick=30 checksum=93277269\r\n[SyncCheck] tick=31 checksum=28041FD8\r\n[SyncCheck] tick=32 checksum=AFB66CF0\r\n[SyncCheck] tick=33 checksum=25FEBBE8\r\n[SyncCheck] tick=34 checksum=4A848800\r\n[SyncCheck] tick=35 checksum=C106203C\r\n[SyncCheck] tick=36 checksum=986A9B1E\r\n[SyncCheck] tick=37 checksum=747047AA\r\n[SyncCheck] tick=38 checksum=D6C8DAC3\r\n[SyncCheck] tick=39 checksum=4DCAD94A\r\n[SyncCheck] tick=40 checksum=7D349243\r\n[SyncCheck] tick=41 checksum=E6B7BA91\r\n[SyncCheck] tick=42 checksum=3AB77136\r\n[SyncCheck] tick=43 checksum=3C0A8D32\r\n[SyncCheck] tick=44 checksum=D0E73AA1\r\n[SyncCheck] tick=45 checksum=65C3E810\r\n[SyncCheck] tick=46 checksum=FAA0957F\r\n[SyncCheck] tick=47 checksum=8F7D42EE\r\n[SyncCheck] tick=48 checksum=2459F05D\r\n[SyncCheck] tick=49 checksum=B9369DCC\r\n[SyncCheck] tick=50 checksum=4E134B3B\r\n[SyncCheck] tick=51 checksum=09A4B785\r\n[SyncCheck] tick=52 checksum=C371E98A\r\n[SyncCheck] tick=53 checksum=E0DBB8CA\r\n[SyncCheck] tick=54 checksum=0C891CA4\r\n[SyncCheck] tick=55 checksum=9F41E4F5\r\n[SyncCheck] tick=56 checksum=A1F47652\r\n[SyncCheck] tick=57 checksum=081FB9A2\r\n[SyncCheck] tick=58 checksum=6E4AFCF2\r\n[SyncCheck] tick=59 checksum=D4764042\r\n[SyncCheck] tick=60 checksum=3AA18392\r\n[SyncCheck] tick=61 checksum=0E839600\r\n[SyncCheck] tick=62 checksum=B00EE190\r\n[SyncCheck] tick=63 checksum=CEAF4830\r\n[SyncCheck] tick=64 checksum=34DA8B80\r\n[SyncCheck] tick=65 checksum=9B05CED0\r\n[SyncCheck] tick=66 checksum=263E1F17\r\n[SyncCheck] tick=67 checksum=C08DF30C\r\n[SyncCheck] tick=68 checksum=40A13943\r\n[SyncCheck] tick=69 checksum=E353E5BE\r\n[SyncCheck] tick=70 checksum=7DC527A6\r\n[SyncCheck] tick=71 checksum=F74D748C\r\n[SyncCheck] tick=72 checksum=1DB12002\r\n[SyncCheck] tick=73 checksum=4CCC08D2\r\n[SyncCheck] tick=74 checksum=06B77DE6\r\n[SyncCheck] tick=75 checksum=C45017E5\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Construction: building #1 is advancing with villager #0.\r\n[SyncCheck] tick=76 checksum=9DC06F23\r\n[SyncCheck] tick=77 checksum=8289B725\r\n[SyncCheck] tick=78 checksum=50855A57\r\n[SyncCheck] tick=79 checksum=D93ECCA9\r\n[SyncCheck] tick=80 checksum=FD4474BD\r\n[SyncCheck] tick=81 checksum=B5E96216\r\n[SyncCheck] tick=82 checksum=B007981C\r\n[SyncCheck] tick=83 checksum=EF9BF5E8\r\n[SyncCheck] tick=84 checksum=A45DFF9B\r\n[SyncCheck] tick=85 checksum=387062B1\r\n[SyncCheck] tick=86 checksum=32A8942A\r\n[SyncCheck] tick=87 checksum=F7CF6EE5\r\n[SyncCheck] tick=88 checksum=582D6EC1\r\n[SyncCheck] tick=89 checksum=837A17DF\r\n[SyncCheck] tick=90 checksum=05E4B1DC\r\n[SyncCheck] tick=91 checksum=368642C5\r\n[SyncCheck] tick=92 checksum=DAFD76E3\r\n[SyncCheck] tick=93 checksum=4A635443\r\n[SyncCheck] tick=94 checksum=10E72282\r\n[SyncCheck] tick=95 checksum=D76AF0C1\r\n[SyncCheck] tick=96 checksum=46D0CE21\r\n[SyncCheck] tick=97 checksum=0D549C60\r\n[SyncCheck] tick=98 checksum=7CBA79C0\r\n[SyncCheck] tick=99 checksum=433E47FF\r\n[SyncCheck] tick=100 checksum=B2A4255F\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; Barracks construction complete (1/1).\r\n"
+        },
+        {
+          "name": "MissingResourceOrBuilder_IsActionableAndCreatesNothing(True)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.MissingResourceOrBuilder_IsActionableAndCreatesNothing(True)",
+          "state": "Passed",
+          "durationSeconds": 0.2594057,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible Tree/Wood resource matches the requested placement.\r\n"
+        },
+        {
+          "name": "MissingResourceOrBuilder_IsActionableAndCreatesNothing(False)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.MissingResourceOrBuilder_IsActionableAndCreatesNothing(False)",
+          "state": "Passed",
+          "durationSeconds": 0.258229,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No eligible owned living villager satisfies the builder restrictions for LumberYard.\r\n"
+        },
+        {
+          "name": "NoLegalNearbyFootprint_BlocksWithoutUnrelatedFallback",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.NoLegalNearbyFootprint_BlocksWithoutUnrelatedFallback",
+          "state": "Passed",
+          "durationSeconds": 0.2573117,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No visible, buildable, reachable location is available near the requested visible Tree/Wood node.\r\n"
+        },
+        {
+          "name": "PlacementDto_RoundTripPreservesSourceAndConstraints",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.PlacementDto_RoundTripPreservesSourceAndConstraints",
+          "state": "Passed",
+          "durationSeconds": 0.2589909,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ProtectedGold_IsPreservedAndIdleBuilderChosen",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.ProtectedGold_IsPreservedAndIdleBuilderChosen",
+          "state": "Passed",
+          "durationSeconds": 0.2866515,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing LumberYard near the visible Tree/Wood node at (137,136) with villager #1.\r\n[SyncCheck] tick=1 checksum=8C207695\r\n"
+        },
+        {
+          "name": "StructuralAuthority_RejectsChangingPlacementSource",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.StructuralAuthority_RejectsChangingPlacementSource",
+          "state": "Passed",
+          "durationSeconds": 0.2461389,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "UnplacedGlobalObjective_RetainsOwnedTotalAcrossCancellation",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.UnplacedGlobalObjective_RetainsOwnedTotalAcrossCancellation",
+          "state": "Passed",
+          "durationSeconds": 0.2420815,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=1 queued=0; Placing House at (126,134) with villager #0.\r\n[Commander] Goal #1 cancelled.\r\n"
+        },
+        {
+          "name": "VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Lumber Yard\",\"Wood\",\"Tree\",False,0)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Lumber Yard\",\"Wood\",\"Tree\",False,0)",
+          "state": "Passed",
+          "durationSeconds": 0.3130199,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing LumberYard near the visible Tree/Wood node at (137,136) with villager #0.\r\n[SyncCheck] tick=1 checksum=70D9229B\r\n[SyncCheck] tick=2 checksum=116C9CEC\r\n[SyncCheck] tick=3 checksum=B200173D\r\n[SyncCheck] tick=4 checksum=5293918E\r\n[SyncCheck] tick=5 checksum=F3270BDF\r\n[SyncCheck] tick=6 checksum=93BA8630\r\n[SyncCheck] tick=7 checksum=344E0081\r\n[SyncCheck] tick=8 checksum=D4E17AD2\r\n[SyncCheck] tick=9 checksum=7574F523\r\n[SyncCheck] tick=10 checksum=D769E137\r\n[SyncCheck] tick=11 checksum=8E281DA1\r\n[SyncCheck] tick=12 checksum=CFEE92E5\r\n[SyncCheck] tick=13 checksum=482C4283\r\n[SyncCheck] tick=14 checksum=327752F9\r\n[SyncCheck] tick=15 checksum=D0037C85\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed LumberYard at (137,136): villager #0 is travelling to building #1.\r\n[SyncCheck] tick=16 checksum=7096F6D6\r\n[SyncCheck] tick=17 checksum=112A7127\r\n[SyncCheck] tick=18 checksum=B1BDEB78\r\n[SyncCheck] tick=19 checksum=525165C9\r\n[SyncCheck] tick=20 checksum=4BD0D26B\r\n[SyncCheck] tick=21 checksum=9F9B5536\r\n[SyncCheck] tick=22 checksum=3278094F\r\n[SyncCheck] tick=23 checksum=D30B83A0\r\n[SyncCheck] tick=24 checksum=739EFDF1\r\n[SyncCheck] tick=25 checksum=1D7D4A19\r\n[SyncCheck] tick=26 checksum=2007B8A2\r\n[SyncCheck] tick=27 checksum=B8FA7977\r\n[SyncCheck] tick=28 checksum=33C12C95\r\n[SyncCheck] tick=29 checksum=46E3430D\r\n[SyncCheck] tick=30 checksum=102130C8\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed LumberYard at (137,136): building #1 is advancing with villager #0.\r\n[SyncCheck] tick=31 checksum=3126067D\r\n[SyncCheck] tick=32 checksum=E320BDC6\r\n[SyncCheck] tick=33 checksum=52751D7D\r\n[SyncCheck] tick=34 checksum=7BB6ACE6\r\n[SyncCheck] tick=35 checksum=CAC950B6\r\n[SyncCheck] tick=36 checksum=0EF7E765\r\n[SyncCheck] tick=37 checksum=B2A5ADAF\r\n[SyncCheck] tick=38 checksum=CA0EAB02\r\n[SyncCheck] tick=39 checksum=A51CDCC7\r\n[SyncCheck] tick=40 checksum=ED3904B7\r\n[SyncCheck] tick=41 checksum=B59267E2\r\n[SyncCheck] tick=42 checksum=4889436E\r\n[SyncCheck] tick=43 checksum=4DB602E6\r\n[SyncCheck] tick=44 checksum=092B8F5D\r\n[SyncCheck] tick=45 checksum=81E0470B\r\n[SyncCheck] tick=46 checksum=87D0AB87\r\n[SyncCheck] tick=47 checksum=E4D6902E\r\n[SyncCheck] tick=48 checksum=8C9E847D\r\n[SyncCheck] tick=49 checksum=E3571511\r\n[SyncCheck] tick=50 checksum=9F2E853E\r\n[SyncCheck] tick=51 checksum=6F5A8F99\r\n[SyncCheck] tick=52 checksum=D30F9AD5\r\n[SyncCheck] tick=53 checksum=08133BF2\r\n[SyncCheck] tick=54 checksum=9B22BB72\r\n[SyncCheck] tick=55 checksum=48F0CC31\r\n[SyncCheck] tick=56 checksum=F6BEDCF0\r\n[SyncCheck] tick=57 checksum=5B1CF251\r\n[SyncCheck] tick=58 checksum=DA3998F1\r\n[SyncCheck] tick=59 checksum=59563F91\r\n[SyncCheck] tick=60 checksum=BDB454F2\r\n[SyncCheck] tick=61 checksum=57D6D5A8\r\n[SyncCheck] tick=62 checksum=D6F37C48\r\n[SyncCheck] tick=63 checksum=3B5191A9\r\n[SyncCheck] tick=64 checksum=BA6E3849\r\n[SyncCheck] tick=65 checksum=398ADEE9\r\n[SyncCheck] tick=66 checksum=9DE8F44A\r\n[SyncCheck] tick=67 checksum=1D059AEA\r\n[SyncCheck] tick=68 checksum=9C22418A\r\n[SyncCheck] tick=69 checksum=008056EB\r\n[SyncCheck] tick=70 checksum=7F9CFD8B\r\n[SyncCheck] tick=71 checksum=FEB9A42B\r\n[SyncCheck] tick=72 checksum=7E1D93A2\r\n[SyncCheck] tick=73 checksum=FD3A3A42\r\n[SyncCheck] tick=74 checksum=7C56E0E2\r\n[SyncCheck] tick=75 checksum=E0B4F643\r\n[SyncCheck] tick=76 checksum=5FD19CE3\r\n[SyncCheck] tick=77 checksum=DEEE4383\r\n[SyncCheck] tick=78 checksum=434C58E4\r\n[SyncCheck] tick=79 checksum=C268FF84\r\n[SyncCheck] tick=80 checksum=4185A624\r\n[SyncCheck] tick=81 checksum=A5E3BB85\r\n[SyncCheck] tick=82 checksum=25006225\r\n[SyncCheck] tick=83 checksum=BF22E2DB\r\n[SyncCheck] tick=84 checksum=2380F83C\r\n[SyncCheck] tick=85 checksum=A29D9EDC\r\n[SyncCheck] tick=86 checksum=21BA457C\r\n[SyncCheck] tick=87 checksum=86185ADD\r\n[SyncCheck] tick=88 checksum=0535017D\r\n[SyncCheck] tick=89 checksum=8451A81D\r\n[SyncCheck] tick=90 checksum=E8AFBD7E\r\n[SyncCheck] tick=91 checksum=67CC641E\r\n[SyncCheck] tick=92 checksum=E6E90ABE\r\n[SyncCheck] tick=93 checksum=4B47201F\r\n[SyncCheck] tick=94 checksum=E569A0D5\r\n[SyncCheck] tick=95 checksum=64864775\r\n[SyncCheck] tick=96 checksum=C8E45CD6\r\n[SyncCheck] tick=97 checksum=48010376\r\n[SyncCheck] tick=98 checksum=C71DAA16\r\n[SyncCheck] tick=99 checksum=2B7BBF77\r\n[SyncCheck] tick=100 checksum=AA986617\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; LumberYard construction complete at (137,136) as building #1.\r\nnative Lumber Yard #1 at 137,136; worker=0; completed tick=631\r\n"
+        },
+        {
+          "name": "VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Lumber Yard\",\"Wood\",\"Tree\",True,0)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Lumber Yard\",\"Wood\",\"Tree\",True,0)",
+          "state": "Passed",
+          "durationSeconds": 0.311356,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing LumberYard near the visible Tree/Wood node at (137,136) with villager #0.\r\n[SyncCheck] tick=1 checksum=70D9229B\r\n[SyncCheck] tick=2 checksum=116C9CEC\r\n[SyncCheck] tick=3 checksum=B200173D\r\n[SyncCheck] tick=4 checksum=5293918E\r\n[SyncCheck] tick=5 checksum=F3270BDF\r\n[SyncCheck] tick=6 checksum=93BA8630\r\n[SyncCheck] tick=7 checksum=344E0081\r\n[SyncCheck] tick=8 checksum=D4E17AD2\r\n[SyncCheck] tick=9 checksum=7574F523\r\n[SyncCheck] tick=10 checksum=D769E137\r\n[SyncCheck] tick=11 checksum=8E281DA1\r\n[SyncCheck] tick=12 checksum=CFEE92E5\r\n[SyncCheck] tick=13 checksum=482C4283\r\n[SyncCheck] tick=14 checksum=327752F9\r\n[SyncCheck] tick=15 checksum=D0037C85\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed LumberYard at (137,136): villager #0 is travelling to building #1.\r\n[SyncCheck] tick=16 checksum=7096F6D6\r\n[SyncCheck] tick=17 checksum=112A7127\r\n[SyncCheck] tick=18 checksum=B1BDEB78\r\n[SyncCheck] tick=19 checksum=525165C9\r\n[SyncCheck] tick=20 checksum=4BD0D26B\r\n[SyncCheck] tick=21 checksum=9F9B5536\r\n[SyncCheck] tick=22 checksum=3278094F\r\n[SyncCheck] tick=23 checksum=D30B83A0\r\n[SyncCheck] tick=24 checksum=739EFDF1\r\n[SyncCheck] tick=25 checksum=1D7D4A19\r\n[SyncCheck] tick=26 checksum=2007B8A2\r\n[SyncCheck] tick=27 checksum=B8FA7977\r\n[SyncCheck] tick=28 checksum=33C12C95\r\n[SyncCheck] tick=29 checksum=46E3430D\r\n[SyncCheck] tick=30 checksum=102130C8\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed LumberYard at (137,136): building #1 is advancing with villager #0.\r\n[SyncCheck] tick=31 checksum=3126067D\r\n[SyncCheck] tick=32 checksum=E320BDC6\r\n[SyncCheck] tick=33 checksum=52751D7D\r\n[SyncCheck] tick=34 checksum=7BB6ACE6\r\n[SyncCheck] tick=35 checksum=CAC950B6\r\n[SyncCheck] tick=36 checksum=0EF7E765\r\n[SyncCheck] tick=37 checksum=B2A5ADAF\r\n[SyncCheck] tick=38 checksum=CA0EAB02\r\n[SyncCheck] tick=39 checksum=A51CDCC7\r\n[SyncCheck] tick=40 checksum=ED3904B7\r\n[SyncCheck] tick=41 checksum=B59267E2\r\n[SyncCheck] tick=42 checksum=4889436E\r\n[SyncCheck] tick=43 checksum=4DB602E6\r\n[SyncCheck] tick=44 checksum=092B8F5D\r\n[SyncCheck] tick=45 checksum=81E0470B\r\n[SyncCheck] tick=46 checksum=87D0AB87\r\n[SyncCheck] tick=47 checksum=E4D6902E\r\n[SyncCheck] tick=48 checksum=8C9E847D\r\n[SyncCheck] tick=49 checksum=E3571511\r\n[SyncCheck] tick=50 checksum=9F2E853E\r\n[SyncCheck] tick=51 checksum=6F5A8F99\r\n[SyncCheck] tick=52 checksum=D30F9AD5\r\n[SyncCheck] tick=53 checksum=08133BF2\r\n[SyncCheck] tick=54 checksum=9B22BB72\r\n[SyncCheck] tick=55 checksum=48F0CC31\r\n[SyncCheck] tick=56 checksum=F6BEDCF0\r\n[SyncCheck] tick=57 checksum=5B1CF251\r\n[SyncCheck] tick=58 checksum=DA3998F1\r\n[SyncCheck] tick=59 checksum=59563F91\r\n[SyncCheck] tick=60 checksum=BDB454F2\r\n[SyncCheck] tick=61 checksum=57D6D5A8\r\n[SyncCheck] tick=62 checksum=D6F37C48\r\n[SyncCheck] tick=63 checksum=3B5191A9\r\n[SyncCheck] tick=64 checksum=BA6E3849\r\n[SyncCheck] tick=65 checksum=398ADEE9\r\n[SyncCheck] tick=66 checksum=9DE8F44A\r\n[SyncCheck] tick=67 checksum=1D059AEA\r\n[SyncCheck] tick=68 checksum=9C22418A\r\n[SyncCheck] tick=69 checksum=008056EB\r\n[SyncCheck] tick=70 checksum=7F9CFD8B\r\n[SyncCheck] tick=71 checksum=FEB9A42B\r\n[SyncCheck] tick=72 checksum=7E1D93A2\r\n[SyncCheck] tick=73 checksum=FD3A3A42\r\n[SyncCheck] tick=74 checksum=7C56E0E2\r\n[SyncCheck] tick=75 checksum=E0B4F643\r\n[SyncCheck] tick=76 checksum=5FD19CE3\r\n[SyncCheck] tick=77 checksum=DEEE4383\r\n[SyncCheck] tick=78 checksum=434C58E4\r\n[SyncCheck] tick=79 checksum=C268FF84\r\n[SyncCheck] tick=80 checksum=4185A624\r\n[SyncCheck] tick=81 checksum=A5E3BB85\r\n[SyncCheck] tick=82 checksum=25006225\r\n[SyncCheck] tick=83 checksum=BF22E2DB\r\n[SyncCheck] tick=84 checksum=2380F83C\r\n[SyncCheck] tick=85 checksum=A29D9EDC\r\n[SyncCheck] tick=86 checksum=21BA457C\r\n[SyncCheck] tick=87 checksum=86185ADD\r\n[SyncCheck] tick=88 checksum=0535017D\r\n[SyncCheck] tick=89 checksum=8451A81D\r\n[SyncCheck] tick=90 checksum=E8AFBD7E\r\n[SyncCheck] tick=91 checksum=67CC641E\r\n[SyncCheck] tick=92 checksum=E6E90ABE\r\n[SyncCheck] tick=93 checksum=4B47201F\r\n[SyncCheck] tick=94 checksum=E569A0D5\r\n[SyncCheck] tick=95 checksum=64864775\r\n[SyncCheck] tick=96 checksum=C8E45CD6\r\n[SyncCheck] tick=97 checksum=48010376\r\n[SyncCheck] tick=98 checksum=C71DAA16\r\n[SyncCheck] tick=99 checksum=2B7BBF77\r\n[SyncCheck] tick=100 checksum=AA986617\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; LumberYard construction complete at (137,136) as building #1.\r\nnative Lumber Yard #1 at 137,136; worker=0; completed tick=631\r\n"
+        },
+        {
+          "name": "VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Mill\",\"Food\",\"Berries\",False,0)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Mill\",\"Food\",\"Berries\",False,0)",
+          "state": "Passed",
+          "durationSeconds": 0.3138374,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Mill near the visible Berries/Food node at (137,136) with villager #0.\r\n[SyncCheck] tick=1 checksum=70D9229B\r\n[SyncCheck] tick=2 checksum=116C9CEC\r\n[SyncCheck] tick=3 checksum=B200173D\r\n[SyncCheck] tick=4 checksum=5293918E\r\n[SyncCheck] tick=5 checksum=F3270BDF\r\n[SyncCheck] tick=6 checksum=93BA8630\r\n[SyncCheck] tick=7 checksum=344E0081\r\n[SyncCheck] tick=8 checksum=D4E17AD2\r\n[SyncCheck] tick=9 checksum=7574F523\r\n[SyncCheck] tick=10 checksum=D769E137\r\n[SyncCheck] tick=11 checksum=8E281DA1\r\n[SyncCheck] tick=12 checksum=CFEE92E5\r\n[SyncCheck] tick=13 checksum=482C4283\r\n[SyncCheck] tick=14 checksum=327752F9\r\n[SyncCheck] tick=15 checksum=D0037C85\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (137,136): villager #0 is travelling to building #1.\r\n[SyncCheck] tick=16 checksum=7096F6D6\r\n[SyncCheck] tick=17 checksum=112A7127\r\n[SyncCheck] tick=18 checksum=B1BDEB78\r\n[SyncCheck] tick=19 checksum=525165C9\r\n[SyncCheck] tick=20 checksum=4BD0D26B\r\n[SyncCheck] tick=21 checksum=9F9B5536\r\n[SyncCheck] tick=22 checksum=3278094F\r\n[SyncCheck] tick=23 checksum=D30B83A0\r\n[SyncCheck] tick=24 checksum=739EFDF1\r\n[SyncCheck] tick=25 checksum=1D7D4A19\r\n[SyncCheck] tick=26 checksum=2007B8A2\r\n[SyncCheck] tick=27 checksum=B8FA7977\r\n[SyncCheck] tick=28 checksum=33C12C95\r\n[SyncCheck] tick=29 checksum=46E3430D\r\n[SyncCheck] tick=30 checksum=102130C8\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (137,136): building #1 is advancing with villager #0.\r\n[SyncCheck] tick=31 checksum=3126067D\r\n[SyncCheck] tick=32 checksum=E320BDC6\r\n[SyncCheck] tick=33 checksum=52751D7D\r\n[SyncCheck] tick=34 checksum=7BB6ACE6\r\n[SyncCheck] tick=35 checksum=CAC950B6\r\n[SyncCheck] tick=36 checksum=0EF7E765\r\n[SyncCheck] tick=37 checksum=B2A5ADAF\r\n[SyncCheck] tick=38 checksum=CA0EAB02\r\n[SyncCheck] tick=39 checksum=A51CDCC7\r\n[SyncCheck] tick=40 checksum=ED3904B7\r\n[SyncCheck] tick=41 checksum=B59267E2\r\n[SyncCheck] tick=42 checksum=4889436E\r\n[SyncCheck] tick=43 checksum=4DB602E6\r\n[SyncCheck] tick=44 checksum=092B8F5D\r\n[SyncCheck] tick=45 checksum=81E0470B\r\n[SyncCheck] tick=46 checksum=87D0AB87\r\n[SyncCheck] tick=47 checksum=E4D6902E\r\n[SyncCheck] tick=48 checksum=8C9E847D\r\n[SyncCheck] tick=49 checksum=E3571511\r\n[SyncCheck] tick=50 checksum=9F2E853E\r\n[SyncCheck] tick=51 checksum=6F5A8F99\r\n[SyncCheck] tick=52 checksum=D30F9AD5\r\n[SyncCheck] tick=53 checksum=08133BF2\r\n[SyncCheck] tick=54 checksum=9B22BB72\r\n[SyncCheck] tick=55 checksum=48F0CC31\r\n[SyncCheck] tick=56 checksum=F6BEDCF0\r\n[SyncCheck] tick=57 checksum=5B1CF251\r\n[SyncCheck] tick=58 checksum=DA3998F1\r\n[SyncCheck] tick=59 checksum=59563F91\r\n[SyncCheck] tick=60 checksum=BDB454F2\r\n[SyncCheck] tick=61 checksum=57D6D5A8\r\n[SyncCheck] tick=62 checksum=D6F37C48\r\n[SyncCheck] tick=63 checksum=3B5191A9\r\n[SyncCheck] tick=64 checksum=BA6E3849\r\n[SyncCheck] tick=65 checksum=398ADEE9\r\n[SyncCheck] tick=66 checksum=9DE8F44A\r\n[SyncCheck] tick=67 checksum=1D059AEA\r\n[SyncCheck] tick=68 checksum=9C22418A\r\n[SyncCheck] tick=69 checksum=008056EB\r\n[SyncCheck] tick=70 checksum=7F9CFD8B\r\n[SyncCheck] tick=71 checksum=FEB9A42B\r\n[SyncCheck] tick=72 checksum=7E1D93A2\r\n[SyncCheck] tick=73 checksum=FD3A3A42\r\n[SyncCheck] tick=74 checksum=7C56E0E2\r\n[SyncCheck] tick=75 checksum=E0B4F643\r\n[SyncCheck] tick=76 checksum=5FD19CE3\r\n[SyncCheck] tick=77 checksum=DEEE4383\r\n[SyncCheck] tick=78 checksum=434C58E4\r\n[SyncCheck] tick=79 checksum=C268FF84\r\n[SyncCheck] tick=80 checksum=4185A624\r\n[SyncCheck] tick=81 checksum=A5E3BB85\r\n[SyncCheck] tick=82 checksum=25006225\r\n[SyncCheck] tick=83 checksum=BF22E2DB\r\n[SyncCheck] tick=84 checksum=2380F83C\r\n[SyncCheck] tick=85 checksum=A29D9EDC\r\n[SyncCheck] tick=86 checksum=21BA457C\r\n[SyncCheck] tick=87 checksum=86185ADD\r\n[SyncCheck] tick=88 checksum=0535017D\r\n[SyncCheck] tick=89 checksum=8451A81D\r\n[SyncCheck] tick=90 checksum=E8AFBD7E\r\n[SyncCheck] tick=91 checksum=67CC641E\r\n[SyncCheck] tick=92 checksum=E6E90ABE\r\n[SyncCheck] tick=93 checksum=4B47201F\r\n[SyncCheck] tick=94 checksum=E569A0D5\r\n[SyncCheck] tick=95 checksum=64864775\r\n[SyncCheck] tick=96 checksum=C8E45CD6\r\n[SyncCheck] tick=97 checksum=48010376\r\n[SyncCheck] tick=98 checksum=C71DAA16\r\n[SyncCheck] tick=99 checksum=2B7BBF77\r\n[SyncCheck] tick=100 checksum=AA986617\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; Mill construction complete at (137,136) as building #1.\r\nnative Mill #1 at 137,136; worker=0; completed tick=631\r\n"
+        },
+        {
+          "name": "VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Mill\",\"Food\",\"Berries\",True,0)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Mill\",\"Food\",\"Berries\",True,0)",
+          "state": "Passed",
+          "durationSeconds": 0.3085679,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Mill near the visible Berries/Food node at (137,136) with villager #0.\r\n[SyncCheck] tick=1 checksum=70D9229B\r\n[SyncCheck] tick=2 checksum=116C9CEC\r\n[SyncCheck] tick=3 checksum=B200173D\r\n[SyncCheck] tick=4 checksum=5293918E\r\n[SyncCheck] tick=5 checksum=F3270BDF\r\n[SyncCheck] tick=6 checksum=93BA8630\r\n[SyncCheck] tick=7 checksum=344E0081\r\n[SyncCheck] tick=8 checksum=D4E17AD2\r\n[SyncCheck] tick=9 checksum=7574F523\r\n[SyncCheck] tick=10 checksum=D769E137\r\n[SyncCheck] tick=11 checksum=8E281DA1\r\n[SyncCheck] tick=12 checksum=CFEE92E5\r\n[SyncCheck] tick=13 checksum=482C4283\r\n[SyncCheck] tick=14 checksum=327752F9\r\n[SyncCheck] tick=15 checksum=D0037C85\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (137,136): villager #0 is travelling to building #1.\r\n[SyncCheck] tick=16 checksum=7096F6D6\r\n[SyncCheck] tick=17 checksum=112A7127\r\n[SyncCheck] tick=18 checksum=B1BDEB78\r\n[SyncCheck] tick=19 checksum=525165C9\r\n[SyncCheck] tick=20 checksum=4BD0D26B\r\n[SyncCheck] tick=21 checksum=9F9B5536\r\n[SyncCheck] tick=22 checksum=3278094F\r\n[SyncCheck] tick=23 checksum=D30B83A0\r\n[SyncCheck] tick=24 checksum=739EFDF1\r\n[SyncCheck] tick=25 checksum=1D7D4A19\r\n[SyncCheck] tick=26 checksum=2007B8A2\r\n[SyncCheck] tick=27 checksum=B8FA7977\r\n[SyncCheck] tick=28 checksum=33C12C95\r\n[SyncCheck] tick=29 checksum=46E3430D\r\n[SyncCheck] tick=30 checksum=102130C8\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (137,136): building #1 is advancing with villager #0.\r\n[SyncCheck] tick=31 checksum=3126067D\r\n[SyncCheck] tick=32 checksum=E320BDC6\r\n[SyncCheck] tick=33 checksum=52751D7D\r\n[SyncCheck] tick=34 checksum=7BB6ACE6\r\n[SyncCheck] tick=35 checksum=CAC950B6\r\n[SyncCheck] tick=36 checksum=0EF7E765\r\n[SyncCheck] tick=37 checksum=B2A5ADAF\r\n[SyncCheck] tick=38 checksum=CA0EAB02\r\n[SyncCheck] tick=39 checksum=A51CDCC7\r\n[SyncCheck] tick=40 checksum=ED3904B7\r\n[SyncCheck] tick=41 checksum=B59267E2\r\n[SyncCheck] tick=42 checksum=4889436E\r\n[SyncCheck] tick=43 checksum=4DB602E6\r\n[SyncCheck] tick=44 checksum=092B8F5D\r\n[SyncCheck] tick=45 checksum=81E0470B\r\n[SyncCheck] tick=46 checksum=87D0AB87\r\n[SyncCheck] tick=47 checksum=E4D6902E\r\n[SyncCheck] tick=48 checksum=8C9E847D\r\n[SyncCheck] tick=49 checksum=E3571511\r\n[SyncCheck] tick=50 checksum=9F2E853E\r\n[SyncCheck] tick=51 checksum=6F5A8F99\r\n[SyncCheck] tick=52 checksum=D30F9AD5\r\n[SyncCheck] tick=53 checksum=08133BF2\r\n[SyncCheck] tick=54 checksum=9B22BB72\r\n[SyncCheck] tick=55 checksum=48F0CC31\r\n[SyncCheck] tick=56 checksum=F6BEDCF0\r\n[SyncCheck] tick=57 checksum=5B1CF251\r\n[SyncCheck] tick=58 checksum=DA3998F1\r\n[SyncCheck] tick=59 checksum=59563F91\r\n[SyncCheck] tick=60 checksum=BDB454F2\r\n[SyncCheck] tick=61 checksum=57D6D5A8\r\n[SyncCheck] tick=62 checksum=D6F37C48\r\n[SyncCheck] tick=63 checksum=3B5191A9\r\n[SyncCheck] tick=64 checksum=BA6E3849\r\n[SyncCheck] tick=65 checksum=398ADEE9\r\n[SyncCheck] tick=66 checksum=9DE8F44A\r\n[SyncCheck] tick=67 checksum=1D059AEA\r\n[SyncCheck] tick=68 checksum=9C22418A\r\n[SyncCheck] tick=69 checksum=008056EB\r\n[SyncCheck] tick=70 checksum=7F9CFD8B\r\n[SyncCheck] tick=71 checksum=FEB9A42B\r\n[SyncCheck] tick=72 checksum=7E1D93A2\r\n[SyncCheck] tick=73 checksum=FD3A3A42\r\n[SyncCheck] tick=74 checksum=7C56E0E2\r\n[SyncCheck] tick=75 checksum=E0B4F643\r\n[SyncCheck] tick=76 checksum=5FD19CE3\r\n[SyncCheck] tick=77 checksum=DEEE4383\r\n[SyncCheck] tick=78 checksum=434C58E4\r\n[SyncCheck] tick=79 checksum=C268FF84\r\n[SyncCheck] tick=80 checksum=4185A624\r\n[SyncCheck] tick=81 checksum=A5E3BB85\r\n[SyncCheck] tick=82 checksum=25006225\r\n[SyncCheck] tick=83 checksum=BF22E2DB\r\n[SyncCheck] tick=84 checksum=2380F83C\r\n[SyncCheck] tick=85 checksum=A29D9EDC\r\n[SyncCheck] tick=86 checksum=21BA457C\r\n[SyncCheck] tick=87 checksum=86185ADD\r\n[SyncCheck] tick=88 checksum=0535017D\r\n[SyncCheck] tick=89 checksum=8451A81D\r\n[SyncCheck] tick=90 checksum=E8AFBD7E\r\n[SyncCheck] tick=91 checksum=67CC641E\r\n[SyncCheck] tick=92 checksum=E6E90ABE\r\n[SyncCheck] tick=93 checksum=4B47201F\r\n[SyncCheck] tick=94 checksum=E569A0D5\r\n[SyncCheck] tick=95 checksum=64864775\r\n[SyncCheck] tick=96 checksum=C8E45CD6\r\n[SyncCheck] tick=97 checksum=48010376\r\n[SyncCheck] tick=98 checksum=C71DAA16\r\n[SyncCheck] tick=99 checksum=2B7BBF77\r\n[SyncCheck] tick=100 checksum=AA986617\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; Mill construction complete at (137,136) as building #1.\r\nnative Mill #1 at 137,136; worker=0; completed tick=631\r\n"
+        },
+        {
+          "name": "VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Lumber Yard\",\"Wood\",\"Tree\",True,1)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Lumber Yard\",\"Wood\",\"Tree\",True,1)",
+          "state": "Passed",
+          "durationSeconds": 0.3150172,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing LumberYard near the visible Tree/Wood node at (137,136) with villager #0.\r\n[SyncCheck] tick=1 checksum=A2C8B700\r\n[SyncCheck] tick=2 checksum=01284011\r\n[SyncCheck] tick=3 checksum=5F87C922\r\n[SyncCheck] tick=4 checksum=BDE75233\r\n[SyncCheck] tick=5 checksum=1C46DB44\r\n[SyncCheck] tick=6 checksum=7AA66455\r\n[SyncCheck] tick=7 checksum=D905ED66\r\n[SyncCheck] tick=8 checksum=37657677\r\n[SyncCheck] tick=9 checksum=95C4FF88\r\n[SyncCheck] tick=10 checksum=8D60E29C\r\n[SyncCheck] tick=11 checksum=AF362286\r\n[SyncCheck] tick=12 checksum=03EDD2CA\r\n[SyncCheck] tick=13 checksum=4F4314E8\r\n[SyncCheck] tick=14 checksum=046489DE\r\n[SyncCheck] tick=15 checksum=30A3346A\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed LumberYard at (137,136): villager #0 is travelling to building #2.\r\n[SyncCheck] tick=16 checksum=8F02BD7B\r\n[SyncCheck] tick=17 checksum=ED62468C\r\n[SyncCheck] tick=18 checksum=4BC1CF9D\r\n[SyncCheck] tick=19 checksum=AA2158AE\r\n[SyncCheck] tick=20 checksum=C502E2D0\r\n[SyncCheck] tick=21 checksum=986CA3DB\r\n[SyncCheck] tick=22 checksum=A04DCCB4\r\n[SyncCheck] tick=23 checksum=FEAD55C5\r\n[SyncCheck] tick=24 checksum=5D0CDED6\r\n[SyncCheck] tick=25 checksum=F23818FE\r\n[SyncCheck] tick=26 checksum=C374B047\r\n[SyncCheck] tick=27 checksum=BE402ADC\r\n[SyncCheck] tick=28 checksum=2DC815BA\r\n[SyncCheck] tick=29 checksum=89727B72\r\n[SyncCheck] tick=30 checksum=57797DED\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed LumberYard at (137,136): building #2 is advancing with villager #0.\r\n[SyncCheck] tick=31 checksum=6A627AA2\r\n[SyncCheck] tick=32 checksum=35536FEB\r\n[SyncCheck] tick=33 checksum=09F79962\r\n[SyncCheck] tick=34 checksum=0017BECB\r\n[SyncCheck] tick=35 checksum=90C3E3DB\r\n[SyncCheck] tick=36 checksum=ED03EE4A\r\n[SyncCheck] tick=37 checksum=6145E554\r\n[SyncCheck] tick=38 checksum=79F49C27\r\n[SyncCheck] tick=39 checksum=E635DE2C\r\n[SyncCheck] tick=40 checksum=016CDF5C\r\n[SyncCheck] tick=41 checksum=3A888E07\r\n[SyncCheck] tick=42 checksum=547A2D13\r\n[SyncCheck] tick=43 checksum=17AFFBCB\r\n[SyncCheck] tick=44 checksum=E56DA4C2\r\n[SyncCheck] tick=45 checksum=ECD9DD70\r\n[SyncCheck] tick=46 checksum=93DBDC2C\r\n[SyncCheck] tick=47 checksum=D77D6153\r\n[SyncCheck] tick=48 checksum=CFF64162\r\n[SyncCheck] tick=49 checksum=B1EA2E36\r\n[SyncCheck] tick=50 checksum=DFE10F63\r\n[SyncCheck] tick=51 checksum=75D2E67E\r\n[SyncCheck] tick=52 checksum=0D081BFA\r\n[SyncCheck] tick=53 checksum=A516C217\r\n[SyncCheck] tick=54 checksum=08EBA417\r\n[SyncCheck] tick=55 checksum=877F1756\r\n[SyncCheck] tick=56 checksum=06128A95\r\n[SyncCheck] tick=57 checksum=6AC0DD36\r\n[SyncCheck] tick=58 checksum=EA2DC116\r\n[SyncCheck] tick=59 checksum=699AA4F6\r\n[SyncCheck] tick=60 checksum=CE48F797\r\n[SyncCheck] tick=61 checksum=B25A920D\r\n[SyncCheck] tick=62 checksum=31C775ED\r\n[SyncCheck] tick=63 checksum=9675C88E\r\n[SyncCheck] tick=64 checksum=15E2AC6E\r\n[SyncCheck] tick=65 checksum=954F904E\r\n[SyncCheck] tick=66 checksum=F9FDE2EF\r\n[SyncCheck] tick=67 checksum=796AC6CF\r\n[SyncCheck] tick=68 checksum=F8D7AAAF\r\n[SyncCheck] tick=69 checksum=5D85FD50\r\n[SyncCheck] tick=70 checksum=DCF2E130\r\n[SyncCheck] tick=71 checksum=5C5FC510\r\n[SyncCheck] tick=72 checksum=25B2CE47\r\n[SyncCheck] tick=73 checksum=A51FB227\r\n[SyncCheck] tick=74 checksum=248C9607\r\n[SyncCheck] tick=75 checksum=893AE8A8\r\n[SyncCheck] tick=76 checksum=08A7CC88\r\n[SyncCheck] tick=77 checksum=8814B068\r\n[SyncCheck] tick=78 checksum=ECC30309\r\n[SyncCheck] tick=79 checksum=6C2FE6E9\r\n[SyncCheck] tick=80 checksum=EB9CCAC9\r\n[SyncCheck] tick=81 checksum=504B1D6A\r\n[SyncCheck] tick=82 checksum=CFB8014A\r\n[SyncCheck] tick=83 checksum=B3C99BC0\r\n[SyncCheck] tick=84 checksum=1877EE61\r\n[SyncCheck] tick=85 checksum=97E4D241\r\n[SyncCheck] tick=86 checksum=1751B621\r\n[SyncCheck] tick=87 checksum=7C0008C2\r\n[SyncCheck] tick=88 checksum=FB6CECA2\r\n[SyncCheck] tick=89 checksum=7AD9D082\r\n[SyncCheck] tick=90 checksum=DF882323\r\n[SyncCheck] tick=91 checksum=5EF50703\r\n[SyncCheck] tick=92 checksum=DE61EAE3\r\n[SyncCheck] tick=93 checksum=43103D84\r\n[SyncCheck] tick=94 checksum=2721D7FA\r\n[SyncCheck] tick=95 checksum=A68EBBDA\r\n[SyncCheck] tick=96 checksum=0B3D0E7B\r\n[SyncCheck] tick=97 checksum=8AA9F25B\r\n[SyncCheck] tick=98 checksum=0A16D63B\r\n[SyncCheck] tick=99 checksum=6EC528DC\r\n[SyncCheck] tick=100 checksum=EE320CBC\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; LumberYard construction complete at (137,136) as building #2.\r\nnative Lumber Yard #2 at 137,136; worker=0; completed tick=631\r\n"
+        },
+        {
+          "name": "VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Mill\",\"Food\",\"Berries\",True,1)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Mill\",\"Food\",\"Berries\",True,1)",
+          "state": "Passed",
+          "durationSeconds": 0.3174444,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Mill near the visible Berries/Food node at (137,136) with villager #0.\r\n[SyncCheck] tick=1 checksum=A2C8B700\r\n[SyncCheck] tick=2 checksum=01284011\r\n[SyncCheck] tick=3 checksum=5F87C922\r\n[SyncCheck] tick=4 checksum=BDE75233\r\n[SyncCheck] tick=5 checksum=1C46DB44\r\n[SyncCheck] tick=6 checksum=7AA66455\r\n[SyncCheck] tick=7 checksum=D905ED66\r\n[SyncCheck] tick=8 checksum=37657677\r\n[SyncCheck] tick=9 checksum=95C4FF88\r\n[SyncCheck] tick=10 checksum=8D60E29C\r\n[SyncCheck] tick=11 checksum=AF362286\r\n[SyncCheck] tick=12 checksum=03EDD2CA\r\n[SyncCheck] tick=13 checksum=4F4314E8\r\n[SyncCheck] tick=14 checksum=046489DE\r\n[SyncCheck] tick=15 checksum=30A3346A\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (137,136): villager #0 is travelling to building #2.\r\n[SyncCheck] tick=16 checksum=8F02BD7B\r\n[SyncCheck] tick=17 checksum=ED62468C\r\n[SyncCheck] tick=18 checksum=4BC1CF9D\r\n[SyncCheck] tick=19 checksum=AA2158AE\r\n[SyncCheck] tick=20 checksum=C502E2D0\r\n[SyncCheck] tick=21 checksum=986CA3DB\r\n[SyncCheck] tick=22 checksum=A04DCCB4\r\n[SyncCheck] tick=23 checksum=FEAD55C5\r\n[SyncCheck] tick=24 checksum=5D0CDED6\r\n[SyncCheck] tick=25 checksum=F23818FE\r\n[SyncCheck] tick=26 checksum=C374B047\r\n[SyncCheck] tick=27 checksum=BE402ADC\r\n[SyncCheck] tick=28 checksum=2DC815BA\r\n[SyncCheck] tick=29 checksum=89727B72\r\n[SyncCheck] tick=30 checksum=57797DED\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (137,136): building #2 is advancing with villager #0.\r\n[SyncCheck] tick=31 checksum=6A627AA2\r\n[SyncCheck] tick=32 checksum=35536FEB\r\n[SyncCheck] tick=33 checksum=09F79962\r\n[SyncCheck] tick=34 checksum=0017BECB\r\n[SyncCheck] tick=35 checksum=90C3E3DB\r\n[SyncCheck] tick=36 checksum=ED03EE4A\r\n[SyncCheck] tick=37 checksum=6145E554\r\n[SyncCheck] tick=38 checksum=79F49C27\r\n[SyncCheck] tick=39 checksum=E635DE2C\r\n[SyncCheck] tick=40 checksum=016CDF5C\r\n[SyncCheck] tick=41 checksum=3A888E07\r\n[SyncCheck] tick=42 checksum=547A2D13\r\n[SyncCheck] tick=43 checksum=17AFFBCB\r\n[SyncCheck] tick=44 checksum=E56DA4C2\r\n[SyncCheck] tick=45 checksum=ECD9DD70\r\n[SyncCheck] tick=46 checksum=93DBDC2C\r\n[SyncCheck] tick=47 checksum=D77D6153\r\n[SyncCheck] tick=48 checksum=CFF64162\r\n[SyncCheck] tick=49 checksum=B1EA2E36\r\n[SyncCheck] tick=50 checksum=DFE10F63\r\n[SyncCheck] tick=51 checksum=75D2E67E\r\n[SyncCheck] tick=52 checksum=0D081BFA\r\n[SyncCheck] tick=53 checksum=A516C217\r\n[SyncCheck] tick=54 checksum=08EBA417\r\n[SyncCheck] tick=55 checksum=877F1756\r\n[SyncCheck] tick=56 checksum=06128A95\r\n[SyncCheck] tick=57 checksum=6AC0DD36\r\n[SyncCheck] tick=58 checksum=EA2DC116\r\n[SyncCheck] tick=59 checksum=699AA4F6\r\n[SyncCheck] tick=60 checksum=CE48F797\r\n[SyncCheck] tick=61 checksum=B25A920D\r\n[SyncCheck] tick=62 checksum=31C775ED\r\n[SyncCheck] tick=63 checksum=9675C88E\r\n[SyncCheck] tick=64 checksum=15E2AC6E\r\n[SyncCheck] tick=65 checksum=954F904E\r\n[SyncCheck] tick=66 checksum=F9FDE2EF\r\n[SyncCheck] tick=67 checksum=796AC6CF\r\n[SyncCheck] tick=68 checksum=F8D7AAAF\r\n[SyncCheck] tick=69 checksum=5D85FD50\r\n[SyncCheck] tick=70 checksum=DCF2E130\r\n[SyncCheck] tick=71 checksum=5C5FC510\r\n[SyncCheck] tick=72 checksum=25B2CE47\r\n[SyncCheck] tick=73 checksum=A51FB227\r\n[SyncCheck] tick=74 checksum=248C9607\r\n[SyncCheck] tick=75 checksum=893AE8A8\r\n[SyncCheck] tick=76 checksum=08A7CC88\r\n[SyncCheck] tick=77 checksum=8814B068\r\n[SyncCheck] tick=78 checksum=ECC30309\r\n[SyncCheck] tick=79 checksum=6C2FE6E9\r\n[SyncCheck] tick=80 checksum=EB9CCAC9\r\n[SyncCheck] tick=81 checksum=504B1D6A\r\n[SyncCheck] tick=82 checksum=CFB8014A\r\n[SyncCheck] tick=83 checksum=B3C99BC0\r\n[SyncCheck] tick=84 checksum=1877EE61\r\n[SyncCheck] tick=85 checksum=97E4D241\r\n[SyncCheck] tick=86 checksum=1751B621\r\n[SyncCheck] tick=87 checksum=7C0008C2\r\n[SyncCheck] tick=88 checksum=FB6CECA2\r\n[SyncCheck] tick=89 checksum=7AD9D082\r\n[SyncCheck] tick=90 checksum=DF882323\r\n[SyncCheck] tick=91 checksum=5EF50703\r\n[SyncCheck] tick=92 checksum=DE61EAE3\r\n[SyncCheck] tick=93 checksum=43103D84\r\n[SyncCheck] tick=94 checksum=2721D7FA\r\n[SyncCheck] tick=95 checksum=A68EBBDA\r\n[SyncCheck] tick=96 checksum=0B3D0E7B\r\n[SyncCheck] tick=97 checksum=8AA9F25B\r\n[SyncCheck] tick=98 checksum=0A16D63B\r\n[SyncCheck] tick=99 checksum=6EC528DC\r\n[SyncCheck] tick=100 checksum=EE320CBC\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; Mill construction complete at (137,136) as building #2.\r\nnative Mill #2 at 137,136; worker=0; completed tick=631\r\n"
+        },
+        {
+          "name": "AgeCard_ReportsObservedAgeAndTerminalStatusWithoutInventedPercent",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTaskBoardTests.AgeCard_ReportsObservedAgeAndTerminalStatusWithoutInventedPercent",
+          "state": "Passed",
+          "durationSeconds": 0.2428108,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: ReachAge\r\n"
+        },
+        {
+          "name": "CancelRequest_StopsAllItsGoalsButLeavesUnrelatedGoalUntouched",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTaskBoardTests.CancelRequest_StopsAllItsGoalsButLeavesUnrelatedGoalUntouched",
+          "state": "Passed",
+          "durationSeconds": 0.2576293,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #2 submitted: EnsureUnitCount\r\n[Commander] Goal #3 submitted: ReachAge\r\n[Commander] Goal #1 cancelled.\r\n[Commander] Goal #2 cancelled.\r\n"
+        },
+        {
+          "name": "CardFromPreviousRuntime_CannotCancelSameIdsInReplacementRuntime",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTaskBoardTests.CardFromPreviousRuntime_CannotCancelSameIdsInReplacementRuntime",
+          "state": "Passed",
+          "durationSeconds": 0.4832526,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: ReachAge\r\n[Commander] Goal #1 submitted: ReachAge\r\n"
+        },
+        {
+          "name": "CompletedHistory_CannotHideOlderActiveTaskOrBadgeCount",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTaskBoardTests.CompletedHistory_CannotHideOlderActiveTaskOrBadgeCount",
+          "state": "Passed",
+          "durationSeconds": 0.2542422,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: ReachAge\r\n[Commander] Goal #2 submitted: ReachAge\r\n[Commander] Goal #3 submitted: ReachAge\r\n[Commander] Goal #4 submitted: ReachAge\r\n[Commander] Goal #5 submitted: ReachAge\r\n[Commander] Goal #6 submitted: ReachAge\r\n[Commander] Goal #7 submitted: ReachAge\r\n[Commander] Goal #8 submitted: ReachAge\r\n[Commander] Goal #9 submitted: ReachAge\r\n[Commander] Goal #10 submitted: ReachAge\r\n[Commander] Goal #11 submitted: ReachAge\r\n[Commander] Goal #12 submitted: ReachAge\r\n[Commander] Goal #13 submitted: ReachAge\r\n[Commander] Goal #14 submitted: ReachAge\r\n[Commander] Goal #15 submitted: ReachAge\r\n[Commander] Goal #16 submitted: ReachAge\r\n[Commander] Goal #17 submitted: ReachAge\r\n[Commander] Goal #18 submitted: ReachAge\r\n[Commander] Goal #19 submitted: ReachAge\r\n[Commander] Goal #20 submitted: ReachAge\r\n[Commander] Goal #21 submitted: ReachAge\r\n[Commander] Goal #22 submitted: ReachAge\r\n[Commander] Goal #23 submitted: ReachAge\r\n[Commander] Goal #24 submitted: ReachAge\r\n[Commander] Goal #25 submitted: ReachAge\r\n[Commander] Goal #26 submitted: ReachAge\r\n[Commander] Goal #27 submitted: ReachAge\r\n[Commander] Goal #28 submitted: ReachAge\r\n[Commander] Goal #29 submitted: ReachAge\r\n[Commander] Goal #30 submitted: ReachAge\r\n[Commander] Goal #31 submitted: ReachAge\r\n[Commander] Goal #32 submitted: ReachAge\r\n[Commander] Goal #33 submitted: ReachAge\r\n"
+        },
+        {
+          "name": "CompoundRequest_ProjectsOneCardWithTwoRealGoalSteps",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTaskBoardTests.CompoundRequest_ProjectsOneCardWithTwoRealGoalSteps",
+          "state": "Passed",
+          "durationSeconds": 0.2551224,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #2 submitted: EnsureUnitCount\r\n"
+        },
+        {
+          "name": "FreshCardAfterConversationReset_CanCancelStillLiveOldRequest_ButOldCardCannot",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTaskBoardTests.FreshCardAfterConversationReset_CanCancelStillLiveOldRequest_ButOldCardCannot",
+          "state": "Passed",
+          "durationSeconds": 0.2555227,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #2 submitted: EnsureUnitCount\r\n[Commander] Goal #1 cancelled.\r\n[Commander] Goal #2 cancelled.\r\n"
+        },
+        {
+          "name": "PartiallyFailedRequest_RemainsCancellableWhileSiblingAutomationIsLive",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTaskBoardTests.PartiallyFailedRequest_RemainsCancellableWhileSiblingAutomationIsLive",
+          "state": "Passed",
+          "durationSeconds": 0.2537015,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #2 submitted: EnsureUnitCount\r\n[Commander] Goal #2 cancelled.\r\n"
+        },
+        {
+          "name": "StaleGeneration_CannotCancelLiveRequest",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTaskBoardTests.StaleGeneration_CannotCancelLiveRequest",
+          "state": "Passed",
+          "durationSeconds": 0.2401222,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: ReachAge\r\n"
+        },
+        {
+          "name": "AcceptedConstructionResponse_DoesNotClaimConstructionHasStarted",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTruthfulStatusFixTests.AcceptedConstructionResponse_DoesNotClaimConstructionHasStarted",
+          "state": "Passed",
+          "durationSeconds": 0.2747721,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "BlockedCard_ShowsReasonInFirstVisibleCardArea",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTruthfulStatusFixTests.BlockedCard_ShowsReasonInFirstVisibleCardArea",
+          "state": "Passed",
+          "durationSeconds": 0.3751091,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+        },
+        {
+          "name": "CompoundBlockedSibling_ProvidesItsOwnActionableReasonAtCardLevel",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTruthfulStatusFixTests.CompoundBlockedSibling_ProvidesItsOwnActionableReasonAtCardLevel",
+          "state": "Passed",
+          "durationSeconds": 0.2879105,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #2 submitted: EnsureUnitCount\r\n"
+        },
+        {
+          "name": "CompoundCompletedAllocation_DoesNotCompletePendingBuilding",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTruthfulStatusFixTests.CompoundCompletedAllocation_DoesNotCompletePendingBuilding",
+          "state": "Passed",
+          "durationSeconds": 0.3095918,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] Goal #2 submitted: BuildStructure\r\n"
+        },
+        {
+          "name": "CompoundPreview_ShowsAwaitingApprovalAndKeepsMinimizedState",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTruthfulStatusFixTests.CompoundPreview_ShowsAwaitingApprovalAndKeepsMinimizedState",
+          "state": "Passed",
+          "durationSeconds": 0.3737542,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n"
+        },
+        {
+          "name": "CurrentRequestBlocker_UpdatesTopStatusWithoutAddingTranscriptLine",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTruthfulStatusFixTests.CurrentRequestBlocker_UpdatesTopStatusWithoutAddingTranscriptLine",
+          "state": "Passed",
+          "durationSeconds": 0.3738016,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] intent=admitted;goal-submitted=True\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #2 submitted: BuildStructure\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+        },
+        {
+          "name": "PendingGoal_IsAcceptedButConstructionWaitIsWorking",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTruthfulStatusFixTests.PendingGoal_IsAcceptedButConstructionWaitIsWorking",
+          "state": "Passed",
+          "durationSeconds": 0.2763424,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n"
+        }
+      ]
+    }
+  },
+  "hint": null
+}

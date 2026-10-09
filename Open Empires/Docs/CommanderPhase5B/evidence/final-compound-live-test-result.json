@@ -1,0 +1,44 @@
+{
+  "job_id": "481e8ddfa8304d438606c82229ae841e",
+  "status": "succeeded",
+  "mode": "PlayMode",
+  "started_unix_ms": 1791549126906,
+  "finished_unix_ms": 1791549154430,
+  "last_update_unix_ms": 1791549154430,
+  "progress": {
+    "completed": 1,
+    "total": 1,
+    "current_test_full_name": null,
+    "current_test_started_unix_ms": 1791549139324,
+    "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5BFinalLivePlayModeTests.ThenCompound_FinalProviderAndNativeCompletion",
+    "last_finished_unix_ms": 1791549154381,
+    "stuck_suspected": false,
+    "editor_is_focused": false,
+    "blocked_reason": null,
+    "failures_so_far": [],
+    "failures_capped": false
+  },
+  "error": null,
+  "result": {
+    "mode": "PlayMode",
+    "summary": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "durationSeconds": 15.0837145,
+      "resultState": "Passed"
+    },
+    "results": [
+      {
+        "name": "ThenCompound_FinalProviderAndNativeCompletion",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalLivePlayModeTests.ThenCompound_FinalProviderAndNativeCompletion",
+        "state": "Passed",
+        "durationSeconds": 15.0546512,
+        "message": null,
+        "stackTrace": null,
+        "output": "[DotEnv] Loaded .env from D:\\unity_projects\\OpenEmpires\\Open Empires\\.env\r\n[CommanderProvider] utc=2026-10-09T12:32:19.7643916Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #2 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing House at (124,129) using bounded fallback semantic placement with 2 clear-tile gap and villager #0.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed House at (124,129): villager #0 is travelling to building #1.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed House at (124,129): building #1 is advancing with villager #0.\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; House construction complete at (124,129) as building #1.\r\n[Commander] Goal #2: status=Executing owned=0 queued=0; Assigning selected workers to Wood.\r\n[Commander] Goal #2: status=Completed owned=1 queued=0; The 1 selected workers have matching assignments.\r\n"
+      }
+    ]
+  }
+}

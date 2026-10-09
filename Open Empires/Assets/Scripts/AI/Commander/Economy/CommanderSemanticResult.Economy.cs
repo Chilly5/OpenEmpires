@@ -33,7 +33,7 @@ namespace OpenEmpires
         {
             string name = RequiredString(value, field);
             if (!Enum.TryParse(name, false, out T parsed) || !Enum.IsDefined(typeof(T), parsed)
-                || parsed.ToString() != name) throw new JsonException();
+                || parsed.ToString() != name) throw FailField(value, field, SchemaFailureCode.InvalidEnum);
             return parsed;
         }
     }

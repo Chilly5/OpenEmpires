@@ -120,6 +120,56 @@ namespace OpenEmpires
             }
             if (goal.LastIssuedSimulationTick >= simulation.CurrentTick)
                 return new CommanderPlan(CommanderGoalStatus.Executing, "Waiting for the issued worker command to be processed.", 0, 0);
+            if (request.ResourceAmount.HasValue)
+            {
+                bool allIssued = goal.NextCommandGroup >= goal.CommandGroups.Count;
+                bool stalePending = false;
+                if (!allIssued)
+                {
+                    var pending = goal.CommandGroups[goal.NextCommandGroup];
+                    int targetId = pending is GatherCommand gather ? gather.ResourceNodeId : ((SlaughterSheepCommand)pending).SheepUnitId;
+                    var kind = pending is GatherCommand ? CommanderWorkerTargetKind.ResourceNode : CommanderWorkerTargetKind.OwnedSheep;
+                    stalePending = !VisibleEconomyTargets(goal).Any(t => t.Id == targetId && t.Kind == kind);
+                }
+                if (allIssued || stalePending)
+                {
+                    var stranded = new List<UnitData>();
+                    foreach (int id in goal.SelectedWorkerIds)
+                    {
+                        var worker = simulation.UnitRegistry.GetUnit(id);
+                        if (MatchesDestination(worker, request.Destination)) continue;
+                        // Finish a real delivery before changing its source; no synthetic credit.
+                        if (worker.State == UnitState.MovingToDropoff || worker.State == UnitState.DroppingOff) continue;
+                        // Another selected worker can slaughter the sheep first. The original
+                        // native order still travels to its carcass; do not mislabel or replace it.
+                        if (AwaitingAssignedSheepTransition(goal, worker)) continue;
+                        if (worker.State != UnitState.Idle && !IsGatheringState(worker.State))
+                            return AllocationBlocked("An original selected worker is busy with another activity; it will not be reclaimed or replaced.");
+                        stranded.Add(worker);
+                    }
+                    if (stranded.Count > 0)
+                    {
+                        var targets = VisibleEconomyTargets(goal);
+                        if (targets.Count == 0)
+                            return AllocationBlocked($"No usable visible {request.Destination.SourceKind}/{request.Destination.Resource} source remains for the original selected workers.");
+                        if (!TryResolveWorkerAssignments(goal, stranded, targets, out var recovery))
+                            return AllocationBlocked("No visible reachable authorized source has capacity for the original stranded workers; no substitute is allowed.");
+                        var changed = new HashSet<int>(stranded.Select(w => w.Id));
+                        goal.Assignments.RemoveAll(a => changed.Contains(a.WorkerId));
+                        goal.Assignments.AddRange(recovery);
+                        goal.CommandGroups.Clear(); goal.NextCommandGroup = 0;
+                        foreach (var group in recovery.GroupBy(a => new { a.Kind, a.TargetId }).OrderBy(g => g.Key.Kind).ThenBy(g => g.Key.TargetId))
+                        {
+                            int[] ids = group.Select(a => a.WorkerId).OrderBy(id => id).ToArray();
+                            goal.CommandGroups.Add(group.Key.Kind == CommanderWorkerTargetKind.ResourceNode
+                                ? (ICommand)new GatherCommand(goal.PlayerId, ids, group.Key.TargetId, request.Destination.SourceKind)
+                                : new SlaughterSheepCommand { PlayerId = goal.PlayerId, VillagerIds = ids,
+                                    SheepUnitId = group.Key.TargetId, SourceKind = request.Destination.SourceKind });
+                        }
+                        // Selected IDs, requested count/source and gathered-income origin never reset.
+                    }
+                }
+            }
             if (goal.NextCommandGroup < goal.CommandGroups.Count)
             {
                 ICommand command = goal.CommandGroups[goal.NextCommandGroup];
@@ -136,7 +186,13 @@ namespace OpenEmpires
             return observed == goal.SelectedWorkerIds.Count
                 ? goal.Allocation.ResourceAmount.HasValue ? ResourceObjectiveWaiting(goal, observed)
                     : new CommanderPlan(CommanderGoalStatus.Completed, $"The {observed} selected workers have matching assignments.", observed, 0)
-                : new CommanderPlan(CommanderGoalStatus.Blocked, $"Only {observed}/{goal.SelectedWorkerIds.Count} selected workers have matching assignments; no substitute will be used.", observed, 0);
+                : goal.Allocation.ResourceAmount.HasValue
+                    && goal.SelectedWorkerIds.All(id => MatchesDestination(simulation.UnitRegistry.GetUnit(id), request.Destination)
+                        || simulation.UnitRegistry.GetUnit(id).State == UnitState.MovingToDropoff
+                        || simulation.UnitRegistry.GetUnit(id).State == UnitState.DroppingOff
+                        || AwaitingAssignedSheepTransition(goal, simulation.UnitRegistry.GetUnit(id)))
+                    ? ResourceObjectiveWaiting(goal, observed)
+                    : new CommanderPlan(CommanderGoalStatus.Blocked, $"Only {observed}/{goal.SelectedWorkerIds.Count} selected workers have matching assignments; no substitute will be used.", observed, 0);
         }
 
         private static long StockpileAmount(PlayerResources resources, ResourceType type) => type switch
@@ -154,6 +210,13 @@ namespace OpenEmpires
                 + "; worker assignments are in place, waiting for actual resources.", workers, 0);
 
         private static CommanderPlan AllocationBlocked(string reason) => new CommanderPlan(CommanderGoalStatus.Blocked, reason, 0, 0);
+        private static bool AwaitingAssignedSheepTransition(AllocateWorkersGoal goal, UnitData worker)
+            => worker.State == UnitState.MovingToSlaughter
+                && goal.Allocation.Destination.Resource == ResourceType.Food
+                && (goal.Allocation.Destination.SourceKind == ResourceSourceKind.Any
+                    || goal.Allocation.Destination.SourceKind == ResourceSourceKind.Sheep)
+                && goal.Assignments.Any(a => a.WorkerId == worker.Id
+                    && a.Kind == CommanderWorkerTargetKind.OwnedSheep && a.TargetId == worker.CombatTargetId);
         private static bool OwnedLivingWorker(UnitData u, int player) => u != null && u.PlayerId == player && u.IsVillager && !u.IsSheep
             && u.CurrentHealth > 0 && u.State != UnitState.Dead;
 

@@ -1,0 +1,152 @@
+{
+  "job_id": "a1b40d33efb3438094f030fa6f8b1516",
+  "status": "succeeded",
+  "mode": "EditMode",
+  "started_unix_ms": 1791566319205,
+  "finished_unix_ms": 1791566350546,
+  "last_update_unix_ms": 1791566350546,
+  "progress": {
+    "completed": 13,
+    "total": 13,
+    "current_test_full_name": null,
+    "current_test_started_unix_ms": 1791566350384,
+    "last_finished_test_full_name": "OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.UnacknowledgedMatchAndCommands_AreNotPublishedToSimulation",
+    "last_finished_unix_ms": 1791566350397,
+    "stuck_suspected": false,
+    "editor_is_focused": false,
+    "blocked_reason": null,
+    "failures_so_far": [],
+    "failures_capped": false
+  },
+  "error": null,
+  "result": {
+    "mode": "EditMode",
+    "summary": {
+      "total": 13,
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "durationSeconds": 23.3756438,
+      "resultState": "Passed"
+    },
+    "results": [
+      {
+        "name": "AuthenticatePacket_DeclaresSourceAndRestrictedCommandProfileWithoutUnsafeInterpolation",
+        "fullName": "OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.AuthenticatePacket_DeclaresSourceAndRestrictedCommandProfileWithoutUnsafeInterpolation",
+        "state": "Passed",
+        "durationSeconds": 3.6507202,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "BrowserRuntimeSourceChanges_ChangeSourceIdentity",
+        "fullName": "OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.BrowserRuntimeSourceChanges_ChangeSourceIdentity",
+        "state": "Passed",
+        "durationSeconds": 0.1136358,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "Disconnect_ClearsQueuedMessagesBeforeNextConnection",
+        "fullName": "OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.Disconnect_ClearsQueuedMessagesBeforeNextConnection",
+        "state": "Passed",
+        "durationSeconds": 1.2231815,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "DuplicateAcknowledgement_CannotRewindInGameState",
+        "fullName": "OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.DuplicateAcknowledgement_CannotRewindInGameState",
+        "state": "Passed",
+        "durationSeconds": 3.4145871,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Matchmaking] State: Disconnected -> Authenticating\r\n[Matchmaking] Authenticated as fixture\r\n[Matchmaking] State: Authenticating -> Authenticated\r\n[Matchmaking] State: Authenticated -> InGame\r\n"
+      },
+      {
+        "name": "EachIncompatibleField_RejectsBeforeMatch(\"protocol_revision\")",
+        "fullName": "OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch(\"protocol_revision\")",
+        "state": "Passed",
+        "durationSeconds": 2.6166181,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Matchmaking] State: Disconnected -> Authenticating\r\n[Matchmaking] State: Authenticating -> Disconnected\r\n[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.\r\n"
+      },
+      {
+        "name": "EachIncompatibleField_RejectsBeforeMatch(\"source_sha256\")",
+        "fullName": "OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch(\"source_sha256\")",
+        "state": "Passed",
+        "durationSeconds": 2.3179423,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Matchmaking] State: Disconnected -> Authenticating\r\n[Matchmaking] State: Authenticating -> Disconnected\r\n[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.\r\n"
+      },
+      {
+        "name": "EachIncompatibleField_RejectsBeforeMatch(\"command_encoding\")",
+        "fullName": "OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch(\"command_encoding\")",
+        "state": "Passed",
+        "durationSeconds": 2.3532422,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Matchmaking] State: Disconnected -> Authenticating\r\n[Matchmaking] State: Authenticating -> Disconnected\r\n[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.\r\n"
+      },
+      {
+        "name": "EachIncompatibleField_RejectsBeforeMatch(\"recovery_policy\")",
+        "fullName": "OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch(\"recovery_policy\")",
+        "state": "Passed",
+        "durationSeconds": 2.3932759,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Matchmaking] State: Disconnected -> Authenticating\r\n[Matchmaking] State: Authenticating -> Disconnected\r\n[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.\r\n"
+      },
+      {
+        "name": "LateMatchingAcknowledgement_AfterDisconnectCannotReopenAdmission",
+        "fullName": "OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.LateMatchingAcknowledgement_AfterDisconnectCannotReopenAdmission",
+        "state": "Passed",
+        "durationSeconds": 1.1525581,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "LegacyAuthenticationWithoutProfile_IsNotGameplayAdmission",
+        "fullName": "OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.LegacyAuthenticationWithoutProfile_IsNotGameplayAdmission",
+        "state": "Passed",
+        "durationSeconds": 1.2145374,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Matchmaking] State: Disconnected -> Authenticating\r\n[Matchmaking] State: Authenticating -> Disconnected\r\n[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.\r\n"
+      },
+      {
+        "name": "MalformedServerPayload_IsNotEchoedToDiagnostics",
+        "fullName": "OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.MalformedServerPayload_IsNotEchoedToDiagnostics",
+        "state": "Passed",
+        "durationSeconds": 0.0091427,
+        "message": null,
+        "stackTrace": null,
+        "output": "\nIgnoreFailingMessages:true\r\n[ServerMessageParser] Invalid server message rejected; payload omitted.\r\n\nIgnoreFailingMessages:false\r\n"
+      },
+      {
+        "name": "MatchingServerAcknowledgement_EnablesAuthenticationOnly",
+        "fullName": "OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.MatchingServerAcknowledgement_EnablesAuthenticationOnly",
+        "state": "Passed",
+        "durationSeconds": 2.3215157,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Matchmaking] State: Disconnected -> Authenticating\r\n[Matchmaking] Authenticated as fixture\r\n[Matchmaking] State: Authenticating -> Authenticated\r\n"
+      },
+      {
+        "name": "UnacknowledgedMatchAndCommands_AreNotPublishedToSimulation",
+        "fullName": "OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.UnacknowledgedMatchAndCommands_AreNotPublishedToSimulation",
+        "state": "Passed",
+        "durationSeconds": 0.0128098,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.\r\n[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.\r\n[Matchmaking] Missing/stale/mismatched compatibility acknowledgement; gameplay blocked.\r\n"
+      }
+    ]
+  }
+}

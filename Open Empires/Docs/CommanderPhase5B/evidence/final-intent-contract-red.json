@@ -1,0 +1,52 @@
+{
+  "job_id": "fd910712fde0451889866e69cde60495",
+  "status": "failed",
+  "mode": "EditMode",
+  "started_unix_ms": 1791544477074,
+  "finished_unix_ms": 1791544496420,
+  "last_update_unix_ms": 1791544496420,
+  "progress": {
+    "completed": 9,
+    "total": 9,
+    "current_test_full_name": null,
+    "current_test_started_unix_ms": 1791544495249,
+    "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.UnrepresentableBuilderCount_RejectsRatherThanChoosingOne",
+    "last_finished_unix_ms": 1791544496250,
+    "stuck_suspected": false,
+    "editor_is_focused": false,
+    "blocked_reason": null,
+    "failures_so_far": [
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.DeclaredSequentialOrdering_RequiresCompletionDependency(True)",
+        "message": "  I couldn't understand that request safely.\r\n  Expected: True\r\n  But was:  False\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.ExplicitIdleBuilder_AdmissionPreservesEligibility",
+        "message": "  I couldn't understand that request safely.\r\n  Expected: True\r\n  But was:  False\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.InvalidConstraintMode_ReportsOnlySanitizedFieldDiagnostic",
+        "message": "  Expected: String containing \"field=nodes[0].constraints[0].mode\"\r\n  But was:  \"utc=2026-10-09T11:14:50.2979513Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=12\nfinish=stop\nassistantContent=extracted;characters=169;finish=stop\nsemantic=invalid;nodes=0\n\"\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.MissingBuilderDeclaration_ProviderRejectsRatherThanDefaulting(\"Lumber Yard\")",
+        "message": "  A provider construction reply must declare builder eligibility and count.\r\n  Expected: False\r\n  But was:  True\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.MissingBuilderDeclaration_ProviderRejectsRatherThanDefaulting(\"Mill\")",
+        "message": "  A provider construction reply must declare builder eligibility and count.\r\n  Expected: False\r\n  But was:  True\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.MissingBuilderDeclaration_ProviderRejectsRatherThanDefaulting(\"House\")",
+        "message": "  A provider construction reply must declare builder eligibility and count.\r\n  Expected: False\r\n  But was:  True\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.MissingCompoundOrdering_ProviderRejectsRatherThanRunningBothImmediately",
+        "message": "  Expected: False\r\n  But was:  True\r\n"
+      }
+    ],
+    "failures_capped": false
+  },
+  "error": null,
+  "result": null
+}

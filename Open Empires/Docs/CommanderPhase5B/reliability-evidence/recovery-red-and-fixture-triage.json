@@ -1,0 +1,36 @@
+{
+  "job_id": "8be686649f264d2d9e8959351819e196",
+  "status": "failed",
+  "mode": "EditMode",
+  "started_unix_ms": 1791564877023,
+  "finished_unix_ms": 1791564914491,
+  "last_update_unix_ms": 1791564914491,
+  "progress": {
+    "completed": 21,
+    "total": 21,
+    "current_test_full_name": null,
+    "current_test_started_unix_ms": 1791564912438,
+    "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5BReliabilityGatheringTests.ExplicitBerries400_RecoversOnlyToBerriesAndKeepsOriginalFourWorkers",
+    "last_finished_unix_ms": 1791564914179,
+    "stuck_suspected": false,
+    "editor_is_focused": false,
+    "blocked_reason": null,
+    "failures_so_far": [
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.StartingScout_ContextSerializesWithExplicitProductionCapability",
+        "message": "  Expected: String containing \"\"unitCapabilities\":[\"Scout\",\"Villager\"]\"\r\n  But was:  \"{\"age\":2,\"civilization\":\"English\",\"resources\":{\"Food\":100,\"Wood\":200,\"Gold\":300,\"Stone\":400},\"population\":12,\"populationCap\":20,\"canonicalUnitIds\":[\"unit:Scout\",\"unit:Villager\"],\"canonicalBuildingIds\":[],\"ownedUnitCounts\":{\"Archer\":0,\"Knight\":0,\"Scout\":1,\"Spearman\":0,\"Villager\":0},\"ownedBuildingCounts\":{\"ArcheryRange\":0,\"Barracks\":1,\"House\":0,\"Mill\":0,\"Stables\":0,\"Tower\":0,\"TownCenter\":0},\"unitCapabilities\":[],\"structureCapabilities\":[\"House\",\"Barracks\",\"ArcheryRange\",\"Stables\",\"Mill\",\"Tower\",\"TownCenter\"],\"resourceCapabilities\":[\"Food\",\"Wood\",\"Gold\",\"Stone\"],\"strategyCapabilities\":[\"AttackPreparation\",\"DefensivePreparation\",\"EconomicExpansion\",\"MilitaryReinforcement\",\"RangedReinforcement\",\"DefensiveTurtle\"],\"actionCapabilities\":[\"AllocateWorkers\",\"MoveUnits\",\"ScoutArea\",\"PatrolArea\",\"SetRallyPoint\",\"AttackTarget\",\"DefendArea\",\"RetreatUnits\",\"RepairTarget\",\"ResearchTechnology\"],\"selectorCapabilities\":{\"units\":[\"Military\",\"Scout\",\"Villagers\",\"Spearman\",\"Archer\",\"Knight\",\"DamagedMilitary\"],\"locations\":[\"PlayerBase\",\"WorkedResource\",\"VisibleResource\",\"VisibleEnemy\",\"RelativeToSelectedUnits\"],\"constructionAnchors\":[\"MyTownCenter\",\"MyBarracks\",\"WorkedResource\",\"VisibleResource\"],\"targets\":{\"UnitType\":[\"Villager\",\"Spearman\",\"Archer\",\"Scout\",\"Knight\"],\"BuildingType\":[\"House\",\"Barracks\",\"TownCenter\",\"Wall\",\"Mill\",\"LumberYard\",\"Mine\",\"ArcheryRange\",\"Stables\",\"Farm\",\"Tower\",\"Monastery\",\"Landmark\",\"Blacksmith\",\"Market\",\"University\",\"SiegeWorkshop\",\"Keep\",\"StoneWall\",\"StoneGate\",\"WoodGate\",\"Wonder\"]}},\"knowledge\":{},\"workerCounts\":{\"idleUnqueued\":0,\"gatheringByResource\":{\"Wood\":3}}}\"\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BReliabilityGatheringTests.AdditionalFood400_RecoversOriginalFourWorkersFromNativeSheepDepletionToVisibleBerries",
+        "message": "  Blocked for 1800 ticks. Only 0/4 selected workers have matching assignments; no substitute will be used.\r\n  Expected: Completed\r\n  But was:  Failed\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BReliabilityGatheringTests.ExplicitBerries400_RecoversOnlyToBerriesAndKeepsOriginalFourWorkers",
+        "message": "  Blocked for 1800 ticks. Only 0/4 selected workers have matching assignments; no substitute will be used.\r\n  Expected: Completed\r\n  But was:  Failed\r\n"
+      }
+    ],
+    "failures_capped": false
+  },
+  "error": null,
+  "result": null
+}

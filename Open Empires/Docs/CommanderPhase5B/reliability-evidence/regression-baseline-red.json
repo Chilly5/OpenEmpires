@@ -1,0 +1,104 @@
+{
+  "job_id": "2d605262a15249779941b0ce491d2b70",
+  "status": "failed",
+  "mode": "EditMode",
+  "started_unix_ms": 1791564169072,
+  "finished_unix_ms": 1791564202847,
+  "last_update_unix_ms": 1791564202847,
+  "progress": {
+    "completed": 20,
+    "total": 20,
+    "current_test_full_name": null,
+    "current_test_started_unix_ms": 1791564201511,
+    "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5AAuthorityTests.ApprovalRequiresDisplayedSingleUseCredential_NotJustIdentityOrLabel",
+    "last_finished_unix_ms": 1791564202661,
+    "stuck_suspected": false,
+    "editor_is_focused": false,
+    "blocked_reason": null,
+    "failures_so_far": [
+      {
+        "full_name": "OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.AuthenticatePacket_DeclaresSourceAndRestrictedCommandProfileWithoutUnsafeInterpolation",
+        "message": "  Generate current compatibility data before running this fixture.\r\n  Expected: not null\r\n  But was:  null\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.Disconnect_ClearsQueuedMessagesBeforeNextConnection",
+        "message": "  Generate current compatibility data before running this fixture.\r\n  Expected: not null\r\n  But was:  null\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.DuplicateAcknowledgement_CannotRewindInGameState",
+        "message": "  Generate current compatibility data before running this fixture.\r\n  Expected: not null\r\n  But was:  null\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch(\"protocol_revision\")",
+        "message": "  Generate current compatibility data before running this fixture.\r\n  Expected: not null\r\n  But was:  null\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch(\"source_sha256\")",
+        "message": "  Generate current compatibility data before running this fixture.\r\n  Expected: not null\r\n  But was:  null\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch(\"command_encoding\")",
+        "message": "  Generate current compatibility data before running this fixture.\r\n  Expected: not null\r\n  But was:  null\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.EachIncompatibleField_RejectsBeforeMatch(\"recovery_policy\")",
+        "message": "  Generate current compatibility data before running this fixture.\r\n  Expected: not null\r\n  But was:  null\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.LateMatchingAcknowledgement_AfterDisconnectCannotReopenAdmission",
+        "message": "  Generate current compatibility data before running this fixture.\r\n  Expected: not null\r\n  But was:  null\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderGrandFixNetworkCompatibilityTests.MatchingServerAcknowledgement_EnablesAuthenticationOnly",
+        "message": "  Generate current compatibility data before running this fixture.\r\n  Expected: not null\r\n  But was:  null\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderIntentIntegrationTests.GoalCompletionEvent_ProducesDeterministicReadyResponse",
+        "message": "  String lengths are both 34. Strings differ at index 25.\r\n  Expected: \"Understood.\\nPreparing 10 spearmen.\"\r\n  But was:  \"Understood.\\nPreparing 10 Spearmen.\"\r\n  -------------------------------------^\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase3CPreparationTests.WorkerReservation_ReleasesDeadOrGarrisonedWorker(True)",
+        "message": "  Expected: null\r\n  But was:  OpenEmpires.CommanderWorkerReservation\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase4A1HardeningTests.TimedOutSubmission_UnlocksCommanderChatUI",
+        "message": "System.InvalidOperationException : Sequence contains more than one matching element"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase4E1ChatTests.NonTacticalOrInvalidSemanticResult_CreatesNoGoal(\"{\\\"outcome\\\":\\\"Request\\\",\\\"nodes\\\":[{\\\"type\\\":\\\"EnsureUnitCount\\\",\\\"unit\\\":\\\"Trebuchet\\\",\\\"count\\\":10}]}\")",
+        "message": "  Expected: True\r\n  But was:  False\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.CivilizationResolvedUnits_AreCountedUnderSemanticCapabilities",
+        "message": "  Expected: String containing \"\"Archer\":3\"\r\n  But was:  \"{\"age\":2,\"civilization\":\"English\",\"resources\":{\"Food\":100,\"Wood\":200,\"Gold\":300,\"Stone\":400},\"population\":12,\"populationCap\":20,\"canonicalUnitIds\":[],\"canonicalBuildingIds\":[],\"ownedUnitCounts\":{\"Archer\":0,\"Knight\":0,\"Longbowman\":3,\"Scout\":0,\"Spearman\":0,\"Villager\":0},\"ownedBuildingCounts\":{\"ArcheryRange\":0,\"Barracks\":1,\"House\":0,\"Mill\":0,\"Stables\":0,\"Tower\":0,\"TownCenter\":0},\"unitCapabilities\":[],\"structureCapabilities\":[\"House\",\"Barracks\",\"ArcheryRange\",\"Stables\",\"Mill\",\"Tower\",\"TownCenter\"],\"resourceCapabilities\":[\"Food\",\"Wood\",\"Gold\",\"Stone\"],\"strategyCapabilities\":[\"AttackPreparation\",\"DefensivePreparation\",\"EconomicExpansion\",\"MilitaryReinforcement\",\"RangedReinforcement\",\"DefensiveTurtle\"],\"actionCapabilities\":[\"AllocateWorkers\",\"MoveUnits\",\"ScoutArea\",\"PatrolArea\",\"SetRallyPoint\",\"AttackTarget\",\"DefendArea\",\"RetreatUnits\",\"RepairTarget\",\"ResearchTechnology\"],\"selectorCapabilities\":{\"units\":[\"Military\",\"Scout\",\"Villagers\",\"Spearman\",\"Archer\",\"Knight\",\"DamagedMilitary\"],\"locations\":[\"PlayerBase\",\"WorkedResource\",\"VisibleResource\",\"VisibleEnemy\",\"RelativeToSelectedUnits\"],\"constructionAnchors\":[\"MyTownCenter\",\"MyBarracks\",\"WorkedResource\",\"VisibleResource\"],\"targets\":{\"UnitType\":[\"Villager\",\"Spearman\",\"Archer\",\"Scout\",\"Knight\"],\"BuildingType\":[\"House\",\"Barracks\",\"TownCenter\",\"Wall\",\"Mill\",\"LumberYard\",\"Mine\",\"ArcheryRange\",\"Stables\",\"Farm\",\"Tower\",\"Monastery\",\"Landmark\",\"Blacksmith\",\"Market\",\"University\",\"SiegeWorkshop\",\"Keep\",\"StoneWall\",\"StoneGate\",\"WoodGate\",\"Wonder\"]}},\"knowledge\":{},\"workerCounts\":{\"idleUnqueued\":0,\"gatheringByResource\":{\"Wood\":3}}}\"\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.StartingScout_ContextSerializesWithExplicitProductionCapability",
+        "message": "  Expected: String containing \"\"unitCapabilities\":[\"Villager\",\"Spearman\",\"Archer\",\"Scout\",\"Knight\"]\"\r\n  But was:  \"{\"age\":2,\"civilization\":\"English\",\"resources\":{\"Food\":100,\"Wood\":200,\"Gold\":300,\"Stone\":400},\"population\":12,\"populationCap\":20,\"canonicalUnitIds\":[],\"canonicalBuildingIds\":[],\"ownedUnitCounts\":{\"Archer\":0,\"Knight\":0,\"Scout\":1,\"Spearman\":0,\"Villager\":0},\"ownedBuildingCounts\":{\"ArcheryRange\":0,\"Barracks\":1,\"House\":0,\"Mill\":0,\"Stables\":0,\"Tower\":0,\"TownCenter\":0},\"unitCapabilities\":[],\"structureCapabilities\":[\"House\",\"Barracks\",\"ArcheryRange\",\"Stables\",\"Mill\",\"Tower\",\"TownCenter\"],\"resourceCapabilities\":[\"Food\",\"Wood\",\"Gold\",\"Stone\"],\"strategyCapabilities\":[\"AttackPreparation\",\"DefensivePreparation\",\"EconomicExpansion\",\"MilitaryReinforcement\",\"RangedReinforcement\",\"DefensiveTurtle\"],\"actionCapabilities\":[\"AllocateWorkers\",\"MoveUnits\",\"ScoutArea\",\"PatrolArea\",\"SetRallyPoint\",\"AttackTarget\",\"DefendArea\",\"RetreatUnits\",\"RepairTarget\",\"ResearchTechnology\"],\"selectorCapabilities\":{\"units\":[\"Military\",\"Scout\",\"Villagers\",\"Spearman\",\"Archer\",\"Knight\",\"DamagedMilitary\"],\"locations\":[\"PlayerBase\",\"WorkedResource\",\"VisibleResource\",\"VisibleEnemy\",\"RelativeToSelectedUnits\"],\"constructionAnchors\":[\"MyTownCenter\",\"MyBarracks\",\"WorkedResource\",\"VisibleResource\"],\"targets\":{\"UnitType\":[\"Villager\",\"Spearman\",\"Archer\",\"Scout\",\"Knight\"],\"BuildingType\":[\"House\",\"Barracks\",\"TownCenter\",\"Wall\",\"Mill\",\"LumberYard\",\"Mine\",\"ArcheryRange\",\"Stables\",\"Farm\",\"Tower\",\"Monastery\",\"Landmark\",\"Blacksmith\",\"Market\",\"University\",\"SiegeWorkshop\",\"Keep\",\"StoneWall\",\"StoneGate\",\"WoodGate\",\"Wonder\"]}},\"knowledge\":{},\"workerCounts\":{\"idleUnqueued\":0,\"gatheringByResource\":{\"Wood\":3}}}\"\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.NearestGold_EqualDistanceChoosesLowerResourceId",
+        "message": "System.Reflection.TargetParameterCountException : Number of parameters specified does not match the expected number."
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.NearestGold_NoCurrentlyVisibleCandidateFailsWithoutRevealingFog",
+        "message": "System.Reflection.TargetParameterCountException : Number of parameters specified does not match the expected number."
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.NearestGold_UsesOnlyCurrentlyVisibleNondepletedMatchingResources",
+        "message": "System.Reflection.TargetParameterCountException : Number of parameters specified does not match the expected number."
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase4E2ReferenceResolverTests.NearestGold_UsesRequestedOwnedTownCenterOrdinal",
+        "message": "System.Reflection.TargetParameterCountException : Number of parameters specified does not match the expected number."
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5AAuthorityTests.ApprovalRequiresDisplayedSingleUseCredential_NotJustIdentityOrLabel",
+        "message": "  Expected: same as <OpenEmpires.StrategicIntent>\r\n  But was:  null\r\n"
+      }
+    ],
+    "failures_capped": false
+  },
+  "error": null,
+  "result": null
+}

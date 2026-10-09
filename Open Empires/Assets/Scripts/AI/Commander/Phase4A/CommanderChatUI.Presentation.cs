@@ -239,7 +239,7 @@ namespace OpenEmpires
                 : VoiceState == CommanderVoiceState.Transcribing ? "Transcribing — Cancel available"
                 : VoiceState == CommanderVoiceState.Error ? "Voice unavailable — open Commander for details"
                 : submitting ? "Interpreting your request…"
-                : approving ? "Approval required — no new plan started"
+                : approving ? "Awaiting approval — no new plan started"
                 : reviewing ? "Transcript ready — review before Send"
                 : (commanderStatusText?.text ?? "Commander ready") + "\n"+CurrentVoiceModeLabel+" — hold " + ResolvePttKey()+" ("+VoiceCaptureLimitLabel+")";
         }

@@ -164,7 +164,7 @@ namespace OpenEmpires
                     $"Structure count must be between 1 and {MaximumStructureCount}.");
             bool placed = intent.PlacementAnchorSelector.HasValue;
             if (!placed && (intent.PlacementAnchorOrdinal.HasValue || intent.PlacementRelation.HasValue
-                || intent.ClearGapTiles.HasValue || intent.PlacementResourceType.HasValue))
+                || intent.ClearGapTiles.HasValue || intent.PlacementResourceType.HasValue || intent.PlacementSourceKind.HasValue))
                 return Invalid(CommanderIntentErrorCode.UnknownCommand, "Incomplete semantic placement.");
             if (placed)
             {
@@ -177,11 +177,16 @@ namespace OpenEmpires
                         && (intent.PlacementAnchorSelector != CommanderSemanticAnchorSelector.MyTownCenter
                             || intent.PlacementAnchorOrdinal.Value < CommanderSemanticJson.MinimumTownCenterOrdinal
                             || intent.PlacementAnchorOrdinal.Value > CommanderSemanticJson.MaximumTownCenterOrdinal))
-                    || (intent.PlacementAnchorSelector == CommanderSemanticAnchorSelector.WorkedResource
+                    || ((intent.PlacementAnchorSelector == CommanderSemanticAnchorSelector.WorkedResource
+                            || intent.PlacementAnchorSelector == CommanderSemanticAnchorSelector.VisibleResource)
                         && (!intent.PlacementResourceType.HasValue
                             || intent.PlacementRelation != CommanderSemanticPlacementRelation.Near))
                     || (intent.PlacementAnchorSelector != CommanderSemanticAnchorSelector.WorkedResource
+                        && intent.PlacementAnchorSelector != CommanderSemanticAnchorSelector.VisibleResource
                         && intent.PlacementResourceType.HasValue)
+                    || (intent.PlacementResourceType.HasValue && !Enum.IsDefined(typeof(ResourceType), intent.PlacementResourceType.Value))
+                    || (intent.PlacementSourceKind.HasValue && (!intent.PlacementResourceType.HasValue
+                        || !ResourceSourceRules.IsCompatible(intent.PlacementResourceType.Value, intent.PlacementSourceKind.Value)))
                     || (intent.ClearGapTiles.HasValue
                         && (intent.ClearGapTiles.Value < CommanderSemanticJson.MinimumClearGapTiles
                             || intent.ClearGapTiles.Value > CommanderSemanticJson.MaximumClearGapTiles))

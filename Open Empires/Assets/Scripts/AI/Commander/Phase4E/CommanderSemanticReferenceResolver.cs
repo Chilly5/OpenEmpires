@@ -42,7 +42,7 @@ namespace OpenEmpires
         }
 
         public bool TryResolveVisibleResourceNearestToTownCenter(int playerId, ResourceType type,
-            int? townCenterOrdinal, out ResourceNodeData node)
+            int? townCenterOrdinal, out ResourceNodeData node, ResourceSourceKind sourceKind = ResourceSourceKind.Any)
         {
             node = null;
             if (!IsValidPlayer(playerId) || !Enum.IsDefined(typeof(ResourceType), type)) return false;
@@ -55,6 +55,7 @@ namespace OpenEmpires
             {
                 ResourceNodeData candidate = resources[i];
                 if (candidate == null || candidate.Type != type || candidate.IsDepleted
+                    || !ResourceSourceRules.MatchesOwnedSource(candidate, sourceKind, playerId, simulation.BuildingRegistry)
                     || simulation.FogOfWar.GetVisibility(playerId, candidate.TileX, candidate.TileZ)
                         != TileVisibility.Visible) continue;
 
@@ -73,7 +74,7 @@ namespace OpenEmpires
         }
 
         public bool TryResolveWorkedResource(int playerId, ResourceType type,
-            out ResourceNodeData node)
+            out ResourceNodeData node, ResourceSourceKind sourceKind = ResourceSourceKind.Any)
         {
             node = null;
             if (!IsValidPlayer(playerId) || !Enum.IsDefined(typeof(ResourceType), type)) return false;
@@ -81,6 +82,7 @@ namespace OpenEmpires
             List<UnitData> units = simulation.UnitRegistry.GetAllUnits();
             for (int i = 0; i < units.Count; i++)
                 if (units[i] != null && units[i].PlayerId == playerId && units[i].IsVillager
+                    && units[i].CurrentHealth > 0 && units[i].State != UnitState.Dead
                     && units[i].TargetResourceNodeId >= 0)
                     worked.Add(units[i].TargetResourceNodeId);
             IReadOnlyList<ResourceNodeData> resources = simulation.MapData.GetAllResourceNodes();
@@ -89,6 +91,7 @@ namespace OpenEmpires
                 ResourceNodeData candidate = resources[i];
                 if (candidate == null || candidate.Type != type || candidate.IsDepleted
                     || !worked.Contains(candidate.Id)
+                    || !ResourceSourceRules.MatchesOwnedSource(candidate, sourceKind, playerId, simulation.BuildingRegistry)
                     || simulation.FogOfWar.GetVisibility(playerId, candidate.TileX, candidate.TileZ)
                         != TileVisibility.Visible) continue;
                 if (node == null || candidate.Id < node.Id) node = candidate;

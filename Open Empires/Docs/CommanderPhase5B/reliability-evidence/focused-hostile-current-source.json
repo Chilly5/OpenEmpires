@@ -1,0 +1,626 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "642f188ea5f8489585418ab0183f7d40",
+    "status": "succeeded",
+    "mode": "EditMode",
+    "started_unix_ms": 1791576783641,
+    "finished_unix_ms": 1791576839114,
+    "last_update_unix_ms": 1791576839114,
+    "progress": {
+      "completed": 65,
+      "total": 65,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791576837915,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.UnsupportedMechanics_CreateZeroGoalsAndZeroCommands",
+      "last_finished_unix_ms": 1791576838882,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": {
+      "mode": "EditMode",
+      "summary": {
+        "total": 65,
+        "passed": 65,
+        "failed": 0,
+        "skipped": 0,
+        "durationSeconds": 46.7390823,
+        "resultState": "Passed"
+      },
+      "results": [
+        {
+          "name": "Cancellation_ReleasesCommanderWorkerAndUnitReservations",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.Cancellation_ReleasesCommanderWorkerAndUnitReservations",
+          "state": "Passed",
+          "durationSeconds": 1.3668113,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: CapabilityAction\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Resolved a bounded owned-unit movement action.\r\n[Commander] Goal #1 cancelled.\r\n"
+        },
+        {
+          "name": "ContextualConstruction_MillNearWorkedBerries_FailsClosedIfResourceDepletedOrUnworked",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ContextualConstruction_MillNearWorkedBerries_FailsClosedIfResourceDepletedOrUnworked",
+          "state": "Passed",
+          "durationSeconds": 1.0289014,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No visible resource node currently worked by an owned villager matches the request.\r\n"
+        },
+        {
+          "name": "ContextualConstruction_MillNearWorkedBerries_PlacesDeterministicLegalCommand",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ContextualConstruction_MillNearWorkedBerries_PlacesDeterministicLegalCommand",
+          "state": "Passed",
+          "durationSeconds": 0.5014949,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Mill near the worked Any/Food node at (135,125) with villager #0.\r\n"
+        },
+        {
+          "name": "Determinism_IdenticalGraphAndState_EmitsIdenticalCommand",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.Determinism_IdenticalGraphAndState_EmitsIdenticalCommand",
+          "state": "Passed",
+          "durationSeconds": 0.3217662,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "FogOfWar_AttackTarget_RejectsHiddenOrFoggedEnemy",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.FogOfWar_AttackTarget_RejectsHiddenOrFoggedEnemy",
+          "state": "Passed",
+          "durationSeconds": 0.327276,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "FogOfWar_WorkedResource_RejectsFoggedResourceNode",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.FogOfWar_WorkedResource_RejectsFoggedResourceNode",
+          "state": "Passed",
+          "durationSeconds": 0.3165723,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "HumanOverride_Military_BlocksCommanderReclamation",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.HumanOverride_Military_BlocksCommanderReclamation",
+          "state": "Passed",
+          "durationSeconds": 0.3223139,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: CapabilityAction\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Resolved a bounded owned-unit movement action.\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; The player took control of every eligible capability unit; Commander will not reclaim them.\r\n"
+        },
+        {
+          "name": "HumanOverride_Worker_ReleasesCommanderReservation",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.HumanOverride_Worker_ReleasesCommanderReservation",
+          "state": "Passed",
+          "durationSeconds": 0.3212403,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Assigning at least 1 villagers to Gold; currently 0. Reassigning villager #0 to Gold node #0.\r\n[Commander] Goal #1: status=WaitingForResources owned=0 queued=0; Assigning at least 1 villagers to Gold; currently 0.\r\n"
+        },
+        {
+          "name": "Ownership_AttackSelector_DoesNotTargetAlliesOrSelf",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.Ownership_AttackSelector_DoesNotTargetAlliesOrSelf",
+          "state": "Passed",
+          "durationSeconds": 0.3154627,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "Ownership_MoveSelector_DoesNotSelectAlliedUnits",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.Ownership_MoveSelector_DoesNotSelectAlliedUnits",
+          "state": "Passed",
+          "durationSeconds": 0.314345,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "Ownership_RepairSelector_DoesNotRepairAlliedOrEnemyBuildings",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.Ownership_RepairSelector_DoesNotRepairAlliedOrEnemyBuildings",
+          "state": "Passed",
+          "durationSeconds": 0.3170438,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "QA_AgeAdvice_UsesAvailableCanonicalLandmarks(English,\"imperial\",\"1600 Food and 800 Gold\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.QA_AgeAdvice_UsesAvailableCanonicalLandmarks(English,\"imperial\",\"1600 Food and 800 Gold\")",
+          "state": "Passed",
+          "durationSeconds": 0.6710547,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "QA_AgeAdvice_UsesAvailableCanonicalLandmarks(French,\"castle\",\"800 Food and 400 Gold\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.QA_AgeAdvice_UsesAvailableCanonicalLandmarks(French,\"castle\",\"800 Food and 400 Gold\")",
+          "state": "Passed",
+          "durationSeconds": 0.5336449,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "QA_AgeAdvice_UsesAvailableCanonicalLandmarks(HolyRomanEmpire,\"castle\",\"800 Food and 400 Gold\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.QA_AgeAdvice_UsesAvailableCanonicalLandmarks(HolyRomanEmpire,\"castle\",\"800 Food and 400 Gold\")",
+          "state": "Passed",
+          "durationSeconds": 0.5484537,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "QA_AlreadyReachedAge_DoesNotAdviseAnotherLandmark",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.QA_AlreadyReachedAge_DoesNotAdviseAnotherLandmark",
+          "state": "Passed",
+          "durationSeconds": 0.5951072,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "QA_CanMyCivilizationMakeKnights_ReturnsCivilizationCapabilityWithoutGameMutation",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.QA_CanMyCivilizationMakeKnights_ReturnsCivilizationCapabilityWithoutGameMutation",
+          "state": "Passed",
+          "durationSeconds": 1.4568792,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "QA_HowDoIReachCastleAge_ReturnsCanonicalAgeCostWithoutGameMutation",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.QA_HowDoIReachCastleAge_ReturnsCanonicalAgeCostWithoutGameMutation",
+          "state": "Passed",
+          "durationSeconds": 1.1376519,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "QA_HowManyVillagersDoIHave_ReturnsDetachedCountWithoutGameMutation",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.QA_HowManyVillagersDoIHave_ReturnsDetachedCountWithoutGameMutation",
+          "state": "Passed",
+          "durationSeconds": 0.9281937,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "QA_HowMuchDoesABarracksCost_ReturnsCanonicalCostWithoutGameMutation",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.QA_HowMuchDoesABarracksCost_ReturnsCanonicalCostWithoutGameMutation",
+          "state": "Passed",
+          "durationSeconds": 0.9535841,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "QA_RoutingDistinction_QuestionVersusAction",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.QA_RoutingDistinction_QuestionVersusAction",
+          "state": "Passed",
+          "durationSeconds": 1.3058798,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: ReachAge\r\n"
+        },
+        {
+          "name": "QA_UnavailableImperialAge_DoesNotInventEnglishLandmarks(French)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.QA_UnavailableImperialAge_DoesNotInventEnglishLandmarks(French)",
+          "state": "Passed",
+          "durationSeconds": 1.2623197,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "QA_UnavailableImperialAge_DoesNotInventEnglishLandmarks(HolyRomanEmpire)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.QA_UnavailableImperialAge_DoesNotInventEnglishLandmarks(HolyRomanEmpire)",
+          "state": "Passed",
+          "durationSeconds": 1.3704432,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "QA_WhatCountersSpearmen_ReturnsCanonicalCounterAdviceWithoutGameMutation",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.QA_WhatCountersSpearmen_ReturnsCanonicalCounterAdviceWithoutGameMutation",
+          "state": "Passed",
+          "durationSeconds": 0.9459695,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "QA_WhereDoITrainArchers_ReturnsProductionBuildingWithoutGameMutation",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.QA_WhereDoITrainArchers_ReturnsProductionBuildingWithoutGameMutation",
+          "state": "Passed",
+          "durationSeconds": 1.3310087,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "Research_ResearchTechnology_RejectsWhenLackingResourcesOrPrerequisites",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.Research_ResearchTechnology_RejectsWhenLackingResourcesOrPrerequisites",
+          "state": "Passed",
+          "durationSeconds": 0.9928089,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "Research_ResearchTechnology_UsesCanonicalAgeCostAndBuilding",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.Research_ResearchTechnology_UsesCanonicalAgeCostAndBuilding",
+          "state": "Passed",
+          "durationSeconds": 0.9907274,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ResultBinding_FailsClosedWhenBoundUnitIsDead",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_FailsClosedWhenBoundUnitIsDead",
+          "state": "Passed",
+          "durationSeconds": 1.0974753,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ResultBinding_FailsClosedWhenBoundUnitIsDestroyed",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_FailsClosedWhenBoundUnitIsDestroyed",
+          "state": "Passed",
+          "durationSeconds": 0.94617,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ResultBinding_FailsClosedWhenBoundUnitIsHumanControlled",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_FailsClosedWhenBoundUnitIsHumanControlled",
+          "state": "Passed",
+          "durationSeconds": 0.9824813,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: CapabilityAction\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; Worker is protected or reserved by another goal.\r\n"
+        },
+        {
+          "name": "ResultBinding_FailsClosedWhenBoundUnitOwnershipTransferred",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_FailsClosedWhenBoundUnitOwnershipTransferred",
+          "state": "Passed",
+          "durationSeconds": 0.7735249,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ResultBinding_FailsClosedWhenGoalManagerDisposed",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_FailsClosedWhenGoalManagerDisposed",
+          "state": "Passed",
+          "durationSeconds": 0.9526138,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ResultBinding_NeverSubstitutesPreExistingUnitsWhenExplicitResultRequested",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_NeverSubstitutesPreExistingUnitsWhenExplicitResultRequested",
+          "state": "Passed",
+          "durationSeconds": 1.288245,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] Goal #2 submitted: CapabilityAction\r\n[Commander] Goal #1: status=WaitingForProduction owned=5 queued=3; All compatible production queues are at Commander limit 3.\r\n"
+        },
+        {
+          "name": "ResultBinding_RejectsDependencyAbsentFromDependsOn",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_RejectsDependencyAbsentFromDependsOn",
+          "state": "Passed",
+          "durationSeconds": 0.9159333,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ResultBinding_RejectsDependencyCycles",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_RejectsDependencyCycles",
+          "state": "Passed",
+          "durationSeconds": 0.8865485,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ResultBinding_RejectsMissingSourceNodeIndex",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_RejectsMissingSourceNodeIndex",
+          "state": "Passed",
+          "durationSeconds": 1.0492788,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ResultBinding_RejectsNegativeSourceNodeIndex",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_RejectsNegativeSourceNodeIndex",
+          "state": "Passed",
+          "durationSeconds": 1.0390324,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ResultBinding_RejectsSelfReferentialSourceNode",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_RejectsSelfReferentialSourceNode",
+          "state": "Passed",
+          "durationSeconds": 1.0843344,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ResultBinding_RejectsStructureSourceWhenUnitsRequired",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_RejectsStructureSourceWhenUnitsRequired",
+          "state": "Passed",
+          "durationSeconds": 1.0057165,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ResultBinding_RejectsUnitSourceWhenStructureRequired",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4GHostileAuditTests.ResultBinding_RejectsUnitSourceWhenStructureRequired",
+          "state": "Passed",
+          "durationSeconds": 1.0241283,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ConfirmationIntegrity_CancelInvalidatesCommitment",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ConfirmationIntegrity_CancelInvalidatesCommitment",
+          "state": "Passed",
+          "durationSeconds": 1.1293875,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ConfirmationIntegrity_CannotReplayOrCommitAcrossRuntimes",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ConfirmationIntegrity_CannotReplayOrCommitAcrossRuntimes",
+          "state": "Passed",
+          "durationSeconds": 1.0014594,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n"
+        },
+        {
+          "name": "EmergencyDefensivePreparation_CannotReplaceOrMutateActiveHumanAuthorizedPlan",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.EmergencyDefensivePreparation_CannotReplaceOrMutateActiveHumanAuthorizedPlan",
+          "state": "Passed",
+          "durationSeconds": 1.1933436,
+          "message": null,
+          "stackTrace": null,
+          "output": "[StrategicPlanner] Strategic intent #1 created: MilitaryReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'MilitaryReinforcement' and started plan #1: MilitaryReinforcement.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 200 Wood.\r\n[StrategicPlanner] Plan #1 milestone active: Production Capacity.\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1 cancelled.\r\n[StrategicPlanner] Reservation #1 cancelled for plan #1.\r\n[StrategicPlanner] Plan #1 cancelled.\r\n"
+        },
+        {
+          "name": "GraphAtomicity_PartialInvalid_ExecutesZeroNodes",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.GraphAtomicity_PartialInvalid_ExecutesZeroNodes",
+          "state": "Passed",
+          "durationSeconds": 0.9757881,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "HumanEvaluation_AllRecommendationFamilies_RemainAdvisoryWithoutWork",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.HumanEvaluation_AllRecommendationFamilies_RemainAdvisoryWithoutWork",
+          "state": "Passed",
+          "durationSeconds": 1.040053,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "OwnerMatrix_ComputerOwnershipGating(-1,False)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.OwnerMatrix_ComputerOwnershipGating(-1,False)",
+          "state": "Passed",
+          "durationSeconds": 1.0806208,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "OwnerMatrix_ComputerOwnershipGating(0,False)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.OwnerMatrix_ComputerOwnershipGating(0,False)",
+          "state": "Passed",
+          "durationSeconds": 0.9718252,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "OwnerMatrix_ComputerOwnershipGating(1,True)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.OwnerMatrix_ComputerOwnershipGating(1,True)",
+          "state": "Passed",
+          "durationSeconds": 1.1003304,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "OwnerMatrix_ComputerOwnershipGating(2,False)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.OwnerMatrix_ComputerOwnershipGating(2,False)",
+          "state": "Passed",
+          "durationSeconds": 0.9537034,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"approved\\\":true,\\\"nodes\\\":[]}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"approved\\\":true,\\\"nodes\\\":[]}\")",
+          "state": "Passed",
+          "durationSeconds": 0.001335,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"playerAuthorized\\\":true,\\\"nodes\\\":[]}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"playerAuthorized\\\":true,\\\"nodes\\\":[]}\")",
+          "state": "Passed",
+          "durationSeconds": 0.0008047,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"emergencyOverride\\\":true,\\\"nodes\\\":[]}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"emergencyOverride\\\":true,\\\"nodes\\\":[]}\")",
+          "state": "Passed",
+          "durationSeconds": 0.0005388,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"ownerId\\\":0,\\\"nodes\\\":[]}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"ownerId\\\":0,\\\"nodes\\\":[]}\")",
+          "state": "Passed",
+          "durationSeconds": 0.0002333,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"trustedRoot\\\":true,\\\"nodes\\\":[]}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"trustedRoot\\\":true,\\\"nodes\\\":[]}\")",
+          "state": "Passed",
+          "durationSeconds": 0.0001353,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"requiredPrerequisite\\\":true,\\\"nodes\\\":[]}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"requiredPrerequisite\\\":true,\\\"nodes\\\":[]}\")",
+          "state": "Passed",
+          "durationSeconds": 0.0004034,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"n1\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Farm\\\",\\\"count\\\":1,\\\"playerDirect\\\":true},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"n1\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Farm\\\",\\\"count\\\":1,\\\"playerDirect\\\":true},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\")",
+          "state": "Passed",
+          "durationSeconds": 0.0003825,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"n1\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Farm\\\",\\\"count\\\":1,\\\"runtimeId\\\":12},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"n1\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Farm\\\",\\\"count\\\":1,\\\"runtimeId\\\":12},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\")",
+          "state": "Passed",
+          "durationSeconds": 0.000639,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"n1\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Farm\\\",\\\"count\\\":1,\\\"tileX\\\":50},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"n1\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Farm\\\",\\\"count\\\":1,\\\"tileX\\\":50},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\")",
+          "state": "Passed",
+          "durationSeconds": 0.0006277,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"n1\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Farm\\\",\\\"count\\\":1,\\\"worldZ\\\":120.5},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"n1\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Farm\\\",\\\"count\\\":1,\\\"worldZ\\\":120.5},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\")",
+          "state": "Passed",
+          "durationSeconds": 0.000471,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"n1\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Farm\\\",\\\"count\\\":1,\\\"command\\\":\\\"PlaceBuilding\\\"},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"n1\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Farm\\\",\\\"count\\\":1,\\\"command\\\":\\\"PlaceBuilding\\\"},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\")",
+          "state": "Passed",
+          "durationSeconds": 0.0006244,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"n1\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Farm\\\",\\\"count\\\":1,\\\"csharp\\\":\\\"System.Console.WriteLine()\\\"},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ParserHostileMatrix_AuthorityAndInjectionFields_RejectWholeCandidate(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"n1\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Farm\\\",\\\"count\\\":1,\\\"csharp\\\":\\\"System.Console.WriteLine()\\\"},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\")",
+          "state": "Passed",
+          "durationSeconds": 0.000882,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ParserHostileMatrix_StructuralAttacks_RejectWholeCandidate",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ParserHostileMatrix_StructuralAttacks_RejectWholeCandidate",
+          "state": "Passed",
+          "durationSeconds": 0.0156114,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "PrimitiveCatalog_ExactlyNineRegisteredPrimitives",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.PrimitiveCatalog_ExactlyNineRegisteredPrimitives",
+          "state": "Passed",
+          "durationSeconds": 0.0042024,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "Questions_AreNonEffectfulAndCreateZeroAttributableGoals",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.Questions_AreNonEffectfulAndCreateZeroAttributableGoals",
+          "state": "Passed",
+          "durationSeconds": 0.997224,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "SubmissionBoundary_ForgedCredentials_FailClosed",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.SubmissionBoundary_ForgedCredentials_FailClosed",
+          "state": "Passed",
+          "durationSeconds": 0.989492,
+          "message": null,
+          "stackTrace": null,
+          "output": "[StrategicPlanner] Strategic intent rejected: Ownership mismatch: Strategic intents can only target the local Commander.\r\n"
+        },
+        {
+          "name": "UnsupportedMechanics_CreateZeroGoalsAndZeroCommands",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.UnsupportedMechanics_CreateZeroGoalsAndZeroCommands",
+          "state": "Passed",
+          "durationSeconds": 0.9667864,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        }
+      ]
+    }
+  },
+  "hint": null
+}

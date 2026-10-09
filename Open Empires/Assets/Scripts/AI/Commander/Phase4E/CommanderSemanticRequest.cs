@@ -45,7 +45,8 @@ namespace OpenEmpires
     {
         MyTownCenter,
         MyBarracks,
-        WorkedResource
+        WorkedResource,
+        VisibleResource
     }
 
     // Near is nondirectional: deterministic placement considers cardinal sides and defaults

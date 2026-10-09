@@ -10,7 +10,7 @@ namespace OpenEmpires
     // fully valid strict semantic response. It cannot choose a new effect or authority.
     internal static class CommanderSemanticSchemaRepair
     {
-        internal static bool TryCreateTemplate(string raw, out JObject template)
+        internal static bool TryCreateTemplate(string raw, out JObject template, bool requireProviderDeclarations = false)
         {
             template = null;
             try
@@ -23,7 +23,8 @@ namespace OpenEmpires
                 if (!changed) return false;
                 string normalized = candidate.ToString(Formatting.None);
                 if (normalized.Length > CommanderDynamicPlan.MaximumCharacters ||
-                    !CommanderSemanticJson.Parse(normalized).IsValid) return false;
+                    !(requireProviderDeclarations ? CommanderSemanticJson.ParseProviderResponse(normalized)
+                        : CommanderSemanticJson.Parse(normalized)).IsValid) return false;
                 template = candidate;
                 return true;
             }

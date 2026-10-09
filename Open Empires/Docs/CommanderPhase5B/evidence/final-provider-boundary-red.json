@@ -1,0 +1,56 @@
+{
+  "job_id": "e15f6d73a0204c75bf1924e7b5d60ce3",
+  "status": "failed",
+  "mode": "EditMode",
+  "started_unix_ms": 1791547328063,
+  "finished_unix_ms": 1791547336197,
+  "last_update_unix_ms": 1791547336197,
+  "progress": {
+    "completed": 9,
+    "total": 9,
+    "current_test_full_name": null,
+    "current_test_started_unix_ms": 1791547335898,
+    "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.UnrepresentableBuilderCount_RejectsRatherThanChoosingOne",
+    "last_finished_unix_ms": 1791547336145,
+    "stuck_suspected": false,
+    "editor_is_focused": false,
+    "blocked_reason": null,
+    "failures_so_far": [
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.DeclaredSequentialOrdering_RequiresCompletionDependency(False)",
+        "message": "  Provider replies require their explicit declaration contract.\r\n  Expected: not null\r\n  But was:  null\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.DeclaredSequentialOrdering_RequiresCompletionDependency(True)",
+        "message": "  Provider replies require their explicit declaration contract.\r\n  Expected: not null\r\n  But was:  null\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.ExplicitIdleBuilder_AdmissionPreservesEligibility",
+        "message": "  Provider replies require their explicit declaration contract.\r\n  Expected: not null\r\n  But was:  null\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.MissingBuilderDeclaration_ProviderRejectsRatherThanDefaulting(\"Lumber Yard\")",
+        "message": "  A provider construction reply must declare builder eligibility and count.\r\n  Expected: False\r\n  But was:  True\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.MissingBuilderDeclaration_ProviderRejectsRatherThanDefaulting(\"Mill\")",
+        "message": "  A provider construction reply must declare builder eligibility and count.\r\n  Expected: False\r\n  But was:  True\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.MissingBuilderDeclaration_ProviderRejectsRatherThanDefaulting(\"House\")",
+        "message": "  A provider construction reply must declare builder eligibility and count.\r\n  Expected: False\r\n  But was:  True\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.MissingCompoundOrdering_ProviderRejectsRatherThanRunningBothImmediately",
+        "message": "  Expected: False\r\n  But was:  True\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.UnrepresentableBuilderCount_RejectsRatherThanChoosingOne",
+        "message": "  Provider replies require their explicit declaration contract.\r\n  Expected: not null\r\n  But was:  null\r\n"
+      }
+    ],
+    "failures_capped": false
+  },
+  "error": null,
+  "result": null
+}

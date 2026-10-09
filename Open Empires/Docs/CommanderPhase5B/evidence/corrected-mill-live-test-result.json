@@ -1,0 +1,44 @@
+{
+  "job_id": "09a8378cba9e46dbac8f3ed5efee11b4",
+  "status": "succeeded",
+  "mode": "PlayMode",
+  "started_unix_ms": 1791549465430,
+  "finished_unix_ms": 1791549468349,
+  "last_update_unix_ms": 1791549468349,
+  "progress": {
+    "completed": 1,
+    "total": 1,
+    "current_test_full_name": null,
+    "current_test_started_unix_ms": 1791549466151,
+    "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5BFinalLivePlayModeTests.CorrectedIdleMill_FinalProviderAndNativeCompletion",
+    "last_finished_unix_ms": 1791549468338,
+    "stuck_suspected": false,
+    "editor_is_focused": true,
+    "blocked_reason": null,
+    "failures_so_far": [],
+    "failures_capped": false
+  },
+  "error": null,
+  "result": {
+    "mode": "PlayMode",
+    "summary": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "durationSeconds": 2.1996007,
+      "resultState": "Passed"
+    },
+    "results": [
+      {
+        "name": "CorrectedIdleMill_FinalProviderAndNativeCompletion",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalLivePlayModeTests.CorrectedIdleMill_FinalProviderAndNativeCompletion",
+        "state": "Passed",
+        "durationSeconds": 2.186797,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-09T12:37:46.4427654Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Mill near the visible Berries/Food node at (137,136) with villager #0.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (137,136): villager #0 is travelling to building #2.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (137,136): building #2 is advancing with villager #0.\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; Mill construction complete at (137,136) as building #2.\r\n"
+      }
+    ]
+  }
+}

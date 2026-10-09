@@ -232,7 +232,7 @@ namespace OpenEmpires.Tests
 
         private ResourceNodeData ResolveResource(ResourceType type, int? townCenterOrdinal)
         {
-            object[] arguments = { 0, type, townCenterOrdinal, null };
+            object[] arguments = { 0, type, townCenterOrdinal, null, ResourceSourceKind.Any };
             bool resolved = InvokeResolver("TryResolveVisibleResourceNearestToTownCenter", arguments);
             Assert.That(resolved, Is.EqualTo(arguments[3] != null));
             return (ResourceNodeData)arguments[3];

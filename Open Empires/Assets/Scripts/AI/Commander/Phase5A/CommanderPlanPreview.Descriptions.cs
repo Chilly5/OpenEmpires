@@ -30,7 +30,7 @@ namespace OpenEmpires
         private static string Relation(string value)
             => value=="MapWest"?"map-west (left) of":value=="MapEast"?"map-east (right) of":value=="Near"?"Near":throw new ArgumentException("Unsupported placement relation.");
         private static string Anchor(string value)
-            => value=="MyTownCenter"?"your Town Center":value=="MyBarracks"?"your Barracks":value=="WorkedResource"?"your worked resource":throw new ArgumentException("Unsupported placement anchor.");
+            => value=="MyTownCenter"?"your Town Center":value=="MyBarracks"?"your Barracks":value=="WorkedResource"?"your worked resource":value=="VisibleResource"?"a visible resource (need not be worked)":throw new ArgumentException("Unsupported placement anchor.");
         private static string UnitName(string canonicalId)
             => KeybindManager.GetUnitTypeDisplayName(int.Parse(canonicalId.Substring("unit:".Length),CultureInfo.InvariantCulture));
         private static string BuildingName(string canonicalId)

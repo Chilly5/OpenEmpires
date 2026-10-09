@@ -74,10 +74,11 @@ namespace OpenEmpires.Tests
         public void StartingScout_ContextSerializesWithExplicitProductionCapability()
         {
             var request = new CommanderSemanticProviderRequest("make 3 spearman",
-                Context(new List<CommanderUnitSnapshot> { new CommanderUnitSnapshot(4, 1, 0) }));
+                Context(new List<CommanderUnitSnapshot> { new CommanderUnitSnapshot(4, 1, 0) },
+                    canonicalUnitIds: new[] { "unit:4", "unit:0" }));
             Assert.That(request.SerializedContext, Does.Contain("\"Scout\":1"));
             Assert.That(request.SerializedContext,
-                Does.Contain("\"unitCapabilities\":[\"Villager\",\"Spearman\",\"Archer\",\"Scout\",\"Knight\"]"));
+                Does.Contain("\"unitCapabilities\":[\"Scout\",\"Villager\"]"));
             Assert.That(request.SerializedContext.Length,
                 Is.LessThanOrEqualTo(CommanderSemanticProviderRequest.MaximumContextCharacters));
         }
@@ -89,15 +90,15 @@ namespace OpenEmpires.Tests
                 Context(new List<CommanderUnitSnapshot>
                 {
                     new CommanderUnitSnapshot(10, 3, 0)
-                }, "English"));
+                }, "English", new[] { "unit:10" }));
             var hre = new CommanderSemanticProviderRequest("spearmen",
                 Context(new List<CommanderUnitSnapshot>
                 {
                     new CommanderUnitSnapshot(12, 4, 0)
-                }, "HolyRomanEmpire"));
+                }, "HolyRomanEmpire", new[] { "unit:12" }));
 
-            Assert.That(english.SerializedContext, Does.Contain("\"Archer\":3"));
-            Assert.That(hre.SerializedContext, Does.Contain("\"Spearman\":4"));
+            Assert.That(english.SerializedContext, Does.Contain("\"Longbowman\":3"));
+            Assert.That(hre.SerializedContext, Does.Contain("\"Landsknecht\":4"));
         }
 
         [Test]
@@ -278,7 +279,7 @@ namespace OpenEmpires.Tests
         }
 
         private static CommanderContext Context(List<CommanderUnitSnapshot> units = null,
-            string civilization = "English")
+            string civilization = "English", IEnumerable<string> canonicalUnitIds = null)
         {
             return new CommanderContext(987654321, 432109876,
                 new CommanderResourceSnapshot(100, 200, 300, 400), 12, 20, 200, 2,
@@ -303,7 +304,7 @@ namespace OpenEmpires.Tests
                 }, new List<CommanderVisibleEnemyMilitarySnapshot>
                 {
                     new CommanderVisibleEnemyMilitarySnapshot(7, 9)
-                });
+                }, canonicalUnitIds: canonicalUnitIds);
         }
 
         private sealed class FakeTransport : ICommanderHttpTransport

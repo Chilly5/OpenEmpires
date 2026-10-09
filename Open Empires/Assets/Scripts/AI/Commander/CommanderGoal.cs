@@ -176,6 +176,7 @@ namespace OpenEmpires
         public int? PlacementAnchorOrdinal { get; }
         public CommanderSemanticPlacementRelation? PlacementRelation { get; }
         public ResourceType? PlacementResourceType { get; }
+        public ResourceSourceKind? PlacementSourceKind { get; }
         public int ClearGapTiles { get; }
         public int? PlacedTileX { get; internal set; }
         public int? PlacedTileZ { get; internal set; }
@@ -205,7 +206,8 @@ namespace OpenEmpires
             int? placementAnchorOrdinal = null,
             CommanderSemanticPlacementRelation? placementRelation = null,
             int? clearGapTiles = null,
-            ResourceType? placementResourceType = null)
+            ResourceType? placementResourceType = null,
+            ResourceSourceKind? placementSourceKind = null)
             : base(playerId, CommanderGoalType.BuildStructure, maxDurationTicks)
         {
             if (count < 1 || count > CommanderIntentValidator.MaximumStructureCount)
@@ -217,6 +219,7 @@ namespace OpenEmpires
             PlacementRelation = placementRelation;
             ClearGapTiles = clearGapTiles ?? 1;
             PlacementResourceType = placementResourceType;
+            PlacementSourceKind = placementSourceKind;
         }
     }
 

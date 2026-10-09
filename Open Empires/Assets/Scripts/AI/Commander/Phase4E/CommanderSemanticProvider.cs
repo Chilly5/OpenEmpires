@@ -109,6 +109,7 @@ namespace OpenEmpires
                 {
                     ["units"] = new JArray("Military", "Scout", "Villagers", "Spearman", "Archer", "Knight", "DamagedMilitary"),
                     ["locations"] = new JArray("PlayerBase", "WorkedResource", "VisibleResource", "VisibleEnemy", "RelativeToSelectedUnits"),
+                    ["constructionAnchors"] = new JArray("MyTownCenter", "MyBarracks", "WorkedResource", "VisibleResource"),
                     ["targets"] = new JObject {
                         ["UnitType"] = new JArray("Villager", "Spearman", "Archer", "Scout", "Knight"),
                         ["BuildingType"] = new JArray(Enum.GetNames(typeof(BuildingType))) }

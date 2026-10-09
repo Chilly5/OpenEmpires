@@ -247,9 +247,10 @@ namespace OpenEmpires.Tests
 
         private static Component FindChildComponent(Component root, string typeName)
         {
-            return root.GetComponentsInChildren<Component>(true)
-                .Single(component => component.GetType().Name == typeName
-                    && (typeName != "Button" || component.gameObject.name == "Send"));
+            // Voice review also contains Send/input controls; select the chat's own binding.
+            string field = typeName == "Button" ? "sendButton" : "inputField";
+            return (Component)typeof(CommanderChatUI).GetField(field,
+                BindingFlags.NonPublic | BindingFlags.Instance).GetValue(root);
         }
 
         private static bool ReadInteractable(Component component)

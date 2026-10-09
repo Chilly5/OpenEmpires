@@ -142,6 +142,7 @@ namespace OpenEmpires
                     && structure.PlacementAnchorOrdinal == build.PlacementAnchorOrdinal
                     && structure.PlacementRelation == build.PlacementRelation
                     && structure.PlacementResourceType == build.PlacementResourceType
+                    && structure.PlacementSourceKind == build.PlacementSourceKind
                     && structure.ClearGapTiles == (build.ClearGapTiles ?? 1)
                 || intent is AllocateWorkersIntent allocation && goal is AllocateWorkersGoal assigned
                     && CommanderScopeEquivalence.SameIntent(new AllocateWorkersIntent(playerId, assigned.Allocation, intent.Constraints), allocation)

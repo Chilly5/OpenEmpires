@@ -76,7 +76,8 @@ namespace OpenEmpires
                     placementAnchorOrdinal: build.PlacementAnchorOrdinal,
                     placementRelation: build.PlacementRelation,
                     clearGapTiles: build.ClearGapTiles,
-                    placementResourceType: build.PlacementResourceType));
+                    placementResourceType: build.PlacementResourceType,
+                    placementSourceKind: build.PlacementSourceKind));
             if (intent is ReachAgeIntent reachAge)
                 return Created(intent, goalManager.SubmitReachAge(reachAge.RequestedTarget,
                     constraints: intent.Constraints));

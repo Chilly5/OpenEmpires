@@ -1,0 +1,64 @@
+{
+  "job_id": "8bd54f7dfd9b40c7b32b5ca2958b78c8",
+  "status": "failed",
+  "mode": "EditMode",
+  "started_unix_ms": 1791565400104,
+  "finished_unix_ms": 1791565417476,
+  "last_update_unix_ms": 1791565417476,
+  "progress": {
+    "completed": 14,
+    "total": 14,
+    "current_test_full_name": null,
+    "current_test_started_unix_ms": 1791565417022,
+    "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5BReliabilitySemanticTests.ResourceSlotSchemaFailure_ReportsExactAllowlistedField(\"countMode\",\"null\")",
+    "last_finished_unix_ms": 1791565417023,
+    "stuck_suspected": false,
+    "editor_is_focused": false,
+    "blocked_reason": null,
+    "failures_so_far": [
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BReliabilityGatheringTests.ExplicitNumericAge3_ReachesActualNativeAge3NotJustTheNextAge",
+        "message": "  I couldn't understand that request safely.\r\n  Expected: True\r\n  But was:  False\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BReliabilitySemanticTests.AbsoluteNumericalAge_UsesTheSameCanonicalTargetAsNamedAge(\"2\",Feudal)",
+        "message": "  I couldn't understand that request safely.\r\n  Expected: True\r\n  But was:  False\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BReliabilitySemanticTests.AbsoluteNumericalAge_UsesTheSameCanonicalTargetAsNamedAge(\"3\",Castle)",
+        "message": "  I couldn't understand that request safely.\r\n  Expected: True\r\n  But was:  False\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BReliabilitySemanticTests.AbsoluteNumericalAge_UsesTheSameCanonicalTargetAsNamedAge(\"4\",Imperial)",
+        "message": "  I couldn't understand that request safely.\r\n  Expected: True\r\n  But was:  False\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BReliabilitySemanticTests.AbsoluteNumericalAge_UsesTheSameCanonicalTargetAsNamedAge(\"\\\"2\\\"\",Feudal)",
+        "message": "  I couldn't understand that request safely.\r\n  Expected: True\r\n  But was:  False\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BReliabilitySemanticTests.AbsoluteNumericalAge_UsesTheSameCanonicalTargetAsNamedAge(\"\\\"3\\\"\",Castle)",
+        "message": "  I couldn't understand that request safely.\r\n  Expected: True\r\n  But was:  False\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BReliabilitySemanticTests.AbsoluteNumericalAge_UsesTheSameCanonicalTargetAsNamedAge(\"\\\"4\\\"\",Imperial)",
+        "message": "  I couldn't understand that request safely.\r\n  Expected: True\r\n  But was:  False\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BReliabilitySemanticTests.ResourceSlotSchemaFailure_ReportsExactAllowlistedField(\"resourceAmount\",\"\\\"400\\\"\")",
+        "message": "  Expected: String containing \"field=nodes[0].resourceAmount\"\r\n  But was:  \"field=nodes[0].<unknown>;code=missing-or-wrong-type\"\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BReliabilitySemanticTests.ResourceSlotSchemaFailure_ReportsExactAllowlistedField(\"resourceAmountMode\",\"7\")",
+        "message": "  Expected: String containing \"field=nodes[0].resourceAmountMode\"\r\n  But was:  \"field=nodes[0].<unknown>;code=missing-or-wrong-type\"\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BReliabilitySemanticTests.ResourceSlotSchemaFailure_ReportsExactAllowlistedField(\"countMode\",\"null\")",
+        "message": "  Expected: String containing \"field=nodes[0].countMode\"\r\n  But was:  \"field=$;code=invalid-schema;stage=syntax;node=-1\"\r\n"
+      }
+    ],
+    "failures_capped": false
+  },
+  "error": null,
+  "result": null
+}

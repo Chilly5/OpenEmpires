@@ -1,0 +1,44 @@
+{
+  "job_id": "1f201733f7c249d290845127584d86c9",
+  "status": "succeeded",
+  "mode": "PlayMode",
+  "started_unix_ms": 1791549403778,
+  "finished_unix_ms": 1791549429879,
+  "last_update_unix_ms": 1791549429879,
+  "progress": {
+    "completed": 1,
+    "total": 1,
+    "current_test_full_name": null,
+    "current_test_started_unix_ms": 1791549414648,
+    "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5BFinalLivePlayModeTests.CorrectedIdleLumber_FinalProviderAndNativeCompletion",
+    "last_finished_unix_ms": 1791549429846,
+    "stuck_suspected": false,
+    "editor_is_focused": true,
+    "blocked_reason": null,
+    "failures_so_far": [],
+    "failures_capped": false
+  },
+  "error": null,
+  "result": {
+    "mode": "PlayMode",
+    "summary": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "durationSeconds": 15.22208,
+      "resultState": "Passed"
+    },
+    "results": [
+      {
+        "name": "CorrectedIdleLumber_FinalProviderAndNativeCompletion",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalLivePlayModeTests.CorrectedIdleLumber_FinalProviderAndNativeCompletion",
+        "state": "Passed",
+        "durationSeconds": 15.1951317,
+        "message": null,
+        "stackTrace": null,
+        "output": "[DotEnv] Loaded .env from D:\\unity_projects\\OpenEmpires\\Open Empires\\.env\r\n[CommanderProvider] utc=2026-10-09T12:36:55.0699378Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing LumberYard near the visible Tree/Wood node at (113,136) with villager #0.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed LumberYard at (113,136): villager #0 is travelling to building #2.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed LumberYard at (113,136): building #2 is advancing with villager #0.\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; LumberYard construction complete at (113,136) as building #2.\r\n"
+      }
+    ]
+  }
+}

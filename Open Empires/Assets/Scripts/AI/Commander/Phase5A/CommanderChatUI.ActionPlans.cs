@@ -54,6 +54,7 @@ namespace OpenEmpires
                 }
                 var submission = semanticDispatcher.SubmitSemanticGraph(graph);
                 if (submission?.CreatedGoal == true) RecordAcceptedSemanticNodes(candidate.Interpretation.Nodes);
+                TrackCurrentRequest(submission);
                 AppendLine("Commander", submission?.Response ?? "Action plan could not be admitted safely.");
             }
             catch (Exception error) when (error is InvalidOperationException || error is ArgumentException)

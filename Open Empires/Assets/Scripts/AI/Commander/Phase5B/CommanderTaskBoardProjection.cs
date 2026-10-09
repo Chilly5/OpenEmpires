@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace OpenEmpires
 {
-    public enum CommanderTaskStatus { Waiting, Working, Blocked, Completed, Failed, Cancelled }
+    public enum CommanderTaskStatus { Accepted, Waiting, Working, Blocked, Completed, Failed, Cancelled }
 
     // Detached values only. The UI never retains mutable goals, plans or command objects.
     public sealed class CommanderTaskStepSnapshot
@@ -137,7 +137,9 @@ namespace OpenEmpires
         {
             var steps = new CommanderTaskStepSnapshot[goals.Count];
             string current = string.Empty, progress = string.Empty, blocker = string.Empty;
-            bool allComplete = true, failed = false, cancelled = false, blocked = false, working = false, live = false;
+            int attentionIndex = -1;
+            bool allComplete = true, failed = false, cancelled = false, blocked = false, working = false,
+                accepted = false, live = false;
             for (int i = 0; i < goals.Count; i++)
             {
                 var goal = goals[i];
@@ -152,15 +154,25 @@ namespace OpenEmpires
                 cancelled |= status == CommanderTaskStatus.Cancelled;
                 blocked |= status == CommanderTaskStatus.Blocked;
                 working |= status == CommanderTaskStatus.Working;
+                accepted |= status == CommanderTaskStatus.Accepted;
                 live |= !goal.IsTerminal;
+                if (attentionIndex < 0 && (status == CommanderTaskStatus.Blocked || status == CommanderTaskStatus.Failed))
+                    attentionIndex = i;
                 if (current.Length == 0 && !goal.IsTerminal)
                 { current = label; progress = value; blocker = reason; }
+            }
+            if (attentionIndex >= 0)
+            {
+                var attention = steps[attentionIndex];
+                current = attention.Label; progress = attention.Progress; blocker = attention.Blocker;
             }
             if (current.Length == 0)
             { var step = steps[steps.Length - 1]; current = step.Label; progress = step.Progress; blocker = step.Blocker; }
             var aggregate = allComplete ? CommanderTaskStatus.Completed : failed ? CommanderTaskStatus.Failed
                 : cancelled ? CommanderTaskStatus.Cancelled : blocked ? CommanderTaskStatus.Blocked
-                : working ? CommanderTaskStatus.Working : CommanderTaskStatus.Waiting;
+                : working ? CommanderTaskStatus.Working
+                : accepted ? CommanderTaskStatus.Accepted
+                : CommanderTaskStatus.Waiting;
             string objective = goals[0].RequestAuthority?.OriginalInput;
             if (string.IsNullOrWhiteSpace(objective)) objective = steps[0].Label;
             return new CommanderTaskCardSnapshot(id, generation, manager.PlayerId, goals[0].CreatedTick,
@@ -173,8 +185,10 @@ namespace OpenEmpires
             CommanderGoalStatus.Failed => CommanderTaskStatus.Failed,
             CommanderGoalStatus.Cancelled => CommanderTaskStatus.Cancelled,
             CommanderGoalStatus.Blocked => CommanderTaskStatus.Blocked,
+            CommanderGoalStatus.Pending => CommanderTaskStatus.Accepted,
             CommanderGoalStatus.Planning => CommanderTaskStatus.Working,
             CommanderGoalStatus.Executing => CommanderTaskStatus.Working,
+            CommanderGoalStatus.WaitingForConstruction => CommanderTaskStatus.Working,
             _ => CommanderTaskStatus.Waiting
         };
 
@@ -221,8 +235,15 @@ namespace OpenEmpires
                 }
                 return "Assigned workers: " + workers.SelectedWorkerIds.Count + " / " + (workers.Allocation.Count?.ToString() ?? "all matching");
             }
-            if (goal is BuildStructureGoal build) return "Completed buildings: " + goal.LastObservedOwnedCount
-                + " / " + build.TargetTotal;
+            if (goal is BuildStructureGoal build)
+            {
+                // Placed/result-bound planners observe this request's exact results.
+                // Ordinary total-count planning observes the player's entire stock.
+                // Never divide a local result observation by a global desired total.
+                int target = build.HasSemanticPlacement || build.HasResultConsumer
+                    ? build.Count : build.TargetTotal;
+                return "Completed buildings: " + goal.LastObservedOwnedCount + " / " + target;
+            }
             if (goal is EnsureUnitCountGoal units) return units.IsExplicitNewProduction
                 ? "Attributed new units: " + units.AttributedUnitIds.Count + " / " + units.RequiredNewProductionCount
                 : "Owned units: " + goal.LastObservedOwnedCount + " / " + units.TargetTotal;

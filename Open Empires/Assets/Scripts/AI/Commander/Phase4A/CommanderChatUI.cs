@@ -120,6 +120,7 @@ namespace OpenEmpires
             if (semanticGoalManager != null && !semanticGoalManager.IsDisposed)
                 semanticGoalManager.CancelFutureSubscriptions();
             runtimeGeneration++;
+            currentRequestGoalId = 0;
             pendingClarification = null;
             ClearActionPlanPreview();
             ClearStrategicPreview();
@@ -217,6 +218,7 @@ namespace OpenEmpires
             if (trimmed.Length == 0) return null;
             if(CommanderTacticalStatusProjection.IsInformationQuestion(trimmed))
             {
+                currentRequestGoalId = 0;
                 if(trimmed.Length>CommanderSemanticProviderRequest.MaximumPlayerMessageCharacters)
                 {AppendLine("Commander","That question is too long; please shorten it.",false);return null;}
                 string informationForm=NormalizeExplanationWholeForm(trimmed);
@@ -238,6 +240,7 @@ namespace OpenEmpires
                 if (pendingClarification == null) TryHandleStrategicLifecycle(trimmed);
                 return null;
             }
+            currentRequestGoalId = 0;
             if (HandlePendingControl(trimmed)) return null;
             if (HandleActionPlanControl(trimmed)) return null;
             ClearActionPlanPreview(); // An independent player turn supersedes an unapproved candidate.
@@ -380,6 +383,7 @@ namespace OpenEmpires
                 if (this != null && generation == runtimeGeneration)
                 {
                     LatestSubmission = tacticalResult;
+                    TrackCurrentRequest(tacticalResult?.CommanderSubmission);
                     AppendLine("Commander", tacticalResult?.DisplayText ?? "The order failed safely.");
                 }
                 return tacticalResult;
@@ -625,6 +629,7 @@ namespace OpenEmpires
                     Debug.Log("[Commander] intent=admitted;goal-submitted=" + (submission?.CreatedGoal == true));
                     if (submission?.CreatedGoal == true)
                         RecordAcceptedSemanticNodes(result.Nodes);
+                    TrackCurrentRequest(submission);
                     AppendLine("Commander", display);
                     return chatSubmission;
                 }
@@ -796,6 +801,7 @@ namespace OpenEmpires
             ClearActionPlanPreview();
             pendingClarification = null;
             runtimeGeneration++;
+            currentRequestGoalId = 0;
             ClearStrategicPreview();
             lifetime?.Cancel();
             lifetime?.Dispose();

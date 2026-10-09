@@ -145,6 +145,8 @@ namespace OpenEmpires.Tests
                 Is.False, "Schema/feasibility approval is not the player's consent.");
             Assert.That(planner.Plans, Is.Empty);
             Assert.That(manager.Goals, Is.Empty);
+            Assert.That(planner.IntentIds.Owns(staged.Intent), Is.True,
+                "Rejected untrusted evaluation cannot retire a bridge-owned displayed preview.");
             var approved = bridge.TakeRecommendation(staged.Intent.IntentId);
             Assert.That(approved, Is.SameAs(staged.Intent));
             Assert.That(bridge.TakeRecommendation(approved.IntentId), Is.Null);

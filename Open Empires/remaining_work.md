@@ -1,5 +1,91 @@
 # OpenEmpires AI Commander — Remaining Phases Handoff
 
+## Phase 5B final reliability fix — ACTIVE, 2026-10-09
+
+User reactivated MCP. Old job recovered as terminal init failure0 tests; bounded
+retry passed6/6. Separate allowance of six paid attempts approved: one HTTP200
+returned valid Clarify for Berries400, five remain. Exact old malformed field did
+not recur and is unknown. MCP disconnected again while user reopens Unity; fresh30s
+wait found0 instances. This goal is not complete or Phase5B accepted.
+
+New implementation goal: [progress/evidence plan](Docs/CommanderPhase5B/reliability-fix-progress.md).
+Latest [implementation checkpoint](Docs/CommanderPhase5B/phase5b-final-reliability-fix-report.md):
+native9/9 passed including exact House→Wood timing, first-TC birth IDs and the
+sheep-transition false-blocker repair. Main376-record identity refreshed/verified;
+legacy-fixture hash supplement retained. PlayMode handle
+`437238419a4e42479dd0adba3690d88f` recovered init failure0; later Play6/6 passed.
+Compatibility data regenerated after the latest Economy edit. Complete the
+remaining paid fidelity work and final-source whole offline/hostile gates.
+All20 audited regression failures reproduced before edits. The two real lifecycle
+defects (garrison reservation and rejected strategic-preview retirement) are fixed;
+fixture arity/content/capability/UI binding drift was repaired at its proper layer.
+Native Any/Food recovery from depleted sheep to berries reaches400 with the same
+four workers; explicit Berries recovery, interruption/loss/cancel safeguards, native
+Age3 and exact first-TC five-birth binding passed in focused23/23. Generated
+source-matched compatibility identity was refreshed without a build/protocol change;
+its fixture13/13 passed. Generic age/temporal/ordinal provider instructions and
+resource-field diagnostics are improved. Full final-source offline regression,
+relevant PlayMode/hostile checks, separately authorized real-provider reproduction
+of the explicit-Berries malformed reply, and final consistency closeout remain.
+No new paid requests, packages, reset/clean/commit/push or next phase so far.
+Phase5B remains unaccepted. Preserve all independent audit first failures.
+
+## Phase 5B final independent acceptance audit — 2026-10-09
+
+**REQUIRES CODEX SOL FIX. Phase 5B is not accepted or frozen.**
+See [final independent verification](Docs/CommanderPhase5B/final-acceptance-verification.md)
+and its retained live/offline evidence. Manifest 374 records still matches current
+source. Independent focused/hostile checks passed 124/124; selected PlayMode passed
+9/9. Full offline regression failed after 1585 cases with 20 recorded failures;
+three selected failures also reproduced in isolation.
+
+Idle construction, repeated-building 1/1 progress, exact House→Wood dependency,
+Gold protection, no-idle blocking, producer-bound next five and exact five new-unit
+binding worked. Provider still falsely rejects “only after it finishes,” maps “Reach
+Age 3” to Next/Age 2, inconsistently clarifies explicit producer ordinals, and rejects
+an explicit-berries additional-Food request. Additional-Food progress was truthful
+but stopped at 150/400 after a sheep assignment ended; legal alternative-source
+recovery needs further classification. Native cancellation/takeover/reset fixtures
+passed. First failures and subsequent corrected/control passes are separate.
+
+22 actual paid HTTP attempts, all terminal, within the existing 100 authorization;
+17 HTTP 200, five timeout/network errors. No production/test edits, reset/clean,
+commit/push or next phase. Fix the provider findings and reconcile regression gates,
+then repeat the failed scenarios. Windows/Web artifacts predate these fixes; rebuild
+with authorization and complete fresh packaged acceptance before freezing Phase 5B.
+
+## Phase 5B final intent/progress fix — implementation complete, 2026-10-09
+
+**PHASE 5B FIX COMPLETE — READY FOR LUNA VERIFICATION; Phase 5B is not accepted.**
+See [final handoff](Docs/CommanderPhase5B/phase5b-final-intent-progress-fix-report.md).
+Provider builder/order declarations fail closed; native actor/scope/approval rules
+remain game-owned. Actual Mill wording reproduced an invalid resource-anchor
+ordinal; disjoint placement forms corrected the prompt without accepting bad data.
+Real Luna idle Lumber Yard/Mill and House→idle Wood assignment now preserve the
+typed restrictions/dependency and complete natively. Repeated-building cards show
+1/1; native borders match preflight. Final-source focused EditMode **28/28**, UI
+PlayMode **1/1**, three real-provider/native scenarios passed. Six actual paid HTTP
+attempts total (five200, one timeout), zero repairs; only two of ten additionally
+approved attempts used, all old ledgers/first failures retained. Manifest374 verified.
+The accidental unfiltered/interrupted run is disclosed, not a regression pass.
+Luna owns independent expanded/player/standalone acceptance and any newly found
+issues. Packages are stale; no rebuild, hostile audit, commit/reset/clean, multiplayer
+or next phase. Stop this implementation goal here; do not start another phase.
+
+## Phase 5B independent fix re-playtest — 2026-10-09
+
+**REQUIRES CODEX SOL FIX; Phase 5B remains unaccepted.** See [independent verification report](Docs/CommanderPhase5B/resource-placement-fix-verification.md) and its typed live/native evidence. The 370-record source identity was verified before and after; current Editor source was used, with no outdated package replay. Independent focused checks passed **39/39 EditMode + 3/3 PlayMode**. Nine actual paid HTTP attempts were counted under the user's explicit additional allowance up to 100: seven HTTP 200 responses, two terminal cancellations after the unchanged timeout, zero repairs; original paid ledger untouched. VisibleResource Lumber Yard/Mill and explicit WorkedResource Mill reached native completion. Actual provider results still omitted IdleOnly on the one-idle Lumber Yard and dropped the compound “then” dependency; one-idle Mill produced invalid semantics, and its later unworked retry timed out. Repeated same-type construction showed **Completed buildings: 1 / 2** for a completed one-building request. First-row blocker, distinct Accepted state, minimized approval, compound overall completion, native Human Stop protection and UI cancellation were verified at their reported evidence levels. Sol should fix provider constraint/dependency fidelity, diagnose the invalid semantic result and correct the progress counting basis. Preserve all first failures and the remaining clarification/resource/future-unit/age/army and fresh Windows/Web acceptance gates; no full Phase 5B acceptance is implied. No production/test source edits, reset/clean, commit/push or next phase in this verification.
+
+## Phase 5B targeted resource-placement/status fix — 2026-10-09
+
+**PHASE 5B FIX IMPLEMENTED — READY FOR LUNA RE-PLAYTEST. Phase 5B is not accepted.** See [fix report](Docs/CommanderPhase5B/phase5b-resource-placement-fix-report.md). Ordinary construction now distinguishes visible unworked resources from explicitly worked resources and preserves typed source/builder/protected-resource constraints through DTO, structural authority, placement and retries. Native Lumber Yard/Mill omitted/IdleOnly A/B cases completed via normal commands/ticks; House/Barracks and compound build→assign controls also passed. Current-request admission/status and first-card blocker presentation were corrected without changing compound completion aggregation or forcing the Commander open. Affected EditMode **95/95**, PlayMode UI **3/3**, zero failed/skipped; exact jobs/results and source identity are linked in the report. No paid calls, full historical regression, reset/clean, commit/push, native/network serialization change or new phase.
+
+Remaining: independent Luna actual-provider/player re-playtest, including actual normalized fields, protected Gold/worker restrictions, ordinary native completion and status/cancel/reset alongside unrelated tasks. Rebuild packages or use current editor source first: existing Windows/Web packages predate this fix; updated packaged Windows/Web runtime was not rebuilt/certified in this narrow pass. Maintain the existing six-semantic-HTTP-attempt limit including repairs; no keys in evidence. This implementation goal stops here; do not automatically begin another phase. Earlier entries below are historical evidence, not acceptance of the changed source.
+
+## Phase 5B realistic playtest audit — 2026-10-09
+
+Status: **NOT ACCEPTED; playtest incomplete with a reproduced construction defect.** See [realistic playtest audit](Docs/CommanderPhase5B/realistic-playtest-audit.md). One packaged Windows single-player 1v1 session submitted three text requests through the UI's configured OpenRouter Luna route; the upstream model was not independently verified. Both “Build a Lumber Yard near the woodline” and its “with one idle villager” variant were acknowledged and admitted but blocked because the construction placement path required a visible Wood resource already worked by an owned villager. No Lumber Yard appeared. A House near the Town Center was admitted later, but enemy combat had killed all villagers, so its no-builder blocker is not a valid default-worker comparison. Exact semantic HTTP attempts, including repairs, were not exposed; three submissions can account for up to six attempts, so no more were made under the existing six-attempt cap. The test-only paid ledger remained unchanged and does not measure the packaged run. Unity MCP reported zero connected editors. No production/test code, credentials, reset/clean, commit, or push. Next: Codex Sol should fix visible-resource construction anchoring and admission/status truth, then Luna should repeat full native-player acceptance within the existing paid limits.
+
 ## Phase 5B implemented — 2026-10-09
 
 The new user brief reopens implementation for clarification context, complete native content recognition, long-running request cards and finite future-unit orders. The earlier Grand Fix goal remains closed under its amended scope; its packages do not certify the changed Phase 5B source.

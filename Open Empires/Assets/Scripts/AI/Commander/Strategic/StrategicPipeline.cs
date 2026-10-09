@@ -191,6 +191,7 @@ namespace OpenEmpires
         public StrategicDecisionRecord EvaluateApprovedIntentNow(StrategicApprovalResult approval)
         {
             ThrowIfDisposed();
+            StrategicIntent consumedIntent = null;
             try
             {
             LastContext = strategicPlanner.BuildContext(commanderContextProvider());
@@ -205,7 +206,10 @@ namespace OpenEmpires
             else if (!strategicPlanner.CanCommitIntent(approval.Intent, out string authorityReason))
                 fresh = StrategicApprovalResult.Reject(authorityReason);
             else
+            {
+                consumedIntent = approval.Intent;
                 fresh = new StrategicApprovalLayer().Evaluate(LastContext, approval.Intent, approval.Intent.Source);
+            }
 
             LastDecision = !fresh.Approved
                 ? StrategicDecisionResult.Rejected(LastContext.SnapshotTick, fresh.Reason)
@@ -240,7 +244,9 @@ namespace OpenEmpires
             EvaluationCompleted?.Invoke(record);
             return record;
             }
-            finally{strategicPlanner.RetireUnusedOwnedIntent(approval?.Intent);}
+            // Rejected uncredentialed input does not own a displayed bridge preview.
+            // Only an authorized consumed candidate belongs to this call's cleanup.
+            finally{strategicPlanner.RetireUnusedOwnedIntent(consumedIntent);}
         }
 
         public StrategicContext CaptureContext()

@@ -8,7 +8,7 @@ namespace OpenEmpires
     // Runtime/owner/request/generation/revision/single-use affinity stays on the candidate.
     internal static class CommanderScopeEquivalence
     {
-        internal const int Version = 6;
+        internal const int Version = 7;
 
         internal static bool SameIntent(CommanderIntent a, CommanderIntent b)
         {
@@ -21,7 +21,7 @@ namespace OpenEmpires
                 return x.StructureType == y.StructureType && x.Count == y.Count
                     && x.PlacementAnchorSelector == y.PlacementAnchorSelector && x.PlacementAnchorOrdinal == y.PlacementAnchorOrdinal
                     && x.PlacementRelation == y.PlacementRelation && x.ClearGapTiles == y.ClearGapTiles
-                    && x.PlacementResourceType == y.PlacementResourceType;
+                    && x.PlacementResourceType == y.PlacementResourceType && x.PlacementSourceKind == y.PlacementSourceKind;
             if (a is SetResourceAllocationIntent r && b is SetResourceAllocationIntent s)
                 return r.Resource == s.Resource && r.Mode == s.Mode && r.WorkerCount == s.WorkerCount;
             if (a is ReachAgeIntent age && b is ReachAgeIntent next)

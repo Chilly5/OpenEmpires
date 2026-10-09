@@ -1,0 +1,44 @@
+{
+    "run_id": "f71031e4-4e88-4ef7-985b-98d0f13ea853",
+    "player_input": "Build a Lumber Yard near the woodline with one idle villager",
+    "method": "Final production provider response followed by explicit game-side approval and normal native commands/ticks",
+    "source_identity": "bfaeb894e89f4e326b73f2c763ac1f9fb95ce2bf70ba492ca6428f206f5ab39e",
+    "outcome": "Request",
+    "trace": "utc=2026-10-09T12:36:55.0699378Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=14486\nfinish=stop\nassistantContent=extracted;characters=232;finish=stop\nsemantic=Request;nodes=1\n",
+    "schema_diagnostic": "",
+    "stage": "terminal",
+    "http_initial": 1,
+    "http_repair": 0,
+    "http_status": 200,
+    "goal_count": 1,
+    "tick": 871,
+    "commandCount": 1,
+    "valid": true,
+    "nodes": [
+        {
+            "type": "BuildStructure",
+            "building": "LumberYard",
+            "anchor": "VisibleResource",
+            "resource": "Wood",
+            "sourceKind": "Tree",
+            "workerState": "",
+            "workerDestination": "",
+            "count": 1,
+            "workerCount": 0,
+            "idleOnly": true,
+            "constraints": [
+                "PreferredWorkers"
+            ],
+            "dependsOn": []
+        }
+    ],
+    "goalStatuses": [
+        "Completed"
+    ],
+    "commandTypes": [
+        "PlaceBuildingCommand"
+    ],
+    "cardProgress": [
+        "Completed buildings: 1 / 1"
+    ]
+}

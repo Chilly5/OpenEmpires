@@ -1,0 +1,88 @@
+{
+  "schema": "phase5b-reliability-controlled-live@1",
+  "run_id": "ef27cf13-9c85-48b5-9af0-43ffdc90a167",
+  "method": "Direct real semantic provider, explicit test game-side approval, native commands/ticks; not UGUI or standalone acceptance",
+  "scenarios": [
+    {
+      "scenario": "berries400",
+      "wording": "Gather 400 additional Food from berries with four villagers.",
+      "stage": "terminal-not-admitted",
+      "raw_response_omitted": true,
+      "valid": true,
+      "outcome": "Clarify",
+      "trace": "utc=2026-10-09T19:26:20.4684751Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=3427\nfinish=stop\nassistantContent=extracted;characters=332;finish=stop\nsemantic=Clarify;nodes=0\n",
+      "schema_diagnostic": "",
+      "node_count": 0,
+      "nodes": []
+    },
+    {
+      "scenario": "berries400",
+      "wording": "Gather 400 additional Food from berries with four villagers.",
+      "stage": "terminal-not-admitted",
+      "raw_response_omitted": true,
+      "valid": false,
+      "outcome": "Unsupported",
+      "trace": "utc=2026-10-09T19:38:49.5605168Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nrequest=timeout\n",
+      "schema_diagnostic": "",
+      "node_count": 0,
+      "safe_explanation": "Commander AI request timed out.",
+      "nodes": []
+    },
+    {
+      "scenario": "age3",
+      "wording": "Reach Age 3.",
+      "stage": "terminal-not-admitted",
+      "raw_response_omitted": true,
+      "static_catalog_identifiers_omitted": true,
+      "valid": false,
+      "outcome": "Unsupported",
+      "trace": "utc=2026-10-09T19:46:02.5801622Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nrequest=timeout\n",
+      "schema_diagnostic": "",
+      "node_count": 0,
+      "safe_explanation": "Commander AI request timed out.",
+      "nodes": []
+    },
+    {
+      "scenario": "only-after",
+      "wording": "Build a House first, and only after it finishes send a villager to wood.",
+      "stage": "terminal-not-admitted",
+      "raw_response_omitted": true,
+      "static_catalog_identifiers_omitted": true,
+      "valid": true,
+      "outcome": "Clarify",
+      "trace": "utc=2026-10-09T19:51:22.5192491Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=3022\nfinish=stop\nassistantContent=extracted;characters=75;finish=stop\nsemantic=Clarify;nodes=0\n",
+      "schema_diagnostic": "",
+      "node_count": 0,
+      "safe_explanation": "How many villagers should I send to wood?",
+      "nodes": []
+    },
+    {
+      "scenario": "any400",
+      "wording": "Gather 400 additional Food.",
+      "stage": "terminal-not-admitted",
+      "raw_response_omitted": true,
+      "static_catalog_identifiers_omitted": true,
+      "valid": false,
+      "outcome": "Unsupported",
+      "trace": "utc=2026-10-09T19:54:38.6073524Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nrequest=timeout\n",
+      "schema_diagnostic": "",
+      "node_count": 0,
+      "safe_explanation": "Commander AI request timed out.",
+      "nodes": []
+    },
+    {
+      "scenario": "first-tc",
+      "wording": "Send the next five villagers from my first Town Center to Wood.",
+      "stage": "terminal-not-admitted",
+      "raw_response_omitted": true,
+      "static_catalog_identifiers_omitted": true,
+      "valid": true,
+      "outcome": "Clarify",
+      "trace": "utc=2026-10-09T19:56:08.6308137Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=8786\nfinish=stop\nassistantContent=extracted;characters=116;finish=stop\nsemantic=Clarify;nodes=0\n",
+      "schema_diagnostic": "",
+      "node_count": 0,
+      "safe_explanation": "What should those villagers do with the Wood—gather it, patrol, or something else?",
+      "nodes": []
+    }
+  ]
+}

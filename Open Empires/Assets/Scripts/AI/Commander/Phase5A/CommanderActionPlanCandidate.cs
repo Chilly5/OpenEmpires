@@ -217,7 +217,8 @@ namespace OpenEmpires
                         + " " + Anchor(build.PlacementAnchorSelector.Value.ToString())
                         + (build.PlacementAnchorOrdinal.HasValue?" number "+build.PlacementAnchorOrdinal:"")
                         + "; " + (build.ClearGapTiles??1) + "-tile clear gap between footprints"
-                        + (build.PlacementResourceType.HasValue?" ("+build.PlacementResourceType+")":"") : "");
+                        + (build.PlacementResourceType.HasValue?" ("+build.PlacementResourceType
+                            + (build.PlacementSourceKind.HasValue?" only from "+build.PlacementSourceKind:"")+")":"") : "");
             if (intent is AllocateWorkersIntent workers)
             {
                 var a = workers.Allocation;

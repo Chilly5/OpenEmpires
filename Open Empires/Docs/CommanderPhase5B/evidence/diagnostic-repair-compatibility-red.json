@@ -1,0 +1,52 @@
+{
+  "job_id": "f339dc5309ae4b91b7ddf87b422fb287",
+  "status": "failed",
+  "mode": "EditMode",
+  "started_unix_ms": 1791548455243,
+  "finished_unix_ms": 1791548477201,
+  "last_update_unix_ms": 1791548477201,
+  "progress": {
+    "completed": 7,
+    "total": 7,
+    "current_test_full_name": null,
+    "current_test_started_unix_ms": 1791548475587,
+    "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.NumericStringWithoutDeclarations_DoesNotSpendARepairAttempt",
+    "last_finished_unix_ms": 1791548476736,
+    "stuck_suspected": false,
+    "editor_is_focused": false,
+    "blocked_reason": null,
+    "failures_so_far": [
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.InvalidPlacement_IdentifiesFieldWithoutPrintingValue(\"anchor\",\"\\\"Woodline\\\"\",\"anchor\")",
+        "message": "  Expected: String containing \"field=nodes[0].placement.anchor\"\r\n  But was:  \"utc=2026-10-09T12:21:08.3450393Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=13\nfinish=stop\nassistantContent=extracted;characters=380;finish=stop\nschema=field=$;code=invalid-schema\nsemantic=invalid;nodes=0\n\"\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.InvalidPlacement_IdentifiesFieldWithoutPrintingValue(\"relation\",\"\\\"Nearest\\\"\",\"relation\")",
+        "message": "  Expected: String containing \"field=nodes[0].placement.relation\"\r\n  But was:  \"utc=2026-10-09T12:21:09.7476094Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=5\nfinish=stop\nassistantContent=extracted;characters=390;finish=stop\nschema=field=$;code=invalid-schema\nsemantic=invalid;nodes=0\n\"\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.InvalidPlacement_IdentifiesFieldWithoutPrintingValue(\"clearGapTiles\",\"5\",\"clearGapTiles\")",
+        "message": "  Expected: String containing \"field=nodes[0].placement.clearGapTiles\"\r\n  But was:  \"utc=2026-10-09T12:21:10.9367373Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=6\nfinish=stop\nassistantContent=extracted;characters=416;finish=stop\nschema=field=$;code=invalid-schema\nsemantic=invalid;nodes=0\n\"\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.InvalidPlacement_IdentifiesFieldWithoutPrintingValue(\"sourceKind\",\"\\\"Trees\\\"\",\"sourceKind\")",
+        "message": "  Expected: String containing \"field=nodes[0].placement.sourceKind\"\r\n  But was:  \"utc=2026-10-09T12:21:12.4189282Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=5\nfinish=stop\nassistantContent=extracted;characters=388;finish=stop\nschema=field=$;code=invalid-schema\nsemantic=invalid;nodes=0\n\"\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.InvalidPlacement_IdentifiesFieldWithoutPrintingValue(\"resource\",\"\\\"Timber\\\"\",\"resource\")",
+        "message": "  Expected: String containing \"field=nodes[0].placement.resource\"\r\n  But was:  \"utc=2026-10-09T12:21:13.9217152Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=13\nfinish=stop\nassistantContent=extracted;characters=389;finish=stop\nschema=field=$;code=invalid-schema\nsemantic=invalid;nodes=0\n\"\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.NumericOnlyRepair_WithDeclarations_PreservesIntentAndUsesOnlyOneRepair",
+        "message": "  Commander AI returned an invalid semantic response; no order was submitted.\r\n  Expected: True\r\n  But was:  False\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.NumericStringWithoutDeclarations_DoesNotSpendARepairAttempt",
+        "message": "  Missing intent declarations cannot be invented by numeric repair.\r\n  Expected: 1\r\n  But was:  2\r\n"
+      }
+    ],
+    "failures_capped": false
+  },
+  "error": null,
+  "result": null
+}

@@ -80,6 +80,7 @@ namespace OpenEmpires.Tests
 
         [TestCase("{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"BuildStructure\",\"structure\":\"Barracks\",\"count\":1}]}", typeof(BuildStructureGoal))]
         [TestCase("{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"SetResourceAllocation\",\"resource\":\"Food\",\"count\":2}]}", typeof(ResourceAllocationGoal))]
+        [TestCase("{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"EnsureUnitCount\",\"unit\":\"Trebuchet\",\"count\":10}]}", typeof(EnsureUnitCountGoal))]
         public async Task SemanticProvider_AdmitsOtherTacticalNodes(string json, Type goalType)
         {
             var provider = new FakeSemanticProvider(json);
@@ -94,7 +95,7 @@ namespace OpenEmpires.Tests
             Assert.That(provider.LegacyCalls, Is.Zero);
         }
 
-        [TestCase("{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"EnsureUnitCount\",\"unit\":\"Trebuchet\",\"count\":10}]}")]
+        [TestCase("{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"EnsureUnitCount\",\"unit\":\"LaserTank\",\"count\":10}]}")]
         [TestCase("{\"outcome\":\"Clarify\",\"message\":\"Which unit?\"}")]
         [TestCase("{\"outcome\":\"Unsupported\",\"message\":\"I cannot do that.\"}")]
         [TestCase("{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":10}]")]

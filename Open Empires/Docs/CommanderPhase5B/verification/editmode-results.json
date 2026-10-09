@@ -1,0 +1,392 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "f8ae750ebdf74b94852839cd94bf5d5e",
+    "status": "succeeded",
+    "mode": "EditMode",
+    "started_unix_ms": 1791537063904,
+    "finished_unix_ms": 1791537122902,
+    "last_update_unix_ms": 1791537122902,
+    "progress": {
+      "completed": 39,
+      "total": 39,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791537121512,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5BTruthfulStatusFixTests.PendingGoal_IsAcceptedButConstructionWaitIsWorking",
+      "last_finished_unix_ms": 1791537122739,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": {
+      "mode": "EditMode",
+      "summary": {
+        "total": 39,
+        "passed": 39,
+        "failed": 0,
+        "skipped": 0,
+        "durationSeconds": 51.3941071,
+        "resultState": "Passed"
+      },
+      "results": [
+        {
+          "name": "AuditReproduction_UnworkedWood_FailsAtAnchorBeforeBuilder(False)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.AuditReproduction_UnworkedWood_FailsAtAnchorBeforeBuilder(False)",
+          "state": "Passed",
+          "durationSeconds": 1.6370347,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No visible resource node currently worked by an owned villager matches the request.\nnormalized anchor=WorkedResource, relation=Near, resource=Wood, idleOnly=False; stage=AnchorUnavailable; reason=No visible resource node currently worked by an owned villager matches the request.\n"
+        },
+        {
+          "name": "AuditReproduction_UnworkedWood_FailsAtAnchorBeforeBuilder(True)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.AuditReproduction_UnworkedWood_FailsAtAnchorBeforeBuilder(True)",
+          "state": "Passed",
+          "durationSeconds": 1.1418672,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No visible resource node currently worked by an owned villager matches the request.\nnormalized anchor=WorkedResource, relation=Near, resource=Wood, idleOnly=True; stage=AnchorUnavailable; reason=No visible resource node currently worked by an owned villager matches the request.\n"
+        },
+        {
+          "name": "BerrySourceCannotSubstituteVisibleFarmOrCarcass",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.BerrySourceCannotSubstituteVisibleFarmOrCarcass",
+          "state": "Passed",
+          "durationSeconds": 1.1223525,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible Berries/Food resource matches the requested placement.\n"
+        },
+        {
+          "name": "CompoundBuildThenAllocate_CannotCompleteBeforeNativeBuilding",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.CompoundBuildThenAllocate_CannotCompleteBeforeNativeBuilding",
+          "state": "Passed",
+          "durationSeconds": 1.7946957,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\n[Commander] Goal #2 submitted: AllocateWorkers\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Mill near the visible Berries/Food node at (137,136) with villager #0.\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (137,136): villager #0 is travelling to building #1.\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (137,136): building #1 is advancing with villager #0.\n[Commander] Goal #1: status=Completed owned=1 queued=0; Mill construction complete at (137,136) as building #1.\n[Commander] Goal #2: status=Executing owned=0 queued=0; Assigning selected workers to Food.\n[Commander] Goal #2: status=Completed owned=1 queued=0; The 1 selected workers have matching assignments.\n"
+        },
+        {
+          "name": "ExplicitlyWorkedResource_RemainsStrict",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.ExplicitlyWorkedResource_RemainsStrict",
+          "state": "Passed",
+          "durationSeconds": 1.3494244,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No visible resource node currently worked by an owned villager matches the request.\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Mill near the worked Berries/Food node at (137,136) with villager #1.\n"
+        },
+        {
+          "name": "HiddenResource_DoesNotResolveOrPlace",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.HiddenResource_DoesNotResolveOrPlace",
+          "state": "Passed",
+          "durationSeconds": 1.1745352,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible Tree/Wood resource matches the requested placement.\n"
+        },
+        {
+          "name": "HumanProtectedIdleWorker_IsNotTakenForConstruction",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.HumanProtectedIdleWorker_IsNotTakenForConstruction",
+          "state": "Passed",
+          "durationSeconds": 1.3566404,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No eligible owned living villager satisfies the builder restrictions for LumberYard.\n"
+        },
+        {
+          "name": "IdleOnlyRestriction_PersistsThroughBlockedRetry",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.IdleOnlyRestriction_PersistsThroughBlockedRetry",
+          "state": "Passed",
+          "durationSeconds": 1.3784246,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No eligible owned living villager satisfies the builder restrictions for LumberYard.\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing LumberYard near the visible Tree/Wood node at (137,136) with villager #1.\n"
+        },
+        {
+          "name": "InvalidResourcePlacement_FailsClosed(\"{\\\"anchor\\\":\\\"VisibleResource\\\",\\\"relation\\\":\\\"Near\\\"}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.InvalidResourcePlacement_FailsClosed(\"{\\\"anchor\\\":\\\"VisibleResource\\\",\\\"relation\\\":\\\"Near\\\"}\")",
+          "state": "Passed",
+          "durationSeconds": 0.9220775,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "InvalidResourcePlacement_FailsClosed(\"{\\\"anchor\\\":\\\"VisibleResource\\\",\\\"relation\\\":\\\"Near\\\",\\\"resource\\\":\\\"Wood\\\",\\\"sourceKind\\\":\\\"Berries\\\"}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.InvalidResourcePlacement_FailsClosed(\"{\\\"anchor\\\":\\\"VisibleResource\\\",\\\"relation\\\":\\\"Near\\\",\\\"resource\\\":\\\"Wood\\\",\\\"sourceKind\\\":\\\"Berries\\\"}\")",
+          "state": "Passed",
+          "durationSeconds": 1.0257831,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "InvalidResourcePlacement_FailsClosed(\"{\\\"anchor\\\":\\\"VisibleResource\\\",\\\"relation\\\":\\\"Near\\\",\\\"resource\\\":\\\"Wood\\\",\\\"x\\\":100}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.InvalidResourcePlacement_FailsClosed(\"{\\\"anchor\\\":\\\"VisibleResource\\\",\\\"relation\\\":\\\"Near\\\",\\\"resource\\\":\\\"Wood\\\",\\\"x\\\":100}\")",
+          "state": "Passed",
+          "durationSeconds": 1.0147236,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "InvalidResourcePlacement_FailsClosed(\"{\\\"anchor\\\":\\\"VisibleResource\\\",\\\"relation\\\":\\\"Near\\\",\\\"resource\\\":\\\"Wood\\\",\\\"ordinal\\\":1}\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.InvalidResourcePlacement_FailsClosed(\"{\\\"anchor\\\":\\\"VisibleResource\\\",\\\"relation\\\":\\\"Near\\\",\\\"resource\\\":\\\"Wood\\\",\\\"ordinal\\\":1}\")",
+          "state": "Passed",
+          "durationSeconds": 1.0474037,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "LivingBuilderControls_CompleteNatively(\"House\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.LivingBuilderControls_CompleteNatively(\"House\")",
+          "state": "Passed",
+          "durationSeconds": 1.4541164,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing House at (126,134) with villager #0.\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Construction: villager #0 is travelling to building #1.\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Construction: building #1 is advancing with villager #0.\n[Commander] Goal #1: status=Completed owned=1 queued=0; House construction complete (1/1).\n"
+        },
+        {
+          "name": "LivingBuilderControls_CompleteNatively(\"Barracks\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.LivingBuilderControls_CompleteNatively(\"Barracks\")",
+          "state": "Passed",
+          "durationSeconds": 1.4652848,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Barracks at (126,134) with villager #0.\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Construction: villager #0 is travelling to building #1.\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Construction: building #1 is advancing with villager #0.\n[Commander] Goal #1: status=Completed owned=1 queued=0; Barracks construction complete (1/1).\n"
+        },
+        {
+          "name": "MissingResourceOrBuilder_IsActionableAndCreatesNothing(True)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.MissingResourceOrBuilder_IsActionableAndCreatesNothing(True)",
+          "state": "Passed",
+          "durationSeconds": 1.185535,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible Tree/Wood resource matches the requested placement.\n"
+        },
+        {
+          "name": "MissingResourceOrBuilder_IsActionableAndCreatesNothing(False)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.MissingResourceOrBuilder_IsActionableAndCreatesNothing(False)",
+          "state": "Passed",
+          "durationSeconds": 1.1081189,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No eligible owned living villager satisfies the builder restrictions for LumberYard.\n"
+        },
+        {
+          "name": "NoLegalNearbyFootprint_BlocksWithoutUnrelatedFallback",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.NoLegalNearbyFootprint_BlocksWithoutUnrelatedFallback",
+          "state": "Passed",
+          "durationSeconds": 1.1605224,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No visible, buildable, reachable location is available near the requested visible Tree/Wood node.\n"
+        },
+        {
+          "name": "PlacementDto_RoundTripPreservesSourceAndConstraints",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.PlacementDto_RoundTripPreservesSourceAndConstraints",
+          "state": "Passed",
+          "durationSeconds": 1.1650178,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ProtectedGold_IsPreservedAndIdleBuilderChosen",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.ProtectedGold_IsPreservedAndIdleBuilderChosen",
+          "state": "Passed",
+          "durationSeconds": 1.1408398,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing LumberYard near the visible Tree/Wood node at (137,136) with villager #1.\n"
+        },
+        {
+          "name": "StructuralAuthority_RejectsChangingPlacementSource",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.StructuralAuthority_RejectsChangingPlacementSource",
+          "state": "Passed",
+          "durationSeconds": 1.086832,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Lumber Yard\",\"Wood\",\"Tree\",False)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Lumber Yard\",\"Wood\",\"Tree\",False)",
+          "state": "Passed",
+          "durationSeconds": 1.5091472,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing LumberYard near the visible Tree/Wood node at (137,136) with villager #0.\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed LumberYard at (137,136): villager #0 is travelling to building #1.\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed LumberYard at (137,136): building #1 is advancing with villager #0.\n[Commander] Goal #1: status=Completed owned=1 queued=0; LumberYard construction complete at (137,136) as building #1.\nnative Lumber Yard #1 at 137,136; worker=0; completed tick=631\n"
+        },
+        {
+          "name": "VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Lumber Yard\",\"Wood\",\"Tree\",True)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Lumber Yard\",\"Wood\",\"Tree\",True)",
+          "state": "Passed",
+          "durationSeconds": 1.3931162,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing LumberYard near the visible Tree/Wood node at (137,136) with villager #0.\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed LumberYard at (137,136): villager #0 is travelling to building #1.\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed LumberYard at (137,136): building #1 is advancing with villager #0.\n[Commander] Goal #1: status=Completed owned=1 queued=0; LumberYard construction complete at (137,136) as building #1.\nnative Lumber Yard #1 at 137,136; worker=0; completed tick=631\n"
+        },
+        {
+          "name": "VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Mill\",\"Food\",\"Berries\",False)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Mill\",\"Food\",\"Berries\",False)",
+          "state": "Passed",
+          "durationSeconds": 1.4467798,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Mill near the visible Berries/Food node at (137,136) with villager #0.\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (137,136): villager #0 is travelling to building #1.\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (137,136): building #1 is advancing with villager #0.\n[Commander] Goal #1: status=Completed owned=1 queued=0; Mill construction complete at (137,136) as building #1.\nnative Mill #1 at 137,136; worker=0; completed tick=631\n"
+        },
+        {
+          "name": "VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Mill\",\"Food\",\"Berries\",True)",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Mill\",\"Food\",\"Berries\",True)",
+          "state": "Passed",
+          "durationSeconds": 1.2253493,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Mill near the visible Berries/Food node at (137,136) with villager #0.\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (137,136): villager #0 is travelling to building #1.\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (137,136): building #1 is advancing with villager #0.\n[Commander] Goal #1: status=Completed owned=1 queued=0; Mill construction complete at (137,136) as building #1.\nnative Mill #1 at 137,136; worker=0; completed tick=631\n"
+        },
+        {
+          "name": "AgeCard_ReportsObservedAgeAndTerminalStatusWithoutInventedPercent",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTaskBoardTests.AgeCard_ReportsObservedAgeAndTerminalStatusWithoutInventedPercent",
+          "state": "Passed",
+          "durationSeconds": 0.9780089,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: ReachAge\n"
+        },
+        {
+          "name": "CancelRequest_StopsAllItsGoalsButLeavesUnrelatedGoalUntouched",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTaskBoardTests.CancelRequest_StopsAllItsGoalsButLeavesUnrelatedGoalUntouched",
+          "state": "Passed",
+          "durationSeconds": 2.0674761,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\n[Commander] Goal #2 submitted: EnsureUnitCount\n[Commander] Goal #3 submitted: ReachAge\n[Commander] Goal #1 cancelled.\n[Commander] Goal #2 cancelled.\n"
+        },
+        {
+          "name": "CardFromPreviousRuntime_CannotCancelSameIdsInReplacementRuntime",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTaskBoardTests.CardFromPreviousRuntime_CannotCancelSameIdsInReplacementRuntime",
+          "state": "Passed",
+          "durationSeconds": 2.684887,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: ReachAge\n[Commander] Goal #1 submitted: ReachAge\n"
+        },
+        {
+          "name": "CompletedHistory_CannotHideOlderActiveTaskOrBadgeCount",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTaskBoardTests.CompletedHistory_CannotHideOlderActiveTaskOrBadgeCount",
+          "state": "Passed",
+          "durationSeconds": 1.0767133,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: ReachAge\n[Commander] Goal #2 submitted: ReachAge\n[Commander] Goal #3 submitted: ReachAge\n[Commander] Goal #4 submitted: ReachAge\n[Commander] Goal #5 submitted: ReachAge\n[Commander] Goal #6 submitted: ReachAge\n[Commander] Goal #7 submitted: ReachAge\n[Commander] Goal #8 submitted: ReachAge\n[Commander] Goal #9 submitted: ReachAge\n[Commander] Goal #10 submitted: ReachAge\n[Commander] Goal #11 submitted: ReachAge\n[Commander] Goal #12 submitted: ReachAge\n[Commander] Goal #13 submitted: ReachAge\n[Commander] Goal #14 submitted: ReachAge\n[Commander] Goal #15 submitted: ReachAge\n[Commander] Goal #16 submitted: ReachAge\n[Commander] Goal #17 submitted: ReachAge\n[Commander] Goal #18 submitted: ReachAge\n[Commander] Goal #19 submitted: ReachAge\n[Commander] Goal #20 submitted: ReachAge\n[Commander] Goal #21 submitted: ReachAge\n[Commander] Goal #22 submitted: ReachAge\n[Commander] Goal #23 submitted: ReachAge\n[Commander] Goal #24 submitted: ReachAge\n[Commander] Goal #25 submitted: ReachAge\n[Commander] Goal #26 submitted: ReachAge\n[Commander] Goal #27 submitted: ReachAge\n[Commander] Goal #28 submitted: ReachAge\n[Commander] Goal #29 submitted: ReachAge\n[Commander] Goal #30 submitted: ReachAge\n[Commander] Goal #31 submitted: ReachAge\n[Commander] Goal #32 submitted: ReachAge\n[Commander] Goal #33 submitted: ReachAge\n"
+        },
+        {
+          "name": "CompoundRequest_ProjectsOneCardWithTwoRealGoalSteps",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTaskBoardTests.CompoundRequest_ProjectsOneCardWithTwoRealGoalSteps",
+          "state": "Passed",
+          "durationSeconds": 1.1820356,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\n[Commander] Goal #2 submitted: EnsureUnitCount\n"
+        },
+        {
+          "name": "FreshCardAfterConversationReset_CanCancelStillLiveOldRequest_ButOldCardCannot",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTaskBoardTests.FreshCardAfterConversationReset_CanCancelStillLiveOldRequest_ButOldCardCannot",
+          "state": "Passed",
+          "durationSeconds": 1.0229512,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\n[Commander] Goal #2 submitted: EnsureUnitCount\n[Commander] Goal #1 cancelled.\n[Commander] Goal #2 cancelled.\n"
+        },
+        {
+          "name": "PartiallyFailedRequest_RemainsCancellableWhileSiblingAutomationIsLive",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTaskBoardTests.PartiallyFailedRequest_RemainsCancellableWhileSiblingAutomationIsLive",
+          "state": "Passed",
+          "durationSeconds": 1.0595842,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\n[Commander] Goal #2 submitted: EnsureUnitCount\n[Commander] Goal #2 cancelled.\n"
+        },
+        {
+          "name": "StaleGeneration_CannotCancelLiveRequest",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTaskBoardTests.StaleGeneration_CannotCancelLiveRequest",
+          "state": "Passed",
+          "durationSeconds": 0.9674399,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: ReachAge\n"
+        },
+        {
+          "name": "AcceptedConstructionResponse_DoesNotClaimConstructionHasStarted",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTruthfulStatusFixTests.AcceptedConstructionResponse_DoesNotClaimConstructionHasStarted",
+          "state": "Passed",
+          "durationSeconds": 1.2022133,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "BlockedCard_ShowsReasonInFirstVisibleCardArea",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTruthfulStatusFixTests.BlockedCard_ShowsReasonInFirstVisibleCardArea",
+          "state": "Passed",
+          "durationSeconds": 1.4933186,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\n[Commander] Goal #1 submitted: BuildStructure\n[Commander] intent=admitted;goal-submitted=True\n"
+        },
+        {
+          "name": "CompoundBlockedSibling_ProvidesItsOwnActionableReasonAtCardLevel",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTruthfulStatusFixTests.CompoundBlockedSibling_ProvidesItsOwnActionableReasonAtCardLevel",
+          "state": "Passed",
+          "durationSeconds": 1.2728267,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\n[Commander] Goal #2 submitted: EnsureUnitCount\n"
+        },
+        {
+          "name": "CompoundCompletedAllocation_DoesNotCompletePendingBuilding",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTruthfulStatusFixTests.CompoundCompletedAllocation_DoesNotCompletePendingBuilding",
+          "state": "Passed",
+          "durationSeconds": 1.2630318,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: AllocateWorkers\n[Commander] Goal #2 submitted: BuildStructure\n"
+        },
+        {
+          "name": "CompoundPreview_ShowsAwaitingApprovalAndKeepsMinimizedState",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTruthfulStatusFixTests.CompoundPreview_ShowsAwaitingApprovalAndKeepsMinimizedState",
+          "state": "Passed",
+          "durationSeconds": 1.3752983,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\n"
+        },
+        {
+          "name": "CurrentRequestBlocker_UpdatesTopStatusWithoutAddingTranscriptLine",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTruthfulStatusFixTests.CurrentRequestBlocker_UpdatesTopStatusWithoutAddingTranscriptLine",
+          "state": "Passed",
+          "durationSeconds": 1.4656718,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\n[Commander] Goal #1 submitted: BuildStructure\n[Commander] intent=admitted;goal-submitted=True\n[Commander] context=projected;provider-request=started\n[Commander] Goal #2 submitted: BuildStructure\n[Commander] intent=admitted;goal-submitted=True\n"
+        },
+        {
+          "name": "PendingGoal_IsAcceptedButConstructionWaitIsWorking",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTruthfulStatusFixTests.PendingGoal_IsAcceptedButConstructionWaitIsWorking",
+          "state": "Passed",
+          "durationSeconds": 1.2251004,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\n"
+        }
+      ]
+    }
+  },
+  "hint": null
+}

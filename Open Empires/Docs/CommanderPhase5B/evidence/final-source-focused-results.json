@@ -1,0 +1,287 @@
+{
+  "job_id": "835c51870b594dfb8fb18800a1598a8b",
+  "status": "succeeded",
+  "mode": "EditMode",
+  "started_unix_ms": 1791549608820,
+  "finished_unix_ms": 1791549617157,
+  "last_update_unix_ms": 1791549617157,
+  "progress": {
+    "completed": 28,
+    "total": 28,
+    "current_test_full_name": null,
+    "current_test_started_unix_ms": 1791549616809,
+    "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Mill\",\"Food\",\"Berries\",True,1)",
+    "last_finished_unix_ms": 1791549617128,
+    "stuck_suspected": false,
+    "editor_is_focused": true,
+    "blocked_reason": null,
+    "failures_so_far": [],
+    "failures_capped": false
+  },
+  "error": null,
+  "result": {
+    "mode": "EditMode",
+    "summary": {
+      "total": 28,
+      "passed": 28,
+      "failed": 0,
+      "skipped": 0,
+      "durationSeconds": 7.7900889,
+      "resultState": "Passed"
+    },
+    "results": [
+      {
+        "name": "DeclaredSequentialOrdering_RequiresCompletionDependency(False)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.DeclaredSequentialOrdering_RequiresCompletionDependency(False)",
+        "state": "Passed",
+        "durationSeconds": 0.2474208,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "DeclaredSequentialOrdering_RequiresCompletionDependency(True)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.DeclaredSequentialOrdering_RequiresCompletionDependency(True)",
+        "state": "Passed",
+        "durationSeconds": 0.2542343,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "ExplicitIdleBuilder_AdmissionPreservesEligibility",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.ExplicitIdleBuilder_AdmissionPreservesEligibility",
+        "state": "Passed",
+        "durationSeconds": 0.3142223,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "InvalidConstraintMode_ReportsOnlySanitizedFieldDiagnostic",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.InvalidConstraintMode_ReportsOnlySanitizedFieldDiagnostic",
+        "state": "Passed",
+        "durationSeconds": 0.2777539,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-09T12:40:10.4344061Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=1\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=169;finish=stop\r\n[CommanderProvider] schema=field=nodes[0].constraints[0].mode;code=invalid-enum\r\n[CommanderProvider] semantic=invalid;nodes=0\r\n"
+      },
+      {
+        "name": "InvalidPlacement_IdentifiesFieldWithoutPrintingValue(\"anchor\",\"\\\"Woodline\\\"\",\"anchor\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.InvalidPlacement_IdentifiesFieldWithoutPrintingValue(\"anchor\",\"\\\"Woodline\\\"\",\"anchor\")",
+        "state": "Passed",
+        "durationSeconds": 0.2538159,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-09T12:40:10.6922477Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=1\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=380;finish=stop\r\n[CommanderProvider] schema=field=nodes[0].placement.anchor;code=invalid-enum\r\n[CommanderProvider] semantic=invalid;nodes=0\r\n"
+      },
+      {
+        "name": "InvalidPlacement_IdentifiesFieldWithoutPrintingValue(\"relation\",\"\\\"Nearest\\\"\",\"relation\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.InvalidPlacement_IdentifiesFieldWithoutPrintingValue(\"relation\",\"\\\"Nearest\\\"\",\"relation\")",
+        "state": "Passed",
+        "durationSeconds": 0.25651,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-09T12:40:10.9481391Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=1\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=390;finish=stop\r\n[CommanderProvider] schema=field=nodes[0].placement.relation;code=invalid-enum\r\n[CommanderProvider] semantic=invalid;nodes=0\r\n"
+      },
+      {
+        "name": "InvalidPlacement_IdentifiesFieldWithoutPrintingValue(\"clearGapTiles\",\"5\",\"clearGapTiles\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.InvalidPlacement_IdentifiesFieldWithoutPrintingValue(\"clearGapTiles\",\"5\",\"clearGapTiles\")",
+        "state": "Passed",
+        "durationSeconds": 0.2535915,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-09T12:40:11.2016975Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=1\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=416;finish=stop\r\n[CommanderProvider] schema=field=nodes[0].placement.clearGapTiles;code=conflicting-declarations\r\n[CommanderProvider] semantic=invalid;nodes=0\r\n"
+      },
+      {
+        "name": "InvalidPlacement_IdentifiesFieldWithoutPrintingValue(\"sourceKind\",\"\\\"Trees\\\"\",\"sourceKind\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.InvalidPlacement_IdentifiesFieldWithoutPrintingValue(\"sourceKind\",\"\\\"Trees\\\"\",\"sourceKind\")",
+        "state": "Passed",
+        "durationSeconds": 0.2549972,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-09T12:40:11.4576319Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=1\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=388;finish=stop\r\n[CommanderProvider] schema=field=nodes[0].placement.sourceKind;code=invalid-enum\r\n[CommanderProvider] semantic=invalid;nodes=0\r\n"
+      },
+      {
+        "name": "InvalidPlacement_IdentifiesFieldWithoutPrintingValue(\"resource\",\"\\\"Timber\\\"\",\"resource\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.InvalidPlacement_IdentifiesFieldWithoutPrintingValue(\"resource\",\"\\\"Timber\\\"\",\"resource\")",
+        "state": "Passed",
+        "durationSeconds": 0.2527495,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-09T12:40:11.7103240Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=1\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=389;finish=stop\r\n[CommanderProvider] schema=field=nodes[0].placement.resource;code=invalid-enum\r\n[CommanderProvider] semantic=invalid;nodes=0\r\n"
+      },
+      {
+        "name": "MissingBuilderDeclaration_ProviderRejectsRatherThanDefaulting(\"Lumber Yard\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.MissingBuilderDeclaration_ProviderRejectsRatherThanDefaulting(\"Lumber Yard\")",
+        "state": "Passed",
+        "durationSeconds": 0.2553354,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-09T12:40:11.9658602Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=1\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=93;finish=stop\r\n[CommanderProvider] schema=field=nodes[0].builders;code=missing-or-wrong-type\r\n[CommanderProvider] semantic=invalid;nodes=0\r\n"
+      },
+      {
+        "name": "MissingBuilderDeclaration_ProviderRejectsRatherThanDefaulting(\"Mill\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.MissingBuilderDeclaration_ProviderRejectsRatherThanDefaulting(\"Mill\")",
+        "state": "Passed",
+        "durationSeconds": 0.2527705,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-09T12:40:12.2182359Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=1\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=86;finish=stop\r\n[CommanderProvider] schema=field=nodes[0].builders;code=missing-or-wrong-type\r\n[CommanderProvider] semantic=invalid;nodes=0\r\n"
+      },
+      {
+        "name": "MissingBuilderDeclaration_ProviderRejectsRatherThanDefaulting(\"House\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.MissingBuilderDeclaration_ProviderRejectsRatherThanDefaulting(\"House\")",
+        "state": "Passed",
+        "durationSeconds": 0.2529758,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-09T12:40:12.4724664Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=1\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=87;finish=stop\r\n[CommanderProvider] schema=field=nodes[0].builders;code=missing-or-wrong-type\r\n[CommanderProvider] semantic=invalid;nodes=0\r\n"
+      },
+      {
+        "name": "MissingCompoundOrdering_ProviderRejectsRatherThanRunningBothImmediately",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.MissingCompoundOrdering_ProviderRejectsRatherThanRunningBothImmediately",
+        "state": "Passed",
+        "durationSeconds": 0.2536704,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-09T12:40:12.7257455Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=1\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=228;finish=stop\r\n[CommanderProvider] schema=field=executionOrder;code=missing-or-wrong-type\r\n[CommanderProvider] semantic=invalid;nodes=0\r\n"
+      },
+      {
+        "name": "NumericOnlyRepair_WithDeclarations_PreservesIntentAndUsesOnlyOneRepair",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.NumericOnlyRepair_WithDeclarations_PreservesIntentAndUsesOnlyOneRepair",
+        "state": "Passed",
+        "durationSeconds": 0.2580943,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-09T12:40:12.9793456Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=1\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=224;finish=stop\r\n[CommanderProvider] schema=field=nodes[0].count;code=missing-or-wrong-type\r\n[CommanderProvider] utc=2026-10-09T12:40:12.9839640Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=0\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=128;finish=stop\r\n[CommanderProvider] semantic=Request;nodes=1\r\n"
+      },
+      {
+        "name": "NumericStringWithoutDeclarations_DoesNotSpendARepairAttempt",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.NumericStringWithoutDeclarations_DoesNotSpendARepairAttempt",
+        "state": "Passed",
+        "durationSeconds": 0.2564391,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-09T12:40:13.2408780Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=1\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=143;finish=stop\r\n[CommanderProvider] schema=field=nodes[0].count;code=missing-or-wrong-type\r\n[CommanderProvider] semantic=invalid;nodes=0\r\n"
+      },
+      {
+        "name": "UnrepresentableBuilderCount_RejectsRatherThanChoosingOne",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BFinalIntentContractTests.UnrepresentableBuilderCount_RejectsRatherThanChoosingOne",
+        "state": "Passed",
+        "durationSeconds": 0.2403931,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "CompoundBuildThenAllocate_CannotCompleteBeforeNativeBuilding",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.CompoundBuildThenAllocate_CannotCompleteBeforeNativeBuilding",
+        "state": "Passed",
+        "durationSeconds": 0.3353863,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #2 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Mill near the visible Berries/Food node at (137,136) with villager #0.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (137,136): villager #0 is travelling to building #1.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (137,136): building #1 is advancing with villager #0.\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; Mill construction complete at (137,136) as building #1.\r\n[Commander] Goal #2: status=Executing owned=0 queued=0; Assigning selected workers to Food.\r\n[Commander] Goal #2: status=Completed owned=1 queued=0; The 1 selected workers have matching assignments.\r\n"
+      },
+      {
+        "name": "ConcurrentPlacedRequests_ReportTheirOwnNativeResults",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.ConcurrentPlacedRequests_ReportTheirOwnNativeResults",
+        "state": "Passed",
+        "durationSeconds": 0.3362423,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #2 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing LumberYard near the visible Tree/Wood node at (137,136) with villager #0.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed LumberYard at (137,136): villager #0 is travelling to building #1.\r\n[Commander] Goal #2: status=Executing owned=0 queued=0; Placing LumberYard near the visible Tree/Wood node at (142,136) with villager #1.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed LumberYard at (137,136): building #1 is advancing with villager #0.\r\n[Commander] Goal #2: status=WaitingForConstruction owned=0 queued=1; Placed LumberYard at (142,136): villager #1 is travelling to building #2.\r\n[Commander] Goal #2: status=WaitingForConstruction owned=0 queued=1; Placed LumberYard at (142,136): building #2 is advancing with villager #1.\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; LumberYard construction complete at (137,136) as building #1.\r\n[Commander] Goal #2: status=Completed owned=1 queued=0; LumberYard construction complete at (142,136) as building #2.\r\n"
+      },
+      {
+        "name": "HumanProtectedIdleWorker_IsNotTakenForConstruction",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.HumanProtectedIdleWorker_IsNotTakenForConstruction",
+        "state": "Passed",
+        "durationSeconds": 0.2627291,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No eligible owned living villager satisfies the builder restrictions for LumberYard.\r\n"
+      },
+      {
+        "name": "IdleOnlyRestriction_PersistsThroughBlockedRetry",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.IdleOnlyRestriction_PersistsThroughBlockedRetry",
+        "state": "Passed",
+        "durationSeconds": 0.2648089,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No eligible owned living villager satisfies the builder restrictions for LumberYard.\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing LumberYard near the visible Tree/Wood node at (137,136) with villager #1.\r\n"
+      },
+      {
+        "name": "ProtectedGold_IsPreservedAndIdleBuilderChosen",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.ProtectedGold_IsPreservedAndIdleBuilderChosen",
+        "state": "Passed",
+        "durationSeconds": 0.2590238,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing LumberYard near the visible Tree/Wood node at (137,136) with villager #1.\r\n"
+      },
+      {
+        "name": "UnplacedGlobalObjective_RetainsOwnedTotalAcrossCancellation",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.UnplacedGlobalObjective_RetainsOwnedTotalAcrossCancellation",
+        "state": "Passed",
+        "durationSeconds": 0.2503439,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=1 queued=0; Placing House at (126,134) with villager #0.\r\n[Commander] Goal #1 cancelled.\r\n"
+      },
+      {
+        "name": "VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Lumber Yard\",\"Wood\",\"Tree\",False,0)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Lumber Yard\",\"Wood\",\"Tree\",False,0)",
+        "state": "Passed",
+        "durationSeconds": 0.312619,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing LumberYard near the visible Tree/Wood node at (137,136) with villager #0.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed LumberYard at (137,136): villager #0 is travelling to building #1.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed LumberYard at (137,136): building #1 is advancing with villager #0.\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; LumberYard construction complete at (137,136) as building #1.\r\nnative Lumber Yard #1 at 137,136; worker=0; completed tick=631\r\n"
+      },
+      {
+        "name": "VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Lumber Yard\",\"Wood\",\"Tree\",True,0)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Lumber Yard\",\"Wood\",\"Tree\",True,0)",
+        "state": "Passed",
+        "durationSeconds": 0.3134228,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing LumberYard near the visible Tree/Wood node at (137,136) with villager #0.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed LumberYard at (137,136): villager #0 is travelling to building #1.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed LumberYard at (137,136): building #1 is advancing with villager #0.\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; LumberYard construction complete at (137,136) as building #1.\r\nnative Lumber Yard #1 at 137,136; worker=0; completed tick=631\r\n"
+      },
+      {
+        "name": "VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Mill\",\"Food\",\"Berries\",False,0)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Mill\",\"Food\",\"Berries\",False,0)",
+        "state": "Passed",
+        "durationSeconds": 0.3518443,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Mill near the visible Berries/Food node at (137,136) with villager #0.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (137,136): villager #0 is travelling to building #1.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (137,136): building #1 is advancing with villager #0.\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; Mill construction complete at (137,136) as building #1.\r\nnative Mill #1 at 137,136; worker=0; completed tick=631\r\n"
+      },
+      {
+        "name": "VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Mill\",\"Food\",\"Berries\",True,0)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Mill\",\"Food\",\"Berries\",True,0)",
+        "state": "Passed",
+        "durationSeconds": 0.3105172,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Mill near the visible Berries/Food node at (137,136) with villager #0.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (137,136): villager #0 is travelling to building #1.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (137,136): building #1 is advancing with villager #0.\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; Mill construction complete at (137,136) as building #1.\r\nnative Mill #1 at 137,136; worker=0; completed tick=631\r\n"
+      },
+      {
+        "name": "VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Lumber Yard\",\"Wood\",\"Tree\",True,1)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Lumber Yard\",\"Wood\",\"Tree\",True,1)",
+        "state": "Passed",
+        "durationSeconds": 0.3211687,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing LumberYard near the visible Tree/Wood node at (137,136) with villager #0.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed LumberYard at (137,136): villager #0 is travelling to building #2.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed LumberYard at (137,136): building #2 is advancing with villager #0.\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; LumberYard construction complete at (137,136) as building #2.\r\nnative Lumber Yard #2 at 137,136; worker=0; completed tick=631\r\n"
+      },
+      {
+        "name": "VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Mill\",\"Food\",\"Berries\",True,1)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BResourcePlacementFixTests.VisibleUnworkedResource_ConstructsNativelyToCompletion(\"Mill\",\"Food\",\"Berries\",True,1)",
+        "state": "Passed",
+        "durationSeconds": 0.3186528,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing Mill near the visible Berries/Food node at (137,136) with villager #0.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (137,136): villager #0 is travelling to building #2.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed Mill at (137,136): building #2 is advancing with villager #0.\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; Mill construction complete at (137,136) as building #2.\r\nnative Mill #2 at 137,136; worker=0; completed tick=631\r\n"
+      }
+    ]
+  }
+}

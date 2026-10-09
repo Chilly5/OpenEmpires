@@ -26,7 +26,8 @@ namespace OpenEmpires
                         break;
                     case "PreferredWorkers":
                         CheckFields(value, "type", "mode");
-                        if (RequiredString(value, "mode") != "IdleOnly") throw new JsonException();
+                        if (RequiredString(value, "mode") != "IdleOnly")
+                            throw FailField(value, "mode", SchemaFailureCode.InvalidEnum);
                         result.Add(new PreferredWorkersConstraint(CommanderPreferredWorkerSource.IdleOnly));
                         break;
                     case "MaximumQueue":

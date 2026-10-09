@@ -1,0 +1,95 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "eb074b0b3bf94e51914b7a13ef8a0319",
+    "status": "succeeded",
+    "mode": "PlayMode",
+    "started_unix_ms": 1791573443926,
+    "finished_unix_ms": 1791573461882,
+    "last_update_unix_ms": 1791573461882,
+    "progress": {
+      "completed": 6,
+      "total": 6,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791573461514,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5BTaskBoardPlayModeTests.ConversationReset_RebindsVisibleCancelToFreshCardWithoutOpeningChat",
+      "last_finished_unix_ms": 1791573461829,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": {
+      "mode": "PlayMode",
+      "summary": {
+        "total": 6,
+        "passed": 6,
+        "failed": 0,
+        "skipped": 0,
+        "durationSeconds": 2.9121792,
+        "resultState": "Passed"
+      },
+      "results": [
+        {
+          "name": "QualifyingBootstrapStartup_AndLaterEmergencyRemainAdvisory",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAuthorityPlayModeTests.QualifyingBootstrapStartup_AndLaterEmergencyRemainAdvisory",
+          "state": "Passed",
+          "durationSeconds": 1.3762173,
+          "message": null,
+          "stackTrace": null,
+          "output": "[SinglePlayerAnalytics] Session started: e3b5591a-5a9e-47ee-a370-70d7ae897aa9\r\n[Phase5A] actual bootstrap qualifying human: advisory exists; plans/goals/reservations/commands=0.\r\n[StrategicPlanner] Strategic intent #1 created: AttackPreparation for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'CavalryPressure' and started plan #1: CavalryPressure.\r\n[StrategicPlanner] Reservation #1 created for plan #1: 840 Food.\r\n[StrategicPlanner] Reservation #2 created for plan #1: 600 Gold.\r\n[StrategicPlanner] Plan #1 milestone active: Economic Foundation.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] Goal #3 submitted: ResourceAllocation\r\n[Phase5A] authorized direct root survives later emergency advisory with zero recommendation-attributable goal/plan deltas.\r\n[DotEnv] Loaded .env from D:\\unity_projects\\OpenEmpires\\Open Empires\\.env\r\n[Commander] Goal #1 cancelled.\r\n[Commander] Goal #2 cancelled.\r\n[Commander] Goal #3 cancelled.\r\n[StrategicPlanner] Reservation #1 cancelled for plan #1.\r\n[StrategicPlanner] Reservation #2 cancelled for plan #1.\r\n[StrategicPlanner] Plan #1 cancelled.\r\n"
+        },
+        {
+          "name": "GatheredIncomeCountsOnlyResourceDeliveryNotArbitraryStockpileCredits",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BNativeObservationsPlayModeTests.GatheredIncomeCountsOnlyResourceDeliveryNotArbitraryStockpileCredits",
+          "state": "Passed",
+          "durationSeconds": 0.2670604,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ProducerBirthObservationIncludesNativeBirthEvenWithoutCommanderReceipt",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BNativeObservationsPlayModeTests.ProducerBirthObservationIncludesNativeBirthEvenWithoutCommanderReceipt",
+          "state": "Passed",
+          "durationSeconds": 0.2555699,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "ActiveGoal_UpdatesCollapsedBadgeWithoutOpeningChat_AndCancelUsesCardControl",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTaskBoardPlayModeTests.ActiveGoal_UpdatesCollapsedBadgeWithoutOpeningChat_AndCancelUsesCardControl",
+          "state": "Passed",
+          "durationSeconds": 0.3411764,
+          "message": null,
+          "stackTrace": null,
+          "output": "There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\n[Commander] Goal #1 submitted: ReachAge\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\n[Commander] Goal #1 cancelled.\r\n"
+        },
+        {
+          "name": "BlockedReason_FitsInFirstTaskViewportWithoutForcingChatOpen",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTaskBoardPlayModeTests.BlockedReason_FitsInFirstTaskViewportWithoutForcingChatOpen",
+          "state": "Passed",
+          "durationSeconds": 0.2941817,
+          "message": null,
+          "stackTrace": null,
+          "output": "There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\n[Commander] Goal #1 submitted: BuildStructure\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\n"
+        },
+        {
+          "name": "ConversationReset_RebindsVisibleCancelToFreshCardWithoutOpeningChat",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5BTaskBoardPlayModeTests.ConversationReset_RebindsVisibleCancelToFreshCardWithoutOpeningChat",
+          "state": "Passed",
+          "durationSeconds": 0.3157017,
+          "message": null,
+          "stackTrace": null,
+          "output": "There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\n[Commander] Goal #1 submitted: ReachAge\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\nThere are no audio listeners in the scene. Please ensure there is always one audio listener in the scene\r\n[Commander] Goal #1 cancelled.\r\n"
+        }
+      ]
+    }
+  },
+  "hint": null
+}

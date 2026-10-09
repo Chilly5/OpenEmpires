@@ -926,8 +926,9 @@ namespace OpenEmpires
             if (goal.DynamicLocation != null)
                 return PlanDynamicSemanticBuilding(goal, type, currentTick, owned, queued);
             var resolver = new CommanderSemanticReferenceResolver(simulation);
-            if (goal.PlacementAnchorSelector == CommanderSemanticAnchorSelector.WorkedResource)
-                return PlanWorkedResourceBuilding(goal, type, resolver, currentTick, owned, queued);
+            if (goal.PlacementAnchorSelector == CommanderSemanticAnchorSelector.WorkedResource
+                || goal.PlacementAnchorSelector == CommanderSemanticAnchorSelector.VisibleResource)
+                return PlanResourceBuilding(goal, type, resolver, currentTick, owned, queued);
             if (!resolver.TryResolveOwnedAnchor(goal.PlayerId, goal.PlacementAnchorSelector.Value,
                 goal.PlacementAnchorOrdinal, out BuildingData anchor))
             {
@@ -972,38 +973,56 @@ namespace OpenEmpires
                 owned, queued);
         }
 
-        private CommanderPlan PlanWorkedResourceBuilding(BuildStructureGoal goal, BuildingType type,
+        private CommanderPlan PlanResourceBuilding(BuildStructureGoal goal, BuildingType type,
             CommanderSemanticReferenceResolver resolver, int currentTick, int owned, int queued)
         {
             if (!goal.PlacementResourceType.HasValue)
-                return new CommanderPlan(CommanderGoalStatus.Failed, "A worked resource type is required.", owned, queued);
-            if (!resolver.TryResolveWorkedResource(goal.PlayerId, goal.PlacementResourceType.Value,
-                out ResourceNodeData resource))
+                return new CommanderPlan(CommanderGoalStatus.Failed, "A placement resource type is required.", owned, queued);
+            bool worked = goal.PlacementAnchorSelector == CommanderSemanticAnchorSelector.WorkedResource;
+            var source = goal.PlacementSourceKind ?? ResourceSourceKind.Any;
+            ResourceNodeData resource;
+            bool resolved = worked
+                ? resolver.TryResolveWorkedResource(goal.PlayerId, goal.PlacementResourceType.Value, out resource, source)
+                : resolver.TryResolveVisibleResourceNearestToTownCenter(goal.PlayerId, goal.PlacementResourceType.Value,
+                    null, out resource, source);
+            if (!resolved)
             {
                 goal.PlacementBlocker = CommanderPlacementBlocker.AnchorUnavailable;
                 return new CommanderPlan(CommanderGoalStatus.Blocked,
-                    "No visible resource node currently worked by an owned villager matches the request.", owned, queued);
+                    worked ? "No visible resource node currently worked by an owned villager matches the request."
+                        : $"No usable visible {source}/{goal.PlacementResourceType.Value} resource matches the requested placement.", owned, queued);
+            }
+            if (SelectBuilder(goal, currentTick) == null)
+            {
+                goal.PlacementBlocker = CommanderPlacementBlocker.NoEligibleBuilder;
+                return new CommanderPlan(CommanderGoalStatus.Blocked,
+                    $"No eligible owned living villager satisfies the builder restrictions for {type}.", owned, queued);
             }
             GetFootprint(type, out int width, out int height);
             IReadOnlyList<Vector2Int> candidates = CommanderSemanticPlacementCandidates.Generate(
                 resource.TileX, resource.TileZ, resource.FootprintWidth, resource.FootprintHeight,
                 width, height, simulation.MapData.Width, simulation.MapData.Height,
                 CommanderSemanticPlacementRelation.Near, goal.ClearGapTiles);
+            // Match the ordinary placement command's border validation. Checking only
+            // the footprint can repeatedly propose a site rejected beside another foundation.
+            int border = type == BuildingType.Farm || type == BuildingType.Wall
+                || type == BuildingType.StoneWall || type == BuildingType.StoneGate
+                || type == BuildingType.WoodGate ? 0 : 1;
             for (int i = 0; i < candidates.Count; i++)
             {
                 Vector2Int tile = candidates[i];
-                if (!IsVisibleBuildableArea(goal.PlayerId, tile.x, tile.y, width, height, 0, type)) continue;
+                if (!IsVisibleBuildableArea(goal.PlayerId, tile.x, tile.y, width, height, border, type)) continue;
                 UnitData builder = FindReachableSemanticBuilder(goal, tile, width, height, currentTick);
                 if (builder == null) continue;
                 goal.PlacementBlocker = CommanderPlacementBlocker.None;
                 return new CommanderPlan(CommanderGoalStatus.Executing,
-                    $"Placing {type} near the worked {goal.PlacementResourceType.Value} node "
+                    $"Placing {type} near the {(worked ? "worked" : "visible")} {source}/{goal.PlacementResourceType.Value} node "
                     + $"at ({tile.x},{tile.y}) with villager #{builder.Id}.", owned, queued,
                     new PlaceBuildingCommand(goal.PlayerId, type, tile.x, tile.y, new[] { builder.Id }));
             }
             goal.PlacementBlocker = CommanderPlacementBlocker.NoLegalCandidate;
             return new CommanderPlan(CommanderGoalStatus.Blocked,
-                $"No visible, buildable, reachable location is available near the worked {goal.PlacementResourceType.Value} node.",
+                $"No visible, buildable, reachable location is available near the requested {(worked ? "worked" : "visible")} {source}/{goal.PlacementResourceType.Value} node.",
                 owned, queued);
         }
 

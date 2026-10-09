@@ -53,7 +53,8 @@ namespace OpenEmpires
                         || node.UnitType.HasValue
                         || node.StrategicObjectiveType.HasValue
                         || (node.ResourceType.HasValue
-                            && node.PlacementAnchorSelector != CommanderSemanticAnchorSelector.WorkedResource)
+                            && node.PlacementAnchorSelector != CommanderSemanticAnchorSelector.WorkedResource
+                            && node.PlacementAnchorSelector != CommanderSemanticAnchorSelector.VisibleResource)
                         || (node.PlacementAnchorSelector.HasValue && node.Count.Value != 1)) return false;
                     dto.intentType = nameof(CommanderIntentType.BuildStructure);
                     dto.structure = node.BuildingType.Value.ToString();
@@ -119,7 +120,7 @@ namespace OpenEmpires
                 ? new BuildStructureIntent(context.PlayerId, node.BuildingType.Value, node.Count.Value,
                     validated.Intent.Constraints, node.PlacementAnchorSelector,
                     node.PlacementAnchorOrdinal, node.PlacementRelation, node.ClearGapTiles,
-                    node.ResourceType)
+                    node.ResourceType, node.SourceKind)
                 : validated.Intent;
             safeReason = string.Empty;
             return true;

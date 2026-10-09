@@ -1,0 +1,5983 @@
+{
+  "schema": "phase5b-independent-replay@1",
+  "authorized_attempt_limit": 100,
+  "source_sha256": "beabf07553a67113b82833cffaa0cb2cc6b7e7690907d254ce326952a7bb06cb",
+  "method": "Controlled Editor match; actual Commander UI; unchanged production HTTP transport and native commands",
+  "http_attempts": [
+    {
+      "ordinal": 1,
+      "scenario": "lumber-default",
+      "requested_model": "openai/gpt-6-luna",
+      "endpoint": "openrouter.ai/api/v1/chat/completions",
+      "status": "received",
+      "http_status": 200,
+      "returned_model": "openai/gpt-6-luna"
+    },
+    {
+      "ordinal": 2,
+      "scenario": "lumber-idle",
+      "requested_model": "openai/gpt-6-luna",
+      "endpoint": "openrouter.ai/api/v1/chat/completions",
+      "status": "received",
+      "http_status": 200,
+      "returned_model": "openai/gpt-6-luna"
+    },
+    {
+      "ordinal": 3,
+      "scenario": "mill-default",
+      "requested_model": "openai/gpt-6-luna",
+      "endpoint": "openrouter.ai/api/v1/chat/completions",
+      "status": "received",
+      "http_status": 200,
+      "returned_model": "openai/gpt-6-luna"
+    },
+    {
+      "ordinal": 4,
+      "scenario": "mill-idle",
+      "requested_model": "openai/gpt-6-luna",
+      "endpoint": "openrouter.ai/api/v1/chat/completions",
+      "status": "received",
+      "http_status": 200,
+      "returned_model": "openai/gpt-6-luna"
+    },
+    {
+      "ordinal": 5,
+      "scenario": "mill-worked",
+      "requested_model": "openai/gpt-6-luna",
+      "endpoint": "openrouter.ai/api/v1/chat/completions",
+      "status": "received",
+      "http_status": 200,
+      "returned_model": "openai/gpt-6-luna"
+    },
+    {
+      "ordinal": 6,
+      "scenario": "compound-build-assign",
+      "requested_model": "openai/gpt-6-luna",
+      "endpoint": "openrouter.ai/api/v1/chat/completions",
+      "status": "received",
+      "http_status": 200,
+      "returned_model": "openai/gpt-6-luna"
+    },
+    {
+      "ordinal": 7,
+      "scenario": "mill-worked-available",
+      "requested_model": "openai/gpt-6-luna",
+      "endpoint": "openrouter.ai/api/v1/chat/completions",
+      "status": "error",
+      "error_type": "OperationCanceledException"
+    },
+    {
+      "ordinal": 8,
+      "scenario": "mill-worked-available-manual-retry",
+      "requested_model": "openai/gpt-6-luna",
+      "endpoint": "openrouter.ai/api/v1/chat/completions",
+      "status": "received",
+      "http_status": 200,
+      "returned_model": "openai/gpt-6-luna"
+    },
+    {
+      "ordinal": 9,
+      "scenario": "mill-idle-unworked-manual-retry",
+      "requested_model": "openai/gpt-6-luna",
+      "endpoint": "openrouter.ai/api/v1/chat/completions",
+      "status": "error",
+      "error_type": "OperationCanceledException"
+    }
+  ],
+  "scenarios": [
+    {
+      "scenario": "lumber-default",
+      "wording": "Build a Lumber Yard near the woodline.",
+      "start_tick": 9714,
+      "expanded_at_start": false,
+      "worker_snapshot": [
+        {
+          "id": 0,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 1,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 2,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 3,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 4,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 5,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 40,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        }
+      ],
+      "normalized_attempts": [
+        {
+          "attempt": 1,
+          "valid": true,
+          "outcome": "Request",
+          "nodes": [
+            {
+              "type": "BuildStructure",
+              "building": "LumberYard",
+              "count": 1,
+              "anchor": "VisibleResource",
+              "resource": "Wood",
+              "source_kind": "Tree",
+              "relation": "Near",
+              "constraints": [],
+              "depends_on": []
+            }
+          ]
+        }
+      ],
+      "commands": [
+        {
+          "tick": 11070,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "LumberYard",
+          "tile_x": 210,
+          "tile_z": 117,
+          "builders": [
+            0
+          ]
+        }
+      ],
+      "samples": [
+        {
+          "goals": [],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            }
+          ],
+          "cards": [],
+          "approval_pending": false,
+          "expanded": false,
+          "top_status": "OpenRouter Luna configured. Availability is checked on your first request.",
+          "first_card_row": "unavailable",
+          "tick": 9714
+        },
+        {
+          "goals": [],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            }
+          ],
+          "cards": [],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "OpenRouter Luna configured. Availability is checked on your first request.",
+          "first_card_row": "unavailable",
+          "tick": 9729
+        },
+        {
+          "goals": [],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            }
+          ],
+          "cards": [],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Commander is interpreting...",
+          "first_card_row": "unavailable",
+          "tick": 10644
+        },
+        {
+          "goals": [
+            {
+              "id": 1,
+              "type": "BuildStructure",
+              "status": "Pending",
+              "reason": "",
+              "placed_id": -1,
+              "anchor": "VisibleResource",
+              "source_kind": "Tree",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 1,
+              "status": "Accepted",
+              "progress": "Completed buildings: 0 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Accepted — Build 1 Lumber Yard",
+          "first_card_row": "Accepted — Completed buildings: 0 / 1",
+          "tick": 11064
+        },
+        {
+          "goals": [
+            {
+              "id": 1,
+              "type": "BuildStructure",
+              "status": "Executing",
+              "reason": "Placing LumberYard near the visible Tree/Wood node at (210,117) with villager #0.",
+              "placed_id": 4,
+              "anchor": "VisibleResource",
+              "source_kind": "Tree",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": true,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 1,
+              "status": "Working",
+              "progress": "Completed buildings: 0 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Working — Build 1 Lumber Yard",
+          "first_card_row": "Working — Completed buildings: 0 / 1",
+          "tick": 11079
+        },
+        {
+          "goals": [
+            {
+              "id": 1,
+              "type": "BuildStructure",
+              "status": "WaitingForConstruction",
+              "reason": "Placed LumberYard at (210,117): villager #0 is travelling to building #4.",
+              "placed_id": 4,
+              "anchor": "VisibleResource",
+              "source_kind": "Tree",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": true,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 1,
+              "status": "Working",
+              "progress": "Completed buildings: 0 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Working — Build 1 Lumber Yard",
+          "first_card_row": "Working — Completed buildings: 0 / 1",
+          "tick": 11094
+        },
+        {
+          "goals": [
+            {
+              "id": 1,
+              "type": "BuildStructure",
+              "status": "WaitingForConstruction",
+              "reason": "Placed LumberYard at (210,117): building #4 is advancing with villager #0.",
+              "placed_id": 4,
+              "anchor": "VisibleResource",
+              "source_kind": "Tree",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": true,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 1,
+              "status": "Working",
+              "progress": "Completed buildings: 0 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Working — Build 1 Lumber Yard",
+          "first_card_row": "Working — Completed buildings: 0 / 1",
+          "tick": 11304
+        },
+        {
+          "goals": [
+            {
+              "id": 1,
+              "type": "BuildStructure",
+              "status": "WaitingForConstruction",
+              "reason": "Placed LumberYard at (210,117): building #4 is advancing with villager #0.",
+              "placed_id": 4,
+              "anchor": "VisibleResource",
+              "source_kind": "Tree",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 1,
+              "status": "Working",
+              "progress": "Completed buildings: 0 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Working — Build 1 Lumber Yard",
+          "first_card_row": "Working — Completed buildings: 0 / 1",
+          "tick": 11889
+        },
+        {
+          "goals": [
+            {
+              "id": 1,
+              "type": "BuildStructure",
+              "status": "Completed",
+              "reason": "LumberYard construction complete at (210,117) as building #4.",
+              "placed_id": 4,
+              "anchor": "VisibleResource",
+              "source_kind": "Tree",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Completed — Completed buildings: 1 / 1",
+          "first_card_row": "Completed — Completed buildings: 1 / 1",
+          "tick": 11904
+        }
+      ]
+    },
+    {
+      "scenario": "lumber-idle",
+      "wording": "Build a Lumber Yard near the woodline with one idle villager.",
+      "start_tick": 13177,
+      "expanded_at_start": false,
+      "worker_snapshot": [
+        {
+          "id": 0,
+          "state": "Gathering",
+          "health": 50,
+          "resource_target": 1269,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 1,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 2,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 3,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 4,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 5,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 40,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        }
+      ],
+      "normalized_attempts": [
+        {
+          "attempt": 2,
+          "valid": true,
+          "outcome": "Request",
+          "nodes": [
+            {
+              "type": "BuildStructure",
+              "building": "LumberYard",
+              "count": 1,
+              "anchor": "VisibleResource",
+              "resource": "Wood",
+              "source_kind": "Tree",
+              "relation": "Near",
+              "constraints": [],
+              "depends_on": []
+            }
+          ]
+        }
+      ],
+      "commands": [
+        {
+          "tick": 13185,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "LumberYard",
+          "tile_x": 213,
+          "tile_z": 120,
+          "builders": [
+            1
+          ]
+        },
+        {
+          "tick": 13200,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "LumberYard",
+          "tile_x": 213,
+          "tile_z": 120,
+          "builders": [
+            1
+          ]
+        },
+        {
+          "tick": 13215,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "LumberYard",
+          "tile_x": 213,
+          "tile_z": 120,
+          "builders": [
+            1
+          ]
+        },
+        {
+          "tick": 13230,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "LumberYard",
+          "tile_x": 213,
+          "tile_z": 120,
+          "builders": [
+            1
+          ]
+        },
+        {
+          "tick": 13245,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "LumberYard",
+          "tile_x": 213,
+          "tile_z": 120,
+          "builders": [
+            1
+          ]
+        },
+        {
+          "tick": 13260,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "LumberYard",
+          "tile_x": 213,
+          "tile_z": 120,
+          "builders": [
+            1
+          ]
+        },
+        {
+          "tick": 13275,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "LumberYard",
+          "tile_x": 213,
+          "tile_z": 120,
+          "builders": [
+            1
+          ]
+        },
+        {
+          "tick": 13290,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "LumberYard",
+          "tile_x": 213,
+          "tile_z": 120,
+          "builders": [
+            1
+          ]
+        },
+        {
+          "tick": 13305,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "LumberYard",
+          "tile_x": 213,
+          "tile_z": 120,
+          "builders": [
+            1
+          ]
+        },
+        {
+          "tick": 13320,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "LumberYard",
+          "tile_x": 213,
+          "tile_z": 120,
+          "builders": [
+            1
+          ]
+        },
+        {
+          "tick": 13335,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "LumberYard",
+          "tile_x": 213,
+          "tile_z": 120,
+          "builders": [
+            1
+          ]
+        },
+        {
+          "tick": 13350,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "LumberYard",
+          "tile_x": 213,
+          "tile_z": 120,
+          "builders": [
+            1
+          ]
+        },
+        {
+          "tick": 13365,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "LumberYard",
+          "tile_x": 213,
+          "tile_z": 120,
+          "builders": [
+            1
+          ]
+        },
+        {
+          "tick": 13380,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "LumberYard",
+          "tile_x": 213,
+          "tile_z": 120,
+          "builders": [
+            1
+          ]
+        },
+        {
+          "tick": 13395,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "LumberYard",
+          "tile_x": 213,
+          "tile_z": 120,
+          "builders": [
+            1
+          ]
+        },
+        {
+          "tick": 13410,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "LumberYard",
+          "tile_x": 213,
+          "tile_z": 120,
+          "builders": [
+            1
+          ]
+        },
+        {
+          "tick": 13425,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "LumberYard",
+          "tile_x": 213,
+          "tile_z": 120,
+          "builders": [
+            1
+          ]
+        },
+        {
+          "tick": 13440,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "LumberYard",
+          "tile_x": 213,
+          "tile_z": 120,
+          "builders": [
+            1
+          ]
+        },
+        {
+          "tick": 13455,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "LumberYard",
+          "tile_x": 213,
+          "tile_z": 120,
+          "builders": [
+            1
+          ]
+        },
+        {
+          "tick": 13470,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "LumberYard",
+          "tile_x": 213,
+          "tile_z": 120,
+          "builders": [
+            1
+          ]
+        },
+        {
+          "tick": 13485,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "LumberYard",
+          "tile_x": 213,
+          "tile_z": 120,
+          "builders": [
+            1
+          ]
+        },
+        {
+          "tick": 13500,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "LumberYard",
+          "tile_x": 213,
+          "tile_z": 120,
+          "builders": [
+            1
+          ]
+        },
+        {
+          "tick": 13515,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "LumberYard",
+          "tile_x": 216,
+          "tile_z": 119,
+          "builders": [
+            1
+          ]
+        }
+      ],
+      "samples": [
+        {
+          "goals": [],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": false,
+          "top_status": "Completed — Completed buildings: 1 / 1",
+          "first_card_row": "Completed — Completed buildings: 1 / 1",
+          "tick": 13177
+        },
+        {
+          "goals": [
+            {
+              "id": 2,
+              "type": "BuildStructure",
+              "status": "Pending",
+              "reason": "",
+              "placed_id": -1,
+              "anchor": "VisibleResource",
+              "source_kind": "Tree",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 2,
+              "status": "Accepted",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Accepted — Build 1 Lumber Yard",
+          "first_card_row": "Accepted — Completed buildings: 0 / 2",
+          "tick": 13177
+        },
+        {
+          "goals": [
+            {
+              "id": 2,
+              "type": "BuildStructure",
+              "status": "Executing",
+              "reason": "Placing LumberYard near the visible Tree/Wood node at (213,120) with villager #1.",
+              "placed_id": -1,
+              "anchor": "VisibleResource",
+              "source_kind": "Tree",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 2,
+              "status": "Working",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Working — Build 1 Lumber Yard",
+          "first_card_row": "Working — Completed buildings: 0 / 2",
+          "tick": 13195
+        },
+        {
+          "goals": [
+            {
+              "id": 2,
+              "type": "BuildStructure",
+              "status": "Executing",
+              "reason": "Placing LumberYard near the visible Tree/Wood node at (216,119) with villager #1.",
+              "placed_id": 5,
+              "anchor": "VisibleResource",
+              "source_kind": "Tree",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": true,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 2,
+              "status": "Working",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Working — Build 1 Lumber Yard",
+          "first_card_row": "Working — Completed buildings: 0 / 2",
+          "tick": 13525
+        },
+        {
+          "goals": [
+            {
+              "id": 2,
+              "type": "BuildStructure",
+              "status": "WaitingForConstruction",
+              "reason": "Placed LumberYard at (216,119): villager #1 is travelling to building #5.",
+              "placed_id": 5,
+              "anchor": "VisibleResource",
+              "source_kind": "Tree",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": true,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 2,
+              "status": "Working",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Working — Build 1 Lumber Yard",
+          "first_card_row": "Working — Completed buildings: 0 / 2",
+          "tick": 13540
+        },
+        {
+          "goals": [
+            {
+              "id": 2,
+              "type": "BuildStructure",
+              "status": "WaitingForConstruction",
+              "reason": "Placed LumberYard at (216,119): building #5 is advancing with villager #1.",
+              "placed_id": 5,
+              "anchor": "VisibleResource",
+              "source_kind": "Tree",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": true,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 2,
+              "status": "Working",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Working — Build 1 Lumber Yard",
+          "first_card_row": "Working — Completed buildings: 0 / 2",
+          "tick": 13765
+        },
+        {
+          "goals": [
+            {
+              "id": 2,
+              "type": "BuildStructure",
+              "status": "WaitingForConstruction",
+              "reason": "Placed LumberYard at (216,119): building #5 is advancing with villager #1.",
+              "placed_id": 5,
+              "anchor": "VisibleResource",
+              "source_kind": "Tree",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 2,
+              "status": "Working",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Working — Build 1 Lumber Yard",
+          "first_card_row": "Working — Completed buildings: 0 / 2",
+          "tick": 14350
+        },
+        {
+          "goals": [
+            {
+              "id": 2,
+              "type": "BuildStructure",
+              "status": "Completed",
+              "reason": "LumberYard construction complete at (216,119) as building #5.",
+              "placed_id": 5,
+              "anchor": "VisibleResource",
+              "source_kind": "Tree",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Completed — Completed buildings: 1 / 2",
+          "first_card_row": "Completed — Completed buildings: 1 / 2",
+          "tick": 14365
+        }
+      ]
+    },
+    {
+      "scenario": "mill-default",
+      "wording": "Build a Mill near the berry bushes.",
+      "start_tick": 14695,
+      "expanded_at_start": false,
+      "worker_snapshot": [
+        {
+          "id": 0,
+          "state": "Gathering",
+          "health": 50,
+          "resource_target": 1268,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 1,
+          "state": "MovingToDropoff",
+          "health": 50,
+          "resource_target": 1293,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 2,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 3,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 4,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 5,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 40,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        }
+      ],
+      "normalized_attempts": [
+        {
+          "attempt": 3,
+          "valid": true,
+          "outcome": "Request",
+          "nodes": [
+            {
+              "type": "BuildStructure",
+              "building": "Mill",
+              "count": 1,
+              "anchor": "VisibleResource",
+              "resource": "Food",
+              "source_kind": "Berries",
+              "relation": "Near",
+              "constraints": [],
+              "depends_on": []
+            }
+          ]
+        }
+      ],
+      "commands": [
+        {
+          "tick": 14835,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "Mill",
+          "tile_x": 225,
+          "tile_z": 110,
+          "builders": [
+            2
+          ]
+        }
+      ],
+      "samples": [
+        {
+          "goals": [],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": false,
+          "top_status": "Completed — Completed buildings: 1 / 2",
+          "first_card_row": "Completed — Completed buildings: 1 / 2",
+          "tick": 14695
+        },
+        {
+          "goals": [],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Commander is interpreting...",
+          "first_card_row": "Completed — Completed buildings: 1 / 2",
+          "tick": 14695
+        },
+        {
+          "goals": [
+            {
+              "id": 3,
+              "type": "BuildStructure",
+              "status": "Pending",
+              "reason": "",
+              "placed_id": -1,
+              "anchor": "VisibleResource",
+              "source_kind": "Berries",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 3,
+              "status": "Accepted",
+              "progress": "Completed buildings: 0 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Accepted — Build 1 Mill",
+          "first_card_row": "Accepted — Completed buildings: 0 / 1",
+          "tick": 14830
+        },
+        {
+          "goals": [
+            {
+              "id": 3,
+              "type": "BuildStructure",
+              "status": "Executing",
+              "reason": "Placing Mill near the visible Berries/Food node at (225,110) with villager #2.",
+              "placed_id": 6,
+              "anchor": "VisibleResource",
+              "source_kind": "Berries",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": true,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 3,
+              "status": "Working",
+              "progress": "Completed buildings: 0 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Working — Build 1 Mill",
+          "first_card_row": "Working — Completed buildings: 0 / 1",
+          "tick": 14845
+        },
+        {
+          "goals": [
+            {
+              "id": 3,
+              "type": "BuildStructure",
+              "status": "WaitingForConstruction",
+              "reason": "Placed Mill at (225,110): villager #2 is travelling to building #6.",
+              "placed_id": 6,
+              "anchor": "VisibleResource",
+              "source_kind": "Berries",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": true,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 3,
+              "status": "Working",
+              "progress": "Completed buildings: 0 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Working — Build 1 Mill",
+          "first_card_row": "Working — Completed buildings: 0 / 1",
+          "tick": 14860
+        },
+        {
+          "goals": [
+            {
+              "id": 3,
+              "type": "BuildStructure",
+              "status": "WaitingForConstruction",
+              "reason": "Placed Mill at (225,110): building #6 is advancing with villager #2.",
+              "placed_id": 6,
+              "anchor": "VisibleResource",
+              "source_kind": "Berries",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": true,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 3,
+              "status": "Working",
+              "progress": "Completed buildings: 0 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Working — Build 1 Mill",
+          "first_card_row": "Working — Completed buildings: 0 / 1",
+          "tick": 14965
+        },
+        {
+          "goals": [
+            {
+              "id": 3,
+              "type": "BuildStructure",
+              "status": "WaitingForConstruction",
+              "reason": "Placed Mill at (225,110): building #6 is advancing with villager #2.",
+              "placed_id": 6,
+              "anchor": "VisibleResource",
+              "source_kind": "Berries",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 3,
+              "status": "Working",
+              "progress": "Completed buildings: 0 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Working — Build 1 Mill",
+          "first_card_row": "Working — Completed buildings: 0 / 1",
+          "tick": 15550
+        },
+        {
+          "goals": [
+            {
+              "id": 3,
+              "type": "BuildStructure",
+              "status": "Completed",
+              "reason": "Mill construction complete at (225,110) as building #6.",
+              "placed_id": 6,
+              "anchor": "VisibleResource",
+              "source_kind": "Berries",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Completed — Completed buildings: 1 / 1",
+          "first_card_row": "Completed — Completed buildings: 1 / 1",
+          "tick": 15565
+        }
+      ]
+    },
+    {
+      "scenario": "mill-idle",
+      "wording": "Build a Mill near the berry bushes with one idle villager.",
+      "start_tick": 20314,
+      "expanded_at_start": false,
+      "worker_snapshot": [
+        {
+          "id": 0,
+          "state": "Gathering",
+          "health": 50,
+          "resource_target": 1321,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 1,
+          "state": "Gathering",
+          "health": 50,
+          "resource_target": 1294,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 2,
+          "state": "Gathering",
+          "health": 50,
+          "resource_target": 2354,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 3,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 4,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 5,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 40,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        }
+      ],
+      "normalized_attempts": [
+        {
+          "attempt": 4,
+          "valid": false,
+          "outcome": "Unsupported",
+          "nodes": []
+        }
+      ],
+      "commands": [
+        {
+          "tick": 24242,
+          "type": "StopCommand",
+          "source": "Human"
+        }
+      ],
+      "samples": [
+        {
+          "goals": [],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": false,
+          "top_status": "Completed — Completed buildings: 1 / 1",
+          "first_card_row": "Completed — Completed buildings: 1 / 1",
+          "tick": 20314
+        },
+        {
+          "goals": [],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Commander is interpreting...",
+          "first_card_row": "Completed — Completed buildings: 1 / 1",
+          "tick": 20321
+        },
+        {
+          "goals": [],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Commander AI returned an invalid semantic response; no order was submitted.",
+          "first_card_row": "Completed — Completed buildings: 1 / 1",
+          "tick": 20741
+        }
+      ]
+    },
+    {
+      "scenario": "mill-worked",
+      "wording": "Build a Mill near the berries my villagers are working.",
+      "start_tick": 24694,
+      "expanded_at_start": false,
+      "worker_snapshot": [
+        {
+          "id": 0,
+          "state": "Gathering",
+          "health": 50,
+          "resource_target": 1322,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 1,
+          "state": "Gathering",
+          "health": 50,
+          "resource_target": 1322,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 2,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 3,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 4,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 5,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 40,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        }
+      ],
+      "normalized_attempts": [
+        {
+          "attempt": 5,
+          "valid": true,
+          "outcome": "Request",
+          "nodes": [
+            {
+              "type": "BuildStructure",
+              "building": "Mill",
+              "count": 1,
+              "anchor": "WorkedResource",
+              "resource": "Food",
+              "source_kind": "Berries",
+              "relation": "Near",
+              "constraints": [],
+              "depends_on": []
+            }
+          ]
+        }
+      ],
+      "commands": [
+        {
+          "tick": 25774,
+          "type": "GatherCommand",
+          "source": "Human"
+        }
+      ],
+      "samples": [
+        {
+          "goals": [],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": false,
+          "top_status": "Commander AI returned an invalid semantic response; no order was submitted.",
+          "first_card_row": "Completed — Completed buildings: 1 / 1",
+          "tick": 24694
+        },
+        {
+          "goals": [],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Commander is interpreting...",
+          "first_card_row": "Completed — Completed buildings: 1 / 1",
+          "tick": 24702
+        },
+        {
+          "goals": [
+            {
+              "id": 4,
+              "type": "BuildStructure",
+              "status": "Pending",
+              "reason": "",
+              "placed_id": -1,
+              "anchor": "WorkedResource",
+              "source_kind": "Berries",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 5,
+              "status": "Accepted",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Accepted — Build 1 Mill",
+          "first_card_row": "Accepted — Completed buildings: 0 / 2",
+          "tick": 24777
+        },
+        {
+          "goals": [
+            {
+              "id": 4,
+              "type": "BuildStructure",
+              "status": "Blocked",
+              "reason": "No visible resource node currently worked by an owned villager matches the request.",
+              "placed_id": -1,
+              "anchor": "WorkedResource",
+              "source_kind": "Berries",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 5,
+              "status": "Blocked",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Blocked — No visible resource node currently worked by an owned villager matches the request.",
+          "first_card_row": "Blocked — No visible resource node currently worked by an owned villager matches the request.",
+          "tick": 24792
+        },
+        {
+          "goals": [
+            {
+              "id": 4,
+              "type": "BuildStructure",
+              "status": "Failed",
+              "reason": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request.",
+              "placed_id": -1,
+              "anchor": "WorkedResource",
+              "source_kind": "Berries",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Failed — Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request.",
+          "first_card_row": "Failed — Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request.",
+          "tick": 26595
+        }
+      ]
+    },
+    {
+      "scenario": "compound-build-assign",
+      "wording": "Build a House near my Town Center, then assign one idle villager to Wood.",
+      "start_tick": 27032,
+      "expanded_at_start": false,
+      "worker_snapshot": [
+        {
+          "id": 0,
+          "state": "MovingToDropoff",
+          "health": 50,
+          "resource_target": 1296,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 1,
+          "state": "Gathering",
+          "health": 50,
+          "resource_target": 1296,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 2,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 3,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 4,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 5,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 40,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        }
+      ],
+      "normalized_attempts": [
+        {
+          "attempt": 6,
+          "valid": true,
+          "outcome": "Request",
+          "nodes": [
+            {
+              "type": "BuildStructure",
+              "building": "House",
+              "count": 1,
+              "anchor": "MyTownCenter",
+              "resource": "",
+              "source_kind": "",
+              "relation": "Near",
+              "constraints": [],
+              "depends_on": []
+            },
+            {
+              "type": "AllocateWorkers",
+              "building": "",
+              "count": null,
+              "anchor": "",
+              "resource": "",
+              "source_kind": "",
+              "relation": "",
+              "constraints": [],
+              "depends_on": []
+            }
+          ]
+        }
+      ],
+      "commands": [
+        {
+          "tick": 30300,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "House",
+          "tile_x": 212,
+          "tile_z": 106,
+          "builders": [
+            2
+          ]
+        },
+        {
+          "tick": 30315,
+          "type": "GatherCommand",
+          "source": "Commander"
+        },
+        {
+          "tick": 30503,
+          "type": "StopCommand",
+          "source": "Human"
+        },
+        {
+          "tick": 30510,
+          "type": "ConstructBuildingCommand",
+          "source": "Commander"
+        },
+        {
+          "tick": 32159,
+          "type": "GatherCommand",
+          "source": "Human"
+        }
+      ],
+      "samples": [
+        {
+          "goals": [],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": false,
+          "top_status": "Failed — Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request.",
+          "first_card_row": "Failed — Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request.",
+          "tick": 27032
+        },
+        {
+          "goals": [],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": false,
+          "top_status": "Commander is interpreting...",
+          "first_card_row": "Failed — Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request.",
+          "tick": 27032
+        },
+        {
+          "goals": [],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": true,
+          "expanded": false,
+          "top_status": "Awaiting approval — no gameplay started.",
+          "first_card_row": "Failed — Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request.",
+          "tick": 27122
+        },
+        {
+          "goals": [
+            {
+              "id": 5,
+              "type": "BuildStructure",
+              "status": "Executing",
+              "reason": "Placing House at (212,106) using bounded fallback semantic placement with 2 clear-tile gap and villager #2.",
+              "placed_id": 7,
+              "anchor": "MyTownCenter",
+              "source_kind": "",
+              "idle_only": false
+            },
+            {
+              "id": 6,
+              "type": "AllocateWorkers",
+              "status": "Pending",
+              "reason": "",
+              "placed_id": -1,
+              "anchor": null,
+              "source_kind": null,
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            },
+            {
+              "id": 7,
+              "type": "House",
+              "under_construction": true,
+              "destroyed": false,
+              "x": 212,
+              "z": 106
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 6,
+              "status": "Working",
+              "progress": "Completed buildings: 0 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": false,
+          "top_status": "Working — Build 1 House",
+          "first_card_row": "Working — Completed buildings: 0 / 1",
+          "tick": 30311
+        },
+        {
+          "goals": [
+            {
+              "id": 5,
+              "type": "BuildStructure",
+              "status": "WaitingForConstruction",
+              "reason": "Placed House at (212,106): villager #2 is travelling to building #7.",
+              "placed_id": 7,
+              "anchor": "MyTownCenter",
+              "source_kind": "",
+              "idle_only": false
+            },
+            {
+              "id": 6,
+              "type": "AllocateWorkers",
+              "status": "Executing",
+              "reason": "Assigning selected workers to Wood.",
+              "placed_id": -1,
+              "anchor": null,
+              "source_kind": null,
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            },
+            {
+              "id": 7,
+              "type": "House",
+              "under_construction": true,
+              "destroyed": false,
+              "x": 212,
+              "z": 106
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 6,
+              "status": "Working",
+              "progress": "Completed buildings: 0 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": false,
+          "top_status": "Working — Build 1 House",
+          "first_card_row": "Working — Completed buildings: 0 / 1",
+          "tick": 30326
+        },
+        {
+          "goals": [
+            {
+              "id": 5,
+              "type": "BuildStructure",
+              "status": "WaitingForConstruction",
+              "reason": "Placed House at (212,106): villager #2 is travelling to building #7.",
+              "placed_id": 7,
+              "anchor": "MyTownCenter",
+              "source_kind": "",
+              "idle_only": false
+            },
+            {
+              "id": 6,
+              "type": "AllocateWorkers",
+              "status": "Completed",
+              "reason": "The 1 selected workers have matching assignments.",
+              "placed_id": -1,
+              "anchor": null,
+              "source_kind": null,
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            },
+            {
+              "id": 7,
+              "type": "House",
+              "under_construction": true,
+              "destroyed": false,
+              "x": 212,
+              "z": 106
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 6,
+              "status": "Working",
+              "progress": "Completed buildings: 0 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": false,
+          "top_status": "Working — Build 1 House",
+          "first_card_row": "Working — Completed buildings: 0 / 1",
+          "tick": 30341
+        },
+        {
+          "goals": [
+            {
+              "id": 5,
+              "type": "BuildStructure",
+              "status": "Executing",
+              "reason": "Placed House at (212,106): assigning villager #3 to recover building #7.",
+              "placed_id": 7,
+              "anchor": "MyTownCenter",
+              "source_kind": "",
+              "idle_only": false
+            },
+            {
+              "id": 6,
+              "type": "AllocateWorkers",
+              "status": "Completed",
+              "reason": "The 1 selected workers have matching assignments.",
+              "placed_id": -1,
+              "anchor": null,
+              "source_kind": null,
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            },
+            {
+              "id": 7,
+              "type": "House",
+              "under_construction": true,
+              "destroyed": false,
+              "x": 212,
+              "z": 106
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 6,
+              "status": "Working",
+              "progress": "Completed buildings: 0 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": false,
+          "top_status": "Working — Build 1 House",
+          "first_card_row": "Working — Completed buildings: 0 / 1",
+          "tick": 30521
+        },
+        {
+          "goals": [
+            {
+              "id": 5,
+              "type": "BuildStructure",
+              "status": "WaitingForConstruction",
+              "reason": "Placed House at (212,106): villager #3 is travelling to building #7.",
+              "placed_id": 7,
+              "anchor": "MyTownCenter",
+              "source_kind": "",
+              "idle_only": false
+            },
+            {
+              "id": 6,
+              "type": "AllocateWorkers",
+              "status": "Completed",
+              "reason": "The 1 selected workers have matching assignments.",
+              "placed_id": -1,
+              "anchor": null,
+              "source_kind": null,
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            },
+            {
+              "id": 7,
+              "type": "House",
+              "under_construction": true,
+              "destroyed": false,
+              "x": 212,
+              "z": 106
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 6,
+              "status": "Working",
+              "progress": "Completed buildings: 0 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": false,
+          "top_status": "Working — Build 1 House",
+          "first_card_row": "Working — Completed buildings: 0 / 1",
+          "tick": 30536
+        },
+        {
+          "goals": [
+            {
+              "id": 5,
+              "type": "BuildStructure",
+              "status": "WaitingForConstruction",
+              "reason": "Placed House at (212,106): building #7 is advancing with villager #3.",
+              "placed_id": 7,
+              "anchor": "MyTownCenter",
+              "source_kind": "",
+              "idle_only": false
+            },
+            {
+              "id": 6,
+              "type": "AllocateWorkers",
+              "status": "Completed",
+              "reason": "The 1 selected workers have matching assignments.",
+              "placed_id": -1,
+              "anchor": null,
+              "source_kind": null,
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            },
+            {
+              "id": 7,
+              "type": "House",
+              "under_construction": true,
+              "destroyed": false,
+              "x": 212,
+              "z": 106
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 6,
+              "status": "Working",
+              "progress": "Completed buildings: 0 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": false,
+          "top_status": "Working — Build 1 House",
+          "first_card_row": "Working — Completed buildings: 0 / 1",
+          "tick": 30581
+        },
+        {
+          "goals": [
+            {
+              "id": 5,
+              "type": "BuildStructure",
+              "status": "WaitingForConstruction",
+              "reason": "Placed House at (212,106): building #7 is advancing with villager #3.",
+              "placed_id": 7,
+              "anchor": "MyTownCenter",
+              "source_kind": "",
+              "idle_only": false
+            },
+            {
+              "id": 6,
+              "type": "AllocateWorkers",
+              "status": "Completed",
+              "reason": "The 1 selected workers have matching assignments.",
+              "placed_id": -1,
+              "anchor": null,
+              "source_kind": null,
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            },
+            {
+              "id": 7,
+              "type": "House",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 212,
+              "z": 106
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 6,
+              "status": "Working",
+              "progress": "Completed buildings: 0 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": false,
+          "top_status": "Working — Build 1 House",
+          "first_card_row": "Working — Completed buildings: 0 / 1",
+          "tick": 31016
+        },
+        {
+          "goals": [
+            {
+              "id": 5,
+              "type": "BuildStructure",
+              "status": "Completed",
+              "reason": "House construction complete at (212,106) as building #7.",
+              "placed_id": 7,
+              "anchor": "MyTownCenter",
+              "source_kind": "",
+              "idle_only": false
+            },
+            {
+              "id": 6,
+              "type": "AllocateWorkers",
+              "status": "Completed",
+              "reason": "The 1 selected workers have matching assignments.",
+              "placed_id": -1,
+              "anchor": null,
+              "source_kind": null,
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            },
+            {
+              "id": 7,
+              "type": "House",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 212,
+              "z": 106
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 6,
+              "status": "Completed",
+              "progress": "Assigned workers: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": false,
+          "top_status": "Completed — Assigned workers: 1 / 1",
+          "first_card_row": "Completed — Assigned workers: 1 / 1",
+          "tick": 31031
+        }
+      ]
+    },
+    {
+      "scenario": "mill-worked-available",
+      "wording": "Build a Mill near the berries my villagers are working.",
+      "start_tick": 32564,
+      "expanded_at_start": false,
+      "worker_snapshot": [
+        {
+          "id": 0,
+          "state": "Gathering",
+          "health": 50,
+          "resource_target": 1324,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 1,
+          "state": "MovingToDropoff",
+          "health": 50,
+          "resource_target": 1324,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 2,
+          "state": "Gathering",
+          "health": 50,
+          "resource_target": 2356,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 3,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 4,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 5,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 40,
+          "state": "MovingToGather",
+          "health": 50,
+          "resource_target": 1324,
+          "construction_target": -1,
+          "queued": 0
+        }
+      ],
+      "normalized_attempts": [],
+      "commands": [],
+      "samples": [
+        {
+          "goals": [],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            },
+            {
+              "id": 7,
+              "type": "House",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 212,
+              "z": 106
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 6,
+              "status": "Completed",
+              "progress": "Assigned workers: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": false,
+          "top_status": "Completed — Assigned workers: 1 / 1",
+          "first_card_row": "Completed — Assigned workers: 1 / 1",
+          "tick": 32564
+        },
+        {
+          "goals": [],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            },
+            {
+              "id": 7,
+              "type": "House",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 212,
+              "z": 106
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 6,
+              "status": "Completed",
+              "progress": "Assigned workers: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Commander is interpreting...",
+          "first_card_row": "Completed — Assigned workers: 1 / 1",
+          "tick": 32578
+        },
+        {
+          "goals": [],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            },
+            {
+              "id": 7,
+              "type": "House",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 212,
+              "z": 106
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 6,
+              "status": "Completed",
+              "progress": "Assigned workers: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Commander AI request timed out. Please try again or use offline commands.",
+          "first_card_row": "Completed — Assigned workers: 1 / 1",
+          "tick": 33028
+        }
+      ]
+    },
+    {
+      "scenario": "mill-worked-available-manual-retry",
+      "wording": "Build a Mill near the berries my villagers are working.",
+      "start_tick": 37912,
+      "expanded_at_start": false,
+      "worker_snapshot": [
+        {
+          "id": 0,
+          "state": "MovingToGather",
+          "health": 50,
+          "resource_target": 2447,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 1,
+          "state": "Gathering",
+          "health": 50,
+          "resource_target": 2447,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 2,
+          "state": "Gathering",
+          "health": 50,
+          "resource_target": 2356,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 3,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 4,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 5,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 40,
+          "state": "MovingToDropoff",
+          "health": 50,
+          "resource_target": 2447,
+          "construction_target": -1,
+          "queued": 0
+        }
+      ],
+      "normalized_attempts": [
+        {
+          "attempt": 8,
+          "valid": true,
+          "outcome": "Request",
+          "nodes": [
+            {
+              "type": "BuildStructure",
+              "building": "Mill",
+              "count": 1,
+              "anchor": "WorkedResource",
+              "resource": "Food",
+              "source_kind": "Berries",
+              "relation": "Near",
+              "constraints": [],
+              "depends_on": []
+            }
+          ]
+        }
+      ],
+      "commands": [
+        {
+          "tick": 37995,
+          "type": "PlaceBuildingCommand",
+          "source": "Commander",
+          "building": "Mill",
+          "tile_x": 223,
+          "tile_z": 114,
+          "builders": [
+            3
+          ]
+        },
+        {
+          "tick": 41185,
+          "type": "StopCommand",
+          "source": "Human"
+        }
+      ],
+      "samples": [
+        {
+          "goals": [],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            },
+            {
+              "id": 7,
+              "type": "House",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 212,
+              "z": 106
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 6,
+              "status": "Completed",
+              "progress": "Assigned workers: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": false,
+          "top_status": "Commander AI request timed out. Please try again or use offline commands.",
+          "first_card_row": "Completed — Assigned workers: 1 / 1",
+          "tick": 37912
+        },
+        {
+          "goals": [],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            },
+            {
+              "id": 7,
+              "type": "House",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 212,
+              "z": 106
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 6,
+              "status": "Completed",
+              "progress": "Assigned workers: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Commander is interpreting...",
+          "first_card_row": "Completed — Assigned workers: 1 / 1",
+          "tick": 37919
+        },
+        {
+          "goals": [
+            {
+              "id": 7,
+              "type": "BuildStructure",
+              "status": "Pending",
+              "reason": "",
+              "placed_id": -1,
+              "anchor": "WorkedResource",
+              "source_kind": "Berries",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            },
+            {
+              "id": 7,
+              "type": "House",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 212,
+              "z": 106
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 8,
+              "status": "Accepted",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 6,
+              "status": "Completed",
+              "progress": "Assigned workers: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Accepted — Build 1 Mill",
+          "first_card_row": "Accepted — Completed buildings: 0 / 2",
+          "tick": 37994
+        },
+        {
+          "goals": [
+            {
+              "id": 7,
+              "type": "BuildStructure",
+              "status": "Executing",
+              "reason": "Placing Mill near the worked Berries/Food node at (223,114) with villager #3.",
+              "placed_id": 8,
+              "anchor": "WorkedResource",
+              "source_kind": "Berries",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            },
+            {
+              "id": 7,
+              "type": "House",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 212,
+              "z": 106
+            },
+            {
+              "id": 8,
+              "type": "Mill",
+              "under_construction": true,
+              "destroyed": false,
+              "x": 223,
+              "z": 114
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 8,
+              "status": "Working",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 6,
+              "status": "Completed",
+              "progress": "Assigned workers: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Working — Build 1 Mill",
+          "first_card_row": "Working — Completed buildings: 0 / 2",
+          "tick": 38009
+        },
+        {
+          "goals": [
+            {
+              "id": 7,
+              "type": "BuildStructure",
+              "status": "WaitingForConstruction",
+              "reason": "Placed Mill at (223,114): villager #3 is travelling to building #8.",
+              "placed_id": 8,
+              "anchor": "WorkedResource",
+              "source_kind": "Berries",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            },
+            {
+              "id": 7,
+              "type": "House",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 212,
+              "z": 106
+            },
+            {
+              "id": 8,
+              "type": "Mill",
+              "under_construction": true,
+              "destroyed": false,
+              "x": 223,
+              "z": 114
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 8,
+              "status": "Working",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 6,
+              "status": "Completed",
+              "progress": "Assigned workers: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Working — Build 1 Mill",
+          "first_card_row": "Working — Completed buildings: 0 / 2",
+          "tick": 38024
+        },
+        {
+          "goals": [
+            {
+              "id": 7,
+              "type": "BuildStructure",
+              "status": "WaitingForConstruction",
+              "reason": "Placed Mill at (223,114): building #8 is advancing with villager #3.",
+              "placed_id": 8,
+              "anchor": "WorkedResource",
+              "source_kind": "Berries",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            },
+            {
+              "id": 7,
+              "type": "House",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 212,
+              "z": 106
+            },
+            {
+              "id": 8,
+              "type": "Mill",
+              "under_construction": true,
+              "destroyed": false,
+              "x": 223,
+              "z": 114
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 8,
+              "status": "Working",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 6,
+              "status": "Completed",
+              "progress": "Assigned workers: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Working — Build 1 Mill",
+          "first_card_row": "Working — Completed buildings: 0 / 2",
+          "tick": 38189
+        },
+        {
+          "goals": [
+            {
+              "id": 7,
+              "type": "BuildStructure",
+              "status": "WaitingForConstruction",
+              "reason": "Placed Mill at (223,114): building #8 is advancing with villager #3.",
+              "placed_id": 8,
+              "anchor": "WorkedResource",
+              "source_kind": "Berries",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            },
+            {
+              "id": 7,
+              "type": "House",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 212,
+              "z": 106
+            },
+            {
+              "id": 8,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 223,
+              "z": 114
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 8,
+              "status": "Working",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 6,
+              "status": "Completed",
+              "progress": "Assigned workers: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Working — Build 1 Mill",
+          "first_card_row": "Working — Completed buildings: 0 / 2",
+          "tick": 38774
+        },
+        {
+          "goals": [
+            {
+              "id": 7,
+              "type": "BuildStructure",
+              "status": "Completed",
+              "reason": "Mill construction complete at (223,114) as building #8.",
+              "placed_id": 8,
+              "anchor": "WorkedResource",
+              "source_kind": "Berries",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            },
+            {
+              "id": 7,
+              "type": "House",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 212,
+              "z": 106
+            },
+            {
+              "id": 8,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 223,
+              "z": 114
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 8,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 6,
+              "status": "Completed",
+              "progress": "Assigned workers: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Completed — Completed buildings: 1 / 2",
+          "first_card_row": "Completed — Completed buildings: 1 / 2",
+          "tick": 38789
+        }
+      ]
+    },
+    {
+      "scenario": "mill-idle-unworked-manual-retry",
+      "wording": "Build a Mill near the berry bushes with one idle villager.",
+      "start_tick": 41624,
+      "expanded_at_start": false,
+      "worker_snapshot": [
+        {
+          "id": 0,
+          "state": "Gathering",
+          "health": 50,
+          "resource_target": 2448,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 1,
+          "state": "Gathering",
+          "health": 50,
+          "resource_target": 2448,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 2,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 3,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 4,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 5,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 40,
+          "state": "MovingToGather",
+          "health": 50,
+          "resource_target": 2448,
+          "construction_target": -1,
+          "queued": 0
+        }
+      ],
+      "normalized_attempts": [],
+      "commands": [],
+      "samples": [
+        {
+          "goals": [],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            },
+            {
+              "id": 7,
+              "type": "House",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 212,
+              "z": 106
+            },
+            {
+              "id": 8,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 223,
+              "z": 114
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 8,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 6,
+              "status": "Completed",
+              "progress": "Assigned workers: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": false,
+          "top_status": "Completed — Completed buildings: 1 / 2",
+          "first_card_row": "Completed — Completed buildings: 1 / 2",
+          "tick": 41624
+        },
+        {
+          "goals": [],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            },
+            {
+              "id": 7,
+              "type": "House",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 212,
+              "z": 106
+            },
+            {
+              "id": 8,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 223,
+              "z": 114
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 8,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 6,
+              "status": "Completed",
+              "progress": "Assigned workers: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Commander is interpreting...",
+          "first_card_row": "Completed — Completed buildings: 1 / 2",
+          "tick": 41624
+        },
+        {
+          "goals": [],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            },
+            {
+              "id": 7,
+              "type": "House",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 212,
+              "z": 106
+            },
+            {
+              "id": 8,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 223,
+              "z": 114
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 8,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 6,
+              "status": "Completed",
+              "progress": "Assigned workers: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Commander AI request timed out. Please try again or use offline commands.",
+          "first_card_row": "Completed — Completed buildings: 1 / 2",
+          "tick": 42074
+        }
+      ]
+    },
+    {
+      "scenario": "cancel-native-ui-fixture",
+      "wording": "Direct game-owned House goal; no provider request",
+      "start_tick": 45750,
+      "expanded_at_start": false,
+      "worker_snapshot": [
+        {
+          "id": 0,
+          "state": "MovingToDropoff",
+          "health": 50,
+          "resource_target": 2452,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 1,
+          "state": "Gathering",
+          "health": 50,
+          "resource_target": 2451,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 2,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 3,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 4,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 5,
+          "state": "Idle",
+          "health": 50,
+          "resource_target": -1,
+          "construction_target": -1,
+          "queued": 0
+        },
+        {
+          "id": 40,
+          "state": "MovingToGather",
+          "health": 50,
+          "resource_target": 2451,
+          "construction_target": -1,
+          "queued": 0
+        }
+      ],
+      "normalized_attempts": [],
+      "commands": [
+        {
+          "tick": 47693,
+          "type": "PingCommand",
+          "source": "Human"
+        }
+      ],
+      "samples": [
+        {
+          "goals": [],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            },
+            {
+              "id": 7,
+              "type": "House",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 212,
+              "z": 106
+            },
+            {
+              "id": 8,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 223,
+              "z": 114
+            }
+          ],
+          "cards": [
+            {
+              "request_id": 8,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 6,
+              "status": "Completed",
+              "progress": "Assigned workers: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": false,
+          "top_status": "Commander AI request timed out. Please try again or use offline commands.",
+          "first_card_row": "Completed — Completed buildings: 1 / 2",
+          "tick": 45750
+        },
+        {
+          "goals": [
+            {
+              "id": 8,
+              "type": "BuildStructure",
+              "status": "Pending",
+              "reason": "",
+              "placed_id": -1,
+              "anchor": "",
+              "source_kind": "",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            },
+            {
+              "id": 7,
+              "type": "House",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 212,
+              "z": 106
+            },
+            {
+              "id": 8,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 223,
+              "z": 114
+            }
+          ],
+          "cards": [
+            {
+              "request_id": -8,
+              "status": "Accepted",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 8,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 6,
+              "status": "Completed",
+              "progress": "Assigned workers: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Commander AI request timed out. Please try again or use offline commands.",
+          "first_card_row": "Accepted — Completed buildings: 0 / 2",
+          "tick": 45750
+        },
+        {
+          "goals": [
+            {
+              "id": 8,
+              "type": "BuildStructure",
+              "status": "Cancelled",
+              "reason": "Cancelled by the owning player.",
+              "placed_id": -1,
+              "anchor": "",
+              "source_kind": "",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            },
+            {
+              "id": 7,
+              "type": "House",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 212,
+              "z": 106
+            },
+            {
+              "id": 8,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 223,
+              "z": 114
+            }
+          ],
+          "cards": [
+            {
+              "request_id": -8,
+              "status": "Cancelled",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 8,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 6,
+              "status": "Completed",
+              "progress": "Assigned workers: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Commander AI request timed out. Please try again or use offline commands.",
+          "first_card_row": "Accepted — Completed buildings: 0 / 2",
+          "tick": 45750
+        },
+        {
+          "goals": [
+            {
+              "id": 8,
+              "type": "BuildStructure",
+              "status": "Cancelled",
+              "reason": "Cancelled by the owning player.",
+              "placed_id": -1,
+              "anchor": "",
+              "source_kind": "",
+              "idle_only": false
+            }
+          ],
+          "buildings": [
+            {
+              "id": 0,
+              "type": "TownCenter",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 105
+            },
+            {
+              "id": 4,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 210,
+              "z": 117
+            },
+            {
+              "id": 5,
+              "type": "LumberYard",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 216,
+              "z": 119
+            },
+            {
+              "id": 6,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 225,
+              "z": 110
+            },
+            {
+              "id": 7,
+              "type": "House",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 212,
+              "z": 106
+            },
+            {
+              "id": 8,
+              "type": "Mill",
+              "under_construction": false,
+              "destroyed": false,
+              "x": 223,
+              "z": 114
+            }
+          ],
+          "cards": [
+            {
+              "request_id": -8,
+              "status": "Cancelled",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 8,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 6,
+              "status": "Completed",
+              "progress": "Assigned workers: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 5,
+              "status": "Failed",
+              "progress": "Completed buildings: 0 / 2",
+              "blocker": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request."
+            },
+            {
+              "request_id": 3,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            },
+            {
+              "request_id": 2,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 2",
+              "blocker": ""
+            },
+            {
+              "request_id": 1,
+              "status": "Completed",
+              "progress": "Completed buildings: 1 / 1",
+              "blocker": ""
+            }
+          ],
+          "approval_pending": false,
+          "expanded": true,
+          "top_status": "Commander AI request timed out. Please try again or use offline commands.",
+          "first_card_row": "Cancelled — Completed buildings: 0 / 2",
+          "tick": 45753
+        }
+      ]
+    }
+  ],
+  "manual_override_before": {
+    "tick": 30503,
+    "builder": 2,
+    "building": 7
+  },
+  "manual_override_after": {
+    "tick": 31120,
+    "protectedWorker": true,
+    "workers": [
+      {
+        "Id": 0,
+        "state": "Gathering",
+        "ConstructionTargetBuildingId": -1,
+        "TargetResourceNodeId": 1297
+      },
+      {
+        "Id": 1,
+        "state": "MovingToDropoff",
+        "ConstructionTargetBuildingId": -1,
+        "TargetResourceNodeId": 1297
+      },
+      {
+        "Id": 2,
+        "state": "Idle",
+        "ConstructionTargetBuildingId": -1,
+        "TargetResourceNodeId": -1
+      },
+      {
+        "Id": 3,
+        "state": "Idle",
+        "ConstructionTargetBuildingId": -1,
+        "TargetResourceNodeId": -1
+      },
+      {
+        "Id": 4,
+        "state": "Idle",
+        "ConstructionTargetBuildingId": -1,
+        "TargetResourceNodeId": -1
+      },
+      {
+        "Id": 5,
+        "state": "Idle",
+        "ConstructionTargetBuildingId": -1,
+        "TargetResourceNodeId": -1
+      },
+      {
+        "Id": 40,
+        "state": "MovingToGather",
+        "ConstructionTargetBuildingId": -1,
+        "TargetResourceNodeId": 1297
+      }
+    ]
+  },
+  "worked_available_setup": {
+    "tick": 32159,
+    "node": 2356,
+    "oldRemaining": 500,
+    "controlledRemaining": 10000,
+    "visibility": "Visible"
+  },
+  "final_goals": [
+    {
+      "id": 1,
+      "type": "BuildStructure",
+      "status": "Completed",
+      "reason": "LumberYard construction complete at (210,117) as building #4.",
+      "placedId": 4
+    },
+    {
+      "id": 2,
+      "type": "BuildStructure",
+      "status": "Completed",
+      "reason": "LumberYard construction complete at (216,119) as building #5.",
+      "placedId": 5
+    },
+    {
+      "id": 3,
+      "type": "BuildStructure",
+      "status": "Completed",
+      "reason": "Mill construction complete at (225,110) as building #6.",
+      "placedId": 6
+    },
+    {
+      "id": 4,
+      "type": "BuildStructure",
+      "status": "Failed",
+      "reason": "Blocked for 1800 ticks. No visible resource node currently worked by an owned villager matches the request.",
+      "placedId": -1
+    },
+    {
+      "id": 5,
+      "type": "BuildStructure",
+      "status": "Completed",
+      "reason": "House construction complete at (212,106) as building #7.",
+      "placedId": 7
+    },
+    {
+      "id": 6,
+      "type": "AllocateWorkers",
+      "status": "Completed",
+      "reason": "The 1 selected workers have matching assignments.",
+      "placedId": -1
+    },
+    {
+      "id": 7,
+      "type": "BuildStructure",
+      "status": "Completed",
+      "reason": "Mill construction complete at (223,114) as building #8.",
+      "placedId": 8
+    },
+    {
+      "id": 8,
+      "type": "BuildStructure",
+      "status": "Cancelled",
+      "reason": "Cancelled by the owning player.",
+      "placedId": -1
+    }
+  ],
+  "final_tick": 47183
+}

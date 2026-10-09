@@ -18,6 +18,8 @@ namespace OpenEmpires
         public const int MaximumDependencyDepth = 4;
 
         public static CommanderSemanticResult Parse(string raw) => CommanderSemanticResult.ParseTrusted(raw);
+        public static CommanderSemanticResult ParseProviderResponse(string raw)
+            => CommanderSemanticResult.ParseTrusted(raw, requireProviderDeclarations: true);
     }
 
     // Keep result construction and validity assignment inside the parser's own class.
@@ -26,13 +28,16 @@ namespace OpenEmpires
     {
         private const string InvalidExplanation = "I couldn't understand that request safely.";
 
-        internal static CommanderSemanticResult ParseTrusted(string raw)
+        internal static CommanderSemanticResult ParseTrusted(string raw, bool requireProviderDeclarations = false)
         {
+            string failureStage = "syntax";
+            int failureNode = -1;
             try
             {
                 if (string.IsNullOrWhiteSpace(raw) || raw.Length > CommanderDynamicPlan.MaximumCharacters)
                     throw new JsonException();
                 CheckStrictSyntax(raw);
+                failureStage = "envelope";
 
                 JObject root;
                 using (var reader = new JsonTextReader(new StringReader(raw))
@@ -83,16 +88,22 @@ namespace OpenEmpires
                         Array.Empty<CommanderSemanticNode>(), message);
                 }
 
-                CheckFields(root, "outcome", "nodes");
+                if (requireProviderDeclarations) CheckFields(root, "outcome", "nodes", "executionOrder");
+                else CheckFields(root, "outcome", "nodes");
                 if (!(root["nodes"] is JArray items) || items.Count < 1 || items.Count > CommanderSemanticJson.MaximumNodes)
                     throw new JsonException();
+                string executionOrder = requireProviderDeclarations
+                    ? ReadProviderExecutionOrder(root, items.Count) : null;
                 var nodes = new List<CommanderSemanticNode>(items.Count);
                 foreach (JToken item in items)
                 {
                     if (!(item is JObject node)) throw new JsonException();
-                    nodes.Add(ParseNode(node));
+                    failureStage = "node"; failureNode = nodes.Count;
+                    nodes.Add(ParseNode(node, requireProviderDeclarations));
                 }
+                failureStage = "graph";
                 ValidateGraph(nodes);
+                if (requireProviderDeclarations) ValidateProviderExecutionOrder(root, items, nodes, executionOrder);
                 return new CommanderSemanticResult(true, outcome, nodes.AsReadOnly(), string.Empty);
             }
             catch (Exception error) when (error is JsonException || error is FormatException
@@ -100,11 +111,13 @@ namespace OpenEmpires
             {
                 // The provider's raw text and fields are not safe diagnostics for the player.
                 return new CommanderSemanticResult(false, CommanderSemanticOutcome.Unsupported,
-                    Array.Empty<CommanderSemanticNode>(), InvalidExplanation);
+                    Array.Empty<CommanderSemanticNode>(), InvalidExplanation)
+                { SchemaDiagnostic = error is SchemaFieldFailure field ? field.Detail
+                    : "field=$;code=invalid-schema;stage=" + failureStage + ";node=" + failureNode };
             }
         }
 
-        private static CommanderSemanticNode ParseNode(JObject node)
+        private static CommanderSemanticNode ParseNode(JObject node, bool requireProviderDeclarations)
         {
             IReadOnlyList<int> dependsOn = ParseDependencies(node);
             switch (RequiredString(node, "type"))
@@ -125,7 +138,9 @@ namespace OpenEmpires
                         producerFromNode: ParseOptionalNodeIndex(node, "producerFromNode"), constraints: ParseConstraints(node), quantityMode: quantityMode);
 
                 case "BuildStructure":
-                    CheckFields(node, "type", "structure", "count", "placement", "dependsOn", "constraints");
+                    if (requireProviderDeclarations)
+                        CheckFields(node, "type", "structure", "count", "placement", "dependsOn", "constraints", "builders");
+                    else CheckFields(node, "type", "structure", "count", "placement", "dependsOn", "constraints");
                     CommanderSemanticAnchorSelector? anchor = null;
                     int? ordinal = null;
                     CommanderSemanticPlacementRelation? relation = null;
@@ -133,18 +148,21 @@ namespace OpenEmpires
                     ResourceType? placementResource = null;
                     if (node.Property("placement") != null)
                     {
-                        if (!(node["placement"] is JObject placement)) throw new JsonException();
-                        CheckFields(placement, "anchor", "ordinal", "relation", "clearGapTiles", "resource");
+                        if (!(node["placement"] is JObject placement))
+                            throw FailField(node, "placement", SchemaFailureCode.MissingOrWrongType);
+                        CheckFields(placement, "anchor", "ordinal", "relation", "clearGapTiles", "resource", "sourceKind");
                         switch (RequiredString(placement, "anchor"))
                         {
                             case "MyTownCenter": anchor = CommanderSemanticAnchorSelector.MyTownCenter; break;
                             case "MyBarracks": anchor = CommanderSemanticAnchorSelector.MyBarracks; break;
                             case "WorkedResource": anchor = CommanderSemanticAnchorSelector.WorkedResource; break;
-                            default: throw new JsonException();
+                            case "VisibleResource": anchor = CommanderSemanticAnchorSelector.VisibleResource; break;
+                            default: throw FailField(placement, "anchor", SchemaFailureCode.InvalidEnum);
                         }
                         if (placement.Property("ordinal") != null)
                         {
-                            if (anchor != CommanderSemanticAnchorSelector.MyTownCenter) throw new JsonException();
+                            if (anchor != CommanderSemanticAnchorSelector.MyTownCenter)
+                                throw FailField(placement, "ordinal", SchemaFailureCode.IncompatibleDeclaration);
                             ordinal = RequiredBoundedInteger(placement, "ordinal",
                                 CommanderSemanticJson.MinimumTownCenterOrdinal,
                                 CommanderSemanticJson.MaximumTownCenterOrdinal);
@@ -154,7 +172,7 @@ namespace OpenEmpires
                             case "MapWest": relation = CommanderSemanticPlacementRelation.MapWest; break;
                             case "MapEast": relation = CommanderSemanticPlacementRelation.MapEast; break;
                             case "Near": relation = CommanderSemanticPlacementRelation.Near; break;
-                            default: throw new JsonException();
+                            default: throw FailField(placement, "relation", SchemaFailureCode.InvalidEnum);
                         }
                         // Omission is intentional: the deterministic resolver owns its relation-specific default.
                         if (placement.Property("clearGapTiles") != null)
@@ -163,15 +181,25 @@ namespace OpenEmpires
                                 CommanderSemanticJson.MinimumClearGapTiles,
                                 CommanderSemanticJson.MaximumClearGapTiles);
                             if (relation == CommanderSemanticPlacementRelation.Near && clearGapTiles != 1)
-                                throw new JsonException();
+                                throw FailField(placement, "clearGapTiles", SchemaFailureCode.IncompatibleDeclaration);
                         }
-                        if (anchor == CommanderSemanticAnchorSelector.WorkedResource)
+                        if (anchor == CommanderSemanticAnchorSelector.WorkedResource
+                            || anchor == CommanderSemanticAnchorSelector.VisibleResource)
                         {
-                            if (placement.Property("resource") == null || relation != CommanderSemanticPlacementRelation.Near)
-                                throw new JsonException();
-                            placementResource = ParseResource(RequiredString(placement, "resource"));
+                            if (placement.Property("resource") == null)
+                                throw FailField(placement, "resource", SchemaFailureCode.MissingOrWrongType);
+                            if (relation != CommanderSemanticPlacementRelation.Near)
+                                throw FailField(placement, "relation", SchemaFailureCode.IncompatibleDeclaration);
+                            placementResource = ReadResourceField(placement, "resource");
                         }
-                        else if (placement.Property("resource") != null) throw new JsonException();
+                        else if (placement.Property("resource") != null || placement.Property("sourceKind") != null) throw new JsonException();
+                    }
+                    ResourceSourceKind? placementSource = null;
+                    if (node["placement"] is JObject resourcePlacement && resourcePlacement.Property("sourceKind") != null)
+                    {
+                        placementSource = RequiredSemanticEnum<ResourceSourceKind>(resourcePlacement, "sourceKind");
+                        if (!placementResource.HasValue || !ResourceSourceRules.IsCompatible(placementResource.Value, placementSource.Value))
+                            throw FailField(resourcePlacement, "sourceKind", SchemaFailureCode.IncompatibleDeclaration);
                     }
                     return new CommanderSemanticNode(CommanderSemanticNodeType.BuildStructure,
                         buildingType: ParseBuilding(RequiredString(node, "structure")),
@@ -181,7 +209,7 @@ namespace OpenEmpires
                         placementRelation: relation,
                         clearGapTiles: clearGapTiles,
                         resourceType: placementResource,
-                        dependsOn: dependsOn, constraints: ParseConstraints(node));
+                        dependsOn: dependsOn, constraints: ParseBuildConstraints(node, requireProviderDeclarations), sourceKind: placementSource);
 
                 case "SetResourceAllocation":
                     CheckFields(node, "type", "resource", "count", "dependsOn");
@@ -226,7 +254,7 @@ namespace OpenEmpires
                 case "ReachAge":
                     CheckFields(node, "type", "targetAge", "dependsOn", "constraints");
                     return new CommanderSemanticNode(CommanderSemanticNodeType.ReachAge,
-                        ageTarget: ParseAgeTarget(RequiredString(node, "targetAge")),
+                        ageTarget: ReadAgeTarget(node),
                         dependsOn: dependsOn, constraints: ParseConstraints(node));
 
                 case "MoveUnits":
@@ -507,11 +535,23 @@ namespace OpenEmpires
             switch (name)
             {
                 case "Next": return CommanderSemanticAgeTarget.Next;
+                case "2":
                 case "Feudal": return CommanderSemanticAgeTarget.Feudal;
+                case "3":
                 case "Castle": return CommanderSemanticAgeTarget.Castle;
+                case "4":
                 case "Imperial": return CommanderSemanticAgeTarget.Imperial;
                 default: throw new JsonException();
             }
+        }
+
+        private static CommanderSemanticAgeTarget ReadAgeTarget(JObject node)
+        {
+            if (node["targetAge"]?.Type == JTokenType.Integer)
+                return (CommanderSemanticAgeTarget)RequiredBoundedInteger(node, "targetAge", 2, 4);
+            string name = RequiredString(node, "targetAge");
+            try { return ParseAgeTarget(name); }
+            catch (JsonException) { throw FailField(node, "targetAge", SchemaFailureCode.InvalidEnum); }
         }
 
         private static TechnologyType ParseTechnology(string name)
@@ -529,14 +569,15 @@ namespace OpenEmpires
                 bool found = false;
                 foreach (string name in allowed)
                     if (property.Name == name) { found = true; break; }
-                if (!found) throw new JsonException();
+                if (!found) throw FailField(value, property.Name, SchemaFailureCode.UnexpectedField);
             }
         }
 
         private static string RequiredString(JObject value, string name)
         {
             JToken token = value[name];
-            if (token == null || token.Type != JTokenType.String) throw new JsonException();
+            if (token == null || token.Type != JTokenType.String)
+                throw FailField(value, name, SchemaFailureCode.MissingOrWrongType);
             return (string)token;
         }
 
@@ -548,9 +589,13 @@ namespace OpenEmpires
         private static int RequiredBoundedInteger(JObject value, string name, int minimum, int maximum)
         {
             JToken token = value[name];
-            if (token == null || token.Type != JTokenType.Integer) throw new JsonException();
-            int number = token.Value<int>();
-            if (number < minimum || number > maximum) throw new JsonException();
+            if (token == null || token.Type != JTokenType.Integer)
+                throw FailField(value, name, SchemaFailureCode.MissingOrWrongType);
+            int number;
+            try { number = token.Value<int>(); }
+            catch (OverflowException) { throw FailField(value, name, SchemaFailureCode.OutOfRange); }
+            if (number < minimum || number > maximum)
+                throw FailField(value, name, SchemaFailureCode.OutOfRange);
             return number;
         }
 

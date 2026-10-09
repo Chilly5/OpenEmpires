@@ -23,7 +23,7 @@ namespace OpenEmpires
             }
 
             if (resolution.Intent is BuildStructureIntent build)
-                return $"Understood. I will construct {build.Count} {CommanderIntentCatalog.GetStructureDisplayName(build.StructureType).ToLowerInvariant()}.";
+                return $"Accepted: build {build.Count} {CommanderIntentCatalog.GetStructureDisplayName(build.StructureType).ToLowerInvariant()}. Planning will check placement and workers; construction has not started yet.";
             if (resolution.Intent is AllocateWorkersIntent workers)
                 return "Understood. " + DescribeAllocation(workers.Allocation);
             if (resolution.Goal is ResourceAllocationGoal allocation)
