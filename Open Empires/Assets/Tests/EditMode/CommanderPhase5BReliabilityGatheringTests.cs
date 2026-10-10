@@ -49,6 +49,13 @@ namespace OpenEmpires.Tests
         }
         private ResourceNodeData Berries(int a, int amount)
             => sim.MapData.AddResourceNode(ResourceType.Food, sim.MapData.TileToWorldFixed(a, z + 8), amount);
+        private void IsolatedBerries(int a, int b)
+        {
+            var node = sim.MapData.AddResourceNode(ResourceType.Food, sim.MapData.TileToWorldFixed(a, b), 1000);
+            for (int tx = node.TileX - 1; tx <= node.TileX + node.FootprintWidth; tx++)
+                for (int tz = node.TileZ - 1; tz <= node.TileZ + node.FootprintHeight; tz++)
+                    sim.MapData.Tiles[tx, tz] = TileType.Water;
+        }
         private AllocateWorkersGoal Start(ResourceSourceKind source)
             => manager.SubmitWorkerAllocation(new CommanderWorkerAllocation(CommanderWorkerAllocationMode.SelectedCount,
                 CommanderWorkerCountMode.Exact, 4, new CommanderWorkerSelector(CommanderWorkerState.Idle),
@@ -120,6 +127,55 @@ namespace OpenEmpires.Tests
             Assert.That(issued.OfType<GatherCommand>().All(c => c.SourceKind == ResourceSourceKind.Berries), Is.True);
             Assert.That(issued.OfType<GatherCommand>().SelectMany(c => c.UnitIds).Distinct().All(workers.Contains), Is.True);
             Assert.That(issued.OfType<SlaughterSheepCommand>(), Is.Empty);
+        }
+
+        [Test] public void BerriesRecovery_SearchesBeyondFourNearerUnreachableSourcesWithinPerTickBound()
+        {
+            var first = Berries(x + 6, 150);
+            var far = sim.MapData.AddResourceNode(ResourceType.Food, sim.MapData.TileToWorldFixed(x + 23, z + 22), 1000);
+            var goal = Start(ResourceSourceKind.Berries);
+            // Establish ordinary native gathering before introducing the recovery obstacles.
+            for (int i = 0; i < 8000 && goal.ResourceProgress < 20 && !goal.IsTerminal; i++)
+            { manager.Tick(sim.CurrentTick); sim.Tick(); }
+            Assert.That(goal.ResourceProgress, Is.GreaterThanOrEqualTo(20));
+            foreach (var tile in new[] { new Vector2Int(x + 12, z + 8), new Vector2Int(x + 17, z + 8),
+                new Vector2Int(x + 12, z + 15), new Vector2Int(x + 17, z + 15) })
+                IsolatedBerries(tile.x, tile.y);
+            sim.FogOfWar.SetVisionCheat(0, true); // Controlled known terrain; production still enforces visibility/known paths.
+            int maxChecks = 0;
+            for (int i = 0; i < 30000 && !goal.IsTerminal; i++)
+            {
+                manager.ResetDiagnosticPathCheckCount(); manager.Tick(sim.CurrentTick);
+                maxChecks = Math.Max(maxChecks, manager.DiagnosticPathCheckCount); sim.Tick();
+            }
+            Assert.That(first.IsDepleted, Is.True);
+            Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Completed), goal.StatusReason);
+            Assert.That(sim.ResourceManager.GetGatheredIncome(0, ResourceType.Food), Is.GreaterThanOrEqualTo(400));
+            Assert.That(issued.OfType<GatherCommand>().Any(c => c.ResourceNodeId == far.Id), Is.True);
+            Assert.That(issued.OfType<GatherCommand>().SelectMany(c => c.UnitIds).Distinct(), Is.EquivalentTo(workers));
+            Assert.That(issued.OfType<GatherCommand>().All(c => c.SourceKind == ResourceSourceKind.Berries), Is.True);
+            Assert.That(maxChecks, Is.LessThanOrEqualTo(16), "At most four path candidates per original worker per planner tick.");
+            TestContext.WriteLine($"Progressive native recovery: Food={goal.ResourceProgress}; tick={sim.CurrentTick}; maxPathChecks={maxChecks}");
+        }
+
+        [Test] public void BerriesRecovery_CompleteUnreachableSweepStillExpiresAsBlockedWithoutCommands()
+        {
+            Berries(x + 6, 150);
+            var goal = Start(ResourceSourceKind.Berries);
+            for (int i = 0; i < 8000 && goal.ResourceProgress < 20 && !goal.IsTerminal; i++)
+            { manager.Tick(sim.CurrentTick); sim.Tick(); }
+            Assert.That(goal.ResourceProgress, Is.GreaterThanOrEqualTo(20));
+            foreach (var tile in new[] { new Vector2Int(x + 12, z + 8), new Vector2Int(x + 17, z + 8),
+                new Vector2Int(x + 12, z + 15), new Vector2Int(x + 17, z + 15), new Vector2Int(x + 23, z + 22) })
+                IsolatedBerries(tile.x, tile.y);
+            sim.FogOfWar.SetVisionCheat(0, true);
+            int before = issued.Count;
+            Run(goal);
+            Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Failed));
+            Assert.That(goal.StatusReason, Does.StartWith("Blocked for 1800 ticks."),
+                "Repeated bounded sweeps must not disguise a proven blocker until the whole duration timeout.");
+            Assert.That(issued.Count, Is.EqualTo(before));
+            Assert.That(sim.ResourceManager.GetGatheredIncome(0, ResourceType.Food), Is.LessThan(400));
         }
 
         [Test] public void ExplicitBerries_WhenExhaustedDoesNotSwitchToAvailableSheep()

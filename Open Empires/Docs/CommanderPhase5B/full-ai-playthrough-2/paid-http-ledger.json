@@ -1,0 +1,39 @@
+{
+  "authorized_original_session_cap": 200,
+  "session_attempts": 4,
+  "original_unused": 196,
+  "subsequent_fresh_retry_cap": 200,
+  "fresh_retry_attempts": 21,
+  "fresh_retry_remaining": 179,
+  "attempts": [
+    {
+      "ordinal": 1,
+      "utc": "2026-10-10T15:50:36.6925887Z",
+      "start_tick": 3102,
+      "final_trace": "utc=2026-10-10T15:50:36.6925887Z;model=openai/gpt-6-luna;request=built\nhttp=sent\n",
+      "ui_timeout": true
+    },
+    {
+      "ordinal": 2,
+      "utc": "2026-10-10T15:52:08.6103656Z",
+      "start_tick": 5788,
+      "final_trace": "utc=2026-10-10T15:52:08.6103656Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=2783\nfinish=stop\nassistantContent=extracted;characters=114;finish=stop\nsemantic=Request;nodes=1\n",
+      "ui_timeout": false
+    },
+    {
+      "ordinal": 3,
+      "utc": "2026-10-10T15:53:55.7489335Z",
+      "start_tick": 9091,
+      "final_trace": "utc=2026-10-10T15:53:55.7489335Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=2751\nfinish=stop\nassistantContent=extracted;characters=130;finish=stop\nsemantic=Clarify;nodes=0\n",
+      "ui_timeout": false
+    },
+    {
+      "ordinal": 4,
+      "utc": "2026-10-10T15:55:17.2855203Z",
+      "start_tick": 11494,
+      "final_trace": "utc=2026-10-10T15:55:17.2855203Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=3332\nfinish=stop\nassistantContent=extracted;characters=450;finish=stop\nsemantic=Request;nodes=2\n",
+      "ui_timeout": false
+    }
+  ],
+  "combined_task_attempts": 25
+}

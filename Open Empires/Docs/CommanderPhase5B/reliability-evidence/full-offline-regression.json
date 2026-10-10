@@ -1,0 +1,34 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "5c5098bd49d34198b37ba54aa5167a1c",
+    "status": "failed",
+    "mode": "EditMode",
+    "started_unix_ms": 1791580598569,
+    "finished_unix_ms": 1791581698439,
+    "last_update_unix_ms": 1791581698439,
+    "progress": {
+      "completed": 1605,
+      "total": 1605,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791581695996,
+      "last_finished_test_full_name": "OpenEmpires.Tests.UnitAttackVisualAnimatorTests.WeaponPrefab_CreatesAttackPivot(\"Assets/Prefabs/Units/Landsknecht.prefab\",12)",
+      "last_finished_unix_ms": 1791581696003,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [
+        {
+          "full_name": "OpenEmpires.Tests.CommanderGrandFixRetentionTests.GarrisonedReservedWorker_RetainsClaimUntilGoalRelease",
+          "message": "  Expected: 7\r\n  But was:  null\r\n"
+        }
+      ],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": null
+  },
+  "hint": null
+}

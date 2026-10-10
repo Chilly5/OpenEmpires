@@ -1,0 +1,45 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"success\":true,\"message\":\"Test job status retrieved.\",\"error\":null,\"data\":{\"job_id\":\"10458678f8294a4591f88223c03615d8\",\"status\":\"failed\",\"mode\":\"EditMode\",\"started_unix_ms\":1791631885480,\"finished_unix_ms\":1791631896804,\"last_update_unix_ms\":1791631896804,\"progress\":{\"completed\":1,\"total\":1,\"current_test_full_name\":null,\"current_test_started_unix_ms\":1791631894371,\"last_finished_test_full_name\":\"OpenEmpires.Tests.CommanderPhase5BReliabilityGatheringTests.BerriesRecovery_SearchesBeyondFourNearerUnreachableSourcesWithinPerTickBound\",\"last_finished_unix_ms\":1791631896638,\"stuck_suspected\":false,\"editor_is_focused\":false,\"blocked_reason\":null,\"failures_so_far\":[{\"full_name\":\"OpenEmpires.Tests.CommanderPhase5BReliabilityGatheringTests.BerriesRecovery_SearchesBeyondFourNearerUnreachableSourcesWithinPerTickBound\",\"message\":\"  Blocked for 1800 ticks. No visible reachable authorized source has capacity for the original stranded workers; no substitute is allowed.\\r\\n  Expected: Completed\\r\\n  But was:  Failed\\r\\n\"}],\"failures_capped\":false},\"error\":null,\"result\":null},\"hint\":null}"
+    }
+  ],
+  "structuredContent": {
+    "result": {
+      "success": true,
+      "message": "Test job status retrieved.",
+      "error": null,
+      "data": {
+        "job_id": "10458678f8294a4591f88223c03615d8",
+        "status": "failed",
+        "mode": "EditMode",
+        "started_unix_ms": 1791631885480,
+        "finished_unix_ms": 1791631896804,
+        "last_update_unix_ms": 1791631896804,
+        "progress": {
+          "completed": 1,
+          "total": 1,
+          "current_test_full_name": null,
+          "current_test_started_unix_ms": 1791631894371,
+          "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5BReliabilityGatheringTests.BerriesRecovery_SearchesBeyondFourNearerUnreachableSourcesWithinPerTickBound",
+          "last_finished_unix_ms": 1791631896638,
+          "stuck_suspected": false,
+          "editor_is_focused": false,
+          "blocked_reason": null,
+          "failures_so_far": [
+            {
+              "full_name": "OpenEmpires.Tests.CommanderPhase5BReliabilityGatheringTests.BerriesRecovery_SearchesBeyondFourNearerUnreachableSourcesWithinPerTickBound",
+              "message": "  Blocked for 1800 ticks. No visible reachable authorized source has capacity for the original stranded workers; no substitute is allowed.\r\n  Expected: Completed\r\n  But was:  Failed\r\n"
+            }
+          ],
+          "failures_capped": false
+        },
+        "error": null,
+        "result": null
+      },
+      "hint": null
+    }
+  },
+  "isError": false
+}

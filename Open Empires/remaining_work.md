@@ -1,6 +1,141 @@
 # OpenEmpires AI Commander — Remaining Phases Handoff
+## Playthrough 2 — discovery closeout, 2026-10-10
 
-## Phase 5B final reliability fix — ACTIVE, 2026-10-09
+[Final report](Docs/CommanderPhase5B/full-ai-playthrough-2-report.md): user-authorized
+AI-disabled retry with exactly20 extra starting Spearmen and three completed Houses,
+27/40 population, unchanged resources, normal timing/fog. Current source376/3059cfbf
+verified. Native human surrender at115:30, winning team1; Age3,52 Villagers and26
+Spearmen alive. Healthy-economy surrender at user-requested closeout, not combat-loss
+or fair-match balance proof. Final overlay was not captured after Computer Use stop.
+
+Fresh retry21/200 attempts:15 HTTP200,six UI timeouts,zero repair;179 unused.
+Initial enemy-enabled interrupted session used four separately authorized attempts,
+so25 total across this task. Original ledgers preserved. Seven submitted gameplay
+objectives completed, five on first submission;19 native goals,14 complete/five fail.
+
+New live demonstrations: Feudal/Castle landmarks, Barracks,Mill,four Farms,Lumber Yard,
+population Houses,exact six-new Spearmen,six-new Villagers,exact five future births,
+additional delivered Gold,and native rally setting. Failures remain visible.
+
+Targeted Sol fixes next: P1 base-defense non-walkable destination versus1-unit arrival
+check; P1 idle-first worker selection blocks already occupied Farm capacity; P1
+compound clarification loses intent. P2 anchored multi-build contract/admission gap.
+Scouting unseen base was admitted as VisibleEnemy but could not discover a location.
+Provider availability remains operational risk. Previous Scout-loss false-takeover
+finding remains unresolved. Patrol/cancellation,attack execution,post-rally births,
+new failure-answer question and active-enemy later combat remain unverified.
+
+No production changes,regression,rebuild,commit,push or new phase. Prior acceptance
+and fresh-package gates below still stand; Phase5B is not accepted.
+
+## Full AI Commander playthrough — completed defeat, 2026-10-10
+
+[Full report](Docs/CommanderPhase5B/full-ai-playthrough-report.md): one normal
+English/Albion 1v1, current source376/3059cfbf, enemy AI enabled, normal resources,
+timers/timeScale1 and unit fog. Genuine Defeat at29:01 via normal Surrender after
+all controllable units were lost; approximately31m13 wall time. No debug resources,
+spawns, forced native result, direct command/admission or accelerated tick loop.
+
+7 text requests/7 paid HTTP attempts from a fresh authorized200 cap;6 HTTP200 and
+1 UI timeout, no repair observed. Two requests achieved their full objectives:
+Food4/Wood2 split and House/Lumber Yard. Scout defense and age-up failed under
+attack; finite future5 Food watcher waited0/5 and was cancelled. Barracks/Spearmen
+request timed out before admission. Recovery question returned unhelpful Clarify.
+One manual gameplay intervention: normal surrender; no manual unit/economy orders.
+
+New confirmed P1: missing/dead capability actors are falsely reported as player
+takeover (ObserveCapability eligible==0 branch), despite no Human events before
+surrender. P2: natural causal question omitted tactical snapshot; cancellation
+action required scrolling. Operational timeout and late operator defense timing
+are retained without blaming every loss on a code defect. Military/scouting/attack/
+later-age capability acceptance remains untested by this defeat. No new phase,
+production edits, regression or rebuild; prior implementation/package gates remain.
+
+## Full AI Commander playthrough — blocked preflight, 2026-10-10
+
+[Playthrough checkpoint](Docs/CommanderPhase5B/full-ai-playthrough-report.md):
+current source376/3059cfbf verified, desktop/main menu usable, provider credentials
+configured. No match or paid call started. The brief requires a fresh bounded HTTP
+allowance; the cap question remains unanswered after three goal turns. Goal blocked,
+not completed/accepted. Passive observer prepared but unattached. Authorize a cap
+including timeouts/repairs and resume for one normal enemy-enabled 1v1; no debug
+conditions/native fixtures/accelerated ticks may substitute. Existing implementation
+and fresh-package gates below remain separate. No production edits or new phase.
+
+## Latest reliability checkpoint — narrow recovery fix verified, 2026-10-10
+
+Goal blocked after three consecutive turns awaiting the two closeout decisions
+below. Editor verified idle/no active tests and source3059cfbf unchanged. No
+automatic retries/spending while waiting; this is not completion or acceptance.
+
+**PHASE 5B FIX PARTIAL — current-source full verification/disposition pending.**
+[Current report](Docs/CommanderPhase5B/phase5b-final-reliability-fix-report.md).
+Full approved offline job35a494d0965d49d28a41fcd114f65595 passed1605/1605,
+0failed/skipped,396.3051475sec. The subsequent approved progressive recovery patch
+fixes farther reachable sources hidden behind four nearer unreachable ones:
+native RED10458678→GREEN56e0a39e,11/11 passed,23.2806485sec. Actual400 credited
+Food at tick7006, original four workers, max6 candidate checks/tick; all-unreachable
+case still times out as a real blocker without commands. Human/loss/cancel and
+other native reliability controls remain green. Read-only follow-up found no blocker.
+
+Human intends **player-wide Food income**, not worker/source-attributed credits;
+Berries/four-workers constrain Commander orders. Ordinary orders continue after
+card completion; no new Commander actions. Identity376 at3059cfbf verified;
+compatibility914079d0 regenerated/runtime matched. Earlier1605 full result is
+pre-patch, not full verification of current source. No third full run started.
+
+Next decisions: separately authorize one current-source full offline run, or
+explicitly amend closeout to accept focused-only checks for the last patch; accept
+documenting the unrecoverable historical malformed field without inventing it.
+No more paid requests are needed: final2/10 used,8unused; total13 attempts,
+8HTTP200/5timeouts/0repairs, all terminal. No package rebuild/commit/push/reset/clean,
+voice/multiplayer changes or next phase. Later Luna actual-UI/standalone acceptance
+and fresh packages remain separate gates. Entries below are historical snapshots.
+
+## Phase 5B final reliability fix — ACTIVE FINAL VERIFICATION, 2026-10-10
+
+User approved final full regression and10 new paid attempts. Both remaining exact
+wordings now pass live/native using unchanged production catalog facts, with only2
+paid requests (zero repairs);8 unused. Final full job
+`35a494d0965d49d28a41fcd114f65595` is running on corrected source316666, total1605.
+No completion/Phase5B acceptance claim until final outcome/requirements audit.
+Original unretained malformed field remains unknown; human direction requested
+for expressly documenting that historical limitation. Earlier blocked notes are history.
+
+Authorization gaps persisted for three consecutive goal turns after the focused
+repair; no active test/HTTP process remains. Approve/decline the pending extra full
+offline regression and separate bounded two-wording paid confirmation, then resume.
+No objective shrinkage, unauthorized run or Phase5B completion/acceptance.
+
+### Current checkpoint — 2026-10-10
+
+[Current reliability report](Docs/CommanderPhase5B/phase5b-final-reliability-fix-report.md).
+The one complete offline run finished **1604 passed /1 failed /0 skipped**; the
+sole failure exposed an overly broad initial garrison-release repair. The newer
+GrandFix specification requires live-garrison claim retention. That behavior is
+restored; the superseded Phase3C fixture now checks retained ownership, inability
+to reserve an inactive worker, no claim theft after restoration, and explicit release.
+Corrected-source **14/14 focused** passed, including all nine native reliability
+cases and human-protection/retention/removal controls. Current main manifest376
+records verifies at `316666d82f277577be5d90c940db397f997d2619be8ef6da75e01cd540693323`;
+seven changed legacy fixtures have supplementary hashes. Compatibility regenerated
+and freshly verified source-matched, with no protocol/encoding change.
+
+Earlier checkpoints: native/semantic19/19, hostile65/65, Play6/6. All11 paid attempts
+are terminal: six HTTP200, five timeouts, no repair. Actual live/native Age3,
+first-TC exact five births with explicit Gather action, and additional Food400 with
+local count continuation passed. Latest Berries/only-after live confirmation remains
+open after timeouts; original malformed field is still unknown. Names-only later
+diagnostic context is not an unchanged full production-context/UGUI certificate.
+Human clarified completion leaves ordinary gathering orders running, but ends
+Commander monitoring/recovery/new actions. No Stop/rollback or fabricated income.
+
+Pending approval: exactly one additional complete offline run on the corrected
+source. No second full regression has started. Paid allowance is exhausted; more
+HTTP requests require new authorization. Goal/Phase5B is NOT complete/accepted.
+No new phase, packages, multiplayer/voice changes, reset/clean/commit/push.
+
+### Earlier implementation checkpoints (historical; superseded above)
 
 User reactivated MCP. Old job recovered as terminal init failure0 tests; bounded
 retry passed6/6. Separate allowance of six paid attempts approved: one HTTP200
@@ -27,7 +162,8 @@ its fixture13/13 passed. Generic age/temporal/ordinal provider instructions and
 resource-field diagnostics are improved. Full final-source offline regression,
 relevant PlayMode/hostile checks, separately authorized real-provider reproduction
 of the explicit-Berries malformed reply, and final consistency closeout remain.
-No new paid requests, packages, reset/clean/commit/push or next phase so far.
+At that earlier checkpoint no new paid requests had run. No packages,
+reset/clean/commit/push or next phase were performed.
 Phase5B remains unaccepted. Preserve all independent audit first failures.
 
 ## Phase 5B final independent acceptance audit — 2026-10-09
@@ -5404,4 +5540,6 @@ LLM → direct game control
 
 
 even if doing so appears easier for a future feature.
+
+
 

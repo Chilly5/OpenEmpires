@@ -1,0 +1,73 @@
+{
+  "authorized_cap": 200,
+  "attempts": 7,
+  "remaining": 193,
+  "schema_repairs_observed": 0,
+  "method": "Passive production HTTP-sent traces; conservative two-attempt submission reservations",
+  "http_attempts": [
+    {
+      "ordinal": 1,
+      "request_utc": "2026-10-10T12:13:45.2695535Z",
+      "model": "openai/gpt-6-luna",
+      "observed_start_tick": 1738,
+      "http_status": "200",
+      "terminal_outcome": "received",
+      "safe_final_trace": "utc=2026-10-10T12:13:45.2695535Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=3614\nfinish=stop\nassistantContent=extracted;characters=365;finish=stop\nsemantic=Request;nodes=2\n"
+    },
+    {
+      "ordinal": 2,
+      "request_utc": "2026-10-10T12:14:28.8800762Z",
+      "model": "openai/gpt-6-luna",
+      "observed_start_tick": 3022,
+      "http_status": "200",
+      "terminal_outcome": "received",
+      "safe_final_trace": "utc=2026-10-10T12:14:28.8800762Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=2659\nfinish=stop\nassistantContent=extracted;characters=435;finish=stop\nsemantic=Request;nodes=2\n"
+    },
+    {
+      "ordinal": 3,
+      "request_utc": "2026-10-10T12:15:15.4517989Z",
+      "model": "openai/gpt-6-luna",
+      "observed_start_tick": 4338,
+      "http_status": "200",
+      "terminal_outcome": "received",
+      "safe_final_trace": "utc=2026-10-10T12:15:15.4517989Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=2398\nfinish=stop\nassistantContent=extracted;characters=110;finish=stop\nsemantic=Request;nodes=1\n"
+    },
+    {
+      "ordinal": 4,
+      "request_utc": "2026-10-10T12:16:33.1685329Z",
+      "model": "openai/gpt-6-luna",
+      "observed_start_tick": 6574,
+      "http_status": "200",
+      "terminal_outcome": "received",
+      "safe_final_trace": "utc=2026-10-10T12:16:33.1685329Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=2843\nfinish=stop\nassistantContent=extracted;characters=65;finish=stop\nsemantic=Request;nodes=1\n"
+    },
+    {
+      "ordinal": 5,
+      "request_utc": "2026-10-10T12:18:04.1293076Z",
+      "model": "openai/gpt-6-luna",
+      "observed_start_tick": 9268,
+      "http_status": "200",
+      "terminal_outcome": "received",
+      "safe_final_trace": "utc=2026-10-10T12:18:04.1293076Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=3492\nfinish=stop\nassistantContent=extracted;characters=148;finish=stop\nsemantic=Request;nodes=1\n"
+    },
+    {
+      "ordinal": 6,
+      "request_utc": "2026-10-10T12:19:57.9512826Z",
+      "model": "openai/gpt-6-luna",
+      "observed_start_tick": 12660,
+      "http_status": null,
+      "terminal_outcome": "ui-timeout",
+      "safe_final_trace": "utc=2026-10-10T12:19:57.9512826Z;model=openai/gpt-6-luna;request=built\nhttp=sent\n",
+      "terminal_evidence": "Final UI transcript and base-collapse screenshot: Commander AI request timed out; no Barracks/army goals admitted. Final HTTP response status unavailable."
+    },
+    {
+      "ordinal": 7,
+      "request_utc": "2026-10-10T12:21:53.9534982Z",
+      "model": "openai/gpt-6-luna",
+      "observed_start_tick": 16046,
+      "http_status": "200",
+      "terminal_outcome": "received",
+      "safe_final_trace": "utc=2026-10-10T12:21:53.9534982Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=3191\nfinish=stop\nassistantContent=extracted;characters=169;finish=stop\nsemantic=Clarify;nodes=0\n"
+    }
+  ]
+}

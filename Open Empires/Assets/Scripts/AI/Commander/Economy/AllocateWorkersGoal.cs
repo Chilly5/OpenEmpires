@@ -23,6 +23,9 @@ namespace OpenEmpires
         internal readonly List<int> SelectedWorkerIds = new List<int>();
         internal readonly List<CommanderWorkerAssignment> Assignments = new List<CommanderWorkerAssignment>();
         internal readonly List<ICommand> CommandGroups = new List<ICommand>();
+        // Recovery only: O(original workers) state, never an unbounded rejected-source cache.
+        internal readonly Dictionary<int, int> RecoveryCandidateOffsets = new Dictionary<int, int>();
+        internal bool RecoverySearchExhausted;
         internal AllocateWorkersGoal(int playerId, CommanderWorkerAllocation allocation, int maxDurationTicks = 36000)
             : base(playerId, CommanderGoalType.AllocateWorkers, maxDurationTicks) => Allocation = allocation;
     }

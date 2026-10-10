@@ -111,9 +111,9 @@ namespace OpenEmpires
             releaseScratch.Clear();
             foreach (var pair in reservations)
             {
-                // A live garrisoned unit may retain its human-protection lease,
-                // but is not an active reservable worker until it is restored.
-                var unit = simulation.UnitRegistry.GetUnit(pair.Key);
+                // Garrisoning is not death: retain the live owned claim until release.
+                // Command dispatch/new reservation still require an active registry unit.
+                var unit = simulation.UnitRegistry.GetUnit(pair.Key) ?? simulation.UnitRegistry.GetGarrisonedUnit(pair.Key);
                 if (unit == null || unit.PlayerId != playerId || !unit.IsVillager || unit.CurrentHealth <= 0 || unit.State == UnitState.Dead)
                     releaseScratch.Add(pair.Key);
             }

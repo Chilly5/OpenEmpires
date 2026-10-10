@@ -152,8 +152,12 @@ namespace OpenEmpires
                         var targets = VisibleEconomyTargets(goal);
                         if (targets.Count == 0)
                             return AllocationBlocked($"No usable visible {request.Destination.SourceKind}/{request.Destination.Resource} source remains for the original selected workers.");
-                        if (!TryResolveWorkerAssignments(goal, stranded, targets, out var recovery))
-                            return AllocationBlocked("No visible reachable authorized source has capacity for the original stranded workers; no substitute is allowed.");
+                        if (!TryResolveWorkerAssignments(goal, stranded, targets, out var recovery, progressiveRecovery: true))
+                            return goal.RecoverySearchExhausted
+                                ? AllocationBlocked("No visible reachable authorized source has capacity for the original stranded workers; no substitute is allowed.")
+                                : new CommanderPlan(CommanderGoalStatus.Executing,
+                                    "Searching further visible authorized sources for the original stranded workers within the per-tick path bound.", 0, 0);
+                        goal.RecoveryCandidateOffsets.Clear(); goal.RecoverySearchExhausted = false;
                         var changed = new HashSet<int>(stranded.Select(w => w.Id));
                         goal.Assignments.RemoveAll(a => changed.Contains(a.WorkerId));
                         goal.Assignments.AddRange(recovery);
@@ -291,7 +295,7 @@ namespace OpenEmpires
         }
 
         private bool TryResolveWorkerAssignments(AllocateWorkersGoal goal, List<UnitData> workers, List<EconomyTarget> targets,
-            out List<CommanderWorkerAssignment> assignments)
+            out List<CommanderWorkerAssignment> assignments, bool progressiveRecovery = false)
         {
             assignments = new List<CommanderWorkerAssignment>();
             var selected = new HashSet<int>(workers.Select(w => w.Id));
@@ -320,10 +324,15 @@ namespace OpenEmpires
             foreach (UnitData worker in workers)
             {
                 var candidates = targets.Where(t => !used.TryGetValue(t.Key, out int count) || count < t.Capacity)
-                    .OrderBy(t => TargetDistance(worker, t)).ThenBy(t => t.Kind).ThenBy(t => t.Id).Take(pathValidationCandidates);
+                    .OrderBy(t => TargetDistance(worker, t)).ThenBy(t => t.Kind).ThenBy(t => t.Id).ToList();
+                int offset = 0;
+                if (progressiveRecovery) goal.RecoveryCandidateOffsets.TryGetValue(worker.Id, out offset);
+                if (offset >= candidates.Count) offset = 0; // Capacity/visibility may change between observations.
+                int end = Math.Min(candidates.Count, offset + pathValidationCandidates);
                 bool found = false;
-                foreach (EconomyTarget target in candidates)
+                for (int index = offset; index < end; index++)
                 {
+                    EconomyTarget target = candidates[index];
                     Vector2Int start = simulation.MapData.WorldToTile(worker.SimPosition);
                     if (!HasReachableAdjacentTile(start, goal.PlayerId, target.X, target.Z, target.Width, target.Height)) continue;
                     // Sheep commands path to their actual tile; adjacent reachability alone is insufficient.
@@ -331,9 +340,22 @@ namespace OpenEmpires
                         start, new Vector2Int(target.X, target.Z), out var sheepPath, goal.PlayerId, simulation.BuildingRegistry)
                         || !IsKnownPath(goal.PlayerId, start, sheepPath))) continue;
                     assignments.Add(new CommanderWorkerAssignment(worker.Id, target.Id, target.Kind));
+                    // Retain a found index while later workers continue searching, but revalidate
+                    // it every retry (no cached route, ownership, visibility or capacity authority).
+                    if (progressiveRecovery) goal.RecoveryCandidateOffsets[worker.Id] = index;
                     used.TryGetValue(target.Key, out int count); used[target.Key] = count + 1; found = true; break;
                 }
-                if (!found) { assignments.Clear(); return false; }
+                if (!found)
+                {
+                    if (progressiveRecovery)
+                    {
+                        goal.RecoveryCandidateOffsets[worker.Id] = end < candidates.Count ? end : 0;
+                        // A complete failed sweep is a real blocker. Later bounded sweeps may
+                        // recover changed terrain/sources, without resetting the blocked timeout.
+                        if (end >= candidates.Count) goal.RecoverySearchExhausted = true;
+                    }
+                    assignments.Clear(); return false;
+                }
             }
             return true;
         }

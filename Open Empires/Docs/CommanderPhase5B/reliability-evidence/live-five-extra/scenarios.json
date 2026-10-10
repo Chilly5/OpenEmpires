@@ -16,6 +16,205 @@
       "node_count": 0,
       "safe_explanation": "Commander AI request timed out.",
       "nodes": []
+    },
+    {
+      "scenario": "only-after",
+      "wording": "Build a House first, and only after it finishes send a villager to wood.",
+      "stage": "terminal-not-admitted",
+      "raw_response_omitted": true,
+      "static_catalog_identifiers_omitted": true,
+      "valid": false,
+      "outcome": "Unsupported",
+      "trace": "utc=2026-10-09T21:05:38.1830995Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nrequest=timeout\n",
+      "schema_diagnostic": "",
+      "node_count": 0,
+      "safe_explanation": "Commander AI request timed out.",
+      "nodes": []
+    },
+    {
+      "scenario": "age3",
+      "wording": "Reach Age 3.",
+      "stage": "terminal-native",
+      "raw_response_omitted": true,
+      "static_catalog_identifiers_omitted": true,
+      "valid": true,
+      "outcome": "Request",
+      "trace": "utc=2026-10-09T21:07:40.8598324Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=3967\nfinish=stop\nassistantContent=extracted;characters=65;finish=stop\nsemantic=Request;nodes=1\n",
+      "schema_diagnostic": "",
+      "node_count": 1,
+      "safe_explanation": "",
+      "nodes": [
+        {
+          "type": "ReachAge",
+          "count": null,
+          "age": "Castle",
+          "producer_ordinal": null,
+          "depends_on": []
+        }
+      ],
+      "semantics_match_request": true,
+      "commands_before_approval": 0,
+      "goals_before_approval": 0,
+      "tick": 7621,
+      "statuses": [
+        "Completed"
+      ],
+      "native_age": 3,
+      "credited_food": 0,
+      "commander_train_count": 0,
+      "placement_count": 2,
+      "gather_before_house_completion": false,
+      "gather_unit_ids": [],
+      "gather_source_kinds": [],
+      "original_worker_ids": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "first_tc_birth_ids": [],
+      "competing_birth_ids": [
+        4
+      ],
+      "house_complete_count": 0,
+      "native_matches_request": true
+    },
+    {
+      "scenario": "first-tc",
+      "wording": "Assign the next five villagers produced by my first Town Center to gather Wood.",
+      "stage": "terminal-native",
+      "raw_response_omitted": true,
+      "static_catalog_identifiers_omitted": true,
+      "valid": true,
+      "outcome": "Request",
+      "trace": "utc=2026-10-09T21:10:45.9311531Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=2809\nfinish=stop\nassistantContent=extracted;characters=167;finish=stop\nsemantic=Request;nodes=1\n",
+      "schema_diagnostic": "",
+      "node_count": 1,
+      "safe_explanation": "",
+      "nodes": [
+        {
+          "type": "WatchFutureUnits",
+          "count": 5,
+          "age": "",
+          "producer_ordinal": 1,
+          "depends_on": []
+        }
+      ],
+      "semantics_match_request": true,
+      "commands_before_approval": 0,
+      "goals_before_approval": 0,
+      "tick": 2026,
+      "statuses": [
+        "Completed"
+      ],
+      "native_age": 1,
+      "credited_food": 0,
+      "commander_train_count": 0,
+      "placement_count": 0,
+      "gather_before_house_completion": false,
+      "gather_unit_ids": [
+        4,
+        6,
+        7,
+        8,
+        9
+      ],
+      "gather_source_kinds": [
+        "Any"
+      ],
+      "original_worker_ids": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "first_tc_birth_ids": [
+        4,
+        6,
+        7,
+        8,
+        9
+      ],
+      "competing_birth_ids": [
+        5
+      ],
+      "house_complete_count": 0,
+      "native_matches_request": true
+    },
+    {
+      "scenario": "any400",
+      "wording": "Gather 400 additional Food.",
+      "stage": "terminal-native",
+      "raw_response_omitted": true,
+      "static_catalog_identifiers_omitted": true,
+      "valid": true,
+      "outcome": "Clarify",
+      "trace": "utc=2026-10-09T21:11:43.7962460Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=2285\nfinish=stop\nassistantContent=extracted;characters=339;finish=stop\nsemantic=Clarify;nodes=0\n",
+      "schema_diagnostic": "",
+      "node_count": 0,
+      "safe_explanation": "How many villagers should gather the additional 400 Food?",
+      "pending_draft": {
+        "mode": "SelectedCount",
+        "count_mode": "Exact",
+        "count": null,
+        "worker_state": "Any",
+        "amount": 400,
+        "amount_mode": "AdditionalGathered",
+        "resource": "Food",
+        "source": "Any",
+        "missing_fields": [
+          "Count"
+        ]
+      },
+      "local_count_reply": "4",
+      "continuation_valid": true,
+      "nodes": [
+        {
+          "type": "AllocateWorkers",
+          "count": null,
+          "age": "",
+          "producer_ordinal": null,
+          "depends_on": [],
+          "allocation_mode": "SelectedCount",
+          "worker_count": 4,
+          "worker_state": "Any",
+          "source": "Any",
+          "resource": "Food",
+          "amount": 400,
+          "amount_mode": "AdditionalGathered"
+        }
+      ],
+      "semantics_match_request": true,
+      "commands_before_approval": 0,
+      "goals_before_approval": 0,
+      "tick": 3436,
+      "statuses": [
+        "Completed"
+      ],
+      "native_age": 1,
+      "credited_food": 400,
+      "commander_train_count": 0,
+      "placement_count": 0,
+      "gather_before_house_completion": false,
+      "gather_unit_ids": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gather_source_kinds": [
+        "Any"
+      ],
+      "original_worker_ids": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "first_tc_birth_ids": [],
+      "competing_birth_ids": [],
+      "house_complete_count": 0,
+      "native_matches_request": true
     }
   ]
 }

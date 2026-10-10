@@ -1,0 +1,56 @@
+{
+  "matchOver": true,
+  "endTick": 52253,
+  "winnerTeam": 1,
+  "surrendered": [
+    0
+  ],
+  "bootstrapEnabled": true,
+  "timeScale": 1.0,
+  "age": 1,
+  "goals": [
+    {
+      "GoalId": 1,
+      "type": "AllocateWorkers",
+      "status": "Completed",
+      "StatusReason": "The 4 selected workers have matching assignments."
+    },
+    {
+      "GoalId": 2,
+      "type": "AllocateWorkers",
+      "status": "Completed",
+      "StatusReason": "The 2 selected workers have matching assignments."
+    },
+    {
+      "GoalId": 3,
+      "type": "BuildStructure",
+      "status": "Completed",
+      "StatusReason": "House construction complete at (214,133) as building #8."
+    },
+    {
+      "GoalId": 4,
+      "type": "BuildStructure",
+      "status": "Completed",
+      "StatusReason": "LumberYard construction complete at (226,123) as building #9."
+    },
+    {
+      "GoalId": 5,
+      "type": "CapabilityAction",
+      "status": "Failed",
+      "StatusReason": "Blocked for 1800 ticks. The player took control of every eligible capability unit; Commander will not reclaim them."
+    },
+    {
+      "GoalId": 6,
+      "type": "ReachAge",
+      "status": "Failed",
+      "StatusReason": "Blocked for 1800 ticks. Age 2 landmark: building #22 is stalled and no reachable, unprotected owned villager can resume it."
+    },
+    {
+      "GoalId": 7,
+      "type": "WatchFutureUnits",
+      "status": "Cancelled",
+      "StatusReason": "Cancelled by the owning player."
+    }
+  ],
+  "transcript": "Commander:\r\nOpenRouter Luna configured. Availability is checked on your first request.\r\n\r\nPlayer:\r\nPut four idle villagers on Food from sheep and two idle villagers on Wood.\r\n\r\nCommander:\r\nAction plan — not started.\n1. Assign exactly 4 eligible idle villagers to gather Food only from Sheep\n2. Assign exactly 2 eligible idle villagers to gather Wood\nPreparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan.\r\n\r\nCommander:\r\nCompound Commander order submitted.\r\n\r\nPlayer:\r\nBuild a House near my Town Center, and a Lumber Yard near the trees.\r\n\r\nCommander:\r\nAction plan — not started.\n1. Build 1 House; Near your Town Center; 1-tile clear gap between footprints\n2. Build 1 Lumber Yard; Near a visible resource (need not be worked); 1-tile clear gap between footprints (Wood only from Tree)\nPreparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan.\r\n\r\nCommander:\r\nCompound Commander order submitted.\r\n\r\nPlayer:\r\nUse my Scout to defend the villagers at my base.\r\n\r\nCommander:\r\nUnderstood.\r\n\r\nPlayer:\r\nAdvance to Feudal Age.\r\n\r\nCommander:\r\nUnderstood. I will advance to age 2.\r\n\r\nPlayer:\r\nSend the next five Villagers from my Town Center to gather Food.\r\n\r\nCommander:\r\nAction plan — not started.\n1. Watch the next 5 Villager from Town Center (only unambiguous owned producer) and gather Food (Any); no additional production\nPreparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan.\r\n\r\nCommander:\r\nCompound Commander order submitted.\r\n\r\nPlayer:\r\nBuild a Barracks and train six Spearmen to defend my base.\r\n\r\nCommander:\r\nCommander AI request timed out. Please try again or use offline commands.\r\n\r\nPlayer:\r\nWhy did my Scout defense fail, and can I recover with no villagers?\r\n\r\nCommander:\r\nI don’t have tactical status to determine why the Scout defense failed. Do you mean recovering without training or assigning villagers?"
+}

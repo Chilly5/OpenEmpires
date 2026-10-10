@@ -1,4 +1,61 @@
-# Phase 5B final reliability fix — active
+# Phase 5B final reliability fix — active final verification
+
+**Current goal state: BLOCKED awaiting human closeout decisions.** The same
+authorization/evidence-disposition blocker persisted through three consecutive
+goal turns. Safe implementation, focused verification, review and handoff checks
+are finished. Fresh Unity state is idle/EditMode with no active test job; current
+source3059cfbf is unchanged/verified. No new run, paid call or completion claim.
+Resume after choosing post-patch full verification versus focused-only amendment
+and whether to document the unretained malformed field as unknown.
+
+## Current — approved progressive recovery fix, 2026-10-10
+
+Full job35a494d0965d49d28a41fcd114f65595 succeeded1605/1605,0failed/skipped,
+396.3051475sec before the final recovery patch. Human then authorized the narrow
+review finding: farther reachable sources must not be hidden by four nearer
+unreachable ones. RED10458678 reproduced1800-tick blocked failure; GREEN56e0a39e
+passed11/11 native tests,0failed/skipped,23.2806485sec. New farther-source400 case
+completed tick7006, original four workers, max6 candidate checks/tick (bound16).
+All-unreachable control preserves blocked timeout/no recovery commands. Human
+confirmed player-wide income semantics; no attribution machinery was introduced.
+Follow-up read-only Sol review found no concrete blocker.
+
+Main376-record source identity3059cfbf is verified; generated compatibility914079d0
+matches runtime. Third full regression requires separate authorization; none started.
+No new paid calls: final allowance2/10 used,8unused. Original malformed field remains
+unrecoverable; explicit limitation disposition is pending. Goal remains partial,
+not Phase5B acceptance. Historical entries below do not describe current status.
+
+Latest authorization: one final complete offline run and10 new paid calls.
+Only2 paid calls needed; Berries400 and only-after both passed exact live/native
+checks with unchanged production projection. New6+4 journals retain8 unused calls;
+no further paid spending needed. Final full job35a494d0965d49d28a41fcd114f65595 is
+running on source316666, total1605. Historical malformed field cannot be recovered;
+human closeout-limitation question pending. Earlier blocked notes below are history.
+
+After three consecutive authorization-blocked goal turns, status is BLOCKED.
+Source remains unchanged/verified; no active test or HTTP job remains. Pending
+questions request exactly one additional complete offline run, and separately at
+most four paid HTTP attempts inclusive of repairs for two wordings. No completion
+or Phase5B acceptance claim; original objective and limitations remain intact.
+
+## Latest — 2026-10-10
+
+One full offline run:1604 passed,1 failed,0 skipped. The sole garrison failure
+showed that newer GrandFix retention policy supersedes the old Phase3C release
+expectation. Original live-garrison claim retention restored, legacy fixture
+reconciled/strengthened, corrected-source14/14 focused passed. No source edit
+during the live full run. Extra final whole regression requires pending approval.
+Current376-record source identity verified:
+`316666d82f277577be5d90c940db397f997d2619be8ef6da75e01cd540693323`.
+Compatibility regenerated/matched; seven legacy fixture hashes recorded separately.
+All11 paid attempts terminal (six200/five timeout/zero repair); three live/native
+cases pass. Berries/only-after live confirmation and exact original bad-field
+identity remain open. Human permits ordinary gathering orders to continue after
+the finite objective completes; no new Commander actions after target.
+See [complete checkpoint report](phase5b-final-reliability-fix-report.md).
+
+## Earlier checkpoints — historical, superseded above
 
 User reactivated MCP and resumed. Old PlayMode job is confirmed terminal init
 failure with zero tests, then bounded retry passed6/6. Six paid attempts are now

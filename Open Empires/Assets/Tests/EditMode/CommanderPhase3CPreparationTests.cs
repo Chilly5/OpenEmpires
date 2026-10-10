@@ -253,7 +253,7 @@ namespace OpenEmpires.Tests
 
         [TestCase(false)]
         [TestCase(true)]
-        public void WorkerReservation_ReleasesDeadOrGarrisonedWorker(bool garrison)
+        public void WorkerReservation_DeathReleasesAndGarrisonRetainsLiveClaim(bool garrison)
         {
             var worker = Worker(x - 8);
             var goal = manager.SubmitResourceAllocation(ResourceType.Wood, 1);
@@ -261,8 +261,21 @@ namespace OpenEmpires.Tests
             if (garrison) sim.UnitRegistry.GarrisonUnit(worker.Id);
             else { worker.CurrentHealth = 0; worker.State = UnitState.Dead; }
             manager.Tick(0);
-            Assert.That(manager.GetWorkerReservation(worker.Id), Is.Null);
+            if (garrison)
+                Assert.That(manager.GetWorkerReservation(worker.Id)?.GoalId, Is.EqualTo(goal.GoalId),
+                    "A live garrisoned worker retains the documented goal claim, but is not active/reservable.");
+            else Assert.That(manager.GetWorkerReservation(worker.Id), Is.Null);
             Assert.That(manager.TryReserveWorker(goal.GoalId, worker.Id, CommanderWorkerReservationType.Gatherer), Is.False);
+            if (garrison)
+            {
+                sim.UnitRegistry.RestoreUnit(worker.Id);
+                var other = manager.SubmitResourceAllocation(ResourceType.Food, 1);
+                Assert.That(manager.TryReserveWorker(other.GoalId, worker.Id, CommanderWorkerReservationType.Gatherer), Is.False,
+                    "Restoration must not allow another goal to steal the retained live claim.");
+                manager.CancelGoal(goal.GoalId);
+                Assert.That(manager.TryReserveWorker(other.GoalId, worker.Id, CommanderWorkerReservationType.Gatherer), Is.True,
+                    "Explicit goal release allows a new eligible claim.");
+            }
         }
 
         [Test]

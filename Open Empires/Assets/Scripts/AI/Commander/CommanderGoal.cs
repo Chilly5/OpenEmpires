@@ -162,7 +162,7 @@ namespace OpenEmpires
             if(this is EnsureUnitCountGoal units){units.RequiredProducerGoal=null;units.TrackedTrainingOrders.Clear();units.BaselineUnitIds.Clear();}
             if(this is BuildStructureGoal build)build.PendingPlacementCommand=null;
             if(this is ReachAgeGoal age)age.PendingAgeUpCommand=null;
-            if(this is AllocateWorkersGoal boundAllocation)boundAllocation.ResultSourceGoal=null;
+            if(this is AllocateWorkersGoal boundAllocation){boundAllocation.ResultSourceGoal=null;boundAllocation.RecoveryCandidateOffsets.Clear();boundAllocation.RecoverySearchExhausted=false;}
             if(this is WatchFutureUnitsGoal future)future.ReleaseObservations();
         }
     }

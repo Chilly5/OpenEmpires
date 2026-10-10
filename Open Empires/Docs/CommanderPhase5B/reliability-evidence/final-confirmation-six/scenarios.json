@@ -1,0 +1,134 @@
+{
+  "schema": "phase5b-reliability-controlled-live@1",
+  "run_id": "bc761319-d608-4c37-bc90-f14be1f59fe4",
+  "method": "Direct real semantic provider, explicit test game-side approval, native commands/ticks; not UGUI or standalone acceptance",
+  "scenarios": [
+    {
+      "scenario": "berries400",
+      "wording": "Gather 400 additional Food from berries with four villagers.",
+      "stage": "terminal-native",
+      "raw_response_omitted": true,
+      "context_projection": "Unchanged bounded production projection; public canonical IDs, no runtime entity IDs or coordinates",
+      "valid": true,
+      "outcome": "Request",
+      "trace": "utc=2026-10-10T11:04:06.8629141Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=3206\nfinish=stop\nassistantContent=extracted;characters=257;finish=stop\nsemantic=Request;nodes=1\n",
+      "schema_diagnostic": "",
+      "node_count": 1,
+      "safe_explanation": "",
+      "nodes": [
+        {
+          "type": "AllocateWorkers",
+          "count": null,
+          "age": "",
+          "producer_ordinal": null,
+          "depends_on": [],
+          "allocation_mode": "SelectedCount",
+          "worker_count": 4,
+          "worker_state": "Any",
+          "source": "Berries",
+          "resource": "Food",
+          "amount": 400,
+          "amount_mode": "AdditionalGathered"
+        }
+      ],
+      "semantics_match_request": true,
+      "commands_before_approval": 0,
+      "goals_before_approval": 0,
+      "tick": 4351,
+      "statuses": [
+        "Completed"
+      ],
+      "native_age": 1,
+      "credited_food": 400,
+      "commander_train_count": 0,
+      "placement_count": 0,
+      "gather_before_house_completion": false,
+      "gather_unit_ids": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gather_source_kinds": [
+        "Berries"
+      ],
+      "original_worker_ids": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "first_tc_birth_ids": [],
+      "competing_birth_ids": [],
+      "house_complete_count": 0,
+      "native_matches_request": true
+    },
+    {
+      "scenario": "only-after",
+      "wording": "Build a House first, and only after it finishes send a villager to wood.",
+      "stage": "terminal-native",
+      "raw_response_omitted": true,
+      "context_projection": "Unchanged bounded production projection; public canonical IDs, no runtime entity IDs or coordinates",
+      "valid": true,
+      "outcome": "Request",
+      "trace": "utc=2026-10-10T11:04:37.9690266Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=1860\nfinish=stop\nassistantContent=extracted;characters=315;finish=stop\nsemantic=Request;nodes=2\n",
+      "schema_diagnostic": "",
+      "node_count": 2,
+      "safe_explanation": "",
+      "nodes": [
+        {
+          "type": "BuildStructure",
+          "count": 1,
+          "age": "",
+          "producer_ordinal": null,
+          "depends_on": []
+        },
+        {
+          "type": "AllocateWorkers",
+          "count": null,
+          "age": "",
+          "producer_ordinal": null,
+          "depends_on": [
+            0
+          ],
+          "allocation_mode": "SelectedCount",
+          "worker_count": 1,
+          "worker_state": "Any",
+          "source": "Any",
+          "resource": "Wood",
+          "amount": null,
+          "amount_mode": ""
+        }
+      ],
+      "semantics_match_request": true,
+      "commands_before_approval": 0,
+      "goals_before_approval": 0,
+      "tick": 541,
+      "statuses": [
+        "Completed",
+        "Completed"
+      ],
+      "native_age": 1,
+      "credited_food": 0,
+      "commander_train_count": 0,
+      "placement_count": 1,
+      "gather_before_house_completion": false,
+      "gather_unit_ids": [
+        3
+      ],
+      "gather_source_kinds": [
+        "Any"
+      ],
+      "original_worker_ids": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "first_tc_birth_ids": [],
+      "competing_birth_ids": [],
+      "house_complete_count": 1,
+      "native_matches_request": true
+    }
+  ]
+}

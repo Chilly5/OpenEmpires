@@ -1,0 +1,79 @@
+{
+  "purpose": "Post-job handoff consistency snapshot; hashes establish present file identity, not retrospective execution provenance or gameplay certification.",
+  "mainManifestAggregateSha256": "3059cfbf9ef7189e05c60b05fe4ee17cd00ffbb7b21e24dd4782517b45055676",
+  "fullRun": {
+    "job": "35a494d0965d49d28a41fcd114f65595",
+    "passed": 1605,
+    "failed": 0,
+    "skipped": 0,
+    "scope": "Pre-progressive-patch source316666; not current-source full verification"
+  },
+  "currentFocused": [
+    {
+      "job": "56e0a39e69c84fa49d6c56220d60a97b",
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "job": "fa925517145e4f99a3b14c0336f69214",
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "pending": [
+    "Separate authorization for post-patch full regression or explicit focused-only scope amendment",
+    "Disposition of unretained historical malformed-field identity"
+  ],
+  "records": [
+    {
+      "path": "Assets/Scripts/AI/Commander/Economy/AllocateWorkersGoal.cs",
+      "sha256": "26a0a8557803a0235eaac52b0cc0ad41ae4b00e46dfbd75167a0f7a76161ae47"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/Economy/CommanderPlanner.Economy.cs",
+      "sha256": "fe137e8e90d160219d61b0894443a9a6c368d75a6968d6b537f90db7aee5b755"
+    },
+    {
+      "path": "Assets/Scripts/AI/Commander/CommanderGoal.cs",
+      "sha256": "58b5974ddd91edf7f541ab1d339c628c6f43e504b31ab6774ae15331f99f07bf"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase5BReliabilityGatheringTests.cs",
+      "sha256": "9e86ecb85d536623ff3e89b8dbfecab5fc9605a7e2a215564a929028933a40d0"
+    },
+    {
+      "path": "Docs/CommanderPhase5B/source-identity.json",
+      "sha256": "36b59e238eef8e3205a12704e151a3b86d7645e001ae8bc09cea80178988789a"
+    },
+    {
+      "path": "Docs/CommanderPhase5B/reliability-evidence/final-full-offline-regression.json",
+      "sha256": "c34410beb00b0740eaad7c35c8c3c9571bef3be04aaef9cbc08cc25447e25a65"
+    },
+    {
+      "path": "Docs/CommanderPhase5B/reliability-evidence/progressive-search-red.json",
+      "sha256": "a06fb7ff73e7e6945c2112bc7edc5ea32a53f1f6933c47cd4e6d170f1529ddea"
+    },
+    {
+      "path": "Docs/CommanderPhase5B/reliability-evidence/progressive-search-focused.json",
+      "sha256": "010feae1f825911633c7672f8089a8e1a89d3decde6663b9b727b51978e4a317"
+    },
+    {
+      "path": "Docs/CommanderPhase5B/reliability-evidence/progressive-search-compatibility-focused.json",
+      "sha256": "66ea83090e5161fe4a030465dfeab90ed2dd1b6399380ca6a452bbb49a375e26"
+    },
+    {
+      "path": "Docs/CommanderPhase5B/reliability-evidence/legacy-fixture-source-supplement.json",
+      "sha256": "f768c16791553b446eb9402f5365c481a9733840d5f90a053f56326f26f805e4"
+    },
+    {
+      "path": "Docs/CommanderPhase5B/reliability-evidence/final-confirmation-six/paid-usage-ledger.json",
+      "sha256": "12e9e3019b1b0d627b8cf5c70bee360c170736d0eb68e26603421fd5eb4d618a"
+    },
+    {
+      "path": "Docs/CommanderPhase5B/reliability-evidence/final-confirmation-four/paid-usage-ledger.json",
+      "sha256": "0597c019e6e765a3693b637faf58ebfa8630d7083c297b9faa92143188d8b141"
+    }
+  ]
+}
