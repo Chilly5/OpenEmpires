@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -9,6 +10,25 @@ namespace OpenEmpires.TestSupport
 {
     public sealed class ScenarioEvidenceRecorder
     {
+        private static readonly string[] Phase5CTurnFields = {
+            "schemaVersion", "caseId", "requestId", "turnCorrelationId", "utterance", "turnText", "turnIndex", "status", "evidenceMode", "uiState",
+            "fixtureKind", "semanticValid", "semanticOutcome", "fidelity", "normalizedFields", "admittedFields", "turnHistory",
+            "draftBefore", "draftAfter", "draftChanges", "approvalRequired", "approved", "approvalMode",
+            "providerCalls", "httpAttempts", "packAccepted", "commandCount", "commandTypes", "nativeResults",
+            "taskStates", "estimatedInputTokens", "actualPromptTokens", "actualCompletionTokens",
+            "actualCachedTokens", "actualReasoningTokens", "reportedCost", "attemptCosts",
+            "uiSubmitMs", "packingMs", "transportMs", "parseMs", "admissionMs",
+            "firstNativeActionMs", "fogNewlyExploredCount", "garrisonHousedCount", "garrisonProtectedCount",
+            "garrisonUnaccommodatedCount", "futureObservedCount", "futureAssignedCount", "humanTrainCommands",
+            "resourceProgress", "gatheredFoodIncome", "foodCompletionTick", "foodIncomeAtCompletion",
+            "commanderCommandsAtFoodCompletion", "ordinaryFoodGatherActive",
+            "fixtureAssumption", "previewMentionsOwnedBase", "newResultCount", "oldUnitExcluded",
+            "humanBirthExcluded", "exactPatrolBinding", "nativePatrolActorCount",
+            "nativePatrolWaypointsMatch", "nativePatrolDestinationMatch",
+            "builderAffinityVerified", "assignedBuilderHumanProtected",
+            "ownedTaskFactCount", "readOnlyProviderRequest", "questionFactClass",
+            "errorStage", "errorCategory", "gap", "tickMode", "ticks"
+        };
         private readonly string path,run;
         private string lastStage="setup",firstFailure,firstCategory;
         private JObject diagnostics=new JObject{["initial_http_attempts"]="unavailable",["repair_http_attempts"]="unavailable",["http_status"]="unavailable",["finish_category"]="unavailable",["attribution"]="unavailable"};
@@ -45,6 +65,55 @@ namespace OpenEmpires.TestSupport
                 ["normalized_nodes"]=Normalize(result),["diagnostics"]=diagnostics.DeepClone()};
             // Never serialize provider prose, input, raw response, headers, errors,
             // context/world objects, symbolic provider node names or credentials.
+            WriteAtomic(root);
+        }
+        // A distinct bounded per-turn projection. The caller supplies only detached, allow-listed
+        // observations; the recorder never serializes provider envelopes or simulation objects.
+        public void RecordPhase5CTurn(JObject safeTurn)
+        {
+            if(safeTurn==null || safeTurn.Count>Phase5CTurnFields.Length)
+                throw new InvalidOperationException("Invalid Phase 5C turn record.");
+            foreach(var field in safeTurn.Properties())
+                if(!Phase5CTurnFields.Contains(field.Name) || !SafePhase5CValue(field.Value,0))
+                    throw new InvalidOperationException("Unsafe Phase 5C turn field.");
+            if((int?)safeTurn["schemaVersion"]!=1 || !SafeSlug((string)safeTurn["caseId"])
+                || (safeTurn["requestId"]?.Type!=JTokenType.Null && !SafeRequestId((string)safeTurn["requestId"]))
+                || (safeTurn["turnCorrelationId"]?.Type!=JTokenType.Null
+                    && safeTurn["turnCorrelationId"]!=null && !SafeRequestId((string)safeTurn["turnCorrelationId"]))
+                || safeTurn["utterance"]?.Type!=JTokenType.String
+                || ((string)safeTurn["utterance"]).Length>1500
+                || !new[]{"started","observed","failed","open-gap"}.Contains((string)safeTurn["status"]))
+                throw new InvalidOperationException("Invalid Phase 5C turn identity or state.");
+            string stage=(string)safeTurn["errorStage"];
+            if(!string.IsNullOrEmpty(stage) && firstFailure==null)
+            {firstFailure=stage;firstCategory=(string)safeTurn["errorCategory"] ?? "unclassified";}
+            var root=new JObject { ["schema"]="openempires-phase5c-scenario-turn@1",["run_id"]=run,
+                ["first_failing_stage"]=firstFailure,["first_failure_category"]=firstCategory };
+            foreach(var field in safeTurn.Properties())root[field.Name]=field.Value.DeepClone();
+            WriteAtomic(root);
+        }
+        private static bool SafeSlug(string value)=>value!=null&&Regex.IsMatch(value,@"^[a-z0-9-]{1,80}$");
+        private static bool SafeRequestId(string value)=>value!=null&&Regex.IsMatch(value,@"^[A-Za-z0-9._:-]{1,128}$");
+        private static bool SafePhase5CValue(JToken value,int depth)
+        {
+            if(value==null||depth>7)return false;
+            if(value.Type==JTokenType.Null||value.Type==JTokenType.Boolean||value.Type==JTokenType.Integer||value.Type==JTokenType.Float)return true;
+            if(value.Type==JTokenType.String)
+            {string text=(string)value;return text==null||text.Length<=1500&&!text.Any(ch=>char.IsControl(ch)&&ch!='\n'&&ch!='\r'&&ch!='\t');}
+            if(value is JArray array)return array.Count<=32&&array.All(item=>SafePhase5CValue(item,depth+1));
+            if(value is JObject objectValue)
+            {
+                if(objectValue.Count>32)return false;
+                foreach(var field in objectValue.Properties())
+                    if(!Regex.IsMatch(field.Name,@"^[A-Za-z][A-Za-z0-9_]{0,63}$")
+                        ||Regex.IsMatch(field.Name,@"(?i)(entityid|unitid|buildingid|coordinate|position|tile|header|raw|secret|password|apikey|hiddenenemy)")
+                        ||!SafePhase5CValue(field.Value,depth+1))return false;
+                return true;
+            }
+            return false;
+        }
+        private void WriteAtomic(JObject root)
+        {
             byte[] bytes=new UTF8Encoding(false,true).GetBytes(root.ToString(Formatting.Indented));
             if(bytes.Length>16384)throw new InvalidOperationException("Evidence artifact exceeds its bound.");
             CheckPaths();Directory.CreateDirectory(Path.GetDirectoryName(path));string temporary=path+"."+Guid.NewGuid().ToString("N")+".tmp";

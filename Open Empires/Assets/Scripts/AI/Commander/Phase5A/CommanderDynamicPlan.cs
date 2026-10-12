@@ -7,7 +7,7 @@ namespace OpenEmpires
     public enum CommanderDynamicMechanic
     {
         SelectWorkers, PartitionWorkers, SelectUnits, SelectStructures,
-        SelectResources, ResolveLocation, Build, AllocateWorkers, Produce
+        SelectResources, ResolveLocation, Build, AllocateWorkers, MoveWorkers, Produce
     }
 
     public enum CommanderDynamicResultKind
@@ -18,13 +18,13 @@ namespace OpenEmpires
 
     public enum CommanderDynamicEffectClass
     {
-        Selection, Location, Construction, Allocation, Production
+        Selection, Location, Construction, Allocation, Movement, Production
     }
 
     public enum CommanderDynamicFieldKind
     {
         Count, Offset, ClearGapTiles, UnitId, BuildingId, Resource,
-        SourceKind, WorkerState, ResourceMode, Anchor, Relation,
+        SourceKind, WorkerState, ResourceMode, Anchor, Relation, WorkerCountMode,
         QuantityMode, UnitKind
     }
 
@@ -78,7 +78,8 @@ namespace OpenEmpires
             {
                 new CommanderDynamicPrimitive("select-workers", CommanderDynamicMechanic.SelectWorkers,
                     CommanderDynamicResultKind.WorkerSet, CommanderDynamicEffectClass.Selection,
-                    new[] { P("count", CommanderDynamicFieldKind.Count),
+                    new[] { P("count", CommanderDynamicFieldKind.Count, false),
+                        P("countMode", CommanderDynamicFieldKind.WorkerCountMode, false),
                         P("state", CommanderDynamicFieldKind.WorkerState, false),
                         P("currentResource", CommanderDynamicFieldKind.Resource, false) },
                     Array.Empty<CommanderDynamicInput>()),
@@ -109,7 +110,9 @@ namespace OpenEmpires
                     CommanderDynamicResultKind.LocationIntent, CommanderDynamicEffectClass.Location,
                     new[] { P("anchor", CommanderDynamicFieldKind.Anchor, false),
                         P("relation", CommanderDynamicFieldKind.Relation),
-                        P("clearGapTiles", CommanderDynamicFieldKind.ClearGapTiles) },
+                        P("clearGapTiles", CommanderDynamicFieldKind.ClearGapTiles),
+                        P("resource", CommanderDynamicFieldKind.Resource, false),
+                        P("sourceKind", CommanderDynamicFieldKind.SourceKind, false) },
                     new[] { I("structures", CommanderDynamicResultKind.StructureSet, false),
                         I("resources", CommanderDynamicResultKind.ResourceSet, false) }),
                 new CommanderDynamicPrimitive("build", CommanderDynamicMechanic.Build,
@@ -122,7 +125,13 @@ namespace OpenEmpires
                     CommanderDynamicResultKind.AssignmentEffect, CommanderDynamicEffectClass.Allocation,
                     new[] { P("resource", CommanderDynamicFieldKind.Resource),
                         P("sourceKind", CommanderDynamicFieldKind.SourceKind) },
-                    new[] { I("workers", CommanderDynamicResultKind.WorkerSet) }),
+                    new[] { I("workers", CommanderDynamicResultKind.WorkerSet),
+                        I("location", CommanderDynamicResultKind.LocationIntent, false) }),
+                new CommanderDynamicPrimitive("move-workers", CommanderDynamicMechanic.MoveWorkers,
+                    CommanderDynamicResultKind.AssignmentEffect, CommanderDynamicEffectClass.Movement,
+                    Array.Empty<CommanderDynamicField>(),
+                    new[] { I("workers", CommanderDynamicResultKind.WorkerSet),
+                        I("location", CommanderDynamicResultKind.LocationIntent) }),
                 new CommanderDynamicPrimitive("produce", CommanderDynamicMechanic.Produce,
                     CommanderDynamicResultKind.UnitResult, CommanderDynamicEffectClass.Production,
                     new[] { P("unit", CommanderDynamicFieldKind.UnitId),

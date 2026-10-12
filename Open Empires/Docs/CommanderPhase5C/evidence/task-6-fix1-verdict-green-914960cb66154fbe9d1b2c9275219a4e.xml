@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Passed" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 01:56:13Z" end-time="2026-10-12 01:56:15Z" duration="2.0123778">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1794" result="Passed" start-time="2026-10-12 01:56:13Z" end-time="2026-10-12 01:56:15Z" duration="2.012378" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="3068" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1794" result="Passed" start-time="2026-10-12 01:56:13Z" end-time="2026-10-12 01:56:15Z" duration="1.933710" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="12696" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="3069" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1794" result="Passed" start-time="2026-10-12 01:56:13Z" end-time="2026-10-12 01:56:15Z" duration="1.933042" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="3070" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1794" result="Passed" start-time="2026-10-12 01:56:13Z" end-time="2026-10-12 01:56:15Z" duration="1.932835" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1002" name="CommanderEconomyClarificationTests" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" testcasecount="106" result="Passed" start-time="2026-10-12 01:56:13Z" end-time="2026-10-12 01:56:15Z" duration="1.930918" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderEconomyClarification" />
+            </properties>
+            <test-case id="1093" name="CorpusMalformedVerdict_AcceptedResponseCannotRemainObservedRejection" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.CorpusMalformedVerdict_AcceptedResponseCannotRemainObservedRejection" methodname="CorpusMalformedVerdict_AcceptedResponseCannotRemainObservedRejection" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="883825208" result="Passed" start-time="2026-10-12 01:56:13Z" end-time="2026-10-12 01:56:14Z" duration="1.041507" asserts="0">
+              <properties>
+                <property name="Category" value="CommanderPhase5CCorpus" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] intent=admitted;goal-submitted=True
+]]></output>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1096" name="CorpusWrongVerdict_NonWrongResponseCannotRemainCertifiedWrong" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.CorpusWrongVerdict_NonWrongResponseCannotRemainCertifiedWrong" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-12 01:56:14Z" end-time="2026-10-12 01:56:15Z" duration="0.873138" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties>
+                <property name="Category" value="CommanderPhase5CCorpus" />
+              </properties>
+              <test-case id="1094" name="CorpusWrongVerdict_NonWrongResponseCannotRemainCertifiedWrong(&quot;{not-json&quot;)" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.CorpusWrongVerdict_NonWrongResponseCannotRemainCertifiedWrong(&quot;{not-json&quot;)" methodname="CorpusWrongVerdict_NonWrongResponseCannotRemainCertifiedWrong" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="372460047" result="Passed" start-time="2026-10-12 01:56:14Z" end-time="2026-10-12 01:56:14Z" duration="0.420052" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] context=projected;provider-request=started
+]]></output>
+              </test-case>
+              <test-case id="1095" name="CorpusWrongVerdict_NonWrongResponseCannotRemainCertifiedWrong(&quot;faithful&quot;)" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.CorpusWrongVerdict_NonWrongResponseCannotRemainCertifiedWrong(&quot;faithful&quot;)" methodname="CorpusWrongVerdict_NonWrongResponseCannotRemainCertifiedWrong" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="698544864" result="Passed" start-time="2026-10-12 01:56:14Z" end-time="2026-10-12 01:56:15Z" duration="0.443980" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] intent=admitted;goal-submitted=True
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,0 +1,40 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "f311b051848e404583effabb58edbc72",
+      "status": "failed",
+      "mode": "EditMode",
+      "started_unix_ms": 1791665515552,
+      "finished_unix_ms": 1791665517583,
+      "last_update_unix_ms": 1791665517583,
+      "progress": {
+        "completed": 18,
+        "total": 18,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791665517543,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.TooLargeRequiredMeaning_IsRejectedWithoutDispatchingOrExecutingPrefix",
+        "last_finished_unix_ms": 1791665517545,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.PreflightRejectionAfterASentRequest_ResetsAttemptCount",
+            "message": "  Expected: False\r\n  But was:  True\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.ReferencedAndAmbiguousCanonicalNames_SurviveKnowledgeRetrieval",
+            "message": "  unit:Spearman\r\n  Expected: collection containing \"unit:Spearman\"\r\n  But was:  < \"unit:1\", \"unit:0\", \"unit:13\", \"unit:6\", \"building:TownCenter\", \"building:Barracks\", \"building:House\", \"building:Tower\" >\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

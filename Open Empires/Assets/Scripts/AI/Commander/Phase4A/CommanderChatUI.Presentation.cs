@@ -1,4 +1,5 @@
 using TMPro;
+using System.Text;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -12,6 +13,17 @@ namespace OpenEmpires
         private Button compactRecord, compactCancel;
         private TMP_Text compactRecordLabel;
         private TMP_Text compactApproveLabel;
+        private TMP_Text latestRequestText, providerConnectionText, pendingQuestionText, expandedApprovalText, launcherText;
+        private TMP_Text expandedReviewText;
+        private GameObject requestRecovery, pendingQuestion, expandedApproval, expandedReview, settingsMenu;
+        private Button retryRequestButton, editRequestButton, cancelRequestButton;
+        private Button chatTabButton, tasksTabButton;
+        private RectTransform bubbleContent;
+        private string latestRequestState = "Ready", latestRequestDetail = "";
+        private long presentationTurnRevision;
+        private long pendingStrategicPresentationTurn;
+        private string recoveryDraft;
+        private bool recoveryAvailable, tasksVisible, settingsMenuVisible;
         private bool expanded;
         private int inputRevision, voiceDraftRevision;
         private string voiceOwnedDraft;
@@ -65,17 +77,20 @@ namespace OpenEmpires
             bool voiceOperation = instance.VoiceState == CommanderVoiceState.Recording
                 || instance.VoiceState == CommanderVoiceState.Transcribing
                 || instance.VoiceState == CommanderVoiceState.Preview;
-            if (!voiceOperation && !instance.voiceSetupVisible && !instance.semanticSetupVisible && !instance.expanded) return false;
+            if (!voiceOperation && !instance.voiceSetupVisible && !instance.semanticSetupVisible
+                && !instance.settingsMenuVisible && !instance.expanded) return false;
             instance.lastEscapeActionFrame = Time.frameCount;
             if (voiceOperation) instance.voiceController?.Cancel();
             else if (instance.voiceSetupVisible) instance.HideVoiceSetup();
             else if (instance.semanticSetupVisible) instance.HideSemanticSetup();
+            else if (instance.settingsMenuVisible) instance.CloseSettingsMenu();
             else instance.MinimizeCommander();
             return true;
         }
 
         public void OpenCommander()
         {
+            CloseSettingsMenu();
             expanded = true;
             UpdatePresentation();
             inputField?.ActivateInputField();
@@ -105,7 +120,210 @@ namespace OpenEmpires
         {
             voiceOwnedDraft = null;
             lastPresentationActionFrame = -1;
+            recoveryAvailable = false;
+            recoveryDraft = null;
+            tasksVisible = false;
+            settingsMenuVisible = false;
+            SetLatestRequestState("Ready", string.Empty);
             MinimizeCommander();
+        }
+
+        private void SetLatestRequestState(string state, string detail)
+        {
+            latestRequestState = state ?? "Ready";
+            latestRequestDetail = detail ?? string.Empty;
+            UpdatePresentation();
+        }
+
+        private long BeginPresentationTurn()
+        {
+            currentRequestGoalId = 0;
+            recoveryAvailable = false;
+            LastSubmittedSemanticRequestId = null;
+            return ++presentationTurnRevision;
+        }
+
+        internal long LastSubmittedUiTurnId => presentationTurnRevision;
+
+        private bool IsLatestPresentationTurn(long turn) => turn == presentationTurnRevision;
+
+        private void PublishLatestRequestState(long turn, string state, string detail)
+        {
+            if (IsLatestPresentationTurn(turn)) SetLatestRequestState(state, detail);
+        }
+
+        private void OpenSettingsMenu()
+        {
+            HideVoiceSetup();
+            HideSemanticSetup();
+            OpenCommander();
+            settingsMenuVisible = true;
+            settingsMenu?.transform.SetAsLastSibling();
+            UpdatePresentation();
+        }
+
+        private void CloseSettingsMenu()
+        {
+            settingsMenuVisible = false;
+            if (settingsMenu != null) settingsMenu.SetActive(false);
+        }
+
+        private string ProviderConnectionLabel
+        {
+            get
+            {
+                string status = SemanticSetupStatus;
+                string route = semanticProvider is OpenRouterCommanderProvider router
+                    ? router.UsesGateway ? "Luna gateway" : "OpenRouter Luna"
+                    : "Text AI";
+                if (semanticSetupMode == SemanticSetupMode.Disabled) return "Text AI: disabled";
+                if (status.Contains("setup required")) return route + ": setup required";
+                if (status.Contains("timed out")) return route + ": timed out";
+                if (status.Contains("connection failed") || status.Contains("service unavailable"))
+                    return route + ": connection issue";
+                if (status.Contains("authentication failed") || status.Contains("access forbidden"))
+                    return route + ": access issue";
+                if (status.Contains("validated semantic data")) return route + ": validated response";
+                if (semanticProvider is OpenRouterCommanderProvider) return route + ": configured, unverified";
+                return "Text AI: local translator";
+            }
+        }
+
+        private string StrategicApprovalPreview()
+        {
+            StrategicIntent pending = strategicBridge?.PendingIntent;
+            if (pending == null) return string.Empty;
+            StrategicPlan template = StrategicPlanRegistry.CreateDefault().CreatePlan(pending);
+            StrategicAdaptationProposal adaptation = pendingAdaptationProposal;
+            var preview = new StringBuilder();
+            preview.AppendLine("Strategic proposal — no new plan started.");
+            preview.AppendLine("Source: validated AI recommendation for your Commander.");
+            if (adaptation != null)
+            {
+                preview.Append("Strategy #").Append(adaptation.SourcePlanId).Append(" (")
+                    .Append(adaptation.CurrentObjective).AppendLine(") remains active until you decide.");
+                preview.AppendLine("Proposed change:");
+            }
+            else preview.AppendLine("Proposed preparation:");
+            int count = adaptation?.ProposedTargets.Count ?? template.Milestones.Count;
+            for (int i = 0; i < count; i++)
+            {
+                string name = i < template.Milestones.Count ? template.Milestones[i].Name : "Next stage";
+                preview.Append("Step ").Append(i + 1).Append(" — ").Append(name).Append(": ");
+                bool any = false;
+                if (adaptation != null)
+                {
+                    foreach (StrategicAdaptationRequest request in adaptation.ProposedTargets[i].Requests)
+                    {
+                        if (any) preview.Append("; ");
+                        preview.Append(StrategicEffect(request, i, template));
+                        any = true;
+                    }
+                }
+                else foreach (StrategicTacticalGoalRequest request in template.Milestones[i].TacticalGoals)
+                {
+                    if (any) preview.Append("; ");
+                    preview.Append(StrategicEffect(request, i, template));
+                    any = true;
+                }
+                if (!any) preview.Append("ready when earlier steps finish");
+                preview.AppendLine(".");
+            }
+            if (adaptation != null)
+                preview.AppendLine("Ordinary Approve cannot replace the active strategy. Confirm as command explicitly; existing policy may reject, coexist, or replace only an eligible AI plan. Direct player plans are never replaced.");
+            else
+                preview.AppendLine("Approve strategy uses ordinary recommendation approval. Confirm as command is a separate stronger player decision. Neither happens by opening Details.");
+            return preview.ToString();
+        }
+
+        private string StrategicEffect(StrategicAdaptationRequest request, int step, StrategicPlan template)
+        {
+            switch (request.Kind)
+            {
+                case StrategicAdaptationRequestKind.WorkerAllocation:
+                    return request.WorkerTarget + " " + request.ResourceType.ToString().ToLowerInvariant() + " workers";
+                case StrategicAdaptationRequestKind.BuildStructure:
+                    return (request.EnsureExisting == true ? "ensure " : "add ") + request.Count + " " + StrategicBuildingName(request.StructureType.Value,request.Count.Value)
+                        + (request.EnsureExisting == true ? " exists" : "");
+                case StrategicAdaptationRequestKind.EnsureUnitCount:
+                    return StrategicUnitEffect(request.UnitType.Value, request.TargetTotal.Value, step, template);
+                default: return "validated step";
+            }
+        }
+
+        private string StrategicEffect(StrategicTacticalGoalRequest request, int step, StrategicPlan template)
+        {
+            if (request is StrategicResourceAllocationGoalRequest workers)
+                return workers.WorkerTarget + " " + workers.ResourceType.ToString().ToLowerInvariant() + " workers";
+            if (request is StrategicBuildStructureGoalRequest building)
+                return (building.EnsureExisting ? "ensure " : "add ") + building.Count + " " + StrategicBuildingName(building.StructureType,building.Count)
+                    + (building.EnsureExisting ? " exists" : "");
+            if (request is StrategicEnsureUnitCountGoalRequest units)
+                return StrategicUnitEffect(units.UnitType, units.TargetTotal, step, template);
+            return "validated step";
+        }
+
+        private string StrategicUnitEffect(int unitType, int total, int step, StrategicPlan template)
+        {
+            string units = unitType == CommanderIntentCatalog.ArcherUnitType ? "archers"
+                : unitType == CommanderIntentCatalog.SpearmanUnitType ? "spearmen"
+                : CommanderIntentCatalog.GetUnitDisplayName(unitType).ToLowerInvariant() + " units";
+            string producer = "its producer";
+            if (semanticSimulation != null && semanticSimulation.TryGetProductionBuildingType(
+                pendingStrategicOwner, unitType, out BuildingType building)) producer = building.ToString();
+            int producerStep = 0;
+            for (int i = 0; i < step && i < template.Milestones.Count; i++)
+                foreach (StrategicTacticalGoalRequest request in template.Milestones[i].TacticalGoals)
+                    if (request is StrategicBuildStructureGoalRequest build && build.StructureType.ToString() == producer)
+                        producerStep = i + 1;
+            return "reach " + total + " total " + units + " after "
+                + (producerStep > 0 ? "step " + producerStep + " secures " : "securing ") + producer
+                + " (existing units count; train only the shortfall)";
+        }
+
+        private static string StrategicBuildingName(BuildingType type, int count)
+            => type == BuildingType.Tower && count > 1 ? "towers" : type.ToString();
+
+        private void CancelActiveSemanticRequest()
+        {
+            semanticRequestRevision++;
+            activeSemanticRequest?.Cancel();
+            activeSemanticRequest = null;
+            recoveryAvailable = false;
+        }
+
+        private void OfferRequestRecovery(long turn, string original, string reason)
+        {
+            if (!IsLatestPresentationTurn(turn)) return;
+            recoveryDraft = original;
+            recoveryAvailable = true;
+            SetLatestRequestState("Failed", reason);
+        }
+
+        private void RetryLatestRequest()
+        {
+            if (!recoveryAvailable || submitting || recoveryDraft == null || InputText != recoveryDraft) return;
+            recoveryAvailable = false; // one physical action consumes this recovery offer
+            _ = SubmitCurrentInputAsync();
+        }
+
+        private void EditLatestRequest()
+        {
+            if (!recoveryAvailable) return;
+            recoveryAvailable = false;
+            inputField?.ActivateInputField();
+            SetLatestRequestState("Failed", "Edit the retained draft, then Send when ready.");
+        }
+
+        private void CancelLatestRequest()
+        {
+            if (submitting)
+            {
+                retainSubmittedDraft = true;
+                CancelActiveSemanticRequest();
+            }
+            recoveryAvailable = false;
+            SetLatestRequestState("Cancelled", "No new order will be submitted from that request.");
         }
 
         private void OnDraftChanged(string value)
@@ -171,31 +389,80 @@ namespace OpenEmpires
 
         private void BuildPresentationUI()
         {
+            var transcriptViewport = transcriptScroll.viewport;
+            var bubbles = UIObject("BubbleContent", transcriptViewport.transform);
+            bubbleContent = bubbles.GetComponent<RectTransform>();
+            bubbleContent.anchorMin = new Vector2(0, 1);
+            bubbleContent.anchorMax = Vector2.one;
+            bubbleContent.pivot = new Vector2(.5f, 1);
+            bubbleContent.sizeDelta = Vector2.zero;
+            var bubbleLayout = bubbles.AddComponent<VerticalLayoutGroup>();
+            bubbleLayout.padding = new RectOffset(8, 8, 8, 8);
+            bubbleLayout.spacing = 8;
+            bubbleLayout.childControlWidth = bubbleLayout.childControlHeight = true;
+            bubbleLayout.childForceExpandWidth = true; bubbleLayout.childForceExpandHeight = false;
+            bubbles.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            transcriptScroll.content = bubbleContent;
+            transcriptText.gameObject.SetActive(false); // Retain exact transcript for API and legacy evidence.
+            RefreshChatBubbles();
             compactCommander = UIObject("CompactCommander",canvasRoot.transform);
             var rect = compactCommander.GetComponent<RectTransform>();
-            rect.anchorMin = rect.anchorMax = rect.pivot = Vector2.one;
-            // Leave the existing right-edge debug/HUD counters accessible.
-            rect.anchoredPosition = new Vector2(-110,-72); rect.sizeDelta = new Vector2(310,0);
-            compactCommander.AddComponent<Image>().color = new Color(.035f,.045f,.06f,.94f);
+            rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(0,1);
+            // Sit beside the player-list HUD rather than covering the right-side controls.
+            rect.anchoredPosition = new Vector2(350,-16); rect.sizeDelta = new Vector2(178,0);
+            compactCommander.AddComponent<Image>().color = new Color(.055f,.065f,.075f,1f);
             var layout = compactCommander.AddComponent<VerticalLayoutGroup>();
             layout.padding = new RectOffset(8,8,8,8); layout.spacing = 6;
             layout.childControlWidth = layout.childControlHeight = true;
             layout.childForceExpandWidth = true; layout.childForceExpandHeight = false;
             compactCommander.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             var open = CompactButton(compactCommander.transform,"Open","Commander",OpenCommander);
+            launcherText = open.GetComponentInChildren<TMP_Text>();
             var settings = CompactButton(compactCommander.transform,"VoiceOptions","Voice",()=>{if(voiceSetupVisible)HideVoiceSetup();else ShowVoiceSetup();});
             var textSettings = CompactButton(compactCommander.transform,"TextAIOptions","Text AI",()=>{if(semanticSetupVisible)HideSemanticSetup();else ShowSemanticSetup();});
             compactRecord = CompactButton(compactCommander.transform,"Record","● Record",OnPttButtonClicked);
             compactRecordLabel = compactRecord.GetComponentInChildren<TMP_Text>();
             compactCancel = CompactButton(compactCommander.transform,"CancelVoice","Cancel",OnVoiceCancelClicked);
-            PanelRow("Launcher",compactCommander.transform,open.gameObject,compactRecord.gameObject,compactCancel.gameObject,settings.gameObject);
+            PanelRow("Launcher",compactCommander.transform,open.gameObject);
             compactCommander.transform.Find("Launcher").SetAsFirstSibling();
-            PanelElement(textSettings.gameObject,28);
+            settings.gameObject.SetActive(false);
+            textSettings.gameObject.SetActive(false);
+            settingsMenu = UIObject("SettingsMenu", commanderPanel);
+            settingsMenu.AddComponent<Image>().color = new Color(.09f,.11f,.13f,1f);
+            PanelElement(settingsMenu, 274);
+            settingsMenu.GetComponent<LayoutElement>().ignoreLayout = true;
+            SetRect(settingsMenu.GetComponent<RectTransform>(), Vector2.zero, Vector2.one,
+                new Vector2(8,8), new Vector2(-8,-46));
+            var settingsLayout = settingsMenu.AddComponent<VerticalLayoutGroup>();
+            settingsLayout.padding = new RectOffset(6,6,6,6); settingsLayout.spacing = 5;
+            settingsLayout.childControlWidth = settingsLayout.childControlHeight = true;
+            settingsLayout.childForceExpandWidth = true; settingsLayout.childForceExpandHeight = false;
+            var settingsHeading = Text("Heading",settingsMenu.transform,"SETTINGS",13,TextAlignmentOptions.Left);
+            settingsHeading.richText = false; PanelElement(settingsHeading.gameObject,18);
+            PanelElement(CompactButton(settingsMenu.transform,"VoiceSettings","Voice settings",()=>
+            {CloseSettingsMenu();ShowVoiceSetup();}).gameObject,32);
+            PanelElement(CompactButton(settingsMenu.transform,"TextAISettings","Text AI settings",()=>
+            {CloseSettingsMenu();ShowSemanticSetup();}).gameObject,32);
+            PanelElement(CompactButton(settingsMenu.transform,"CaptureEvidence","Capture UI evidence",()=>
+            {CloseSettingsMenu();RequestEvidenceScreenshot();}).gameObject,32);
+            localObservationToggle = CompactButton(settingsMenu.transform, "LocalMetricsToggle",
+                "Record local metrics: Off", ToggleLocalObservationRecording);
+            PanelElement(localObservationToggle.gameObject, 32);
+            PanelElement(CompactButton(settingsMenu.transform, "ExportLocalMetrics",
+                "Export local metrics", ExportLocalObservations).gameObject, 32);
+            var observationNote = Text("LocalMetricsNote", settingsMenu.transform,
+                "Opt-in, local only. No upload or automatic orders.", 10, TextAlignmentOptions.Left);
+            observationNote.richText = false; PanelElement(observationNote.gameObject, 28);
+            PanelElement(CompactButton(settingsMenu.transform,"CloseSettings","Close",CloseSettingsMenu).gameObject,32);
+            settingsMenu.SetActive(false);
             compactStatus = Text("Status",compactCommander.transform,"Preparing Commander…",12,TextAlignmentOptions.Left);
-            compactStatus.richText = false; PanelElement(compactStatus.gameObject,38);
+            compactStatus.richText = false; PanelElement(compactStatus.gameObject,28);
             BuildTaskBoardUI();
             BuildVoiceSetupUI();
             BuildSemanticSetupUI();
+            DockSetupCard(voiceSetupCard);
+            DockSetupCard(semanticSetupCard);
+            settingsMenu.transform.SetAsLastSibling();
             compactReview = ReviewCard("TranscriptReview","Review transcript — not submitted",out compactReviewText,
                 new[]{"Send","Edit","Discard"},new UnityEngine.Events.UnityAction[]{()=>{_ = SubmitCurrentInputAsync();},OpenCommander,OnVoiceCancelClicked});
             compactApproval = ReviewCard("PlanApproval","Plan approval — not started",out compactApprovalText,
@@ -203,14 +470,178 @@ namespace OpenEmpires
                     ()=>{if(pendingActionPlan!=null)HandleActionPlanControl("approve plan");else OpenCommander();},
                     ()=>{if(pendingActionPlan!=null)HandleActionPlanControl("cancel plan");else DismissStrategicRecommendation();}});
             compactApproveLabel = compactApproval.transform.Find("Actions/Action1").GetComponentInChildren<TMP_Text>();
+            var title = commanderPanel.Find("Title")?.GetComponent<TMP_Text>();
+            if (title != null) title.text = "COMMANDER";
+            commanderPanel.GetComponent<Image>().color = new Color(.065f,.075f,.085f,1f);
+            latestRequestText = Text("LatestRequest",commanderPanel,"Ready",14,TextAlignmentOptions.Left);
+            latestRequestText.richText = false; PanelElement(latestRequestText.gameObject,36);
+            providerConnectionText = Text("ProviderConnection",commanderPanel,"Text AI: local translator",12,TextAlignmentOptions.Left);
+            providerConnectionText.richText = false; PanelElement(providerConnectionText.gameObject,18);
+            providerConnectionText.transform.SetSiblingIndex(2);
+            latestRequestText.transform.SetSiblingIndex(3);
+            var chat = CompactButton(commanderPanel,"ChatTab","Chat",()=>{tasksVisible=false;UpdatePresentation();});
+            var tasks = CompactButton(commanderPanel,"TasksTab","Tasks",()=>
+            {tasksVisible=true;UpdateStrategicHostControls();UpdatePresentation();});
+            chatTabButton = chat; tasksTabButton = tasks;
+            var views = PanelRow("Views",commanderPanel,chat.gameObject,tasks.gameObject);
+            views.transform.SetSiblingIndex(4);
+            var settingsButton = CompactButton(commanderPanel,"Settings","Settings",OpenSettingsMenu);
+            PanelElement(settingsButton.gameObject,28);
+            settingsButton.GetComponent<LayoutElement>().ignoreLayout = true;
+            SetRect(settingsButton.GetComponent<RectTransform>(),Vector2.one,Vector2.one,new Vector2(-122,-37),new Vector2(-52,-9));
             var minimize = CompactButton(commanderPanel,"Minimize","Minimize Commander",MinimizeCommander);
             PanelElement(minimize.gameObject,32);
             minimize.GetComponent<LayoutElement>().ignoreLayout = true;
-            SetRect(minimize.GetComponent<RectTransform>(),Vector2.one,Vector2.one,new Vector2(-150,-38),new Vector2(-12,-10));
+            minimize.GetComponentInChildren<TMP_Text>().text="−";
+            SetRect(minimize.GetComponent<RectTransform>(),Vector2.one,Vector2.one,new Vector2(-44,-37),new Vector2(-12,-9));
+            pendingQuestion = UIObject("PendingClarification",commanderPanel);
+            pendingQuestion.AddComponent<Image>().color = new Color(.14f,.19f,.23f,1f);
+            pendingQuestionText = Text("Question",pendingQuestion.transform,"",14,TextAlignmentOptions.Left);
+            pendingQuestionText.richText=false;
+            SetRect(pendingQuestionText.rectTransform,Vector2.zero,Vector2.one,new Vector2(8,4),new Vector2(-8,-4));
+            PanelElement(pendingQuestion,64);pendingQuestion.transform.SetSiblingIndex(5);
+            expandedApproval = UIObject("Approval",commanderPanel);
+            expandedApproval.AddComponent<Image>().color = new Color(.14f,.19f,.23f,1f);
+            PanelElement(expandedApproval,168,true);expandedApproval.transform.SetSiblingIndex(6);
+            var approvalScroll = UIObject("PreviewScroll",expandedApproval.transform);
+            SetRect(approvalScroll.GetComponent<RectTransform>(),Vector2.zero,Vector2.one,
+                new Vector2(8,44),new Vector2(-8,-8));
+            var approvalScrollRect = approvalScroll.AddComponent<ScrollRect>();
+            approvalScrollRect.horizontal=false;
+            approvalScrollRect.vertical=true;
+            approvalScrollRect.movementType=ScrollRect.MovementType.Clamped;
+            var approvalViewport=UIObject("Viewport",approvalScroll.transform);
+            SetRect(approvalViewport.GetComponent<RectTransform>(),Vector2.zero,Vector2.one,
+                Vector2.zero,Vector2.zero);
+            approvalViewport.AddComponent<Image>().color=new Color(0,0,0,.1f);
+            approvalViewport.AddComponent<RectMask2D>();
+            approvalScrollRect.viewport=approvalViewport.GetComponent<RectTransform>();
+            expandedApprovalText=Text("Details",approvalViewport.transform,"",14,TextAlignmentOptions.TopLeft);
+            expandedApprovalText.richText=false;
+            expandedApprovalText.textWrappingMode=TextWrappingModes.Normal;
+            expandedApprovalText.rectTransform.anchorMin=new Vector2(0,1);
+            expandedApprovalText.rectTransform.anchorMax=Vector2.one;
+            expandedApprovalText.rectTransform.pivot=new Vector2(.5f,1);
+            expandedApprovalText.rectTransform.sizeDelta=Vector2.zero;
+            expandedApprovalText.gameObject.AddComponent<ContentSizeFitter>().verticalFit=ContentSizeFitter.FitMode.PreferredSize;
+            approvalScrollRect.content=expandedApprovalText.rectTransform;
+            var approvePlan=CompactButton(expandedApproval.transform,"ApprovePlan","Approve plan",()=>HandleActionPlanControl("approve plan"));
+            SetRect(approvePlan.GetComponent<RectTransform>(),new Vector2(0,0),new Vector2(.5f,0),
+                new Vector2(8,7),new Vector2(-4,37));
+            var rejectPlan=CompactButton(expandedApproval.transform,"RejectPlan","Reject plan",()=>HandleActionPlanControl("cancel plan"));
+            SetRect(rejectPlan.GetComponent<RectTransform>(),new Vector2(.5f,0),new Vector2(1,0),
+                new Vector2(4,7),new Vector2(-8,37));
+            var approveStrategy=CompactButton(expandedApproval.transform,"ApproveStrategy","Approve strategy",()=>
+            {ApproveStrategicRecommendation();UpdatePresentation();});
+            SetRect(approveStrategy.GetComponent<RectTransform>(),new Vector2(0,0),new Vector2(1f/3f,0),
+                new Vector2(8,7),new Vector2(-4,37));
+            var confirmStrategy=CompactButton(expandedApproval.transform,"ConfirmStrategy","Confirm as command",()=>
+            {ConfirmStrategicCommand();UpdatePresentation();});
+            SetRect(confirmStrategy.GetComponent<RectTransform>(),new Vector2(1f/3f,0),new Vector2(2f/3f,0),
+                new Vector2(4,7),new Vector2(-4,37));
+            var dismissStrategy=CompactButton(expandedApproval.transform,"DismissStrategy","Dismiss",()=>
+            {DismissStrategicRecommendation();UpdatePresentation();});
+            SetRect(dismissStrategy.GetComponent<RectTransform>(),new Vector2(2f/3f,0),new Vector2(1,0),
+                new Vector2(4,7),new Vector2(-8,37));
+            requestRecovery = UIObject("RequestRecovery",commanderPanel);
+            retryRequestButton=CompactButton(requestRecovery.transform,"Retry","Retry",RetryLatestRequest);
+            editRequestButton=CompactButton(requestRecovery.transform,"Edit","Edit",EditLatestRequest);
+            cancelRequestButton=CompactButton(requestRecovery.transform,"Cancel","Cancel",CancelLatestRequest);
+            var recoveryLayout=requestRecovery.AddComponent<HorizontalLayoutGroup>();
+            recoveryLayout.spacing=8; recoveryLayout.childControlWidth=recoveryLayout.childControlHeight=true;
+            recoveryLayout.childForceExpandWidth=true;recoveryLayout.childForceExpandHeight=true;
+            PanelElement(requestRecovery,36);
+            expandedReview=UIObject("VoiceReview",commanderPanel);
+            expandedReview.AddComponent<Image>().color=new Color(.13f,.19f,.21f,1f);
+            PanelElement(expandedReview,68);
+            expandedReviewText=Text("ReviewText",expandedReview.transform,
+                "Reviewed transcript — not sent",13,TextAlignmentOptions.Left);
+            expandedReviewText.richText=false;
+            SetRect(expandedReviewText.rectTransform,new Vector2(0,1),Vector2.one,
+                new Vector2(8,-25),new Vector2(-8,-4));
+            var sendReviewed=CompactButton(expandedReview.transform,"SendReviewed","Send reviewed",()=>{_ = SubmitCurrentInputAsync();});
+            var editReviewed=CompactButton(expandedReview.transform,"EditReviewed","Edit",()=>inputField?.ActivateInputField());
+            var discardReviewed=CompactButton(expandedReview.transform,"DiscardReviewed","Discard",OnVoiceCancelClicked);
+            SetRect(sendReviewed.GetComponent<RectTransform>(),new Vector2(0,0),new Vector2(.5f,0),new Vector2(8,5),new Vector2(-4,35));
+            SetRect(editReviewed.GetComponent<RectTransform>(),new Vector2(.5f,0),new Vector2(.75f,0),new Vector2(4,5),new Vector2(-4,35));
+            SetRect(discardReviewed.GetComponent<RectTransform>(),new Vector2(.75f,0),new Vector2(1,0),new Vector2(4,5),new Vector2(-8,35));
             inputLengthText = Text("RequestLength",commanderPanel,"0 / 1024 characters",11,TextAlignmentOptions.Left);
             inputLengthText.richText = false; PanelElement(inputLengthText.gameObject,18);
+            requestRecovery.transform.SetSiblingIndex(commanderPanel.childCount-4);
+            expandedReview.transform.SetSiblingIndex(commanderPanel.childCount-3);
+            inputLengthText.transform.SetSiblingIndex(commanderPanel.childCount-2);
+            var inputRow=commanderPanel.Find("TextSubmission");
+            if(inputRow!=null)
+            {
+                inputRow.SetAsLastSibling();
+                var composerLayout=inputRow.GetComponent<HorizontalLayoutGroup>();
+                composerLayout.childForceExpandWidth=false;
+                composerLayout.childForceExpandHeight=true;
+                var inputLayout=inputRow.Find("Input")?.GetComponent<LayoutElement>();
+                if(inputLayout!=null)
+                {
+                    inputLayout.minHeight=inputLayout.preferredHeight=64;
+                    inputLayout.flexibleWidth=1;
+                }
+                var sendLayout=inputRow.Find("Send")?.GetComponent<LayoutElement>();
+                if(sendLayout!=null)
+                {
+                    sendLayout.minHeight=sendLayout.preferredHeight=64;
+                    sendLayout.preferredWidth=76;
+                    sendLayout.flexibleWidth=0;
+                }
+            }
+            var inputRect=commanderPanel.Find("TextSubmission/Input")?.GetComponent<RectTransform>();
+            if(inputRect!=null)
+            {
+                inputRect.parent.GetComponent<LayoutElement>().minHeight=68;
+                inputRect.parent.GetComponent<LayoutElement>().preferredHeight=68;
+                inputRect.GetComponent<Image>().color=new Color(.12f,.14f,.16f,1f);
+            }
+            inputField.lineType=TMP_InputField.LineType.MultiLineNewline;
+            inputField.textComponent.fontSize=14;
+            transcriptText.fontSize=15;
+            var transcriptImage=transcriptScroll.GetComponent<Image>();
+            if(transcriptImage!=null)transcriptImage.color=new Color(.09f,.105f,.12f,1f);
             inputField.onValueChanged.AddListener(OnDraftChanged);
             UpdatePresentation();
+        }
+
+        private void RefreshChatBubbles()
+        {
+            if (bubbleContent == null) return;
+            for (int i = bubbleContent.childCount - 1; i >= 0; i--)
+            {
+                var old = bubbleContent.GetChild(i);
+                old.SetParent(null, false);
+                if (Application.isPlaying) Destroy(old.gameObject); else DestroyImmediate(old.gameObject);
+            }
+            foreach (string entry in transcriptEntries)
+            {
+                int marker = entry.IndexOf(':');
+                string speaker = marker < 0 ? "Commander" : entry.Substring(0, marker);
+                string body = marker < 0 ? entry : entry.Substring(marker + 1).Trim();
+                bool player = speaker == "Player";
+                var bubble = UIObject(player ? "PlayerBubble" : "CommanderBubble", bubbleContent);
+                bubble.AddComponent<Image>().color = player
+                    ? new Color(.17f, .28f, .33f, 1f) : new Color(.13f, .15f, .17f, 1f);
+                var layout = bubble.AddComponent<VerticalLayoutGroup>();
+                layout.padding = new RectOffset(10, 10, 8, 8);
+                layout.spacing = 4;
+                layout.childControlWidth = layout.childControlHeight = true;
+                layout.childForceExpandWidth = true; layout.childForceExpandHeight = false;
+                var name = Text("Speaker", bubble.transform, player ? "YOU" : "COMMANDER", 12,
+                    TextAlignmentOptions.Left);
+                name.richText = false; name.color = new Color(.6f, .83f, .87f, 1f);
+                PanelElement(name.gameObject, 16);
+                var message = Text("Message", bubble.transform, body, 15, TextAlignmentOptions.Left);
+                message.richText = false;
+                message.textWrappingMode = TextWrappingModes.Normal;
+                message.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+                bubble.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            }
+            Canvas.ForceUpdateCanvases();
+            transcriptScroll.verticalNormalizedPosition = 0;
         }
 
         private void UpdatePresentation()
@@ -218,30 +649,115 @@ namespace OpenEmpires
             if (compactCommander == null) return;
             RefreshTaskBoard();
             RefreshSemanticSetupStatus();
+            bool reviewing = VoiceState == CommanderVoiceState.Preview;
+            bool strategicChatApproval = !tasksVisible && strategicBridge?.PendingIntent != null;
             if (commanderPanel != null) commanderPanel.gameObject.SetActive(expanded);
             compactCommander.SetActive(!expanded);
+            // LatestRequest is the visible lifecycle source; keep the legacy text only
+            // as internal state so stale provider/debug status cannot crowd the dock.
+            if (commanderStatusText != null) commanderStatusText.gameObject.SetActive(false);
+            if (currentPlanStatusText != null)
+                currentPlanStatusText.gameObject.SetActive(selectedPlanId != 0 && !strategicChatApproval);
+            if (strategicChatApproval && strategicHostRow != null) strategicHostRow.SetActive(false);
+            if (voiceRootObject != null)
+            {
+                bool voiceNeedsStatus = VoiceState == CommanderVoiceState.Recording
+                    || VoiceState == CommanderVoiceState.Transcribing
+                    || VoiceState == CommanderVoiceState.Error;
+                voiceRootObject.GetComponent<LayoutElement>().minHeight = voiceNeedsStatus ? 56 : 36;
+                voiceRootObject.GetComponent<LayoutElement>().preferredHeight = voiceNeedsStatus ? 56 : 36;
+                if (voiceStatusText != null) voiceStatusText.gameObject.SetActive(voiceNeedsStatus);
+                voiceRootObject.SetActive(!reviewing);
+            }
+            if (latestRequestText != null)
+            {
+                string detail=latestRequestDetail.Length>90?latestRequestDetail.Substring(0,87)+"…":latestRequestDetail;
+                latestRequestText.text=latestRequestState+(detail.Length==0?"":" — "+detail);
+            }
+            if (providerConnectionText != null) providerConnectionText.text = ProviderConnectionLabel;
+            if (settingsMenu != null) settingsMenu.SetActive(settingsMenuVisible && !voiceSetupVisible && !semanticSetupVisible && expanded);
+            if (launcherText != null) launcherText.text="Commander"+(taskBadgeText!=null&&taskBadgeText.gameObject.activeSelf?" • "+taskBadgeText.text:"")
+                +(pendingClarification!=null||pendingActionPlan!=null||recoveryAvailable?" !":"");
+            if(chatTabButton!=null)chatTabButton.GetComponent<Image>().color=tasksVisible?new Color(.13f,.15f,.17f,1f):new Color(.19f,.34f,.42f,1f);
+            if(tasksTabButton!=null)tasksTabButton.GetComponent<Image>().color=tasksVisible?new Color(.19f,.34f,.42f,1f):new Color(.13f,.15f,.17f,1f);
+            bool hasApproval = pendingActionPlan!=null||strategicBridge?.PendingIntent!=null;
+            // A pending preview replaces Chat's transcript scroll, rather than
+            // nesting an approval scroller alongside the conversation scroller.
+            if(transcriptScroll!=null)transcriptScroll.gameObject.SetActive(!tasksVisible&&!hasApproval);
+            if(taskBoardScroll!=null)taskBoardScroll.gameObject.SetActive(tasksVisible);
+            if(pendingQuestion!=null)
+            {
+                pendingQuestion.SetActive(pendingClarification!=null);
+                if(pendingClarification!=null)pendingQuestionText.text="Needs clarification — "+pendingClarification.Question;
+            }
+            if(expandedApproval!=null)
+            {
+                expandedApproval.SetActive(hasApproval&&!tasksVisible);
+                if(hasApproval)expandedApprovalText.text=pendingActionPlan?.Preview??StrategicApprovalPreview();
+                var approvePlan=expandedApproval.transform.Find("ApprovePlan");
+                var rejectPlan=expandedApproval.transform.Find("RejectPlan");
+                if(approvePlan!=null)approvePlan.gameObject.SetActive(pendingActionPlan!=null);
+                if(rejectPlan!=null)rejectPlan.gameObject.SetActive(pendingActionPlan!=null);
+                bool strategicOnly=pendingActionPlan==null&&strategicBridge?.PendingIntent!=null;
+                var approveStrategy=expandedApproval.transform.Find("ApproveStrategy");
+                var confirmStrategy=expandedApproval.transform.Find("ConfirmStrategy");
+                var dismissStrategy=expandedApproval.transform.Find("DismissStrategy");
+                if(approveStrategy!=null)
+                {
+                    approveStrategy.gameObject.SetActive(strategicOnly);
+                    approveStrategy.GetComponent<Button>().interactable=strategicOnly&&pendingAdaptationProposal==null&&!submitting;
+                    approveStrategy.GetComponent<Image>().color=pendingAdaptationProposal==null
+                        ?new Color(.18f,.29f,.42f,1f):new Color(.12f,.14f,.16f,1f);
+                    approveStrategy.GetComponentInChildren<TMP_Text>().color=pendingAdaptationProposal==null
+                        ?Color.white:new Color(.55f,.59f,.62f,1f);
+                }
+                if(confirmStrategy!=null)
+                {
+                    confirmStrategy.gameObject.SetActive(strategicOnly);
+                    confirmStrategy.GetComponent<Button>().interactable=strategicOnly&&!submitting;
+                }
+                if(dismissStrategy!=null)dismissStrategy.gameObject.SetActive(strategicOnly);
+            }
+            if(requestRecovery!=null)requestRecovery.SetActive(recoveryAvailable||submitting&&semanticProvider!=null);
+            if(expandedReview!=null)
+            {
+                expandedReview.SetActive(reviewing);
+                if(reviewing)expandedReviewText.text="Reviewed transcript — not sent. Edit or Send: "
+                    +(InputText.Length>72?InputText.Substring(0,69)+"…":InputText);
+            }
+            if(retryRequestButton!=null)retryRequestButton.gameObject.SetActive(recoveryAvailable);
+            if(editRequestButton!=null)editRequestButton.gameObject.SetActive(recoveryAvailable);
+            if(cancelRequestButton!=null)cancelRequestButton.gameObject.SetActive(recoveryAvailable||submitting&&semanticProvider!=null);
             BoundSetupCard(voiceSetupCard,532);
             BoundSetupCard(semanticSetupCard,336);
-            bool reviewing = VoiceState == CommanderVoiceState.Preview;
-            compactReview.SetActive(reviewing);
+            compactReview.SetActive(false);
             bool approving = pendingActionPlan != null || strategicBridge?.PendingIntent != null;
-            compactApproval.SetActive(approving);
+            compactApproval.SetActive(false);
             compactApproveLabel.text = pendingActionPlan != null ? "Approve plan" : "Review strategy";
             if (reviewing) compactReviewText.text = InputText;
-            if (approving) compactApprovalText.text = pendingActionPlan?.Preview
-                ?? "A strategy is awaiting consent. Open Details to review it and use the existing strategy confirmation controls.";
+            if (approving) compactApprovalText.text = pendingActionPlan?.Preview ?? StrategicApprovalPreview();
             bool busy = VoiceState == CommanderVoiceState.Recording || VoiceState == CommanderVoiceState.Transcribing;
-            compactCancel.gameObject.SetActive(busy);
+            compactCancel.gameObject.SetActive(false);
             compactRecord.interactable = voiceController != null && !submitting && CommanderVoiceSettings.VoiceEnabled
                 && (VoiceState == CommanderVoiceState.Idle || VoiceState == CommanderVoiceState.Error || VoiceState == CommanderVoiceState.Recording);
-            compactRecordLabel.text = VoiceState == CommanderVoiceState.Recording ? "■ Stop" : "● Record";
-            compactStatus.text = VoiceState == CommanderVoiceState.Recording ? VoiceCaptureActivityLabel
-                : VoiceState == CommanderVoiceState.Transcribing ? "Transcribing — Cancel available"
-                : VoiceState == CommanderVoiceState.Error ? "Voice unavailable — open Commander for details"
-                : submitting ? "Interpreting your request…"
-                : approving ? "Awaiting approval — no new plan started"
-                : reviewing ? "Transcript ready — review before Send"
-                : (commanderStatusText?.text ?? "Commander ready") + "\n"+CurrentVoiceModeLabel+" — hold " + ResolvePttKey()+" ("+VoiceCaptureLimitLabel+")";
+            compactRecord.gameObject.SetActive(false);
+            compactStatus.text = VoiceState == CommanderVoiceState.Recording
+                ? ((voiceAudioCapture is ICommanderCaptureReadiness ready && !ready.IsListening)
+                    ? "Mic opening • " : "Listening • ") + VoiceCaptureLimitLabel.Replace(" limit", "")
+                : VoiceState == CommanderVoiceState.Transcribing ? "Transcribing"
+                : VoiceState == CommanderVoiceState.Error ? "Voice unavailable"
+                : submitting ? "Interpreting"
+                : approving ? "Approval needed"
+                : reviewing ? "Review transcript"
+                : latestRequestState.Length > 30 ? latestRequestState.Substring(0,27) + "…" : latestRequestState;
+        }
+        private void DockSetupCard(GameObject card)
+        {
+            if (card == null) return;
+            card.transform.SetParent(commanderPanel, false);
+            card.GetComponent<LayoutElement>().ignoreLayout = true;
+            SetRect(card.GetComponent<RectTransform>(), Vector2.zero, Vector2.one,
+                new Vector2(8,8), new Vector2(-8,-46));
         }
         private void MakeSetupScrollable(GameObject card)
         {

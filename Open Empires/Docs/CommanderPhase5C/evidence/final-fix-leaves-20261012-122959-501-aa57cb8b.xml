@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 12:29:59Z" end-time="2026-10-12 12:30:12Z" duration="12.5800998">
+  <test-suite type="TestSuite" id="3413" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="260" result="Failed" site="Child" start-time="2026-10-12 12:29:59Z" end-time="2026-10-12 12:30:12Z" duration="12.580100" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="3407" name="OpenEmpires.PlayModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.PlayModeTests.dll" runstate="Runnable" testcasecount="260" result="Failed" site="Child" start-time="2026-10-12 12:29:59Z" end-time="2026-10-12 12:30:12Z" duration="12.522026" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="25412" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="3408" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="260" result="Failed" site="Child" start-time="2026-10-12 12:29:59Z" end-time="2026-10-12 12:30:12Z" duration="12.488528" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="3409" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="260" result="Failed" site="Child" start-time="2026-10-12 12:29:59Z" end-time="2026-10-12 12:30:12Z" duration="12.455422" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="3365" name="CommanderPhase5CLiveHouseDiagnosticTests" fullname="OpenEmpires.Tests.CommanderPhase5CLiveHouseDiagnosticTests" classname="OpenEmpires.Tests.CommanderPhase5CLiveHouseDiagnosticTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-12 12:29:59Z" end-time="2026-10-12 12:30:12Z" duration="12.421687" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderLiveProvider" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="3367" name="BuildAHouse_ActualSampleSceneUiAndNativeCompletion" fullname="OpenEmpires.Tests.CommanderPhase5CLiveHouseDiagnosticTests.BuildAHouse_ActualSampleSceneUiAndNativeCompletion" methodname="BuildAHouse_ActualSampleSceneUiAndNativeCompletion" classname="OpenEmpires.Tests.CommanderPhase5CLiveHouseDiagnosticTests" runstate="Runnable" seed="2146602120" result="Failed" start-time="2026-10-12 12:29:59Z" end-time="2026-10-12 12:30:12Z" duration="12.339901" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Real UI did not stage an actionable House preview.
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5CLiveHouseDiagnosticTests+<BuildAHouse_ActualSampleSceneUiAndNativeCompletion>d__5.MoveNext () [0x00b1c] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\PlayMode\CommanderPhase5CLiveHouseDiagnosticTests.cs:301
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] Local 1v1 QA match enabled at 10x time scale.
+[MapRenderer] Loaded 12 tree materials with Billboard shader
+[MapRenderer] Spawned 2487 resource nodes. Running static batching...
+GameSetup complete: 40 units, map 256x256
+[SyncCheck] Map=Albion Lowlands MapSeed=42 Players=2 Teams=[0,1] AI=[1]
+[SyncCheck] Tick0 Checksum=52864BD7
+[SyncCheck] tick=0 units=40:F0AAF814 blds=2:00007D01 teams=00000001 resNodes=2487:BFD97388 playerRes=26CBDC38
+[SinglePlayerAnalytics] Session started: ece68b82-0602-4dfd-9538-5c284ab946d5
+[SyncCheck] tick=1 checksum=6E3A71C4
+[LlmAiInitiator] AI-initiated chat disabled: GEMINI_API_KEY not found.
+[SyncCheck] tick=2 checksum=3458BCDE
+[SyncCheck] tick=3 checksum=0BB57E0D
+[SyncCheck] tick=4 checksum=8A5DA607
+[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-12T12:30:06.7741409Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[SyncCheck] tick=5 checksum=CA308135
+[SyncCheck] tick=6 checksum=8FEA942B
+[SyncCheck] tick=7 checksum=E44384D9
+[SyncCheck] tick=8 checksum=AF3A0C2C
+[SyncCheck] tick=9 checksum=B3831247
+[SyncCheck] tick=10 checksum=C3067E0A
+[SyncCheck] tick=11 checksum=8456EEAA
+[SyncCheck] tick=12 checksum=7FDE5C43
+[SyncCheck] tick=13 checksum=8A0CA810
+[SyncCheck] tick=14 checksum=EFD05854
+[SyncCheck] tick=15 checksum=8B3E667B
+[SyncCheck] tick=16 checksum=39929C53
+[SyncCheck] tick=17 checksum=B8199F25
+[SyncCheck] tick=18 checksum=C5D4BF22
+[SyncCheck] tick=19 checksum=F0132FE6
+[SyncCheck] tick=20 checksum=D550E62C
+[SyncCheck] tick=21 checksum=1131B289
+[SyncCheck] tick=22 checksum=FFBBADA7
+[SyncCheck] tick=23 checksum=A7441DA6
+[SyncCheck] tick=24 checksum=16D7002B
+[SyncCheck] tick=25 checksum=3783746D
+[SyncCheck] tick=26 checksum=FCB65B0D
+[SyncCheck] tick=27 checksum=8EF1B1F1
+[SyncCheck] tick=28 checksum=27464350
+[SyncCheck] tick=29 checksum=12AB202B
+[SyncCheck] tick=30 checksum=C4122CBF
+[SyncCheck] tick=31 checksum=A8220AC5
+[SyncCheck] tick=32 checksum=AF808C3C
+[SyncCheck] tick=33 checksum=F73B3BCE
+[SyncCheck] tick=34 checksum=94BC7024
+[SyncCheck] tick=35 checksum=81AF475A
+[SyncCheck] tick=36 checksum=5D535E26
+[SyncCheck] tick=37 checksum=A11DF21D
+[SyncCheck] tick=38 checksum=028E6F3A
+[SyncCheck] tick=39 checksum=D990BBED
+[SyncCheck] tick=40 checksum=3B1E5BFF
+[SyncCheck] tick=41 checksum=FA7138CF
+[SyncCheck] tick=42 checksum=594CCA50
+[SyncCheck] tick=43 checksum=29842837
+[SyncCheck] tick=44 checksum=51DB82CF
+[SyncCheck] tick=45 checksum=E8A68827
+[SyncCheck] tick=46 checksum=74EBEE2B
+[SyncCheck] tick=47 checksum=67D15512
+[SyncCheck] tick=48 checksum=71FE0A1A
+[SyncCheck] tick=49 checksum=58FE2957
+[SyncCheck] tick=50 checksum=90C2A882
+[SyncCheck] tick=51 checksum=36888365
+[SyncCheck] tick=52 checksum=A92730BF
+[SyncCheck] tick=53 checksum=ADD0D5B8
+[SyncCheck] tick=54 checksum=E97C9D9A
+[SyncCheck] tick=55 checksum=51CA57CE
+[SyncCheck] tick=56 checksum=3B39A925
+[SyncCheck] tick=57 checksum=9E848B02
+[SyncCheck] tick=58 checksum=CE2A4FBE
+[SyncCheck] tick=59 checksum=89CDF87E
+[SyncCheck] tick=60 checksum=7090676E
+[SyncCheck] tick=61 checksum=CE500888
+[SyncCheck] tick=62 checksum=3F4446CD
+[SyncCheck] tick=63 checksum=336A8306
+[SyncCheck] tick=64 checksum=EBA3BE02
+[SyncCheck] tick=65 checksum=DE4F5E24
+[SyncCheck] tick=66 checksum=77DFAB4E
+[SyncCheck] tick=67 checksum=08AD01B2
+[SyncCheck] tick=68 checksum=1C9A37A9
+[SyncCheck] tick=69 checksum=5D7CF1BF
+[SyncCheck] tick=70 checksum=53C6DE0E
+[SyncCheck] tick=71 checksum=E975F2D2
+[SyncCheck] tick=72 checksum=3F3793FF
+[SyncCheck] tick=73 checksum=F3439272
+[SyncCheck] tick=74 checksum=8D686B6E
+[SyncCheck] tick=75 checksum=D556A64C
+[SyncCheck] tick=76 checksum=CE448362
+[SyncCheck] tick=77 checksum=FDCF705E
+[SyncCheck] tick=78 checksum=F126576C
+[SyncCheck] tick=79 checksum=E690E314
+[SyncCheck] tick=80 checksum=2A5509EA
+[SyncCheck] tick=81 checksum=2E8E8440
+[SyncCheck] tick=82 checksum=AD952784
+[SyncCheck] tick=83 checksum=5CAECEC7
+[SyncCheck] tick=84 checksum=58D7DE99
+[SyncCheck] tick=85 checksum=3C6895FB
+[SyncCheck] tick=86 checksum=DF245EDF
+[SyncCheck] tick=87 checksum=41F75030
+[SyncCheck] tick=88 checksum=8B96BF47
+[SyncCheck] tick=89 checksum=B4EEAE45
+[SyncCheck] tick=90 checksum=409547FB
+[SyncCheck] tick=91 checksum=3230A76F
+[SyncCheck] tick=92 checksum=90E98033
+[SyncCheck] tick=93 checksum=924696F2
+[SyncCheck] tick=94 checksum=02E7F843
+[SyncCheck] tick=95 checksum=067F4B75
+[SyncCheck] tick=96 checksum=76EB7506
+[SyncCheck] tick=97 checksum=B27B207F
+[SyncCheck] tick=98 checksum=3B8533B8
+[SyncCheck] tick=99 checksum=D3914A3E
+[SyncCheck] tick=100 checksum=97EDA93D
+[Commander] Goal #1 submitted: BuildStructure
+[Commander] intent=admitted;goal-submitted=True
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: D:\unity_projects\OpenEmpires\Open Empires\Docs\CommanderPhase5C\evidence\final-fix-leaves-20261012-122959-501-aa57cb8b.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -12,6 +12,7 @@ namespace OpenEmpires
         private RectTransform taskBoardContent;
         private string taskBoardFingerprint;
         private int currentRequestGoalId;
+        private bool taskHistoryExpanded;
 
         private void TrackCurrentRequest(CommanderIntentSubmission submission)
         {
@@ -25,8 +26,8 @@ namespace OpenEmpires
             taskBadgeText.richText = false;
             PanelElement(taskBadgeText.gameObject, 20);
             var board = UIObject("TaskBoard", commanderPanel);
-            board.AddComponent<Image>().color = new Color(.045f, .065f, .09f, .97f);
-            PanelElement(board, 90);
+            board.AddComponent<Image>().color = new Color(.09f, .105f, .12f, 1f);
+            PanelElement(board, 140, true);
             taskBoardScroll = board.AddComponent<ScrollRect>();
             taskBoardScroll.horizontal = false;
             taskBoardScroll.vertical = true;
@@ -57,6 +58,7 @@ namespace OpenEmpires
             transcriptLayout.minHeight = 70;
             transcriptLayout.preferredHeight = 70;
             taskBoardFingerprint = null;
+            taskHistoryExpanded = false;
             RefreshTaskBoard();
         }
 
@@ -65,10 +67,14 @@ namespace OpenEmpires
             if (taskBadgeText == null || taskBoardContent == null) return;
             var snapshot = CommanderTaskBoardProjection.Capture(semanticGoalManager,
                 strategicPipeline?.StrategicPlanner, runtimeGeneration);
+            if (localObservationStore != null)
+                foreach (var card in snapshot.Cards)
+                    if (card.RequestId > 0)
+                        localObservationStore.ObserveTaskCard(card.RequestId, card.Generation, card.Status);
             RefreshCurrentRequestStatus(snapshot);
             taskBadgeText.text = snapshot.ActiveCount + " active task" + (snapshot.ActiveCount == 1 ? "" : "s");
             taskBadgeText.gameObject.SetActive(snapshot.ActiveCount > 0);
-            string fingerprint = Fingerprint(snapshot);
+            string fingerprint = Fingerprint(snapshot) + "|history=" + taskHistoryExpanded;
             if (fingerprint == taskBoardFingerprint) return;
             taskBoardFingerprint = fingerprint;
             for (int i = taskBoardContent.childCount - 1; i >= 0; i--)
@@ -83,7 +89,17 @@ namespace OpenEmpires
                 empty.richText = false; PanelElement(empty.gameObject, 24);
                 return;
             }
-            foreach (var card in snapshot.Cards) RenderTaskCard(card);
+            for (int i = 0; i < snapshot.ActiveCount; i++) RenderTaskCard(snapshot.Cards[i]);
+            if (snapshot.Cards.Count > snapshot.ActiveCount)
+            {
+                var history = CompactButton(taskBoardContent, "HistoryToggle",
+                    (taskHistoryExpanded ? "▾ Hide" : "▸ Show") + " task history ("
+                        + (snapshot.Cards.Count - snapshot.ActiveCount) + ")", () =>
+                    { taskHistoryExpanded = !taskHistoryExpanded; taskBoardFingerprint = null; RefreshTaskBoard(); });
+                PanelElement(history.gameObject, 32);
+                if (taskHistoryExpanded)
+                    for (int i = snapshot.ActiveCount; i < snapshot.Cards.Count; i++) RenderTaskCard(snapshot.Cards[i]);
+            }
         }
 
         private void RefreshCurrentRequestStatus(CommanderTaskBoardSnapshot snapshot)
@@ -105,6 +121,9 @@ namespace OpenEmpires
                 string detail = card.Status == CommanderTaskStatus.Blocked || card.Status == CommanderTaskStatus.Failed
                     ? card.Blocker : card.Status == CommanderTaskStatus.Completed
                         ? card.Progress : card.CurrentStep;
+                latestRequestState = card.Status == CommanderTaskStatus.Blocked
+                    || card.Status == CommanderTaskStatus.Waiting ? "Waiting/Blocked" : card.Status.ToString();
+                latestRequestDetail = detail ?? string.Empty;
                 string message = card.Status + (string.IsNullOrWhiteSpace(detail) ? string.Empty : " — " + detail);
                 commanderStatusText.text = message.Length > 120 ? message.Substring(0, 117) + "..." : message;
                 commanderStatusText.color = card.Status == CommanderTaskStatus.Blocked
@@ -133,30 +152,18 @@ namespace OpenEmpires
         private void RenderTaskCard(CommanderTaskCardSnapshot card)
         {
             var root = UIObject("TaskCard", taskBoardContent);
-            root.AddComponent<Image>().color = new Color(.075f, .105f, .15f, .98f);
+            root.AddComponent<Image>().color = new Color(.13f, .15f, .17f, 1f);
             var layout = root.AddComponent<VerticalLayoutGroup>();
-            layout.padding = new RectOffset(6, 6, 6, 6);
-            layout.spacing = 3;
+            layout.padding = new RectOffset(8, 8, 8, 8);
+            layout.spacing = 8;
             layout.childControlWidth = layout.childControlHeight = true;
             layout.childForceExpandWidth = true;
             layout.childForceExpandHeight = false;
             string attention = card.Status == CommanderTaskStatus.Blocked || card.Status == CommanderTaskStatus.Failed
                 ? card.Blocker : string.Empty;
             var status = Text("Status", root.transform, card.Status + " — "
-                + (string.IsNullOrWhiteSpace(attention) ? card.Progress : attention), 12, TextAlignmentOptions.Left);
-            status.richText = false; PanelElement(status.gameObject, 32);
-            var title = Text("Objective", root.transform, card.Objective, 13, TextAlignmentOptions.Left);
-            title.richText = false; PanelElement(title.gameObject, 34);
-            var stepText = Text("CurrentStep", root.transform,
-                "Current: " + card.CurrentStep + (string.IsNullOrEmpty(card.Blocker) ? "" : " — " + card.Blocker),
-                11, TextAlignmentOptions.Left);
-            stepText.richText = false; PanelElement(stepText.gameObject, 32);
-            foreach (var step in card.Steps)
-            {
-                var detail = Text("Step", root.transform, "• " + step.Label + " — " + step.Status
-                    + (string.IsNullOrEmpty(step.Progress) ? "" : " — " + step.Progress), 11, TextAlignmentOptions.Left);
-                detail.richText = false; PanelElement(detail.gameObject, 34);
-            }
+                + (string.IsNullOrWhiteSpace(attention) ? card.Progress : attention), 14, TextAlignmentOptions.Left);
+            status.richText = false; PanelElement(status.gameObject, 40);
             if (card.CanCancel)
             {
                 var cancel = CompactButton(root.transform, "CancelTask", "Cancel task", () =>
@@ -168,8 +175,33 @@ namespace OpenEmpires
                         RefreshTaskBoard();
                     }
                 });
-                PanelElement(cancel.gameObject, 27);
+                PanelElement(cancel.gameObject, 28);
             }
+            var title = Text("Objective", root.transform, card.Objective, 15, TextAlignmentOptions.Left);
+            title.richText = false; PanelElement(title.gameObject, 44);
+            var stepText = Text("CurrentStep", root.transform,
+                "Current: " + card.CurrentStep + (string.IsNullOrEmpty(card.Blocker) ? "" : " — " + card.Blocker),
+                14, TextAlignmentOptions.Left);
+            stepText.richText = false; PanelElement(stepText.gameObject, 40);
+            var details = UIObject("Details", root.transform);
+            var detailsLayout = details.AddComponent<VerticalLayoutGroup>();
+            detailsLayout.spacing = 4;
+            detailsLayout.childControlWidth = detailsLayout.childControlHeight = true;
+            detailsLayout.childForceExpandWidth = true; detailsLayout.childForceExpandHeight = false;
+            foreach (var step in card.Steps)
+            {
+                var detail = Text("Step", details.transform, "• " + step.Label + " — " + step.Status
+                    + (string.IsNullOrEmpty(step.Progress) ? "" : " — " + step.Progress), 13, TextAlignmentOptions.Left);
+                detail.richText = false; PanelElement(detail.gameObject, 42);
+            }
+            details.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            var toggle = CompactButton(root.transform,"DetailsToggle","Show details",()=>
+            {
+                details.SetActive(!details.activeSelf);
+                root.GetComponent<RectTransform>().ForceUpdateRectTransforms();
+            });
+            PanelElement(toggle.gameObject, 28);
+            details.SetActive(false);
             root.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
         }
     }

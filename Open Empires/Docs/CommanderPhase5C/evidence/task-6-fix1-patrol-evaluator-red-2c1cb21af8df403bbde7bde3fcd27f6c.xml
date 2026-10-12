@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 01:57:45Z" end-time="2026-10-12 01:57:47Z" duration="1.7768193">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1794" result="Failed" site="Child" start-time="2026-10-12 01:57:45Z" end-time="2026-10-12 01:57:47Z" duration="1.776819" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="3068" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1794" result="Failed" site="Child" start-time="2026-10-12 01:57:45Z" end-time="2026-10-12 01:57:47Z" duration="1.696025" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="12696" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="3069" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1794" result="Failed" site="Child" start-time="2026-10-12 01:57:45Z" end-time="2026-10-12 01:57:47Z" duration="1.695476" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="3070" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1794" result="Failed" site="Child" start-time="2026-10-12 01:57:45Z" end-time="2026-10-12 01:57:47Z" duration="1.695161" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1002" name="CommanderEconomyClarificationTests" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" testcasecount="106" result="Failed" site="Child" start-time="2026-10-12 01:57:45Z" end-time="2026-10-12 01:57:47Z" duration="1.693103" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderEconomyClarification" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1097" name="CorpusOrderedVerdict_ProcessedCallbackWithoutPatrollingActorIsGap" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.CorpusOrderedVerdict_ProcessedCallbackWithoutPatrollingActorIsGap" methodname="CorpusOrderedVerdict_ProcessedCallbackWithoutPatrollingActorIsGap" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="154563347" result="Failed" start-time="2026-10-12 01:57:45Z" end-time="2026-10-12 01:57:47Z" duration="1.676305" asserts="0">
+              <properties>
+                <property name="Category" value="CommanderPhase5CCorpus" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  String lengths are both 8. Strings differ at index 1.
+  Expected: "open-gap"
+  But was:  "observed"
+  ------------^
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderEconomyClarificationTests.CorpusOrderedVerdict_ProcessedCallbackWithoutPatrollingActorIsGap () [0x002cc] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.Phase5CCorpus.cs:282
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[SyncCheck] tick=1 checksum=2B4F4354
+[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #2 submitted: CapabilityAction
+[Commander] Goal #1: status=Executing owned=1 queued=1; Queueing Spearman at Barracks #1.
+[SyncCheck] tick=2 checksum=C79D7BC0
+[SyncCheck] tick=3 checksum=98FF8600
+[SyncCheck] tick=4 checksum=6A619040
+[SyncCheck] tick=5 checksum=3BC39A80
+[SyncCheck] tick=6 checksum=0D25A4C0
+[SyncCheck] tick=7 checksum=DE87AF00
+[SyncCheck] tick=8 checksum=AFE9B940
+[SyncCheck] tick=9 checksum=814BC380
+[SyncCheck] tick=10 checksum=52ADCDC0
+[SyncCheck] tick=11 checksum=240FD800
+[SyncCheck] tick=12 checksum=F571E240
+[SyncCheck] tick=13 checksum=C6D3EC80
+[SyncCheck] tick=14 checksum=9835F6C0
+[SyncCheck] tick=15 checksum=69980100
+[SyncCheck] tick=16 checksum=3AFA0B40
+[Commander] Goal #1: status=Executing owned=1 queued=2; Queueing Spearman at Barracks #1.
+[SyncCheck] tick=17 checksum=DDA1A322
+[SyncCheck] tick=18 checksum=3880E0E2
+[SyncCheck] tick=19 checksum=93601EA2
+[SyncCheck] tick=20 checksum=EE3F5C62
+[SyncCheck] tick=21 checksum=491E9A22
+[SyncCheck] tick=22 checksum=A3FDD7E2
+[SyncCheck] tick=23 checksum=FEDD15A2
+[SyncCheck] tick=24 checksum=59BC5362
+[SyncCheck] tick=25 checksum=B49B9122
+[SyncCheck] tick=26 checksum=0F7ACEE2
+[SyncCheck] tick=27 checksum=6A5A0CA2
+[SyncCheck] tick=28 checksum=C5394A62
+[SyncCheck] tick=29 checksum=20188822
+[SyncCheck] tick=30 checksum=7AF7C5E2
+[SyncCheck] tick=31 checksum=D5D703A2
+[Commander] Goal #1: status=WaitingForProduction owned=1 queued=3; Owned 1, queued 3, target 2.
+[SyncCheck] tick=32 checksum=30B64162
+[SyncCheck] tick=33 checksum=8B957F22
+[SyncCheck] tick=34 checksum=E674BCE2
+[SyncCheck] tick=35 checksum=4153FAA2
+[SyncCheck] tick=36 checksum=9C333862
+[SyncCheck] tick=37 checksum=F7127622
+[SyncCheck] tick=38 checksum=51F1B3E2
+[SyncCheck] tick=39 checksum=ACD0F1A2
+[SyncCheck] tick=40 checksum=07B02F62
+[SyncCheck] tick=41 checksum=628F6D22
+[SyncCheck] tick=42 checksum=BD6EAAE2
+[SyncCheck] tick=43 checksum=184DE8A2
+[SyncCheck] tick=44 checksum=732D2662
+[SyncCheck] tick=45 checksum=CE0C6422
+[SyncCheck] tick=46 checksum=28EBA1E2
+[SyncCheck] tick=47 checksum=83CADFA2
+[SyncCheck] tick=48 checksum=DEAA1D62
+[SyncCheck] tick=49 checksum=39895B22
+[SyncCheck] tick=50 checksum=946898E2
+[SyncCheck] tick=51 checksum=EF47D6A2
+[SyncCheck] tick=52 checksum=4A271462
+[SyncCheck] tick=53 checksum=A5065222
+[SyncCheck] tick=54 checksum=FFE58FE2
+[SyncCheck] tick=55 checksum=5AC4CDA2
+[SyncCheck] tick=56 checksum=B5A40B62
+[SyncCheck] tick=57 checksum=10834922
+[SyncCheck] tick=58 checksum=6B6286E2
+[SyncCheck] tick=59 checksum=C641C4A2
+[SyncCheck] tick=60 checksum=21210262
+[SyncCheck] tick=61 checksum=7C004022
+[SyncCheck] tick=62 checksum=D6DF7DE2
+[SyncCheck] tick=63 checksum=31BEBBA2
+[SyncCheck] tick=64 checksum=8C9DF962
+[SyncCheck] tick=65 checksum=E77D3722
+[SyncCheck] tick=66 checksum=425C74E2
+[SyncCheck] tick=67 checksum=9D3BB2A2
+[SyncCheck] tick=68 checksum=F81AF062
+[SyncCheck] tick=69 checksum=52FA2E22
+[SyncCheck] tick=70 checksum=ADD96BE2
+[SyncCheck] tick=71 checksum=08B8A9A2
+[SyncCheck] tick=72 checksum=6397E762
+[SyncCheck] tick=73 checksum=BE772522
+[SyncCheck] tick=74 checksum=195662E2
+[SyncCheck] tick=75 checksum=7435A0A2
+[SyncCheck] tick=76 checksum=CF14DE62
+[SyncCheck] tick=77 checksum=29F41C22
+[SyncCheck] tick=78 checksum=84D359E2
+[SyncCheck] tick=79 checksum=DFB297A2
+[SyncCheck] tick=80 checksum=3A91D562
+[SyncCheck] tick=81 checksum=95711322
+[SyncCheck] tick=82 checksum=F05050E2
+[SyncCheck] tick=83 checksum=4B2F8EA2
+[SyncCheck] tick=84 checksum=A60ECC62
+[SyncCheck] tick=85 checksum=00EE0A22
+[SyncCheck] tick=86 checksum=5BCD47E2
+[SyncCheck] tick=87 checksum=B6AC85A2
+[SyncCheck] tick=88 checksum=118BC362
+[SyncCheck] tick=89 checksum=6C6B0122
+[SyncCheck] tick=90 checksum=C74A3EE2
+[SyncCheck] tick=91 checksum=22297CA2
+[SyncCheck] tick=92 checksum=7D08BA62
+[SyncCheck] tick=93 checksum=D7E7F822
+[SyncCheck] tick=94 checksum=32C735E2
+[SyncCheck] tick=95 checksum=8DA673A2
+[SyncCheck] tick=96 checksum=E885B162
+[SyncCheck] tick=97 checksum=4364EF22
+[SyncCheck] tick=98 checksum=9E442CE2
+[SyncCheck] tick=99 checksum=F9236AA2
+[SyncCheck] tick=100 checksum=5402A862
+[Commander] Goal #1: status=WaitingForProduction owned=2 queued=2; Owned 2, queued 2, target 2.
+[Commander] Goal #1: status=WaitingForProduction owned=3 queued=1; Owned 3, queued 1, target 2.
+[Commander] Goal #1: status=Completed owned=4 queued=0; Owned 4/2 living units.
+[Commander] Goal #2: status=Executing owned=0 queued=0; Resolved a point patrol route from each selected unit's starting position to a known walkable point beside the selected game-side anchor.
+[Commander] Goal #2: status=Executing owned=2 queued=0; Patrol is active for 2 eligible unit(s).
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

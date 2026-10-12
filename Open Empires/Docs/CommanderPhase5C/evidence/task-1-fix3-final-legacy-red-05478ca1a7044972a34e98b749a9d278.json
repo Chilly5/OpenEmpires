@@ -1,0 +1,34 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "05478ca1a7044972a34e98b749a9d278",
+    "status": "failed",
+    "mode": "EditMode",
+    "started_unix_ms": 1791706787508,
+    "finished_unix_ms": 1791706787831,
+    "last_update_unix_ms": 1791706787831,
+    "progress": {
+      "completed": 7,
+      "total": 7,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791706787809,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5AProviderContractTests.SharedWorkerComposition_PromptIncludesOneSelectionAndStrictExample",
+      "last_finished_unix_ms": 1791706787815,
+      "stuck_suspected": false,
+      "editor_is_focused": true,
+      "blocked_reason": null,
+      "failures_so_far": [
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5AProviderContractTests.SharedWorkerComposition_PromptIncludesOneSelectionAndStrictExample",
+          "message": "System.ArgumentOutOfRangeException : Index was out of range. Must be non-negative and less than the size of the collection.\r\nParameter name: index"
+        }
+      ],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": null
+  },
+  "hint": null
+}

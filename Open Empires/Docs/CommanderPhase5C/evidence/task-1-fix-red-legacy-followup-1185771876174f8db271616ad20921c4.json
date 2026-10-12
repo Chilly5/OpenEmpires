@@ -1,0 +1,36 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "1185771876174f8db271616ad20921c4",
+      "status": "failed",
+      "mode": "EditMode",
+      "started_unix_ms": 1791666245637,
+      "finished_unix_ms": 1791666245869,
+      "last_update_unix_ms": 1791666245869,
+      "progress": {
+        "completed": 7,
+        "total": 7,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791666245847,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5AProviderContractTests.SharedWorkerComposition_PromptIncludesOneSelectionAndStrictExample",
+        "last_finished_unix_ms": 1791666245851,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5AProviderContractTests.DynamicFarm_UsesRegistryVocabularyAndReturnsTypedPlan",
+            "message": "  Expected: String containing \"question\"\r\n  But was:  \"JSON only,strict fields/enums; never authorize IDs,coords,commands,hidden/extra goals. Keep counts,negations,actors,sources,restrictions,order,exact refs;unknown unknown. Request{outcome:Request,nodes:1..4,executionOrder:Independent|Sequential|DependencyGraph}; after/then=completion dependsOn:[prior0-based]; resultFromNode=exact-new,producerFromNode=explicit-new; a/an=1,number words,left=MapWest. Clarify{outcome:Clarify,message<=180,pending:{executionOrder,nodes:partial1..4},missingSlots:[{node,path,type:Confirmation|Count|SourceKind|CanonicalName,alternatives:[canonical]}]};retain known leaves/edges/refs,omit only missing;Confirmation retains offer. Worker pending+missingFields valid;not approval. Answer/Unsupported{outcome,message<=180};no nodes.BuildStructure{structure:canonical,count:1..20,builders:{state:Eligible(default)|IdleOnly(strict),count:1},placement?}. placement TC/Barracks:{anchor:MyTownCenter|MyBarracks,relation:Near|MapWest|MapEast,clearGapTiles?:1..20,ordinal?:1..8 TC-only}; resource:{anchor:VisibleResource(default)|WorkedResource(explicit),relation:Near,resource,sourceKind?}. Near gap1,no resource ordinal. AllocateWorkers{mode:SelectedCount(default)|Additional(more workers)|TargetTotal(keep total),countMode:Exact|AllMatching(snapshot),count:1..200 omit if AllMatching,workers:{state:Any|Idle|Gathering,currentResource?},destination:{resource,sourceKind?},resourceAmount?:1..1000000 paired resourceAmountMode:Stockpile|AdditionalGathered(player-wide)}. Amount!=worker count;assignment!=income. resource:Food|Wood|Gold|Stone; sourceKind:Any or Food=Sheep|Berries|Farm,Wood=Tree,Gold=GoldMine,Stone=StoneMine. constraints?<=4 objects type:NoConstruction;PreferredWorkers mode:IdleOnly;ProtectedResource resource,amount?:0..200;MaximumQueue amount1..8;ResourceSource resource,sourceKind. DynamicPlan for repeated placed construction/shared workers: {outcome:DynamicPlan,version:1,nodes:[{id:symbol,mechanic,parameters:{},inputs:{},dependsOn:[]}]}. One shared worker selection, partition disjointly; exact producer set for explicitly new buildings. Registry fields below use name:type; ? optional; input refs also in dependsOn. select-workers p[count:Count;state:WorkerState?;currentResource:Resource?;] in[] ->WorkerSet.partition-workers p[offset:Offset;count:Count;] in[workers:WorkerSet;] ->WorkerSet.select-units p[unit:UnitId?;kind:UnitKind?;count:Count;] in[] ->UnitSet.select-structures p[building:BuildingId;count:Count;] in[] ->StructureSet.select-resources p[resource:Resource;sourceKind:SourceKind;mode:ResourceMode;count:Count;] in[] ->ResourceSet.resolve-location p[anchor:Anchor?;relation:Relation;clearGapTiles:ClearGapTiles;] in[structures:StructureSet?;resources:ResourceSet?;] ->LocationIntent.build p[building:BuildingId;count:Count;] in[workers:WorkerSet?;location:LocationIntent?;] ->StructureSet.allocate-workers p[resource:Resource;sourceKind:SourceKind;] in[workers:WorkerSet;] ->AssignmentEffect.produce p[unit:UnitId;count:Count;quantityMode:QuantityMode;] in[producers:StructureSet?;] ->UnitResult. Max12 nodes,4 refs/node,depth5,total counts200. Canonical IDs from context only; relation Near|MapWest|MapEast, Near gap1; resource mode Visible|Worked. Simple known requests keep Request fast path. \"\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

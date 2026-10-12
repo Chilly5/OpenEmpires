@@ -1,0 +1,196 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"success\":true,\"message\":\"Test job status retrieved.\",\"error\":null,\"data\":{\"job_id\":\"6dc6b12b2b7840ddbe2de1c4aabaeae8\",\"status\":\"succeeded\",\"mode\":\"EditMode\",\"started_unix_ms\":1791708607538,\"finished_unix_ms\":1791708639279,\"last_update_unix_ms\":1791708639279,\"progress\":{\"completed\":16,\"total\":16,\"current_test_full_name\":null,\"current_test_started_unix_ms\":1791708638642,\"last_finished_test_full_name\":\"OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.Repair_RetainsBothAttemptEstimatesAndUsage\",\"last_finished_unix_ms\":1791708638911,\"stuck_suspected\":false,\"editor_is_focused\":false,\"blocked_reason\":null,\"failures_so_far\":[],\"failures_capped\":false},\"error\":null,\"result\":{\"mode\":\"EditMode\",\"summary\":{\"total\":16,\"passed\":16,\"failed\":0,\"skipped\":0,\"durationSeconds\":23.3665029,\"resultState\":\"Passed\"},\"results\":[{\"name\":\"HouseThenNextFive_FromTreesKeepsGraphAndNeedsSeparateApproval\",\"fullName\":\"OpenEmpires.Tests.CommanderEconomyClarificationTests.HouseThenNextFive_FromTreesKeepsGraphAndNeedsSeparateApproval\",\"state\":\"Passed\",\"durationSeconds\":3.353943,\"message\":null,\"stackTrace\":null,\"output\":\"[Commander] context=projected;provider-request=started\\r\\n[Commander] Goal #1 submitted: BuildStructure\\r\\n[Commander] Goal #2 submitted: WatchFutureUnits\\r\\n\"},{\"name\":\"MineProposal_YesUsesOriginalRequestAndNoSecondTranslation\",\"fullName\":\"OpenEmpires.Tests.CommanderEconomyClarificationTests.MineProposal_YesUsesOriginalRequestAndNoSecondTranslation\",\"state\":\"Passed\",\"durationSeconds\":1.6815508,\"message\":null,\"stackTrace\":null,\"output\":\"[Commander] context=projected;provider-request=started\\r\\n[Commander] Goal #1 submitted: BuildStructure\\r\\n[Commander] intent=admitted;goal-submitted=True\\r\\n\"},{\"name\":\"NearName_ConfirmedCrossCivilizationUnitStillFailsNormalAdmission\",\"fullName\":\"OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_ConfirmedCrossCivilizationUnitStillFailsNormalAdmission\",\"state\":\"Passed\",\"durationSeconds\":1.5649201,\"message\":null,\"stackTrace\":null,\"output\":\"[Commander] context=projected;provider-request=started\\r\\n[CommanderProvider] utc=2026-10-11T08:50:22.5040768Z;model=openai/gpt-6-luna;request=built\\r\\n[CommanderProvider] http=sent\\r\\n[CommanderProvider] http=200;durationMs=7\\r\\n[CommanderProvider] finish=stop\\r\\n[CommanderProvider] assistantContent=extracted;characters=140;finish=stop\\r\\n[CommanderProvider] semantic=Request;nodes=1\\r\\n[Commander] intent=admitted;goal-submitted=False\\r\\n\"},{\"name\":\"NearName_ExactNamesAndEstablishedAliasesDoNotRequireConfirmation(\\\"Longbowman\\\")\",\"fullName\":\"OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_ExactNamesAndEstablishedAliasesDoNotRequireConfirmation(\\\"Longbowman\\\")\",\"state\":\"Passed\",\"durationSeconds\":1.5361284,\"message\":null,\"stackTrace\":null,\"output\":\"[Commander] context=projected;provider-request=started\\r\\n[CommanderProvider] utc=2026-10-11T08:50:24.1074554Z;model=openai/gpt-6-luna;request=built\\r\\n[CommanderProvider] http=sent\\r\\n[CommanderProvider] http=200;durationMs=5\\r\\n[CommanderProvider] finish=stop\\r\\n[CommanderProvider] assistantContent=extracted;characters=140;finish=stop\\r\\n[CommanderProvider] semantic=Request;nodes=1\\r\\n[Commander] Goal #1 submitted: EnsureUnitCount\\r\\n[Commander] intent=admitted;goal-submitted=True\\r\\n\"},{\"name\":\"NearName_ExactNamesAndEstablishedAliasesDoNotRequireConfirmation(\\\"Longbowmen\\\")\",\"fullName\":\"OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_ExactNamesAndEstablishedAliasesDoNotRequireConfirmation(\\\"Longbowmen\\\")\",\"state\":\"Passed\",\"durationSeconds\":1.4646372,\"message\":null,\"stackTrace\":null,\"output\":\"[Commander] context=projected;provider-request=started\\r\\n[CommanderProvider] utc=2026-10-11T08:50:25.5790245Z;model=openai/gpt-6-luna;request=built\\r\\n[CommanderProvider] http=sent\\r\\n[CommanderProvider] http=200;durationMs=5\\r\\n[CommanderProvider] finish=stop\\r\\n[CommanderProvider] assistantContent=extracted;characters=140;finish=stop\\r\\n[CommanderProvider] semantic=Request;nodes=1\\r\\n[Commander] Goal #1 submitted: EnsureUnitCount\\r\\n[Commander] intent=admitted;goal-submitted=True\\r\\n\"},{\"name\":\"NearName_LocalConfirmationRetainsFullStrictPayloadIncludingIndependentResourceAmount\",\"fullName\":\"OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_LocalConfirmationRetainsFullStrictPayloadIncludingIndependentResourceAmount\",\"state\":\"Passed\",\"durationSeconds\":1.499253,\"message\":null,\"stackTrace\":null,\"output\":\"[Commander] context=projected;provider-request=started\\r\\n[CommanderProvider] utc=2026-10-11T08:50:27.1574242Z;model=openai/gpt-6-luna;request=built\\r\\n[CommanderProvider] http=sent\\r\\n[CommanderProvider] http=200;durationMs=6\\r\\n[CommanderProvider] finish=stop\\r\\n[CommanderProvider] assistantContent=extracted;characters=461;finish=stop\\r\\n[CommanderProvider] semantic=Request;nodes=2\\r\\n\"},{\"name\":\"NearName_OriginalTicketRejectsForeignResetAndReplay\",\"fullName\":\"OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_OriginalTicketRejectsForeignResetAndReplay\",\"state\":\"Passed\",\"durationSeconds\":2.6534785,\"message\":null,\"stackTrace\":null,\"output\":\"[Commander] context=projected;provider-request=started\\r\\n[CommanderProvider] utc=2026-10-11T08:50:29.6285078Z;model=openai/gpt-6-luna;request=built\\r\\n[CommanderProvider] http=sent\\r\\n[CommanderProvider] http=200;durationMs=3\\r\\n[CommanderProvider] finish=stop\\r\\n[CommanderProvider] assistantContent=extracted;characters=140;finish=stop\\r\\n[CommanderProvider] semantic=Request;nodes=1\\r\\n[Commander] failed-stage=intent-admission;exception=ArgumentException\\r\\n[Commander] Goal #1 submitted: EnsureUnitCount\\r\\n[Commander] intent=admitted;goal-submitted=True\\r\\n[Commander] failed-stage=intent-admission;exception=ArgumentException\\r\\n\"},{\"name\":\"NearName_PrunedModelHintsStillRequireGameOwnedConfirmation\",\"fullName\":\"OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_PrunedModelHintsStillRequireGameOwnedConfirmation\",\"state\":\"Passed\",\"durationSeconds\":4.3797418,\"message\":null,\"stackTrace\":null,\"output\":\"[CommanderProvider] utc=2026-10-11T08:50:34.1976961Z;model=openai/gpt-6-luna;request=built\\r\\n[CommanderProvider] http=sent\\r\\n[CommanderProvider] http=200;durationMs=5\\r\\n[CommanderProvider] finish=stop\\r\\n[CommanderProvider] assistantContent=extracted;characters=140;finish=stop\\r\\n[CommanderProvider] semantic=Request;nodes=1\\r\\n\"},{\"name\":\"NearName_ReadOnlyAnswerDoesNotCreatePendingAction\",\"fullName\":\"OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_ReadOnlyAnswerDoesNotCreatePendingAction\",\"state\":\"Passed\",\"durationSeconds\":1.3557257,\"message\":null,\"stackTrace\":null,\"output\":\"[CommanderProvider] utc=2026-10-11T08:50:35.5568247Z;model=openai/gpt-6-luna;request=built\\r\\n[CommanderProvider] http=sent\\r\\n[CommanderProvider] http=200;durationMs=6\\r\\n[CommanderProvider] finish=stop\\r\\n[CommanderProvider] assistantContent=extracted;characters=63;finish=stop\\r\\n[CommanderProvider] semantic=Answer;nodes=0\\r\\n\"},{\"name\":\"NearName_UnrelatedProposalKeepsOriginalDraftBlockedLocally\",\"fullName\":\"OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_UnrelatedProposalKeepsOriginalDraftBlockedLocally\",\"state\":\"Passed\",\"durationSeconds\":1.3293598,\"message\":null,\"stackTrace\":null,\"output\":\"[Commander] context=projected;provider-request=started\\r\\n[CommanderProvider] utc=2026-10-11T08:50:36.8670663Z;model=openai/gpt-6-luna;request=built\\r\\n[CommanderProvider] http=sent\\r\\n[CommanderProvider] http=200;durationMs=5\\r\\n[CommanderProvider] finish=stop\\r\\n[CommanderProvider] assistantContent=extracted;characters=138;finish=stop\\r\\n[CommanderProvider] semantic=Request;nodes=1\\r\\n\"},{\"name\":\"Timeout_ReturnsSafeRejectionWithoutRetry\",\"fullName\":\"OpenEmpires.Tests.CommanderPhase4E1ProviderTests.Timeout_ReturnsSafeRejectionWithoutRetry\",\"state\":\"Passed\",\"durationSeconds\":0.4534021,\"message\":null,\"stackTrace\":null,\"output\":\"[CommanderProvider] utc=2026-10-11T08:50:37.1532620Z;model=openai/gpt-6-luna;request=built\\r\\n[CommanderProvider] http=sent\\r\\n\"},{\"name\":\"CompletedAttemptSnapshot_RemainsImmutableAcrossLaterRequests\",\"fullName\":\"OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.CompletedAttemptSnapshot_RemainsImmutableAcrossLaterRequests\",\"state\":\"Passed\",\"durationSeconds\":0.3249553,\"message\":null,\"stackTrace\":null,\"output\":\"[CommanderProvider] utc=2026-10-11T08:50:37.7113696Z;model=openai/gpt-6-luna;request=built\\r\\n[CommanderProvider] http=sent\\r\\n[CommanderProvider] http=200;durationMs=2\\r\\n[CommanderProvider] finish=stop\\r\\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\\r\\n[CommanderProvider] semantic=Answer;nodes=0\\r\\n\"},{\"name\":\"OlderCancelledLateAttempt_DoesNotOverwriteNewerRequestMetrics\",\"fullName\":\"OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.OlderCancelledLateAttempt_DoesNotOverwriteNewerRequestMetrics\",\"state\":\"Passed\",\"durationSeconds\":0.220329,\"message\":null,\"stackTrace\":null,\"output\":\"[CommanderProvider] utc=2026-10-11T08:50:37.9351727Z;model=openai/gpt-6-luna;request=built\\r\\n[CommanderProvider] http=sent\\r\\n[CommanderProvider] utc=2026-10-11T08:50:37.9410274Z;model=openai/gpt-6-luna;request=built\\r\\n[CommanderProvider] http=sent\\r\\n[CommanderProvider] http=200;durationMs=7\\r\\n[CommanderProvider] finish=stop\\r\\n[CommanderProvider] assistantContent=extracted;characters=40;finish=stop\\r\\n[CommanderProvider] semantic=Answer;nodes=0\\r\\n\"},{\"name\":\"OrdinaryRequests_KeepCompleteModelPayloadBelowConservativeInputBudget(\\\"Gather 200 Gold with three villagers from Wood.\\\")\",\"fullName\":\"OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.OrdinaryRequests_KeepCompleteModelPayloadBelowConservativeInputBudget(\\\"Gather 200 Gold with three villagers from Wood.\\\")\",\"state\":\"Passed\",\"durationSeconds\":0.2712569,\"message\":null,\"stackTrace\":null,\"output\":\"[CommanderProvider] utc=2026-10-11T08:50:38.2787599Z;model=openai/gpt-6-luna;request=built\\r\\n[CommanderProvider] http=sent\\r\\n[CommanderProvider] http=200;durationMs=8\\r\\n[CommanderProvider] finish=stop\\r\\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\\r\\n[CommanderProvider] semantic=Answer;nodes=0\\r\\nOffline pack audit: {\\\"utterance\\\":\\\"Gather 200 Gold with three villagers from Wood.\\\",\\\"systemUtf8Units\\\":1438,\\\"userUtf8Units\\\":344,\\\"estimateWithMargin\\\":2048,\\\"estimateMethod\\\":\\\"UTF8 byte units plus256 message margin; not verified model tokenizer\\\",\\\"actualPromptTokens\\\":null}\\r\\n\"},{\"name\":\"OrdinaryRequests_KeepCompleteModelPayloadBelowConservativeInputBudget(\\\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\\\")\",\"fullName\":\"OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.OrdinaryRequests_KeepCompleteModelPayloadBelowConservativeInputBudget(\\\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\\\")\",\"state\":\"Passed\",\"durationSeconds\":0.3278221,\"message\":null,\"stackTrace\":null,\"output\":\"[CommanderProvider] utc=2026-10-11T08:50:38.5334203Z;model=openai/gpt-6-luna;request=built\\r\\n[CommanderProvider] http=sent\\r\\n[CommanderProvider] http=200;durationMs=4\\r\\n[CommanderProvider] finish=stop\\r\\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\\r\\n[CommanderProvider] semantic=Answer;nodes=0\\r\\nOffline pack audit: {\\\"utterance\\\":\\\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\\\",\\\"systemUtf8Units\\\":2086,\\\"userUtf8Units\\\":398,\\\"estimateWithMargin\\\":2750,\\\"estimateMethod\\\":\\\"UTF8 byte units plus256 message margin; not verified model tokenizer\\\",\\\"actualPromptTokens\\\":null}\\r\\n\"},{\"name\":\"Repair_RetainsBothAttemptEstimatesAndUsage\",\"fullName\":\"OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.Repair_RetainsBothAttemptEstimatesAndUsage\",\"state\":\"Passed\",\"durationSeconds\":0.2684045,\"message\":null,\"stackTrace\":null,\"output\":\"[CommanderProvider] utc=2026-10-11T08:50:38.8600936Z;model=openai/gpt-6-luna;request=built\\r\\n[CommanderProvider] http=sent\\r\\n[CommanderProvider] http=200;durationMs=2\\r\\n[CommanderProvider] finish=stop\\r\\n[CommanderProvider] assistantContent=extracted;characters=88;finish=stop\\r\\n[CommanderProvider] schema=field=nodes[0].count;code=missing-or-wrong-type\\r\\n[CommanderProvider] utc=2026-10-11T08:50:38.8830445Z;model=openai/gpt-6-luna;request=built\\r\\n[CommanderProvider] http=sent\\r\\n[CommanderProvider] http=200;durationMs=5\\r\\n[CommanderProvider] finish=stop\\r\\n[CommanderProvider] assistantContent=extracted;characters=86;finish=stop\\r\\n[CommanderProvider] semantic=Request;nodes=1\\r\\n\"}]}},\"hint\":null}"
+    }
+  ],
+  "structuredContent": {
+    "result": {
+      "success": true,
+      "message": "Test job status retrieved.",
+      "error": null,
+      "data": {
+        "job_id": "6dc6b12b2b7840ddbe2de1c4aabaeae8",
+        "status": "succeeded",
+        "mode": "EditMode",
+        "started_unix_ms": 1791708607538,
+        "finished_unix_ms": 1791708639279,
+        "last_update_unix_ms": 1791708639279,
+        "progress": {
+          "completed": 16,
+          "total": 16,
+          "current_test_full_name": null,
+          "current_test_started_unix_ms": 1791708638642,
+          "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.Repair_RetainsBothAttemptEstimatesAndUsage",
+          "last_finished_unix_ms": 1791708638911,
+          "stuck_suspected": false,
+          "editor_is_focused": false,
+          "blocked_reason": null,
+          "failures_so_far": [],
+          "failures_capped": false
+        },
+        "error": null,
+        "result": {
+          "mode": "EditMode",
+          "summary": {
+            "total": 16,
+            "passed": 16,
+            "failed": 0,
+            "skipped": 0,
+            "durationSeconds": 23.3665029,
+            "resultState": "Passed"
+          },
+          "results": [
+            {
+              "name": "HouseThenNextFive_FromTreesKeepsGraphAndNeedsSeparateApproval",
+              "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.HouseThenNextFive_FromTreesKeepsGraphAndNeedsSeparateApproval",
+              "state": "Passed",
+              "durationSeconds": 3.353943,
+              "message": null,
+              "stackTrace": null,
+              "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #2 submitted: WatchFutureUnits\r\n"
+            },
+            {
+              "name": "MineProposal_YesUsesOriginalRequestAndNoSecondTranslation",
+              "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.MineProposal_YesUsesOriginalRequestAndNoSecondTranslation",
+              "state": "Passed",
+              "durationSeconds": 1.6815508,
+              "message": null,
+              "stackTrace": null,
+              "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+            },
+            {
+              "name": "NearName_ConfirmedCrossCivilizationUnitStillFailsNormalAdmission",
+              "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_ConfirmedCrossCivilizationUnitStillFailsNormalAdmission",
+              "state": "Passed",
+              "durationSeconds": 1.5649201,
+              "message": null,
+              "stackTrace": null,
+              "output": "[Commander] context=projected;provider-request=started\r\n[CommanderProvider] utc=2026-10-11T08:50:22.5040768Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=7\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=140;finish=stop\r\n[CommanderProvider] semantic=Request;nodes=1\r\n[Commander] intent=admitted;goal-submitted=False\r\n"
+            },
+            {
+              "name": "NearName_ExactNamesAndEstablishedAliasesDoNotRequireConfirmation(\"Longbowman\")",
+              "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_ExactNamesAndEstablishedAliasesDoNotRequireConfirmation(\"Longbowman\")",
+              "state": "Passed",
+              "durationSeconds": 1.5361284,
+              "message": null,
+              "stackTrace": null,
+              "output": "[Commander] context=projected;provider-request=started\r\n[CommanderProvider] utc=2026-10-11T08:50:24.1074554Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=5\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=140;finish=stop\r\n[CommanderProvider] semantic=Request;nodes=1\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+            },
+            {
+              "name": "NearName_ExactNamesAndEstablishedAliasesDoNotRequireConfirmation(\"Longbowmen\")",
+              "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_ExactNamesAndEstablishedAliasesDoNotRequireConfirmation(\"Longbowmen\")",
+              "state": "Passed",
+              "durationSeconds": 1.4646372,
+              "message": null,
+              "stackTrace": null,
+              "output": "[Commander] context=projected;provider-request=started\r\n[CommanderProvider] utc=2026-10-11T08:50:25.5790245Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=5\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=140;finish=stop\r\n[CommanderProvider] semantic=Request;nodes=1\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+            },
+            {
+              "name": "NearName_LocalConfirmationRetainsFullStrictPayloadIncludingIndependentResourceAmount",
+              "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_LocalConfirmationRetainsFullStrictPayloadIncludingIndependentResourceAmount",
+              "state": "Passed",
+              "durationSeconds": 1.499253,
+              "message": null,
+              "stackTrace": null,
+              "output": "[Commander] context=projected;provider-request=started\r\n[CommanderProvider] utc=2026-10-11T08:50:27.1574242Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=6\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=461;finish=stop\r\n[CommanderProvider] semantic=Request;nodes=2\r\n"
+            },
+            {
+              "name": "NearName_OriginalTicketRejectsForeignResetAndReplay",
+              "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_OriginalTicketRejectsForeignResetAndReplay",
+              "state": "Passed",
+              "durationSeconds": 2.6534785,
+              "message": null,
+              "stackTrace": null,
+              "output": "[Commander] context=projected;provider-request=started\r\n[CommanderProvider] utc=2026-10-11T08:50:29.6285078Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=3\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=140;finish=stop\r\n[CommanderProvider] semantic=Request;nodes=1\r\n[Commander] failed-stage=intent-admission;exception=ArgumentException\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] intent=admitted;goal-submitted=True\r\n[Commander] failed-stage=intent-admission;exception=ArgumentException\r\n"
+            },
+            {
+              "name": "NearName_PrunedModelHintsStillRequireGameOwnedConfirmation",
+              "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_PrunedModelHintsStillRequireGameOwnedConfirmation",
+              "state": "Passed",
+              "durationSeconds": 4.3797418,
+              "message": null,
+              "stackTrace": null,
+              "output": "[CommanderProvider] utc=2026-10-11T08:50:34.1976961Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=5\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=140;finish=stop\r\n[CommanderProvider] semantic=Request;nodes=1\r\n"
+            },
+            {
+              "name": "NearName_ReadOnlyAnswerDoesNotCreatePendingAction",
+              "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_ReadOnlyAnswerDoesNotCreatePendingAction",
+              "state": "Passed",
+              "durationSeconds": 1.3557257,
+              "message": null,
+              "stackTrace": null,
+              "output": "[CommanderProvider] utc=2026-10-11T08:50:35.5568247Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=6\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=63;finish=stop\r\n[CommanderProvider] semantic=Answer;nodes=0\r\n"
+            },
+            {
+              "name": "NearName_UnrelatedProposalKeepsOriginalDraftBlockedLocally",
+              "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_UnrelatedProposalKeepsOriginalDraftBlockedLocally",
+              "state": "Passed",
+              "durationSeconds": 1.3293598,
+              "message": null,
+              "stackTrace": null,
+              "output": "[Commander] context=projected;provider-request=started\r\n[CommanderProvider] utc=2026-10-11T08:50:36.8670663Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=5\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=138;finish=stop\r\n[CommanderProvider] semantic=Request;nodes=1\r\n"
+            },
+            {
+              "name": "Timeout_ReturnsSafeRejectionWithoutRetry",
+              "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.Timeout_ReturnsSafeRejectionWithoutRetry",
+              "state": "Passed",
+              "durationSeconds": 0.4534021,
+              "message": null,
+              "stackTrace": null,
+              "output": "[CommanderProvider] utc=2026-10-11T08:50:37.1532620Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n"
+            },
+            {
+              "name": "CompletedAttemptSnapshot_RemainsImmutableAcrossLaterRequests",
+              "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.CompletedAttemptSnapshot_RemainsImmutableAcrossLaterRequests",
+              "state": "Passed",
+              "durationSeconds": 0.3249553,
+              "message": null,
+              "stackTrace": null,
+              "output": "[CommanderProvider] utc=2026-10-11T08:50:37.7113696Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=2\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\r\n[CommanderProvider] semantic=Answer;nodes=0\r\n"
+            },
+            {
+              "name": "OlderCancelledLateAttempt_DoesNotOverwriteNewerRequestMetrics",
+              "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.OlderCancelledLateAttempt_DoesNotOverwriteNewerRequestMetrics",
+              "state": "Passed",
+              "durationSeconds": 0.220329,
+              "message": null,
+              "stackTrace": null,
+              "output": "[CommanderProvider] utc=2026-10-11T08:50:37.9351727Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] utc=2026-10-11T08:50:37.9410274Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=7\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=40;finish=stop\r\n[CommanderProvider] semantic=Answer;nodes=0\r\n"
+            },
+            {
+              "name": "OrdinaryRequests_KeepCompleteModelPayloadBelowConservativeInputBudget(\"Gather 200 Gold with three villagers from Wood.\")",
+              "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.OrdinaryRequests_KeepCompleteModelPayloadBelowConservativeInputBudget(\"Gather 200 Gold with three villagers from Wood.\")",
+              "state": "Passed",
+              "durationSeconds": 0.2712569,
+              "message": null,
+              "stackTrace": null,
+              "output": "[CommanderProvider] utc=2026-10-11T08:50:38.2787599Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=8\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\r\n[CommanderProvider] semantic=Answer;nodes=0\r\nOffline pack audit: {\"utterance\":\"Gather 200 Gold with three villagers from Wood.\",\"systemUtf8Units\":1438,\"userUtf8Units\":344,\"estimateWithMargin\":2048,\"estimateMethod\":\"UTF8 byte units plus256 message margin; not verified model tokenizer\",\"actualPromptTokens\":null}\r\n"
+            },
+            {
+              "name": "OrdinaryRequests_KeepCompleteModelPayloadBelowConservativeInputBudget(\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\")",
+              "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.OrdinaryRequests_KeepCompleteModelPayloadBelowConservativeInputBudget(\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\")",
+              "state": "Passed",
+              "durationSeconds": 0.3278221,
+              "message": null,
+              "stackTrace": null,
+              "output": "[CommanderProvider] utc=2026-10-11T08:50:38.5334203Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=4\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\r\n[CommanderProvider] semantic=Answer;nodes=0\r\nOffline pack audit: {\"utterance\":\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\",\"systemUtf8Units\":2086,\"userUtf8Units\":398,\"estimateWithMargin\":2750,\"estimateMethod\":\"UTF8 byte units plus256 message margin; not verified model tokenizer\",\"actualPromptTokens\":null}\r\n"
+            },
+            {
+              "name": "Repair_RetainsBothAttemptEstimatesAndUsage",
+              "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.Repair_RetainsBothAttemptEstimatesAndUsage",
+              "state": "Passed",
+              "durationSeconds": 0.2684045,
+              "message": null,
+              "stackTrace": null,
+              "output": "[CommanderProvider] utc=2026-10-11T08:50:38.8600936Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=2\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=88;finish=stop\r\n[CommanderProvider] schema=field=nodes[0].count;code=missing-or-wrong-type\r\n[CommanderProvider] utc=2026-10-11T08:50:38.8830445Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=5\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=86;finish=stop\r\n[CommanderProvider] semantic=Request;nodes=1\r\n"
+            }
+          ]
+        }
+      },
+      "hint": null
+    }
+  },
+  "isError": false
+}

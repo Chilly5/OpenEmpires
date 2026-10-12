@@ -1,0 +1,36 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "36784662362e4969b413fd25094a186c",
+      "status": "failed",
+      "mode": "EditMode",
+      "started_unix_ms": 1791777924127,
+      "finished_unix_ms": 1791777926183,
+      "last_update_unix_ms": 1791777926183,
+      "progress": {
+        "completed": 1,
+        "total": 1,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791777925972,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderFinalFixResultCaptureLifecycleTests.Capture_InterruptedCallbackRecreationRetainsOnlyOriginalRun",
+        "last_finished_unix_ms": 1791777926128,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderFinalFixResultCaptureLifecycleTests.Capture_InterruptedCallbackRecreationRetainsOnlyOriginalRun",
+            "message": "  The same owned run must resume, not create a second artifact.\r\n  String lengths are both 124. Strings differ at index 105.\r\n  Expected: \"...C\\\\evidence\\\\final-fix-leaves-20261012-040525-979-a27c9b3e.json\"\r\n  But was:  \"...C\\\\evidence\\\\final-fix-leaves-20261012-040526-047-d54813f3.json\"\r\n  ----------------------------------------------------------^\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

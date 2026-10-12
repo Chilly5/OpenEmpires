@@ -71,6 +71,15 @@ namespace OpenEmpires
                     eligible.RemoveAll(u => !exact.Contains(u.Id));
                 }
                 eligible.Sort((a, b) => CompareEconomyWorkers(a, b, targets));
+                if (request.Destination.Resource == ResourceType.Food
+                    && (request.Destination.SourceKind == ResourceSourceKind.Farm || request.Destination.SourceKind == ResourceSourceKind.Any)
+                    && (request.Mode == CommanderWorkerAllocationMode.SelectedCount
+                        || request.CountMode == CommanderWorkerCountMode.AllMatching)
+                    && request.Workers.State != CommanderWorkerState.Idle)
+                    eligible = eligible.OrderBy(u => MatchesDestination(u, request.Destination)
+                        && simulation.MapData.GetResourceNode(u.TargetResourceNodeId)?.IsFarmNode == true
+                        && targets.Any(t => t.Kind == CommanderWorkerTargetKind.ResourceNode && t.Id == u.TargetResourceNodeId) ? 0 : 1)
+                        .ThenBy(u => WorkerPriority(u)).ThenBy(u => u.Id).ToList();
                 if (request.CountMode == CommanderWorkerCountMode.AllMatching)
                 {
                     if (!goal.SnapshotCaptured)
@@ -105,7 +114,12 @@ namespace OpenEmpires
                 goal.SelectedWorkerIds.AddRange(selected.Select(u => u.Id));
                 foreach (var group in assignments.GroupBy(a => new { a.Kind, a.TargetId }).OrderBy(g => g.Key.Kind).ThenBy(g => g.Key.TargetId))
                 {
-                    int[] ids = group.Select(a => a.WorkerId).OrderBy(id => id).ToArray();
+                    int[] ids = group.Where(a => !selected.Any(u => u.Id == a.WorkerId
+                        && a.Kind == CommanderWorkerTargetKind.ResourceNode
+                        && IsGatheringState(u.State) && u.TargetResourceNodeId == a.TargetId
+                        && simulation.MapData.GetResourceNode(a.TargetId)?.IsFarmNode == true))
+                        .Select(a => a.WorkerId).OrderBy(id => id).ToArray();
+                    if (ids.Length == 0) continue;
                     goal.CommandGroups.Add(group.Key.Kind == CommanderWorkerTargetKind.ResourceNode
                         ? (ICommand)new GatherCommand(goal.PlayerId, ids, group.Key.TargetId, request.Destination.SourceKind)
                         : new SlaughterSheepCommand { PlayerId = goal.PlayerId, VillagerIds = ids, SheepUnitId = group.Key.TargetId, SourceKind = request.Destination.SourceKind });
@@ -232,7 +246,10 @@ namespace OpenEmpires
             if (request.Workers.State == CommanderWorkerState.Idle && worker.State != UnitState.Idle) return false;
             if (request.Workers.State == CommanderWorkerState.Gathering && !IsGatheringState(worker.State)) return false;
             if (request.Workers.CurrentResource.HasValue && !IsGatheringResource(worker, request.Workers.CurrentResource.Value)) return false;
-            return request.Mode == CommanderWorkerAllocationMode.SelectedCount || !MatchesDestination(worker, request.Destination);
+            return request.Mode == CommanderWorkerAllocationMode.SelectedCount
+                || (request.CountMode == CommanderWorkerCountMode.AllMatching
+                    && request.Mode == CommanderWorkerAllocationMode.SelectedCount)
+                || !MatchesDestination(worker, request.Destination);
         }
 
         private bool MatchesDestination(UnitData worker, CommanderResourceDestination destination)
@@ -265,7 +282,8 @@ namespace OpenEmpires
             var result = new List<EconomyTarget>(); var destination = goal.Allocation.Destination;
             foreach (ResourceNodeData node in simulation.MapData.GetAllResourceNodes())
                 if (!node.IsDepleted && node.Type == destination.Resource && ResourceSourceRules.Matches(node, destination.SourceKind)
-                    && LegalFarm(node, goal.PlayerId) && simulation.FogOfWar.GetVisibility(goal.PlayerId, node.TileX, node.TileZ) == TileVisibility.Visible)
+                    && LegalFarm(node, goal.PlayerId) && simulation.FogOfWar.GetVisibility(goal.PlayerId, node.TileX, node.TileZ) == TileVisibility.Visible
+                    && (goal.DynamicResourceLocation == null || goal.DynamicResourceLocation.AllowsResource(simulation, goal.PlayerId, node)))
                     result.Add(new EconomyTarget(node.Id, node.TileX, node.TileZ, node.FootprintWidth, node.FootprintHeight,
                         node.IsFarmNode ? 1 : (node.FootprintWidth + 2) * (node.FootprintHeight + 2) - node.FootprintWidth * node.FootprintHeight,
                         CommanderWorkerTargetKind.ResourceNode));
@@ -299,10 +317,21 @@ namespace OpenEmpires
         {
             assignments = new List<CommanderWorkerAssignment>();
             var selected = new HashSet<int>(workers.Select(w => w.Id));
+            var retained = new Dictionary<int, EconomyTarget>();
+            foreach (UnitData worker in workers)
+                if (MatchesDestination(worker, goal.Allocation.Destination)
+                    && simulation.MapData.GetResourceNode(worker.TargetResourceNodeId)?.IsFarmNode == true)
+                {
+                    var target = targets.FirstOrDefault(t => t.Kind == CommanderWorkerTargetKind.ResourceNode
+                        && t.Id == worker.TargetResourceNodeId);
+                    if (targets.Any(t => t.Kind == CommanderWorkerTargetKind.ResourceNode
+                        && t.Id == worker.TargetResourceNodeId)) retained[worker.Id] = target;
+                }
             var used = new Dictionary<long, int>();
             foreach (UnitData worker in simulation.UnitRegistry.GetAllUnits())
             {
-                if (worker.CurrentHealth <= 0 || worker.State == UnitState.Dead || selected.Contains(worker.Id)) continue;
+                if (worker.CurrentHealth <= 0 || worker.State == UnitState.Dead
+                    || (selected.Contains(worker.Id) && !retained.ContainsKey(worker.Id))) continue;
                 long key = worker.State == UnitState.MovingToSlaughter
                     ? ((long)CommanderWorkerTargetKind.OwnedSheep << 32) | (uint)worker.CombatTargetId : (uint)worker.TargetResourceNodeId;
                 if (!IsGatheringState(worker.State) && worker.State != UnitState.MovingToSlaughter) continue;
@@ -323,6 +352,11 @@ namespace OpenEmpires
                     }
             foreach (UnitData worker in workers)
             {
+                if (retained.TryGetValue(worker.Id, out EconomyTarget currentTarget))
+                {
+                    assignments.Add(new CommanderWorkerAssignment(worker.Id, currentTarget.Id, currentTarget.Kind));
+                    continue;
+                }
                 var candidates = targets.Where(t => !used.TryGetValue(t.Key, out int count) || count < t.Capacity)
                     .OrderBy(t => TargetDistance(worker, t)).ThenBy(t => t.Kind).ThenBy(t => t.Id).ToList();
                 int offset = 0;

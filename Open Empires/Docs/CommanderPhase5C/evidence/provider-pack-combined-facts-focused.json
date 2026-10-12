@@ -1,0 +1,102 @@
+{
+  "project": "D:/unity_projects/OpenEmpires/Open Empires",
+  "unityInstance": "Open Empires@6d7310c7",
+  "unityVersion": "6000.5.9f1",
+  "testClass": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests",
+  "mode": "EditMode",
+  "requestedInitTimeoutMs": 120000,
+  "includeDetails": true,
+  "includeFailedTests": true,
+  "jobId": "6cd08e1f118c446a8bf0681147bd51ed",
+  "startedUnixMs": 1791661486360,
+  "finishedUnixMs": 1791661501223,
+  "status": "failed",
+  "progress": {
+    "completed": 8,
+    "total": 8,
+    "currentTestFullName": null,
+    "currentTestStartedUnixMs": 1791661500540,
+    "lastFinishedTestFullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.TooLargeRequiredMeaning_IsRejectedWithoutDispatchingOrExecutingPrefix",
+    "lastFinishedUnixMs": 1791661500847,
+    "stuckSuspected": false,
+    "editorIsFocused": false,
+    "blockedReason": null,
+    "failuresCapped": false
+  },
+  "counts": {
+    "passed": 6,
+    "failed": 2,
+    "skipped": 0,
+    "note": "The endpoint omitted result.summary/results; pass/skipped counts are inferred from 8 completed cases and 2 reported failures."
+  },
+  "failures": [
+    {
+      "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\")",
+      "message": "Commander input limit: the complete request and required context cannot fit safely; nothing was submitted. Edit the request or resolve its pending question.; conservative estimate=4080. Expected: 1. But was: 0.",
+      "conservativeInputEstimate": 4080
+    },
+    {
+      "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"Move all of my Wood villagers to the woodline left of my Town Center.\")",
+      "message": "Commander input limit: the complete request and required context cannot fit safely; nothing was submitted. Edit the request or resolve its pending question.; conservative estimate=4133. Expected: 1. But was: 0.",
+      "conservativeInputEstimate": 4133
+    }
+  ],
+  "editor": {
+    "compileBeforeRun": {
+      "isCompiling": false,
+      "isDomainReloadPending": false,
+      "readyForTools": true
+    },
+    "preRunConsoleErrors": [],
+    "postRunConsoleErrors": [],
+    "postRunConsoleWarningQuery": {
+      "entriesReturned": 30,
+      "note": "The error+warning query returned 30 warning entries (obsolete API warnings); a separate error-only query returned zero entries."
+    },
+    "testJobObservation": {
+      "initialPollError": "No Unity Editor instances found. Please ensure Unity is running with MCP for Unity bridge.",
+      "instanceResourceTemporarilyReportedZeroInstances": true,
+      "reconnectedInstance": "Open Empires@6d7310c7",
+      "sameJobIdRepollReachedTerminal": true,
+      "newJobStarted": false
+    }
+  },
+  "rawTerminalJobData": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "6cd08e1f118c446a8bf0681147bd51ed",
+      "status": "failed",
+      "mode": "EditMode",
+      "started_unix_ms": 1791661486360,
+      "finished_unix_ms": 1791661501223,
+      "last_update_unix_ms": 1791661501223,
+      "progress": {
+        "completed": 8,
+        "total": 8,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791661500540,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.TooLargeRequiredMeaning_IsRejectedWithoutDispatchingOrExecutingPrefix",
+        "last_finished_unix_ms": 1791661500847,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\")",
+            "message": "Commander input limit: the complete request and required context cannot fit safely; nothing was submitted. Edit the request or resolve its pending question.; conservative estimate=4080; Expected: 1; But was: 0"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"Move all of my Wood villagers to the woodline left of my Town Center.\")",
+            "message": "Commander input limit: the complete request and required context cannot fit safely; nothing was submitted. Edit the request or resolve its pending question.; conservative estimate=4133; Expected: 1; But was: 0"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

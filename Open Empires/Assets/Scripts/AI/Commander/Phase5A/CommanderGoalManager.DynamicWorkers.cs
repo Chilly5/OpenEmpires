@@ -21,7 +21,8 @@ namespace OpenEmpires
             {
                 if (selections.TryGetValue(id, out var captured)) return captured;
                 var node = nodes[id];
-                int count = node.Parameter<int>("count");
+                bool allMatching = node.Parameters.ContainsKey("countMode");
+                int count = allMatching ? 0 : node.Parameter<int>("count");
                 int[] ids;
                 if (node.Primitive.Mechanic == CommanderDynamicMechanic.PartitionWorkers)
                 {
@@ -54,10 +55,16 @@ namespace OpenEmpires
                         return !resource.HasValue || (gathering && current != null && !current.IsDepleted
                             && current.Type == resource.Value);
                     }
-                    ids = simulation.UnitRegistry.GetAllUnits().Where(Matches).OrderBy(w => w.Id)
-                        .Take(count).Select(w => w.Id).ToArray();
-                    if (ids.Length != count)
+                    int bound = Math.Min(200, simulation.Config.MaxPopulation);
+                    ids = allMatching
+                        ? simulation.UnitRegistry.GetAllUnits().Where(Matches).Take(bound + 1)
+                            .Select(w => w.Id).ToArray()
+                        : simulation.UnitRegistry.GetAllUnits().Where(Matches).OrderBy(w => w.Id)
+                            .Take(count).Select(w => w.Id).ToArray();
+                    if (allMatching ? ids.Length < 1 || ids.Length > bound
+                        : ids.Length != count)
                         throw new InvalidOperationException("The full shared worker selection is unavailable; no goals or reservations were admitted.");
+                    if (allMatching) Array.Sort(ids);
                     foreach (int worker in ids) sourceClaims.Add(worker);
                 }
                 else throw new InvalidOperationException("The worker reference is incompatible.");

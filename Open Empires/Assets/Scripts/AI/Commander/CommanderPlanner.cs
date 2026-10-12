@@ -73,6 +73,8 @@ namespace OpenEmpires
 
         private CommanderPlan PlanCapability(CommanderCapabilityGoal goal, int currentTick)
         {
+            if (goal.Action.ActionType == CommanderCapabilityActionType.DiscoverEnemy)
+                return PlanDiscovery(goal, currentTick);
             if (goal.ResultHumanOverride)
                 return new CommanderPlan(CommanderGoalStatus.Blocked,
                     "The player took control of a required producer result; this dependent action will not reclaim it.", 0, 0);
@@ -87,6 +89,21 @@ namespace OpenEmpires
                 || goal.ResultSourceGoal.Status != CommanderGoalStatus.Completed))
                 return new CommanderPlan(CommanderGoalStatus.Blocked,
                     "The referenced producer is unavailable in this Commander runtime; no fallback is allowed.", 0, 0);
+            if (goal.Action.ActionType == CommanderCapabilityActionType.GarrisonUnits
+                || goal.Action.ActionType == CommanderCapabilityActionType.UngarrisonBuilding)
+                return PlanShelterCapability(goal, currentTick);
+            if (goal.DynamicMoveLocation != null)
+            {
+                if (goal.CommandIssued)
+                {
+                    ResourceNodeData source = simulation.MapData.GetResourceNode(goal.DynamicMoveResourceId);
+                    if (!goal.DynamicMoveLocation.AllowsResource(simulation, goal.PlayerId, source))
+                        return new CommanderPlan(CommanderGoalStatus.Blocked,
+                            "The exact selected woodline source or owned Town Center was lost; no substitute move is authorized.", 0, 0);
+                    return ObserveCapability(goal, currentTick);
+                }
+                return PlanDynamicWorkerMove(goal, currentTick);
+            }
             if (goal.CommandIssued)
                 return ObserveCapability(goal, currentTick);
             var executor = new CommanderCapabilityExecutor(simulation);
@@ -123,6 +140,16 @@ namespace OpenEmpires
             bool created = executor.TryCreateCommand(goal.Action, binding, goal.TargetBinding, out command, out reason);
             if (!created)
                 return new CommanderPlan(CommanderGoalStatus.Blocked, reason, 0, 0);
+            if (command is MoveCommand move
+                && (goal.Action.ActionType == CommanderCapabilityActionType.MoveUnits
+                    || goal.Action.ActionType == CommanderCapabilityActionType.DefendArea
+                    || goal.Action.ActionType == CommanderCapabilityActionType.RetreatUnits
+                    || goal.Action.ActionType == CommanderCapabilityActionType.ScoutArea))
+            {
+                if (!TryResolveNativeMovementSlots(goal, move, currentTick, out move, out reason))
+                    return new CommanderPlan(CommanderGoalStatus.Blocked, reason, 0, 0);
+                command = move;
+            }
             return new CommanderPlan(CommanderGoalStatus.Executing, reason, 0, 0, command);
         }
 
@@ -140,13 +167,24 @@ namespace OpenEmpires
                 for (int i = 0; i < subjects.Length; i++)
                 {
                     UnitData unit = simulation.UnitRegistry.GetUnit(subjects[i]);
-                    if (unit != null && unit.PlayerId == goal.PlayerId && unit.CurrentHealth > 0
-                        && unit.State != UnitState.Dead && !workerAuthority.IsHumanProtected(unit.Id, currentTick))
-                        eligible++;
+                    if (unit == null)
+                    {
+                        UnitData sheltered = simulation.UnitRegistry.GetGarrisonedUnit(subjects[i]);
+                        return new CommanderPlan(CommanderGoalStatus.Blocked,
+                            sheltered != null ? "An exact capability subject is garrisoned; no substitute is authorized."
+                                : "An exact capability subject is missing; no substitute is authorized.", eligible, 0);
+                    }
+                    if (unit.CurrentHealth <= 0 || unit.State == UnitState.Dead)
+                        return new CommanderPlan(CommanderGoalStatus.Blocked,
+                            "An exact capability subject is dead; no substitute is authorized.", eligible, 0);
+                    if (unit.PlayerId != goal.PlayerId)
+                        return new CommanderPlan(CommanderGoalStatus.Blocked,
+                            "An exact capability subject is foreign-owned; no substitute is authorized.", eligible, 0);
+                    if (workerAuthority.IsHumanProtected(unit.Id, currentTick))
+                        return new CommanderPlan(CommanderGoalStatus.Blocked,
+                            "The player took control of an exact capability subject; Commander will not reclaim it.", eligible, 0);
+                    eligible++;
                 }
-                if (eligible == 0)
-                    return new CommanderPlan(CommanderGoalStatus.Blocked,
-                        "The player took control of every eligible capability unit; Commander will not reclaim them.", 0, 0);
             }
 
             switch (goal.Action.ActionType)
@@ -155,11 +193,17 @@ namespace OpenEmpires
                 case CommanderCapabilityActionType.DefendArea:
                 case CommanderCapabilityActionType.RetreatUnits:
                 case CommanderCapabilityActionType.ScoutArea:
-                    if (issued is MoveCommand move && AllUnitsAt(subjects, move.TargetPosition, currentTick))
+                    string movementReason = "The exact issued movement command is unavailable.";
+                    if (issued is MoveCommand move && ObserveNativeMovement(goal, move, subjects, currentTick, out movementReason))
                         return new CommanderPlan(CommanderGoalStatus.Completed,
                             "The movement objective is satisfied in simulation state.", eligible, 0);
+                    if (movementReason.StartsWith("The exact native formation made no progress", StringComparison.Ordinal)
+                        || movementReason.StartsWith("A native route stopped short", StringComparison.Ordinal)
+                        || movementReason.StartsWith("An exact subject has a replacement", StringComparison.Ordinal)
+                        || movementReason.StartsWith("An exact movement subject is temporarily unavailable", StringComparison.Ordinal))
+                        return new CommanderPlan(CommanderGoalStatus.Blocked, movementReason, eligible, 0);
                     return new CommanderPlan(CommanderGoalStatus.Executing,
-                        "Waiting for the selected units to reach the resolved location.", eligible, 0);
+                        movementReason, eligible, 0);
 
                 case CommanderCapabilityActionType.PatrolArea:
                     if (issued is PatrolCommand patrol)
@@ -227,23 +271,163 @@ namespace OpenEmpires
             }
         }
 
-        private bool AllUnitsAt(int[] subjects, FixedVector3 target, int currentTick)
+        private bool TryResolveNativeMovementSlots(CommanderCapabilityGoal goal, MoveCommand original,
+            int currentTick, out MoveCommand move, out string reason)
         {
-            if (subjects == null || subjects.Length == 0) return false;
-            int eligible = 0;
-            Fixed32 tolerance = Fixed32.FromInt(1);
-            Fixed32 toleranceSquared = tolerance * tolerance;
+            move = original;
+            reason = "No complete known reachable formation objective exists near the requested location.";
+            if (original.UnitIds == null || original.UnitIds.Length == 0 || original.UnitIds.Length > 200) return false;
+            Vector2Int anchor = simulation.MapData.WorldToTile(original.TargetPosition);
+            if (!simulation.MapData.IsInBounds(anchor.x, anchor.y)) return false;
+            var occupied = new HashSet<Vector2Int>();
+            var slots = new FixedVector3[original.UnitIds.Length];
+            var nativeCenters = new FixedVector3[original.UnitIds.Length];
+            var scatterLimits = new Fixed32[original.UnitIds.Length];
+            for (int i = 0; i < original.UnitIds.Length; i++)
+            {
+                UnitData unit = simulation.UnitRegistry.GetUnit(original.UnitIds[i]);
+                if (unit == null || unit.PlayerId != goal.PlayerId || unit.CurrentHealth <= 0
+                    || unit.State == UnitState.Dead || workerAuthority.IsHumanProtected(unit.Id, currentTick)) return false;
+                bool found = false;
+                for (int radius = 0; radius <= 10 && !found; radius++)
+                    for (int dx = -radius; dx <= radius && !found; dx++)
+                        for (int dz = -radius; dz <= radius && !found; dz++)
+                        {
+                            if (Mathf.Max(Mathf.Abs(dx), Mathf.Abs(dz)) != radius) continue;
+                            int x = anchor.x + dx, z = anchor.y + dz;
+                            var destination = new Vector2Int(x, z);
+                            if (goal.DynamicMoveLocation != null
+                                && !goal.DynamicMoveLocation.AllowsMoveTile(simulation, goal.PlayerId,
+                                    goal.DynamicMoveResourceId, x, z)) continue;
+                            if (!simulation.MapData.IsWalkable(x, z)
+                                || !simulation.MapData.IsWalkable(x, z, goal.PlayerId, simulation.BuildingRegistry)
+                                || !IsKnownTile(goal.PlayerId, x, z)) continue;
+                            FixedVector3 proposed = simulation.MapData.TileToWorldFixed(x, z);
+                            FixedVector3 commandAnchor = i == 0 ? proposed : slots[0];
+                            if (!TryKnownNativeMoveEnvelope(goal.PlayerId, anchor, unit,
+                                commandAnchor, proposed, occupied, out FixedVector3 nativeCenter,
+                                out Fixed32 scatter, out HashSet<Vector2Int> covered,
+                                goal.DynamicMoveLocation, goal.DynamicMoveResourceId)) continue;
+                            occupied.UnionWith(covered);
+                            slots[i] = proposed;
+                            nativeCenters[i] = nativeCenter;
+                            scatterLimits[i] = scatter;
+                            found = true;
+                        }
+                if (!found) return false;
+            }
+            move.TargetPosition = slots[0];
+            move.FormationPositions = slots;
+            var unsnapped = (FixedVector3[])slots.Clone();
+            simulation.SnapNativeMoveFormationPositions(ref move);
+            for (int i = 0; i < slots.Length; i++)
+                if (simulation.MapData.WorldToTile(slots[i]) != simulation.MapData.WorldToTile(unsnapped[i]))
+                    return false;
+            goal.NativeMovementSlots = nativeCenters;
+            goal.NativeMovementScatter = scatterLimits;
+            goal.NativeMovementEndpoints = new FixedVector3[slots.Length];
+            goal.NativeMovementProcessed = new bool[slots.Length];
+            goal.NativeMovementResults = new NativeMovePathResult[slots.Length];
+            goal.NativeMovementReplaced = false;
+            reason = "Moving exact selected units to known reachable native formation positions.";
+            return true;
+        }
+
+        private bool TryKnownNativeMoveEnvelope(int playerId, Vector2Int semanticAnchor,
+            UnitData unit, FixedVector3 commandAnchor, FixedVector3 slot,
+            HashSet<Vector2Int> occupied, out FixedVector3 center,
+            out Fixed32 scatter, out HashSet<Vector2Int> covered,
+            CommanderBoundLocation dynamicMoveLocation = null, int dynamicMoveResourceId = -1)
+        {
+            center = simulation.NativeMoveFormationCenter(commandAnchor, slot, unit);
+            scatter = simulation.MaximumNativeMoveScatter(unit);
+            covered = new HashSet<Vector2Int>();
+            if (scatter > Fixed32.FromInt(10)) return false;
+            Vector2Int low = simulation.MapData.WorldToTile(new FixedVector3(center.x - scatter,
+                center.y, center.z - scatter));
+            Vector2Int high = simulation.MapData.WorldToTile(new FixedVector3(center.x + scatter,
+                center.y, center.z + scatter));
+            if (high.x - low.x > 20 || high.y - low.y > 20) return false;
+            Vector2Int start = simulation.MapData.WorldToTile(unit.SimPosition);
+            for (int x = low.x; x <= high.x; x++)
+                for (int z = low.y; z <= high.y; z++)
+                {
+                    var tile = new Vector2Int(x, z);
+                    if (Mathf.Max(Mathf.Abs(x - semanticAnchor.x), Mathf.Abs(z - semanticAnchor.y)) > 10
+                        || dynamicMoveLocation != null && !dynamicMoveLocation.AllowsMoveTile(
+                            simulation, playerId, dynamicMoveResourceId, x, z)
+                        || occupied.Contains(tile)
+                        || !simulation.MapData.IsWalkable(x, z, playerId, simulation.BuildingRegistry)
+                        || !IsKnownTile(playerId, x, z)
+                        || !GridPathfinder.TryFindCompletePath(simulation.MapData, start, tile,
+                            out List<Vector2Int> path, playerId, simulation.BuildingRegistry)
+                        || !IsKnownPath(playerId, start, path)) return false;
+                    covered.Add(tile);
+                }
+            return covered.Count > 0;
+        }
+
+        private bool ObserveNativeMovement(CommanderCapabilityGoal goal, MoveCommand move,
+            int[] subjects, int currentTick, out string reason)
+        {
+            reason = "Waiting for the exact selected units to reach their native formation endpoints.";
+            if (subjects == null || subjects.Length == 0 || goal.NativeMovementSlots == null
+                || goal.NativeMovementSlots.Length != subjects.Length
+                || goal.NativeMovementProcessed == null || goal.NativeMovementEndpoints == null
+                || goal.NativeMovementScatter == null || goal.NativeMovementResults == null) return false;
+            if (simulation.CurrentTick <= goal.CommandIssuedSimulationTick) return false;
+            if (goal.NativeMovementReplaced)
+            { reason = "An exact subject has a replacement native order; unrelated movement cannot satisfy this request."; return false; }
+            for (int i = 0; i < subjects.Length; i++)
+            {
+                UnitData current = simulation.UnitRegistry.GetUnit(subjects[i]);
+                if (current == null || current.State != UnitState.Moving && current.State != UnitState.Idle)
+                {
+                    reason = "An exact movement subject is temporarily unavailable; no replacement or takeover is inferred.";
+                    return false;
+                }
+            }
+            for (int i = 0; i < subjects.Length; i++)
+            {
+                if (!goal.NativeMovementProcessed[i])
+                {
+                    if (simulation.CurrentTick - goal.CommandIssuedSimulationTick >= 150)
+                        reason = "The exact native formation made no progress for 150 simulation ticks; native processing was not observed.";
+                    return false;
+                }
+                if (goal.NativeMovementResults[i] == NativeMovePathResult.Partial
+                    || goal.NativeMovementResults[i] == NativeMovePathResult.NoPath
+                    || Math.Abs((long)goal.NativeMovementEndpoints[i].x.Raw - goal.NativeMovementSlots[i].x.Raw) > goal.NativeMovementScatter[i].Raw
+                    || Math.Abs((long)goal.NativeMovementEndpoints[i].z.Raw - goal.NativeMovementSlots[i].z.Raw) > goal.NativeMovementScatter[i].Raw)
+                { reason = "A native route stopped short of its validated formation slot; no distant idle position counts as arrival."; return false; }
+            }
+            long remaining = 0;
+            bool allArrived = true;
             for (int i = 0; i < subjects.Length; i++)
             {
                 UnitData unit = simulation.UnitRegistry.GetUnit(subjects[i]);
-                if (unit == null || unit.PlayerId < 0 || unit.CurrentHealth <= 0
-                    || unit.State == UnitState.Dead || workerAuthority.IsHumanProtected(unit.Id, currentTick)) continue;
-                eligible++;
-                Fixed32 dx = unit.SimPosition.x - target.x;
-                Fixed32 dz = unit.SimPosition.z - target.z;
-                if (dx * dx + dz * dz > toleranceSquared) return false;
+                if (unit == null || unit.HasPath
+                    && !Near(unit.FinalDestination, goal.NativeMovementEndpoints[i], Fixed32.FromInt(1)))
+                { reason = "An exact subject has a replacement native order; unrelated movement cannot satisfy this request."; return false; }
+                Fixed32 dx = unit.SimPosition.x - goal.NativeMovementEndpoints[i].x;
+                Fixed32 dz = unit.SimPosition.z - goal.NativeMovementEndpoints[i].z;
+                remaining += Math.Abs((long)dx.Raw) + Math.Abs((long)dz.Raw);
+                if (unit.State != UnitState.Idle || !Near(unit.SimPosition, goal.NativeMovementEndpoints[i], Fixed32.FromInt(1)))
+                    allArrived = false;
             }
-            return eligible > 0;
+            if (allArrived) return true;
+            if (remaining < goal.NativeRemainingDistance)
+            { goal.NativeRemainingDistance = remaining; goal.NativeLastProgressSimulationTick = simulation.CurrentTick; }
+            if (simulation.CurrentTick - goal.NativeLastProgressSimulationTick >= 150)
+                reason = "The exact native formation made no progress for 150 simulation ticks; distant idle units are not complete.";
+            return false;
+        }
+
+        private static bool Near(FixedVector3 a, FixedVector3 b, Fixed32 tolerance)
+        {
+            long dx = (long)a.x.Raw - b.x.Raw, dz = (long)a.z.Raw - b.z.Raw;
+            long limit = tolerance.Raw;
+            return dx * dx + dz * dz <= limit * limit;
         }
 
         private int CountPatrolling(int[] subjects, int currentTick)

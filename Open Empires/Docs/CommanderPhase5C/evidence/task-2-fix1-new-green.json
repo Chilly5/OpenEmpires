@@ -1,0 +1,124 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "8dc589d6109b4ccfa48fd8b5229f8907",
+      "status": "succeeded",
+      "mode": "EditMode",
+      "started_unix_ms": 1791667199740,
+      "finished_unix_ms": 1791667205646,
+      "last_update_unix_ms": 1791667205646,
+      "progress": {
+        "completed": 9,
+        "total": 9,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791667205110,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.UnrecognizedGraphReply_AndSourceYes_ReaskWithoutHttp",
+        "last_finished_unix_ms": 1791667205551,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "EditMode",
+        "summary": {
+          "total": 9,
+          "passed": 9,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 4.3737319,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "FourSlotGraph_AllLocalRepliesCompleteWithinBudget",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.FourSlotGraph_AllLocalRepliesCompleteWithinBudget",
+            "state": "Passed",
+            "durationSeconds": 0.6843226,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n"
+          },
+          {
+            "name": "GraphSlotAlternatives_ExternalMutationCannotAlterDraft",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.GraphSlotAlternatives_ExternalMutationCannotAlterDraft",
+            "state": "Passed",
+            "durationSeconds": 0.0034549,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "KnownCountCorrection_DoesNotChangeResourceAmount",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.KnownCountCorrection_DoesNotChangeResourceAmount",
+            "state": "Passed",
+            "durationSeconds": 0.4731157,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          },
+          {
+            "name": "KnownResourceAmountCorrection_DoesNotChangeWorkerCount",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.KnownResourceAmountCorrection_DoesNotChangeWorkerCount",
+            "state": "Passed",
+            "durationSeconds": 0.376339,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          },
+          {
+            "name": "KnownStructureCorrection_BuildOrMakeMillInsteadPreservesMineProposalFields",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.KnownStructureCorrection_BuildOrMakeMillInsteadPreservesMineProposalFields",
+            "state": "Passed",
+            "durationSeconds": 0.6796444,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] intent=admitted;goal-submitted=True\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          },
+          {
+            "name": "OverlongGraphOriginal_IsRejectedWithoutTruncation",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.OverlongGraphOriginal_IsRejectedWithoutTruncation",
+            "state": "Passed",
+            "durationSeconds": 0.003038,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "PendingDraft_ForeignRuntimeAndReplayCannotCreateGoals",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.PendingDraft_ForeignRuntimeAndReplayCannotCreateGoals",
+            "state": "Passed",
+            "durationSeconds": 1.2012718,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] failed-stage=intent-admission;exception=ArgumentException\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] intent=admitted;goal-submitted=True\r\n[Commander] failed-stage=intent-admission;exception=ArgumentException\r\n"
+          },
+          {
+            "name": "RepeatedSuccessfulGraphCorrections_ExpireBeforeSeventhReply",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.RepeatedSuccessfulGraphCorrections_ExpireBeforeSeventhReply",
+            "state": "Passed",
+            "durationSeconds": 0.4726875,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n"
+          },
+          {
+            "name": "UnrecognizedGraphReply_AndSourceYes_ReaskWithoutHttp",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.UnrecognizedGraphReply_AndSourceYes_ReaskWithoutHttp",
+            "state": "Passed",
+            "durationSeconds": 0.4403157,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n"
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

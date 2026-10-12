@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 05:30:21Z" end-time="2026-10-12 05:30:23Z" duration="2.4320837">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1805" result="Failed" site="Child" start-time="2026-10-12 05:30:21Z" end-time="2026-10-12 05:30:23Z" duration="2.432084" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="3081" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1805" result="Failed" site="Child" start-time="2026-10-12 05:30:21Z" end-time="2026-10-12 05:30:23Z" duration="2.334373" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="40764" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="3082" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1805" result="Failed" site="Child" start-time="2026-10-12 05:30:21Z" end-time="2026-10-12 05:30:23Z" duration="2.239853" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="3083" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1805" result="Failed" site="Child" start-time="2026-10-12 05:30:21Z" end-time="2026-10-12 05:30:23Z" duration="2.133255" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="2999" name="CommanderPhase5CProviderBudgetTests" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" testcasecount="48" result="Failed" site="Child" start-time="2026-10-12 05:30:21Z" end-time="2026-10-12 05:30:23Z" duration="2.019259" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5C" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="3016" name="SharedWorkersBuildThenExactNewProduction_RetrievesTypedClosedGraphWithoutAutomaticAuthority" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.SharedWorkersBuildThenExactNewProduction_RetrievesTypedClosedGraphWithoutAutomaticAuthority" methodname="SharedWorkersBuildThenExactNewProduction_RetrievesTypedClosedGraphWithoutAutomaticAuthority" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" seed="1294584754" result="Failed" start-time="2026-10-12 05:30:21Z" end-time="2026-10-12 05:30:23Z" duration="1.835959" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Commander input limit: the complete request and required canonical context cannot fit safely; nothing was submitted. Edit the request or resolve its pending question.; estimate=4509; sections={"contract":3212,"context":853,"memory":2,"questionFacts":0,"pending":0,"utterance":128,"messageMargin":256}
+  Expected: 1
+  But was:  0
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.SharedWorkersBuildThenExactNewProduction_RetrievesTypedClosedGraphWithoutAutomaticAuthority () [0x0013e] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5CProviderBudgetTests.cs:183
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: D:\unity_projects\OpenEmpires\Open Empires\Docs\CommanderPhase5C\evidence\final-fix-leaves-20261012-053021-369-5f6120c1.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

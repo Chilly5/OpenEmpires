@@ -1,0 +1,605 @@
+diff --git a/Docs/CommanderPhase5C/evidence/task7-regression-repair-baseline/Assets/Scripts/AI/Commander/Phase5C/CommanderSemanticRequestPack.cs b/Assets/Scripts/AI/Commander/Phase5C/CommanderSemanticRequestPack.cs
+index 47ebe16..fbe9d0b 100644
+--- a/Docs/CommanderPhase5C/evidence/task7-regression-repair-baseline/Assets/Scripts/AI/Commander/Phase5C/CommanderSemanticRequestPack.cs
++++ b/Assets/Scripts/AI/Commander/Phase5C/CommanderSemanticRequestPack.cs
+@@ -64,7 +64,8 @@ namespace OpenEmpires
+                 || referencedBuilding && Has("place", "erect");
+             bool allocation = Has("gather", "gathering", "food", "wood", "gold", "stone", "berries", "sheep", "farms", "split", "assign", "allocation", "allocate", "put");
+             bool future = Has("next", "future", "births");
+-            bool production = Has("train", "produce", "recruit", "new", "more", "spearmen", "archers", "knights");
++            bool production = Has("train", "produce", "recruit", "new", "more",
++                "spearman", "spearmen", "spear", "spears", "archer", "archers", "knight", "knights");
+             bool age = Has("age", "ages", "feudal", "castle", "imperial", "advance");
+             bool action = Has("move", "march", "go", "guard", "protect", "defend", "defense", "patrol", "scout", "explore", "find", "discover", "enemy", "attack", "strike", "retreat", "withdraw", "repair", "fix", "rally", "garrison", "ungarrison")
+                 || Has("send") && Has("spearmen", "archers", "knights", "army", "troops", "military");
+@@ -90,13 +91,41 @@ namespace OpenEmpires
+                         && (fallbackAll || MatchesAction(capability, words))
+                         && Enum.TryParse(capability.ToString(), out CommanderSemanticNodeType type)) selected.Add(type);
+ 
+-            string instruction = request.IsReadOnlyQuestion ? ReadOnlyRules : CommonRules + Vocabulary(selected);
+-            // Contract retrieval only: quantities on future units must not imply repeated buildings.
+-            bool repeated = Has("split", "partition") || construction && (Has("third")
+-                || HasRepeatedReferencedBuilding(search, knowledge));
++            // A counted building without placement stays on the ordinary BuildStructure path.
++            // Do not infer repeated *placed* construction from the number alone.
++            bool sharedWorkers = Has("worker", "workers", "villager", "villagers")
++                && Has("third", "split", "partition");
++            bool repeatedPlaced = construction
++                && Has("place", "placed", "near", "beside", "by", "next", "adjacent",
++                    "around", "west", "east", "left", "right", "at")
++                && HasRepeatedReferencedBuilding(search, knowledge);
++            bool repeated = sharedWorkers || repeatedPlaced || Has("split", "partition", "third");
+             bool composedWoodline = Has("all") && Has("wood", "woodline", "trees", "tree")
+                 && Has("west", "western", "left") && Has("town", "center", "tc");
+-            if (repeated && !request.IsReadOnlyQuestion) instruction += DynamicVocabulary();
++            var regularSelected = new HashSet<CommanderSemanticNodeType>(selected);
++            if (sharedWorkers)
++            {
++                // One shared selection/partition cannot be expressed by independent
++                // Request nodes; the registered DynamicPlan primitives keep the same effects.
++                regularSelected.Remove(CommanderSemanticNodeType.BuildStructure);
++                regularSelected.Remove(CommanderSemanticNodeType.AllocateWorkers);
++                regularSelected.Remove(CommanderSemanticNodeType.EnsureUnitCount);
++                regularSelected.Remove(CommanderSemanticNodeType.MoveUnits);
++            }
++            else if (repeatedPlaced)
++            {
++                // A placed count and its exact new-building production are represented
++                // by the registered location/build/produce graph, not legacy Request.
++                regularSelected.Remove(CommanderSemanticNodeType.BuildStructure);
++                regularSelected.Remove(CommanderSemanticNodeType.EnsureUnitCount);
++                regularSelected.Remove(CommanderSemanticNodeType.AllocateWorkers);
++            }
++            string instruction = request.IsReadOnlyQuestion ? ReadOnlyRules
++                : ((sharedWorkers || repeatedPlaced) && regularSelected.Count == 0
++                    ? BaseRules + ReplyRules : CommonRules)
++                    + Vocabulary(regularSelected);
++            if (repeated && !request.IsReadOnlyQuestion)
++                instruction += DynamicVocabulary(sharedWorkers, repeatedPlaced, selected);
+             else if (composedWoodline && !request.IsReadOnlyQuestion) instruction += ComposedWoodlineVocabulary;
+             bool optionalStripped = false;
+             while (true)
+@@ -217,10 +246,14 @@ namespace OpenEmpires
+                 default: throw new InvalidOperationException("No capability retrieval mapping: " + type);
+             }
+         }
+-        private const string CommonRules =
++        private const string BaseRules =
+             "JSON only,strict fields/enums; never authorize IDs,coords,commands,hidden/extra goals. Keep counts,negations,actors,sources,restrictions,order,exact refs;unknown unknown. "
+-            + "Request{outcome:Request,nodes:1..4,executionOrder:Independent|Sequential|DependencyGraph}; after/then=completion dependsOn:[prior0-based]; resultFromNode=exact-new,producerFromNode=explicit-new; a/an=1,number words,left=MapWest. "
+-            + "Clarify{outcome:Clarify,message<=180,pending:{executionOrder,nodes:partial1..4},missingSlots:[{node,path,type:Confirmation|Count|SourceKind|CanonicalName,alternatives:[canonical]}]};retain known leaves/edges/refs,omit only missing;Confirmation retains offer. Worker pending+missingFields valid;not approval. Answer/Unsupported{outcome,message<=180};no nodes.";
++            + "After/then depends on completion; a/an=1,number words,left=MapWest. ";
++        private const string RequestRules =
++            "Request{outcome:Request,nodes:1..4,executionOrder:Independent|Sequential|DependencyGraph}; dependsOn:[prior0-based]; resultFromNode=exact-new,producerFromNode=explicit-new. ";
++        private const string ReplyRules =
++            "Clarify{outcome:Clarify,message<=180,pending:{executionOrder,nodes:partial1..4},missingSlots:[{node,path,type:Confirmation|Count|SourceKind|CanonicalName,alternatives:[canonical]}]};retain known leaves/edges/refs,omit only missing;Confirmation retains offer. Worker pending+missingFields valid;not approval. Answer/Unsupported{outcome,message<=180};no nodes. ";
++        private const string CommonRules = BaseRules + RequestRules + ReplyRules;
+ 
+         private static string Vocabulary(HashSet<CommanderSemanticNodeType> selected)
+         {
+@@ -275,18 +308,72 @@ namespace OpenEmpires
+             return text.ToString();
+         }
+ 
+-        private static string DynamicVocabulary()
++        private static string DynamicVocabulary(bool sharedWorkers, bool repeatedPlaced,
++            HashSet<CommanderSemanticNodeType> selected)
+         {
+-            var text = new StringBuilder("DynamicPlan for repeated placed construction/shared workers: {outcome:DynamicPlan,version:1,nodes:[{id,mechanic,parameters:{},inputs:{},dependsOn:[]}]}. One shared worker selection; partition disjointly; exact producer set for explicitly new buildings. Registry name:type, ? optional; input refs in dependsOn. ");
++            var text = new StringBuilder("Shared workers/placed repeats: DynamicPlan{outcome:DynamicPlan,version:1,nodes:[{id,mechanic,parameters:{},inputs:{},dependsOn:[]}]}; ");
++            if (sharedWorkers) text.Append("One worker selection, disjoint partitions; ");
++            if (selected.Contains(CommanderSemanticNodeType.EnsureUnitCount))
++                text.Append("produce.producers=exact new build result; ");
++            text.Append("Registry p=parameters,in=inputs,?optional; typed input refs also in dependsOn. ");
++            // This is contract retrieval, not a capability grant: every advertised primitive
++            // still comes from the registered schema and the game binds all concrete actors.
++            var needed = new HashSet<CommanderDynamicMechanic>();
++            if (sharedWorkers)
++            {
++                needed.UnionWith(new[] { CommanderDynamicMechanic.PartitionWorkers,
++                    CommanderDynamicMechanic.AllocateWorkers,
++                    CommanderDynamicMechanic.ResolveLocation, CommanderDynamicMechanic.Build });
++                if (selected.Contains(CommanderSemanticNodeType.MoveUnits))
++                    needed.Add(CommanderDynamicMechanic.MoveWorkers);
++                if (selected.Contains(CommanderSemanticNodeType.EnsureUnitCount))
++                    needed.Add(CommanderDynamicMechanic.Produce);
++            }
++            if (repeatedPlaced)
++            {
++                needed.UnionWith(new[] { CommanderDynamicMechanic.ResolveLocation,
++                    CommanderDynamicMechanic.Build });
++                if (selected.Contains(CommanderSemanticNodeType.EnsureUnitCount))
++                    needed.Add(CommanderDynamicMechanic.Produce);
++                if (selected.Contains(CommanderSemanticNodeType.AllocateWorkers))
++                    needed.Add(CommanderDynamicMechanic.AllocateWorkers);
++            }
++            // Close required typed inputs using the authoritative registry descriptors.
++            // This preserves source primitives when a new registered dependency is added;
++            // unknown compositions retain the complete registry and may refuse on budget.
++            if (needed.Count > 0)
++            {
++                bool changed;
++                do
++                {
++                    changed = false;
++                    foreach (var primitive in CommanderDynamicPrimitiveRegistry.All.Where(p => needed.Contains(p.Mechanic)))
++                        foreach (var input in primitive.Inputs.Where(i => i.Required))
++                        {
++                            if (CommanderDynamicPrimitiveRegistry.All.Any(p => needed.Contains(p.Mechanic)
++                                && p.Mechanic != primitive.Mechanic && p.Result == input.Accepts
++                                && p.Inputs.All(i => !i.Required))) continue;
++                            var source = CommanderDynamicPrimitiveRegistry.All.FirstOrDefault(p =>
++                                p.Result == input.Accepts && p.Mechanic != primitive.Mechanic
++                                && p.Inputs.All(i => !i.Required) && p.Effect == CommanderDynamicEffectClass.Selection);
++                            if (source == null) source = CommanderDynamicPrimitiveRegistry.All.FirstOrDefault(p =>
++                                p.Result == input.Accepts && p.Mechanic != primitive.Mechanic
++                                && p.Inputs.All(i => !i.Required));
++                            if (source == null) { needed.Clear(); break; }
++                            changed |= needed.Add(source.Mechanic);
++                        }
++                } while (changed && needed.Count > 0);
++            }
+             foreach (var primitive in CommanderDynamicPrimitiveRegistry.All)
+             {
++                if (needed.Count > 0 && !needed.Contains(primitive.Mechanic)) continue;
+                 text.Append(primitive.Id).Append(" p[");
+                 foreach (var field in primitive.Parameters) text.Append(field.Name).Append(':').Append(field.Kind).Append(field.Required ? ";" : "?;");
+                 text.Append("] in[");
+                 foreach (var input in primitive.Inputs) text.Append(input.Role).Append(':').Append(input.Accepts).Append(input.Required ? ";" : "?;");
+                 text.Append("] ->").Append(primitive.Result).Append('.');
+             }
+-            return text.Append(" Max12 nodes,4 refs/node,depth5,total counts200. Canonical context IDs only; Near|MapWest|MapEast gap1; resource Visible|Worked. Simple known requests keep Request fast path. ").ToString();
++            return text.Append(" Types: Count=int1..200 (build<=20); Offset=int0..200; ClearGapTiles=int1..20 (Near=1); UnitId/BuildingId=context canonical IDs; Resource/SourceKind=compatible values above; WorkerState=Any|Idle|Gathering; WorkerCountMode=AllMatching; Anchor=MyTownCenter|MyBarracks; Relation=Near|MapWest|MapEast; QuantityMode=New|TargetTotal. select-workers: count XOR countMode; AllMatching needs non-Any state and cannot partition; currentResource requires Gathering. resolve-location: exactly one anchor/structures/resources; resource+sourceKind together only for MyTownCenter+MapWest. Max12 nodes,4 refs/node,depth5,total non-partition counts200. New=exact new; TargetTotal=existing+new. ").ToString();
+         }
+ 
+         private const string ComposedWoodlineVocabulary =
+diff --git a/Docs/CommanderPhase5C/evidence/task7-regression-repair-baseline/Assets/Tests/EditMode/CommanderGrandFixEvidenceLaneTests.cs b/Assets/Tests/EditMode/CommanderGrandFixEvidenceLaneTests.cs
+index e8722b3..ac17d3e 100644
+--- a/Docs/CommanderPhase5C/evidence/task7-regression-repair-baseline/Assets/Tests/EditMode/CommanderGrandFixEvidenceLaneTests.cs
++++ b/Assets/Tests/EditMode/CommanderGrandFixEvidenceLaneTests.cs
+@@ -206,8 +206,11 @@ namespace OpenEmpires.Tests
+             try
+             {
+                 var simulation=new GameSimulation(config,1,new[]{0},Array.Empty<int>());using var manager=new CommanderGoalManager(simulation,0);
+-                var provider=new OpenRouterCommanderProvider("not-an-api-key",new FakeTransport(Completion("{\"outcome\":\"Answer\",\"message\":\"fixture\"}",finish)));
+-                var result=await provider.TranslateSemanticAsync(new CommanderSemanticProviderRequest("a question",new CommanderContextBuilder().Build(simulation,manager)),CancellationToken.None);
++                var transport=new FakeTransport(Completion("{\"outcome\":\"Answer\",\"message\":\"fixture\"}",finish));
++                var provider=new OpenRouterCommanderProvider("not-an-api-key",transport);
++                var result=await provider.TranslateSemanticAsync(new CommanderSemanticProviderRequest("a question",
++                    new CommanderContextBuilder().Build(simulation,manager),readOnlyQuestion:true),CancellationToken.None);
++                Assert.That(transport.Calls,Is.EqualTo(1),"The read-only fixture must reach its fake completion envelope.");
+                 Assert.That(result.IsValid,Is.False);Assert.That(provider.LastRequestTrace,Does.Contain("finish="+expected));
+                 Assert.That(provider.LastRequestTrace,Does.Not.Contain("private-finish-marker"));
+             }
+diff --git a/Docs/CommanderPhase5C/evidence/task7-regression-repair-baseline/Assets/Tests/EditMode/CommanderGrandFixPresentationTests.cs b/Assets/Tests/EditMode/CommanderGrandFixPresentationTests.cs
+index 923c41f..da33c48 100644
+--- a/Docs/CommanderPhase5C/evidence/task7-regression-repair-baseline/Assets/Tests/EditMode/CommanderGrandFixPresentationTests.cs
++++ b/Assets/Tests/EditMode/CommanderGrandFixPresentationTests.cs
+@@ -204,17 +204,20 @@ namespace OpenEmpires.Tests
+             await chat.SubmitMessageAsync("Assign the three workers to the two requested roles.");
+             var candidate=chat.PendingActionPlan;
+             Assert.That(candidate,Is.Not.Null);
++            Assert.That(Compact.transform.Find("PlanApproval").gameObject.activeSelf,Is.False,
++                "The compact approval card is intentionally hidden in this presentation.");
++            Surface("OpenCommander");
+             typeof(CommanderChatUI).GetMethod("UpdatePresentation",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(chat,null);
+             var flags=BindingFlags.Instance|BindingFlags.NonPublic;
+-            // Keep this assembly's existing dependency boundary; inspect the real
+-            // runtime TMP component without adding a package reference for a test.
+-            var body=(Component)typeof(CommanderChatUI).GetField("compactApprovalText",flags).GetValue(chat);
++            // Inspect the actually visible expanded review body after opening Details.
++            // Keep this assembly's existing TMP dependency boundary via reflection.
++            var body=(Component)typeof(CommanderChatUI).GetField("expandedApprovalText",flags).GetValue(chat);
+             Assert.That(body.GetType().GetProperty("text").GetValue(body),Is.EqualTo(candidate.Preview));
+             Assert.That(body.GetType().GetProperty("richText").GetValue(body),Is.False);
+             var scroll=body.GetComponentInParent<UnityEngine.UI.ScrollRect>();
+             Assert.That(scroll,Is.Not.Null);Assert.That(scroll.content,Is.SameAs(body.transform));
+             Assert.That(body.GetComponent<UnityEngine.UI.ContentSizeFitter>().verticalFit,Is.EqualTo(UnityEngine.UI.ContentSizeFitter.FitMode.PreferredSize));
+-            Click(scroll.transform.parent.Find("Actions/Action0").GetComponent<UnityEngine.UI.Button>());
++            Assert.That(scroll.gameObject.activeInHierarchy,Is.True);
+             Assert.That(Panel.gameObject.activeSelf,Is.True);
+             Assert.That(chat.PendingActionPlan,Is.SameAs(candidate));
+             Assert.That(manager.Goals,Is.Empty);Assert.That(sim.CommandBuffer.FlushCommands(),Is.Empty);
+diff --git a/Docs/CommanderPhase5C/evidence/task7-regression-repair-baseline/Assets/Tests/EditMode/CommanderPhase4ATests.cs b/Assets/Tests/EditMode/CommanderPhase4ATests.cs
+index 67e68d6..90bc9fa 100644
+--- a/Docs/CommanderPhase5C/evidence/task7-regression-repair-baseline/Assets/Tests/EditMode/CommanderPhase4ATests.cs
++++ b/Assets/Tests/EditMode/CommanderPhase4ATests.cs
+@@ -132,11 +132,12 @@ namespace OpenEmpires.Tests
+             await provider.TranslateSemanticAsync(request, CancellationToken.None);
+ 
+             string body = transport.RequestBodies.Single();
+-            Assert.That(body, Does.Contain("\\\"placement\\\""));
++            Assert.That(body, Does.Contain("placement?"),
++                "The compact contract must advertise optional typed placement, not an obsolete JSON spelling.");
+             Assert.That(body, Does.Contain("MyTownCenter|MyBarracks"));
+-            Assert.That(body, Does.Contain("MapWest|MapEast|Near"));
++            Assert.That(body, Does.Contain("Near|MapWest|MapEast"));
+             Assert.That(body, Does.Contain("clearGapTiles"));
+-            Assert.That(body, Does.Contain("producerFromNode"));
++            Assert.That(body, Does.Contain("producerFromNode=explicit-new"));
+         }
+ 
+         [Test]
+diff --git a/Docs/CommanderPhase5C/evidence/task7-regression-repair-baseline/Assets/Tests/EditMode/CommanderPhase4GCapabilityTests.cs b/Assets/Tests/EditMode/CommanderPhase4GCapabilityTests.cs
+index 176c1ff..6849923 100644
+--- a/Docs/CommanderPhase5C/evidence/task7-regression-repair-baseline/Assets/Tests/EditMode/CommanderPhase4GCapabilityTests.cs
++++ b/Assets/Tests/EditMode/CommanderPhase4GCapabilityTests.cs
+@@ -225,10 +225,12 @@ namespace OpenEmpires.Tests
+                 int z = simulation.MapData.Height / 2;
+                 simulation.CreateBuilding(0, BuildingType.TownCenter, x, z, false, true);
+                 UnitData military = simulation.UnitRegistry.CreateUnit(0,
+-                    simulation.MapData.TileToWorldFixed(x + 2, z + 2), Fixed32.One,
++                    simulation.MapData.TileToWorldFixed(x + 8, z + 8), Fixed32.One,
+                     Fixed32.FromFloat(.4f), Fixed32.One);
+                 military.UnitType = 1;
+                 military.MaxHealth = military.CurrentHealth = 100;
++                for (int ix = x - 20; ix <= x + 20; ix++)
++                    for (int iz = z - 20; iz <= z + 20; iz++) simulation.FogOfWar.SetVisible(0, ix, iz);
+ 
+                 var intent = new CapabilityActionIntent(0, CommanderCapabilityActionType.MoveUnits,
+                     new CommanderUnitSelector(CommanderUnitSelectorKind.Military),
+@@ -237,7 +239,7 @@ namespace OpenEmpires.Tests
+ 
+                 manager.Tick(0);
+ 
+-                Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Executing));
++                Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Executing), goal.StatusReason);
+                 Assert.That(simulation.CommandBuffer.FlushCommands(), Has.Some.TypeOf<MoveCommand>());
+             }
+             finally
+diff --git a/Docs/CommanderPhase5C/evidence/task7-regression-repair-baseline/Assets/Tests/EditMode/CommanderPhase5AAntiGravityHostileAuditTests.cs b/Assets/Tests/EditMode/CommanderPhase5AAntiGravityHostileAuditTests.cs
+index dd527f8..3708d7e 100644
+--- a/Docs/CommanderPhase5C/evidence/task7-regression-repair-baseline/Assets/Tests/EditMode/CommanderPhase5AAntiGravityHostileAuditTests.cs
++++ b/Assets/Tests/EditMode/CommanderPhase5AAntiGravityHostileAuditTests.cs
+@@ -318,7 +318,7 @@ namespace OpenEmpires.Tests
+         public void PrimitiveCatalog_ExactlyNineRegisteredPrimitives()
+         {
+             var primitives = CommanderDynamicPrimitiveRegistry.All;
+-            Assert.That(primitives.Count, Is.EqualTo(9));
++            Assert.That(primitives.Count, Is.EqualTo(10));
+ 
+             var expected = new[]
+             {
+@@ -330,6 +330,7 @@ namespace OpenEmpires.Tests
+                 "resolve-location",
+                 "build",
+                 "allocate-workers",
++                "move-workers",
+                 "produce"
+             };
+ 
+@@ -346,8 +347,9 @@ namespace OpenEmpires.Tests
+ 
+             var effects = primitives.Where(p => p.Effect == CommanderDynamicEffectClass.Construction
+                 || p.Effect == CommanderDynamicEffectClass.Allocation
++                || p.Effect == CommanderDynamicEffectClass.Movement
+                 || p.Effect == CommanderDynamicEffectClass.Production).Select(p => p.Id).ToArray();
+-            Assert.That(effects, Is.EquivalentTo(new[] { "build", "allocate-workers", "produce" }));
++            Assert.That(effects, Is.EquivalentTo(new[] { "build", "allocate-workers", "move-workers", "produce" }));
+         }
+ 
+         #endregion
+diff --git a/Docs/CommanderPhase5C/evidence/task7-regression-repair-baseline/Assets/Tests/EditMode/CommanderPhase5AProviderContractTests.cs b/Assets/Tests/EditMode/CommanderPhase5AProviderContractTests.cs
+index 9136e8c..b527ab7 100644
+--- a/Docs/CommanderPhase5C/evidence/task7-regression-repair-baseline/Assets/Tests/EditMode/CommanderPhase5AProviderContractTests.cs
++++ b/Assets/Tests/EditMode/CommanderPhase5AProviderContractTests.cs
+@@ -13,40 +13,34 @@ namespace OpenEmpires.Tests
+     {
+         private const string Key = "test-only-provider-secret";
+         private const string Farm = "{\"outcome\":\"DynamicPlan\",\"version\":1,\"nodes\":[{\"id\":\"farms\",\"mechanic\":\"build\",\"parameters\":{\"building\":\"building:Farm\",\"count\":4},\"inputs\":{},\"dependsOn\":[]}]}";
++        private const string OrdinaryFarm = "{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"BuildStructure\",\"structure\":\"Farm\",\"count\":4,\"builders\":{\"state\":\"Eligible\",\"count\":1}}]}";
+         private const string StringCountFarm = "{\"outcome\":\"DynamicPlan\",\"version\":1,\"nodes\":[{\"id\":\"farms\",\"mechanic\":\"build\",\"parameters\":{\"building\":\"building:Farm\",\"count\":\"4\"},\"inputs\":{},\"dependsOn\":[]}]}";
+         private const string Spearmen = "{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":10}]}";
+ 
+         [Test]
+         public async Task DynamicFarm_UsesRegistryVocabularyAndReturnsTypedPlan()
+         {
+-            var transport = new SequenceTransport(Completion(Farm));
++            var transport = new SequenceTransport(Completion(OrdinaryFarm));
+             var result = await Translate(transport, "make four farms");
+ 
+             Assert.That(result.IsValid, Is.True, result.SafeExplanation);
+-            Assert.That(result.Outcome, Is.EqualTo(CommanderSemanticOutcome.DynamicPlan));
+-            Assert.That(result.DynamicPlan, Is.Not.Null);
+-            Assert.That(result.DynamicPlan.Nodes[0].Primitive.Mechanic, Is.EqualTo(CommanderDynamicMechanic.Build));
+-            Assert.That(result.DynamicPlan.Nodes[0].Parameter<string>("building"), Is.EqualTo("building:Farm"));
++            Assert.That(result.Outcome, Is.EqualTo(CommanderSemanticOutcome.Request));
++            Assert.That(result.Nodes, Has.Count.EqualTo(1));
++            Assert.That(result.Nodes[0].Type, Is.EqualTo(CommanderSemanticNodeType.BuildStructure));
++            Assert.That(result.Nodes[0].BuildingType, Is.EqualTo(BuildingType.Farm));
++            Assert.That(result.Nodes[0].Count, Is.EqualTo(4));
+             Assert.That(transport.Bodies, Has.Count.EqualTo(1));
+             ChatBody body = JsonUtility.FromJson<ChatBody>(transport.Bodies[0]);
+             Assert.That(body.model, Is.EqualTo("openai/gpt-6-luna"));
+             Assert.That(body.max_tokens, Is.EqualTo(4096));
+             Assert.That(transport.Bodies[0], Does.Not.Contain("response_format"));
+             string instruction = body.messages[0].content;
+-            Assert.That(instruction, Does.Contain("DynamicPlan"));
+             Assert.That(instruction, Does.Contain("BuildStructure"));
+-            foreach (var primitive in CommanderDynamicPrimitiveRegistry.All)
+-            {
+-                Assert.That(instruction, Does.Contain(primitive.Id), primitive.Id);
+-                foreach (var field in primitive.Parameters)
+-                    Assert.That(instruction, Does.Contain(field.Name), primitive.Id + "." + field.Name);
+-                foreach (var input in primitive.Inputs)
+-                    Assert.That(instruction, Does.Contain(input.Role), primitive.Id + "." + input.Role);
+-            }
++            Assert.That(instruction, Does.Not.Contain("partition-workers"),
++                "A plain counted Farm has no shared-worker or repeated-placement composition.");
+             Assert.That(instruction, Does.Contain("never authorize"));
+             Assert.That(instruction, Does.Contain("missingSlots"));
+             Assert.That(instruction, Does.Contain("count:1..20"));
+-            Assert.That(instruction, Does.Contain("Max12 nodes"));
+             Assert.That(transport.Bodies[0], Does.Not.Contain(Key));
+         }
+ 
+@@ -69,8 +63,9 @@ namespace OpenEmpires.Tests
+             var transport = new SequenceTransport(Completion(Spearmen));
+             await Translate(transport, "send two of three idle workers to sheep and the third to build a mill near berries");
+ 
++            Assert.That(transport.Bodies, Has.Count.EqualTo(1), "The whole shared-worker request must fit before indexing a body.");
+             string instruction = JsonUtility.FromJson<ChatBody>(transport.Bodies[0]).messages[0].content;
+-            Assert.That(instruction, Does.Contain("one shared worker selection").IgnoreCase,
++            Assert.That(instruction, Does.Contain("one worker selection").IgnoreCase,
+                 "System message must describe one shared worker set before partitioning.");
+             Assert.That(instruction.Contains("partition-workers"), Is.True,
+                 "System message must expose the registry partition mechanic.");
+@@ -82,19 +77,38 @@ namespace OpenEmpires.Tests
+         [Test]
+         public async Task RepeatedPlacementAndExactProducers_PromptIncludesStrictDynamicExample()
+         {
+-            var transport = new SequenceTransport(Completion(Spearmen));
+-            await Translate(transport, "build two barracks near my town center and train ten new spearmen in them");
+-
+-            string instruction = JsonUtility.FromJson<ChatBody>(transport.Bodies[0]).messages[0].content;
+-            Assert.That(instruction.Contains("repeated placed construction"), Is.True,
+-                "System message must route repeated placement through DynamicPlan.");
+-            Assert.That(instruction.Contains("exact producer set"), Is.True,
+-                "System message must bind production to the new building result.");
+-            Assert.That(instruction, Does.Contain("simple known requests").IgnoreCase,
+-                "Known fast paths must remain available.");
+-            Assert.That(instruction, Does.Contain("build"));
+-            Assert.That(instruction, Does.Contain("train"));
+-            Assert.That(instruction, Does.Contain("quantityMode"));
++            const string utterance = "build two barracks near my town center and train ten new spearmen in them";
++            const string response = "{\"outcome\":\"DynamicPlan\",\"version\":1,\"nodes\":["
++                + "{\"id\":\"site\",\"mechanic\":\"resolve-location\",\"parameters\":{\"anchor\":\"MyTownCenter\",\"relation\":\"Near\",\"clearGapTiles\":1},\"inputs\":{},\"dependsOn\":[]},"
++                + "{\"id\":\"barracks\",\"mechanic\":\"build\",\"parameters\":{\"building\":\"building:Barracks\",\"count\":2},\"inputs\":{\"location\":\"site\"},\"dependsOn\":[\"site\"]},"
++                + "{\"id\":\"spears\",\"mechanic\":\"produce\",\"parameters\":{\"unit\":\"unit:1\",\"count\":10,\"quantityMode\":\"New\"},\"inputs\":{\"producers\":\"barracks\"},\"dependsOn\":[\"barracks\"]}]}";
++            var config = ScriptableObject.CreateInstance<SimulationConfig>();
++            CommanderGoalManager manager = null;
++            try
++            {
++                var simulation = new GameSimulation(config, 1, new[] { 0 }, Array.Empty<int>());
++                simulation.SetPlayerCivilizations(new[] { Civilization.English });
++                manager = new CommanderGoalManager(simulation, 0);
++                var transport = new SequenceTransport(Completion(response));
++                var context = new CommanderContextBuilder().Build(simulation, manager, utterance);
++                var provider = new OpenRouterCommanderProvider(Key, transport);
++                var result = await provider.TranslateSemanticAsync(
++                    new CommanderSemanticProviderRequest(utterance, context), CancellationToken.None);
++                Assert.That(transport.Bodies, Has.Count.EqualTo(1), result.SafeExplanation
++                    + "; estimate=" + provider.LastInputEstimate);
++                Assert.That(result.IsValid && result.Outcome == CommanderSemanticOutcome.DynamicPlan, Is.True,
++                    result.SafeExplanation);
++                Assert.That(result.DynamicPlan.Nodes[1].Parameter<int>("count"), Is.EqualTo(2));
++                Assert.That(result.DynamicPlan.Nodes[2].Inputs["producers"], Is.EqualTo("barracks"));
++                string instruction = JsonUtility.FromJson<ChatBody>(transport.Bodies[0]).messages[0].content;
++                Assert.That(instruction, Does.Contain("placed repeats"));
++                Assert.That(instruction, Does.Contain("produce.producers=exact new build result"));
++                Assert.That(instruction, Does.Contain("resolve-location"));
++                Assert.That(instruction, Does.Contain("build p["));
++                Assert.That(instruction, Does.Contain("produce p["));
++                Assert.That(instruction, Does.Contain("quantityMode"));
++            }
++            finally { manager?.Dispose(); UnityEngine.Object.DestroyImmediate(config); }
+         }
+ 
+         [Test]
+diff --git a/Docs/CommanderPhase5C/evidence/task7-regression-repair-baseline/Assets/Tests/EditMode/CommanderPhase5CProviderBudgetTests.cs b/Assets/Tests/EditMode/CommanderPhase5CProviderBudgetTests.cs
+index 5430a43..0cbfdb5 100644
+--- a/Docs/CommanderPhase5C/evidence/task7-regression-repair-baseline/Assets/Tests/EditMode/CommanderPhase5CProviderBudgetTests.cs
++++ b/Assets/Tests/EditMode/CommanderPhase5CProviderBudgetTests.cs
+@@ -37,15 +37,30 @@ namespace OpenEmpires.Tests
+                     + "; estimate=" + provider.LastInputEstimate
+                     + "; sections=" + JsonConvert.SerializeObject(provider.LastInputSectionEstimates));
+                 string contract = (string)JObject.Parse(transport.Body)["messages"]?[0]?["content"];
+-                Assert.That(contract, Does.Contain("DynamicPlan for repeated placed construction"));
+-                Assert.That(contract, Does.Contain("BuildStructure{structure:canonical,count:1,"));
+-                Assert.That(contract, Does.Not.Contain("BuildStructure{structure:canonical,count:1..20,"));
++                Assert.That(contract, Does.Contain("placed repeats: DynamicPlan"));
++                Assert.That(contract, Does.Contain("resolve-location p["));
++                Assert.That(contract, Does.Contain("build p["));
++                Assert.That(contract, Does.Contain("Count=int1..200 (build<=20)"));
++                Assert.That(contract, Does.Contain("Anchor=MyTownCenter|MyBarracks"));
++                Assert.That(contract, Does.Contain("Relation=Near|MapWest|MapEast"));
++                Assert.That(contract, Does.Not.Contain("BuildStructure{"),
++                    "This known placed count is represented by one typed location/build graph.");
+                 Assert.That(PackedKnowledgeIds(CommanderSemanticRequestPack.TryBuild(
+                     new CommanderSemanticProviderRequest(utterance, context), "openai/gpt-6-luna", 4096,
+                     out var pack, out _) ? pack : null), Does.Contain("building:House"));
+                 Assert.That(result.IsValid && result.Outcome == CommanderSemanticOutcome.DynamicPlan, Is.True, result.SafeExplanation);
++                Assert.That(result.DynamicPlan.Nodes[0].Primitive,
++                    Is.SameAs(CommanderDynamicPrimitiveRegistry.Find("resolve-location")));
++                Assert.That(result.DynamicPlan.Nodes[0].Parameter<string>("anchor"), Is.EqualTo("MyTownCenter"));
++                Assert.That(result.DynamicPlan.Nodes[0].Parameter<string>("relation"), Is.EqualTo("Near"));
++                Assert.That(result.DynamicPlan.Nodes[1].Primitive,
++                    Is.SameAs(CommanderDynamicPrimitiveRegistry.Find("build")));
++                Assert.That(result.DynamicPlan.Nodes[1].Parameter<int>("count"), Is.EqualTo(2));
++                Assert.That(result.DynamicPlan.Nodes[1].Inputs["location"], Is.EqualTo("site"));
++                Assert.That(result.DynamicPlan.Nodes[1].DependsOn, Does.Contain("site"));
+                 Assert.That(manager.PrepareActionPlan(result, utterance, 1).Preview, Does.Contain("House"));
+                 Assert.That(manager.Goals, Is.Empty, "Semantic admission previews only; no prefix executes before approval.");
++                Assert.That(simulation.CommandBuffer.FlushCommands(), Is.Empty);
+             }
+             finally { manager?.Dispose(); UnityEngine.Object.DestroyImmediate(config); }
+         }
+@@ -120,6 +135,9 @@ namespace OpenEmpires.Tests
+ 
+         [TestCase("Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.")]
+         [TestCase("Move all of my Wood villagers to the woodline left of my Town Center.")]
++        [TestCase("make four farms")]
++        [TestCase("send two of three idle workers to sheep and the third to build a mill near berries")]
++        [TestCase("build two barracks near my town center and train ten new spearmen in them")]
+         public async Task RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(string utterance)
+         {
+             var config = UnityEngine.ScriptableObject.CreateInstance<SimulationConfig>();
+@@ -155,6 +173,54 @@ namespace OpenEmpires.Tests
+             finally { manager?.Dispose(); UnityEngine.Object.DestroyImmediate(config); }
+         }
+ 
++        [TestCase(false)]
++        [TestCase(true)]
++        public async Task SharedWorkersBuildThenExactNewProduction_RetrievesTypedClosedGraphWithoutAutomaticAuthority(bool schemaRepair)
++        {
++            const string utterance = "send two of three idle workers to sheep and the third to build a Barracks near my Town Center, then train ten new Spearmen in it";
++            const string response = "{\"outcome\":\"DynamicPlan\",\"version\":1,\"nodes\":["
++                + "{\"id\":\"idle\",\"mechanic\":\"select-workers\",\"parameters\":{\"count\":3,\"state\":\"Idle\"},\"inputs\":{},\"dependsOn\":[]},"
++                + "{\"id\":\"sheepWorkers\",\"mechanic\":\"partition-workers\",\"parameters\":{\"offset\":0,\"count\":2},\"inputs\":{\"workers\":\"idle\"},\"dependsOn\":[\"idle\"]},"
++                + "{\"id\":\"builder\",\"mechanic\":\"partition-workers\",\"parameters\":{\"offset\":2,\"count\":1},\"inputs\":{\"workers\":\"idle\"},\"dependsOn\":[\"idle\"]},"
++                + "{\"id\":\"sheep\",\"mechanic\":\"allocate-workers\",\"parameters\":{\"resource\":\"Food\",\"sourceKind\":\"Sheep\"},\"inputs\":{\"workers\":\"sheepWorkers\"},\"dependsOn\":[\"sheepWorkers\"]},"
++                + "{\"id\":\"site\",\"mechanic\":\"resolve-location\",\"parameters\":{\"anchor\":\"MyTownCenter\",\"relation\":\"Near\",\"clearGapTiles\":1},\"inputs\":{},\"dependsOn\":[]},"
++                + "{\"id\":\"barracks\",\"mechanic\":\"build\",\"parameters\":{\"building\":\"building:Barracks\",\"count\":1},\"inputs\":{\"workers\":\"builder\",\"location\":\"site\"},\"dependsOn\":[\"builder\",\"site\"]},"
++                + "{\"id\":\"spears\",\"mechanic\":\"produce\",\"parameters\":{\"unit\":\"unit:1\",\"count\":10,\"quantityMode\":\"New\"},\"inputs\":{\"producers\":\"barracks\"},\"dependsOn\":[\"barracks\"]}]}";
++            var config = UnityEngine.ScriptableObject.CreateInstance<SimulationConfig>();
++            CommanderGoalManager manager = null;
++            try
++            {
++                var simulation = new GameSimulation(config, 1, new[] { 0 }, Array.Empty<int>());
++                simulation.SetPlayerCivilizations(new[] { Civilization.English });
++                manager = new CommanderGoalManager(simulation, 0);
++                var transport = new CaptureTransport { Replies = schemaRepair
++                    ? new[] { response.Replace("\"count\":10", "\"count\":\"10\""), response }
++                    : new[] { response } };
++                var provider = new OpenRouterCommanderProvider("fixture-not-a-credential", transport);
++                var result = await provider.TranslateSemanticAsync(new CommanderSemanticProviderRequest(utterance,
++                    new CommanderContextBuilder().Build(simulation, manager, utterance)), CancellationToken.None);
++                Assert.That(transport.Calls, Is.EqualTo(schemaRepair ? 2 : 1), result.SafeExplanation + "; estimate="
++                    + provider.LastInputEstimate + "; sections=" + JsonConvert.SerializeObject(provider.LastInputSectionEstimates));
++                Assert.That(provider.LastInputEstimate, Is.LessThan(4000));
++                Assert.That(provider.LastSemanticAttempts.All(attempt => attempt.InputEstimate < 4000), Is.True,
++                    "Both initial and eligible schema-only repair must pass the unchanged preflight cap.");
++                string instruction = (string)JObject.Parse(transport.Bodies[0])["messages"]?[0]?["content"];
++                foreach (string primitive in new[] { "select-workers", "partition-workers", "allocate-workers",
++                    "resolve-location", "build p[", "produce p[" })
++                    Assert.That(instruction, Does.Contain(primitive), primitive);
++                Assert.That((string)JObject.Parse(transport.Bodies[0])["messages"]?[1]?["content"], Does.Contain(utterance));
++                Assert.That(result.IsValid && result.Outcome == CommanderSemanticOutcome.DynamicPlan,
++                    Is.True, result.SafeExplanation);
++                var candidate = manager.PrepareActionPlan(result, utterance, 1);
++                Assert.That(candidate.Graph.Nodes, Has.Count.EqualTo(3));
++                Assert.That(candidate.Graph.Nodes[2].ProducerFromNode, Is.EqualTo(1));
++                Assert.That(candidate.Graph.Nodes[2].DependsOn, Does.Contain(1));
++                Assert.That(manager.Goals, Is.Empty, "The model's whole graph is a candidate, not approval.");
++                Assert.That(simulation.CommandBuffer.FlushCommands(), Is.Empty);
++            }
++            finally { manager?.Dispose(); UnityEngine.Object.DestroyImmediate(config); }
++        }
++
+         [Test] public async Task MalformedUsageMetadata_DoesNotInvalidateOtherwiseValidSemanticReply()
+         {
+             var transport = new CaptureTransport { Usage = new JObject { ["prompt_tokens"] = -1,
+@@ -525,25 +591,56 @@ namespace OpenEmpires.Tests
+             var provider = new OpenRouterCommanderProvider("fixture-not-a-credential", transport);
+             using (var cancelled = new CancellationTokenSource())
+             {
+-                var old = provider.TranslateSemanticAsync(new CommanderSemanticProviderRequest("Build a House.",
+-                    CommanderEconomyClarificationTests.Context()), cancelled.Token);
+-                cancelled.Cancel();
+-                await provider.TranslateSemanticAsync(new CommanderSemanticProviderRequest("Build a Mill.",
+-                    CommanderEconomyClarificationTests.Context()), CancellationToken.None);
+-                Assert.That(provider.LastSemanticAttempts, Has.Count.EqualTo(1));
+-                Assert.That(provider.LastUsage.PromptTokens, Is.EqualTo(222));
+-                Assert.That(provider.LastHttpStatusCode, Is.EqualTo(200));
+-                transport.ReleaseOld();
+-                Assert.ThrowsAsync<TaskCanceledException>(async () => await old);
+-                Assert.That(provider.LastSemanticAttempts, Has.Count.EqualTo(1));
+-                Assert.That(provider.LastSemanticAttempts[0].Usage.PromptTokens, Is.EqualTo(222));
+-                Assert.That(provider.LastUsage.PromptTokens, Is.EqualTo(222));
+-                Assert.That(provider.LastHttpStatusCode, Is.EqualTo(200));
+-                Assert.That(Read(provider, "SemanticHttpAttemptCount"), Is.EqualTo(2L));
+-                var history = (System.Collections.IEnumerable)Read(provider, "RecentSemanticAttempts");
+-                var observed = history.Cast<CommanderProviderAttempt>().ToArray();
+-                Assert.That(observed, Has.Length.EqualTo(2));
+-                Assert.That(observed.Single(x => x.ResultStage == "caller-canceled").Usage.PromptTokens, Is.Null);
++                Task<CommanderSemanticResult> old = null, newer = null;
++                try
++                {
++                    old = provider.TranslateSemanticAsync(new CommanderSemanticProviderRequest("Build a House.",
++                        CommanderEconomyClarificationTests.Context()), cancelled.Token);
++                    Assert.That(transport.Calls, Is.EqualTo(1),
++                        "The old request must dispatch before cancellation; estimate=" + provider.LastInputEstimate
++                        + "; sections=" + JsonConvert.SerializeObject(provider.LastInputSectionEstimates));
++                    cancelled.Cancel();
++                    newer = provider.TranslateSemanticAsync(new CommanderSemanticProviderRequest("Build a Mill.",
++                        CommanderEconomyClarificationTests.Context()), CancellationToken.None);
++                    Assert.That(await Task.WhenAny(newer, Task.Delay(TimeSpan.FromSeconds(3))), Is.SameAs(newer),
++                        "The new request must not wait for the old fake transport; calls=" + transport.Calls
++                        + "; estimate=" + provider.LastInputEstimate);
++                    await newer;
++                    Assert.That(transport.Calls, Is.EqualTo(2), "Both requests must reach the fake transport.");
++                    Assert.That(provider.LastSemanticAttempts, Has.Count.EqualTo(1));
++                    Assert.That(provider.LastUsage.PromptTokens, Is.EqualTo(222));
++                    Assert.That(provider.LastHttpStatusCode, Is.EqualTo(200));
++                    transport.ReleaseOld();
++                    Assert.That(await Task.WhenAny(old, Task.Delay(TimeSpan.FromSeconds(3))), Is.SameAs(old),
++                        "The released old attempt must settle without waiting for the provider deadline.");
++                    Assert.ThrowsAsync<TaskCanceledException>(async () => await old);
++                    Assert.That(provider.LastSemanticAttempts, Has.Count.EqualTo(1));
++                    Assert.That(provider.LastSemanticAttempts[0].Usage.PromptTokens, Is.EqualTo(222));
++                    Assert.That(provider.LastUsage.PromptTokens, Is.EqualTo(222));
++                    Assert.That(provider.LastHttpStatusCode, Is.EqualTo(200));
++                    Assert.That(Read(provider, "SemanticHttpAttemptCount"), Is.EqualTo(2L));
++                    var history = (System.Collections.IEnumerable)Read(provider, "RecentSemanticAttempts");
++                    var observed = history.Cast<CommanderProviderAttempt>().ToArray();
++                    Assert.That(observed, Has.Length.EqualTo(2));
++                    Assert.That(observed.Single(x => x.ResultStage == "caller-canceled").Usage.PromptTokens, Is.Null);
++                }
++                finally
++                {
++                    cancelled.Cancel();
++                    transport.ReleaseOld();
++                    await ObserveOwnedAttempt(old);
++                    await ObserveOwnedAttempt(newer);
++                }
++            }
++        }
++
++        private static async Task ObserveOwnedAttempt(Task task)
++        {
++            if (task == null) return;
++            if (await Task.WhenAny(task, Task.Delay(TimeSpan.FromSeconds(3))) == task && task.IsFaulted)
++            {
++                var observed = task.Exception;
++                Assert.That(observed, Is.Not.Null);
+             }
+         }
+ 
+@@ -585,6 +682,7 @@ namespace OpenEmpires.Tests
+         private sealed class CaptureTransport : ICommanderHttpTransport
+         {
+             internal string Body;
++            internal readonly List<string> Bodies = new List<string>();
+             internal int Calls;
+             internal JObject Usage;
+             internal string[] Replies;
+@@ -592,7 +690,7 @@ namespace OpenEmpires.Tests
+             public Task<CommanderHttpResponse> PostJsonAsync(Uri uri, string body,
+                 IReadOnlyDictionary<string, string> headers, CancellationToken token)
+             {
+-                Calls++; Body = body;
++                Calls++; Body = body; Bodies.Add(body);
+                 var envelope = new JObject { ["choices"] = new JArray(new JObject {
+                     ["finish_reason"] = "stop", ["message"] = new JObject {
+                         ["content"] = Replies != null ? Replies[Calls - 1] : "{\"outcome\":\"Answer\",\"message\":\"Offline fixture.\"}" } }) };
+@@ -615,8 +713,9 @@ namespace OpenEmpires.Tests
+         private sealed class OverlapTransport : ICommanderHttpTransport
+         {
+             private readonly TaskCompletionSource<CommanderHttpResponse> old =
+-                new TaskCompletionSource<CommanderHttpResponse>();
++                new TaskCompletionSource<CommanderHttpResponse>(TaskCreationOptions.RunContinuationsAsynchronously);
+             private int calls;
++            internal int Calls => Volatile.Read(ref calls);
+             public Task<CommanderHttpResponse> PostJsonAsync(Uri uri, string body,
+                 IReadOnlyDictionary<string, string> headers, CancellationToken token)
+             {

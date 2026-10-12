@@ -1,0 +1,22 @@
+{
+  "instance": "Open Empires@6d7310c7",
+  "mode": "EditMode",
+  "job_id": "eb33dd69db964d89ba62ec79cb0138b1",
+  "started_unix_ms": 1791714835199,
+  "finished_unix_ms": 1791714838365,
+  "status": "failed",
+  "completed": 7,
+  "total": 7,
+  "failed": 6,
+  "passed": 1,
+  "full_name_filters": "See task-3-fix1-discovery.json full_names",
+  "failures": [
+    {"name":"CausalCountedUnitsQuestion_PreservesAmbiguityBetweenOwnedRequests","message":"Expected Ambiguous; was null"},
+    {"name":"CausalCountedUnitsQuestion_SelectsOnlyMatchingOwnedRequest(six,One)","message":"Expected One; was null"},
+    {"name":"CausalCountedUnitsQuestion_SelectsOnlyMatchingOwnedRequest(seven,None)","message":"Expected None; was null"},
+    {"name":"MixedRadiusFormation_UsesLegalNativeEndpointsAndCompletes_AcceleratedFixture","message":"Blocked for 1800 ticks. A native route stopped short of its validated formation slot; expected Completed; was Failed"},
+    {"name":"NearSlotIdleSubject_CannotCompleteBeforeItsNativeMoveIsProcessed","message":"Expected not Completed; was Completed"},
+    {"name":"ReplacementNativeMoveToSameEndpoint_CannotCompleteOriginalRequest","message":"Expected not Completed; was Completed"}
+  ],
+  "passed_control": "NativePartialPathAfterPreflight_CannotBecomeInventedArrival"
+}

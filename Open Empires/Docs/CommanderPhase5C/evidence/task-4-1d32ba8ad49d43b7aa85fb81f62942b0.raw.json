@@ -1,0 +1,36 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "1d32ba8ad49d43b7aa85fb81f62942b0",
+      "status": "failed",
+      "mode": "EditMode",
+      "started_unix_ms": 1791748246654,
+      "finished_unix_ms": 1791748256037,
+      "last_update_unix_ms": 1791748256037,
+      "progress": {
+        "completed": 1,
+        "total": 1,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791748254632,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.DiscoveryEnemyTownCenter_IssuesOnlyKnownFrontierScoutMove",
+        "last_finished_unix_ms": 1791748255790,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.DiscoveryEnemyTownCenter_IssuesOnlyKnownFrontierScoutMove",
+            "message": "  I couldn't understand that request safely.\r\n  Expected: True\r\n  But was:  False\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

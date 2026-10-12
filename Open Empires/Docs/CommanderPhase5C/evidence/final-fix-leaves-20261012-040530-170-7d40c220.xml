@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 04:05:30Z" end-time="2026-10-12 04:05:30Z" duration="0.0213095">
+  <test-suite type="TestSuite" id="3090" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1802" result="Failed" site="Child" start-time="2026-10-12 04:05:30Z" end-time="2026-10-12 04:05:30Z" duration="0.021310" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="3078" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1802" result="Failed" site="Child" start-time="2026-10-12 04:05:30Z" end-time="2026-10-12 04:05:30Z" duration="0.018759" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="12696" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="3079" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1802" result="Failed" site="Child" start-time="2026-10-12 04:05:30Z" end-time="2026-10-12 04:05:30Z" duration="0.018552" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="3080" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1802" result="Failed" site="Child" start-time="2026-10-12 04:05:30Z" end-time="2026-10-12 04:05:30Z" duration="0.018393" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1119" name="CommanderFinalFixResultCaptureLifecycleTests" fullname="OpenEmpires.Tests.CommanderFinalFixResultCaptureLifecycleTests" classname="OpenEmpires.Tests.CommanderFinalFixResultCaptureLifecycleTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-12 04:05:30Z" end-time="2026-10-12 04:05:30Z" duration="0.017459" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5COffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1121" name="Capture_NextUnarmedRunDoesNotStealAbandonedResult" fullname="OpenEmpires.Tests.CommanderFinalFixResultCaptureLifecycleTests.Capture_NextUnarmedRunDoesNotStealAbandonedResult" methodname="Capture_NextUnarmedRunDoesNotStealAbandonedResult" classname="OpenEmpires.Tests.CommanderFinalFixResultCaptureLifecycleTests" runstate="Runnable" seed="786291745" result="Failed" start-time="2026-10-12 04:05:30Z" end-time="2026-10-12 04:05:30Z" duration="0.005328" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  A distinct, unarmed run must not create another capture artifact.
+  Expected: 12
+  But was:  14
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderFinalFixResultCaptureLifecycleTests.Capture_NextUnarmedRunDoesNotStealAbandonedResult () [0x00047] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderFinalFixResultCaptureLifecycleTests.cs:61
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: Docs\CommanderPhase5C\evidence\final-fix-leaves-20261012-040530-170-7d40c220.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

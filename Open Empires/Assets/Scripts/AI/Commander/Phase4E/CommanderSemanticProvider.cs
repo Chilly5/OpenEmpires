@@ -28,22 +28,41 @@ namespace OpenEmpires
         public string SerializedPendingClarification { get; }
         public bool IsPlayerMessageTooLong { get; }
         public bool IsReadOnlyQuestion { get; }
+        // Game-owned retrieval metadata, retained independently of optional model-pack rows.
+        internal string UnresolvedNameInterpretations { get; }
+        // In-memory observation handle only: never included in the serialized model request.
+        internal CommanderTurnObservationStore.CommanderTurnObservation Observation { get; }
 
         public CommanderSemanticProviderRequest(string playerMessage, CommanderContext context,
             IReadOnlyList<CommanderSemanticMemoryEntry> semanticMemory = null, string questionFacts = null,
             CommanderPendingClarification pendingClarification = null,
             CommanderTacticalStatusSnapshot tacticalStatus = null, bool readOnlyQuestion = false)
+            : this(playerMessage, context, semanticMemory, questionFacts, pendingClarification,
+                tacticalStatus, readOnlyQuestion, null) { }
+
+        internal CommanderSemanticProviderRequest(string playerMessage, CommanderContext context,
+            IReadOnlyList<CommanderSemanticMemoryEntry> semanticMemory, string questionFacts,
+            CommanderPendingClarification pendingClarification,
+            CommanderTacticalStatusSnapshot tacticalStatus, bool readOnlyQuestion,
+            CommanderTurnObservationStore.CommanderTurnObservation observation)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
+            Observation = observation;
             string text = playerMessage ?? string.Empty;
             IsPlayerMessageTooLong = text.Length > MaximumPlayerMessageCharacters;
             PlayerMessage = IsPlayerMessageTooLong ? string.Empty : text;
+            var knowledge = ParseKnowledge(context.KnowledgeContext);
+            UnresolvedNameInterpretations = new JArray((knowledge["nameInterpretations"] as JArray ?? new JArray())
+                .OfType<JObject>().Where(h => (bool?)h["interpretationOnly"] == true && (bool?)h["ambiguous"] == false))
+                .ToString(Formatting.None);
             SerializedContext = SerializeContext(context,tacticalStatus);
             SerializedPendingClarification = pendingClarification?.Serialize() ?? string.Empty;
             if (SerializedPendingClarification.Length > 4096)
                 throw new InvalidOperationException("Pending clarification exceeds its bound.");
             string facts = questionFacts ?? tacticalStatus?.Answer() ?? string.Empty;
-            QuestionFacts = facts.Length > 512 ? facts.Substring(0, 512) : facts;
+            QuestionFacts = facts.Length > 512
+                ? "The complete answer is unavailable within the bounded question-fact projection."
+                : facts;
             IsReadOnlyQuestion=readOnlyQuestion||tacticalStatus!=null||!string.IsNullOrEmpty(questionFacts);
             SerializedSemanticMemory = CommanderSemanticConversationMemory.Serialize(semanticMemory
                 ?? Array.Empty<CommanderSemanticMemoryEntry>());
@@ -104,7 +123,7 @@ namespace OpenEmpires
                     "DefensiveTurtle"),
                 ["actionCapabilities"] = new JArray("AllocateWorkers", "MoveUnits", "ScoutArea", "PatrolArea",
                     "SetRallyPoint", "AttackTarget", "DefendArea", "RetreatUnits",
-                    "RepairTarget", "ResearchTechnology"),
+                    "RepairTarget", "ResearchTechnology", "GarrisonUnits", "UngarrisonBuilding", "DiscoverEnemy"),
                 ["selectorCapabilities"] = new JObject
                 {
                     ["units"] = new JArray("Military", "Scout", "Villagers", "Spearman", "Archer", "Knight", "DamagedMilitary"),
@@ -122,7 +141,16 @@ namespace OpenEmpires
             root["workerCounts"] = new JObject { ["idleUnqueued"] = Math.Min(200, context.IdleVillagers), ["gatheringByResource"] = gathering };
             if(status!=null)root["tacticalStatus"]=status.Json();
             string serialized = root.ToString(Formatting.None);
-            if(status!=null&&serialized.Length>MaximumContextCharacters)
+            if (serialized.Length > MaximumContextCharacters
+                && root["knowledge"]?["requiredCanonicalIds"] is JArray required && required.Count > 0)
+            {
+                // Do not silently drop required rows to satisfy the detached-context bound.
+                // The pack recognizes this small marker and refuses the complete request.
+                root["knowledge"] = new JObject { ["requiredReferenceOverflow"] = true };
+                serialized = root.ToString(Formatting.None);
+            }
+            if(status!=null&&serialized.Length>MaximumContextCharacters
+                && (bool?)root["knowledge"]?["requiredReferenceOverflow"] != true)
             {
                 root["knowledge"]=new JObject{["omitted"]=true,["reason"]="Tactical status prioritized within unchanged context bound."};
                 serialized=root.ToString(Formatting.None);
@@ -145,6 +173,32 @@ namespace OpenEmpires
 
     public sealed partial class CommanderSemanticResult
     {
+        internal CommanderSemanticResult RequireNameConfirmation(string strictProposal, CommanderSemanticProviderRequest request)
+        {
+            if (!IsValid) return this;
+            var hints = JArray.Parse(request.UnresolvedNameInterpretations);
+            return RequireNameConfirmation(strictProposal, hints);
+        }
+
+        internal CommanderSemanticResult RequireNameConfirmation(string strictProposal, JArray hints)
+        {
+            if (!IsValid) return this;
+            if (hints.Count == 0) return this;
+            if (Outcome == CommanderSemanticOutcome.Clarify && PendingGraphDraft != null)
+                return new CommanderSemanticResult(true, Outcome, Nodes, SafeExplanation,
+                    pendingGraphDraft: PendingGraphDraft.WithNameRequirements(hints));
+            // The legacy worker draft cannot represent a unit/building hint. Preserve
+            // its entire strict proposal in the existing non-approvable local blocker.
+            if (Outcome != CommanderSemanticOutcome.Request && Outcome != CommanderSemanticOutcome.DynamicPlan
+                && !(Outcome == CommanderSemanticOutcome.Clarify && PendingDraft != null)) return this;
+            var draft = CommanderRequestGraphDraft.ConfirmNames(strictProposal, hints);
+            return NameConfirmation(draft);
+        }
+
+        internal static CommanderSemanticResult NameConfirmation(CommanderRequestGraphDraft draft)
+            => new CommanderSemanticResult(true, CommanderSemanticOutcome.Clarify,
+                Array.Empty<CommanderSemanticNode>(), draft.NameConfirmationQuestion, pendingGraphDraft: draft);
+
         internal static CommanderSemanticResult ProviderRejected(string safeExplanation)
         {
             return new CommanderSemanticResult(false, CommanderSemanticOutcome.Unsupported,

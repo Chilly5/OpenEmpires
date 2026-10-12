@@ -318,7 +318,7 @@ namespace OpenEmpires.Tests
         public void PrimitiveCatalog_ExactlyNineRegisteredPrimitives()
         {
             var primitives = CommanderDynamicPrimitiveRegistry.All;
-            Assert.That(primitives.Count, Is.EqualTo(9));
+            Assert.That(primitives.Count, Is.EqualTo(10));
 
             var expected = new[]
             {
@@ -330,6 +330,7 @@ namespace OpenEmpires.Tests
                 "resolve-location",
                 "build",
                 "allocate-workers",
+                "move-workers",
                 "produce"
             };
 
@@ -346,8 +347,9 @@ namespace OpenEmpires.Tests
 
             var effects = primitives.Where(p => p.Effect == CommanderDynamicEffectClass.Construction
                 || p.Effect == CommanderDynamicEffectClass.Allocation
+                || p.Effect == CommanderDynamicEffectClass.Movement
                 || p.Effect == CommanderDynamicEffectClass.Production).Select(p => p.Id).ToArray();
-            Assert.That(effects, Is.EquivalentTo(new[] { "build", "allocate-workers", "produce" }));
+            Assert.That(effects, Is.EquivalentTo(new[] { "build", "allocate-workers", "move-workers", "produce" }));
         }
 
         #endregion

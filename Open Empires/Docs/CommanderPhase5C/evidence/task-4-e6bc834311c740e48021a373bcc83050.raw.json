@@ -1,0 +1,52 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "e6bc834311c740e48021a373bcc83050",
+      "status": "succeeded",
+      "mode": "EditMode",
+      "started_unix_ms": 1791748059297,
+      "finished_unix_ms": 1791748068518,
+      "last_update_unix_ms": 1791748068518,
+      "progress": {
+        "completed": 1,
+        "total": 1,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791748066651,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.AllCurrentWoodWorkers_ExplicitMoveToWestTownCenterWoodlineUsesNativeMove",
+        "last_finished_unix_ms": 1791748068345,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "EditMode",
+        "summary": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 2.2401075,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "AllCurrentWoodWorkers_ExplicitMoveToWestTownCenterWoodlineUsesNativeMove",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.AllCurrentWoodWorkers_ExplicitMoveToWestTownCenterWoodlineUsesNativeMove",
+            "state": "Passed",
+            "durationSeconds": 1.6801693,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: CapabilityAction\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Moving the full frozen worker set to the exact visible western woodline using native Move.\r\n"
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

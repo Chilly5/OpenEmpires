@@ -11,6 +11,10 @@ namespace OpenEmpires
             => Build(simulation, manager, string.Empty);
 
         public CommanderContext Build(GameSimulation simulation, CommanderGoalManager manager, string knowledgeQuery)
+            => Build(simulation, manager, knowledgeQuery, null);
+
+        public CommanderContext Build(GameSimulation simulation, CommanderGoalManager manager, string knowledgeQuery,
+            string boundedPending)
         {
             if (simulation == null) throw new ArgumentNullException(nameof(simulation));
             if (manager == null) throw new ArgumentNullException(nameof(manager));
@@ -134,7 +138,7 @@ namespace OpenEmpires
                     entry.Key, entry.Value));
             var catalog = GameKnowledgeCatalog.Build(simulation);
             string knowledgeContext = CommanderKnowledgeRetrieval.Retrieve(catalog, knowledgeQuery,
-                simulation.GetPlayerCivilization(player));
+                simulation.GetPlayerCivilization(player), boundedPending);
             var civilization = catalog.Civilizations.FirstOrDefault(c =>
                 c.Civilization == simulation.GetPlayerCivilization(player));
             // Detached projections over the same canonical data and implemented

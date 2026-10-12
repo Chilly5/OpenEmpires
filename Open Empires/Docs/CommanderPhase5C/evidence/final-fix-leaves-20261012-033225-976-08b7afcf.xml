@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Passed" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 03:32:25Z" end-time="2026-10-12 03:32:28Z" duration="2.0988315">
+  <test-suite type="TestSuite" id="1305" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="255" result="Passed" start-time="2026-10-12 03:32:25Z" end-time="2026-10-12 03:32:28Z" duration="2.098832" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1299" name="OpenEmpires.PlayModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.PlayModeTests.dll" runstate="Runnable" testcasecount="255" result="Passed" start-time="2026-10-12 03:32:26Z" end-time="2026-10-12 03:32:28Z" duration="1.973990" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="12696" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1300" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="255" result="Passed" start-time="2026-10-12 03:32:26Z" end-time="2026-10-12 03:32:28Z" duration="1.970681" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1301" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="255" result="Passed" start-time="2026-10-12 03:32:26Z" end-time="2026-10-12 03:32:28Z" duration="1.967491" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1263" name="CommanderPhase5CUIPlayModeTests" fullname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests" classname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests" runstate="Runnable" testcasecount="33" result="Passed" start-time="2026-10-12 03:32:26Z" end-time="2026-10-12 03:32:28Z" duration="1.963492" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5COffline" />
+            </properties>
+            <test-case id="1265" name="LocalMetrics_RealProviderFixtureCorrelatesAdmissionAttemptAndCost" fullname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.LocalMetrics_RealProviderFixtureCorrelatesAdmissionAttemptAndCost" methodname="LocalMetrics_RealProviderFixtureCorrelatesAdmissionAttemptAndCost" classname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests" runstate="Runnable" seed="500485208" result="Passed" start-time="2026-10-12 03:32:26Z" end-time="2026-10-12 03:32:27Z" duration="1.347834" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-12T03:32:27.1696312Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=1
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=86;finish=stop
+[CommanderProvider] semantic=Request;nodes=1
+[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] intent=admitted;goal-submitted=True
+]]></output>
+            </test-case>
+            <test-case id="1266" name="LocalMetricsSettings_AreOffByDefaultAndRecordOriginalTimedOutTicket" fullname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.LocalMetricsSettings_AreOffByDefaultAndRecordOriginalTimedOutTicket" methodname="LocalMetricsSettings_AreOffByDefaultAndRecordOriginalTimedOutTicket" classname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests" runstate="Runnable" seed="1601343036" result="Passed" start-time="2026-10-12 03:32:27Z" end-time="2026-10-12 03:32:28Z" duration="0.514260" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: Docs\CommanderPhase5C\evidence\final-fix-leaves-20261012-033225-976-08b7afcf.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

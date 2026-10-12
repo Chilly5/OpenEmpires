@@ -1,0 +1,90 @@
+{
+  "purpose": "Task7 bounded regression repair increment only; not the all-goal source manifest",
+  "head": "4c9de96adbf6342fbe9e1490fa9b898a0f99caf6",
+  "baselineRoot": "Docs/CommanderPhase5C/evidence/task7-regression-repair-baseline",
+  "sourceFiles": [
+    {
+      "path": "Assets/Scripts/AI/Commander/Phase5C/CommanderSemanticRequestPack.cs",
+      "baselineSha256": "2E8ADB6D51DBAAB971B1279C870041D1FA528A212FB532CA0C1AEDD58EEF535E",
+      "currentSha256": "039929D28FF4B2445D9EC82A67A158F1C9FCD7C716AC7D303CB4390233BF1D8D"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderGrandFixEvidenceLaneTests.cs",
+      "baselineSha256": "B3312F5B0F80884C7B02F0FE769A57589D6DD59BC44A12003C99A47485EF01C0",
+      "currentSha256": "3CBFA09D8F4082B92FE4D2A755614598BBC1FA8FABA28840F9FF19B233CBF811"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderGrandFixPresentationTests.cs",
+      "baselineSha256": "71AD4BF809591B465753687C9C8584A1E907EA29EF57E2D65A2968A1BEF2EBBA",
+      "currentSha256": "8F03D6351BCC36D4A5DB0C30EE4CF5F784E15DF85F085CE7A9E1A88810CE81EF"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4ATests.cs",
+      "baselineSha256": "DFAD6B52021CC9D7E02D1AA4DB30A0207FC1BB2F5850C8218CE66360A6DFC715",
+      "currentSha256": "DC3631CEF7E6BCD28FD6EEBD2D453F525DE12314041899335BB730A30281AE61"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4E1ProviderTests.cs",
+      "baselineSha256": "A19313816D3DE62931F6E318B913E28C8CF8F3810AE5BBF48E816FC42CB36958",
+      "currentSha256": "A19313816D3DE62931F6E318B913E28C8CF8F3810AE5BBF48E816FC42CB36958"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase4GCapabilityTests.cs",
+      "baselineSha256": "D8042FFCA37D0AEC35EF4AEAEC36D4EC53CD3B909F0F034C1A8C04664DCEAEE7",
+      "currentSha256": "92B7EFA43FCC9139F26664C3958D731FA801B4EBEB0110443E2BEB56EDA3A9A3"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase5AAntiGravityHostileAuditTests.cs",
+      "baselineSha256": "47DA2A94D7EC92E6806F121665CDF3DF9A5E0A7DA78AD3FD7F993119FEA030BB",
+      "currentSha256": "E515174BE55B6D81FF02D1081A5239DD22E61ADF9F529BE74D0A10CBD07A98BD"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase5AProviderContractTests.cs",
+      "baselineSha256": "CA403FBC655A8DBFA8465BE9D92750F6A3C61886EF110467C80651250E97BB12",
+      "currentSha256": "E604ABD84EBA87043EF55384D4240C9DB31651EC0894A48DC65E2123F1474122"
+    },
+    {
+      "path": "Assets/Tests/EditMode/CommanderPhase5CProviderBudgetTests.cs",
+      "baselineSha256": "A000606C379E9C61EE40363D162ED67C2833BE80A853187FB6FEF969BE48858B",
+      "currentSha256": "64DE2D635E0A6CAAF16A22C5EECC2800FF4ECC9BE2AB458713205B8B6E07DF92"
+    }
+  ],
+  "loadedAssemblies": [
+    {
+      "name": "OpenEmpires.Runtime",
+      "mvid": "b05b50f4-8f73-415d-96f9-6b4db86d50b0",
+      "sha256": "C3C0BBC87FC19CC3A696A764B743FF7C9B022FDCC9DE8C332DBD2339F672D14F",
+      "path": "Library/ScriptAssemblies/OpenEmpires.Runtime.dll"
+    },
+    {
+      "name": "OpenEmpires.EditModeTests",
+      "mvid": "34cf0fa9-5a2c-44b1-96f7-54fa40ecf3c5",
+      "sha256": "8A99E67AC0A16BEEBC41C34BACEC3AB311242EC6AC524C1CFE4FC2511A348243",
+      "path": "Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll"
+    }
+  ],
+  "focusedGate": {
+    "jobId": "61007aa377d74dedbc31cfe70641acc6",
+    "mode": "EditMode",
+    "total": 30,
+    "passed": 30,
+    "failed": 0,
+    "skipped": 0,
+    "xml": "Docs/CommanderPhase5C/evidence/final-fix-leaves-20261012-060222-385-684351c1.xml",
+    "rawJob": "Docs/CommanderPhase5C/evidence/task7-repair-job-61007aa377d74dedbc31cfe70641acc6.json"
+  },
+  "artifacts": [
+    {
+      "path": "Docs/CommanderPhase5C/task-7-regression-repair-incremental.diff",
+      "sha256": "B7773ABEEDB10F6D66C570D0B3F067DAA1598BD7DDB6C6AEB75E1A71821C34AD"
+    },
+    {
+      "path": "Docs/CommanderPhase5C/evidence/final-fix-leaves-20261012-060222-385-684351c1.xml",
+      "sha256": "AEB6AAA4E1DA801874EF1B2E6A093047ED80B4DD859FEAB3EE408E32F57E8FE2"
+    },
+    {
+      "path": "Docs/CommanderPhase5C/evidence/task7-repair-job-61007aa377d74dedbc31cfe70641acc6.json",
+      "sha256": "98795C35B954E7F48EE101E483E8490F2B8E906FEF9CEB650D359F4368A80F67"
+    }
+  ]
+}

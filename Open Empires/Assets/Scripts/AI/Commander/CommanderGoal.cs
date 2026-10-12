@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace OpenEmpires
 {
@@ -121,10 +122,14 @@ namespace OpenEmpires
         internal int LastConstructionRecoveryTick { get; set; } = int.MinValue / 2;
         internal int BlockedSinceTick { get; set; } = -1;
         internal int NextBlockedRetryTick { get; set; }
+        // A partial exact native action can be permanently blocked without entering the
+        // ordinary recoverable blocked-retry loop or misreporting player success.
+        internal bool TerminalBlocked { get; set; }
 
         public bool IsTerminal => Status == CommanderGoalStatus.Completed
             || Status == CommanderGoalStatus.Failed
-            || Status == CommanderGoalStatus.Cancelled;
+            || Status == CommanderGoalStatus.Cancelled
+            || Status == CommanderGoalStatus.Blocked && TerminalBlocked;
         public IReadOnlyList<CommanderGoal> Dependencies => dependencies.AsReadOnly();
 
         protected CommanderGoal(int playerId, CommanderGoalType goalType, int maxDurationTicks, int priority = 0)
@@ -158,9 +163,13 @@ namespace OpenEmpires
         internal void ReleaseRuntimeReferences()
         {
             RuntimeOwner=null;RequestAuthority=null;dependencies.Clear();PreparationAllocators.Clear();FrozenWorkerIds=null;
-            if(this is CommanderCapabilityGoal capability){capability.TargetBinding=null;capability.ResultSourceGoal=null;capability.IssuedCommand=null;}
+            if(this is CommanderCapabilityGoal capability)
+            {capability.TargetBinding=null;capability.ResultSourceGoal=null;capability.IssuedCommand=null;
+                capability.NativeMovementSlots=null;capability.NativeMovementEndpoints=null;
+                capability.NativeMovementProcessed=null;capability.NativeMovementResults=null;
+                capability.NativeMovementScatter=null;}
             if(this is EnsureUnitCountGoal units){units.RequiredProducerGoal=null;units.TrackedTrainingOrders.Clear();units.BaselineUnitIds.Clear();}
-            if(this is BuildStructureGoal build)build.PendingPlacementCommand=null;
+            if(this is BuildStructureGoal build){build.PendingPlacementCommand=null;build.DynamicPlannedSiteSet=null;}
             if(this is ReachAgeGoal age)age.PendingAgeUpCommand=null;
             if(this is AllocateWorkersGoal boundAllocation){boundAllocation.ResultSourceGoal=null;boundAllocation.RecoveryCandidateOffsets.Clear();boundAllocation.RecoverySearchExhausted=false;}
             if(this is WatchFutureUnitsGoal future)future.ReleaseObservations();
@@ -189,7 +198,11 @@ namespace OpenEmpires
         internal bool HasResultConsumer { get; set; }
         internal readonly HashSet<int> BaselineBuildingIds = new HashSet<int>();
         internal readonly List<int> AttributedBuildingIds = new List<int>();
+        // Captured only after the ordinary placement command creates this goal's foundation.
+        // These are observed game-side builders, not a provider-selected identity.
+        internal IReadOnlyList<int> LastAcceptedBuilderUnitIds { get; set; } = Array.Empty<int>();
         internal CommanderBoundLocation DynamicLocation { get; set; }
+        internal IReadOnlyList<Vector2Int> DynamicPlannedSiteSet { get; set; }
         internal IReadOnlyList<int> ResultBuildingIds { get; private set; } = Array.Empty<int>();
         internal int ResultCaptureTick { get; private set; } = -1;
         public bool HasSemanticPlacement => PlacementAnchorSelector.HasValue || DynamicLocation != null;
@@ -306,11 +319,37 @@ namespace OpenEmpires
         internal bool CommandIssued { get; set; }
         internal ICommand IssuedCommand { get; set; }
         internal int CommandIssuedSimulationTick { get; set; } = -1;
+        internal FixedVector3[] NativeMovementSlots { get; set; }
+        internal FixedVector3[] NativeMovementEndpoints { get; set; }
+        internal Fixed32[] NativeMovementScatter { get; set; }
+        internal bool[] NativeMovementProcessed { get; set; }
+        internal NativeMovePathResult[] NativeMovementResults { get; set; }
+        internal bool NativeMovementReplaced { get; set; }
+        internal long NativeRemainingDistance { get; set; } = long.MaxValue;
+        internal int NativeLastProgressSimulationTick { get; set; } = -1;
         // Runtime-only typed result source. This prevents provider node indices from
         // becoming entity references and prevents cross-manager/stale-result reuse.
         internal CommanderGoal ResultSourceGoal { get; set; }
         internal bool RequiresResultBinding { get; set; }
         internal bool ResultHumanOverride { get; set; }
+        internal BuildingData GarrisonShelter { get; set; }
+        internal int[] GarrisonCandidateIds { get; set; }
+        internal int[] GarrisonIssuedIds { get; set; }
+        internal int GarrisonProtectedCount { get; set; }
+        internal int GarrisonUnaccommodatedCount { get; set; }
+        internal long GarrisonRemainingDistance { get; set; } = long.MaxValue;
+        internal int GarrisonLastProgressSimulationTick { get; set; } = -1;
+        internal int[] UngarrisonInitialIds { get; set; }
+        internal CommanderBoundLocation DynamicMoveLocation { get; set; }
+        internal int DynamicMoveResourceId { get; set; } = -1;
+        internal int DiscoveryScoutId { get; set; } = -1;
+        internal HashSet<int> DiscoveryVisitedWaypoints { get; } = new HashSet<int>();
+        internal int DiscoveryMovesIssued { get; set; }
+        internal int DiscoveryScanRadius { get; set; }
+        internal int DiscoveryScanOffset { get; set; }
+        internal int DiscoveryScanCenterX { get; set; } = -1;
+        internal int DiscoveryScanCenterZ { get; set; } = -1;
+        internal int DiscoveryCandidatesChecked { get; set; }
 
         public CommanderCapabilityGoal(CapabilityActionIntent action, int maxDurationTicks = 36000)
             : base(action?.PlayerId ?? throw new ArgumentNullException(nameof(action)),

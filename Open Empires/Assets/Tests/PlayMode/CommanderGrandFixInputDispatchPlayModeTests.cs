@@ -115,17 +115,24 @@ namespace OpenEmpires.Tests
         }
 
         [UnityTest]
-        public IEnumerator CompactLauncher_PrecedesSettingsWithoutOverlappingControls()
+        public IEnumerator CompactLauncher_UsesSeparateSettingsWithoutOverlappingControls()
         {
             chat.enabled=true;yield return null;Canvas.ForceUpdateCanvases();
             var compact=chat.transform.Find("CommanderCanvas/CompactCommander");
-            var launcher=compact.Find("Launcher").GetComponent<RectTransform>();
-            var settings=compact.Find("TextAIOptions").GetComponent<RectTransform>();
-            var launcherCorners=new Vector3[4];var settingsCorners=new Vector3[4];
-            launcher.GetWorldCorners(launcherCorners);settings.GetWorldCorners(settingsCorners);
-            Assert.That(launcherCorners[0].y,Is.GreaterThan(settingsCorners[1].y),
-                "Primary Commander/Record/Voice controls belong above Text AI settings, with a clear gap.");
+            Assert.That(compact.Find("Launcher").gameObject.activeInHierarchy,Is.True);
+            Assert.That(compact.Find("TextAIOptions").gameObject.activeInHierarchy,Is.False);
+            Assert.That(compact.Find("VoiceOptions").gameObject.activeInHierarchy,Is.False);
             Assert.That(goals.Goals,Is.Empty);Assert.That(chat.IsExpanded,Is.False);
+            chat.OpenCommander();yield return null;Canvas.ForceUpdateCanvases();
+            var panel=chat.transform.Find("CommanderCanvas/Panel");
+            var settings=panel.Find("Settings").GetComponent<RectTransform>();
+            var minimize=panel.Find("Minimize").GetComponent<RectTransform>();
+            var settingsCorners=new Vector3[4];var minimizeCorners=new Vector3[4];
+            settings.GetWorldCorners(settingsCorners);minimize.GetWorldCorners(minimizeCorners);
+            Assert.That(settings.gameObject.activeInHierarchy,Is.True);
+            Assert.That(settingsCorners[2].x,Is.LessThanOrEqualTo(minimizeCorners[0].x-2),
+                "Settings and Minimize must be distinct hit targets in the expanded dock.");
+            Assert.That(goals.Goals,Is.Empty);
         }
 
         [UnityTest]

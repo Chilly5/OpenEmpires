@@ -1,0 +1,338 @@
+{
+  "schema": "openempires-phase5c-scenario-turn@1",
+  "run_id": "0ead9f43-e089-41be-b5a5-7932182132f2",
+  "first_failing_stage": null,
+  "first_failure_category": null,
+  "schemaVersion": 1,
+  "caseId": "house-next-five-from-trees",
+  "requestId": "runtime:1",
+  "utterance": "Build a House, then send the next five Villagers from my first Town Center to Wood.",
+  "turnIndex": 2,
+  "status": "observed",
+  "evidenceMode": "offline-production-chat-fixture",
+  "providerCalls": 1,
+  "httpAttempts": 0,
+  "fidelity": "fixture-expected-observed",
+  "semanticValid": null,
+  "estimatedInputTokens": null,
+  "actualPromptTokens": null,
+  "actualCompletionTokens": null,
+  "actualCachedTokens": null,
+  "actualReasoningTokens": null,
+  "reportedCost": null,
+  "attemptCosts": [],
+  "packingMs": null,
+  "transportMs": null,
+  "parseMs": null,
+  "admissionMs": null,
+  "firstNativeActionMs": 574.53,
+  "commandCount": 1,
+  "commandTypes": [
+    "PlaceBuildingCommand"
+  ],
+  "nativeResults": [
+    "PlaceBuildingCommand:processed"
+  ],
+  "taskStates": [
+    "BuildStructureGoal:WaitingForConstruction",
+    "WatchFutureUnitsGoal:WaitingForPrerequisite"
+  ],
+  "draftBefore": [],
+  "draftAfter": [],
+  "draftChanges": [],
+  "normalizedFields": [
+    {
+      "type": "BuildStructure",
+      "building": "House",
+      "unit": null,
+      "resource": null,
+      "count": 1,
+      "quantityMode": "TargetTotal",
+      "anchor": null,
+      "anchorOrdinal": null,
+      "relation": null,
+      "placementSource": null,
+      "unitSelector": null,
+      "locationSelector": null,
+      "producerOrdinal": null,
+      "producerFrom": null,
+      "resultFrom": null,
+      "futureAction": null,
+      "workerMode": null,
+      "workerCountMode": null,
+      "workerCount": null,
+      "workerState": null,
+      "workerCurrentResource": null,
+      "destinationResource": null,
+      "destinationSource": null,
+      "resourceAmount": null,
+      "resourceAmountMode": null,
+      "dependencies": []
+    },
+    {
+      "type": "WatchFutureUnits",
+      "building": "TownCenter",
+      "unit": 0,
+      "resource": "Wood",
+      "count": 5,
+      "quantityMode": "TargetTotal",
+      "anchor": null,
+      "anchorOrdinal": null,
+      "relation": null,
+      "placementSource": "Tree",
+      "unitSelector": null,
+      "locationSelector": null,
+      "producerOrdinal": 1,
+      "producerFrom": null,
+      "resultFrom": null,
+      "futureAction": "Gather",
+      "workerMode": null,
+      "workerCountMode": null,
+      "workerCount": null,
+      "workerState": null,
+      "workerCurrentResource": null,
+      "destinationResource": null,
+      "destinationSource": null,
+      "resourceAmount": null,
+      "resourceAmountMode": null,
+      "dependencies": [
+        0
+      ]
+    }
+  ],
+  "admittedFields": [
+    {
+      "type": "BuildStructureGoal",
+      "status": "Pending",
+      "originalUtterance": "Build a House, then send the next five Villagers from my first Town Center to Wood.",
+      "building": "House",
+      "count": 1,
+      "anchor": null,
+      "anchorOrdinal": null,
+      "relation": null,
+      "resource": null,
+      "source": null
+    },
+    {
+      "type": "WatchFutureUnitsGoal",
+      "status": "Pending",
+      "originalUtterance": "Build a House, then send the next five Villagers from my first Town Center to Wood."
+    }
+  ],
+  "turnHistory": [
+    {
+      "index": 0,
+      "text": "Build a House, then send the next five Villagers from my first Town Center to Wood.",
+      "requestId": "runtime:1",
+      "providerCalls": 1,
+      "semanticValid": true,
+      "semanticOutcome": "Clarify",
+      "normalizedFields": [
+        {
+          "draftNodeCount": 2,
+          "missingSlots": [
+            "1:sourceKind:SourceKind"
+          ]
+        }
+      ],
+      "admittedFields": [],
+      "draftBefore": [],
+      "draftAfter": [
+        "1:sourceKind:SourceKind"
+      ],
+      "draftChanges": [],
+      "approvalRequired": false,
+      "approved": false,
+      "commandTypes": [],
+      "taskStates": [],
+      "uiSubmitMs": 24.589
+    },
+    {
+      "index": 1,
+      "text": "From trees.",
+      "requestId": "runtime:1",
+      "providerCalls": 1,
+      "semanticValid": true,
+      "semanticOutcome": "Request",
+      "normalizedFields": [
+        {
+          "type": "BuildStructure",
+          "building": "House",
+          "unit": null,
+          "resource": null,
+          "count": 1,
+          "quantityMode": "TargetTotal",
+          "anchor": null,
+          "anchorOrdinal": null,
+          "relation": null,
+          "placementSource": null,
+          "unitSelector": null,
+          "locationSelector": null,
+          "producerOrdinal": null,
+          "producerFrom": null,
+          "resultFrom": null,
+          "futureAction": null,
+          "workerMode": null,
+          "workerCountMode": null,
+          "workerCount": null,
+          "workerState": null,
+          "workerCurrentResource": null,
+          "destinationResource": null,
+          "destinationSource": null,
+          "resourceAmount": null,
+          "resourceAmountMode": null,
+          "dependencies": []
+        },
+        {
+          "type": "WatchFutureUnits",
+          "building": "TownCenter",
+          "unit": 0,
+          "resource": "Wood",
+          "count": 5,
+          "quantityMode": "TargetTotal",
+          "anchor": null,
+          "anchorOrdinal": null,
+          "relation": null,
+          "placementSource": "Tree",
+          "unitSelector": null,
+          "locationSelector": null,
+          "producerOrdinal": 1,
+          "producerFrom": null,
+          "resultFrom": null,
+          "futureAction": "Gather",
+          "workerMode": null,
+          "workerCountMode": null,
+          "workerCount": null,
+          "workerState": null,
+          "workerCurrentResource": null,
+          "destinationResource": null,
+          "destinationSource": null,
+          "resourceAmount": null,
+          "resourceAmountMode": null,
+          "dependencies": [
+            0
+          ]
+        }
+      ],
+      "admittedFields": [],
+      "draftBefore": [
+        "1:sourceKind:SourceKind"
+      ],
+      "draftAfter": [],
+      "draftChanges": [
+        "1:sourceKind:SourceKind"
+      ],
+      "approvalRequired": true,
+      "approved": false,
+      "commandTypes": [],
+      "taskStates": [],
+      "uiSubmitMs": 53.662
+    },
+    {
+      "index": 2,
+      "text": "Yes.",
+      "requestId": "runtime:1",
+      "providerCalls": 1,
+      "semanticValid": null,
+      "semanticOutcome": null,
+      "normalizedFields": [
+        {
+          "type": "BuildStructure",
+          "building": "House",
+          "unit": null,
+          "resource": null,
+          "count": 1,
+          "quantityMode": "TargetTotal",
+          "anchor": null,
+          "anchorOrdinal": null,
+          "relation": null,
+          "placementSource": null,
+          "unitSelector": null,
+          "locationSelector": null,
+          "producerOrdinal": null,
+          "producerFrom": null,
+          "resultFrom": null,
+          "futureAction": null,
+          "workerMode": null,
+          "workerCountMode": null,
+          "workerCount": null,
+          "workerState": null,
+          "workerCurrentResource": null,
+          "destinationResource": null,
+          "destinationSource": null,
+          "resourceAmount": null,
+          "resourceAmountMode": null,
+          "dependencies": []
+        },
+        {
+          "type": "WatchFutureUnits",
+          "building": "TownCenter",
+          "unit": 0,
+          "resource": "Wood",
+          "count": 5,
+          "quantityMode": "TargetTotal",
+          "anchor": null,
+          "anchorOrdinal": null,
+          "relation": null,
+          "placementSource": "Tree",
+          "unitSelector": null,
+          "locationSelector": null,
+          "producerOrdinal": 1,
+          "producerFrom": null,
+          "resultFrom": null,
+          "futureAction": "Gather",
+          "workerMode": null,
+          "workerCountMode": null,
+          "workerCount": null,
+          "workerState": null,
+          "workerCurrentResource": null,
+          "destinationResource": null,
+          "destinationSource": null,
+          "resourceAmount": null,
+          "resourceAmountMode": null,
+          "dependencies": [
+            0
+          ]
+        }
+      ],
+      "admittedFields": [
+        {
+          "type": "BuildStructureGoal",
+          "status": "Pending",
+          "originalUtterance": "Build a House, then send the next five Villagers from my first Town Center to Wood.",
+          "building": "House",
+          "count": 1,
+          "anchor": null,
+          "anchorOrdinal": null,
+          "relation": null,
+          "resource": null,
+          "source": null
+        },
+        {
+          "type": "WatchFutureUnitsGoal",
+          "status": "Pending",
+          "originalUtterance": "Build a House, then send the next five Villagers from my first Town Center to Wood."
+        }
+      ],
+      "draftBefore": [],
+      "draftAfter": [],
+      "draftChanges": [],
+      "approvalRequired": false,
+      "approved": true,
+      "commandTypes": [],
+      "taskStates": [
+        "BuildStructureGoal:Pending",
+        "WatchFutureUnitsGoal:Pending"
+      ],
+      "uiSubmitMs": 32.775
+    }
+  ],
+  "fixtureKind": "correct-synthetic",
+  "turnText": "Yes.",
+  "uiSubmitMs": 32.775,
+  "semanticOutcome": null,
+  "approvalRequired": false,
+  "approved": true,
+  "tickMode": "accelerated-fixture",
+  "ticks": 60
+}

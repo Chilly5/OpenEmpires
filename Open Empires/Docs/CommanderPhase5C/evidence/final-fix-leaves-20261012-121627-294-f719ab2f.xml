@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 12:16:27Z" end-time="2026-10-12 12:16:47Z" duration="19.6055355">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1811" result="Failed" site="Child" start-time="2026-10-12 12:16:27Z" end-time="2026-10-12 12:16:47Z" duration="19.605536" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="3090" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1811" result="Failed" site="Child" start-time="2026-10-12 12:16:27Z" end-time="2026-10-12 12:16:47Z" duration="19.507058" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="25412" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="3091" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1811" result="Failed" site="Child" start-time="2026-10-12 12:16:27Z" end-time="2026-10-12 12:16:47Z" duration="19.410936" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="3092" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1811" result="Failed" site="Child" start-time="2026-10-12 12:16:27Z" end-time="2026-10-12 12:16:47Z" duration="19.311688" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="2996" name="CommanderPhase5CLiveFoodDiagnosticTests" fullname="OpenEmpires.Tests.CommanderPhase5CLiveFoodDiagnosticTests" classname="OpenEmpires.Tests.CommanderPhase5CLiveFoodDiagnosticTests" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-10-12 12:16:27Z" end-time="2026-10-12 12:16:47Z" duration="19.211324" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderLiveProvider" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="2997" name="FixedFoodFiveEightAndWoodSix_ProbeProductionEnvelopeWithoutOrders" fullname="OpenEmpires.Tests.CommanderPhase5CLiveFoodDiagnosticTests.FixedFoodFiveEightAndWoodSix_ProbeProductionEnvelopeWithoutOrders" methodname="FixedFoodFiveEightAndWoodSix_ProbeProductionEnvelopeWithoutOrders" classname="OpenEmpires.Tests.CommanderPhase5CLiveFoodDiagnosticTests" runstate="Runnable" seed="1453907125" result="Failed" start-time="2026-10-12 12:16:27Z" end-time="2026-10-12 12:16:46Z" duration="19.071152" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  See allow-listed safe-result.json and owned HTTP journal for first failing layer.
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5CLiveFoodDiagnosticTests+<FixedFoodFiveEightAndWoodSix_ProbeProductionEnvelopeWithoutOrders>d__8.MoveNext () [0x008b2] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5CLiveFoodDiagnosticTests.cs:249
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[DotEnv] Loaded .env from D:\unity_projects\OpenEmpires\Open Empires\.env
+[CommanderProvider] utc=2026-10-12T12:16:28.4696737Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] utc=2026-10-12T12:16:43.0791853Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] utc=2026-10-12T12:16:44.9592447Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: D:\unity_projects\OpenEmpires\Open Empires\Docs\CommanderPhase5C\evidence\final-fix-leaves-20261012-121627-294-f719ab2f.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

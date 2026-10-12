@@ -1,0 +1,36 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "a805abfb0aba445e9977741b3786d183",
+      "status": "failed",
+      "mode": "EditMode",
+      "started_unix_ms": 1791730628947,
+      "finished_unix_ms": 1791730638530,
+      "last_update_unix_ms": 1791730638530,
+      "progress": {
+        "completed": 1,
+        "total": 1,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791730636921,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.TwentyAnchoredHouses_InsufficientDistinctSitesRejectsBeforeFirstPlacement",
+        "last_finished_unix_ms": 1791730638393,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.TwentyAnchoredHouses_InsufficientDistinctSitesRejectsBeforeFirstPlacement",
+            "message": "  Expected: Blocked\r\n  But was:  Executing\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "job_id": "9315dbc56f2146bcafdfbf44663bfdd3",
+  "status": "succeeded",
+  "mode": "EditMode",
+  "started_unix_ms": 1791782862518,
+  "finished_unix_ms": 1791782880508,
+  "last_update_unix_ms": 1791782880508,
+  "progress": {
+    "completed": 5,
+    "total": 5,
+    "current_test_full_name": null,
+    "current_test_started_unix_ms": 1791782878113,
+    "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"build two barracks near my town center and train ten new spearmen in them\")",
+    "last_finished_unix_ms": 1791782879916,
+    "stuck_suspected": false,
+    "editor_is_focused": false,
+    "blocked_reason": null,
+    "failures_so_far": [],
+    "failures_capped": false
+  },
+  "error": null,
+  "result": {
+    "mode": "EditMode",
+    "summary": {
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0,
+      "durationSeconds": 8.5003762,
+      "resultState": "Passed"
+    },
+    "results": [
+      {
+        "name": "RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\")",
+        "state": "Passed",
+        "durationSeconds": 1.9313833,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-12T05:27:53.8972258Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=10\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\r\n[CommanderProvider] semantic=Answer;nodes=0\r\npack sections={\"contract\":2149,\"context\":741,\"memory\":2,\"questionFacts\":0,\"pending\":0,\"utterance\":101,\"messageMargin\":256}; estimate=3307\r\ncontext-unit-lengths=[{\"key\":\"age\",\"bytes\":1},{\"key\":\"civilization\",\"bytes\":9},{\"key\":\"resources\",\"bytes\":38},{\"key\":\"population\",\"bytes\":1},{\"key\":\"populationCap\",\"bytes\":1},{\"key\":\"workerCounts\",\"bytes\":79},{\"key\":\"knowledge\",\"bytes\":447},{\"key\":\"ownedUnitCounts\",\"bytes\":24},{\"key\":\"ownedBuildingCounts\",\"bytes\":2}]\r\nknowledge-unit-lengths=[{\"key\":\"unitsColumns\",\"bytes\":86},{\"key\":\"units\",\"bytes\":59},{\"key\":\"buildingsColumns\",\"bytes\":94},{\"key\":\"buildings\",\"bytes\":149}]\r\nProduction catalog estimate=3307; actual tokens unknown; Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\r\n"
+      },
+      {
+        "name": "RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"Move all of my Wood villagers to the woodline left of my Town Center.\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"Move all of my Wood villagers to the woodline left of my Town Center.\")",
+        "state": "Passed",
+        "durationSeconds": 1.2764855,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-12T05:27:55.3249537Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=5\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\r\n[CommanderProvider] semantic=Answer;nodes=0\r\npack sections={\"contract\":2643,\"context\":688,\"memory\":2,\"questionFacts\":0,\"pending\":0,\"utterance\":69,\"messageMargin\":256}; estimate=3716\r\ncontext-unit-lengths=[{\"key\":\"age\",\"bytes\":1},{\"key\":\"civilization\",\"bytes\":9},{\"key\":\"resources\",\"bytes\":38},{\"key\":\"population\",\"bytes\":1},{\"key\":\"populationCap\",\"bytes\":1},{\"key\":\"workerCounts\",\"bytes\":79},{\"key\":\"knowledge\",\"bytes\":394},{\"key\":\"ownedUnitCounts\",\"bytes\":24},{\"key\":\"ownedBuildingCounts\",\"bytes\":2}]\r\nknowledge-unit-lengths=[{\"key\":\"unitsColumns\",\"bytes\":86},{\"key\":\"units\",\"bytes\":59},{\"key\":\"buildingsColumns\",\"bytes\":94},{\"key\":\"buildings\",\"bytes\":96}]\r\nProduction catalog estimate=3716; actual tokens unknown; Move all of my Wood villagers to the woodline left of my Town Center.\r\n"
+      },
+      {
+        "name": "RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"make four farms\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"make four farms\")",
+        "state": "Passed",
+        "durationSeconds": 1.2820802,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-12T05:27:56.6460104Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=5\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\r\n[CommanderProvider] semantic=Answer;nodes=0\r\npack sections={\"contract\":1885,\"context\":474,\"memory\":2,\"questionFacts\":0,\"pending\":0,\"utterance\":15,\"messageMargin\":256}; estimate=2690\r\ncontext-unit-lengths=[{\"key\":\"age\",\"bytes\":1},{\"key\":\"civilization\",\"bytes\":9},{\"key\":\"resources\",\"bytes\":38},{\"key\":\"population\",\"bytes\":1},{\"key\":\"populationCap\",\"bytes\":1},{\"key\":\"workerCounts\",\"bytes\":79},{\"key\":\"knowledge\",\"bytes\":180},{\"key\":\"ownedUnitCounts\",\"bytes\":24},{\"key\":\"ownedBuildingCounts\",\"bytes\":2}]\r\nknowledge-unit-lengths=[{\"key\":\"buildingsColumns\",\"bytes\":94},{\"key\":\"buildings\",\"bytes\":52}]\r\nProduction catalog estimate=2690; actual tokens unknown; make four farms\r\n"
+      },
+      {
+        "name": "RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"send two of three idle workers to sheep and the third to build a mill near berries\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"send two of three idle workers to sheep and the third to build a mill near berries\")",
+        "state": "Passed",
+        "durationSeconds": 1.3573429,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-12T05:27:58.0527486Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=8\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\r\n[CommanderProvider] semantic=Answer;nodes=0\r\npack sections={\"contract\":2434,\"context\":698,\"memory\":2,\"questionFacts\":0,\"pending\":0,\"utterance\":82,\"messageMargin\":256}; estimate=3530\r\ncontext-unit-lengths=[{\"key\":\"age\",\"bytes\":1},{\"key\":\"civilization\",\"bytes\":9},{\"key\":\"resources\",\"bytes\":38},{\"key\":\"population\",\"bytes\":1},{\"key\":\"populationCap\",\"bytes\":1},{\"key\":\"workerCounts\",\"bytes\":79},{\"key\":\"knowledge\",\"bytes\":404},{\"key\":\"ownedUnitCounts\",\"bytes\":24},{\"key\":\"ownedBuildingCounts\",\"bytes\":2}]\r\nknowledge-unit-lengths=[{\"key\":\"unitsColumns\",\"bytes\":86},{\"key\":\"units\",\"bytes\":107},{\"key\":\"buildingsColumns\",\"bytes\":94},{\"key\":\"buildings\",\"bytes\":58}]\r\nProduction catalog estimate=3530; actual tokens unknown; send two of three idle workers to sheep and the third to build a mill near berries\r\n"
+      },
+      {
+        "name": "RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"build two barracks near my town center and train ten new spearmen in them\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"build two barracks near my town center and train ten new spearmen in them\")",
+        "state": "Passed",
+        "durationSeconds": 1.7289221,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-12T05:27:59.7929957Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=15\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\r\n[CommanderProvider] semantic=Answer;nodes=0\r\npack sections={\"contract\":2576,\"context\":747,\"memory\":2,\"questionFacts\":0,\"pending\":0,\"utterance\":73,\"messageMargin\":256}; estimate=3712\r\ncontext-unit-lengths=[{\"key\":\"age\",\"bytes\":1},{\"key\":\"civilization\",\"bytes\":9},{\"key\":\"resources\",\"bytes\":38},{\"key\":\"population\",\"bytes\":1},{\"key\":\"populationCap\",\"bytes\":1},{\"key\":\"workerCounts\",\"bytes\":79},{\"key\":\"knowledge\",\"bytes\":453},{\"key\":\"ownedUnitCounts\",\"bytes\":24},{\"key\":\"ownedBuildingCounts\",\"bytes\":2}]\r\nknowledge-unit-lengths=[{\"key\":\"unitsColumns\",\"bytes\":86},{\"key\":\"units\",\"bytes\":58},{\"key\":\"buildingsColumns\",\"bytes\":94},{\"key\":\"buildings\",\"bytes\":156}]\r\nProduction catalog estimate=3712; actual tokens unknown; build two barracks near my town center and train ten new spearmen in them\r\n"
+      }
+    ]
+  }
+}

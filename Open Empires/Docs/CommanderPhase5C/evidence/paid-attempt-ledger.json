@@ -1,0 +1,77 @@
+{
+  "phase": "5C",
+  "authorization": "User approved up to 200 total paid HTTP attempts on 2026-10-12; earlier 10-attempt ceiling superseded. Agent use remains separately accounted from four human screenshot calls.",
+  "maximumHttpAttempts": 200,
+  "countsInclude": ["initial", "permitted-repair", "timeout", "failed-http"],
+  "usedHttpAttempts": 15,
+  "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+  "model": "openai/gpt-6-luna",
+  "credential": "existing configured credential; never recorded or inspected",
+  "payloadScope": "text commands, bounded public canonical facts and owned/controlled fixture counts",
+  "excluded": ["audio", "hidden-enemy observations", "runtime entity IDs", "coordinates", "private files", "credentials", "remote deployment", "paid setup probes"],
+  "attempts": [
+    {
+      "source": "evidence/live-house-scene-5/paid-usage-ledger.json",
+      "kind": "semantic-initial",
+      "utc": "2026-10-12T12:37:31Z",
+      "httpStatus": 200,
+      "result": "Actual SampleScene UI submission: one ordinary House goal, one PlaceBuildingCommand, normal 50 Wood spent, completed House 1/1 at tick766. No repair or duplicate approval."
+    },
+    {
+      "source": "evidence/live-food-shape-3/paid-usage-ledger.json",
+      "kind": "three semantic-initial attempts; no repair",
+      "utc": "2026-10-12T12:26:40Z",
+      "httpStatus": 200,
+      "result": "After concrete assignment contract fix: all three exact worker quantities and resources correct on first attempts; native orders not exercised."
+    },
+    {
+      "source": "evidence/live-house-scene-4/paid-usage-ledger.json",
+      "kind": "semantic-initial",
+      "utc": "2026-10-12T12:30:06Z",
+      "httpStatus": 200,
+      "result": "House valid and ordinary goal admitted. Test incorrectly required a preview for direct ordinary admission; stopped before construction verification. Harness corrected, original failure retained."
+    },
+    {
+      "source": "evidence/live-food-shape-2/paid-usage-ledger.json",
+      "kind": "three semantic-initial attempts; no repair",
+      "utc": "2026-10-12T12:16:28Z",
+      "httpStatus": 200,
+      "result": "Food5 exact request; Food8 and Wood6 incorrectly Clarify missing Count despite explicit counts. All valid JSON; first failures retained."
+    },
+    {
+      "source": "evidence/live-food-shape-1/paid-usage-ledger.json",
+      "kind": "three semantic-initial attempts; no repair",
+      "utc": "2026-10-12T12:00:57Z",
+      "httpStatus": 200,
+      "result": "Food5 and Food8 valid exact SelectedCount on first attempts; Wood6 valid Clarify, contrary to expected direct assignment. Actual prompt counts 4010/4011/4010; parse-only, no orders."
+    },
+    {
+      "source": "evidence/live-house-diagnostic-1/paid-usage-ledger.json",
+      "kind": "semantic-initial",
+      "utc": "2026-10-12T06:41:24.1126356Z",
+      "httpStatus": 200,
+      "result": "valid Request: one BuildStructure House; no admission or order"
+    },
+    {
+      "source": "evidence/live-house-ui-1/paid-usage-ledger.json",
+      "kind": "semantic-initial",
+      "utc": "2026-10-12T06:57:48Z",
+      "httpStatus": 0,
+      "result": "cancelled during invalid duplicate-UI harness setup; no semantic or gameplay result"
+    },
+    {
+      "source": "evidence/live-house-scene-2/paid-usage-ledger.json",
+      "kind": "semantic-initial",
+      "utc": "2026-10-12T09:35:44.0955097Z",
+      "httpStatus": 403,
+      "result": "OpenRouter access forbidden before model interpretation; no approval, order or construction"
+    },
+    {
+      "source": "evidence/live-house-scene-3/paid-usage-ledger.json",
+      "kind": "semantic-initial",
+      "utc": "2026-10-12T09:56:27.4807335Z",
+      "httpStatus": 0,
+      "result": "After user connection change, production transport network failure after12137ms; no HTTP response, approval or game order"
+    }
+  ]
+}

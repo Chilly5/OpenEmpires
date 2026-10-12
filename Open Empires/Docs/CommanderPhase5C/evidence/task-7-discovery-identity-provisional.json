@@ -1,0 +1,31 @@
+{
+  "schema": "phase5c-task7-discovery-identity@1",
+  "status": "provisional; byte correspondence between current source and loaded assemblies is not established",
+  "discoveryUtc": "2026-10-12T02:45:44Z",
+  "projectRoot": "D:/unity_projects/OpenEmpires/Open Empires",
+  "unityVersion": "6000.5.9f1",
+  "activeTarget": "StandaloneWindows64",
+  "loadedAssemblyModuleVersionIds": {
+    "OpenEmpires.Runtime": "3830b5d7-431a-4064-baa0-62e0708becf2",
+    "OpenEmpires.EditModeTests": "2d839ac7-9ad8-4735-bff3-4bc98cf5806e",
+    "OpenEmpires.PlayModeTests": "4afab2e3-f449-4520-882e-3f9b3cfeaf25"
+  },
+  "files": [
+    {"path":"Library/ScriptAssemblies/OpenEmpires.Runtime.dll","mtimeUtc":"2026-10-12T01:57:25.4711438Z","bytes":2178560,"sha256":"21231aa40c283cbd73d0109bf2e6b20538d84fa4384353e1a1b214e708f1ff67"},
+    {"path":"Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll","mtimeUtc":"2026-10-12T02:05:43.4570942Z","bytes":1375744,"sha256":"7db464b35c537d324a8536a61a5d59753e4f2f8f8e952cd3e397f56ea967c645"},
+    {"path":"Library/ScriptAssemblies/OpenEmpires.PlayModeTests.dll","mtimeUtc":"2026-10-12T01:57:25.6361567Z","bytes":565760,"sha256":"ead4e6a2bad46b37dbd81b099b495e4d644234046f4d98e087a6dc550965e36a"},
+    {"path":"Library/ScriptAssemblies/OpenEmpires.TestSupport.dll","mtimeUtc":"2026-10-12T01:59:20.5402852Z","bytes":40960,"sha256":"538a7fdbb5d1af99d6558020a45da0665f48b4efed33c86edc1309fe130a3df5"},
+    {"path":"Assets/Tests/EditMode/CommanderEconomyClarificationTests.Phase5CCorpus.cs","mtimeUtc":"2026-10-12T02:07:21.1460000Z","bytes":113881,"sha256":"fc2ba9991d394df043b1f9519d8cec1b99d4472e536d1f7afcf6d959aba3dd69"},
+    {"path":"Assets/Tests/EditMode/CommanderPhase4GCapabilityTests.cs","mtimeUtc":"2026-10-12T02:06:13.5620000Z","bytes":51300,"sha256":"d8042ffca37d0aec35ef4aeaec36d4ec53cd3b909f0f034c1a8c04664dceaee7"},
+    {"path":"Assets/Tests/EditMode/CommanderPhase4GHostileAuditTests.cs","mtimeUtc":"2026-10-12T02:05:57.8320000Z","bytes":41278,"sha256":"384a064344257f3aa04dc3ee0fa7e5e56687e839b916e38ad7fa10f0a51bc2d2"},
+    {"path":"Assets/Tests/Shared/ScenarioEvidenceRecorder.cs","mtimeUtc":"2026-10-12T01:59:38.7400000Z","bytes":13040,"sha256":"ba20aad736deb0dacfcae0b42aa81c175f302e56df7d253a960707a9372d85b9"}
+  ],
+  "mtimeObservation": "Three EditMode .cs files have mtimes later than the EditMode test DLL; Shared ScenarioEvidenceRecorder.cs is later than the TestSupport DLL and PlayMode test DLL, but before the EditMode DLL. This is an affinity warning, not proof of byte mismatch. Runtime .cs and PlayMode .cs were not later than their DLLs in this check. No source-to-assembly manifest was found.",
+  "lastFocusedXmlMtimeUtc": {
+    "task-6-fix1-corpus-4414e413be204ccdad796308a3c6e8ce.xml":"2026-10-12T02:08:10.7920944Z",
+    "task-6-fix1-patrol-green-6459310d77c44214a528c7f541bb71c4.xml":"2026-10-12T02:00:08.9882711Z",
+    "task-6-fix1-direct-green-7122c5ccc592430196cecbe13f530154.xml":"2026-10-12T02:07:01.8669089Z"
+  },
+  "editorLogNote": "C:/Users/RS/AppData/Local/Unity/Editor/Editor.log had mtime 2026-10-11T21:07:24Z and did not establish later compilation chronology.",
+  "nextGate": "After reviewed source fixes, allow Unity import/compilation, then rediscover both trees; compare all IDs and bind new assembly hashes/MVIDs to frozen source before the single authorized full pass."
+}

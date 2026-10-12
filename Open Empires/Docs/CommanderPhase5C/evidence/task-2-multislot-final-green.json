@@ -1,0 +1,122 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "c65d9b231be9464aa68f181e40b94fe9",
+    "status": "succeeded",
+    "mode": "EditMode",
+    "started_unix_ms": 1791664251223,
+    "finished_unix_ms": 1791664269781,
+    "last_update_unix_ms": 1791664269781,
+    "progress": {
+      "completed": 9,
+      "total": 9,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791664268079,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.TwoMissingSlots_CountThenSourceResumeSameDraftLocally",
+      "last_finished_unix_ms": 1791664269529,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": {
+      "mode": "EditMode",
+      "summary": {
+        "total": 9,
+        "passed": 9,
+        "failed": 0,
+        "skipped": 0,
+        "durationSeconds": 12.218024,
+        "resultState": "Passed"
+      },
+      "results": [
+        {
+          "name": "CountReplies_FillPendingSlotsWithoutProduction",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.CountReplies_FillPendingSlotsWithoutProduction",
+          "state": "Passed",
+          "durationSeconds": 1.4009673,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+        },
+        {
+          "name": "GraphDraftRejectsInvalidAlternativesAndAuthority",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.GraphDraftRejectsInvalidAlternativesAndAuthority",
+          "state": "Passed",
+          "durationSeconds": 0.0396639,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "HouseThenNextFive_FromTreesKeepsGraphAndNeedsSeparateApproval",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.HouseThenNextFive_FromTreesKeepsGraphAndNeedsSeparateApproval",
+          "state": "Passed",
+          "durationSeconds": 1.9786756,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #2 submitted: WatchFutureUnits\r\n"
+        },
+        {
+          "name": "MineProposal_YesUsesOriginalRequestAndNoSecondTranslation",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.MineProposal_YesUsesOriginalRequestAndNoSecondTranslation",
+          "state": "Passed",
+          "durationSeconds": 1.4823774,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+        },
+        {
+          "name": "MovementCommandSupersedesGraphDraftWithoutCancellingAcceptedWork",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.MovementCommandSupersedesGraphDraftWithoutCancellingAcceptedWork",
+          "state": "Passed",
+          "durationSeconds": 1.365251,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n"
+        },
+        {
+          "name": "NoRejectsOnlyProposal_AndIndependentCommandSupersedes",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NoRejectsOnlyProposal_AndIndependentCommandSupersedes",
+          "state": "Passed",
+          "durationSeconds": 1.5804153,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] intent=admitted;goal-submitted=True\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #2 submitted: EnsureUnitCount\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+        },
+        {
+          "name": "ResetDropsGraphDraft_AndBareYesCannotBecomeANewGoal",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.ResetDropsGraphDraft_AndBareYesCannotBecomeANewGoal",
+          "state": "Passed",
+          "durationSeconds": 1.319883,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n"
+        },
+        {
+          "name": "SourceReply_PreservesAmountModeAndWoodWorkerCriterion",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.SourceReply_PreservesAmountModeAndWoodWorkerCriterion",
+          "state": "Passed",
+          "durationSeconds": 1.5429297,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+        },
+        {
+          "name": "TwoMissingSlots_CountThenSourceResumeSameDraftLocally",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.TwoMissingSlots_CountThenSourceResumeSameDraftLocally",
+          "state": "Passed",
+          "durationSeconds": 1.4501056,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+        }
+      ]
+    }
+  },
+  "hint": null
+}

@@ -1,0 +1,46 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "1ca058ded49d42119b74176149d51924",
+    "status": "failed",
+    "mode": "EditMode",
+    "started_unix_ms": 1791706103588,
+    "finished_unix_ms": 1791706109490,
+    "last_update_unix_ms": 1791706109490,
+    "progress": {
+      "completed": 12,
+      "total": 12,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791706109194,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.SimilarNameHint_SurvivesRealRetrievalAndPackWithoutBecomingRequired",
+      "last_finished_unix_ms": 1791706109446,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RejectedSuccessfulHttp_RecordsActualResultStage(\"{\\\"choices\\\":[{\\\"finish_reason\\\":{},\\\"message\\\":{\\\"content\\\":\\\"x\\\"}}]}\",\"response-invalid-envelope\")",
+          "message": "  Expected string length 25 but was 12. Strings differ at index 0.\r\n  Expected: \"response-invalid-envelope\"\r\n  But was:  \"http-success\"\r\n  -----------^\r\n"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RejectedSuccessfulHttp_RecordsActualResultStage(\"{\\\"choices\\\":[{\\\"finish_reason\\\":\\\"stop\\\",\\\"message\\\":{\\\"content\\\":[{\\\"type\\\":{},\\\"text\\\":\\\"x\\\"}]}}]}\",\"response-invalid-envelope\")",
+          "message": "  Expected string length 25 but was 12. Strings differ at index 0.\r\n  Expected: \"response-invalid-envelope\"\r\n  But was:  \"http-success\"\r\n  -----------^\r\n"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.SimilarNameHint_DoesNotEvictExactCanonicalReferences",
+          "message": "  Expected: collection containing \"unit:10\"\r\n  But was:  < \"unit:0\", \"unit:1\", \"unit:2\", \"unit:3\", \"unit:4\", \"unit:7\", \"unit:8\", \"unit:9\" >\r\n"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.SimilarNameHint_SurvivesRealRetrievalAndPackWithoutBecomingRequired",
+          "message": "  Expected: not null\r\n  But was:  null\r\n"
+        }
+      ],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": null
+  },
+  "hint": null
+}

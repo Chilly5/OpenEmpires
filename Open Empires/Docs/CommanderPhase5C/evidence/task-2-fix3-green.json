@@ -1,0 +1,133 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "b97eb8b879224c308504a4596f158e57",
+      "status": "succeeded",
+      "mode": "EditMode",
+      "started_unix_ms": 1791705543673,
+      "finished_unix_ms": 1791705553361,
+      "last_update_unix_ms": 1791705553361,
+      "progress": {
+        "completed": 10,
+        "total": 10,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791705552958,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.QualifiedOldAmount_ChangesOnlyAmount",
+        "last_finished_unix_ms": 1791705553324,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "EditMode",
+        "summary": {
+          "total": 10,
+          "passed": 10,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 3.9862534,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "KnownResourceAmountCorrection_DoesNotChangeWorkerCount",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.KnownResourceAmountCorrection_DoesNotChangeWorkerCount",
+            "state": "Passed",
+            "durationSeconds": 0.5766482,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          },
+          {
+            "name": "NamedOldToNewSource_ChangesOnlySource",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NamedOldToNewSource_ChangesOnlySource",
+            "state": "Passed",
+            "durationSeconds": 0.3676834,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          },
+          {
+            "name": "NamedOldToNewStructure_AdmitsOnlyMill",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NamedOldToNewStructure_AdmitsOnlyMill",
+            "state": "Passed",
+            "durationSeconds": 0.33267,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          },
+          {
+            "name": "NamedOldToNewWorkerCount_PreservesAmount",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NamedOldToNewWorkerCount_PreservesAmount",
+            "state": "Passed",
+            "durationSeconds": 0.4350425,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          },
+          {
+            "name": "NegatedCountCorrection_PreservesCountAndIndependentAmount",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NegatedCountCorrection_PreservesCountAndIndependentAmount",
+            "state": "Passed",
+            "durationSeconds": 0.3733449,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          },
+          {
+            "name": "NewAmountWrongMode_ReasksAndRetainsAdditionalFood",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NewAmountWrongMode_ReasksAndRetainsAdditionalFood",
+            "state": "Passed",
+            "durationSeconds": 0.365331,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          },
+          {
+            "name": "NewAmountWrongResource_ReasksAndRetainsAdditionalFood",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NewAmountWrongResource_ReasksAndRetainsAdditionalFood",
+            "state": "Passed",
+            "durationSeconds": 0.3677545,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          },
+          {
+            "name": "OldAmountWrongMode_ReasksAndRetainsAdditionalFood",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.OldAmountWrongMode_ReasksAndRetainsAdditionalFood",
+            "state": "Passed",
+            "durationSeconds": 0.4153875,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          },
+          {
+            "name": "OldAmountWrongResource_ReasksAndRetainsAdditionalFood",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.OldAmountWrongResource_ReasksAndRetainsAdditionalFood",
+            "state": "Passed",
+            "durationSeconds": 0.3614544,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          },
+          {
+            "name": "QualifiedOldAmount_ChangesOnlyAmount",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.QualifiedOldAmount_ChangesOnlyAmount",
+            "state": "Passed",
+            "durationSeconds": 0.3653452,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

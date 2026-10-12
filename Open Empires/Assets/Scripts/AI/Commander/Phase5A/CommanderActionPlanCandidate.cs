@@ -153,7 +153,10 @@ namespace OpenEmpires
                 }
                 string resultBuildingName=node.ResultFromNode.HasValue&&graph.Nodes[node.ResultFromNode.Value].Intent is BuildStructureIntent boundBuilding
                     ?Words(CommanderIntentCatalog.GetStructureDisplayName(boundBuilding.StructureType)):null;
-                text.Append(node.Index + 1).Append(". ").Append(Describe(node.Intent, canonicalUnitName,resultBuildingName));
+                text.Append(node.Index + 1).Append(". ").Append(
+                    dynamicSource?.Primitive.Mechanic == CommanderDynamicMechanic.MoveWorkers
+                        ? "Move the full frozen selected villager set to the visible resource-side woodline using native formation travel; no gather order"
+                        : Describe(node.Intent, canonicalUnitName,resultBuildingName));
                 if (node.Intent is EnsureUnitCountIntent units && !units.NewProductionCount.HasValue)
                     foreach (var quote in graph.ProductionExpectations)
                         if (quote.NodeIndex == node.Index)

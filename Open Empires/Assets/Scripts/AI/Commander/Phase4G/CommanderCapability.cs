@@ -13,7 +13,10 @@ namespace OpenEmpires
         DefendArea,
         RetreatUnits,
         RepairTarget,
-        ResearchTechnology
+        ResearchTechnology,
+        GarrisonUnits,
+        UngarrisonBuilding,
+        DiscoverEnemy
     }
 
     public enum CommanderUnitSelectorKind
@@ -30,8 +33,10 @@ namespace OpenEmpires
         public CommanderUnitSelectorKind Kind { get; }
         public int UnitType { get; }
         public int Count { get; }
+        public bool AllMatching { get; }
 
-        public CommanderUnitSelector(CommanderUnitSelectorKind kind, int count = 1, int unitType = -1)
+        public CommanderUnitSelector(CommanderUnitSelectorKind kind, int count = 1, int unitType = -1,
+            bool allMatching = false)
         {
             if (!Enum.IsDefined(typeof(CommanderUnitSelectorKind), kind))
                 throw new ArgumentOutOfRangeException(nameof(kind));
@@ -41,6 +46,7 @@ namespace OpenEmpires
             Kind = kind;
             Count = count;
             UnitType = unitType;
+            AllMatching = allMatching;
         }
     }
 
@@ -82,7 +88,9 @@ namespace OpenEmpires
                 ? CommanderIntentCatalog.IsSupportedUnit(UnitType) && !StructureType.HasValue
                 : Kind == CommanderTargetSelectorKind.BuildingType && UnitType == -1
                     && StructureType.HasValue && Enum.IsDefined(typeof(BuildingType), StructureType.Value);
-            return valid && (action == CommanderCapabilityActionType.AttackTarget
+            return valid && (action == CommanderCapabilityActionType.DiscoverEnemy
+                && location == CommanderLocationSelectorKind.VisibleEnemy
+                || action == CommanderCapabilityActionType.AttackTarget
                 && location == CommanderLocationSelectorKind.VisibleEnemy
                 || action == CommanderCapabilityActionType.RepairTarget
                 && location == CommanderLocationSelectorKind.PlayerBase && Kind == CommanderTargetSelectorKind.BuildingType);

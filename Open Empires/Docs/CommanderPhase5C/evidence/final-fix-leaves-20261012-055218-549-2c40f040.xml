@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="5" result="Failed(Child)" total="5" passed="3" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 05:52:18Z" end-time="2026-10-12 05:52:24Z" duration="5.5246006">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1806" result="Failed" site="Child" start-time="2026-10-12 05:52:18Z" end-time="2026-10-12 05:52:24Z" duration="5.524601" total="5" passed="3" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="3083" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1806" result="Failed" site="Child" start-time="2026-10-12 05:52:18Z" end-time="2026-10-12 05:52:24Z" duration="5.431968" total="5" passed="3" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="40764" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="3084" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1806" result="Failed" site="Child" start-time="2026-10-12 05:52:18Z" end-time="2026-10-12 05:52:24Z" duration="5.328935" total="5" passed="3" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="3085" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1806" result="Failed" site="Child" start-time="2026-10-12 05:52:18Z" end-time="2026-10-12 05:52:24Z" duration="5.222438" total="5" passed="3" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1138" name="CommanderGrandFixEvidenceLaneTests" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" runstate="Runnable" testcasecount="28" result="Passed" start-time="2026-10-12 05:52:19Z" end-time="2026-10-12 05:52:22Z" duration="3.188539" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <test-suite type="ParameterizedMethod" id="1171" name="RejectedCompletion_RecordsSafeFinishCategory" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.RejectedCompletion_RecordsSafeFinishCategory" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-12 05:52:19Z" end-time="2026-10-12 05:52:22Z" duration="3.072053" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1169" name="RejectedCompletion_RecordsSafeFinishCategory(&quot;length&quot;,&quot;length&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.RejectedCompletion_RecordsSafeFinishCategory(&quot;length&quot;,&quot;length&quot;)" methodname="RejectedCompletion_RecordsSafeFinishCategory" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" runstate="Runnable" seed="1204890054" result="Passed" start-time="2026-10-12 05:52:19Z" end-time="2026-10-12 05:52:20Z" duration="1.688754" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T05:52:20.9184500Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=5
+[CommanderProvider] finish=length
+]]></output>
+              </test-case>
+              <test-case id="1170" name="RejectedCompletion_RecordsSafeFinishCategory(&quot;private-finish-marker&quot;,&quot;other&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.RejectedCompletion_RecordsSafeFinishCategory(&quot;private-finish-marker&quot;,&quot;other&quot;)" methodname="RejectedCompletion_RecordsSafeFinishCategory" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" runstate="Runnable" seed="1236267958" result="Passed" start-time="2026-10-12 05:52:21Z" end-time="2026-10-12 05:52:22Z" duration="1.177370" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T05:52:22.1959251Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=5
+[CommanderProvider] finish=other
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+          <test-suite type="TestFixture" id="2824" name="CommanderPhase5AProviderContractTests" fullname="OpenEmpires.Tests.CommanderPhase5AProviderContractTests" classname="OpenEmpires.Tests.CommanderPhase5AProviderContractTests" runstate="Runnable" testcasecount="14" result="Failed" site="Child" start-time="2026-10-12 05:52:22Z" end-time="2026-10-12 05:52:24Z" duration="1.922694" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="2825" name="DynamicFarm_UsesRegistryVocabularyAndReturnsTypedPlan" fullname="OpenEmpires.Tests.CommanderPhase5AProviderContractTests.DynamicFarm_UsesRegistryVocabularyAndReturnsTypedPlan" methodname="DynamicFarm_UsesRegistryVocabularyAndReturnsTypedPlan" classname="OpenEmpires.Tests.CommanderPhase5AProviderContractTests" runstate="Runnable" seed="662369947" result="Failed" start-time="2026-10-12 05:52:22Z" end-time="2026-10-12 05:52:22Z" duration="0.359952" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Commander AI returned an invalid semantic response; no order was submitted.
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5AProviderContractTests.DynamicFarm_UsesRegistryVocabularyAndReturnsTypedPlan () [0x00093] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AProviderContractTests.cs:26
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[CommanderProvider] utc=2026-10-12T05:52:22.5114512Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=11
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=86;finish=stop
+[CommanderProvider] schema=field=nodes[0].builders;code=missing-or-wrong-type
+[CommanderProvider] semantic=invalid;nodes=0
+]]></output>
+            </test-case>
+            <test-case id="2828" name="RepeatedPlacementAndExactProducers_PromptIncludesStrictDynamicExample" fullname="OpenEmpires.Tests.CommanderPhase5AProviderContractTests.RepeatedPlacementAndExactProducers_PromptIncludesStrictDynamicExample" methodname="RepeatedPlacementAndExactProducers_PromptIncludesStrictDynamicExample" classname="OpenEmpires.Tests.CommanderPhase5AProviderContractTests" runstate="Runnable" seed="1690270974" result="Failed" start-time="2026-10-12 05:52:22Z" end-time="2026-10-12 05:52:23Z" duration="1.203903" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Commander input limit: the complete request and required canonical context cannot fit safely; nothing was submitted. Edit the request or resolve its pending question.
+  Expected: property Count equal to 1
+  But was:  0
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5AProviderContractTests.RepeatedPlacementAndExactProducers_PromptIncludesStrictDynamicExample () [0x00122] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AProviderContractTests.cs:96
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="2827" name="SharedWorkerComposition_PromptIncludesOneSelectionAndStrictExample" fullname="OpenEmpires.Tests.CommanderPhase5AProviderContractTests.SharedWorkerComposition_PromptIncludesOneSelectionAndStrictExample" methodname="SharedWorkerComposition_PromptIncludesOneSelectionAndStrictExample" classname="OpenEmpires.Tests.CommanderPhase5AProviderContractTests" runstate="Runnable" seed="2029594621" result="Passed" start-time="2026-10-12 05:52:23Z" end-time="2026-10-12 05:52:24Z" duration="0.242263" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[CommanderProvider] utc=2026-10-12T05:52:24.1021170Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=8
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=87;finish=stop
+[CommanderProvider] semantic=Request;nodes=1
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: D:\unity_projects\OpenEmpires\Open Empires\Docs\CommanderPhase5C\evidence\final-fix-leaves-20261012-055218-549-2c40f040.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

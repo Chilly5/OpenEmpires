@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Passed" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 05:45:48Z" end-time="2026-10-12 05:45:53Z" duration="4.55483">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1806" result="Passed" start-time="2026-10-12 05:45:48Z" end-time="2026-10-12 05:45:53Z" duration="4.554830" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="3083" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1806" result="Passed" start-time="2026-10-12 05:45:48Z" end-time="2026-10-12 05:45:53Z" duration="4.443360" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="40764" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="3084" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1806" result="Passed" start-time="2026-10-12 05:45:49Z" end-time="2026-10-12 05:45:53Z" duration="4.358753" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="3085" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1806" result="Passed" start-time="2026-10-12 05:45:49Z" end-time="2026-10-12 05:45:53Z" duration="4.247494" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="2999" name="CommanderPhase5CProviderBudgetTests" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" testcasecount="49" result="Passed" start-time="2026-10-12 05:45:49Z" end-time="2026-10-12 05:45:53Z" duration="4.134980" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5C" />
+            </properties>
+            <test-suite type="ParameterizedMethod" id="3018" name="SharedWorkersBuildThenExactNewProduction_RetrievesTypedClosedGraphWithoutAutomaticAuthority" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.SharedWorkersBuildThenExactNewProduction_RetrievesTypedClosedGraphWithoutAutomaticAuthority" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-12 05:45:49Z" end-time="2026-10-12 05:45:53Z" duration="4.019171" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="3016" name="SharedWorkersBuildThenExactNewProduction_RetrievesTypedClosedGraphWithoutAutomaticAuthority(False)" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.SharedWorkersBuildThenExactNewProduction_RetrievesTypedClosedGraphWithoutAutomaticAuthority(False)" methodname="SharedWorkersBuildThenExactNewProduction_RetrievesTypedClosedGraphWithoutAutomaticAuthority" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" seed="474036712" result="Passed" start-time="2026-10-12 05:45:49Z" end-time="2026-10-12 05:45:51Z" duration="2.406920" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T05:45:51.5749191Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=17
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=1069;finish=stop
+[CommanderProvider] semantic=DynamicPlan;nodes=0
+]]></output>
+              </test-case>
+              <test-case id="3017" name="SharedWorkersBuildThenExactNewProduction_RetrievesTypedClosedGraphWithoutAutomaticAuthority(True)" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.SharedWorkersBuildThenExactNewProduction_RetrievesTypedClosedGraphWithoutAutomaticAuthority(True)" methodname="SharedWorkersBuildThenExactNewProduction_RetrievesTypedClosedGraphWithoutAutomaticAuthority" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" seed="1412711005" result="Passed" start-time="2026-10-12 05:45:51Z" end-time="2026-10-12 05:45:53Z" duration="1.391760" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T05:45:53.2759032Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=7
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=1071;finish=stop
+[CommanderProvider] schema=field=$;code=invalid-schema;stage=envelope;node=-1
+[CommanderProvider] utc=2026-10-12T05:45:53.3086349Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=7
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=1069;finish=stop
+[CommanderProvider] semantic=DynamicPlan;nodes=0
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: D:\unity_projects\OpenEmpires\Open Empires\Docs\CommanderPhase5C\evidence\final-fix-leaves-20261012-054548-754-9e98c6cc.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

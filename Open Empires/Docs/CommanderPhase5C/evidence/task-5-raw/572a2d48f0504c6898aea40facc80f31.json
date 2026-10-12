@@ -1,0 +1,36 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "572a2d48f0504c6898aea40facc80f31",
+      "status": "failed",
+      "mode": "PlayMode",
+      "started_unix_ms": 1791755755010,
+      "finished_unix_ms": 1791755766932,
+      "last_update_unix_ms": 1791755766932,
+      "progress": {
+        "completed": 1,
+        "total": 1,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791755766136,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.CompoundApproval_ShowsFullValidatedPreviewAndExplicitDecisionsWithoutIssuing",
+        "last_finished_unix_ms": 1791755766873,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.CompoundApproval_ShowsFullValidatedPreviewAndExplicitDecisionsWithoutIssuing",
+            "message": "System.NullReferenceException : Object reference not set to an instance of an object"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

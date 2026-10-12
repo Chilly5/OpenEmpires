@@ -1,0 +1,22 @@
+### Finding Verdicts
+
+- **Older order overwrites newer information answer** — ADDRESSED. `BeginPresentationTurn` separates latest-chat identity from admission revision; the semantic completion publishes status and tracks its goal only when its turn remains latest (`Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Presentation.cs:138-149`; `Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs:228-246`, `:682-688`). The targeted overlapping-order/question case is present and passed (`Assets/Tests/PlayMode/CommanderPhase5CUIPlayModeTests.cs:582-600`).
+- **Late provider fault overwrites Cancelled/newer status** — ADDRESSED. The generic catch now requires the matching semantic revision and an uncancelled request before publishing, and its presentation update is turn-scoped (`Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs:703-714`). Cancelled-late-fault and older-fault/newer-answer cases passed in the saved 4/4 job (`Assets/Tests/PlayMode/CommanderPhase5CUIPlayModeTests.cs:602-638`).
+- **Voice settings have no normal UI entry** — ADDRESSED. Expanded Settings opens a distinct menu with Voice and Text AI choices; Voice uses the existing setup path without granting audio consent (`Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Presentation.cs:152-168`, `:420-437`, `:471`). The settings/consent and Escape tests are in the saved 5/5 job (`Assets/Tests/PlayMode/CommanderPhase5CUIPlayModeTests.cs:226-270`).
+- **Strategic approval card has generic text and no direct decisions** — ADDRESSED for the scoped default-plan/proposed-adaptation cases. The card now projects quantities, sequence/source and producer dependence from the pending strategic intent/proposal, shows direct strategy decisions through existing authority methods, and disables ordinary Approve for adaptation (`Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Presentation.cs:184-279`, `:510-527`, `:649-698`). The saved 5/5 presentation, 2/2 lifecycle and 1/1 geometry jobs cover populated proposal/adaptation and same-frame decisions (`Assets/Tests/PlayMode/CommanderPhase5CUIPlayModeTests.cs:272-408`).
+- **Distinct provider label (original Minor)** — ADDRESSED. Provider state is a separate header field from latest-request status (`Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Presentation.cs:167-183`, `:463-467`, `:652-659`), with a focused assertion in the saved 5/5 job (`Assets/Tests/PlayMode/CommanderPhase5CUIPlayModeTests.cs:264-278`).
+
+### New Breakage in the Fix Diff
+
+- **Important — older timeout advertises unavailable recovery.** `OfferRequestRecovery` now returns without creating a Retry/Edit/Cancel offer when a newer information question has advanced the presentation turn (`Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Presentation.cs:291-296`), but both timeout branches still append “Choose Retry, Edit, or Cancel” unconditionally (`Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs:515-522`, `:693-700`). A pending order can time out after a newer local question; its draft is retained, but its promised controls are absent, and the newer question remains `Completed`. Preserve an accessible recovery offer for that timed-out request without letting it impersonate the latest question, or make the older-timeout response accurately actionable. Add the older-order/newer-question/timeout case; the current overlap test completes the old order successfully rather than timing it out (`Assets/Tests/PlayMode/CommanderPhase5CUIPlayModeTests.cs:582-600`).
+
+### Out-of-Scope Observations
+
+- ⚠️ Cross-task gates remain unverified here: native 1280×720/1920×1080, real-match HUD/input, Windows and served-Web player output, measured complete sub-4K prompts, paid-attempt ledger, final offline suites and builds. The three fix-round PNG files exist and are labeled actual Editor 1518×654 only (`Docs/CommanderPhase5C/task-5-report.md`).
+- Check: saved terminal JSONs exist and report Passed 4/4 race, 5/5 presentation, 2/2 lifecycle, 1/1 geometry, and 11/11 affected controls, with zero failures/skips (`Docs/CommanderPhase5C/evidence/task-5-raw/`). No test, MCP job, build, HTTP call or source edit was run by this reviewer.
+
+### Verdict
+
+**Fix round:** Findings remain open — all original Important findings and the Minor provider label are addressed, but the new Important timeout-recovery mismatch needs repair.
+
+**Spec compliance:** ❌ Scoped recovery requirement remains unmet in the overlapping-request timeout case. **Task quality:** Needs fixes.

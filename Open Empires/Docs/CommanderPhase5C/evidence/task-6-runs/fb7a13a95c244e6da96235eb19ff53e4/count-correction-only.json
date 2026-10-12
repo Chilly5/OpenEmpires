@@ -1,0 +1,231 @@
+{
+  "schema": "openempires-phase5c-scenario-turn@1",
+  "run_id": "3b07865d-2ef8-41ae-8e1b-0b85b1e16a47",
+  "first_failing_stage": "local-continuation",
+  "first_failure_category": "typed-correction-not-retained",
+  "schemaVersion": 1,
+  "caseId": "count-correction-only",
+  "requestId": "runtime:1",
+  "utterance": "Gather 200 gold with 3 villagers.",
+  "turnIndex": 2,
+  "status": "observed",
+  "evidenceMode": "offline-production-chat-fixture",
+  "providerCalls": 1,
+  "httpAttempts": 0,
+  "packAccepted": true,
+  "fidelity": "mismatch",
+  "semanticValid": null,
+  "estimatedInputTokens": 2261,
+  "actualPromptTokens": null,
+  "actualCompletionTokens": null,
+  "actualCachedTokens": null,
+  "actualReasoningTokens": null,
+  "reportedCost": null,
+  "attemptCosts": [],
+  "packingMs": null,
+  "transportMs": null,
+  "parseMs": null,
+  "admissionMs": null,
+  "firstNativeActionMs": 586.519,
+  "commandCount": 1,
+  "commandTypes": [
+    "GatherCommand"
+  ],
+  "nativeResults": [
+    "GatherCommand:processed"
+  ],
+  "taskStates": [
+    "AllocateWorkersGoal:WaitingForResources"
+  ],
+  "draftBefore": [
+    "0:destination.sourceKind:SourceKind"
+  ],
+  "draftAfter": [],
+  "draftChanges": [
+    "0:destination.sourceKind:SourceKind"
+  ],
+  "normalizedFields": [],
+  "admittedFields": [
+    {
+      "type": "AllocateWorkersGoal",
+      "status": "Pending",
+      "originalUtterance": "Gather 200 gold with 3 villagers.",
+      "mode": "SelectedCount",
+      "countMode": "Exact",
+      "count": 4,
+      "state": "Any",
+      "currentResource": null,
+      "destinationResource": "Gold",
+      "destinationSource": "GoldMine",
+      "resourceAmount": 200,
+      "resourceAmountMode": "Stockpile"
+    }
+  ],
+  "turnHistory": [
+    {
+      "index": 0,
+      "text": "Gather 200 gold with 3 villagers.",
+      "requestId": "runtime:1",
+      "uiState": "Needs clarification",
+      "providerCalls": 1,
+      "packAccepted": true,
+      "estimatedInputTokens": 2261,
+      "semanticValid": true,
+      "semanticOutcome": "Clarify",
+      "normalizedFields": [
+        {
+          "draftNodeCount": 1,
+          "missingSlots": [
+            "0:destination.sourceKind:SourceKind"
+          ]
+        },
+        {
+          "draftType": "AllocateWorkers",
+          "structure": null,
+          "count": 3,
+          "resource": null,
+          "resourceAmount": 200,
+          "resourceAmountMode": "Stockpile",
+          "workerMode": "SelectedCount",
+          "countMode": "Exact",
+          "workerState": "Any",
+          "workerCurrentResource": null,
+          "destinationResource": "Gold",
+          "destinationSource": null,
+          "producerOrdinal": null,
+          "dependencies": []
+        }
+      ],
+      "admittedFields": [],
+      "draftBefore": [],
+      "draftAfter": [
+        "0:destination.sourceKind:SourceKind"
+      ],
+      "draftChanges": [],
+      "approvalRequired": false,
+      "approved": false,
+      "commandTypes": [],
+      "taskStates": [],
+      "uiSubmitMs": 15.189,
+      "packingMs": 0.404,
+      "transportMs": null,
+      "parseMs": 0.226,
+      "admissionMs": 2.355
+    },
+    {
+      "index": 1,
+      "text": "Make that 4 villagers.",
+      "requestId": "runtime:1",
+      "uiState": "Needs clarification",
+      "providerCalls": 1,
+      "packAccepted": null,
+      "estimatedInputTokens": null,
+      "semanticValid": null,
+      "semanticOutcome": null,
+      "normalizedFields": [
+        {
+          "draftNodeCount": 1,
+          "missingSlots": [
+            "0:destination.sourceKind:SourceKind"
+          ]
+        },
+        {
+          "draftType": "AllocateWorkers",
+          "structure": null,
+          "count": 4,
+          "resource": null,
+          "resourceAmount": 200,
+          "resourceAmountMode": "Stockpile",
+          "workerMode": "SelectedCount",
+          "countMode": "Exact",
+          "workerState": "Any",
+          "workerCurrentResource": null,
+          "destinationResource": "Gold",
+          "destinationSource": null,
+          "producerOrdinal": null,
+          "dependencies": []
+        }
+      ],
+      "admittedFields": [],
+      "draftBefore": [
+        "0:destination.sourceKind:SourceKind"
+      ],
+      "draftAfter": [
+        "0:destination.sourceKind:SourceKind"
+      ],
+      "draftChanges": [
+        "node0.count:3->4"
+      ],
+      "approvalRequired": false,
+      "approved": false,
+      "commandTypes": [],
+      "taskStates": [],
+      "uiSubmitMs": 53.718,
+      "packingMs": null,
+      "transportMs": null,
+      "parseMs": null,
+      "admissionMs": null
+    },
+    {
+      "index": 2,
+      "text": "From gold mines.",
+      "requestId": "runtime:1",
+      "uiState": "Accepted",
+      "providerCalls": 1,
+      "packAccepted": null,
+      "estimatedInputTokens": null,
+      "semanticValid": null,
+      "semanticOutcome": "Request",
+      "normalizedFields": [],
+      "admittedFields": [
+        {
+          "type": "AllocateWorkersGoal",
+          "status": "Pending",
+          "originalUtterance": "Gather 200 gold with 3 villagers.",
+          "mode": "SelectedCount",
+          "countMode": "Exact",
+          "count": 4,
+          "state": "Any",
+          "currentResource": null,
+          "destinationResource": "Gold",
+          "destinationSource": "GoldMine",
+          "resourceAmount": 200,
+          "resourceAmountMode": "Stockpile"
+        }
+      ],
+      "draftBefore": [
+        "0:destination.sourceKind:SourceKind"
+      ],
+      "draftAfter": [],
+      "draftChanges": [
+        "0:destination.sourceKind:SourceKind"
+      ],
+      "approvalRequired": false,
+      "approved": false,
+      "commandTypes": [],
+      "taskStates": [
+        "AllocateWorkersGoal:Pending"
+      ],
+      "uiSubmitMs": 65.05,
+      "packingMs": null,
+      "transportMs": null,
+      "parseMs": null,
+      "admissionMs": null
+    }
+  ],
+  "fogNewlyExploredCount": null,
+  "garrisonHousedCount": null,
+  "garrisonProtectedCount": null,
+  "garrisonUnaccommodatedCount": null,
+  "fixtureKind": "correct-synthetic",
+  "turnText": "From gold mines.",
+  "uiSubmitMs": 65.05,
+  "semanticOutcome": "Request",
+  "approvalRequired": false,
+  "approved": false,
+  "uiState": "Accepted",
+  "tickMode": "accelerated-fixture",
+  "ticks": 60,
+  "errorStage": "local-continuation",
+  "errorCategory": "typed-correction-not-retained"
+}

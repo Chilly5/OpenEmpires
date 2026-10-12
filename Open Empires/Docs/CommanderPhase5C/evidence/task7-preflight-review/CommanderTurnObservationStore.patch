@@ -1,0 +1,13 @@
+diff --git a/Docs/CommanderPhase5C/evidence/task7-preflight-baseline/Assets/Scripts/AI/Commander/Phase5C/CommanderTurnObservationStore.cs b/Assets/Scripts/AI/Commander/Phase5C/CommanderTurnObservationStore.cs
+index 70c925b..1cf964b 100644
+--- a/Docs/CommanderPhase5C/evidence/task7-preflight-baseline/Assets/Scripts/AI/Commander/Phase5C/CommanderTurnObservationStore.cs
++++ b/Assets/Scripts/AI/Commander/Phase5C/CommanderTurnObservationStore.cs
+@@ -21,7 +21,7 @@ namespace OpenEmpires
+         private static readonly HashSet<string> OutcomeKeys = new HashSet<string>(StringComparer.Ordinal)
+         { "Unknown", "Request", "DynamicPlan", "Clarify", "Unsupported", "Answer" };
+         private static readonly HashSet<string> StatusKeys = new HashSet<string>(StringComparer.Ordinal)
+-        { "Unknown", "Accepted", "Waiting", "Working", "Blocked", "Completed", "Failed", "Cancelled", "AwaitingApproval", "Rejected" };
++        { "Unknown", "NotApplicable", "Accepted", "Waiting", "Working", "Blocked", "Completed", "Failed", "Cancelled", "AwaitingApproval", "Rejected" };
+         private readonly object gate = new object();
+         private readonly string path;
+         private readonly string session = Guid.NewGuid().ToString("N");

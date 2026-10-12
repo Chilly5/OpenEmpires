@@ -1,0 +1,93 @@
+{
+  "args": {
+    "mode": "EditMode",
+    "init_timeout": 120000,
+    "include_details": true,
+    "include_failed_tests": true,
+    "test_names": [
+      "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_PartialCountRetainsOriginalNameRequirement",
+      "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_PartialCompoundCountAndSourceStillNeedNameAndGameplayApproval",
+      "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_ExplicitNameSlotIsNotAskedAgainAfterCount",
+      "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_LegacyWorkerDraftCannotDropUnrepresentableName",
+      "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_RequestCannotExecuteUntilLocalNameConfirmation",
+      "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_DynamicProposalCannotBypassNameThenGameplayConfirmation",
+      "OpenEmpires.Tests.CommanderEconomyClarificationTests.MineProposal_YesUsesOriginalRequestAndNoSecondTranslation",
+      "OpenEmpires.Tests.CommanderEconomyClarificationTests.HouseThenNextFive_FromTreesKeepsGraphAndNeedsSeparateApproval"
+    ]
+  },
+  "pre": {
+    "direct": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"success\":true,\"message\":\"Code executed successfully.\",\"data\":{\"result\":{\"dataPath\":\"D:/unity_projects/OpenEmpires/Open Empires/Assets\",\"compiling\":false,\"updating\":false,\"loaded\":true},\"compiler\":\"codedom\"}}"
+        }
+      ],
+      "structuredContent": {
+        "success": true,
+        "message": "Code executed successfully.",
+        "data": {
+          "result": {
+            "dataPath": "D:/unity_projects/OpenEmpires/Open Empires/Assets",
+            "compiling": false,
+            "updating": false,
+            "loaded": true
+          },
+          "compiler": "codedom"
+        }
+      },
+      "isError": false
+    },
+    "consoleResult": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"success\":false,\"message\":\"success=False message=None error='Timeout receiving Unity response' data=None hint=None\"}"
+        }
+      ],
+      "structuredContent": {
+        "success": false,
+        "message": "success=False message=None error='Timeout receiving Unity response' data=None hint=None"
+      },
+      "isError": false
+    }
+  },
+  "console": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"success\":true,\"message\":\"Retrieved 0 log entries.\",\"data\":[]}"
+      }
+    ],
+    "structuredContent": {
+      "success": true,
+      "message": "Retrieved 0 log entries.",
+      "data": []
+    },
+    "isError": false
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"success\":true,\"message\":\"Test job started.\",\"error\":null,\"data\":{\"job_id\":\"dc4e703b364e4bab89b8c9be00460824\",\"status\":\"running\",\"mode\":\"EditMode\",\"include_details\":true,\"include_failed_tests\":true},\"hint\":null}"
+      }
+    ],
+    "structuredContent": {
+      "result": {
+        "success": true,
+        "message": "Test job started.",
+        "error": null,
+        "data": {
+          "job_id": "dc4e703b364e4bab89b8c9be00460824",
+          "status": "running",
+          "mode": "EditMode",
+          "include_details": true,
+          "include_failed_tests": true
+        },
+        "hint": null
+      }
+    },
+    "isError": false
+  }
+}

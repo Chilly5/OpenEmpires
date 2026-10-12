@@ -53,6 +53,9 @@ namespace OpenEmpires.Tests
         { Assert.Throws<ArgumentException>(()=>CommanderIntentDtoCodec.FromIntent(Radius(CommanderCapabilityActionType.PatrolArea,5))); }
         [Test]public void PointPatrol_UsesNormalPatrolCommandWithNoAroundPromise()
         {
+            int x=sim.MapData.Width/2,z=sim.MapData.Height/2;
+            for(int tx=x-8;tx<=x+8;tx++)for(int tz=z-8;tz<=z+8;tz++)
+                sim.FogOfWar.SetVisible(0,tx,tz);
             Assert.That(new CommanderCapabilityExecutor(sim).TryCreateCommand(Point(CommanderCapabilityActionType.PatrolArea),out var command,out var reason),Is.True);
             Assert.That(command,Is.TypeOf<PatrolCommand>());Assert.That(reason.ToLowerInvariant(),Does.Not.Contain("around"));
         }

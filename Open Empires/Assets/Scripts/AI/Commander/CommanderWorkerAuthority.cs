@@ -75,7 +75,7 @@ namespace OpenEmpires
             return true;
         }
 
-        private bool CanUseUnit(int unitId, int goalId, int currentTick)
+        internal bool CanUseUnit(int unitId, int goalId, int currentTick)
         {
             UnitData unit = simulation.UnitRegistry.GetUnit(unitId);
             if (unit == null || unit.PlayerId != playerId || unit.CurrentHealth <= 0
@@ -192,26 +192,7 @@ namespace OpenEmpires
 
         internal static int[] GetSubjectUnitIds(ICommand command)
         {
-            switch (command)
-            {
-                case MoveCommand value: return value.UnitIds;
-                case GatherCommand value: return value.UnitIds;
-                case StopCommand value: return value.UnitIds;
-                case AttackBuildingCommand value: return value.UnitIds;
-                case AttackUnitCommand value: return value.UnitIds;
-                case ConstructBuildingCommand value: return value.UnitIds;
-                case DropOffCommand value: return value.UnitIds;
-                case GarrisonCommand value: return value.UnitIds;
-                case PatrolCommand value: return value.UnitIds;
-                case DeleteUnitsCommand value: return value.UnitIds;
-                case FollowUnitCommand value: return value.UnitIds;
-                case HealUnitCommand value: return value.UnitIds;
-                case RepairBuildingCommand value: return value.UnitIds;
-                case PlaceBuildingCommand value: return value.VillagerUnitIds;
-                case PlaceWallCommand value: return value.VillagerUnitIds;
-                case SlaughterSheepCommand value: return value.VillagerIds;
-                default: return null;
-            }
+            return CommandBuffer.GetSubjectUnitIds(command);
         }
     }
 }

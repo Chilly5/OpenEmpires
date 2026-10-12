@@ -1,0 +1,16 @@
+{
+  "job_id": "e092e52dea7746559c8e9d4242c18f6e",
+  "status": "failed",
+  "mode": "EditMode",
+  "started_unix_ms": 1791704082775,
+  "finished_unix_ms": 1791704089446,
+  "completed": 4,
+  "total": 4,
+  "result": null,
+  "failures_so_far": [
+    {"full_name":"OpenEmpires.Tests.CommanderEconomyClarificationTests.ConditionalOrExampleCorrection_ReasksWithoutSupersedingMine","message":"if we change Mine to Mill: expected same RequestTicket, was null"},
+    {"full_name":"OpenEmpires.Tests.CommanderEconomyClarificationTests.NegatedSourceCorrection_PreservesSheepUntilCountReply","message":"Expected True, was False"},
+    {"full_name":"OpenEmpires.Tests.CommanderEconomyClarificationTests.NegatedStructureCorrection_RetainsMineTicketUntilYes","message":"Don't change the Mine to a Mill: expected same RequestTicket, was null"}
+  ],
+  "observation": "Terminal get_test_job returned progress/failures, no result payload. Fourth count test did not appear in failures_so_far; no per-test result was returned."
+}

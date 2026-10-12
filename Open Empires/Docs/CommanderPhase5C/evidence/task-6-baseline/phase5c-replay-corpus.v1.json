@@ -1,0 +1,162 @@
+{
+  "schemaVersion": 1,
+  "evidenceMode": "offline-fixture-inputs",
+  "executionState": "not-run",
+  "description": "Safe replay inputs and expected observations for the later production-seam runner. Expectations are not results; fixtures are focused EditMode references, not live English or UI/native acceptance.",
+  "cases": [
+    {
+      "id": "mine-yes-original-request",
+      "turns": ["Build a gold mine near gold.", "Yes."],
+      "expected": {"semantic": {"action": "BuildStructure", "structure": "Mine", "anchor": "Gold"}, "constraints": ["affirmation binds original proposal", "negative alternative creates no goal"], "order": ["proposal", "local yes", "ordinary admission"], "exactResult": "one admitted Mine request; no second semantic translation", "approval": "ordinary Mine flow; do not add a separate build-approval stage", "localZeroCall": ["yes", "no"]},
+      "fixtures": [{"path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Graph.cs", "tests": ["MineProposal_YesUsesOriginalRequestAndNoSecondTranslation", "NoRejectsOnlyProposal_AndIndependentCommandSupersedes"]}]
+    },
+    {
+      "id": "house-next-five-from-trees",
+      "turns": ["Build a House, then send the next five Villagers from my first Town Center to Wood.", "From trees.", "Yes."],
+      "expected": {"semantic": {"nodes": ["BuildHouse", "WatchFutureUnits(GatherWood,Tree,count=5,producer=first TownCenter)"], "dependsOn": ["House completion before future-unit watch"]}, "constraints": ["exactly two nodes", "each matching birth is assigned as it arrives", "existing matching human-queue births may count", "do not implicitly train", "producer is not switched", "local source clarification precedes approval"], "order": ["clarify source locally", "approve the pending compound action plan", "House native completion", "watch for and assign each matching birth to Wood/Tree as it arrives"], "exactResult": "five matching attributed future births assigned; no fabricated wait-for-all-five barrier", "approval": "existing pending action-plan approval before execution", "localZeroCall": ["From trees clarification"]},
+      "fixtures": [{"path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Graph.cs", "tests": ["HouseThenNextFive_FromTreesKeepsGraphAndNeedsSeparateApproval", "TwoMissingSlots_CountThenSourceResumeSameDraftLocally"]}, {"path": "Assets/Tests/EditMode/CommanderPhase5BFutureOrdersTests.cs", "tests": ["NextBirthsFromBoundProducer_IncludeOldQueueAndNeverTrainOrSwitchProducers", "NewVillagersCanBeBoundToGatherWithoutSelectingOldVillagers"]}]
+    },
+    {
+      "id": "amount-versus-worker-count",
+      "turns": ["Gather 200 gold with 3 villagers."],
+      "expected": {"semantic": {"resourceAmount": 200, "amountMode": "Stockpile", "workerCount": 3, "countMode": "Exact", "resource": "Gold"}, "constraints": ["resource amount mode Stockpile is distinct from worker quantity mode TargetTotal"], "order": [], "exactResult": "objective remains incomplete until amount condition is satisfied", "approval": "ordinary allocation admission", "localZeroCall": []},
+      "fixtures": [{"path": "Assets/Tests/EditMode/CommanderPhase5BClarificationTests.cs", "tests": ["ResourceAmountClarification_RetainsObjectiveThroughLocalCountReply", "ResourceObjective_DoesNotCompleteWhenWorkersAreAssigned"]}, {"path": "Assets/Tests/EditMode/CommanderPhase5BReliabilitySemanticTests.cs", "tests": ["BerriesAmountCountContract_PreservesIndependentSlots"]}]
+    },
+    {
+      "id": "count-correction-only",
+      "turns": ["Gather 200 gold with 3 villagers.", "Make that 4 villagers."],
+      "expected": {"semantic": {"resourceAmount": 200, "amountMode": "Stockpile", "workerCount": 4, "workerQuantityMode": "TargetTotal", "countMode": "Exact"}, "constraints": ["correction changes worker count only", "preserve resource amount and Stockpile mode", "worker TargetTotal is not resource amount mode"], "order": ["initial request", "local correction"], "exactResult": "amount stays 200; count becomes 4", "approval": "ordinary allocation admission", "localZeroCall": ["correction"]},
+      "fixtures": [{"path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Graph.cs", "tests": ["KnownCountCorrection_DoesNotChangeResourceAmount"]}, {"path": "Assets/Tests/EditMode/CommanderPhase5BClarificationTests.cs", "tests": ["ExplicitAmountCorrection_ChangesOnlyAmountAndKeepsWorkerAndSourceCriteria"]}]
+    },
+    {
+      "id": "amount-correction-only",
+      "turns": ["Gather 200 gold with 3 villagers.", "Change the amount to 250."],
+      "expected": {"semantic": {"resourceAmount": 250, "amountMode": "Stockpile", "workerCount": 3, "workerQuantityMode": "TargetTotal", "countMode": "Exact"}, "constraints": ["correction changes amount only", "preserve worker and source criteria", "resource amount mode is Stockpile; worker TargetTotal is separate"], "order": ["initial request", "local correction"], "exactResult": "amount becomes 250; count stays 3", "approval": "ordinary allocation admission", "localZeroCall": ["correction"]},
+      "fixtures": [{"path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Graph.cs", "tests": ["KnownResourceAmountCorrection_DoesNotChangeWorkerCount"]}, {"path": "Assets/Tests/EditMode/CommanderPhase5BClarificationTests.cs", "tests": ["ExplicitAmountCorrection_ChangesOnlyAmountAndKeepsWorkerAndSourceCriteria"]}]
+    },
+    {
+      "id": "all-current-wood-to-berries",
+      "turns": ["Send all my wood gatherers to berries."],
+      "expected": {"semantic": {"workerSelector": {"countMode": "AllMatching", "currentResource": "Wood"}, "destination": {"resource": "Food", "sourceKind": "Berries"}}, "constraints": ["bounded eligible snapshot", "no invented exact count", "source selection respects visible/known facts"], "order": [], "exactResult": "all eligible current-Wood workers frozen for the request", "approval": "ordinary allocation admission", "localZeroCall": []},
+      "fixtures": [{"path": "Assets/Tests/EditMode/CommanderPhase5BReliabilitySemanticTests.cs", "tests": ["BerriesAmountCountContract_PreservesIndependentSlots"]}, {"path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Execution.cs", "tests": ["QuantityModes_KeepBaselineTransferAndAllMatchingDistinct"]}]
+    },
+    {
+      "id": "exact-current-wood-to-berries",
+      "turns": ["Send exactly six of my current wood gatherers to berries."],
+      "expected": {"semantic": {"workerSelector": {"countMode": "Exact", "count": 6, "currentResource": "Wood"}, "destination": {"resource": "Food", "sourceKind": "Berries"}}, "constraints": ["exact count is preserved independently of resource destination", "only eligible current-Wood workers selected"], "order": [], "exactResult": "exactly six matching worker IDs, or bounded rejection if unavailable", "approval": "ordinary allocation admission", "localZeroCall": []},
+      "fixtures": [{"path": "Assets/Tests/EditMode/CommanderPhase5BReliabilitySemanticTests.cs", "tests": ["BerriesAmountCountContract_PreservesIndependentSlots"]}, {"path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Graph.cs", "tests": ["SourceReply_PreservesAmountModeAndWoodWorkerCriterion"]}, {"path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Execution.cs", "tests": ["QuantityModes_KeepBaselineTransferAndAllMatchingDistinct"]}]
+    },
+    {
+      "id": "worker-mode-selected-count-four",
+      "turns": ["Put 4 villagers on Food."],
+      "expected": {"semantic": {"mode": "SelectedCount", "countMode": "Exact", "count": 4, "destination": "Food"}, "constraints": ["exactly four selected workers, not four additional and not a total-target deficit"], "order": [], "exactResult": "record exact selected-count mode with requested count 4; admission/outcome is runner-observed", "approval": "ordinary allocation admission", "localZeroCall": []},
+      "fixtures": [{"path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Execution.cs", "tests": ["TwoFarms_QuantityModeUsesIncumbentAndIdleWithoutReissuingGather", "QuantityModes_KeepBaselineTransferAndAllMatchingDistinct"]}]
+    },
+    {
+      "id": "worker-mode-additional-four",
+      "turns": ["Put 4 more villagers on Food."],
+      "expected": {"semantic": {"mode": "Additional", "countMode": "Exact", "count": 4, "destination": "Food"}, "constraints": ["four additional eligible workers, not four selected total and not TargetTotal"], "order": [], "exactResult": "record Additional mode with requested delta 4; admission/outcome is runner-observed", "approval": "ordinary allocation admission", "localZeroCall": []},
+      "fixtures": [{"path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Execution.cs", "tests": ["OccupiedFarm_AdditionalCannotClaimIncumbentOrEvictProtectedCapacity", "TwoFarms_QuantityModeUsesIncumbentAndIdleWithoutReissuingGather"]}]
+    },
+    {
+      "id": "worker-mode-target-total-four",
+      "turns": ["Make sure 4 villagers total are on Food."],
+      "expected": {"semantic": {"mode": "TargetTotal", "countMode": "Exact", "count": 4, "destination": "Food"}, "constraints": ["four workers total; only the deficit is selected", "TargetTotal is worker quantity mode, not resource amount mode"], "order": [], "exactResult": "record TargetTotal mode with target 4; computed deficit/admission is runner-observed", "approval": "ordinary allocation admission", "localZeroCall": []},
+      "fixtures": [{"path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Execution.cs", "tests": ["TwoFarms_QuantityModeUsesIncumbentAndIdleWithoutReissuingGather"]}, {"path": "Assets/Tests/EditMode/CommanderPhase5CProviderBudgetTests.cs", "tests": ["RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests"]}]
+    },
+    {
+      "id": "additional-gathered-food-bounded-objective",
+      "turns": ["Gather 400 additional Food from berries with 4 villagers."],
+      "expected": {"semantic": {"mode": "SelectedCount", "countMode": "Exact", "workerCount": 4, "resource": "Food", "sourceKind": "Berries", "resourceAmount": 400, "resourceAmountMode": "AdditionalGathered"}, "constraints": ["credited player-wide Food since activation counts, including another worker's Sheep/Farm deliveries", "recovery keeps the original selected IDs and activation baseline", "bounded recovery searches only known visible matching Berries", "ordinary native Gather continues after Commander objective completion", "Commander issues no new recovery after target and does not cancel gathering"], "order": [], "exactResult": "objective completes on credited AdditionalGathered threshold; delivery-cycle timing remains unproven", "approval": "ordinary allocation admission", "localZeroCall": []},
+      "fixtures": [{"path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Execution.cs", "tests": ["BerriesRecovery_AdvancesPastFourNearerUnreachableSourcesWithBoundedChecks", "BerriesRecovery_ExhaustedVisibleSourcesFailClosedWithoutReplacement", "BerriesAdditionalIncome_OtherWorkerNativeDepositCompletesWithoutStoppingGather"]}]
+    },
+    {
+      "id": "idle-only-protection",
+      "turns": ["Use only idle villagers for the House; leave protected villagers alone."],
+      "expected": {"semantic": {"workerCriterion": "IdleOnly", "protectedFloor": "preserved"}, "constraints": ["no active or protected fallback", "blocked rather than weakening selector"], "order": [], "exactResult": "only eligible idle workers considered", "approval": "build approval as applicable", "localZeroCall": []},
+      "fixtures": [{"path": "Assets/Tests/EditMode/CommanderPhase5BResourcePlacementFixTests.cs", "tests": ["IdleOnlyRestriction_PersistsThroughBlockedRetry", "HumanProtectedIdleWorker_IsNotTakenForConstruction"]}, {"path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Execution.cs", "tests": ["OccupiedFarm_IdleOnlyCannotReuseGatheringIncumbent"]}]
+    },
+    {
+      "id": "all-wood-west-tc-explicit-move",
+      "turns": ["Move all of wood villagers to left of my town center woodline."],
+      "expected": {"semantic": {"outcome": "DynamicPlan", "nodes": ["select-workers(AllMatching,currentResource=Wood)", "resolve-location(MyTownCenter,MapWest,Wood,Tree)", "move-workers(select-workers,resolve-location)"], "workerSelector": {"countMode": "AllMatching", "currentResource": "Wood"}, "location": {"anchor": "owned TownCenter", "relation": "MapWest", "resource": "Wood", "sourceKind": "Tree"}}, "constraints": ["single composed selector and location", "no hidden coordinates", "overflow rejects whole snapshot", "do not rewrite public action as Gather"], "order": [], "exactResult": "native Move issued for frozen eligible snapshot; exact move receipt/arrival determines completion", "approval": "separate existing pending action-plan approval before execution", "localZeroCall": []},
+      "fixtures": [{"path": "Assets/Tests/EditMode/CommanderPhase5ADynamicRuntimeTests.cs", "tests": ["AllCurrentWoodWorkers_ExplicitMoveToWestTownCenterWoodlineUsesNativeMove", "CurrentWoodMove_AllOverBoundSnapshotRejectsBeforeAnyGoalOrCommand", "ComposedWoodline_RejectsWrongSourceAndRelativeDirectionBeforeAdmission", "ComposedWoodline_RejectsWrongOwnerOrFoggedSource"]}]
+    },
+    {
+      "id": "all-wood-west-tc-explicit-gather",
+      "turns": ["Gather wood with all of my current wood villagers from trees left of my town center."],
+      "expected": {"semantic": {"outcome": "DynamicPlan", "nodes": ["select-workers(AllMatching,currentResource=Wood)", "resolve-location(MyTownCenter,MapWest,Wood,Tree)", "allocate-workers(resource=Wood,sourceKind=Tree,inputs=select-workers+resolve-location)"], "workerSelector": {"countMode": "AllMatching", "currentResource": "Wood"}, "location": {"anchor": "owned TownCenter", "relation": "MapWest", "resource": "Wood", "sourceKind": "Tree"}}, "constraints": ["single composed selector and location", "no hidden coordinates", "overflow rejects whole snapshot", "do not rewrite public Gather action as Move"], "order": [], "exactResult": "native Gather issued for eligible frozen workers; this is not Move-arrival completion", "approval": "separate existing pending action-plan approval before execution", "localZeroCall": []},
+      "fixtures": [{"path": "Assets/Tests/EditMode/CommanderPhase5ADynamicRuntimeTests.cs", "tests": ["AllCurrentWoodWorkers_GatherOnlyVisibleTreesWestOfOwnedTownCenter", "ComposedWoodline_RejectsWrongSourceAndRelativeDirectionBeforeAdmission"]}]
+    },
+    {
+      "id": "two-houses-near-town-center",
+      "turns": ["Build two Houses near my Town Center."],
+      "expected": {"semantic": {"action": "BuildStructure", "structure": "House", "count": 2, "anchor": "owned TownCenter", "relation": "Near"}, "constraints": ["preflight distinct compatible sites", "impossible full request rejected before prefix"], "order": ["House 1", "House 2"], "exactResult": "two distinct native placements/construction results", "approval": "compound build approval", "localZeroCall": []},
+      "fixtures": [{"path": "Assets/Tests/EditMode/CommanderPhase5ADynamicRuntimeTests.cs", "tests": ["TwoHousesNearOwnedTownCenter_CompleteAtDistinctNativeSites", "TwentyAnchoredHouses_InsufficientDistinctSitesRejectsBeforeFirstPlacement"]}]
+    },
+    {
+      "id": "ordered-production-exact-new-units",
+      "turns": ["Train two spearmen, then send those new spearmen to patrol."],
+      "expected": {"semantic": {"nodes": ["Train(Spearman,2)", "Patrol(exact training results)"], "dependsOn": ["training completion before patrol"]}, "constraints": ["exclude existing units and human/foreign queue results", "no producer switch or substitution"], "order": ["train", "patrol"], "exactResult": "only exact native-attributed newly produced IDs credited", "approval": "compound preview and approval", "localZeroCall": []},
+      "fixtures": [{"path": "Assets/Tests/EditMode/CommanderPhase5BFutureOrdersTests.cs", "tests": ["TrainNewSpearmenThenPatrol_BindsNativeResultsNotOldOrHumanQueue", "NativeRejectedAssignmentBlocksExactBirthWithoutCreditingOrSubstitution", "HumanTakeoverStaysInterruptedAfterProtectionTimeoutAndDoesNotReplaceUnit"]}]
+    },
+    {
+      "id": "occupied-farms-and-capacity",
+      "turns": ["Put four villagers on these Farms, counting workers already farming them."],
+      "expected": {"semantic": {"destination": "specified Farms", "count": 4}, "constraints": ["retain eligible incumbents before idle selection when mode permits", "do not reissue incumbent Gather", "IdleOnly cannot reuse gathering incumbents", "protected capacity is not evicted"], "order": [], "exactResult": "occupied capacity and selected actors agree; no dummy command", "approval": "approval only when preview path requires it", "localZeroCall": []},
+      "fixtures": [{"path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Execution.cs", "tests": ["OccupiedFarm_SelectedCountRetainsEligibleIncumbentWithoutReissuingGather", "OccupiedFarm_AdditionalCannotClaimIncumbentOrEvictProtectedCapacity", "TwoFarms_QuantityModeUsesIncumbentAndIdleWithoutReissuingGather", "OccupiedFarm_IdleOnlyCannotReuseGatheringIncumbent", "AllMatchingGathering_FreezesFarmIncumbentWithoutNewNativeOrder", "RetainedFarmIncumbentWithPendingAmount_ReservesWithoutDummyCommand", "ProtectedFarmIncumbent_KeepsCapacityAndCannotBeEvicted"]}]
+    },
+    {
+      "id": "defense-arrival-native-receipt",
+      "turns": ["Move these six units to defend the center of our base."],
+      "expected": {"semantic": {"action": "DefendArea", "subjects": "exact requested six units", "objective": "owned base center", "nativeEffect": "MoveCommand"}, "constraints": ["formation slots legal/reachable", "completion requires exact issued-command processing receipt and native endpoint", "partial/no-path/unrelated orders cannot complete"], "order": [], "exactResult": "all exact subjects arrive at their actual native endpoints", "approval": "ordinary movement admission", "localZeroCall": []},
+      "fixtures": [{"path": "Assets/Tests/EditMode/CommanderPhase4GCapabilityTests.cs", "tests": ["DefenseAtOwnedBase_UsesDistinctReachableNativeSlots_AcceleratedFixture", "NativePartialPathAfterPreflight_CannotBecomeInventedArrival", "InvalidDefenseObjective_EnqueuesNoNativeMove", "CapabilityGoal_HumanOverrideBlocksWithoutFalseCompletion"]}]
+    },
+    {
+      "id": "death-versus-takeover",
+      "turns": ["What happened to the assigned builders?"],
+      "expected": {"semantic": {"question": "read-only task status"}, "constraints": ["distinguish dead/missing, foreign, garrisoned, human takeover, busy/unavailable", "never substitute survivors for exact subjects", "a typed English explanation may use one compact semantic call"], "order": [], "exactResult": "cause reflects observed native state; no false completion", "approval": "none", "callExpectation": "local UI status refresh is zero-call; natural-language explanation may use one compact call; measure actual usage", "localZeroCall": ["UI status refresh only"]},
+      "fixtures": [{"path": "Assets/Tests/EditMode/CommanderPhase4GCapabilityTests.cs", "tests": ["CapabilityGoal_HumanOverrideBlocksWithoutFalseCompletion"]}, {"path": "Assets/Tests/EditMode/CommanderPhase5BFutureOrdersTests.cs", "tests": ["HumanTakeoverStaysInterruptedAfterProtectionTimeoutAndDoesNotReplaceUnit"]}]
+    },
+    {
+      "id": "garrison-capacity-protected-remainder",
+      "turns": ["Garrison all my villagers in my Town Center."],
+      "expected": {"semantic": {"action": "GarrisonUnits", "selector": "owned eligible villagers", "countMode": "AllMatching", "target": "my Town Center"}, "constraints": ["native capacity", "protected remainder is not reclaimed", "no fallback shelter", "no all-sheltered claim from command issue"], "order": [], "exactResult": "actual housed count and explicit unaccommodated/protected remainder", "approval": "as required by compound preview", "localZeroCall": []},
+      "fixtures": [{"path": "Assets/Tests/EditMode/CommanderPhase5ADynamicRuntimeTests.cs", "tests": ["SemanticGarrison_AllVillagersFreezesActualSetAndReportsRemainder", "SemanticGarrison_ProtectedWorkerIsNotReclaimedOrSilentlyReplaced", "SemanticGarrison_FullShelterBlocksWithoutAnyCommand", "SemanticGarrison_StalledNativeApproachTerminatesWithoutShelterFallback", "ExactTargetGarrison_LateFullOrDestroyedTargetCancelsWithoutFallback"]}]
+    },
+    {
+      "id": "finite-discovery-distinct-from-point-scout",
+      "turns": ["Find the enemy Town Center with my Scout."],
+      "expected": {"semantic": {"action": "DiscoverEnemy", "scout": "one owned Scout", "targetType": "TownCenter"}, "constraints": ["known frontier only", "finite bounded scan", "do not use hidden identity/coordinates", "distinct from point ScoutArea"], "order": ["frontier move(s)", "visibility observation"], "exactResult": "complete only on legitimately visible requested hostile target; otherwise explicit finite exhaustion/block", "approval": "ordinary scout route admission", "localZeroCall": []},
+      "fixtures": [{"path": "Assets/Tests/EditMode/CommanderPhase5ADynamicRuntimeTests.cs", "tests": ["DiscoveryEnemyTownCenter_IssuesOnlyKnownFrontierScoutMove", "Discovery_VisibleEnemyCompletesOnlyOnLegitimateVisibleTarget", "Discovery_NoFrontierFailsWithoutInventingEnemyOrCommand", "Discovery_ExactScoutLossTakeoverOrCancelStopsFurtherOrders"]}]
+    },
+    {
+      "id": "cancel-reset-late-retry",
+      "turns": ["Build a House by the visible gold.", "No, cancel that proposal.", "Reset Commander.", "Yes."],
+      "expected": {"semantic": {"cancel": "reject current proposal", "reset": "invalidate pending draft", "lateReply": "inert"}, "constraints": ["no stale or double admission", "Retry is explicit and costs one attempt only if actually dispatched", "no automatic retry in this fixture"], "order": ["proposal", "cancel", "reset", "stale yes"], "exactResult": "zero goal from cancelled/reset draft", "approval": "none", "localZeroCall": ["cancel", "reset", "stale reply"]},
+      "fixtures": [{"path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Graph.cs", "tests": ["NoRejectsOnlyProposal_AndIndependentCommandSupersedes", "ResetDropsGraphDraft_AndBareYesCannotBecomeANewGoal", "PendingDraft_ForeignRuntimeAndReplayCannotCreateGoals"]}, {"path": "Assets/Tests/EditMode/CommanderEconomyClarificationTests.Chat.cs", "tests": ["MultiFieldReplies_CancelOrBoundAmbiguousContinuation", "ResetRuntimeAndLateReply_CannotResumeOldPending"]}, {"path": "Assets/Tests/EditMode/CommanderPhase5CProviderBudgetTests.cs", "tests": ["OlderCancelledLateAttempt_DoesNotOverwriteNewerRequestMetrics", "CompletedAttemptSnapshot_RemainsImmutableAcrossLaterRequests"]}]
+    },
+    {
+      "id": "causal-information-owned-task-facts",
+      "turns": ["Why are those units still waiting?"],
+      "expected": {"semantic": {"outcome": "read-only answer", "facts": "bounded relevant owned-task facts"}, "constraints": ["no executable node", "no gameplay admission or command", "no unrelated/hidden observations", "ambiguous request facts stay ambiguous"], "order": [], "exactResult": "answer grounded only in selected owned task facts or explicit unavailable", "approval": "none", "callExpectation": "local UI status refresh is zero-call; typed English explanation may use one compact semantic call; measure actual usage", "localZeroCall": ["UI status refresh only"]},
+      "fixtures": [{"path": "Assets/Tests/EditMode/CommanderGrandFixStatusTests.cs", "tests": ["CausalNamedQuestionWithoutStatusKeyword_UsesOwnedTaskFacts", "CausalCountedUnitsQuestion_SelectsOnlyMatchingOwnedRequest", "CausalCountedUnitsQuestion_PreservesAmbiguityBetweenOwnedRequests", "LongCausalBlocker_IsExplicitlyUnavailableRatherThanMeaningTruncated"]}]
+    },
+    {
+      "id": "malformed-provider-json",
+      "turns": ["Build a House near my Town Center."],
+      "syntheticProviderFixture": {"kind": "malformed-json", "bodySource": "new synthetic descriptor; not a historical captured body", "descriptor": "JSON object truncated before closing brace"},
+      "expected": {"semantic": {"fixtureClass": "malformed"}, "constraints": ["reject parse", "no executable node", "do not reconstruct historical malformed body"], "order": [], "exactResult": "parse-stage failure recorded", "approval": "none", "localZeroCall": ["offline fixture"]},
+      "fixtures": [],
+      "fixtureGap": "No exact existing malformed-JSON response test identified; adjacent invalid-allocation-schema coverage is not proof for this case."
+    },
+    {
+      "id": "schema-valid-wrong-provider-result",
+      "turns": ["Gather 200 gold with 3 villagers."],
+      "syntheticProviderFixture": {"kind": "schema-valid-wrong", "descriptor": {"resource": "Wood", "workerCount": 2}, "note": "synthetic descriptor separate from the human utterance"},
+      "expected": {"semantic": {"fixtureClass": "schema-valid-wrong", "declaredExpectedSlots": {"resource": "Gold", "amount": 200, "workerCount": 3}}, "constraints": ["record schema validity separately from semantic-fidelity mismatch", "do not count mismatch as fulfilled", "record existing admission behavior independently", "no universal entailment or guaranteed rejection claim"], "order": [], "exactResult": "diagnostic records mismatch against declared expected slots; actual admission/command outcome is runner-observed and not predetermined here", "approval": "not asserted by synthetic mismatch alone", "localZeroCall": ["offline fixture"]},
+      "fixtures": [],
+      "fixtureGap": "No exact existing schema-valid-but-semantically-wrong provider-result test identified; this remains a runner diagnostic expectation, not fixture-backed coverage."
+    }
+  ]
+}

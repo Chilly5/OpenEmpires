@@ -102,19 +102,40 @@ namespace OpenEmpires
 
             // Without an explicit relay FIFO contract, equal payloads from distinct
             // original boxes cannot be assigned to their true issuers by ordinal.
+            var ambiguousMoves = new HashSet<int>();
+            var ambiguousGarrisons = new HashSet<int>();
             for (int i = 0; i < batch.Stamped.Length; i++)
             {
                 for (int j = i + 1; j < batch.Stamped.Length; j++)
                 {
                     if (batch.Stamped[i].Equals(batch.Stamped[j])
-                        && !ReferenceEquals(batch.Originals[i], batch.Originals[j])
-                        && (batch.Originals[i] is PlaceBuildingCommand
+                        && !ReferenceEquals(batch.Originals[i], batch.Originals[j]))
+                    {
+                        if (batch.Originals[i] is MoveCommand)
+                        {
+                            // Identical relay payloads have no provable individual
+                            // origin; leave only these Move receipts unattributed.
+                            ambiguousMoves.Add(i);
+                            ambiguousMoves.Add(j);
+                            continue;
+                        }
+                        if (batch.Originals[i] is GarrisonCommand)
+                        {
+                            // An opt-in exact order cannot inherit a different
+                            // identical box's origin; native rejects unmatched
+                            // replay candidates while its marker is pending.
+                            ambiguousGarrisons.Add(i);
+                            ambiguousGarrisons.Add(j);
+                            continue;
+                        }
+                        if (batch.Originals[i] is PlaceBuildingCommand
                             || batch.Originals[j] is PlaceBuildingCommand
                             || simulation.HasPendingTrainingOrigin(batch.Originals[i])
-                            || simulation.HasPendingTrainingOrigin(batch.Originals[j])))
-                    {
-                        Discard(batch, simulation);
-                        return verified;
+                            || simulation.HasPendingTrainingOrigin(batch.Originals[j]))
+                        {
+                            Discard(batch, simulation);
+                            return verified;
+                        }
                     }
                 }
             }
@@ -122,9 +143,11 @@ namespace OpenEmpires
             for (int i = 0; i < batch.Originals.Length; i++)
             {
                 ICommand original = batch.Originals[i];
-                if (!(original is PlaceBuildingCommand)
+                if (!(original is PlaceBuildingCommand) && !(original is MoveCommand)
+                    && !(original is GarrisonCommand)
                     && (!(original is TrainUnitCommand) || !simulation.HasPendingTrainingOrigin(original)))
                     continue;
+                if (ambiguousMoves.Contains(i) || ambiguousGarrisons.Contains(i)) continue;
                 // A replay box must identify only one original box in this tick.
                 if (verified.ContainsKey(local[i]))
                 {

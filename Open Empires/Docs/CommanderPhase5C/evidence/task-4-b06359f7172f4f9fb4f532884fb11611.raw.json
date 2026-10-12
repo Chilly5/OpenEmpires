@@ -1,0 +1,36 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "b06359f7172f4f9fb4f532884fb11611",
+      "status": "failed",
+      "mode": "EditMode",
+      "started_unix_ms": 1791729910397,
+      "finished_unix_ms": 1791729922428,
+      "last_update_unix_ms": 1791729922428,
+      "progress": {
+        "completed": 1,
+        "total": 1,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791729919735,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.AllCurrentWoodWorkers_GatherOnlyVisibleTreesWestOfOwnedTownCenter",
+        "last_finished_unix_ms": 1791729922028,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.AllCurrentWoodWorkers_GatherOnlyVisibleTreesWestOfOwnedTownCenter",
+            "message": "  I couldn't understand that request safely.\r\n  Expected: True\r\n  But was:  False\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

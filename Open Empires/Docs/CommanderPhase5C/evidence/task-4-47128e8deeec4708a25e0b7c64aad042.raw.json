@@ -1,0 +1,36 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "47128e8deeec4708a25e0b7c64aad042",
+      "status": "failed",
+      "mode": "EditMode",
+      "started_unix_ms": 1791734732779,
+      "finished_unix_ms": 1791734741638,
+      "last_update_unix_ms": 1791734741638,
+      "progress": {
+        "completed": 2,
+        "total": 2,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791734741313,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.SemanticUngarrison_ExplicitBuildingWideCommandRestoresAllHousedUnits",
+        "last_finished_unix_ms": 1791734741584,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.SemanticUngarrison_ExplicitBuildingWideCommandRestoresAllHousedUnits",
+            "message": "  Expected: String containing \"building-wide\"\r\n  But was:  \"Building-wide ungarrison released 2/2 from the exact owned shelter.\"\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

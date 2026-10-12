@@ -1,4 +1,188 @@
 # OpenEmpires AI Commander — Remaining Phases Handoff
+
+## Current: Phase5C PARTIAL HANDOFF — 2026-10-12
+
+User explicitly approved closing after the command fix and focused checks, with
+full regression and Windows/Web verification deferred. See
+[final implementation report](Docs/CommanderPhase5C/final-implementation-report.md).
+This ends the revised closeout goal, NOT full Phase5C release acceptance.
+
+Final focused evidence: three live gathering wordings preserve exact5/8/6 workers
+and Food/Food/Wood on first attempts; actual SampleScene House completes1/1,
+one placement,50Wood spent. Offline7/7 and launcher/settings1/1 passed.
+Paid15/200, no repairs; actual inputs4178–4182 (original sub4K requirement relaxed
+by user for reliability). Windows64 target and idle EditMode restored.
+Original failures and historical reports remain retained below.
+
+NEXT: full offline EditMode replacement + PlayMode; fresh Windows/Web builds and
+runtime identities; standalone/served-Web populated UI; broader live/native
+scenario and gateway usage/latency proof. Do not start a next phase automatically.
+
+### Historical active checkpoint (superseded by partial handoff above)
+
+## Phase5C implementation — ACTIVE, 2026-10-10
+Latest user priority (2026-10-12): repair the actual overlapping Commander launcher,
+reduce routine status text, and open the expanded UI at the top-left beside its
+launcher. Diagnose and fix the real `build a house` semantic rejection before
+spending time on final broad gates. Compare the last committed provider contract
+when useful. Latest speed directive supersedes the earlier5000 proposal: user
+accepts the older roughly6000–7000 input-token approach if that restores working
+behavior faster. Restore detailed existing response instructions rather than
+optimizing compression further. Byte guards are not actual token measurements.
+The user has increased the paid HTTP allowance to200 total attempts, including repairs
+and failures; this is a ceiling, not a spending target. Actual usage and estimates
+must remain separate. The replacement full Edit run and original full Play pass
+are reserved, not running. Earlier full Windows/Web release requirements must
+either be evidenced or explicitly listed as unverified/deferred at closeout;
+successful focused checks alone do not certify them.
+
+Current parent evidence:4/4 focused contract/launcher checks and real HUD captures
+at1520x656. Scene2 House request returnedHTTP403; after the Internet change,
+scene3 failed at network transport without an HTTP response. DNS resolves but
+credential-free local HTTPS also timed out. Paid4/200 reservations; actual usage
+unknown. Native House completion, logical/paraphrase live matrix and release gates
+are unproven. Connection/access must work before further paid verification.
+
+Current checkpoint (2026-10-12): Tasks 1–4 and the narrow economy recovery
+follow-up have scoped focused evidence/reviews, not phase-wide acceptance. Task 5
+UI source implementation passed its scoped review after two fix rounds. Its
+request-presentation race gate passed 4/4, settings/strategic presentation 5/5,
+lifecycle 2/2, adaptation geometry 1/1, affected input/voice controls 11/11,
+and final timeout follow-up 1/1 plus 3/3. These are separate focused gates;
+native-size/HUD/platform acceptance remains open. Task 6 now executes 25 cases
+through production UI with atomic per-turn records: 23 scoped synthetic matches,
+one malformed and one deliberately wrong negative diagnostic. Native fixtures
+include five attributed future births, finite Food completion plus later delivery,
+travel-causal fog discovery and exact-new patrol subjects. Scoped Task 6 review
+found three issues: request correlation on rejection/read-only turns, enforceable
+negative-response assertions, and actual native patrol actor state. Fix round 1
+and scoped re-review now address all three; Task 6 scoped work is complete.
+The one final fix wave has source-matched 8/8 EditMode and 2/2 PlayMode evidence.
+Scoped re-review accepts repeated-build alignment and truthful partial garrison.
+The three Task7 preflight corrections are now verified: Answer has no completed
+gameplay task in metrics; protected-worker garrison is truthfully Blocked at 1/2;
+the one-shot result recorder is run-bound, with a standalone isolated lifecycle
+test. Parent source/identity verification and retained native 3/3 Play, 1/1 native
+garrison and 1/1 isolated lifecycle evidence support only these narrow corrections.
+No second broad review was started. The first full Edit pass was interrupted at
+1743/1797 captured IDs: 1723 passed, 19 failed, one error and 54 missing; no terminal
+XML. Human recovery confirmed the old job gone. Bounded regression repair is
+active, starting with the unbounded overlap harness and the 20 nonpassing cases.
+One replacement full Edit pass is now explicitly approved after fixes on final
+source; it has not started. The original full Play pass remains unspent. Earlier
+frozen/partial evidence stays historical, not green; rediscover after repairs.
+Actual live provider usage, Windows/Web populated UI and release gates remain open.
+No full pass has completed; fresh builds have not started. Paid history is4/200;
+earlier zero-call records below remain historical.
+Task 7 final source freeze, single offline regression pass, fresh Windows/Web
+builds and final manifest/report remain open. Paid HTTP allowance:4/200 reserved.
+The user reconfirmed player-wide Food income; source restrictions govern orders,
+not income attribution. Ordinary gathering continues after card completion.
+
+Current continuation: full Phase5C objective resumed and product status ACTIVE
+verified on 2026-10-11. Historical pause/narrow-follow-up entries below remain
+retained, not current restrictions on approved implementation. Native FIX1 scoped
+review is next, then Task4 adapters, Task5 UI, Task6 scenarios and Task7 final gates.
+Native FIX1 scoped review subsequently cleared all three original findings. Task3
+focused gate has 16/16 source-matched accelerated movement/causal evidence plus clean
+review; earlier Farm/loss gate has 26/26 historical focused evidence. This is not
+full native/live acceptance. Task4 bounded adapters are now the implementation step.
+Task4 first ALL-current-Wood → visible Tree west of owned TC slice passed one
+accelerated EditMode/native-command fixture (job186baa96c20544b9bfb3489d4bd69169).
+Original parser rejection and preview failure are retained. The composed selector
+now has a source-matched 4/4 focused gate with processed native Gather plus owner,
+fog and incompatible canonical-source/direction controls (job4b3cf89924564b5a965d4f902f20811b).
+Provider-contract advertisement remains pending. Two-House native characterization
+passed1/1 on the existing route; a static N-site preflight gap was then reproduced
+and fixed. Current focused pair3a8d91e9ad9b46e9a82cb87332f972d6 passed2/2: impossible
+20-House plan blocked before any placement, valid two-House plan completed at2/2.
+Native garrison/ungarrison and finite discovery are not yet closed.
+Native exact-target garrison seam now has5/5 focused proof (jobb629c1958d014965bce6cfa86df043f3)
+for capacity/loss/relay attribution/ordinary behavior.
+Guard ownership/liveness follow-up reproduced three defects and passed the current
+8/8 native covering gate f141607caf6e4eb8af1f7c232c656193 after correction.
+Semantic adapter, cancellation, task status and Ungarrison integration remain open;
+this is not player-facing closure. Semantic Garrison/Ungarrison parser RED2/2 was
+retained (job2b47fbbb77d24174ae6bbcf6fd07a218); the adapter is now being implemented.
+Subsequent current focused semantic shelter gate8d5618397c2c43f4beeadbdcdb938f31
+passed7/7: actual partial entry/remainder, protection, full shelter, cancel/reset
+guard lifetime, building-wide egress and selective-egress rejection. Provider/pack
+advertisement, independent Task4 review and real-time/UI/platform proof remain open.
+Typed ALL-villager and 150-simulation-tick stall fixes now have a3/3 focused covering
+gate6dc6a1f700214b249ea090181bfc4a8a. The201-worker overflow/no-prefix control passed1/1
+(job10d07b37e11b42fdbda6ac9ef31a72b3);
+Explicit Move now has native arrival/receipt and overflow refusal proof2/2
+(job50558f9f36e540a0993330a795a46ea4), without Gather substitution. Finite known-frontier
+discovery has focused6/6 for dispatch/visibility/exhaustion/loss/takeover/cancel;
+its visible-target completion uses fixture visibility, not a travel-driven fog reveal.
+Final representative Task4 gate d1bac547fb314f02b07fbdd246aff6b3 passed14/14; subsequent
+runtime-affinity hardening passed its affected2/2 (job9e53f0950805403497deba061ca6710b).
+Task4 independent review found three Important gaps (result-bound Garrison identity,
+expired exact-guard fallback, greedy repeated-site preflight). The narrow fix batch
+passed6/6 and final affected4/4; scoped re-review cleared all three with no new
+important breakage. Task4 implementation is complete at its scoped gate, not full
+Phase5C acceptance. The temporary MCP disconnect then resolved with fresh correct
+idle editor state; Task5 UI/recovery is now dispatched to the sole source/Unity
+writer. A separate Luna prepares Task6 corpus data only. No forced editor restart
+or repeated completed gate; UI/scenario/actual-token/final offline/build proof remains.
+Task5 now has source-matched focused UI18/18, input5/5 and voice2/2 with saved
+actual1518x654 Editor captures; its frozen7-file delta is in independent review.
+This is not full/native-size/platform acceptance. Corpus25cases is prepared/not-run.
+Nextafterreview: actual integratedrunner, measuredliveWindows/Web inputusage and
+source-matched singlefinaloffline pass/freshbuilds/completehandoff; no nextphase.
+UI/scenario/token/platform gates remain required; no final full run, build or
+Phase5C paid call has begun.
+Latest 2026-10-11 user clarification: AdditionalGathered Food is player-wide income;
+source constraints govern selected workers' orders. Ordinary gathering continues
+after completion, but Commander issues no new task-owned recovery orders.
+Historical paused checkpoint (superseded by the ACTIVE continuation above): only
+the explicitly approved narrow recovery follow-up was authorized at that point;
+Tasks4–7 were not being started and no further full regression was authorized.
+See Docs/CommanderPhase5C/recovery-followup-brief.md. This is not the current goal state.
+Recovery follow-up: the current production search already passes the reported
+four-unreachable-then-farther-reachable case. Added three focused test cases only;
+final job0e7a7a79903544e78b9aeb4df3254c0a passed3/3 (accelerated EditMode).
+Player-wide completion/continued ordinary gather and exhausted fail-closed behavior
+are included. Narrow review approved; no new production fix/full suite/build/API.
+Later integrated verification should prove a full native delivery cycle after task
+completion; this focused test proves immediate continued gather state and no new
+Commander commands, not that entire cycle.
+Report: Docs/CommanderPhase5C/recovery-followup-report.md.
+Earlier checkpoints below are historical; the ACTIVE summary at the top is authoritative.
+Current status2026-10-11: ACTIVE, incomplete; historical UnityMCP blockage is retained.
+Update22:24UTC: goalresumed, freshheartbeat/liveeditorstate restored, retained0da
+authoritativelyunknown/missing withidle/nojob. Historicalblocker preserved below;
+no priorpass/failure inferred. Implementation/verification ACTIVE again.
+See [blocked checkpoint](Docs/CommanderPhase5C/blocked-checkpoint.md) for exact retained
+job/recovery steps. Full Phase5C requirements below remain in scope.
+
+New user brief explicitly carries forward unresolved5B defects/gates; historical
+malformed fields remain unknown and do not block this phase's implementation.
+[Plan](Docs/CommanderPhase5C/implementation-plan.md),
+[progress/next step](Docs/CommanderPhase5C/progress.md),
+[closure matrix](Docs/CommanderPhase5C/closure-matrix.md).
+Baseline clean HEAD4c9de96adbf6342fbe9e1490fa9b898a0f99caf6, prior376/3059cfbf identity
+verified; UnityWindows64 idle/no jobs. One source writer/Unity runner, offline-first
+request accounting/compact packing then conversation/native correctness, UI/adapters,
+integrated short checks and final regression/Windows+Web builds. Latest human approval
+is10 paid attempts incl repairs/timeouts,0used, and onefinalfullofflinepass after
+source stabilizes. Phase5B remains unaccepted. Earlier
+entries below are retained history, not current5C acceptance.
+2026-10-11 current checkpoint: compact contract/accounting and typed clarification
+have focused evidence, but review found remaining fixes. Retrieval/accounting fix2
+baseline8b302c1649a44dfeac446930ded3b1d1 passed33/33 focused checks; fix3 final covering
+d26825467af24a55b81bcbb6cb6d3211 passed46/46. Direct game-owned similar-name confirmation
+has5/5+16/16 focused proof; partial Clarify/local-slot continuation follow-up
+dc4e703b364e4bab89b8c9be00460824 passed12/12 with clean final scoped review. This
+closes the focused implementation gate, not actual endpoint/live/native acceptance. Exact
+retry0da4a1e66ca24242bef8a3762244fa8f was authoritatively
+missing after reconnect; its result remains unknown. Fresh compilation completed.
+Task2 correction safety has focused11/11+3/3 evidence; typed amount-qualifier follow-up
+GREEN b97eb8b879224c308504a4596f158e57 passed10/10 and scoped review is clean. Original
+RED/initialization failures remain retained; this is not live/native acceptance.
+Next native defense/Farm/loss/causal-fact implementation; UI/adapters/scenarios/final gates remain.
+No duplicate/restart/paid calls. Native correctness/adapters, modernUI, durable scenarios,
+measuredboth-route tokenproof, finalregression andfreshWindows/Webpackages remainOPEN.
 ## Playthrough 2 — discovery closeout, 2026-10-10
 
 [Final report](Docs/CommanderPhase5B/full-ai-playthrough-2-report.md): user-authorized

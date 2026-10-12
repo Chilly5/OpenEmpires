@@ -178,6 +178,14 @@ namespace OpenEmpires
                 if (sourceIntent is EnsureUnitCountIntent ensure)
                 {
                     if (!CanBindUnits(action, ensure.UnitType)) return false;
+                    if (action.ActionType == CommanderCapabilityActionType.GarrisonUnits
+                        && (ensure.UnitType != 0 || !ensure.NewProductionCount.HasValue
+                            || !(action.UnitSelector.Kind == CommanderUnitSelectorKind.Villagers
+                                || action.UnitSelector.Kind == CommanderUnitSelectorKind.UnitType
+                                    && action.UnitSelector.UnitType == 0)
+                            || action.UnitSelector.AllMatching
+                            || action.UnitSelector.Count != ensure.NewProductionCount.Value))
+                        return false;
                 }
                 else if (sourceIntent is BuildStructureIntent build)
                 {

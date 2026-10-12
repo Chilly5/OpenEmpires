@@ -1,0 +1,38 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "44e3f730ff7248799f3aab3f31a91bf6",
+    "status": "failed",
+    "mode": "EditMode",
+    "started_unix_ms": 1791663753494,
+    "finished_unix_ms": 1791663761586,
+    "last_update_unix_ms": 1791663761586,
+    "progress": {
+      "completed": 5,
+      "total": 5,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791663760621,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"Move all of my Wood villagers to the woodline left of my Town Center.\")",
+      "last_finished_unix_ms": 1791663761328,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [
+        {
+          "full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.MovementCommandSupersedesGraphDraftWithoutCancellingAcceptedWork",
+          "message": "  Expected: null\r\n  But was:  <OpenEmpires.CommanderPendingClarification>\r\n"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.ResetDropsGraphDraft_AndBareYesCannotBecomeANewGoal",
+          "message": "  An orphan confirmation is not a new model order.\r\n  Expected: 1\r\n  But was:  2\r\n"
+        }
+      ],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": null
+  },
+  "hint": null
+}

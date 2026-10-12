@@ -20,12 +20,14 @@ function semanticRequest(body) {
   if(!body||typeof body!=='object'||Array.isArray(body)||Object.keys(body).some(k=>!['model','messages','max_tokens','reasoning'].includes(k))
     ||body.model!=='openai/gpt-6-luna'||!Number.isInteger(body.max_tokens)||body.max_tokens<1||body.max_tokens>4096
     ||!Array.isArray(body.messages)||body.messages.length<1||body.messages.length>16)throw deny('INVALID_SEMANTIC_REQUEST');
-  let length=0;
+  let length=0,conservativeInput=256;
   for(const m of body.messages) {
     if(!m||Object.keys(m).some(k=>!['role','content'].includes(k))||!['system','user','assistant'].includes(m.role)||typeof m.content!=='string')throw deny('INVALID_SEMANTIC_REQUEST');
     length+=m.content.length;
+    conservativeInput+=Buffer.byteLength(m.role,'utf8')+Buffer.byteLength(m.content,'utf8');
   }
-  if(length>24576||body.reasoning!==undefined&&(Object.keys(body.reasoning).length!==1||body.reasoning.effort!=='none'))throw deny('INVALID_SEMANTIC_REQUEST');
+  // Identical decoded model-visible fields and margin as the Unity preflight; the body is forwarded unchanged.
+  if(length>24576||conservativeInput>=4000||body.reasoning!==undefined&&(Object.keys(body.reasoning).length!==1||body.reasoning.effort!=='none'))throw deny('INVALID_SEMANTIC_REQUEST');
   return body;
 }
 export function createGateway(configuration) {

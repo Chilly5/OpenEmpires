@@ -1,0 +1,29 @@
+diff --git a/Docs/CommanderPhase5C/evidence/task7-preflight-baseline/Assets/Tests/EditMode/CommanderPhase5ADynamicRuntimeTests.cs b/Assets/Tests/EditMode/CommanderPhase5ADynamicRuntimeTests.cs
+index d5d73db..c4256d8 100644
+--- a/Docs/CommanderPhase5C/evidence/task7-preflight-baseline/Assets/Tests/EditMode/CommanderPhase5ADynamicRuntimeTests.cs
++++ b/Assets/Tests/EditMode/CommanderPhase5ADynamicRuntimeTests.cs
+@@ -802,16 +802,20 @@ namespace OpenEmpires.Tests
+             ICommand original = f.Sim.CommandBuffer.FlushCommands().Single();
+             var command = (GarrisonCommand)original;
+             Assert.That(command.UnitIds, Is.EqualTo(new[] { f.Workers[1].Id }));
+-            for (int tick = 1; tick < 500 && goal.Status != CommanderGoalStatus.Completed; tick++)
++            for (int tick = 1; tick < 500 && goal.Status != CommanderGoalStatus.Blocked; tick++)
+             {
+                 f.Sim.Tick(tick == 1 ? new System.Collections.Generic.List<ICommand> { original }
+                     : new System.Collections.Generic.List<ICommand>());
+                 f.Manager.Tick(tick * 15);
+             }
+-            Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Completed), goal.StatusReason);
++            Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Blocked), goal.StatusReason);
+             Assert.That(goal.StatusReason, Does.Contain("protected 1"));
+-            Assert.That(f.Sim.BuildingRegistry.GetAllBuildings().Single(b => b.Type == BuildingType.TownCenter)
+-                .GarrisonedUnitIds.Contains(f.Workers[0].Id), Is.False);
++            var sheltered = f.Sim.BuildingRegistry.GetAllBuildings().Single(b => b.Type == BuildingType.TownCenter);
++            Assert.That(sheltered.GarrisonedUnitIds.Contains(f.Workers[1].Id), Is.True);
++            Assert.That(sheltered.GarrisonedUnitIds.Contains(f.Workers[0].Id), Is.False);
++            Assert.That(sheltered.GarrisonCount, Is.EqualTo(1));
++            Assert.That(f.Sim.CommandBuffer.FlushCommands(), Is.Empty,
++                "The protected villager must not be reclaimed or silently replaced.");
+         }
+ 
+         [Test]

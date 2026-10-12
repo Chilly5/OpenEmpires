@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-11 23:56:16Z" end-time="2026-10-11 23:56:19Z" duration="2.2048599">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1777" result="Failed" site="Child" start-time="2026-10-11 23:56:16Z" end-time="2026-10-11 23:56:19Z" duration="2.204860" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="3050" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1777" result="Failed" site="Child" start-time="2026-10-11 23:56:16Z" end-time="2026-10-11 23:56:19Z" duration="2.179718" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="12696" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="3051" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1777" result="Failed" site="Child" start-time="2026-10-11 23:56:16Z" end-time="2026-10-11 23:56:19Z" duration="2.179087" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="3052" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1777" result="Failed" site="Child" start-time="2026-10-11 23:56:16Z" end-time="2026-10-11 23:56:19Z" duration="2.178820" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1002" name="CommanderEconomyClarificationTests" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" testcasecount="90" result="Failed" site="Child" start-time="2026-10-11 23:56:16Z" end-time="2026-10-11 23:56:19Z" duration="2.176510" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderEconomyClarification" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1082" name="CorpusReplay_UsesProductionChatBoundaryAndPersistsAllDeclaredCases" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.CorpusReplay_UsesProductionChatBoundaryAndPersistsAllDeclaredCases" methodname="CorpusReplay_UsesProductionChatBoundaryAndPersistsAllDeclaredCases" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="848372133" result="Failed" label="Error" start-time="2026-10-11 23:56:16Z" end-time="2026-10-11 23:56:19Z" duration="2.158799" asserts="0">
+              <properties>
+                <property name="Category" value="CommanderPhase5CCorpus" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                <stack-trace><![CDATA[  at OpenEmpires.TestSupport.ScenarioEvidenceRecorder.SafePhase5CValue (Newtonsoft.Json.Linq.JToken value, System.Int32 depth) [0x00053] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\Shared\ScenarioEvidenceRecorder.cs:91 
+  at OpenEmpires.TestSupport.ScenarioEvidenceRecorder.SafePhase5CValue (Newtonsoft.Json.Linq.JToken value, System.Int32 depth) [0x000e2] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\Shared\ScenarioEvidenceRecorder.cs:97 
+  at OpenEmpires.TestSupport.ScenarioEvidenceRecorder+<>c__DisplayClass13_0.<SafePhase5CValue>b__0 (Newtonsoft.Json.Linq.JToken item) [0x00000] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\Shared\ScenarioEvidenceRecorder.cs:92 
+  at System.Linq.Enumerable.All[TSource] (System.Collections.Generic.IEnumerable`1[T] source, System.Func`2[T,TResult] predicate) [0x0002c] in <fe644d7ad1cf499ebe4e7ad937bc03bf>:0 
+  at OpenEmpires.TestSupport.ScenarioEvidenceRecorder.SafePhase5CValue (Newtonsoft.Json.Linq.JToken value, System.Int32 depth) [0x00095] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\Shared\ScenarioEvidenceRecorder.cs:92 
+  at OpenEmpires.TestSupport.ScenarioEvidenceRecorder.RecordPhase5CTurn (Newtonsoft.Json.Linq.JObject safeTurn) [0x00032] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\Shared\ScenarioEvidenceRecorder.cs:68 
+  at OpenEmpires.Tests.CommanderEconomyClarificationTests.RunPhase5CCorpusAsync (System.String corpusPath, System.String directory) [0x0093b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.Phase5CCorpus.cs:238 
+  at OpenEmpires.Tests.CommanderEconomyClarificationTests.CorpusReplay_UsesProductionChatBoundaryAndPersistsAllDeclaredCases () [0x000f4] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.Phase5CCorpus.cs:29 
+  at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31 
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44 ]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[SyncCheck] tick=1 checksum=1920B5C4
+[SyncCheck] tick=2 checksum=66E02DC5
+[SyncCheck] tick=3 checksum=B49FA5C6
+[SyncCheck] tick=4 checksum=025F1DC7
+[SyncCheck] tick=5 checksum=501E95C8
+[SyncCheck] tick=6 checksum=9DDE0DC9
+[SyncCheck] tick=7 checksum=EB9D85CA
+[SyncCheck] tick=8 checksum=395CFDCB
+[SyncCheck] tick=9 checksum=871C75CC
+[SyncCheck] tick=10 checksum=D4DBEDCD
+[SyncCheck] tick=11 checksum=229B65CE
+[SyncCheck] tick=12 checksum=705ADDCF
+[SyncCheck] tick=13 checksum=BE1A55D0
+[SyncCheck] tick=14 checksum=0BD9CDD1
+[SyncCheck] tick=15 checksum=599945D2
+[SyncCheck] tick=16 checksum=A758BDD3
+[SyncCheck] tick=17 checksum=F51835D4
+[SyncCheck] tick=18 checksum=42D7ADD5
+[SyncCheck] tick=19 checksum=909725D6
+[SyncCheck] tick=20 checksum=DE569DD7
+[SyncCheck] tick=21 checksum=2C1615D8
+[SyncCheck] tick=22 checksum=79D58DD9
+[SyncCheck] tick=23 checksum=C79505DA
+[SyncCheck] tick=24 checksum=15547DDB
+[SyncCheck] tick=25 checksum=6313F5DC
+[SyncCheck] tick=26 checksum=B0D36DDD
+[SyncCheck] tick=27 checksum=FE92E5DE
+[SyncCheck] tick=28 checksum=4C525DDF
+[SyncCheck] tick=29 checksum=9A11D5E0
+[SyncCheck] tick=30 checksum=E7D14DE1
+[SyncCheck] tick=31 checksum=3590C5E2
+[SyncCheck] tick=32 checksum=83503DE3
+[SyncCheck] tick=33 checksum=D10FB5E4
+[SyncCheck] tick=34 checksum=1ECF2DE5
+[SyncCheck] tick=35 checksum=6C8EA5E6
+[SyncCheck] tick=36 checksum=BA4E1DE7
+[SyncCheck] tick=37 checksum=080D95E8
+[SyncCheck] tick=38 checksum=55CD0DE9
+[SyncCheck] tick=39 checksum=A38C85EA
+[SyncCheck] tick=40 checksum=F14BFDEB
+[SyncCheck] tick=41 checksum=3F0B75EC
+[SyncCheck] tick=42 checksum=8CCAEDED
+[SyncCheck] tick=43 checksum=DA8A65EE
+[SyncCheck] tick=44 checksum=2849DDEF
+[SyncCheck] tick=45 checksum=760955F0
+[SyncCheck] tick=46 checksum=C3C8CDF1
+[SyncCheck] tick=47 checksum=118845F2
+[SyncCheck] tick=48 checksum=5F47BDF3
+[SyncCheck] tick=49 checksum=AD0735F4
+[SyncCheck] tick=50 checksum=FAC6ADF5
+[SyncCheck] tick=51 checksum=488625F6
+[SyncCheck] tick=52 checksum=96459DF7
+[SyncCheck] tick=53 checksum=E40515F8
+[SyncCheck] tick=54 checksum=31C48DF9
+[SyncCheck] tick=55 checksum=7F8405FA
+[SyncCheck] tick=56 checksum=CD437DFB
+[SyncCheck] tick=57 checksum=1B02F5FC
+[SyncCheck] tick=58 checksum=68C26DFD
+[SyncCheck] tick=59 checksum=B681E5FE
+[SyncCheck] tick=60 checksum=04415DFF
+[Commander] context=projected;provider-request=started
+[SyncCheck] tick=1 checksum=2DBD3A6A
+[SyncCheck] tick=2 checksum=482E3389
+[SyncCheck] tick=3 checksum=629F2CA8
+[SyncCheck] tick=4 checksum=7D1025C7
+[SyncCheck] tick=5 checksum=97811EE6
+[SyncCheck] tick=6 checksum=B1F21805
+[SyncCheck] tick=7 checksum=CC631124
+[SyncCheck] tick=8 checksum=E6D40A43
+[SyncCheck] tick=9 checksum=01450362
+[SyncCheck] tick=10 checksum=1BB5FC81
+[SyncCheck] tick=11 checksum=3626F5A0
+[SyncCheck] tick=12 checksum=5097EEBF
+[SyncCheck] tick=13 checksum=6B08E7DE
+[SyncCheck] tick=14 checksum=8579E0FD
+[SyncCheck] tick=15 checksum=9FEADA1C
+[SyncCheck] tick=16 checksum=BA5BD33B
+[SyncCheck] tick=17 checksum=D4CCCC5A
+[SyncCheck] tick=18 checksum=EF3DC579
+[SyncCheck] tick=19 checksum=09AEBE98
+[SyncCheck] tick=20 checksum=241FB7B7
+[SyncCheck] tick=21 checksum=3E90B0D6
+[SyncCheck] tick=22 checksum=5901A9F5
+[SyncCheck] tick=23 checksum=7372A314
+[SyncCheck] tick=24 checksum=8DE39C33
+[SyncCheck] tick=25 checksum=A8549552
+[SyncCheck] tick=26 checksum=C2C58E71
+[SyncCheck] tick=27 checksum=DD368790
+[SyncCheck] tick=28 checksum=F7A780AF
+[SyncCheck] tick=29 checksum=121879CE
+[SyncCheck] tick=30 checksum=2C8972ED
+[SyncCheck] tick=31 checksum=46FA6C0C
+[SyncCheck] tick=32 checksum=616B652B
+[SyncCheck] tick=33 checksum=7BDC5E4A
+[SyncCheck] tick=34 checksum=964D5769
+[SyncCheck] tick=35 checksum=B0BE5088
+[SyncCheck] tick=36 checksum=CB2F49A7
+[SyncCheck] tick=37 checksum=E5A042C6
+[SyncCheck] tick=38 checksum=00113BE5
+[SyncCheck] tick=39 checksum=1A823504
+[SyncCheck] tick=40 checksum=34F32E23
+[SyncCheck] tick=41 checksum=4F642742
+[SyncCheck] tick=42 checksum=69D52061
+[SyncCheck] tick=43 checksum=84461980
+[SyncCheck] tick=44 checksum=9EB7129F
+[SyncCheck] tick=45 checksum=B9280BBE
+[SyncCheck] tick=46 checksum=D39904DD
+[SyncCheck] tick=47 checksum=EE09FDFC
+[SyncCheck] tick=48 checksum=087AF71B
+[SyncCheck] tick=49 checksum=22EBF03A
+[SyncCheck] tick=50 checksum=3D5CE959
+[SyncCheck] tick=51 checksum=57CDE278
+[SyncCheck] tick=52 checksum=723EDB97
+[SyncCheck] tick=53 checksum=8CAFD4B6
+[SyncCheck] tick=54 checksum=A720CDD5
+[SyncCheck] tick=55 checksum=C191C6F4
+[SyncCheck] tick=56 checksum=DC02C013
+[SyncCheck] tick=57 checksum=F673B932
+[SyncCheck] tick=58 checksum=10E4B251
+[SyncCheck] tick=59 checksum=2B55AB70
+[SyncCheck] tick=60 checksum=45C6A48F
+[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] intent=admitted;goal-submitted=True
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

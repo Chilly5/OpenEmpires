@@ -132,11 +132,12 @@ namespace OpenEmpires.Tests
             await provider.TranslateSemanticAsync(request, CancellationToken.None);
 
             string body = transport.RequestBodies.Single();
-            Assert.That(body, Does.Contain("\\\"placement\\\""));
+            Assert.That(body, Does.Contain("placement?"),
+                "The compact contract must advertise optional typed placement, not an obsolete JSON spelling.");
             Assert.That(body, Does.Contain("MyTownCenter|MyBarracks"));
-            Assert.That(body, Does.Contain("MapWest|MapEast|Near"));
+            Assert.That(body, Does.Contain("Near|MapWest|MapEast"));
             Assert.That(body, Does.Contain("clearGapTiles"));
-            Assert.That(body, Does.Contain("producerFromNode"));
+            Assert.That(body, Does.Contain("producerFromNode=explicit-new"));
         }
 
         [Test]

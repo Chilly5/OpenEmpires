@@ -63,7 +63,7 @@ namespace OpenEmpires
         }
         private static string DescribeAction(CapabilityActionIntent action,string resultBuildingName)
         {
-            string actors=action.UnitSelector.Count+" owned "+(action.UnitSelector.Kind==CommanderUnitSelectorKind.UnitType
+            string actors=(action.UnitSelector.AllMatching?"all currently eligible owned ":action.UnitSelector.Count+" owned ")+(action.UnitSelector.Kind==CommanderUnitSelectorKind.UnitType
                 ?CommanderIntentCatalog.GetUnitDisplayName(action.UnitSelector.UnitType):UnitKind(action.UnitSelector.Kind.ToString()));
             string location=Location(action.LocationSelector);
             string target=action.TargetSelector.HasValue
@@ -76,6 +76,7 @@ namespace OpenEmpires
             {
                 case CommanderCapabilityActionType.MoveUnits:effect="Move "+actors+" to "+location;break;
                 case CommanderCapabilityActionType.ScoutArea:effect="Scout by moving "+actors+" to "+location;break;
+                case CommanderCapabilityActionType.DiscoverEnemy:effect="Discover "+target+" with one owned Scout over a finite route of known frontier waypoints; complete only when the requested enemy becomes visibly observed; stop on route exhaustion or scout loss";break;
                 case CommanderCapabilityActionType.PatrolArea:effect="Patrol with "+actors+"; point patrol from each starting position to "+location;break;
                 case CommanderCapabilityActionType.DefendArea:effect="Move "+actors+" to "+location+" to help defend";break;
                 case CommanderCapabilityActionType.RetreatUnits:effect="Retreat "+actors+" to "+location;break;
@@ -83,9 +84,11 @@ namespace OpenEmpires
                 case CommanderCapabilityActionType.RepairTarget:effect="Repair "+target+" with "+actors;break;
                 case CommanderCapabilityActionType.SetRallyPoint:effect="Set the rally point of "+(resultBuildingName!=null?"the exact "+resultBuildingName:"your "+Words(CommanderIntentCatalog.GetStructureDisplayName(action.StructureType??BuildingType.Barracks)))+" at "+location;break;
                 case CommanderCapabilityActionType.ResearchTechnology:effect="Research "+Words(action.Technology?.ToString())+" using an eligible completed research building";break;
+                case CommanderCapabilityActionType.GarrisonUnits:effect="Garrison up to "+actors+" in one exact owned "+Words(CommanderIntentCatalog.GetStructureDisplayName(action.StructureType.Value))+"; report protected and unaccommodated remainder; no alternate shelter fallback";break;
+                case CommanderCapabilityActionType.UngarrisonBuilding:effect="Ungarrison every housed unit from one exact owned "+Words(CommanderIntentCatalog.GetStructureDisplayName(action.StructureType.Value))+" (building-wide; selective egress is unsupported)";break;
                 default:throw new ArgumentException("Unsupported preview effect.");
             }
-            if(action.TargetSelector.HasValue)effect+="; no unrelated target substitutes (normal gameplay may retarget after dispatch)";
+            if(action.TargetSelector.HasValue && action.ActionType!=CommanderCapabilityActionType.DiscoverEnemy)effect+="; no unrelated target substitutes (normal gameplay may retarget after dispatch)";
             if(action.LocationSelector.RadiusTiles.HasValue)effect+="; unsupported radius constraint "+action.LocationSelector.RadiusTiles.Value;
             return effect;
         }
@@ -140,7 +143,9 @@ namespace OpenEmpires
                     case CommanderDynamicMechanic.SelectWorkers:
                         string state=node.Parameters.TryGetValue("state",out object s)?(string)s:"Any";
                         string resource=node.Parameters.TryGetValue("currentResource",out object r)?(string)r:null;
-                        description="Choose "+node.Parameter<int>("count")+" "+WorkerDescription(state,resource)+" once";break;
+                        description=node.Parameters.ContainsKey("countMode")
+                            ? "Choose all currently "+WorkerDescription(state,resource)+" once as a bounded frozen snapshot"
+                            : "Choose "+node.Parameter<int>("count")+" "+WorkerDescription(state,resource)+" once";break;
                     case CommanderDynamicMechanic.PartitionWorkers:
                         int first=node.Parameter<int>("offset")+1,last=first+node.Parameter<int>("count")-1;
                         description="Use "+(first==last?"villager "+first:"villagers "+first+"–"+last)+" from "+Label(graph,node.Inputs["workers"])+" as a fixed group";break;
@@ -154,9 +159,14 @@ namespace OpenEmpires
                         string anchor=node.Parameters.TryGetValue("anchor",out object a)?Anchor((string)a)
                             :node.Inputs.TryGetValue("structures",out string structure)?"the exact building from "+Label(graph,structure)
                             :"the exact resource from "+Label(graph,node.Inputs["resources"]);
-                        description=Relation(node.Parameter<string>("relation"))+" "+anchor+"; "+node.Parameter<int>("clearGapTiles")+"-tile clear gap between footprints within bounded tolerance; report a blocker if no valid site exists";break;
+                        description=node.Parameters.ContainsKey("resource")
+                            ? "Only currently visible "+node.Parameter<string>("sourceKind")+"/"+node.Parameter<string>("resource")
+                                +" sources "+Relation(node.Parameter<string>("relation"))+" "+anchor
+                                +"; at least "+node.Parameter<int>("clearGapTiles")+" clear tile(s); freeze eligible source identities at admission"
+                            : Relation(node.Parameter<string>("relation"))+" "+anchor+"; "+node.Parameter<int>("clearGapTiles")+"-tile clear gap between footprints within bounded tolerance; report a blocker if no valid site exists";break;
                     case CommanderDynamicMechanic.Build:
                     case CommanderDynamicMechanic.AllocateWorkers:
+                    case CommanderDynamicMechanic.MoveWorkers:
                     case CommanderDynamicMechanic.Produce:continue; // Fully disclosed by effect lines and input bindings.
                     default:throw new ArgumentException("Unsupported preview selection.");
                 }

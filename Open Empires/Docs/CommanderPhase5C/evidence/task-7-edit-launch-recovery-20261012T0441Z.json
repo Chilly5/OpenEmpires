@@ -1,0 +1,38 @@
+{
+  "schema": "phase5c-task7-launch-recovery/v1",
+  "observedUtc": "2026-10-12T04:41:00Z",
+  "failedRpc": {
+    "mode": "EditMode",
+    "requestedExactIds": 1797,
+    "error": "Could not connect to Unity",
+    "jobId": null
+  },
+  "freshNativeState": {
+    "managerCurrentJobId": "",
+    "managerHasRunningJob": false,
+    "testRunStatusIsRunning": false,
+    "sessionCurrentJobId": "",
+    "sessionRegistryCurrentJobId": "",
+    "registryJobs": 10,
+    "registryNewest": {
+      "jobId": "0494015fb0574f5a986728cba88d2915",
+      "mode": "EditMode",
+      "status": "succeeded",
+      "startedUnixMs": 1791778556811,
+      "finishedUnixMs": 1791778558997,
+      "totalTests": 1,
+      "completedTests": 1
+    },
+    "recentFullRunFound": false,
+    "captureArm": true,
+    "captureOwner": "",
+    "captureFile": "",
+    "nativeArtifactAfterFailedRpc": false
+  },
+  "frozenIdentity": {
+    "sourceManifest": "Docs/CommanderPhase5C/evidence/task-7-freeze-source-manifest-20261012T0435Z.json",
+    "manifestVerified": true,
+    "compatibilitySourceSha256": "d73a2ebf4c2b20d141ecb84815058907f304690049fc7834e0169c3299983157"
+  },
+  "ruling": "Parent explicitly authorized one recovery submission of same approved actual EditMode pass after no job/RunStarted evidence; retain same unconsumed arm; no loop if second no-ID."
+}

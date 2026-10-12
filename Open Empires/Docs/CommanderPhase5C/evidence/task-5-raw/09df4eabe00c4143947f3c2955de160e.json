@@ -1,0 +1,36 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "09df4eabe00c4143947f3c2955de160e",
+      "status": "failed",
+      "mode": "PlayMode",
+      "started_unix_ms": 1791754588720,
+      "finished_unix_ms": 1791754595269,
+      "last_update_unix_ms": 1791754595269,
+      "progress": {
+        "completed": 1,
+        "total": 1,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791754594604,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.TimedOutLateResponse_CannotAdmitAndDoubleRetryStartsOnce",
+        "last_finished_unix_ms": 1791754595207,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.TimedOutLateResponse_CannotAdmitAndDoubleRetryStartsOnce",
+            "message": "  immediately after Cancel\r\n  Expected string length 17 but was 0. Strings differ at index 0.\r\n  Expected: \"train 10 spearmen\"\r\n  But was:  <string.Empty>\r\n  -----------^\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

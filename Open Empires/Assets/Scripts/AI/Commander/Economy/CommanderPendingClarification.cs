@@ -48,6 +48,7 @@ namespace OpenEmpires
     public sealed class CommanderPendingClarification
     {
         public CommanderWorkerAllocationDraft Draft { get; }
+        public CommanderRequestGraphDraft GraphDraft { get; }
         public string OriginalText { get; }
         public string Question { get; }
         public int Turns { get; }
@@ -62,8 +63,20 @@ namespace OpenEmpires
             RuntimeGeneration = generation; Sequence = sequence; Turns = turns;
             RequestTicket = requestTicket;
         }
+        internal CommanderPendingClarification(CommanderRequestGraphDraft graphDraft, string original, string question,
+            int generation, long sequence, int turns = 0, CommanderRequestTicket requestTicket = null)
+        {
+            if (original != null && original.Length > CommanderSemanticProviderRequest.MaximumPlayerMessageCharacters)
+                throw new ArgumentOutOfRangeException(nameof(original));
+            GraphDraft = graphDraft; OriginalText = original ?? string.Empty; Question = Bound(question, 180);
+            RuntimeGeneration = generation; Sequence = sequence; Turns = turns;
+            RequestTicket = requestTicket;
+        }
         internal string Serialize()
         {
+            if (GraphDraft != null) return new JObject { ["draftGraph"] = GraphDraft.ToPendingJson(),
+                ["missingSlots"] = GraphDraft.ToSlotsJson(), ["originalText"] = OriginalText,
+                ["question"] = Question }.ToString(Formatting.None);
             var missing = new JArray(); foreach (var field in Draft.MissingFields) missing.Add(field.ToString());
             return new JObject { ["draft"] = Draft.ToJson(), ["missingFields"] = missing, ["originalText"] = OriginalText, ["question"] = Question }.ToString(Formatting.None);
         }

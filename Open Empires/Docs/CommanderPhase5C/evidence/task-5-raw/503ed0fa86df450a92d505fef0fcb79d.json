@@ -1,0 +1,61 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "503ed0fa86df450a92d505fef0fcb79d",
+      "status": "succeeded",
+      "mode": "PlayMode",
+      "started_unix_ms": 1791756917926,
+      "finished_unix_ms": 1791756923762,
+      "last_update_unix_ms": 1791756923762,
+      "progress": {
+        "completed": 2,
+        "total": 2,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791756923288,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4HVoicePlayModeTests.ScenarioA_PreviewMode_PopulatesInputField_AndSubmitsOnConfirmation",
+        "last_finished_unix_ms": 1791756923725,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "PlayMode",
+        "summary": {
+          "total": 2,
+          "passed": 2,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 1.0518249,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "EditedPreview_NormalSendConsumesVoicePreviewExactlyOnce",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4HVoicePlayModeTests.EditedPreview_NormalSendConsumesVoicePreviewExactlyOnce",
+            "state": "Passed",
+            "durationSeconds": 0.6009722,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          },
+          {
+            "name": "ScenarioA_PreviewMode_PopulatesInputField_AndSubmitsOnConfirmation",
+            "fullName": "OpenEmpires.Tests.CommanderPhase4HVoicePlayModeTests.ScenarioA_PreviewMode_PopulatesInputField_AndSubmitsOnConfirmation",
+            "state": "Passed",
+            "durationSeconds": 0.4365385,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

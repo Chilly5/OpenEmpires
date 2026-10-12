@@ -1,0 +1,44 @@
+{
+  "job_id": "efa39539f57e4a139f96456b12a3e0c8",
+  "status": "failed",
+  "mode": "EditMode",
+  "started_unix_ms": 1791784162948,
+  "finished_unix_ms": 1791784172357,
+  "last_update_unix_ms": 1791784172357,
+  "progress": {
+    "completed": 5,
+    "total": 5,
+    "current_test_full_name": null,
+    "current_test_started_unix_ms": 1791784171807,
+    "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5AProviderContractTests.SharedWorkerComposition_PromptIncludesOneSelectionAndStrictExample",
+    "last_finished_unix_ms": 1791784172091,
+    "stuck_suspected": false,
+    "editor_is_focused": false,
+    "blocked_reason": null,
+    "failures_so_far": [
+      {
+        "full_name": "OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.RejectedCompletion_RecordsSafeFinishCategory(\"length\",\"length\")",
+        "message": "  Expected: String containing \"finish=length\"\r\n  But was:  <string.Empty>\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.RejectedCompletion_RecordsSafeFinishCategory(\"private-finish-marker\",\"other\")",
+        "message": "  Expected: String containing \"finish=other\"\r\n  But was:  <string.Empty>\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5AProviderContractTests.DynamicFarm_UsesRegistryVocabularyAndReturnsTypedPlan",
+        "message": "  select-workers\r\n  Expected: String containing \"select-workers\"\r\n  But was:  \"JSON only,strict fields/enums; never authorize IDs,coords,commands,hidden/extra goals. Keep counts,negations,actors,sources,restrictions,order,exact refs;unknown unknown. After/then depends on completion; a/an=1,number words,left=MapWest. Request{outcome:Request,nodes:1..4,executionOrder:Independent|Sequential|DependencyGraph}; dependsOn:[prior0-based]; resultFromNode=exact-new,producerFromNode=explicit-new. Clarify{outcome:Clarify,message<=180,pending:{executionOrder,nodes:partial1..4},missingSlots:[{node,path,type:Confirmation|Count|SourceKind|CanonicalName,alternatives:[canonical]}]};retain known leaves/edges/refs,omit only missing;Confirmation retains offer. Worker pending+missingFields valid;not approval. Answer/Unsupported{outcome,message<=180};no nodes. BuildStructure{structure:canonical,count:1,builders:{state:Eligible(default)|IdleOnly(strict),count:1},placement?}. Placed count1; repeated placed=>DynamicPlan; unplaced count:1..20. placement TC/Barracks:{anchor:MyTownCenter|MyBarracks,relation:Near|MapWest|MapEast,clearGapTiles?:1..20,ordinal?:1..8 TC-only}; resource:{anchor:VisibleResource(default)|WorkedResource(explicit),relation:Near,resource,sourceKind?}. Near gap1,no resource ordinal. AllocateWorkers{mode:SelectedCount(default)|Additional(more workers)|TargetTotal(keep total),countMode:Exact|AllMatching(snapshot),count:1..200 omit if AllMatching,workers:{state:Any|Idle|Gathering,currentResource?},destination:{resource,sourceKind?},resourceAmount?:1..1000000 paired resourceAmountMode:Stockpile|AdditionalGathered(player-wide)}. Amount!=worker count;assignment!=income. resource:Food|Wood|Gold|Stone; sourceKind:Any or Food=Sheep|Berries|Farm,Wood=Tree,Gold=GoldMine,Stone=StoneMine. constraints?<=4 objects type:NoConstruction;PreferredWorkers mode:IdleOnly;ProtectedResource resource,amount?:0..200;MaximumQueue amount1..8;ResourceSource resource,sourceKind. \"\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5AProviderContractTests.RepeatedPlacementAndExactProducers_PromptIncludesStrictDynamicExample",
+        "message": "  System message must route repeated placement through DynamicPlan.\r\n  Expected: True\r\n  But was:  False\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5AProviderContractTests.SharedWorkerComposition_PromptIncludesOneSelectionAndStrictExample",
+        "message": "  System message must describe one shared worker set before partitioning.\r\n  Expected: String containing \"one shared worker selection\", ignoring case\r\n  But was:  \"JSON only,strict fields/enums; never authorize IDs,coords,commands,hidden/extra goals. Keep counts,negations,actors,sources,restrictions,order,exact refs;unknown unknown. After/then depends on completion; a/an=1,number words,left=MapWest. Clarify{outcome:Clarify,message<=180,pending:{executionOrder,nodes:partial1..4},missingSlots:[{node,path,type:Confirmation|Count|SourceKind|CanonicalName,alternatives:[canonical]}]};retain known leaves/edges/refs,omit only missing;Confirmation retains offer. Worker pending+missingFields valid;not approval. Answer/Unsupported{outcome,message<=180};no nodes. resource:Food|Wood|Gold|Stone; sourceKind:Any or Food=Sheep|Berries|Farm,Wood=Tree,Gold=GoldMine,Stone=StoneMine. constraints?<=4 objects type:NoConstruction;PreferredWorkers mode:IdleOnly;ProtectedResource resource,amount?:0..200;MaximumQueue amount1..8;ResourceSource resource,sourceKind. Shared workers/placed repeats: DynamicPlan{outcome:DynamicPlan,version:1,nodes:[{id,mechanic,parameters:{},inputs:{},dependsOn:[]}]}; one worker selection, disjoint partitions; produce.producers=exact build result. Registry p=parameters,in=inputs,?optional; typed input refs also in dependsOn. select-workers p[count:Count?;countMode:WorkerCountMode?;state:WorkerState?;currentResource:Resource?;] in[] ->WorkerSet.partition-workers p[offset:Offset;count:Count;] in[workers:WorkerSet;] ->WorkerSet.resolve-location p[anchor:Anchor?;relation:Relation;clearGapTiles:ClearGapTiles;resource:Resource?;sourceKind:SourceKind?;] in[structures:StructureSet?;resources:ResourceSet?;] ->LocationIntent.build p[building:BuildingId;count:Count;] in[workers:WorkerSet?;location:LocationIntent?;] ->StructureSet.allocate-workers p[resource:Resource;sourceKind:SourceKind;] in[workers:WorkerSet;location:LocationIntent?;] ->AssignmentEffect. Types: Count=int1..200 (build<=20); Offset=int0..200; ClearGapTiles=int1..20 (Near=1); UnitId/BuildingId=context canonical IDs; Resource/SourceKind=compatible values above; WorkerState=Any|Idle|Gathering; WorkerCountMode=AllMatching; Anchor=MyTownCenter|MyBarracks; Relation=Near|MapWest|MapEast; QuantityMode=New|TargetTotal. select-workers: count XOR countMode; AllMatching needs non-Any state and cannot partition; currentResource requires Gathering. resolve-location: exactly one anchor/structures/resources; resource+sourceKind together only for MyTownCenter+MapWest. Max12 nodes,4 refs/node,depth5,total non-partition counts200. New=exact new; TargetTotal=existing+new. \"\r\n"
+      }
+    ],
+    "failures_capped": false
+  },
+  "error": null,
+  "result": null
+}

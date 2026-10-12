@@ -1,0 +1,52 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "db89c97f1ed547c6b551c0f541ae8673",
+      "status": "succeeded",
+      "mode": "EditMode",
+      "started_unix_ms": 1791730287626,
+      "finished_unix_ms": 1791730300585,
+      "last_update_unix_ms": 1791730300585,
+      "progress": {
+        "completed": 1,
+        "total": 1,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791730296729,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.TwoHousesNearOwnedTownCenter_CompleteAtDistinctNativeSites",
+        "last_finished_unix_ms": 1791730300374,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "EditMode",
+        "summary": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 4.1611974,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "TwoHousesNearOwnedTownCenter_CompleteAtDistinctNativeSites",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.TwoHousesNearOwnedTownCenter_CompleteAtDistinctNativeSites",
+            "state": "Passed",
+            "durationSeconds": 3.6256774,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing House at (124,129) from its exact semantic anchor with villager #0.\r\n[SyncCheck] tick=1 checksum=496D9AE9\r\n[SyncCheck] tick=2 checksum=197C6C53\r\n[SyncCheck] tick=3 checksum=A8DF9C60\r\n[SyncCheck] tick=4 checksum=12808996\r\n[SyncCheck] tick=5 checksum=A6AF1769\r\n[SyncCheck] tick=6 checksum=815E38B1\r\n[SyncCheck] tick=7 checksum=CC391AA4\r\n[SyncCheck] tick=8 checksum=50237209\r\n[SyncCheck] tick=9 checksum=8E173685\r\n[SyncCheck] tick=10 checksum=CB8A0E23\r\n[SyncCheck] tick=11 checksum=8AC49DA8\r\n[SyncCheck] tick=12 checksum=A79AE849\r\n[SyncCheck] tick=13 checksum=C5E48977\r\n[SyncCheck] tick=14 checksum=761FDBC9\r\n[SyncCheck] tick=15 checksum=328C7CA1\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed House at (124,129): building #1 is advancing with villager #0.\r\n[SyncCheck] tick=16 checksum=D5A4B9EC\r\n[SyncCheck] tick=17 checksum=7525498A\r\n[SyncCheck] tick=18 checksum=62284126\r\n[SyncCheck] tick=19 checksum=2238A7E5\r\n[SyncCheck] tick=20 checksum=56A9628B\r\n[SyncCheck] tick=21 checksum=6FAA68FE\r\n[SyncCheck] tick=22 checksum=C7C31802\r\n[SyncCheck] tick=23 checksum=E8B4B466\r\n[SyncCheck] tick=24 checksum=CA12C2D6\r\n[SyncCheck] tick=25 checksum=FFF01744\r\n[SyncCheck] tick=26 checksum=8292BFD0\r\n[SyncCheck] tick=27 checksum=E56BCC1D\r\n[SyncCheck] tick=28 checksum=9F6B4B51\r\n[SyncCheck] tick=29 checksum=269D0488\r\n[SyncCheck] tick=30 checksum=211FE6CB\r\n[SyncCheck] tick=31 checksum=E075B156\r\n[SyncCheck] tick=32 checksum=F190144E\r\n[SyncCheck] tick=33 checksum=23A0F555\r\n[SyncCheck] tick=34 checksum=2F9B7A95\r\n[SyncCheck] tick=35 checksum=84FBE09B\r\n[SyncCheck] tick=36 checksum=D58F5C53\r\n[SyncCheck] tick=37 checksum=0730061E\r\n[SyncCheck] tick=38 checksum=A2443B9E\r\n[SyncCheck] tick=39 checksum=DF6266D2\r\n[SyncCheck] tick=40 checksum=7EE0BD9B\r\n[SyncCheck] tick=41 checksum=3DD878BC\r\n[SyncCheck] tick=42 checksum=35DB7F32\r\n[SyncCheck] tick=43 checksum=41BA6942\r\n[SyncCheck] tick=44 checksum=567D1609\r\n[SyncCheck] tick=45 checksum=91464A53\r\n[SyncCheck] tick=46 checksum=699F7D6D\r\n[SyncCheck] tick=47 checksum=72A4AA21\r\n[SyncCheck] tick=48 checksum=496F21F0\r\n[SyncCheck] tick=49 checksum=AD5F7378\r\n[SyncCheck] tick=50 checksum=2156777D\r\n[SyncCheck] tick=51 checksum=E3701CDC\r\n[SyncCheck] tick=52 checksum=768D3C59\r\n[SyncCheck] tick=53 checksum=8FBCD56F\r\n[SyncCheck] tick=54 checksum=D6167FE2\r\n[SyncCheck] tick=55 checksum=58C93453\r\n[SyncCheck] tick=56 checksum=8D398E0A\r\n[SyncCheck] tick=57 checksum=FA1FFCF5\r\n[SyncCheck] tick=58 checksum=CBCD0C9C\r\n[SyncCheck] tick=59 checksum=8BF43E21\r\n[SyncCheck] tick=60 checksum=4F9D57E3\r\n[SyncCheck] tick=61 checksum=6D162363\r\n[SyncCheck] tick=62 checksum=E3B80EE1\r\n[SyncCheck] tick=63 checksum=9194E31D\r\n[SyncCheck] tick=64 checksum=A81D18D8\r\n[SyncCheck] tick=65 checksum=08F2BED0\r\n[SyncCheck] tick=66 checksum=4CA505E8\r\n[SyncCheck] tick=67 checksum=B532D1C7\r\n[SyncCheck] tick=68 checksum=5DFF027B\r\n[SyncCheck] tick=69 checksum=CB49E30D\r\n[SyncCheck] tick=70 checksum=86C6F49F\r\n[SyncCheck] tick=71 checksum=06C2B60F\r\n[SyncCheck] tick=72 checksum=C5C1AFDE\r\n[SyncCheck] tick=73 checksum=679D4ACD\r\n[SyncCheck] tick=74 checksum=394D257A\r\n[SyncCheck] tick=75 checksum=7B70B147\r\n[SyncCheck] tick=76 checksum=ED687CD2\r\n[SyncCheck] tick=77 checksum=AD92795D\r\n[SyncCheck] tick=78 checksum=1BA4EA11\r\n[SyncCheck] tick=79 checksum=AF7C8F1B\r\n[SyncCheck] tick=80 checksum=C8CFABA4\r\n[SyncCheck] tick=81 checksum=5915D8CB\r\n[SyncCheck] tick=82 checksum=8D356EB3\r\n[SyncCheck] tick=83 checksum=336AABBB\r\n[SyncCheck] tick=84 checksum=5FC1F202\r\n[SyncCheck] tick=85 checksum=02B90007\r\n[SyncCheck] tick=86 checksum=7CEF2E6E\r\n[SyncCheck] tick=87 checksum=6DC52493\r\n[SyncCheck] tick=88 checksum=F398D3B8\r\n[SyncCheck] tick=89 checksum=A18636A7\r\n[SyncCheck] tick=90 checksum=9DF9AD8A\r\n[SyncCheck] tick=91 checksum=B877CCCF\r\n[SyncCheck] tick=92 checksum=02CA2BD2\r\n[SyncCheck] tick=93 checksum=5C4B8376\r\n[SyncCheck] tick=94 checksum=5FD25A79\r\n[SyncCheck] tick=95 checksum=3F22727C\r\n[SyncCheck] tick=96 checksum=D753B99F\r\n[SyncCheck] tick=97 checksum=6FD849A2\r\n[SyncCheck] tick=98 checksum=8DD85124\r\n[SyncCheck] tick=99 checksum=ABD858A6\r\n[SyncCheck] tick=100 checksum=39642DB2\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Placing House at (129,124) from its exact semantic anchor with villager #0.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed House at (129,124): villager #0 is travelling to building #2.\r\n[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Placed House at (129,124): building #2 is advancing with villager #0.\r\n[Commander] Goal #1: status=Completed owned=2 queued=0; Completed 2 distinct exact semantic placements.\r\n"
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

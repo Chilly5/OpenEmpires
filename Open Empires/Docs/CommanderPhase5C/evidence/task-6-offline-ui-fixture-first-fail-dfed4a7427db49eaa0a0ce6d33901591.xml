@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 00:38:16Z" end-time="2026-10-12 00:38:17Z" duration="0.9391684">
+  <test-suite type="TestSuite" id="1303" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="253" result="Failed" site="Child" start-time="2026-10-12 00:38:16Z" end-time="2026-10-12 00:38:17Z" duration="0.939168" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1297" name="OpenEmpires.PlayModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.PlayModeTests.dll" runstate="Runnable" testcasecount="253" result="Failed" site="Child" start-time="2026-10-12 00:38:16Z" end-time="2026-10-12 00:38:17Z" duration="0.904466" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="12696" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1298" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="253" result="Failed" site="Child" start-time="2026-10-12 00:38:16Z" end-time="2026-10-12 00:38:17Z" duration="0.899039" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1299" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="253" result="Failed" site="Child" start-time="2026-10-12 00:38:16Z" end-time="2026-10-12 00:38:17Z" duration="0.896308" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1263" name="CommanderPhase5CUIPlayModeTests" fullname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests" classname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests" runstate="Runnable" testcasecount="31" result="Failed" site="Child" start-time="2026-10-12 00:38:16Z" end-time="2026-10-12 00:38:17Z" duration="0.892431" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5COffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1292" name="ExplicitOfflineFixture_CapturesPendingApprovalTasksAndChat" fullname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.ExplicitOfflineFixture_CapturesPendingApprovalTasksAndChat" methodname="ExplicitOfflineFixture_CapturesPendingApprovalTasksAndChat" classname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests" runstate="Runnable" seed="1738413661" result="Failed" start-time="2026-10-12 00:38:16Z" end-time="2026-10-12 00:38:17Z" duration="0.862284" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: not <empty>
+  But was:  <empty>
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests+<ExplicitOfflineFixture_CapturesPendingApprovalTasksAndChat>d__41.MoveNext () [0x001ba] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\PlayMode\CommanderPhase5CUIPlayModeTests.cs:780
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Explicit local UI evidence screenshot saved.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

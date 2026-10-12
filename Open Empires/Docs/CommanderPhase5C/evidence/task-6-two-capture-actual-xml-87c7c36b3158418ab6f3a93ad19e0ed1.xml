@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Passed" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 00:40:46Z" end-time="2026-10-12 00:40:48Z" duration="2.0073473">
+  <test-suite type="TestSuite" id="1303" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="253" result="Passed" start-time="2026-10-12 00:40:46Z" end-time="2026-10-12 00:40:48Z" duration="2.007347" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1297" name="OpenEmpires.PlayModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.PlayModeTests.dll" runstate="Runnable" testcasecount="253" result="Passed" start-time="2026-10-12 00:40:46Z" end-time="2026-10-12 00:40:48Z" duration="1.971986" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="12696" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1298" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="253" result="Passed" start-time="2026-10-12 00:40:46Z" end-time="2026-10-12 00:40:48Z" duration="1.969388" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1299" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="253" result="Passed" start-time="2026-10-12 00:40:46Z" end-time="2026-10-12 00:40:48Z" duration="1.967259" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1263" name="CommanderPhase5CUIPlayModeTests" fullname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests" classname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests" runstate="Runnable" testcasecount="31" result="Passed" start-time="2026-10-12 00:40:46Z" end-time="2026-10-12 00:40:48Z" duration="1.963764" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5COffline" />
+            </properties>
+            <test-case id="1292" name="ExplicitOfflineFixture_CapturesPendingApprovalTasksAndChat" fullname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.ExplicitOfflineFixture_CapturesPendingApprovalTasksAndChat" methodname="ExplicitOfflineFixture_CapturesPendingApprovalTasksAndChat" classname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests" runstate="Runnable" seed="1297230759" result="Passed" start-time="2026-10-12 00:40:46Z" end-time="2026-10-12 00:40:47Z" duration="1.377187" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Explicit local UI evidence screenshot saved.
+[Commander] Goal #1 submitted: BuildStructure
+[Commander] Explicit local UI evidence screenshot saved.
+[Commander] Explicit local UI evidence screenshot saved.
+]]></output>
+            </test-case>
+            <test-case id="1291" name="ExplicitRuntimeCapture_UsesActualPopulatedCommanderCanvas" fullname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.ExplicitRuntimeCapture_UsesActualPopulatedCommanderCanvas" methodname="ExplicitRuntimeCapture_UsesActualPopulatedCommanderCanvas" classname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests" runstate="Runnable" seed="356586800" result="Passed" start-time="2026-10-12 00:40:47Z" end-time="2026-10-12 00:40:48Z" duration="0.557149" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: ReachAge
+[Commander] Explicit local UI evidence screenshot saved.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

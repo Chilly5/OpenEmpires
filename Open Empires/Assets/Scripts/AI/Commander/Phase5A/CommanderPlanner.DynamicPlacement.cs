@@ -5,6 +5,8 @@ namespace OpenEmpires
 {
     internal sealed partial class CommanderPlanner
     {
+        private const int MaximumDynamicSiteSearchNodes = 8192;
+
         // Called only after ordinary age/cost/prerequisite checks in PlanBuilding.
         // The anchor is a frozen game-side identity, never a provider tile or runtime ID.
         private CommanderPlan PlanDynamicSemanticBuilding(BuildStructureGoal goal,
@@ -35,9 +37,28 @@ namespace OpenEmpires
                 simulation.MapData.Width, simulation.MapData.Height,
                 location.Relation, location.ClearGapTiles);
             int border = type == BuildingType.Farm ? 0 : 1;
-            for (int i = 0; i < candidates.Count; i++)
+            // Before placing the first building, require enough mutually legal sites
+            // for the entire repeated request. Later external occupancy/authority
+            // changes may still block honestly; a known impossible prefix is never issued.
+            IReadOnlyList<Vector2Int> planned = null;
+            bool exhausted = false;
+            if (goal.Count > 1 && goal.DynamicPlannedSiteSet == null
+                && !TrySelectFullDynamicSiteSet(goal, type, currentTick, candidates,
+                    width, height, border, out planned, out exhausted))
             {
-                Vector2Int tile = candidates[i];
+                goal.PlacementBlocker = CommanderPlacementBlocker.NoLegalCandidate;
+                return new CommanderPlan(CommanderGoalStatus.Blocked,
+                    (exhausted ? "The bounded compatible-site search budget was exhausted; "
+                        : $"Only a partial set of distinct legal {type} sites is available near the exact anchor; ")
+                    + $"none of the requested {goal.Count} placements was started.", owned, queued);
+            }
+            if (goal.Count > 1 && goal.DynamicPlannedSiteSet == null)
+                goal.DynamicPlannedSiteSet = planned;
+            IReadOnlyList<Vector2Int> placementCandidates = goal.DynamicPlannedSiteSet != null
+                ? new[] { goal.DynamicPlannedSiteSet[goal.AttributedBuildingIds.Count] } : candidates;
+            for (int i = 0; i < placementCandidates.Count; i++)
+            {
+                Vector2Int tile = placementCandidates[i];
                 if (!IsVisibleBuildableArea(goal.PlayerId, tile.x, tile.y, width, height,
                     border, type)) continue;
                 UnitData builder = FindReachableSemanticBuilder(goal, tile, width,
@@ -52,8 +73,62 @@ namespace OpenEmpires
             }
             goal.PlacementBlocker = CommanderPlacementBlocker.NoLegalCandidate;
             return new CommanderPlan(CommanderGoalStatus.Blocked,
-                $"No visible, buildable, reachable location satisfies the exact {type} "
-                + "anchor and bounded relation.", owned, queued);
+                goal.DynamicPlannedSiteSet != null
+                    ? "A preflight-selected exact site became unavailable; no alternate placement was started."
+                    : $"No visible, buildable, reachable location satisfies the exact {type} "
+                        + "anchor and bounded relation.", owned, queued);
+        }
+
+        private bool TrySelectFullDynamicSiteSet(BuildStructureGoal goal, BuildingType type,
+            int currentTick, IReadOnlyList<Vector2Int> candidates,
+            int width, int height, int border, out IReadOnlyList<Vector2Int> planned,
+            out bool exhausted)
+        {
+            planned = null;
+            exhausted = false;
+            bool budgetExceeded = false;
+            var legal = new List<Vector2Int>();
+            for (int i = 0; i < candidates.Count; i++)
+            {
+                Vector2Int tile = candidates[i];
+                if (!IsVisibleBuildableArea(goal.PlayerId, tile.x, tile.y,
+                    width, height, border, type)) continue;
+                if (FindReachableSemanticBuilder(goal, tile, width, height, currentTick) != null)
+                    legal.Add(tile);
+            }
+            var selected = new List<Vector2Int>(goal.Count);
+            int checkedNodes = 0;
+            bool Search(int start)
+            {
+                if (selected.Count == goal.Count) return true;
+                if (legal.Count - start < goal.Count - selected.Count) return false;
+                for (int i = start; i < legal.Count; i++)
+                {
+                    if (++checkedNodes > MaximumDynamicSiteSearchNodes)
+                    { budgetExceeded = true; return false; }
+                    Vector2Int tile = legal[i];
+                    bool conflicts = false;
+                    for (int j = 0; j < selected.Count; j++)
+                    {
+                        Vector2Int prior = selected[j];
+                        if (tile.x - border < prior.x + width + border
+                            && tile.x + width + border > prior.x - border
+                            && tile.y - border < prior.y + height + border
+                            && tile.y + height + border > prior.y - border)
+                        { conflicts = true; break; }
+                    }
+                    if (conflicts) continue;
+                    selected.Add(tile);
+                    if (Search(i + 1)) return true;
+                    selected.RemoveAt(selected.Count - 1);
+                    if (budgetExceeded) return false;
+                }
+                return false;
+            }
+            if (!Search(0))
+            { exhausted = budgetExceeded; return false; }
+            planned = selected.ToArray();
+            return true;
         }
     }
 }

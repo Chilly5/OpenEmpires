@@ -1,0 +1,30 @@
+{
+  "instance": "Open Empires@6d7310c7",
+  "mode": "EditMode",
+  "initialization_failure": {
+    "job_id": "1683520fbba441b085c1f7fee0c9fee3",
+    "status": "failed",
+    "started_unix_ms": 1791711583471,
+    "finished_unix_ms": 1791711718490,
+    "completed": 0,
+    "total": null,
+    "error": "Test job failed to initialize (tests did not start within timeout)"
+  },
+  "terminal_red_retry": {
+    "job_id": "56013d7e5e1a49f19115e22a98d51c11",
+    "status": "failed",
+    "started_unix_ms": 1791711729322,
+    "finished_unix_ms": 1791711735148,
+    "completed": 6,
+    "total": 6,
+    "failures_so_far": [
+      {"full_name":"OpenEmpires.Tests.CommanderEconomyClarificationTests.OccupiedFarm_SelectedCountRetainsEligibleIncumbentWithoutReissuingGather","message":"Insufficient legal source capacity or no known reachable route in the bounded candidate search; no workers were assigned. Expected: Completed But was: Blocked"},
+      {"full_name":"OpenEmpires.Tests.CommanderGrandFixStatusTests.CausalNamedQuestionWithoutStatusKeyword_UsesOwnedTaskFacts(\"Why haven't my Spearmen arrived?\")","message":"System.NullReferenceException : Object reference not set to an instance of an object"},
+      {"full_name":"OpenEmpires.Tests.CommanderGrandFixStatusTests.CausalNamedQuestionWithoutStatusKeyword_UsesOwnedTaskFacts(\"What happened to my Spearmen?\")","message":"System.NullReferenceException : Object reference not set to an instance of an object"},
+      {"full_name":"OpenEmpires.Tests.CommanderPhase4GCapabilityTests.DefenseAtOwnedBase_UsesDistinctReachableNativeSlots_AcceleratedFixture","message":"System.ArgumentNullException : actual. Parameter name: Argument actual must not be null"},
+      {"full_name":"OpenEmpires.Tests.CommanderPhase4GCapabilityTests.MissingExactMovementSubject_IsNotReportedAsHumanTakeover","message":"Expected: String containing dead. But was: the player took control of every eligible capability unit; commander will not reclaim them."}
+    ],
+    "passed": 1,
+    "failed": 5
+  }
+}

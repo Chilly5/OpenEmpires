@@ -159,6 +159,9 @@ namespace OpenEmpires
                 case CommanderDynamicFieldKind.WorkerState:
                     if (!NamedEnum<CommanderWorkerState>(s)) throw new JsonException();
                     break;
+                case CommanderDynamicFieldKind.WorkerCountMode:
+                    if (s != "AllMatching") throw new JsonException();
+                    break;
                 case CommanderDynamicFieldKind.ResourceMode:
                     if (s != "Visible" && s != "Worked") throw new JsonException();
                     break;
@@ -202,10 +205,25 @@ namespace OpenEmpires
                 parameters.ContainsKey("currentResource") &&
                 (!parameters.TryGetValue("state", out object state) ||
                     (string)state != "Gathering")) throw new JsonException();
+            if (mechanic == CommanderDynamicMechanic.SelectWorkers &&
+                (parameters.ContainsKey("count") == parameters.ContainsKey("countMode")
+                    || parameters.ContainsKey("countMode") &&
+                        (!parameters.TryGetValue("state", out object selectedState)
+                            || (string)selectedState == "Any"))) throw new JsonException();
             if (mechanic == CommanderDynamicMechanic.ResolveLocation &&
                 (Convert.ToInt32(parameters.ContainsKey("anchor")) +
                  Convert.ToInt32(inputs.ContainsKey("structures")) +
                  Convert.ToInt32(inputs.ContainsKey("resources"))) != 1)
+                throw new JsonException();
+            if (mechanic == CommanderDynamicMechanic.ResolveLocation &&
+                (parameters.ContainsKey("resource") != parameters.ContainsKey("sourceKind")
+                    || parameters.ContainsKey("resource") &&
+                        (!parameters.TryGetValue("anchor", out object sourceAnchor)
+                            || (string)sourceAnchor != "MyTownCenter"
+                            || (string)parameters["relation"] != "MapWest"
+                            || !ResourceSourceRules.IsCompatible(
+                                (ResourceType)Enum.Parse(typeof(ResourceType), (string)parameters["resource"]),
+                                (ResourceSourceKind)Enum.Parse(typeof(ResourceSourceKind), (string)parameters["sourceKind"])))))
                 throw new JsonException();
             if (mechanic == CommanderDynamicMechanic.SelectResources ||
                 mechanic == CommanderDynamicMechanic.AllocateWorkers)
@@ -260,7 +278,8 @@ namespace OpenEmpires
                     DynamicWorkerSpan(i, nodes, byId);
                 if (nodes[i].Inputs.TryGetValue("workers", out string source) &&
                     (nodes[i].Primitive.Mechanic == CommanderDynamicMechanic.Build ||
-                     nodes[i].Primitive.Mechanic == CommanderDynamicMechanic.AllocateWorkers))
+                     nodes[i].Primitive.Mechanic == CommanderDynamicMechanic.AllocateWorkers ||
+                     nodes[i].Primitive.Mechanic == CommanderDynamicMechanic.MoveWorkers))
                 {
                     var span = DynamicWorkerSpan(byId[source], nodes, byId);
                     workerUses.Add((i, span.root, span.start, span.end));
@@ -302,9 +321,12 @@ namespace OpenEmpires
         {
             var node = nodes[i];
             if (node.Primitive.Mechanic == CommanderDynamicMechanic.SelectWorkers)
-                return (node.Id, 0, node.Parameter<int>("count"));
+                return (node.Id, 0, node.Parameters.ContainsKey("countMode")
+                    ? 200 : node.Parameter<int>("count"));
             if (node.Primitive.Mechanic != CommanderDynamicMechanic.PartitionWorkers)
                 throw new JsonException();
+            if (nodes[byId[node.Inputs["workers"]]].Parameters.ContainsKey("countMode"))
+                throw new JsonException("An ALL worker snapshot cannot be partitioned by an unprovided count.");
             var source = DynamicWorkerSpan(byId[node.Inputs["workers"]], nodes, byId);
             int offset = node.Parameter<int>("offset"), count = node.Parameter<int>("count");
             if (offset > source.end - source.start ||

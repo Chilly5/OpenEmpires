@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Passed" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 04:10:29Z" end-time="2026-10-12 04:10:32Z" duration="2.7832886">
+  <test-suite type="TestSuite" id="1306" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="256" result="Passed" start-time="2026-10-12 04:10:29Z" end-time="2026-10-12 04:10:32Z" duration="2.783289" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1300" name="OpenEmpires.PlayModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.PlayModeTests.dll" runstate="Runnable" testcasecount="256" result="Passed" start-time="2026-10-12 04:10:29Z" end-time="2026-10-12 04:10:32Z" duration="2.622850" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="12696" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1301" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="256" result="Passed" start-time="2026-10-12 04:10:29Z" end-time="2026-10-12 04:10:32Z" duration="2.619529" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1302" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="256" result="Passed" start-time="2026-10-12 04:10:29Z" end-time="2026-10-12 04:10:32Z" duration="2.616846" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1263" name="CommanderPhase5CUIPlayModeTests" fullname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests" classname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests" runstate="Runnable" testcasecount="34" result="Passed" start-time="2026-10-12 04:10:29Z" end-time="2026-10-12 04:10:32Z" duration="2.613007" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5COffline" />
+            </properties>
+            <test-case id="1266" name="LocalMetrics_ReadOnlyAnswerRetainsCostWithoutCompletedGameplayTask" fullname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.LocalMetrics_ReadOnlyAnswerRetainsCostWithoutCompletedGameplayTask" methodname="LocalMetrics_ReadOnlyAnswerRetainsCostWithoutCompletedGameplayTask" classname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests" runstate="Runnable" seed="1757561817" result="Passed" start-time="2026-10-12 04:10:29Z" end-time="2026-10-12 04:10:31Z" duration="1.246886" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-12T04:10:30.8012749Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=18
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=60;finish=stop
+[CommanderProvider] semantic=Answer;nodes=0
+]]></output>
+            </test-case>
+            <test-case id="1265" name="LocalMetrics_RealProviderFixtureCorrelatesAdmissionAttemptAndCost" fullname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.LocalMetrics_RealProviderFixtureCorrelatesAdmissionAttemptAndCost" methodname="LocalMetrics_RealProviderFixtureCorrelatesAdmissionAttemptAndCost" classname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests" runstate="Runnable" seed="1119694324" result="Passed" start-time="2026-10-12 04:10:31Z" end-time="2026-10-12 04:10:31Z" duration="0.725089" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-12T04:10:31.4995918Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=12
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=86;finish=stop
+[CommanderProvider] semantic=Request;nodes=1
+[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] intent=admitted;goal-submitted=True
+]]></output>
+            </test-case>
+            <test-case id="1267" name="LocalMetricsSettings_AreOffByDefaultAndRecordOriginalTimedOutTicket" fullname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.LocalMetricsSettings_AreOffByDefaultAndRecordOriginalTimedOutTicket" methodname="LocalMetricsSettings_AreOffByDefaultAndRecordOriginalTimedOutTicket" classname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests" runstate="Runnable" seed="124900590" result="Passed" start-time="2026-10-12 04:10:31Z" end-time="2026-10-12 04:10:32Z" duration="0.520798" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: Docs\CommanderPhase5C\evidence\final-fix-leaves-20261012-041029-504-55c0ed27.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

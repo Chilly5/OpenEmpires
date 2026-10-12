@@ -1,0 +1,162 @@
+{
+  "schema": "openempires-phase5c-scenario-turn@1",
+  "run_id": "a128e06b-966e-44b3-97e2-eecef92584d7",
+  "first_failing_stage": null,
+  "first_failure_category": null,
+  "schemaVersion": 1,
+  "caseId": "exact-current-wood-to-berries",
+  "requestId": "runtime:1",
+  "utterance": "Send exactly six of my current wood gatherers to berries.",
+  "turnIndex": 0,
+  "status": "observed",
+  "evidenceMode": "offline-production-chat-fixture",
+  "providerCalls": 1,
+  "httpAttempts": 0,
+  "fidelity": "fixture-expected-observed",
+  "semanticValid": true,
+  "estimatedInputTokens": null,
+  "actualPromptTokens": null,
+  "actualCompletionTokens": null,
+  "actualCachedTokens": null,
+  "actualReasoningTokens": null,
+  "reportedCost": null,
+  "attemptCosts": [],
+  "packingMs": 14.298,
+  "transportMs": null,
+  "parseMs": 0.077,
+  "admissionMs": 24.44,
+  "firstNativeActionMs": 455.13,
+  "commandCount": 1,
+  "commandTypes": [
+    "GatherCommand"
+  ],
+  "nativeResults": [
+    "GatherCommand:processed"
+  ],
+  "taskStates": [
+    "AllocateWorkersGoal:Completed"
+  ],
+  "draftBefore": [],
+  "draftAfter": [],
+  "draftChanges": [],
+  "normalizedFields": [
+    {
+      "type": "AllocateWorkers",
+      "building": null,
+      "unit": null,
+      "resource": null,
+      "count": null,
+      "quantityMode": "TargetTotal",
+      "anchor": null,
+      "anchorOrdinal": null,
+      "relation": null,
+      "placementSource": null,
+      "unitSelector": null,
+      "locationSelector": null,
+      "producerOrdinal": null,
+      "producerFrom": null,
+      "resultFrom": null,
+      "futureAction": null,
+      "workerMode": "SelectedCount",
+      "workerCountMode": "Exact",
+      "workerCount": 6,
+      "workerState": "Gathering",
+      "workerCurrentResource": "Wood",
+      "destinationResource": "Food",
+      "destinationSource": "Berries",
+      "resourceAmount": null,
+      "resourceAmountMode": null,
+      "dependencies": []
+    }
+  ],
+  "admittedFields": [
+    {
+      "type": "AllocateWorkersGoal",
+      "status": "Pending",
+      "originalUtterance": "Send exactly six of my current wood gatherers to berries.",
+      "mode": "SelectedCount",
+      "countMode": "Exact",
+      "count": 6,
+      "state": "Gathering",
+      "currentResource": "Wood",
+      "destinationResource": "Food",
+      "destinationSource": "Berries",
+      "resourceAmount": null,
+      "resourceAmountMode": null
+    }
+  ],
+  "turnHistory": [
+    {
+      "index": 0,
+      "text": "Send exactly six of my current wood gatherers to berries.",
+      "requestId": "runtime:1",
+      "providerCalls": 1,
+      "semanticValid": true,
+      "semanticOutcome": "Request",
+      "normalizedFields": [
+        {
+          "type": "AllocateWorkers",
+          "building": null,
+          "unit": null,
+          "resource": null,
+          "count": null,
+          "quantityMode": "TargetTotal",
+          "anchor": null,
+          "anchorOrdinal": null,
+          "relation": null,
+          "placementSource": null,
+          "unitSelector": null,
+          "locationSelector": null,
+          "producerOrdinal": null,
+          "producerFrom": null,
+          "resultFrom": null,
+          "futureAction": null,
+          "workerMode": "SelectedCount",
+          "workerCountMode": "Exact",
+          "workerCount": 6,
+          "workerState": "Gathering",
+          "workerCurrentResource": "Wood",
+          "destinationResource": "Food",
+          "destinationSource": "Berries",
+          "resourceAmount": null,
+          "resourceAmountMode": null,
+          "dependencies": []
+        }
+      ],
+      "admittedFields": [
+        {
+          "type": "AllocateWorkersGoal",
+          "status": "Pending",
+          "originalUtterance": "Send exactly six of my current wood gatherers to berries.",
+          "mode": "SelectedCount",
+          "countMode": "Exact",
+          "count": 6,
+          "state": "Gathering",
+          "currentResource": "Wood",
+          "destinationResource": "Food",
+          "destinationSource": "Berries",
+          "resourceAmount": null,
+          "resourceAmountMode": null
+        }
+      ],
+      "draftBefore": [],
+      "draftAfter": [],
+      "draftChanges": [],
+      "approvalRequired": false,
+      "approved": false,
+      "commandTypes": [],
+      "taskStates": [
+        "AllocateWorkersGoal:Pending"
+      ],
+      "uiSubmitMs": 38.699
+    }
+  ],
+  "fixtureKind": "correct-synthetic",
+  "turnText": "Send exactly six of my current wood gatherers to berries.",
+  "uiSubmitMs": 38.699,
+  "semanticOutcome": "Request",
+  "approvalRequired": false,
+  "approved": false,
+  "tickMode": "accelerated-fixture",
+  "ticks": 60
+}

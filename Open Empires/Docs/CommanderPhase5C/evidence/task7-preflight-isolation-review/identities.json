@@ -1,0 +1,23 @@
+{
+  "scope": "Task7 preflight isolated capture lifecycle correction; supersedes the two capture source/test entries and Editor/EditMode DLL hashes in task7-preflight-review/identities.json",
+  "head": "4c9de96adbf6342fbe9e1490fa9b898a0f99caf6",
+  "beforeRoot": "Docs/CommanderPhase5C/evidence/task7-preflight-isolation-baseline",
+  "sha256": {
+    "Assets/Editor/CommanderFinalFixResultCapture.cs": {"before": "7211B92BE5FE6EB65796EFE92A9C380CEFBDF7B3DA0BE47B2E5CC0840145260C", "after": "C5FC468D3D27C0695F6AA1A389AFAD254940A3ABCA54769B583331908BF69243"},
+    "Assets/Tests/EditMode/CommanderFinalFixResultCaptureLifecycleTests.cs": {"before": "DA909976861539A2FDEB8D540E9ECA4CFED13ED66B07CC413D933D4F9240F999", "after": "BC40E03BB26EB8D6D9FD5B7BCD7D74C26D152A30FE0EDA4E66FDC9A17C1836F3"}
+  },
+  "patchesSha256": {
+    "CommanderFinalFixResultCapture.patch": "401005556952473345C60E4352C546F1B651C461F7411F5F85D33713D5CF9DCE",
+    "CommanderFinalFixResultCaptureLifecycleTests.patch": "E87E444AD5AA19F335A1ED449201DFC29D69C6FC2B03EADE76A00ACC472A032C"
+  },
+  "currentAssembliesSha256": {
+    "OpenEmpires.Runtime.dll": "81AC29DC6FFECEB7C6DD96532464F120317278122BF3718E60F94295597FD13A",
+    "OpenEmpires.Editor.dll": "B53466026B66534CAA779A586FF73BBBD7C81385702042D6701DA13ACE605C6F",
+    "OpenEmpires.EditModeTests.dll": "BC747D4610745BD3412B69A01EB3A69D9B45F5393CAC1FA70B7E23B0BFD1F5D2",
+    "OpenEmpires.PlayModeTests.dll": "0E574CF8EF79F4445B35DFD99E8C0860020AB9F50ADF57C1A5343DC32FC24E63"
+  },
+  "nativeXml": {"path": "Docs/CommanderPhase5C/evidence/final-fix-leaves-20261012-041558-556-2b5f543e.xml", "sha256": "9643295B9E69E414B539A80508CF075795F4117284FB24A24593EEA4B70E3A78", "passed": 1, "failed": 0, "skipped": 0},
+  "nativeLeafJson": {"path": "Docs/CommanderPhase5C/evidence/final-fix-leaves-20261012-041558-556-2b5f543e.json", "sha256": "DAE318DC99F70BCE98E166532055A58463C825D5E7D7463ED36208E9E92CAB26"},
+  "greenJob": "0494015fb0574f5a986728cba88d2915",
+  "redJob": "1bd50c4926654982a823c0bcaf940829"
+}

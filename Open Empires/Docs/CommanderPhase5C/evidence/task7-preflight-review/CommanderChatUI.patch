@@ -1,0 +1,13 @@
+diff --git a/Docs/CommanderPhase5C/evidence/task7-preflight-baseline/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs b/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs
+index 2f72764..ef00af9 100644
+--- a/Docs/CommanderPhase5C/evidence/task7-preflight-baseline/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs
++++ b/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs
+@@ -569,7 +569,7 @@ namespace OpenEmpires
+                         observationStage = "parsed";
+                         observationStatus = result.Outcome == CommanderSemanticOutcome.Clarify
+                             ? "Waiting" : result.Outcome == CommanderSemanticOutcome.Answer
+-                                ? "Completed" : "Rejected";
++                                ? "NotApplicable" : "Rejected";
+                     }
+                     if (this == null || generation != runtimeGeneration
+                         || semanticRequestRevision != requestRevision

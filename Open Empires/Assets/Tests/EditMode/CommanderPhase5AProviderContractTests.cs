@@ -13,40 +13,34 @@ namespace OpenEmpires.Tests
     {
         private const string Key = "test-only-provider-secret";
         private const string Farm = "{\"outcome\":\"DynamicPlan\",\"version\":1,\"nodes\":[{\"id\":\"farms\",\"mechanic\":\"build\",\"parameters\":{\"building\":\"building:Farm\",\"count\":4},\"inputs\":{},\"dependsOn\":[]}]}";
+        private const string OrdinaryFarm = "{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"BuildStructure\",\"structure\":\"Farm\",\"count\":4,\"builders\":{\"state\":\"Eligible\",\"count\":1}}]}";
         private const string StringCountFarm = "{\"outcome\":\"DynamicPlan\",\"version\":1,\"nodes\":[{\"id\":\"farms\",\"mechanic\":\"build\",\"parameters\":{\"building\":\"building:Farm\",\"count\":\"4\"},\"inputs\":{},\"dependsOn\":[]}]}";
         private const string Spearmen = "{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":10}]}";
 
         [Test]
         public async Task DynamicFarm_UsesRegistryVocabularyAndReturnsTypedPlan()
         {
-            var transport = new SequenceTransport(Completion(Farm));
+            var transport = new SequenceTransport(Completion(OrdinaryFarm));
             var result = await Translate(transport, "make four farms");
 
             Assert.That(result.IsValid, Is.True, result.SafeExplanation);
-            Assert.That(result.Outcome, Is.EqualTo(CommanderSemanticOutcome.DynamicPlan));
-            Assert.That(result.DynamicPlan, Is.Not.Null);
-            Assert.That(result.DynamicPlan.Nodes[0].Primitive.Mechanic, Is.EqualTo(CommanderDynamicMechanic.Build));
-            Assert.That(result.DynamicPlan.Nodes[0].Parameter<string>("building"), Is.EqualTo("building:Farm"));
+            Assert.That(result.Outcome, Is.EqualTo(CommanderSemanticOutcome.Request));
+            Assert.That(result.Nodes, Has.Count.EqualTo(1));
+            Assert.That(result.Nodes[0].Type, Is.EqualTo(CommanderSemanticNodeType.BuildStructure));
+            Assert.That(result.Nodes[0].BuildingType, Is.EqualTo(BuildingType.Farm));
+            Assert.That(result.Nodes[0].Count, Is.EqualTo(4));
             Assert.That(transport.Bodies, Has.Count.EqualTo(1));
             ChatBody body = JsonUtility.FromJson<ChatBody>(transport.Bodies[0]);
             Assert.That(body.model, Is.EqualTo("openai/gpt-6-luna"));
             Assert.That(body.max_tokens, Is.EqualTo(4096));
             Assert.That(transport.Bodies[0], Does.Not.Contain("response_format"));
             string instruction = body.messages[0].content;
-            Assert.That(instruction, Does.Contain("\"outcome\":\"DynamicPlan\""));
-            Assert.That(instruction, Does.Contain("building:Farm"));
-            foreach (var primitive in CommanderDynamicPrimitiveRegistry.All)
-            {
-                Assert.That(instruction, Does.Contain(primitive.Id), primitive.Id);
-                foreach (var field in primitive.Parameters)
-                    Assert.That(instruction, Does.Contain(field.Name), primitive.Id + "." + field.Name);
-                foreach (var input in primitive.Inputs)
-                    Assert.That(instruction, Does.Contain(input.Role), primitive.Id + "." + input.Role);
-            }
+            Assert.That(instruction, Does.Contain("BuildStructure"));
+            Assert.That(instruction, Does.Not.Contain("partition-workers"),
+                "A plain counted Farm has no shared-worker or repeated-placement composition.");
             Assert.That(instruction, Does.Contain("never authorize"));
-            Assert.That(instruction, Does.Contain("question"));
-            Assert.That(instruction, Does.Contain("Castle"));
-            Assert.That(instruction, Does.Contain("StrategicObjective"));
+            Assert.That(instruction, Does.Contain("missingSlots"));
+            Assert.That(instruction, Does.Contain("count:1..20"));
             Assert.That(transport.Bodies[0], Does.Not.Contain(Key));
         }
 
@@ -69,41 +63,52 @@ namespace OpenEmpires.Tests
             var transport = new SequenceTransport(Completion(Spearmen));
             await Translate(transport, "send two of three idle workers to sheep and the third to build a mill near berries");
 
+            Assert.That(transport.Bodies, Has.Count.EqualTo(1), "The whole shared-worker request must fit before indexing a body.");
             string instruction = JsonUtility.FromJson<ChatBody>(transport.Bodies[0]).messages[0].content;
-            Assert.That(instruction.Contains("one shared worker selection"), Is.True,
+            Assert.That(instruction, Does.Contain("one worker selection").IgnoreCase,
                 "System message must describe one shared worker set before partitioning.");
             Assert.That(instruction.Contains("partition-workers"), Is.True,
                 "System message must expose the registry partition mechanic.");
-            var example = CommanderSemanticJson.Parse(Example(instruction, "SharedWorkersExample:"));
-            Assert.That(example.IsValid, Is.True, example.SafeExplanation);
-            Assert.That(example.Outcome, Is.EqualTo(CommanderSemanticOutcome.DynamicPlan));
-            Assert.That(example.DynamicPlan.Nodes, Has.Count.EqualTo(7));
-            Assert.That(example.DynamicPlan.Nodes[0].Primitive.Mechanic, Is.EqualTo(CommanderDynamicMechanic.SelectWorkers));
-            Assert.That(example.DynamicPlan.Nodes[1].Primitive.Mechanic, Is.EqualTo(CommanderDynamicMechanic.PartitionWorkers));
-            Assert.That(example.DynamicPlan.Nodes[2].Primitive.Mechanic, Is.EqualTo(CommanderDynamicMechanic.PartitionWorkers));
-            Assert.That(example.DynamicPlan.Nodes[5].Primitive.Mechanic, Is.EqualTo(CommanderDynamicMechanic.Build));
-            Assert.That(example.DynamicPlan.Nodes[6].Primitive.Mechanic, Is.EqualTo(CommanderDynamicMechanic.AllocateWorkers));
+            Assert.That(instruction, Does.Contain("select-workers"));
+            Assert.That(instruction, Does.Contain("allocate-workers"));
+            Assert.That(instruction, Does.Contain("dependsOn"));
         }
 
         [Test]
         public async Task RepeatedPlacementAndExactProducers_PromptIncludesStrictDynamicExample()
         {
-            var transport = new SequenceTransport(Completion(Spearmen));
-            await Translate(transport, "build two barracks near my town center and train ten new spearmen in them");
-
-            string instruction = JsonUtility.FromJson<ChatBody>(transport.Bodies[0]).messages[0].content;
-            Assert.That(instruction.Contains("repeated placed construction"), Is.True,
-                "System message must route repeated placement through DynamicPlan.");
-            Assert.That(instruction.Contains("exact producer set"), Is.True,
-                "System message must bind production to the new building result.");
-            Assert.That(instruction.Contains("simple known requests"), Is.True,
-                "Known fast paths must remain available.");
-            var example = CommanderSemanticJson.Parse(Example(instruction, "ExactProducersExample:"));
-            Assert.That(example.IsValid, Is.True, example.SafeExplanation);
-            Assert.That(example.Outcome, Is.EqualTo(CommanderSemanticOutcome.DynamicPlan));
-            Assert.That(example.DynamicPlan.Nodes, Has.Count.EqualTo(3));
-            Assert.That(example.DynamicPlan.Nodes[1].Parameter<int>("count"), Is.EqualTo(2));
-            Assert.That(example.DynamicPlan.Nodes[2].Parameter<string>("quantityMode"), Is.EqualTo("New"));
+            const string utterance = "build two barracks near my town center and train ten new spearmen in them";
+            const string response = "{\"outcome\":\"DynamicPlan\",\"version\":1,\"nodes\":["
+                + "{\"id\":\"site\",\"mechanic\":\"resolve-location\",\"parameters\":{\"anchor\":\"MyTownCenter\",\"relation\":\"Near\",\"clearGapTiles\":1},\"inputs\":{},\"dependsOn\":[]},"
+                + "{\"id\":\"barracks\",\"mechanic\":\"build\",\"parameters\":{\"building\":\"building:Barracks\",\"count\":2},\"inputs\":{\"location\":\"site\"},\"dependsOn\":[\"site\"]},"
+                + "{\"id\":\"spears\",\"mechanic\":\"produce\",\"parameters\":{\"unit\":\"unit:1\",\"count\":10,\"quantityMode\":\"New\"},\"inputs\":{\"producers\":\"barracks\"},\"dependsOn\":[\"barracks\"]}]}";
+            var config = ScriptableObject.CreateInstance<SimulationConfig>();
+            CommanderGoalManager manager = null;
+            try
+            {
+                var simulation = new GameSimulation(config, 1, new[] { 0 }, Array.Empty<int>());
+                simulation.SetPlayerCivilizations(new[] { Civilization.English });
+                manager = new CommanderGoalManager(simulation, 0);
+                var transport = new SequenceTransport(Completion(response));
+                var context = new CommanderContextBuilder().Build(simulation, manager, utterance);
+                var provider = new OpenRouterCommanderProvider(Key, transport);
+                var result = await provider.TranslateSemanticAsync(
+                    new CommanderSemanticProviderRequest(utterance, context), CancellationToken.None);
+                Assert.That(transport.Bodies, Has.Count.EqualTo(1), result.SafeExplanation
+                    + "; estimate=" + provider.LastInputEstimate);
+                Assert.That(result.IsValid && result.Outcome == CommanderSemanticOutcome.DynamicPlan, Is.True,
+                    result.SafeExplanation);
+                Assert.That(result.DynamicPlan.Nodes[1].Parameter<int>("count"), Is.EqualTo(2));
+                Assert.That(result.DynamicPlan.Nodes[2].Inputs["producers"], Is.EqualTo("barracks"));
+                string instruction = JsonUtility.FromJson<ChatBody>(transport.Bodies[0]).messages[0].content;
+                Assert.That(instruction, Does.Contain("placed repeats"));
+                Assert.That(instruction, Does.Contain("produce.producers=exact new build result"));
+                Assert.That(instruction, Does.Contain("resolve-location"));
+                Assert.That(instruction, Does.Contain("build p["));
+                Assert.That(instruction, Does.Contain("produce p["));
+                Assert.That(instruction, Does.Contain("quantityMode"));
+            }
+            finally { manager?.Dispose(); UnityEngine.Object.DestroyImmediate(config); }
         }
 
         [Test]

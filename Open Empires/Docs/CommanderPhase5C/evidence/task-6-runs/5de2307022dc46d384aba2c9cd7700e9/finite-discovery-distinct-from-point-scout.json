@@ -1,0 +1,151 @@
+{
+  "schema": "openempires-phase5c-scenario-turn@1",
+  "run_id": "abd6f4b5-eade-4feb-afe3-632b3adf3db5",
+  "first_failing_stage": null,
+  "first_failure_category": null,
+  "schemaVersion": 1,
+  "caseId": "finite-discovery-distinct-from-point-scout",
+  "requestId": "runtime:1",
+  "utterance": "Find the enemy Town Center with my Scout.",
+  "turnIndex": 0,
+  "status": "observed",
+  "evidenceMode": "offline-production-chat-fixture",
+  "providerCalls": 1,
+  "httpAttempts": 0,
+  "fidelity": "matched",
+  "semanticValid": true,
+  "estimatedInputTokens": null,
+  "actualPromptTokens": null,
+  "actualCompletionTokens": null,
+  "actualCachedTokens": null,
+  "actualReasoningTokens": null,
+  "reportedCost": null,
+  "attemptCosts": [],
+  "packingMs": 14.328,
+  "transportMs": null,
+  "parseMs": 0.322,
+  "admissionMs": 25.031,
+  "firstNativeActionMs": 829.299,
+  "commandCount": 2,
+  "commandTypes": [
+    "MoveCommand",
+    "MoveCommand"
+  ],
+  "nativeResults": [
+    "Move:Complete",
+    "MoveCommand:processed",
+    "Move:Complete",
+    "MoveCommand:processed"
+  ],
+  "taskStates": [
+    "CommanderCapabilityGoal:Completed"
+  ],
+  "draftBefore": [],
+  "draftAfter": [],
+  "draftChanges": [],
+  "normalizedFields": [
+    {
+      "type": "DiscoverEnemy",
+      "building": null,
+      "unit": null,
+      "resource": null,
+      "count": 1,
+      "quantityMode": "TargetTotal",
+      "anchor": null,
+      "anchorOrdinal": null,
+      "relation": null,
+      "placementSource": null,
+      "unitSelector": "Scout",
+      "locationSelector": "VisibleEnemy",
+      "producerOrdinal": null,
+      "producerFrom": null,
+      "resultFrom": null,
+      "futureAction": null,
+      "workerMode": null,
+      "workerCountMode": null,
+      "workerCount": null,
+      "workerState": null,
+      "workerCurrentResource": null,
+      "destinationResource": null,
+      "destinationSource": null,
+      "resourceAmount": null,
+      "resourceAmountMode": null,
+      "dependencies": []
+    }
+  ],
+  "admittedFields": [
+    {
+      "type": "CommanderCapabilityGoal",
+      "status": "Pending",
+      "originalUtterance": "Find the enemy Town Center with my Scout."
+    }
+  ],
+  "turnHistory": [
+    {
+      "index": 0,
+      "text": "Find the enemy Town Center with my Scout.",
+      "requestId": "runtime:1",
+      "uiState": "Accepted",
+      "providerCalls": 1,
+      "semanticValid": true,
+      "semanticOutcome": "Request",
+      "normalizedFields": [
+        {
+          "type": "DiscoverEnemy",
+          "building": null,
+          "unit": null,
+          "resource": null,
+          "count": 1,
+          "quantityMode": "TargetTotal",
+          "anchor": null,
+          "anchorOrdinal": null,
+          "relation": null,
+          "placementSource": null,
+          "unitSelector": "Scout",
+          "locationSelector": "VisibleEnemy",
+          "producerOrdinal": null,
+          "producerFrom": null,
+          "resultFrom": null,
+          "futureAction": null,
+          "workerMode": null,
+          "workerCountMode": null,
+          "workerCount": null,
+          "workerState": null,
+          "workerCurrentResource": null,
+          "destinationResource": null,
+          "destinationSource": null,
+          "resourceAmount": null,
+          "resourceAmountMode": null,
+          "dependencies": []
+        }
+      ],
+      "admittedFields": [
+        {
+          "type": "CommanderCapabilityGoal",
+          "status": "Pending",
+          "originalUtterance": "Find the enemy Town Center with my Scout."
+        }
+      ],
+      "draftBefore": [],
+      "draftAfter": [],
+      "draftChanges": [],
+      "approvalRequired": false,
+      "approved": false,
+      "commandTypes": [],
+      "taskStates": [
+        "CommanderCapabilityGoal:Pending"
+      ],
+      "uiSubmitMs": 39.584
+    }
+  ],
+  "fogNewlyExploredCount": 95,
+  "fixtureKind": "correct-synthetic",
+  "turnText": "Find the enemy Town Center with my Scout.",
+  "uiSubmitMs": 39.584,
+  "semanticOutcome": "Request",
+  "approvalRequired": false,
+  "approved": false,
+  "uiState": "Accepted",
+  "tickMode": "accelerated-fixture",
+  "ticks": 1500
+}

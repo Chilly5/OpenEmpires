@@ -1,0 +1,401 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "aa00b760f6d14529a0118b7ac47dd011",
+    "status": "succeeded",
+    "mode": "EditMode",
+    "started_unix_ms": 1791664066511,
+    "finished_unix_ms": 1791664144657,
+    "last_update_unix_ms": 1791664144657,
+    "progress": {
+      "completed": 40,
+      "total": 40,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791664143906,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.TooLargeRequiredMeaning_IsRejectedWithoutDispatchingOrExecutingPrefix",
+      "last_finished_unix_ms": 1791664144232,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": {
+      "mode": "EditMode",
+      "summary": {
+        "total": 40,
+        "passed": 40,
+        "failed": 0,
+        "skipped": 0,
+        "durationSeconds": 72.1418243,
+        "resultState": "Passed"
+      },
+      "results": [
+        {
+          "name": "AdditionalResourceObjective_TracksDepositsDespiteSpendingAndIgnoresRefunds",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.AdditionalResourceObjective_TracksDepositsDespiteSpendingAndIgnoresRefunds",
+          "state": "Passed",
+          "durationSeconds": 0.956781,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.\r\n[SyncCheck] tick=0 PRE-CMD=11808F91 cmds=1\r\n[SyncCheck] tick=0 POST-CMD=11808F93\r\n[SyncCheck] tick=0 PRE-AI-EXEC=11808F93 aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=893FCDCB systemDetail=11808F93,11919B4F,11919B4F,11919B4F,11919B4F,11919B4F,11919B4F,11919B4F,11919B4F\r\n[Commander] Goal #1: status=WaitingForResources owned=1 queued=0; Additional gathered Food: 0/40; worker assignments are in place, waiting for actual resources.\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; Additional gathered Food: 40/40 reached.\r\n"
+        },
+        {
+          "name": "CountReplies_FillPendingSlotsWithoutProduction",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.CountReplies_FillPendingSlotsWithoutProduction",
+          "state": "Passed",
+          "durationSeconds": 5.2494501,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+        },
+        {
+          "name": "ExplicitAmountCorrection_ChangesOnlyAmountAndKeepsWorkerAndSourceCriteria",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.ExplicitAmountCorrection_ChangesOnlyAmountAndKeepsWorkerAndSourceCriteria",
+          "state": "Passed",
+          "durationSeconds": 0.9073978,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+        },
+        {
+          "name": "FutureOrderRequiresExplicitPreviewApproval_AndConversationResetRemovesWatcher",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.FutureOrderRequiresExplicitPreviewApproval_AndConversationResetRemovesWatcher",
+          "state": "Passed",
+          "durationSeconds": 0.8639952,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: WatchFutureUnits\r\n[Commander] Goal #1 cancelled.\r\n"
+        },
+        {
+          "name": "GraphDraftRejectsInvalidAlternativesAndAuthority",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.GraphDraftRejectsInvalidAlternativesAndAuthority",
+          "state": "Passed",
+          "durationSeconds": 0.0309101,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "HouseThenNextFive_FromTreesKeepsGraphAndNeedsSeparateApproval",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.HouseThenNextFive_FromTreesKeepsGraphAndNeedsSeparateApproval",
+          "state": "Passed",
+          "durationSeconds": 1.2529466,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #2 submitted: WatchFutureUnits\r\n"
+        },
+        {
+          "name": "HumanTakeover_InterruptsWithoutReclaimAfterLease",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.HumanTakeover_InterruptsWithoutReclaimAfterLease",
+          "state": "Passed",
+          "durationSeconds": 0.5069851,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; The player took control of a selected worker; this request will not reclaim or replace it.\r\n"
+        },
+        {
+          "name": "IndependentProduction_SupersedesWorkerClarification",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.IndependentProduction_SupersedesWorkerClarification",
+          "state": "Passed",
+          "durationSeconds": 0.7783338,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+        },
+        {
+          "name": "InvalidAllocationSchema_RejectsBoundsFieldsAndIncompatibleSources",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.InvalidAllocationSchema_RejectsBoundsFieldsAndIncompatibleSources",
+          "state": "Passed",
+          "durationSeconds": 0.005514,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "MineProposal_YesUsesOriginalRequestAndNoSecondTranslation",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.MineProposal_YesUsesOriginalRequestAndNoSecondTranslation",
+          "state": "Passed",
+          "durationSeconds": 0.9455812,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+        },
+        {
+          "name": "MovementCommandSupersedesGraphDraftWithoutCancellingAcceptedWork",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.MovementCommandSupersedesGraphDraftWithoutCancellingAcceptedWork",
+          "state": "Passed",
+          "durationSeconds": 1.0875375,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n"
+        },
+        {
+          "name": "MultiFieldReplies_CancelOrBoundAmbiguousContinuation",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.MultiFieldReplies_CancelOrBoundAmbiguousContinuation",
+          "state": "Passed",
+          "durationSeconds": 12.2457179,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+        },
+        {
+          "name": "NewIndependentCommand_SupersedesPendingWorkerQuestion(\"reach Age 3\",\"{\\\"type\\\":\\\"ReachAge\\\",\\\"targetAge\\\":\\\"Castle\\\"}\")",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NewIndependentCommand_SupersedesPendingWorkerQuestion(\"reach Age 3\",\"{\\\"type\\\":\\\"ReachAge\\\",\\\"targetAge\\\":\\\"Castle\\\"}\")",
+          "state": "Passed",
+          "durationSeconds": 0.9782476,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: ReachAge\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+        },
+        {
+          "name": "NewIndependentCommand_SupersedesPendingWorkerQuestion(\"send the next two villagers from my Town Center to wood\",\"{\\\"type\\\":\\\"WatchFutureUnits\\\",\\\"unit\\\":\\\"Villager\\\",\\\"count\\\":2,\\\"producer\\\":\\\"TownCenter\\\",\\\"action\\\":\\\"Gather\\\",\\\"resource\\\":\\\"Wood\\\"}\")",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NewIndependentCommand_SupersedesPendingWorkerQuestion(\"send the next two villagers from my Town Center to wood\",\"{\\\"type\\\":\\\"WatchFutureUnits\\\",\\\"unit\\\":\\\"Villager\\\",\\\"count\\\":2,\\\"producer\\\":\\\"TownCenter\\\",\\\"action\\\":\\\"Gather\\\",\\\"resource\\\":\\\"Wood\\\"}\")",
+          "state": "Passed",
+          "durationSeconds": 0.3245296,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n"
+        },
+        {
+          "name": "NoRejectsOnlyProposal_AndIndependentCommandSupersedes",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NoRejectsOnlyProposal_AndIndependentCommandSupersedes",
+          "state": "Passed",
+          "durationSeconds": 0.3693549,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] intent=admitted;goal-submitted=True\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #2 submitted: EnsureUnitCount\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+        },
+        {
+          "name": "ProviderProjectionAndSchema_ExposeAllEconomyFields",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.ProviderProjectionAndSchema_ExposeAllEconomyFields",
+          "state": "Passed",
+          "durationSeconds": 0.3101717,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-10T20:28:19.0507912Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=2\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=241;finish=stop\r\n[CommanderProvider] semantic=Clarify;nodes=0\r\n"
+        },
+        {
+          "name": "QuantityModes_KeepBaselineTransferAndAllMatchingDistinct",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.QuantityModes_KeepBaselineTransferAndAllMatchingDistinct",
+          "state": "Passed",
+          "durationSeconds": 4.7900376,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Waiting for the issued worker command to be processed.\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Waiting for the issued worker command to be processed.\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Completed owned=6 queued=0; The requested worker total is already satisfied.\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Waiting for the issued worker command to be processed.\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No eligible workers matched the one-time snapshot.\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; The matching worker snapshot exceeds the allowed bound.\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.\r\n[SyncCheck] tick=0 PRE-CMD=52102DCE cmds=1\r\n[SyncCheck] tick=0 POST-CMD=7AB53AD4\r\n[SyncCheck] tick=0 PRE-AI-EXEC=7AB53AD4 aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=DC446167 systemDetail=7AB53AD4,1C035B56,1C035B56,1C035B56,1C035B56,1C035B56,1C035B56,F98DE140,F98DE140\r\n[Commander] Goal #1: status=Completed owned=3 queued=0; The 3 selected workers have matching assignments.\r\n"
+        },
+        {
+          "name": "ReservationPreflight_DistributesCapacityOrIssuesNothing",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.ReservationPreflight_DistributesCapacityOrIssuesNothing",
+          "state": "Passed",
+          "durationSeconds": 2.2446094,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; Only 2 eligible workers are available; 4 are required.\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.\r\n[SyncCheck] tick=0 PRE-CMD=86871A4B cmds=1\r\n[SyncCheck] tick=0 POST-CMD=86871A4D\r\n[SyncCheck] tick=0 PRE-AI-EXEC=86871A4D aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=D376250A systemDetail=86871A4D,869D4B4B,869D4B4B,869D4B4B,869D4B4B,869D4B4B,869D4B4B,869D4B4B,869D4B4B\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.\r\n[SyncCheck] tick=1 PRE-CMD=869D4B4B cmds=1\r\n[SyncCheck] tick=1 POST-CMD=86B97A4D\r\n[SyncCheck] tick=1 PRE-AI-EXEC=86B97A4D aiCmds=0\r\n[SyncCheck] INIT tick=2 checksum=AEEC7CC6 systemDetail=86B97A4D,82BB054D,82BB054D,82BB054D,82BB054D,82BB054D,82BB054D,82BB054D,82BB054D\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.\r\n[SyncCheck] tick=2 PRE-CMD=82BB054D cmds=1\r\n[SyncCheck] tick=2 POST-CMD=AB43E34F\r\n[SyncCheck] tick=2 PRE-AI-EXEC=AB43E34F aiCmds=0\r\n[SyncCheck] tick=3 checksum=CE497CF6\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.\r\n[SyncCheck] tick=3 PRE-CMD=7A9CB69A cmds=1\r\n[SyncCheck] tick=3 POST-CMD=57A2C39C\r\n[SyncCheck] tick=3 PRE-AI-EXEC=57A2C39C aiCmds=0\r\n[SyncCheck] tick=4 checksum=4ADF793B\r\n"
+        },
+        {
+          "name": "ResetDropsGraphDraft_AndBareYesCannotBecomeANewGoal",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.ResetDropsGraphDraft_AndBareYesCannotBecomeANewGoal",
+          "state": "Passed",
+          "durationSeconds": 1.6188208,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n"
+        },
+        {
+          "name": "ResetRuntimeAndLateReply_CannotResumeOldPending",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.ResetRuntimeAndLateReply_CannotResumeOldPending",
+          "state": "Passed",
+          "durationSeconds": 9.4136677,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n"
+        },
+        {
+          "name": "ResourceAmountClarification_RejectsProviderDroppingResolvedAmount",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.ResourceAmountClarification_RejectsProviderDroppingResolvedAmount",
+          "state": "Passed",
+          "durationSeconds": 0.9928229,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n"
+        },
+        {
+          "name": "ResourceAmountClarification_RetainsObjectiveThroughLocalCountReply(\"4\")",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.ResourceAmountClarification_RetainsObjectiveThroughLocalCountReply(\"4\")",
+          "state": "Passed",
+          "durationSeconds": 0.3488598,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+        },
+        {
+          "name": "ResourceAmountClarification_RetainsObjectiveThroughLocalCountReply(\"four\")",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.ResourceAmountClarification_RetainsObjectiveThroughLocalCountReply(\"four\")",
+          "state": "Passed",
+          "durationSeconds": 0.3422943,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+        },
+        {
+          "name": "ResourceObjective_DoesNotCompleteWhenWorkersAreAssigned",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.ResourceObjective_DoesNotCompleteWhenWorkersAreAssigned",
+          "state": "Passed",
+          "durationSeconds": 0.2673988,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.\r\n[SyncCheck] tick=0 PRE-CMD=11808F91 cmds=1\r\n[SyncCheck] tick=0 POST-CMD=11808F93\r\n[SyncCheck] tick=0 PRE-AI-EXEC=11808F93 aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=EC20E0C1 systemDetail=11808F93,11919B4F,11919B4F,11919B4F,11919B4F,11919B4F,11919B4F,11919B4F,11919B4F\r\n[Commander] Goal #1: status=WaitingForResources owned=1 queued=0; Stockpile Food: 0/800; worker assignments are in place, waiting for actual resources.\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; Stockpile Food: 800/800 reached.\r\n"
+        },
+        {
+          "name": "SemanticMappings_PreserveWorkerAndSourceCriteria",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.SemanticMappings_PreserveWorkerAndSourceCriteria",
+          "state": "Passed",
+          "durationSeconds": 0.0251395,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "SharedTextAndRegressionRoutes_PreserveExistingBehavior",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.SharedTextAndRegressionRoutes_PreserveExistingBehavior",
+          "state": "Passed",
+          "durationSeconds": 0.7725733,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #2 submitted: EnsureUnitCount\r\n[Commander] intent=admitted;goal-submitted=True\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #3 submitted: EnsureUnitCount\r\n[Commander] intent=admitted;goal-submitted=True\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #4 submitted: BuildStructure\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+        },
+        {
+          "name": "SourceConstraints_RoundtripJsonBinaryQueuedAndLegacyDefaults",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.SourceConstraints_RoundtripJsonBinaryQueuedAndLegacyDefaults",
+          "state": "Passed",
+          "durationSeconds": 0.0794686,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommandSerializer] Failed to parse Gather: Invalid resource source kind.\r\n[CommandSerializer] Failed to parse Gather: Invalid resource source kind.\r\n[CommandSerializer] Failed to parse Gather: Invalid resource source kind.\r\n[CommandSerializer] Failed to parse Gather: Invalid resource source kind.\r\n[CommandSerializer] Failed to parse Gather: Invalid resource source kind.\r\n"
+        },
+        {
+          "name": "SourceConstraints_SurviveFallbackDepletionAndClearOnHumanOrder",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.SourceConstraints_SurviveFallbackDepletionAndClearOnHumanOrder",
+          "state": "Passed",
+          "durationSeconds": 6.6748797,
+          "message": null,
+          "stackTrace": null,
+          "output": "[SyncCheck] tick=0 PRE-CMD=11808F91 cmds=1\r\n[SyncCheck] tick=0 POST-CMD=11808F93\r\n[SyncCheck] tick=0 PRE-AI-EXEC=11808F93 aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=0D3411E1 systemDetail=11808F93,119BC711,119BC711,119BC711,119BC711,119BC711,119BC711,119BC711,119BC711\r\n[SyncCheck] tick=2 checksum=CCDE6682\r\n[SyncCheck] tick=3 checksum=8C88BB23\r\n[SyncCheck] tick=4 checksum=4C330FC4\r\n[SyncCheck] tick=5 checksum=E79EE026\r\n[SyncCheck] tick=6 checksum=A74934C7\r\n[SyncCheck] tick=7 checksum=66F38968\r\n[SyncCheck] tick=8 checksum=269DDE09\r\n[SyncCheck] tick=9 checksum=E64832AA\r\n[SyncCheck] tick=10 checksum=A5F2874B\r\n[SyncCheck] tick=11 checksum=659CDBEC\r\n[SyncCheck] tick=12 checksum=2547308D\r\n[SyncCheck] tick=13 checksum=E4F1852E\r\n[SyncCheck] tick=14 checksum=082DDD70\r\n[SyncCheck] tick=15 checksum=64462E70\r\n[SyncCheck] tick=16 checksum=878286B2\r\n[SyncCheck] tick=17 checksum=472CDB53\r\n[SyncCheck] tick=18 checksum=06D72FF4\r\n[SyncCheck] tick=19 checksum=C6818495\r\n[SyncCheck] tick=20 checksum=862BD936\r\n[SyncCheck] tick=21 checksum=45D62DD7\r\n[SyncCheck] tick=22 checksum=05808278\r\n[SyncCheck] tick=23 checksum=C52AD719\r\n[SyncCheck] tick=24 checksum=84D52BBA\r\n[SyncCheck] tick=25 checksum=447F805B\r\n[SyncCheck] tick=26 checksum=0429D4FC\r\n[SyncCheck] tick=27 checksum=C3D4299D\r\n[SyncCheck] tick=28 checksum=837E7E3E\r\n[SyncCheck] tick=29 checksum=4328D2DF\r\n[SyncCheck] tick=30 checksum=02D32780\r\n[SyncCheck] tick=31 checksum=C27D7C21\r\n[SyncCheck] tick=32 checksum=5DE94C83\r\n[SyncCheck] tick=33 checksum=1D93A124\r\n[SyncCheck] tick=34 checksum=DD3DF5C5\r\n[SyncCheck] tick=35 checksum=9CE84A66\r\n[SyncCheck] tick=36 checksum=5C929F07\r\n[SyncCheck] tick=37 checksum=1C3CF3A8\r\n[SyncCheck] tick=38 checksum=DBE74849\r\n[SyncCheck] tick=39 checksum=9B919CEA\r\n[SyncCheck] tick=40 checksum=5B3BF18B\r\n[SyncCheck] tick=41 checksum=1AE6462C\r\n[SyncCheck] tick=42 checksum=DA909ACD\r\n[SyncCheck] tick=43 checksum=9A3AEF6E\r\n[SyncCheck] tick=44 checksum=59E5440F\r\n[SyncCheck] tick=45 checksum=198F98B0\r\n[SyncCheck] tick=46 checksum=D939ED51\r\n[SyncCheck] tick=47 checksum=98E441F2\r\n[SyncCheck] tick=48 checksum=5783CA08\r\n[SyncCheck] tick=49 checksum=66951CAD\r\n[SyncCheck] tick=50 checksum=0152A9B8\r\n[SyncCheck] tick=51 checksum=D8CC49E8\r\n[SyncCheck] tick=52 checksum=ADB2E5BC\r\n[SyncCheck] tick=53 checksum=22E79856\r\n[SyncCheck] tick=54 checksum=4DFA7576\r\n[SyncCheck] tick=55 checksum=EEA9C65A\r\n[SyncCheck] tick=56 checksum=E1A9A604\r\n[SyncCheck] tick=57 checksum=6E847DB1\r\n[SyncCheck] tick=58 checksum=29715FE5\r\n[SyncCheck] tick=59 checksum=A86B2A3C\r\n[SyncCheck] tick=60 checksum=79B58359\r\n[SyncCheck] tick=61 checksum=4E6043FB\r\n[SyncCheck] tick=62 checksum=6EE874A0\r\n[SyncCheck] tick=63 checksum=84229C4B\r\n[SyncCheck] tick=64 checksum=248DB35B\r\n[SyncCheck] tick=65 checksum=5618BDD0\r\n[SyncCheck] tick=66 checksum=6FF39C88\r\n[SyncCheck] tick=67 checksum=0650FA26\r\n[SyncCheck] tick=68 checksum=CA40AF69\r\n[SyncCheck] tick=69 checksum=043FC4CF\r\n[SyncCheck] tick=70 checksum=CF63357B\r\n[SyncCheck] tick=71 checksum=1096064A\r\n[SyncCheck] tick=72 checksum=1BCD92FE\r\n[SyncCheck] tick=73 checksum=8E660F56\r\n[SyncCheck] tick=74 checksum=CB034793\r\n[SyncCheck] tick=75 checksum=0B73D3B4\r\n[SyncCheck] tick=76 checksum=D6959C58\r\n[SyncCheck] tick=77 checksum=E4DE3842\r\n[SyncCheck] tick=78 checksum=6F29A030\r\n[SyncCheck] tick=79 checksum=99B65861\r\n[SyncCheck] tick=80 checksum=404A4477\r\n[SyncCheck] tick=81 checksum=62E0FC91\r\n[SyncCheck] tick=82 checksum=017EE890\r\n[SyncCheck] tick=83 checksum=55000132\r\n[SyncCheck] tick=84 checksum=D6865DD8\r\n[SyncCheck] tick=85 checksum=7081EAC2\r\n[SyncCheck] tick=86 checksum=D4F51FF0\r\n[SyncCheck] tick=87 checksum=EE4B81C1\r\n[SyncCheck] tick=88 checksum=ADDB0797\r\n[SyncCheck] tick=89 checksum=37DDCDD0\r\n[SyncCheck] tick=90 checksum=7C80CC8E\r\n[SyncCheck] tick=91 checksum=3C2B212F\r\n[SyncCheck] tick=92 checksum=FBD575D0\r\n[SyncCheck] tick=93 checksum=1F11CE12\r\n[SyncCheck] tick=94 checksum=DEBC22B3\r\n[SyncCheck] tick=95 checksum=9E667754\r\n[SyncCheck] tick=96 checksum=5E10CBF5\r\n[SyncCheck] tick=97 checksum=1DBB2096\r\n[SyncCheck] tick=98 checksum=DD657537\r\n[SyncCheck] tick=99 checksum=78D14599\r\n[SyncCheck] tick=100 checksum=387B9A3A\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.\r\n[SyncCheck] tick=0 PRE-CMD=11808F91 cmds=1\r\n[SyncCheck] tick=0 POST-CMD=11808F93\r\n[SyncCheck] tick=0 PRE-AI-EXEC=11808F93 aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=B5ECB68B systemDetail=11808F93,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B\r\n[SyncCheck] tick=2 checksum=8CBF8E84\r\n[SyncCheck] tick=3 checksum=6392667D\r\n[SyncCheck] tick=4 checksum=3A653E76\r\n[SyncCheck] tick=5 checksum=1138166F\r\n[SyncCheck] tick=6 checksum=E80AEE68\r\n[SyncCheck] tick=7 checksum=BEDDC661\r\n[SyncCheck] tick=8 checksum=95B09E5A\r\n[SyncCheck] tick=9 checksum=6C837653\r\n[SyncCheck] tick=10 checksum=43564E4C\r\n[SyncCheck] tick=11 checksum=1A292645\r\n[SyncCheck] tick=12 checksum=F0FBFE3E\r\n[SyncCheck] tick=13 checksum=C7CED637\r\n[SyncCheck] tick=14 checksum=9EA1AE30\r\n[SyncCheck] tick=15 checksum=75748629\r\n[SyncCheck] tick=16 checksum=4C475E22\r\n[SyncCheck] tick=17 checksum=231A361B\r\n[SyncCheck] tick=18 checksum=F9ED0E14\r\n[SyncCheck] tick=19 checksum=D0BFE60D\r\n[SyncCheck] tick=20 checksum=A792BE06\r\n[SyncCheck] tick=21 checksum=7E6595FF\r\n[SyncCheck] tick=22 checksum=55386DF8\r\n[SyncCheck] tick=23 checksum=2C0B45F1\r\n[SyncCheck] tick=24 checksum=02DE1DEA\r\n[SyncCheck] tick=25 checksum=D9B0F5E3\r\n[SyncCheck] tick=26 checksum=B083CDDC\r\n[SyncCheck] tick=27 checksum=8756A5D5\r\n[SyncCheck] tick=28 checksum=5E297DCE\r\n[SyncCheck] tick=29 checksum=34FC55C7\r\n[SyncCheck] tick=30 checksum=0BCF2DC0\r\n[SyncCheck] tick=31 checksum=E2A205B9\r\n[SyncCheck] tick=32 checksum=B974DDB2\r\n[SyncCheck] tick=33 checksum=9047B5AB\r\n[SyncCheck] tick=34 checksum=671A8DA4\r\n[SyncCheck] tick=35 checksum=3DED659D\r\n[SyncCheck] tick=36 checksum=14C03D96\r\n[SyncCheck] tick=37 checksum=F9A6D2D6\r\n[SyncCheck] tick=38 checksum=F3A89F72\r\n[SyncCheck] tick=39 checksum=063C3AA6\r\n[SyncCheck] tick=40 checksum=1D3028B2\r\n[SyncCheck] tick=41 checksum=A2B3F1B5\r\n[SyncCheck] tick=42 checksum=9A058DF1\r\n[SyncCheck] tick=43 checksum=6A168D43\r\n[SyncCheck] tick=44 checksum=8054700C\r\n[SyncCheck] tick=45 checksum=46EEBE6B\r\n[SyncCheck] tick=46 checksum=3F847481\r\n[SyncCheck] tick=47 checksum=BCD5A66B\r\n[SyncCheck] tick=48 checksum=D651C82B\r\n[SyncCheck] tick=49 checksum=E1F6E620\r\n[SyncCheck] tick=50 checksum=5E260429\r\n[SyncCheck] tick=51 checksum=227C2AC6\r\n[SyncCheck] tick=52 checksum=432AD5B7\r\n[SyncCheck] tick=53 checksum=1630115B\r\n[SyncCheck] tick=54 checksum=1D2AD9D3\r\n[SyncCheck] tick=55 checksum=D67C32FE\r\n[SyncCheck] tick=56 checksum=16832D1A\r\n[SyncCheck] tick=57 checksum=E07DC069\r\n[SyncCheck] tick=58 checksum=76890169\r\n[SyncCheck] tick=59 checksum=4D5BD962\r\n[SyncCheck] tick=60 checksum=242EB15B\r\n[SyncCheck] tick=61 checksum=FB018954\r\n[SyncCheck] tick=62 checksum=D1D4614D\r\n[SyncCheck] tick=63 checksum=A8A73946\r\n[SyncCheck] tick=64 checksum=7F7A113F\r\n[SyncCheck] tick=65 checksum=564CE938\r\n[SyncCheck] tick=66 checksum=2D1FC131\r\n[SyncCheck] tick=67 checksum=03F2992A\r\n[SyncCheck] tick=68 checksum=DAC57123\r\n[SyncCheck] tick=69 checksum=B198491C\r\n[SyncCheck] tick=70 checksum=886B2115\r\n[SyncCheck] tick=71 checksum=5F3DF90E\r\n[SyncCheck] tick=72 checksum=3610D107\r\n[SyncCheck] tick=73 checksum=0CE3A900\r\n[SyncCheck] tick=74 checksum=E3B680F9\r\n[SyncCheck] tick=75 checksum=0A59D8A9\r\n[SyncCheck] tick=76 checksum=4D3FF8D0\r\n[SyncCheck] tick=77 checksum=DA6BFFD4\r\n[SyncCheck] tick=78 checksum=DF790294\r\n[SyncCheck] tick=79 checksum=A17189F1\r\n[SyncCheck] tick=80 checksum=E3C122AB\r\n[SyncCheck] tick=81 checksum=69D35982\r\n[SyncCheck] tick=82 checksum=F713BB36\r\n[SyncCheck] tick=83 checksum=E4BE4C68\r\n[SyncCheck] tick=84 checksum=DECF25D6\r\n[SyncCheck] tick=85 checksum=6311543F\r\n[SyncCheck] tick=86 checksum=39E42C38\r\n[SyncCheck] tick=87 checksum=10B70431\r\n[SyncCheck] tick=88 checksum=E789DC2A\r\n[SyncCheck] tick=89 checksum=BE5CB423\r\n[SyncCheck] tick=90 checksum=952F8C1C\r\n[SyncCheck] tick=91 checksum=6C026415\r\n[SyncCheck] tick=92 checksum=42D53C0E\r\n[SyncCheck] tick=93 checksum=19A81407\r\n[SyncCheck] tick=94 checksum=370F952C\r\n[SyncCheck] tick=95 checksum=1CB93823\r\n[SyncCheck] tick=96 checksum=A0F7F7C2\r\n[SyncCheck] tick=97 checksum=525B58F6\r\n[SyncCheck] tick=98 checksum=EB13D06E\r\n[SyncCheck] tick=99 checksum=CEB6D65B\r\n[SyncCheck] tick=100 checksum=A589AE54\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; The 1 selected workers have matching assignments.\r\n[SyncCheck] tick=0 PRE-CMD=11808F91 cmds=2\r\n[SyncCheck] tick=0 POST-CMD=11808F92\r\n[SyncCheck] tick=0 PRE-AI-EXEC=11808F92 aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=CECBBE3A systemDetail=11808F92,11A0961A,11A0961A,11A0961A,11A0961A,11A0961A,11A0961A,11A0961A,11A0961A\r\n[SyncCheck] tick=2 checksum=64A44CD1\r\n[SyncCheck] tick=3 checksum=FA7CDB68\r\n[SyncCheck] tick=4 checksum=905569FF\r\n[SyncCheck] tick=5 checksum=262DF896\r\n[SyncCheck] tick=6 checksum=BC06872D\r\n[SyncCheck] tick=7 checksum=51DF15C4\r\n[SyncCheck] tick=8 checksum=E7B7A45B\r\n[SyncCheck] tick=9 checksum=7D9032F2\r\n[SyncCheck] tick=10 checksum=1368C189\r\n[SyncCheck] tick=11 checksum=A9415020\r\n[SyncCheck] tick=12 checksum=3F19DEB7\r\n[SyncCheck] tick=13 checksum=D4F26D4E\r\n[SyncCheck] tick=14 checksum=6ACAFBE5\r\n[SyncCheck] tick=15 checksum=00A38A7C\r\n[SyncCheck] tick=16 checksum=967C1913\r\n[SyncCheck] tick=17 checksum=2C54A7AA\r\n[SyncCheck] tick=18 checksum=C22D3641\r\n[SyncCheck] tick=19 checksum=0CA627DF\r\n[SyncCheck] tick=20 checksum=817B7943\r\n[SyncCheck] tick=21 checksum=936E5525\r\n[SyncCheck] tick=22 checksum=1385EBC3\r\n[SyncCheck] tick=23 checksum=2BEB8A3E\r\n[SyncCheck] tick=24 checksum=9B06ED56\r\n[SyncCheck] tick=25 checksum=1F3FD1CB\r\n[SyncCheck] tick=26 checksum=76FDF45D\r\n[SyncCheck] tick=27 checksum=E2480DED\r\n[SyncCheck] tick=28 checksum=32254EB9\r\n[SyncCheck] tick=29 checksum=8F5559C6\r\n[SyncCheck] tick=30 checksum=252DE85D\r\n[SyncCheck] tick=31 checksum=BB0676F4\r\n[SyncCheck] tick=32 checksum=50DF058B\r\n[SyncCheck] tick=33 checksum=E6B79422\r\n[SyncCheck] tick=34 checksum=7C9022B9\r\n[SyncCheck] tick=35 checksum=1268B150\r\n[SyncCheck] tick=36 checksum=A8413FE7\r\n[SyncCheck] tick=37 checksum=3E19CE7E\r\n[SyncCheck] tick=38 checksum=22E27C35\r\n[SyncCheck] tick=39 checksum=A493EAC6\r\n[SyncCheck] tick=40 checksum=F3AA83DE\r\n[SyncCheck] tick=41 checksum=C5DE408D\r\n[SyncCheck] tick=42 checksum=21E0D85F\r\n[SyncCheck] tick=43 checksum=87612216\r\n[SyncCheck] tick=44 checksum=F4BCD16F\r\n[SyncCheck] tick=45 checksum=B3123F44\r\n[SyncCheck] tick=46 checksum=48EACDDB\r\n[SyncCheck] tick=47 checksum=9B7EAB4F\r\n[SyncCheck] tick=48 checksum=64B92CE5\r\n[SyncCheck] tick=49 checksum=D2AEA70C\r\n[SyncCheck] tick=50 checksum=EEE06063\r\n[SyncCheck] tick=51 checksum=18F75E99\r\n[SyncCheck] tick=52 checksum=BC84FA89\r\n[SyncCheck] tick=53 checksum=088FBA4F\r\n[SyncCheck] tick=54 checksum=04579ECD\r\n[SyncCheck] tick=55 checksum=FB9E9D10\r\n[SyncCheck] tick=56 checksum=1C76374B\r\n[SyncCheck] tick=56 PRE-CMD=19028F93 cmds=1\r\n[SyncCheck] tick=56 POST-CMD=19028F91\r\n[SyncCheck] tick=56 PRE-AI-EXEC=19028F91 aiCmds=0\r\n[SyncCheck] tick=57 checksum=C965447C\r\n[SyncCheck] tick=0 PRE-CMD=492DD370 cmds=1\r\n[SyncCheck] tick=0 POST-CMD=49D6ED7C\r\n[SyncCheck] tick=0 PRE-AI-EXEC=49D6ED7C aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=AC17F927 systemDetail=49D6ED7C,495819FD,495819FD,495819FD,495819FD,495819FD,495819FD,495819FD,495819FD\r\n[SyncCheck] tick=0 PRE-CMD=11808F91 cmds=1\r\n[SyncCheck] tick=0 POST-CMD=11808F93\r\n[SyncCheck] tick=0 PRE-AI-EXEC=11808F93 aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=DF364DAA systemDetail=11808F93,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B\r\n[SyncCheck] tick=0 PRE-CMD=11808F91 cmds=1\r\n[SyncCheck] tick=0 POST-CMD=11808F93\r\n[SyncCheck] tick=0 PRE-AI-EXEC=11808F93 aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=DF364DAA systemDetail=11808F93,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B,1181980B\r\n"
+        },
+        {
+          "name": "SourceReply_PreservesAmountModeAndWoodWorkerCriterion",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.SourceReply_PreservesAmountModeAndWoodWorkerCriterion",
+          "state": "Passed",
+          "durationSeconds": 1.5604699,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+        },
+        {
+          "name": "TargetResolution_RejectsUnknownExhaustedUnreachableAndWrongSources",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.TargetResolution_RejectsUnknownExhaustedUnreachableAndWrongSources",
+          "state": "Passed",
+          "durationSeconds": 6.4604787,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible Sheep/Food source is known.\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible Sheep/Food source is known.\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible Sheep/Food source is known.\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; Insufficient legal source capacity or no known reachable route in the bounded candidate search; no workers were assigned.\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible Sheep/Food source is known.\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible Sheep/Food source is known.\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible Sheep/Food source is known.\r\n"
+        },
+        {
+          "name": "WorkerCountCorrection_WhileDestinationPending_ChangesOnlyExplicitCount",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.WorkerCountCorrection_WhileDestinationPending_ChangesOnlyExplicitCount",
+          "state": "Passed",
+          "durationSeconds": 1.3985837,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+        },
+        {
+          "name": "WorkerSelection_RespectsOwnershipAuthorityAndCurrentResource",
+          "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.WorkerSelection_RespectsOwnershipAuthorityAndCurrentResource",
+          "state": "Passed",
+          "durationSeconds": 3.8707325,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #2 submitted: AllocateWorkers\r\n[Commander] Goal #2: status=Blocked owned=0 queued=0; Only 0 eligible workers are available; 1 are required.\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Gold.\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; Only 2 eligible workers are available; 3 are required.\r\n"
+        },
+        {
+          "name": "MalformedUsageMetadata_DoesNotInvalidateOtherwiseValidSemanticReply",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.MalformedUsageMetadata_DoesNotInvalidateOtherwiseValidSemanticReply",
+          "state": "Passed",
+          "durationSeconds": 0.2144068,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-10T20:29:00.0806789Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=6\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\r\n[CommanderProvider] semantic=Answer;nodes=0\r\n"
+        },
+        {
+          "name": "MissingResponseUsage_RemainsUnknownNotZero",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.MissingResponseUsage_RemainsUnknownNotZero",
+          "state": "Passed",
+          "durationSeconds": 0.2082707,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-10T20:29:00.2819063Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=5\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\r\n[CommanderProvider] semantic=Answer;nodes=0\r\n"
+        },
+        {
+          "name": "OrdinaryRequests_KeepCompleteModelPayloadBelowConservativeInputBudget(\"Gather 200 Gold with three villagers from Wood.\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.OrdinaryRequests_KeepCompleteModelPayloadBelowConservativeInputBudget(\"Gather 200 Gold with three villagers from Wood.\")",
+          "state": "Passed",
+          "durationSeconds": 0.2719135,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-10T20:29:00.6383956Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=7\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\r\n[CommanderProvider] semantic=Answer;nodes=0\r\nOffline pack audit: {\"utterance\":\"Gather 200 Gold with three villagers from Wood.\",\"systemUtf8Units\":1484,\"userUtf8Units\":344,\"estimateWithMargin\":2094,\"estimateMethod\":\"UTF8 byte units plus256 message margin; not verified model tokenizer\",\"actualPromptTokens\":null}\r\n"
+        },
+        {
+          "name": "OrdinaryRequests_KeepCompleteModelPayloadBelowConservativeInputBudget(\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.OrdinaryRequests_KeepCompleteModelPayloadBelowConservativeInputBudget(\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\")",
+          "state": "Passed",
+          "durationSeconds": 0.3105961,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-10T20:29:00.8784843Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=6\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\r\n[CommanderProvider] semantic=Answer;nodes=0\r\nOffline pack audit: {\"utterance\":\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\",\"systemUtf8Units\":2123,\"userUtf8Units\":398,\"estimateWithMargin\":2787,\"estimateMethod\":\"UTF8 byte units plus256 message margin; not verified model tokenizer\",\"actualPromptTokens\":null}\r\n"
+        },
+        {
+          "name": "RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\")",
+          "state": "Passed",
+          "durationSeconds": 1.3975029,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-10T20:29:02.4707202Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=6\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\r\n[CommanderProvider] semantic=Answer;nodes=0\r\nProduction catalog estimate=3983; actual tokens unknown; Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\r\n"
+        },
+        {
+          "name": "RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"Move all of my Wood villagers to the woodline left of my Town Center.\")",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"Move all of my Wood villagers to the woodline left of my Town Center.\")",
+          "state": "Passed",
+          "durationSeconds": 1.1523774,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-10T20:29:03.6399947Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=4\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\r\n[CommanderProvider] semantic=Answer;nodes=0\r\nProduction catalog estimate=3919; actual tokens unknown; Move all of my Wood villagers to the woodline left of my Town Center.\r\n"
+        },
+        {
+          "name": "ResponseUsage_IsRetainedAsTypedObservedMetricsIncludingCachedInput",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.ResponseUsage_IsRetainedAsTypedObservedMetricsIncludingCachedInput",
+          "state": "Passed",
+          "durationSeconds": 0.2497625,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-10T20:29:03.8758727Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=8\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\r\n[CommanderProvider] semantic=Answer;nodes=0\r\n"
+        },
+        {
+          "name": "TooLargeRequiredMeaning_IsRejectedWithoutDispatchingOrExecutingPrefix",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.TooLargeRequiredMeaning_IsRejectedWithoutDispatchingOrExecutingPrefix",
+          "state": "Passed",
+          "durationSeconds": 0.3250491,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        }
+      ]
+    }
+  },
+  "hint": null
+}

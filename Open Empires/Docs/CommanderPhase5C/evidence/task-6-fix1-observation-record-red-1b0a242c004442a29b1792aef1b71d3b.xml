@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 01:51:20Z" end-time="2026-10-12 01:51:20Z" duration="0.1037315">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1794" result="Failed" site="Child" start-time="2026-10-12 01:51:20Z" end-time="2026-10-12 01:51:20Z" duration="0.103732" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="3068" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1794" result="Failed" site="Child" start-time="2026-10-12 01:51:20Z" end-time="2026-10-12 01:51:20Z" duration="0.036381" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="12696" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="3069" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1794" result="Failed" site="Child" start-time="2026-10-12 01:51:20Z" end-time="2026-10-12 01:51:20Z" duration="0.035090" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="3070" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1794" result="Failed" site="Child" start-time="2026-10-12 01:51:20Z" end-time="2026-10-12 01:51:20Z" duration="0.034093" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="3040" name="CommanderPhase5CScenarioArtifactTests" fullname="OpenEmpires.Tests.CommanderPhase5CScenarioArtifactTests" classname="OpenEmpires.Tests.CommanderPhase5CScenarioArtifactTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-12 01:51:20Z" end-time="2026-10-12 01:51:20Z" duration="0.032483" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="3042" name="PerTurnArtifact_AllowsDistinctObservationTurnWithNoExecutionTicket" fullname="OpenEmpires.Tests.CommanderPhase5CScenarioArtifactTests.PerTurnArtifact_AllowsDistinctObservationTurnWithNoExecutionTicket" methodname="PerTurnArtifact_AllowsDistinctObservationTurnWithNoExecutionTicket" classname="OpenEmpires.Tests.CommanderPhase5CScenarioArtifactTests" runstate="Runnable" seed="1505944494" result="Failed" label="Error" start-time="2026-10-12 01:51:20Z" end-time="2026-10-12 01:51:20Z" duration="0.016934" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.InvalidOperationException : Unsafe Phase 5C turn field.]]></message>
+                <stack-trace><![CDATA[  at OpenEmpires.TestSupport.ScenarioEvidenceRecorder.RecordPhase5CTurn (Newtonsoft.Json.Linq.JObject safeTurn) [0x00052] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\Shared\ScenarioEvidenceRecorder.cs:77 
+  at OpenEmpires.Tests.CommanderPhase5CScenarioArtifactTests.PerTurnArtifact_AllowsDistinctObservationTurnWithNoExecutionTicket () [0x0004a] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5CScenarioArtifactTests.cs:52 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <816f70bc2a9c4332b0bd119906a8d40e>:0 ]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

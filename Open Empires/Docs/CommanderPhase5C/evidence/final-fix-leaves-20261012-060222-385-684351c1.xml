@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="30" result="Passed" total="30" passed="30" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 06:02:22Z" end-time="2026-10-12 06:02:46Z" duration="24.062902">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1806" result="Passed" start-time="2026-10-12 06:02:22Z" end-time="2026-10-12 06:02:46Z" duration="24.062902" total="30" passed="30" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="3083" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1806" result="Passed" start-time="2026-10-12 06:02:22Z" end-time="2026-10-12 06:02:46Z" duration="23.956680" total="30" passed="30" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="40764" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="3084" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1806" result="Passed" start-time="2026-10-12 06:02:22Z" end-time="2026-10-12 06:02:46Z" duration="23.868290" total="30" passed="30" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="3085" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1806" result="Passed" start-time="2026-10-12 06:02:22Z" end-time="2026-10-12 06:02:46Z" duration="23.757796" total="30" passed="30" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1138" name="CommanderGrandFixEvidenceLaneTests" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" runstate="Runnable" testcasecount="28" result="Passed" start-time="2026-10-12 06:02:22Z" end-time="2026-10-12 06:02:25Z" duration="3.090929" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <test-suite type="ParameterizedMethod" id="1171" name="RejectedCompletion_RecordsSafeFinishCategory" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.RejectedCompletion_RecordsSafeFinishCategory" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-12 06:02:22Z" end-time="2026-10-12 06:02:25Z" duration="2.975011" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1169" name="RejectedCompletion_RecordsSafeFinishCategory(&quot;length&quot;,&quot;length&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.RejectedCompletion_RecordsSafeFinishCategory(&quot;length&quot;,&quot;length&quot;)" methodname="RejectedCompletion_RecordsSafeFinishCategory" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" runstate="Runnable" seed="875122038" result="Passed" start-time="2026-10-12 06:02:23Z" end-time="2026-10-12 06:02:24Z" duration="1.614421" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:24.6008916Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=12
+[CommanderProvider] finish=length
+]]></output>
+              </test-case>
+              <test-case id="1170" name="RejectedCompletion_RecordsSafeFinishCategory(&quot;private-finish-marker&quot;,&quot;other&quot;)" fullname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests.RejectedCompletion_RecordsSafeFinishCategory(&quot;private-finish-marker&quot;,&quot;other&quot;)" methodname="RejectedCompletion_RecordsSafeFinishCategory" classname="OpenEmpires.Tests.CommanderGrandFixEvidenceLaneTests" runstate="Runnable" seed="449741117" result="Passed" start-time="2026-10-12 06:02:24Z" end-time="2026-10-12 06:02:25Z" duration="1.175945" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:25.9093824Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=5
+[CommanderProvider] finish=other
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+          <test-suite type="TestFixture" id="1280" name="CommanderGrandFixPresentationTests" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" testcasecount="32" result="Passed" start-time="2026-10-12 06:02:25Z" end-time="2026-10-12 06:02:28Z" duration="2.163588" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <test-case id="1301" name="ReadableApprovalCard_PreservesWholeScrollableTextAndDetailsDoesNotApprove" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.ReadableApprovalCard_PreservesWholeScrollableTextAndDetailsDoesNotApprove" methodname="ReadableApprovalCard_PreservesWholeScrollableTextAndDetailsDoesNotApprove" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="48232297" result="Passed" start-time="2026-10-12 06:02:25Z" end-time="2026-10-12 06:02:28Z" duration="2.119399" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1920" name="CommanderPhase4ATests" fullname="OpenEmpires.Tests.CommanderPhase4ATests" classname="OpenEmpires.Tests.CommanderPhase4ATests" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-10-12 06:02:28Z" end-time="2026-10-12 06:02:29Z" duration="1.111082" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase4A" />
+            </properties>
+            <test-case id="1924" name="OpenRouterSemanticRequest_TransmitsSupportedPlacementSchema" fullname="OpenEmpires.Tests.CommanderPhase4ATests.OpenRouterSemanticRequest_TransmitsSupportedPlacementSchema" methodname="OpenRouterSemanticRequest_TransmitsSupportedPlacementSchema" classname="OpenEmpires.Tests.CommanderPhase4ATests" runstate="Runnable" seed="606748651" result="Passed" start-time="2026-10-12 06:02:28Z" end-time="2026-10-12 06:02:29Z" duration="1.086729" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:29.1312723Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=6
+[CommanderProvider] finish=unspecified
+[CommanderProvider] assistantContent=extracted;characters=48;finish=unspecified
+[CommanderProvider] semantic=Unsupported;nodes=0
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2333" name="CommanderPhase4E1ProviderTests" fullname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests" classname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests" runstate="Runnable" testcasecount="24" result="Passed" start-time="2026-10-12 06:02:29Z" end-time="2026-10-12 06:02:32Z" duration="3.383577" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase4E1" />
+            </properties>
+            <test-suite type="ParameterizedMethod" id="2357" name="HttpFailures_AreDistinctAndDoNotEchoUpstream" fullname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests.HttpFailures_AreDistinctAndDoNotEchoUpstream" classname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-12 06:02:29Z" end-time="2026-10-12 06:02:31Z" duration="2.242394" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="2349" name="HttpFailures_AreDistinctAndDoNotEchoUpstream(400,&quot;request was rejected&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests.HttpFailures_AreDistinctAndDoNotEchoUpstream(400,&quot;request was rejected&quot;)" methodname="HttpFailures_AreDistinctAndDoNotEchoUpstream" classname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests" runstate="Runnable" seed="1355644750" result="Passed" start-time="2026-10-12 06:02:29Z" end-time="2026-10-12 06:02:29Z" duration="0.325293" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:29.5693580Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=400;durationMs=5
+]]></output>
+              </test-case>
+              <test-case id="2350" name="HttpFailures_AreDistinctAndDoNotEchoUpstream(401,&quot;authentication&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests.HttpFailures_AreDistinctAndDoNotEchoUpstream(401,&quot;authentication&quot;)" methodname="HttpFailures_AreDistinctAndDoNotEchoUpstream" classname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests" runstate="Runnable" seed="1337662328" result="Passed" start-time="2026-10-12 06:02:29Z" end-time="2026-10-12 06:02:29Z" duration="0.222391" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:29.8040797Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=401;durationMs=5
+]]></output>
+              </test-case>
+              <test-case id="2351" name="HttpFailures_AreDistinctAndDoNotEchoUpstream(402,&quot;credits&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests.HttpFailures_AreDistinctAndDoNotEchoUpstream(402,&quot;credits&quot;)" methodname="HttpFailures_AreDistinctAndDoNotEchoUpstream" classname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests" runstate="Runnable" seed="1440104934" result="Passed" start-time="2026-10-12 06:02:29Z" end-time="2026-10-12 06:02:30Z" duration="0.232823" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:30.0699324Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=402;durationMs=15
+]]></output>
+              </test-case>
+              <test-case id="2352" name="HttpFailures_AreDistinctAndDoNotEchoUpstream(403,&quot;forbidden&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests.HttpFailures_AreDistinctAndDoNotEchoUpstream(403,&quot;forbidden&quot;)" methodname="HttpFailures_AreDistinctAndDoNotEchoUpstream" classname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests" runstate="Runnable" seed="1915102058" result="Passed" start-time="2026-10-12 06:02:30Z" end-time="2026-10-12 06:02:30Z" duration="0.223173" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:30.3388515Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=403;durationMs=8
+]]></output>
+              </test-case>
+              <test-case id="2353" name="HttpFailures_AreDistinctAndDoNotEchoUpstream(404,&quot;model unavailable&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests.HttpFailures_AreDistinctAndDoNotEchoUpstream(404,&quot;model unavailable&quot;)" methodname="HttpFailures_AreDistinctAndDoNotEchoUpstream" classname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests" runstate="Runnable" seed="1684339938" result="Passed" start-time="2026-10-12 06:02:30Z" end-time="2026-10-12 06:02:30Z" duration="0.217876" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:30.5612986Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=404;durationMs=4
+]]></output>
+              </test-case>
+              <test-case id="2354" name="HttpFailures_AreDistinctAndDoNotEchoUpstream(408,&quot;timed out&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests.HttpFailures_AreDistinctAndDoNotEchoUpstream(408,&quot;timed out&quot;)" methodname="HttpFailures_AreDistinctAndDoNotEchoUpstream" classname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests" runstate="Runnable" seed="874592973" result="Passed" start-time="2026-10-12 06:02:30Z" end-time="2026-10-12 06:02:30Z" duration="0.219980" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:30.8243983Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=408;durationMs=3
+]]></output>
+              </test-case>
+              <test-case id="2355" name="HttpFailures_AreDistinctAndDoNotEchoUpstream(429,&quot;rate-limited&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests.HttpFailures_AreDistinctAndDoNotEchoUpstream(429,&quot;rate-limited&quot;)" methodname="HttpFailures_AreDistinctAndDoNotEchoUpstream" classname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests" runstate="Runnable" seed="1438166724" result="Passed" start-time="2026-10-12 06:02:30Z" end-time="2026-10-12 06:02:31Z" duration="0.228332" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:31.0740225Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=429;durationMs=4
+]]></output>
+              </test-case>
+              <test-case id="2356" name="HttpFailures_AreDistinctAndDoNotEchoUpstream(503,&quot;provider unavailable&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests.HttpFailures_AreDistinctAndDoNotEchoUpstream(503,&quot;provider unavailable&quot;)" methodname="HttpFailures_AreDistinctAndDoNotEchoUpstream" classname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests" runstate="Runnable" seed="10726488" result="Passed" start-time="2026-10-12 06:02:31Z" end-time="2026-10-12 06:02:31Z" duration="0.223730" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:31.3396316Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=503;durationMs=5
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-case id="2359" name="LengthFinishReason_RejectsEvenIfContentLooksValid" fullname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests.LengthFinishReason_RejectsEvenIfContentLooksValid" methodname="LengthFinishReason_RejectsEvenIfContentLooksValid" classname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests" runstate="Runnable" seed="1747871224" result="Passed" start-time="2026-10-12 06:02:31Z" end-time="2026-10-12 06:02:31Z" duration="0.223501" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:31.5954397Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=5
+[CommanderProvider] finish=length
+]]></output>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="2336" name="NaturalParaphrase_ReturnsSameTypedUnitRequest" fullname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests.NaturalParaphrase_ReturnsSameTypedUnitRequest" classname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-12 06:02:31Z" end-time="2026-10-12 06:02:32Z" duration="0.620006" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="2334" name="NaturalParaphrase_ReturnsSameTypedUnitRequest(&quot;Could you get our spearmen up to ten?&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests.NaturalParaphrase_ReturnsSameTypedUnitRequest(&quot;Could you get our spearmen up to ten?&quot;)" methodname="NaturalParaphrase_ReturnsSameTypedUnitRequest" classname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests" runstate="Runnable" seed="1487355266" result="Passed" start-time="2026-10-12 06:02:31Z" end-time="2026-10-12 06:02:31Z" duration="0.238026" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:31.9374030Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=2
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=87;finish=stop
+[CommanderProvider] semantic=Request;nodes=1
+]]></output>
+              </test-case>
+              <test-case id="2335" name="NaturalParaphrase_ReturnsSameTypedUnitRequest(&quot;I want a total of ten spears in my army.&quot;)" fullname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests.NaturalParaphrase_ReturnsSameTypedUnitRequest(&quot;I want a total of ten spears in my army.&quot;)" methodname="NaturalParaphrase_ReturnsSameTypedUnitRequest" classname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests" runstate="Runnable" seed="1177927991" result="Passed" start-time="2026-10-12 06:02:31Z" end-time="2026-10-12 06:02:32Z" duration="0.304478" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:32.1865558Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=6
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=87;finish=stop
+[CommanderProvider] semantic=Request;nodes=1
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-case id="2358" name="OneCompleteJsonFence_ParsesButAmbiguousPayloadDoesNot" fullname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests.OneCompleteJsonFence_ParsesButAmbiguousPayloadDoesNot" methodname="OneCompleteJsonFence_ParsesButAmbiguousPayloadDoesNot" classname="OpenEmpires.Tests.CommanderPhase4E1ProviderTests" runstate="Runnable" seed="652211541" result="Passed" start-time="2026-10-12 06:02:32Z" end-time="2026-10-12 06:02:32Z" duration="0.226015" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:32.5180162Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=5
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=99;finish=stop
+[CommanderProvider] semantic=Request;nodes=1
+[CommanderProvider] utc=2026-10-12T06:02:32.5349887Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=5
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=174;finish=stop
+[CommanderProvider] schema=field=$;code=invalid-schema;stage=envelope;node=-1
+[CommanderProvider] semantic=invalid;nodes=0
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2554" name="CommanderPhase4GCapabilityTests" fullname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests" classname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests" runstate="Runnable" testcasecount="29" result="Passed" start-time="2026-10-12 06:02:32Z" end-time="2026-10-12 06:02:33Z" duration="1.204662" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="2565" name="CapabilityGoal_MilitaryCommandUsesNormalCommandBufferAndRemainsExecuting" fullname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests.CapabilityGoal_MilitaryCommandUsesNormalCommandBufferAndRemainsExecuting" methodname="CapabilityGoal_MilitaryCommandUsesNormalCommandBufferAndRemainsExecuting" classname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests" runstate="Runnable" seed="1158665604" result="Passed" start-time="2026-10-12 06:02:32Z" end-time="2026-10-12 06:02:33Z" duration="1.093728" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: CapabilityAction
+[Commander] Goal #1: status=Executing owned=0 queued=0; Moving exact selected units to known reachable native formation positions.
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2647" name="CommanderPhase5AAntiGravityHostileAuditTests" fullname="OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests" classname="OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests" runstate="Runnable" testcasecount="26" result="Passed" start-time="2026-10-12 06:02:33Z" end-time="2026-10-12 06:02:33Z" duration="0.054560" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+              <property name="Category" value="AntiGravityAudit" />
+            </properties>
+            <test-case id="2673" name="PrimitiveCatalog_ExactlyNineRegisteredPrimitives" fullname="OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.PrimitiveCatalog_ExactlyNineRegisteredPrimitives" methodname="PrimitiveCatalog_ExactlyNineRegisteredPrimitives" classname="OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests" runstate="Runnable" seed="1283686581" result="Passed" start-time="2026-10-12 06:02:33Z" end-time="2026-10-12 06:02:33Z" duration="0.008532" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2824" name="CommanderPhase5AProviderContractTests" fullname="OpenEmpires.Tests.CommanderPhase5AProviderContractTests" classname="OpenEmpires.Tests.CommanderPhase5AProviderContractTests" runstate="Runnable" testcasecount="14" result="Passed" start-time="2026-10-12 06:02:33Z" end-time="2026-10-12 06:02:35Z" duration="1.795747" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <test-case id="2825" name="DynamicFarm_UsesRegistryVocabularyAndReturnsTypedPlan" fullname="OpenEmpires.Tests.CommanderPhase5AProviderContractTests.DynamicFarm_UsesRegistryVocabularyAndReturnsTypedPlan" methodname="DynamicFarm_UsesRegistryVocabularyAndReturnsTypedPlan" classname="OpenEmpires.Tests.CommanderPhase5AProviderContractTests" runstate="Runnable" seed="1782926374" result="Passed" start-time="2026-10-12 06:02:33Z" end-time="2026-10-12 06:02:34Z" duration="0.226069" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:34.0891004Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=3
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=128;finish=stop
+[CommanderProvider] semantic=Request;nodes=1
+]]></output>
+            </test-case>
+            <test-case id="2828" name="RepeatedPlacementAndExactProducers_PromptIncludesStrictDynamicExample" fullname="OpenEmpires.Tests.CommanderPhase5AProviderContractTests.RepeatedPlacementAndExactProducers_PromptIncludesStrictDynamicExample" methodname="RepeatedPlacementAndExactProducers_PromptIncludesStrictDynamicExample" classname="OpenEmpires.Tests.CommanderPhase5AProviderContractTests" runstate="Runnable" seed="140518720" result="Passed" start-time="2026-10-12 06:02:34Z" end-time="2026-10-12 06:02:35Z" duration="1.257605" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:35.3483023Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=5
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=495;finish=stop
+[CommanderProvider] semantic=DynamicPlan;nodes=0
+]]></output>
+            </test-case>
+            <test-case id="2827" name="SharedWorkerComposition_PromptIncludesOneSelectionAndStrictExample" fullname="OpenEmpires.Tests.CommanderPhase5AProviderContractTests.SharedWorkerComposition_PromptIncludesOneSelectionAndStrictExample" methodname="SharedWorkerComposition_PromptIncludesOneSelectionAndStrictExample" classname="OpenEmpires.Tests.CommanderPhase5AProviderContractTests" runstate="Runnable" seed="1191724058" result="Passed" start-time="2026-10-12 06:02:35Z" end-time="2026-10-12 06:02:35Z" duration="0.219795" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:35.5332692Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=5
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=87;finish=stop
+[CommanderProvider] semantic=Request;nodes=1
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2999" name="CommanderPhase5CProviderBudgetTests" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" testcasecount="49" result="Passed" start-time="2026-10-12 06:02:35Z" end-time="2026-10-12 06:02:46Z" duration="10.840735" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5C" />
+            </properties>
+            <test-case id="3054" name="OlderCancelledLateAttempt_DoesNotOverwriteNewerRequestMetrics" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.OlderCancelledLateAttempt_DoesNotOverwriteNewerRequestMetrics" methodname="OlderCancelledLateAttempt_DoesNotOverwriteNewerRequestMetrics" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" seed="282394283" result="Passed" start-time="2026-10-12 06:02:35Z" end-time="2026-10-12 06:02:36Z" duration="0.480746" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:35.9060946Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] utc=2026-10-12T06:02:35.9128654Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=5
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=40;finish=stop
+[CommanderProvider] semantic=Answer;nodes=0
+]]></output>
+            </test-case>
+            <test-case id="3000" name="PlaceTwoHousesNearTownCenter_RetrievesAdmittableRepeatedBuildRoute" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.PlaceTwoHousesNearTownCenter_RetrievesAdmittableRepeatedBuildRoute" methodname="PlaceTwoHousesNearTownCenter_RetrievesAdmittableRepeatedBuildRoute" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" seed="1823650632" result="Passed" start-time="2026-10-12 06:02:36Z" end-time="2026-10-12 06:02:37Z" duration="1.242382" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:37.3718366Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=6
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=331;finish=stop
+[CommanderProvider] semantic=DynamicPlan;nodes=0
+]]></output>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="3015" name="RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-12 06:02:37Z" end-time="2026-10-12 06:02:43Z" duration="6.475239" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="3010" name="RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(&quot;Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(&quot;Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.&quot;)" methodname="RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" seed="767337053" result="Passed" start-time="2026-10-12 06:02:37Z" end-time="2026-10-12 06:02:38Z" duration="1.213050" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:38.6470212Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=4
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=49;finish=stop
+[CommanderProvider] semantic=Answer;nodes=0
+pack sections={"contract":2162,"context":741,"memory":2,"questionFacts":0,"pending":0,"utterance":101,"messageMargin":256}; estimate=3320
+context-unit-lengths=[{"key":"age","bytes":1},{"key":"civilization","bytes":9},{"key":"resources","bytes":38},{"key":"population","bytes":1},{"key":"populationCap","bytes":1},{"key":"workerCounts","bytes":79},{"key":"knowledge","bytes":447},{"key":"ownedUnitCounts","bytes":24},{"key":"ownedBuildingCounts","bytes":2}]
+knowledge-unit-lengths=[{"key":"unitsColumns","bytes":86},{"key":"units","bytes":59},{"key":"buildingsColumns","bytes":94},{"key":"buildings","bytes":149}]
+Production catalog estimate=3320; actual tokens unknown; Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.
+]]></output>
+              </test-case>
+              <test-case id="3011" name="RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(&quot;Move all of my Wood villagers to the woodline left of my Town Center.&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(&quot;Move all of my Wood villagers to the woodline left of my Town Center.&quot;)" methodname="RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" seed="1713763797" result="Passed" start-time="2026-10-12 06:02:38Z" end-time="2026-10-12 06:02:39Z" duration="1.099892" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:39.8013494Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=4
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=49;finish=stop
+[CommanderProvider] semantic=Answer;nodes=0
+pack sections={"contract":2656,"context":688,"memory":2,"questionFacts":0,"pending":0,"utterance":69,"messageMargin":256}; estimate=3729
+context-unit-lengths=[{"key":"age","bytes":1},{"key":"civilization","bytes":9},{"key":"resources","bytes":38},{"key":"population","bytes":1},{"key":"populationCap","bytes":1},{"key":"workerCounts","bytes":79},{"key":"knowledge","bytes":394},{"key":"ownedUnitCounts","bytes":24},{"key":"ownedBuildingCounts","bytes":2}]
+knowledge-unit-lengths=[{"key":"unitsColumns","bytes":86},{"key":"units","bytes":59},{"key":"buildingsColumns","bytes":94},{"key":"buildings","bytes":96}]
+Production catalog estimate=3729; actual tokens unknown; Move all of my Wood villagers to the woodline left of my Town Center.
+]]></output>
+              </test-case>
+              <test-case id="3012" name="RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(&quot;make four farms&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(&quot;make four farms&quot;)" methodname="RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" seed="151075853" result="Passed" start-time="2026-10-12 06:02:39Z" end-time="2026-10-12 06:02:41Z" duration="1.230316" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:41.0669995Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=5
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=49;finish=stop
+[CommanderProvider] semantic=Answer;nodes=0
+pack sections={"contract":1898,"context":474,"memory":2,"questionFacts":0,"pending":0,"utterance":15,"messageMargin":256}; estimate=2703
+context-unit-lengths=[{"key":"age","bytes":1},{"key":"civilization","bytes":9},{"key":"resources","bytes":38},{"key":"population","bytes":1},{"key":"populationCap","bytes":1},{"key":"workerCounts","bytes":79},{"key":"knowledge","bytes":180},{"key":"ownedUnitCounts","bytes":24},{"key":"ownedBuildingCounts","bytes":2}]
+knowledge-unit-lengths=[{"key":"buildingsColumns","bytes":94},{"key":"buildings","bytes":52}]
+Production catalog estimate=2703; actual tokens unknown; make four farms
+]]></output>
+              </test-case>
+              <test-case id="3013" name="RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(&quot;send two of three idle workers to sheep and the third to build a mill near berries&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(&quot;send two of three idle workers to sheep and the third to build a mill near berries&quot;)" methodname="RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" seed="331711224" result="Passed" start-time="2026-10-12 06:02:41Z" end-time="2026-10-12 06:02:42Z" duration="1.234819" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:42.3328563Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=6
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=49;finish=stop
+[CommanderProvider] semantic=Answer;nodes=0
+pack sections={"contract":2454,"context":698,"memory":2,"questionFacts":0,"pending":0,"utterance":82,"messageMargin":256}; estimate=3550
+context-unit-lengths=[{"key":"age","bytes":1},{"key":"civilization","bytes":9},{"key":"resources","bytes":38},{"key":"population","bytes":1},{"key":"populationCap","bytes":1},{"key":"workerCounts","bytes":79},{"key":"knowledge","bytes":404},{"key":"ownedUnitCounts","bytes":24},{"key":"ownedBuildingCounts","bytes":2}]
+knowledge-unit-lengths=[{"key":"unitsColumns","bytes":86},{"key":"units","bytes":107},{"key":"buildingsColumns","bytes":94},{"key":"buildings","bytes":58}]
+Production catalog estimate=3550; actual tokens unknown; send two of three idle workers to sheep and the third to build a mill near berries
+]]></output>
+              </test-case>
+              <test-case id="3014" name="RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(&quot;build two barracks near my town center and train ten new spearmen in them&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(&quot;build two barracks near my town center and train ten new spearmen in them&quot;)" methodname="RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" seed="1257106781" result="Passed" start-time="2026-10-12 06:02:42Z" end-time="2026-10-12 06:02:43Z" duration="1.512163" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:43.8940244Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=3
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=49;finish=stop
+[CommanderProvider] semantic=Answer;nodes=0
+pack sections={"contract":2225,"context":747,"memory":2,"questionFacts":0,"pending":0,"utterance":73,"messageMargin":256}; estimate=3361
+context-unit-lengths=[{"key":"age","bytes":1},{"key":"civilization","bytes":9},{"key":"resources","bytes":38},{"key":"population","bytes":1},{"key":"populationCap","bytes":1},{"key":"workerCounts","bytes":79},{"key":"knowledge","bytes":453},{"key":"ownedUnitCounts","bytes":24},{"key":"ownedBuildingCounts","bytes":2}]
+knowledge-unit-lengths=[{"key":"unitsColumns","bytes":86},{"key":"units","bytes":58},{"key":"buildingsColumns","bytes":94},{"key":"buildings","bytes":156}]
+Production catalog estimate=3361; actual tokens unknown; build two barracks near my town center and train ten new spearmen in them
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="3018" name="SharedWorkersBuildThenExactNewProduction_RetrievesTypedClosedGraphWithoutAutomaticAuthority" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.SharedWorkersBuildThenExactNewProduction_RetrievesTypedClosedGraphWithoutAutomaticAuthority" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-12 06:02:43Z" end-time="2026-10-12 06:02:46Z" duration="2.573969" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="3016" name="SharedWorkersBuildThenExactNewProduction_RetrievesTypedClosedGraphWithoutAutomaticAuthority(False)" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.SharedWorkersBuildThenExactNewProduction_RetrievesTypedClosedGraphWithoutAutomaticAuthority(False)" methodname="SharedWorkersBuildThenExactNewProduction_RetrievesTypedClosedGraphWithoutAutomaticAuthority" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" seed="168104415" result="Passed" start-time="2026-10-12 06:02:44Z" end-time="2026-10-12 06:02:45Z" duration="1.329982" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:45.2865357Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=4
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=1069;finish=stop
+[CommanderProvider] semantic=DynamicPlan;nodes=0
+]]></output>
+              </test-case>
+              <test-case id="3017" name="SharedWorkersBuildThenExactNewProduction_RetrievesTypedClosedGraphWithoutAutomaticAuthority(True)" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.SharedWorkersBuildThenExactNewProduction_RetrievesTypedClosedGraphWithoutAutomaticAuthority(True)" methodname="SharedWorkersBuildThenExactNewProduction_RetrievesTypedClosedGraphWithoutAutomaticAuthority" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" seed="288733027" result="Passed" start-time="2026-10-12 06:02:45Z" end-time="2026-10-12 06:02:46Z" duration="1.091009" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T06:02:46.4185881Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=3
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=1071;finish=stop
+[CommanderProvider] schema=field=$;code=invalid-schema;stage=envelope;node=-1
+[CommanderProvider] utc=2026-10-12T06:02:46.4348920Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=4
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=1069;finish=stop
+[CommanderProvider] semantic=DynamicPlan;nodes=0
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: D:\unity_projects\OpenEmpires\Open Empires\Docs\CommanderPhase5C\evidence\final-fix-leaves-20261012-060222-385-684351c1.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

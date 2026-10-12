@@ -1,0 +1,118 @@
+diff --git a/Docs/CommanderPhase5C/evidence/task7-preflight-isolation-baseline/Assets/Editor/CommanderFinalFixResultCapture.cs b/Assets/Editor/CommanderFinalFixResultCapture.cs
+index 330f11f..85650e1 100644
+--- a/Docs/CommanderPhase5C/evidence/task7-preflight-isolation-baseline/Assets/Editor/CommanderFinalFixResultCapture.cs
++++ b/Assets/Editor/CommanderFinalFixResultCapture.cs
+@@ -16,10 +16,9 @@ namespace OpenEmpires.Editor
+     internal sealed class CommanderFinalFixResultCapture : ICallbacks
+     {
+         private static readonly string KeyRoot = "OpenEmpires.Commander.CaptureRun." + Application.dataPath + ".";
+-        private static readonly string ArmKey = KeyRoot + "Arm";
+-        private static readonly string OwnerKey = KeyRoot + "Owner";
+-        private static readonly string FileKey = KeyRoot + "File";
+         private static readonly CommanderFinalFixResultCapture Instance = new CommanderFinalFixResultCapture();
++        private readonly Func<string> currentRunGuid;
++        private readonly string armKey, ownerKey, fileKey, outputDirectory;
+         private readonly List<JObject> leaves = new List<JObject>();
+         private string file;
+         private string started;
+@@ -30,35 +29,49 @@ namespace OpenEmpires.Editor
+             TestRunnerApi.RegisterTestCallback(Instance);
+         }
+ 
++        private CommanderFinalFixResultCapture() : this(CurrentRunGuid, KeyRoot,
++            Path.Combine(Directory.GetParent(Application.dataPath).FullName,
++                "Docs", "CommanderPhase5C", "evidence")) { }
++
++        internal CommanderFinalFixResultCapture(Func<string> runGuid, string keyRoot, string directory)
++        {
++            currentRunGuid = runGuid ?? throw new ArgumentNullException(nameof(runGuid));
++            if (string.IsNullOrEmpty(keyRoot)) throw new ArgumentException(nameof(keyRoot));
++            outputDirectory = directory ?? throw new ArgumentNullException(nameof(directory));
++            armKey = keyRoot + "Arm";
++            ownerKey = keyRoot + "Owner";
++            fileKey = keyRoot + "File";
++        }
++
+         [MenuItem("Tools/Commander/Arm next test result capture")]
+-        private static void ArmNextRun() => SessionState.SetBool(ArmKey, true);
++        private static void ArmNextRun() => Instance.Arm();
++
++        private void Arm() => SessionState.SetBool(armKey, true);
+ 
+         public void RunStarted(ITestAdaptor testsToRun)
+         {
+             file = null;
+             owner = null;
+-            string currentRun = CurrentRunGuid();
+-            string previousOwner = SessionState.GetString(OwnerKey, "");
+-            string previousFile = SessionState.GetString(FileKey, "");
++            string currentRun = currentRunGuid();
++            string previousOwner = SessionState.GetString(ownerKey, "");
++            string previousFile = SessionState.GetString(fileKey, "");
+             if (previousOwner.Length != 0)
+             {
+                 if (currentRun == previousOwner && LoadOwned(previousFile, previousOwner)) return;
+                 ClearOwned(); // The former file remains explicitly unfinished.
+             }
+-            bool armed = SessionState.GetBool(ArmKey, false);
+-            SessionState.SetBool(ArmKey, false); // Consume before any file or callback work.
++            bool armed = SessionState.GetBool(armKey, false);
++            SessionState.SetBool(armKey, false); // Consume before any file or callback work.
+             if (!armed || string.IsNullOrEmpty(currentRun)) return;
+             leaves.Clear();
+             started = DateTime.UtcNow.ToString("O");
+-            string directory = Path.Combine(Directory.GetParent(Application.dataPath).FullName,
+-                "Docs", "CommanderPhase5C", "evidence");
+-            Directory.CreateDirectory(directory);
+-            file = Path.Combine(directory, "final-fix-leaves-"
++            Directory.CreateDirectory(outputDirectory);
++            file = Path.Combine(outputDirectory, "final-fix-leaves-"
+                 + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss-fff") + "-"
+                 + Guid.NewGuid().ToString("N").Substring(0, 8) + ".json");
+             owner = currentRun;
+-            SessionState.SetString(OwnerKey, owner);
+-            SessionState.SetString(FileKey, file);
++            SessionState.SetString(ownerKey, owner);
++            SessionState.SetString(fileKey, file);
+             Save(false, null);
+         }
+ 
+@@ -85,8 +98,8 @@ namespace OpenEmpires.Editor
+             {
+                 try
+                 {
+-                    TestRunnerApi.SaveResultToFile(result, Path.Combine("Docs", "CommanderPhase5C",
+-                        "evidence", Path.GetFileNameWithoutExtension(file) + ".xml"));
++                    TestRunnerApi.SaveResultToFile(result, Path.Combine(outputDirectory,
++                        Path.GetFileNameWithoutExtension(file) + ".xml"));
+                 }
+                 catch (Exception) { } // JSON leaves still retain the exact result states.
+             }
+@@ -98,10 +111,10 @@ namespace OpenEmpires.Editor
+ 
+         private bool OwnsCurrentRun()
+         {
+-            string currentRun = CurrentRunGuid();
++            string currentRun = currentRunGuid();
+             if (string.IsNullOrEmpty(currentRun)) return false;
+-            if (file == null && !LoadOwned(SessionState.GetString(FileKey, ""),
+-                    SessionState.GetString(OwnerKey, ""))) return false;
++            if (file == null && !LoadOwned(SessionState.GetString(fileKey, ""),
++                    SessionState.GetString(ownerKey, ""))) return false;
+             return owner == currentRun;
+         }
+ 
+@@ -125,10 +138,10 @@ namespace OpenEmpires.Editor
+             catch (Exception) { return false; }
+         }
+ 
+-        private static void ClearOwned()
++        private void ClearOwned()
+         {
+-            SessionState.EraseString(OwnerKey);
+-            SessionState.EraseString(FileKey);
++            SessionState.EraseString(ownerKey);
++            SessionState.EraseString(fileKey);
+         }
+ 
+         private static string CurrentRunGuid()

@@ -1,0 +1,84 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "0e1edebfdd7f45a3845f5efe9272eec8",
+      "status": "failed",
+      "mode": "EditMode",
+      "started_unix_ms": 1791669036027,
+      "finished_unix_ms": 1791669053513,
+      "last_update_unix_ms": 1791669053513,
+      "progress": {
+        "completed": 32,
+        "total": 32,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791669052825,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.TooManyRequiredNames_RefuseWholeRequestBeforeHttp",
+        "last_finished_unix_ms": 1791669053399,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.LateCanonicalName_AfterOldWordAndPhraseWindowsSurvivesRealPack",
+            "message": "  Expected: collection containing \"building:Market\"\r\n  But was:  < \"unit:0\" >\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.NineExplicitCanonicalNames_SurviveRealContextAndPackedColumns",
+            "message": "  unit:9\r\n  Expected: collection containing \"unit:9\"\r\n  But was:  < \"unit:8\", \"unit:10\", \"unit:0\", \"unit:1\", \"unit:3\", \"unit:2\", \"unit:7\", \"unit:4\" >\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.NullTransportResponse_RecordsTransportNullNotSuccess",
+            "message": "  Expected string length 14 but was 10. Strings differ at index 0.\r\n  Expected: \"transport-null\"\r\n  But was:  \"http-start\"\r\n  -----------^\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.OlderCancelledLateAttempt_DoesNotOverwriteNewerRequestMetrics",
+            "message": "  Expected: <System.OperationCanceledException>\r\n  But was:  <System.Threading.Tasks.TaskCanceledException: A task was canceled.\r\n  at NUnit.Framework.Internal.ExceptionHelper.Rethrow (System.Exception exception) [0x0000d] in <8b63e8ac0a4746599ed207982825ae6c>:0 \r\n  at NUnit.Framework.Internal.AsyncInvocationRegion+AsyncTaskInvocationRegion.WaitForPendingOperationsToComplete (System.Object invocationResult) [0x00038] in <8b63e8ac0a4746599ed207982825ae6c>:0 \r\n  at NUnit.Framework.Assert.ThrowsAsync (NUnit.Framework.Constraints.IResolveConstraint expression, NUnit.Framework.AsyncTestDelegate code, System.String message, System.Object[] args) [0x00013] in <8b63e8ac0a4746599ed207982825ae6c>:0 >\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.PendingGraphAndAmbiguousAlternatives_AreRetainedOrWholeRequestRefused",
+            "message": "  Current reply and bounded pending graph must both reach retrieval.\r\n  Expected: not null\r\n  But was:  null\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RejectedSuccessfulHttp_RecordsActualResultStage(\"{\\\"choices\\\":[]}\",\"response-invalid-envelope\")",
+            "message": "  Expected string length 25 but was 12. Strings differ at index 0.\r\n  Expected: \"response-invalid-envelope\"\r\n  But was:  \"http-success\"\r\n  -----------^\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RejectedSuccessfulHttp_RecordsActualResultStage(\"{\\\"choices\\\":[{},{}]}\",\"response-invalid-envelope\")",
+            "message": "  Expected string length 25 but was 12. Strings differ at index 0.\r\n  Expected: \"response-invalid-envelope\"\r\n  But was:  \"http-success\"\r\n  -----------^\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RejectedSuccessfulHttp_RecordsActualResultStage(\"{\\\"choices\\\":[{\\\"finish_reason\\\":\\\"length\\\",\\\"message\\\":{\\\"content\\\":\\\"x\\\"}}]}\",\"response-truncated\")",
+            "message": "  Expected string length 18 but was 12. Strings differ at index 0.\r\n  Expected: \"response-truncated\"\r\n  But was:  \"http-success\"\r\n  -----------^\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RejectedSuccessfulHttp_RecordsActualResultStage(\"{\\\"choices\\\":[{\\\"finish_reason\\\":\\\"content_filter\\\",\\\"message\\\":{\\\"content\\\":\\\"x\\\"}}]}\",\"response-incomplete\")",
+            "message": "  Expected string length 19 but was 12. Strings differ at index 0.\r\n  Expected: \"response-incomplete\"\r\n  But was:  \"http-success\"\r\n  -----------^\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RejectedSuccessfulHttp_RecordsActualResultStage(\"{\\\"choices\\\":[{\\\"finish_reason\\\":\\\"stop\\\",\\\"message\\\":{\\\"content\\\":\\\"\\\"}}]}\",\"response-empty\")",
+            "message": "  Expected string length 14 but was 12. Strings differ at index 0.\r\n  Expected: \"response-empty\"\r\n  But was:  \"http-success\"\r\n  -----------^\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RejectedSuccessfulHttp_RecordsActualResultStage(\"{\\\"choices\\\":[{\\\"finish_reason\\\":\\\"stop\\\",\\\"message\\\":{\\\"content\\\":[{\\\"type\\\":\\\"image\\\"}]}}]}\",\"response-unsupported-parts\")",
+            "message": "  Expected string length 26 but was 12. Strings differ at index 0.\r\n  Expected: \"response-unsupported-parts\"\r\n  But was:  \"http-success\"\r\n  -----------^\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RejectedSuccessfulHttp_RecordsActualResultStage(\"{\\\"error\\\":{\\\"code\\\":500}}\",\"provider-error\")",
+            "message": "  Expected string length 14 but was 12. Strings differ at index 0.\r\n  Expected: \"provider-error\"\r\n  But was:  \"http-success\"\r\n  -----------^\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.TooManyRequiredNames_RefuseWholeRequestBeforeHttp",
+            "message": "  Expected: 0\r\n  But was:  1\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

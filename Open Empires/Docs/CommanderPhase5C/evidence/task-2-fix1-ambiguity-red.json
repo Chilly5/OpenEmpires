@@ -1,0 +1,36 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "d6fcab8ce0984dcf9c2ed90fe098274a",
+      "status": "failed",
+      "mode": "EditMode",
+      "started_unix_ms": 1791667847074,
+      "finished_unix_ms": 1791667847737,
+      "last_update_unix_ms": 1791667847737,
+      "progress": {
+        "completed": 1,
+        "total": 1,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791667847292,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.AmbiguousKnownFieldCorrection_ReasksForOneNodeAndFieldLocally",
+        "last_finished_unix_ms": 1791667847718,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.AmbiguousKnownFieldCorrection_ReasksForOneNodeAndFieldLocally",
+            "message": "  Expected: String containing \"node\"\r\n  But was:  \"Commander:\r\nLocal mock translator ready.\r\n\r\nPlayer:\r\nbuild two Mines\r\n\r\nCommander:\r\nPlease confirm the missing detail.\r\n\r\nPlayer:\r\nMill instead\r\n\r\nCommander:\r\nThat reply did not identify one safe graph detail. Please confirm the missing detail.\"\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

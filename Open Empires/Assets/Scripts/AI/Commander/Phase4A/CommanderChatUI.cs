@@ -45,6 +45,11 @@ namespace OpenEmpires
         private Button confirmStrategyButton;
         private Button dismissStrategyButton;
         private bool submitting;
+        private CancellationTokenSource activeSemanticRequest;
+        private int semanticRequestRevision;
+        // Local observation only. A read-only question never receives an executable ticket.
+        internal long? LastSubmittedSemanticRequestId { get; private set; }
+        private bool retainSubmittedDraft;
         private int runtimeGeneration;
         private StrategicAdaptationProposal pendingAdaptationProposal;
         private StrategicPipeline pendingStrategicPipeline;
@@ -103,10 +108,14 @@ namespace OpenEmpires
                 yield return null;
 
             GameBootstrapper bootstrap = GameBootstrapper.Instance;
-            Initialize(CommanderAIProviderFactory.CreateDefault(), bootstrap.Simulation,
+            bool offlineEvidenceFixture = ShouldStartCliOfflineFixture();
+            Initialize(offlineEvidenceFixture ? (ICommanderAIProvider)new OfflineEvidenceProvider()
+                : CommanderAIProviderFactory.CreateDefault(), bootstrap.Simulation,
                 bootstrap.Commander, bootstrap.CommanderDispatcher);
             if (bootstrap.CommanderStrategicPipeline != null)
                 InitializeStrategic(StrategicAIInterpreterFactory.Create(), bootstrap.CommanderStrategicPipeline);
+            if (offlineEvidenceFixture) StartCoroutine(CaptureOfflineFixtureOnce());
+            else if (ShouldStartCliEvidenceCapture()) StartCoroutine(CaptureStatusEvidenceOnce());
         }
 
         public void Initialize(ICommanderAIProvider provider, GameSimulation simulation,
@@ -120,6 +129,8 @@ namespace OpenEmpires
             if (semanticGoalManager != null && !semanticGoalManager.IsDisposed)
                 semanticGoalManager.CancelFutureSubscriptions();
             runtimeGeneration++;
+            CancelActiveSemanticRequest();
+            retainSubmittedDraft = false;
             currentRequestGoalId = 0;
             pendingClarification = null;
             ClearActionPlanPreview();
@@ -138,6 +149,7 @@ namespace OpenEmpires
             transcriptEntries.Clear();
             transcript.Clear();
             if (transcriptText != null) transcriptText.text = string.Empty;
+            RefreshChatBubbles();
             submitting = false;
             adapter = new CommanderAIIntentAdapter(provider, simulation, goalManager, dispatcher,
                 null, providerTimeout);
@@ -157,12 +169,6 @@ namespace OpenEmpires
             canvasRoot.SetActive(true);
             InitializeVoiceControls();
             InitializePresentation();
-            if (transcript.Length == 0)
-                AppendLine("Commander", provider is GeminiAIProvider
-                    ? "Gemini translator ready."
-                    : provider is OpenRouterCommanderProvider
-                        ? "OpenRouter Luna configured. Availability is checked on your first request."
-                        : "Local mock translator ready.", false);
         }
 
         public void InitializeStrategic(IStrategicAIInterpreter interpreter, StrategicPipeline pipeline,
@@ -180,6 +186,7 @@ namespace OpenEmpires
             if (strategicPipeline != null && !ReferenceEquals(strategicPipeline, pipeline))
                 ResetConversation();
             runtimeGeneration++;
+            CancelActiveSemanticRequest();
             ClearStrategicPreview();
             lifetime?.Cancel();
             lifetime?.Dispose();
@@ -218,19 +225,26 @@ namespace OpenEmpires
             if (trimmed.Length == 0) return null;
             if(CommanderTacticalStatusProjection.IsInformationQuestion(trimmed))
             {
-                currentRequestGoalId = 0;
+                long informationTurn = BeginPresentationTurn();
+                int informationGeneration = runtimeGeneration;
+                SetLatestRequestState("Interpreting", trimmed);
                 if(trimmed.Length>CommanderSemanticProviderRequest.MaximumPlayerMessageCharacters)
-                {AppendLine("Commander","That question is too long; please shorten it.",false);return null;}
+                {SetLatestRequestState("Failed", "Question is too long.");AppendLine("Commander","That question is too long; please shorten it.",false);return null;}
                 string informationForm=NormalizeExplanationWholeForm(trimmed);
                 if(informationForm=="strategy status"||informationForm=="current strategy status")
                 {
                     AppendLine("Player",trimmed,false);
                     AppendLine("Commander",strategicPipeline!=null&&Conversation!=null&&strategicPipeline.StrategicPlanner.PlayerId==Conversation.PlayerId
                         ?CurrentPlansStatus(strategicPipeline,Conversation.PlayerId):"Strategic Commander is not ready.",false);
+                    SetLatestRequestState("Completed", "Information answered; no gameplay order submitted.");
                     return null;
                 }
-                if(TryHandleExplanationQuery(trimmed))return null;
-                return await SubmitReadOnlyQuestionAsync(trimmed);
+                if(TryHandleExplanationQuery(trimmed))
+                {SetLatestRequestState("Completed", "Information answered; no gameplay order submitted.");return null;}
+                var informationResult = await SubmitReadOnlyQuestionAsync(trimmed, informationTurn);
+                if(this!=null&&informationGeneration==runtimeGeneration&&IsLatestPresentationTurn(informationTurn))
+                    SetLatestRequestState("Completed", "Information answered; no gameplay order submitted.");
+                return informationResult;
             }
             if (submitting)
             {
@@ -240,9 +254,17 @@ namespace OpenEmpires
                 if (pendingClarification == null) TryHandleStrategicLifecycle(trimmed);
                 return null;
             }
-            currentRequestGoalId = 0;
+            long presentationTurn = BeginPresentationTurn();
+            long submissionStartedAt = System.Diagnostics.Stopwatch.GetTimestamp();
             if (HandlePendingControl(trimmed)) return null;
             if (HandleActionPlanControl(trimmed)) return null;
+            if (pendingClarification == null
+                && (NormalizeWholeForm(trimmed) == "yes" || NormalizeWholeForm(trimmed) == "no"))
+            {
+                AppendLine("Player", trimmed);
+                AppendLine("Commander", "No Commander question or action plan is awaiting that answer.");
+                return null;
+            }
             ClearActionPlanPreview(); // An independent player turn supersedes an unapproved candidate.
             // Any new player turn dismisses an adaptation, while no-plan recommendations
             // retain the established preference/explanation query behavior.
@@ -263,7 +285,7 @@ namespace OpenEmpires
             }
 
             string wholeForm = NormalizeWholeForm(trimmed);
-            if (wholeForm == "clear memory")
+            if (wholeForm == "clear memory" || wholeForm == "reset commander")
             {
                 ResetConversation();
                 return null;
@@ -283,6 +305,8 @@ namespace OpenEmpires
             }
             if (submitting) return null;
             submitting = true;
+            retainSubmittedDraft = false;
+            SetLatestRequestState("Interpreting", trimmed);
             SetCommanderStatus("Commander is interpreting...", false);
             int generation = runtimeGeneration;
             IReadOnlyList<MemoryEntry> memoryAtTurnStart = Conversation.Snapshot();
@@ -292,12 +316,14 @@ namespace OpenEmpires
             LatestSubmission = null;
             UpdateStrategicControls();
             AppendLine("Player", trimmed);
+            int submittedDraftRevision = inputRevision;
             inputField.interactable = false;
             sendButton.interactable = false;
             try
             {
                 if (semanticProvider != null)
-                    return await SubmitSemanticTacticalAsync(trimmed, generation);
+                    return await SubmitSemanticTacticalAsync(trimmed, generation, presentationTurn,
+                        submissionStartedAt);
 
                 CommanderTextRoute route = intentRouter.Classify(trimmed);
                 if (route == CommanderTextRoute.Rejected)
@@ -365,8 +391,11 @@ namespace OpenEmpires
                         pendingStrategicIntentId = pending.IntentId;
                         pendingStrategicLastPlanId = sourceLastPlanId;
                         pendingStrategicHadNoPlan = sourceCount == 0;
+                        pendingStrategicPresentationTurn = presentationTurn;
                     }
                     LatestStrategicInterpretation = result;
+                    if (result.Success)
+                        PublishLatestRequestState(presentationTurn, "Awaiting approval", trimmed);
                     AppendLine("Commander", result.Success
                         ? StrategicPreview(result.Intent.ObjectiveType)
                             + (pendingAdaptationProposal == null
@@ -383,7 +412,8 @@ namespace OpenEmpires
                 if (this != null && generation == runtimeGeneration)
                 {
                     LatestSubmission = tacticalResult;
-                    TrackCurrentRequest(tacticalResult?.CommanderSubmission);
+                    if (IsLatestPresentationTurn(presentationTurn))
+                        TrackCurrentRequest(tacticalResult?.CommanderSubmission);
                     AppendLine("Commander", tacticalResult?.DisplayText ?? "The order failed safely.");
                 }
                 return tacticalResult;
@@ -395,7 +425,8 @@ namespace OpenEmpires
                     submitting = false;
                     inputField.interactable = true;
                     sendButton.interactable = true;
-                    inputField.text = string.Empty;
+                    if (!retainSubmittedDraft && inputRevision == submittedDraftRevision
+                        && inputField.text == trimmed) inputField.text = string.Empty;
                     UpdateStrategicControls();
                     UpdateVoiceUI();
                     if (commanderStatusText != null && commanderStatusText.text == "Commander is interpreting...")
@@ -405,7 +436,7 @@ namespace OpenEmpires
         }
 
         private async Task<CommanderAIChatSubmission> SubmitSemanticTacticalAsync(
-            string message, int generation)
+            string message, int generation, long presentationTurn, long submissionStartedAt)
         {
             ICommanderSemanticProvider provider = semanticProvider;
             CommanderPendingClarification capturedPending = pendingClarification;
@@ -430,21 +461,48 @@ namespace OpenEmpires
                 return null;
             }
 
+            int requestRevision = ++semanticRequestRevision;
+            CommanderTurnObservationStore.CommanderTurnObservation observation = null;
+            System.Diagnostics.Stopwatch admissionClock = null;
+            string observationStage = "rejected", observationOutcome = "Unknown", observationStatus = "Rejected";
             using (var request = CancellationTokenSource.CreateLinkedTokenSource(lifetime.Token))
             {
+                activeSemanticRequest = request;
                 request.CancelAfter(semanticProviderTimeout);
                 try
                 {
                     bool IsCurrentScope() => this != null && runtimeGeneration == generation
+                        && semanticRequestRevision == requestRevision
                         && !lifetime.IsCancellationRequested
                         && ReferenceEquals(semanticGoalManager, manager)
                         && ReferenceEquals(semanticSimulation, simulation)
                         && ReferenceEquals(semanticDispatcher, dispatcher)
                         && ReferenceEquals(semanticProvider, provider);
                     var requestTicket = capturedPending?.RequestTicket ?? manager.BeginSemanticRequest(message, generation, IsCurrentScope);
+                    LastSubmittedSemanticRequestId = requestTicket?.Id;
+                    if (requestTicket != null)
+                    {
+                        observation = LocalObservationStore.Begin(requestTicket.Id, presentationTurn,
+                            requestRevision, generation, provider is OpenRouterCommanderProvider openRouter
+                                && openRouter.UsesGateway ? "WebGateway" : "WindowsDirect");
+                        observation?.Timing("uiSubmissionMs", (System.Diagnostics.Stopwatch.GetTimestamp()
+                            - submissionStartedAt) * 1000 / System.Diagnostics.Stopwatch.Frequency);
+                    }
+                    if (capturedPending != null && (!ReferenceEquals(pendingClarification, capturedPending)
+                        || request.IsCancellationRequested || requestTicket == null
+                        || capturedPending.OriginalText != requestTicket.OriginalInput
+                        || !requestTicket.BindLocalContinuation(manager, generation, IsCurrentScope)))
+                    {
+                        pendingClarification = null;
+                        AppendLine("Commander", "The retained request is no longer current; please submit a new request.");
+                        return null;
+                    }
                     semanticStage = "context-projection";
+                    var contextClock = System.Diagnostics.Stopwatch.StartNew();
                     CommanderContext context = new CommanderContextBuilder().Build(simulation, manager,
-                        capturedPending?.OriginalText ?? message);
+                        message, capturedPending?.GraphDraft?.IsNameConfirmation == true ? null : capturedPending?.Serialize());
+                    contextClock.Stop();
+                    observation?.Timing("contextMs", contextClock.ElapsedMilliseconds);
                     if (context.PlayerId != owner)
                     {
                         AppendLine("Commander", "Commander ownership changed; ask again.");
@@ -453,14 +511,25 @@ namespace OpenEmpires
                     IReadOnlyList<CommanderSemanticMemoryEntry> semanticMemoryAtTurnStart =
                         Conversation.SemanticMemory.Snapshot();
                     TryObserveQuestionAnswer(NormalizeExplanationWholeForm(message), out string questionFacts);
-                    var providerRequest = new CommanderSemanticProviderRequest(message, context,
-                        semanticMemoryAtTurnStart, questionFacts, capturedPending);
-                    semanticStage = "provider-request";
-                    Debug.Log("[Commander] context=projected;provider-request=started");
                     CommanderSemanticResult localCount = LocalCountContinuation(capturedPending, message);
-                    Task<CommanderSemanticResult> translation = localCount == null
-                        ? RequestSemanticTranslation(provider, providerRequest, request.Token)
-                        : Task.FromResult(localCount);
+                    CommanderSemanticResult localGraph = LocalGraphContinuation(capturedPending, message);
+                    if (capturedPending?.GraphDraft != null && localGraph == null)
+                    {
+                        semanticStage = "graph-local-reask";
+                        ReaskPending(CommanderRequestGraphDraft.IsCorrectionUtterance(message)
+                            ? "Please identify one graph node and field to correct with a supported value."
+                            : "That reply did not identify one safe graph detail.");
+                        return null;
+                    }
+                    semanticStage = localCount != null || localGraph != null ? "local-continuation" : "provider-request";
+                    if (localCount == null && localGraph == null)
+                        Debug.Log("[Commander] context=projected;provider-request=started");
+                    var providerClock = System.Diagnostics.Stopwatch.StartNew();
+                    Task<CommanderSemanticResult> translation = localCount == null && localGraph == null
+                        ? RequestSemanticTranslation(provider, new CommanderSemanticProviderRequest(message, context,
+                            semanticMemoryAtTurnStart, questionFacts, capturedPending,
+                            null, false, observation), request.Token)
+                        : Task.FromResult(localCount ?? localGraph);
                     // A provider may ignore cancellation. Keep the host usable and observe
                     // any late fault without ever admitting its late response.
                     _ = translation.ContinueWith(task => { var ignored = task.Exception; },
@@ -471,55 +540,94 @@ namespace OpenEmpires
                         Task.Delay(semanticProviderTimeout, request.Token));
                     if (finished != translation)
                     {
+                        providerClock.Stop();
+                        observation?.Timing("providerMs", providerClock.ElapsedMilliseconds);
+                        observationStage = "timed-out";
+                        observationStatus = "Failed";
                         request.Cancel();
                         if (this != null && generation == runtimeGeneration
-                            && !lifetime.IsCancellationRequested)
-                            AppendLine("Commander", "Commander AI request timed out. Please try again or use offline commands.");
+                            && semanticRequestRevision == requestRevision && !lifetime.IsCancellationRequested)
+                        {
+                            retainSubmittedDraft = true;
+                            ReportRequestTimeout(presentationTurn, message);
+                        }
                         return null;
                     }
                     CommanderSemanticResult result = await translation;
+                    providerClock.Stop();
+                    observation?.Timing("providerMs", providerClock.ElapsedMilliseconds);
                     semanticStage = "semantic-response";
+                    if (result != null && result.IsValid)
+                    {
+                        observationOutcome = result.Outcome.ToString();
+                        observationStage = "parsed";
+                        observationStatus = result.Outcome == CommanderSemanticOutcome.Clarify
+                            ? "Waiting" : result.Outcome == CommanderSemanticOutcome.Answer
+                                ? "NotApplicable" : "Rejected";
+                    }
                     if (this == null || generation != runtimeGeneration
+                        || semanticRequestRevision != requestRevision
                         || !ReferenceEquals(semanticProvider, provider)
                         || !ReferenceEquals(semanticSimulation, simulation)
                         || !ReferenceEquals(semanticGoalManager, manager)
                         || !ReferenceEquals(semanticDispatcher, dispatcher)
                         || Conversation == null || Conversation.PlayerId != owner
                         || request.IsCancellationRequested || lifetime.IsCancellationRequested)
+                    {
+                        observationStage = "cancelled";
+                        observationStatus = "Cancelled";
                         return null;
+                    }
 
                     if (result == null || !result.IsValid)
                     {
+                        PublishLatestRequestState(presentationTurn, "Failed",
+                            provider is OpenRouterCommanderProvider && result != null
+                                ? result.SafeExplanation : "The response could not be safely interpreted.");
                         if (capturedPending != null) { ReaskPending("That reply could not safely fill the missing criteria."); return null; }
                         AppendLine("Commander", provider is OpenRouterCommanderProvider && result != null
                             ? result.SafeExplanation : "I couldn't understand that request safely.");
                         return null;
                     }
                     manager.TraceRequest(requestTicket, "interpreted-" + result.Outcome);
+                    admissionClock = System.Diagnostics.Stopwatch.StartNew();
+                    if (result.Outcome == CommanderSemanticOutcome.Request
+                        || result.Outcome == CommanderSemanticOutcome.DynamicPlan)
+                        observationStage = "admission";
                     if (!string.IsNullOrEmpty(questionFacts)
                         && (result.Outcome == CommanderSemanticOutcome.Request || result.Outcome == CommanderSemanticOutcome.DynamicPlan))
                     {
                         AppendLine("Commander", "You asked for information; no gameplay order was submitted.");
                         Debug.Log("[Commander] question=read-only;executable-response=rejected");
+                        observationStage = "rejected";
                         return null;
                     }
                     if (result.Outcome != CommanderSemanticOutcome.Request
                         && result.Outcome != CommanderSemanticOutcome.DynamicPlan)
                     {
-                        if (HandleClarificationResult(result, capturedPending, message, generation, requestTicket)) return null;
+                        if (HandleClarificationResult(result, capturedPending, message, generation, requestTicket,
+                            ReferenceEquals(result, localGraph)))
+                        { observationStatus = "Waiting"; return null; }
                         if (result.Outcome == CommanderSemanticOutcome.Clarify)
                             Conversation.SemanticMemory.RecordClarification(result.SafeExplanation);
+                        PublishLatestRequestState(presentationTurn, result.Outcome == CommanderSemanticOutcome.Clarify
+                            ? "Needs clarification" : "Completed", result.SafeExplanation);
                         AppendLine("Commander", string.IsNullOrWhiteSpace(result.SafeExplanation)
                             ? "Please clarify or try a supported Commander request."
                             : result.SafeExplanation);
                         return null;
                     }
-                    if (HandleClarificationResult(result, capturedPending, message, generation, requestTicket)) return null;
+                    if (HandleClarificationResult(result, capturedPending, message, generation, requestTicket,
+                        ReferenceEquals(result, localGraph)))
+                    { observationStatus = "Waiting"; return null; }
                     if (result.Outcome == CommanderSemanticOutcome.DynamicPlan)
                     {
                         semanticStage = "dynamic-admission";
-                        pendingActionPlan = manager.PrepareActionPlan(result, message, generation,
+                        pendingActionPlan = manager.PrepareActionPlan(result, requestTicket.OriginalInput, generation,
                             strategicPipeline, IsCurrentScope, requestTicket);
+                        observationStage = "awaiting-approval";
+                        observationStatus = "AwaitingApproval";
+                        PublishLatestRequestState(presentationTurn, "Awaiting approval", requestTicket.OriginalInput);
                         AppendLine("Commander", pendingActionPlan.Preview);
                         UpdateStrategicControls();
                         return null;
@@ -539,8 +647,11 @@ namespace OpenEmpires
                             AppendLine("Commander", graphReason);
                             return null;
                         }
-                        pendingActionPlan = manager.PrepareActionPlan(result, message, generation,
+                        pendingActionPlan = manager.PrepareActionPlan(result, requestTicket.OriginalInput, generation,
                             strategicPipeline, IsCurrentScope, requestTicket);
+                        observationStage = "awaiting-approval";
+                        observationStatus = "AwaitingApproval";
+                        PublishLatestRequestState(presentationTurn, "Awaiting approval", requestTicket.OriginalInput);
                         AppendLine("Commander", pendingActionPlan.Preview);
                         UpdateStrategicControls();
                         return null;
@@ -596,6 +707,10 @@ namespace OpenEmpires
                         pendingStrategicIntentId = pending.IntentId;
                         pendingStrategicLastPlanId = sourceLastPlanId;
                         pendingStrategicHadNoPlan = sourceCount == 0;
+                        pendingStrategicPresentationTurn = presentationTurn;
+                        PublishLatestRequestState(presentationTurn, "Awaiting approval", message);
+                        observationStage = "awaiting-approval";
+                        observationStatus = "AwaitingApproval";
                         AppendLine("Commander", StrategicPreview(pending.ObjectiveType)
                             + (pendingAdaptationProposal == null
                                 ? " No plan started. Approve normally, or explicitly confirm as your command (may replace AI plans, never direct-player plans)."
@@ -626,29 +741,64 @@ namespace OpenEmpires
                     var chatSubmission = new CommanderAIChatSubmission(providerResult,
                         interpretation, submission, display);
                     LatestSubmission = chatSubmission;
+                    observationStage = submission?.CreatedGoal == true ? "admitted" : "rejected";
+                    observationStatus = submission?.CreatedGoal == true ? "Accepted" : "Failed";
+                    PublishLatestRequestState(presentationTurn, submission?.CreatedGoal == true ? "Accepted" : "Failed", display);
                     Debug.Log("[Commander] intent=admitted;goal-submitted=" + (submission?.CreatedGoal == true));
                     if (submission?.CreatedGoal == true)
                         RecordAcceptedSemanticNodes(result.Nodes);
-                    TrackCurrentRequest(submission);
+                    if (IsLatestPresentationTurn(presentationTurn)) TrackCurrentRequest(submission);
                     AppendLine("Commander", display);
                     return chatSubmission;
                 }
                 catch (System.OperationCanceledException)
                 {
+                    observationStage = request.IsCancellationRequested ? "timed-out" : "cancelled";
+                    observationStatus = "Failed";
                     if (this != null && generation == runtimeGeneration
-                        && !lifetime.IsCancellationRequested)
-                        AppendLine("Commander", "Commander AI request timed out. Please try again or use offline commands.");
+                        && semanticRequestRevision == requestRevision && !lifetime.IsCancellationRequested)
+                    {
+                        retainSubmittedDraft = true;
+                        ReportRequestTimeout(presentationTurn, message);
+                    }
                     return null;
                 }
                 catch (System.Exception error)
                 {
+                    observationStage = "rejected";
+                    observationStatus = "Failed";
                     Debug.Log("[Commander] failed-stage=" + semanticStage + ";exception=" + error.GetType().Name);
                     if (this != null && generation == runtimeGeneration
-                        && !lifetime.IsCancellationRequested)
-                        AppendLine("Commander", "Commander translation failed safely; no order was submitted.");
+                        && semanticRequestRevision == requestRevision
+                        && !request.IsCancellationRequested && !lifetime.IsCancellationRequested)
+                    {
+                        PublishLatestRequestState(presentationTurn, "Failed", "Translation failed safely; no order was submitted.");
+                        AppendLine("Commander", IsLatestPresentationTurn(presentationTurn)
+                            ? "Commander translation failed safely; no order was submitted."
+                            : "Earlier request failed safely; no order was submitted.");
+                    }
                     return null;
                 }
+                finally
+                {
+                    if (admissionClock != null)
+                    {
+                        admissionClock.Stop();
+                        observation?.Timing("admissionMs", admissionClock.ElapsedMilliseconds);
+                    }
+                    observation?.Mark(observationStage, observationOutcome, observationStatus);
+                    if (ReferenceEquals(activeSemanticRequest, request)) activeSemanticRequest = null;
+                }
             }
+        }
+
+        private void ReportRequestTimeout(long presentationTurn, string message)
+        {
+            bool latest = IsLatestPresentationTurn(presentationTurn);
+            OfferRequestRecovery(presentationTurn, message, "Timed out — no order was submitted.");
+            AppendLine("Commander", latest
+                ? "That request timed out. No order was submitted. Choose Retry, Edit, or Cancel."
+                : "An earlier order timed out. No order was submitted. To try it again, enter that order in the composer and press Send.");
         }
 
         private void RecordAcceptedSemanticNodes(IReadOnlyList<CommanderSemanticNode> nodes)
@@ -723,6 +873,7 @@ namespace OpenEmpires
 
         private void ClearStrategicPreview()
         {
+            pendingStrategicPresentationTurn = 0;
             pendingAdaptationProposal = null;
             pendingStrategicPipeline = null;
             pendingStrategicGeneration = 0;
@@ -768,6 +919,7 @@ namespace OpenEmpires
             if (pendingAdaptationProposal != null && !confirmed) return null;
             StrategicIntent intent = confirmed ? strategicBridge.Confirm(id) : strategicBridge.TakeRecommendation(id);
             if (intent == null) return null;
+            long strategicPresentationTurn = pendingStrategicPresentationTurn;
             ClearStrategicPreview();
             pendingExplanationIntentId = intent.IntentId;
             pendingExplanationObjective = intent.ObjectiveType.ToString();
@@ -783,19 +935,25 @@ namespace OpenEmpires
                 pendingExplanationObjective = null;
             }
             AppendLine("Commander", LatestStrategicDecision.Outcome);
+            PublishLatestRequestState(strategicPresentationTurn,
+                LatestStrategicDecision.Submission?.CreatedPlan == true ? "Accepted" : "Failed",
+                LatestStrategicDecision.Outcome);
             UpdateStrategicControls();
             return LatestStrategicDecision;
         }
 
         public void DismissStrategicRecommendation()
         {
+            long strategicPresentationTurn = pendingStrategicPresentationTurn;
             strategicBridge?.ClearPending();
             ClearStrategicPreview();
+            PublishLatestRequestState(strategicPresentationTurn,"Cancelled","Strategic proposal dismissed; nothing started.");
             UpdateStrategicControls();
         }
 
         public void ResetConversation()
         {
+            CancelActiveSemanticRequest();
             if (semanticGoalManager != null && !semanticGoalManager.IsDisposed)
                 semanticGoalManager.CancelFutureSubscriptions();
             ClearActionPlanPreview();
@@ -807,10 +965,12 @@ namespace OpenEmpires
             lifetime?.Dispose();
             lifetime = new CancellationTokenSource();
             Conversation.Reset();
+            SetLatestRequestState("Ready", string.Empty);
             adapter?.ResetHistory();
             transcript.Clear();
             transcriptEntries.Clear();
             if (transcriptText != null) transcriptText.text = string.Empty;
+            RefreshChatBubbles();
             strategicBridge?.Reset();
             ResetAdvisories();
             LatestStrategicInterpretation = null;
@@ -843,8 +1003,13 @@ namespace OpenEmpires
                 var label = approveStrategyButton.GetComponentInChildren<TMP_Text>();
                 if (label != null) label.text = actionAvailable ? "Approve plan" : "Approve strategy";
             }
-            if (strategicApprovalRow != null) strategicApprovalRow.SetActive(actionAvailable || strategicBridge?.PendingIntent != null);
+            // The dock approval card is the sole visible decision row for both
+            // candidates and strategies; the buttons above retain their existing
+            // authority methods but must not form a second visible stage.
+            if (strategicApprovalRow != null) strategicApprovalRow.SetActive(false);
             UpdateStrategicHostControls();
+            if (strategicBridge?.PendingIntent != null && !tasksVisible && strategicHostRow != null)
+                strategicHostRow.SetActive(false);
         }
 
         public async Task<CommanderAIChatSubmission> SubmitCurrentInputAsync()
@@ -859,7 +1024,7 @@ namespace OpenEmpires
             }
             if (voiceController?.State == CommanderVoiceState.Preview) voiceController.Cancel();
             CommanderAIChatSubmission result = await SubmitMessageAsync(text);
-            if (!submitting && InputText == text) InputText = string.Empty;
+            if (!submitting && !retainSubmittedDraft && InputText == text) InputText = string.Empty;
             return result;
         }
 
@@ -885,6 +1050,7 @@ namespace OpenEmpires
                 if (i > 0) transcript.AppendLine().AppendLine();
                 transcript.Append(transcriptEntries[i]);
             }
+            RefreshChatBubbles();
             if (transcriptText != null)
             {
                 transcriptText.text = transcript.ToString();
@@ -950,6 +1116,7 @@ namespace OpenEmpires
 
         private void OnDestroy()
         {
+            CancelActiveSemanticRequest();
             if (destroyCleanupComplete) return;
             destroyCleanupComplete = true;
             pendingClarification = null;
@@ -996,7 +1163,7 @@ namespace OpenEmpires
             RectTransform panelRect = panel.GetComponent<RectTransform>();
             panelRect.anchorMin = panelRect.anchorMax = new Vector2(0, 1);
             panelRect.pivot = new Vector2(0, 1);
-            panelRect.anchoredPosition = new Vector2(280, -72);
+            panelRect.anchoredPosition = new Vector2(350, -16);
             panelRect.sizeDelta = new Vector2(460, 540);
             commanderPanel = panelRect;
             Image panelImage = panel.AddComponent<Image>();
@@ -1182,12 +1349,21 @@ namespace OpenEmpires
         {
             if (commanderPanel == null || canvasRoot == null) return;
             var canvasRect = canvasRoot.GetComponent<RectTransform>();
-            commanderPanel.sizeDelta = new Vector2(Mathf.Min(460, Mathf.Max(320, canvasRect.rect.width - 32)),
-                Mathf.Min(540, Mathf.Max(400, canvasRect.rect.height - 96)));
-            // The existing player-list HUD ends at267 reference pixels in local
-            // play. Keep it visible, without pushing Commander off the right edge.
-            commanderPanel.anchoredPosition = new Vector2(
-                Mathf.Clamp(canvasRect.rect.width-commanderPanel.sizeDelta.x-16,16,280),-72);
+            float scale = Mathf.Max(.01f, canvasRoot.GetComponent<Canvas>().scaleFactor);
+            Rect safe = Screen.safeArea;
+            float left = safe.width > 0 ? safe.xMin / scale : 0;
+            float right = safe.width > 0 ? safe.xMax / scale : canvasRect.rect.width;
+            float top = safe.height > 0 ? safe.yMax / scale : canvasRect.rect.height;
+            float bottom = safe.height > 0 ? safe.yMin / scale : 0;
+            // Preserve the real player-list HUD at the left; a zoomed Editor
+            // preview is not a reason to translate every HUD element.
+            float x = Mathf.Max(left + 16, 350);
+            float width = Mathf.Clamp(Mathf.Min(420, right - x - 16), 320, 460);
+            if (x + width + 16 > right) x = Mathf.Max(left + 8, right - width - 16);
+            float yInset = 16;
+            float height = Mathf.Clamp(top - bottom - yInset - 16, 320, 620);
+            commanderPanel.sizeDelta = new Vector2(width, height);
+            commanderPanel.anchoredPosition = new Vector2(x, -(canvasRect.rect.height - top + yInset));
         }
 
         private Button StrategyButton(Transform parent, string label, float left, float width,

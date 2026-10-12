@@ -1,0 +1,59 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "0579f30447e8480c9aba8bff557d5920",
+    "status": "succeeded",
+    "mode": "PlayMode",
+    "started_unix_ms": 1791760423725,
+    "finished_unix_ms": 1791760436762,
+    "last_update_unix_ms": 1791760436762,
+    "progress": {
+      "completed": 2,
+      "total": 2,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791760436262,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.StrategicPreview_ShowsValidatedMilestonesAndDirectSingleStageDecisions",
+      "last_finished_unix_ms": 1791760436706,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": {
+      "mode": "PlayMode",
+      "summary": {
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0,
+        "durationSeconds": 1.2017989,
+        "resultState": "Passed"
+      },
+      "results": [
+        {
+          "name": "StrategicApprovalButtons_SameFrameCannotApproveAndConfirm",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.StrategicApprovalButtons_SameFrameCannotApproveAndConfirm",
+          "state": "Passed",
+          "durationSeconds": 0.7091408,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n"
+        },
+        {
+          "name": "StrategicPreview_ShowsValidatedMilestonesAndDirectSingleStageDecisions",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.StrategicPreview_ShowsValidatedMilestonesAndDirectSingleStageDecisions",
+          "state": "Passed",
+          "durationSeconds": 0.4439063,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n"
+        }
+      ]
+    }
+  },
+  "hint": null
+}

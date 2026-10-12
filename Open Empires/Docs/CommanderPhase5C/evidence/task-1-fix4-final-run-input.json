@@ -1,0 +1,60 @@
+{
+  "args": {
+    "mode": "EditMode",
+    "test_names": [
+      "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_UnrelatedProposalKeepsOriginalDraftBlockedLocally",
+      "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_ExactNamesAndEstablishedAliasesDoNotRequireConfirmation",
+      "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_ReadOnlyAnswerDoesNotCreatePendingAction",
+      "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_PrunedModelHintsStillRequireGameOwnedConfirmation",
+      "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_ConfirmedCrossCivilizationUnitStillFailsNormalAdmission",
+      "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_OriginalTicketRejectsForeignResetAndReplay",
+      "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_LocalConfirmationRetainsFullStrictPayloadIncludingIndependentResourceAmount",
+      "OpenEmpires.Tests.CommanderEconomyClarificationTests.MineProposal_YesUsesOriginalRequestAndNoSecondTranslation",
+      "OpenEmpires.Tests.CommanderEconomyClarificationTests.HouseThenNextFive_FromTreesKeepsGraphAndNeedsSeparateApproval",
+      "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.OrdinaryRequests_KeepCompleteModelPayloadBelowConservativeInputBudget",
+      "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.Repair_RetainsBothAttemptEstimatesAndUsage",
+      "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.CompletedAttemptSnapshot_RemainsImmutableAcrossLaterRequests",
+      "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.OlderCancelledLateAttempt_DoesNotOverwriteNewerRequestMetrics",
+      "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.Timeout_ReturnsSafeRejectionWithoutRetry"
+    ],
+    "init_timeout": 120000,
+    "include_details": true,
+    "include_failed_tests": true
+  },
+  "compile": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"success\":true,\"message\":\"Code executed successfully.\",\"data\":{\"result\":{\"path\":\"D:/unity_projects/OpenEmpires/Open Empires/Assets\",\"compiling\":false,\"updating\":false,\"loaded\":true},\"compiler\":\"codedom\"}}"
+      }
+    ],
+    "structuredContent": {
+      "success": true,
+      "message": "Code executed successfully.",
+      "data": {
+        "result": {
+          "path": "D:/unity_projects/OpenEmpires/Open Empires/Assets",
+          "compiling": false,
+          "updating": false,
+          "loaded": true
+        },
+        "compiler": "codedom"
+      }
+    },
+    "isError": false
+  },
+  "console": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"success\":true,\"message\":\"Retrieved 0 log entries.\",\"data\":[]}"
+      }
+    ],
+    "structuredContent": {
+      "success": true,
+      "message": "Retrieved 0 log entries.",
+      "data": []
+    },
+    "isError": false
+  }
+}

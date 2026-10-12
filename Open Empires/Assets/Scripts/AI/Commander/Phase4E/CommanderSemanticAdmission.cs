@@ -87,6 +87,7 @@ namespace OpenEmpires
 
                 case CommanderSemanticNodeType.MoveUnits:
                 case CommanderSemanticNodeType.ScoutArea:
+                case CommanderSemanticNodeType.DiscoverEnemy:
                 case CommanderSemanticNodeType.PatrolArea:
                 case CommanderSemanticNodeType.SetRallyPoint:
                 case CommanderSemanticNodeType.AttackTarget:
@@ -94,6 +95,8 @@ namespace OpenEmpires
                 case CommanderSemanticNodeType.RetreatUnits:
                 case CommanderSemanticNodeType.RepairTarget:
                 case CommanderSemanticNodeType.ResearchTechnology:
+                case CommanderSemanticNodeType.GarrisonUnits:
+                case CommanderSemanticNodeType.UngarrisonBuilding:
                     if (!node.UnitSelector.HasValue || !node.LocationSelector.HasValue)
                         return false;
                     if (node.Type == CommanderSemanticNodeType.ResearchTechnology && !node.Technology.HasValue)
@@ -101,7 +104,8 @@ namespace OpenEmpires
                     if (node.TargetSelector.HasValue && !node.TargetSelector.Value.IsCompatible(ToCapabilityAction(node.Type),
                         ToLocationSelector(node.LocationSelector.Value))) return false;
                     intent = new CapabilityActionIntent(context.PlayerId,
-                        ToCapabilityAction(node.Type), ToUnitSelector(node.UnitSelector.Value, node.UnitType, node.Count),
+                        ToCapabilityAction(node.Type), ToUnitSelector(node.UnitSelector.Value, node.UnitType, node.Count,
+                            node.AllMatchingUnits),
                         new CommanderLocationSelector(ToLocationSelector(node.LocationSelector.Value),
                             node.ResourceType), node.Technology, node.BuildingType,
                         node.Constraints, node.TargetSelector);
@@ -132,7 +136,7 @@ namespace OpenEmpires
         }
 
         private static CommanderUnitSelector ToUnitSelector(CommanderSemanticUnitSelector selector,
-            int? unitType, int? count)
+            int? unitType, int? count, bool allMatching = false)
         {
             CommanderUnitSelectorKind kind;
             switch (selector)
@@ -145,7 +149,8 @@ namespace OpenEmpires
                 case CommanderSemanticUnitSelector.DamagedMilitary: kind = CommanderUnitSelectorKind.DamagedMilitary; break;
                 default: kind = CommanderUnitSelectorKind.Military; break;
             }
-            return new CommanderUnitSelector(kind, Math.Max(1, count ?? 1), unitType ?? -1);
+            return new CommanderUnitSelector(kind, Math.Max(1, count ?? 1), unitType ?? -1,
+                allMatching);
         }
 
         private static CommanderLocationSelectorKind ToLocationSelector(CommanderSemanticLocationSelector selector)

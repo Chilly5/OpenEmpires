@@ -1,0 +1,104 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "a5e4415243e0461a964a8a0533ed2f46",
+    "status": "succeeded",
+    "mode": "EditMode",
+    "started_unix_ms": 1791706619666,
+    "finished_unix_ms": 1791706626762,
+    "last_update_unix_ms": 1791706626762,
+    "progress": {
+      "completed": 7,
+      "total": 7,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791706626254,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5AProviderContractTests.SharedWorkerComposition_PromptIncludesOneSelectionAndStrictExample",
+      "last_finished_unix_ms": 1791706626507,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": {
+      "mode": "EditMode",
+      "summary": {
+        "total": 7,
+        "passed": 7,
+        "failed": 0,
+        "skipped": 0,
+        "durationSeconds": 2.3762227,
+        "resultState": "Passed"
+      },
+      "results": [
+        {
+          "name": "DetachedContext_ExcludesIdsCoordinatesAndEnemyData",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.DetachedContext_ExcludesIdsCoordinatesAndEnemyData",
+          "state": "Passed",
+          "durationSeconds": 0.3242212,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-11T08:17:04.9066888Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=5\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=87;finish=stop\r\n[CommanderProvider] semantic=Request;nodes=1\r\n"
+        },
+        {
+          "name": "Prompt_ProvidesOnlyParserValidNonRequestOutcomes",
+          "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.Prompt_ProvidesOnlyParserValidNonRequestOutcomes",
+          "state": "Passed",
+          "durationSeconds": 0.2175321,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-11T08:17:05.1176529Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=4\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=87;finish=stop\r\n[CommanderProvider] semantic=Request;nodes=1\r\n"
+        },
+        {
+          "name": "DynamicFarm_UsesRegistryVocabularyAndReturnsTypedPlan",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AProviderContractTests.DynamicFarm_UsesRegistryVocabularyAndReturnsTypedPlan",
+          "state": "Passed",
+          "durationSeconds": 0.2788052,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-11T08:17:05.4545754Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=11\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=160;finish=stop\r\n[CommanderProvider] semantic=DynamicPlan;nodes=0\r\n"
+        },
+        {
+          "name": "NumericStringCount_RequestsOneSchemaOnlyRepairAndAcceptsExactTemplate",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AProviderContractTests.NumericStringCount_RequestsOneSchemaOnlyRepairAndAcceptsExactTemplate",
+          "state": "Passed",
+          "durationSeconds": 0.2505849,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-11T08:17:05.7269934Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=3\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=162;finish=stop\r\n[CommanderProvider] schema=field=$;code=invalid-schema;stage=envelope;node=-1\r\n[CommanderProvider] utc=2026-10-11T08:17:05.7413187Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=4\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=160;finish=stop\r\n[CommanderProvider] semantic=DynamicPlan;nodes=0\r\n"
+        },
+        {
+          "name": "RepeatedPlacementAndExactProducers_PromptIncludesStrictDynamicExample",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AProviderContractTests.RepeatedPlacementAndExactProducers_PromptIncludesStrictDynamicExample",
+          "state": "Passed",
+          "durationSeconds": 0.2366671,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-11T08:17:05.9750175Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=4\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=87;finish=stop\r\n[CommanderProvider] semantic=Request;nodes=1\r\n"
+        },
+        {
+          "name": "SchemaRepairChangingEffect_IsRejectedWithoutThirdCall",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AProviderContractTests.SchemaRepairChangingEffect_IsRejectedWithoutThirdCall",
+          "state": "Passed",
+          "durationSeconds": 0.2566066,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-11T08:17:06.2070018Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=4\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=162;finish=stop\r\n[CommanderProvider] schema=field=$;code=invalid-schema;stage=envelope;node=-1\r\n[CommanderProvider] utc=2026-10-11T08:17:06.2246629Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=8\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=160;finish=stop\r\n[CommanderProvider] semantic=invalid;nodes=0\r\n"
+        },
+        {
+          "name": "SharedWorkerComposition_PromptIncludesOneSelectionAndStrictExample",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AProviderContractTests.SharedWorkerComposition_PromptIncludesOneSelectionAndStrictExample",
+          "state": "Passed",
+          "durationSeconds": 0.2531239,
+          "message": null,
+          "stackTrace": null,
+          "output": "[CommanderProvider] utc=2026-10-11T08:17:06.4884848Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=4\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=87;finish=stop\r\n[CommanderProvider] semantic=Request;nodes=1\r\n"
+        }
+      ]
+    }
+  },
+  "hint": null
+}

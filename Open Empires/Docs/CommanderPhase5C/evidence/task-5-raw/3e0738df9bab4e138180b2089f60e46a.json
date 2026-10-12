@@ -1,0 +1,77 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "3e0738df9bab4e138180b2089f60e46a",
+    "status": "succeeded",
+    "mode": "PlayMode",
+    "started_unix_ms": 1791759547807,
+    "finished_unix_ms": 1791759561647,
+    "last_update_unix_ms": 1791759561647,
+    "progress": {
+      "completed": 4,
+      "total": 4,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791759561150,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.OlderProviderFault_CannotReplaceNewerInformationAnswer",
+      "last_finished_unix_ms": 1791759561587,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": {
+      "mode": "PlayMode",
+      "summary": {
+        "total": 4,
+        "passed": 4,
+        "failed": 0,
+        "skipped": 0,
+        "durationSeconds": 2.1390513,
+        "resultState": "Passed"
+      },
+      "results": [
+        {
+          "name": "CancelledRequest_LateProviderFaultCannotReplaceCancelledStatus",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.CancelledRequest_LateProviderFaultCannotReplaceCancelledStatus",
+          "state": "Passed",
+          "durationSeconds": 0.6171065,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] failed-stage=provider-request;exception=InvalidOperationException\r\n"
+        },
+        {
+          "name": "EarlierAsyncInformationAnswer_IsIdentifiedAfterNewerQuestion",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.EarlierAsyncInformationAnswer_IsIdentifiedAfterNewerQuestion",
+          "state": "Passed",
+          "durationSeconds": 0.4377582,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "NewerInformationQuestion_KeepsLatestStatusWhileOlderOrderGetsOwnTask",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.NewerInformationQuestion_KeepsLatestStatusWhileOlderOrderGetsOwnTask",
+          "state": "Passed",
+          "durationSeconds": 0.5829526,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: EnsureUnitCount\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+        },
+        {
+          "name": "OlderProviderFault_CannotReplaceNewerInformationAnswer",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.OlderProviderFault_CannotReplaceNewerInformationAnswer",
+          "state": "Passed",
+          "durationSeconds": 0.4360569,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] failed-stage=provider-request;exception=InvalidOperationException\r\n"
+        }
+      ]
+    }
+  },
+  "hint": null
+}

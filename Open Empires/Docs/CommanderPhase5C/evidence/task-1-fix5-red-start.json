@@ -1,0 +1,38 @@
+{
+  "args": {
+    "mode": "EditMode",
+    "init_timeout": 120000,
+    "include_details": true,
+    "include_failed_tests": true,
+    "test_names": [
+      "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_PartialCountRetainsOriginalNameRequirement",
+      "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_PartialCompoundCountAndSourceStillNeedNameAndGameplayApproval",
+      "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_ExplicitNameSlotIsNotAskedAgainAfterCount",
+      "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_LegacyWorkerDraftCannotDropUnrepresentableName"
+    ]
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"success\":true,\"message\":\"Test job started.\",\"error\":null,\"data\":{\"job_id\":\"2c784bc9f77641a79f71fa83c8356850\",\"status\":\"running\",\"mode\":\"EditMode\",\"include_details\":true,\"include_failed_tests\":true},\"hint\":null}"
+      }
+    ],
+    "structuredContent": {
+      "result": {
+        "success": true,
+        "message": "Test job started.",
+        "error": null,
+        "data": {
+          "job_id": "2c784bc9f77641a79f71fa83c8356850",
+          "status": "running",
+          "mode": "EditMode",
+          "include_details": true,
+          "include_failed_tests": true
+        },
+        "hint": null
+      }
+    },
+    "isError": false
+  }
+}

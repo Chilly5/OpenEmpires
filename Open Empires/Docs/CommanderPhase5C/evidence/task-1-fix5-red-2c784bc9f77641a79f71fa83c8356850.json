@@ -1,0 +1,57 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"success\":true,\"message\":\"Test job status retrieved.\",\"error\":null,\"data\":{\"job_id\":\"2c784bc9f77641a79f71fa83c8356850\",\"status\":\"failed\",\"mode\":\"EditMode\",\"started_unix_ms\":1791710236630,\"finished_unix_ms\":1791710264341,\"last_update_unix_ms\":1791710264341,\"progress\":{\"completed\":7,\"total\":7,\"current_test_full_name\":null,\"current_test_started_unix_ms\":1791710261666,\"last_finished_test_full_name\":\"OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_PartialCountRetainsOriginalNameRequirement(\\\"Longbowman\\\",False)\",\"last_finished_unix_ms\":1791710263876,\"stuck_suspected\":false,\"editor_is_focused\":false,\"blocked_reason\":null,\"failures_so_far\":[{\"full_name\":\"OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_LegacyWorkerDraftCannotDropUnrepresentableName\",\"message\":\"  Legacy count draft cannot omit the hinted action and execute.\\r\\n  Expected: <empty>\\r\\n  But was:  < <OpenEmpires.AllocateWorkersGoal> >\\r\\n\"},{\"full_name\":\"OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_PartialCompoundCountAndSourceStillNeedNameAndGameplayApproval(False)\",\"message\":\"  Slot completion is not name confirmation.\\r\\n  Expected: null\\r\\n  But was:  <OpenEmpires.CommanderActionPlanCandidate>\\r\\n\"},{\"full_name\":\"OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_PartialCompoundCountAndSourceStillNeedNameAndGameplayApproval(True)\",\"message\":\"  Slot completion is not name confirmation.\\r\\n  Expected: null\\r\\n  But was:  <OpenEmpires.CommanderActionPlanCandidate>\\r\\n\"},{\"full_name\":\"OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_PartialCountRetainsOriginalNameRequirement(\\\"longbowmna\\\",True)\",\"message\":\"  Count must not confirm the name.\\r\\n  Expected: <empty>\\r\\n  But was:  < <OpenEmpires.EnsureUnitCountGoal> >\\r\\n\"}],\"failures_capped\":false},\"error\":null,\"result\":null},\"hint\":null}"
+    }
+  ],
+  "structuredContent": {
+    "result": {
+      "success": true,
+      "message": "Test job status retrieved.",
+      "error": null,
+      "data": {
+        "job_id": "2c784bc9f77641a79f71fa83c8356850",
+        "status": "failed",
+        "mode": "EditMode",
+        "started_unix_ms": 1791710236630,
+        "finished_unix_ms": 1791710264341,
+        "last_update_unix_ms": 1791710264341,
+        "progress": {
+          "completed": 7,
+          "total": 7,
+          "current_test_full_name": null,
+          "current_test_started_unix_ms": 1791710261666,
+          "last_finished_test_full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_PartialCountRetainsOriginalNameRequirement(\"Longbowman\",False)",
+          "last_finished_unix_ms": 1791710263876,
+          "stuck_suspected": false,
+          "editor_is_focused": false,
+          "blocked_reason": null,
+          "failures_so_far": [
+            {
+              "full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_LegacyWorkerDraftCannotDropUnrepresentableName",
+              "message": "  Legacy count draft cannot omit the hinted action and execute.\r\n  Expected: <empty>\r\n  But was:  < <OpenEmpires.AllocateWorkersGoal> >\r\n"
+            },
+            {
+              "full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_PartialCompoundCountAndSourceStillNeedNameAndGameplayApproval(False)",
+              "message": "  Slot completion is not name confirmation.\r\n  Expected: null\r\n  But was:  <OpenEmpires.CommanderActionPlanCandidate>\r\n"
+            },
+            {
+              "full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_PartialCompoundCountAndSourceStillNeedNameAndGameplayApproval(True)",
+              "message": "  Slot completion is not name confirmation.\r\n  Expected: null\r\n  But was:  <OpenEmpires.CommanderActionPlanCandidate>\r\n"
+            },
+            {
+              "full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_PartialCountRetainsOriginalNameRequirement(\"longbowmna\",True)",
+              "message": "  Count must not confirm the name.\r\n  Expected: <empty>\r\n  But was:  < <OpenEmpires.EnsureUnitCountGoal> >\r\n"
+            }
+          ],
+          "failures_capped": false
+        },
+        "error": null,
+        "result": null
+      },
+      "hint": null
+    }
+  },
+  "isError": false
+}

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="7" result="Passed" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 12:44:19Z" end-time="2026-10-12 12:44:26Z" duration="7.975291">
+  <test-suite type="TestSuite" id="1312" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1811" result="Passed" start-time="2026-10-12 12:44:19Z" end-time="2026-10-12 12:44:26Z" duration="7.975291" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="3402" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1811" result="Passed" start-time="2026-10-12 12:44:19Z" end-time="2026-10-12 12:44:26Z" duration="7.876737" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="25412" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="3403" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1811" result="Passed" start-time="2026-10-12 12:44:19Z" end-time="2026-10-12 12:44:26Z" duration="7.767814" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="3404" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1811" result="Passed" start-time="2026-10-12 12:44:19Z" end-time="2026-10-12 12:44:26Z" duration="7.660762" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1314" name="CommanderEconomyClarificationTests" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" testcasecount="107" result="Passed" start-time="2026-10-12 12:44:19Z" end-time="2026-10-12 12:44:26Z" duration="7.471982" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderEconomyClarification" />
+            </properties>
+            <test-case id="1338" name="HouseThenNextFive_FromTreesKeepsGraphAndNeedsSeparateApproval" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.HouseThenNextFive_FromTreesKeepsGraphAndNeedsSeparateApproval" methodname="HouseThenNextFive_FromTreesKeepsGraphAndNeedsSeparateApproval" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="2118676357" result="Passed" start-time="2026-10-12 12:44:19Z" end-time="2026-10-12 12:44:20Z" duration="1.295793" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: WatchFutureUnits
+]]></output>
+            </test-case>
+            <test-case id="1418" name="InvalidAllocationSchema_RejectsBoundsFieldsAndIncompatibleSources" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.InvalidAllocationSchema_RejectsBoundsFieldsAndIncompatibleSources" methodname="InvalidAllocationSchema_RejectsBoundsFieldsAndIncompatibleSources" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1499557428" result="Passed" start-time="2026-10-12 12:44:20Z" end-time="2026-10-12 12:44:20Z" duration="0.022329" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1337" name="MineProposal_YesUsesOriginalRequestAndNoSecondTranslation" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.MineProposal_YesUsesOriginalRequestAndNoSecondTranslation" methodname="MineProposal_YesUsesOriginalRequestAndNoSecondTranslation" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1209249962" result="Passed" start-time="2026-10-12 12:44:20Z" end-time="2026-10-12 12:44:22Z" duration="1.247745" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: BuildStructure
+[Commander] intent=admitted;goal-submitted=True
+]]></output>
+            </test-case>
+            <test-case id="1319" name="QuantityModes_KeepBaselineTransferAndAllMatchingDistinct" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.QuantityModes_KeepBaselineTransferAndAllMatchingDistinct" methodname="QuantityModes_KeepBaselineTransferAndAllMatchingDistinct" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="822939420" result="Passed" start-time="2026-10-12 12:44:22Z" end-time="2026-10-12 12:44:26Z" duration="4.718344" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[Commander] Goal #1: status=Executing owned=0 queued=0; Waiting for the issued worker command to be processed.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[Commander] Goal #1: status=Executing owned=0 queued=0; Waiting for the issued worker command to be processed.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Completed owned=6 queued=0; The requested worker total is already satisfied.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[Commander] Goal #1: status=Executing owned=0 queued=0; Waiting for the issued worker command to be processed.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No eligible workers matched the one-time snapshot.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Blocked owned=0 queued=0; The matching worker snapshot exceeds the allowed bound.
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=0 PRE-CMD=52102DCE cmds=1
+[SyncCheck] tick=0 POST-CMD=7AB53AD4
+[SyncCheck] tick=0 PRE-AI-EXEC=7AB53AD4 aiCmds=0
+[SyncCheck] INIT tick=1 checksum=DC446167 systemDetail=7AB53AD4,1C035B56,1C035B56,1C035B56,1C035B56,1C035B56,1C035B56,F98DE140,F98DE140
+[Commander] Goal #1: status=Completed owned=3 queued=0; The 3 selected workers have matching assignments.
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="3314" name="CommanderPhase5CProviderBudgetTests" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" testcasecount="52" result="Passed" start-time="2026-10-12 12:44:26Z" end-time="2026-10-12 12:44:26Z" duration="0.077887" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5C" />
+            </properties>
+            <test-suite type="ParameterizedMethod" id="3318" name="OrdinaryRequest_EmitsDetailedTypedJsonContractWithinBoundedPayload" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.OrdinaryRequest_EmitsDetailedTypedJsonContractWithinBoundedPayload" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-12 12:44:26Z" end-time="2026-10-12 12:44:26Z" duration="0.072035" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="3315" name="OrdinaryRequest_EmitsDetailedTypedJsonContractWithinBoundedPayload(&quot;build a house&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.OrdinaryRequest_EmitsDetailedTypedJsonContractWithinBoundedPayload(&quot;build a house&quot;)" methodname="OrdinaryRequest_EmitsDetailedTypedJsonContractWithinBoundedPayload" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" seed="999019009" result="Passed" start-time="2026-10-12 12:44:26Z" end-time="2026-10-12 12:44:26Z" duration="0.007236" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="3316" name="OrdinaryRequest_EmitsDetailedTypedJsonContractWithinBoundedPayload(&quot;put four idle villagers on Wood from trees&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.OrdinaryRequest_EmitsDetailedTypedJsonContractWithinBoundedPayload(&quot;put four idle villagers on Wood from trees&quot;)" methodname="OrdinaryRequest_EmitsDetailedTypedJsonContractWithinBoundedPayload" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" seed="366890252" result="Passed" start-time="2026-10-12 12:44:26Z" end-time="2026-10-12 12:44:26Z" duration="0.001018" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="3317" name="OrdinaryRequest_EmitsDetailedTypedJsonContractWithinBoundedPayload(&quot;Build a Mill, and after completion send a worker to gold&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.OrdinaryRequest_EmitsDetailedTypedJsonContractWithinBoundedPayload(&quot;Build a Mill, and after completion send a worker to gold&quot;)" methodname="OrdinaryRequest_EmitsDetailedTypedJsonContractWithinBoundedPayload" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" seed="706072506" result="Passed" start-time="2026-10-12 12:44:26Z" end-time="2026-10-12 12:44:26Z" duration="0.002068" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: D:\unity_projects\OpenEmpires\Open Empires\Docs\CommanderPhase5C\evidence\final-fix-leaves-20261012-124418-913-8a58ebfd.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

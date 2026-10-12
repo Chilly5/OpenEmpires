@@ -1,0 +1,297 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace OpenEmpires
+{
+    public sealed class CommanderIntentValidationResult
+    {
+        public bool IsValid { get; }
+        public CommanderIntentErrorCode ErrorCode { get; }
+        public string Reason { get; }
+
+        private CommanderIntentValidationResult(bool isValid,
+            CommanderIntentErrorCode errorCode, string reason)
+        {
+            IsValid = isValid;
+            ErrorCode = errorCode;
+            Reason = reason ?? string.Empty;
+        }
+
+        public static CommanderIntentValidationResult Valid()
+        {
+            return new CommanderIntentValidationResult(true,
+                CommanderIntentErrorCode.None, string.Empty);
+        }
+
+        public static CommanderIntentValidationResult Invalid(
+            CommanderIntentErrorCode errorCode, string reason)
+        {
+            return new CommanderIntentValidationResult(false, errorCode, reason);
+        }
+    }
+
+    public sealed class CommanderIntentValidator
+    {
+        public const int MaximumStructureCount = 20;
+        public const int MaximumQueuePolicy = 8;
+
+        public CommanderIntentValidationResult Validate(CommanderIntent intent,
+            GameSimulation simulation, int owningPlayerId)
+        {
+            if (intent == null)
+                return Invalid(CommanderIntentErrorCode.UnknownCommand,
+                    "No Commander intent was provided.");
+            if (simulation == null)
+                return Invalid(CommanderIntentErrorCode.UnknownCommand,
+                    "The simulation is unavailable.");
+            if (intent.PlayerId < 0 || intent.PlayerId >= simulation.PlayerCount)
+                return Invalid(CommanderIntentErrorCode.InvalidPlayer,
+                    "The requested player is not part of this match.");
+            if (intent.PlayerId != owningPlayerId)
+                return Invalid(CommanderIntentErrorCode.PlayerMismatch,
+                    "Ownership mismatch: Commander intents can only target the owning local player.");
+
+            CommanderIntentValidationResult constraints = ValidateConstraints(intent.Constraints);
+            if (!constraints.IsValid) return constraints;
+            for (int i = 0; i < intent.Constraints.Count; i++)
+            {
+                if (intent.Constraints[i] is NoConstructionConstraint
+                    && !(intent is EnsureUnitCountIntent) && !(intent is ReachAgeIntent))
+                    return Invalid(CommanderIntentErrorCode.UnsupportedConstraint,
+                        "A construction request contradicts NoConstruction; this constraint applies to production or age goals.");
+                if (intent.Constraints[i] is MaximumQueueConstraint && !(intent is EnsureUnitCountIntent))
+                    return Invalid(CommanderIntentErrorCode.UnsupportedConstraint,
+                        "A maximum queue constraint applies only to unit production.");
+                if (intent.Constraints[i] is ResourceSourceConstraint
+                    && !(intent is EnsureUnitCountIntent) && !(intent is BuildStructureIntent) && !(intent is ReachAgeIntent))
+                    return Invalid(CommanderIntentErrorCode.UnsupportedConstraint,
+                        "Preparation source restrictions apply to production, construction or age goals; worker allocation uses its explicit destination source.");
+                if (intent.Constraints[i] is ProtectedResourceConstraint resource
+                    && resource.MinimumWorkers > simulation.Config.MaxPopulation)
+                    return Invalid(CommanderIntentErrorCode.AmountOutOfRange,
+                        "Protected worker minimum exceeds maximum population.");
+            }
+
+            if (intent is EnsureUnitCountIntent ensure)
+            {
+                if (!IsUnitAvailableToCivilization(simulation, ensure.PlayerId, ensure.UnitType))
+                    return Invalid(CommanderIntentErrorCode.UnknownUnit,
+                        "This known unit is unavailable to the player's civilization; no different unit will substitute.");
+                return ValidateEnsureUnitCount(ensure, simulation.Config.MaxPopulation);
+            }
+            if (intent is SetResourceAllocationIntent allocation)
+                return ValidateResourceAllocation(allocation, simulation.Config.MaxPopulation);
+            if (intent is AllocateWorkersIntent workers)
+                return workers.Allocation != null && workers.Allocation.IsValid(simulation.Config.MaxPopulation)
+                    ? CommanderIntentValidationResult.Valid()
+                    : Invalid(CommanderIntentErrorCode.AmountOutOfRange, "Invalid worker count or allocation criteria.");
+            if (intent is BuildStructureIntent build)
+                return ValidateBuildStructure(build);
+            if (intent is ReachAgeIntent reachAge)
+                return ValidateReachAge(reachAge);
+            if (intent is CapabilityActionIntent capability)
+                return ValidateCapabilityAction(capability);
+            if (intent is WatchFutureUnitsIntent future)
+            {
+                if (future.Count < 1 || future.Count > 50 || future.Count > simulation.Config.MaxPopulation
+                    || !Enum.IsDefined(typeof(CommanderFutureUnitAction), future.Action)
+                    || !Enum.IsDefined(typeof(ResourceType), future.Resource)
+                    || !Enum.IsDefined(typeof(ResourceSourceKind), future.SourceKind)
+                    || future.ProducerOrdinal.HasValue && (future.ProducerOrdinal < 1 || future.ProducerOrdinal > 8)
+                    || future.Action == CommanderFutureUnitAction.Gather && future.UnitType != 0
+                    || !simulation.TryGetProductionBuildingType(future.PlayerId, future.UnitType, out _)
+                    || !IsUnitAvailableToCivilization(simulation, future.PlayerId, future.UnitType))
+                    return Invalid(CommanderIntentErrorCode.UnknownCommand, "Invalid finite future-unit order.");
+                return CommanderIntentValidationResult.Valid();
+            }
+
+            return Invalid(CommanderIntentErrorCode.UnknownCommand,
+                "The Commander intent type is not recognized.");
+        }
+
+        private static bool IsUnitAvailableToCivilization(GameSimulation simulation, int playerId, int requestedType)
+        {
+            int resolved = simulation.ResolveCivUnitType(playerId, requestedType);
+            var catalog = GameKnowledgeCatalog.Build(simulation);
+            var unit = catalog.FindUnitByType(resolved);
+            var civilization = catalog.Civilizations.FirstOrDefault(c =>
+                c.Civilization == simulation.GetPlayerCivilization(playerId));
+            return unit != null && civilization != null
+                && civilization.AvailableUnitIds.Contains(unit.StableId);
+        }
+
+        private static CommanderIntentValidationResult ValidateEnsureUnitCount(
+            EnsureUnitCountIntent intent, int maximumPopulation)
+        {
+            if (!CommanderIntentCatalog.IsSupportedUnit(intent.UnitType))
+                return Invalid(CommanderIntentErrorCode.UnknownUnit,
+                    $"Unit type {intent.UnitType} is not supported by the intent catalog.");
+            if (intent.TargetTotal < 1 || intent.TargetTotal > maximumPopulation)
+                return Invalid(CommanderIntentErrorCode.AmountOutOfRange,
+                    $"Unit target must be between 1 and {maximumPopulation}.");
+            return CommanderIntentValidationResult.Valid();
+        }
+
+        private static CommanderIntentValidationResult ValidateResourceAllocation(
+            SetResourceAllocationIntent intent, int maximumPopulation)
+        {
+            if (!Enum.IsDefined(typeof(ResourceType), intent.Resource))
+                return Invalid(CommanderIntentErrorCode.UnknownResource,
+                    "The requested resource is not recognized.");
+            if (!Enum.IsDefined(typeof(ResourceAllocationMode), intent.Mode))
+                return Invalid(CommanderIntentErrorCode.UnknownCommand, "Unknown allocation mode.");
+            if (intent.Mode == ResourceAllocationMode.SetExact && !intent.WorkerCount.HasValue)
+                return Invalid(CommanderIntentErrorCode.MissingAmount,
+                    "An exact resource assignment needs a worker count.");
+            if (intent.WorkerCount.HasValue
+                && (intent.WorkerCount.Value < 0 || intent.WorkerCount.Value > maximumPopulation))
+            {
+                return Invalid(CommanderIntentErrorCode.AmountOutOfRange,
+                    $"Worker count must be between 0 and {maximumPopulation}.");
+            }
+            return CommanderIntentValidationResult.Valid();
+        }
+
+        private static CommanderIntentValidationResult ValidateBuildStructure(
+            BuildStructureIntent intent)
+        {
+            if (!CommanderIntentCatalog.IsSupportedStructure(intent.StructureType))
+                return Invalid(CommanderIntentErrorCode.UnknownStructure,
+                    "The requested structure is not supported by the intent catalog.");
+            if (intent.Count < 1 || intent.Count > MaximumStructureCount)
+                return Invalid(CommanderIntentErrorCode.AmountOutOfRange,
+                    $"Structure count must be between 1 and {MaximumStructureCount}.");
+            bool placed = intent.PlacementAnchorSelector.HasValue;
+            if (!placed && (intent.PlacementAnchorOrdinal.HasValue || intent.PlacementRelation.HasValue
+                || intent.ClearGapTiles.HasValue || intent.PlacementResourceType.HasValue || intent.PlacementSourceKind.HasValue))
+                return Invalid(CommanderIntentErrorCode.UnknownCommand, "Incomplete semantic placement.");
+            if (placed)
+            {
+                if (intent.Count != 1 || !Enum.IsDefined(typeof(CommanderSemanticAnchorSelector),
+                        intent.PlacementAnchorSelector.Value)
+                    || !intent.PlacementRelation.HasValue
+                    || !Enum.IsDefined(typeof(CommanderSemanticPlacementRelation),
+                        intent.PlacementRelation.Value)
+                    || (intent.PlacementAnchorOrdinal.HasValue
+                        && (intent.PlacementAnchorSelector != CommanderSemanticAnchorSelector.MyTownCenter
+                            || intent.PlacementAnchorOrdinal.Value < CommanderSemanticJson.MinimumTownCenterOrdinal
+                            || intent.PlacementAnchorOrdinal.Value > CommanderSemanticJson.MaximumTownCenterOrdinal))
+                    || ((intent.PlacementAnchorSelector == CommanderSemanticAnchorSelector.WorkedResource
+                            || intent.PlacementAnchorSelector == CommanderSemanticAnchorSelector.VisibleResource)
+                        && (!intent.PlacementResourceType.HasValue
+                            || intent.PlacementRelation != CommanderSemanticPlacementRelation.Near))
+                    || (intent.PlacementAnchorSelector != CommanderSemanticAnchorSelector.WorkedResource
+                        && intent.PlacementAnchorSelector != CommanderSemanticAnchorSelector.VisibleResource
+                        && intent.PlacementResourceType.HasValue)
+                    || (intent.PlacementResourceType.HasValue && !Enum.IsDefined(typeof(ResourceType), intent.PlacementResourceType.Value))
+                    || (intent.PlacementSourceKind.HasValue && (!intent.PlacementResourceType.HasValue
+                        || !ResourceSourceRules.IsCompatible(intent.PlacementResourceType.Value, intent.PlacementSourceKind.Value)))
+                    || (intent.ClearGapTiles.HasValue
+                        && (intent.ClearGapTiles.Value < CommanderSemanticJson.MinimumClearGapTiles
+                            || intent.ClearGapTiles.Value > CommanderSemanticJson.MaximumClearGapTiles))
+                    || (intent.PlacementRelation == CommanderSemanticPlacementRelation.Near
+                        && intent.ClearGapTiles.HasValue && intent.ClearGapTiles.Value != 1))
+                    return Invalid(CommanderIntentErrorCode.UnknownCommand,
+                        "Unsupported or ambiguous semantic placement.");
+            }
+            return CommanderIntentValidationResult.Valid();
+        }
+
+        private static CommanderIntentValidationResult ValidateReachAge(ReachAgeIntent intent)
+        {
+            if (!Enum.IsDefined(typeof(CommanderSemanticAgeTarget), intent.RequestedTarget)
+                || intent.TargetAge < 2 || intent.TargetAge > 4)
+                return Invalid(CommanderIntentErrorCode.AmountOutOfRange,
+                    "The requested age is outside the bounded Commander range.");
+            return CommanderIntentValidationResult.Valid();
+        }
+
+        private static CommanderIntentValidationResult ValidateCapabilityAction(CapabilityActionIntent intent)
+        {
+            if(intent.LocationSelector.RadiusTiles.HasValue)
+                return Invalid(CommanderIntentErrorCode.UnsupportedConstraint,
+                    "This action supports a point target, not a radius or perimeter. Request a point route or revise the spatial constraint.");
+            if (!Enum.IsDefined(typeof(CommanderCapabilityActionType), intent.ActionType))
+                return Invalid(CommanderIntentErrorCode.UnknownCommand, "Unknown Commander capability action.");
+            if (intent.UnitSelector.Count < 1 || intent.UnitSelector.Count > 50)
+                return Invalid(CommanderIntentErrorCode.AmountOutOfRange, "Unit selector count is outside the bounded range.");
+            if (!Enum.IsDefined(typeof(CommanderUnitSelectorKind), intent.UnitSelector.Kind)
+                || !Enum.IsDefined(typeof(CommanderLocationSelectorKind), intent.LocationSelector.Kind))
+                return Invalid(CommanderIntentErrorCode.UnknownCommand, "Unknown Commander selector.");
+            if (intent.UnitSelector.Kind == CommanderUnitSelectorKind.UnitType
+                && !CommanderIntentCatalog.IsSupportedUnit(intent.UnitSelector.UnitType))
+                return Invalid(CommanderIntentErrorCode.UnknownUnit, "The requested unit selector is not supported.");
+            if (intent.TargetSelector.HasValue && !intent.TargetSelector.Value.IsCompatible(intent.ActionType, intent.LocationSelector.Kind))
+                return Invalid(CommanderIntentErrorCode.UnknownCommand, "The requested target type is incompatible with this action.");
+            if (intent.ActionType == CommanderCapabilityActionType.RepairTarget
+                && intent.UnitSelector.Kind != CommanderUnitSelectorKind.Villagers)
+                return Invalid(CommanderIntentErrorCode.UnknownCommand,
+                    "RepairTarget requires an owned-villager selector.");
+            if (intent.ActionType == CommanderCapabilityActionType.AttackTarget
+                && intent.UnitSelector.Kind == CommanderUnitSelectorKind.Villagers)
+                return Invalid(CommanderIntentErrorCode.UnknownCommand,
+                    "AttackTarget cannot commandeer villagers.");
+            if ((intent.LocationSelector.Kind == CommanderLocationSelectorKind.WorkedResource
+                || intent.LocationSelector.Kind == CommanderLocationSelectorKind.VisibleResource)
+                && !intent.LocationSelector.ResourceType.HasValue)
+                return Invalid(CommanderIntentErrorCode.UnknownResource,
+                    "Resource locations require a resource selector.");
+            if ((intent.ActionType == CommanderCapabilityActionType.ResearchTechnology)
+                && (!intent.Technology.HasValue || !Enum.IsDefined(typeof(TechnologyType), intent.Technology.Value)))
+                return Invalid(CommanderIntentErrorCode.UnknownCommand, "A known technology is required.");
+            return CommanderIntentValidationResult.Valid();
+        }
+
+        private static CommanderIntentValidationResult ValidateConstraints(
+            IReadOnlyList<CommanderConstraint> constraints)
+        {
+            var seen = new HashSet<CommanderConstraintType>();
+            for (int i = 0; i < constraints.Count; i++)
+            {
+                CommanderConstraint constraint = constraints[i];
+                if (constraint == null || !seen.Add(constraint.Type))
+                    return Invalid(CommanderIntentErrorCode.UnsupportedConstraint,
+                        "Duplicate or empty Commander constraints are not allowed.");
+                if (!(constraint is MaximumQueueConstraint) && !(constraint is ProtectedResourceConstraint)
+                    && !(constraint is PreferredWorkersConstraint) && !(constraint is NoConstructionConstraint)
+                    && !(constraint is ResourceSourceConstraint))
+                    return Invalid(CommanderIntentErrorCode.UnsupportedConstraint, "Unknown constraint implementation.");
+                if (constraint is ResourceSourceConstraint source
+                    && (!Enum.IsDefined(typeof(ResourceType), source.Resource)
+                        || !ResourceSourceRules.IsDefined(source.SourceKind)
+                        || !ResourceSourceRules.IsCompatible(source.Resource, source.SourceKind)))
+                    return Invalid(CommanderIntentErrorCode.UnsupportedConstraint, "The preparation resource/source pair is incompatible.");
+
+                if (constraint is MaximumQueueConstraint maximumQueue
+                    && (maximumQueue.MaximumQueue < 1
+                        || maximumQueue.MaximumQueue > MaximumQueuePolicy))
+                {
+                    return Invalid(CommanderIntentErrorCode.AmountOutOfRange,
+                        $"Maximum queue must be between 1 and {MaximumQueuePolicy}.");
+                }
+                if (constraint is ProtectedResourceConstraint protectedResource
+                    && (!Enum.IsDefined(typeof(ResourceType), protectedResource.Resource)
+                        || protectedResource.MinimumWorkers < 0))
+                {
+                    return Invalid(CommanderIntentErrorCode.UnknownResource,
+                        "The protected resource is not recognized.");
+                }
+                if (constraint is PreferredWorkersConstraint preferredWorkers
+                    && !Enum.IsDefined(typeof(CommanderPreferredWorkerSource),
+                        preferredWorkers.WorkerSource))
+                {
+                    return Invalid(CommanderIntentErrorCode.UnsupportedConstraint,
+                        "The preferred worker source is not recognized.");
+                }
+            }
+            return CommanderIntentValidationResult.Valid();
+        }
+
+        private static CommanderIntentValidationResult Invalid(
+            CommanderIntentErrorCode errorCode, string reason)
+        {
+            return CommanderIntentValidationResult.Invalid(errorCode, reason);
+        }
+    }
+}

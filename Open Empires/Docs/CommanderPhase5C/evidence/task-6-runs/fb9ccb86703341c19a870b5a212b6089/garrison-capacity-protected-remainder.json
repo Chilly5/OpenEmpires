@@ -1,0 +1,147 @@
+{
+  "schema": "openempires-phase5c-scenario-turn@1",
+  "run_id": "1d24e878-8d6d-4550-ac13-de76fe2e413a",
+  "first_failing_stage": null,
+  "first_failure_category": null,
+  "schemaVersion": 1,
+  "caseId": "garrison-capacity-protected-remainder",
+  "requestId": "runtime:1",
+  "utterance": "Garrison all my villagers in my Town Center.",
+  "turnIndex": 0,
+  "status": "observed",
+  "evidenceMode": "offline-production-chat-fixture",
+  "providerCalls": 1,
+  "httpAttempts": 0,
+  "fidelity": "fixture-expected-observed",
+  "semanticValid": true,
+  "estimatedInputTokens": null,
+  "actualPromptTokens": null,
+  "actualCompletionTokens": null,
+  "actualCachedTokens": null,
+  "actualReasoningTokens": null,
+  "reportedCost": null,
+  "attemptCosts": [],
+  "packingMs": 12.688,
+  "transportMs": null,
+  "parseMs": 0.32,
+  "admissionMs": 24.776,
+  "firstNativeActionMs": 484.999,
+  "commandCount": 1,
+  "commandTypes": [
+    "GarrisonCommand"
+  ],
+  "nativeResults": [
+    "GarrisonCommand:processed"
+  ],
+  "taskStates": [
+    "CommanderCapabilityGoal:Completed"
+  ],
+  "draftBefore": [],
+  "draftAfter": [],
+  "draftChanges": [],
+  "normalizedFields": [
+    {
+      "type": "GarrisonUnits",
+      "building": "TownCenter",
+      "unit": null,
+      "resource": null,
+      "count": null,
+      "quantityMode": "TargetTotal",
+      "anchor": null,
+      "anchorOrdinal": null,
+      "relation": null,
+      "placementSource": null,
+      "unitSelector": "Villagers",
+      "locationSelector": "PlayerBase",
+      "producerOrdinal": null,
+      "producerFrom": null,
+      "resultFrom": null,
+      "futureAction": null,
+      "workerMode": null,
+      "workerCountMode": null,
+      "workerCount": null,
+      "workerState": null,
+      "workerCurrentResource": null,
+      "destinationResource": null,
+      "destinationSource": null,
+      "resourceAmount": null,
+      "resourceAmountMode": null,
+      "dependencies": []
+    }
+  ],
+  "admittedFields": [
+    {
+      "type": "CommanderCapabilityGoal",
+      "status": "Pending",
+      "originalUtterance": "Garrison all my villagers in my Town Center."
+    }
+  ],
+  "turnHistory": [
+    {
+      "index": 0,
+      "text": "Garrison all my villagers in my Town Center.",
+      "requestId": "runtime:1",
+      "uiState": "Accepted",
+      "providerCalls": 1,
+      "semanticValid": true,
+      "semanticOutcome": "Request",
+      "normalizedFields": [
+        {
+          "type": "GarrisonUnits",
+          "building": "TownCenter",
+          "unit": null,
+          "resource": null,
+          "count": null,
+          "quantityMode": "TargetTotal",
+          "anchor": null,
+          "anchorOrdinal": null,
+          "relation": null,
+          "placementSource": null,
+          "unitSelector": "Villagers",
+          "locationSelector": "PlayerBase",
+          "producerOrdinal": null,
+          "producerFrom": null,
+          "resultFrom": null,
+          "futureAction": null,
+          "workerMode": null,
+          "workerCountMode": null,
+          "workerCount": null,
+          "workerState": null,
+          "workerCurrentResource": null,
+          "destinationResource": null,
+          "destinationSource": null,
+          "resourceAmount": null,
+          "resourceAmountMode": null,
+          "dependencies": []
+        }
+      ],
+      "admittedFields": [
+        {
+          "type": "CommanderCapabilityGoal",
+          "status": "Pending",
+          "originalUtterance": "Garrison all my villagers in my Town Center."
+        }
+      ],
+      "draftBefore": [],
+      "draftAfter": [],
+      "draftChanges": [],
+      "approvalRequired": false,
+      "approved": false,
+      "commandTypes": [],
+      "taskStates": [
+        "CommanderCapabilityGoal:Pending"
+      ],
+      "uiSubmitMs": 37.688
+    }
+  ],
+  "fogNewlyExploredCount": null,
+  "fixtureKind": "correct-synthetic",
+  "turnText": "Garrison all my villagers in my Town Center.",
+  "uiSubmitMs": 37.688,
+  "semanticOutcome": "Request",
+  "approvalRequired": false,
+  "approved": false,
+  "uiState": "Accepted",
+  "tickMode": "accelerated-fixture",
+  "ticks": 500
+}

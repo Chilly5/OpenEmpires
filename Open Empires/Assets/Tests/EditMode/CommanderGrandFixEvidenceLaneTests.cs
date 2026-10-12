@@ -206,8 +206,11 @@ namespace OpenEmpires.Tests
             try
             {
                 var simulation=new GameSimulation(config,1,new[]{0},Array.Empty<int>());using var manager=new CommanderGoalManager(simulation,0);
-                var provider=new OpenRouterCommanderProvider("not-an-api-key",new FakeTransport(Completion("{\"outcome\":\"Answer\",\"message\":\"fixture\"}",finish)));
-                var result=await provider.TranslateSemanticAsync(new CommanderSemanticProviderRequest("a question",new CommanderContextBuilder().Build(simulation,manager)),CancellationToken.None);
+                var transport=new FakeTransport(Completion("{\"outcome\":\"Answer\",\"message\":\"fixture\"}",finish));
+                var provider=new OpenRouterCommanderProvider("not-an-api-key",transport);
+                var result=await provider.TranslateSemanticAsync(new CommanderSemanticProviderRequest("a question",
+                    new CommanderContextBuilder().Build(simulation,manager),readOnlyQuestion:true),CancellationToken.None);
+                Assert.That(transport.Calls,Is.EqualTo(1),"The read-only fixture must reach its fake completion envelope.");
                 Assert.That(result.IsValid,Is.False);Assert.That(provider.LastRequestTrace,Does.Contain("finish="+expected));
                 Assert.That(provider.LastRequestTrace,Does.Not.Contain("private-finish-marker"));
             }

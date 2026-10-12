@@ -1,0 +1,176 @@
+using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+namespace OpenEmpires
+{
+    // Detached provider proposal. It carries typed, bounded data, never authority or a runtime selector.
+    public sealed class CommanderRequestGraphDraft
+    {
+        public sealed class Slot
+        {
+            public int Node { get; }
+            public string Path { get; }
+            public string Type { get; }
+            public IReadOnlyList<JToken> Alternatives { get; }
+            internal Slot(int node, string path, string type, IList<JToken> alternatives)
+            { Node = node; Path = path; Type = type; Alternatives = new List<JToken>(alternatives).AsReadOnly(); }
+        }
+
+        private readonly JObject graph;
+        private readonly List<Slot> slots;
+        public IReadOnlyList<Slot> MissingSlots => slots.AsReadOnly();
+        public int NodeCount => ((JArray)graph["nodes"]).Count;
+        private CommanderRequestGraphDraft(JObject graph, List<Slot> slots)
+        { this.graph = (JObject)graph.DeepClone(); this.slots = slots; }
+
+        internal static CommanderRequestGraphDraft Parse(JObject root)
+        {
+            if (!(root["pending"] is JObject graph) || !(graph["nodes"] is JArray nodes)
+                || nodes.Count < 1 || nodes.Count > CommanderSemanticJson.MaximumNodes
+                || !(root["missingSlots"] is JArray sourceSlots) || sourceSlots.Count < 1 || sourceSlots.Count > 4)
+                throw new JsonException();
+            ExactFields(graph, "executionOrder", "nodes");
+            string order = (string)graph["executionOrder"];
+            if (order != "Independent" && order != "Sequential" && order != "DependencyGraph") throw new JsonException();
+            var slots = new List<Slot>();
+            var seen = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var entry in sourceSlots)
+            {
+                if (!(entry is JObject spec)) throw new JsonException();
+                ExactFields(spec, "node", "path", "type", "alternatives");
+                if (spec["node"]?.Type != JTokenType.Integer || spec["path"]?.Type != JTokenType.String
+                    || spec["type"]?.Type != JTokenType.String || !(spec["alternatives"] is JArray alternatives)
+                    || alternatives.Count < 1 || alternatives.Count > 8) throw new JsonException();
+                int index = (int)spec["node"];
+                string path = (string)spec["path"], type = (string)spec["type"];
+                if (index < 0 || index >= nodes.Count || !(nodes[index] is JObject node)
+                    || !Allowed(type, path) || !seen.Add(index + ":" + path)) throw new JsonException();
+                JObject parent = Parent(node, path);
+                string leaf = Leaf(path);
+                if (parent == null || type == "Confirmation" && parent[leaf]?.Type != JTokenType.String
+                    || type != "Confirmation" && parent.Property(leaf) != null) throw new JsonException();
+                var values = new List<JToken>();
+                foreach (var choice in alternatives)
+                {
+                    if (choice == null || (choice.Type != JTokenType.String && choice.Type != JTokenType.Integer)
+                        || choice.ToString().Length > 64 || type == "Count" && choice.Type != JTokenType.Integer
+                        || type != "Count" && choice.Type != JTokenType.String
+                        || type == "Confirmation" && (string)choice != (string)parent[leaf]) throw new JsonException();
+                    values.Add(choice.DeepClone());
+                }
+                slots.Add(new Slot(index, path, type, values));
+            }
+            var draft = new CommanderRequestGraphDraft(graph, slots);
+            // Every offered completion, not just the first, must survive the existing strict
+            // parser and graph checks. Temporary values never enter the stored graph.
+            foreach (var slot in slots)
+                foreach (var alternative in slot.Alternatives)
+                    if (!draft.Probe(slot, alternative).IsValid) throw new JsonException();
+            return draft;
+        }
+
+        private CommanderSemanticResult Probe(Slot changed, JToken value)
+        {
+            var completed = (JObject)graph.DeepClone();
+            foreach (var slot in slots)
+            {
+                var parent = Parent((JObject)((JArray)completed["nodes"])[slot.Node], slot.Path);
+                if (slot.Type != "Confirmation") parent[Leaf(slot.Path)] = (slot == changed ? value : slot.Alternatives[0]).DeepClone();
+            }
+            return CommanderSemanticJson.ParseProviderResponse(new JObject { ["outcome"] = "Request",
+                ["executionOrder"] = completed["executionOrder"].DeepClone(),
+                ["nodes"] = completed["nodes"].DeepClone() }.ToString(Formatting.None));
+        }
+
+        internal CommanderSemanticResult Resolve(string reply)
+        {
+            Slot slot = null;
+            JToken chosen = null;
+            foreach (var candidate in slots)
+            {
+                JToken match = Match(candidate, reply);
+                if (match == null) continue;
+                if (slot != null) return null; // A reply matching two distinct slots is ambiguous.
+                slot = candidate; chosen = match;
+            }
+            if (slot == null) return null;
+            if (slots.Count == 1)
+            {
+                var parsed = Probe(slot, chosen);
+                return parsed.IsValid ? parsed : null;
+            }
+            var next = (JObject)graph.DeepClone();
+            if (slot.Type != "Confirmation")
+                Parent((JObject)((JArray)next["nodes"])[slot.Node], slot.Path)[Leaf(slot.Path)] = chosen.DeepClone();
+            var remaining = new JArray();
+            foreach (var other in slots)
+                if (!ReferenceEquals(other, slot))
+                    remaining.Add(new JObject { ["node"] = other.Node, ["path"] = other.Path,
+                        ["type"] = other.Type, ["alternatives"] = new JArray(other.Alternatives) });
+            return CommanderSemanticJson.Parse(new JObject { ["outcome"] = "Clarify",
+                ["message"] = "Please specify the remaining detail.", ["pending"] = next,
+                ["missingSlots"] = remaining }.ToString(Formatting.None));
+        }
+
+        private static JToken Match(Slot slot, string reply)
+        {
+            string whole = (reply ?? string.Empty).Trim().ToLowerInvariant();
+            JToken chosen = null;
+            if (slot.Type == "Confirmation" && (whole == "yes" || whole == "y")) chosen = slot.Alternatives[0];
+            else if (slot.Type == "Count" && CommanderClarificationReplies.TryParseCount(reply, out int count)) chosen = new JValue(count);
+            else
+            {
+                string canonical = slot.Type == "SourceKind" ? SourceAlias(whole) : whole;
+                foreach (var offered in slot.Alternatives)
+                    if (string.Equals((string)offered, canonical, StringComparison.OrdinalIgnoreCase)) { chosen = offered; break; }
+            }
+            return chosen;
+        }
+
+        private static string SourceAlias(string reply)
+        {
+            switch (reply)
+            {
+                case "from trees": case "trees": case "tree": case "from tree": return "Tree";
+                case "from berries": case "berries": case "berry": return "Berries";
+                case "from sheep": case "sheep": return "Sheep";
+                case "from farms": case "farms": case "farm": return "Farm";
+                case "from gold mines": case "gold mines": case "gold mine": return "GoldMine";
+                case "from stone mines": case "stone mines": case "stone mine": return "StoneMine";
+                default: return reply;
+            }
+        }
+
+        internal JObject ToPendingJson() => (JObject)graph.DeepClone();
+        internal JArray ToSlotsJson()
+        {
+            var result = new JArray();
+            foreach (var slot in slots)
+                result.Add(new JObject { ["node"] = slot.Node, ["path"] = slot.Path,
+                    ["type"] = slot.Type, ["alternatives"] = new JArray(slot.Alternatives) });
+            return result;
+        }
+
+        private static bool Allowed(string type, string path)
+        {
+            if (type == "Confirmation") return path == "structure" || path == "unit" || path == "producer";
+            if (type == "Count") return path == "count";
+            if (type == "SourceKind") return path == "sourceKind" || path == "destination.sourceKind" || path == "placement.sourceKind";
+            if (type == "CanonicalName") return path == "structure" || path == "unit" || path == "producer"
+                || path == "technology" || path == "resource" || path == "destination.resource" || path == "placement.resource";
+            return false;
+        }
+        private static JObject Parent(JObject node, string path)
+        {
+            int dot = path.IndexOf('.');
+            return dot < 0 ? node : node[path.Substring(0, dot)] as JObject;
+        }
+        private static string Leaf(string path)
+        { int dot = path.IndexOf('.'); return dot < 0 ? path : path.Substring(dot + 1); }
+        private static void ExactFields(JObject obj, params string[] fields)
+        { foreach (var property in obj.Properties()) if (Array.IndexOf(fields, property.Name) < 0) throw new JsonException(); }
+    }
+}
+

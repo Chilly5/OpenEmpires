@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 06:47:20Z" end-time="2026-10-12 06:47:23Z" duration="2.8648879">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1807" result="Failed" site="Child" start-time="2026-10-12 06:47:20Z" end-time="2026-10-12 06:47:23Z" duration="2.864888" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="3084" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1807" result="Failed" site="Child" start-time="2026-10-12 06:47:20Z" end-time="2026-10-12 06:47:23Z" duration="2.767498" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="10196" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="3085" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1807" result="Failed" site="Child" start-time="2026-10-12 06:47:20Z" end-time="2026-10-12 06:47:23Z" duration="2.667611" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="3086" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1807" result="Failed" site="Child" start-time="2026-10-12 06:47:20Z" end-time="2026-10-12 06:47:23Z" duration="2.521962" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1280" name="CommanderGrandFixPresentationTests" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" testcasecount="33" result="Failed" site="Child" start-time="2026-10-12 06:47:20Z" end-time="2026-10-12 06:47:23Z" duration="2.441915" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1282" name="LauncherAndSettings_UseTopLeftCompactAndWideExpandedSurfaces" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.LauncherAndSettings_UseTopLeftCompactAndWideExpandedSurfaces" methodname="LauncherAndSettings_UseTopLeftCompactAndWideExpandedSurfaces" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="179060775" result="Failed" start-time="2026-10-12 06:47:20Z" end-time="2026-10-12 06:47:23Z" duration="2.280422" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: (0.00, 1.00)
+  But was:  (1.00, 1.00)
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderGrandFixPresentationTests.LauncherAndSettings_UseTopLeftCompactAndWideExpandedSurfaces () [0x0000c] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderGrandFixPresentationTests.cs:66
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: D:\unity_projects\OpenEmpires\Open Empires\Docs\CommanderPhase5C\evidence\final-fix-leaves-20261012-064720-269-61e79e20.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

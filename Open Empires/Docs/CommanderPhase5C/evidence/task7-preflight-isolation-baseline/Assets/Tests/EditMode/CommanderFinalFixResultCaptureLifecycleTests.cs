@@ -1,0 +1,80 @@
+using System;
+using System.IO;
+using System.Reflection;
+using Newtonsoft.Json.Linq;
+using NUnit.Framework;
+using UnityEditor;
+using UnityEditor.TestTools.TestRunner.Api;
+using UnityEngine;
+
+namespace OpenEmpires.Tests
+{
+    [Category("CommanderPhase5COffline")]
+    public sealed class CommanderFinalFixResultCaptureLifecycleTests
+    {
+        private const string InterruptedFileKey = "OpenEmpires.Commander.CaptureLifecycleTest.File";
+        private const string CountKey = "OpenEmpires.Commander.CaptureLifecycleTest.Count";
+
+        private static Type CaptureType => Type.GetType(
+            "OpenEmpires.Editor.CommanderFinalFixResultCapture, OpenEmpires.Editor", true);
+
+        private static string ActiveFile(object capture) => (string)CaptureType.GetField("file",
+            BindingFlags.Instance | BindingFlags.NonPublic).GetValue(capture);
+
+        private static string[] EvidenceFiles() => Directory.GetFiles(Path.Combine(
+            Directory.GetParent(Application.dataPath).FullName,
+            "Docs", "CommanderPhase5C", "evidence"), "final-fix-leaves-*.json");
+
+        [Test]
+        public void Capture_InterruptedCallbackRecreationRetainsOnlyOriginalRun()
+        {
+            // The real runner already started this focused test; arm only this synthetic
+            // callback and never launch a nested or unrelated test run.
+            CaptureType.GetMethod("ArmNextRun", BindingFlags.Static | BindingFlags.NonPublic)
+                .Invoke(null, null);
+            var first = (ICallbacks)Activator.CreateInstance(CaptureType, true);
+            first.RunStarted(null);
+            string file = ActiveFile(first);
+            Assert.That(file, Is.Not.Null);
+            Assert.That(File.Exists(file), Is.True);
+            int count = EvidenceFiles().Length;
+            SessionState.SetString(InterruptedFileKey, file);
+            SessionState.SetInt(CountKey, count);
+
+            var recreated = (ICallbacks)Activator.CreateInstance(CaptureType, true);
+            recreated.RunStarted(null);
+            Assert.That(ActiveFile(recreated), Is.EqualTo(file),
+                "The same owned run must resume, not create a second artifact.");
+            Assert.That(EvidenceFiles().Length, Is.EqualTo(count));
+            Assert.That((bool)JObject.Parse(File.ReadAllText(file))["finished"], Is.False);
+
+            // Simulate the original runner disappearing without RunFinished. The next
+            // separately launched focused job has a different framework GUID.
+            string ownerKey = (string)CaptureType.GetField("OwnerKey",
+                BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
+            SessionState.SetString(ownerKey, Guid.NewGuid().ToString());
+        }
+
+        [Test]
+        public void Capture_NextUnarmedRunDoesNotStealAbandonedResult()
+        {
+            string original = SessionState.GetString(InterruptedFileKey, "");
+            int count = SessionState.GetInt(CountKey, -1);
+            try
+            {
+                Assert.That(original, Is.Not.Empty, "Run the interrupted-callback leaf first.");
+                Assert.That(count, Is.GreaterThan(0));
+                Assert.That(EvidenceFiles().Length, Is.EqualTo(count),
+                    "A distinct, unarmed run must not create another capture artifact.");
+                Assert.That((bool)JObject.Parse(File.ReadAllText(original))["finished"], Is.False,
+                    "The interrupted run remains explicitly incomplete.");
+            }
+            finally
+            {
+                SessionState.EraseString(InterruptedFileKey);
+                SessionState.EraseInt(CountKey);
+                EditorPrefs.DeleteKey("OpenEmpires.Commander.CaptureNextTestRun");
+            }
+        }
+    }
+}

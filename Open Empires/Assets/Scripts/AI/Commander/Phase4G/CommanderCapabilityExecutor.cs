@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace OpenEmpires
 {
@@ -114,8 +115,14 @@ namespace OpenEmpires
                     reason = "Resolved a bounded owned-unit movement action.";
                     return true;
                 case CommanderCapabilityActionType.PatrolArea:
+                    if (!TryResolvePatrolPoint(intent.PlayerId, intent.LocationSelector, resource,
+                        unitIds, position, out position))
+                    {
+                        reason = "No known walkable patrol point with a complete route for every exact selected unit exists near the requested anchor.";
+                        return false;
+                    }
                     command = new PatrolCommand(intent.PlayerId, unitIds, position);
-                    reason = "Resolved a point patrol route from each selected unit's starting position to a visible game-side anchor.";
+                    reason = "Resolved a point patrol route from each selected unit's starting position to a known walkable point beside the selected game-side anchor.";
                     return true;
                 case CommanderCapabilityActionType.SetRallyPoint:
                     return TryRally(intent.PlayerId, intent.StructureType, position, resource,
@@ -141,6 +148,100 @@ namespace OpenEmpires
                     reason = "Unsupported Commander capability.";
                     return false;
             }
+        }
+
+        // A semantic anchor may be the occupied center of a TC or resource. Native patrol
+        // needs a point it can reach in both directions; search only the anchor footprint
+        // plus two tiles, in deterministic nearest-first order. Never substitute another anchor.
+        private bool TryResolvePatrolPoint(int playerId, CommanderLocationSelector selector,
+            ResourceNodeData resource, int[] unitIds, FixedVector3 anchor, out FixedVector3 point)
+        {
+            point = default;
+            if (unitIds == null || unitIds.Length == 0) return false;
+            Vector2Int anchorTile = simulation.MapData.WorldToTile(anchor);
+            int left = anchorTile.x, bottom = anchorTile.y, right = left + 1, top = bottom + 1;
+            if (selector.Kind == CommanderLocationSelectorKind.PlayerBase)
+            {
+                BuildingData tc = simulation.BuildingRegistry.GetAllBuildings()
+                    .Where(b => b != null && b.PlayerId == playerId && !b.IsDestroyed
+                        && simulation.GetEffectiveBuildingType(b) == BuildingType.TownCenter)
+                    .OrderBy(b => b.Id).FirstOrDefault();
+                if (tc == null || simulation.MapData.WorldToTile(tc.SimPosition) != anchorTile) return false;
+                left = tc.OriginTileX; bottom = tc.OriginTileZ;
+                right = left + tc.TileFootprintWidth; top = bottom + tc.TileFootprintHeight;
+            }
+            else if (resource != null)
+            {
+                left = resource.TileX; bottom = resource.TileZ;
+                right = left + resource.FootprintWidth; top = bottom + resource.FootprintHeight;
+            }
+            var candidates = new List<Vector2Int>();
+            for (int x = left - 2; x < right + 2; x++)
+                for (int z = bottom - 2; z < top + 2; z++)
+                {
+                    if (x >= left && x < right && z >= bottom && z < top) continue;
+                    candidates.Add(new Vector2Int(x, z));
+                }
+            foreach (Vector2Int tile in candidates.OrderBy(candidate =>
+                (candidate.x - anchorTile.x) * (candidate.x - anchorTile.x)
+                + (candidate.y - anchorTile.y) * (candidate.y - anchorTile.y))
+                .ThenBy(candidate => candidate.x).ThenBy(candidate => candidate.y))
+            {
+                if (!simulation.MapData.IsWalkable(tile.x, tile.y)
+                    || !simulation.MapData.IsWalkable(tile.x, tile.y, playerId, simulation.BuildingRegistry)
+                    || !IsKnownPatrolTile(playerId, tile)) continue;
+                bool allReachable = true;
+                foreach (int id in unitIds)
+                {
+                    UnitData unit = simulation.UnitRegistry.GetUnit(id);
+                    if (unit == null || unit.PlayerId != playerId || unit.CurrentHealth <= 0
+                        || unit.State == UnitState.Dead) { allReachable = false; break; }
+                    Vector2Int start = simulation.MapData.WorldToTile(unit.SimPosition);
+                    if (start == tile || !simulation.MapData.IsWalkable(start.x, start.y, playerId, simulation.BuildingRegistry)
+                        || !GridPathfinder.TryFindCompletePath(simulation.MapData, start, tile,
+                            out List<Vector2Int> outward, playerId, simulation.BuildingRegistry)
+                        || !IsKnownPatrolPath(playerId, start, outward)
+                        || !GridPathfinder.TryFindCompletePath(simulation.MapData, tile, start,
+                            out List<Vector2Int> returning, playerId, simulation.BuildingRegistry)
+                        || !IsKnownPatrolPath(playerId, tile, returning))
+                    { allReachable = false; break; }
+                }
+                if (!allReachable) continue;
+                point = simulation.MapData.TileToWorldFixed(tile.x, tile.y);
+                return true;
+            }
+            return false;
+        }
+
+        private bool IsKnownPatrolPath(int playerId, Vector2Int start, List<Vector2Int> path)
+        {
+            Vector2Int from = start;
+            foreach (Vector2Int to in path)
+            {
+                int x = from.x, z = from.y;
+                int dx = Mathf.Abs(to.x - x), dz = Mathf.Abs(to.y - z);
+                int sx = x < to.x ? 1 : -1, sz = z < to.y ? 1 : -1;
+                int error = dx - dz;
+                while (true)
+                {
+                    if (!IsKnownPatrolTile(playerId, new Vector2Int(x, z))) return false;
+                    if (x == to.x && z == to.y) break;
+                    int twice = 2 * error;
+                    bool stepX = twice > -dz, stepZ = twice < dx;
+                    if (stepX && stepZ && (!IsKnownPatrolTile(playerId, new Vector2Int(x + sx, z))
+                        || !IsKnownPatrolTile(playerId, new Vector2Int(x, z + sz)))) return false;
+                    if (stepX) { error -= dz; x += sx; }
+                    if (stepZ) { error += dx; z += sz; }
+                }
+                from = to;
+            }
+            return IsKnownPatrolTile(playerId, start);
+        }
+
+        private bool IsKnownPatrolTile(int playerId, Vector2Int tile)
+        {
+            TileVisibility visibility = simulation.FogOfWar.GetVisibility(playerId, tile.x, tile.y);
+            return visibility == TileVisibility.Visible || visibility == TileVisibility.Explored;
         }
 
         private bool TryResolveUnits(int playerId, CommanderUnitSelector selector,
@@ -187,7 +288,7 @@ namespace OpenEmpires
             return true;
         }
 
-        private bool MatchesSelector(UnitData unit, CommanderUnitSelector selector)
+        internal bool MatchesSelector(UnitData unit, CommanderUnitSelector selector)
         {
             switch (selector.Kind)
             {

@@ -1,0 +1,143 @@
+{
+  "job_id": "f72fca279d6244498d05669f90864dd0",
+  "status": "succeeded",
+  "mode": "EditMode",
+  "started_unix_ms": 1791784659379,
+  "finished_unix_ms": 1791784668182,
+  "last_update_unix_ms": 1791784668182,
+  "progress": {
+    "completed": 12,
+    "total": 12,
+    "current_test_full_name": null,
+    "current_test_started_unix_ms": 1791784667712,
+    "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.OneCompleteJsonFence_ParsesButAmbiguousPayloadDoesNot",
+    "last_finished_unix_ms": 1791784668009,
+    "stuck_suspected": false,
+    "editor_is_focused": false,
+    "blocked_reason": null,
+    "failures_so_far": [],
+    "failures_capped": false
+  },
+  "error": null,
+  "result": {
+    "mode": "EditMode",
+    "summary": {
+      "total": 12,
+      "passed": 12,
+      "failed": 0,
+      "skipped": 0,
+      "durationSeconds": 3.8018328,
+      "resultState": "Passed"
+    },
+    "results": [
+      {
+        "name": "HttpFailures_AreDistinctAndDoNotEchoUpstream(400,\"request was rejected\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.HttpFailures_AreDistinctAndDoNotEchoUpstream(400,\"request was rejected\")",
+        "state": "Passed",
+        "durationSeconds": 0.264304,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-12T05:57:45.0837565Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=400;durationMs=7\r\n"
+      },
+      {
+        "name": "HttpFailures_AreDistinctAndDoNotEchoUpstream(401,\"authentication\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.HttpFailures_AreDistinctAndDoNotEchoUpstream(401,\"authentication\")",
+        "state": "Passed",
+        "durationSeconds": 0.2009324,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-12T05:57:45.3383287Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=401;durationMs=4\r\n"
+      },
+      {
+        "name": "HttpFailures_AreDistinctAndDoNotEchoUpstream(402,\"credits\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.HttpFailures_AreDistinctAndDoNotEchoUpstream(402,\"credits\")",
+        "state": "Passed",
+        "durationSeconds": 0.209746,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-12T05:57:45.5718815Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=402;durationMs=2\r\n"
+      },
+      {
+        "name": "HttpFailures_AreDistinctAndDoNotEchoUpstream(403,\"forbidden\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.HttpFailures_AreDistinctAndDoNotEchoUpstream(403,\"forbidden\")",
+        "state": "Passed",
+        "durationSeconds": 0.2082017,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-12T05:57:45.7900310Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=403;durationMs=8\r\n"
+      },
+      {
+        "name": "HttpFailures_AreDistinctAndDoNotEchoUpstream(404,\"model unavailable\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.HttpFailures_AreDistinctAndDoNotEchoUpstream(404,\"model unavailable\")",
+        "state": "Passed",
+        "durationSeconds": 0.1983,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-12T05:57:46.0210756Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=404;durationMs=5\r\n"
+      },
+      {
+        "name": "HttpFailures_AreDistinctAndDoNotEchoUpstream(408,\"timed out\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.HttpFailures_AreDistinctAndDoNotEchoUpstream(408,\"timed out\")",
+        "state": "Passed",
+        "durationSeconds": 0.203765,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-12T05:57:46.2548079Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=408;durationMs=4\r\n"
+      },
+      {
+        "name": "HttpFailures_AreDistinctAndDoNotEchoUpstream(429,\"rate-limited\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.HttpFailures_AreDistinctAndDoNotEchoUpstream(429,\"rate-limited\")",
+        "state": "Passed",
+        "durationSeconds": 0.2188527,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-12T05:57:46.4868311Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=429;durationMs=5\r\n"
+      },
+      {
+        "name": "HttpFailures_AreDistinctAndDoNotEchoUpstream(503,\"provider unavailable\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.HttpFailures_AreDistinctAndDoNotEchoUpstream(503,\"provider unavailable\")",
+        "state": "Passed",
+        "durationSeconds": 0.1493151,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-12T05:57:46.7219509Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=503;durationMs=6\r\n"
+      },
+      {
+        "name": "LengthFinishReason_RejectsEvenIfContentLooksValid",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.LengthFinishReason_RejectsEvenIfContentLooksValid",
+        "state": "Passed",
+        "durationSeconds": 0.2212382,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-12T05:57:46.9639610Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=4\r\n[CommanderProvider] finish=length\r\n"
+      },
+      {
+        "name": "NaturalParaphrase_ReturnsSameTypedUnitRequest(\"Could you get our spearmen up to ten?\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.NaturalParaphrase_ReturnsSameTypedUnitRequest(\"Could you get our spearmen up to ten?\")",
+        "state": "Passed",
+        "durationSeconds": 0.3264051,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-12T05:57:47.3125192Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=7\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=87;finish=stop\r\n[CommanderProvider] semantic=Request;nodes=1\r\n"
+      },
+      {
+        "name": "NaturalParaphrase_ReturnsSameTypedUnitRequest(\"I want a total of ten spears in my army.\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.NaturalParaphrase_ReturnsSameTypedUnitRequest(\"I want a total of ten spears in my army.\")",
+        "state": "Passed",
+        "durationSeconds": 0.1146633,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-12T05:57:47.5526230Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=28\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=87;finish=stop\r\n[CommanderProvider] semantic=Request;nodes=1\r\n"
+      },
+      {
+        "name": "OneCompleteJsonFence_ParsesButAmbiguousPayloadDoesNot",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.OneCompleteJsonFence_ParsesButAmbiguousPayloadDoesNot",
+        "state": "Passed",
+        "durationSeconds": 0.2635176,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-12T05:57:47.8731889Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=5\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=99;finish=stop\r\n[CommanderProvider] semantic=Request;nodes=1\r\n[CommanderProvider] utc=2026-10-12T05:57:47.8909067Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=20\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=174;finish=stop\r\n[CommanderProvider] schema=field=$;code=invalid-schema;stage=envelope;node=-1\r\n[CommanderProvider] semantic=invalid;nodes=0\r\n"
+      }
+    ]
+  }
+}

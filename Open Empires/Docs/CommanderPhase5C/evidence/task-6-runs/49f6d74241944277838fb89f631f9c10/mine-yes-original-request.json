@@ -1,0 +1,167 @@
+{
+  "schema": "openempires-phase5c-scenario-turn@1",
+  "run_id": "85196d44-397c-4233-a824-4918f0392b56",
+  "first_failing_stage": "native-placement",
+  "first_failure_category": "mine-placement-not-complete",
+  "schemaVersion": 1,
+  "caseId": "mine-yes-original-request",
+  "requestId": "runtime:1",
+  "utterance": "Build a gold mine near gold.",
+  "turnIndex": 1,
+  "status": "open-gap",
+  "evidenceMode": "offline-production-chat-fixture",
+  "providerCalls": 1,
+  "httpAttempts": 0,
+  "packAccepted": true,
+  "fidelity": "matched",
+  "semanticValid": null,
+  "estimatedInputTokens": 2666,
+  "actualPromptTokens": null,
+  "actualCompletionTokens": null,
+  "actualCachedTokens": null,
+  "actualReasoningTokens": null,
+  "reportedCost": null,
+  "attemptCosts": [],
+  "packingMs": null,
+  "transportMs": null,
+  "parseMs": null,
+  "admissionMs": null,
+  "firstNativeActionMs": null,
+  "commandCount": 0,
+  "commandTypes": [],
+  "nativeResults": [],
+  "taskStates": [
+    "BuildStructureGoal:Blocked"
+  ],
+  "draftBefore": [
+    "0:structure:Confirmation"
+  ],
+  "draftAfter": [],
+  "draftChanges": [
+    "0:structure:Confirmation"
+  ],
+  "normalizedFields": [],
+  "admittedFields": [
+    {
+      "type": "BuildStructureGoal",
+      "status": "Pending",
+      "originalUtterance": "Build a gold mine near gold.",
+      "building": "Mine",
+      "count": 1,
+      "anchor": "VisibleResource",
+      "anchorOrdinal": null,
+      "relation": "Near",
+      "resource": "Gold",
+      "source": "GoldMine"
+    }
+  ],
+  "turnHistory": [
+    {
+      "index": 0,
+      "text": "Build a gold mine near gold.",
+      "requestId": "runtime:1",
+      "uiState": "Needs clarification",
+      "providerCalls": 1,
+      "packAccepted": true,
+      "estimatedInputTokens": 2666,
+      "semanticValid": true,
+      "semanticOutcome": "Clarify",
+      "normalizedFields": [
+        {
+          "draftNodeCount": 1,
+          "missingSlots": [
+            "0:structure:Confirmation"
+          ]
+        },
+        {
+          "draftType": "BuildStructure",
+          "structure": "Mine",
+          "count": 1,
+          "resource": null,
+          "resourceAmount": null,
+          "resourceAmountMode": null,
+          "workerMode": null,
+          "countMode": null,
+          "workerState": null,
+          "workerCurrentResource": null,
+          "destinationResource": null,
+          "destinationSource": null,
+          "producerOrdinal": null,
+          "dependencies": []
+        }
+      ],
+      "admittedFields": [],
+      "draftBefore": [],
+      "draftAfter": [
+        "0:structure:Confirmation"
+      ],
+      "draftChanges": [],
+      "approvalRequired": false,
+      "approved": false,
+      "commandTypes": [],
+      "taskStates": [],
+      "uiSubmitMs": 209.231,
+      "packingMs": 18.114,
+      "transportMs": null,
+      "parseMs": 13.879,
+      "admissionMs": 11.714
+    },
+    {
+      "index": 1,
+      "text": "Yes.",
+      "requestId": "runtime:1",
+      "uiState": "Accepted",
+      "providerCalls": 1,
+      "packAccepted": null,
+      "estimatedInputTokens": null,
+      "semanticValid": null,
+      "semanticOutcome": "Request",
+      "normalizedFields": [],
+      "admittedFields": [
+        {
+          "type": "BuildStructureGoal",
+          "status": "Pending",
+          "originalUtterance": "Build a gold mine near gold.",
+          "building": "Mine",
+          "count": 1,
+          "anchor": "VisibleResource",
+          "anchorOrdinal": null,
+          "relation": "Near",
+          "resource": "Gold",
+          "source": "GoldMine"
+        }
+      ],
+      "draftBefore": [
+        "0:structure:Confirmation"
+      ],
+      "draftAfter": [],
+      "draftChanges": [
+        "0:structure:Confirmation"
+      ],
+      "approvalRequired": false,
+      "approved": false,
+      "commandTypes": [],
+      "taskStates": [
+        "BuildStructureGoal:Pending"
+      ],
+      "uiSubmitMs": 124.965,
+      "packingMs": null,
+      "transportMs": null,
+      "parseMs": null,
+      "admissionMs": null
+    }
+  ],
+  "fogNewlyExploredCount": null,
+  "fixtureKind": "correct-synthetic",
+  "turnText": "Yes.",
+  "uiSubmitMs": 124.965,
+  "semanticOutcome": "Request",
+  "approvalRequired": false,
+  "approved": false,
+  "uiState": "Accepted",
+  "tickMode": "accelerated-fixture",
+  "ticks": 60,
+  "errorStage": "native-placement",
+  "errorCategory": "mine-placement-not-complete",
+  "gap": "BuildStructureGoal:Blocked"
+}

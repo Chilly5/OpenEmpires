@@ -1,0 +1,150 @@
+{
+  "schema": "openempires-phase5c-scenario-turn@1",
+  "run_id": "a128e06b-966e-44b3-97e2-eecef92584d7",
+  "first_failing_stage": null,
+  "first_failure_category": null,
+  "schemaVersion": 1,
+  "caseId": "defense-arrival-native-receipt",
+  "requestId": "runtime:1",
+  "utterance": "Move these six units to defend the center of our base.",
+  "turnIndex": 0,
+  "status": "observed",
+  "evidenceMode": "offline-production-chat-fixture",
+  "providerCalls": 1,
+  "httpAttempts": 0,
+  "fidelity": "fixture-expected-observed",
+  "semanticValid": true,
+  "estimatedInputTokens": null,
+  "actualPromptTokens": null,
+  "actualCompletionTokens": null,
+  "actualCachedTokens": null,
+  "actualReasoningTokens": null,
+  "reportedCost": null,
+  "attemptCosts": [],
+  "packingMs": 14.852,
+  "transportMs": null,
+  "parseMs": 0.052,
+  "admissionMs": 26.384,
+  "firstNativeActionMs": 548.644,
+  "commandCount": 1,
+  "commandTypes": [
+    "MoveCommand"
+  ],
+  "nativeResults": [
+    "Move:Complete",
+    "Move:Complete",
+    "Move:Complete",
+    "Move:Complete",
+    "Move:Complete",
+    "Move:Complete",
+    "MoveCommand:processed"
+  ],
+  "taskStates": [
+    "CommanderCapabilityGoal:Executing"
+  ],
+  "draftBefore": [],
+  "draftAfter": [],
+  "draftChanges": [],
+  "normalizedFields": [
+    {
+      "type": "DefendArea",
+      "building": null,
+      "unit": null,
+      "resource": null,
+      "count": 6,
+      "quantityMode": "TargetTotal",
+      "anchor": null,
+      "anchorOrdinal": null,
+      "relation": null,
+      "placementSource": null,
+      "unitSelector": "Spearman",
+      "locationSelector": "PlayerBase",
+      "producerOrdinal": null,
+      "producerFrom": null,
+      "resultFrom": null,
+      "futureAction": null,
+      "workerMode": null,
+      "workerCountMode": null,
+      "workerCount": null,
+      "workerState": null,
+      "workerCurrentResource": null,
+      "destinationResource": null,
+      "destinationSource": null,
+      "resourceAmount": null,
+      "resourceAmountMode": null,
+      "dependencies": []
+    }
+  ],
+  "admittedFields": [
+    {
+      "type": "CommanderCapabilityGoal",
+      "status": "Pending",
+      "originalUtterance": "Move these six units to defend the center of our base."
+    }
+  ],
+  "turnHistory": [
+    {
+      "index": 0,
+      "text": "Move these six units to defend the center of our base.",
+      "requestId": "runtime:1",
+      "providerCalls": 1,
+      "semanticValid": true,
+      "semanticOutcome": "Request",
+      "normalizedFields": [
+        {
+          "type": "DefendArea",
+          "building": null,
+          "unit": null,
+          "resource": null,
+          "count": 6,
+          "quantityMode": "TargetTotal",
+          "anchor": null,
+          "anchorOrdinal": null,
+          "relation": null,
+          "placementSource": null,
+          "unitSelector": "Spearman",
+          "locationSelector": "PlayerBase",
+          "producerOrdinal": null,
+          "producerFrom": null,
+          "resultFrom": null,
+          "futureAction": null,
+          "workerMode": null,
+          "workerCountMode": null,
+          "workerCount": null,
+          "workerState": null,
+          "workerCurrentResource": null,
+          "destinationResource": null,
+          "destinationSource": null,
+          "resourceAmount": null,
+          "resourceAmountMode": null,
+          "dependencies": []
+        }
+      ],
+      "admittedFields": [
+        {
+          "type": "CommanderCapabilityGoal",
+          "status": "Pending",
+          "originalUtterance": "Move these six units to defend the center of our base."
+        }
+      ],
+      "draftBefore": [],
+      "draftAfter": [],
+      "draftChanges": [],
+      "approvalRequired": false,
+      "approved": false,
+      "commandTypes": [],
+      "taskStates": [
+        "CommanderCapabilityGoal:Pending"
+      ],
+      "uiSubmitMs": 41.208
+    }
+  ],
+  "fixtureKind": "correct-synthetic",
+  "turnText": "Move these six units to defend the center of our base.",
+  "uiSubmitMs": 41.208,
+  "semanticOutcome": "Request",
+  "approvalRequired": false,
+  "approved": false,
+  "tickMode": "accelerated-fixture",
+  "ticks": 60
+}

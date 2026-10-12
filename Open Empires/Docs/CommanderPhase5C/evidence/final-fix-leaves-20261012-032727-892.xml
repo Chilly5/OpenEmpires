@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 03:27:27Z" end-time="2026-10-12 03:27:28Z" duration="0.8515168">
+  <test-suite type="TestSuite" id="1304" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="254" result="Failed" site="Child" start-time="2026-10-12 03:27:27Z" end-time="2026-10-12 03:27:28Z" duration="0.851517" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1298" name="OpenEmpires.PlayModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.PlayModeTests.dll" runstate="Runnable" testcasecount="254" result="Failed" site="Child" start-time="2026-10-12 03:27:28Z" end-time="2026-10-12 03:27:28Z" duration="0.730063" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="12696" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1299" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="254" result="Failed" site="Child" start-time="2026-10-12 03:27:28Z" end-time="2026-10-12 03:27:28Z" duration="0.722621" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1300" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="254" result="Failed" site="Child" start-time="2026-10-12 03:27:28Z" end-time="2026-10-12 03:27:28Z" duration="0.720113" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1263" name="CommanderPhase5CUIPlayModeTests" fullname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests" classname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests" runstate="Runnable" testcasecount="32" result="Failed" site="Child" start-time="2026-10-12 03:27:28Z" end-time="2026-10-12 03:27:28Z" duration="0.716244" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5COffline" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1265" name="LocalMetricsSettings_AreOffByDefaultAndRecordOriginalTimedOutTicket" fullname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.LocalMetricsSettings_AreOffByDefaultAndRecordOriginalTimedOutTicket" methodname="LocalMetricsSettings_AreOffByDefaultAndRecordOriginalTimedOutTicket" classname="OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests" runstate="Runnable" seed="1820813346" result="Failed" start-time="2026-10-12 03:27:28Z" end-time="2026-10-12 03:27:28Z" duration="0.621494" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "On"
+  But was:  "Record local metrics: Off"
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests+<LocalMetricsSettings_AreOffByDefaultAndRecordOriginalTimedOutTicket>d__14.MoveNext () [0x00178] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\PlayMode\CommanderPhase5CUIPlayModeTests.cs:97
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: Docs\CommanderPhase5C\evidence\final-fix-leaves-20261012-032727-892.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

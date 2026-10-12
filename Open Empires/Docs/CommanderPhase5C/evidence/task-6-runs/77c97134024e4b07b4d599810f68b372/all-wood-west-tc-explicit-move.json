@@ -1,0 +1,197 @@
+{
+  "schema": "openempires-phase5c-scenario-turn@1",
+  "run_id": "719e209f-4012-4c12-9e2d-5dfbe7569638",
+  "first_failing_stage": null,
+  "first_failure_category": null,
+  "schemaVersion": 1,
+  "caseId": "all-wood-west-tc-explicit-move",
+  "requestId": "runtime:1",
+  "utterance": "Move all of wood villagers to left of my town center woodline.",
+  "turnIndex": 0,
+  "status": "observed",
+  "evidenceMode": "offline-production-chat-fixture",
+  "providerCalls": 1,
+  "httpAttempts": 0,
+  "packAccepted": true,
+  "fidelity": "matched",
+  "semanticValid": true,
+  "estimatedInputTokens": 3736,
+  "actualPromptTokens": null,
+  "actualCompletionTokens": null,
+  "actualCachedTokens": null,
+  "actualReasoningTokens": null,
+  "reportedCost": null,
+  "attemptCosts": [],
+  "packingMs": 3.232,
+  "transportMs": null,
+  "parseMs": 8.777,
+  "admissionMs": 44.515,
+  "firstNativeActionMs": 575.15,
+  "commandCount": 1,
+  "commandTypes": [
+    "MoveCommand"
+  ],
+  "nativeResults": [
+    "Move:Complete",
+    "Move:Complete",
+    "Move:Complete",
+    "MoveCommand:processed"
+  ],
+  "taskStates": [
+    "CommanderCapabilityGoal:Completed"
+  ],
+  "draftBefore": [],
+  "draftAfter": [],
+  "draftChanges": [],
+  "normalizedFields": [
+    {
+      "mechanic": "SelectWorkers",
+      "parameters": {
+        "countMode": "AllMatching",
+        "state": "Gathering",
+        "currentResource": "Wood"
+      },
+      "inputs": {},
+      "dependencies": []
+    },
+    {
+      "mechanic": "ResolveLocation",
+      "parameters": {
+        "anchor": "MyTownCenter",
+        "relation": "MapWest",
+        "clearGap": 1,
+        "resource": "Wood",
+        "sourceKind": "Tree"
+      },
+      "inputs": {},
+      "dependencies": []
+    },
+    {
+      "mechanic": "MoveWorkers",
+      "parameters": {},
+      "inputs": {
+        "workers": 0,
+        "location": 1
+      },
+      "dependencies": [
+        0,
+        1
+      ]
+    }
+  ],
+  "admittedFields": [
+    {
+      "type": "CommanderCapabilityGoal",
+      "status": "Pending",
+      "originalUtterance": "Move all of wood villagers to left of my town center woodline."
+    }
+  ],
+  "turnHistory": [
+    {
+      "index": 0,
+      "text": "Move all of wood villagers to left of my town center woodline.",
+      "requestId": "runtime:1",
+      "uiState": "Awaiting approval",
+      "providerCalls": 1,
+      "packAccepted": true,
+      "estimatedInputTokens": 3736,
+      "semanticValid": true,
+      "semanticOutcome": "DynamicPlan",
+      "normalizedFields": [
+        {
+          "mechanic": "SelectWorkers",
+          "parameters": {
+            "countMode": "AllMatching",
+            "state": "Gathering",
+            "currentResource": "Wood"
+          },
+          "inputs": {},
+          "dependencies": []
+        },
+        {
+          "mechanic": "ResolveLocation",
+          "parameters": {
+            "anchor": "MyTownCenter",
+            "relation": "MapWest",
+            "clearGap": 1,
+            "resource": "Wood",
+            "sourceKind": "Tree"
+          },
+          "inputs": {},
+          "dependencies": []
+        },
+        {
+          "mechanic": "MoveWorkers",
+          "parameters": {},
+          "inputs": {
+            "workers": 0,
+            "location": 1
+          },
+          "dependencies": [
+            0,
+            1
+          ]
+        }
+      ],
+      "admittedFields": [],
+      "draftBefore": [],
+      "draftAfter": [],
+      "draftChanges": [],
+      "approvalRequired": true,
+      "approved": false,
+      "commandTypes": [],
+      "taskStates": [],
+      "uiSubmitMs": 70.098,
+      "packingMs": 3.232,
+      "transportMs": null,
+      "parseMs": 8.777,
+      "admissionMs": 44.515
+    },
+    {
+      "index": 1,
+      "text": "Approve plan",
+      "origin": "offline-fixture-control",
+      "requestId": "runtime:1",
+      "uiState": "Accepted",
+      "providerCalls": 1,
+      "approved": true,
+      "admittedFields": [
+        {
+          "type": "CommanderCapabilityGoal",
+          "status": "Pending",
+          "originalUtterance": "Move all of wood villagers to left of my town center woodline."
+        }
+      ],
+      "taskStates": [
+        "CommanderCapabilityGoal:Pending"
+      ],
+      "uiSubmitMs": 58.672
+    }
+  ],
+  "fogNewlyExploredCount": null,
+  "garrisonHousedCount": null,
+  "garrisonProtectedCount": null,
+  "garrisonUnaccommodatedCount": null,
+  "futureObservedCount": null,
+  "futureAssignedCount": null,
+  "humanTrainCommands": null,
+  "resourceProgress": null,
+  "gatheredFoodIncome": null,
+  "foodCompletionTick": null,
+  "foodIncomeAtCompletion": null,
+  "commanderCommandsAtFoodCompletion": null,
+  "ordinaryFoodGatherActive": null,
+  "ownedTaskFactCount": null,
+  "readOnlyProviderRequest": false,
+  "questionFactClass": null,
+  "fixtureKind": "correct-synthetic",
+  "turnText": "Move all of wood villagers to left of my town center woodline.",
+  "uiSubmitMs": 70.098,
+  "semanticOutcome": "DynamicPlan",
+  "approvalRequired": true,
+  "approved": true,
+  "uiState": "Accepted",
+  "approvalMode": "offline-fixture-control-not-declared-player-turn",
+  "tickMode": "accelerated-fixture",
+  "ticks": 1500
+}

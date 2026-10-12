@@ -1,0 +1,14 @@
+# Task 2 fix round 2 — scoped re-review
+
+## Verdict
+
+- **Negated/conditional correction finding: ADDRESSED for the reviewed cases.** The new whole-reply affirmative gate runs before replacement scanning (`CommanderRequestGraphDraft.cs:145-149,244-273`). `Don't/do not/never change...`, conditional/example clauses, and questions do not match it; `Resolve` returns null, and the retained-graph caller re-asks before HTTP (`CommanderChatUI.cs:465-480`). The existing ticket and graph are not replaced on that path. The frozen raw EditMode results report 11/11 affected tests and 3/3 controls passed, including old-value `yes`, separate compound approval, `no`, and reply budgets. This is focused fixture evidence, not live-provider/native acceptance.
+- **Spec compliance: NOT YET. Task quality: NEEDS FIX** for the new guard issue below. No other guard-diff breakage established in this scoped review.
+
+## New breakage
+
+- **Important — the old amount qualifier is not verified in `change old to new`.** `NamesCurrentValue` checks only the numeric value and that the old phrase is a typed non-worker amount (`CommanderRequestGraphDraft.cs:310-317`); it does not compare the old phrase's resource or `stockpile`/`additional` mode with the retained graph. For the already-covered draft with `destination.resource=Food`, `resourceAmount=400`, `resourceAmountMode=AdditionalGathered`, and `count=3`, `change 400 wood to 500 food` passes the new shape gate (`:255-265`), creates only a `resourceAmount=500` change (`:170-177,191-223`), and passes `NamesCurrentValue` even though the draft has no 400-Wood amount. The strict reparse would preserve Food/AdditionalGathered and admit a changed amount after the remaining source slot is answered. This is an explicit old-value mismatch, not an unrecognized utterance that fails closed. Require the named old amount's resource/mode to match the selected graph field, or reject that old-to-new shape locally. The 14 saved tests exercise `instead` positives, not this old-to-new case; this finding is source-path reasoning, not a newly run test.
+
+## Evidence and limits
+
+Reviewed the frozen production diff and test additions against the live files; SHA-256 matches the package (`C1B615525226E3303E60DE854D25E5EF03320ACCB62724D5A77723AD7FD47EAF` production, `99681AFCA2252CD019DB479891513090E7DCB6BBC56DCFAD6F4DFC5067D6FB98` tests). Raw saved results: `evidence/task-2-fix2-green.json` 11/11 and `evidence/task-2-fix2-controls-green.json` 3/3. `change Mine to Mill`, `change six villagers to three villagers`, and `change Sheep to Berries` have plausible typed one-leaf source paths with old-value checks, but no direct saved test; no pass claim is made for them. An article-bearing `change the Mine to a Mill` is rejected by the bounded replacement grammar, consistent with its stated fail-closed language limit. No tests, Unity/MCP, provider, build, network, or broader review were run.

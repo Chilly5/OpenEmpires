@@ -1,0 +1,66 @@
+diff --git a/Docs/CommanderPhase5C/evidence/task7-preflight-baseline/Assets/Tests/PlayMode/CommanderPhase5CUIPlayModeTests.cs b/Assets/Tests/PlayMode/CommanderPhase5CUIPlayModeTests.cs
+index a218147..e535d41 100644
+--- a/Docs/CommanderPhase5C/evidence/task7-preflight-baseline/Assets/Tests/PlayMode/CommanderPhase5CUIPlayModeTests.cs
++++ b/Assets/Tests/PlayMode/CommanderPhase5CUIPlayModeTests.cs
+@@ -112,6 +112,46 @@ namespace OpenEmpires.Tests
+             finally { Directory.Delete(directory, true); }
+         }
+ 
++        [UnityTest]
++        public IEnumerator LocalMetrics_ReadOnlyAnswerRetainsCostWithoutCompletedGameplayTask()
++        {
++            string directory = Path.Combine(Path.GetTempPath(), "commander-ui-answer-observation-"
++                + Guid.NewGuid().ToString("N"));
++            Directory.CreateDirectory(directory);
++            string path = Path.Combine(directory, "observations.json");
++            try
++            {
++                var store = new CommanderTurnObservationStore(path);
++                store.SetRecording(true);
++                typeof(CommanderChatUI).GetField("localObservationStore",
++                    BindingFlags.Instance | BindingFlags.NonPublic).SetValue(chat, store);
++                chat.Initialize(new OpenRouterCommanderProvider("fixture-not-a-credential",
++                    new ChargedAnswerTransport()), simulation, goals, dispatcher, TimeSpan.FromSeconds(2));
++                chat.enabled = true;
++                chat.OpenCommander();
++                Task<CommanderAIChatSubmission> request = chat.SubmitMessageAsync("Summarize my spearmen.");
++                while (!request.IsCompleted) yield return null;
++                Assert.That(request.Exception, Is.Null);
++                Assert.That(goals.Goals, Is.Empty, "A read-only answer admits no gameplay goal.");
++                Assert.That(CommanderTaskBoardProjection.Capture(goals, null, 1).Cards, Is.Empty,
++                    "An answered question has no task card.");
++                Assert.That(simulation.CommandBuffer.FlushCommands(), Is.Empty,
++                    "An answered question issues no gameplay command.");
++                Assert.That(TextOf(chat.transform.Find("CommanderCanvas/Panel/LatestRequest")),
++                    Does.StartWith("Completed"), "The conversation reply may finish visibly.");
++                string json = File.ReadAllText(path);
++                Assert.That(json, Does.Contain("\"requestId\":" + chat.LastSubmittedSemanticRequestId.Value));
++                Assert.That(json, Does.Contain("\"outcome\":\"Answer\""));
++                Assert.That(json, Does.Contain("\"taskStatus\":\"NotApplicable\""),
++                    "The conversation reply may finish without a gameplay task being completed.");
++                Assert.That(json, Does.Contain("\"promptTokens\":37"));
++                Assert.That(json, Does.Contain("\"completionTokens\":11"));
++                Assert.That(json, Does.Contain("\"cost\":0.001"));
++                Assert.That(json, Does.Not.Contain("Summarize my spearmen"));
++            }
++            finally { Directory.Delete(directory, true); }
++        }
++
+         [UnityTest]
+         public IEnumerator LocalMetricsSettings_AreOffByDefaultAndRecordOriginalTimedOutTicket()
+         {
+@@ -1032,6 +1072,14 @@ namespace OpenEmpires.Tests
+                     "{\"choices\":[{\"finish_reason\":\"stop\",\"message\":{\"content\":\"{\\\"outcome\\\":\\\"Request\\\",\\\"nodes\\\":[{\\\"type\\\":\\\"EnsureUnitCount\\\",\\\"unit\\\":\\\"Spearman\\\",\\\"count\\\":3}]}\"}}],\"usage\":{\"prompt_tokens\":37,\"completion_tokens\":11,\"cost\":0.001}}"));
+         }
+ 
++        private sealed class ChargedAnswerTransport : ICommanderHttpTransport
++        {
++            public Task<CommanderHttpResponse> PostJsonAsync(Uri uri, string body,
++                System.Collections.Generic.IReadOnlyDictionary<string, string> headers, CancellationToken token)
++                => Task.FromResult(new CommanderHttpResponse(200,
++                    "{\"choices\":[{\"finish_reason\":\"stop\",\"message\":{\"content\":\"{\\\"outcome\\\":\\\"Answer\\\",\\\"message\\\":\\\"I can answer that question.\\\"}\"}}],\"usage\":{\"prompt_tokens\":37,\"completion_tokens\":11,\"cost\":0.001}}"));
++        }
++
+         private sealed class FixtureAudioCapture : ICommanderAudioCapture
+         {
+             public bool IsRecording { get; private set; }

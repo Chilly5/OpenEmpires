@@ -29,7 +29,10 @@ namespace OpenEmpires
         ResearchTechnology,
         StrategicObjective,
         AllocateWorkers,
-        WatchFutureUnits
+        WatchFutureUnits,
+        GarrisonUnits,
+        UngarrisonBuilding,
+        DiscoverEnemy
     }
 
     // Provider-facing age vocabulary. Numeric game ages remain game-side data.
@@ -93,6 +96,7 @@ namespace OpenEmpires
         public CommanderSemanticPlacementRelation? PlacementRelation { get; }
         public int? ClearGapTiles { get; }
         public CommanderSemanticUnitSelector? UnitSelector { get; }
+        public bool AllMatchingUnits { get; }
         public CommanderSemanticLocationSelector? LocationSelector { get; }
         public CommanderTargetSelector? TargetSelector { get; }
         public CommanderProductionQuantityMode QuantityMode { get; }
@@ -127,7 +131,8 @@ namespace OpenEmpires
             CommanderProductionQuantityMode quantityMode = CommanderProductionQuantityMode.TargetTotal,
             int? producerOrdinal = null,
             CommanderFutureUnitAction? futureAction = null,
-            ResourceSourceKind? sourceKind = null)
+            ResourceSourceKind? sourceKind = null,
+            bool allMatchingUnits = false)
         {
             Type = type;
             UnitType = unitType;
@@ -141,6 +146,7 @@ namespace OpenEmpires
             ClearGapTiles = clearGapTiles;
             AgeTarget = ageTarget;
             UnitSelector = unitSelector;
+            AllMatchingUnits = allMatchingUnits;
             LocationSelector = locationSelector;
             TargetSelector = targetSelector;
             QuantityMode = quantityMode;
@@ -168,17 +174,19 @@ namespace OpenEmpires
         public IReadOnlyList<CommanderSemanticNode> Nodes { get; }
         public string SafeExplanation { get; }
         public CommanderWorkerAllocationDraft PendingDraft { get; }
+        public CommanderRequestGraphDraft PendingGraphDraft { get; }
         public CommanderDynamicPlan DynamicPlan { get; }
 
         private CommanderSemanticResult(bool isValid, CommanderSemanticOutcome outcome,
             IReadOnlyList<CommanderSemanticNode> nodes, string safeExplanation, CommanderWorkerAllocationDraft pendingDraft = null,
-            CommanderDynamicPlan dynamicPlan = null)
+            CommanderDynamicPlan dynamicPlan = null, CommanderRequestGraphDraft pendingGraphDraft = null)
         {
             IsValid = isValid;
             Outcome = outcome;
             Nodes = nodes ?? Array.Empty<CommanderSemanticNode>();
             SafeExplanation = safeExplanation ?? string.Empty;
             PendingDraft = pendingDraft;
+            PendingGraphDraft = pendingGraphDraft;
             DynamicPlan = dynamicPlan;
         }
     }

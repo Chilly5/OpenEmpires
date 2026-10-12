@@ -1,0 +1,68 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "9cf8c406f40042c4a633ff80ae841cb2",
+    "status": "succeeded",
+    "mode": "PlayMode",
+    "started_unix_ms": 1791760501565,
+    "finished_unix_ms": 1791760510733,
+    "last_update_unix_ms": 1791760510733,
+    "progress": {
+      "completed": 3,
+      "total": 3,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791760510120,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.StrategicPreview_ShowsValidatedMilestonesAndDirectSingleStageDecisions",
+      "last_finished_unix_ms": 1791760510671,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": {
+      "mode": "PlayMode",
+      "summary": {
+        "total": 3,
+        "passed": 3,
+        "failed": 0,
+        "skipped": 0,
+        "durationSeconds": 2.4762974,
+        "resultState": "Passed"
+      },
+      "results": [
+        {
+          "name": "SettingsSurface_OffersProactiveVoiceAndTextAIWithoutConsent",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.SettingsSurface_OffersProactiveVoiceAndTextAIWithoutConsent",
+          "state": "Passed",
+          "durationSeconds": 0.9265342,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander Phase5C render] evidence directory=D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderPhase5C\\evidence\\task-5-render\\20261011-231508-760-fix1-settings-menu\r\n"
+        },
+        {
+          "name": "StrategicAdaptationPreview_NamesExistingSourceAndRequiresExplicitConfirm",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.StrategicAdaptationPreview_NamesExistingSourceAndRequiresExplicitConfirm",
+          "state": "Passed",
+          "durationSeconds": 0.9402976,
+          "message": null,
+          "stackTrace": null,
+          "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] context=projected;provider-request=started\r\n[Commander Phase5C render] evidence directory=D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderPhase5C\\evidence\\task-5-render\\20261011-231510-038-fix1-strategic-adaptation\r\n[Commander] Goal #1 cancelled.\r\n[Commander] Goal #2 cancelled.\r\n[StrategicPlanner] Plan #1 cancelled.\r\n"
+        },
+        {
+          "name": "StrategicPreview_ShowsValidatedMilestonesAndDirectSingleStageDecisions",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.StrategicPreview_ShowsValidatedMilestonesAndDirectSingleStageDecisions",
+          "state": "Passed",
+          "durationSeconds": 0.5514181,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander Phase5C render] evidence directory=D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderPhase5C\\evidence\\task-5-render\\20261011-231510-632-fix1-strategic-proposal\r\n"
+        }
+      ]
+    }
+  },
+  "hint": null
+}

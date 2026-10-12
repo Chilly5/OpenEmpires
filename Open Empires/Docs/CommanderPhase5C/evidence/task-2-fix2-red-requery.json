@@ -1,0 +1,44 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "e092e52dea7746559c8e9d4242c18f6e",
+      "status": "failed",
+      "mode": "EditMode",
+      "started_unix_ms": 1791704082775,
+      "finished_unix_ms": 1791704089446,
+      "last_update_unix_ms": 1791704089446,
+      "progress": {
+        "completed": 4,
+        "total": 4,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791704089083,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NegatedStructureCorrection_RetainsMineTicketUntilYes",
+        "last_finished_unix_ms": 1791704089410,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.ConditionalOrExampleCorrection_ReasksWithoutSupersedingMine",
+            "message": "  if we change Mine to Mill\r\n  Expected: same as <OpenEmpires.CommanderRequestTicket>\r\n  But was:  null\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NegatedSourceCorrection_PreservesSheepUntilCountReply",
+            "message": "  Expected: True\r\n  But was:  False\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NegatedStructureCorrection_RetainsMineTicketUntilYes",
+            "message": "  Don't change the Mine to a Mill\r\n  Expected: same as <OpenEmpires.CommanderRequestTicket>\r\n  But was:  null\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

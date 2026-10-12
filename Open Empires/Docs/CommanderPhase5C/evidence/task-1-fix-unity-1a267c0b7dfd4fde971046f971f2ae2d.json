@@ -1,0 +1,42 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "1a267c0b7dfd4fde971046f971f2ae2d",
+    "status": "failed",
+    "mode": "EditMode",
+    "started_unix_ms": 1791664898761,
+    "finished_unix_ms": 1791664912029,
+    "last_update_unix_ms": 1791664912029,
+    "progress": {
+      "completed": 15,
+      "total": 15,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791664911424,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.TooLargeRequiredMeaning_IsRejectedWithoutDispatchingOrExecutingPrefix",
+      "last_finished_unix_ms": 1791664911752,
+      "stuck_suspected": false,
+      "editor_is_focused": true,
+      "blocked_reason": null,
+      "failures_so_far": [
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.GenericRequest_AdvertisesEveryStrictlyParsedSemanticFamily",
+          "message": "  Expected: 1\r\n  But was:  0\r\n"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\")",
+          "message": "  Commander input limit: the complete request and required context cannot fit safely; nothing was submitted. Edit the request or resolve its pending question.; conservative estimate=4876\r\n  Expected: 1\r\n  But was:  0\r\n"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"Move all of my Wood villagers to the woodline left of my Town Center.\")",
+          "message": "  Commander input limit: the complete request and required context cannot fit safely; nothing was submitted. Edit the request or resolve its pending question.; conservative estimate=4246\r\n  Expected: 1\r\n  But was:  0\r\n"
+        }
+      ],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": null
+  },
+  "hint": null
+}

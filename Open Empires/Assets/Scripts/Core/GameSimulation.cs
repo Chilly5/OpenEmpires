@@ -840,6 +840,7 @@ namespace OpenEmpires
             MapData.ApplyGenerationResult(tiles, heights, forestDensity);
             MapData.BasePositions = basePositions;
             CommandBuffer = new CommandBuffer();
+            CommandBuffer.CommandEnqueued += ObserveLocalGarrisonEnqueue;
             AiCommandBuffer = new CommandBuffer();
             movementSystem = new UnitMovementSystem();
             separationSystem = new UnitSeparationSystem();
@@ -1717,10 +1718,13 @@ namespace OpenEmpires
         private void ProcessCommand(ICommand command, ICommand verifiedOriginal = null)
         {
             if (ConsumeSuppressedLocalAction(command)) return;
+            if (RejectUnattributedExactGarrison(command, verifiedOriginal)) return;
+            if (!ObserveExactGarrisonCommand(command, verifiedOriginal ?? command,
+                out bool exactGarrison)) return;
             switch (command)
             {
                 case MoveCommand move:
-                    ProcessMoveCommand(move);
+                    ProcessMoveCommand(move, verifiedOriginal ?? command);
                     break;
                 case GatherCommand gather:
                     ProcessGatherCommand(gather);
@@ -1771,7 +1775,7 @@ namespace OpenEmpires
                     ProcessCancelUpgradeCommand(cancelUpgrade);
                     break;
                 case GarrisonCommand garrison:
-                    ProcessGarrisonCommand(garrison);
+                    ProcessGarrisonCommand(garrison, exactGarrison);
                     break;
                 case UngarrisonCommand ungarrison:
                     ProcessUngarrisonCommand(ungarrison);
@@ -1849,6 +1853,7 @@ namespace OpenEmpires
             if (command is GatherCommand || command is PatrolCommand
                 || command is SlaughterSheepCommand)
                 PublishLocalActionCommandProcessed(command);
+            PublishNativeUnitCommandProcessed(verifiedOriginal ?? command, command);
         }
 
         public void SpawnNeutralSheep()
@@ -3090,7 +3095,7 @@ namespace OpenEmpires
             CleanUpDestroyedBuilding(cmd.BuildingId);
         }
 
-        private void ProcessMoveCommand(MoveCommand cmd)
+        private void ProcessMoveCommand(MoveCommand cmd, ICommand originalCommand)
         {
             // === Retarget if click target is impassable or a hole ===
             Vector2Int cmdTargetTile = MapData.WorldToTile(cmd.TargetPosition);
@@ -3103,40 +3108,7 @@ namespace OpenEmpires
                 cmd.TargetPosition = MapData.TileToWorldFixed(newTarget.x, newTarget.y);
             }
 
-            // === Validate formation connectivity ===
-            // Ensure all formation positions are in the same connected walkable region as the main target.
-            if (cmd.FormationPositions != null)
-            {
-                Vector2Int anchorTile = MapData.WorldToTile(cmd.TargetPosition);
-
-                // Compute search radius: max Chebyshev distance from anchor to any formation pos + margin
-                int maxChebyshev = 0;
-                for (int fi = 0; fi < cmd.FormationPositions.Length; fi++)
-                {
-                    Vector2Int fpTile = MapData.WorldToTile(cmd.FormationPositions[fi]);
-                    int chebyshev = Mathf.Max(Mathf.Abs(fpTile.x - anchorTile.x), Mathf.Abs(fpTile.y - anchorTile.y));
-                    if (chebyshev > maxChebyshev) maxChebyshev = chebyshev;
-                }
-                int floodRadius = maxChebyshev * 2;
-
-                HashSet<int> reachable = GridPathfinder.FloodFillWalkable(MapData, anchorTile, floodRadius);
-
-                if (reachable.Count > 0)
-                {
-                    int mapWidth = MapData.Width;
-                    for (int fi = 0; fi < cmd.FormationPositions.Length; fi++)
-                    {
-                        Vector2Int fpTile = MapData.WorldToTile(cmd.FormationPositions[fi]);
-                        int key = fpTile.y * mapWidth + fpTile.x;
-                        if (!reachable.Contains(key))
-                        {
-                            Vector2Int snapped = GridPathfinder.FindConnectedTileToward(fpTile, anchorTile, reachable, mapWidth, floodRadius);
-                            if (snapped.x >= 0)
-                                cmd.FormationPositions[fi] = MapData.TileToWorldFixed(snapped.x, snapped.y);
-                        }
-                    }
-                }
-            }
+            SnapNativeMoveFormationPositions(ref cmd);
 
             // Assign a formation group ID when creating a new drag formation
             int formGroupId = 0;
@@ -3188,32 +3160,8 @@ namespace OpenEmpires
                 }
                 else if (cmd.FormationPositions != null && formPosIdx < cmd.FormationPositions.Length)
                 {
-                    targetPos = cmd.FormationPositions[formPosIdx];
-
-                    // Scale formation spacing proportionally to unit radius
-                    // (cavalry 0.55 → 1.375x spread, infantry 0.4 → 1.0x)
-                    Fixed32 radiusScale = unit.Radius / cachedUnitRadius;
-                    if (radiusScale != Fixed32.One)
-                    {
-                        FixedVector3 offset = targetPos - cmd.TargetPosition;
-                        targetPos = cmd.TargetPosition + new FixedVector3(
-                            offset.x * radiusScale, offset.y, offset.z * radiusScale);
-                    }
-
-                    Fixed32 scatterFactor = Fixed32.Max(Fixed32.Zero,
-                        Fixed32.One - (unit.Mass - Fixed32.One) / (cachedSpearmanMass - Fixed32.One));
-                    Fixed32 scatter = cachedFormationScatter * scatterFactor;
-
-                    if (scatter > cachedScatterThreshold)
-                    {
-                        uint hash = (uint)(unit.Id * 2654435761u + (uint)currentTick * 1103515245u);
-                        int hashX = (int)(hash & 0xFFFF) - 32768;
-                        int hashZ = (int)((hash >> 16) & 0xFFFF) - 32768;
-                        Fixed32 normX = new Fixed32(hashX);
-                        Fixed32 normZ = new Fixed32(hashZ);
-                        targetPos.x = targetPos.x + normX * scatter;
-                        targetPos.z = targetPos.z + normZ * scatter;
-                    }
+                    targetPos = ResolveNativeMoveFormationTarget(cmd.TargetPosition,
+                        cmd.FormationPositions[formPosIdx], unit, currentTick);
 
                     if (!cmd.IsQueued)
                     {
@@ -3285,12 +3233,17 @@ namespace OpenEmpires
                         unit.FinalDestination = new FixedVector3(targetPos.x, Fixed32.Zero, targetPos.z);
                         unit.State = UnitState.Moving;
                         unit.PlayerCommanded = !cmd.IsAttackMove;
+                        PublishNativeMoveProcessed(originalCommand, unit.Id, unit.FinalDestination,
+                            pathEnd == goalTile
+                                ? startTile == goalTile ? NativeMovePathResult.AlreadyAtTarget : NativeMovePathResult.Complete
+                                : NativeMovePathResult.Partial);
                     }
                     else
                     {
                         unit.ClearPath();
                         unit.State = UnitState.Idle;
                         unit.PlayerCommanded = false;
+                        PublishNativeMoveProcessed(originalCommand, unit.Id, targetPos, NativeMovePathResult.NoPath);
                     }
 
                     unit.TargetResourceNodeId = -1;
@@ -6445,6 +6398,7 @@ namespace OpenEmpires
 
         private void ProcessArrivedGarrisonUnits()
         {
+            PruneExactGarrisonSubjects();
             // Collect units to process first to avoid collection modification during iteration
             garrisonUnitsBuffer.Clear();
             foreach (var unit in UnitRegistry.GetAllUnits())
@@ -6531,6 +6485,7 @@ namespace OpenEmpires
 
         private void RedirectToAlternativeGarrison(UnitData unit)
         {
+            if (RejectExactGarrisonFallback(unit)) return;
             var alternativeBuilding = FindNearestAvailableGarrisonBuilding(unit.PlayerId, unit.SimPosition, unit.TargetGarrisonBuildingId);
             
             if (alternativeBuilding == null)
@@ -6604,14 +6559,14 @@ namespace OpenEmpires
             return -1;
         }
 
-        private void ProcessGarrisonCommand(GarrisonCommand cmd)
+        private void ProcessGarrisonCommand(GarrisonCommand cmd, bool exactTarget = false)
         {
             // First, collect all valid units for garrison
             var validUnits = new List<UnitData>();
             foreach (int unitId in cmd.UnitIds)
             {
                 var unit = UnitRegistry.GetUnit(unitId);
-                if (unit == null || unit.State == UnitState.Dead) continue;
+                if (unit == null || unit.State == UnitState.Dead || unit.CurrentHealth <= 0) continue;
                 if (unit.PlayerId != cmd.PlayerId) continue;
                 validUnits.Add(unit);
             }
@@ -6620,6 +6575,8 @@ namespace OpenEmpires
 
             // Get all available garrison buildings for this player, sorted by distance from the first unit
             var availableBuildings = GetAvailableGarrisonBuildings(cmd.PlayerId, validUnits[0].SimPosition);
+            if (exactTarget)
+                availableBuildings.RemoveAll(building => building.Id != cmd.TargetBuildingId);
             if (availableBuildings.Count == 0) return;
 
             // Try to prioritize the specified building if it's available
@@ -6739,7 +6696,8 @@ namespace OpenEmpires
         private bool GarrisonUnit(UnitData unit, BuildingData building)
         {
             // Check if building can actually garrison this unit
-            if (!building.CanGarrison)
+            if (unit.State == UnitState.Dead || unit.CurrentHealth <= 0
+                || !building.CanGarrison || !IsExactGarrisonTarget(unit, building.Id))
             {
                 return false;
             }
@@ -6767,6 +6725,8 @@ namespace OpenEmpires
 
             // Move to garrison storage (won't be moved/attacked/etc)
             UnitRegistry.GarrisonUnit(unit.Id);
+
+            activeExactGarrison.Remove(unit.Id);
 
             OnUnitGarrisoned?.Invoke(unit.Id, building.Id);
             return true;

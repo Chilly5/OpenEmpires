@@ -62,7 +62,12 @@ namespace OpenEmpires
                     if (!resolver.TryResolveOwnedAnchor(playerId, selector, null,
                         out BuildingData anchor))
                         throw new ArgumentException("The owned semantic anchor is unavailable.");
-                    bound = CommanderBoundLocation.FromBuilding(simulation, this, playerId,
+                    if (node.Parameters.TryGetValue("resource", out object resourceValue))
+                        bound = CommanderBoundLocation.FromResourceSide(simulation, this, playerId,
+                            anchor, (ResourceType)Enum.Parse(typeof(ResourceType), (string)resourceValue),
+                            (ResourceSourceKind)Enum.Parse(typeof(ResourceSourceKind),
+                                node.Parameter<string>("sourceKind")), gap);
+                    else bound = CommanderBoundLocation.FromBuilding(simulation, this, playerId,
                         anchor, relation, gap);
                 }
                 else if (node.Inputs.TryGetValue("structures", out string structureNodeId))
@@ -107,6 +112,8 @@ namespace OpenEmpires
             }
 
             var buildBindings = new List<(BuildStructureGoal goal, CommanderBoundLocation location)>();
+            var allocationBindings = new List<(AllocateWorkersGoal goal, CommanderBoundLocation location)>();
+            var moveBindings = new List<(CommanderCapabilityGoal goal, CommanderBoundLocation location)>();
             var producerBindings = new List<(EnsureUnitCountGoal goal, IReadOnlyList<int> ids)>();
             foreach (var node in program.Nodes)
             {
@@ -118,6 +125,25 @@ namespace OpenEmpires
                         || !locations.TryGetValue(locationId, out CommanderBoundLocation bound))
                         throw new ArgumentException("The building location is unavailable.");
                     buildBindings.Add((build, bound));
+                }
+                if (node.Primitive.Mechanic == CommanderDynamicMechanic.AllocateWorkers
+                    && node.Inputs.TryGetValue("location", out string resourceLocationId))
+                {
+                    if (!goalsById.TryGetValue(node.Id, out CommanderGoal effect)
+                        || !(effect is AllocateWorkersGoal allocation)
+                        || !locations.TryGetValue(resourceLocationId, out CommanderBoundLocation bound))
+                        throw new ArgumentException("The resource-side location is unavailable.");
+                    allocationBindings.Add((allocation, bound));
+                }
+                if (node.Primitive.Mechanic == CommanderDynamicMechanic.MoveWorkers)
+                {
+                    if (!goalsById.TryGetValue(node.Id, out CommanderGoal effect)
+                        || !(effect is CommanderCapabilityGoal move)
+                        || !node.Inputs.TryGetValue("location", out string moveLocationId)
+                        || !locations.TryGetValue(moveLocationId, out CommanderBoundLocation bound)
+                        || !bound.IsResourceSide)
+                        throw new ArgumentException("The exact resource-side move location is unavailable.");
+                    moveBindings.Add((move, bound));
                 }
                 if (node.Primitive.Mechanic == CommanderDynamicMechanic.Produce
                     && node.Inputs.TryGetValue("producers", out string producerNodeId)
@@ -135,6 +161,8 @@ namespace OpenEmpires
 
             foreach (BuildStructureGoal source in futureAnchors) source.HasResultConsumer = true;
             foreach (var binding in buildBindings) binding.goal.DynamicLocation = binding.location;
+            foreach (var binding in allocationBindings) binding.goal.DynamicResourceLocation = binding.location;
+            foreach (var binding in moveBindings) binding.goal.DynamicMoveLocation = binding.location;
             foreach (var binding in producerBindings) binding.goal.BoundProducerBuildingIds = binding.ids;
         }
 

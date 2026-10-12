@@ -1,0 +1,71 @@
+{
+  "job_id": "c24c8045435748769a2589a21b872a33",
+  "status": "succeeded",
+  "mode": "EditMode",
+  "started_unix_ms": 1791782360004,
+  "finished_unix_ms": 1791782370773,
+  "last_update_unix_ms": 1791782370773,
+  "progress": {
+    "completed": 4,
+    "total": 4,
+    "current_test_full_name": null,
+    "current_test_started_unix_ms": 1791782370216,
+    "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.OneCompleteJsonFence_ParsesButAmbiguousPayloadDoesNot",
+    "last_finished_unix_ms": 1791782370419,
+    "stuck_suspected": false,
+    "editor_is_focused": false,
+    "blocked_reason": null,
+    "failures_so_far": [],
+    "failures_capped": false
+  },
+  "error": null,
+  "result": {
+    "mode": "EditMode",
+    "summary": {
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0,
+      "durationSeconds": 1.8889482,
+      "resultState": "Passed"
+    },
+    "results": [
+      {
+        "name": "HttpFailures_AreDistinctAndDoNotEchoUpstream(400,\"request was rejected\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.HttpFailures_AreDistinctAndDoNotEchoUpstream(400,\"request was rejected\")",
+        "state": "Passed",
+        "durationSeconds": 0.4309976,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-12T05:19:29.5611248Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=400;durationMs=11\r\n"
+      },
+      {
+        "name": "LengthFinishReason_RejectsEvenIfContentLooksValid",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.LengthFinishReason_RejectsEvenIfContentLooksValid",
+        "state": "Passed",
+        "durationSeconds": 0.1083154,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-12T05:19:29.7045403Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=4\r\n[CommanderProvider] finish=length\r\n"
+      },
+      {
+        "name": "NaturalParaphrase_ReturnsSameTypedUnitRequest(\"I want a total of ten spears in my army.\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.NaturalParaphrase_ReturnsSameTypedUnitRequest(\"I want a total of ten spears in my army.\")",
+        "state": "Passed",
+        "durationSeconds": 0.3388925,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-12T05:19:30.0573582Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=4\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=87;finish=stop\r\n[CommanderProvider] semantic=Request;nodes=1\r\n"
+      },
+      {
+        "name": "OneCompleteJsonFence_ParsesButAmbiguousPayloadDoesNot",
+        "fullName": "OpenEmpires.Tests.CommanderPhase4E1ProviderTests.OneCompleteJsonFence_ParsesButAmbiguousPayloadDoesNot",
+        "state": "Passed",
+        "durationSeconds": 0.1697883,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-12T05:19:30.3383392Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=5\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=99;finish=stop\r\n[CommanderProvider] semantic=Request;nodes=1\r\n[CommanderProvider] utc=2026-10-12T05:19:30.3559786Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=5\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=174;finish=stop\r\n[CommanderProvider] schema=field=$;code=invalid-schema;stage=envelope;node=-1\r\n[CommanderProvider] semantic=invalid;nodes=0\r\n"
+      }
+    ]
+  }
+}

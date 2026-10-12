@@ -1,0 +1,88 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "b629c1958d014965bce6cfa86df043f3",
+      "status": "succeeded",
+      "mode": "EditMode",
+      "started_unix_ms": 1791731569376,
+      "finished_unix_ms": 1791731583861,
+      "last_update_unix_ms": 1791731583861,
+      "progress": {
+        "completed": 5,
+        "total": 5,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791731582631,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.OrdinaryGarrisonAndHumanReplacementKeepNativeFallback",
+        "last_finished_unix_ms": 1791731583703,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "EditMode",
+        "summary": {
+          "total": 5,
+          "passed": 5,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 6.0600489,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "ExactTargetGarrison_FullRequestedShelterMustNotDispatchToAnotherShelter",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.ExactTargetGarrison_FullRequestedShelterMustNotDispatchToAnotherShelter",
+            "state": "Passed",
+            "durationSeconds": 1.2890504,
+            "message": null,
+            "stackTrace": null,
+            "output": "[SyncCheck] tick=0 PRE-CMD=65C274AE cmds=1\r\n[SyncCheck] tick=0 POST-CMD=65C274AE\r\n[SyncCheck] tick=0 PRE-AI-EXEC=65C274AE aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=6D4E3E3E systemDetail=65C274AE,65C274AE,65C274AE,65C274AE,65C274AE,65C274AE,65C274AE,65C274AE,65C274AE\r\n"
+          },
+          {
+            "name": "ExactTargetGarrison_LateFullOrDestroyedTargetCancelsWithoutFallback(False)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.ExactTargetGarrison_LateFullOrDestroyedTargetCancelsWithoutFallback(False)",
+            "state": "Passed",
+            "durationSeconds": 1.0700312,
+            "message": null,
+            "stackTrace": null,
+            "output": "[SyncCheck] tick=0 PRE-CMD=9AD6842E cmds=1\r\n[SyncCheck] tick=0 POST-CMD=9B474036\r\n[SyncCheck] tick=0 PRE-AI-EXEC=9B474036 aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=A4A5DCDF systemDetail=9B474036,E770C2BE,E770C2BE,2E16B63E,2E16B63E,2E16B63E,2E16B63E,2E16B63E,2E16B63E\r\n[SyncCheck] tick=2 checksum=4D23621C\r\n"
+          },
+          {
+            "name": "ExactTargetGarrison_LateFullOrDestroyedTargetCancelsWithoutFallback(True)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.ExactTargetGarrison_LateFullOrDestroyedTargetCancelsWithoutFallback(True)",
+            "state": "Passed",
+            "durationSeconds": 1.0556445,
+            "message": null,
+            "stackTrace": null,
+            "output": "[SyncCheck] tick=0 PRE-CMD=9AD6842E cmds=1\r\n[SyncCheck] tick=0 POST-CMD=9B474036\r\n[SyncCheck] tick=0 PRE-AI-EXEC=9B474036 aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=A4A5DCDF systemDetail=9B474036,E770C2BE,E770C2BE,2E16B63E,2E16B63E,2E16B63E,2E16B63E,2E16B63E,2E16B63E\r\n[SyncCheck] tick=2 checksum=B1E80A16\r\n"
+          },
+          {
+            "name": "ExactTargetGarrison_RelayOriginRemainsExactAndAmbiguousReplayFailsClosed",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.ExactTargetGarrison_RelayOriginRemainsExactAndAmbiguousReplayFailsClosed",
+            "state": "Passed",
+            "durationSeconds": 0.9825554,
+            "message": null,
+            "stackTrace": null,
+            "output": "[SyncCheck] tick=0 PRE-CMD=65C274AE cmds=2\r\n[SyncCheck] tick=0 POST-CMD=65C274AE\r\n[SyncCheck] tick=0 PRE-AI-EXEC=65C274AE aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=6D4E3E3E systemDetail=65C274AE,65C274AE,65C274AE,65C274AE,65C274AE,65C274AE,65C274AE,65C274AE,65C274AE\r\n[SyncCheck] tick=1 PRE-CMD=65C274AE cmds=3\r\n[SyncCheck] tick=1 POST-CMD=65C274AE\r\n[SyncCheck] tick=1 PRE-AI-EXEC=65C274AE aiCmds=0\r\n[SyncCheck] INIT tick=2 checksum=9089621C systemDetail=65C274AE,65C274AE,65C274AE,65C274AE,65C274AE,65C274AE,65C274AE,65C274AE,65C274AE\r\n"
+          },
+          {
+            "name": "OrdinaryGarrisonAndHumanReplacementKeepNativeFallback",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.OrdinaryGarrisonAndHumanReplacementKeepNativeFallback",
+            "state": "Passed",
+            "durationSeconds": 1.0715677,
+            "message": null,
+            "stackTrace": null,
+            "output": "[SyncCheck] tick=0 PRE-CMD=9AD6842E cmds=1\r\n[SyncCheck] tick=0 POST-CMD=9B474036\r\n[SyncCheck] tick=0 PRE-AI-EXEC=9B474036 aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=A4A5DCDF systemDetail=9B474036,E770C2BE,E770C2BE,2E16B63E,2E16B63E,2E16B63E,2E16B63E,2E16B63E,2E16B63E\r\n[SyncCheck] tick=1 PRE-CMD=FF72ED75 cmds=1\r\n[SyncCheck] tick=1 POST-CMD=FF72ED75\r\n[SyncCheck] tick=1 PRE-AI-EXEC=FF72ED75 aiCmds=0\r\n[SyncCheck] INIT tick=2 checksum=729AFEA0 systemDetail=FF72ED75,B23EB91B,B23EB91B,B23EB91B,B23EB91B,B23EB91B,B23EB91B,B23EB91B,B23EB91B\r\n"
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

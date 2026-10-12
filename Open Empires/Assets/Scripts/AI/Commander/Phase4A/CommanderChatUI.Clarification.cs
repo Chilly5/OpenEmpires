@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -16,20 +17,41 @@ namespace OpenEmpires
         {
             if (pendingClarification == null) return false;
             if (pendingClarification.RuntimeGeneration != runtimeGeneration) { pendingClarification = null; return false; }
-            string whole = message.Trim().ToLowerInvariant();
+            string whole = NormalizeWholeForm(message);
             if (whole == "cancel" || whole == "never mind" || whole == "nevermind" || whole == "forget it")
             {
-                pendingClarification = null; AppendLine("Player", message); AppendLine("Commander", "Pending worker request cancelled; no goal was created."); return true;
+                pendingClarification = null; AppendLine("Player", message);
+                SetLatestRequestState("Cancelled", "Pending request cancelled; no goal was created.");
+                AppendLine("Commander", "Pending request cancelled; no goal was created."); return true;
+            }
+            bool negativeCancellation = Regex.IsMatch(whole,
+                @"^no,\s*cancel(?:\s+(?:that|this)\s+(?:proposal|plan))?$");
+            if (pendingClarification.GraphDraft != null && (whole == "no" || negativeCancellation))
+            {
+                pendingClarification = null; AppendLine("Player", message);
+                SetLatestRequestState("Cancelled", "Proposal dismissed; existing tasks are unchanged.");
+                AppendLine("Commander", "Proposal dismissed; existing tasks are unchanged."); return true;
             }
             // This only chooses whether a new turn supersedes a pending question.
             // It neither parses nor executes any gameplay action.
-            string[] standalone = { "build ", "train ", "make ", "produce ", "research ", "attack ", "scout ", "patrol ", "retreat ", "repair ", "defend ", "advance ", "put ", "gather ", "send ", "reach ", "assign ", "have ", "keep " };
-            if (standalone.Any(prefix => whole.StartsWith(prefix, StringComparison.Ordinal)))
+            string[] standalone = { "build ", "train ", "make ", "produce ", "research ", "attack ", "scout ", "patrol ", "retreat ", "repair ", "defend ", "advance ", "put ", "gather ", "send ", "reach ", "assign ", "have ", "keep ", "move ", "garrison ", "ungarrison ", "explore ", "find " };
+            if (!(pendingClarification.GraphDraft != null && CommanderRequestGraphDraft.IsCorrectionUtterance(message))
+                && standalone.Any(prefix => whole.StartsWith(prefix, StringComparison.Ordinal)))
             { pendingClarification = null; return false; }
             var previous = pendingClarification;
-            pendingClarification = new CommanderPendingClarification(previous.Draft, previous.OriginalText, previous.Question,
-                previous.RuntimeGeneration, previous.Sequence, previous.Turns + 1, previous.RequestTicket);
-            if (whole == "yes" || whole == "no" || whole == "those" || whole == "there")
+            if (previous.GraphDraft != null && previous.Turns >= 6)
+            {
+                pendingClarification = null;
+                AppendLine("Player", message);
+                AppendLine("Commander", "Clarification expired after six replies; please give a new complete request.");
+                return true;
+            }
+            pendingClarification = previous.GraphDraft != null
+                ? new CommanderPendingClarification(previous.GraphDraft, previous.OriginalText, previous.Question,
+                    previous.RuntimeGeneration, previous.Sequence, previous.Turns + 1, previous.RequestTicket)
+                : new CommanderPendingClarification(previous.Draft, previous.OriginalText, previous.Question,
+                    previous.RuntimeGeneration, previous.Sequence, previous.Turns + 1, previous.RequestTicket);
+            if (previous.GraphDraft == null && (whole == "yes" || whole == "no" || whole == "those" || whole == "there"))
             { AppendLine("Player", message); ReaskPending("Please specify the missing worker criteria."); return true; }
             return false;
         }
@@ -37,14 +59,20 @@ namespace OpenEmpires
         private void ReaskPending(string reason)
         {
             if (pendingClarification == null) return;
-            if (pendingClarification.Turns >= 3)
-            { pendingClarification = null; AppendLine("Commander", "Worker clarification expired after three replies; please give a new complete request."); }
+            if (pendingClarification.Turns >= (pendingClarification.GraphDraft != null ? 6 : 3))
+            {
+                bool graph = pendingClarification.GraphDraft != null;
+                pendingClarification = null;
+                AppendLine("Commander", graph
+                    ? "Clarification expired after six replies; please give a new complete request."
+                    : "Clarification expired after three replies; please give a new complete request.");
+            }
             else AppendLine("Commander", reason + " " + pendingClarification.Question);
         }
 
         private CommanderSemanticResult LocalCountContinuation(CommanderPendingClarification pending, string reply)
         {
-            if (pending == null || pending.Draft.CountMode != CommanderWorkerCountMode.Exact || pending.Draft.Count.HasValue
+            if (pending?.Draft == null || pending.Draft.CountMode != CommanderWorkerCountMode.Exact || pending.Draft.Count.HasValue
                 || !CommanderClarificationReplies.TryParseCount(reply, out int count)) return null;
             var updated = pending.Draft.WithCount(count);
             if (updated.MissingFields.Count == 0) return updated.CompleteResult();
@@ -53,10 +81,37 @@ namespace OpenEmpires
                 ["pending"] = updated.ToJson(), ["missingFields"] = missing }.ToString(Formatting.None));
         }
 
+        private static CommanderSemanticResult LocalGraphContinuation(CommanderPendingClarification pending, string reply)
+            => pending?.GraphDraft?.Resolve(reply);
+
         private bool HandleClarificationResult(CommanderSemanticResult result, CommanderPendingClarification previous,
-            string reply, int generation, CommanderRequestTicket requestTicket)
+            string reply, int generation, CommanderRequestTicket requestTicket, bool localGraphResult = false)
         {
             if (previous != null && !ReferenceEquals(previous, pendingClarification)) return true;
+            if (previous?.GraphDraft != null)
+            {
+                if (localGraphResult && (result.Outcome == CommanderSemanticOutcome.Request
+                    || result.Outcome == CommanderSemanticOutcome.DynamicPlan))
+                { pendingClarification = null; return false; }
+                if (localGraphResult && result.Outcome == CommanderSemanticOutcome.Clarify
+                    && result.PendingGraphDraft != null)
+                {
+                    pendingClarification = new CommanderPendingClarification(result.PendingGraphDraft,
+                        previous.OriginalText, result.SafeExplanation, generation, previous.Sequence,
+                        previous.Turns, previous.RequestTicket);
+                    return false;
+                }
+                ReaskPending("That reply did not safely resolve the retained request.");
+                return true;
+            }
+            if (result.PendingGraphDraft != null)
+            {
+                if (previous != null) { ReaskPending("That reply did not preserve the worker request."); return true; }
+                pendingClarification = new CommanderPendingClarification(result.PendingGraphDraft, reply,
+                    string.IsNullOrWhiteSpace(result.SafeExplanation) ? "Please clarify the proposed request." : result.SafeExplanation,
+                    generation, ++clarificationSequence, 0, requestTicket);
+                return false;
+            }
             if (result.PendingDraft != null)
             {
                 if (previous != null && !PreservesResolvedCriteria(previous.Draft, result.PendingDraft, reply))

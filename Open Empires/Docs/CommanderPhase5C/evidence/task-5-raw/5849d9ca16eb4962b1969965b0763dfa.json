@@ -1,0 +1,36 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "5849d9ca16eb4962b1969965b0763dfa",
+      "status": "failed",
+      "mode": "PlayMode",
+      "started_unix_ms": 1791756423375,
+      "finished_unix_ms": 1791756430814,
+      "last_update_unix_ms": 1791756430814,
+      "progress": {
+        "completed": 1,
+        "total": 1,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791756429667,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.CompoundApproval_ShowsFullValidatedPreviewAndExplicitDecisionsWithoutIssuing",
+        "last_finished_unix_ms": 1791756430734,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.CompoundApproval_ShowsFullValidatedPreviewAndExplicitDecisionsWithoutIssuing",
+            "message": "  Expected: String starting with \"Cancelled\"\r\n  But was:  \"Awaiting approval — build a Barracks, then train three Spearmen there\"\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

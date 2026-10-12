@@ -1,0 +1,765 @@
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+using NUnit.Framework;
+
+namespace OpenEmpires.Tests
+{
+    public sealed partial class CommanderEconomyClarificationTests
+    {
+        private static string GraphDraft(JArray nodes, string order, int index, string path, string type, params JToken[] alternatives) =>
+            new JObject { ["outcome"] = "Clarify", ["message"] = "Please confirm the missing detail.",
+                ["pending"] = new JObject { ["executionOrder"] = order, ["nodes"] = nodes },
+                ["missingSlots"] = new JArray(new JObject { ["node"] = index, ["path"] = path,
+                    ["type"] = type, ["alternatives"] = new JArray(alternatives) }) }.ToString();
+
+        [Test]
+        public async Task MineProposal_YesUsesOriginalRequestAndNoSecondTranslation()
+        {
+            var mine = new JObject { ["type"] = "BuildStructure", ["structure"] = "Mine", ["count"] = 1,
+                ["builders"] = new JObject { ["state"] = "Eligible", ["count"] = 1 },
+                ["placement"] = new JObject { ["anchor"] = "VisibleResource", ["relation"] = "Near",
+                    ["resource"] = "Gold", ["sourceKind"] = "GoldMine" } };
+            string proposal = GraphDraft(new JArray(mine), "Independent", 0, "structure", "Confirmation", new JValue("Mine"));
+            using (var f = new ChatFixture(new SequenceSemanticProvider(proposal)))
+            {
+                f.Economy.Worker(0); f.Economy.Node(ResourceType.Gold, 8);
+                await f.Chat.SubmitMessageAsync("build a gold mine near gold");
+                Assert.That(f.Chat.PendingClarification, Is.Not.Null);
+                Assert.That(f.Economy.Manager.Goals, Is.Empty);
+                var result = await f.Chat.SubmitMessageAsync("yes");
+                Assert.That(result?.Success, Is.True);
+                Assert.That(f.Provider.Calls, Is.EqualTo(1));
+                Assert.That(f.Chat.PendingClarification, Is.Null);
+                var goal = f.Economy.Manager.Goals.OfType<BuildStructureGoal>().Single();
+                Assert.That(goal.StructureType, Is.EqualTo(BuildingType.Mine));
+                Assert.That(goal.PlacementAnchorSelector, Is.EqualTo(CommanderSemanticAnchorSelector.VisibleResource));
+                Assert.That(goal.PlacementResourceType, Is.EqualTo(ResourceType.Gold));
+                Assert.That(goal.PlacementSourceKind, Is.EqualTo(ResourceSourceKind.GoldMine));
+                Assert.That(goal.RequestAuthority.OriginalInput, Is.EqualTo("build a gold mine near gold"));
+            }
+        }
+
+        [Test]
+        public async Task HouseThenNextFive_FromTreesKeepsGraphAndNeedsSeparateApproval()
+        {
+            var house = new JObject { ["type"] = "BuildStructure", ["structure"] = "House", ["count"] = 1,
+                ["builders"] = new JObject { ["state"] = "Eligible", ["count"] = 1 } };
+            var watch = new JObject { ["type"] = "WatchFutureUnits", ["unit"] = "Villager", ["count"] = 5,
+                ["producer"] = "TownCenter", ["producerOrdinal"] = 1, ["action"] = "Gather", ["resource"] = "Wood",
+                ["dependsOn"] = new JArray(0) };
+            string proposal = GraphDraft(new JArray(house, watch), "Sequential", 1, "sourceKind", "SourceKind", new JValue("Tree"));
+            using (var f = new ChatFixture(new SequenceSemanticProvider(proposal)))
+            {
+                f.Economy.Worker(0);
+                f.Economy.Simulation.CreateBuilding(0, BuildingType.TownCenter, f.Economy.Base.x, f.Economy.Base.y, false, true).AutoProduceVillagers = false;
+                await f.Chat.SubmitMessageAsync("Build a House, then send the next five Villagers from my first Town Center to Wood");
+                Assert.That(f.Chat.PendingClarification, Is.Not.Null);
+                await f.Chat.SubmitMessageAsync("From trees");
+                Assert.That(f.Provider.Calls, Is.EqualTo(1));
+                Assert.That(f.Chat.PendingClarification, Is.Null);
+                Assert.That(f.Economy.Manager.Goals, Is.Empty);
+                Assert.That(f.Chat.PendingActionPlan, Is.Not.Null);
+                var nodes = f.Chat.PendingActionPlan.Interpretation.Nodes;
+                Assert.That(nodes.Count, Is.EqualTo(2));
+                Assert.That(nodes[1].DependsOn, Is.EquivalentTo(new[] { 0 }));
+                Assert.That(nodes[1].Count, Is.EqualTo(5));
+                Assert.That(nodes[1].ProducerOrdinal, Is.EqualTo(1));
+                Assert.That(nodes[1].ResourceType, Is.EqualTo(ResourceType.Wood));
+                Assert.That(nodes[1].SourceKind, Is.EqualTo(ResourceSourceKind.Tree));
+                await f.Chat.SubmitMessageAsync("yes");
+                Assert.That(f.Economy.Manager.Goals.Count, Is.EqualTo(2));
+                Assert.That(f.Provider.Calls, Is.EqualTo(1));
+                await f.Chat.SubmitMessageAsync("yes");
+                Assert.That(f.Economy.Manager.Goals.Count, Is.EqualTo(2));
+            }
+        }
+
+        [Test]
+        public async Task NoRejectsOnlyProposal_AndIndependentCommandSupersedes()
+        {
+            var mine = new JObject { ["type"] = "BuildStructure", ["structure"] = "Mine", ["count"] = 1,
+                ["builders"] = new JObject { ["state"] = "Eligible", ["count"] = 1 } };
+            string proposal = GraphDraft(new JArray(mine), "Independent", 0, "structure", "Confirmation", new JValue("Mine"));
+            using (var f = new ChatFixture(new SequenceSemanticProvider(
+                Request("{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":4}"), proposal, proposal,
+                Request("{\"type\":\"EnsureUnitCount\",\"unit\":\"Archer\",\"count\":3}"))))
+            {
+                await f.Chat.SubmitMessageAsync("train four spearmen");
+                int accepted = f.Economy.Manager.Goals.Count;
+                await f.Chat.SubmitMessageAsync("build a gold mine");
+                await f.Chat.SubmitMessageAsync("no");
+                Assert.That(f.Chat.PendingClarification, Is.Null);
+                Assert.That(f.Economy.Manager.Goals.Count, Is.EqualTo(accepted));
+                await f.Chat.SubmitMessageAsync("build a gold mine");
+                Assert.That(f.Chat.PendingClarification, Is.Not.Null);
+                await f.Chat.SubmitMessageAsync("train three archers");
+                Assert.That(f.Chat.PendingClarification, Is.Null);
+                Assert.That(f.Economy.Manager.Goals.Count, Is.EqualTo(accepted + 1));
+            }
+        }
+
+        [Test]
+        public void GraphDraftRejectsInvalidAlternativesAndAuthority()
+        {
+            var build = new JObject { ["type"] = "BuildStructure", ["structure"] = "Mine", ["count"] = 1,
+                ["builders"] = new JObject { ["state"] = "Eligible", ["count"] = 1 } };
+            var valid = JObject.Parse(GraphDraft(new JArray(build), "Independent", 0, "structure", "Confirmation", new JValue("Mine")));
+            Assert.That(CommanderSemanticJson.Parse(valid.ToString()).IsValid, Is.True);
+            foreach (Action<JObject> corrupt in new Action<JObject>[] {
+                x => ((JObject)x["pending"])["playerId"] = 0,
+                x => ((JObject)((JArray)((JObject)x["pending"])["nodes"])[0])["entityId"] = 10,
+                x => ((JObject)((JArray)x["missingSlots"])[0])["type"] = "RuntimeId",
+                x => ((JObject)((JArray)x["missingSlots"])[0])["path"] = "placement.tile",
+                x => ((JObject)((JArray)x["missingSlots"])[0])["alternatives"] = new JArray("Barracks"),
+                x => ((JObject)((JArray)x["missingSlots"])[0])["node"] = 2 })
+            {
+                var copy = (JObject)valid.DeepClone(); corrupt(copy);
+                Assert.That(CommanderSemanticJson.Parse(copy.ToString()).IsValid, Is.False, copy.ToString());
+            }
+            var watch = new JObject { ["type"] = "WatchFutureUnits", ["unit"] = "Villager", ["count"] = 5,
+                ["producer"] = "TownCenter", ["action"] = "Gather", ["resource"] = "Wood" };
+            Assert.That(CommanderSemanticJson.Parse(GraphDraft(new JArray(watch), "Independent", 0,
+                "sourceKind", "SourceKind", new JValue("GoldMine"))).IsValid, Is.False,
+                "Every offered source must be compatible with the retained resource.");
+        }
+
+        [Test]
+        public async Task SourceReply_PreservesAmountModeAndWoodWorkerCriterion()
+        {
+            var allocation = new JObject { ["type"] = "AllocateWorkers", ["mode"] = "SelectedCount",
+                ["countMode"] = "Exact", ["count"] = 6,
+                ["workers"] = new JObject { ["state"] = "Gathering", ["currentResource"] = "Wood" },
+                ["destination"] = new JObject { ["resource"] = "Food" },
+                ["resourceAmount"] = 400, ["resourceAmountMode"] = "AdditionalGathered" };
+            string proposal = GraphDraft(new JArray(allocation), "Independent", 0, "destination.sourceKind",
+                "SourceKind", new JValue("Berries"));
+            using (var f = new ChatFixture(new SequenceSemanticProvider(proposal)))
+            {
+                for (int i = 0; i < 6; i++) f.Economy.Assigned(f.Economy.Worker(i), f.Economy.Node(ResourceType.Wood, 15 + i));
+                f.Economy.Node(ResourceType.Food, 30);
+                await f.Chat.SubmitMessageAsync("send six wood villagers to gather 400 additional food");
+                var submitted = await f.Chat.SubmitMessageAsync("from berries");
+                Assert.That(submitted?.Success, Is.True);
+                Assert.That(f.Provider.Calls, Is.EqualTo(1));
+                var retained = f.Economy.Manager.Goals.OfType<AllocateWorkersGoal>().Single().Allocation;
+                Assert.That(retained.Count, Is.EqualTo(6));
+                Assert.That(retained.Workers.CurrentResource, Is.EqualTo(ResourceType.Wood));
+                Assert.That(retained.ResourceAmount, Is.EqualTo(400));
+                Assert.That(retained.ResourceAmountMode, Is.EqualTo(CommanderResourceAmountMode.AdditionalGathered));
+                Assert.That(retained.Destination.SourceKind, Is.EqualTo(ResourceSourceKind.Berries));
+            }
+        }
+
+        [Test]
+        public async Task ResetDropsGraphDraft_AndBareYesCannotBecomeANewGoal()
+        {
+            var mine = new JObject { ["type"] = "BuildStructure", ["structure"] = "Mine", ["count"] = 1,
+                ["builders"] = new JObject { ["state"] = "Eligible", ["count"] = 1 } };
+            string proposal = GraphDraft(new JArray(mine), "Independent", 0, "structure", "Confirmation", new JValue("Mine"));
+            using (var f = new ChatFixture(new SequenceSemanticProvider(proposal,
+                Request("{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":4}"))))
+            {
+                await f.Chat.SubmitMessageAsync("build a gold mine");
+                Assert.That(f.Chat.PendingClarification, Is.Not.Null);
+                f.Chat.ResetConversation();
+                Assert.That(f.Chat.PendingClarification, Is.Null);
+                await f.Chat.SubmitMessageAsync("yes");
+                Assert.That(f.Provider.Calls, Is.EqualTo(1), "An orphan confirmation is not a new model order.");
+                Assert.That(f.Economy.Manager.Goals, Is.Empty);
+            }
+        }
+
+        [Test]
+        public async Task MovementCommandSupersedesGraphDraftWithoutCancellingAcceptedWork()
+        {
+            var mine = new JObject { ["type"] = "BuildStructure", ["structure"] = "Mine", ["count"] = 1,
+                ["builders"] = new JObject { ["state"] = "Eligible", ["count"] = 1 } };
+            string proposal = GraphDraft(new JArray(mine), "Independent", 0, "structure", "Confirmation", new JValue("Mine"));
+            using (var f = new ChatFixture(new SequenceSemanticProvider(proposal,
+                "{\"outcome\":\"Unsupported\",\"message\":\"No safe destination.\"}")))
+            {
+                await f.Chat.SubmitMessageAsync("build a gold mine");
+                Assert.That(f.Chat.PendingClarification, Is.Not.Null);
+                await f.Chat.SubmitMessageAsync("move villagers to my base");
+                Assert.That(f.Provider.Calls, Is.EqualTo(2));
+                Assert.That(f.Chat.PendingClarification, Is.Null);
+                Assert.That(f.Economy.Manager.Goals, Is.Empty);
+            }
+        }
+
+        [Test]
+        public async Task TwoMissingSlots_CountThenSourceResumeSameDraftLocally()
+        {
+            var allocation = new JObject { ["type"] = "AllocateWorkers", ["mode"] = "SelectedCount",
+                ["countMode"] = "Exact", ["workers"] = new JObject { ["state"] = "Idle" },
+                ["destination"] = new JObject { ["resource"] = "Food" } };
+            var proposal = JObject.Parse(GraphDraft(new JArray(allocation), "Independent", 0,
+                "count", "Count", new JValue(2)));
+            ((JArray)proposal["missingSlots"]).Add(new JObject { ["node"] = 0,
+                ["path"] = "destination.sourceKind", ["type"] = "SourceKind",
+                ["alternatives"] = new JArray("Berries") });
+            using (var f = new ChatFixture(new SequenceSemanticProvider(proposal.ToString())))
+            {
+                for (int i = 0; i < 3; i++) f.Economy.Worker(i);
+                f.Economy.Node(ResourceType.Food, 12);
+                await f.Chat.SubmitMessageAsync("send idle villagers to food");
+                Assert.That(f.Chat.PendingClarification?.GraphDraft?.MissingSlots.Count, Is.EqualTo(2));
+                await f.Chat.SubmitMessageAsync("three");
+                Assert.That(f.Provider.Calls, Is.EqualTo(1));
+                Assert.That(f.Economy.Manager.Goals, Is.Empty);
+                Assert.That(f.Chat.PendingClarification?.GraphDraft?.MissingSlots.Count, Is.EqualTo(1));
+                await f.Chat.SubmitMessageAsync("from berries");
+                Assert.That(f.Provider.Calls, Is.EqualTo(1));
+                var retained = f.Economy.Manager.Goals.OfType<AllocateWorkersGoal>().Single().Allocation;
+                Assert.That(retained.Count, Is.EqualTo(3));
+                Assert.That(retained.Workers.State, Is.EqualTo(CommanderWorkerState.Idle));
+                Assert.That(retained.Destination.SourceKind, Is.EqualTo(ResourceSourceKind.Berries));
+            }
+        }
+
+        [Test]
+        public async Task KnownStructureCorrection_BuildOrMakeMillInsteadPreservesMineProposalFields()
+        {
+            foreach (string correction in new[] { "build a Mill instead", "make a Mill instead" })
+            {
+                var mine = new JObject { ["type"] = "BuildStructure", ["structure"] = "Mine", ["count"] = 1,
+                    ["builders"] = new JObject { ["state"] = "Eligible", ["count"] = 1 },
+                    ["placement"] = new JObject { ["anchor"] = "MyTownCenter", ["relation"] = "Near" } };
+                using (var f = new ChatFixture(new SequenceSemanticProvider(GraphDraft(new JArray(mine),
+                    "Independent", 0, "structure", "Confirmation", new JValue("Mine")))))
+                {
+                    f.Economy.Worker(0);
+                    f.Economy.Simulation.CreateBuilding(0, BuildingType.TownCenter, f.Economy.Base.x, f.Economy.Base.y, false, true);
+                    await f.Chat.SubmitMessageAsync("build a Mine near my Town Center");
+                    var result = await f.Chat.SubmitMessageAsync(correction);
+                    Assert.That(result?.Success, Is.True, correction);
+                    Assert.That(f.Provider.Calls, Is.EqualTo(1), correction);
+                    var goal = f.Economy.Manager.Goals.OfType<BuildStructureGoal>().Single();
+                    Assert.That(goal.StructureType, Is.EqualTo(BuildingType.Mill));
+                    Assert.That(goal.PlacementAnchorSelector, Is.EqualTo(CommanderSemanticAnchorSelector.MyTownCenter));
+                    Assert.That(goal.RequestAuthority.OriginalInput, Is.EqualTo("build a Mine near my Town Center"));
+                }
+            }
+        }
+
+        [Test]
+        public async Task KnownCountCorrection_DoesNotChangeResourceAmount()
+        {
+            var allocation = new JObject { ["type"] = "AllocateWorkers", ["mode"] = "SelectedCount",
+                ["countMode"] = "Exact", ["count"] = 6,
+                ["workers"] = new JObject { ["state"] = "Gathering", ["currentResource"] = "Wood" },
+                ["destination"] = new JObject { ["resource"] = "Food" },
+                ["resourceAmount"] = 400, ["resourceAmountMode"] = "AdditionalGathered" };
+            using (var f = new ChatFixture(new SequenceSemanticProvider(GraphDraft(new JArray(allocation),
+                "Independent", 0, "destination.sourceKind", "SourceKind", new JValue("Berries")))))
+            {
+                for (int i = 0; i < 3; i++) f.Economy.Assigned(f.Economy.Worker(i), f.Economy.Node(ResourceType.Wood, 15 + i));
+                f.Economy.Node(ResourceType.Food, 30);
+                await f.Chat.SubmitMessageAsync("send six wood villagers to gather 400 additional food");
+                await f.Chat.SubmitMessageAsync("three villagers instead");
+                Assert.That(f.Provider.Calls, Is.EqualTo(1));
+                Assert.That(f.Economy.Manager.Goals, Is.Empty);
+                var pending = (JObject)((JArray)f.Chat.PendingClarification.GraphDraft.ToPendingJson()["nodes"])[0];
+                Assert.That((int)pending["count"], Is.EqualTo(3));
+                Assert.That((int)pending["resourceAmount"], Is.EqualTo(400));
+                await f.Chat.SubmitMessageAsync("from berries");
+                var retained = f.Economy.Manager.Goals.OfType<AllocateWorkersGoal>().Single().Allocation;
+                Assert.That(retained.Count, Is.EqualTo(3));
+                Assert.That(retained.ResourceAmount, Is.EqualTo(400));
+                Assert.That(retained.ResourceAmountMode, Is.EqualTo(CommanderResourceAmountMode.AdditionalGathered));
+                Assert.That(retained.Workers.CurrentResource, Is.EqualTo(ResourceType.Wood));
+            }
+        }
+
+        [Test]
+        public async Task UnrecognizedGraphReply_AndSourceYes_ReaskWithoutHttp()
+        {
+            var watch = new JObject { ["type"] = "WatchFutureUnits", ["unit"] = "Villager", ["count"] = 5,
+                ["producer"] = "TownCenter", ["action"] = "Gather", ["resource"] = "Wood" };
+            using (var f = new ChatFixture(new SequenceSemanticProvider(GraphDraft(new JArray(watch),
+                "Independent", 0, "sourceKind", "SourceKind", new JValue("Tree")))))
+            {
+                f.Economy.Simulation.CreateBuilding(0, BuildingType.TownCenter, f.Economy.Base.x, f.Economy.Base.y, false, true);
+                await f.Chat.SubmitMessageAsync("send the next five villagers to wood from trees");
+                await f.Chat.SubmitMessageAsync("yes");
+                await f.Chat.SubmitMessageAsync("maybe elsewhere");
+                Assert.That(f.Provider.Calls, Is.EqualTo(1));
+                Assert.That(f.Chat.PendingClarification, Is.Not.Null);
+                Assert.That(f.Economy.Manager.Goals, Is.Empty);
+                await f.Chat.SubmitMessageAsync("from trees");
+                Assert.That(f.Provider.Calls, Is.EqualTo(1));
+                Assert.That(f.Chat.PendingActionPlan, Is.Not.Null);
+                Assert.That(f.Economy.Manager.Goals, Is.Empty);
+            }
+        }
+
+        [Test]
+        public void GraphSlotAlternatives_ExternalMutationCannotAlterDraft()
+        {
+            var mine = new JObject { ["type"] = "BuildStructure", ["structure"] = "Mine", ["count"] = 1,
+                ["builders"] = new JObject { ["state"] = "Eligible", ["count"] = 1 } };
+            var parsed = CommanderSemanticJson.Parse(GraphDraft(new JArray(mine), "Independent", 0,
+                "structure", "Confirmation", new JValue("Mine")));
+            var draft = parsed.PendingGraphDraft;
+            ((JValue)draft.MissingSlots[0].Alternatives[0]).Value = "Mill";
+            Assert.That((string)draft.MissingSlots[0].Alternatives[0], Is.EqualTo("Mine"));
+            Assert.That((string)((JArray)draft.ToSlotsJson()[0]["alternatives"])[0], Is.EqualTo("Mine"));
+            Assert.That(draft.Resolve("yes").Nodes[0].BuildingType, Is.EqualTo(BuildingType.Mine));
+        }
+
+        [Test]
+        public async Task KnownResourceAmountCorrection_DoesNotChangeWorkerCount()
+        {
+            var allocation = new JObject { ["type"] = "AllocateWorkers", ["mode"] = "SelectedCount",
+                ["countMode"] = "Exact", ["count"] = 3,
+                ["workers"] = new JObject { ["state"] = "Idle" },
+                ["destination"] = new JObject { ["resource"] = "Food" },
+                ["resourceAmount"] = 400, ["resourceAmountMode"] = "AdditionalGathered" };
+            using (var f = new ChatFixture(new SequenceSemanticProvider(GraphDraft(new JArray(allocation),
+                "Independent", 0, "destination.sourceKind", "SourceKind", new JValue("Berries")))))
+            {
+                for (int i = 0; i < 3; i++) f.Economy.Worker(i);
+                f.Economy.Node(ResourceType.Food, 12);
+                await f.Chat.SubmitMessageAsync("send three idle villagers to gather 400 additional food");
+                await f.Chat.SubmitMessageAsync("500 additional food instead");
+                Assert.That(f.Provider.Calls, Is.EqualTo(1));
+                var node = (JObject)((JArray)f.Chat.PendingClarification.GraphDraft.ToPendingJson()["nodes"])[0];
+                Assert.That((int)node["count"], Is.EqualTo(3));
+                Assert.That((int)node["resourceAmount"], Is.EqualTo(500));
+                Assert.That((string)node["resourceAmountMode"], Is.EqualTo("AdditionalGathered"));
+                await f.Chat.SubmitMessageAsync("from berries");
+                var retained = f.Economy.Manager.Goals.OfType<AllocateWorkersGoal>().Single().Allocation;
+                Assert.That(retained.Count, Is.EqualTo(3));
+                Assert.That(retained.ResourceAmount, Is.EqualTo(500));
+            }
+        }
+
+        [Test]
+        public async Task RepeatedSuccessfulGraphCorrections_ExpireBeforeSeventhReply()
+        {
+            var allocation = new JObject { ["type"] = "AllocateWorkers", ["mode"] = "SelectedCount",
+                ["countMode"] = "Exact", ["count"] = 2,
+                ["workers"] = new JObject { ["state"] = "Idle" },
+                ["destination"] = new JObject { ["resource"] = "Food" } };
+            using (var f = new ChatFixture(new SequenceSemanticProvider(GraphDraft(new JArray(allocation),
+                "Independent", 0, "destination.sourceKind", "SourceKind", new JValue("Berries")))))
+            {
+                for (int i = 0; i < 8; i++) f.Economy.Worker(i);
+                f.Economy.Node(ResourceType.Food, 12);
+                await f.Chat.SubmitMessageAsync("send two idle villagers to berries");
+                foreach (string word in new[] { "three", "four", "five", "six", "seven", "eight" })
+                    await f.Chat.SubmitMessageAsync(word + " villagers instead");
+                Assert.That(f.Chat.PendingClarification, Is.Not.Null, "Six successful replies may remain pending.");
+                Assert.That(f.Chat.PendingClarification.Turns, Is.EqualTo(6));
+                await f.Chat.SubmitMessageAsync("from berries");
+                Assert.That(f.Chat.PendingClarification, Is.Null);
+                Assert.That(f.Provider.Calls, Is.EqualTo(1));
+                Assert.That(f.Economy.Manager.Goals, Is.Empty);
+            }
+        }
+
+        [Test]
+        public async Task PendingDraft_ForeignRuntimeAndReplayCannotCreateGoals()
+        {
+            var mine = new JObject { ["type"] = "BuildStructure", ["structure"] = "Mine", ["count"] = 1,
+                ["builders"] = new JObject { ["state"] = "Eligible", ["count"] = 1 } };
+            string proposal = GraphDraft(new JArray(mine), "Independent", 0, "structure", "Confirmation", new JValue("Mine"));
+            var pendingField = typeof(CommanderChatUI).GetField("pendingClarification",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            using (var first = new ChatFixture(new SequenceSemanticProvider(proposal)))
+            using (var foreign = new ChatFixture(new SequenceSemanticProvider(proposal)))
+            using (var replacement = new EconomyFixture())
+            using (var replacementDispatcher = new CommanderIntentDispatcher(replacement.Simulation, replacement.Manager))
+            {
+                first.Economy.Worker(0); foreign.Economy.Worker(0);
+                await first.Chat.SubmitMessageAsync("build a Mine");
+                var old = first.Chat.PendingClarification;
+                pendingField.SetValue(foreign.Chat, old);
+                await foreign.Chat.SubmitMessageAsync("yes");
+                Assert.That(foreign.Economy.Manager.Goals, Is.Empty);
+                Assert.That(foreign.Provider.Calls, Is.EqualTo(0));
+
+                first.Chat.Initialize(first.Provider, replacement.Simulation, replacement.Manager, replacementDispatcher);
+                pendingField.SetValue(first.Chat, old);
+                await first.Chat.SubmitMessageAsync("yes");
+                Assert.That(replacement.Manager.Goals, Is.Empty);
+                Assert.That(first.Provider.Calls, Is.EqualTo(1));
+            }
+            using (var f = new ChatFixture(new SequenceSemanticProvider(proposal)))
+            {
+                f.Economy.Worker(0);
+                await f.Chat.SubmitMessageAsync("build a Mine");
+                var old = f.Chat.PendingClarification;
+                await f.Chat.SubmitMessageAsync("yes");
+                Assert.That(f.Economy.Manager.Goals.Count, Is.EqualTo(1));
+                pendingField.SetValue(f.Chat, old);
+                await f.Chat.SubmitMessageAsync("yes");
+                Assert.That(f.Economy.Manager.Goals.Count, Is.EqualTo(1));
+                Assert.That(f.Provider.Calls, Is.EqualTo(1));
+            }
+        }
+
+        [Test]
+        public void OverlongGraphOriginal_IsRejectedWithoutTruncation()
+        {
+            var mine = new JObject { ["type"] = "BuildStructure", ["structure"] = "Mine", ["count"] = 1,
+                ["builders"] = new JObject { ["state"] = "Eligible", ["count"] = 1 } };
+            var draft = CommanderSemanticJson.Parse(GraphDraft(new JArray(mine), "Independent", 0,
+                "structure", "Confirmation", new JValue("Mine"))).PendingGraphDraft;
+            string exact = new string('x', CommanderSemanticProviderRequest.MaximumPlayerMessageCharacters);
+            Assert.That(new CommanderPendingClarification(draft, exact, "confirm", 1, 1).OriginalText, Is.EqualTo(exact));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new CommanderPendingClarification(draft,
+                exact + "y", "confirm", 1, 1));
+        }
+
+        [Test]
+        public async Task FourSlotGraph_AllLocalRepliesCompleteWithinBudget()
+        {
+            var allocation = new JObject { ["type"] = "AllocateWorkers", ["mode"] = "SelectedCount",
+                ["countMode"] = "Exact", ["workers"] = new JObject { ["state"] = "Idle" },
+                ["destination"] = new JObject() };
+            var house = new JObject { ["type"] = "BuildStructure", ["structure"] = "House", ["count"] = 1,
+                ["builders"] = new JObject { ["state"] = "Eligible", ["count"] = 1 } };
+            var proposal = JObject.Parse(GraphDraft(new JArray(allocation, house), "Independent", 0, "count", "Count", new JValue(3)));
+            var slots = (JArray)proposal["missingSlots"];
+            slots.Add(new JObject { ["node"] = 0, ["path"] = "destination.resource", ["type"] = "CanonicalName",
+                ["alternatives"] = new JArray("Food") });
+            slots.Add(new JObject { ["node"] = 0, ["path"] = "destination.sourceKind", ["type"] = "SourceKind",
+                ["alternatives"] = new JArray("Berries") });
+            slots.Add(new JObject { ["node"] = 1, ["path"] = "structure", ["type"] = "Confirmation",
+                ["alternatives"] = new JArray("House") });
+            using (var f = new ChatFixture(new SequenceSemanticProvider(proposal.ToString())))
+            {
+                for (int i = 0; i < 3; i++) f.Economy.Worker(i);
+                f.Economy.Node(ResourceType.Food, 12);
+                await f.Chat.SubmitMessageAsync("send three idle villagers to food and build a House");
+                Assert.That(f.Chat.PendingClarification?.GraphDraft?.MissingSlots.Count, Is.EqualTo(4));
+                foreach (string reply in new[] { "three", "Food", "from berries", "yes" })
+                    await f.Chat.SubmitMessageAsync(reply);
+                Assert.That(f.Provider.Calls, Is.EqualTo(1));
+                Assert.That(f.Chat.PendingClarification, Is.Null);
+                Assert.That(f.Chat.PendingActionPlan, Is.Not.Null);
+                Assert.That(f.Economy.Manager.Goals, Is.Empty);
+            }
+        }
+
+        [Test]
+        public async Task KnownSourceCorrection_ChangesOnlyNamedSource()
+        {
+            var allocation = new JObject { ["type"] = "AllocateWorkers", ["mode"] = "SelectedCount",
+                ["countMode"] = "Exact", ["workers"] = new JObject { ["state"] = "Idle" },
+                ["destination"] = new JObject { ["resource"] = "Food", ["sourceKind"] = "Sheep" } };
+            using (var f = new ChatFixture(new SequenceSemanticProvider(GraphDraft(new JArray(allocation),
+                "Independent", 0, "count", "Count", new JValue(3)))))
+            {
+                for (int i = 0; i < 3; i++) f.Economy.Worker(i);
+                f.Economy.Node(ResourceType.Food, 12);
+                await f.Chat.SubmitMessageAsync("send idle villagers from sheep to food");
+                await f.Chat.SubmitMessageAsync("from berries instead");
+                Assert.That(f.Provider.Calls, Is.EqualTo(1));
+                var node = (JObject)((JArray)f.Chat.PendingClarification.GraphDraft.ToPendingJson()["nodes"])[0];
+                Assert.That((string)node["destination"]["resource"], Is.EqualTo("Food"));
+                Assert.That((string)node["destination"]["sourceKind"], Is.EqualTo("Berries"));
+                await f.Chat.SubmitMessageAsync("three");
+                Assert.That(f.Economy.Manager.Goals.OfType<AllocateWorkersGoal>().Single().Allocation.Destination.SourceKind,
+                    Is.EqualTo(ResourceSourceKind.Berries));
+            }
+        }
+
+        [Test]
+        public async Task IndependentBuildWithoutCorrectionMarker_SupersedesGraphDraft()
+        {
+            var mine = new JObject { ["type"] = "BuildStructure", ["structure"] = "Mine", ["count"] = 1,
+                ["builders"] = new JObject { ["state"] = "Eligible", ["count"] = 1 } };
+            using (var f = new ChatFixture(new SequenceSemanticProvider(GraphDraft(new JArray(mine),
+                "Independent", 0, "structure", "Confirmation", new JValue("Mine")),
+                Request("{\"type\":\"BuildStructure\",\"structure\":\"Mill\",\"count\":1}"))))
+            {
+                f.Economy.Worker(0);
+                await f.Chat.SubmitMessageAsync("build a Mine");
+                await f.Chat.SubmitMessageAsync("build a Mill");
+                Assert.That(f.Provider.Calls, Is.EqualTo(2));
+                Assert.That(f.Chat.PendingClarification, Is.Null);
+                Assert.That(f.Economy.Manager.Goals.OfType<BuildStructureGoal>().Single().StructureType,
+                    Is.EqualTo(BuildingType.Mill));
+            }
+        }
+
+        [Test]
+        public async Task AmbiguousKnownFieldCorrection_ReasksForOneNodeAndFieldLocally()
+        {
+            var mine = new JObject { ["type"] = "BuildStructure", ["structure"] = "Mine", ["count"] = 1,
+                ["builders"] = new JObject { ["state"] = "Eligible", ["count"] = 1 } };
+            using (var f = new ChatFixture(new SequenceSemanticProvider(GraphDraft(new JArray(mine.DeepClone(), mine.DeepClone()),
+                "Independent", 0, "structure", "Confirmation", new JValue("Mine")))))
+            {
+                await f.Chat.SubmitMessageAsync("build two Mines");
+                await f.Chat.SubmitMessageAsync("Mill instead");
+                Assert.That(f.Provider.Calls, Is.EqualTo(1));
+                Assert.That(f.Chat.PendingClarification, Is.Not.Null);
+                Assert.That(f.Economy.Manager.Goals, Is.Empty);
+                Assert.That(f.Chat.DisplayedTranscript, Does.Contain("node"));
+                Assert.That(f.Chat.DisplayedTranscript, Does.Contain("field"));
+            }
+        }
+
+        [Test]
+        public async Task NegatedStructureCorrection_RetainsMineTicketUntilYes()
+        {
+            foreach (string correction in new[] { "Don't change the Mine to a Mill", "do not change the Mine to a Mill", "never change the Mine to a Mill" })
+            {
+                var mine = new JObject { ["type"] = "BuildStructure", ["structure"] = "Mine", ["count"] = 1,
+                    ["builders"] = new JObject { ["state"] = "Eligible", ["count"] = 1 } };
+                using (var f = new ChatFixture(new SequenceSemanticProvider(GraphDraft(new JArray(mine),
+                    "Independent", 0, "structure", "Confirmation", new JValue("Mine")))))
+                {
+                    f.Economy.Worker(0);
+                    await f.Chat.SubmitMessageAsync("build a Mine");
+                    var old = f.Chat.PendingClarification;
+                    var original = old.GraphDraft.ToPendingJson();
+                    await f.Chat.SubmitMessageAsync(correction);
+                    Assert.That(f.Chat.PendingClarification?.RequestTicket, Is.SameAs(old.RequestTicket), correction);
+                    Assert.That(JToken.DeepEquals(f.Chat.PendingClarification.GraphDraft.ToPendingJson(), original), Is.True, correction);
+                    Assert.That(f.Provider.Calls, Is.EqualTo(1), correction);
+                    Assert.That(f.Economy.Manager.Goals, Is.Empty, correction);
+                    Assert.That(f.Economy.Commands(), Is.Empty, correction);
+                    await f.Chat.SubmitMessageAsync("yes");
+                    Assert.That(f.Economy.Manager.Goals.OfType<BuildStructureGoal>().Single().StructureType,
+                        Is.EqualTo(BuildingType.Mine), correction);
+                }
+            }
+        }
+
+        [Test]
+        public async Task NegatedCountCorrection_PreservesCountAndIndependentAmount()
+        {
+            var allocation = new JObject { ["type"] = "AllocateWorkers", ["mode"] = "SelectedCount",
+                ["countMode"] = "Exact", ["count"] = 6,
+                ["workers"] = new JObject { ["state"] = "Gathering", ["currentResource"] = "Wood" },
+                ["destination"] = new JObject { ["resource"] = "Food" },
+                ["resourceAmount"] = 400, ["resourceAmountMode"] = "AdditionalGathered" };
+            using (var f = new ChatFixture(new SequenceSemanticProvider(GraphDraft(new JArray(allocation),
+                "Independent", 0, "destination.sourceKind", "SourceKind", new JValue("Berries")))))
+            {
+                for (int i = 0; i < 6; i++) f.Economy.Assigned(f.Economy.Worker(i), f.Economy.Node(ResourceType.Wood, 15 + i));
+                f.Economy.Node(ResourceType.Food, 30);
+                await f.Chat.SubmitMessageAsync("send six wood villagers to gather 400 additional food");
+                var old = f.Chat.PendingClarification;
+                var original = old.GraphDraft.ToPendingJson();
+                await f.Chat.SubmitMessageAsync("don't change six villagers to three");
+                Assert.That(f.Chat.PendingClarification?.RequestTicket, Is.SameAs(old.RequestTicket));
+                Assert.That(JToken.DeepEquals(f.Chat.PendingClarification.GraphDraft.ToPendingJson(), original), Is.True);
+                Assert.That(f.Provider.Calls, Is.EqualTo(1));
+                Assert.That(f.Economy.Manager.Goals, Is.Empty);
+                Assert.That(f.Economy.Commands(), Is.Empty);
+                await f.Chat.SubmitMessageAsync("from berries");
+                var retained = f.Economy.Manager.Goals.OfType<AllocateWorkersGoal>().Single().Allocation;
+                Assert.That(retained.Count, Is.EqualTo(6));
+                Assert.That(retained.ResourceAmount, Is.EqualTo(400));
+                Assert.That(retained.ResourceAmountMode, Is.EqualTo(CommanderResourceAmountMode.AdditionalGathered));
+                Assert.That(retained.Workers.CurrentResource, Is.EqualTo(ResourceType.Wood));
+            }
+        }
+
+        [Test]
+        public async Task NegatedSourceCorrection_PreservesSheepUntilCountReply()
+        {
+            var allocation = new JObject { ["type"] = "AllocateWorkers", ["mode"] = "SelectedCount",
+                ["countMode"] = "Exact", ["workers"] = new JObject { ["state"] = "Idle" },
+                ["destination"] = new JObject { ["resource"] = "Food", ["sourceKind"] = "Sheep" } };
+            using (var f = new ChatFixture(new SequenceSemanticProvider(GraphDraft(new JArray(allocation),
+                "Independent", 0, "count", "Count", new JValue(3)))))
+            {
+                for (int i = 0; i < 3; i++) f.Economy.Worker(i);
+                f.Economy.Node(ResourceType.Food, 12);
+                await f.Chat.SubmitMessageAsync("send idle villagers from sheep to food");
+                var old = f.Chat.PendingClarification;
+                var original = old.GraphDraft.ToPendingJson();
+                await f.Chat.SubmitMessageAsync("do not change Sheep to Berries");
+                Assert.That(f.Chat.PendingClarification?.RequestTicket, Is.SameAs(old.RequestTicket));
+                Assert.That(JToken.DeepEquals(f.Chat.PendingClarification.GraphDraft.ToPendingJson(), original), Is.True);
+                Assert.That(f.Provider.Calls, Is.EqualTo(1));
+                Assert.That(f.Economy.Manager.Goals, Is.Empty);
+                Assert.That(f.Economy.Commands(), Is.Empty);
+                await f.Chat.SubmitMessageAsync("three");
+                Assert.That(f.Economy.Manager.Goals.OfType<AllocateWorkersGoal>().Single().Allocation.Destination.SourceKind,
+                    Is.EqualTo(ResourceSourceKind.Sheep));
+            }
+        }
+
+        [Test]
+        public async Task ConditionalOrExampleCorrection_ReasksWithoutSupersedingMine()
+        {
+            foreach (string correction in new[] { "if we change Mine to Mill", "for example change Mine to Mill",
+                "build a Mill instead if we have wood", "could we change Mine to Mill?" })
+            {
+                var mine = new JObject { ["type"] = "BuildStructure", ["structure"] = "Mine", ["count"] = 1,
+                    ["builders"] = new JObject { ["state"] = "Eligible", ["count"] = 1 } };
+                using (var f = new ChatFixture(new SequenceSemanticProvider(GraphDraft(new JArray(mine),
+                    "Independent", 0, "structure", "Confirmation", new JValue("Mine")))))
+                {
+                    f.Economy.Worker(0);
+                    await f.Chat.SubmitMessageAsync("build a Mine");
+                    var old = f.Chat.PendingClarification;
+                    var original = old.GraphDraft.ToPendingJson();
+                    await f.Chat.SubmitMessageAsync(correction);
+                    Assert.That(f.Chat.PendingClarification?.RequestTicket, Is.SameAs(old.RequestTicket), correction);
+                    Assert.That(JToken.DeepEquals(f.Chat.PendingClarification.GraphDraft.ToPendingJson(), original), Is.True, correction);
+                    Assert.That(f.Provider.Calls, Is.EqualTo(1), correction);
+                    Assert.That(f.Economy.Manager.Goals, Is.Empty, correction);
+                    Assert.That(f.Economy.Commands(), Is.Empty, correction);
+                    await f.Chat.SubmitMessageAsync("yes");
+                    Assert.That(f.Economy.Manager.Goals.OfType<BuildStructureGoal>().Single().StructureType,
+                        Is.EqualTo(BuildingType.Mine), correction);
+                }
+            }
+        }
+
+        [Test]
+        public async Task OldAmountWrongResource_ReasksAndRetainsAdditionalFood()
+        { await AssertMismatchedAmountCorrectionRetainsDraft("change 400 wood to 500 food"); }
+
+        [Test]
+        public async Task OldAmountWrongMode_ReasksAndRetainsAdditionalFood()
+        { await AssertMismatchedAmountCorrectionRetainsDraft("change 400 stockpile food to 500 food"); }
+
+        [Test]
+        public async Task NewAmountWrongResource_ReasksAndRetainsAdditionalFood()
+        { await AssertMismatchedAmountCorrectionRetainsDraft("change 400 additional food to 500 wood"); }
+
+        [Test]
+        public async Task NewAmountWrongMode_ReasksAndRetainsAdditionalFood()
+        { await AssertMismatchedAmountCorrectionRetainsDraft("change 400 additional food to 500 stockpile food"); }
+
+        private static async Task AssertMismatchedAmountCorrectionRetainsDraft(string correction)
+        {
+            var allocation = new JObject { ["type"] = "AllocateWorkers", ["mode"] = "SelectedCount",
+                ["countMode"] = "Exact", ["count"] = 3,
+                ["workers"] = new JObject { ["state"] = "Idle" },
+                ["destination"] = new JObject { ["resource"] = "Food" },
+                ["resourceAmount"] = 400, ["resourceAmountMode"] = "AdditionalGathered" };
+            using (var f = new ChatFixture(new SequenceSemanticProvider(GraphDraft(new JArray(allocation),
+                "Independent", 0, "destination.sourceKind", "SourceKind", new JValue("Berries")))))
+            {
+                for (int i = 0; i < 3; i++) f.Economy.Worker(i);
+                f.Economy.Node(ResourceType.Food, 12);
+                await f.Chat.SubmitMessageAsync("send three idle villagers to gather 400 additional food");
+                var old = f.Chat.PendingClarification;
+                var retained = old.GraphDraft.ToPendingJson();
+                await f.Chat.SubmitMessageAsync(correction);
+                Assert.That(f.Chat.PendingClarification?.RequestTicket, Is.SameAs(old.RequestTicket), correction);
+                Assert.That(JToken.DeepEquals(f.Chat.PendingClarification.GraphDraft.ToPendingJson(), retained), Is.True, correction);
+                Assert.That(f.Provider.Calls, Is.EqualTo(1), correction);
+                Assert.That(f.Economy.Manager.Goals, Is.Empty, correction);
+                Assert.That(f.Economy.Commands(), Is.Empty, correction);
+                await f.Chat.SubmitMessageAsync("from berries");
+                var admitted = f.Economy.Manager.Goals.OfType<AllocateWorkersGoal>().Single().Allocation;
+                Assert.That(admitted.Count, Is.EqualTo(3), correction);
+                Assert.That(admitted.Destination.Resource, Is.EqualTo(ResourceType.Food), correction);
+                Assert.That(admitted.ResourceAmount, Is.EqualTo(400), correction);
+                Assert.That(admitted.ResourceAmountMode, Is.EqualTo(CommanderResourceAmountMode.AdditionalGathered), correction);
+                Assert.That(f.Provider.Calls, Is.EqualTo(1), correction);
+            }
+        }
+
+        [Test]
+        public async Task QualifiedOldAmount_ChangesOnlyAmount()
+        {
+            var allocation = new JObject { ["type"] = "AllocateWorkers", ["mode"] = "SelectedCount",
+                ["countMode"] = "Exact", ["count"] = 3,
+                ["workers"] = new JObject { ["state"] = "Idle" },
+                ["destination"] = new JObject { ["resource"] = "Food" },
+                ["resourceAmount"] = 400, ["resourceAmountMode"] = "AdditionalGathered" };
+            using (var f = new ChatFixture(new SequenceSemanticProvider(GraphDraft(new JArray(allocation),
+                "Independent", 0, "destination.sourceKind", "SourceKind", new JValue("Berries")))))
+            {
+                for (int i = 0; i < 3; i++) f.Economy.Worker(i);
+                f.Economy.Node(ResourceType.Food, 12);
+                await f.Chat.SubmitMessageAsync("send three idle villagers to gather 400 additional food");
+                var old = f.Chat.PendingClarification;
+                await f.Chat.SubmitMessageAsync("change 400 additional food to 500 additional food");
+                Assert.That(f.Chat.PendingClarification?.RequestTicket, Is.SameAs(old.RequestTicket));
+                var node = (JObject)((JArray)f.Chat.PendingClarification.GraphDraft.ToPendingJson()["nodes"])[0];
+                Assert.That((int)node["count"], Is.EqualTo(3));
+                Assert.That((string)node["destination"]["resource"], Is.EqualTo("Food"));
+                Assert.That((int)node["resourceAmount"], Is.EqualTo(500));
+                Assert.That((string)node["resourceAmountMode"], Is.EqualTo("AdditionalGathered"));
+                Assert.That(f.Provider.Calls, Is.EqualTo(1));
+                Assert.That(f.Economy.Manager.Goals, Is.Empty);
+                await f.Chat.SubmitMessageAsync("from berries");
+                var admitted = f.Economy.Manager.Goals.OfType<AllocateWorkersGoal>().Single().Allocation;
+                Assert.That(admitted.Count, Is.EqualTo(3));
+                Assert.That(admitted.ResourceAmount, Is.EqualTo(500));
+                Assert.That(admitted.ResourceAmountMode, Is.EqualTo(CommanderResourceAmountMode.AdditionalGathered));
+            }
+        }
+
+        [Test]
+        public async Task NamedOldToNewStructure_AdmitsOnlyMill()
+        {
+            var mine = new JObject { ["type"] = "BuildStructure", ["structure"] = "Mine", ["count"] = 1,
+                ["builders"] = new JObject { ["state"] = "Eligible", ["count"] = 1 } };
+            using (var f = new ChatFixture(new SequenceSemanticProvider(GraphDraft(new JArray(mine),
+                "Independent", 0, "structure", "Confirmation", new JValue("Mine")))))
+            {
+                f.Economy.Worker(0);
+                await f.Chat.SubmitMessageAsync("build a Mine");
+                await f.Chat.SubmitMessageAsync("change Mine to Mill");
+                Assert.That(f.Provider.Calls, Is.EqualTo(1));
+                Assert.That(f.Economy.Manager.Goals.OfType<BuildStructureGoal>().Single().StructureType,
+                    Is.EqualTo(BuildingType.Mill));
+            }
+        }
+
+        [Test]
+        public async Task NamedOldToNewSource_ChangesOnlySource()
+        {
+            var allocation = new JObject { ["type"] = "AllocateWorkers", ["mode"] = "SelectedCount",
+                ["countMode"] = "Exact", ["workers"] = new JObject { ["state"] = "Idle" },
+                ["destination"] = new JObject { ["resource"] = "Food", ["sourceKind"] = "Sheep" } };
+            using (var f = new ChatFixture(new SequenceSemanticProvider(GraphDraft(new JArray(allocation),
+                "Independent", 0, "count", "Count", new JValue(3)))))
+            {
+                for (int i = 0; i < 3; i++) f.Economy.Worker(i);
+                f.Economy.Node(ResourceType.Food, 12);
+                await f.Chat.SubmitMessageAsync("send idle villagers from sheep to food");
+                await f.Chat.SubmitMessageAsync("change Sheep to Berries");
+                Assert.That(f.Provider.Calls, Is.EqualTo(1));
+                var node = (JObject)((JArray)f.Chat.PendingClarification.GraphDraft.ToPendingJson()["nodes"])[0];
+                Assert.That((string)node["destination"]["resource"], Is.EqualTo("Food"));
+                Assert.That((string)node["destination"]["sourceKind"], Is.EqualTo("Berries"));
+                await f.Chat.SubmitMessageAsync("three");
+                Assert.That(f.Economy.Manager.Goals.OfType<AllocateWorkersGoal>().Single().Allocation.Destination.SourceKind,
+                    Is.EqualTo(ResourceSourceKind.Berries));
+            }
+        }
+
+        [Test]
+        public async Task NamedOldToNewWorkerCount_PreservesAmount()
+        {
+            var allocation = new JObject { ["type"] = "AllocateWorkers", ["mode"] = "SelectedCount",
+                ["countMode"] = "Exact", ["count"] = 6,
+                ["workers"] = new JObject { ["state"] = "Idle" },
+                ["destination"] = new JObject { ["resource"] = "Food" },
+                ["resourceAmount"] = 400, ["resourceAmountMode"] = "AdditionalGathered" };
+            using (var f = new ChatFixture(new SequenceSemanticProvider(GraphDraft(new JArray(allocation),
+                "Independent", 0, "destination.sourceKind", "SourceKind", new JValue("Berries")))))
+            {
+                for (int i = 0; i < 6; i++) f.Economy.Worker(i);
+                f.Economy.Node(ResourceType.Food, 12);
+                await f.Chat.SubmitMessageAsync("send six idle villagers to gather 400 additional food");
+                await f.Chat.SubmitMessageAsync("change six villagers to three villagers");
+                Assert.That(f.Provider.Calls, Is.EqualTo(1));
+                var node = (JObject)((JArray)f.Chat.PendingClarification.GraphDraft.ToPendingJson()["nodes"])[0];
+                Assert.That((int)node["count"], Is.EqualTo(3));
+                Assert.That((int)node["resourceAmount"], Is.EqualTo(400));
+                await f.Chat.SubmitMessageAsync("from berries");
+                var admitted = f.Economy.Manager.Goals.OfType<AllocateWorkersGoal>().Single().Allocation;
+                Assert.That(admitted.Count, Is.EqualTo(3));
+                Assert.That(admitted.ResourceAmount, Is.EqualTo(400));
+            }
+        }
+    }
+}

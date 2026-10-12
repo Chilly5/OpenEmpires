@@ -1,0 +1,40 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "f5bb6fa70382470b87305119b79f7b94",
+      "status": "failed",
+      "mode": "EditMode",
+      "started_unix_ms": 1791736402488,
+      "finished_unix_ms": 1791736415050,
+      "last_update_unix_ms": 1791736415050,
+      "progress": {
+        "completed": 2,
+        "total": 2,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791736412717,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.SemanticGarrison_StalledNativeApproachTerminatesWithoutShelterFallback",
+        "last_finished_unix_ms": 1791736414913,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.SemanticGarrison_AllVillagersFreezesActualSetAndReportsRemainder",
+            "message": "  I couldn't understand that request safely.\r\n  Expected: True\r\n  But was:  False\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.SemanticGarrison_StalledNativeApproachTerminatesWithoutShelterFallback",
+            "message": "  Garrisoned 0/1 in the exact owned TownCenter; protected 0; unaccommodated 1. Native entry is pending.\r\n  Expected: Blocked\r\n  But was:  Executing\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

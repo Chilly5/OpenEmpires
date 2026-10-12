@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="7" result="Failed(Child)" total="7" passed="5" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 05:54:26Z" end-time="2026-10-12 05:54:35Z" duration="9.2513234">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1806" result="Failed" site="Child" start-time="2026-10-12 05:54:26Z" end-time="2026-10-12 05:54:35Z" duration="9.251323" total="7" passed="5" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="3083" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1806" result="Failed" site="Child" start-time="2026-10-12 05:54:26Z" end-time="2026-10-12 05:54:35Z" duration="9.145534" total="7" passed="5" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="40764" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="3084" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1806" result="Failed" site="Child" start-time="2026-10-12 05:54:26Z" end-time="2026-10-12 05:54:35Z" duration="9.054865" total="7" passed="5" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="3085" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1806" result="Failed" site="Child" start-time="2026-10-12 05:54:26Z" end-time="2026-10-12 05:54:35Z" duration="8.945109" total="7" passed="5" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="2824" name="CommanderPhase5AProviderContractTests" fullname="OpenEmpires.Tests.CommanderPhase5AProviderContractTests" classname="OpenEmpires.Tests.CommanderPhase5AProviderContractTests" runstate="Runnable" testcasecount="14" result="Failed" site="Child" start-time="2026-10-12 05:54:26Z" end-time="2026-10-12 05:54:29Z" duration="2.325408" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="2825" name="DynamicFarm_UsesRegistryVocabularyAndReturnsTypedPlan" fullname="OpenEmpires.Tests.CommanderPhase5AProviderContractTests.DynamicFarm_UsesRegistryVocabularyAndReturnsTypedPlan" methodname="DynamicFarm_UsesRegistryVocabularyAndReturnsTypedPlan" classname="OpenEmpires.Tests.CommanderPhase5AProviderContractTests" runstate="Runnable" seed="274219302" result="Passed" start-time="2026-10-12 05:54:27Z" end-time="2026-10-12 05:54:27Z" duration="0.582778" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[CommanderProvider] utc=2026-10-12T05:54:27.4996067Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=38
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=128;finish=stop
+[CommanderProvider] semantic=Request;nodes=1
+]]></output>
+            </test-case>
+            <test-case id="2828" name="RepeatedPlacementAndExactProducers_PromptIncludesStrictDynamicExample" fullname="OpenEmpires.Tests.CommanderPhase5AProviderContractTests.RepeatedPlacementAndExactProducers_PromptIncludesStrictDynamicExample" methodname="RepeatedPlacementAndExactProducers_PromptIncludesStrictDynamicExample" classname="OpenEmpires.Tests.CommanderPhase5AProviderContractTests" runstate="Runnable" seed="1695645437" result="Failed" start-time="2026-10-12 05:54:27Z" end-time="2026-10-12 05:54:29Z" duration="1.521874" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Commander input limit: the complete request and required canonical context cannot fit safely; nothing was submitted. Edit the request or resolve its pending question.; estimate=4211
+  Expected: property Count equal to 1
+  But was:  0
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5AProviderContractTests.RepeatedPlacementAndExactProducers_PromptIncludesStrictDynamicExample () [0x0012e] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5AProviderContractTests.cs:97
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2999" name="CommanderPhase5CProviderBudgetTests" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" testcasecount="49" result="Failed" site="Child" start-time="2026-10-12 05:54:29Z" end-time="2026-10-12 05:54:35Z" duration="6.506070" total="5" passed="4" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5C" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="ParameterizedMethod" id="3015" name="RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" testcasecount="5" result="Failed" site="Child" start-time="2026-10-12 05:54:29Z" end-time="2026-10-12 05:54:35Z" duration="6.436487" total="5" passed="4" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="3010" name="RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(&quot;Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(&quot;Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.&quot;)" methodname="RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" seed="421105613" result="Passed" start-time="2026-10-12 05:54:29Z" end-time="2026-10-12 05:54:30Z" duration="1.315264" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T05:54:30.7624396Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=6
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=49;finish=stop
+[CommanderProvider] semantic=Answer;nodes=0
+pack sections={"contract":2162,"context":741,"memory":2,"questionFacts":0,"pending":0,"utterance":101,"messageMargin":256}; estimate=3320
+context-unit-lengths=[{"key":"age","bytes":1},{"key":"civilization","bytes":9},{"key":"resources","bytes":38},{"key":"population","bytes":1},{"key":"populationCap","bytes":1},{"key":"workerCounts","bytes":79},{"key":"knowledge","bytes":447},{"key":"ownedUnitCounts","bytes":24},{"key":"ownedBuildingCounts","bytes":2}]
+knowledge-unit-lengths=[{"key":"unitsColumns","bytes":86},{"key":"units","bytes":59},{"key":"buildingsColumns","bytes":94},{"key":"buildings","bytes":149}]
+Production catalog estimate=3320; actual tokens unknown; Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.
+]]></output>
+              </test-case>
+              <test-case id="3011" name="RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(&quot;Move all of my Wood villagers to the woodline left of my Town Center.&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(&quot;Move all of my Wood villagers to the woodline left of my Town Center.&quot;)" methodname="RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" seed="133467554" result="Passed" start-time="2026-10-12 05:54:30Z" end-time="2026-10-12 05:54:31Z" duration="1.149161" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T05:54:31.9791313Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=6
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=49;finish=stop
+[CommanderProvider] semantic=Answer;nodes=0
+pack sections={"contract":2656,"context":688,"memory":2,"questionFacts":0,"pending":0,"utterance":69,"messageMargin":256}; estimate=3729
+context-unit-lengths=[{"key":"age","bytes":1},{"key":"civilization","bytes":9},{"key":"resources","bytes":38},{"key":"population","bytes":1},{"key":"populationCap","bytes":1},{"key":"workerCounts","bytes":79},{"key":"knowledge","bytes":394},{"key":"ownedUnitCounts","bytes":24},{"key":"ownedBuildingCounts","bytes":2}]
+knowledge-unit-lengths=[{"key":"unitsColumns","bytes":86},{"key":"units","bytes":59},{"key":"buildingsColumns","bytes":94},{"key":"buildings","bytes":96}]
+Production catalog estimate=3729; actual tokens unknown; Move all of my Wood villagers to the woodline left of my Town Center.
+]]></output>
+              </test-case>
+              <test-case id="3012" name="RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(&quot;make four farms&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(&quot;make four farms&quot;)" methodname="RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" seed="1661291321" result="Passed" start-time="2026-10-12 05:54:32Z" end-time="2026-10-12 05:54:33Z" duration="1.215472" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T05:54:33.2349964Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=4
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=49;finish=stop
+[CommanderProvider] semantic=Answer;nodes=0
+pack sections={"contract":1898,"context":474,"memory":2,"questionFacts":0,"pending":0,"utterance":15,"messageMargin":256}; estimate=2703
+context-unit-lengths=[{"key":"age","bytes":1},{"key":"civilization","bytes":9},{"key":"resources","bytes":38},{"key":"population","bytes":1},{"key":"populationCap","bytes":1},{"key":"workerCounts","bytes":79},{"key":"knowledge","bytes":180},{"key":"ownedUnitCounts","bytes":24},{"key":"ownedBuildingCounts","bytes":2}]
+knowledge-unit-lengths=[{"key":"buildingsColumns","bytes":94},{"key":"buildings","bytes":52}]
+Production catalog estimate=2703; actual tokens unknown; make four farms
+]]></output>
+              </test-case>
+              <test-case id="3013" name="RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(&quot;send two of three idle workers to sheep and the third to build a mill near berries&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(&quot;send two of three idle workers to sheep and the third to build a mill near berries&quot;)" methodname="RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" seed="61582064" result="Passed" start-time="2026-10-12 05:54:33Z" end-time="2026-10-12 05:54:34Z" duration="1.254219" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[CommanderProvider] utc=2026-10-12T05:54:34.5268471Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=6
+[CommanderProvider] finish=stop
+[CommanderProvider] assistantContent=extracted;characters=49;finish=stop
+[CommanderProvider] semantic=Answer;nodes=0
+pack sections={"contract":2492,"context":698,"memory":2,"questionFacts":0,"pending":0,"utterance":82,"messageMargin":256}; estimate=3588
+context-unit-lengths=[{"key":"age","bytes":1},{"key":"civilization","bytes":9},{"key":"resources","bytes":38},{"key":"population","bytes":1},{"key":"populationCap","bytes":1},{"key":"workerCounts","bytes":79},{"key":"knowledge","bytes":404},{"key":"ownedUnitCounts","bytes":24},{"key":"ownedBuildingCounts","bytes":2}]
+knowledge-unit-lengths=[{"key":"unitsColumns","bytes":86},{"key":"units","bytes":107},{"key":"buildingsColumns","bytes":94},{"key":"buildings","bytes":58}]
+Production catalog estimate=3588; actual tokens unknown; send two of three idle workers to sheep and the third to build a mill near berries
+]]></output>
+              </test-case>
+              <test-case id="3014" name="RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(&quot;build two barracks near my town center and train ten new spearmen in them&quot;)" fullname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(&quot;build two barracks near my town center and train ten new spearmen in them&quot;)" methodname="RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests" classname="OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests" runstate="Runnable" seed="278203531" result="Failed" start-time="2026-10-12 05:54:34Z" end-time="2026-10-12 05:54:35Z" duration="1.184578" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Commander input limit: the complete request and required canonical context cannot fit safely; nothing was submitted. Edit the request or resolve its pending question.; conservative estimate=4211; sections={"contract":3075,"context":747,"memory":2,"questionFacts":0,"pending":0,"utterance":73,"messageMargin":256}
+  Expected: 1
+  But was:  0
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests (System.String utterance) [0x0026f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase5CProviderBudgetTests.cs:153
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[pack sections={"contract":3075,"context":747,"memory":2,"questionFacts":0,"pending":0,"utterance":73,"messageMargin":256}; estimate=4211
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: D:\unity_projects\OpenEmpires\Open Empires\Docs\CommanderPhase5C\evidence\final-fix-leaves-20261012-055426-484-2e440df4.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

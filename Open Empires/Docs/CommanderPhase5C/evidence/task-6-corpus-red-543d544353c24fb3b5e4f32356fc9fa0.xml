@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-11 23:52:07Z" end-time="2026-10-11 23:52:07Z" duration="0.0718493">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1777" result="Failed" site="Child" start-time="2026-10-11 23:52:07Z" end-time="2026-10-11 23:52:07Z" duration="0.071849" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="3050" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1777" result="Failed" site="Child" start-time="2026-10-11 23:52:07Z" end-time="2026-10-11 23:52:07Z" duration="0.048009" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="12696" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="3051" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1777" result="Failed" site="Child" start-time="2026-10-11 23:52:07Z" end-time="2026-10-11 23:52:07Z" duration="0.047287" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="3052" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1777" result="Failed" site="Child" start-time="2026-10-11 23:52:07Z" end-time="2026-10-11 23:52:07Z" duration="0.047040" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1002" name="CommanderEconomyClarificationTests" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" testcasecount="90" result="Failed" site="Child" start-time="2026-10-11 23:52:07Z" end-time="2026-10-11 23:52:07Z" duration="0.044864" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderEconomyClarification" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1082" name="CorpusReplay_UsesProductionChatBoundaryAndPersistsAllDeclaredCases" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.CorpusReplay_UsesProductionChatBoundaryAndPersistsAllDeclaredCases" methodname="CorpusReplay_UsesProductionChatBoundaryAndPersistsAllDeclaredCases" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="211110522" result="Failed" start-time="2026-10-11 23:52:07Z" end-time="2026-10-11 23:52:07Z" duration="0.027182" asserts="0">
+              <properties>
+                <property name="Category" value="CommanderPhase5CCorpus" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  The declared 25-case corpus needs an executable production-chat replay.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderEconomyClarificationTests.CorpusReplay_UsesProductionChatBoundaryAndPersistsAllDeclaredCases () [0x00024] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.Phase5CCorpus.cs:19
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

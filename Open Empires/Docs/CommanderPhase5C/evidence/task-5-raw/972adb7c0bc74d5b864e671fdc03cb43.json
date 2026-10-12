@@ -1,0 +1,36 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "972adb7c0bc74d5b864e671fdc03cb43",
+      "status": "failed",
+      "mode": "PlayMode",
+      "started_unix_ms": 1791756595743,
+      "finished_unix_ms": 1791756606686,
+      "last_update_unix_ms": 1791756606686,
+      "progress": {
+        "completed": 1,
+        "total": 1,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791756606076,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.ReviewedVoiceDraft_IsVisibleInExpandedDockAndDiscardDoesNotSubmit",
+        "last_finished_unix_ms": 1791756606621,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.ReviewedVoiceDraft_IsVisibleInExpandedDockAndDiscardDoesNotSubmit",
+            "message": "  Expected: True\r\n  But was:  null\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

@@ -78,6 +78,12 @@ namespace OpenEmpires
                 {
                     if (outcome == CommanderSemanticOutcome.Clarify && root.Property("pending") != null)
                     {
+                        if (root["pending"] is JObject graph && graph.Property("nodes") != null)
+                        {
+                            CheckFields(root, "outcome", "message", "pending", "missingSlots");
+                            return new CommanderSemanticResult(true, outcome, Array.Empty<CommanderSemanticNode>(),
+                                OptionalExplanation(root), pendingGraphDraft: CommanderRequestGraphDraft.Parse(root));
+                        }
                         CheckFields(root, "outcome", "message", "pending", "missingFields");
                         return new CommanderSemanticResult(true, outcome, Array.Empty<CommanderSemanticNode>(),
                             OptionalExplanation(root), ParsePendingDraft(root));
@@ -243,6 +249,8 @@ namespace OpenEmpires
                         throw new JsonException();
                     ResourceSourceKind? watchedSource = node.Property("sourceKind") == null
                         ? (ResourceSourceKind?)null : RequiredSemanticEnum<ResourceSourceKind>(node, "sourceKind");
+                    if (watchedSource.HasValue && !ResourceSourceRules.IsCompatible(watchedResource, watchedSource.Value))
+                        throw FailField(node, "sourceKind", SchemaFailureCode.IncompatibleDeclaration);
                     int? watchedOrdinal = node.Property("producerOrdinal") == null ? (int?)null
                         : RequiredBoundedInteger(node, "producerOrdinal", 1, 8);
                     if (!CanProduce(watchedProducer, watchedUnit)) throw new JsonException();
@@ -265,7 +273,18 @@ namespace OpenEmpires
                 case "DefendArea":
                 case "RetreatUnits":
                 case "RepairTarget":
+                case "GarrisonUnits":
+                case "DiscoverEnemy":
                     return ParseCapabilityNode(node, RequiredString(node, "type"), dependsOn);
+
+                case "UngarrisonBuilding":
+                    CheckFields(node, "type", "location", "structure", "dependsOn");
+                    if (RequiredString(node, "location") != "PlayerBase") throw new JsonException();
+                    return new CommanderSemanticNode(CommanderSemanticNodeType.UngarrisonBuilding,
+                        buildingType: ParseBuilding(RequiredString(node, "structure")),
+                        unitSelector: CommanderSemanticUnitSelector.Villagers,
+                        locationSelector: CommanderSemanticLocationSelector.PlayerBase,
+                        count: 1, dependsOn: dependsOn);
 
                 case "ResearchTechnology":
                     CheckFields(node, "type", "technology", "dependsOn");
@@ -287,9 +306,13 @@ namespace OpenEmpires
         private static CommanderSemanticNode ParseCapabilityNode(JObject node, string type,
             IReadOnlyList<int> dependsOn)
         {
-            CheckFields(node, "type", "unitSelector", "count", "location", "resource", "structure", "dependsOn", "resultFromNode", "target");
+            CheckFields(node, "type", "unitSelector", "count", "countMode", "location", "resource", "structure", "dependsOn", "resultFromNode", "target");
             CommanderSemanticUnitSelector unit = ParseUnitSelector(RequiredString(node, "unitSelector"));
-            int count = RequiredCount(node, 1, 50);
+            bool allMatching = node.Property("countMode") != null;
+            if (allMatching && (type != "GarrisonUnits" || unit != CommanderSemanticUnitSelector.Villagers
+                || RequiredString(node, "countMode") != "AllMatching" || node.Property("count") != null))
+                throw new JsonException();
+            int? count = allMatching ? (int?)null : RequiredCount(node, 1, 50);
             CommanderSemanticLocationSelector location = ParseLocationSelector(RequiredString(node, "location"));
             ResourceType? resource = null;
             if (node.Property("resource") != null)
@@ -301,8 +324,14 @@ namespace OpenEmpires
             if (node.Property("structure") != null)
             {
                 structure = ParseBuilding(RequiredString(node, "structure"));
-                if (type != "SetRallyPoint") throw new JsonException();
+                if (type != "SetRallyPoint" && type != "GarrisonUnits") throw new JsonException();
             }
+            if (type == "GarrisonUnits" && (!structure.HasValue
+                || location != CommanderSemanticLocationSelector.PlayerBase)) throw new JsonException();
+            if (type == "DiscoverEnemy" && (unit != CommanderSemanticUnitSelector.Scout
+                || count != 1 || location != CommanderSemanticLocationSelector.VisibleEnemy
+                || resource.HasValue || structure.HasValue || node.Property("target") == null
+                || node.Property("resultFromNode") != null)) throw new JsonException();
             CommanderSemanticNodeType action;
             if (!Enum.TryParse(type, false, out action)) throw new JsonException();
             CommanderTargetSelector? target = node.Property("target") == null ? (CommanderTargetSelector?)null
@@ -314,7 +343,8 @@ namespace OpenEmpires
             int? resultFromNode = ParseOptionalNodeIndex(node, "resultFromNode");
             return new CommanderSemanticNode(action, count: count, resourceType: resource,
                 buildingType: structure, unitSelector: unit, locationSelector: location,
-                dependsOn: dependsOn, resultFromNode: resultFromNode, targetSelector: target);
+                dependsOn: dependsOn, resultFromNode: resultFromNode, targetSelector: target,
+                allMatchingUnits: allMatching);
         }
 
         // Shared strict target vocabulary for both semantic requests and legacy DTOs.

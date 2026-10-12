@@ -1,0 +1,205 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "b62fe643447c4a7aa52cc5a80471da65",
+      "status": "succeeded",
+      "mode": "PlayMode",
+      "started_unix_ms": 1791757254778,
+      "finished_unix_ms": 1791757268989,
+      "last_update_unix_ms": 1791757268989,
+      "progress": {
+        "completed": 18,
+        "total": 18,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791757268417,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.Timeout_RetainsDraftAndOffersExplicitRetryEditCancel",
+        "last_finished_unix_ms": 1791757268948,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "PlayMode",
+        "summary": {
+          "total": 18,
+          "passed": 18,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 8.9802153,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "ApprovePlan_UsesExistingSingleUseAuthorityAndUpdatesLatestStatus",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.ApprovePlan_UsesExistingSingleUseAuthorityAndUpdatesLatestStatus",
+            "state": "Passed",
+            "durationSeconds": 0.463934,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #2 submitted: EnsureUnitCount\r\n"
+          },
+          {
+            "name": "CapabilityCards_NameRealActionAndDoNotInventAllMatchingCount",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.CapabilityCards_NameRealActionAndDoNotInventAllMatchingCount",
+            "state": "Passed",
+            "durationSeconds": 0.4257517,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: CapabilityAction\r\n[Commander] Goal #2 submitted: CapabilityAction\r\n[Commander] Goal #3 submitted: CapabilityAction\r\n[Commander] Goal #4 submitted: CapabilityAction\r\n"
+          },
+          {
+            "name": "CaptureActualPopulatedEditorViews_AtRequestedDesktopSizes",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.CaptureActualPopulatedEditorViews_AtRequestedDesktopSizes",
+            "state": "Passed",
+            "durationSeconds": 0.6874852,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: ReachAge\r\n[Commander Phase5C render] evidence directory=D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderPhase5C\\evidence\\task-5-render\\20261011-222101-304-populated-chat-tasks\r\n[Commander Phase5C render] active Commander canvases=1; own compact active=False\r\n[Commander Phase5C render] active launcher object=none; own launcher=False\r\n[Commander Phase5C render] requested=1280x720; captured=1518x654; Chat active goal and local reply\r\n[Commander Phase5C render] requested=1280x720; captured=1518x654; Tasks active goal and visible Cancel\r\n[Commander Phase5C render] active launcher object=none; own launcher=False\r\n[Commander Phase5C render] requested=1920x1080; captured=1518x654; Chat active goal and local reply\r\n[Commander Phase5C render] requested=1920x1080; captured=1518x654; Tasks active goal and visible Cancel\r\n"
+          },
+          {
+            "name": "ChatView_RendersPlayerAndCommanderAsSeparateBubbles",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.ChatView_RendersPlayerAndCommanderAsSeparateBubbles",
+            "state": "Passed",
+            "durationSeconds": 0.5061787,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "Composer_LeavesTwoLineDraftAreaBesideCompactSend",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.Composer_LeavesTwoLineDraftAreaBesideCompactSend",
+            "state": "Passed",
+            "durationSeconds": 0.4554485,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "CompoundApproval_ShowsFullValidatedPreviewAndExplicitDecisionsWithoutIssuing",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.CompoundApproval_ShowsFullValidatedPreviewAndExplicitDecisionsWithoutIssuing",
+            "state": "Passed",
+            "durationSeconds": 0.6468446,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander Phase5C render] evidence directory=D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderPhase5C\\evidence\\task-5-render\\20261011-222103-129-compound-approval\r\n"
+          },
+          {
+            "name": "DockInputOwnership_TracksActualExpandedAndCompactRegions",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.DockInputOwnership_TracksActualExpandedAndCompactRegions",
+            "state": "Passed",
+            "durationSeconds": 0.4852913,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "ExpandedDock_HidesItsLauncherAndHasOneActiveCommanderCanvas",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.ExpandedDock_HidesItsLauncherAndHasOneActiveCommanderCanvas",
+            "state": "Passed",
+            "durationSeconds": 0.4242186,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "IdleDock_ShowsReadableSettingsWithoutLegacyStatusAndTallVoiceStack",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.IdleDock_ShowsReadableSettingsWithoutLegacyStatusAndTallVoiceStack",
+            "state": "Passed",
+            "durationSeconds": 0.4107025,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "LatestQuestionStatus_DoesNotBorrowOlderWorkingGoal",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.LatestQuestionStatus_DoesNotBorrowOlderWorkingGoal",
+            "state": "Passed",
+            "durationSeconds": 0.4145895,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: ReachAge\r\n"
+          },
+          {
+            "name": "MinimizedStartup_OpensTabbedDockWithFixedMultilineComposer",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.MinimizedStartup_OpensTabbedDockWithFixedMultilineComposer",
+            "state": "Passed",
+            "durationSeconds": 0.4155376,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MissingWorkerCount_ShowsProminentClarificationWithoutGameplay",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.MissingWorkerCount_ShowsProminentClarificationWithoutGameplay",
+            "state": "Passed",
+            "durationSeconds": 0.4698029,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander Phase5C render] evidence directory=D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderPhase5C\\evidence\\task-5-render\\20261011-222105-768-pending-clarification\r\n"
+          },
+          {
+            "name": "PopulatedChatView_StaysInsideScreenAndAboveFixedComposer",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.PopulatedChatView_StaysInsideScreenAndAboveFixedComposer",
+            "state": "Passed",
+            "durationSeconds": 0.4157749,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: ReachAge\r\n"
+          },
+          {
+            "name": "ReviewedVoiceDraft_IsVisibleInExpandedDockAndDiscardDoesNotSubmit",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.ReviewedVoiceDraft_IsVisibleInExpandedDockAndDiscardDoesNotSubmit",
+            "state": "Passed",
+            "durationSeconds": 0.4242641,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "TasksView_ActiveCancelIsInsideViewportWithoutScrolling",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.TasksView_ActiveCancelIsInsideViewportWithoutScrolling",
+            "state": "Passed",
+            "durationSeconds": 0.4229887,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: ReachAge\r\n"
+          },
+          {
+            "name": "TasksView_KeepsActiveCancelVisibleAndHistoryCollapsed",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.TasksView_KeepsActiveCancelVisibleAndHistoryCollapsed",
+            "state": "Passed",
+            "durationSeconds": 0.7733424,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #2 submitted: ReachAge\r\nThe character with Unicode value \\u25B8 was not found in the [LiberationSans SDF] font asset or any potential fallbacks. It was replaced by Unicode character \\u25A1 in text object [Label].\r\n[Commander] Goal #2 cancelled.\r\n"
+          },
+          {
+            "name": "TimedOutLateResponse_CannotAdmitAndDoubleRetryStartsOnce",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.TimedOutLateResponse_CannotAdmitAndDoubleRetryStartsOnce",
+            "state": "Passed",
+            "durationSeconds": 0.578174,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n"
+          },
+          {
+            "name": "Timeout_RetainsDraftAndOffersExplicitRetryEditCancel",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.Timeout_RetainsDraftAndOffersExplicitRetryEditCancel",
+            "state": "Passed",
+            "durationSeconds": 0.5311832,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander Phase5C render] evidence directory=D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderPhase5C\\evidence\\task-5-render\\20261011-222108-908-timeout-recovery\r\n"
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

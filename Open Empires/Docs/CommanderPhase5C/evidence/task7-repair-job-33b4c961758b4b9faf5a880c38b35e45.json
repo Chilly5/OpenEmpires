@@ -1,0 +1,53 @@
+{
+  "job_id": "33b4c961758b4b9faf5a880c38b35e45",
+  "status": "succeeded",
+  "mode": "EditMode",
+  "started_unix_ms": 1791783939413,
+  "finished_unix_ms": 1791783953765,
+  "last_update_unix_ms": 1791783953765,
+  "progress": {
+    "completed": 2,
+    "total": 2,
+    "current_test_full_name": null,
+    "current_test_started_unix_ms": 1791783951973,
+    "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.SharedWorkersBuildThenExactNewProduction_RetrievesTypedClosedGraphWithoutAutomaticAuthority(True)",
+    "last_finished_unix_ms": 1791783953399,
+    "stuck_suspected": false,
+    "editor_is_focused": false,
+    "blocked_reason": null,
+    "failures_so_far": [],
+    "failures_capped": false
+  },
+  "error": null,
+  "result": {
+    "mode": "EditMode",
+    "summary": {
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "durationSeconds": 4.55483,
+      "resultState": "Passed"
+    },
+    "results": [
+      {
+        "name": "SharedWorkersBuildThenExactNewProduction_RetrievesTypedClosedGraphWithoutAutomaticAuthority(False)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.SharedWorkersBuildThenExactNewProduction_RetrievesTypedClosedGraphWithoutAutomaticAuthority(False)",
+        "state": "Passed",
+        "durationSeconds": 2.4069202,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-12T05:45:51.5749191Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=17\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=1069;finish=stop\r\n[CommanderProvider] semantic=DynamicPlan;nodes=0\r\n"
+      },
+      {
+        "name": "SharedWorkersBuildThenExactNewProduction_RetrievesTypedClosedGraphWithoutAutomaticAuthority(True)",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.SharedWorkersBuildThenExactNewProduction_RetrievesTypedClosedGraphWithoutAutomaticAuthority(True)",
+        "state": "Passed",
+        "durationSeconds": 1.3917597,
+        "message": null,
+        "stackTrace": null,
+        "output": "[CommanderProvider] utc=2026-10-12T05:45:53.2759032Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=7\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=1071;finish=stop\r\n[CommanderProvider] schema=field=$;code=invalid-schema;stage=envelope;node=-1\r\n[CommanderProvider] utc=2026-10-12T05:45:53.3086349Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=7\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=1069;finish=stop\r\n[CommanderProvider] semantic=DynamicPlan;nodes=0\r\n"
+      }
+    ]
+  }
+}

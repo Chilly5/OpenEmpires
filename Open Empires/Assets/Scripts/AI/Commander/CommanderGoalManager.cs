@@ -117,6 +117,8 @@ namespace OpenEmpires
             simulation.TrainingOriginLost += HandleTrainingOriginLost;
             simulation.ProducerUnitProduced += HandleFutureBirth;
             simulation.LocalActionCommandProcessed += HandleFutureCommandProcessed;
+            simulation.NativeMoveProcessed += HandleNativeMoveProcessed;
+            simulation.NativeUnitCommandProcessed += HandleNativeUnitCommandProcessed;
             planner = new CommanderPlanner(simulation, workerAuthority,
                 pathValidationCandidates);
         }
@@ -566,7 +568,9 @@ namespace OpenEmpires
                         continue;
                     }
                     CommanderPlan plan = planner.Plan(goal, currentTick);
-                    if (plan.Command != null && goal is AllocateWorkersGoal workers && !workers.ReservationsAcquired)
+                    if (goal is AllocateWorkersGoal workers && workers.Prepared
+                        && workers.SelectedWorkerIds.Count > 0 && !workers.ReservationsAcquired
+                        && (plan.Command != null || plan.Status == CommanderGoalStatus.WaitingForResources))
                     {
                         if (workerAuthority.TryReserveWorkers(workers.SelectedWorkerIds, goal.GoalId, currentTick))
                             workers.ReservationsAcquired = true;
@@ -576,6 +580,16 @@ namespace OpenEmpires
                     if (plan.Command != null && !workerAuthority.TryReserveCommand(goal, plan.Command, currentTick))
                         plan = new CommanderPlan(CommanderGoalStatus.Blocked,
                             "Worker is protected or reserved by another goal.", plan.OwnedCount, plan.QueuedCount);
+                    if (plan.Command is GarrisonCommand
+                        && goal is CommanderCapabilityGoal shelterGoal
+                        && shelterGoal.Action.ActionType == CommanderCapabilityActionType.GarrisonUnits
+                        && !simulation.RegisterExactGarrisonCommand(plan.Command))
+                    {
+                        workerAuthority.ReleaseGoal(goal.GoalId);
+                        plan = new CommanderPlan(CommanderGoalStatus.Blocked,
+                            "The exact native garrison order could not be bound safely; no order was issued.",
+                            plan.OwnedCount, plan.QueuedCount);
+                    }
                     goal.LastObservedOwnedCount = plan.OwnedCount;
                     goal.LastPlannerObservationTick=currentTick;
                     goal.LastObservedQueuedCount = plan.QueuedCount;
@@ -636,6 +650,7 @@ namespace OpenEmpires
                             capability.CommandIssued = true;
                             capability.IssuedCommand = plan.Command;
                             capability.CommandIssuedSimulationTick = simulation.CurrentTick;
+                            capability.NativeLastProgressSimulationTick = simulation.CurrentTick;
                         }
                         if (goal is WatchFutureUnitsGoal future)
                         {
@@ -807,6 +822,8 @@ namespace OpenEmpires
                 {
                     goal.PlacedBuildingId = created.Id;
                     if (!goal.AttributedBuildingIds.Contains(created.Id)) goal.AttributedBuildingIds.Add(created.Id);
+                    if (command is PlaceBuildingCommand placed && placed.VillagerUnitIds != null)
+                        goal.LastAcceptedBuilderUnitIds = Array.AsReadOnly(placed.VillagerUnitIds.ToArray());
                 }
                 return;
             }
@@ -856,6 +873,8 @@ namespace OpenEmpires
             ReleaseTrainingObservations();
             simulation.ProducerUnitProduced -= HandleFutureBirth;
             simulation.LocalActionCommandProcessed -= HandleFutureCommandProcessed;
+            simulation.NativeMoveProcessed -= HandleNativeMoveProcessed;
+            simulation.NativeUnitCommandProcessed -= HandleNativeUnitCommandProcessed;
             simulation.CommandBuffer.CommandEnqueued -= HandleCommandEnqueued;
             simulation.OnBuildingPlacedFromCommand -= HandleBuildingPlacedFromCommand;
             for (int i = 0; i < activeGoals.Count; i++)

@@ -1,0 +1,99 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+namespace OpenEmpires
+{
+    // Retrieval only: lexical similarity never chooses an entity or authorizes an effect.
+    internal static class CommanderKnowledgeRetrieval
+    {
+        // Required references are independent of optional lexical suggestions. The finite
+        // ceiling is a refusal boundary, never permission to omit the seventeenth reference.
+        internal const int MaximumRequiredEntries = 16;
+        internal static string Retrieve(GameKnowledgeCatalog catalog, string input, Civilization civilization,
+            string boundedPending = null)
+        {
+            if (catalog == null) throw new ArgumentNullException(nameof(catalog));
+            var required = new HashSet<string>(StringComparer.Ordinal);
+            var matchedPhrases = new HashSet<string>(StringComparer.Ordinal);
+            var resolutions = new List<JObject>();
+            foreach (string source in new[] { input ?? string.Empty, boundedPending ?? string.Empty })
+            {
+                // Both sources already have independent caller bounds (1024 player, 4096 pending).
+                // Scan the complete bounded strings; prefix/word/phrase cuts lose tail facts.
+                string searchable = " " + string.Join(" ", Regex.Matches(source.ToLowerInvariant(), @"[\p{L}\p{N}]+")
+                    .Cast<Match>().Select(x => x.Value)) + " ";
+                foreach (var unit in catalog.Units)
+                    MatchAliases(required, matchedPhrases, unit.StableId, unit.DisplayName, unit.Aliases, searchable);
+                foreach (var building in catalog.Buildings)
+                    MatchAliases(required, matchedPhrases, building.StableId, building.DisplayName, building.Aliases, searchable);
+                // Role words such as "cavalry" are resolver-defined ambiguous names, not
+                // a new local name table. Deduplication bounds resolver work for long replies.
+                foreach (string word in Regex.Matches(source.ToLowerInvariant(), @"[\p{L}\p{N}]+")
+                    .Cast<Match>().Select(x => x.Value).Distinct(StringComparer.Ordinal))
+                    if (word.Length >= 3) matchedPhrases.Add(word);
+            }
+            foreach (string phrase in matchedPhrases.OrderBy(x => x, StringComparer.Ordinal))
+            {
+                var unit = CommanderContentNameResolver.ResolveUnit(phrase, catalog, civilization);
+                var building = CommanderContentNameResolver.ResolveBuilding(phrase, catalog, civilization);
+                if (unit.Status != CommanderContentResolutionStatus.Ambiguous
+                    && building.Status != CommanderContentResolutionStatus.Ambiguous) continue;
+                foreach (var candidate in unit.Suggestions) required.Add(candidate.StableId);
+                foreach (var candidate in building.Suggestions) required.Add(candidate.StableId);
+                resolutions.Add(new JObject { ["phrase"] = phrase, ["interpretationOnly"] = true,
+                    ["unitCandidates"] = new JArray(unit.Suggestions.Select(x => x.StableId)),
+                    ["buildingCandidates"] = new JArray(building.Suggestions.Select(x => x.StableId)),
+                    ["ambiguous"] = true });
+            }
+            bool overflow = required.Count > MaximumRequiredEntries || resolutions.Count > 6;
+            var chosen = overflow ? Array.Empty<string>() : required.OrderBy(x => x, StringComparer.Ordinal).ToArray();
+            var units = new JArray(); var buildings = new JArray();
+            foreach (string id in chosen)
+            {
+                if (id.StartsWith("unit:", StringComparison.Ordinal))
+                {
+                    var data = catalog.FindUnit(id);
+                    var resolution = CommanderContentNameResolver.ResolveUnit(data.StableId, catalog, civilization);
+                    units.Add(new JObject { ["id"] = data.StableId, ["name"] = data.DisplayName,
+                        ["age"] = data.RequiredAge, ["producer"] = data.ProductionBuildingType < 0
+                            ? null : ((BuildingType)data.ProductionBuildingType).ToString(),
+                        ["cost"] = Cost(data.Cost), ["availableForCivilization"] = resolution.IsAvailableForCivilization,
+                        ["commanderExecutable"] = resolution.IsExecutable });
+                }
+                else
+                {
+                    var data = catalog.FindBuilding(id);
+                    var resolution = CommanderContentNameResolver.ResolveBuilding(data.StableId, catalog, civilization);
+                    buildings.Add(new JObject { ["id"] = data.StableId, ["name"] = data.DisplayName,
+                        ["age"] = data.RequiredAge, ["cost"] = Cost(data.Cost),
+                        ["availableForCivilization"] = resolution.IsAvailableForCivilization,
+                        ["commanderExecutable"] = resolution.IsExecutable,
+                        ["dropoffResources"] = new JArray(Enum.GetValues(typeof(ResourceType)).Cast<ResourceType>()
+                            .Where(r => GameSimulation.AcceptsResourceType(data.BuildingType, r)).Select(r => r.ToString())) });
+                }
+            }
+            return new JObject { ["units"] = units, ["buildings"] = buildings,
+                ["technologies"] = new JArray(), ["nameInterpretations"] = new JArray(overflow ? Enumerable.Empty<JObject>() : resolutions),
+                ["requiredCanonicalIds"] = new JArray(chosen), ["requiredReferenceOverflow"] = overflow,
+                ["policy"] = "Knowledge is not execution authority. Show canonical interpretations; clarify ambiguous names. Availability and support are separate." }
+                .ToString(Formatting.None);
+        }
+
+        private static JObject Cost(KnowledgeCost value) => new JObject
+            { ["food"] = value.Food, ["wood"] = value.Wood, ["gold"] = value.Gold, ["stone"] = value.Stone };
+        private static void MatchAliases(HashSet<string> required, HashSet<string> matchedPhrases, string id, string name,
+            IEnumerable<string> aliases, string searchable)
+        {
+            foreach (string label in new[] { name }.Concat(aliases))
+            {
+                string normalized = Regex.Replace(label.ToLowerInvariant(), @"[^\p{L}\p{N}]+", " ").Trim();
+                if (normalized.Length > 0 && searchable.Contains(" " + normalized + " "))
+                { required.Add(id); matchedPhrases.Add(normalized); }
+            }
+        }
+    }
+}

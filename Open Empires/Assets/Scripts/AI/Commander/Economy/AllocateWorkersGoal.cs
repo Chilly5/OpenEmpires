@@ -14,6 +14,7 @@ namespace OpenEmpires
     public sealed class AllocateWorkersGoal : CommanderGoal
     {
         public CommanderWorkerAllocation Allocation { get; }
+        internal CommanderBoundLocation DynamicResourceLocation { get; set; }
         public long ResourceProgress { get; internal set; }
         internal EnsureUnitCountGoal ResultSourceGoal;
         internal long GatheredIncomeAtActivation;

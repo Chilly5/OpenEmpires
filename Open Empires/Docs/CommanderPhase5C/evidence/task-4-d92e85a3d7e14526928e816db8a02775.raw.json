@@ -1,0 +1,52 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "d92e85a3d7e14526928e816db8a02775",
+      "status": "succeeded",
+      "mode": "EditMode",
+      "started_unix_ms": 1791730378852,
+      "finished_unix_ms": 1791730389730,
+      "last_update_unix_ms": 1791730389730,
+      "progress": {
+        "completed": 1,
+        "total": 1,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791730387495,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.AllCurrentWoodWorkers_GatherOnlyVisibleTreesWestOfOwnedTownCenter",
+        "last_finished_unix_ms": 1791730389525,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "EditMode",
+        "summary": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 2.5802235,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "AllCurrentWoodWorkers_GatherOnlyVisibleTreesWestOfOwnedTownCenter",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.AllCurrentWoodWorkers_GatherOnlyVisibleTreesWestOfOwnedTownCenter",
+            "state": "Passed",
+            "durationSeconds": 2.0168866,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Wood.\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Waiting for the issued worker command to be processed.\r\n[SyncCheck] tick=0 PRE-CMD=FAEAC8D0 cmds=1\r\n[SyncCheck] tick=0 POST-CMD=2779754D\r\n[SyncCheck] tick=0 PRE-AI-EXEC=2779754D aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=BD3A8950 systemDetail=2779754D,43F9207A,43F9207A,2267E0FA,2267E0FA,2267E0FA,2267E0FA,2267E0FA,2267E0FA\r\n"
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

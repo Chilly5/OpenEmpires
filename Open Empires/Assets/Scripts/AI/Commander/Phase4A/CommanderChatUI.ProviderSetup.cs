@@ -51,8 +51,8 @@ namespace OpenEmpires
 
         public void ShowSemanticSetup()
         {
-            HideVoiceSetup(); MinimizeCommander(); semanticSetupVisible = true;
-            if (semanticSetupCard != null) semanticSetupCard.SetActive(true);
+            HideVoiceSetup(); OpenCommander(); semanticSetupVisible = true;
+            if (semanticSetupCard != null) { semanticSetupCard.transform.SetAsLastSibling(); semanticSetupCard.SetActive(true); }
             Canvas.ForceUpdateCanvases();UpdatePresentation();Canvas.ForceUpdateCanvases();
             RefreshSemanticSetupStatus();
         }

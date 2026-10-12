@@ -1,0 +1,162 @@
+{
+  "schema": "openempires-phase5c-scenario-turn@1",
+  "run_id": "e1357e43-8a89-4dd3-a833-6be5cf82290a",
+  "first_failing_stage": null,
+  "first_failure_category": null,
+  "schemaVersion": 1,
+  "caseId": "worker-mode-additional-four",
+  "requestId": "runtime:1",
+  "utterance": "Put 4 more villagers on Food.",
+  "turnIndex": 0,
+  "status": "observed",
+  "evidenceMode": "offline-production-chat-fixture",
+  "providerCalls": 1,
+  "httpAttempts": 0,
+  "fidelity": "fixture-expected-observed",
+  "semanticValid": true,
+  "estimatedInputTokens": null,
+  "actualPromptTokens": null,
+  "actualCompletionTokens": null,
+  "actualCachedTokens": null,
+  "actualReasoningTokens": null,
+  "reportedCost": null,
+  "attemptCosts": [],
+  "packingMs": 12.246,
+  "transportMs": null,
+  "parseMs": 0.085,
+  "admissionMs": 25.956,
+  "firstNativeActionMs": 458.246,
+  "commandCount": 1,
+  "commandTypes": [
+    "GatherCommand"
+  ],
+  "nativeResults": [
+    "GatherCommand:processed"
+  ],
+  "taskStates": [
+    "AllocateWorkersGoal:Completed"
+  ],
+  "draftBefore": [],
+  "draftAfter": [],
+  "draftChanges": [],
+  "normalizedFields": [
+    {
+      "type": "AllocateWorkers",
+      "building": null,
+      "unit": null,
+      "resource": null,
+      "count": null,
+      "quantityMode": "TargetTotal",
+      "anchor": null,
+      "anchorOrdinal": null,
+      "relation": null,
+      "placementSource": null,
+      "unitSelector": null,
+      "locationSelector": null,
+      "producerOrdinal": null,
+      "producerFrom": null,
+      "resultFrom": null,
+      "futureAction": null,
+      "workerMode": "Additional",
+      "workerCountMode": "Exact",
+      "workerCount": 4,
+      "workerState": "Any",
+      "workerCurrentResource": null,
+      "destinationResource": "Food",
+      "destinationSource": "Any",
+      "resourceAmount": null,
+      "resourceAmountMode": null,
+      "dependencies": []
+    }
+  ],
+  "admittedFields": [
+    {
+      "type": "AllocateWorkersGoal",
+      "status": "Pending",
+      "originalUtterance": "Put 4 more villagers on Food.",
+      "mode": "Additional",
+      "countMode": "Exact",
+      "count": 4,
+      "state": "Any",
+      "currentResource": null,
+      "destinationResource": "Food",
+      "destinationSource": "Any",
+      "resourceAmount": null,
+      "resourceAmountMode": null
+    }
+  ],
+  "turnHistory": [
+    {
+      "index": 0,
+      "text": "Put 4 more villagers on Food.",
+      "requestId": "runtime:1",
+      "providerCalls": 1,
+      "semanticValid": true,
+      "semanticOutcome": "Request",
+      "normalizedFields": [
+        {
+          "type": "AllocateWorkers",
+          "building": null,
+          "unit": null,
+          "resource": null,
+          "count": null,
+          "quantityMode": "TargetTotal",
+          "anchor": null,
+          "anchorOrdinal": null,
+          "relation": null,
+          "placementSource": null,
+          "unitSelector": null,
+          "locationSelector": null,
+          "producerOrdinal": null,
+          "producerFrom": null,
+          "resultFrom": null,
+          "futureAction": null,
+          "workerMode": "Additional",
+          "workerCountMode": "Exact",
+          "workerCount": 4,
+          "workerState": "Any",
+          "workerCurrentResource": null,
+          "destinationResource": "Food",
+          "destinationSource": "Any",
+          "resourceAmount": null,
+          "resourceAmountMode": null,
+          "dependencies": []
+        }
+      ],
+      "admittedFields": [
+        {
+          "type": "AllocateWorkersGoal",
+          "status": "Pending",
+          "originalUtterance": "Put 4 more villagers on Food.",
+          "mode": "Additional",
+          "countMode": "Exact",
+          "count": 4,
+          "state": "Any",
+          "currentResource": null,
+          "destinationResource": "Food",
+          "destinationSource": "Any",
+          "resourceAmount": null,
+          "resourceAmountMode": null
+        }
+      ],
+      "draftBefore": [],
+      "draftAfter": [],
+      "draftChanges": [],
+      "approvalRequired": false,
+      "approved": false,
+      "commandTypes": [],
+      "taskStates": [
+        "AllocateWorkersGoal:Pending"
+      ],
+      "uiSubmitMs": 38.142
+    }
+  ],
+  "fixtureKind": "correct-synthetic",
+  "turnText": "Put 4 more villagers on Food.",
+  "uiSubmitMs": 38.142,
+  "semanticOutcome": "Request",
+  "approvalRequired": false,
+  "approved": false,
+  "tickMode": "accelerated-fixture",
+  "ticks": 60
+}

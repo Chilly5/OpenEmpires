@@ -75,6 +75,69 @@ namespace OpenEmpires.Tests
             Assert.That(provider.Last.SerializedContext.Length,Is.LessThanOrEqualTo(8192));
         }
 
+        [TestCase("Why haven't my Spearmen arrived?")]
+        [TestCase("What happened to my Spearmen?")]
+        public async Task CausalNamedQuestionWithoutStatusKeyword_UsesOwnedTaskFacts(string question)
+        {
+            Waiting(); var provider = new FactsProvider(Answer); var chat = Chat(provider);
+            int before = manager.Goals.Count;
+            await chat.SubmitMessageAsync(question);
+            var status = JsonUtility.FromJson<StatusContext>(provider.Last.SerializedContext).tacticalStatus;
+            Assert.That(status, Is.Not.Null);
+            Assert.That(status.requests[0].steps[0].reason.ToLowerInvariant(), Does.Contain("wood"));
+            Assert.That(chat.Conversation.Memory.ToJson().ToLowerInvariant(), Does.Contain("wood"));
+            Assert.That(manager.Goals.Count, Is.EqualTo(before));
+            Assert.That(sim.CommandBuffer.FlushCommands(), Is.Empty);
+        }
+
+        [TestCase("What happened to the six units?", "One")]
+        [TestCase("What happened to the seven units?", "None")]
+        public async Task CausalCountedUnitsQuestion_SelectsOnlyMatchingOwnedRequest(string question, string selection)
+        {
+            var goal = manager.SubmitEnsureUnitCount(1, 6, newProductionCount: 6);
+            manager.Tick(0); sim.CommandBuffer.FlushCommands();
+            var provider = new FactsProvider(Answer); var chat = Chat(provider);
+            int before = manager.Goals.Count;
+            await chat.SubmitMessageAsync(question);
+            var status = JsonUtility.FromJson<StatusContext>(provider.Last.SerializedContext).tacticalStatus;
+            Assert.That(status, Is.Not.Null);
+            Assert.That(status.selection, Is.EqualTo(selection));
+            if (selection == "One")
+            {
+                Assert.That(status.requests[0].steps[0].requestedNew, Is.EqualTo(6));
+                Assert.That(status.requests[0].steps[0].reason, Is.EqualTo(goal.StatusReason));
+            }
+            Assert.That(manager.Goals.Count, Is.EqualTo(before));
+            Assert.That(sim.CommandBuffer.FlushCommands(), Is.Empty);
+        }
+
+        [Test]
+        public async Task CausalCountedUnitsQuestion_PreservesAmbiguityBetweenOwnedRequests()
+        {
+            manager.SubmitEnsureUnitCount(1, 6, newProductionCount: 6);
+            manager.SubmitEnsureUnitCount(2, 6, newProductionCount: 6);
+            manager.Tick(0); sim.CommandBuffer.FlushCommands();
+            var provider = new FactsProvider(Answer); var chat = Chat(provider);
+            await chat.SubmitMessageAsync("What happened to the six units?");
+            var status = JsonUtility.FromJson<StatusContext>(provider.Last.SerializedContext).tacticalStatus;
+            Assert.That(status, Is.Not.Null);
+            Assert.That(status.selection, Is.EqualTo("Ambiguous"));
+            Assert.That(manager.Goals.Count, Is.EqualTo(2));
+            Assert.That(sim.CommandBuffer.FlushCommands(), Is.Empty);
+        }
+
+        [Test] public void LongCausalBlocker_IsExplicitlyUnavailableRatherThanMeaningTruncated()
+        {
+            var goal = Waiting();
+            goal.SetStatus(CommanderGoalStatus.Blocked,
+                new string('a', 160) + " not the six requested archers; no survivor substitution is allowed.");
+            var status = Observe("Why did my Spearmen task stop?", out string json);
+            Assert.That(status, Is.Not.Null);
+            Assert.That(status.requests[0].steps[0].reason, Does.Contain("unavailable"));
+            Assert.That(status.requests[0].steps[0].reason, Does.Not.Contain("..."));
+            Assert.That(json, Does.Not.Contain("no survivor substitution"));
+        }
+
         [Test] public async Task AmbiguousArmyQuestion_ShowsOwnedChoicesRatherThanSelectingFirstGoal()
         {
             Waiting();manager.SubmitEnsureUnitCount(2,3,newProductionCount:3);

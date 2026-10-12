@@ -1,0 +1,251 @@
+diff --git a/Docs/CommanderPhase5C/evidence/final-fix-baseline/Assets/Tests/EditMode/CommanderPhase5ADynamicRuntimeTests.cs b/Assets/Tests/EditMode/CommanderPhase5ADynamicRuntimeTests.cs
+index 5bd16c2..d5d73db 100644
+--- a/Docs/CommanderPhase5C/evidence/final-fix-baseline/Assets/Tests/EditMode/CommanderPhase5ADynamicRuntimeTests.cs
++++ b/Assets/Tests/EditMode/CommanderPhase5ADynamicRuntimeTests.cs
+@@ -650,16 +650,19 @@ namespace OpenEmpires.Tests
+             var command = (GarrisonCommand)original;
+             Assert.That(command.TargetBuildingId, Is.EqualTo(shelter.Id));
+             Assert.That(command.UnitIds.Length, Is.EqualTo(1));
+-            for (int tick = 1; tick < 500 && goal.Status != CommanderGoalStatus.Completed; tick++)
++            for (int tick = 1; tick < 500 && !goal.IsTerminal; tick++)
+             {
+                 f.Sim.Tick(tick == 1 ? new System.Collections.Generic.List<ICommand> { original }
+                     : new System.Collections.Generic.List<ICommand>());
+                 f.Manager.Tick(tick * 15);
+             }
+-            Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Completed), goal.StatusReason);
++            Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Blocked), goal.StatusReason);
+             Assert.That(shelter.GarrisonCount, Is.EqualTo(1));
+             Assert.That(goal.StatusReason, Does.Contain("1/2"));
+             Assert.That(goal.StatusReason, Does.Contain("unaccommodated"));
++            var card = CommanderTaskBoardProjection.Capture(f.Manager, null, 1).Cards.Single();
++            Assert.That(card.Status, Is.EqualTo(CommanderTaskStatus.Blocked));
++            Assert.That(card.Progress, Does.Contain("1 / 2"));
+         }
+ 
+         [Test]
+@@ -679,15 +682,39 @@ namespace OpenEmpires.Tests
+             f.Manager.Tick(0);
+             ICommand original = f.Sim.CommandBuffer.FlushCommands().Single();
+             Assert.That(((GarrisonCommand)original).UnitIds.Length, Is.EqualTo(1));
+-            for (int tick = 1; tick < 500 && goal.Status != CommanderGoalStatus.Completed; tick++)
++            for (int tick = 1; tick < 500 && !goal.IsTerminal; tick++)
+             {
+                 f.Sim.Tick(tick == 1 ? new System.Collections.Generic.List<ICommand> { original }
+                     : new System.Collections.Generic.List<ICommand>());
+                 f.Manager.Tick(tick * 15);
+             }
+-            Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Completed), goal.StatusReason);
++            Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Blocked), goal.StatusReason);
+             Assert.That(goal.StatusReason, Does.Contain("1/3"));
+             Assert.That(goal.StatusReason, Does.Contain("unaccommodated 2"));
++            var card = CommanderTaskBoardProjection.Capture(f.Manager, null, 1).Cards.Single();
++            Assert.That(card.Status, Is.EqualTo(CommanderTaskStatus.Blocked));
++            Assert.That(card.Progress, Does.Contain("1 / 3"));
++        }
++
++        [Test]
++        public void SemanticGarrison_FullNativeEntryStillCompletesRequestedObjective()
++        {
++            using var f = new Fixture(1);
++            var parsed = CommanderSemanticJson.Parse(GarrisonTwoVillagers.Replace("\"count\":2", "\"count\":1"));
++            var candidate = f.Manager.PrepareActionPlan(parsed, "garrison one villager in my Town Center", 1);
++            var goal = (CommanderCapabilityGoal)f.Manager.SubmitSemanticGraph(f.Manager.ApproveActionPlan(candidate, 1))[0];
++            f.Manager.Tick(0);
++            ICommand original = f.Sim.CommandBuffer.FlushCommands().Single();
++            for (int tick = 1; tick < 500 && !goal.IsTerminal; tick++)
++            {
++                f.Sim.Tick(tick == 1 ? new System.Collections.Generic.List<ICommand> { original }
++                    : new System.Collections.Generic.List<ICommand>());
++                f.Manager.Tick(tick * 15);
++            }
++            Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Completed), goal.StatusReason);
++            Assert.That(goal.StatusReason, Does.Contain("1/1"));
++            Assert.That(CommanderTaskBoardProjection.Capture(f.Manager, null, 1).Cards.Single().Status,
++                Is.EqualTo(CommanderTaskStatus.Completed));
+         }
+ 
+         [Test]
+
+diff --git a/Docs/CommanderPhase5C/evidence/final-fix-baseline/Assets/Tests/EditMode/CommanderPhase5CProviderBudgetTests.cs b/Assets/Tests/EditMode/CommanderPhase5CProviderBudgetTests.cs
+index 964f9d7..5430a43 100644
+--- a/Docs/CommanderPhase5C/evidence/final-fix-baseline/Assets/Tests/EditMode/CommanderPhase5CProviderBudgetTests.cs
++++ b/Assets/Tests/EditMode/CommanderPhase5CProviderBudgetTests.cs
+@@ -14,6 +14,41 @@ namespace OpenEmpires.Tests
+     [Category("CommanderPhase5C")]
+     public sealed class CommanderPhase5CProviderBudgetTests
+     {
++        [Test]
++        public async Task PlaceTwoHousesNearTownCenter_RetrievesAdmittableRepeatedBuildRoute()
++        {
++            const string utterance = "Place two Houses near my Town Center.";
++            const string response = "{\"outcome\":\"DynamicPlan\",\"version\":1,\"nodes\":["
++                + "{\"id\":\"site\",\"mechanic\":\"resolve-location\",\"parameters\":{\"anchor\":\"MyTownCenter\",\"relation\":\"Near\",\"clearGapTiles\":1},\"inputs\":{},\"dependsOn\":[]},"
++                + "{\"id\":\"houses\",\"mechanic\":\"build\",\"parameters\":{\"building\":\"building:House\",\"count\":2},\"inputs\":{\"location\":\"site\"},\"dependsOn\":[\"site\"]}]}";
++            var config = UnityEngine.ScriptableObject.CreateInstance<SimulationConfig>();
++            CommanderGoalManager manager = null;
++            try
++            {
++                var simulation = new GameSimulation(config, 1, new[] { 0 }, Array.Empty<int>());
++                simulation.SetPlayerCivilizations(new[] { Civilization.English });
++                manager = new CommanderGoalManager(simulation, 0);
++                var transport = new CaptureTransport { Replies = new[] { response } };
++                var provider = new OpenRouterCommanderProvider("fixture-not-a-credential", transport);
++                var context = new CommanderContextBuilder().Build(simulation, manager, utterance);
++                var result = await provider.TranslateSemanticAsync(
++                    new CommanderSemanticProviderRequest(utterance, context), CancellationToken.None);
++                Assert.That(transport.Calls, Is.EqualTo(1), result.SafeExplanation
++                    + "; estimate=" + provider.LastInputEstimate
++                    + "; sections=" + JsonConvert.SerializeObject(provider.LastInputSectionEstimates));
++                string contract = (string)JObject.Parse(transport.Body)["messages"]?[0]?["content"];
++                Assert.That(contract, Does.Contain("DynamicPlan for repeated placed construction"));
++                Assert.That(contract, Does.Contain("BuildStructure{structure:canonical,count:1,"));
++                Assert.That(contract, Does.Not.Contain("BuildStructure{structure:canonical,count:1..20,"));
++                Assert.That(PackedKnowledgeIds(CommanderSemanticRequestPack.TryBuild(
++                    new CommanderSemanticProviderRequest(utterance, context), "openai/gpt-6-luna", 4096,
++                    out var pack, out _) ? pack : null), Does.Contain("building:House"));
++                Assert.That(result.IsValid && result.Outcome == CommanderSemanticOutcome.DynamicPlan, Is.True, result.SafeExplanation);
++                Assert.That(manager.PrepareActionPlan(result, utterance, 1).Preview, Does.Contain("House"));
++                Assert.That(manager.Goals, Is.Empty, "Semantic admission previews only; no prefix executes before approval.");
++            }
++            finally { manager?.Dispose(); UnityEngine.Object.DestroyImmediate(config); }
++        }
+         [TestCase("Garrison all villagers in my Town Center.", "GarrisonUnits")]
+         [TestCase("Ungarrison my Town Center.", "UngarrisonBuilding")]
+         [TestCase("Find the enemy Town Center with my Scout.", "DiscoverEnemy")]
+
+diff --git a/Docs/CommanderPhase5C/evidence/final-fix-baseline/Assets/Tests/EditMode/CommanderEconomyClarificationTests.Phase5CCorpus.cs b/Assets/Tests/EditMode/CommanderEconomyClarificationTests.Phase5CCorpus.cs
+index 76a5e20..4d537c5 100644
+--- a/Docs/CommanderPhase5C/evidence/final-fix-baseline/Assets/Tests/EditMode/CommanderEconomyClarificationTests.Phase5CCorpus.cs
++++ b/Assets/Tests/EditMode/CommanderEconomyClarificationTests.Phase5CCorpus.cs
+@@ -331,7 +331,7 @@ namespace OpenEmpires.Tests
+                 await fixture.Chat.SubmitMessageAsync("Garrison all my villagers in my Town Center.");
+                 fixture.TickBounded(500);
+                 var goal = fixture.Manager.Goals.OfType<CommanderCapabilityGoal>().Single();
+-                Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Completed));
++                Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Blocked));
+                 Assert.That(goal.GarrisonShelter.GarrisonCount, Is.EqualTo(1));
+                 Assert.That(goal.GarrisonProtectedCount, Is.EqualTo(1));
+                 Assert.That(goal.GarrisonUnaccommodatedCount, Is.EqualTo(1));
+@@ -1579,7 +1579,7 @@ namespace OpenEmpires.Tests
+             if (id == "garrison-capacity-protected-remainder")
+             {
+                 var goal = fixture.Manager.Goals.OfType<CommanderCapabilityGoal>().SingleOrDefault();
+-                Mark(oneCall && goal != null && goal.Status == CommanderGoalStatus.Completed
++                Mark(oneCall && goal != null && goal.Status == CommanderGoalStatus.Blocked
+                     && hasNative("GarrisonCommand:processed") && goal.GarrisonShelter?.GarrisonCount == 1
+                     && goal.GarrisonProtectedCount == 1 && goal.GarrisonUnaccommodatedCount == 1,
+                     "native-garrison", "capacity-or-protected-remainder-missing");
+
+diff --git a/Docs/CommanderPhase5C/evidence/final-fix-baseline/Assets/Tests/PlayMode/CommanderPhase5CUIPlayModeTests.cs b/Assets/Tests/PlayMode/CommanderPhase5CUIPlayModeTests.cs
+index 673ca52..a218147 100644
+--- a/Docs/CommanderPhase5C/evidence/final-fix-baseline/Assets/Tests/PlayMode/CommanderPhase5CUIPlayModeTests.cs
++++ b/Assets/Tests/PlayMode/CommanderPhase5CUIPlayModeTests.cs
+@@ -2,6 +2,7 @@ using System;
+ using System.Collections;
+ using System.IO;
+ using System.Linq;
++using System.Reflection;
+ using System.Threading;
+ using System.Threading.Tasks;
+ using NUnit.Framework;
+@@ -73,6 +74,83 @@ namespace OpenEmpires.Tests
+             Assert.That(chat.transform.Find("CommanderCanvas/Panel/TaskBoard")?.GetComponent<ScrollRect>(), Is.Not.Null);
+         }
+ 
++        [UnityTest]
++        public IEnumerator LocalMetrics_RealProviderFixtureCorrelatesAdmissionAttemptAndCost()
++        {
++            string directory = Path.Combine(Path.GetTempPath(), "commander-ui-provider-observation-"
++                + Guid.NewGuid().ToString("N"));
++            Directory.CreateDirectory(directory);
++            string path = Path.Combine(directory, "observations.json");
++            try
++            {
++                var store = new CommanderTurnObservationStore(path);
++                store.SetRecording(true);
++                typeof(CommanderChatUI).GetField("localObservationStore",
++                    BindingFlags.Instance | BindingFlags.NonPublic).SetValue(chat, store);
++                chat.Initialize(new OpenRouterCommanderProvider("fixture-not-a-credential",
++                    new ChargedSuccessTransport()), simulation, goals, dispatcher, TimeSpan.FromSeconds(2));
++                chat.enabled = true;
++                chat.OpenCommander();
++                Task<CommanderAIChatSubmission> request = chat.SubmitMessageAsync("Train 3 spearmen.");
++                while (!request.IsCompleted) yield return null;
++                Assert.That(request.Exception, Is.Null);
++                Assert.That(goals.Goals, Is.Not.Empty, "The actual semantic admission must create the scoped goal.");
++                string json = File.ReadAllText(path);
++                Assert.That(json, Does.Contain("\"requestId\":" + chat.LastSubmittedSemanticRequestId.Value));
++                Assert.That(json, Does.Contain("\"outcome\":\"Request\""));
++                Assert.That(json, Does.Contain("\"stage\":\"admitted\""));
++                Assert.That(json, Does.Contain("\"promptTokens\":37"));
++                Assert.That(json, Does.Contain("\"completionTokens\":11"));
++                Assert.That(json, Does.Contain("\"cost\":0.001"));
++                Assert.That(System.Text.RegularExpressions.Regex.IsMatch(json,
++                    "\\\"transportMs\\\":[0-9]+"), Is.True);
++                Assert.That(System.Text.RegularExpressions.Regex.IsMatch(json,
++                    "\\\"parseMs\\\":[0-9]+"), Is.True);
++                Assert.That(json, Does.Not.Contain("Train 3 spearmen"));
++                Assert.That(json, Does.Not.Contain("fixture-not-a-credential"));
++            }
++            finally { Directory.Delete(directory, true); }
++        }
++
++        [UnityTest]
++        public IEnumerator LocalMetricsSettings_AreOffByDefaultAndRecordOriginalTimedOutTicket()
++        {
++            string directory = Path.Combine(Path.GetTempPath(), "commander-ui-observation-" + Guid.NewGuid().ToString("N"));
++            Directory.CreateDirectory(directory);
++            string path = Path.Combine(directory, "observations.json");
++            try
++            {
++                var store = new CommanderTurnObservationStore(path);
++                typeof(CommanderChatUI).GetField("localObservationStore",
++                    BindingFlags.Instance | BindingFlags.NonPublic).SetValue(chat, store);
++                chat.enabled = true;
++                chat.OpenCommander();
++                yield return null;
++                chat.transform.Find("CommanderCanvas/Panel/Settings").GetComponent<Button>().onClick.Invoke();
++                var menu = chat.transform.Find("CommanderCanvas/CompactCommander/SettingsMenu");
++                var toggle = menu.Find("LocalMetricsToggle").GetComponent<Button>();
++                Assert.That(TextOf(menu.Find("LocalMetricsToggle/Label")), Does.Contain("Off"));
++                Assert.That(menu.Find("ExportLocalMetrics"), Is.Not.Null);
++                yield return null; // Presentation actions intentionally allow one click per frame.
++                toggle.onClick.Invoke();
++                Assert.That(TextOf(menu.Find("LocalMetricsToggle/Label")), Does.Contain("On"));
++                Task<CommanderAIChatSubmission> request = chat.SubmitMessageAsync("gather 200 gold with 3 villagers");
++                while (!request.IsCompleted) yield return null;
++                Assert.That(File.Exists(path), Is.True);
++                string json = File.ReadAllText(path);
++                Assert.That(json, Does.Contain("\"requestId\":" + chat.LastSubmittedSemanticRequestId.Value));
++                Assert.That(json, Does.Contain("\"stage\":\"timed-out\""));
++                Assert.That(json, Does.Contain("\"taskStatus\":\"Failed\""));
++                Assert.That(json, Does.Contain("\"attempts\":[]"),
++                    "A fake provider cannot invent an HTTP attempt or cost.");
++                provider.CompleteLatest("{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":3}]}");
++                yield return null;
++                Assert.That(goals.Goals, Is.Empty, "A late response must not admit a goal.");
++                Assert.That(File.ReadAllText(path), Does.Contain("\"stage\":\"timed-out\""));
++            }
++            finally { Directory.Delete(directory, true); }
++        }
++
+         [UnityTest]
+         public IEnumerator Timeout_RetainsDraftAndOffersExplicitRetryEditCancel()
+         {
+@@ -946,6 +1024,14 @@ namespace OpenEmpires.Tests
+             public void FailLatest(Exception error) => latest?.TrySetException(error);
+         }
+ 
++        private sealed class ChargedSuccessTransport : ICommanderHttpTransport
++        {
++            public Task<CommanderHttpResponse> PostJsonAsync(Uri uri, string body,
++                System.Collections.Generic.IReadOnlyDictionary<string, string> headers, CancellationToken token)
++                => Task.FromResult(new CommanderHttpResponse(200,
++                    "{\"choices\":[{\"finish_reason\":\"stop\",\"message\":{\"content\":\"{\\\"outcome\\\":\\\"Request\\\",\\\"nodes\\\":[{\\\"type\\\":\\\"EnsureUnitCount\\\",\\\"unit\\\":\\\"Spearman\\\",\\\"count\\\":3}]}\"}}],\"usage\":{\"prompt_tokens\":37,\"completion_tokens\":11,\"cost\":0.001}}"));
++        }
++
+         private sealed class FixtureAudioCapture : ICommanderAudioCapture
+         {
+             public bool IsRecording { get; private set; }
+

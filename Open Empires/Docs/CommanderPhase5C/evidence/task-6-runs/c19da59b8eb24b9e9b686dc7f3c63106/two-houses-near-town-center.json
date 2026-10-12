@@ -1,0 +1,166 @@
+{
+  "schema": "openempires-phase5c-scenario-turn@1",
+  "run_id": "95ae47de-d1c1-4e91-a519-4c3a05bec105",
+  "first_failing_stage": null,
+  "first_failure_category": null,
+  "schemaVersion": 1,
+  "caseId": "two-houses-near-town-center",
+  "requestId": "runtime:1",
+  "utterance": "Build two Houses near my Town Center.",
+  "turnIndex": 0,
+  "status": "observed",
+  "evidenceMode": "offline-production-chat-fixture",
+  "providerCalls": 1,
+  "httpAttempts": 0,
+  "fidelity": "matched",
+  "semanticValid": true,
+  "estimatedInputTokens": null,
+  "actualPromptTokens": null,
+  "actualCompletionTokens": null,
+  "actualCachedTokens": null,
+  "actualReasoningTokens": null,
+  "reportedCost": null,
+  "attemptCosts": [],
+  "packingMs": 13.82,
+  "transportMs": null,
+  "parseMs": 0.361,
+  "admissionMs": 8.633,
+  "firstNativeActionMs": 504.089,
+  "commandCount": 2,
+  "commandTypes": [
+    "PlaceBuildingCommand",
+    "PlaceBuildingCommand"
+  ],
+  "nativeResults": [
+    "PlaceBuildingCommand:processed",
+    "PlaceBuildingCommand:processed"
+  ],
+  "taskStates": [
+    "BuildStructureGoal:Completed"
+  ],
+  "draftBefore": [],
+  "draftAfter": [],
+  "draftChanges": [],
+  "normalizedFields": [
+    {
+      "mechanic": "ResolveLocation",
+      "parameters": {
+        "anchor": "MyTownCenter",
+        "relation": "Near",
+        "clearGap": 1
+      },
+      "inputs": {},
+      "dependencies": []
+    },
+    {
+      "mechanic": "Build",
+      "parameters": {
+        "building": "building:House",
+        "count": 2
+      },
+      "inputs": {
+        "location": 0
+      },
+      "dependencies": [
+        0
+      ]
+    }
+  ],
+  "admittedFields": [
+    {
+      "type": "BuildStructureGoal",
+      "status": "Pending",
+      "originalUtterance": "Build two Houses near my Town Center.",
+      "building": "House",
+      "count": 2,
+      "anchor": null,
+      "anchorOrdinal": null,
+      "relation": null,
+      "resource": null,
+      "source": null
+    }
+  ],
+  "turnHistory": [
+    {
+      "index": 0,
+      "text": "Build two Houses near my Town Center.",
+      "requestId": "runtime:1",
+      "uiState": "Awaiting approval",
+      "providerCalls": 1,
+      "semanticValid": true,
+      "semanticOutcome": "DynamicPlan",
+      "normalizedFields": [
+        {
+          "mechanic": "ResolveLocation",
+          "parameters": {
+            "anchor": "MyTownCenter",
+            "relation": "Near",
+            "clearGap": 1
+          },
+          "inputs": {},
+          "dependencies": []
+        },
+        {
+          "mechanic": "Build",
+          "parameters": {
+            "building": "building:House",
+            "count": 2
+          },
+          "inputs": {
+            "location": 0
+          },
+          "dependencies": [
+            0
+          ]
+        }
+      ],
+      "admittedFields": [],
+      "draftBefore": [],
+      "draftAfter": [],
+      "draftChanges": [],
+      "approvalRequired": true,
+      "approved": false,
+      "commandTypes": [],
+      "taskStates": [],
+      "uiSubmitMs": 22.71
+    },
+    {
+      "index": 1,
+      "text": "Approve plan",
+      "origin": "offline-fixture-control",
+      "requestId": "runtime:1",
+      "uiState": "Accepted",
+      "providerCalls": 1,
+      "approved": true,
+      "admittedFields": [
+        {
+          "type": "BuildStructureGoal",
+          "status": "Pending",
+          "originalUtterance": "Build two Houses near my Town Center.",
+          "building": "House",
+          "count": 2,
+          "anchor": null,
+          "anchorOrdinal": null,
+          "relation": null,
+          "resource": null,
+          "source": null
+        }
+      ],
+      "taskStates": [
+        "BuildStructureGoal:Pending"
+      ],
+      "uiSubmitMs": 26.839
+    }
+  ],
+  "fogNewlyExploredCount": null,
+  "fixtureKind": "correct-synthetic",
+  "turnText": "Build two Houses near my Town Center.",
+  "uiSubmitMs": 22.71,
+  "semanticOutcome": "DynamicPlan",
+  "approvalRequired": true,
+  "approved": true,
+  "uiState": "Accepted",
+  "approvalMode": "offline-fixture-control-not-declared-player-turn",
+  "tickMode": "accelerated-fixture",
+  "ticks": 6000
+}

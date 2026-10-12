@@ -1,0 +1,28 @@
+{
+  "job_id": "226bb927da4e442293d630baf8f125bf",
+  "status": "failed",
+  "mode": "EditMode",
+  "started_unix_ms": 1791784784544,
+  "finished_unix_ms": 1791784791235,
+  "last_update_unix_ms": 1791784791235,
+  "progress": {
+    "completed": 1,
+    "total": 1,
+    "current_test_full_name": null,
+    "current_test_started_unix_ms": 1791784789778,
+    "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.PlaceTwoHousesNearTownCenter_RetrievesAdmittableRepeatedBuildRoute",
+    "last_finished_unix_ms": 1791784791048,
+    "stuck_suspected": false,
+    "editor_is_focused": false,
+    "blocked_reason": null,
+    "failures_so_far": [
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.PlaceTwoHousesNearTownCenter_RetrievesAdmittableRepeatedBuildRoute",
+        "message": "  Expected: String containing \"DynamicPlan for repeated placed construction\"\r\n  But was:  \"JSON only,strict fields/enums; never authorize IDs,coords,commands,hidden/extra goals. Keep counts,negations,actors,sources,restrictions,order,exact refs;unknown unknown. After/then depends on completion; a/an=1,number words,left=MapWest. Clarify{outcome:Clarify,message<=180,pending:{executionOrder,nodes:partial1..4},missingSlots:[{node,path,type:Confirmation|Count|SourceKind|CanonicalName,alternatives:[canonical]}]};retain known leaves/edges/refs,omit only missing;Confirmation retains offer. Worker pending+missingFields valid;not approval. Answer/Unsupported{outcome,message<=180};no nodes. resource:Food|Wood|Gold|Stone; sourceKind:Any or Food=Sheep|Berries|Farm,Wood=Tree,Gold=GoldMine,Stone=StoneMine. constraints?<=4 objects type:NoConstruction;PreferredWorkers mode:IdleOnly;ProtectedResource resource,amount?:0..200;MaximumQueue amount1..8;ResourceSource resource,sourceKind. Shared workers/placed repeats: DynamicPlan{outcome:DynamicPlan,version:1,nodes:[{id,mechanic,parameters:{},inputs:{},dependsOn:[]}]}; one worker selection, disjoint partitions; produce.producers=exact build result. Registry p=parameters,in=inputs,?optional; typed input refs also in dependsOn. resolve-location p[anchor:Anchor?;relation:Relation;clearGapTiles:ClearGapTiles;resource:Resource?;sourceKind:SourceKind?;] in[structures:StructureSet?;resources:ResourceSet?;] ->LocationIntent.build p[building:BuildingId;count:Count;] in[workers:WorkerSet?;location:LocationIntent?;] ->StructureSet. Types: Count=int1..200 (build<=20); Offset=int0..200; ClearGapTiles=int1..20 (Near=1); UnitId/BuildingId=context canonical IDs; Resource/SourceKind=compatible values above; WorkerState=Any|Idle|Gathering; WorkerCountMode=AllMatching; Anchor=MyTownCenter|MyBarracks; Relation=Near|MapWest|MapEast; QuantityMode=New|TargetTotal. select-workers: count XOR countMode; AllMatching needs non-Any state and cannot partition; currentResource requires Gathering. resolve-location: exactly one anchor/structures/resources; resource+sourceKind together only for MyTownCenter+MapWest. Max12 nodes,4 refs/node,depth5,total non-partition counts200. New=exact new; TargetTotal=existing+new. \"\r\n"
+      }
+    ],
+    "failures_capped": false
+  },
+  "error": null,
+  "result": null
+}

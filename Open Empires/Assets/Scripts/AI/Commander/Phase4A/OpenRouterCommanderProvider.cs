@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -16,7 +18,7 @@ namespace OpenEmpires
         private const string Endpoint = "https://openrouter.ai/api/v1/chat/completions";
         private const string Model = "openai/gpt-6-luna";
         private const string Unavailable = "Commander AI service temporarily unavailable.";
-        private const string SemanticInstruction =
+        internal const string SemanticInstruction =
             "Translate the player's Commander request into one bounded JSON object, with no markdown or other text. "
             + "You provide semantic data only, never game authority. Outcomes are Request, DynamicPlan, Clarify, Unsupported, Answer. "
             + "For Request use {\"outcome\":\"Request\",\"nodes\":[one to four typed nodes]}. Every compound Request MUST also declare executionOrder as Independent, Sequential, or DependencyGraph. Independent has no dependencies; Sequential means each step waits for the previous step's actual completion and each later node MUST include dependsOn:[previousIndex]. DependencyGraph describes explicitly mixed ordering with all requested edges retained. Temporal first/then/after/once/when-complete/only-after-completion wording describes these same supported completion dependencies, not an unsupported workflow. Order effects as stated and retain the edges. Existing owned actors remain existing unless the player explicitly requests newly produced actors; a completed building does not imply production of a new villager. Indefinite singular a/an/one denotes count 1. Do not invent an EnsureUnitCount or resultFromNode for an ordinary existing-worker follow-up. Never drop temporal restrictions. If you cannot represent them, Clarify or Unsupported, not a different plan. "
@@ -28,7 +30,7 @@ namespace OpenEmpires
             + "The currently executable node forms are "
             + "{\"type\":\"EnsureUnitCount\",\"unit\":\"Villager|Spearman|Archer|Scout|Knight\",\"count\":integer 0..200,\"quantityMode\":\"TargetTotal|New\" optional}, "
             + "EnsureUnitCount defaults to TargetTotal: owned and matching queued units count toward that total. Explicit 'new'/'more'/'additional' uses quantityMode New, count means exactly that many new request-attributed units regardless of old units or human queues. A resultFromNode unit action consumes an exact newly produced set, never existing/human-produced units; its count must equal the game-side production forecast. Do not widen a total goal to new production to repair a mismatch; Clarify or preserve the original request for deterministic preflight rejection. "
-            + "{\"type\":\"BuildStructure\",\"structure\":\"exact name from detached structureCapabilities\",\"count\":integer 1..20,\"builders\":{\"state\":\"Eligible|IdleOnly\",\"count\":1},\"placement\":optional one of the following DISJOINT forms}. "
+            + "{\"type\":\"BuildStructure\",\"structure\":\"exact name from detached structureCapabilities\",\"count\":1 when placement is present, otherwise integer 1..20,\"builders\":{\"state\":\"Eligible|IdleOnly\",\"count\":1},\"placement\":optional one of the following DISJOINT forms}. Repeated placed construction uses DynamicPlan. "
             + "Town Center placement: {\"anchor\":\"MyTownCenter\",\"relation\":\"MapWest|MapEast|Near\",\"ordinal\":optional integer 1..8,\"clearGapTiles\":optional integer 1..20; Near permits only 1}. Barracks placement: {\"anchor\":\"MyBarracks\",\"relation\":\"MapWest|MapEast|Near\",\"clearGapTiles\":optional integer 1..20; Near permits only 1}. Resource placement: {\"anchor\":\"VisibleResource|WorkedResource\",\"relation\":\"Near\",\"resource\":\"Food|Wood|Gold|Stone\",\"sourceKind\":optional \"Any|Berries|Tree|GoldMine|StoneMine|Farm|Sheep\"}. Resource placement NEVER contains ordinal. Ordinal is NOT a default field and is forbidden outside MyTownCenter. For resource Near placement omit clearGapTiles unless the supported value 1 is explicitly needed. Never carry fields from another placement form. "
             + "Every Request BuildStructure MUST declare builders. Eligible is the game's ordinary eligible-builder policy when the player did not restrict builders; IdleOnly is a strict idle-only selector, not a preference. Builder count is separate from structure count. This ordinary path supports exactly one builder; another explicit builder quantity cannot be dropped or defaulted to one: Clarify or Unsupported if no existing typed form can preserve it. Never emit Eligible for an explicit idle-only restriction. "
             + "Optional node constraints use exact objects: {\"type\":\"PreferredWorkers\",\"mode\":\"IdleOnly\"}, {\"type\":\"ProtectedResource\",\"resource\":\"Gold\",\"amount\":optional integer 0..200}, {\"type\":\"NoConstruction\"}, {\"type\":\"MaximumQueue\",\"amount\":integer 1..8}, {\"type\":\"ResourceSource\",\"resource\":\"Food\",\"sourceKind\":\"Sheep\"}. Preserve explicitly requested restrictions on every affected node and prerequisite; if essential restrictions are unrepresentable, clarify instead of omitting them. Builders IdleOnly is normalized game-side to PreferredWorkers IdleOnly; any duplicated constraint must agree. DynamicPlan instead uses its existing top-level constraint vocabulary. "
@@ -79,14 +81,27 @@ namespace OpenEmpires
             + "do not invent game mechanics. Canonical unit/structure tokens always use the exact singular casing shown in the schema. "
             + "Do not add fields.";
 
-        private const string SemanticFidelityCheck =
-            " Final interpretation check for the existing typed Request forms: a/an worker or villager is EXACTLY ONE eligible existing worker, not an unspecified count. Number words also fill their respective integer slots. A supplied quantity must not become a Count question. Resource amount and worker count stay separate; preserve the requested source and absolute age. A completion phrase connects effects with dependsOn, not newly produced actors. Example 'Build a Mill, and after completion send a worker to gold' is {\"outcome\":\"Request\",\"executionOrder\":\"Sequential\",\"nodes\":[{\"type\":\"BuildStructure\",\"structure\":\"Mill\",\"count\":1,\"builders\":{\"state\":\"Eligible\",\"count\":1}},{\"type\":\"AllocateWorkers\",\"mode\":\"SelectedCount\",\"countMode\":\"Exact\",\"count\":1,\"workers\":{\"state\":\"Any\"},\"destination\":{\"resource\":\"Gold\"},\"dependsOn\":[0]}]}. Clarify only genuinely missing meaning; no runtime IDs, coordinates, commands, authority, dropped constraints or invented production.";
+        internal const string SemanticFidelityCheck =
+            " Final interpretation check for the existing typed Request forms: a/an worker or villager is EXACTLY ONE eligible existing worker, not an unspecified count. Number words also fill their respective integer slots. A supplied quantity must not become a Count question. Resource amount and worker count stay separate; preserve the requested source and absolute age. A completion phrase connects effects with dependsOn, not newly produced actors. Example 'Build a Mill, and after completion send a worker to gold' is {\"outcome\":\"Request\",\"executionOrder\":\"Sequential\",\"nodes\":[{\"type\":\"BuildStructure\",\"structure\":\"Mill\",\"count\":1,\"builders\":{\"state\":\"Eligible\",\"count\":1}},{\"type\":\"AllocateWorkers\",\"mode\":\"SelectedCount\",\"countMode\":\"Exact\",\"count\":1,\"workers\":{\"state\":\"Any\"},\"destination\":{\"resource\":\"Gold\"},\"dependsOn\":[0]}]}. Clarify only genuinely missing meaning; no runtime IDs, coordinates, commands, authority, dropped constraints or invented production. "
+            + "Ordinary assignment example: 'gather food with four villagers' -> {\"outcome\":\"Request\",\"nodes\":[{\"type\":\"AllocateWorkers\",\"mode\":\"SelectedCount\",\"countMode\":\"Exact\",\"count\":4,\"workers\":{\"state\":\"Any\"},\"destination\":{\"resource\":\"Food\",\"sourceKind\":\"Any\"}}]}. The same form applies to any requested worker number and Food/Wood/Gold/Stone. 'with 8 villager' still specifies eight workers despite singular spelling. Missing resource amount is ordinary assignment, NOT a missing slot. Missing source or worker eligibility uses Any, NOT clarification. For a resource plus an explicit worker quantity, return this complete Request; never emit missingFields Count for an already supplied quantity. Current shortages, pathing and worker availability are checked by the game after semantic translation, not a reason to discard the specified count.";
 
         private readonly string apiKey;
         private readonly ICommanderHttpTransport transport;
         private readonly TimeSpan timeout;
         private readonly int semanticMaxTokens;
         public string LastRequestTrace { get; private set; } = string.Empty;
+        public CommanderProviderUsage LastUsage { get; private set; } = CommanderProviderUsage.Unknown;
+        public int? LastInputEstimate { get; private set; }
+        public IReadOnlyDictionary<string, int> LastInputSectionEstimates { get; private set; }
+        private readonly object semanticGate = new object();
+        private SemanticRun activeSemanticRun;
+        private int semanticHttpAttemptCount;
+        private readonly List<CommanderProviderAttempt> recentSemanticAttempts = new List<CommanderProviderAttempt>();
+        public int SemanticHttpAttemptCount { get { lock (semanticGate) return semanticHttpAttemptCount; } }
+        public IReadOnlyList<CommanderProviderAttempt> RecentSemanticAttempts { get { lock (semanticGate)
+            return Array.AsReadOnly(recentSemanticAttempts.ToArray()); } }
+        public IReadOnlyList<CommanderProviderAttempt> LastSemanticAttempts { get; private set; }
+            = Array.AsReadOnly(Array.Empty<CommanderProviderAttempt>());
         internal bool HasConfiguration => !string.IsNullOrWhiteSpace(apiKey);
         internal bool UsesGateway => transport is CommanderGatewaySemanticTransport;
         internal bool UsesTransport(ICommanderHttpTransport candidate) => ReferenceEquals(transport,candidate);
@@ -96,6 +111,46 @@ namespace OpenEmpires
         internal bool LastRequestTimedOut { get; private set; }
         internal bool HasAttemptedRequest { get; private set; }
         internal bool HasValidatedSemanticResponse { get; private set; }
+
+        private sealed class SemanticRun
+        {
+            public CommanderTurnObservationStore.CommanderTurnObservation Observation;
+            public readonly List<CommanderProviderAttempt> Attempts = new List<CommanderProviderAttempt>();
+            public string Trace = string.Empty;
+            public CommanderProviderUsage Usage = CommanderProviderUsage.Unknown;
+            public int? HttpStatusCode;
+            public bool NetworkFailure;
+            public bool TimedOut;
+            public bool Attempted;
+            public bool Validated;
+        }
+
+        private void Publish(SemanticRun run)
+        {
+            lock (semanticGate)
+            {
+                if (!ReferenceEquals(activeSemanticRun, run)) return;
+                LastRequestTrace = run.Trace;
+                LastUsage = run.Usage;
+                LastHttpStatusCode = run.HttpStatusCode;
+                LastNetworkFailure = run.NetworkFailure;
+                LastRequestTimedOut = run.TimedOut;
+                HasAttemptedRequest = run.Attempted;
+                HasValidatedSemanticResponse = run.Validated;
+                LastSemanticAttempts = Array.AsReadOnly(run.Attempts.ToArray());
+            }
+        }
+
+        private void PublishEstimate(SemanticRun run, int? estimate,
+            IReadOnlyDictionary<string, int> sections)
+        {
+            lock (semanticGate)
+            {
+                if (!ReferenceEquals(activeSemanticRun, run)) return;
+                LastInputEstimate = estimate;
+                LastInputSectionEstimates = sections;
+            }
+        }
 
         public OpenRouterCommanderProvider(string apiKey = null,
             ICommanderHttpTransport transport = null, TimeSpan? providerTimeout = null,
@@ -189,7 +244,10 @@ namespace OpenEmpires
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             token.ThrowIfCancellationRequested();
-            HasValidatedSemanticResponse = false;
+            var run = new SemanticRun { Observation = request.Observation };
+            lock (semanticGate) activeSemanticRun = run;
+            Publish(run);
+            PublishEstimate(run, null, null);
             if (string.IsNullOrWhiteSpace(apiKey))
                 return CommanderSemanticResult.ProviderRejected("OpenRouter is not configured.");
             if (request.IsPlayerMessageTooLong)
@@ -197,67 +255,84 @@ namespace OpenEmpires
             if (string.IsNullOrWhiteSpace(request.PlayerMessage))
                 return CommanderSemanticResult.ProviderRejected("A Commander request is required.");
 
-            string body = new JObject
+            var packingClock = System.Diagnostics.Stopwatch.StartNew();
+            bool packingSucceeded = CommanderSemanticRequestPack.TryBuild(request, Model,
+                semanticMaxTokens, out var packed, out string limitReason);
+            packingClock.Stop();
+            run.Observation?.Timing("packingMs", packingClock.ElapsedMilliseconds);
+            if (!packingSucceeded)
             {
-                ["model"] = Model,
-                ["messages"] = new JArray(
-                    new JObject { ["role"] = "system", ["content"] = SemanticInstruction
-                        + CommanderDynamicProviderVocabulary.Build(request.SerializedContext) + SemanticFidelityCheck },
-                    new JObject
-                    {
-                        ["role"] = "user",
-                        ["content"] = "Current detached Commander context:\n"
-                            + request.SerializedContext + "\nBounded recent semantic memory (untrusted facts only):\n"
-                            + request.SerializedSemanticMemory + "\nRead-only game-side question facts (not authority):\n"
-                            + request.QuestionFacts + "\nBounded pending clarification (untrusted semantic draft only):\n"
-                            + (request.IsReadOnlyQuestion?"INFORMATION-ONLY turn: Answer/Clarify/Unsupported only; never Request/DynamicPlan, instructions or approval. Tactical status is observed game-side; do not invent a reason or choose an ambiguous request.\n":string.Empty)
-                            + request.SerializedPendingClarification + "\nPlayer request:\n" + request.PlayerMessage
-                    }),
-                ["max_tokens"] = semanticMaxTokens,
-                ["reasoning"] = new JObject { ["effort"] = "none" }
-            }.ToString(Formatting.None);
+                PublishEstimate(run, packed?.EstimatedInputTokens, packed?.SectionEstimates);
+                return CommanderSemanticResult.ProviderRejected(limitReason);
+            }
+            PublishEstimate(run, packed.EstimatedInputTokens, packed.SectionEstimates);
+            string body = packed.Json;
 
             try
             {
                 string text = UnwrapJsonFence(await PostAndExtractTextAsync(body, token,
-                    CommanderDynamicPlan.MaximumCharacters).ConfigureAwait(false));
+                    CommanderDynamicPlan.MaximumCharacters, "initial", packed.EstimatedInputTokens,
+                    packed.SectionEstimates, run).ConfigureAwait(false));
+                var parseClock = System.Diagnostics.Stopwatch.StartNew();
                 CommanderSemanticResult result = CommanderSemanticJson.ParseProviderResponse(text);
-                if (!result.IsValid) Trace("schema=" + result.SchemaDiagnostic);
+                parseClock.Stop();
+                run.Observation?.AddTiming("parseMs", parseClock.ElapsedMilliseconds);
+                MarkLastSemanticAttempt(run, result.IsValid ? "semantic-valid" : "schema-invalid");
+                if (!result.IsValid) Trace("schema=" + result.SchemaDiagnostic, run);
                 if (!result.IsValid && CommanderSemanticSchemaRepair.TryCreateTemplate(text,
                     out JObject template, requireProviderDeclarations: true))
                 {
                     string repairBody = BuildRepairBody(template);
-                    string initialTrace = LastRequestTrace;
+                    int repairEstimate = CommanderSemanticRequestPack.EstimateBody(JObject.Parse(repairBody));
+                    if (repairEstimate >= CommanderSemanticRequestPack.InputByteLimit)
+                        return CommanderSemanticResult.ProviderRejected("Commander input limit: required schema repair cannot fit safely; no repair was submitted.");
+                    JObject repairJson = JObject.Parse(repairBody);
+                    var repairSections = new Dictionary<string, int> {
+                        ["contract"] = Encoding.UTF8.GetByteCount((string)repairJson["messages"]?[0]?["content"] ?? string.Empty),
+                        ["repairTemplate"] = Encoding.UTF8.GetByteCount((string)repairJson["messages"]?[1]?["content"] ?? string.Empty),
+                        ["messageMargin"] = CommanderSemanticRequestPack.MessageMargin };
+                    string initialTrace = run.Trace;
                     string repairedText = UnwrapJsonFence(await PostAndExtractTextAsync(repairBody,
-                        token, CommanderDynamicPlan.MaximumCharacters).ConfigureAwait(false));
-                    LastRequestTrace = initialTrace + "repair-attempt:\n" + LastRequestTrace;
+                        token, CommanderDynamicPlan.MaximumCharacters, "repair", repairEstimate,
+                        repairSections, run).ConfigureAwait(false));
+                    run.Trace = initialTrace + "repair-attempt:\n" + run.Trace;
+                    Publish(run);
+                    parseClock.Restart();
                     result = CommanderSemanticJson.ParseProviderResponse(repairedText);
-                    if (!result.IsValid) Trace("repair-schema=" + result.SchemaDiagnostic);
+                    parseClock.Stop();
+                    run.Observation?.AddTiming("parseMs", parseClock.ElapsedMilliseconds);
+                    text = repairedText;
+                    if (!result.IsValid) Trace("repair-schema=" + result.SchemaDiagnostic, run);
                     if (!result.IsValid || !CommanderSemanticSchemaRepair.MatchesTemplate(
                         repairedText, template))
                         result = CommanderSemanticResult.ProviderRejected(
                             "Commander AI returned an invalid semantic response; no order was submitted.");
+                    MarkLastSemanticAttempt(run, result.IsValid ? "semantic-valid" : "schema-invalid");
                 }
                 Trace("semantic=" + (result.IsValid ? result.Outcome.ToString() : "invalid")
-                    + ";nodes=" + result.Nodes.Count);
-                HasValidatedSemanticResponse = result.IsValid;
-                return result.IsValid ? result : CommanderSemanticResult.ProviderRejected(
+                    + ";nodes=" + result.Nodes.Count, run);
+                run.Validated = result.IsValid;
+                Publish(run);
+                return result.IsValid ? result.RequireNameConfirmation(text, request) : CommanderSemanticResult.ProviderRejected(
                     "Commander AI returned an invalid semantic response; no order was submitted.");
             }
             catch (OperationCanceledException) when (token.IsCancellationRequested) { throw; }
             catch (OperationCanceledException)
             {
-                Trace("request=timeout");
-                LastRequestTimedOut = true;
+                Trace("request=timeout", run);
+                run.TimedOut = true;
+                Publish(run);
                 return CommanderSemanticResult.ProviderRejected("Commander AI request timed out.");
             }
             catch (OpenRouterFailure failure)
             {
+                if (run.Attempts.Count > 0 && run.Attempts[run.Attempts.Count - 1].ResultStage == "response-extracted")
+                    MarkLastSemanticAttempt(run, "content-invalid-format");
                 return CommanderSemanticResult.ProviderRejected(failure.Message);
             }
             catch (Exception error)
             {
-                Trace("request=failed;exception=" + error.GetType().Name);
+                Trace("request=failed;exception=" + error.GetType().Name, run);
                 return CommanderSemanticResult.ProviderRejected(Unavailable);
             }
         }
@@ -305,19 +380,59 @@ namespace OpenEmpires
             }.ToString(Formatting.None);
         }
 
-        private async Task<string> PostAndExtractTextAsync(string body,
-            CancellationToken cancellationToken, int maximumContentCharacters)
+        private void MarkLastSemanticAttempt(SemanticRun run, string stage)
         {
-            LastRequestTrace = string.Empty;
-            HasAttemptedRequest = true; LastHttpStatusCode = null;
-            LastNetworkFailure = false; LastRequestTimedOut = false;
+            if (run.Attempts.Count > 0)
+            {
+                var previous = run.Attempts[run.Attempts.Count - 1];
+                var updated = previous.WithResultStage(stage);
+                run.Attempts[run.Attempts.Count - 1] = updated;
+                lock (semanticGate)
+                {
+                    int index = recentSemanticAttempts.FindLastIndex(attempt => ReferenceEquals(attempt, previous));
+                    if (index >= 0) recentSemanticAttempts[index] = updated;
+                }
+                Publish(run);
+                run.Observation?.ObserveAttempt(run.Attempts.Count - 1, updated);
+            }
+        }
+
+        private async Task<string> PostAndExtractTextAsync(string body,
+            CancellationToken cancellationToken, int maximumContentCharacters, string semanticKind = null,
+            int? inputEstimate = null, IReadOnlyDictionary<string, int> sectionEstimates = null,
+            SemanticRun run = null)
+        {
+            if (run != null)
+            {
+                run.Trace = string.Empty;
+                run.Usage = CommanderProviderUsage.Unknown;
+                run.Attempted = true;
+                run.HttpStatusCode = null;
+                run.NetworkFailure = false;
+                run.TimedOut = false;
+                lock (semanticGate) semanticHttpAttemptCount++;
+                Publish(run);
+            }
+            else
+            {
+                LastRequestTrace = string.Empty;
+                LastUsage = CommanderProviderUsage.Unknown;
+                HasAttemptedRequest = true; LastHttpStatusCode = null;
+                LastNetworkFailure = false; LastRequestTimedOut = false;
+            }
+            CommanderProviderUsage attemptUsage = CommanderProviderUsage.Unknown;
+            int? attemptHttpStatus = null;
             var elapsed = System.Diagnostics.Stopwatch.StartNew();
-            Trace("utc=" + DateTime.UtcNow.ToString("O") + ";model=" + Model + ";request=built");
+            string resultStage = "http-start";
+            Trace("utc=" + DateTime.UtcNow.ToString("O") + ";model=" + Model + ";request=built", run);
+            try
+            {
             using (var deadline = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
             {
                 deadline.CancelAfter(timeout);
-                Trace("http=sent");
+                Trace("http=sent", run);
                 CommanderHttpResponse response;
+                var transportClock = System.Diagnostics.Stopwatch.StartNew();
                 try { response = await transport.PostJsonAsync(new Uri(Endpoint),
                     body, new Dictionary<string, string>
                     {
@@ -325,41 +440,97 @@ namespace OpenEmpires
                     }, deadline.Token).ConfigureAwait(false); }
                 catch (CommanderHttpResponseLimitException error)
                 {
-                    LastHttpStatusCode = error.StatusCode;
-                    Trace("http=" + error.StatusCode + ";receive=byte-limit;durationMs=" + elapsed.ElapsedMilliseconds);
+                    resultStage = "response-byte-limit";
+                    attemptHttpStatus = error.StatusCode;
+                    if (run != null) { run.HttpStatusCode = attemptHttpStatus; Publish(run); }
+                    else LastHttpStatusCode = attemptHttpStatus;
+                    Trace("http=" + error.StatusCode + ";receive=byte-limit;durationMs=" + elapsed.ElapsedMilliseconds, run);
                     throw new OpenRouterFailure(error.StatusCode < 200 || error.StatusCode > 299
                         ? HttpFailure(error.StatusCode) : "Commander AI returned an oversized response.");
                 }
                 catch (System.Net.Http.HttpRequestException)
                 {
-                    LastNetworkFailure = true;
-                    Trace("http=network-failure;durationMs=" + elapsed.ElapsedMilliseconds);
+                    resultStage = "network-failure";
+                    if (run != null) { run.NetworkFailure = true; Publish(run); }
+                    else LastNetworkFailure = true;
+                    Trace("http=network-failure;durationMs=" + elapsed.ElapsedMilliseconds, run);
                     throw new OpenRouterFailure("Could not reach Commander AI. Check your connection.");
                 }
+                finally
+                {
+                    transportClock.Stop();
+                    run?.Observation?.AddTiming("transportMs", transportClock.ElapsedMilliseconds);
+                }
                 deadline.Token.ThrowIfCancellationRequested();
-                if (response == null) throw new OpenRouterFailure(Unavailable);
-                LastHttpStatusCode = response.StatusCode;
-                Trace("http=" + response.StatusCode + ";durationMs=" + elapsed.ElapsedMilliseconds);
+                if (response == null)
+                {
+                    resultStage = "transport-null";
+                    throw new OpenRouterFailure(Unavailable);
+                }
+                attemptHttpStatus = response.StatusCode;
+                if (run != null) { run.HttpStatusCode = attemptHttpStatus; Publish(run); }
+                else LastHttpStatusCode = attemptHttpStatus;
+                resultStage = response.StatusCode >= 200 && response.StatusCode <= 299 ? "http-success" : "http-failure";
+                Trace("http=" + response.StatusCode + ";durationMs=" + elapsed.ElapsedMilliseconds, run);
                 if (response.StatusCode < 200 || response.StatusCode > 299)
                     throw new OpenRouterFailure(HttpFailure(response.StatusCode));
+                // A 2xx status is transport success only. Every rejected envelope must
+                // have a failure stage even if a malformed token raises unexpectedly.
+                resultStage = "response-invalid-envelope";
                 try
                 {
-                    if (response.Body.Length > 65536)
-                        throw new OpenRouterFailure("Commander AI returned an oversized response.");
-                    JObject result = JObject.Parse(response.Body);
-                    if (result["error"] is JObject error)
-                        throw new OpenRouterFailure(HttpFailure((int?)error["code"] ?? 500));
-                    if (!(result["choices"] is JArray choices) || choices.Count != 1)
+                    if (response.Body == null)
                         throw new OpenRouterFailure("Commander AI returned an invalid response envelope.");
-                    string finish = (string)choices[0]["finish_reason"];
+                    if (response.Body.Length > 65536)
+                    {
+                        resultStage = "response-oversize";
+                        throw new OpenRouterFailure("Commander AI returned an oversized response.");
+                    }
+                    JObject result = JObject.Parse(response.Body);
+                    attemptUsage = CommanderProviderUsage.Read(result);
+                    if (run != null) { run.Usage = attemptUsage; Publish(run); }
+                    else LastUsage = attemptUsage;
+                    if (result["error"] != null && result["error"].Type != JTokenType.Null)
+                    {
+                        if (!(result["error"] is JObject error))
+                            throw new OpenRouterFailure("Commander AI returned an invalid response envelope.");
+                        resultStage = "provider-error";
+                        JToken codeToken = error["code"];
+                        int code = 500;
+                        if (codeToken?.Type == JTokenType.Integer)
+                            int.TryParse(codeToken.ToString(Formatting.None), out code);
+                        if (code <= 0) code = 500;
+                        throw new OpenRouterFailure(HttpFailure(code));
+                    }
+                    if (!(result["choices"] is JArray choices) || choices.Count != 1 || !(choices[0] is JObject))
+                    {
+                        resultStage = "response-invalid-envelope";
+                        throw new OpenRouterFailure("Commander AI returned an invalid response envelope.");
+                    }
+                    JToken finishToken = choices[0]["finish_reason"];
+                    if (finishToken != null && finishToken.Type != JTokenType.Null
+                        && finishToken.Type != JTokenType.String)
+                        throw new OpenRouterFailure("Commander AI returned an invalid response envelope.");
+                    string finish = finishToken?.Type == JTokenType.String ? (string)finishToken : null;
                     // Bounded diagnostic category BEFORE rejection; never echo
                     // arbitrary provider finish strings or the response body.
-                    Trace("finish="+(finish=="stop"?"stop":finish=="length"?"length":finish==null?"unspecified":"other"));
+                    Trace("finish="+(finish=="stop"?"stop":finish=="length"?"length":finish==null?"unspecified":"other"), run);
                     if (finish == "length")
+                    {
+                        resultStage = "response-truncated";
                         throw new OpenRouterFailure("Commander AI response was truncated; no order was submitted.");
+                    }
                     if (finish != null && finish != "stop")
+                    {
+                        resultStage = "response-incomplete";
                         throw new OpenRouterFailure("Commander AI did not return a completed semantic response.");
-                    JToken content = choices[0]["message"]?["content"];
+                    }
+                    if (!(choices[0]["message"] is JObject message))
+                    {
+                        resultStage = "response-invalid-envelope";
+                        throw new OpenRouterFailure("Commander AI returned an invalid response envelope.");
+                    }
+                    JToken content = message["content"];
                     string text = null;
                     if (content?.Type == JTokenType.String) text = (string)content;
                     else if (content is JArray parts)
@@ -367,20 +538,68 @@ namespace OpenEmpires
                         var buffer = new System.Text.StringBuilder();
                         foreach (JToken part in parts)
                         {
-                            if ((string)part["type"] != "text" || part["text"]?.Type != JTokenType.String)
+                            if (!(part is JObject textPart))
+                            {
+                                resultStage = "response-unsupported-parts";
                                 throw new OpenRouterFailure("Commander AI returned unsupported content parts.");
-                            buffer.Append((string)part["text"]);
+                            }
+                            JToken partType = textPart["type"];
+                            if (partType != null && partType.Type != JTokenType.String)
+                                throw new OpenRouterFailure("Commander AI returned an invalid response envelope.");
+                            if ((string)partType != "text" || textPart["text"]?.Type != JTokenType.String)
+                            {
+                                resultStage = "response-unsupported-parts";
+                                throw new OpenRouterFailure("Commander AI returned unsupported content parts.");
+                            }
+                            buffer.Append((string)textPart["text"]);
                         }
                         text = buffer.ToString();
                     }
+                    else if (content != null && content.Type != JTokenType.Null)
+                        throw new OpenRouterFailure("Commander AI returned an invalid response envelope.");
                     if (string.IsNullOrWhiteSpace(text))
+                    {
+                        resultStage = "response-empty";
                         throw new OpenRouterFailure("Commander AI returned an empty semantic response.");
+                    }
                     if (text.Length > maximumContentCharacters + 16)
+                    {
+                        resultStage = "response-oversize";
                         throw new OpenRouterFailure("Commander AI returned an oversized response.");
-                    Trace("assistantContent=extracted;characters=" + text.Length + ";finish=" + (finish ?? "unspecified"));
+                    }
+                    Trace("assistantContent=extracted;characters=" + text.Length + ";finish=" + (finish ?? "unspecified"), run);
+                    resultStage = "response-extracted";
                     return text;
                 }
-                catch (JsonException) { throw new OpenRouterFailure("Commander AI returned an invalid response envelope."); }
+                catch (JsonException)
+                {
+                    resultStage = "response-invalid-envelope";
+                    throw new OpenRouterFailure("Commander AI returned an invalid response envelope.");
+                }
+            }
+            }
+            catch (OperationCanceledException)
+            {
+                resultStage = cancellationToken.IsCancellationRequested ? "caller-canceled" : "timeout";
+                throw;
+            }
+            finally
+            {
+                if (semanticKind != null)
+                {
+                    var attempt = new CommanderProviderAttempt(semanticKind,
+                        inputEstimate ?? CommanderSemanticRequestPack.EstimateBody(JObject.Parse(body)),
+                        sectionEstimates ?? new Dictionary<string, int>(), attemptUsage,
+                        elapsed.ElapsedMilliseconds, attemptHttpStatus, resultStage);
+                    run.Attempts.Add(attempt);
+                    lock (semanticGate)
+                    {
+                        recentSemanticAttempts.Add(attempt);
+                        if (recentSemanticAttempts.Count > 32) recentSemanticAttempts.RemoveAt(0);
+                    }
+                    Publish(run);
+                    run.Observation?.ObserveAttempt(run.Attempts.Count - 1, attempt);
+                }
             }
         }
 
@@ -414,10 +633,15 @@ namespace OpenEmpires
             return inside; // Strict parser still rejects prose, duplicate objects and authority fields.
         }
 
-        private void Trace(string safeMetadata)
+        private void Trace(string safeMetadata, SemanticRun run = null)
         {
             // Call sites supply only controlled metadata, never input, output, headers or exceptions' messages.
-            if (LastRequestTrace.Length < 2000) LastRequestTrace += safeMetadata + "\n";
+            if (run != null)
+            {
+                if (run.Trace.Length < 2000) run.Trace += safeMetadata + "\n";
+                Publish(run);
+            }
+            else if (LastRequestTrace.Length < 2000) LastRequestTrace += safeMetadata + "\n";
             UnityEngine.Debug.Log("[CommanderProvider] " + safeMetadata);
         }
 

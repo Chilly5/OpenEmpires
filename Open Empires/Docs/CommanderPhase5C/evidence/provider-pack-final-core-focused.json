@@ -1,0 +1,147 @@
+{
+  "project": "D:/unity_projects/OpenEmpires/Open Empires",
+  "unityInstance": "Open Empires@6d7310c7",
+  "unityVersion": "6000.5.9f1",
+  "testClass": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests",
+  "mode": "EditMode",
+  "requestedInitTimeoutMs": 120000,
+  "includeDetails": true,
+  "includeFailedTests": true,
+  "runTestsCall": {
+    "transportResponse": "Timeout receiving Unity response",
+    "recoveredJobIdFromEditorState": "50fa52759f9e4d2c99a9f6928102a955",
+    "duplicateRunStarted": false
+  },
+  "jobId": "50fa52759f9e4d2c99a9f6928102a955",
+  "startedUnixMs": 1791662246006,
+  "finishedUnixMs": 1791662254403,
+  "status": "succeeded",
+  "progress": {
+    "completed": 8,
+    "total": 8,
+    "currentTestFullName": null,
+    "currentTestStartedUnixMs": 1791662254350,
+    "lastFinishedTestFullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.TooLargeRequiredMeaning_IsRejectedWithoutDispatchingOrExecutingPrefix",
+    "lastFinishedUnixMs": 1791662254354,
+    "stuckSuspected": false,
+    "editorIsFocused": true,
+    "blockedReason": null,
+    "failuresCapped": false
+  },
+  "summary": {
+    "total": 8,
+    "passed": 8,
+    "failed": 0,
+    "skipped": 0,
+    "durationSeconds": 0.8022549,
+    "resultState": "Passed"
+  },
+  "tests": [
+    {
+      "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.MalformedUsageMetadata_DoesNotInvalidateOtherwiseValidSemanticReply",
+      "state": "Passed",
+      "durationSeconds": 0.0445692,
+      "message": null,
+      "stackTrace": null,
+      "output": "[CommanderProvider] utc=2026-10-10T19:57:33.6128601Z;model=openai/gpt-6-luna;request=built\n[CommanderProvider] http=sent\n[CommanderProvider] http=200;durationMs=2\n[CommanderProvider] finish=stop\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\n[CommanderProvider] semantic=Answer;nodes=0\n"
+    },
+    {
+      "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.MissingResponseUsage_RemainsUnknownNotZero",
+      "state": "Passed",
+      "durationSeconds": 0.0041889,
+      "message": null,
+      "stackTrace": null,
+      "output": "[CommanderProvider] utc=2026-10-10T19:57:33.6322071Z;model=openai/gpt-6-luna;request=built\n[CommanderProvider] http=sent\n[CommanderProvider] http=200;durationMs=0\n[CommanderProvider] finish=stop\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\n[CommanderProvider] semantic=Answer;nodes=0\n"
+    },
+    {
+      "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.OrdinaryRequests_KeepCompleteModelPayloadBelowConservativeInputBudget(\"Gather 200 Gold with three villagers from Wood.\")",
+      "state": "Passed",
+      "durationSeconds": 0.0092987,
+      "message": null,
+      "stackTrace": null,
+      "output": "[CommanderProvider] utc=2026-10-10T19:57:33.6364536Z;model=openai/gpt-6-luna;request=built\n[CommanderProvider] http=sent\n[CommanderProvider] http=200;durationMs=0\n[CommanderProvider] finish=stop\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\n[CommanderProvider] semantic=Answer;nodes=0\nOffline pack audit: {\"utterance\":\"Gather 200 Gold with three villagers from Wood.\",\"systemUtf8Units\":1432,\"userUtf8Units\":344,\"estimateWithMargin\":2042,\"estimateMethod\":\"UTF8 byte units plus256 message margin; not verified model tokenizer\",\"actualPromptTokens\":null}\n"
+    },
+    {
+      "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.OrdinaryRequests_KeepCompleteModelPayloadBelowConservativeInputBudget(\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\")",
+      "state": "Passed",
+      "durationSeconds": 0.0030369,
+      "message": null,
+      "stackTrace": null,
+      "output": "[CommanderProvider] utc=2026-10-10T19:57:33.6452156Z;model=openai/gpt-6-luna;request=built\n[CommanderProvider] http=sent\n[CommanderProvider] http=200;durationMs=0\n[CommanderProvider] finish=stop\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\n[CommanderProvider] semantic=Answer;nodes=0\nOffline pack audit: {\"utterance\":\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\",\"systemUtf8Units\":2071,\"userUtf8Units\":398,\"estimateWithMargin\":2735,\"estimateMethod\":\"UTF8 byte units plus256 message margin; not verified model tokenizer\",\"actualPromptTokens\":null}\n"
+    },
+    {
+      "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\")",
+      "state": "Passed",
+      "durationSeconds": 0.4023461,
+      "message": null,
+      "stackTrace": null,
+      "output": "[CommanderProvider] utc=2026-10-10T19:57:34.0461660Z;model=openai/gpt-6-luna;request=built\n[CommanderProvider] http=sent\n[CommanderProvider] http=200;durationMs=1\n[CommanderProvider] finish=stop\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\n[CommanderProvider] semantic=Answer;nodes=0\nProduction catalog estimate=3931; actual tokens unknown; Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\n"
+    },
+    {
+      "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"Move all of my Wood villagers to the woodline left of my Town Center.\")",
+      "state": "Passed",
+      "durationSeconds": 0.288834,
+      "message": null,
+      "stackTrace": null,
+      "output": "[CommanderProvider] utc=2026-10-10T19:57:34.3369261Z;model=openai/gpt-6-luna;request=built\n[CommanderProvider] http=sent\n[CommanderProvider] http=200;durationMs=1\n[CommanderProvider] finish=stop\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\n[CommanderProvider] semantic=Answer;nodes=0\nProduction catalog estimate=3867; actual tokens unknown; Move all of my Wood villagers to the woodline left of my Town Center.\n"
+    },
+    {
+      "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.ResponseUsage_IsRetainedAsTypedObservedMetricsIncludingCachedInput",
+      "state": "Passed",
+      "durationSeconds": 0.0091968,
+      "message": null,
+      "stackTrace": null,
+      "output": "[CommanderProvider] utc=2026-10-10T19:57:34.3435167Z;model=openai/gpt-6-luna;request=built\n[CommanderProvider] http=sent\n[CommanderProvider] http=200;durationMs=1\n[CommanderProvider] finish=stop\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\n[CommanderProvider] semantic=Answer;nodes=0\n"
+    },
+    {
+      "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.TooLargeRequiredMeaning_IsRejectedWithoutDispatchingOrExecutingPrefix",
+      "state": "Passed",
+      "durationSeconds": 0.0034341,
+      "message": null,
+      "stackTrace": null,
+      "output": ""
+    }
+  ],
+  "editor": {
+    "compileBeforeRun": {
+      "isCompiling": false,
+      "isDomainReloadPending": false,
+      "readyForTools": true
+    },
+    "preRunConsoleErrors": [],
+    "postRunConsoleErrors": []
+  },
+  "rawTerminalSummary": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "data": {
+      "job_id": "50fa52759f9e4d2c99a9f6928102a955",
+      "status": "succeeded",
+      "mode": "EditMode",
+      "started_unix_ms": 1791662246006,
+      "finished_unix_ms": 1791662254403,
+      "last_update_unix_ms": 1791662254403,
+      "progress": {
+        "completed": 8,
+        "total": 8,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "result": {
+        "mode": "EditMode",
+        "summary": {
+          "total": 8,
+          "passed": 8,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 0.8022549,
+          "resultState": "Passed"
+        }
+      },
+      "error": null
+    }
+  }
+}

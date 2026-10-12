@@ -112,6 +112,28 @@ namespace OpenEmpires
     {
         internal static bool IsStatusQuestion(string input) => Regex.IsMatch(input??"",
             @"\b(status|progress|progressing|doing|waiting|finished|ready|blocked|stuck|request|army)\b",RegexOptions.IgnoreCase|RegexOptions.CultureInvariant);
+        internal static bool IsCausalTaskQuestion(string input,GameSimulation sim,CommanderGoalManager manager)
+        {
+            string query=(input??"").Trim();
+            if(!Regex.IsMatch(query,@"^(why|what happened|how come|what went wrong)\b",RegexOptions.IgnoreCase|RegexOptions.CultureInvariant))return false;
+            if(Regex.IsMatch(query,@"\b(task|order|goal|arriv(?:e|ed|ing)|stop(?:ped)?|staff(?:ed|ing)?|builders?)\b",RegexOptions.IgnoreCase|RegexOptions.CultureInvariant))return true;
+            if(Regex.IsMatch(query,@"^what happened\b",RegexOptions.IgnoreCase|RegexOptions.CultureInvariant)
+                &&ReferencedUnitCount(query).HasValue)return true;
+            var catalog=GameKnowledgeCatalog.Build(sim);
+            return catalog.Units.Any(u=>Mention(query,u.DisplayName)||u.Aliases.Any(a=>Mention(query,a)))
+                ||catalog.Buildings.Any(b=>Mention(query,b.DisplayName)||b.Aliases.Any(a=>Mention(query,a)));
+        }
+        private static int? ReferencedUnitCount(string query)
+        {
+            var match=Regex.Match(query??"",@"\b(?:my|the|our)\s+(?<count>\d{1,3}|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)\s+(?:selected\s+)?units?\b",
+                RegexOptions.IgnoreCase|RegexOptions.CultureInvariant);
+            if(!match.Success)return null;
+            string value=match.Groups["count"].Value.ToLowerInvariant();
+            if(int.TryParse(value,out int number))return number;
+            string[] words={"one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen","twenty"};
+            for(int i=0;i<words.Length;i++)if(value==words[i])return i+1;
+            return null;
+        }
         internal static bool IsInformationQuestion(string input)
         {
             string text=(input??"").Trim();
@@ -127,12 +149,13 @@ namespace OpenEmpires
         internal static CommanderTacticalStatusSnapshot Observe(GameSimulation sim,CommanderGoalManager manager,string query)
         {
             var catalog=GameKnowledgeCatalog.Build(sim);
+            bool builderRole=Regex.IsMatch(query??"",@"\bbuilders?\b",RegexOptions.IgnoreCase|RegexOptions.CultureInvariant);
             var all=manager.ActiveGoals.Concat(manager.ArchivedGoals.Reverse().Take(CommanderGoalManager.MaxArchivedGoals))
                 .Where(g=>g.PlayerId==manager.PlayerId&&ReferenceEquals(g.RuntimeOwner,manager)).ToList();
             bool HasMention(CommanderGoal goal)
             {
                 if(goal is EnsureUnitCountGoal unit)return UnitMention(unit.RequestedUnitType);
-                if(goal is BuildStructureGoal build)return BuildingMention(build.StructureType);
+                if(goal is BuildStructureGoal build)return builderRole||BuildingMention(build.StructureType);
                 if(goal is CommanderCapabilityGoal action)
                     return action.Action.UnitSelector.Kind==CommanderUnitSelectorKind.UnitType&&UnitMention(action.Action.UnitSelector.UnitType)
                         || action.Action.TargetSelector.HasValue&&(action.Action.TargetSelector.Value.Kind==CommanderTargetSelectorKind.UnitType
@@ -152,6 +175,11 @@ namespace OpenEmpires
             // absence is not permission to answer about a different request.
             bool specific=catalog.Units.Any(u=>UnitMention(u.UnitType))||catalog.Buildings.Any(b=>BuildingMention(b.BuildingType));
             var groups=all.GroupBy(g=>(object)g.RequestAuthority??g).Where(g=>!specific||g.Any(HasMention)).ToList();
+            int? genericUnitCount=!specific?ReferencedUnitCount(query):null;
+            if(genericUnitCount.HasValue)
+                groups=groups.Where(g=>g.Any(s=>s is EnsureUnitCountGoal u
+                    ?(u.IsExplicitNewProduction?u.RequiredNewProductionCount:u.TargetTotal)==genericUnitCount.Value
+                    :s is CommanderCapabilityGoal c&&c.Action.UnitSelector.Count==genericUnitCount.Value)).ToList();
             // A count attached to a named subject disambiguates otherwise identical
             // owned requests. This is selection for observation, never authority.
             var counts=Regex.Matches(query??"",@"\b[0-9]{1,3}\b").Cast<Match>()
@@ -185,7 +213,7 @@ namespace OpenEmpires
         {
             string text=Regex.Replace(value??"",@"#\d+|\b(?:goal|building|unit|worker|producer)\s+(?:id\s*)?\d+\b","the resolved entity",RegexOptions.IgnoreCase|RegexOptions.CultureInvariant);
             text=Regex.Replace(text,@"\(\s*-?\d+\s*,\s*-?\d+\s*\)","the resolved location");
-            text=Regex.Replace(text,@"\s+"," ").Trim();return text.Length<=160?text:text.Substring(0,157)+"...";
+            text=Regex.Replace(text,@"\s+"," ").Trim();return text.Length<=160?text:"The full blocker is unavailable within the bounded task-fact projection.";
         }
         private static CommanderTacticalStepSnapshot Step(GameSimulation sim,CommanderGoalManager manager,CommanderGoal goal)
         {
@@ -217,7 +245,26 @@ namespace OpenEmpires
             }
             else if(goal is BuildStructureGoal building)
             { requested=building.Count;label="Build "+building.Count+" "+CommanderIntentCatalog.GetStructureDisplayName(building.StructureType);
-                produced=building.AttributedBuildingIds.Count(id=>sim.BuildingRegistry.GetBuilding(id) is BuildingData b&&b.PlayerId==goal.PlayerId&&!b.IsDestroyed&&!b.IsUnderConstruction); }
+                produced=building.AttributedBuildingIds.Count(id=>sim.BuildingRegistry.GetBuilding(id) is BuildingData b&&b.PlayerId==goal.PlayerId&&!b.IsDestroyed&&!b.IsUnderConstruction);
+                BuildingData acceptedFoundation=sim.BuildingRegistry.GetBuilding(building.PlacedBuildingId);
+                if(!building.IsTerminal&&acceptedFoundation!=null&&acceptedFoundation.PlayerId==goal.PlayerId
+                    &&!acceptedFoundation.IsDestroyed&&acceptedFoundation.IsUnderConstruction
+                    &&building.LastAcceptedBuilderUnitIds.Count>0
+                    &&building.AttributedBuildingIds.Contains(building.PlacedBuildingId))
+                {
+                    bool dead=false,foreign=false,human=false;
+                    foreach(int builderId in building.LastAcceptedBuilderUnitIds)
+                    {
+                        UnitData assigned=sim.UnitRegistry.GetUnit(builderId);
+                        if(assigned==null||assigned.CurrentHealth<=0||assigned.State==UnitState.Dead)dead=true;
+                        else if(assigned.PlayerId!=goal.PlayerId)foreign=true;
+                        else if(manager.ObserveHumanProtection(builderId))human=true;
+                    }
+                    if(dead)reason="An accepted construction builder is dead or missing; no unrelated survivor proves that assignment complete.";
+                    else if(foreign)reason="An accepted construction builder is no longer owned; no foreign unit can satisfy the assignment.";
+                    else if(human){takeover=true;reason="The player took control of an accepted construction builder; that worker remains protected from Commander recovery.";}
+                }
+            }
             else if(goal is AllocateWorkersGoal workers){label="Workers to "+workers.Allocation.Destination.Resource;requested=workers.Allocation.Count??workers.SelectedWorkerIds.Count;takeover|=workers.HumanInterrupted;}
             else if(goal is ResourceAllocationGoal allocation){label="Workers to "+allocation.Resource;requested=allocation.TargetWorkers;}
             else if(goal is ReachAgeGoal age){label="Reach age "+age.TargetAge;requested=age.TargetAge;}

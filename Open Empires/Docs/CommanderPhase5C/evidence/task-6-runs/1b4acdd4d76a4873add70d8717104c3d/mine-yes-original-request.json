@@ -1,0 +1,145 @@
+{
+  "schema": "openempires-phase5c-scenario-turn@1",
+  "run_id": "0ead9f43-e089-41be-b5a5-7932182132f2",
+  "first_failing_stage": null,
+  "first_failure_category": null,
+  "schemaVersion": 1,
+  "caseId": "mine-yes-original-request",
+  "requestId": "runtime:1",
+  "utterance": "Build a gold mine near gold.",
+  "turnIndex": 1,
+  "status": "observed",
+  "evidenceMode": "offline-production-chat-fixture",
+  "providerCalls": 1,
+  "httpAttempts": 0,
+  "fidelity": "fixture-expected-observed",
+  "semanticValid": null,
+  "estimatedInputTokens": null,
+  "actualPromptTokens": null,
+  "actualCompletionTokens": null,
+  "actualCachedTokens": null,
+  "actualReasoningTokens": null,
+  "reportedCost": null,
+  "attemptCosts": [],
+  "packingMs": null,
+  "transportMs": null,
+  "parseMs": null,
+  "admissionMs": null,
+  "firstNativeActionMs": null,
+  "commandCount": 0,
+  "commandTypes": [],
+  "nativeResults": [],
+  "taskStates": [
+    "BuildStructureGoal:Blocked"
+  ],
+  "draftBefore": [
+    "0:structure:Confirmation"
+  ],
+  "draftAfter": [],
+  "draftChanges": [
+    "0:structure:Confirmation"
+  ],
+  "normalizedFields": [
+    {
+      "draftNodeCount": 1,
+      "missingSlots": [
+        "0:structure:Confirmation"
+      ]
+    }
+  ],
+  "admittedFields": [
+    {
+      "type": "BuildStructureGoal",
+      "status": "Pending",
+      "originalUtterance": "Build a gold mine near gold.",
+      "building": "Mine",
+      "count": 1,
+      "anchor": "VisibleResource",
+      "anchorOrdinal": null,
+      "relation": "Near",
+      "resource": "Gold",
+      "source": "GoldMine"
+    }
+  ],
+  "turnHistory": [
+    {
+      "index": 0,
+      "text": "Build a gold mine near gold.",
+      "requestId": "runtime:1",
+      "providerCalls": 1,
+      "semanticValid": true,
+      "semanticOutcome": "Clarify",
+      "normalizedFields": [
+        {
+          "draftNodeCount": 1,
+          "missingSlots": [
+            "0:structure:Confirmation"
+          ]
+        }
+      ],
+      "admittedFields": [],
+      "draftBefore": [],
+      "draftAfter": [
+        "0:structure:Confirmation"
+      ],
+      "draftChanges": [],
+      "approvalRequired": false,
+      "approved": false,
+      "commandTypes": [],
+      "taskStates": [],
+      "uiSubmitMs": 158.913
+    },
+    {
+      "index": 1,
+      "text": "Yes.",
+      "requestId": "runtime:1",
+      "providerCalls": 1,
+      "semanticValid": null,
+      "semanticOutcome": "Request",
+      "normalizedFields": [
+        {
+          "draftNodeCount": 1,
+          "missingSlots": [
+            "0:structure:Confirmation"
+          ]
+        }
+      ],
+      "admittedFields": [
+        {
+          "type": "BuildStructureGoal",
+          "status": "Pending",
+          "originalUtterance": "Build a gold mine near gold.",
+          "building": "Mine",
+          "count": 1,
+          "anchor": "VisibleResource",
+          "anchorOrdinal": null,
+          "relation": "Near",
+          "resource": "Gold",
+          "source": "GoldMine"
+        }
+      ],
+      "draftBefore": [
+        "0:structure:Confirmation"
+      ],
+      "draftAfter": [],
+      "draftChanges": [
+        "0:structure:Confirmation"
+      ],
+      "approvalRequired": false,
+      "approved": true,
+      "commandTypes": [],
+      "taskStates": [
+        "BuildStructureGoal:Pending"
+      ],
+      "uiSubmitMs": 115.197
+    }
+  ],
+  "fixtureKind": "correct-synthetic",
+  "turnText": "Yes.",
+  "uiSubmitMs": 115.197,
+  "semanticOutcome": "Request",
+  "approvalRequired": false,
+  "approved": true,
+  "tickMode": "accelerated-fixture",
+  "ticks": 60
+}

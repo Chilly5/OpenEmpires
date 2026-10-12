@@ -1,0 +1,546 @@
+diff --git a/Docs/CommanderPhase5C/evidence/final-fix-baseline/Assets/Scripts/AI/Commander/Phase5C/CommanderSemanticRequestPack.cs b/Assets/Scripts/AI/Commander/Phase5C/CommanderSemanticRequestPack.cs
+index 6d8cb58..47ebe16 100644
+--- a/Docs/CommanderPhase5C/evidence/final-fix-baseline/Assets/Scripts/AI/Commander/Phase5C/CommanderSemanticRequestPack.cs
++++ b/Assets/Scripts/AI/Commander/Phase5C/CommanderSemanticRequestPack.cs
+@@ -58,7 +58,10 @@ namespace OpenEmpires
+                 .Cast<Match>().Select(m => m.Value), StringComparer.Ordinal);
+             bool Has(params string[] terms) => terms.Any(words.Contains);
+             bool fallbackAll = false;
+-            bool construction = Has("build", "construct", "house", "houses", "mill", "farm", "farms", "barracks", "mine", "yard");
++            bool referencedBuilding = (knowledge?["buildings"] as JArray)?.OfType<JObject>()
++                .Any(row => row["name"]?.Type == JTokenType.String) == true;
++            bool construction = Has("build", "construct", "house", "houses", "mill", "farm", "farms", "barracks", "mine", "yard")
++                || referencedBuilding && Has("place", "erect");
+             bool allocation = Has("gather", "gathering", "food", "wood", "gold", "stone", "berries", "sheep", "farms", "split", "assign", "allocation", "allocate", "put");
+             bool future = Has("next", "future", "births");
+             bool production = Has("train", "produce", "recruit", "new", "more", "spearmen", "archers", "knights");
+@@ -89,9 +92,8 @@ namespace OpenEmpires
+ 
+             string instruction = request.IsReadOnlyQuestion ? ReadOnlyRules : CommonRules + Vocabulary(selected);
+             // Contract retrieval only: quantities on future units must not imply repeated buildings.
+-            bool repeated = Has("split", "partition") || construction && (Has("third") || Regex.IsMatch(search,
+-                @"\b(?:build|construct|make)\s+(?:two|three|four|five|six|seven|eight|nine|ten|[2-9]|1[0-9]|20)\b",
+-                RegexOptions.IgnoreCase));
++            bool repeated = Has("split", "partition") || construction && (Has("third")
++                || HasRepeatedReferencedBuilding(search, knowledge));
+             bool composedWoodline = Has("all") && Has("wood", "woodline", "trees", "tree")
+                 && Has("west", "western", "left") && Has("town", "center", "tc");
+             if (repeated && !request.IsReadOnlyQuestion) instruction += DynamicVocabulary();
+@@ -139,6 +141,23 @@ namespace OpenEmpires
+             }
+         }
+ 
++        private static bool HasRepeatedReferencedBuilding(string search, JObject knowledge)
++        {
++            if (!(knowledge?["buildings"] is JArray buildings)) return false;
++            const string quantity = @"\b(?:two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|[2-9]|1[0-9]|20)\s+";
++            foreach (JObject row in buildings.OfType<JObject>())
++            {
++                string name = (string)row["name"];
++                if (string.IsNullOrWhiteSpace(name)) continue;
++                string normalized = Regex.Replace(name.Trim(), @"[^\p{L}\p{N}]+", " ");
++                string phrase = string.Join(@"\s+", normalized.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
++                    .Select(Regex.Escape));
++                if (Regex.IsMatch(search, quantity + @"(?:[\p{L}]+\s+){0,2}" + phrase + @"(?:s|es)?\b",
++                    RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)) return true;
++            }
++            return false;
++        }
++
+         private static bool StripOptionalHints(JObject knowledge)
+         {
+             if (knowledge == null) return false;
+@@ -212,7 +231,7 @@ namespace OpenEmpires
+                 switch (type)
+                 {
+                     case CommanderSemanticNodeType.BuildStructure:
+-                        text.Append("BuildStructure{structure:canonical,count:1..20,builders:{state:Eligible(default)|IdleOnly(strict),count:1},placement?}. placement TC/Barracks:{anchor:MyTownCenter|MyBarracks,relation:Near|MapWest|MapEast,clearGapTiles?:1..20,ordinal?:1..8 TC-only}; resource:{anchor:VisibleResource(default)|WorkedResource(explicit),relation:Near,resource,sourceKind?}. Near gap1,no resource ordinal. "); break;
++                        text.Append("BuildStructure{structure:canonical,count:1,builders:{state:Eligible(default)|IdleOnly(strict),count:1},placement?}. Placed count1; repeated placed=>DynamicPlan; unplaced count:1..20. placement TC/Barracks:{anchor:MyTownCenter|MyBarracks,relation:Near|MapWest|MapEast,clearGapTiles?:1..20,ordinal?:1..8 TC-only}; resource:{anchor:VisibleResource(default)|WorkedResource(explicit),relation:Near,resource,sourceKind?}. Near gap1,no resource ordinal. "); break;
+                     case CommanderSemanticNodeType.SetResourceAllocation:
+                         text.Append("SetResourceAllocation{resource,count:0..200} sets worker target; distinct from AllocateWorkers. "); break;
+                     case CommanderSemanticNodeType.AllocateWorkers:
+@@ -258,7 +277,7 @@ namespace OpenEmpires
+ 
+         private static string DynamicVocabulary()
+         {
+-            var text = new StringBuilder("DynamicPlan for repeated placed construction/shared workers: {outcome:DynamicPlan,version:1,nodes:[{id:symbol,mechanic,parameters:{},inputs:{},dependsOn:[]}]}. One shared worker selection, partition disjointly; exact producer set for explicitly new buildings. Registry fields below use name:type; ? optional; input refs also in dependsOn. ");
++            var text = new StringBuilder("DynamicPlan for repeated placed construction/shared workers: {outcome:DynamicPlan,version:1,nodes:[{id,mechanic,parameters:{},inputs:{},dependsOn:[]}]}. One shared worker selection; partition disjointly; exact producer set for explicitly new buildings. Registry name:type, ? optional; input refs in dependsOn. ");
+             foreach (var primitive in CommanderDynamicPrimitiveRegistry.All)
+             {
+                 text.Append(primitive.Id).Append(" p[");
+@@ -267,7 +286,7 @@ namespace OpenEmpires
+                 foreach (var input in primitive.Inputs) text.Append(input.Role).Append(':').Append(input.Accepts).Append(input.Required ? ";" : "?;");
+                 text.Append("] ->").Append(primitive.Result).Append('.');
+             }
+-            return text.Append(" Max12 nodes,4 refs/node,depth5,total counts200. Canonical IDs from context only; relation Near|MapWest|MapEast, Near gap1; resource mode Visible|Worked. Simple known requests keep Request fast path. ").ToString();
++            return text.Append(" Max12 nodes,4 refs/node,depth5,total counts200. Canonical context IDs only; Near|MapWest|MapEast gap1; resource Visible|Worked. Simple known requests keep Request fast path. ").ToString();
+         }
+ 
+         private const string ComposedWoodlineVocabulary =
+
+diff --git a/Docs/CommanderPhase5C/evidence/final-fix-baseline/Assets/Scripts/AI/Commander/Phase4A/OpenRouterCommanderProvider.cs b/Assets/Scripts/AI/Commander/Phase4A/OpenRouterCommanderProvider.cs
+index 8772a9f..4f928f9 100644
+--- a/Docs/CommanderPhase5C/evidence/final-fix-baseline/Assets/Scripts/AI/Commander/Phase4A/OpenRouterCommanderProvider.cs
++++ b/Assets/Scripts/AI/Commander/Phase4A/OpenRouterCommanderProvider.cs
+@@ -30,7 +30,7 @@ namespace OpenEmpires
+             + "The currently executable node forms are "
+             + "{\"type\":\"EnsureUnitCount\",\"unit\":\"Villager|Spearman|Archer|Scout|Knight\",\"count\":integer 0..200,\"quantityMode\":\"TargetTotal|New\" optional}, "
+             + "EnsureUnitCount defaults to TargetTotal: owned and matching queued units count toward that total. Explicit 'new'/'more'/'additional' uses quantityMode New, count means exactly that many new request-attributed units regardless of old units or human queues. A resultFromNode unit action consumes an exact newly produced set, never existing/human-produced units; its count must equal the game-side production forecast. Do not widen a total goal to new production to repair a mismatch; Clarify or preserve the original request for deterministic preflight rejection. "
+-            + "{\"type\":\"BuildStructure\",\"structure\":\"exact name from detached structureCapabilities\",\"count\":integer 1..20,\"builders\":{\"state\":\"Eligible|IdleOnly\",\"count\":1},\"placement\":optional one of the following DISJOINT forms}. "
++            + "{\"type\":\"BuildStructure\",\"structure\":\"exact name from detached structureCapabilities\",\"count\":1 when placement is present, otherwise integer 1..20,\"builders\":{\"state\":\"Eligible|IdleOnly\",\"count\":1},\"placement\":optional one of the following DISJOINT forms}. Repeated placed construction uses DynamicPlan. "
+             + "Town Center placement: {\"anchor\":\"MyTownCenter\",\"relation\":\"MapWest|MapEast|Near\",\"ordinal\":optional integer 1..8,\"clearGapTiles\":optional integer 1..20; Near permits only 1}. Barracks placement: {\"anchor\":\"MyBarracks\",\"relation\":\"MapWest|MapEast|Near\",\"clearGapTiles\":optional integer 1..20; Near permits only 1}. Resource placement: {\"anchor\":\"VisibleResource|WorkedResource\",\"relation\":\"Near\",\"resource\":\"Food|Wood|Gold|Stone\",\"sourceKind\":optional \"Any|Berries|Tree|GoldMine|StoneMine|Farm|Sheep\"}. Resource placement NEVER contains ordinal. Ordinal is NOT a default field and is forbidden outside MyTownCenter. For resource Near placement omit clearGapTiles unless the supported value 1 is explicitly needed. Never carry fields from another placement form. "
+             + "Every Request BuildStructure MUST declare builders. Eligible is the game's ordinary eligible-builder policy when the player did not restrict builders; IdleOnly is a strict idle-only selector, not a preference. Builder count is separate from structure count. This ordinary path supports exactly one builder; another explicit builder quantity cannot be dropped or defaulted to one: Clarify or Unsupported if no existing typed form can preserve it. Never emit Eligible for an explicit idle-only restriction. "
+             + "Optional node constraints use exact objects: {\"type\":\"PreferredWorkers\",\"mode\":\"IdleOnly\"}, {\"type\":\"ProtectedResource\",\"resource\":\"Gold\",\"amount\":optional integer 0..200}, {\"type\":\"NoConstruction\"}, {\"type\":\"MaximumQueue\",\"amount\":integer 1..8}, {\"type\":\"ResourceSource\",\"resource\":\"Food\",\"sourceKind\":\"Sheep\"}. Preserve explicitly requested restrictions on every affected node and prerequisite; if essential restrictions are unrepresentable, clarify instead of omitting them. Builders IdleOnly is normalized game-side to PreferredWorkers IdleOnly; any duplicated constraint must agree. DynamicPlan instead uses its existing top-level constraint vocabulary. "
+@@ -113,6 +113,7 @@ namespace OpenEmpires
+ 
+         private sealed class SemanticRun
+         {
++            public CommanderTurnObservationStore.CommanderTurnObservation Observation;
+             public readonly List<CommanderProviderAttempt> Attempts = new List<CommanderProviderAttempt>();
+             public string Trace = string.Empty;
+             public CommanderProviderUsage Usage = CommanderProviderUsage.Unknown;
+@@ -242,7 +243,7 @@ namespace OpenEmpires
+         {
+             if (request == null) throw new ArgumentNullException(nameof(request));
+             token.ThrowIfCancellationRequested();
+-            var run = new SemanticRun();
++            var run = new SemanticRun { Observation = request.Observation };
+             lock (semanticGate) activeSemanticRun = run;
+             Publish(run);
+             PublishEstimate(run, null, null);
+@@ -253,7 +254,12 @@ namespace OpenEmpires
+             if (string.IsNullOrWhiteSpace(request.PlayerMessage))
+                 return CommanderSemanticResult.ProviderRejected("A Commander request is required.");
+ 
+-            if (!CommanderSemanticRequestPack.TryBuild(request, Model, semanticMaxTokens, out var packed, out string limitReason))
++            var packingClock = System.Diagnostics.Stopwatch.StartNew();
++            bool packingSucceeded = CommanderSemanticRequestPack.TryBuild(request, Model,
++                semanticMaxTokens, out var packed, out string limitReason);
++            packingClock.Stop();
++            run.Observation?.Timing("packingMs", packingClock.ElapsedMilliseconds);
++            if (!packingSucceeded)
+             {
+                 PublishEstimate(run, packed?.EstimatedInputTokens, packed?.SectionEstimates);
+                 return CommanderSemanticResult.ProviderRejected(limitReason);
+@@ -266,7 +272,10 @@ namespace OpenEmpires
+                 string text = UnwrapJsonFence(await PostAndExtractTextAsync(body, token,
+                     CommanderDynamicPlan.MaximumCharacters, "initial", packed.EstimatedInputTokens,
+                     packed.SectionEstimates, run).ConfigureAwait(false));
++                var parseClock = System.Diagnostics.Stopwatch.StartNew();
+                 CommanderSemanticResult result = CommanderSemanticJson.ParseProviderResponse(text);
++                parseClock.Stop();
++                run.Observation?.AddTiming("parseMs", parseClock.ElapsedMilliseconds);
+                 MarkLastSemanticAttempt(run, result.IsValid ? "semantic-valid" : "schema-invalid");
+                 if (!result.IsValid) Trace("schema=" + result.SchemaDiagnostic, run);
+                 if (!result.IsValid && CommanderSemanticSchemaRepair.TryCreateTemplate(text,
+@@ -287,7 +296,10 @@ namespace OpenEmpires
+                         repairSections, run).ConfigureAwait(false));
+                     run.Trace = initialTrace + "repair-attempt:\n" + run.Trace;
+                     Publish(run);
++                    parseClock.Restart();
+                     result = CommanderSemanticJson.ParseProviderResponse(repairedText);
++                    parseClock.Stop();
++                    run.Observation?.AddTiming("parseMs", parseClock.ElapsedMilliseconds);
+                     text = repairedText;
+                     if (!result.IsValid) Trace("repair-schema=" + result.SchemaDiagnostic, run);
+                     if (!result.IsValid || !CommanderSemanticSchemaRepair.MatchesTemplate(
+@@ -380,6 +392,7 @@ namespace OpenEmpires
+                     if (index >= 0) recentSemanticAttempts[index] = updated;
+                 }
+                 Publish(run);
++                run.Observation?.ObserveAttempt(run.Attempts.Count - 1, updated);
+             }
+         }
+ 
+@@ -418,6 +431,7 @@ namespace OpenEmpires
+                 deadline.CancelAfter(timeout);
+                 Trace("http=sent", run);
+                 CommanderHttpResponse response;
++                var transportClock = System.Diagnostics.Stopwatch.StartNew();
+                 try { response = await transport.PostJsonAsync(new Uri(Endpoint),
+                     body, new Dictionary<string, string>
+                     {
+@@ -441,6 +455,11 @@ namespace OpenEmpires
+                     Trace("http=network-failure;durationMs=" + elapsed.ElapsedMilliseconds, run);
+                     throw new OpenRouterFailure("Could not reach Commander AI. Check your connection.");
+                 }
++                finally
++                {
++                    transportClock.Stop();
++                    run?.Observation?.AddTiming("transportMs", transportClock.ElapsedMilliseconds);
++                }
+                 deadline.Token.ThrowIfCancellationRequested();
+                 if (response == null)
+                 {
+@@ -578,6 +597,7 @@ namespace OpenEmpires
+                         if (recentSemanticAttempts.Count > 32) recentSemanticAttempts.RemoveAt(0);
+                     }
+                     Publish(run);
++                    run.Observation?.ObserveAttempt(run.Attempts.Count - 1, attempt);
+                 }
+             }
+         }
+
+diff --git a/Docs/CommanderPhase5C/evidence/final-fix-baseline/Assets/Scripts/AI/Commander/CommanderPlanner.Garrison.cs b/Assets/Scripts/AI/Commander/CommanderPlanner.Garrison.cs
+index 124696e..934daee 100644
+--- a/Docs/CommanderPhase5C/evidence/final-fix-baseline/Assets/Scripts/AI/Commander/CommanderPlanner.Garrison.cs
++++ b/Assets/Scripts/AI/Commander/CommanderPlanner.Garrison.cs
+@@ -148,7 +148,11 @@ namespace OpenEmpires
+             string result = $"Garrisoned {housed}/{requested} in the exact owned {shelter.Type}; protected {goal.GarrisonProtectedCount}; unaccommodated {Math.Max(0, remainder)}.";
+             if (housed == (goal.GarrisonIssuedIds?.Length ?? 0)
+                 && simulation.CurrentTick > goal.CommandIssuedSimulationTick)
+-                return new CommanderPlan(CommanderGoalStatus.Completed, result, housed, 0);
++            {
++                goal.TerminalBlocked = housed != requested;
++                return new CommanderPlan(housed == requested ? CommanderGoalStatus.Completed : CommanderGoalStatus.Blocked,
++                    result, housed, 0);
++            }
+             if (moving && remainingDistance < goal.GarrisonRemainingDistance)
+             {
+                 goal.GarrisonRemainingDistance = remainingDistance;
+
+diff --git a/Docs/CommanderPhase5C/evidence/final-fix-baseline/Assets/Scripts/AI/Commander/CommanderGoal.cs b/Assets/Scripts/AI/Commander/CommanderGoal.cs
+index c27a245..6cda7ad 100644
+--- a/Docs/CommanderPhase5C/evidence/final-fix-baseline/Assets/Scripts/AI/Commander/CommanderGoal.cs
++++ b/Assets/Scripts/AI/Commander/CommanderGoal.cs
+@@ -122,10 +122,14 @@ namespace OpenEmpires
+         internal int LastConstructionRecoveryTick { get; set; } = int.MinValue / 2;
+         internal int BlockedSinceTick { get; set; } = -1;
+         internal int NextBlockedRetryTick { get; set; }
++        // A partial exact native action can be permanently blocked without entering the
++        // ordinary recoverable blocked-retry loop or misreporting player success.
++        internal bool TerminalBlocked { get; set; }
+ 
+         public bool IsTerminal => Status == CommanderGoalStatus.Completed
+             || Status == CommanderGoalStatus.Failed
+-            || Status == CommanderGoalStatus.Cancelled;
++            || Status == CommanderGoalStatus.Cancelled
++            || Status == CommanderGoalStatus.Blocked && TerminalBlocked;
+         public IReadOnlyList<CommanderGoal> Dependencies => dependencies.AsReadOnly();
+ 
+         protected CommanderGoal(int playerId, CommanderGoalType goalType, int maxDurationTicks, int priority = 0)
+
+diff --git a/Docs/CommanderPhase5C/evidence/final-fix-baseline/Assets/Scripts/AI/Commander/Phase5B/CommanderTaskBoardProjection.cs b/Assets/Scripts/AI/Commander/Phase5B/CommanderTaskBoardProjection.cs
+index 23f3fee..207b49d 100644
+--- a/Docs/CommanderPhase5C/evidence/final-fix-baseline/Assets/Scripts/AI/Commander/Phase5B/CommanderTaskBoardProjection.cs
++++ b/Assets/Scripts/AI/Commander/Phase5B/CommanderTaskBoardProjection.cs
+@@ -316,7 +316,9 @@ namespace OpenEmpires
+                     foreach (int id in goal.GarrisonIssuedIds ?? Array.Empty<int>())
+                         if (goal.GarrisonShelter.GarrisonedUnitIds.Contains(id)
+                             && simulation.UnitRegistry.GetGarrisonedUnit(id) != null) housed++;
+-                return "Native shelter entries: " + housed + " / " + goal.GarrisonCandidateIds.Length
++                int requested = goal.Action.UnitSelector.AllMatching
++                    ? goal.GarrisonCandidateIds.Length : goal.Action.UnitSelector.Count;
++                return "Native shelter entries: " + housed + " / " + requested
+                     + "; protected: " + goal.GarrisonProtectedCount
+                     + "; unaccommodated: " + goal.GarrisonUnaccommodatedCount;
+             }
+
+diff --git a/Docs/CommanderPhase5C/evidence/final-fix-baseline/Assets/Scripts/AI/Commander/Phase5B/CommanderChatUI.TaskBoard.cs b/Assets/Scripts/AI/Commander/Phase5B/CommanderChatUI.TaskBoard.cs
+index f5f0b9a..34106db 100644
+--- a/Docs/CommanderPhase5C/evidence/final-fix-baseline/Assets/Scripts/AI/Commander/Phase5B/CommanderChatUI.TaskBoard.cs
++++ b/Assets/Scripts/AI/Commander/Phase5B/CommanderChatUI.TaskBoard.cs
+@@ -67,6 +67,10 @@ namespace OpenEmpires
+             if (taskBadgeText == null || taskBoardContent == null) return;
+             var snapshot = CommanderTaskBoardProjection.Capture(semanticGoalManager,
+                 strategicPipeline?.StrategicPlanner, runtimeGeneration);
++            if (localObservationStore != null)
++                foreach (var card in snapshot.Cards)
++                    if (card.RequestId > 0)
++                        localObservationStore.ObserveTaskCard(card.RequestId, card.Generation, card.Status);
+             RefreshCurrentRequestStatus(snapshot);
+             taskBadgeText.text = snapshot.ActiveCount + " active task" + (snapshot.ActiveCount == 1 ? "" : "s");
+             taskBadgeText.gameObject.SetActive(snapshot.ActiveCount > 0);
+@@ -89,7 +93,7 @@ namespace OpenEmpires
+             if (snapshot.Cards.Count > snapshot.ActiveCount)
+             {
+                 var history = CompactButton(taskBoardContent, "HistoryToggle",
+-                    (taskHistoryExpanded ? "▾ Hide" : "▸ Show") + " completed history ("
++                    (taskHistoryExpanded ? "▾ Hide" : "▸ Show") + " task history ("
+                         + (snapshot.Cards.Count - snapshot.ActiveCount) + ")", () =>
+                     { taskHistoryExpanded = !taskHistoryExpanded; taskBoardFingerprint = null; RefreshTaskBoard(); });
+                 PanelElement(history.gameObject, 32);
+
+diff --git a/Docs/CommanderPhase5C/evidence/final-fix-baseline/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs b/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs
+index 8e1452a..2f72764 100644
+--- a/Docs/CommanderPhase5C/evidence/final-fix-baseline/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs
++++ b/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.cs
+@@ -261,6 +261,7 @@ namespace OpenEmpires
+                 return null;
+             }
+             long presentationTurn = BeginPresentationTurn();
++            long submissionStartedAt = System.Diagnostics.Stopwatch.GetTimestamp();
+             if (HandlePendingControl(trimmed)) return null;
+             if (HandleActionPlanControl(trimmed)) return null;
+             if (pendingClarification == null
+@@ -327,7 +328,8 @@ namespace OpenEmpires
+             try
+             {
+                 if (semanticProvider != null)
+-                    return await SubmitSemanticTacticalAsync(trimmed, generation, presentationTurn);
++                    return await SubmitSemanticTacticalAsync(trimmed, generation, presentationTurn,
++                        submissionStartedAt);
+ 
+                 CommanderTextRoute route = intentRouter.Classify(trimmed);
+                 if (route == CommanderTextRoute.Rejected)
+@@ -440,7 +442,7 @@ namespace OpenEmpires
+         }
+ 
+         private async Task<CommanderAIChatSubmission> SubmitSemanticTacticalAsync(
+-            string message, int generation, long presentationTurn)
++            string message, int generation, long presentationTurn, long submissionStartedAt)
+         {
+             ICommanderSemanticProvider provider = semanticProvider;
+             CommanderPendingClarification capturedPending = pendingClarification;
+@@ -466,6 +468,9 @@ namespace OpenEmpires
+             }
+ 
+             int requestRevision = ++semanticRequestRevision;
++            CommanderTurnObservationStore.CommanderTurnObservation observation = null;
++            System.Diagnostics.Stopwatch admissionClock = null;
++            string observationStage = "rejected", observationOutcome = "Unknown", observationStatus = "Rejected";
+             using (var request = CancellationTokenSource.CreateLinkedTokenSource(lifetime.Token))
+             {
+                 activeSemanticRequest = request;
+@@ -481,6 +486,14 @@ namespace OpenEmpires
+                         && ReferenceEquals(semanticProvider, provider);
+                     var requestTicket = capturedPending?.RequestTicket ?? manager.BeginSemanticRequest(message, generation, IsCurrentScope);
+                     LastSubmittedSemanticRequestId = requestTicket?.Id;
++                    if (requestTicket != null)
++                    {
++                        observation = LocalObservationStore.Begin(requestTicket.Id, presentationTurn,
++                            requestRevision, generation, provider is OpenRouterCommanderProvider openRouter
++                                && openRouter.UsesGateway ? "WebGateway" : "WindowsDirect");
++                        observation?.Timing("uiSubmissionMs", (System.Diagnostics.Stopwatch.GetTimestamp()
++                            - submissionStartedAt) * 1000 / System.Diagnostics.Stopwatch.Frequency);
++                    }
+                     if (capturedPending != null && (!ReferenceEquals(pendingClarification, capturedPending)
+                         || request.IsCancellationRequested || requestTicket == null
+                         || capturedPending.OriginalText != requestTicket.OriginalInput
+@@ -491,8 +504,11 @@ namespace OpenEmpires
+                         return null;
+                     }
+                     semanticStage = "context-projection";
++                    var contextClock = System.Diagnostics.Stopwatch.StartNew();
+                     CommanderContext context = new CommanderContextBuilder().Build(simulation, manager,
+                         message, capturedPending?.GraphDraft?.IsNameConfirmation == true ? null : capturedPending?.Serialize());
++                    contextClock.Stop();
++                    observation?.Timing("contextMs", contextClock.ElapsedMilliseconds);
+                     if (context.PlayerId != owner)
+                     {
+                         AppendLine("Commander", "Commander ownership changed; ask again.");
+@@ -514,9 +530,11 @@ namespace OpenEmpires
+                     semanticStage = localCount != null || localGraph != null ? "local-continuation" : "provider-request";
+                     if (localCount == null && localGraph == null)
+                         Debug.Log("[Commander] context=projected;provider-request=started");
++                    var providerClock = System.Diagnostics.Stopwatch.StartNew();
+                     Task<CommanderSemanticResult> translation = localCount == null && localGraph == null
+                         ? RequestSemanticTranslation(provider, new CommanderSemanticProviderRequest(message, context,
+-                            semanticMemoryAtTurnStart, questionFacts, capturedPending), request.Token)
++                            semanticMemoryAtTurnStart, questionFacts, capturedPending,
++                            null, false, observation), request.Token)
+                         : Task.FromResult(localCount ?? localGraph);
+                     // A provider may ignore cancellation. Keep the host usable and observe
+                     // any late fault without ever admitting its late response.
+@@ -528,6 +546,10 @@ namespace OpenEmpires
+                         Task.Delay(semanticProviderTimeout, request.Token));
+                     if (finished != translation)
+                     {
++                        providerClock.Stop();
++                        observation?.Timing("providerMs", providerClock.ElapsedMilliseconds);
++                        observationStage = "timed-out";
++                        observationStatus = "Failed";
+                         request.Cancel();
+                         if (this != null && generation == runtimeGeneration
+                             && semanticRequestRevision == requestRevision && !lifetime.IsCancellationRequested)
+@@ -538,7 +560,17 @@ namespace OpenEmpires
+                         return null;
+                     }
+                     CommanderSemanticResult result = await translation;
++                    providerClock.Stop();
++                    observation?.Timing("providerMs", providerClock.ElapsedMilliseconds);
+                     semanticStage = "semantic-response";
++                    if (result != null && result.IsValid)
++                    {
++                        observationOutcome = result.Outcome.ToString();
++                        observationStage = "parsed";
++                        observationStatus = result.Outcome == CommanderSemanticOutcome.Clarify
++                            ? "Waiting" : result.Outcome == CommanderSemanticOutcome.Answer
++                                ? "Completed" : "Rejected";
++                    }
+                     if (this == null || generation != runtimeGeneration
+                         || semanticRequestRevision != requestRevision
+                         || !ReferenceEquals(semanticProvider, provider)
+@@ -547,7 +579,11 @@ namespace OpenEmpires
+                         || !ReferenceEquals(semanticDispatcher, dispatcher)
+                         || Conversation == null || Conversation.PlayerId != owner
+                         || request.IsCancellationRequested || lifetime.IsCancellationRequested)
++                    {
++                        observationStage = "cancelled";
++                        observationStatus = "Cancelled";
+                         return null;
++                    }
+ 
+                     if (result == null || !result.IsValid)
+                     {
+@@ -558,18 +594,24 @@ namespace OpenEmpires
+                         return null;
+                     }
+                     manager.TraceRequest(requestTicket, "interpreted-" + result.Outcome);
++                    admissionClock = System.Diagnostics.Stopwatch.StartNew();
++                    if (result.Outcome == CommanderSemanticOutcome.Request
++                        || result.Outcome == CommanderSemanticOutcome.DynamicPlan)
++                        observationStage = "admission";
+                     if (!string.IsNullOrEmpty(questionFacts)
+                         && (result.Outcome == CommanderSemanticOutcome.Request || result.Outcome == CommanderSemanticOutcome.DynamicPlan))
+                     {
+                         AppendLine("Commander", "You asked for information; no gameplay order was submitted.");
+                         Debug.Log("[Commander] question=read-only;executable-response=rejected");
++                        observationStage = "rejected";
+                         return null;
+                     }
+                     if (result.Outcome != CommanderSemanticOutcome.Request
+                         && result.Outcome != CommanderSemanticOutcome.DynamicPlan)
+                     {
+                         if (HandleClarificationResult(result, capturedPending, message, generation, requestTicket,
+-                            ReferenceEquals(result, localGraph))) return null;
++                            ReferenceEquals(result, localGraph)))
++                        { observationStatus = "Waiting"; return null; }
+                         if (result.Outcome == CommanderSemanticOutcome.Clarify)
+                             Conversation.SemanticMemory.RecordClarification(result.SafeExplanation);
+                         PublishLatestRequestState(presentationTurn, result.Outcome == CommanderSemanticOutcome.Clarify
+@@ -580,12 +622,15 @@ namespace OpenEmpires
+                         return null;
+                     }
+                     if (HandleClarificationResult(result, capturedPending, message, generation, requestTicket,
+-                        ReferenceEquals(result, localGraph))) return null;
++                        ReferenceEquals(result, localGraph)))
++                    { observationStatus = "Waiting"; return null; }
+                     if (result.Outcome == CommanderSemanticOutcome.DynamicPlan)
+                     {
+                         semanticStage = "dynamic-admission";
+                         pendingActionPlan = manager.PrepareActionPlan(result, requestTicket.OriginalInput, generation,
+                             strategicPipeline, IsCurrentScope, requestTicket);
++                        observationStage = "awaiting-approval";
++                        observationStatus = "AwaitingApproval";
+                         PublishLatestRequestState(presentationTurn, "Awaiting approval", requestTicket.OriginalInput);
+                         AppendLine("Commander", pendingActionPlan.Preview);
+                         UpdateStrategicControls();
+@@ -608,6 +653,8 @@ namespace OpenEmpires
+                         }
+                         pendingActionPlan = manager.PrepareActionPlan(result, requestTicket.OriginalInput, generation,
+                             strategicPipeline, IsCurrentScope, requestTicket);
++                        observationStage = "awaiting-approval";
++                        observationStatus = "AwaitingApproval";
+                         PublishLatestRequestState(presentationTurn, "Awaiting approval", requestTicket.OriginalInput);
+                         AppendLine("Commander", pendingActionPlan.Preview);
+                         UpdateStrategicControls();
+@@ -666,6 +713,8 @@ namespace OpenEmpires
+                         pendingStrategicHadNoPlan = sourceCount == 0;
+                         pendingStrategicPresentationTurn = presentationTurn;
+                         PublishLatestRequestState(presentationTurn, "Awaiting approval", message);
++                        observationStage = "awaiting-approval";
++                        observationStatus = "AwaitingApproval";
+                         AppendLine("Commander", StrategicPreview(pending.ObjectiveType)
+                             + (pendingAdaptationProposal == null
+                                 ? " No plan started. Approve normally, or explicitly confirm as your command (may replace AI plans, never direct-player plans)."
+@@ -696,6 +745,8 @@ namespace OpenEmpires
+                     var chatSubmission = new CommanderAIChatSubmission(providerResult,
+                         interpretation, submission, display);
+                     LatestSubmission = chatSubmission;
++                    observationStage = submission?.CreatedGoal == true ? "admitted" : "rejected";
++                    observationStatus = submission?.CreatedGoal == true ? "Accepted" : "Failed";
+                     PublishLatestRequestState(presentationTurn, submission?.CreatedGoal == true ? "Accepted" : "Failed", display);
+                     Debug.Log("[Commander] intent=admitted;goal-submitted=" + (submission?.CreatedGoal == true));
+                     if (submission?.CreatedGoal == true)
+@@ -706,6 +757,8 @@ namespace OpenEmpires
+                 }
+                 catch (System.OperationCanceledException)
+                 {
++                    observationStage = request.IsCancellationRequested ? "timed-out" : "cancelled";
++                    observationStatus = "Failed";
+                     if (this != null && generation == runtimeGeneration
+                         && semanticRequestRevision == requestRevision && !lifetime.IsCancellationRequested)
+                     {
+@@ -716,6 +769,8 @@ namespace OpenEmpires
+                 }
+                 catch (System.Exception error)
+                 {
++                    observationStage = "rejected";
++                    observationStatus = "Failed";
+                     Debug.Log("[Commander] failed-stage=" + semanticStage + ";exception=" + error.GetType().Name);
+                     if (this != null && generation == runtimeGeneration
+                         && semanticRequestRevision == requestRevision
+@@ -730,6 +785,12 @@ namespace OpenEmpires
+                 }
+                 finally
+                 {
++                    if (admissionClock != null)
++                    {
++                        admissionClock.Stop();
++                        observation?.Timing("admissionMs", admissionClock.ElapsedMilliseconds);
++                    }
++                    observation?.Mark(observationStage, observationOutcome, observationStatus);
+                     if (ReferenceEquals(activeSemanticRequest, request)) activeSemanticRequest = null;
+                 }
+             }
+
+diff --git a/Docs/CommanderPhase5C/evidence/final-fix-baseline/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Presentation.cs b/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Presentation.cs
+index 2eb7471..1d2feac 100644
+--- a/Docs/CommanderPhase5C/evidence/final-fix-baseline/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Presentation.cs
++++ b/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Presentation.cs
+@@ -428,7 +428,7 @@ namespace OpenEmpires
+             textSettings.gameObject.SetActive(false);
+             settingsMenu = UIObject("SettingsMenu", compactCommander.transform);
+             settingsMenu.AddComponent<Image>().color = new Color(.09f,.11f,.13f,1f);
+-            PanelElement(settingsMenu, 192);
++            PanelElement(settingsMenu, 274);
+             var settingsLayout = settingsMenu.AddComponent<VerticalLayoutGroup>();
+             settingsLayout.padding = new RectOffset(6,6,6,6); settingsLayout.spacing = 5;
+             settingsLayout.childControlWidth = settingsLayout.childControlHeight = true;
+@@ -441,6 +441,14 @@ namespace OpenEmpires
+             {CloseSettingsMenu();ShowSemanticSetup();}).gameObject,32);
+             PanelElement(CompactButton(settingsMenu.transform,"CaptureEvidence","Capture UI evidence",()=>
+             {CloseSettingsMenu();RequestEvidenceScreenshot();}).gameObject,32);
++            localObservationToggle = CompactButton(settingsMenu.transform, "LocalMetricsToggle",
++                "Record local metrics: Off", ToggleLocalObservationRecording);
++            PanelElement(localObservationToggle.gameObject, 32);
++            PanelElement(CompactButton(settingsMenu.transform, "ExportLocalMetrics",
++                "Export local metrics", ExportLocalObservations).gameObject, 32);
++            var observationNote = Text("LocalMetricsNote", settingsMenu.transform,
++                "Opt-in, local only. No upload or automatic orders.", 10, TextAlignmentOptions.Left);
++            observationNote.richText = false; PanelElement(observationNote.gameObject, 28);
+             PanelElement(CompactButton(settingsMenu.transform,"CloseSettings","Close",CloseSettingsMenu).gameObject,32);
+             settingsMenu.SetActive(false);
+             compactStatus = Text("Status",compactCommander.transform,"Preparing Commander…",12,TextAlignmentOptions.Left);
+
+diff --git a/Docs/CommanderPhase5C/evidence/final-fix-baseline/Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticProvider.cs b/Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticProvider.cs
+index d2a0365..a8f71e0 100644
+--- a/Docs/CommanderPhase5C/evidence/final-fix-baseline/Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticProvider.cs
++++ b/Assets/Scripts/AI/Commander/Phase4E/CommanderSemanticProvider.cs
+@@ -30,13 +30,24 @@ namespace OpenEmpires
+         public bool IsReadOnlyQuestion { get; }
+         // Game-owned retrieval metadata, retained independently of optional model-pack rows.
+         internal string UnresolvedNameInterpretations { get; }
++        // In-memory observation handle only: never included in the serialized model request.
++        internal CommanderTurnObservationStore.CommanderTurnObservation Observation { get; }
+ 
+         public CommanderSemanticProviderRequest(string playerMessage, CommanderContext context,
+             IReadOnlyList<CommanderSemanticMemoryEntry> semanticMemory = null, string questionFacts = null,
+             CommanderPendingClarification pendingClarification = null,
+             CommanderTacticalStatusSnapshot tacticalStatus = null, bool readOnlyQuestion = false)
++            : this(playerMessage, context, semanticMemory, questionFacts, pendingClarification,
++                tacticalStatus, readOnlyQuestion, null) { }
++
++        internal CommanderSemanticProviderRequest(string playerMessage, CommanderContext context,
++            IReadOnlyList<CommanderSemanticMemoryEntry> semanticMemory, string questionFacts,
++            CommanderPendingClarification pendingClarification,
++            CommanderTacticalStatusSnapshot tacticalStatus, bool readOnlyQuestion,
++            CommanderTurnObservationStore.CommanderTurnObservation observation)
+         {
+             if (context == null) throw new ArgumentNullException(nameof(context));
++            Observation = observation;
+             string text = playerMessage ?? string.Empty;
+             IsPlayerMessageTooLong = text.Length > MaximumPlayerMessageCharacters;
+             PlayerMessage = IsPlayerMessageTooLong ? string.Empty : text;
+

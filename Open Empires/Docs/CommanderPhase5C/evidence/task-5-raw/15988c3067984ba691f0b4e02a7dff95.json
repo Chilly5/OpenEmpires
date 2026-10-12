@@ -1,0 +1,70 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "15988c3067984ba691f0b4e02a7dff95",
+      "status": "succeeded",
+      "mode": "PlayMode",
+      "started_unix_ms": 1791756785795,
+      "finished_unix_ms": 1791756799899,
+      "last_update_unix_ms": 1791756799899,
+      "progress": {
+        "completed": 3,
+        "total": 3,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791756798817,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.Timeout_RetainsDraftAndOffersExplicitRetryEditCancel",
+        "last_finished_unix_ms": 1791756799835,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "PlayMode",
+        "summary": {
+          "total": 3,
+          "passed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 2.1776653,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "DockInputOwnership_TracksActualExpandedAndCompactRegions",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.DockInputOwnership_TracksActualExpandedAndCompactRegions",
+            "state": "Passed",
+            "durationSeconds": 0.491344,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "MissingWorkerCount_ShowsProminentClarificationWithoutGameplay",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.MissingWorkerCount_ShowsProminentClarificationWithoutGameplay",
+            "state": "Passed",
+            "durationSeconds": 0.6150456,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander Phase5C render] evidence directory=D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderPhase5C\\evidence\\task-5-render\\20261011-221318-774-pending-clarification\r\n"
+          },
+          {
+            "name": "Timeout_RetainsDraftAndOffersExplicitRetryEditCancel",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.Timeout_RetainsDraftAndOffersExplicitRetryEditCancel",
+            "state": "Passed",
+            "durationSeconds": 1.0169183,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander Phase5C render] evidence directory=D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderPhase5C\\evidence\\task-5-render\\20261011-221319-801-timeout-recovery\r\n"
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

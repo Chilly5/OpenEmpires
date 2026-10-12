@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 06:57:48Z" end-time="2026-10-12 06:57:48Z" duration="0.6679416">
+  <test-suite type="TestSuite" id="1310" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="259" result="Failed" site="Child" start-time="2026-10-12 06:57:48Z" end-time="2026-10-12 06:57:48Z" duration="0.667942" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1304" name="OpenEmpires.PlayModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.PlayModeTests.dll" runstate="Runnable" testcasecount="259" result="Failed" site="Child" start-time="2026-10-12 06:57:48Z" end-time="2026-10-12 06:57:48Z" duration="0.659473" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="10196" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1305" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="259" result="Failed" site="Child" start-time="2026-10-12 06:57:48Z" end-time="2026-10-12 06:57:48Z" duration="0.656513" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1306" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="259" result="Failed" site="Child" start-time="2026-10-12 06:57:48Z" end-time="2026-10-12 06:57:48Z" duration="0.653927" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1263" name="CommanderPhase5CLiveHouseDiagnosticTests" fullname="OpenEmpires.Tests.CommanderPhase5CLiveHouseDiagnosticTests" classname="OpenEmpires.Tests.CommanderPhase5CLiveHouseDiagnosticTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-12 06:57:48Z" end-time="2026-10-12 06:57:48Z" duration="0.649654" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderLiveProvider" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1264" name="BuildAHouse_RealUiPreviewApprovalAndNativeHouse" fullname="OpenEmpires.Tests.CommanderPhase5CLiveHouseDiagnosticTests.BuildAHouse_RealUiPreviewApprovalAndNativeHouse" methodname="BuildAHouse_RealUiPreviewApprovalAndNativeHouse" classname="OpenEmpires.Tests.CommanderPhase5CLiveHouseDiagnosticTests" runstate="Runnable" seed="1430049224" result="Failed" label="Error" start-time="2026-10-12 06:57:48Z" end-time="2026-10-12 06:57:48Z" duration="0.625378" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[UnityEngine.MissingReferenceException : The object of type 'OpenEmpires.CommanderChatUI' has been destroyed but you are still trying to access it.
+Your script should either check if it is null or you should not destroy the object.]]></message>
+                <stack-trace><![CDATA[  at UnityEngine.Object+MarshalledUnityObject.TryThrowEditorNullExceptionObject (UnityEngine.Object unityObj, System.String parameterName) [0x00065] in <2f52b751ded44e96b74c2c8a24c6c65b>:0 
+  at UnityEngine.Bindings.ThrowHelper.ThrowNullReferenceException (System.Object obj) [0x0000a] in <2f52b751ded44e96b74c2c8a24c6c65b>:0 
+  at UnityEngine.Component.get_transform () [0x00006] in <2f52b751ded44e96b74c2c8a24c6c65b>:0 
+  at OpenEmpires.Tests.CommanderPhase5CLiveHouseDiagnosticTests+<BuildAHouse_RealUiPreviewApprovalAndNativeHouse>d__4.MoveNext () [0x0096b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\PlayMode\CommanderPhase5CLiveHouseDiagnosticTests.cs:140 
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44 ]]></stack-trace>
+              </failure>
+              <output><![CDATA[[DotEnv] Loaded .env from D:\unity_projects\OpenEmpires\Open Empires\.env
+[DotEnv] Loaded .env from D:\unity_projects\OpenEmpires\Open Empires\.env
+[Commander] context=projected;provider-request=started
+[Commander] context=projected;provider-request=started
+[CommanderProvider] utc=2026-10-12T06:57:48.6847923Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] utc=2026-10-12T06:57:48.6847923Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=sent
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: D:\unity_projects\OpenEmpires\Open Empires\Docs\CommanderPhase5C\evidence\final-fix-leaves-20261012-065748-125-5e8fae76.xml
+Saving results to: D:\unity_projects\OpenEmpires\Open Empires\Docs\CommanderPhase5C\evidence\final-fix-leaves-20261012-065748-125-5e8fae76.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

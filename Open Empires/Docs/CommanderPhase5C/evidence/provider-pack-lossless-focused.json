@@ -1,0 +1,91 @@
+{
+  "project": "D:/unity_projects/OpenEmpires/Open Empires",
+  "unityInstance": "Open Empires@6d7310c7",
+  "unityVersion": "6000.5.9f1",
+  "testClass": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests",
+  "mode": "EditMode",
+  "requestedInitTimeoutMs": 120000,
+  "includeDetails": true,
+  "includeFailedTests": true,
+  "jobId": "3aec4f7c9fba420990274e3b37c07af4",
+  "startedUnixMs": 1791660681498,
+  "finishedUnixMs": 1791660688991,
+  "status": "failed",
+  "progress": {
+    "completed": 8,
+    "total": 8,
+    "currentTestFullName": null,
+    "currentTestStartedUnixMs": 1791660688944,
+    "lastFinishedTestFullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.TooLargeRequiredMeaning_IsRejectedWithoutDispatchingOrExecutingPrefix",
+    "lastFinishedUnixMs": 1791660688947,
+    "stuckSuspected": false,
+    "editorIsFocused": false,
+    "blockedReason": null,
+    "failuresCapped": false
+  },
+  "counts": {
+    "passed": 6,
+    "failed": 2,
+    "skipped": 0,
+    "note": "The job endpoint omitted result.summary/results; pass/skipped counts are inferred from 8 completed cases and 2 reported failures."
+  },
+  "failures": [
+    {
+      "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\")",
+      "message": "Commander input limit: the complete request and required context cannot fit safely; nothing was submitted. Edit the request or resolve its pending question.; conservative estimate=4507. Expected: 1. But was: 0.",
+      "conservativeInputEstimate": 4507
+    },
+    {
+      "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"Move all of my Wood villagers to the woodline left of my Town Center.\")",
+      "message": "Commander input limit: the complete request and required context cannot fit safely; nothing was submitted. Edit the request or resolve its pending question.; conservative estimate=4499. Expected: 1. But was: 0.",
+      "conservativeInputEstimate": 4499
+    }
+  ],
+  "editor": {
+    "compileBeforeRun": {
+      "isCompiling": false,
+      "isDomainReloadPending": false,
+      "readyForTools": true
+    },
+    "preRunConsoleErrors": [],
+    "postRunConsoleEntries": []
+  },
+  "rawTerminalJobData": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "3aec4f7c9fba420990274e3b37c07af4",
+      "status": "failed",
+      "mode": "EditMode",
+      "started_unix_ms": 1791660681498,
+      "finished_unix_ms": 1791660688991,
+      "last_update_unix_ms": 1791660688991,
+      "progress": {
+        "completed": 8,
+        "total": 8,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791660688944,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.TooLargeRequiredMeaning_IsRejectedWithoutDispatchingOrExecutingPrefix",
+        "last_finished_unix_ms": 1791660688947,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\")",
+            "message": "Commander input limit: the complete request and required context cannot fit safely; nothing was submitted. Edit the request or resolve its pending question.; conservative estimate=4507. Expected: 1. But was: 0."
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"Move all of my Wood villagers to the woodline left of my Town Center.\")",
+            "message": "Commander input limit: the complete request and required context cannot fit safely; nothing was submitted. Edit the request or resolve its pending question.; conservative estimate=4499. Expected: 1. But was: 0."
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

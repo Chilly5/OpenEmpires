@@ -21,7 +21,7 @@ namespace OpenEmpires
         private string reviewedGateway;private Func<string> reviewedGatewaySession;
         private CommanderGatewaySemanticTransport gatewaySemanticTransport;
 
-        public void ShowVoiceSetup(){HideSemanticSetup();MinimizeCommander();voiceSetupVisible=true;if(voiceSetupCard!=null)voiceSetupCard.SetActive(true);Canvas.ForceUpdateCanvases();UpdatePresentation();Canvas.ForceUpdateCanvases();}
+        public void ShowVoiceSetup(){HideSemanticSetup();OpenCommander();voiceSetupVisible=true;if(voiceSetupCard!=null){voiceSetupCard.transform.SetAsLastSibling();voiceSetupCard.SetActive(true);}Canvas.ForceUpdateCanvases();UpdatePresentation();Canvas.ForceUpdateCanvases();}
         public void HideVoiceSetup(){voiceSetupVisible=false;CancelPendingVoiceSetup();if(voiceSetupCard!=null)voiceSetupCard.SetActive(false);}
         private void CancelPendingVoiceSetup(){voiceSetupGeneration++;voiceSetupCancellation?.Cancel();microphoneActivationCancellation?.Cancel();pendingOnlineVoice?.Dispose();pendingOnlineVoice=null;
             CancelLocalModelWork();

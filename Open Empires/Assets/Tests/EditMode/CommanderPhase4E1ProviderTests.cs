@@ -54,7 +54,8 @@ namespace OpenEmpires.Tests
             string sent = body.messages[1].content;
             Assert.That(sent, Does.Contain("Spearman"));
             Assert.That(sent, Does.Contain("Barracks"));
-            Assert.That(sent, Does.Contain("RangedReinforcement"));
+            Assert.That(sent, Does.Not.Contain("RangedReinforcement"),
+                "Unrequested strategy facts are excluded from a unit-production request.");
             Assert.That(sent, Does.Contain("population"));
             Assert.That(sent, Does.Not.Contain("PlayerId"));
             // Canonical building IDs are permitted content facts, not runtime identity.
@@ -106,13 +107,13 @@ namespace OpenEmpires.Tests
         {
             var transport = new FakeTransport(Completion(200, UnitJson));
             await new OpenRouterCommanderProvider(DummyKey, transport).TranslateSemanticAsync(
-                new CommanderSemanticProviderRequest("unclear order", Context()),
+                new CommanderSemanticProviderRequest("Build what?", Context()),
                 CancellationToken.None);
 
             ChatBody body = JsonUtility.FromJson<ChatBody>(transport.Body);
             string instruction = body.messages[0].content;
-            Assert.That(instruction, Does.Contain("\"outcome\":\"Clarify\""));
-            Assert.That(instruction, Does.Contain("\"outcome\":\"Unsupported\""));
+            Assert.That(instruction, Does.Contain("outcome:Clarify"));
+            Assert.That(instruction, Does.Contain("Unsupported"));
             Assert.That(instruction, Does.Not.Contain("\"outcome\":\"Clarify|Unsupported\""));
         }
 

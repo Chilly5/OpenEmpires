@@ -1,0 +1,52 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "c723fcaecd634a41bc29c691568ff3d7",
+      "status": "succeeded",
+      "mode": "PlayMode",
+      "started_unix_ms": 1791756493450,
+      "finished_unix_ms": 1791756506452,
+      "last_update_unix_ms": 1791756506452,
+      "progress": {
+        "completed": 1,
+        "total": 1,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791756505319,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.CompoundApproval_ShowsFullValidatedPreviewAndExplicitDecisionsWithoutIssuing",
+        "last_finished_unix_ms": 1791756506375,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "PlayMode",
+        "summary": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 1.0969955,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "CompoundApproval_ShowsFullValidatedPreviewAndExplicitDecisionsWithoutIssuing",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.CompoundApproval_ShowsFullValidatedPreviewAndExplicitDecisionsWithoutIssuing",
+            "state": "Passed",
+            "durationSeconds": 1.0513251,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander Phase5C render] evidence directory=D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderPhase5C\\evidence\\task-5-render\\20261011-220826-292-compound-approval\r\n"
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

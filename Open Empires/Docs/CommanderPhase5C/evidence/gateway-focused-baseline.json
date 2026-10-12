@@ -1,0 +1,16 @@
+{
+  "mode": "offline localhost fixtures; no external provider request",
+  "source": "baseline unchanged gateway/upstream",
+  "nodeVersion": "v24.13.1",
+  "command": "node --test --test-name-pattern='semantic route rejects|upstream chunked/error' gateway.test.mjs upstream.test.mjs",
+  "workingDirectory": "D:/unity_projects/OpenEmpires/backend/speech-gateway",
+  "passed": 2,
+  "failed": 0,
+  "skipped": 0,
+  "durationMs": 216.7061,
+  "cases": [
+    {"name": "semantic route rejects caller endpoint/model and bounds envelope while preserving Luna", "durationMs": 108.5576},
+    {"name": "upstream chunked/error bodies are bounded and raw provider failures are never surfaced", "durationMs": 64.9998}
+  ],
+  "limits": "Not a gateway token-cap test, real-Web UI acceptance, live-model input count or full regression. No source change or paid call."
+}

@@ -1,0 +1,714 @@
+diff --git a/Assets/Scripts/AI/Commander/Phase5C/CommanderTurnObservationStore.cs b/Assets/Scripts/AI/Commander/Phase5C/CommanderTurnObservationStore.cs
+new file mode 100644
+index 0000000..70c925b
+--- /dev/null
++++ b/Assets/Scripts/AI/Commander/Phase5C/CommanderTurnObservationStore.cs
+@@ -0,0 +1,291 @@
++using System;
++using System.Collections.Generic;
++using System.IO;
++using System.Linq;
++using Newtonsoft.Json;
++using Newtonsoft.Json.Linq;
++
++namespace OpenEmpires
++{
++    // Local, opt-in evidence only. No game authority, payloads, headers, context, entity IDs or coordinates.
++    internal sealed class CommanderTurnObservationStore
++    {
++        internal const int MaximumTurns = 64;
++        internal const int MaximumExportBytes = 131072;
++        private static readonly HashSet<string> TimingKeys = new HashSet<string>(StringComparer.Ordinal)
++        { "uiSubmissionMs", "contextMs", "packingMs", "transportMs", "providerMs", "parseMs", "admissionMs", "firstNativeActionMs" };
++        private static readonly HashSet<string> SectionKeys = new HashSet<string>(StringComparer.Ordinal)
++        { "contract", "context", "memory", "questionFacts", "pending", "utterance", "messageMargin", "repairTemplate" };
++        private static readonly HashSet<string> StageKeys = new HashSet<string>(StringComparer.Ordinal)
++        { "submitted", "context", "provider", "parsed", "admission", "awaiting-approval", "admitted", "rejected", "timed-out", "cancelled", "late-attempt" };
++        private static readonly HashSet<string> OutcomeKeys = new HashSet<string>(StringComparer.Ordinal)
++        { "Unknown", "Request", "DynamicPlan", "Clarify", "Unsupported", "Answer" };
++        private static readonly HashSet<string> StatusKeys = new HashSet<string>(StringComparer.Ordinal)
++        { "Unknown", "Accepted", "Waiting", "Working", "Blocked", "Completed", "Failed", "Cancelled", "AwaitingApproval", "Rejected" };
++        private readonly object gate = new object();
++        private readonly string path;
++        private readonly string session = Guid.NewGuid().ToString("N");
++        private readonly List<TurnRecord> turns = new List<TurnRecord>();
++        private bool recording;
++        private Action persisted;
++
++        internal CommanderTurnObservationStore(string path)
++        {
++            this.path = path ?? throw new ArgumentNullException(nameof(path));
++            try
++            {
++                if (!File.Exists(path) || new FileInfo(path).Length > MaximumExportBytes) return;
++                JObject saved = JObject.Parse(File.ReadAllText(path));
++                if ((string)saved["schema"] != "commander-local-observation-v1"
++                    || !(saved["turns"] is JArray rows)) return;
++                foreach (JObject row in rows.OfType<JObject>().Take(MaximumTurns))
++                {
++                    TurnRecord item = TurnRecord.Read(row);
++                    if (item != null) turns.Add(item);
++                }
++            }
++            catch (Exception) { turns.Clear(); } // Corrupt local evidence never enters a provider request.
++        }
++
++        internal bool Recording { get { lock (gate) return recording; } }
++        internal void SetRecording(bool enabled) { lock (gate) recording = enabled; }
++        internal void SetPersistedCallback(Action callback) { lock (gate) persisted = callback; }
++
++        internal CommanderTurnObservation Begin(long requestId, long turn, int revision, string route)
++            => Begin(requestId, turn, revision, 0, route);
++
++        internal CommanderTurnObservation Begin(long requestId, long turn, int revision, int generation, string route)
++        {
++            if (requestId <= 0 || turn <= 0 || revision < 0 || generation < 0) return null;
++            lock (gate)
++            {
++                if (!recording) return null;
++                var record = new TurnRecord { Session = session, RequestId = requestId, Turn = turn,
++                    Revision = revision, Generation = generation,
++                    Route = route == "WebGateway" ? "WebGateway" : "WindowsDirect",
++                    Stage = "submitted", Outcome = "Unknown", TaskStatus = "Unknown" };
++                turns.Add(record);
++                while (turns.Count > MaximumTurns) turns.RemoveAt(0);
++                SaveLocked();
++                return new CommanderTurnObservation(this, record);
++            }
++        }
++
++        internal void ObserveTaskCard(long requestId, int generation, CommanderTaskStatus status)
++        {
++            lock (gate)
++            {
++                TurnRecord record = turns.LastOrDefault(item => item.Session == session
++                    && item.RequestId == requestId && item.Generation == generation);
++                if (record == null) return;
++                string safe = status.ToString();
++                if (!StatusKeys.Contains(safe) || record.TaskStatus == safe) return;
++                record.TaskStatus = safe;
++                SaveLocked();
++            }
++        }
++
++        internal string ExportJson()
++        {
++            lock (gate) return ExportLocked();
++        }
++
++        private string ExportLocked() => new JObject { ["schema"] = "commander-local-observation-v1",
++            ["turns"] = new JArray(turns.Select(item => item.Json())) }.ToString(Formatting.None);
++
++        private void SaveLocked()
++        {
++            string json = ExportLocked();
++            while (System.Text.Encoding.UTF8.GetByteCount(json) > MaximumExportBytes && turns.Count > 0)
++            { turns.RemoveAt(0); json = ExportLocked(); }
++            string temporary = path + ".tmp";
++            try
++            {
++                Directory.CreateDirectory(Path.GetDirectoryName(path));
++                File.WriteAllText(temporary, json);
++                if (File.Exists(path))
++                {
++#if UNITY_WEBGL && !UNITY_EDITOR
++                    // IDBFS persists the completed virtual-FS replacement in the queued sync.
++                    File.Delete(path);
++                    File.Move(temporary, path);
++#else
++                    // Replace preserves the old complete file if the write fails.
++                    File.Replace(temporary, path, null);
++#endif
++                }
++                else File.Move(temporary, path);
++                try { persisted?.Invoke(); } catch (Exception) { }
++            }
++            catch (Exception)
++            {
++                try { if (File.Exists(temporary)) File.Delete(temporary); } catch (Exception) { }
++                // Observation must never affect admission or gameplay.
++            }
++        }
++
++        internal sealed class CommanderTurnObservation
++        {
++            private readonly CommanderTurnObservationStore owner;
++            private readonly TurnRecord record;
++            internal CommanderTurnObservation(CommanderTurnObservationStore owner, TurnRecord record)
++            { this.owner = owner; this.record = record; }
++
++            internal void ObserveAttempt(int index, CommanderProviderAttempt attempt)
++            {
++                if (index < 0 || index > 1 || attempt == null) return;
++                lock (owner.gate)
++                {
++                    if (!owner.turns.Contains(record)) return; // Never reassign a late attempt to another turn.
++                    while (record.Attempts.Count <= index) record.Attempts.Add(null);
++                    record.Attempts[index] = AttemptRecord.From(attempt);
++                    owner.SaveLocked();
++                }
++            }
++
++            internal void Mark(string stage, string outcome, string taskStatus)
++            {
++                lock (owner.gate)
++                {
++                    if (!owner.turns.Contains(record)) return;
++                    if (StageKeys.Contains(stage)) record.Stage = stage;
++                    if (OutcomeKeys.Contains(outcome)) record.Outcome = outcome;
++                    if (StatusKeys.Contains(taskStatus)) record.TaskStatus = taskStatus;
++                    owner.SaveLocked();
++                }
++            }
++
++            internal void Timing(string key, long milliseconds)
++            {
++                if (!TimingKeys.Contains(key) || milliseconds < 0) return;
++                lock (owner.gate)
++                {
++                    if (!owner.turns.Contains(record)) return;
++                    if (!record.Timings.ContainsKey(key)) record.Timings[key] = milliseconds;
++                    owner.SaveLocked();
++                }
++            }
++
++            internal void AddTiming(string key, long milliseconds)
++            {
++                if ((key != "transportMs" && key != "parseMs") || milliseconds < 0) return;
++                lock (owner.gate)
++                {
++                    if (!owner.turns.Contains(record)) return;
++                    record.Timings.TryGetValue(key, out long previous);
++                    record.Timings[key] = previous > long.MaxValue - milliseconds
++                        ? long.MaxValue : previous + milliseconds;
++                    owner.SaveLocked();
++                }
++            }
++        }
++
++        internal sealed class TurnRecord
++        {
++            internal string Session;
++            internal long RequestId, Turn;
++            internal int Revision, Generation;
++            internal string Route, Stage, Outcome, TaskStatus;
++            internal readonly Dictionary<string, long> Timings = new Dictionary<string, long>(StringComparer.Ordinal);
++            internal readonly List<AttemptRecord> Attempts = new List<AttemptRecord>();
++
++            internal JObject Json()
++            {
++                var timings = new JObject();
++                foreach (string key in TimingKeys.OrderBy(x => x, StringComparer.Ordinal))
++                    timings[key] = Timings.TryGetValue(key, out long value) ? new JValue(value) : JValue.CreateNull();
++                return new JObject { ["session"] = Session, ["requestId"] = RequestId, ["turn"] = Turn,
++                    ["revision"] = Revision, ["generation"] = Generation, ["route"] = Route,
++                    ["stage"] = Stage, ["outcome"] = Outcome, ["taskStatus"] = TaskStatus,
++                    ["timings"] = timings,
++                    ["attempts"] = new JArray(Attempts.Where(x => x != null).Select(x => x.Json())) };
++            }
++
++            internal static TurnRecord Read(JObject row)
++            {
++                string session = (string)row["session"];
++                if (session == null || session.Length != 32 || !Guid.TryParseExact(session, "N", out _)) return null;
++                long? requestId = (long?)row["requestId"], turn = (long?)row["turn"];
++                int? revision = (int?)row["revision"], generation = (int?)row["generation"];
++                if (requestId <= 0 || turn <= 0 || revision < 0 || generation < 0) return null;
++                var item = new TurnRecord { Session = session, RequestId = requestId.Value, Turn = turn.Value,
++                    Revision = revision.Value, Generation = generation.Value,
++                    Route = (string)row["route"] == "WebGateway" ? "WebGateway" : "WindowsDirect",
++                    Stage = StageKeys.Contains((string)row["stage"]) ? (string)row["stage"] : "submitted",
++                    Outcome = OutcomeKeys.Contains((string)row["outcome"]) ? (string)row["outcome"] : "Unknown",
++                    TaskStatus = StatusKeys.Contains((string)row["taskStatus"]) ? (string)row["taskStatus"] : "Unknown" };
++                if (row["timings"] is JObject timing)
++                    foreach (string key in TimingKeys)
++                        if ((long?)timing[key] is long value && value >= 0) item.Timings[key] = value;
++                if (row["attempts"] is JArray attempts)
++                    foreach (JObject attempt in attempts.OfType<JObject>().Take(2))
++                        item.Attempts.Add(AttemptRecord.Read(attempt));
++                return item;
++            }
++        }
++
++        internal sealed class AttemptRecord
++        {
++            internal string Kind, Stage;
++            internal int Estimate;
++            internal long Elapsed;
++            internal int? HttpStatus;
++            internal readonly Dictionary<string, int> Sections = new Dictionary<string, int>(StringComparer.Ordinal);
++            internal long? Prompt, Completion, Cached, Reasoning, Total;
++            internal decimal? Cost;
++
++            internal static AttemptRecord From(CommanderProviderAttempt attempt)
++            {
++                var item = new AttemptRecord { Kind = attempt.Kind == "repair" ? "repair" : "initial",
++                    Stage = SafeStage(attempt.ResultStage), Estimate = Math.Max(0, attempt.InputEstimate),
++                    Elapsed = Math.Max(0, attempt.ElapsedMilliseconds), HttpStatus = attempt.HttpStatusCode,
++                    Prompt = attempt.Usage.PromptTokens, Completion = attempt.Usage.CompletionTokens,
++                    Cached = attempt.Usage.CachedTokens, Reasoning = attempt.Usage.ReasoningTokens,
++                    Total = attempt.Usage.TotalTokens, Cost = attempt.Usage.Cost };
++                foreach (var section in attempt.SectionEstimates)
++                    if (SectionKeys.Contains(section.Key) && section.Value >= 0) item.Sections[section.Key] = section.Value;
++                return item;
++            }
++
++            internal JObject Json()
++            {
++                var sections = new JObject();
++                foreach (var section in Sections.OrderBy(x => x.Key, StringComparer.Ordinal))
++                    sections[section.Key] = section.Value;
++                return new JObject { ["kind"] = Kind, ["estimate"] = Estimate,
++                    ["sections"] = sections, ["elapsedMs"] = Elapsed, ["httpStatus"] = HttpStatus,
++                    ["stage"] = Stage,
++                    ["usage"] = new JObject { ["promptTokens"] = Prompt, ["completionTokens"] = Completion,
++                        ["cachedTokens"] = Cached, ["reasoningTokens"] = Reasoning,
++                        ["totalTokens"] = Total, ["cost"] = Cost } };
++            }
++
++            internal static AttemptRecord Read(JObject row)
++            {
++                var item = new AttemptRecord { Kind = (string)row["kind"] == "repair" ? "repair" : "initial",
++                    Stage = SafeStage((string)row["stage"]), Estimate = Math.Max(0, (int?)row["estimate"] ?? 0),
++                    Elapsed = Math.Max(0, (long?)row["elapsedMs"] ?? 0),
++                    HttpStatus = (int?)row["httpStatus"] };
++                if (row["sections"] is JObject sections)
++                    foreach (string key in SectionKeys)
++                        if ((int?)sections[key] is int value && value >= 0) item.Sections[key] = value;
++                if (row["usage"] is JObject usage)
++                {
++                    item.Prompt = Nonnegative((long?)usage["promptTokens"]);
++                    item.Completion = Nonnegative((long?)usage["completionTokens"]);
++                    item.Cached = Nonnegative((long?)usage["cachedTokens"]);
++                    item.Reasoning = Nonnegative((long?)usage["reasoningTokens"]);
++                    item.Total = Nonnegative((long?)usage["totalTokens"]);
++                    decimal? cost = (decimal?)usage["cost"];
++                    item.Cost = cost >= 0 ? cost : null;
++                }
++                return item;
++            }
++
++            private static long? Nonnegative(long? value) => value >= 0 ? value : null;
++            private static string SafeStage(string value)
++                => !string.IsNullOrEmpty(value) && value.Length <= 40
++                    && value.All(c => c >= 'a' && c <= 'z' || c == '-') ? value : "unknown";
++        }
++    }
++}
+
+diff --git a/Assets/Scripts/AI/Commander/Phase5C/CommanderTurnObservationStore.cs.meta b/Assets/Scripts/AI/Commander/Phase5C/CommanderTurnObservationStore.cs.meta
+new file mode 100644
+index 0000000..71b055f
+--- /dev/null
++++ b/Assets/Scripts/AI/Commander/Phase5C/CommanderTurnObservationStore.cs.meta
+@@ -0,0 +1,2 @@
++fileFormatVersion: 2
++guid: ab0c3ba3ee3ead2458161e09b4a7b332
+\ No newline at end of file
+
+diff --git a/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Observation.cs b/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Observation.cs
+new file mode 100644
+index 0000000..99cd70e
+--- /dev/null
++++ b/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Observation.cs
+@@ -0,0 +1,90 @@
++using System;
++using System.IO;
++using System.Runtime.InteropServices;
++using TMPro;
++using UnityEngine;
++using UnityEngine.UI;
++
++namespace OpenEmpires
++{
++    public sealed partial class CommanderChatUI
++    {
++        private CommanderTurnObservationStore localObservationStore;
++        private Button localObservationToggle;
++
++#if UNITY_WEBGL && !UNITY_EDITOR
++        [DllImport("__Internal")] private static extern void CommanderObservation_Sync();
++        [DllImport("__Internal")] private static extern void CommanderObservation_Download(string json);
++#endif
++
++        private CommanderTurnObservationStore LocalObservationStore
++        {
++            get
++            {
++                if (localObservationStore != null) return localObservationStore;
++                string file = Path.Combine(Application.persistentDataPath,
++                    "CommanderEvidence", "commander-observations.json");
++                localObservationStore = new CommanderTurnObservationStore(file);
++#if UNITY_WEBGL && !UNITY_EDITOR
++                localObservationStore.SetPersistedCallback(CommanderObservation_Sync);
++#endif
++                return localObservationStore;
++            }
++        }
++
++        private void ToggleLocalObservationRecording()
++        {
++            LocalObservationStore.SetRecording(!LocalObservationStore.Recording);
++            UpdateLocalObservationToggle();
++            AppendLine("Commander", LocalObservationStore.Recording
++                ? "Local metrics recording is on for this session. No metrics are uploaded."
++                : "Local metrics recording is off. Existing local records remain available for export.", false);
++        }
++
++        private void UpdateLocalObservationToggle()
++        {
++            if (localObservationToggle == null) return;
++            TMP_Text label = localObservationToggle.GetComponentInChildren<TMP_Text>();
++            if (label != null) label.text = "Record local metrics: "
++                + (LocalObservationStore.Recording ? "On" : "Off");
++        }
++
++        private void ExportLocalObservations()
++        {
++            string json = LocalObservationStore.ExportJson();
++            if (System.Text.Encoding.UTF8.GetByteCount(json) > CommanderTurnObservationStore.MaximumExportBytes)
++            {
++                AppendLine("Commander", "Local metrics export exceeded its bound; nothing was exported.", false);
++                return;
++            }
++#if UNITY_WEBGL && !UNITY_EDITOR
++            try
++            {
++                CommanderObservation_Download(json);
++                AppendLine("Commander", "Browser download requested for local metrics. No metrics were uploaded.", false);
++            }
++            catch (Exception)
++            {
++                AppendLine("Commander", "Browser download could not be started.", false);
++            }
++#else
++            try
++            {
++                string directory = Path.Combine(Application.persistentDataPath, "CommanderEvidence");
++                Directory.CreateDirectory(directory);
++                string destination = Path.Combine(directory, "commander-metrics-export-"
++                    + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss-fff") + ".json");
++                string temporary = destination + ".tmp";
++                File.WriteAllText(temporary, json);
++                File.Move(temporary, destination);
++                AppendLine("Commander", "Local metrics exported to " + destination
++                    + ". No metrics were uploaded.", false);
++            }
++            catch (Exception)
++            {
++                AppendLine("Commander", "Local metrics export failed; existing records were retained.", false);
++            }
++#endif
++        }
++    }
++}
+
+diff --git a/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Observation.cs.meta b/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Observation.cs.meta
+new file mode 100644
+index 0000000..9ac35bb
+--- /dev/null
++++ b/Assets/Scripts/AI/Commander/Phase4A/CommanderChatUI.Observation.cs.meta
+@@ -0,0 +1,2 @@
++fileFormatVersion: 2
++guid: 6eec1752844c7b44eb0d8829d9a33dd1
+\ No newline at end of file
+
+diff --git a/Assets/Plugins/WebGL/CommanderObservation.jslib b/Assets/Plugins/WebGL/CommanderObservation.jslib
+new file mode 100644
+index 0000000..cae1949
+--- /dev/null
++++ b/Assets/Plugins/WebGL/CommanderObservation.jslib
+@@ -0,0 +1,33 @@
++mergeInto(LibraryManager.library, {
++  $CommanderObservationSyncState: { busy: false, pending: false },
++  CommanderObservation_Sync__deps: ['$CommanderObservationSyncState'],
++  CommanderObservation_Sync: function () {
++    if (typeof FS !== 'undefined' && typeof FS.syncfs === 'function') {
++      var state = CommanderObservationSyncState;
++      if (state.busy) { state.pending = true; return; }
++      var sync = function () {
++        state.busy = true;
++        try {
++          FS.syncfs(false, function () {
++            state.busy = false;
++            if (state.pending) { state.pending = false; sync(); }
++          });
++        } catch (error) { state.busy = false; }
++      };
++      sync();
++    }
++  },
++  CommanderObservation_Download: function (jsonPointer) {
++    var json = UTF8ToString(jsonPointer);
++    if (json.length > 131072 || typeof document === 'undefined') return;
++    var blob = new Blob([json], { type: 'application/json' });
++    var link = document.createElement('a');
++    var url = URL.createObjectURL(blob);
++    link.href = url;
++    link.download = 'commander-local-metrics.json';
++    document.body.appendChild(link);
++    link.click();
++    document.body.removeChild(link);
++    setTimeout(function () { URL.revokeObjectURL(url); }, 30000);
++  }
++});
+
+diff --git a/Assets/Plugins/WebGL/CommanderObservation.jslib.meta b/Assets/Plugins/WebGL/CommanderObservation.jslib.meta
+new file mode 100644
+index 0000000..a596634
+--- /dev/null
++++ b/Assets/Plugins/WebGL/CommanderObservation.jslib.meta
+@@ -0,0 +1,2 @@
++fileFormatVersion: 2
++guid: ed245b42e9756e6449b48695e4c2a250
+\ No newline at end of file
+
+diff --git a/Assets/Editor/CommanderFinalFixResultCapture.cs b/Assets/Editor/CommanderFinalFixResultCapture.cs
+new file mode 100644
+index 0000000..6409e15
+--- /dev/null
++++ b/Assets/Editor/CommanderFinalFixResultCapture.cs
+@@ -0,0 +1,96 @@
++using System;
++using System.Collections.Generic;
++using System.IO;
++using Newtonsoft.Json;
++using Newtonsoft.Json.Linq;
++using UnityEditor;
++using UnityEditor.TestTools.TestRunner.Api;
++using UnityEngine;
++
++namespace OpenEmpires.Editor
++{
++    // Editor-only, default-inactive result retention for one explicitly armed test run.
++    // It never starts tests, gameplay, or a provider request.
++    [InitializeOnLoad]
++    internal sealed class CommanderFinalFixResultCapture : ICallbacks
++    {
++        private const string ArmKey = "OpenEmpires.Commander.CaptureNextTestRun";
++        private static readonly CommanderFinalFixResultCapture Instance = new CommanderFinalFixResultCapture();
++        private readonly List<JObject> leaves = new List<JObject>();
++        private string file;
++        private string started;
++
++        static CommanderFinalFixResultCapture()
++        {
++            TestRunnerApi.RegisterTestCallback(Instance);
++        }
++
++        [MenuItem("Tools/Commander/Arm next test result capture")]
++        private static void ArmNextRun() => EditorPrefs.SetBool(ArmKey, true);
++
++        public void RunStarted(ITestAdaptor testsToRun)
++        {
++            file = null;
++            if (!EditorPrefs.GetBool(ArmKey, false)) return;
++            leaves.Clear();
++            started = DateTime.UtcNow.ToString("O");
++            string directory = Path.Combine(Directory.GetParent(Application.dataPath).FullName,
++                "Docs", "CommanderPhase5C", "evidence");
++            Directory.CreateDirectory(directory);
++            file = Path.Combine(directory, "final-fix-leaves-"
++                + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss-fff") + "-"
++                + Guid.NewGuid().ToString("N").Substring(0, 8) + ".json");
++            Save(false, null);
++        }
++
++        public void TestStarted(ITestAdaptor test) { }
++
++        public void TestFinished(ITestResultAdaptor result)
++        {
++            if (result == null || result.HasChildren || file == null) return;
++            leaves.Add(new JObject {
++                ["fullName"] = result.FullName,
++                ["state"] = result.ResultState,
++                ["durationSeconds"] = result.Duration,
++                ["message"] = result.Message == null ? null : result.Message.Substring(0,
++                    Math.Min(500, result.Message.Length))
++            });
++            Save(false, null);
++        }
++
++        public void RunFinished(ITestResultAdaptor result)
++        {
++            if (file == null) return;
++            if (result != null && file != null)
++            {
++                try
++                {
++                    TestRunnerApi.SaveResultToFile(result, Path.Combine("Docs", "CommanderPhase5C",
++                        "evidence", Path.GetFileNameWithoutExtension(file) + ".xml"));
++                }
++                catch (Exception) { } // JSON leaves still retain the exact result states.
++            }
++            Save(true, result);
++            EditorPrefs.SetBool(ArmKey, false);
++            file = null;
++        }
++
++        private void Save(bool finished, ITestResultAdaptor result)
++        {
++            if (file == null) return;
++            try
++            {
++                var json = new JObject { ["schema"] = "commander-focused-test-leaves-v1",
++                    ["startedUtc"] = started, ["finished"] = finished,
++                    ["runState"] = result?.ResultState,
++                    ["passCount"] = result?.PassCount, ["failCount"] = result?.FailCount,
++                    ["skipCount"] = result?.SkipCount, ["leaves"] = new JArray(leaves) };
++                string temp = file + ".tmp";
++                File.WriteAllText(temp, json.ToString(Formatting.None));
++                if (File.Exists(file)) File.Replace(temp, file, null);
++                else File.Move(temp, file);
++            }
++            catch (Exception) { } // Evidence hook may not affect test semantics.
++        }
++    }
++}
+
+diff --git a/Assets/Editor/CommanderFinalFixResultCapture.cs.meta b/Assets/Editor/CommanderFinalFixResultCapture.cs.meta
+new file mode 100644
+index 0000000..2ea895e
+--- /dev/null
++++ b/Assets/Editor/CommanderFinalFixResultCapture.cs.meta
+@@ -0,0 +1,2 @@
++fileFormatVersion: 2
++guid: 03a407b3b7c9a7f4bade9b180762d11d
+\ No newline at end of file
+
+diff --git a/Assets/Tests/EditMode/CommanderPhase5CObservationTests.cs b/Assets/Tests/EditMode/CommanderPhase5CObservationTests.cs
+new file mode 100644
+index 0000000..40b953f
+--- /dev/null
++++ b/Assets/Tests/EditMode/CommanderPhase5CObservationTests.cs
+@@ -0,0 +1,119 @@
++using System;
++using System.IO;
++using System.Reflection;
++using System.Threading;
++using System.Threading.Tasks;
++using Newtonsoft.Json.Linq;
++using NUnit.Framework;
++
++namespace OpenEmpires.Tests
++{
++    [Category("CommanderPhase5C")]
++    public sealed class CommanderPhase5CObservationTests
++    {
++        [Test]
++        public void LocalObservation_PersistsOnlyBoundedRedactedAttemptAndOutcome()
++        {
++            // A real production store and serializer, not the scenario-test recorder.
++            string directory = Path.Combine(Path.GetTempPath(), "commander-observation-test-" + Guid.NewGuid().ToString("N"));
++            Directory.CreateDirectory(directory);
++            string path = Path.Combine(directory, "observations.json");
++            try
++            {
++                var store = new CommanderTurnObservationStore(path);
++                store.SetRecording(true);
++                var turn = store.Begin(17L, 23L, 4, "WindowsDirect");
++                Assert.That(turn, Is.Not.Null);
++                var usage = CommanderProviderUsage.Read(new JObject { ["usage"] = new JObject {
++                    ["prompt_tokens"] = 321, ["completion_tokens"] = 24, ["cost"] = .0007m } });
++                var attempt = new CommanderProviderAttempt("initial", 900,
++                    new System.Collections.Generic.Dictionary<string, int> { ["contract"] = 200 },
++                    usage, 37, 200, "semantic-valid");
++                turn.ObserveAttempt(0, attempt);
++                turn.Mark("admitted", "Request", "Accepted");
++                string json = store.ExportJson();
++                Assert.That(File.Exists(path), Is.True);
++                Assert.That(File.ReadAllText(path), Is.EqualTo(json));
++                var record = (JObject)((JArray)JObject.Parse(json)["turns"])[0];
++                Assert.That((long)record["requestId"], Is.EqualTo(17));
++                Assert.That((long)record["turn"], Is.EqualTo(23));
++                Assert.That((int)record["revision"], Is.EqualTo(4));
++                Assert.That((long)record["attempts"]?[0]?["usage"]?["promptTokens"], Is.EqualTo(321));
++                Assert.That((decimal)record["attempts"]?[0]?["usage"]?["cost"], Is.EqualTo(.0007m));
++                Assert.That((string)record["taskStatus"], Is.EqualTo("Accepted"));
++                Assert.That(json, Does.Not.Contain("\"prompt\":")); // no raw prompt field/content
++                Assert.That(json.Length, Is.LessThan(131072));
++            }
++            finally { Directory.Delete(directory, true); }
++        }
++
++        [Test]
++        public async Task FailedChargedProviderAttempt_IsDurableAndKeepsOriginalTurnAfterLaterTurn()
++        {
++            string directory = Path.Combine(Path.GetTempPath(), "commander-attempt-test-" + Guid.NewGuid().ToString("N"));
++            Directory.CreateDirectory(directory);
++            try
++            {
++                var store = new CommanderTurnObservationStore(Path.Combine(directory, "observations.json"));
++                store.SetRecording(true);
++                var first = store.Begin(41, 51, 1, 9, "WindowsDirect");
++                first.Mark("timed-out", "Unknown", "Failed");
++                store.Begin(42, 52, 2, 9, "WindowsDirect");
++                var request = new CommanderSemanticProviderRequest("Build a House.",
++                    CommanderEconomyClarificationTests.Context(), null, null, null, null, false, first);
++                var provider = new OpenRouterCommanderProvider("fixture-not-a-credential",
++                    new ChargedFailureTransport());
++                await provider.TranslateSemanticAsync(request, CancellationToken.None);
++                JObject persisted = JObject.Parse(File.ReadAllText(Path.Combine(directory, "observations.json")));
++                var turns = (JArray)persisted["turns"];
++                Assert.That((long)turns[0]["requestId"], Is.EqualTo(41));
++                Assert.That((string)turns[0]["stage"], Is.EqualTo("timed-out"));
++                Assert.That((long)turns[0]["attempts"]?[0]?["usage"]?["promptTokens"], Is.EqualTo(37));
++                Assert.That((decimal)turns[0]["attempts"]?[0]?["usage"]?["cost"], Is.EqualTo(.001m));
++                Assert.That((string)turns[0]["attempts"]?[0]?["stage"], Is.EqualTo("provider-error"));
++                Assert.That(((JArray)turns[1]["attempts"]).Count, Is.Zero);
++                Assert.That(persisted.ToString(), Does.Not.Contain("fixture-not-a-credential"));
++            }
++            finally { Directory.Delete(directory, true); }
++        }
++
++        [Test]
++        public void BoundedRing_DropsEvictedHandleAndKeepsUnknownUsageNull()
++        {
++            string directory = Path.Combine(Path.GetTempPath(), "commander-ring-test-" + Guid.NewGuid().ToString("N"));
++            Directory.CreateDirectory(directory);
++            try
++            {
++                var store = new CommanderTurnObservationStore(Path.Combine(directory, "observations.json"));
++                store.SetRecording(true);
++                var evicted = store.Begin(1, 1, 1, "WindowsDirect");
++                CommanderTurnObservationStore.CommanderTurnObservation last = null;
++                for (int i = 2; i <= 70; i++) last = store.Begin(i, i, 1, "WindowsDirect");
++                var unknown = new CommanderProviderAttempt("initial", 100,
++                    new System.Collections.Generic.Dictionary<string, int>(),
++                    CommanderProviderUsage.Unknown, 3, null, "timeout");
++                evicted.ObserveAttempt(0, unknown);
++                last.ObserveAttempt(0, unknown);
++                var rows = (JArray)JObject.Parse(store.ExportJson())["turns"];
++                Assert.That(rows.Count, Is.EqualTo(CommanderTurnObservationStore.MaximumTurns));
++                Assert.That((long)rows[0]["requestId"], Is.EqualTo(7));
++                Assert.That((long)rows[rows.Count - 1]["requestId"], Is.EqualTo(70));
++                Assert.That(rows[rows.Count - 1]["attempts"]?[0]?["usage"]?["promptTokens"]?.Type,
++                    Is.EqualTo(JTokenType.Null));
++                Assert.That(rows[rows.Count - 1]["attempts"]?[0]?["usage"]?["cost"]?.Type,
++                    Is.EqualTo(JTokenType.Null));
++                Assert.That(System.Text.Encoding.UTF8.GetByteCount(store.ExportJson()),
++                    Is.LessThanOrEqualTo(CommanderTurnObservationStore.MaximumExportBytes));
++            }
++            finally { Directory.Delete(directory, true); }
++        }
++
++        private sealed class ChargedFailureTransport : ICommanderHttpTransport
++        {
++            public Task<CommanderHttpResponse> PostJsonAsync(Uri uri, string body,
++                System.Collections.Generic.IReadOnlyDictionary<string, string> headers, CancellationToken token)
++                => Task.FromResult(new CommanderHttpResponse(200,
++                    "{\"usage\":{\"prompt_tokens\":37,\"cost\":0.001},\"error\":{\"code\":402}}"));
++        }
++    }
++}
+
+diff --git a/Assets/Tests/EditMode/CommanderPhase5CObservationTests.cs.meta b/Assets/Tests/EditMode/CommanderPhase5CObservationTests.cs.meta
+new file mode 100644
+index 0000000..5b78068
+--- /dev/null
++++ b/Assets/Tests/EditMode/CommanderPhase5CObservationTests.cs.meta
+@@ -0,0 +1,2 @@
++fileFormatVersion: 2
++guid: 92c2fde806bd4c842a29660de2cb2300
+\ No newline at end of file
+

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Passed" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 01:53:36Z" end-time="2026-10-12 01:53:37Z" duration="1.567213">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1794" result="Passed" start-time="2026-10-12 01:53:36Z" end-time="2026-10-12 01:53:37Z" duration="1.567213" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="3068" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1794" result="Passed" start-time="2026-10-12 01:53:36Z" end-time="2026-10-12 01:53:37Z" duration="1.493995" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="12696" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="3069" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1794" result="Passed" start-time="2026-10-12 01:53:36Z" end-time="2026-10-12 01:53:37Z" duration="1.492642" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="3070" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1794" result="Passed" start-time="2026-10-12 01:53:36Z" end-time="2026-10-12 01:53:37Z" duration="1.492320" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1002" name="CommanderEconomyClarificationTests" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" testcasecount="106" result="Passed" start-time="2026-10-12 01:53:36Z" end-time="2026-10-12 01:53:37Z" duration="1.455531" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderEconomyClarification" />
+            </properties>
+            <test-case id="1091" name="CorpusMalformedSubmission_RetainsRealTicketInsteadOfCaseLabel" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.CorpusMalformedSubmission_RetainsRealTicketInsteadOfCaseLabel" methodname="CorpusMalformedSubmission_RetainsRealTicketInsteadOfCaseLabel" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="627292325" result="Passed" start-time="2026-10-12 01:53:36Z" end-time="2026-10-12 01:53:37Z" duration="0.932837" asserts="0">
+              <properties>
+                <property name="Category" value="CommanderPhase5CCorpus" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+]]></output>
+            </test-case>
+            <test-case id="1092" name="CorpusReadOnlySubmission_HasNoExecutableTicketOrCaseLabel" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.CorpusReadOnlySubmission_HasNoExecutableTicketOrCaseLabel" methodname="CorpusReadOnlySubmission_HasNoExecutableTicketOrCaseLabel" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="705928307" result="Passed" start-time="2026-10-12 01:53:37Z" end-time="2026-10-12 01:53:37Z" duration="0.504925" asserts="0">
+              <properties>
+                <property name="Category" value="CommanderPhase5CCorpus" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] Goal #1 submitted: EnsureUnitCount
+[Commander] Goal #1: status=Blocked owned=0 queued=0; Need 20 wood for the next Spearman; have 0. No explored non-depleted Wood node is known.
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="3040" name="CommanderPhase5CScenarioArtifactTests" fullname="OpenEmpires.Tests.CommanderPhase5CScenarioArtifactTests" classname="OpenEmpires.Tests.CommanderPhase5CScenarioArtifactTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-12 01:53:37Z" end-time="2026-10-12 01:53:37Z" duration="0.034113" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="3042" name="PerTurnArtifact_AllowsDistinctObservationTurnWithNoExecutionTicket" fullname="OpenEmpires.Tests.CommanderPhase5CScenarioArtifactTests.PerTurnArtifact_AllowsDistinctObservationTurnWithNoExecutionTicket" methodname="PerTurnArtifact_AllowsDistinctObservationTurnWithNoExecutionTicket" classname="OpenEmpires.Tests.CommanderPhase5CScenarioArtifactTests" runstate="Runnable" seed="1429280228" result="Passed" start-time="2026-10-12 01:53:37Z" end-time="2026-10-12 01:53:37Z" duration="0.030795" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

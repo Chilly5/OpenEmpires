@@ -37,6 +37,7 @@ namespace OpenEmpires
             if (cancel)
             {
                 ClearActionPlanPreview();
+                SetLatestRequestState("Cancelled", "Action plan dismissed; nothing started.");
                 AppendLine("Commander", "Action plan dismissed; nothing started.");
                 return true;
             }
@@ -49,17 +50,21 @@ namespace OpenEmpires
                 if (graph == null)
                 {
                     candidate.Cancel();
+                    SetLatestRequestState("Failed", "Action plan changed or expired; nothing started.");
                     AppendLine("Commander", "Action plan is stale or changed; nothing started. Request a fresh preview.");
                     return true;
                 }
                 var submission = semanticDispatcher.SubmitSemanticGraph(graph);
                 if (submission?.CreatedGoal == true) RecordAcceptedSemanticNodes(candidate.Interpretation.Nodes);
                 TrackCurrentRequest(submission);
+                SetLatestRequestState(submission?.CreatedGoal == true ? "Accepted" : "Failed",
+                    submission?.Response ?? "Action plan could not be admitted safely.");
                 AppendLine("Commander", submission?.Response ?? "Action plan could not be admitted safely.");
             }
             catch (Exception error) when (error is InvalidOperationException || error is ArgumentException)
             {
                 candidate.Cancel();
+                SetLatestRequestState("Failed", "Action plan admission did not finish safely.");
                 AppendLine("Commander", "Action plan admission did not finish safely. Check its current goal status before retrying.");
             }
             return true;

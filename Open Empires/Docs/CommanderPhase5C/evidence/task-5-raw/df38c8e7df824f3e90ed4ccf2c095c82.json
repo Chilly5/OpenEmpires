@@ -1,0 +1,50 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "df38c8e7df824f3e90ed4ccf2c095c82",
+    "status": "succeeded",
+    "mode": "PlayMode",
+    "started_unix_ms": 1791760837083,
+    "finished_unix_ms": 1791760849773,
+    "last_update_unix_ms": 1791760849773,
+    "progress": {
+      "completed": 1,
+      "total": 1,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791760848762,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.StrategicAdaptationPreview_NamesExistingSourceAndRequiresExplicitConfirm",
+      "last_finished_unix_ms": 1791760849702,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": {
+      "mode": "PlayMode",
+      "summary": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0,
+        "durationSeconds": 0.9865602,
+        "resultState": "Passed"
+      },
+      "results": [
+        {
+          "name": "StrategicAdaptationPreview_NamesExistingSourceAndRequiresExplicitConfirm",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.StrategicAdaptationPreview_NamesExistingSourceAndRequiresExplicitConfirm",
+          "state": "Passed",
+          "durationSeconds": 0.9346775,
+          "message": null,
+          "stackTrace": null,
+          "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] context=projected;provider-request=started\r\n[Commander Phase5C render] evidence directory=D:\\unity_projects\\OpenEmpires\\Open Empires\\Docs\\CommanderPhase5C\\evidence\\task-5-render\\20261011-232049-591-fix1-strategic-adaptation\r\n[Commander] Goal #1 cancelled.\r\n[Commander] Goal #2 cancelled.\r\n[StrategicPlanner] Plan #1 cancelled.\r\n"
+        }
+      ]
+    }
+  },
+  "hint": null
+}

@@ -1,0 +1,86 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "ccb485400b84431caf3ca7f4c480f2ce",
+    "status": "succeeded",
+    "mode": "EditMode",
+    "started_unix_ms": 1791664292771,
+    "finished_unix_ms": 1791664299215,
+    "last_update_unix_ms": 1791664299215,
+    "progress": {
+      "completed": 5,
+      "total": 5,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791664298905,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.RetainedApprovedUiGraph_CannotCommitAfterHostGenerationReset",
+      "last_finished_unix_ms": 1791664299201,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": {
+      "mode": "EditMode",
+      "summary": {
+        "total": 5,
+        "passed": 5,
+        "failed": 0,
+        "skipped": 0,
+        "durationSeconds": 2.0958658,
+        "resultState": "Passed"
+      },
+      "results": [
+        {
+          "name": "ConfirmationIntegrity_CannotReplayOrCommitAcrossRuntimes",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.ConfirmationIntegrity_CannotReplayOrCommitAcrossRuntimes",
+          "state": "Passed",
+          "durationSeconds": 0.3423144,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n"
+        },
+        {
+          "name": "CandidateApproval_RejectsForeignRuntimeGenerationAndChangedMeaning",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.CandidateApproval_RejectsForeignRuntimeGenerationAndChangedMeaning",
+          "state": "Passed",
+          "durationSeconds": 0.3009108,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #2 submitted: EnsureUnitCount\r\n"
+        },
+        {
+          "name": "ConfirmedCompound_CancelPlanCancelsEveryLiveRoot",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.ConfirmedCompound_CancelPlanCancelsEveryLiveRoot",
+          "state": "Passed",
+          "durationSeconds": 0.32832,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #2 submitted: EnsureUnitCount\r\n[Commander] Goal #1 cancelled.\r\n[Commander] Goal #2 cancelled.\r\n"
+        },
+        {
+          "name": "ParsedGraph_CannotBypassConfirmationAtManagerBoundary",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.ParsedGraph_CannotBypassConfirmationAtManagerBoundary",
+          "state": "Passed",
+          "durationSeconds": 0.2834034,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "RetainedApprovedUiGraph_CannotCommitAfterHostGenerationReset",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.RetainedApprovedUiGraph_CannotCommitAfterHostGenerationReset",
+          "state": "Passed",
+          "durationSeconds": 0.2960455,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n"
+        }
+      ]
+    }
+  },
+  "hint": null
+}

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Passed" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 00:44:42Z" end-time="2026-10-12 00:44:43Z" duration="1.0544641">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1784" result="Passed" start-time="2026-10-12 00:44:42Z" end-time="2026-10-12 00:44:43Z" duration="1.054464" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="3057" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1784" result="Passed" start-time="2026-10-12 00:44:42Z" end-time="2026-10-12 00:44:43Z" duration="1.015311" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="12696" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="3058" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1784" result="Passed" start-time="2026-10-12 00:44:42Z" end-time="2026-10-12 00:44:43Z" duration="1.014826" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="3059" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1784" result="Passed" start-time="2026-10-12 00:44:42Z" end-time="2026-10-12 00:44:43Z" duration="1.014621" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1002" name="CommanderEconomyClarificationTests" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" testcasecount="97" result="Passed" start-time="2026-10-12 00:44:42Z" end-time="2026-10-12 00:44:43Z" duration="1.012712" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderEconomyClarification" />
+            </properties>
+            <test-case id="1088" name="CorpusGarrison_CapacityAndProtectedRemainderAreNativeFacts" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.CorpusGarrison_CapacityAndProtectedRemainderAreNativeFacts" methodname="CorpusGarrison_CapacityAndProtectedRemainderAreNativeFacts" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1836478975" result="Passed" start-time="2026-10-12 00:44:42Z" end-time="2026-10-12 00:44:43Z" duration="0.996255" asserts="0">
+              <properties>
+                <property name="Category" value="CommanderPhase5CCorpus" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: CapabilityAction
+[Commander] intent=admitted;goal-submitted=True
+[Commander] Goal #1: status=Executing owned=0 queued=0; Sending 1/3 owned eligible unit(s) to exact shelter; protected 1; unaccommodated 1.
+[SyncCheck] tick=1 checksum=4F61BD56
+[SyncCheck] tick=2 checksum=FF749005
+[SyncCheck] tick=3 checksum=0743F9EB
+[SyncCheck] tick=4 checksum=FA0212E8
+[SyncCheck] tick=5 checksum=1317417E
+[SyncCheck] tick=6 checksum=BE0FD3AA
+[SyncCheck] tick=7 checksum=CD00E00E
+[SyncCheck] tick=8 checksum=B9139F79
+[SyncCheck] tick=9 checksum=595BF62D
+[SyncCheck] tick=10 checksum=52D647CE
+[SyncCheck] tick=11 checksum=A728B07B
+[SyncCheck] tick=12 checksum=C5387492
+[SyncCheck] tick=13 checksum=4EEB22F3
+[SyncCheck] tick=14 checksum=9FE90C40
+[SyncCheck] tick=15 checksum=8184B4A8
+[Commander] Goal #1: status=Executing owned=0 queued=0; Garrisoned 0/3 in the exact owned TownCenter; protected 1; unaccommodated 2. Native entry is pending.
+[SyncCheck] tick=16 checksum=ADB6A301
+[SyncCheck] tick=17 checksum=A1800A89
+[SyncCheck] tick=18 checksum=CDF2BD74
+[SyncCheck] tick=19 checksum=55E2DAFD
+[SyncCheck] tick=20 checksum=62AF45B5
+[SyncCheck] tick=21 checksum=CE7ADA3A
+[SyncCheck] tick=22 checksum=004EBC26
+[SyncCheck] tick=23 checksum=6CAF83A6
+[SyncCheck] tick=24 checksum=401928F6
+[SyncCheck] tick=25 checksum=31F4C1B0
+[SyncCheck] tick=26 checksum=E14D132B
+[SyncCheck] tick=27 checksum=27A06FE8
+[SyncCheck] tick=28 checksum=924A6B3B
+[SyncCheck] tick=29 checksum=16A6C09F
+[SyncCheck] tick=30 checksum=B24921DA
+[SyncCheck] tick=31 checksum=C38BB4EA
+[SyncCheck] tick=32 checksum=05FB8FA3
+[SyncCheck] tick=33 checksum=F771B2D5
+[SyncCheck] tick=34 checksum=EA0C95B9
+[SyncCheck] tick=35 checksum=E4F6FFC8
+[SyncCheck] tick=36 checksum=372089C0
+[SyncCheck] tick=37 checksum=515304BF
+[SyncCheck] tick=38 checksum=A10AFD4A
+[SyncCheck] tick=39 checksum=DCA19B81
+[SyncCheck] tick=40 checksum=75313D11
+[SyncCheck] tick=41 checksum=511681B3
+[SyncCheck] tick=42 checksum=DF1625EE
+[SyncCheck] tick=43 checksum=FDC2F10B
+[SyncCheck] tick=44 checksum=AD2C0566
+[SyncCheck] tick=45 checksum=CBD8D083
+[SyncCheck] tick=46 checksum=59D874BE
+[SyncCheck] tick=47 checksum=624CD49A
+[SyncCheck] tick=48 checksum=F955AF94
+[SyncCheck] tick=49 checksum=DF16E6B0
+[SyncCheck] tick=50 checksum=47E63F30
+[SyncCheck] tick=51 checksum=573A65CA
+[SyncCheck] tick=52 checksum=5C674EB5
+[SyncCheck] tick=53 checksum=2C94D5E6
+[SyncCheck] tick=54 checksum=A45C0EE0
+[SyncCheck] tick=55 checksum=C308D9FD
+[SyncCheck] tick=56 checksum=AA13C9B9
+[SyncCheck] tick=57 checksum=DEF90017
+[SyncCheck] tick=58 checksum=931ABBCA
+[SyncCheck] tick=59 checksum=89EE0F95
+[SyncCheck] tick=60 checksum=57085C08
+[SyncCheck] tick=61 checksum=80E62C04
+[SyncCheck] tick=62 checksum=0ED6ADE3
+[SyncCheck] tick=63 checksum=4AB0BBE8
+[SyncCheck] tick=64 checksum=A06F1BE0
+[SyncCheck] tick=65 checksum=F1F015AE
+[SyncCheck] tick=66 checksum=EDFDC93A
+[SyncCheck] tick=67 checksum=2E28AFFB
+[SyncCheck] tick=68 checksum=6E5396BC
+[SyncCheck] tick=69 checksum=AE7E7D7D
+[SyncCheck] tick=70 checksum=EEA9643E
+[SyncCheck] tick=71 checksum=2ED44AFF
+[SyncCheck] tick=72 checksum=6EFF31C0
+[SyncCheck] tick=73 checksum=AF2A1881
+[SyncCheck] tick=74 checksum=EF54FF42
+[SyncCheck] tick=75 checksum=2F7FE603
+[Commander] Goal #1: status=Completed owned=1 queued=0; Garrisoned 1/3 in the exact owned TownCenter; protected 1; unaccommodated 1.
+[SyncCheck] tick=76 checksum=6FAACCC4
+[SyncCheck] tick=77 checksum=AFD5B385
+[SyncCheck] tick=78 checksum=F0009A46
+[SyncCheck] tick=79 checksum=302B8107
+[SyncCheck] tick=80 checksum=705667C8
+[SyncCheck] tick=81 checksum=B0814E89
+[SyncCheck] tick=82 checksum=F0AC354A
+[SyncCheck] tick=83 checksum=30D71C0B
+[SyncCheck] tick=84 checksum=710202CC
+[SyncCheck] tick=85 checksum=B12CE98D
+[SyncCheck] tick=86 checksum=F157D04E
+[SyncCheck] tick=87 checksum=3182B70F
+[SyncCheck] tick=88 checksum=71AD9DD0
+[SyncCheck] tick=89 checksum=B1D88491
+[SyncCheck] tick=90 checksum=F2036B52
+[SyncCheck] tick=91 checksum=322E5213
+[SyncCheck] tick=92 checksum=725938D4
+[SyncCheck] tick=93 checksum=B2841F95
+[SyncCheck] tick=94 checksum=F2AF0656
+[SyncCheck] tick=95 checksum=32D9ED17
+[SyncCheck] tick=96 checksum=7304D3D8
+[SyncCheck] tick=97 checksum=B32FBA99
+[SyncCheck] tick=98 checksum=F35AA15A
+[SyncCheck] tick=99 checksum=3385881B
+[SyncCheck] tick=100 checksum=73B06EDC
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

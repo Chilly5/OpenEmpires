@@ -1,0 +1,36 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "58f7fd12313840d5996423655950e6be",
+      "status": "failed",
+      "mode": "EditMode",
+      "started_unix_ms": 1791734860299,
+      "finished_unix_ms": 1791734878550,
+      "last_update_unix_ms": 1791734878550,
+      "progress": {
+        "completed": 7,
+        "total": 7,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791734877684,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.SemanticUngarrison_ExplicitBuildingWideCommandRestoresAllHousedUnits",
+        "last_finished_unix_ms": 1791734878388,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.SemanticGarrison_ProtectedWorkerIsNotReclaimedOrSilentlyReplaced",
+            "message": "  Garrisoned 0/2 in the exact owned TownCenter; protected 1; unaccommodated 1. Native entry is pending.\r\n  Expected: Completed\r\n  But was:  Executing\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

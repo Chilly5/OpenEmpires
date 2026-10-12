@@ -1,0 +1,63 @@
+{
+  "schema": "openempires-phase5c-scenario-turn@1",
+  "run_id": "ee69f15a-e3e0-4fc0-832c-5642889a2c2b",
+  "first_failing_stage": null,
+  "first_failure_category": null,
+  "schemaVersion": 1,
+  "caseId": "worker-mode-selected-count-four",
+  "requestId": "runtime:1",
+  "utterance": "Put 4 villagers on Food.",
+  "turnIndex": 0,
+  "status": "observed",
+  "evidenceMode": "offline-production-chat-fixture",
+  "providerCalls": 1,
+  "httpAttempts": 0,
+  "fidelity": "fixture-expected-observed",
+  "semanticValid": true,
+  "estimatedInputTokens": null,
+  "actualPromptTokens": null,
+  "actualCompletionTokens": null,
+  "actualCachedTokens": null,
+  "actualReasoningTokens": null,
+  "reportedCost": null,
+  "attemptCosts": [],
+  "packingMs": 10.546,
+  "transportMs": null,
+  "parseMs": 2.12,
+  "admissionMs": 70.46,
+  "firstNativeActionMs": 537.473,
+  "commandCount": 1,
+  "commandTypes": [
+    "GatherCommand"
+  ],
+  "nativeResults": [
+    "GatherCommand:processed"
+  ],
+  "taskStates": [
+    "AllocateWorkersGoal:Completed"
+  ],
+  "draftBefore": [],
+  "draftAfter": [],
+  "draftChanges": [],
+  "normalizedFields": [
+    {
+      "type": "AllocateWorkers",
+      "building": null,
+      "resource": null,
+      "count": null,
+      "quantityMode": "TargetTotal",
+      "workerMode": "SelectedCount",
+      "workerCountMode": "Exact",
+      "workerCount": 4,
+      "dependencies": []
+    }
+  ],
+  "fixtureKind": "correct-synthetic",
+  "turnText": "Put 4 villagers on Food.",
+  "uiSubmitMs": 82.306,
+  "semanticOutcome": "Request",
+  "approvalRequired": false,
+  "approved": false,
+  "tickMode": "accelerated-fixture",
+  "ticks": 60
+}

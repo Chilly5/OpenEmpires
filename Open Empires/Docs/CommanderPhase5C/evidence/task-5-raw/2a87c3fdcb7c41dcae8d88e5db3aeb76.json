@@ -1,0 +1,86 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "2a87c3fdcb7c41dcae8d88e5db3aeb76",
+    "status": "succeeded",
+    "mode": "PlayMode",
+    "started_unix_ms": 1791760086279,
+    "finished_unix_ms": 1791760095266,
+    "last_update_unix_ms": 1791760095266,
+    "progress": {
+      "completed": 5,
+      "total": 5,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791760094770,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.StrategicPreview_ShowsValidatedMilestonesAndDirectSingleStageDecisions",
+      "last_finished_unix_ms": 1791760095207,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": {
+      "mode": "PlayMode",
+      "summary": {
+        "total": 5,
+        "passed": 5,
+        "failed": 0,
+        "skipped": 0,
+        "durationSeconds": 2.5731826,
+        "resultState": "Passed"
+      },
+      "results": [
+        {
+          "name": "Header_ShowsProviderStateSeparateFromLatestRequest",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.Header_ShowsProviderStateSeparateFromLatestRequest",
+          "state": "Passed",
+          "durationSeconds": 0.5114292,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "SettingsSurface_EscapeClosesBeforeGameplayReceivesIt",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.SettingsSurface_EscapeClosesBeforeGameplayReceivesIt",
+          "state": "Passed",
+          "durationSeconds": 0.4296412,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "SettingsSurface_OffersProactiveVoiceAndTextAIWithoutConsent",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.SettingsSurface_OffersProactiveVoiceAndTextAIWithoutConsent",
+          "state": "Passed",
+          "durationSeconds": 0.4096046,
+          "message": null,
+          "stackTrace": null,
+          "output": ""
+        },
+        {
+          "name": "StrategicAdaptationPreview_NamesExistingSourceAndRequiresExplicitConfirm",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.StrategicAdaptationPreview_NamesExistingSourceAndRequiresExplicitConfirm",
+          "state": "Passed",
+          "durationSeconds": 0.7348186,
+          "message": null,
+          "stackTrace": null,
+          "output": "[StrategicPlanner] Strategic intent #1 created: RangedReinforcement for player 0.\r\n[StrategicPlanner] Intent #1 selected template 'ranged_reinforcement' and started plan #1: RangedReinforcement.\r\n[StrategicPlanner] Plan #1 milestone active: Economy.\r\n[Commander] Goal #1 submitted: ResourceAllocation\r\n[Commander] Goal #2 submitted: ResourceAllocation\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 cancelled.\r\n[Commander] Goal #2 cancelled.\r\n[StrategicPlanner] Plan #1 cancelled.\r\n"
+        },
+        {
+          "name": "StrategicPreview_ShowsValidatedMilestonesAndDirectSingleStageDecisions",
+          "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.StrategicPreview_ShowsValidatedMilestonesAndDirectSingleStageDecisions",
+          "state": "Passed",
+          "durationSeconds": 0.4362596,
+          "message": null,
+          "stackTrace": null,
+          "output": "[Commander] context=projected;provider-request=started\r\n"
+        }
+      ]
+    }
+  },
+  "hint": null
+}

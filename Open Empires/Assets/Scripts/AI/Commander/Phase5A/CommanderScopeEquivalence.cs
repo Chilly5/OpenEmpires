@@ -34,7 +34,9 @@ namespace OpenEmpires
             if (a is CapabilityActionIntent c && b is CapabilityActionIntent d)
                 return c.ActionType == d.ActionType && c.Technology == d.Technology && c.StructureType == d.StructureType
                     && c.UnitSelector.Kind == d.UnitSelector.Kind && c.UnitSelector.UnitType == d.UnitSelector.UnitType
-                    && c.UnitSelector.Count == d.UnitSelector.Count && c.LocationSelector.Kind == d.LocationSelector.Kind
+                    && c.UnitSelector.Count == d.UnitSelector.Count
+                    && c.UnitSelector.AllMatching == d.UnitSelector.AllMatching
+                    && c.LocationSelector.Kind == d.LocationSelector.Kind
                     && c.LocationSelector.ResourceType == d.LocationSelector.ResourceType
                     && c.LocationSelector.RadiusTiles == d.LocationSelector.RadiusTiles
                     && c.TargetSelector.HasValue == d.TargetSelector.HasValue

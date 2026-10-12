@@ -52,6 +52,7 @@ namespace OpenEmpires.Tests
                 for (int tz = cz - 25; tz <= cz + 25; tz++)
                 {
                     simulation.MapData.Tiles[tx, tz] = TileType.Grass;
+                    simulation.MapData.ForestDensity[tx, tz] = 0f;
                     simulation.FogOfWar.SetVisible(0, tx, tz);
                 }
             simulation.CreateBuilding(0, BuildingType.TownCenter, cx, cz, false, true);
@@ -842,7 +843,7 @@ namespace OpenEmpires.Tests
             for (int i = 0; i < 5; i++)
             {
                 var u = simulation.UnitRegistry.CreateUnit(0,
-                    simulation.MapData.TileToWorldFixed(cx + i, cz + 3), Fixed32.One,
+                    simulation.MapData.TileToWorldFixed(cx + i, cz + 6), Fixed32.One,
                     Fixed32.FromFloat(.4f), Fixed32.One);
                 u.UnitType = 1;
                 u.CurrentHealth = u.MaxHealth = 100;

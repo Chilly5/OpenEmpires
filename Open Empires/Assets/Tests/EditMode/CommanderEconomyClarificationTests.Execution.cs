@@ -179,6 +179,134 @@ namespace OpenEmpires.Tests
         }
 
         [Test]
+        public void OccupiedFarm_SelectedCountRetainsEligibleIncumbentWithoutReissuingGather()
+        {
+            using (var f = new EconomyFixture())
+            {
+                var farm = f.Simulation.CreateBuilding(0, BuildingType.Farm, f.Base.x + 16, f.Base.y + 14, false);
+                var node = f.Simulation.MapData.AddFarmResourceNode(ResourceType.Food, farm.SimPosition, 10000);
+                node.LinkedBuildingId = farm.Id; farm.LinkedResourceNodeId = node.Id;
+                f.Simulation.MapData.MarkFarmTiles(farm.OriginTileX, farm.OriginTileZ, farm.TileFootprintWidth, farm.TileFootprintHeight);
+                var incumbent = f.Worker(0); f.Assigned(incumbent, node);
+                var idle = f.Worker(1);
+                var goal = f.Submit("SelectedCount", "Exact", "1", "Any", "", "Food", "Farm");
+                f.Manager.Tick(0);
+                Assert.That(f.Commands(), Is.Empty, "The native Gather command would count its own incumbent as occupying the Farm.");
+                Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Completed), goal.StatusReason);
+                Assert.That(incumbent.TargetResourceNodeId, Is.EqualTo(node.Id));
+                Assert.That(idle.TargetResourceNodeId, Is.Not.EqualTo(node.Id));
+            }
+        }
+
+        [Test]
+        public void OccupiedFarm_AdditionalCannotClaimIncumbentOrEvictProtectedCapacity()
+        {
+            using (var f = new EconomyFixture())
+            {
+                var farm = f.Simulation.CreateBuilding(0, BuildingType.Farm, f.Base.x + 16, f.Base.y + 14, false);
+                var node = f.Simulation.MapData.AddFarmResourceNode(ResourceType.Food, farm.SimPosition, 10000);
+                node.LinkedBuildingId = farm.Id; farm.LinkedResourceNodeId = node.Id;
+                f.Simulation.MapData.MarkFarmTiles(farm.OriginTileX, farm.OriginTileZ, farm.TileFootprintWidth, farm.TileFootprintHeight);
+                var incumbent = f.Worker(0); f.Assigned(incumbent, node);
+                var idle = f.Worker(1);
+                var goal = f.Submit("Additional", "Exact", "1", "Any", "", "Food", "Farm");
+                f.Manager.Tick(0);
+                Assert.That(f.Commands(), Is.Empty);
+                Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Blocked));
+                Assert.That(f.Manager.GetWorkerReservation(idle.Id), Is.Null);
+                Assert.That(incumbent.TargetResourceNodeId, Is.EqualTo(node.Id));
+            }
+        }
+
+        [TestCase("SelectedCount", "2")]
+        [TestCase("Additional", "1")]
+        [TestCase("TargetTotal", "2")]
+        public void TwoFarms_QuantityModeUsesIncumbentAndIdleWithoutReissuingGather(string mode, string count)
+        {
+            using (var f = new EconomyFixture())
+            {
+                var first = f.Farm(16); var second = f.Farm(22);
+                var incumbent = f.Worker(0); f.Assigned(incumbent, first);
+                var idle = f.Worker(1);
+                var goal = f.Submit(mode, "Exact", count, "Any", "", "Food", "Farm");
+                f.Manager.Tick(0);
+                var commands = f.Commands();
+                Assert.That(Subjects(commands), Is.EquivalentTo(new[] { idle.Id }));
+                Assert.That(commands.OfType<GatherCommand>().Single().ResourceNodeId, Is.EqualTo(second.Id));
+                Assert.That(incumbent.TargetResourceNodeId, Is.EqualTo(first.Id));
+                f.Simulation.Tick(commands);
+                f.Manager.Tick(15);
+                Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Completed), goal.StatusReason);
+            }
+        }
+
+        [Test]
+        public void OccupiedFarm_IdleOnlyCannotReuseGatheringIncumbent()
+        {
+            using (var f = new EconomyFixture())
+            {
+                var farm = f.Farm(16); var incumbent = f.Worker(0); f.Assigned(incumbent, farm);
+                var idle = f.Worker(1);
+                var goal = f.Submit("SelectedCount", "Exact", "1", "Idle", "", "Food", "Farm");
+                f.Manager.Tick(0);
+                Assert.That(f.Commands(), Is.Empty);
+                Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Blocked));
+                Assert.That(f.Manager.GetWorkerReservation(idle.Id), Is.Null);
+                Assert.That(incumbent.TargetResourceNodeId, Is.EqualTo(farm.Id));
+            }
+        }
+
+        [Test]
+        public void AllMatchingGathering_FreezesFarmIncumbentWithoutNewNativeOrder()
+        {
+            using (var f = new EconomyFixture())
+            {
+                var farm = f.Farm(16); var incumbent = f.Worker(0); f.Assigned(incumbent, farm);
+                var goal = f.Submit("SelectedCount", "AllMatching", "", "Gathering", "Food", "Food", "Farm");
+                f.Manager.Tick(0);
+                Assert.That(f.Commands(), Is.Empty);
+                Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Completed), goal.StatusReason);
+            }
+        }
+
+        [Test]
+        public void RetainedFarmIncumbentWithPendingAmount_ReservesWithoutDummyCommand()
+        {
+            using (var f = new EconomyFixture())
+            {
+                var farm = f.Farm(16); var incumbent = f.Worker(0); f.Assigned(incumbent, farm);
+                var first = f.SubmitWithAmount("SelectedCount", "Exact", "1", "Any", "", "Food", "Farm");
+                f.Manager.Tick(0);
+                Assert.That(first.Status, Is.EqualTo(CommanderGoalStatus.WaitingForResources), first.StatusReason);
+                Assert.That(f.Commands(), Is.Empty, "An incumbent must not receive a duplicate Gather.");
+                Assert.That(f.Manager.GetWorkerReservation(incumbent.Id)?.GoalId, Is.EqualTo(first.GoalId));
+                var competing = f.Submit("SelectedCount", "Exact", "1", "Any", "", "Food", "Farm");
+                f.Manager.Tick(15);
+                Assert.That(competing.Status, Is.EqualTo(CommanderGoalStatus.Blocked));
+                Assert.That(f.Commands(), Is.Empty);
+                Assert.That(f.Manager.GetWorkerReservation(incumbent.Id)?.GoalId, Is.EqualTo(first.GoalId));
+            }
+        }
+
+        [Test]
+        public void ProtectedFarmIncumbent_KeepsCapacityAndCannotBeEvicted()
+        {
+            using (var f = new EconomyFixture())
+            {
+                var farm = f.Farm(16); var incumbent = f.Worker(0); f.Assigned(incumbent, farm);
+                var idle = f.Worker(1);
+                f.Simulation.CommandBuffer.EnqueueCommand(new StopCommand(0, new[] { incumbent.Id }));
+                f.Commands(); // Human authority observation without processing away the existing gather.
+                var goal = f.Submit("SelectedCount", "Exact", "1", "Idle", "", "Food", "Farm");
+                f.Manager.Tick(0);
+                Assert.That(f.Commands(), Is.Empty);
+                Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Blocked));
+                Assert.That(f.Manager.GetWorkerReservation(idle.Id), Is.Null);
+                Assert.That(incumbent.TargetResourceNodeId, Is.EqualTo(farm.Id));
+            }
+        }
+
+        [Test]
         public void HumanTakeover_InterruptsWithoutReclaimAfterLease()
         {
             using (var f = new EconomyFixture())
@@ -190,6 +318,108 @@ namespace OpenEmpires.Tests
                 Assert.That(f.Manager.GetWorkerReservation(selectedId), Is.Null);
                 f.Manager.Tick(15); Assert.That(f.Commands(), Is.Empty);
                 f.Manager.Tick(915); Assert.That(f.Commands(), Is.Empty); Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Blocked));
+            }
+        }
+
+        [Test]
+        public void BerriesRecovery_AdvancesPastFourNearerUnreachableSourcesWithBoundedChecks()
+        {
+            using (var f = new EconomyFixture())
+            {
+                var worker = f.Worker(0);
+                var first = f.Node(ResourceType.Food, 6);
+                var goal = (AllocateWorkersGoal)f.SubmitWithAmount("SelectedCount", "Exact", "1", "Idle", "", "Food", "Berries");
+                long origin = goal.GatheredIncomeAtActivation;
+                f.Manager.Tick(0);
+                var initial = f.Commands();
+                Assert.That(initial.OfType<GatherCommand>().Single().ResourceNodeId, Is.EqualTo(first.Id));
+                Assert.That(Subjects(initial), Is.EqualTo(new[] { worker.Id }));
+                f.Simulation.Tick(initial);
+                first.RemainingAmount = 0; worker.ClearPath(); worker.State = UnitState.Idle; worker.TargetResourceNodeId = -1;
+                foreach (var tile in new[] { new Vector2Int(f.Base.x + 12, f.Base.y + 10),
+                    new Vector2Int(f.Base.x + 17, f.Base.y + 10), new Vector2Int(f.Base.x + 12, f.Base.y + 15),
+                    new Vector2Int(f.Base.x + 17, f.Base.y + 15) }) f.IsolatedBerries(tile.x, tile.y);
+                var far = f.Simulation.MapData.AddResourceNode(ResourceType.Food,
+                    f.Simulation.MapData.TileToWorldFixed(f.Base.x + 23, f.Base.y + 22), 1000);
+                var sheep = f.Simulation.UnitRegistry.CreateUnit(0, worker.SimPosition, Fixed32.One, Fixed32.One, Fixed32.One);
+                sheep.IsSheep = true; sheep.CurrentHealth = 20;
+
+                f.Manager.ResetDiagnosticPathCheckCount(); f.Manager.Tick(15);
+                Assert.That(f.Manager.DiagnosticPathCheckCount, Is.LessThanOrEqualTo(4));
+                Assert.That(f.Commands(), Is.Empty, "The first bounded window has no reachable authorized source.");
+                Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Executing), goal.StatusReason);
+                Assert.That(goal.RecoveryCandidateOffsets[worker.Id], Is.EqualTo(4));
+                f.Simulation.Tick(new List<ICommand>());
+                f.Manager.ResetDiagnosticPathCheckCount(); f.Manager.Tick(30);
+                var recovered = f.Commands();
+                Assert.That(f.Manager.DiagnosticPathCheckCount, Is.LessThanOrEqualTo(4));
+                Assert.That(recovered.OfType<GatherCommand>().Single().ResourceNodeId, Is.EqualTo(far.Id));
+                Assert.That(recovered.OfType<GatherCommand>().Single().SourceKind, Is.EqualTo(ResourceSourceKind.Berries));
+                Assert.That(Subjects(recovered), Is.EqualTo(new[] { worker.Id }));
+                Assert.That(recovered.OfType<SlaughterSheepCommand>(), Is.Empty);
+                Assert.That(goal.SelectedWorkerIds, Is.EqualTo(new[] { worker.Id }));
+                Assert.That(goal.GatheredIncomeAtActivation, Is.EqualTo(origin));
+                f.Simulation.Tick(recovered);
+                Assert.That(worker.TargetResourceNodeId, Is.EqualTo(far.Id));
+            }
+        }
+
+        [Test]
+        public void BerriesRecovery_ExhaustedVisibleSourcesFailClosedWithoutReplacement()
+        {
+            using (var f = new EconomyFixture())
+            {
+                var worker = f.Worker(0); var first = f.Node(ResourceType.Food, 6);
+                var goal = (AllocateWorkersGoal)f.SubmitWithAmount("SelectedCount", "Exact", "1", "Idle", "", "Food", "Berries");
+                f.Manager.Tick(0); var initial = f.Commands(); f.Simulation.Tick(initial);
+                first.RemainingAmount = 0; worker.ClearPath(); worker.State = UnitState.Idle; worker.TargetResourceNodeId = -1;
+                foreach (var tile in new[] { new Vector2Int(f.Base.x + 12, f.Base.y + 10),
+                    new Vector2Int(f.Base.x + 17, f.Base.y + 10), new Vector2Int(f.Base.x + 12, f.Base.y + 15),
+                    new Vector2Int(f.Base.x + 17, f.Base.y + 15) }) f.IsolatedBerries(tile.x, tile.y);
+                var unused = f.Worker(3);
+                f.Manager.ResetDiagnosticPathCheckCount(); f.Manager.Tick(15);
+                Assert.That(f.Manager.DiagnosticPathCheckCount, Is.LessThanOrEqualTo(4));
+                Assert.That(goal.RecoverySearchExhausted, Is.True);
+                Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Blocked), goal.StatusReason);
+                Assert.That(f.Commands(), Is.Empty);
+                Assert.That(goal.SelectedWorkerIds, Is.EqualTo(new[] { worker.Id }));
+                Assert.That(f.Manager.GetWorkerReservation(unused.Id), Is.Null);
+                f.Manager.Tick(1815);
+                Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Failed), goal.StatusReason);
+                Assert.That(f.Commands(), Is.Empty);
+            }
+        }
+
+        [Test]
+        public void BerriesAdditionalIncome_OtherWorkerNativeDepositCompletesWithoutStoppingGather()
+        {
+            using (var f = new EconomyFixture())
+            {
+                var townCenter = f.Simulation.CreateBuilding(0, BuildingType.TownCenter, f.Base.x, f.Base.y, false, true);
+                var first = f.Node(ResourceType.Food, 6); var selected = f.Worker(0);
+                var goal = (AllocateWorkersGoal)f.SubmitWithAmount(10, "SelectedCount", "Exact", "1", "Idle", "", "Food", "Berries");
+                f.Manager.Tick(0); var initial = f.Commands();
+                Assert.That(Subjects(initial), Is.EqualTo(new[] { selected.Id }));
+                f.Simulation.Tick(initial);
+                Assert.That(selected.TargetResourceNodeId, Is.EqualTo(first.Id));
+                var other = f.Worker(7);
+                other.SimPosition = f.Simulation.MapData.TileToWorldFixed(townCenter.OriginTileX + townCenter.TileFootprintWidth,
+                    townCenter.OriginTileZ + 1);
+                other.CarriedResourceType = ResourceType.Food; other.CarriedResourceAmount = 10;
+                f.Simulation.Tick(new List<ICommand> { new DropOffCommand(0, new[] { other.Id }, townCenter.Id) });
+                for (int i = 0; i < 60 && f.Simulation.ResourceManager.GetGatheredIncome(0, ResourceType.Food) < 10; i++)
+                    f.Simulation.Tick(new List<ICommand>());
+                Assert.That(f.Simulation.ResourceManager.GetGatheredIncome(0, ResourceType.Food), Is.GreaterThanOrEqualTo(10));
+                f.Manager.Tick(15);
+                Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Completed), goal.StatusReason);
+                Assert.That(goal.ResourceProgress, Is.EqualTo(10));
+                Assert.That(selected.TargetResourceNodeId, Is.EqualTo(first.Id), "The ordinary selected gather order is left running.");
+                Assert.That(selected.State == UnitState.MovingToGather || selected.State == UnitState.Gathering
+                    || selected.State == UnitState.MovingToDropoff || selected.State == UnitState.DroppingOff,
+                    Is.True, "The selected worker keeps its ordinary gather lifecycle after task completion.");
+                Assert.That(f.Commands(), Is.Empty);
+                for (int tick = 30; tick <= 120; tick += 15)
+                { f.Manager.Tick(tick); Assert.That(f.Commands(), Is.Empty); f.Simulation.Tick(new List<ICommand>()); }
             }
         }
 
@@ -223,6 +453,15 @@ namespace OpenEmpires.Tests
             }
             internal ResourceNodeData Node(ResourceType resource, int offset) => Simulation.MapData.AddResourceNode(resource,
                 Simulation.MapData.TileToWorldFixed(Base.x + offset, Base.y + 10), 10000);
+            internal ResourceNodeData Farm(int offset)
+            {
+                var building = Simulation.CreateBuilding(0, BuildingType.Farm, Base.x + offset, Base.y + 14, false);
+                var node = Simulation.MapData.AddFarmResourceNode(ResourceType.Food, building.SimPosition, 10000);
+                node.LinkedBuildingId = building.Id; building.LinkedResourceNodeId = node.Id;
+                Simulation.MapData.MarkFarmTiles(building.OriginTileX, building.OriginTileZ,
+                    building.TileFootprintWidth, building.TileFootprintHeight);
+                return node;
+            }
             internal void Assigned(UnitData worker, ResourceNodeData node)
             { worker.State = UnitState.Gathering; worker.TargetResourceNodeId = node.Id; }
             internal CommanderGoal Submit(params string[] values)
@@ -232,6 +471,28 @@ namespace OpenEmpires.Tests
                 Assert.That(CommanderSemanticAdmission.TryCreateTacticalIntent(parsed.Nodes[0], Context(), out var intent, out _), Is.True);
                 var result = new CommanderIntentResolver().Resolve(intent, Simulation, Manager);
                 Assert.That(result.CreatedGoal, Is.True, result.Reason); return result.Goal;
+            }
+            internal CommanderGoal SubmitWithAmount(params string[] values)
+                => SubmitWithAmount(100, values);
+            internal CommanderGoal SubmitWithAmount(int amount, params string[] values)
+            {
+                string node = AllocationNode(values);
+                node = node.Substring(0, node.Length - 1)
+                    + ",\"resourceAmount\":" + amount + ",\"resourceAmountMode\":\"AdditionalGathered\"}";
+                var parsed = CommanderSemanticJson.Parse(Request(node));
+                Assert.That(parsed.IsValid, Is.True);
+                Assert.That(CommanderSemanticAdmission.TryCreateTacticalIntent(parsed.Nodes[0], Context(), out var intent, out _), Is.True);
+                var result = new CommanderIntentResolver().Resolve(intent, Simulation, Manager);
+                Assert.That(result.CreatedGoal, Is.True, result.Reason); return result.Goal;
+            }
+            internal ResourceNodeData IsolatedBerries(int x, int z)
+            {
+                var node = Simulation.MapData.AddResourceNode(ResourceType.Food,
+                    Simulation.MapData.TileToWorldFixed(x, z), 1000);
+                for (int tx = node.TileX - 1; tx <= node.TileX + node.FootprintWidth; tx++)
+                    for (int tz = node.TileZ - 1; tz <= node.TileZ + node.FootprintHeight; tz++)
+                        Simulation.MapData.Tiles[tx, tz] = TileType.Water;
+                return node;
             }
             internal List<ICommand> Commands() => Simulation.CommandBuffer.FlushCommands();
             public void Dispose() { Manager.Dispose(); UnityEngine.Object.DestroyImmediate(config); }

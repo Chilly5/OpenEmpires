@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Failed(Child)" total="4" passed="3" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 05:46:56Z" end-time="2026-10-12 05:47:02Z" duration="5.3227308">
+  <test-suite type="TestSuite" id="3095" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1806" result="Failed" site="Child" start-time="2026-10-12 05:46:56Z" end-time="2026-10-12 05:47:02Z" duration="5.322731" total="4" passed="3" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="3083" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1806" result="Failed" site="Child" start-time="2026-10-12 05:46:57Z" end-time="2026-10-12 05:47:02Z" duration="5.216640" total="4" passed="3" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="40764" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="3084" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1806" result="Failed" site="Child" start-time="2026-10-12 05:46:57Z" end-time="2026-10-12 05:47:02Z" duration="5.110653" total="4" passed="3" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="3085" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1806" result="Failed" site="Child" start-time="2026-10-12 05:46:57Z" end-time="2026-10-12 05:47:02Z" duration="5.001614" total="4" passed="3" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1280" name="CommanderGrandFixPresentationTests" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" testcasecount="32" result="Passed" start-time="2026-10-12 05:46:57Z" end-time="2026-10-12 05:46:59Z" duration="2.509004" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderGrandFixOffline" />
+            </properties>
+            <test-case id="1301" name="ReadableApprovalCard_PreservesWholeScrollableTextAndDetailsDoesNotApprove" fullname="OpenEmpires.Tests.CommanderGrandFixPresentationTests.ReadableApprovalCard_PreservesWholeScrollableTextAndDetailsDoesNotApprove" methodname="ReadableApprovalCard_PreservesWholeScrollableTextAndDetailsDoesNotApprove" classname="OpenEmpires.Tests.CommanderGrandFixPresentationTests" runstate="Runnable" seed="1674803600" result="Passed" start-time="2026-10-12 05:46:57Z" end-time="2026-10-12 05:46:59Z" duration="2.360200" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1920" name="CommanderPhase4ATests" fullname="OpenEmpires.Tests.CommanderPhase4ATests" classname="OpenEmpires.Tests.CommanderPhase4ATests" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-10-12 05:46:59Z" end-time="2026-10-12 05:47:01Z" duration="1.260816" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase4A" />
+            </properties>
+            <test-case id="1924" name="OpenRouterSemanticRequest_TransmitsSupportedPlacementSchema" fullname="OpenEmpires.Tests.CommanderPhase4ATests.OpenRouterSemanticRequest_TransmitsSupportedPlacementSchema" methodname="OpenRouterSemanticRequest_TransmitsSupportedPlacementSchema" classname="OpenEmpires.Tests.CommanderPhase4ATests" runstate="Runnable" seed="1876884759" result="Passed" start-time="2026-10-12 05:46:59Z" end-time="2026-10-12 05:47:01Z" duration="1.219756" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[CommanderProvider] utc=2026-10-12T05:47:01.0822539Z;model=openai/gpt-6-luna;request=built
+[CommanderProvider] http=sent
+[CommanderProvider] http=200;durationMs=7
+[CommanderProvider] finish=unspecified
+[CommanderProvider] assistantContent=extracted;characters=48;finish=unspecified
+[CommanderProvider] semantic=Unsupported;nodes=0
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2554" name="CommanderPhase4GCapabilityTests" fullname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests" classname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests" runstate="Runnable" testcasecount="29" result="Failed" site="Child" start-time="2026-10-12 05:47:01Z" end-time="2026-10-12 05:47:02Z" duration="1.053841" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="2565" name="CapabilityGoal_MilitaryCommandUsesNormalCommandBufferAndRemainsExecuting" fullname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests.CapabilityGoal_MilitaryCommandUsesNormalCommandBufferAndRemainsExecuting" methodname="CapabilityGoal_MilitaryCommandUsesNormalCommandBufferAndRemainsExecuting" classname="OpenEmpires.Tests.CommanderPhase4GCapabilityTests" runstate="Runnable" seed="805628966" result="Failed" start-time="2026-10-12 05:47:01Z" end-time="2026-10-12 05:47:02Z" duration="1.007248" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  No complete known reachable formation objective exists near the requested location.
+  Expected: Executing
+  But was:  Blocked
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase4GCapabilityTests.CapabilityGoal_MilitaryCommandUsesNormalCommandBufferAndRemainsExecuting () [0x000fa] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderPhase4GCapabilityTests.cs:240
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] Goal #1 submitted: CapabilityAction
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No complete known reachable formation objective exists near the requested location.
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="2647" name="CommanderPhase5AAntiGravityHostileAuditTests" fullname="OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests" classname="OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests" runstate="Runnable" testcasecount="26" result="Passed" start-time="2026-10-12 05:47:02Z" end-time="2026-10-12 05:47:02Z" duration="0.064023" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderPhase5A" />
+              <property name="Category" value="AntiGravityAudit" />
+            </properties>
+            <test-case id="2673" name="PrimitiveCatalog_ExactlyNineRegisteredPrimitives" fullname="OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests.PrimitiveCatalog_ExactlyNineRegisteredPrimitives" methodname="PrimitiveCatalog_ExactlyNineRegisteredPrimitives" classname="OpenEmpires.Tests.CommanderPhase5AAntiGravityHostileAuditTests" runstate="Runnable" seed="1238831345" result="Passed" start-time="2026-10-12 05:47:02Z" end-time="2026-10-12 05:47:02Z" duration="0.012441" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: D:\unity_projects\OpenEmpires\Open Empires\Docs\CommanderPhase5C\evidence\final-fix-leaves-20261012-054656-894-ac6a45bb.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

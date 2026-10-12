@@ -1,0 +1,827 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 00:14:49Z" end-time="2026-10-12 00:14:56Z" duration="7.6395777">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1781" result="Failed" site="Child" start-time="2026-10-12 00:14:49Z" end-time="2026-10-12 00:14:56Z" duration="7.639578" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="3054" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1781" result="Failed" site="Child" start-time="2026-10-12 00:14:49Z" end-time="2026-10-12 00:14:56Z" duration="7.614479" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="12696" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="3055" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1781" result="Failed" site="Child" start-time="2026-10-12 00:14:49Z" end-time="2026-10-12 00:14:56Z" duration="7.613968" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="3056" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1781" result="Failed" site="Child" start-time="2026-10-12 00:14:49Z" end-time="2026-10-12 00:14:56Z" duration="7.613770" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1002" name="CommanderEconomyClarificationTests" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" testcasecount="94" result="Failed" site="Child" start-time="2026-10-12 00:14:49Z" end-time="2026-10-12 00:14:56Z" duration="7.611726" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderEconomyClarification" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1086" name="CorpusReplay_UsesProductionChatBoundaryAndPersistsAllDeclaredCases" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.CorpusReplay_UsesProductionChatBoundaryAndPersistsAllDeclaredCases" methodname="CorpusReplay_UsesProductionChatBoundaryAndPersistsAllDeclaredCases" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="208234647" result="Failed" label="Error" start-time="2026-10-12 00:14:49Z" end-time="2026-10-12 00:14:56Z" duration="7.594903" asserts="0">
+              <properties>
+                <property name="Category" value="CommanderPhase5CCorpus" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.InvalidOperationException : Unsafe Phase 5C turn field.]]></message>
+                <stack-trace><![CDATA[  at OpenEmpires.TestSupport.ScenarioEvidenceRecorder.RecordPhase5CTurn (Newtonsoft.Json.Linq.JObject safeTurn) [0x00052] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\Shared\ScenarioEvidenceRecorder.cs:69 
+  at OpenEmpires.Tests.CommanderEconomyClarificationTests.RunPhase5CCorpusAsync (System.String corpusPath, System.String directory) [0x00f56] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.Phase5CCorpus.cs:447 
+  at OpenEmpires.Tests.CommanderEconomyClarificationTests.CorpusReplay_UsesProductionChatBoundaryAndPersistsAllDeclaredCases () [0x000f4] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.Phase5CCorpus.cs:126 
+  at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31 
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44 ]]></stack-trace>
+              </failure>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: BuildStructure
+[Commander] intent=admitted;goal-submitted=True
+[Commander] Goal #1: status=Blocked owned=0 queued=0; No usable visible GoldMine/Gold resource matches the requested placement.
+[SyncCheck] tick=1 checksum=1920B5C4
+[SyncCheck] tick=2 checksum=66E02DC5
+[SyncCheck] tick=3 checksum=B49FA5C6
+[SyncCheck] tick=4 checksum=025F1DC7
+[SyncCheck] tick=5 checksum=501E95C8
+[SyncCheck] tick=6 checksum=9DDE0DC9
+[SyncCheck] tick=7 checksum=EB9D85CA
+[SyncCheck] tick=8 checksum=395CFDCB
+[SyncCheck] tick=9 checksum=871C75CC
+[SyncCheck] tick=10 checksum=D4DBEDCD
+[SyncCheck] tick=11 checksum=229B65CE
+[SyncCheck] tick=12 checksum=705ADDCF
+[SyncCheck] tick=13 checksum=BE1A55D0
+[SyncCheck] tick=14 checksum=0BD9CDD1
+[SyncCheck] tick=15 checksum=599945D2
+[SyncCheck] tick=16 checksum=A758BDD3
+[SyncCheck] tick=17 checksum=F51835D4
+[SyncCheck] tick=18 checksum=42D7ADD5
+[SyncCheck] tick=19 checksum=909725D6
+[SyncCheck] tick=20 checksum=DE569DD7
+[SyncCheck] tick=21 checksum=2C1615D8
+[SyncCheck] tick=22 checksum=79D58DD9
+[SyncCheck] tick=23 checksum=C79505DA
+[SyncCheck] tick=24 checksum=15547DDB
+[SyncCheck] tick=25 checksum=6313F5DC
+[SyncCheck] tick=26 checksum=B0D36DDD
+[SyncCheck] tick=27 checksum=FE92E5DE
+[SyncCheck] tick=28 checksum=4C525DDF
+[SyncCheck] tick=29 checksum=9A11D5E0
+[SyncCheck] tick=30 checksum=E7D14DE1
+[SyncCheck] tick=31 checksum=3590C5E2
+[SyncCheck] tick=32 checksum=83503DE3
+[SyncCheck] tick=33 checksum=D10FB5E4
+[SyncCheck] tick=34 checksum=1ECF2DE5
+[SyncCheck] tick=35 checksum=6C8EA5E6
+[SyncCheck] tick=36 checksum=BA4E1DE7
+[SyncCheck] tick=37 checksum=080D95E8
+[SyncCheck] tick=38 checksum=55CD0DE9
+[SyncCheck] tick=39 checksum=A38C85EA
+[SyncCheck] tick=40 checksum=F14BFDEB
+[SyncCheck] tick=41 checksum=3F0B75EC
+[SyncCheck] tick=42 checksum=8CCAEDED
+[SyncCheck] tick=43 checksum=DA8A65EE
+[SyncCheck] tick=44 checksum=2849DDEF
+[SyncCheck] tick=45 checksum=760955F0
+[SyncCheck] tick=46 checksum=C3C8CDF1
+[SyncCheck] tick=47 checksum=118845F2
+[SyncCheck] tick=48 checksum=5F47BDF3
+[SyncCheck] tick=49 checksum=AD0735F4
+[SyncCheck] tick=50 checksum=FAC6ADF5
+[SyncCheck] tick=51 checksum=488625F6
+[SyncCheck] tick=52 checksum=96459DF7
+[SyncCheck] tick=53 checksum=E40515F8
+[SyncCheck] tick=54 checksum=31C48DF9
+[SyncCheck] tick=55 checksum=7F8405FA
+[SyncCheck] tick=56 checksum=CD437DFB
+[SyncCheck] tick=57 checksum=1B02F5FC
+[SyncCheck] tick=58 checksum=68C26DFD
+[SyncCheck] tick=59 checksum=B681E5FE
+[SyncCheck] tick=60 checksum=04415DFF
+[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: WatchFutureUnits
+[Commander] Goal #1: status=Executing owned=0 queued=0; Placing House at (197,140) with villager #0.
+[SyncCheck] tick=1 checksum=5535B08B
+[SyncCheck] tick=2 checksum=D8DF48F3
+[SyncCheck] tick=3 checksum=5AC506EA
+[SyncCheck] tick=4 checksum=AC358051
+[SyncCheck] tick=5 checksum=AB241B07
+[SyncCheck] tick=6 checksum=799D712D
+[SyncCheck] tick=7 checksum=F594E8A2
+[SyncCheck] tick=8 checksum=41171B87
+[SyncCheck] tick=9 checksum=0B66059C
+[SyncCheck] tick=10 checksum=A53FAB21
+[SyncCheck] tick=11 checksum=BDE607D6
+[SyncCheck] tick=12 checksum=55591BBB
+[SyncCheck] tick=13 checksum=3CE77CB1
+[SyncCheck] tick=14 checksum=C54F2EF8
+[SyncCheck] tick=15 checksum=9DD22E50
+[Commander] Goal #1: status=WaitingForConstruction owned=0 queued=1; Construction: villager #0 is travelling to building #1.
+[SyncCheck] tick=16 checksum=D3154AB7
+[SyncCheck] tick=17 checksum=7A804E50
+[SyncCheck] tick=18 checksum=72069EFA
+[SyncCheck] tick=19 checksum=8AF6D296
+[SyncCheck] tick=20 checksum=F4025343
+[SyncCheck] tick=21 checksum=7E77B6E2
+[SyncCheck] tick=22 checksum=084A6352
+[SyncCheck] tick=23 checksum=0444F6F4
+[SyncCheck] tick=24 checksum=D0EB6948
+[SyncCheck] tick=25 checksum=BEFBBE8E
+[SyncCheck] tick=26 checksum=AC695CA5
+[SyncCheck] tick=27 checksum=8C8F738F
+[SyncCheck] tick=28 checksum=CCF91E48
+[SyncCheck] tick=29 checksum=BB67242F
+[SyncCheck] tick=30 checksum=A9D52A16
+[SyncCheck] tick=31 checksum=98432FFD
+[SyncCheck] tick=32 checksum=86B135E4
+[SyncCheck] tick=33 checksum=751F3BCB
+[SyncCheck] tick=34 checksum=638D41B2
+[SyncCheck] tick=35 checksum=51FB4799
+[SyncCheck] tick=36 checksum=40694D80
+[SyncCheck] tick=37 checksum=2ED75367
+[SyncCheck] tick=38 checksum=1D45594E
+[SyncCheck] tick=39 checksum=0BB35F35
+[SyncCheck] tick=40 checksum=FA21651C
+[SyncCheck] tick=41 checksum=E88F6B03
+[SyncCheck] tick=42 checksum=D6FD70EA
+[SyncCheck] tick=43 checksum=C56B76D1
+[SyncCheck] tick=44 checksum=B3D97CB8
+[SyncCheck] tick=45 checksum=A247829F
+[SyncCheck] tick=46 checksum=90B58886
+[SyncCheck] tick=47 checksum=7F238E6D
+[SyncCheck] tick=48 checksum=6D919454
+[SyncCheck] tick=49 checksum=5BFF9A3B
+[SyncCheck] tick=50 checksum=4A6DA022
+[SyncCheck] tick=51 checksum=38DBA609
+[SyncCheck] tick=52 checksum=2749ABF0
+[SyncCheck] tick=53 checksum=15B7B1D7
+[SyncCheck] tick=54 checksum=0425B7BE
+[SyncCheck] tick=55 checksum=F293BDA5
+[SyncCheck] tick=56 checksum=E101C38C
+[SyncCheck] tick=57 checksum=CF6FC973
+[SyncCheck] tick=58 checksum=BDDDCF5A
+[SyncCheck] tick=59 checksum=AC4BD541
+[SyncCheck] tick=60 checksum=9AB9DB28
+[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] intent=admitted;goal-submitted=True
+[Commander] Goal #1: status=Completed owned=0 queued=0; Stockpile Gold: 2000/200 reached.
+[SyncCheck] tick=1 checksum=325940CB
+[SyncCheck] tick=2 checksum=E2C1112A
+[SyncCheck] tick=3 checksum=9328E189
+[SyncCheck] tick=4 checksum=4390B1E8
+[SyncCheck] tick=5 checksum=F3F88247
+[SyncCheck] tick=6 checksum=A46052A6
+[SyncCheck] tick=7 checksum=54C82305
+[SyncCheck] tick=8 checksum=052FF364
+[SyncCheck] tick=9 checksum=B597C3C3
+[SyncCheck] tick=10 checksum=65FF9422
+[SyncCheck] tick=11 checksum=16676481
+[SyncCheck] tick=12 checksum=C6CF34E0
+[SyncCheck] tick=13 checksum=7737053F
+[SyncCheck] tick=14 checksum=279ED59E
+[SyncCheck] tick=15 checksum=D806A5FD
+[SyncCheck] tick=16 checksum=886E765C
+[SyncCheck] tick=17 checksum=38D646BB
+[SyncCheck] tick=18 checksum=E93E171A
+[SyncCheck] tick=19 checksum=99A5E779
+[SyncCheck] tick=20 checksum=4A0DB7D8
+[SyncCheck] tick=21 checksum=FA758837
+[SyncCheck] tick=22 checksum=AADD5896
+[SyncCheck] tick=23 checksum=5B4528F5
+[SyncCheck] tick=24 checksum=0BACF954
+[SyncCheck] tick=25 checksum=BC14C9B3
+[SyncCheck] tick=26 checksum=6C7C9A12
+[SyncCheck] tick=27 checksum=1CE46A71
+[SyncCheck] tick=28 checksum=CD4C3AD0
+[SyncCheck] tick=29 checksum=7DB40B2F
+[SyncCheck] tick=30 checksum=2E1BDB8E
+[SyncCheck] tick=31 checksum=DE83ABED
+[SyncCheck] tick=32 checksum=8EEB7C4C
+[SyncCheck] tick=33 checksum=3F534CAB
+[SyncCheck] tick=34 checksum=EFBB1D0A
+[SyncCheck] tick=35 checksum=A022ED69
+[SyncCheck] tick=36 checksum=508ABDC8
+[SyncCheck] tick=37 checksum=00F28E27
+[SyncCheck] tick=38 checksum=B15A5E86
+[SyncCheck] tick=39 checksum=61C22EE5
+[SyncCheck] tick=40 checksum=1229FF44
+[SyncCheck] tick=41 checksum=C291CFA3
+[SyncCheck] tick=42 checksum=72F9A002
+[SyncCheck] tick=43 checksum=23617061
+[SyncCheck] tick=44 checksum=D3C940C0
+[SyncCheck] tick=45 checksum=8431111F
+[SyncCheck] tick=46 checksum=3498E17E
+[SyncCheck] tick=47 checksum=E500B1DD
+[SyncCheck] tick=48 checksum=9568823C
+[SyncCheck] tick=49 checksum=45D0529B
+[SyncCheck] tick=50 checksum=F63822FA
+[SyncCheck] tick=51 checksum=A69FF359
+[SyncCheck] tick=52 checksum=5707C3B8
+[SyncCheck] tick=53 checksum=076F9417
+[SyncCheck] tick=54 checksum=B7D76476
+[SyncCheck] tick=55 checksum=683F34D5
+[SyncCheck] tick=56 checksum=18A70534
+[SyncCheck] tick=57 checksum=C90ED593
+[SyncCheck] tick=58 checksum=7976A5F2
+[SyncCheck] tick=59 checksum=29DE7651
+[SyncCheck] tick=60 checksum=DA4646B0
+[Commander] context=projected;provider-request=started
+[SyncCheck] tick=1 checksum=325940CB
+[SyncCheck] tick=2 checksum=E2C1112A
+[SyncCheck] tick=3 checksum=9328E189
+[SyncCheck] tick=4 checksum=4390B1E8
+[SyncCheck] tick=5 checksum=F3F88247
+[SyncCheck] tick=6 checksum=A46052A6
+[SyncCheck] tick=7 checksum=54C82305
+[SyncCheck] tick=8 checksum=052FF364
+[SyncCheck] tick=9 checksum=B597C3C3
+[SyncCheck] tick=10 checksum=65FF9422
+[SyncCheck] tick=11 checksum=16676481
+[SyncCheck] tick=12 checksum=C6CF34E0
+[SyncCheck] tick=13 checksum=7737053F
+[SyncCheck] tick=14 checksum=279ED59E
+[SyncCheck] tick=15 checksum=D806A5FD
+[SyncCheck] tick=16 checksum=886E765C
+[SyncCheck] tick=17 checksum=38D646BB
+[SyncCheck] tick=18 checksum=E93E171A
+[SyncCheck] tick=19 checksum=99A5E779
+[SyncCheck] tick=20 checksum=4A0DB7D8
+[SyncCheck] tick=21 checksum=FA758837
+[SyncCheck] tick=22 checksum=AADD5896
+[SyncCheck] tick=23 checksum=5B4528F5
+[SyncCheck] tick=24 checksum=0BACF954
+[SyncCheck] tick=25 checksum=BC14C9B3
+[SyncCheck] tick=26 checksum=6C7C9A12
+[SyncCheck] tick=27 checksum=1CE46A71
+[SyncCheck] tick=28 checksum=CD4C3AD0
+[SyncCheck] tick=29 checksum=7DB40B2F
+[SyncCheck] tick=30 checksum=2E1BDB8E
+[SyncCheck] tick=31 checksum=DE83ABED
+[SyncCheck] tick=32 checksum=8EEB7C4C
+[SyncCheck] tick=33 checksum=3F534CAB
+[SyncCheck] tick=34 checksum=EFBB1D0A
+[SyncCheck] tick=35 checksum=A022ED69
+[SyncCheck] tick=36 checksum=508ABDC8
+[SyncCheck] tick=37 checksum=00F28E27
+[SyncCheck] tick=38 checksum=B15A5E86
+[SyncCheck] tick=39 checksum=61C22EE5
+[SyncCheck] tick=40 checksum=1229FF44
+[SyncCheck] tick=41 checksum=C291CFA3
+[SyncCheck] tick=42 checksum=72F9A002
+[SyncCheck] tick=43 checksum=23617061
+[SyncCheck] tick=44 checksum=D3C940C0
+[SyncCheck] tick=45 checksum=8431111F
+[SyncCheck] tick=46 checksum=3498E17E
+[SyncCheck] tick=47 checksum=E500B1DD
+[SyncCheck] tick=48 checksum=9568823C
+[SyncCheck] tick=49 checksum=45D0529B
+[SyncCheck] tick=50 checksum=F63822FA
+[SyncCheck] tick=51 checksum=A69FF359
+[SyncCheck] tick=52 checksum=5707C3B8
+[SyncCheck] tick=53 checksum=076F9417
+[SyncCheck] tick=54 checksum=B7D76476
+[SyncCheck] tick=55 checksum=683F34D5
+[SyncCheck] tick=56 checksum=18A70534
+[SyncCheck] tick=57 checksum=C90ED593
+[SyncCheck] tick=58 checksum=7976A5F2
+[SyncCheck] tick=59 checksum=29DE7651
+[SyncCheck] tick=60 checksum=DA4646B0
+[Commander] context=projected;provider-request=started
+[SyncCheck] tick=1 checksum=325940CB
+[SyncCheck] tick=2 checksum=E2C1112A
+[SyncCheck] tick=3 checksum=9328E189
+[SyncCheck] tick=4 checksum=4390B1E8
+[SyncCheck] tick=5 checksum=F3F88247
+[SyncCheck] tick=6 checksum=A46052A6
+[SyncCheck] tick=7 checksum=54C82305
+[SyncCheck] tick=8 checksum=052FF364
+[SyncCheck] tick=9 checksum=B597C3C3
+[SyncCheck] tick=10 checksum=65FF9422
+[SyncCheck] tick=11 checksum=16676481
+[SyncCheck] tick=12 checksum=C6CF34E0
+[SyncCheck] tick=13 checksum=7737053F
+[SyncCheck] tick=14 checksum=279ED59E
+[SyncCheck] tick=15 checksum=D806A5FD
+[SyncCheck] tick=16 checksum=886E765C
+[SyncCheck] tick=17 checksum=38D646BB
+[SyncCheck] tick=18 checksum=E93E171A
+[SyncCheck] tick=19 checksum=99A5E779
+[SyncCheck] tick=20 checksum=4A0DB7D8
+[SyncCheck] tick=21 checksum=FA758837
+[SyncCheck] tick=22 checksum=AADD5896
+[SyncCheck] tick=23 checksum=5B4528F5
+[SyncCheck] tick=24 checksum=0BACF954
+[SyncCheck] tick=25 checksum=BC14C9B3
+[SyncCheck] tick=26 checksum=6C7C9A12
+[SyncCheck] tick=27 checksum=1CE46A71
+[SyncCheck] tick=28 checksum=CD4C3AD0
+[SyncCheck] tick=29 checksum=7DB40B2F
+[SyncCheck] tick=30 checksum=2E1BDB8E
+[SyncCheck] tick=31 checksum=DE83ABED
+[SyncCheck] tick=32 checksum=8EEB7C4C
+[SyncCheck] tick=33 checksum=3F534CAB
+[SyncCheck] tick=34 checksum=EFBB1D0A
+[SyncCheck] tick=35 checksum=A022ED69
+[SyncCheck] tick=36 checksum=508ABDC8
+[SyncCheck] tick=37 checksum=00F28E27
+[SyncCheck] tick=38 checksum=B15A5E86
+[SyncCheck] tick=39 checksum=61C22EE5
+[SyncCheck] tick=40 checksum=1229FF44
+[SyncCheck] tick=41 checksum=C291CFA3
+[SyncCheck] tick=42 checksum=72F9A002
+[SyncCheck] tick=43 checksum=23617061
+[SyncCheck] tick=44 checksum=D3C940C0
+[SyncCheck] tick=45 checksum=8431111F
+[SyncCheck] tick=46 checksum=3498E17E
+[SyncCheck] tick=47 checksum=E500B1DD
+[SyncCheck] tick=48 checksum=9568823C
+[SyncCheck] tick=49 checksum=45D0529B
+[SyncCheck] tick=50 checksum=F63822FA
+[SyncCheck] tick=51 checksum=A69FF359
+[SyncCheck] tick=52 checksum=5707C3B8
+[SyncCheck] tick=53 checksum=076F9417
+[SyncCheck] tick=54 checksum=B7D76476
+[SyncCheck] tick=55 checksum=683F34D5
+[SyncCheck] tick=56 checksum=18A70534
+[SyncCheck] tick=57 checksum=C90ED593
+[SyncCheck] tick=58 checksum=7976A5F2
+[SyncCheck] tick=59 checksum=29DE7651
+[SyncCheck] tick=60 checksum=DA4646B0
+[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] intent=admitted;goal-submitted=True
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=1 checksum=461AEC38
+[SyncCheck] tick=2 checksum=9C97BB87
+[SyncCheck] tick=3 checksum=A6908DB2
+[SyncCheck] tick=4 checksum=D3E6297D
+[SyncCheck] tick=5 checksum=BBE32260
+[SyncCheck] tick=6 checksum=CD82B2A0
+[SyncCheck] tick=7 checksum=D9676633
+[SyncCheck] tick=8 checksum=1AE4BFA4
+[SyncCheck] tick=9 checksum=228AC295
+[SyncCheck] tick=10 checksum=B7DE1DC6
+[SyncCheck] tick=11 checksum=5350CA37
+[SyncCheck] tick=12 checksum=B9E0EB48
+[SyncCheck] tick=13 checksum=D412353A
+[SyncCheck] tick=14 checksum=D363096A
+[SyncCheck] tick=15 checksum=D68E9D1C
+[Commander] Goal #1: status=Completed owned=7 queued=0; The 7 selected workers have matching assignments.
+[SyncCheck] tick=16 checksum=9DDD82DD
+[SyncCheck] tick=17 checksum=8CF90C87
+[SyncCheck] tick=18 checksum=8A6215ED
+[SyncCheck] tick=19 checksum=B86C2A90
+[SyncCheck] tick=20 checksum=82F53DCD
+[SyncCheck] tick=21 checksum=E5F96EED
+[SyncCheck] tick=22 checksum=890BA448
+[SyncCheck] tick=23 checksum=EF2621BB
+[SyncCheck] tick=24 checksum=2D8161CD
+[SyncCheck] tick=25 checksum=9798F45C
+[SyncCheck] tick=26 checksum=53DE096B
+[SyncCheck] tick=27 checksum=7EFB7653
+[SyncCheck] tick=28 checksum=56218337
+[SyncCheck] tick=29 checksum=E52F3D3B
+[SyncCheck] tick=30 checksum=01ECB9BF
+[SyncCheck] tick=31 checksum=E848A49D
+[SyncCheck] tick=32 checksum=9B6BB358
+[SyncCheck] tick=33 checksum=F7C46C34
+[SyncCheck] tick=34 checksum=2C4B9D5D
+[SyncCheck] tick=35 checksum=B9110244
+[SyncCheck] tick=36 checksum=70A184EA
+[SyncCheck] tick=37 checksum=905866F2
+[SyncCheck] tick=38 checksum=64DE1779
+[SyncCheck] tick=39 checksum=4241A87D
+[SyncCheck] tick=40 checksum=7E62F5E2
+[SyncCheck] tick=41 checksum=DB7F34A6
+[SyncCheck] tick=42 checksum=F293F06B
+[SyncCheck] tick=43 checksum=0B2B42F1
+[SyncCheck] tick=44 checksum=CB507414
+[SyncCheck] tick=45 checksum=99FE9AD5
+[SyncCheck] tick=46 checksum=2AE10638
+[SyncCheck] tick=47 checksum=7948F5D8
+[SyncCheck] tick=48 checksum=7051BA19
+[SyncCheck] tick=49 checksum=74278C18
+[SyncCheck] tick=50 checksum=E65E1E1A
+[SyncCheck] tick=51 checksum=FB2A7DBA
+[SyncCheck] tick=52 checksum=F1A07BF8
+[SyncCheck] tick=53 checksum=C0869AF1
+[SyncCheck] tick=54 checksum=45865D69
+[SyncCheck] tick=55 checksum=9ACA1F7A
+[SyncCheck] tick=56 checksum=8FD3286A
+[SyncCheck] tick=57 checksum=4AC0DC97
+[SyncCheck] tick=58 checksum=DEB21403
+[SyncCheck] tick=59 checksum=C36B2FC7
+[SyncCheck] tick=60 checksum=64CC8B09
+[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] intent=admitted;goal-submitted=True
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=1 checksum=3998CFCF
+[SyncCheck] tick=2 checksum=AD149786
+[SyncCheck] tick=3 checksum=3512C6C4
+[SyncCheck] tick=4 checksum=A60290E2
+[SyncCheck] tick=5 checksum=1DCF9F66
+[SyncCheck] tick=6 checksum=14253CCF
+[SyncCheck] tick=7 checksum=3C929368
+[SyncCheck] tick=8 checksum=58D5A4C2
+[SyncCheck] tick=9 checksum=B6ADEE3C
+[SyncCheck] tick=10 checksum=76148257
+[SyncCheck] tick=11 checksum=43E3DA12
+[SyncCheck] tick=12 checksum=7054E48E
+[SyncCheck] tick=13 checksum=5EF001EC
+[SyncCheck] tick=14 checksum=3E88E788
+[SyncCheck] tick=15 checksum=B9FC5EA7
+[Commander] Goal #1: status=Completed owned=6 queued=0; The 6 selected workers have matching assignments.
+[SyncCheck] tick=16 checksum=BDAA2645
+[SyncCheck] tick=17 checksum=FA7F3503
+[SyncCheck] tick=18 checksum=7E543781
+[SyncCheck] tick=19 checksum=10CB015F
+[SyncCheck] tick=20 checksum=95ABAE1D
+[SyncCheck] tick=21 checksum=50B92DDB
+[SyncCheck] tick=22 checksum=5661B97C
+[SyncCheck] tick=23 checksum=DDAE969D
+[SyncCheck] tick=24 checksum=C4D0BAB9
+[SyncCheck] tick=25 checksum=958F2DF9
+[SyncCheck] tick=26 checksum=8E14CE1E
+[SyncCheck] tick=27 checksum=5442B6E4
+[SyncCheck] tick=28 checksum=F54ABC4F
+[SyncCheck] tick=29 checksum=F00E831C
+[SyncCheck] tick=30 checksum=E807176E
+[SyncCheck] tick=31 checksum=B3DB3001
+[SyncCheck] tick=32 checksum=79F8AA78
+[SyncCheck] tick=33 checksum=3B5EB191
+[SyncCheck] tick=34 checksum=C5AF4650
+[SyncCheck] tick=35 checksum=7C84C2EF
+[SyncCheck] tick=36 checksum=C30690D4
+[SyncCheck] tick=37 checksum=A83EAFDA
+[SyncCheck] tick=38 checksum=56615C86
+[SyncCheck] tick=39 checksum=C3506132
+[SyncCheck] tick=40 checksum=D1120B83
+[SyncCheck] tick=41 checksum=6F7F31D8
+[SyncCheck] tick=42 checksum=BF3F3A11
+[SyncCheck] tick=43 checksum=E73AE60B
+[SyncCheck] tick=44 checksum=19900941
+[SyncCheck] tick=45 checksum=819A6116
+[SyncCheck] tick=46 checksum=D8A0399B
+[SyncCheck] tick=47 checksum=5BF525C5
+[SyncCheck] tick=48 checksum=60E90E10
+[SyncCheck] tick=49 checksum=65DCF65B
+[SyncCheck] tick=50 checksum=824052A8
+[SyncCheck] tick=51 checksum=F6B98F11
+[SyncCheck] tick=52 checksum=FBAD775C
+[SyncCheck] tick=53 checksum=00A15FA7
+[SyncCheck] tick=54 checksum=1D04BBF4
+[SyncCheck] tick=55 checksum=A059A81E
+[SyncCheck] tick=56 checksum=A54D9069
+[SyncCheck] tick=57 checksum=AA4178B4
+[SyncCheck] tick=58 checksum=C6A4D501
+[SyncCheck] tick=59 checksum=49F9C12B
+[SyncCheck] tick=60 checksum=4EEDA976
+[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] intent=admitted;goal-submitted=True
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=1 checksum=8C371B8B
+[SyncCheck] tick=2 checksum=0CBC1771
+[SyncCheck] tick=3 checksum=908E39A0
+[SyncCheck] tick=4 checksum=85641C35
+[SyncCheck] tick=5 checksum=F867E1F4
+[SyncCheck] tick=6 checksum=6DB92CDA
+[SyncCheck] tick=7 checksum=73889F83
+[SyncCheck] tick=8 checksum=1A3F6218
+[SyncCheck] tick=9 checksum=2D127891
+[SyncCheck] tick=10 checksum=2CD381F3
+[SyncCheck] tick=11 checksum=965627FB
+[SyncCheck] tick=12 checksum=8188FEA7
+[SyncCheck] tick=13 checksum=032C3556
+[SyncCheck] tick=14 checksum=17AD65EC
+[SyncCheck] tick=15 checksum=1531D5CE
+[Commander] Goal #1: status=Completed owned=4 queued=0; The 4 selected workers have matching assignments.
+[SyncCheck] tick=16 checksum=7F08E6EB
+[SyncCheck] tick=17 checksum=5BB4951B
+[SyncCheck] tick=18 checksum=C5DC2CA4
+[SyncCheck] tick=19 checksum=9FF79390
+[SyncCheck] tick=20 checksum=437C7F9D
+[SyncCheck] tick=21 checksum=6A84FB47
+[SyncCheck] tick=22 checksum=3B65A686
+[SyncCheck] tick=23 checksum=E4705155
+[SyncCheck] tick=24 checksum=F05D5539
+[SyncCheck] tick=25 checksum=74A3B6D6
+[SyncCheck] tick=26 checksum=7C2B7089
+[SyncCheck] tick=27 checksum=86DEE238
+[SyncCheck] tick=28 checksum=8623184F
+[SyncCheck] tick=29 checksum=3D7D7D41
+[SyncCheck] tick=30 checksum=3DE67A09
+[SyncCheck] tick=31 checksum=B74ADFC7
+[SyncCheck] tick=32 checksum=CE68C43D
+[SyncCheck] tick=33 checksum=87AC05B3
+[SyncCheck] tick=34 checksum=80390B08
+[SyncCheck] tick=35 checksum=A7BE3166
+[SyncCheck] tick=36 checksum=EB10317B
+[SyncCheck] tick=37 checksum=B0442DAE
+[SyncCheck] tick=38 checksum=4C42EF42
+[SyncCheck] tick=39 checksum=633C78F7
+[SyncCheck] tick=40 checksum=B597BEC5
+[SyncCheck] tick=41 checksum=4044D932
+[SyncCheck] tick=42 checksum=48709F5E
+[SyncCheck] tick=43 checksum=EAEBC13C
+[SyncCheck] tick=44 checksum=8D6B09A4
+[SyncCheck] tick=45 checksum=6C349807
+[SyncCheck] tick=46 checksum=588186E2
+[SyncCheck] tick=47 checksum=6A741039
+[SyncCheck] tick=48 checksum=23FC7682
+[SyncCheck] tick=49 checksum=8B4FCF17
+[SyncCheck] tick=50 checksum=0B086AFA
+[SyncCheck] tick=51 checksum=4E24F71E
+[SyncCheck] tick=52 checksum=20DC2972
+[SyncCheck] tick=53 checksum=78E958F2
+[SyncCheck] tick=54 checksum=F35A909D
+[SyncCheck] tick=55 checksum=84F58872
+[SyncCheck] tick=56 checksum=4F269F77
+[SyncCheck] tick=57 checksum=F91B8788
+[SyncCheck] tick=58 checksum=7F830702
+[SyncCheck] tick=59 checksum=34E83049
+[SyncCheck] tick=60 checksum=2BC38DEB
+[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] intent=admitted;goal-submitted=True
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=1 checksum=374A8647
+[SyncCheck] tick=2 checksum=8529B843
+[SyncCheck] tick=3 checksum=0EE2C751
+[SyncCheck] tick=4 checksum=1B2FD68A
+[SyncCheck] tick=5 checksum=0DC4C2A3
+[SyncCheck] tick=6 checksum=1655591F
+[SyncCheck] tick=7 checksum=D06044CC
+[SyncCheck] tick=8 checksum=D9219D09
+[SyncCheck] tick=9 checksum=6F2D1D75
+[SyncCheck] tick=10 checksum=F546AEB1
+[SyncCheck] tick=11 checksum=2CDA951E
+[SyncCheck] tick=12 checksum=73F371DE
+[SyncCheck] tick=13 checksum=E24E6ECC
+[SyncCheck] tick=14 checksum=4B0138C4
+[SyncCheck] tick=15 checksum=5D30F10E
+[Commander] Goal #1: status=Completed owned=4 queued=0; The 4 selected workers have matching assignments.
+[SyncCheck] tick=16 checksum=9E0275C7
+[SyncCheck] tick=17 checksum=0D75C6EF
+[SyncCheck] tick=18 checksum=26660669
+[SyncCheck] tick=19 checksum=1293D5F2
+[SyncCheck] tick=20 checksum=0DEC8C67
+[SyncCheck] tick=21 checksum=767ACAEA
+[SyncCheck] tick=22 checksum=AF027A1C
+[SyncCheck] tick=23 checksum=F1FBC8BB
+[SyncCheck] tick=24 checksum=04EE8809
+[SyncCheck] tick=25 checksum=A48DB4E8
+[SyncCheck] tick=26 checksum=91EB8452
+[SyncCheck] tick=27 checksum=76399C0A
+[SyncCheck] tick=28 checksum=61FEC77B
+[SyncCheck] tick=29 checksum=48C2F65A
+[SyncCheck] tick=30 checksum=7EDF56DC
+[SyncCheck] tick=31 checksum=391B9A43
+[SyncCheck] tick=32 checksum=4A6F9A2B
+[SyncCheck] tick=33 checksum=9F2B6735
+[SyncCheck] tick=34 checksum=2EB95D21
+[SyncCheck] tick=35 checksum=7EEEDD71
+[SyncCheck] tick=36 checksum=6E12DEE4
+[SyncCheck] tick=37 checksum=5F44F457
+[SyncCheck] tick=38 checksum=55046B8D
+[SyncCheck] tick=39 checksum=B8668507
+[SyncCheck] tick=40 checksum=F07C8A67
+[SyncCheck] tick=41 checksum=A123B50B
+[SyncCheck] tick=42 checksum=27235A7B
+[SyncCheck] tick=43 checksum=C6093123
+[SyncCheck] tick=44 checksum=0FF0C2C6
+[SyncCheck] tick=45 checksum=9959BE98
+[SyncCheck] tick=46 checksum=DCBBA060
+[SyncCheck] tick=47 checksum=BDBE229B
+[SyncCheck] tick=48 checksum=98A5FC87
+[SyncCheck] tick=49 checksum=5CA85847
+[SyncCheck] tick=50 checksum=FD3BECB2
+[SyncCheck] tick=51 checksum=118591AD
+[SyncCheck] tick=52 checksum=7D122032
+[SyncCheck] tick=53 checksum=1F178E64
+[SyncCheck] tick=54 checksum=E8759660
+[SyncCheck] tick=55 checksum=6C3E3FE5
+[SyncCheck] tick=56 checksum=809082D2
+[SyncCheck] tick=57 checksum=7FBF0488
+[SyncCheck] tick=58 checksum=5EC23100
+[SyncCheck] tick=59 checksum=D2B210C2
+[SyncCheck] tick=60 checksum=643E14E8
+[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] intent=admitted;goal-submitted=True
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=1 checksum=374A8647
+[SyncCheck] tick=2 checksum=8529B843
+[SyncCheck] tick=3 checksum=0EE2C751
+[SyncCheck] tick=4 checksum=1B2FD68A
+[SyncCheck] tick=5 checksum=0DC4C2A3
+[SyncCheck] tick=6 checksum=1655591F
+[SyncCheck] tick=7 checksum=D06044CC
+[SyncCheck] tick=8 checksum=D9219D09
+[SyncCheck] tick=9 checksum=6F2D1D75
+[SyncCheck] tick=10 checksum=F546AEB1
+[SyncCheck] tick=11 checksum=2CDA951E
+[SyncCheck] tick=12 checksum=73F371DE
+[SyncCheck] tick=13 checksum=E24E6ECC
+[SyncCheck] tick=14 checksum=4B0138C4
+[SyncCheck] tick=15 checksum=5D30F10E
+[Commander] Goal #1: status=Completed owned=4 queued=0; The 4 selected workers have matching assignments.
+[SyncCheck] tick=16 checksum=9E0275C7
+[SyncCheck] tick=17 checksum=0D75C6EF
+[SyncCheck] tick=18 checksum=26660669
+[SyncCheck] tick=19 checksum=1293D5F2
+[SyncCheck] tick=20 checksum=0DEC8C67
+[SyncCheck] tick=21 checksum=767ACAEA
+[SyncCheck] tick=22 checksum=AF027A1C
+[SyncCheck] tick=23 checksum=F1FBC8BB
+[SyncCheck] tick=24 checksum=04EE8809
+[SyncCheck] tick=25 checksum=A48DB4E8
+[SyncCheck] tick=26 checksum=91EB8452
+[SyncCheck] tick=27 checksum=76399C0A
+[SyncCheck] tick=28 checksum=61FEC77B
+[SyncCheck] tick=29 checksum=48C2F65A
+[SyncCheck] tick=30 checksum=7EDF56DC
+[SyncCheck] tick=31 checksum=391B9A43
+[SyncCheck] tick=32 checksum=4A6F9A2B
+[SyncCheck] tick=33 checksum=9F2B6735
+[SyncCheck] tick=34 checksum=2EB95D21
+[SyncCheck] tick=35 checksum=7EEEDD71
+[SyncCheck] tick=36 checksum=6E12DEE4
+[SyncCheck] tick=37 checksum=5F44F457
+[SyncCheck] tick=38 checksum=55046B8D
+[SyncCheck] tick=39 checksum=B8668507
+[SyncCheck] tick=40 checksum=F07C8A67
+[SyncCheck] tick=41 checksum=A123B50B
+[SyncCheck] tick=42 checksum=27235A7B
+[SyncCheck] tick=43 checksum=C6093123
+[SyncCheck] tick=44 checksum=0FF0C2C6
+[SyncCheck] tick=45 checksum=9959BE98
+[SyncCheck] tick=46 checksum=DCBBA060
+[SyncCheck] tick=47 checksum=BDBE229B
+[SyncCheck] tick=48 checksum=98A5FC87
+[SyncCheck] tick=49 checksum=5CA85847
+[SyncCheck] tick=50 checksum=FD3BECB2
+[SyncCheck] tick=51 checksum=118591AD
+[SyncCheck] tick=52 checksum=7D122032
+[SyncCheck] tick=53 checksum=1F178E64
+[SyncCheck] tick=54 checksum=E8759660
+[SyncCheck] tick=55 checksum=6C3E3FE5
+[SyncCheck] tick=56 checksum=809082D2
+[SyncCheck] tick=57 checksum=7FBF0488
+[SyncCheck] tick=58 checksum=5EC23100
+[SyncCheck] tick=59 checksum=D2B210C2
+[SyncCheck] tick=60 checksum=643E14E8
+[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] intent=admitted;goal-submitted=True
+[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Food.
+[SyncCheck] tick=1 checksum=40FFEA98
+[SyncCheck] tick=2 checksum=66C5DDB4
+[SyncCheck] tick=3 checksum=6FED42CC
+[SyncCheck] tick=4 checksum=DD6739FC
+[SyncCheck] tick=5 checksum=8660AB87
+[SyncCheck] tick=6 checksum=2F2B9F2C
+[SyncCheck] tick=7 checksum=A17810EC
+[SyncCheck] tick=8 checksum=C5D68CC5
+[SyncCheck] tick=9 checksum=9C4712B7
+[SyncCheck] tick=10 checksum=89F88EC5
+[SyncCheck] tick=11 checksum=777B8CED
+[SyncCheck] tick=12 checksum=AD808B6D
+[SyncCheck] tick=13 checksum=7C77933E
+[SyncCheck] tick=14 checksum=938DE2AB
+[SyncCheck] tick=15 checksum=8B80A9F8
+[Commander] Goal #1: status=WaitingForResources owned=4 queued=0; Additional gathered Food: 0/400; worker assignments are in place, waiting for actual resources.
+[SyncCheck] tick=16 checksum=616330C2
+[SyncCheck] tick=17 checksum=6C17E7AC
+[SyncCheck] tick=18 checksum=D37E15D4
+[SyncCheck] tick=19 checksum=B5E48459
+[SyncCheck] tick=20 checksum=ECC1B29C
+[SyncCheck] tick=21 checksum=7F660040
+[SyncCheck] tick=22 checksum=45E3E63E
+[SyncCheck] tick=23 checksum=4E2FC3DC
+[SyncCheck] tick=24 checksum=5D621538
+[SyncCheck] tick=25 checksum=4E8BED1C
+[SyncCheck] tick=26 checksum=D49B6E0C
+[SyncCheck] tick=27 checksum=C798FE54
+[SyncCheck] tick=28 checksum=9B1C0137
+[SyncCheck] tick=29 checksum=BEBE0C50
+[SyncCheck] tick=30 checksum=D6896244
+[SyncCheck] tick=31 checksum=F7A623D1
+[SyncCheck] tick=32 checksum=5C578435
+[SyncCheck] tick=33 checksum=7F0C7412
+[SyncCheck] tick=34 checksum=3B675B47
+[SyncCheck] tick=35 checksum=92396998
+[SyncCheck] tick=36 checksum=964A6F3E
+[SyncCheck] tick=37 checksum=0BE25FE0
+[SyncCheck] tick=38 checksum=F553C37D
+[SyncCheck] tick=39 checksum=394B3252
+[SyncCheck] tick=40 checksum=1580D49C
+[SyncCheck] tick=41 checksum=530055A3
+[SyncCheck] tick=42 checksum=62C7C1D7
+[SyncCheck] tick=43 checksum=038BA595
+[SyncCheck] tick=44 checksum=5F8C1F92
+[SyncCheck] tick=45 checksum=81C9C294
+[SyncCheck] tick=46 checksum=D4971D6D
+[SyncCheck] tick=47 checksum=CB2768CE
+[SyncCheck] tick=48 checksum=00A3936B
+[SyncCheck] tick=49 checksum=5B64E3E9
+[SyncCheck] tick=50 checksum=1296AE87
+[SyncCheck] tick=51 checksum=6BBB7B26
+[SyncCheck] tick=52 checksum=82767D47
+[SyncCheck] tick=53 checksum=FD429265
+[SyncCheck] tick=54 checksum=317EE5A3
+[SyncCheck] tick=55 checksum=F1B8C1C5
+[SyncCheck] tick=56 checksum=87909DC2
+[SyncCheck] tick=57 checksum=10B67645
+[SyncCheck] tick=58 checksum=F4BF6528
+[SyncCheck] tick=59 checksum=F184DF65
+[SyncCheck] tick=60 checksum=0D155248
+[Commander] context=projected;provider-request=started
+[SyncCheck] tick=1 checksum=CDB3702B
+[SyncCheck] tick=2 checksum=C90D66AC
+[SyncCheck] tick=3 checksum=C4675D2D
+[SyncCheck] tick=4 checksum=BFC153AE
+[SyncCheck] tick=5 checksum=BB1B4A2F
+[SyncCheck] tick=6 checksum=B67540B0
+[SyncCheck] tick=7 checksum=B1CF3731
+[SyncCheck] tick=8 checksum=AD292DB2
+[SyncCheck] tick=9 checksum=A8832433
+[SyncCheck] tick=10 checksum=A3DD1AB4
+[SyncCheck] tick=11 checksum=9F371135
+[SyncCheck] tick=12 checksum=9A9107B6
+[SyncCheck] tick=13 checksum=95EAFE37
+[SyncCheck] tick=14 checksum=9144F4B8
+[SyncCheck] tick=15 checksum=8C9EEB39
+[SyncCheck] tick=16 checksum=87F8E1BA
+[SyncCheck] tick=17 checksum=8352D83B
+[SyncCheck] tick=18 checksum=7EACCEBC
+[SyncCheck] tick=19 checksum=7A06C53D
+[SyncCheck] tick=20 checksum=7560BBBE
+[SyncCheck] tick=21 checksum=70BAB23F
+[SyncCheck] tick=22 checksum=6C14A8C0
+[SyncCheck] tick=23 checksum=676E9F41
+[SyncCheck] tick=24 checksum=62C895C2
+[SyncCheck] tick=25 checksum=5E228C43
+[SyncCheck] tick=26 checksum=597C82C4
+[SyncCheck] tick=27 checksum=54D67945
+[SyncCheck] tick=28 checksum=50306FC6
+[SyncCheck] tick=29 checksum=4B8A6647
+[SyncCheck] tick=30 checksum=46E45CC8
+[SyncCheck] tick=31 checksum=423E5349
+[SyncCheck] tick=32 checksum=3D9849CA
+[SyncCheck] tick=33 checksum=38F2404B
+[SyncCheck] tick=34 checksum=344C36CC
+[SyncCheck] tick=35 checksum=2FA62D4D
+[SyncCheck] tick=36 checksum=2B0023CE
+[SyncCheck] tick=37 checksum=265A1A4F
+[SyncCheck] tick=38 checksum=21B410D0
+[SyncCheck] tick=39 checksum=1D0E0751
+[SyncCheck] tick=40 checksum=1867FDD2
+[SyncCheck] tick=41 checksum=13C1F453
+[SyncCheck] tick=42 checksum=0F1BEAD4
+[SyncCheck] tick=43 checksum=0A75E155
+[SyncCheck] tick=44 checksum=05CFD7D6
+[SyncCheck] tick=45 checksum=0129CE57
+[SyncCheck] tick=46 checksum=FC83C4D8
+[SyncCheck] tick=47 checksum=F7DDBB59
+[SyncCheck] tick=48 checksum=F337B1DA
+[SyncCheck] tick=49 checksum=EE91A85B
+[SyncCheck] tick=50 checksum=E9EB9EDC
+[SyncCheck] tick=51 checksum=E545955D
+[SyncCheck] tick=52 checksum=E09F8BDE
+[SyncCheck] tick=53 checksum=DBF9825F
+[SyncCheck] tick=54 checksum=D75378E0
+[SyncCheck] tick=55 checksum=D2AD6F61
+[SyncCheck] tick=56 checksum=CE0765E2
+[SyncCheck] tick=57 checksum=C9615C63
+[SyncCheck] tick=58 checksum=C4BB52E4
+[SyncCheck] tick=59 checksum=C0154965
+[SyncCheck] tick=60 checksum=BB6F3FE6
+[Commander] context=projected;provider-request=started
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

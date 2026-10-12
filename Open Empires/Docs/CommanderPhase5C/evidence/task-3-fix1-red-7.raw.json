@@ -1,0 +1,48 @@
+{
+  "job_id": "eb33dd69db964d89ba62ec79cb0138b1",
+  "status": "failed",
+  "mode": "EditMode",
+  "started_unix_ms": 1791714835199,
+  "finished_unix_ms": 1791714838365,
+  "last_update_unix_ms": 1791714838365,
+  "progress": {
+    "completed": 7,
+    "total": 7,
+    "current_test_full_name": null,
+    "current_test_started_unix_ms": 1791714837943,
+    "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase4GCapabilityTests.ReplacementNativeMoveToSameEndpoint_CannotCompleteOriginalRequest",
+    "last_finished_unix_ms": 1791714838322,
+    "stuck_suspected": false,
+    "editor_is_focused": true,
+    "blocked_reason": null,
+    "failures_so_far": [
+      {
+        "full_name": "OpenEmpires.Tests.CommanderGrandFixStatusTests.CausalCountedUnitsQuestion_PreservesAmbiguityBetweenOwnedRequests",
+        "message": "  Expected: \"Ambiguous\"\r\n  But was:  null\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderGrandFixStatusTests.CausalCountedUnitsQuestion_SelectsOnlyMatchingOwnedRequest(\"What happened to the six units?\",\"One\")",
+        "message": "  Expected: \"One\"\r\n  But was:  null\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderGrandFixStatusTests.CausalCountedUnitsQuestion_SelectsOnlyMatchingOwnedRequest(\"What happened to the seven units?\",\"None\")",
+        "message": "  Expected: \"None\"\r\n  But was:  null\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase4GCapabilityTests.MixedRadiusFormation_UsesLegalNativeEndpointsAndCompletes_AcceleratedFixture",
+        "message": "  Blocked for 1800 ticks. A native route stopped short of its validated formation slot; no distant idle position counts as arrival.\r\n  Expected: Completed\r\n  But was:  Failed\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase4GCapabilityTests.NearSlotIdleSubject_CannotCompleteBeforeItsNativeMoveIsProcessed",
+        "message": "  Expected: not equal to Completed\r\n  But was:  Completed\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase4GCapabilityTests.ReplacementNativeMoveToSameEndpoint_CannotCompleteOriginalRequest",
+        "message": "  Expected: not equal to Completed\r\n  But was:  Completed\r\n"
+      }
+    ],
+    "failures_capped": false
+  },
+  "error": null,
+  "result": null
+}

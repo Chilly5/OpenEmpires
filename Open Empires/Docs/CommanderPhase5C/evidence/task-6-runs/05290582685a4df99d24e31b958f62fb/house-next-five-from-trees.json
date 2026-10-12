@@ -1,0 +1,58 @@
+{
+  "schema": "openempires-phase5c-scenario-turn@1",
+  "run_id": "88ab1863-9aac-4914-9daf-666db8f27cf7",
+  "first_failing_stage": "admission-or-native",
+  "first_failure_category": "expected-effect-missing",
+  "schemaVersion": 1,
+  "caseId": "house-next-five-from-trees",
+  "requestId": "runtime:1",
+  "utterance": "Build a House, then send the next five Villagers from my first Town Center to Wood.",
+  "turnIndex": 2,
+  "status": "observed",
+  "evidenceMode": "offline-production-chat-fixture",
+  "providerCalls": 1,
+  "httpAttempts": 0,
+  "fidelity": "fixture-expected-not-observed",
+  "semanticValid": true,
+  "estimatedInputTokens": null,
+  "actualPromptTokens": null,
+  "actualCompletionTokens": null,
+  "actualCachedTokens": null,
+  "actualReasoningTokens": null,
+  "reportedCost": null,
+  "attemptCosts": [],
+  "packingMs": -86.5,
+  "transportMs": null,
+  "parseMs": 2.046,
+  "admissionMs": 132.833,
+  "firstNativeActionMs": null,
+  "commandCount": 0,
+  "commandTypes": [],
+  "nativeResults": [],
+  "taskStates": [],
+  "draftBefore": [
+    "1:sourceKind:SourceKind"
+  ],
+  "draftAfter": [
+    "1:sourceKind:SourceKind"
+  ],
+  "draftChanges": [],
+  "normalizedFields": [
+    {
+      "draftNodeCount": 2,
+      "missingSlots": [
+        "1:sourceKind:SourceKind"
+      ]
+    }
+  ],
+  "fixtureKind": "correct-synthetic",
+  "turnText": "Yes.",
+  "uiSubmitMs": 48.245,
+  "semanticOutcome": "Clarify",
+  "approvalRequired": false,
+  "approved": false,
+  "tickMode": "accelerated-fixture",
+  "ticks": 60,
+  "errorStage": "admission-or-native",
+  "errorCategory": "expected-effect-missing"
+}

@@ -194,6 +194,7 @@ namespace OpenEmpires
 
         private static string GoalLabel(GameSimulation simulation, CommanderGoal goal)
         {
+            if (goal is CommanderCapabilityGoal capability) return CapabilityLabel(capability);
             if (goal is ReachAgeGoal age) return "Reach Age " + age.TargetAge;
             if (goal is AllocateWorkersGoal workers)
             {
@@ -219,6 +220,7 @@ namespace OpenEmpires
 
         private static string GoalProgress(GameSimulation simulation, CommanderGoal goal)
         {
+            if (goal is CommanderCapabilityGoal capability) return CapabilityProgress(simulation, capability);
             if (goal is ReachAgeGoal age) return "Age " + simulation.GetPlayerAge(goal.PlayerId) + " / " + age.TargetAge;
             if (goal is AllocateWorkersGoal workers)
             {
@@ -252,6 +254,86 @@ namespace OpenEmpires
                 + "; interrupted: " + future.InterruptedCount;
             if (goal is ResourceAllocationGoal allocation) return "Workers: " + goal.LastObservedOwnedCount
                 + " / " + allocation.TargetWorkers;
+            return goal.StatusReason ?? string.Empty;
+        }
+
+        private static string CapabilityLabel(CommanderCapabilityGoal goal)
+        {
+            var action = goal.Action;
+            string subjects = action.UnitSelector.AllMatching ? "all matching villagers"
+                : action.UnitSelector.Count + " " + action.UnitSelector.Kind;
+            switch (action.ActionType)
+            {
+                case CommanderCapabilityActionType.MoveUnits:
+                    return "Move " + subjects + " to the validated destination";
+                case CommanderCapabilityActionType.GarrisonUnits:
+                    return "Garrison " + subjects + " in the exact owned "
+                        + (action.StructureType?.ToString() ?? "shelter");
+                case CommanderCapabilityActionType.UngarrisonBuilding:
+                    return "Ungarrison the exact owned " + (action.StructureType?.ToString() ?? "shelter");
+                case CommanderCapabilityActionType.DiscoverEnemy:
+                    return "Discover visible enemy " + (action.TargetSelector?.Kind == CommanderTargetSelectorKind.BuildingType
+                        ? action.TargetSelector?.StructureType?.ToString() : "unit");
+                default:
+                    return action.ActionType.ToString();
+            }
+        }
+
+        private static string CapabilityProgress(GameSimulation simulation, CommanderCapabilityGoal goal)
+        {
+            var action = goal.Action.ActionType;
+            if (action == CommanderCapabilityActionType.MoveUnits)
+            {
+                int count = goal.IssuedCommand is MoveCommand move && move.UnitIds != null
+                    ? move.UnitIds.Length : goal.FrozenWorkerIds?.Count ?? 0;
+                if (count == 0) return "Awaiting exact bound subjects; no placeholder count.";
+                if (!(goal.IssuedCommand is MoveCommand issued))
+                    return "Frozen subjects: " + count + "; native order pending.";
+                int receipts = 0, arrived = 0;
+                for (int i = 0; i < count; i++)
+                {
+                    if (goal.NativeMovementProcessed == null || i >= goal.NativeMovementProcessed.Length
+                        || !goal.NativeMovementProcessed[i]) continue;
+                    receipts++;
+                    if (goal.NativeMovementResults == null || i >= goal.NativeMovementResults.Length
+                        || goal.NativeMovementResults[i] == NativeMovePathResult.Partial
+                        || goal.NativeMovementResults[i] == NativeMovePathResult.NoPath
+                        || goal.NativeMovementEndpoints == null || i >= goal.NativeMovementEndpoints.Length) continue;
+                    var unit = simulation.UnitRegistry.GetUnit(issued.UnitIds[i]);
+                    if (unit == null || unit.State != UnitState.Idle || unit.HasPath) continue;
+                    long dx = (long)unit.SimPosition.x.Raw - goal.NativeMovementEndpoints[i].x.Raw;
+                    long dz = (long)unit.SimPosition.z.Raw - goal.NativeMovementEndpoints[i].z.Raw;
+                    long limit = Fixed32.FromInt(1).Raw;
+                    if (dx * dx + dz * dz <= limit * limit) arrived++;
+                }
+                return "Native arrivals: " + arrived + " / " + count + "; route receipts: " + receipts + " / " + count;
+            }
+            if (action == CommanderCapabilityActionType.GarrisonUnits)
+            {
+                if (goal.GarrisonCandidateIds == null) return "Awaiting exact eligible shelter snapshot.";
+                int housed = 0;
+                if (goal.GarrisonShelter != null)
+                    foreach (int id in goal.GarrisonIssuedIds ?? Array.Empty<int>())
+                        if (goal.GarrisonShelter.GarrisonedUnitIds.Contains(id)
+                            && simulation.UnitRegistry.GetGarrisonedUnit(id) != null) housed++;
+                int requested = goal.Action.UnitSelector.AllMatching
+                    ? goal.GarrisonCandidateIds.Length : goal.Action.UnitSelector.Count;
+                return "Native shelter entries: " + housed + " / " + requested
+                    + "; protected: " + goal.GarrisonProtectedCount
+                    + "; unaccommodated: " + goal.GarrisonUnaccommodatedCount;
+            }
+            if (action == CommanderCapabilityActionType.UngarrisonBuilding)
+            {
+                if (goal.UngarrisonInitialIds == null) return "Awaiting exact shelter occupant snapshot.";
+                int released = 0;
+                foreach (int id in goal.UngarrisonInitialIds)
+                    if (simulation.UnitRegistry.GetUnit(id) != null
+                        && (goal.GarrisonShelter == null || !goal.GarrisonShelter.GarrisonedUnitIds.Contains(id))) released++;
+                return "Native released: " + released + " / " + goal.UngarrisonInitialIds.Length;
+            }
+            if (action == CommanderCapabilityActionType.DiscoverEnemy)
+                return "Known-frontier moves: " + goal.DiscoveryMovesIssued + " / 8; candidates checked: "
+                    + goal.DiscoveryCandidatesChecked + ". " + (goal.StatusReason ?? string.Empty);
             return goal.StatusReason ?? string.Empty;
         }
 

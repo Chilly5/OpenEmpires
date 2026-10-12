@@ -146,7 +146,8 @@ namespace OpenEmpires
                             || !TryWorkerSelection(workers, byId, simulation.Config.MaxPopulation,
                                 out _, out _, out _))) return false;
                     if (node.Inputs.TryGetValue("location", out string location)
-                        && (!byId.TryGetValue(location, out var site) || !TryLocation(site, byId)))
+                        && (!byId.TryGetValue(location, out var site) || !TryLocation(site, byId)
+                            || site.Parameters.ContainsKey("resource")))
                         return false;
                     intent = new BuildStructureIntent(playerId, building.BuildingType,
                         node.Parameter<int>("count"), constraints);
@@ -162,6 +163,13 @@ namespace OpenEmpires
                         node.Parameter<string>("resource"));
                     var sourceKind = (ResourceSourceKind)Enum.Parse(typeof(ResourceSourceKind),
                         node.Parameter<string>("sourceKind"));
+                    if (node.Inputs.TryGetValue("location", out string resourceLocation)
+                        && (!byId.TryGetValue(resourceLocation, out var region)
+                            || !TryLocation(region, byId)
+                            || !region.Parameters.TryGetValue("resource", out object regionResource)
+                            || !region.Parameters.TryGetValue("sourceKind", out object regionSource)
+                            || (string)regionResource != resource.ToString()
+                            || (string)regionSource != sourceKind.ToString())) return false;
                     foreach (var restriction in globalConstraints)
                         if (restriction is ResourceSourceConstraint sourceRestriction
                             && sourceRestriction.Resource == resource && sourceRestriction.SourceKind != ResourceSourceKind.Any)
@@ -172,10 +180,27 @@ namespace OpenEmpires
                         }
                     var allocation = new CommanderWorkerAllocation(
                         CommanderWorkerAllocationMode.SelectedCount,
-                        CommanderWorkerCountMode.Exact, selectedCount,
+                        source.Parameters.ContainsKey("countMode")
+                            ? CommanderWorkerCountMode.AllMatching : CommanderWorkerCountMode.Exact,
+                        source.Parameters.ContainsKey("countMode") ? (int?)null : selectedCount,
                         new CommanderWorkerSelector(state, currentResource),
                         new CommanderResourceDestination(resource, sourceKind));
                     intent = new AllocateWorkersIntent(playerId, allocation, constraints);
+                    break;
+                case CommanderDynamicMechanic.MoveWorkers:
+                    if (!byId.TryGetValue(node.Inputs["workers"], out var movingWorkers)
+                        || !TryWorkerSelection(movingWorkers, byId, simulation.Config.MaxPopulation,
+                            out _, out _, out _)
+                        || !byId.TryGetValue(node.Inputs["location"], out var moveLocation)
+                        || !TryLocation(moveLocation, byId)
+                        || !moveLocation.Parameters.ContainsKey("resource")
+                        || !moveLocation.Parameters.ContainsKey("sourceKind")
+                        || moveLocation.Parameter<string>("anchor") != "MyTownCenter"
+                        || moveLocation.Parameter<string>("relation") != "MapWest") return false;
+                    intent = new CapabilityActionIntent(playerId, CommanderCapabilityActionType.MoveUnits,
+                        new CommanderUnitSelector(CommanderUnitSelectorKind.Villagers),
+                        new CommanderLocationSelector(CommanderLocationSelectorKind.PlayerBase),
+                        constraints: constraints);
                     break;
                 case CommanderDynamicMechanic.Produce:
                     if (!TryUnit(node.Parameter<string>("unit"), knowledge, civilization,
@@ -290,6 +315,10 @@ namespace OpenEmpires
             if (gap < CommanderSemanticJson.MinimumClearGapTiles
                 || gap > CommanderSemanticJson.MaximumClearGapTiles
                 || (relation == "Near" && gap != 1)) return false;
+            if (node.Parameters.ContainsKey("resource")
+                && (!node.Parameters.ContainsKey("sourceKind") || relation != "MapWest"
+                    || !node.Parameters.TryGetValue("anchor", out object composedAnchor)
+                    || (string)composedAnchor != "MyTownCenter")) return false;
             if (node.Parameters.TryGetValue("anchor", out object anchor))
                 return (string)anchor == "MyTownCenter" || (string)anchor == "MyBarracks";
             if (node.Inputs.TryGetValue("structures", out string structures))
@@ -320,8 +349,9 @@ namespace OpenEmpires
             }
             if (node.Primitive.Mechanic != CommanderDynamicMechanic.SelectWorkers)
                 return false;
-            count = node.Parameter<int>("count");
-            if (count < 1 || count > maximumPopulation) return false;
+            bool all = node.Parameters.ContainsKey("countMode");
+            count = all ? 0 : node.Parameter<int>("count");
+            if (!all && (count < 1 || count > maximumPopulation)) return false;
             if (node.Parameters.TryGetValue("state", out object stateName)
                 && (!Enum.TryParse((string)stateName, false, out state)
                     || state.ToString() != (string)stateName)) return false;
@@ -332,6 +362,7 @@ namespace OpenEmpires
                     || current.ToString() != (string)resourceName) return false;
                 currentResource = current;
             }
+            if (all && state == CommanderWorkerState.Any) return false;
             return true;
         }
 

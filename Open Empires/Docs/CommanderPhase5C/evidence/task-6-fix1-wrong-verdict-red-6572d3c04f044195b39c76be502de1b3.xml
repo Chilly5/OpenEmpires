@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 01:50:13Z" end-time="2026-10-12 01:50:14Z" duration="0.8638449">
+  <test-suite type="TestSuite" id="3078" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1793" result="Failed" site="Child" start-time="2026-10-12 01:50:13Z" end-time="2026-10-12 01:50:14Z" duration="0.863845" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="3067" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1793" result="Failed" site="Child" start-time="2026-10-12 01:50:13Z" end-time="2026-10-12 01:50:14Z" duration="0.859794" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="12696" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="3068" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1793" result="Failed" site="Child" start-time="2026-10-12 01:50:13Z" end-time="2026-10-12 01:50:14Z" duration="0.859486" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="3069" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1793" result="Failed" site="Child" start-time="2026-10-12 01:50:13Z" end-time="2026-10-12 01:50:14Z" duration="0.859207" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1002" name="CommanderEconomyClarificationTests" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" testcasecount="106" result="Failed" site="Child" start-time="2026-10-12 01:50:13Z" end-time="2026-10-12 01:50:14Z" duration="0.858310" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderEconomyClarification" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="ParameterizedMethod" id="1096" name="CorpusWrongVerdict_NonWrongResponseCannotRemainCertifiedWrong" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.CorpusWrongVerdict_NonWrongResponseCannotRemainCertifiedWrong" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-12 01:50:13Z" end-time="2026-10-12 01:50:14Z" duration="0.857233" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties>
+                <property name="Category" value="CommanderPhase5CCorpus" />
+              </properties>
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1094" name="CorpusWrongVerdict_NonWrongResponseCannotRemainCertifiedWrong(&quot;{not-json&quot;)" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.CorpusWrongVerdict_NonWrongResponseCannotRemainCertifiedWrong(&quot;{not-json&quot;)" methodname="CorpusWrongVerdict_NonWrongResponseCannotRemainCertifiedWrong" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="158647422" result="Failed" start-time="2026-10-12 01:50:13Z" end-time="2026-10-12 01:50:13Z" duration="0.415609" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  String lengths are both 8. Strings differ at index 1.
+  Expected: "open-gap"
+  But was:  "observed"
+  ------------^
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderEconomyClarificationTests.CorpusWrongVerdict_NonWrongResponseCannotRemainCertifiedWrong (System.String variant) [0x0010f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.Phase5CCorpus.cs:253
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[[Commander] context=projected;provider-request=started
+]]></output>
+              </test-case>
+              <test-case id="1095" name="CorpusWrongVerdict_NonWrongResponseCannotRemainCertifiedWrong(&quot;faithful&quot;)" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.CorpusWrongVerdict_NonWrongResponseCannotRemainCertifiedWrong(&quot;faithful&quot;)" methodname="CorpusWrongVerdict_NonWrongResponseCannotRemainCertifiedWrong" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1033931819" result="Failed" start-time="2026-10-12 01:50:13Z" end-time="2026-10-12 01:50:14Z" duration="0.440758" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  String lengths are both 8. Strings differ at index 1.
+  Expected: "open-gap"
+  But was:  "observed"
+  ------------^
+]]></message>
+                  <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderEconomyClarificationTests.CorpusWrongVerdict_NonWrongResponseCannotRemainCertifiedWrong (System.String variant) [0x0010f] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\EditMode\CommanderEconomyClarificationTests.Phase5CCorpus.cs:253
+at UnityEngine.TestTools.TestRunner.TestTaskWrapper+<Execute>d__2.MoveNext () [0x00063] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\TestRunner\TestTaskWrapper.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: AllocateWorkers
+[Commander] intent=admitted;goal-submitted=True
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

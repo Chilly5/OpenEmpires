@@ -1,0 +1,34 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "0128c3e6c5ca44a08056253e90a60611",
+    "status": "failed",
+    "mode": "PlayMode",
+    "started_unix_ms": 1791759425099,
+    "finished_unix_ms": 1791759438007,
+    "last_update_unix_ms": 1791759438007,
+    "progress": {
+      "completed": 1,
+      "total": 1,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791759437315,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.EarlierAsyncInformationAnswer_IsIdentifiedAfterNewerQuestion",
+      "last_finished_unix_ms": 1791759437952,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.EarlierAsyncInformationAnswer_IsIdentifiedAfterNewerQuestion",
+          "message": "  Expected: String starting with \"Earlier question\"\r\n  But was:  \"No nearby observations.\"\r\n"
+        }
+      ],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": null
+  },
+  "hint": null
+}

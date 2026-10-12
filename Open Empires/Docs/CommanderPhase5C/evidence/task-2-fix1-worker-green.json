@@ -1,0 +1,61 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "2a51f1dd5c874840bf190bd7e6cdbf92",
+      "status": "succeeded",
+      "mode": "EditMode",
+      "started_unix_ms": 1791667594542,
+      "finished_unix_ms": 1791667595802,
+      "last_update_unix_ms": 1791667595802,
+      "progress": {
+        "completed": 2,
+        "total": 2,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791667595322,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.WorkerCountCorrection_WhileDestinationPending_ChangesOnlyExplicitCount",
+        "last_finished_unix_ms": 1791667595782,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "EditMode",
+        "summary": {
+          "total": 2,
+          "passed": 2,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 1.0529235,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "ExplicitAmountCorrection_ChangesOnlyAmountAndKeepsWorkerAndSourceCriteria",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.ExplicitAmountCorrection_ChangesOnlyAmountAndKeepsWorkerAndSourceCriteria",
+            "state": "Passed",
+            "durationSeconds": 0.5821388,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          },
+          {
+            "name": "WorkerCountCorrection_WhileDestinationPending_ChangesOnlyExplicitCount",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.WorkerCountCorrection_WhileDestinationPending_ChangesOnlyExplicitCount",
+            "state": "Passed",
+            "durationSeconds": 0.461362,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

@@ -1,0 +1,169 @@
+{
+  "schema": "commander-food-shape-diagnostic@1",
+  "model": "openai/gpt-6-luna",
+  "stage": "fixture-ready",
+  "cases": [
+    {
+      "utterance": "gather food with 5 villagers",
+      "stage": "translated",
+      "outcome": "Request",
+      "schemaDiagnostic": "",
+      "safeTrace": "utc=2026-10-12T12:16:28.4696737Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=14457\nfinish=stop\nassistantContent=extracted;characters=190;finish=stop\nsemantic=Request;nodes=1\n",
+      "valid": true,
+      "nodeCount": 1,
+      "initialHttp": 1,
+      "repairHttp": 0,
+      "httpStatus": 200,
+      "nodeTypes": [
+        "AllocateWorkers"
+      ],
+      "workerModes": [
+        "SelectedCount"
+      ],
+      "workerCounts": [
+        "5"
+      ],
+      "workerDestinations": [
+        "Food"
+      ],
+      "missingFields": null,
+      "attempts": [
+        {
+          "kind": "initial",
+          "stage": "semantic-valid",
+          "promptTokens": "4010",
+          "completionTokens": "51",
+          "cachedTokens": "4007",
+          "cost": "0.00006587",
+          "elapsedMs": 14460,
+          "inputUtf8Estimate": 19945,
+          "httpStatus": 200
+        }
+      ],
+      "envelopes": [
+        {
+          "responseBytes": 1045,
+          "contentCharacters": 190,
+          "contentUtf8Bytes": 190,
+          "nodeCount": 1,
+          "unknownRootKeyCount": 0,
+          "envelope": "json",
+          "contentKind": "string",
+          "jsonError": null,
+          "errorPath": null,
+          "outcome": "Request",
+          "nodesType": "Array",
+          "hasOutcome": true,
+          "hasNodes": true,
+          "hasExecutionOrder": false,
+          "hasMessage": false,
+          "hasPending": false
+        }
+      ]
+    },
+    {
+      "utterance": "gather food with 8 villager",
+      "stage": "translated",
+      "outcome": "Clarify",
+      "schemaDiagnostic": "",
+      "safeTrace": "utc=2026-10-12T12:16:43.0791853Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=1768\nfinish=stop\nassistantContent=extracted;characters=257;finish=stop\nsemantic=Clarify;nodes=0\n",
+      "valid": true,
+      "nodeCount": 0,
+      "initialHttp": 2,
+      "repairHttp": 0,
+      "httpStatus": 200,
+      "nodeTypes": [],
+      "workerModes": [],
+      "workerCounts": [],
+      "workerDestinations": [],
+      "missingFields": [
+        "Count"
+      ],
+      "attempts": [
+        {
+          "kind": "initial",
+          "stage": "semantic-valid",
+          "promptTokens": "4011",
+          "completionTokens": "63",
+          "cachedTokens": "4008",
+          "cost": "0.00007188",
+          "elapsedMs": 1771,
+          "inputUtf8Estimate": 19944,
+          "httpStatus": 200
+        }
+      ],
+      "envelopes": [
+        {
+          "responseBytes": 1118,
+          "contentCharacters": 257,
+          "contentUtf8Bytes": 257,
+          "nodeCount": 0,
+          "unknownRootKeyCount": 0,
+          "envelope": "json",
+          "contentKind": "string",
+          "jsonError": null,
+          "errorPath": null,
+          "outcome": "Clarify",
+          "nodesType": "missing",
+          "hasOutcome": true,
+          "hasNodes": false,
+          "hasExecutionOrder": false,
+          "hasMessage": true,
+          "hasPending": true
+        }
+      ]
+    },
+    {
+      "utterance": "gather wood with 6 villagers",
+      "stage": "translated",
+      "outcome": "Clarify",
+      "schemaDiagnostic": "",
+      "safeTrace": "utc=2026-10-12T12:16:44.9592447Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=1907\nfinish=stop\nassistantContent=extracted;characters=257;finish=stop\nsemantic=Clarify;nodes=0\n",
+      "valid": true,
+      "nodeCount": 0,
+      "initialHttp": 3,
+      "repairHttp": 0,
+      "httpStatus": 200,
+      "nodeTypes": [],
+      "workerModes": [],
+      "workerCounts": [],
+      "workerDestinations": [],
+      "missingFields": [
+        "Count"
+      ],
+      "attempts": [
+        {
+          "kind": "initial",
+          "stage": "semantic-valid",
+          "promptTokens": "4010",
+          "completionTokens": "63",
+          "cachedTokens": "4007",
+          "cost": "0.00007187",
+          "elapsedMs": 1915,
+          "inputUtf8Estimate": 19945,
+          "httpStatus": 200
+        }
+      ],
+      "envelopes": [
+        {
+          "responseBytes": 1118,
+          "contentCharacters": 257,
+          "contentUtf8Bytes": 257,
+          "nodeCount": 0,
+          "unknownRootKeyCount": 0,
+          "envelope": "json",
+          "contentKind": "string",
+          "jsonError": null,
+          "errorPath": null,
+          "outcome": "Clarify",
+          "nodesType": "missing",
+          "hasOutcome": true,
+          "hasNodes": false,
+          "hasExecutionOrder": false,
+          "hasMessage": true,
+          "hasPending": true
+        }
+      ]
+    }
+  ]
+}

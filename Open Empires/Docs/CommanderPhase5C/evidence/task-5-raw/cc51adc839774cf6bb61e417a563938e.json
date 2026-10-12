@@ -1,0 +1,52 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "cc51adc839774cf6bb61e417a563938e",
+      "status": "succeeded",
+      "mode": "PlayMode",
+      "started_unix_ms": 1791754857952,
+      "finished_unix_ms": 1791754865691,
+      "last_update_unix_ms": 1791754865691,
+      "progress": {
+        "completed": 1,
+        "total": 1,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791754864544,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.CaptureActualPopulatedEditorViews_AtRequestedDesktopSizes",
+        "last_finished_unix_ms": 1791754865631,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "PlayMode",
+        "summary": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 1.1196982,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "CaptureActualPopulatedEditorViews_AtRequestedDesktopSizes",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.CaptureActualPopulatedEditorViews_AtRequestedDesktopSizes",
+            "state": "Passed",
+            "durationSeconds": 1.083161,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: ReachAge\r\nThe character with Unicode value \\u2699 was not found in the [LiberationSans SDF] font asset or any potential fallbacks. It was replaced by Unicode character \\u25A1 in text object [Label].\r\n[Commander Phase5C render] requested=1280x720; captured=1518x654; Chat active goal and local reply\r\n[Commander Phase5C render] requested=1280x720; captured=1518x654; Tasks active goal and visible Cancel\r\n[Commander Phase5C render] requested=1920x1080; captured=1518x654; Chat active goal and local reply\r\n[Commander Phase5C render] requested=1920x1080; captured=1518x654; Tasks active goal and visible Cancel\r\n"
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

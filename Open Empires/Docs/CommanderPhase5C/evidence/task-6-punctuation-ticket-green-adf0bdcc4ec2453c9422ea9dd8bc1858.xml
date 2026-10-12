@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Passed" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 00:04:15Z" end-time="2026-10-12 00:04:18Z" duration="2.4536494">
+  <test-suite type="TestSuite" id="1000" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="1778" result="Passed" start-time="2026-10-12 00:04:15Z" end-time="2026-10-12 00:04:18Z" duration="2.453649" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="3051" name="OpenEmpires.EditModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.EditModeTests.dll" runstate="Runnable" testcasecount="1778" result="Passed" start-time="2026-10-12 00:04:15Z" end-time="2026-10-12 00:04:18Z" duration="2.431357" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="12696" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="3052" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="1778" result="Passed" start-time="2026-10-12 00:04:15Z" end-time="2026-10-12 00:04:18Z" duration="2.430902" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="3053" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="1778" result="Passed" start-time="2026-10-12 00:04:15Z" end-time="2026-10-12 00:04:18Z" duration="2.430700" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1002" name="CommanderEconomyClarificationTests" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" testcasecount="91" result="Passed" start-time="2026-10-12 00:04:15Z" end-time="2026-10-12 00:04:18Z" duration="2.427970" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderEconomyClarification" />
+            </properties>
+            <test-case id="1082" name="CorpusPunctuation_ResolvesRetainedGraphWithoutAnotherProviderCall" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.CorpusPunctuation_ResolvesRetainedGraphWithoutAnotherProviderCall" methodname="CorpusPunctuation_ResolvesRetainedGraphWithoutAnotherProviderCall" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="691828198" result="Passed" start-time="2026-10-12 00:04:15Z" end-time="2026-10-12 00:04:17Z" duration="1.306775" asserts="0">
+              <properties>
+                <property name="Category" value="CommanderPhase5CCorpus" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: BuildStructure
+[Commander] intent=admitted;goal-submitted=True
+[Commander] context=projected;provider-request=started
+]]></output>
+            </test-case>
+            <test-case id="1026" name="HouseThenNextFive_FromTreesKeepsGraphAndNeedsSeparateApproval" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.HouseThenNextFive_FromTreesKeepsGraphAndNeedsSeparateApproval" methodname="HouseThenNextFive_FromTreesKeepsGraphAndNeedsSeparateApproval" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="73040947" result="Passed" start-time="2026-10-12 00:04:17Z" end-time="2026-10-12 00:04:17Z" duration="0.524340" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: BuildStructure
+[Commander] Goal #2 submitted: WatchFutureUnits
+]]></output>
+            </test-case>
+            <test-case id="1025" name="MineProposal_YesUsesOriginalRequestAndNoSecondTranslation" fullname="OpenEmpires.Tests.CommanderEconomyClarificationTests.MineProposal_YesUsesOriginalRequestAndNoSecondTranslation" methodname="MineProposal_YesUsesOriginalRequestAndNoSecondTranslation" classname="OpenEmpires.Tests.CommanderEconomyClarificationTests" runstate="Runnable" seed="1829070456" result="Passed" start-time="2026-10-12 00:04:17Z" end-time="2026-10-12 00:04:18Z" duration="0.579539" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Commander] context=projected;provider-request=started
+[Commander] Goal #1 submitted: BuildStructure
+[Commander] intent=admitted;goal-submitted=True
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/RS/AppData/LocalLow/DefaultCompany/Open Empires\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

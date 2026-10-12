@@ -1,0 +1,79 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "4b3cf89924564b5a965d4f902f20811b",
+      "status": "succeeded",
+      "mode": "EditMode",
+      "started_unix_ms": 1791730513068,
+      "finished_unix_ms": 1791730525766,
+      "last_update_unix_ms": 1791730525766,
+      "progress": {
+        "completed": 4,
+        "total": 4,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791730524788,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.ComposedWoodline_RejectsWrongSourceAndRelativeDirectionBeforeAdmission",
+        "last_finished_unix_ms": 1791730525622,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "EditMode",
+        "summary": {
+          "total": 4,
+          "passed": 4,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 4.953073,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "AllCurrentWoodWorkers_GatherOnlyVisibleTreesWestOfOwnedTownCenter",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.AllCurrentWoodWorkers_GatherOnlyVisibleTreesWestOfOwnedTownCenter",
+            "state": "Passed",
+            "durationSeconds": 1.7433518,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Assigning selected workers to Wood.\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Waiting for the issued worker command to be processed.\r\n[SyncCheck] tick=0 PRE-CMD=FAEAC8D0 cmds=1\r\n[SyncCheck] tick=0 POST-CMD=2779754D\r\n[SyncCheck] tick=0 PRE-AI-EXEC=2779754D aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=BD3A8950 systemDetail=2779754D,43F9207A,43F9207A,2267E0FA,2267E0FA,2267E0FA,2267E0FA,2267E0FA,2267E0FA\r\n"
+          },
+          {
+            "name": "ComposedWoodline_RejectsWrongOwnerOrFoggedSource(False)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.ComposedWoodline_RejectsWrongOwnerOrFoggedSource(False)",
+            "state": "Passed",
+            "durationSeconds": 0.9467689,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "ComposedWoodline_RejectsWrongOwnerOrFoggedSource(True)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.ComposedWoodline_RejectsWrongOwnerOrFoggedSource(True)",
+            "state": "Passed",
+            "durationSeconds": 0.8619642,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "ComposedWoodline_RejectsWrongSourceAndRelativeDirectionBeforeAdmission",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.ComposedWoodline_RejectsWrongSourceAndRelativeDirectionBeforeAdmission",
+            "state": "Passed",
+            "durationSeconds": 0.8342342,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

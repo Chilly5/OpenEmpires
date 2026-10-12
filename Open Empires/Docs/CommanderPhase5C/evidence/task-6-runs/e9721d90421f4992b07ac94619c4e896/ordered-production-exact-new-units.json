@@ -1,0 +1,230 @@
+{
+  "schema": "openempires-phase5c-scenario-turn@1",
+  "run_id": "e1357e43-8a89-4dd3-a833-6be5cf82290a",
+  "first_failing_stage": null,
+  "first_failure_category": null,
+  "schemaVersion": 1,
+  "caseId": "ordered-production-exact-new-units",
+  "requestId": "runtime:1",
+  "utterance": "Train two spearmen, then send those new spearmen to patrol.",
+  "turnIndex": 0,
+  "status": "observed",
+  "evidenceMode": "offline-production-chat-fixture",
+  "providerCalls": 1,
+  "httpAttempts": 0,
+  "fidelity": "fixture-expected-observed",
+  "semanticValid": true,
+  "estimatedInputTokens": null,
+  "actualPromptTokens": null,
+  "actualCompletionTokens": null,
+  "actualCachedTokens": null,
+  "actualReasoningTokens": null,
+  "reportedCost": null,
+  "attemptCosts": [],
+  "packingMs": 41.09,
+  "transportMs": null,
+  "parseMs": 2.468,
+  "admissionMs": 47.07,
+  "firstNativeActionMs": 589.182,
+  "commandCount": 2,
+  "commandTypes": [
+    "TrainUnitCommand",
+    "TrainUnitCommand"
+  ],
+  "nativeResults": [
+    "TrainUnitCommand:processed",
+    "TrainUnitCommand:processed"
+  ],
+  "taskStates": [
+    "EnsureUnitCountGoal:Completed",
+    "CommanderCapabilityGoal:Blocked"
+  ],
+  "draftBefore": [],
+  "draftAfter": [],
+  "draftChanges": [],
+  "normalizedFields": [
+    {
+      "type": "EnsureUnitCount",
+      "building": null,
+      "unit": 1,
+      "resource": null,
+      "count": 2,
+      "quantityMode": "New",
+      "anchor": null,
+      "anchorOrdinal": null,
+      "relation": null,
+      "placementSource": null,
+      "unitSelector": null,
+      "locationSelector": null,
+      "producerOrdinal": null,
+      "producerFrom": null,
+      "resultFrom": null,
+      "futureAction": null,
+      "workerMode": null,
+      "workerCountMode": null,
+      "workerCount": null,
+      "workerState": null,
+      "workerCurrentResource": null,
+      "destinationResource": null,
+      "destinationSource": null,
+      "resourceAmount": null,
+      "resourceAmountMode": null,
+      "dependencies": []
+    },
+    {
+      "type": "PatrolArea",
+      "building": null,
+      "unit": null,
+      "resource": "Gold",
+      "count": 2,
+      "quantityMode": "TargetTotal",
+      "anchor": null,
+      "anchorOrdinal": null,
+      "relation": null,
+      "placementSource": null,
+      "unitSelector": "Spearman",
+      "locationSelector": "WorkedResource",
+      "producerOrdinal": null,
+      "producerFrom": null,
+      "resultFrom": 0,
+      "futureAction": null,
+      "workerMode": null,
+      "workerCountMode": null,
+      "workerCount": null,
+      "workerState": null,
+      "workerCurrentResource": null,
+      "destinationResource": null,
+      "destinationSource": null,
+      "resourceAmount": null,
+      "resourceAmountMode": null,
+      "dependencies": [
+        0
+      ]
+    }
+  ],
+  "admittedFields": [
+    {
+      "type": "EnsureUnitCountGoal",
+      "status": "Pending",
+      "originalUtterance": "Train two spearmen, then send those new spearmen to patrol."
+    },
+    {
+      "type": "CommanderCapabilityGoal",
+      "status": "Pending",
+      "originalUtterance": "Train two spearmen, then send those new spearmen to patrol."
+    }
+  ],
+  "turnHistory": [
+    {
+      "index": 0,
+      "text": "Train two spearmen, then send those new spearmen to patrol.",
+      "requestId": "runtime:1",
+      "providerCalls": 1,
+      "semanticValid": true,
+      "semanticOutcome": "Request",
+      "normalizedFields": [
+        {
+          "type": "EnsureUnitCount",
+          "building": null,
+          "unit": 1,
+          "resource": null,
+          "count": 2,
+          "quantityMode": "New",
+          "anchor": null,
+          "anchorOrdinal": null,
+          "relation": null,
+          "placementSource": null,
+          "unitSelector": null,
+          "locationSelector": null,
+          "producerOrdinal": null,
+          "producerFrom": null,
+          "resultFrom": null,
+          "futureAction": null,
+          "workerMode": null,
+          "workerCountMode": null,
+          "workerCount": null,
+          "workerState": null,
+          "workerCurrentResource": null,
+          "destinationResource": null,
+          "destinationSource": null,
+          "resourceAmount": null,
+          "resourceAmountMode": null,
+          "dependencies": []
+        },
+        {
+          "type": "PatrolArea",
+          "building": null,
+          "unit": null,
+          "resource": "Gold",
+          "count": 2,
+          "quantityMode": "TargetTotal",
+          "anchor": null,
+          "anchorOrdinal": null,
+          "relation": null,
+          "placementSource": null,
+          "unitSelector": "Spearman",
+          "locationSelector": "WorkedResource",
+          "producerOrdinal": null,
+          "producerFrom": null,
+          "resultFrom": 0,
+          "futureAction": null,
+          "workerMode": null,
+          "workerCountMode": null,
+          "workerCount": null,
+          "workerState": null,
+          "workerCurrentResource": null,
+          "destinationResource": null,
+          "destinationSource": null,
+          "resourceAmount": null,
+          "resourceAmountMode": null,
+          "dependencies": [
+            0
+          ]
+        }
+      ],
+      "admittedFields": [],
+      "draftBefore": [],
+      "draftAfter": [],
+      "draftChanges": [],
+      "approvalRequired": true,
+      "approved": false,
+      "commandTypes": [],
+      "taskStates": [],
+      "uiSubmitMs": 90.484
+    },
+    {
+      "index": 1,
+      "text": "Approve plan",
+      "origin": "offline-fixture-control",
+      "requestId": "runtime:1",
+      "providerCalls": 1,
+      "approved": true,
+      "admittedFields": [
+        {
+          "type": "EnsureUnitCountGoal",
+          "status": "Pending",
+          "originalUtterance": "Train two spearmen, then send those new spearmen to patrol."
+        },
+        {
+          "type": "CommanderCapabilityGoal",
+          "status": "Pending",
+          "originalUtterance": "Train two spearmen, then send those new spearmen to patrol."
+        }
+      ],
+      "taskStates": [
+        "EnsureUnitCountGoal:Pending",
+        "CommanderCapabilityGoal:Pending"
+      ],
+      "uiSubmitMs": 26.154
+    }
+  ],
+  "fixtureKind": "correct-synthetic",
+  "turnText": "Train two spearmen, then send those new spearmen to patrol.",
+  "uiSubmitMs": 90.484,
+  "semanticOutcome": "Request",
+  "approvalRequired": true,
+  "approved": true,
+  "approvalMode": "offline-fixture-control-not-declared-player-turn",
+  "tickMode": "accelerated-fixture",
+  "ticks": 1500
+}

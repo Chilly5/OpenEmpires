@@ -6,7 +6,7 @@ namespace OpenEmpires
 {
     public sealed partial class CommanderChatUI
     {
-        private async Task<CommanderAIChatSubmission> SubmitReadOnlyQuestionAsync(string message)
+        private async Task<CommanderAIChatSubmission> SubmitReadOnlyQuestionAsync(string message, long presentationTurn)
         {
             var sim=semanticSimulation;var manager=semanticGoalManager;var provider=semanticProvider;
             if(sim==null||manager==null||manager.IsDisposed||Conversation==null||Conversation.PlayerId!=manager.PlayerId)
@@ -15,14 +15,17 @@ namespace OpenEmpires
             bool Current()=>this!=null&&runtimeGeneration==generation&&!lifetime.IsCancellationRequested
                 &&ReferenceEquals(semanticSimulation,sim)&&ReferenceEquals(semanticGoalManager,manager)
                 &&ReferenceEquals(semanticProvider,provider)&&!manager.IsDisposed;
-            bool statusQuestion=CommanderTacticalStatusProjection.IsStatusQuestion(message);
+            bool statusQuestion=CommanderTacticalStatusProjection.IsStatusQuestion(message)
+                ||CommanderTacticalStatusProjection.IsCausalTaskQuestion(message,sim,manager);
             var status=statusQuestion?CommanderTacticalStatusProjection.Observe(sim,manager,message):null;
             TryObserveQuestionAnswer(NormalizeExplanationWholeForm(message),out string facts);
             void LocalFallback(string unavailable)
             {
                 if(!Current())return;
                 string answer=(statusQuestion?CommanderTacticalStatusProjection.Observe(sim,manager,message).Answer():facts)??unavailable;
-                AppendLine("Commander",answer,false);Conversation.Memory.RecordExplanation(answer);
+                AppendLine("Commander",IsLatestPresentationTurn(presentationTurn)
+                    ?answer:"Earlier question ("+message+"): "+answer,false);
+                Conversation.Memory.RecordExplanation(answer);
             }
             AppendLine("Player",message,false);
             if(submitting||provider==null)
@@ -54,7 +57,9 @@ namespace OpenEmpires
                     if(answer==null)
                         answer=result?.IsValid==true&&(result.Outcome==CommanderSemanticOutcome.Answer||result.Outcome==CommanderSemanticOutcome.Clarify||result.Outcome==CommanderSemanticOutcome.Unsupported)
                             ?result.SafeExplanation:"You asked for information; no gameplay order was submitted.";
-                    AppendLine("Commander",answer,false);Conversation.Memory.RecordExplanation(answer);
+                    AppendLine("Commander",IsLatestPresentationTurn(presentationTurn)
+                        ?answer:"Earlier question ("+message+"): "+answer,false);
+                    Conversation.Memory.RecordExplanation(answer);
                 }
                 catch(OperationCanceledException){LocalFallback("The information request was cancelled; gameplay requests were unchanged.");}
                 catch(Exception){LocalFallback("I could not observe that safely; no gameplay requests changed.");}

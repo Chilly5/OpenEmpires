@@ -47,7 +47,7 @@ namespace OpenEmpires.Tests
             CommanderVoiceSettings.VoiceEnabled=enabledBefore; CommanderVoiceSettings.AutoSubmit=autoBefore;
         }
         private RectTransform Panel=> (RectTransform)typeof(CommanderChatUI).GetField("commanderPanel",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(chat);
-        private void Surface(string method)=>typeof(CommanderChatUI).GetMethod(method,BindingFlags.Instance|BindingFlags.Public)?.Invoke(chat,null);
+        private void Surface(string method)=>typeof(CommanderChatUI).GetMethod(method,BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic)?.Invoke(chat,null);
         private GameObject Compact=>chat.transform.Find("CommanderCanvas/CompactCommander")?.gameObject;
 
         [Test]
@@ -58,6 +58,33 @@ namespace OpenEmpires.Tests
             Assert.That(chat.VoiceController,Is.Not.Null);
             Assert.That(Compact,Is.Not.Null); Assert.That(Compact.activeSelf,Is.True);
             Assert.That(chat.InputText,Is.Empty);
+        }
+        [Test]
+        public void LauncherAndSettings_UseTopLeftCompactAndWideExpandedSurfaces()
+        {
+            var compactRect=Compact.GetComponent<RectTransform>();
+            Assert.That(compactRect.anchorMin,Is.EqualTo(new Vector2(0,1)));
+            Assert.That(compactRect.anchoredPosition.x,Is.GreaterThanOrEqualTo(320));
+            Assert.That(compactRect.anchoredPosition.y,Is.GreaterThanOrEqualTo(-24));
+            Assert.That(Compact.transform.Find("Launcher").gameObject.activeSelf,Is.True);
+            Assert.That(Compact.transform.Find("Record").gameObject.activeSelf,Is.False);
+            Assert.That(Compact.transform.Find("CancelVoice").gameObject.activeSelf,Is.False);
+            var statusObject=Compact.transform.Find("Status").GetComponent("TextMeshProUGUI");
+            var status=(string)statusObject.GetType().GetProperty("text").GetValue(statusObject);
+            Assert.That(status,Does.Not.Contain("\n"));
+            Assert.That(status.Length,Is.LessThanOrEqualTo(30));
+            Surface("OpenCommander");
+            Assert.That(Panel.anchoredPosition.x,Is.EqualTo(compactRect.anchoredPosition.x).Within(1));
+            Assert.That(Panel.anchoredPosition.y,Is.GreaterThanOrEqualTo(-24));
+            Surface("OpenSettingsMenu");
+            var menu=Panel.Find("SettingsMenu");
+            Assert.That(chat.IsExpanded,Is.True);
+            Assert.That(menu,Is.Not.Null);
+            Assert.That(menu.gameObject.activeInHierarchy,Is.True);
+            Canvas.ForceUpdateCanvases();
+            Assert.That(menu.GetComponent<RectTransform>().rect.width,Is.GreaterThanOrEqualTo(320));
+            Assert.That(provider.Calls,Is.Zero);
+            Assert.That(manager.Goals,Is.Empty);
         }
         [Test]
         public void DeliberateOpenThenMinimize_DoesNotCancelAcceptedWork()
@@ -114,9 +141,10 @@ namespace OpenEmpires.Tests
         }
         [Test]public void CompactVoiceSetup_IsHiddenInitiallyAndOpensWithoutConversationOrGoals()
         {
-            var setup=chat.transform.Find("CommanderCanvas/CompactCommander/VoiceSetup");
+            var setup=chat.transform.Find("CommanderCanvas/Panel/VoiceSetup");
             Assert.That(setup,Is.Not.Null);Assert.That(setup.gameObject.activeSelf,Is.False);
-            Surface("ShowVoiceSetup");Assert.That(setup.gameObject.activeSelf,Is.True);Assert.That(chat.IsExpanded,Is.False);
+            Surface("ShowVoiceSetup");Assert.That(setup.gameObject.activeSelf,Is.True);Assert.That(chat.IsExpanded,Is.True);
+            Canvas.ForceUpdateCanvases();Assert.That(setup.GetComponent<RectTransform>().rect.width,Is.GreaterThanOrEqualTo(320));
             Assert.That(provider.Calls,Is.Zero);Assert.That(manager.Goals,Is.Empty);
         }
         [Test]public async Task OnlinePolicyReviewAndExplicitConsent_DoNotRecordSubmitOrApprove()
@@ -204,17 +232,20 @@ namespace OpenEmpires.Tests
             await chat.SubmitMessageAsync("Assign the three workers to the two requested roles.");
             var candidate=chat.PendingActionPlan;
             Assert.That(candidate,Is.Not.Null);
+            Assert.That(Compact.transform.Find("PlanApproval").gameObject.activeSelf,Is.False,
+                "The compact approval card is intentionally hidden in this presentation.");
+            Surface("OpenCommander");
             typeof(CommanderChatUI).GetMethod("UpdatePresentation",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(chat,null);
             var flags=BindingFlags.Instance|BindingFlags.NonPublic;
-            // Keep this assembly's existing dependency boundary; inspect the real
-            // runtime TMP component without adding a package reference for a test.
-            var body=(Component)typeof(CommanderChatUI).GetField("compactApprovalText",flags).GetValue(chat);
+            // Inspect the actually visible expanded review body after opening Details.
+            // Keep this assembly's existing TMP dependency boundary via reflection.
+            var body=(Component)typeof(CommanderChatUI).GetField("expandedApprovalText",flags).GetValue(chat);
             Assert.That(body.GetType().GetProperty("text").GetValue(body),Is.EqualTo(candidate.Preview));
             Assert.That(body.GetType().GetProperty("richText").GetValue(body),Is.False);
             var scroll=body.GetComponentInParent<UnityEngine.UI.ScrollRect>();
             Assert.That(scroll,Is.Not.Null);Assert.That(scroll.content,Is.SameAs(body.transform));
             Assert.That(body.GetComponent<UnityEngine.UI.ContentSizeFitter>().verticalFit,Is.EqualTo(UnityEngine.UI.ContentSizeFitter.FitMode.PreferredSize));
-            Click(scroll.transform.parent.Find("Actions/Action0").GetComponent<UnityEngine.UI.Button>());
+            Assert.That(scroll.gameObject.activeInHierarchy,Is.True);
             Assert.That(Panel.gameObject.activeSelf,Is.True);
             Assert.That(chat.PendingActionPlan,Is.SameAs(candidate));
             Assert.That(manager.Goals,Is.Empty);Assert.That(sim.CommandBuffer.FlushCommands(),Is.Empty);
@@ -410,7 +441,7 @@ namespace OpenEmpires.Tests
                 var value=typeof(CommanderChatUI).GetField("compactStatus",flags).GetValue(chat);
                 return (string)value.GetType().GetProperty("text").GetValue(value);
             }
-            Assert.That(Status(),Does.Contain("Opening microphone"));
+            Assert.That(Status(),Does.Contain("Mic opening"));
             audio.Listening=true;
             typeof(CommanderChatUI).GetMethod("Update",flags).Invoke(chat,null);
             Assert.That(Status(),Does.Contain("Listening"));Assert.That(Status(),Does.Contain("3 s"));
@@ -430,11 +461,11 @@ namespace OpenEmpires.Tests
         [Test]
         public void PlayerModelControls_AppearOnlyOnDeliberateSetupAndDoNotOpenMicrophone()
         {
-            var controls=chat.transform.Find("CommanderCanvas/CompactCommander/VoiceSetup/SetupViewport/SetupContent/LocalModels");
+            var controls=chat.transform.Find("CommanderCanvas/Panel/VoiceSetup/SetupViewport/SetupContent/LocalModels");
             Assert.That(controls,Is.Not.Null,"Windows player needs import/download controls, not developer CLI instructions.");
             Assert.That(controls.gameObject.activeInHierarchy,Is.False);
             Surface("ShowVoiceSetup");Assert.That(controls.gameObject.activeInHierarchy,Is.True);
-            Assert.That(chat.IsExpanded,Is.False);Assert.That(chat.VoiceState,Is.EqualTo(CommanderVoiceState.Idle));
+            Assert.That(chat.IsExpanded,Is.True);Assert.That(chat.VoiceState,Is.EqualTo(CommanderVoiceState.Idle));
             Assert.That(provider.Calls,Is.Zero);Assert.That(manager.Goals,Is.Empty);
         }
         [Test]

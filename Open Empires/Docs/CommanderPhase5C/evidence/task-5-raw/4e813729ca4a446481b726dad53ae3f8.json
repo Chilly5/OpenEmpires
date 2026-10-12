@@ -1,0 +1,52 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "4e813729ca4a446481b726dad53ae3f8",
+      "status": "succeeded",
+      "mode": "PlayMode",
+      "started_unix_ms": 1791757222733,
+      "finished_unix_ms": 1791757230326,
+      "last_update_unix_ms": 1791757230326,
+      "progress": {
+        "completed": 1,
+        "total": 1,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791757229396,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.ApprovePlan_UsesExistingSingleUseAuthorityAndUpdatesLatestStatus",
+        "last_finished_unix_ms": 1791757230250,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "PlayMode",
+        "summary": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 0.9182082,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "ApprovePlan_UsesExistingSingleUseAuthorityAndUpdatesLatestStatus",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.ApprovePlan_UsesExistingSingleUseAuthorityAndUpdatesLatestStatus",
+            "state": "Passed",
+            "durationSeconds": 0.8491228,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #2 submitted: EnsureUnitCount\r\n"
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

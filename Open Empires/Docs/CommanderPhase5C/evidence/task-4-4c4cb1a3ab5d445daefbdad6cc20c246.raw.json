@@ -1,0 +1,52 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "4c4cb1a3ab5d445daefbdad6cc20c246",
+      "status": "succeeded",
+      "mode": "EditMode",
+      "started_unix_ms": 1791731397027,
+      "finished_unix_ms": 1791731406923,
+      "last_update_unix_ms": 1791731406923,
+      "progress": {
+        "completed": 1,
+        "total": 1,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791731405441,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.ExactTargetGarrison_FullRequestedShelterMustNotDispatchToAnotherShelter",
+        "last_finished_unix_ms": 1791731406754,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "EditMode",
+        "summary": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 1.8555632,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "ExactTargetGarrison_FullRequestedShelterMustNotDispatchToAnotherShelter",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.ExactTargetGarrison_FullRequestedShelterMustNotDispatchToAnotherShelter",
+            "state": "Passed",
+            "durationSeconds": 1.2999989,
+            "message": null,
+            "stackTrace": null,
+            "output": "[SyncCheck] tick=0 PRE-CMD=65C274AE cmds=1\r\n[SyncCheck] tick=0 POST-CMD=65C274AE\r\n[SyncCheck] tick=0 PRE-AI-EXEC=65C274AE aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=6D4E3E3E systemDetail=65C274AE,65C274AE,65C274AE,65C274AE,65C274AE,65C274AE,65C274AE,65C274AE,65C274AE\r\n"
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

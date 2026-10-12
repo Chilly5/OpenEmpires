@@ -1,0 +1,61 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"success\":true,\"message\":\"Test job status retrieved.\",\"error\":null,\"data\":{\"job_id\":\"24c32640098b44f2bf443faf991de53c\",\"status\":\"failed\",\"mode\":\"EditMode\",\"started_unix_ms\":1791707922291,\"finished_unix_ms\":1791707934028,\"last_update_unix_ms\":1791707934028,\"progress\":{\"completed\":5,\"total\":5,\"current_test_full_name\":null,\"current_test_started_unix_ms\":1791707933580,\"last_finished_test_full_name\":\"OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_RequestCannotExecuteUntilLocalNameConfirmation(\\\"Longbowman\\\")\",\"last_finished_unix_ms\":1791707933978,\"stuck_suspected\":false,\"editor_is_focused\":true,\"blocked_reason\":null,\"failures_so_far\":[{\"full_name\":\"OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_CompoundRetainsEveryFieldAndNeedsSeparateGameplayApproval\",\"message\":\"  Commander:\\r\\nOpenRouter Luna configured. Availability is checked on your first request.\\r\\n\\r\\nPlayer:\\r\\nTrain three new longbowmna, then send the next five Villagers from my first Town Center to Wood from trees\\r\\n\\r\\nCommander:\\r\\nAction plan — not started.\\n1. Produce 3 new Longbowman\\n2. Watch the next 5 Villager from Town Center number 1 and gather Wood (Tree); no additional production; after step 1\\nPreparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan.\\r\\n  Expected: not null\\r\\n  But was:  null\\r\\n\"},{\"full_name\":\"OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_DynamicProposalCannotBypassNameThenGameplayConfirmation\",\"message\":\"  Commander:\\r\\nOpenRouter Luna configured. Availability is checked on your first request.\\r\\n\\r\\nPlayer:\\r\\nTrain three new longbowmna\\r\\n\\r\\nCommander:\\r\\nAction plan — not started.\\n1. Produce 3 new Longbowman\\nSelections and placement (fixed for this plan):\\nWorker selections are frozen once; partition roles cannot overlap. Locations use map directions and footprint-to-footprint clear gaps within bounded tolerance.\\nPreparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan.\\r\\n  Expected: not null\\r\\n  But was:  null\\r\\n\"},{\"full_name\":\"OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_NoDismissesProposalOnly\",\"message\":\"  Expected: not null\\r\\n  But was:  null\\r\\n\"},{\"full_name\":\"OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_RequestCannotExecuteUntilLocalNameConfirmation(\\\"yes\\\")\",\"message\":\"  Commander:\\r\\nOpenRouter Luna configured. Availability is checked on your first request.\\r\\n\\r\\nPlayer:\\r\\nTrain three new longbowmna\\r\\n\\r\\nCommander:\\r\\nUnderstood.\\nPreparing 3 Longbowmen.\\r\\n  Expected: not null\\r\\n  But was:  null\\r\\n\"},{\"full_name\":\"OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_RequestCannotExecuteUntilLocalNameConfirmation(\\\"Longbowman\\\")\",\"message\":\"  Commander:\\r\\nOpenRouter Luna configured. Availability is checked on your first request.\\r\\n\\r\\nPlayer:\\r\\nTrain three new longbowmna\\r\\n\\r\\nCommander:\\r\\nUnderstood.\\nPreparing 3 Longbowmen.\\r\\n  Expected: not null\\r\\n  But was:  null\\r\\n\"}],\"failures_capped\":false},\"error\":null,\"result\":null},\"hint\":null}"
+    }
+  ],
+  "structuredContent": {
+    "result": {
+      "success": true,
+      "message": "Test job status retrieved.",
+      "error": null,
+      "data": {
+        "job_id": "24c32640098b44f2bf443faf991de53c",
+        "status": "failed",
+        "mode": "EditMode",
+        "started_unix_ms": 1791707922291,
+        "finished_unix_ms": 1791707934028,
+        "last_update_unix_ms": 1791707934028,
+        "progress": {
+          "completed": 5,
+          "total": 5,
+          "current_test_full_name": null,
+          "current_test_started_unix_ms": 1791707933580,
+          "last_finished_test_full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_RequestCannotExecuteUntilLocalNameConfirmation(\"Longbowman\")",
+          "last_finished_unix_ms": 1791707933978,
+          "stuck_suspected": false,
+          "editor_is_focused": true,
+          "blocked_reason": null,
+          "failures_so_far": [
+            {
+              "full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_CompoundRetainsEveryFieldAndNeedsSeparateGameplayApproval",
+              "message": "  Commander:\r\nOpenRouter Luna configured. Availability is checked on your first request.\r\n\r\nPlayer:\r\nTrain three new longbowmna, then send the next five Villagers from my first Town Center to Wood from trees\r\n\r\nCommander:\r\nAction plan — not started.\n1. Produce 3 new Longbowman\n2. Watch the next 5 Villager from Town Center number 1 and gather Wood (Tree); no additional production; after step 1\nPreparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan.\r\n  Expected: not null\r\n  But was:  null\r\n"
+            },
+            {
+              "full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_DynamicProposalCannotBypassNameThenGameplayConfirmation",
+              "message": "  Commander:\r\nOpenRouter Luna configured. Availability is checked on your first request.\r\n\r\nPlayer:\r\nTrain three new longbowmna\r\n\r\nCommander:\r\nAction plan — not started.\n1. Produce 3 new Longbowman\nSelections and placement (fixed for this plan):\nWorker selections are frozen once; partition roles cannot overlap. Locations use map directions and footprint-to-footprint clear gaps within bounded tolerance.\nPreparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan.\r\n  Expected: not null\r\n  But was:  null\r\n"
+            },
+            {
+              "full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_NoDismissesProposalOnly",
+              "message": "  Expected: not null\r\n  But was:  null\r\n"
+            },
+            {
+              "full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_RequestCannotExecuteUntilLocalNameConfirmation(\"yes\")",
+              "message": "  Commander:\r\nOpenRouter Luna configured. Availability is checked on your first request.\r\n\r\nPlayer:\r\nTrain three new longbowmna\r\n\r\nCommander:\r\nUnderstood.\nPreparing 3 Longbowmen.\r\n  Expected: not null\r\n  But was:  null\r\n"
+            },
+            {
+              "full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_RequestCannotExecuteUntilLocalNameConfirmation(\"Longbowman\")",
+              "message": "  Commander:\r\nOpenRouter Luna configured. Availability is checked on your first request.\r\n\r\nPlayer:\r\nTrain three new longbowmna\r\n\r\nCommander:\r\nUnderstood.\nPreparing 3 Longbowmen.\r\n  Expected: not null\r\n  But was:  null\r\n"
+            }
+          ],
+          "failures_capped": false
+        },
+        "error": null,
+        "result": null
+      },
+      "hint": null
+    }
+  },
+  "isError": false
+}

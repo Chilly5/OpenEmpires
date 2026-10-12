@@ -1,0 +1,247 @@
+{
+  "schema": "openempires-phase5c-scenario-turn@1",
+  "run_id": "32854f41-85d2-46d8-a058-bc072c7b47b0",
+  "first_failing_stage": null,
+  "first_failure_category": null,
+  "schemaVersion": 1,
+  "caseId": "cancel-reset-late-retry",
+  "requestId": "case:cancel-reset-late-retry",
+  "utterance": "Build a House by the visible gold.",
+  "turnIndex": 3,
+  "status": "observed",
+  "evidenceMode": "offline-production-chat-fixture",
+  "providerCalls": 1,
+  "httpAttempts": 0,
+  "fidelity": "matched",
+  "semanticValid": null,
+  "estimatedInputTokens": null,
+  "actualPromptTokens": null,
+  "actualCompletionTokens": null,
+  "actualCachedTokens": null,
+  "actualReasoningTokens": null,
+  "reportedCost": null,
+  "attemptCosts": [],
+  "packingMs": null,
+  "transportMs": null,
+  "parseMs": null,
+  "admissionMs": null,
+  "firstNativeActionMs": null,
+  "commandCount": 0,
+  "commandTypes": [],
+  "nativeResults": [],
+  "taskStates": [],
+  "draftBefore": [],
+  "draftAfter": [],
+  "draftChanges": [],
+  "normalizedFields": [
+    {
+      "draftNodeCount": 1,
+      "missingSlots": [
+        "0:structure:Confirmation"
+      ]
+    },
+    {
+      "draftType": "BuildStructure",
+      "structure": "House",
+      "count": 1,
+      "resource": null,
+      "resourceAmount": null,
+      "resourceAmountMode": null,
+      "workerMode": null,
+      "countMode": null,
+      "workerState": null,
+      "workerCurrentResource": null,
+      "destinationResource": null,
+      "destinationSource": null,
+      "producerOrdinal": null,
+      "dependencies": []
+    }
+  ],
+  "admittedFields": [],
+  "turnHistory": [
+    {
+      "index": 0,
+      "text": "Build a House by the visible gold.",
+      "requestId": "runtime:1",
+      "uiState": "Needs clarification",
+      "providerCalls": 1,
+      "semanticValid": true,
+      "semanticOutcome": "Clarify",
+      "normalizedFields": [
+        {
+          "draftNodeCount": 1,
+          "missingSlots": [
+            "0:structure:Confirmation"
+          ]
+        },
+        {
+          "draftType": "BuildStructure",
+          "structure": "House",
+          "count": 1,
+          "resource": null,
+          "resourceAmount": null,
+          "resourceAmountMode": null,
+          "workerMode": null,
+          "countMode": null,
+          "workerState": null,
+          "workerCurrentResource": null,
+          "destinationResource": null,
+          "destinationSource": null,
+          "producerOrdinal": null,
+          "dependencies": []
+        }
+      ],
+      "admittedFields": [],
+      "draftBefore": [],
+      "draftAfter": [
+        "0:structure:Confirmation"
+      ],
+      "draftChanges": [],
+      "approvalRequired": false,
+      "approved": false,
+      "commandTypes": [],
+      "taskStates": [],
+      "uiSubmitMs": 14.841
+    },
+    {
+      "index": 1,
+      "text": "No, cancel that proposal.",
+      "requestId": "case:cancel-reset-late-retry",
+      "uiState": "Cancelled",
+      "providerCalls": 1,
+      "semanticValid": null,
+      "semanticOutcome": null,
+      "normalizedFields": [
+        {
+          "draftNodeCount": 1,
+          "missingSlots": [
+            "0:structure:Confirmation"
+          ]
+        },
+        {
+          "draftType": "BuildStructure",
+          "structure": "House",
+          "count": 1,
+          "resource": null,
+          "resourceAmount": null,
+          "resourceAmountMode": null,
+          "workerMode": null,
+          "countMode": null,
+          "workerState": null,
+          "workerCurrentResource": null,
+          "destinationResource": null,
+          "destinationSource": null,
+          "producerOrdinal": null,
+          "dependencies": []
+        }
+      ],
+      "admittedFields": [],
+      "draftBefore": [
+        "0:structure:Confirmation"
+      ],
+      "draftAfter": [],
+      "draftChanges": [
+        "0:structure:Confirmation"
+      ],
+      "approvalRequired": false,
+      "approved": false,
+      "commandTypes": [],
+      "taskStates": [],
+      "uiSubmitMs": 7.36
+    },
+    {
+      "index": 2,
+      "text": "Reset Commander.",
+      "requestId": "case:cancel-reset-late-retry",
+      "uiState": "Ready",
+      "providerCalls": 1,
+      "semanticValid": null,
+      "semanticOutcome": null,
+      "normalizedFields": [
+        {
+          "draftNodeCount": 1,
+          "missingSlots": [
+            "0:structure:Confirmation"
+          ]
+        },
+        {
+          "draftType": "BuildStructure",
+          "structure": "House",
+          "count": 1,
+          "resource": null,
+          "resourceAmount": null,
+          "resourceAmountMode": null,
+          "workerMode": null,
+          "countMode": null,
+          "workerState": null,
+          "workerCurrentResource": null,
+          "destinationResource": null,
+          "destinationSource": null,
+          "producerOrdinal": null,
+          "dependencies": []
+        }
+      ],
+      "admittedFields": [],
+      "draftBefore": [],
+      "draftAfter": [],
+      "draftChanges": [],
+      "approvalRequired": false,
+      "approved": false,
+      "commandTypes": [],
+      "taskStates": [],
+      "uiSubmitMs": 5.879
+    },
+    {
+      "index": 3,
+      "text": "Yes.",
+      "requestId": "case:cancel-reset-late-retry",
+      "uiState": "Ready",
+      "providerCalls": 1,
+      "semanticValid": null,
+      "semanticOutcome": null,
+      "normalizedFields": [
+        {
+          "draftNodeCount": 1,
+          "missingSlots": [
+            "0:structure:Confirmation"
+          ]
+        },
+        {
+          "draftType": "BuildStructure",
+          "structure": "House",
+          "count": 1,
+          "resource": null,
+          "resourceAmount": null,
+          "resourceAmountMode": null,
+          "workerMode": null,
+          "countMode": null,
+          "workerState": null,
+          "workerCurrentResource": null,
+          "destinationResource": null,
+          "destinationSource": null,
+          "producerOrdinal": null,
+          "dependencies": []
+        }
+      ],
+      "admittedFields": [],
+      "draftBefore": [],
+      "draftAfter": [],
+      "draftChanges": [],
+      "approvalRequired": false,
+      "approved": false,
+      "commandTypes": [],
+      "taskStates": [],
+      "uiSubmitMs": 4.452
+    }
+  ],
+  "fogNewlyExploredCount": null,
+  "fixtureKind": "correct-synthetic",
+  "turnText": "Yes.",
+  "uiSubmitMs": 4.452,
+  "semanticOutcome": null,
+  "approvalRequired": false,
+  "approved": false,
+  "uiState": "Ready",
+  "tickMode": "accelerated-fixture",
+  "ticks": 60
+}

@@ -1,0 +1,142 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "1271c6035f054d7fa2e6513e4c04ff3a",
+      "status": "succeeded",
+      "mode": "EditMode",
+      "started_unix_ms": 1791704408615,
+      "finished_unix_ms": 1791704415085,
+      "last_update_unix_ms": 1791704415085,
+      "progress": {
+        "completed": 11,
+        "total": 11,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791704414056,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NegatedStructureCorrection_RetainsMineTicketUntilYes",
+        "last_finished_unix_ms": 1791704415063,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "EditMode",
+        "summary": {
+          "total": 11,
+          "passed": 11,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 6.241729,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "ConditionalOrExampleCorrection_ReasksWithoutSupersedingMine",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.ConditionalOrExampleCorrection_ReasksWithoutSupersedingMine",
+            "state": "Passed",
+            "durationSeconds": 1.4017869,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] intent=admitted;goal-submitted=True\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] intent=admitted;goal-submitted=True\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] intent=admitted;goal-submitted=True\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          },
+          {
+            "name": "HouseThenNextFive_FromTreesKeepsGraphAndNeedsSeparateApproval",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.HouseThenNextFive_FromTreesKeepsGraphAndNeedsSeparateApproval",
+            "state": "Passed",
+            "durationSeconds": 0.3388109,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] Goal #2 submitted: WatchFutureUnits\r\n"
+          },
+          {
+            "name": "IndependentBuildWithoutCorrectionMarker_SupersedesGraphDraft",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.IndependentBuildWithoutCorrectionMarker_SupersedesGraphDraft",
+            "state": "Passed",
+            "durationSeconds": 0.3049458,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          },
+          {
+            "name": "KnownCountCorrection_DoesNotChangeResourceAmount",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.KnownCountCorrection_DoesNotChangeResourceAmount",
+            "state": "Passed",
+            "durationSeconds": 0.3991417,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          },
+          {
+            "name": "KnownResourceAmountCorrection_DoesNotChangeWorkerCount",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.KnownResourceAmountCorrection_DoesNotChangeWorkerCount",
+            "state": "Passed",
+            "durationSeconds": 0.3658882,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          },
+          {
+            "name": "KnownSourceCorrection_ChangesOnlyNamedSource",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.KnownSourceCorrection_ChangesOnlyNamedSource",
+            "state": "Passed",
+            "durationSeconds": 0.3473021,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          },
+          {
+            "name": "KnownStructureCorrection_BuildOrMakeMillInsteadPreservesMineProposalFields",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.KnownStructureCorrection_BuildOrMakeMillInsteadPreservesMineProposalFields",
+            "state": "Passed",
+            "durationSeconds": 0.6471058,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] intent=admitted;goal-submitted=True\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          },
+          {
+            "name": "MineProposal_YesUsesOriginalRequestAndNoSecondTranslation",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.MineProposal_YesUsesOriginalRequestAndNoSecondTranslation",
+            "state": "Passed",
+            "durationSeconds": 0.4983341,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          },
+          {
+            "name": "NegatedCountCorrection_PreservesCountAndIndependentAmount",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NegatedCountCorrection_PreservesCountAndIndependentAmount",
+            "state": "Passed",
+            "durationSeconds": 0.5756492,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          },
+          {
+            "name": "NegatedSourceCorrection_PreservesSheepUntilCountReply",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NegatedSourceCorrection_PreservesSheepUntilCountReply",
+            "state": "Passed",
+            "durationSeconds": 0.3464006,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: AllocateWorkers\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          },
+          {
+            "name": "NegatedStructureCorrection_RetainsMineTicketUntilYes",
+            "fullName": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NegatedStructureCorrection_RetainsMineTicketUntilYes",
+            "state": "Passed",
+            "durationSeconds": 1.0073157,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] intent=admitted;goal-submitted=True\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] intent=admitted;goal-submitted=True\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: BuildStructure\r\n[Commander] intent=admitted;goal-submitted=True\r\n"
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

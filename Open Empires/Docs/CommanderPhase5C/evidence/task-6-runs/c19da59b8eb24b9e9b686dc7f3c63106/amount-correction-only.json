@@ -1,0 +1,172 @@
+{
+  "schema": "openempires-phase5c-scenario-turn@1",
+  "run_id": "95ae47de-d1c1-4e91-a519-4c3a05bec105",
+  "first_failing_stage": null,
+  "first_failure_category": null,
+  "schemaVersion": 1,
+  "caseId": "amount-correction-only",
+  "requestId": "runtime:1",
+  "utterance": "Gather 200 gold with 3 villagers.",
+  "turnIndex": 1,
+  "status": "open-gap",
+  "evidenceMode": "offline-production-chat-fixture",
+  "providerCalls": 1,
+  "httpAttempts": 0,
+  "fidelity": "matched",
+  "semanticValid": null,
+  "estimatedInputTokens": null,
+  "actualPromptTokens": null,
+  "actualCompletionTokens": null,
+  "actualCachedTokens": null,
+  "actualReasoningTokens": null,
+  "reportedCost": null,
+  "attemptCosts": [],
+  "packingMs": null,
+  "transportMs": null,
+  "parseMs": null,
+  "admissionMs": null,
+  "firstNativeActionMs": null,
+  "commandCount": 0,
+  "commandTypes": [],
+  "nativeResults": [],
+  "taskStates": [],
+  "draftBefore": [
+    "0:destination.sourceKind:SourceKind"
+  ],
+  "draftAfter": [
+    "0:destination.sourceKind:SourceKind"
+  ],
+  "draftChanges": [
+    "node0.resourceAmount:200->250"
+  ],
+  "normalizedFields": [
+    {
+      "draftNodeCount": 1,
+      "missingSlots": [
+        "0:destination.sourceKind:SourceKind"
+      ]
+    },
+    {
+      "draftType": "AllocateWorkers",
+      "structure": null,
+      "count": 3,
+      "resource": null,
+      "resourceAmount": 250,
+      "resourceAmountMode": "Stockpile",
+      "workerMode": "SelectedCount",
+      "countMode": "Exact",
+      "workerState": "Any",
+      "workerCurrentResource": null,
+      "destinationResource": "Gold",
+      "destinationSource": null,
+      "producerOrdinal": null,
+      "dependencies": []
+    }
+  ],
+  "admittedFields": [],
+  "turnHistory": [
+    {
+      "index": 0,
+      "text": "Gather 200 gold with 3 villagers.",
+      "requestId": "runtime:1",
+      "uiState": "Needs clarification",
+      "providerCalls": 1,
+      "semanticValid": true,
+      "semanticOutcome": "Clarify",
+      "normalizedFields": [
+        {
+          "draftNodeCount": 1,
+          "missingSlots": [
+            "0:destination.sourceKind:SourceKind"
+          ]
+        },
+        {
+          "draftType": "AllocateWorkers",
+          "structure": null,
+          "count": 3,
+          "resource": null,
+          "resourceAmount": 200,
+          "resourceAmountMode": "Stockpile",
+          "workerMode": "SelectedCount",
+          "countMode": "Exact",
+          "workerState": "Any",
+          "workerCurrentResource": null,
+          "destinationResource": "Gold",
+          "destinationSource": null,
+          "producerOrdinal": null,
+          "dependencies": []
+        }
+      ],
+      "admittedFields": [],
+      "draftBefore": [],
+      "draftAfter": [
+        "0:destination.sourceKind:SourceKind"
+      ],
+      "draftChanges": [],
+      "approvalRequired": false,
+      "approved": false,
+      "commandTypes": [],
+      "taskStates": [],
+      "uiSubmitMs": 15.116
+    },
+    {
+      "index": 1,
+      "text": "Change the amount to 250.",
+      "requestId": "runtime:1",
+      "uiState": "Needs clarification",
+      "providerCalls": 1,
+      "semanticValid": null,
+      "semanticOutcome": null,
+      "normalizedFields": [
+        {
+          "draftNodeCount": 1,
+          "missingSlots": [
+            "0:destination.sourceKind:SourceKind"
+          ]
+        },
+        {
+          "draftType": "AllocateWorkers",
+          "structure": null,
+          "count": 3,
+          "resource": null,
+          "resourceAmount": 250,
+          "resourceAmountMode": "Stockpile",
+          "workerMode": "SelectedCount",
+          "countMode": "Exact",
+          "workerState": "Any",
+          "workerCurrentResource": null,
+          "destinationResource": "Gold",
+          "destinationSource": null,
+          "producerOrdinal": null,
+          "dependencies": []
+        }
+      ],
+      "admittedFields": [],
+      "draftBefore": [
+        "0:destination.sourceKind:SourceKind"
+      ],
+      "draftAfter": [
+        "0:destination.sourceKind:SourceKind"
+      ],
+      "draftChanges": [
+        "node0.resourceAmount:200->250"
+      ],
+      "approvalRequired": false,
+      "approved": false,
+      "commandTypes": [],
+      "taskStates": [],
+      "uiSubmitMs": 42.065
+    }
+  ],
+  "fogNewlyExploredCount": null,
+  "fixtureKind": "correct-synthetic",
+  "turnText": "Change the amount to 250.",
+  "uiSubmitMs": 42.065,
+  "semanticOutcome": null,
+  "approvalRequired": false,
+  "approved": false,
+  "uiState": "Needs clarification",
+  "tickMode": "accelerated-fixture",
+  "ticks": 60,
+  "gap": "Typed correction retained locally; remaining source-kind clarification and subsequent admission are not declared corpus turns."
+}

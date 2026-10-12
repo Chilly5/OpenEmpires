@@ -1,0 +1,196 @@
+{
+  "schema": "openempires-phase5c-scenario-turn@1",
+  "run_id": "6c7b2971-1f33-4ff0-a2eb-0804bc1cd8ef",
+  "first_failing_stage": null,
+  "first_failure_category": null,
+  "schemaVersion": 1,
+  "caseId": "all-wood-west-tc-explicit-gather",
+  "requestId": "runtime:1",
+  "utterance": "Gather wood with all of my current wood villagers from trees left of my town center.",
+  "turnIndex": 0,
+  "status": "observed",
+  "evidenceMode": "offline-production-chat-fixture",
+  "providerCalls": 1,
+  "httpAttempts": 0,
+  "fidelity": "matched",
+  "semanticValid": true,
+  "estimatedInputTokens": null,
+  "actualPromptTokens": null,
+  "actualCompletionTokens": null,
+  "actualCachedTokens": null,
+  "actualReasoningTokens": null,
+  "reportedCost": null,
+  "attemptCosts": [],
+  "packingMs": 16.995,
+  "transportMs": null,
+  "parseMs": 0.182,
+  "admissionMs": 8.051,
+  "firstNativeActionMs": 482.313,
+  "commandCount": 1,
+  "commandTypes": [
+    "GatherCommand"
+  ],
+  "nativeResults": [
+    "GatherCommand:processed"
+  ],
+  "taskStates": [
+    "AllocateWorkersGoal:Completed"
+  ],
+  "draftBefore": [],
+  "draftAfter": [],
+  "draftChanges": [],
+  "normalizedFields": [
+    {
+      "mechanic": "SelectWorkers",
+      "parameters": {
+        "countMode": "AllMatching",
+        "state": "Gathering",
+        "currentResource": "Wood"
+      },
+      "inputs": {},
+      "dependencies": []
+    },
+    {
+      "mechanic": "ResolveLocation",
+      "parameters": {
+        "anchor": "MyTownCenter",
+        "relation": "MapWest",
+        "clearGap": 1,
+        "resource": "Wood",
+        "sourceKind": "Tree"
+      },
+      "inputs": {},
+      "dependencies": []
+    },
+    {
+      "mechanic": "AllocateWorkers",
+      "parameters": {
+        "resource": "Wood",
+        "sourceKind": "Tree"
+      },
+      "inputs": {
+        "workers": 0,
+        "location": 1
+      },
+      "dependencies": [
+        0,
+        1
+      ]
+    }
+  ],
+  "admittedFields": [
+    {
+      "type": "AllocateWorkersGoal",
+      "status": "Pending",
+      "originalUtterance": "Gather wood with all of my current wood villagers from trees left of my town center.",
+      "mode": "SelectedCount",
+      "countMode": "AllMatching",
+      "count": null,
+      "state": "Gathering",
+      "currentResource": "Wood",
+      "destinationResource": "Wood",
+      "destinationSource": "Tree",
+      "resourceAmount": null,
+      "resourceAmountMode": null
+    }
+  ],
+  "turnHistory": [
+    {
+      "index": 0,
+      "text": "Gather wood with all of my current wood villagers from trees left of my town center.",
+      "requestId": "runtime:1",
+      "uiState": "Awaiting approval",
+      "providerCalls": 1,
+      "semanticValid": true,
+      "semanticOutcome": "DynamicPlan",
+      "normalizedFields": [
+        {
+          "mechanic": "SelectWorkers",
+          "parameters": {
+            "countMode": "AllMatching",
+            "state": "Gathering",
+            "currentResource": "Wood"
+          },
+          "inputs": {},
+          "dependencies": []
+        },
+        {
+          "mechanic": "ResolveLocation",
+          "parameters": {
+            "anchor": "MyTownCenter",
+            "relation": "MapWest",
+            "clearGap": 1,
+            "resource": "Wood",
+            "sourceKind": "Tree"
+          },
+          "inputs": {},
+          "dependencies": []
+        },
+        {
+          "mechanic": "AllocateWorkers",
+          "parameters": {
+            "resource": "Wood",
+            "sourceKind": "Tree"
+          },
+          "inputs": {
+            "workers": 0,
+            "location": 1
+          },
+          "dependencies": [
+            0,
+            1
+          ]
+        }
+      ],
+      "admittedFields": [],
+      "draftBefore": [],
+      "draftAfter": [],
+      "draftChanges": [],
+      "approvalRequired": true,
+      "approved": false,
+      "commandTypes": [],
+      "taskStates": [],
+      "uiSubmitMs": 25.117
+    },
+    {
+      "index": 1,
+      "text": "Approve plan",
+      "origin": "offline-fixture-control",
+      "requestId": "runtime:1",
+      "uiState": "Accepted",
+      "providerCalls": 1,
+      "approved": true,
+      "admittedFields": [
+        {
+          "type": "AllocateWorkersGoal",
+          "status": "Pending",
+          "originalUtterance": "Gather wood with all of my current wood villagers from trees left of my town center.",
+          "mode": "SelectedCount",
+          "countMode": "AllMatching",
+          "count": null,
+          "state": "Gathering",
+          "currentResource": "Wood",
+          "destinationResource": "Wood",
+          "destinationSource": "Tree",
+          "resourceAmount": null,
+          "resourceAmountMode": null
+        }
+      ],
+      "taskStates": [
+        "AllocateWorkersGoal:Pending"
+      ],
+      "uiSubmitMs": 24.586
+    }
+  ],
+  "fogNewlyExploredCount": null,
+  "fixtureKind": "correct-synthetic",
+  "turnText": "Gather wood with all of my current wood villagers from trees left of my town center.",
+  "uiSubmitMs": 25.117,
+  "semanticOutcome": "DynamicPlan",
+  "approvalRequired": true,
+  "approved": true,
+  "uiState": "Accepted",
+  "approvalMode": "offline-fixture-control-not-declared-player-turn",
+  "tickMode": "accelerated-fixture",
+  "ticks": 60
+}

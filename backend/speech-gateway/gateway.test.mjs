@@ -110,3 +110,18 @@ test('semantic route rejects caller endpoint/model and bounds envelope while pre
     assert.equal((await fetch(f.base+'/api/commander/semantic',{method:'POST',headers:{...semanticHeaders,'X-Commander-Job':'44444444-4444-4444-8444-444444444444'},body:JSON.stringify({...body,url:'https://evil.example.invalid'})})).status,400);
   }finally{await f.close();}
 });
+test('semantic route applies the same conservative decoded-payload input guard and forwards unchanged',async()=>{
+  let forwarded;
+  const f=await fixture({semantic:async({body})=>{forwarded=body;return {choices:[{finish_reason:'stop',message:{content:'{}'}}]};}});
+  try{
+    const semanticHeaders={...headers,'Content-Type':'application/json','X-Commander-Job':job};
+    const safe={model:'openai/gpt-6-luna',messages:[{role:'system',content:'rules'},{role:'user',content:'order'}],max_tokens:4096,reasoning:{effort:'none'}};
+    const accepted=await fetch(f.base+'/api/commander/semantic',{method:'POST',headers:semanticHeaders,body:JSON.stringify(safe)});
+    assert.equal(accepted.status,200);
+    assert.deepEqual(forwarded,safe);
+    const over={...safe,messages:[{role:'user',content:'界'.repeat(1500)}]};
+    const rejected=await fetch(f.base+'/api/commander/semantic',{method:'POST',headers:{...semanticHeaders,'X-Commander-Job':'33333333-3333-4333-8333-333333333333'},body:JSON.stringify(over)});
+    assert.equal(rejected.status,400);
+    assert.deepEqual(forwarded,safe);
+  }finally{await f.close();}
+});

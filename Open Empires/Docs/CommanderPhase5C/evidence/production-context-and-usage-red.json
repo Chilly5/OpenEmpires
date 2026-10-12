@@ -1,0 +1,110 @@
+{
+  "project": "D:/unity_projects/OpenEmpires/Open Empires",
+  "unityInstance": "Open Empires@6d7310c7",
+  "unityVersion": "6000.5.9f1",
+  "testClass": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests",
+  "mode": "EditMode",
+  "jobId": "b47820791b0742d190a2f6d7f16a4f26",
+  "startedUnixMs": 1791659924232,
+  "finishedUnixMs": 1791659936444,
+  "status": "failed",
+  "progress": {
+    "completed": 8,
+    "total": 8,
+    "stuckSuspected": false,
+    "editorIsFocused": true,
+    "blockedReason": null,
+    "failuresCapped": false,
+    "lastFinishedTestFullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.TooLargeRequiredMeaning_IsRejectedWithoutDispatchingOrExecutingPrefix"
+  },
+  "counts": {
+    "passed": 5,
+    "failed": 3,
+    "skipped": 0,
+    "note": "The job endpoint returned no result.summary/results object; passed/skipped are inferred from 8 completed cases and 3 reported failures."
+  },
+  "failures": [
+    {
+      "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.MalformedUsageMetadata_DoesNotInvalidateOtherwiseValidSemanticReply",
+      "message": "Invalid observation metadata cannot poison valid semantic content. Expected: True. But was: False."
+    },
+    {
+      "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\")",
+      "message": "Commander input limit: the complete request and required context cannot fit safely; nothing was submitted. Edit the request or resolve its pending question. Expected: 1. But was: 0.",
+      "measuredInputEstimate": null,
+      "note": "No per-test output or numeric LastInputEstimate was returned by the terminal job API."
+    },
+    {
+      "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"Move all of my Wood villagers to the woodline left of my Town Center.\")",
+      "message": "Commander input limit: the complete request and required context cannot fit safely; nothing was submitted. Edit the request or resolve its pending question. Expected: 1. But was: 0.",
+      "measuredInputEstimate": null,
+      "note": "No per-test output or numeric LastInputEstimate was returned by the terminal job API."
+    }
+  ],
+  "editor": {
+    "preRunCompilation": {
+      "isCompiling": false,
+      "isDomainReloadPending": false,
+      "readyForTools": true
+    },
+    "postRunCompilation": {
+      "isCompiling": false,
+      "isDomainReloadPending": false,
+      "stateReadWasStale": true,
+      "readyForTools": false,
+      "note": "Post-run state snapshot was 8 seconds old and reported stale_status; last observed compilation state was false."
+    },
+    "preRunConsoleErrors": [],
+    "postRunConsoleErrors": [
+      {
+        "type": "Exception",
+        "message": "[CommanderProvider] request=failed;exception=InvalidOperationException",
+        "file": "Assets/Scripts/AI/Commander/Phase4A/OpenRouterCommanderProvider.cs",
+        "line": 417,
+        "stackTrace": "OpenEmpires.OpenRouterCommanderProvider/<TranslateSemanticAsync>d__58:MoveNext () at Assets/Scripts/AI/Commander/Phase4A/OpenRouterCommanderProvider.cs:254; OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests/<MalformedUsageMetadata_DoesNotInvalidateOtherwiseValidSemanticReply>d__3:MoveNext () at Assets/Tests/EditMode/CommanderPhase5CProviderBudgetTests.cs:77"
+      }
+    ]
+  },
+  "rawTerminalJobData": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "b47820791b0742d190a2f6d7f16a4f26",
+      "status": "failed",
+      "mode": "EditMode",
+      "started_unix_ms": 1791659924232,
+      "finished_unix_ms": 1791659936444,
+      "last_update_unix_ms": 1791659936444,
+      "progress": {
+        "completed": 8,
+        "total": 8,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791659936316,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.TooLargeRequiredMeaning_IsRejectedWithoutDispatchingOrExecutingPrefix",
+        "last_finished_unix_ms": 1791659936327,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.MalformedUsageMetadata_DoesNotInvalidateOtherwiseValidSemanticReply",
+            "message": "Invalid observation metadata cannot poison valid semantic content. Expected: True. But was: False."
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\")",
+            "message": "Commander input limit: the complete request and required context cannot fit safely; nothing was submitted. Edit the request or resolve its pending question. Expected: 1. But was: 0."
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.RealProductionCatalogProjection_StillFitsCompoundAndComposedRequests(\"Move all of my Wood villagers to the woodline left of my Town Center.\")",
+            "message": "Commander input limit: the complete request and required context cannot fit safely; nothing was submitted. Edit the request or resolve its pending question. Expected: 1. But was: 0."
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

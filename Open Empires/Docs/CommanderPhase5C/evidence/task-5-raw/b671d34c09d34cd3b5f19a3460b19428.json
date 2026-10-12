@@ -1,0 +1,61 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "b671d34c09d34cd3b5f19a3460b19428",
+      "status": "succeeded",
+      "mode": "PlayMode",
+      "started_unix_ms": 1791755431516,
+      "finished_unix_ms": 1791755439000,
+      "last_update_unix_ms": 1791755439000,
+      "progress": {
+        "completed": 2,
+        "total": 2,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791755438553,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.Composer_LeavesTwoLineDraftAreaBesideCompactSend",
+        "last_finished_unix_ms": 1791755438948,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "PlayMode",
+        "summary": {
+          "total": 2,
+          "passed": 2,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 1.5201943,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "CaptureActualPopulatedEditorViews_AtRequestedDesktopSizes",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.CaptureActualPopulatedEditorViews_AtRequestedDesktopSizes",
+            "state": "Passed",
+            "durationSeconds": 1.0860709,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: ReachAge\r\n[Commander Phase5C render] active Commander canvases=1; own compact active=False\r\n[Commander Phase5C render] active launcher object=none; own launcher=False\r\n[Commander Phase5C render] requested=1280x720; captured=1518x654; Chat active goal and local reply\r\n[Commander Phase5C render] requested=1280x720; captured=1518x654; Tasks active goal and visible Cancel\r\n[Commander Phase5C render] active launcher object=none; own launcher=False\r\n[Commander Phase5C render] requested=1920x1080; captured=1518x654; Chat active goal and local reply\r\n[Commander Phase5C render] requested=1920x1080; captured=1518x654; Tasks active goal and visible Cancel\r\n"
+          },
+          {
+            "name": "Composer_LeavesTwoLineDraftAreaBesideCompactSend",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5CUIPlayModeTests.Composer_LeavesTwoLineDraftAreaBesideCompactSend",
+            "state": "Passed",
+            "durationSeconds": 0.3949101,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

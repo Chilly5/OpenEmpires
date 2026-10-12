@@ -1,0 +1,54 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "4a62c83178434dc485ad811279a0cd35",
+    "status": "failed",
+    "mode": "EditMode",
+    "started_unix_ms": 1791664679785,
+    "finished_unix_ms": 1791664696372,
+    "last_update_unix_ms": 1791664696372,
+    "progress": {
+      "completed": 15,
+      "total": 15,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791664695627,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.TooLargeRequiredMeaning_IsRejectedWithoutDispatchingOrExecutingPrefix",
+      "last_finished_unix_ms": 1791664695955,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.EmptyUsageObject_IsUnknownAndDoesNotInventPromptTokens",
+          "message": "  Expected: False\r\n  But was:  True\r\n"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.GenericRequest_AdvertisesEveryStrictlyParsedSemanticFamily",
+          "message": "  SetResourceAllocation\r\n  Expected: String containing \"SetResourceAllocation\"\r\n  But was:  \"JSON only;strict keys/enums,no authority/IDs/coordinates/commands/hidden or extra goals. Keep counts,negations,actors,sources,constraints,order,exact results;unknown stays unknown. Request{outcome:Request,nodes:typed1..4,executionOrder:Independent|Sequential|DependencyGraph}. then/after=completion dependsOn:[prior0-based];resultFromNode=exact new results;producerFromNode=explicit new producer. a/an=1;number words;left=MapWest. Clarify{outcome:Clarify,message<=180,pending:{executionOrder,nodes:partial1..4},missingSlots:[{node,path,type:Confirmation|Count|SourceKind|CanonicalName,alternatives:[canonical]}]};keep known fields/edges/refs,omit missing leaves;Confirmation keeps offered value. Worker pending+missingFields valid. Clarify!=approval. Answer/Unsupported{outcome,message<=180},no nodes.EnsureUnitCount:unit canonical,count0..200,quantityMode:TargetTotal default|New. New/more=exact new count, no existing substitutes. Game handles prerequisites; extra buildings only explicit. BuildStructure{structure:canonical,count1..20,builders:{state:Eligible(default preferidle)|IdleOnly(strict),count:1},placement?}. placement{anchor:MyTownCenter|MyBarracks,relation:Near|MapWest|MapEast,clearGapTiles?:1..20,ordinal?:1..8 TC only} OR {anchor:VisibleResource(default)|WorkedResource(explicit),relation:Near,resource,sourceKind?}. Near gap1,no resource ordinal. ReachAge:targetAge:Feudal|Castle|Imperial|Next. Explicit2/3/4=Feudal/Castle/Imperial, not Next. ResearchTechnology:technology:BlacksmithDamage|BlacksmithDefense|Ballistics|SiegeEngineering|Chemistry|MurderHoles. AllocateWorkers{mode:SelectedCount(ordinary)|Additional(more workers)|TargetTotal(keep total),countMode:Exact|AllMatching(snapshot),count1..200 omitAllMatching,workers:{state:Any|Idle|Gathering,currentResource?},destination:{resource,sourceKind?:Any},resourceAmount?:1..1000000 paired resourceAmountMode:Stockpile|AdditionalGathered(player-wide income)}. Amount!=workers; assignment!=income. WatchFutureUnits{unit:canonical,count1..50,producer:canonical,producerOrdinal?:1..8,action:Gather(Villager only),resource,sourceKind?} OR Patrol,location:WorkedResource,resource. Next actual births incl human queues,neverTrain; first=1; ambiguous producer clarify. Action type:MoveUnits|ScoutArea|PatrolArea|SetRallyPoint|AttackTarget|DefendArea|RetreatUnits|RepairTarget; unitSelector,count1..50,location,resource/structure optional,resultFromNode/dependsOn optional. unitSelector:Military|Scout|Villagers|Spearman|Archer|Knight|DamagedMilitary; location:PlayerBase|WorkedResource|VisibleResource|VisibleEnemy|RelativeToSelectedUnits. VisibleEnemy never discovers an unseen base. Point routes, no invented radius. Attack/Repair optional target:{kind:UnitType,unit} OR {kind:BuildingType,structure}; rally resolves owned producer. resource:Food|Wood|Gold|Stone; sourceKind:Any or Food=Sheep|Berries|Farm,Wood=Tree,Gold=GoldMine,Stone=StoneMine. constraints?<=4 objects type:NoConstruction;PreferredWorkers mode:IdleOnly;ProtectedResource resource,amount?:0..200;MaximumQueue amount1..8;ResourceSource resource,sourceKind. \"\r\n"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.MixedAndAliasRequests_KeepRegisteredFormsVisible(\"Set the Wood allocation to zero.\",\"SetResourceAllocation\")",
+          "message": "  Expected: String containing \"SetResourceAllocation\"\r\n  But was:  \"JSON only;strict keys/enums,no authority/IDs/coordinates/commands/hidden or extra goals. Keep counts,negations,actors,sources,constraints,order,exact results;unknown stays unknown. Request{outcome:Request,nodes:typed1..4,executionOrder:Independent|Sequential|DependencyGraph}. then/after=completion dependsOn:[prior0-based];resultFromNode=exact new results;producerFromNode=explicit new producer. a/an=1;number words;left=MapWest. Clarify{outcome:Clarify,message<=180,pending:{executionOrder,nodes:partial1..4},missingSlots:[{node,path,type:Confirmation|Count|SourceKind|CanonicalName,alternatives:[canonical]}]};keep known fields/edges/refs,omit missing leaves;Confirmation keeps offered value. Worker pending+missingFields valid. Clarify!=approval. Answer/Unsupported{outcome,message<=180},no nodes.AllocateWorkers{mode:SelectedCount(ordinary)|Additional(more workers)|TargetTotal(keep total),countMode:Exact|AllMatching(snapshot),count1..200 omitAllMatching,workers:{state:Any|Idle|Gathering,currentResource?},destination:{resource,sourceKind?:Any},resourceAmount?:1..1000000 paired resourceAmountMode:Stockpile|AdditionalGathered(player-wide income)}. Amount!=workers; assignment!=income. resource:Food|Wood|Gold|Stone; sourceKind:Any or Food=Sheep|Berries|Farm,Wood=Tree,Gold=GoldMine,Stone=StoneMine. constraints?<=4 objects type:NoConstruction;PreferredWorkers mode:IdleOnly;ProtectedResource resource,amount?:0..200;MaximumQueue amount1..8;ResourceSource resource,sourceKind. \"\r\n"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.MixedAndAliasRequests_KeepRegisteredFormsVisible(\"Send spearmen to guard my Gold mine.\",\"DefendArea\")",
+          "message": "  Expected: String containing \"DefendArea\"\r\n  But was:  \"JSON only;strict keys/enums,no authority/IDs/coordinates/commands/hidden or extra goals. Keep counts,negations,actors,sources,constraints,order,exact results;unknown stays unknown. Request{outcome:Request,nodes:typed1..4,executionOrder:Independent|Sequential|DependencyGraph}. then/after=completion dependsOn:[prior0-based];resultFromNode=exact new results;producerFromNode=explicit new producer. a/an=1;number words;left=MapWest. Clarify{outcome:Clarify,message<=180,pending:{executionOrder,nodes:partial1..4},missingSlots:[{node,path,type:Confirmation|Count|SourceKind|CanonicalName,alternatives:[canonical]}]};keep known fields/edges/refs,omit missing leaves;Confirmation keeps offered value. Worker pending+missingFields valid. Clarify!=approval. Answer/Unsupported{outcome,message<=180},no nodes.EnsureUnitCount:unit canonical,count0..200,quantityMode:TargetTotal default|New. New/more=exact new count, no existing substitutes. Game handles prerequisites; extra buildings only explicit. BuildStructure{structure:canonical,count1..20,builders:{state:Eligible(default preferidle)|IdleOnly(strict),count:1},placement?}. placement{anchor:MyTownCenter|MyBarracks,relation:Near|MapWest|MapEast,clearGapTiles?:1..20,ordinal?:1..8 TC only} OR {anchor:VisibleResource(default)|WorkedResource(explicit),relation:Near,resource,sourceKind?}. Near gap1,no resource ordinal. AllocateWorkers{mode:SelectedCount(ordinary)|Additional(more workers)|TargetTotal(keep total),countMode:Exact|AllMatching(snapshot),count1..200 omitAllMatching,workers:{state:Any|Idle|Gathering,currentResource?},destination:{resource,sourceKind?:Any},resourceAmount?:1..1000000 paired resourceAmountMode:Stockpile|AdditionalGathered(player-wide income)}. Amount!=workers; assignment!=income. resource:Food|Wood|Gold|Stone; sourceKind:Any or Food=Sheep|Berries|Farm,Wood=Tree,Gold=GoldMine,Stone=StoneMine. constraints?<=4 objects type:NoConstruction;PreferredWorkers mode:IdleOnly;ProtectedResource resource,amount?:0..200;MaximumQueue amount1..8;ResourceSource resource,sourceKind. \"\r\n"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.MixedAndAliasRequests_KeepRegisteredFormsVisible(\"Split all idle villagers between Food and Wood.\",\"partition-workers\")",
+          "message": "  Expected: String containing \"partition-workers\"\r\n  But was:  \"JSON only;strict keys/enums,no authority/IDs/coordinates/commands/hidden or extra goals. Keep counts,negations,actors,sources,constraints,order,exact results;unknown stays unknown. Request{outcome:Request,nodes:typed1..4,executionOrder:Independent|Sequential|DependencyGraph}. then/after=completion dependsOn:[prior0-based];resultFromNode=exact new results;producerFromNode=explicit new producer. a/an=1;number words;left=MapWest. Clarify{outcome:Clarify,message<=180,pending:{executionOrder,nodes:partial1..4},missingSlots:[{node,path,type:Confirmation|Count|SourceKind|CanonicalName,alternatives:[canonical]}]};keep known fields/edges/refs,omit missing leaves;Confirmation keeps offered value. Worker pending+missingFields valid. Clarify!=approval. Answer/Unsupported{outcome,message<=180},no nodes.AllocateWorkers{mode:SelectedCount(ordinary)|Additional(more workers)|TargetTotal(keep total),countMode:Exact|AllMatching(snapshot),count1..200 omitAllMatching,workers:{state:Any|Idle|Gathering,currentResource?},destination:{resource,sourceKind?:Any},resourceAmount?:1..1000000 paired resourceAmountMode:Stockpile|AdditionalGathered(player-wide income)}. Amount!=workers; assignment!=income. resource:Food|Wood|Gold|Stone; sourceKind:Any or Food=Sheep|Berries|Farm,Wood=Tree,Gold=GoldMine,Stone=StoneMine. constraints?<=4 objects type:NoConstruction;PreferredWorkers mode:IdleOnly;ProtectedResource resource,amount?:0..200;MaximumQueue amount1..8;ResourceSource resource,sourceKind. \"\r\n"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.Repair_RetainsBothAttemptEstimatesAndUsage",
+          "message": "  Expected: not null\r\n  But was:  null\r\n"
+        }
+      ],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": null
+  },
+  "hint": null
+}

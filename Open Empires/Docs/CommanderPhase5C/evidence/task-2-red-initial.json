@@ -1,0 +1,42 @@
+{
+  "success": true,
+  "message": "Test job status retrieved.",
+  "error": null,
+  "data": {
+    "job_id": "410eb54fef894c4e843c1521669b9b78",
+    "status": "failed",
+    "mode": "EditMode",
+    "started_unix_ms": 1791662942205,
+    "finished_unix_ms": 1791662948643,
+    "last_update_unix_ms": 1791662948643,
+    "progress": {
+      "completed": 4,
+      "total": 4,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791662948163,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NoRejectsOnlyProposal_AndIndependentCommandSupersedes",
+      "last_finished_unix_ms": 1791662948596,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [
+        {
+          "full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.HouseThenNextFive_FromTreesKeepsGraphAndNeedsSeparateApproval",
+          "message": "  Expected: not null\r\n  But was:  null\r\n"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.MineProposal_YesUsesOriginalRequestAndNoSecondTranslation",
+          "message": "  Expected: not null\r\n  But was:  null\r\n"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NoRejectsOnlyProposal_AndIndependentCommandSupersedes",
+          "message": "  Expected: 1\r\n  But was:  2\r\n"
+        }
+      ],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": null
+  },
+  "hint": null
+}

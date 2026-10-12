@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 07:25:15Z" end-time="2026-10-12 07:25:20Z" duration="5.1338545">
+  <test-suite type="TestSuite" id="1311" name="Open Empires" fullname="Open Empires" runstate="Runnable" testcasecount="260" result="Failed" site="Child" start-time="2026-10-12 07:25:15Z" end-time="2026-10-12 07:25:20Z" duration="5.133855" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1305" name="OpenEmpires.PlayModeTests.dll" fullname="D:/unity_projects/OpenEmpires/Open Empires/Library/ScriptAssemblies/OpenEmpires.PlayModeTests.dll" runstate="Runnable" testcasecount="260" result="Failed" site="Child" start-time="2026-10-12 07:25:15Z" end-time="2026-10-12 07:25:20Z" duration="5.125646" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="10196" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1306" name="OpenEmpires" fullname="OpenEmpires" runstate="Runnable" testcasecount="260" result="Failed" site="Child" start-time="2026-10-12 07:25:15Z" end-time="2026-10-12 07:25:20Z" duration="5.123061" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1307" name="Tests" fullname="OpenEmpires.Tests" runstate="Runnable" testcasecount="260" result="Failed" site="Child" start-time="2026-10-12 07:25:15Z" end-time="2026-10-12 07:25:20Z" duration="5.121026" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1263" name="CommanderPhase5CLiveHouseDiagnosticTests" fullname="OpenEmpires.Tests.CommanderPhase5CLiveHouseDiagnosticTests" classname="OpenEmpires.Tests.CommanderPhase5CLiveHouseDiagnosticTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-12 07:25:15Z" end-time="2026-10-12 07:25:20Z" duration="5.117332" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="Category" value="CommanderLiveProvider" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1265" name="BuildAHouse_ActualSampleSceneUiAndNativeCompletion" fullname="OpenEmpires.Tests.CommanderPhase5CLiveHouseDiagnosticTests.BuildAHouse_ActualSampleSceneUiAndNativeCompletion" methodname="BuildAHouse_ActualSampleSceneUiAndNativeCompletion" classname="OpenEmpires.Tests.CommanderPhase5CLiveHouseDiagnosticTests" runstate="Runnable" seed="2008797654" result="Failed" start-time="2026-10-12 07:25:15Z" end-time="2026-10-12 07:25:20Z" duration="5.077017" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  The real SampleScene bootstrap is required.
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at OpenEmpires.Tests.CommanderPhase5CLiveHouseDiagnosticTests+<BuildAHouse_ActualSampleSceneUiAndNativeCompletion>d__5.MoveNext () [0x0022b] in D:\unity_projects\OpenEmpires\Open Empires\Assets\Tests\PlayMode\CommanderPhase5CLiveHouseDiagnosticTests.cs:212
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[[DotEnv] Loaded .env from D:\unity_projects\OpenEmpires\Open Empires\.env
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: D:\unity_projects\OpenEmpires\Open Empires\Docs\CommanderPhase5C\evidence\final-fix-leaves-20261012-072515-647-225723c9.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

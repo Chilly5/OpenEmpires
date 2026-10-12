@@ -216,6 +216,10 @@ namespace OpenEmpires
                 return Invalid(CommanderIntentErrorCode.UnknownCommand, "Unknown Commander capability action.");
             if (intent.UnitSelector.Count < 1 || intent.UnitSelector.Count > 50)
                 return Invalid(CommanderIntentErrorCode.AmountOutOfRange, "Unit selector count is outside the bounded range.");
+            if (intent.UnitSelector.AllMatching && (intent.ActionType != CommanderCapabilityActionType.GarrisonUnits
+                || intent.UnitSelector.Kind != CommanderUnitSelectorKind.Villagers))
+                return Invalid(CommanderIntentErrorCode.UnknownCommand,
+                    "AllMatching units are supported only for bounded villager garrisoning.");
             if (!Enum.IsDefined(typeof(CommanderUnitSelectorKind), intent.UnitSelector.Kind)
                 || !Enum.IsDefined(typeof(CommanderLocationSelectorKind), intent.LocationSelector.Kind))
                 return Invalid(CommanderIntentErrorCode.UnknownCommand, "Unknown Commander selector.");
@@ -224,6 +228,28 @@ namespace OpenEmpires
                 return Invalid(CommanderIntentErrorCode.UnknownUnit, "The requested unit selector is not supported.");
             if (intent.TargetSelector.HasValue && !intent.TargetSelector.Value.IsCompatible(intent.ActionType, intent.LocationSelector.Kind))
                 return Invalid(CommanderIntentErrorCode.UnknownCommand, "The requested target type is incompatible with this action.");
+            if (intent.ActionType == CommanderCapabilityActionType.DiscoverEnemy
+                && (intent.UnitSelector.Kind != CommanderUnitSelectorKind.Scout
+                    || intent.UnitSelector.Count != 1 || intent.UnitSelector.AllMatching
+                    || intent.LocationSelector.Kind != CommanderLocationSelectorKind.VisibleEnemy
+                    || intent.LocationSelector.RadiusTiles.HasValue
+                    || intent.LocationSelector.ResourceType.HasValue || !intent.TargetSelector.HasValue
+                    || intent.StructureType.HasValue || intent.Technology.HasValue))
+                return Invalid(CommanderIntentErrorCode.UnknownCommand,
+                    "Discovery requires one owned Scout and an explicit enemy target type.");
+            if (intent.ActionType == CommanderCapabilityActionType.GarrisonUnits
+                || intent.ActionType == CommanderCapabilityActionType.UngarrisonBuilding)
+            {
+                if (intent.LocationSelector.Kind != CommanderLocationSelectorKind.PlayerBase
+                    || !intent.StructureType.HasValue || intent.TargetSelector.HasValue
+                    || intent.Technology.HasValue || intent.LocationSelector.ResourceType.HasValue)
+                    return Invalid(CommanderIntentErrorCode.UnknownCommand,
+                        "A garrison action requires one owned shelter type at the player base.");
+                if (intent.ActionType == CommanderCapabilityActionType.UngarrisonBuilding
+                    && intent.UnitSelector.Count != 1)
+                    return Invalid(CommanderIntentErrorCode.UnknownCommand,
+                        "Ungarrison is building-wide; selective egress is unsupported.");
+            }
             if (intent.ActionType == CommanderCapabilityActionType.RepairTarget
                 && intent.UnitSelector.Kind != CommanderUnitSelectorKind.Villagers)
                 return Invalid(CommanderIntentErrorCode.UnknownCommand,

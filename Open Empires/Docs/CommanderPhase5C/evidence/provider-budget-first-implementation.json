@@ -1,0 +1,97 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"success\":true,\"message\":\"Test job status retrieved.\",\"error\":null,\"data\":{\"job_id\":\"e671b075a45c450e8b04e8ff20471790\",\"status\":\"succeeded\",\"mode\":\"EditMode\",\"started_unix_ms\":1791659766677,\"finished_unix_ms\":1791659778110,\"last_update_unix_ms\":1791659778110,\"progress\":{\"completed\":5,\"total\":5,\"current_test_full_name\":null,\"current_test_started_unix_ms\":1791659777411,\"last_finished_test_full_name\":\"OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.TooLargeRequiredMeaning_IsRejectedWithoutDispatchingOrExecutingPrefix\",\"last_finished_unix_ms\":1791659777733,\"stuck_suspected\":false,\"editor_is_focused\":false,\"blocked_reason\":null,\"failures_so_far\":[],\"failures_capped\":false},\"error\":null,\"result\":{\"mode\":\"EditMode\",\"summary\":{\"total\":5,\"passed\":5,\"failed\":0,\"skipped\":0,\"durationSeconds\":2.0658671,\"resultState\":\"Passed\"},\"results\":[{\"name\":\"MissingResponseUsage_RemainsUnknownNotZero\",\"fullName\":\"OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.MissingResponseUsage_RemainsUnknownNotZero\",\"state\":\"Passed\",\"durationSeconds\":0.35903,\"message\":null,\"stackTrace\":null,\"output\":\"[CommanderProvider] utc=2026-10-10T19:16:16.5071875Z;model=openai/gpt-6-luna;request=built\\r\\n[CommanderProvider] http=sent\\r\\n[CommanderProvider] http=200;durationMs=9\\r\\n[CommanderProvider] finish=stop\\r\\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\\r\\n[CommanderProvider] semantic=Answer;nodes=0\\r\\n\"},{\"name\":\"OrdinaryRequests_KeepCompleteModelPayloadBelowConservativeInputBudget(\\\"Gather 200 Gold with three villagers from Wood.\\\")\",\"fullName\":\"OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.OrdinaryRequests_KeepCompleteModelPayloadBelowConservativeInputBudget(\\\"Gather 200 Gold with three villagers from Wood.\\\")\",\"state\":\"Passed\",\"durationSeconds\":0.2678107,\"message\":null,\"stackTrace\":null,\"output\":\"[CommanderProvider] utc=2026-10-10T19:16:16.7873097Z;model=openai/gpt-6-luna;request=built\\r\\n[CommanderProvider] http=sent\\r\\n[CommanderProvider] http=200;durationMs=5\\r\\n[CommanderProvider] finish=stop\\r\\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\\r\\n[CommanderProvider] semantic=Answer;nodes=0\\r\\nOffline pack audit: {\\\"utterance\\\":\\\"Gather 200 Gold with three villagers from Wood.\\\",\\\"systemUtf8Units\\\":1970,\\\"userUtf8Units\\\":464,\\\"estimateWithMargin\\\":2831,\\\"estimateMethod\\\":\\\"UTF8 byte units plus256 message margin; not verified model tokenizer\\\",\\\"actualPromptTokens\\\":null}\\r\\n\"},{\"name\":\"OrdinaryRequests_KeepCompleteModelPayloadBelowConservativeInputBudget(\\\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\\\")\",\"fullName\":\"OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.OrdinaryRequests_KeepCompleteModelPayloadBelowConservativeInputBudget(\\\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\\\")\",\"state\":\"Passed\",\"durationSeconds\":0.3066411,\"message\":null,\"stackTrace\":null,\"output\":\"[CommanderProvider] utc=2026-10-10T19:16:17.0425066Z;model=openai/gpt-6-luna;request=built\\r\\n[CommanderProvider] http=sent\\r\\n[CommanderProvider] http=200;durationMs=10\\r\\n[CommanderProvider] finish=stop\\r\\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\\r\\n[CommanderProvider] semantic=Answer;nodes=0\\r\\nOffline pack audit: {\\\"utterance\\\":\\\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\\\",\\\"systemUtf8Units\\\":2721,\\\"userUtf8Units\\\":518,\\\"estimateWithMargin\\\":3636,\\\"estimateMethod\\\":\\\"UTF8 byte units plus256 message margin; not verified model tokenizer\\\",\\\"actualPromptTokens\\\":null}\\r\\n\"},{\"name\":\"ResponseUsage_IsRetainedAsTypedObservedMetricsIncludingCachedInput\",\"fullName\":\"OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.ResponseUsage_IsRetainedAsTypedObservedMetricsIncludingCachedInput\",\"state\":\"Passed\",\"durationSeconds\":0.2651275,\"message\":null,\"stackTrace\":null,\"output\":\"[CommanderProvider] utc=2026-10-10T19:16:17.3698368Z;model=openai/gpt-6-luna;request=built\\r\\n[CommanderProvider] http=sent\\r\\n[CommanderProvider] http=200;durationMs=18\\r\\n[CommanderProvider] finish=stop\\r\\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\\r\\n[CommanderProvider] semantic=Answer;nodes=0\\r\\n\"},{\"name\":\"TooLargeRequiredMeaning_IsRejectedWithoutDispatchingOrExecutingPrefix\",\"fullName\":\"OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.TooLargeRequiredMeaning_IsRejectedWithoutDispatchingOrExecutingPrefix\",\"state\":\"Passed\",\"durationSeconds\":0.3214207,\"message\":null,\"stackTrace\":null,\"output\":\"\"}]}},\"hint\":null}"
+    }
+  ],
+  "structuredContent": {
+    "result": {
+      "success": true,
+      "message": "Test job status retrieved.",
+      "error": null,
+      "data": {
+        "job_id": "e671b075a45c450e8b04e8ff20471790",
+        "status": "succeeded",
+        "mode": "EditMode",
+        "started_unix_ms": 1791659766677,
+        "finished_unix_ms": 1791659778110,
+        "last_update_unix_ms": 1791659778110,
+        "progress": {
+          "completed": 5,
+          "total": 5,
+          "current_test_full_name": null,
+          "current_test_started_unix_ms": 1791659777411,
+          "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.TooLargeRequiredMeaning_IsRejectedWithoutDispatchingOrExecutingPrefix",
+          "last_finished_unix_ms": 1791659777733,
+          "stuck_suspected": false,
+          "editor_is_focused": false,
+          "blocked_reason": null,
+          "failures_so_far": [],
+          "failures_capped": false
+        },
+        "error": null,
+        "result": {
+          "mode": "EditMode",
+          "summary": {
+            "total": 5,
+            "passed": 5,
+            "failed": 0,
+            "skipped": 0,
+            "durationSeconds": 2.0658671,
+            "resultState": "Passed"
+          },
+          "results": [
+            {
+              "name": "MissingResponseUsage_RemainsUnknownNotZero",
+              "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.MissingResponseUsage_RemainsUnknownNotZero",
+              "state": "Passed",
+              "durationSeconds": 0.35903,
+              "message": null,
+              "stackTrace": null,
+              "output": "[CommanderProvider] utc=2026-10-10T19:16:16.5071875Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=9\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\r\n[CommanderProvider] semantic=Answer;nodes=0\r\n"
+            },
+            {
+              "name": "OrdinaryRequests_KeepCompleteModelPayloadBelowConservativeInputBudget(\"Gather 200 Gold with three villagers from Wood.\")",
+              "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.OrdinaryRequests_KeepCompleteModelPayloadBelowConservativeInputBudget(\"Gather 200 Gold with three villagers from Wood.\")",
+              "state": "Passed",
+              "durationSeconds": 0.2678107,
+              "message": null,
+              "stackTrace": null,
+              "output": "[CommanderProvider] utc=2026-10-10T19:16:16.7873097Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=5\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\r\n[CommanderProvider] semantic=Answer;nodes=0\r\nOffline pack audit: {\"utterance\":\"Gather 200 Gold with three villagers from Wood.\",\"systemUtf8Units\":1970,\"userUtf8Units\":464,\"estimateWithMargin\":2831,\"estimateMethod\":\"UTF8 byte units plus256 message margin; not verified model tokenizer\",\"actualPromptTokens\":null}\r\n"
+            },
+            {
+              "name": "OrdinaryRequests_KeepCompleteModelPayloadBelowConservativeInputBudget(\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\")",
+              "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.OrdinaryRequests_KeepCompleteModelPayloadBelowConservativeInputBudget(\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\")",
+              "state": "Passed",
+              "durationSeconds": 0.3066411,
+              "message": null,
+              "stackTrace": null,
+              "output": "[CommanderProvider] utc=2026-10-10T19:16:17.0425066Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=10\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\r\n[CommanderProvider] semantic=Answer;nodes=0\r\nOffline pack audit: {\"utterance\":\"Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.\",\"systemUtf8Units\":2721,\"userUtf8Units\":518,\"estimateWithMargin\":3636,\"estimateMethod\":\"UTF8 byte units plus256 message margin; not verified model tokenizer\",\"actualPromptTokens\":null}\r\n"
+            },
+            {
+              "name": "ResponseUsage_IsRetainedAsTypedObservedMetricsIncludingCachedInput",
+              "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.ResponseUsage_IsRetainedAsTypedObservedMetricsIncludingCachedInput",
+              "state": "Passed",
+              "durationSeconds": 0.2651275,
+              "message": null,
+              "stackTrace": null,
+              "output": "[CommanderProvider] utc=2026-10-10T19:16:17.3698368Z;model=openai/gpt-6-luna;request=built\r\n[CommanderProvider] http=sent\r\n[CommanderProvider] http=200;durationMs=18\r\n[CommanderProvider] finish=stop\r\n[CommanderProvider] assistantContent=extracted;characters=49;finish=stop\r\n[CommanderProvider] semantic=Answer;nodes=0\r\n"
+            },
+            {
+              "name": "TooLargeRequiredMeaning_IsRejectedWithoutDispatchingOrExecutingPrefix",
+              "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.TooLargeRequiredMeaning_IsRejectedWithoutDispatchingOrExecutingPrefix",
+              "state": "Passed",
+              "durationSeconds": 0.3214207,
+              "message": null,
+              "stackTrace": null,
+              "output": ""
+            }
+          ]
+        }
+      },
+      "hint": null
+    }
+  },
+  "isError": false
+}

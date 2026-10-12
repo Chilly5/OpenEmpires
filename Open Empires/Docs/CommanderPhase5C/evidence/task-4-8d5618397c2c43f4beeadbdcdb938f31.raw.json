@@ -1,0 +1,106 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "8d5618397c2c43f4beeadbdcdb938f31",
+      "status": "succeeded",
+      "mode": "EditMode",
+      "started_unix_ms": 1791734922142,
+      "finished_unix_ms": 1791734933644,
+      "last_update_unix_ms": 1791734933644,
+      "progress": {
+        "completed": 7,
+        "total": 7,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791734932683,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.SemanticUngarrison_ExplicitBuildingWideCommandRestoresAllHousedUnits",
+        "last_finished_unix_ms": 1791734933491,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "EditMode",
+        "summary": {
+          "total": 7,
+          "passed": 7,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 4.068745,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "SelectiveUngarrisonDeclarationIsRejectedBeforeAdmission",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.SelectiveUngarrisonDeclarationIsRejectedBeforeAdmission",
+            "state": "Passed",
+            "durationSeconds": 0.7441439,
+            "message": null,
+            "stackTrace": null,
+            "output": ""
+          },
+          {
+            "name": "SemanticGarrison_CancelOrResetRetainsExactGuardUntilNativeOrderEnds(False)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.SemanticGarrison_CancelOrResetRetainsExactGuardUntilNativeOrderEnds(False)",
+            "state": "Passed",
+            "durationSeconds": 0.572104,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: CapabilityAction\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Sending 2/2 owned eligible unit(s) to exact shelter; protected 0; unaccommodated 0.\r\n[SyncCheck] tick=0 PRE-CMD=9AD6842E cmds=1\r\n[SyncCheck] tick=0 POST-CMD=3D6AB83E\r\n[SyncCheck] tick=0 PRE-AI-EXEC=3D6AB83E aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=72E98680 systemDetail=3D6AB83E,C8A9394E,C8A9394E,B021394E,B021394E,B021394E,B021394E,B021394E,B021394E\r\n[Commander] Goal #1 cancelled.\r\n[SyncCheck] tick=2 checksum=90DFC6CB\r\n"
+          },
+          {
+            "name": "SemanticGarrison_CancelOrResetRetainsExactGuardUntilNativeOrderEnds(True)",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.SemanticGarrison_CancelOrResetRetainsExactGuardUntilNativeOrderEnds(True)",
+            "state": "Passed",
+            "durationSeconds": 0.2827286,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: CapabilityAction\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Sending 2/2 owned eligible unit(s) to exact shelter; protected 0; unaccommodated 0.\r\n[SyncCheck] tick=0 PRE-CMD=9AD6842E cmds=1\r\n[SyncCheck] tick=0 POST-CMD=3D6AB83E\r\n[SyncCheck] tick=0 PRE-AI-EXEC=3D6AB83E aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=72E98680 systemDetail=3D6AB83E,C8A9394E,C8A9394E,B021394E,B021394E,B021394E,B021394E,B021394E,B021394E\r\n[SyncCheck] tick=2 checksum=90DFC6CB\r\n"
+          },
+          {
+            "name": "SemanticGarrison_FullShelterBlocksWithoutAnyCommand",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.SemanticGarrison_FullShelterBlocksWithoutAnyCommand",
+            "state": "Passed",
+            "durationSeconds": 0.2832189,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: CapabilityAction\r\n[Commander] Goal #1: status=Blocked owned=0 queued=0; Garrisoned 0/2; protected 0; unaccommodated 2. No exact owned, reachable capacity can be used.\r\n"
+          },
+          {
+            "name": "SemanticGarrison_ProtectedWorkerIsNotReclaimedOrSilentlyReplaced",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.SemanticGarrison_ProtectedWorkerIsNotReclaimedOrSilentlyReplaced",
+            "state": "Passed",
+            "durationSeconds": 0.3018644,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: CapabilityAction\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Sending 1/2 owned eligible unit(s) to exact shelter; protected 1; unaccommodated 0.\r\n[SyncCheck] tick=0 PRE-CMD=87DA842E cmds=1\r\n[SyncCheck] tick=0 POST-CMD=392247CF\r\n[SyncCheck] tick=0 PRE-AI-EXEC=392247CF aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=9F3C582B systemDetail=392247CF,392247CF,392247CF,392247CF,392247CF,392247CF,392247CF,392247CF,392247CF\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; Garrisoned 1/2 in the exact owned TownCenter; protected 1; unaccommodated 0.\r\n"
+          },
+          {
+            "name": "SemanticGarrison_UsesOwnedShelterAndReportsActualHousedCount",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.SemanticGarrison_UsesOwnedShelterAndReportsActualHousedCount",
+            "state": "Passed",
+            "durationSeconds": 0.4666728,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: CapabilityAction\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Sending 1/2 owned eligible unit(s) to exact shelter; protected 0; unaccommodated 1.\r\n[SyncCheck] tick=0 PRE-CMD=9AD6842E cmds=1\r\n[SyncCheck] tick=0 POST-CMD=3CF9FC36\r\n[SyncCheck] tick=0 PRE-AI-EXEC=3CF9FC36 aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=7017356A systemDetail=3CF9FC36,7C0EFABE,7C0EFABE,C2B4EE3E,C2B4EE3E,C2B4EE3E,C2B4EE3E,C2B4EE3E,C2B4EE3E\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Garrisoned 0/2 in the exact owned TownCenter; protected 0; unaccommodated 2. Native entry is pending.\r\n[SyncCheck] tick=1 PRE-CMD=C2B4EE3E cmds=0\r\n[SyncCheck] tick=1 POST-CMD=C2B4EE3E\r\n[SyncCheck] tick=1 PRE-AI-EXEC=C2B4EE3E aiCmds=0\r\n[SyncCheck] INIT tick=2 checksum=8A753B81 systemDetail=C2B4EE3E,01C9ECC6,01C9ECC6,0472C346,0472C346,0472C346,0472C346,0472C346,0472C346\r\n[SyncCheck] tick=2 PRE-CMD=0472C346 cmds=0\r\n[SyncCheck] tick=2 POST-CMD=0472C346\r\n[SyncCheck] tick=2 PRE-AI-EXEC=0472C346 aiCmds=0\r\n[SyncCheck] tick=3 checksum=F44954F3\r\n[SyncCheck] tick=3 PRE-CMD=A3EAD271 cmds=0\r\n[SyncCheck] tick=3 POST-CMD=A3EAD271\r\n[SyncCheck] tick=3 PRE-AI-EXEC=A3EAD271 aiCmds=0\r\n[SyncCheck] tick=4 checksum=D52A7892\r\n[SyncCheck] tick=4 PRE-CMD=118ABC0A cmds=0\r\n[SyncCheck] tick=4 POST-CMD=118ABC0A\r\n[SyncCheck] tick=4 PRE-AI-EXEC=118ABC0A aiCmds=0\r\n[SyncCheck] tick=5 checksum=4451C2CE\r\n[SyncCheck] tick=5 PRE-CMD=E26AC318 cmds=0\r\n[SyncCheck] tick=5 POST-CMD=E26AC318\r\n[SyncCheck] tick=5 PRE-AI-EXEC=E26AC318 aiCmds=0\r\n[SyncCheck] tick=6 checksum=3C2DC92C\r\n[SyncCheck] tick=6 PRE-CMD=E87F21E2 cmds=0\r\n[SyncCheck] tick=6 POST-CMD=E87F21E2\r\n[SyncCheck] tick=6 PRE-AI-EXEC=E87F21E2 aiCmds=0\r\n[SyncCheck] tick=7 checksum=C7D1A1A3\r\n[SyncCheck] tick=7 PRE-CMD=15C3BD2F cmds=0\r\n[SyncCheck] tick=7 POST-CMD=15C3BD2F\r\n[SyncCheck] tick=7 PRE-AI-EXEC=15C3BD2F aiCmds=0\r\n[SyncCheck] tick=8 checksum=B9023185\r\n[SyncCheck] tick=8 PRE-CMD=8758FA05 cmds=0\r\n[SyncCheck] tick=8 POST-CMD=8758FA05\r\n[SyncCheck] tick=8 PRE-AI-EXEC=8758FA05 aiCmds=0\r\n[SyncCheck] tick=9 checksum=16DA72C5\r\n[SyncCheck] tick=9 PRE-CMD=8583BDA9 cmds=0\r\n[SyncCheck] tick=9 POST-CMD=8583BDA9\r\n[SyncCheck] tick=9 PRE-AI-EXEC=8583BDA9 aiCmds=0\r\n[SyncCheck] tick=10 checksum=94A71B92\r\n[SyncCheck] tick=10 PRE-CMD=A3904C1F cmds=0\r\n[SyncCheck] tick=10 POST-CMD=A3904C1F\r\n[SyncCheck] tick=10 PRE-AI-EXEC=A3904C1F aiCmds=0\r\n[SyncCheck] tick=11 checksum=C4980721\r\n[SyncCheck] tick=11 PRE-CMD=BF32D42A cmds=0\r\n[SyncCheck] tick=11 POST-CMD=BF32D42A\r\n[SyncCheck] tick=11 PRE-AI-EXEC=BF32D42A aiCmds=0\r\n[SyncCheck] tick=12 checksum=12C6F1C4\r\n[SyncCheck] tick=12 PRE-CMD=6D50088B cmds=0\r\n[SyncCheck] tick=12 POST-CMD=6D50088B\r\n[SyncCheck] tick=12 PRE-AI-EXEC=6D50088B aiCmds=0\r\n[SyncCheck] tick=13 checksum=15A3F09C\r\n[SyncCheck] tick=13 PRE-CMD=42CC9C03 cmds=0\r\n[SyncCheck] tick=13 POST-CMD=42CC9C03\r\n[SyncCheck] tick=13 PRE-AI-EXEC=42CC9C03 aiCmds=0\r\n[SyncCheck] tick=14 checksum=2C4CF627\r\n[SyncCheck] tick=14 PRE-CMD=D48D4153 cmds=0\r\n[SyncCheck] tick=14 POST-CMD=D48D4153\r\n[SyncCheck] tick=14 PRE-AI-EXEC=D48D4153 aiCmds=0\r\n[SyncCheck] tick=15 checksum=13DD6346\r\n[SyncCheck] tick=15 PRE-CMD=2291F87B cmds=0\r\n[SyncCheck] tick=15 POST-CMD=2291F87B\r\n[SyncCheck] tick=15 PRE-AI-EXEC=2291F87B aiCmds=0\r\n[SyncCheck] tick=16 checksum=E88E8B58\r\n[SyncCheck] tick=16 PRE-CMD=C1BF743C cmds=0\r\n[SyncCheck] tick=16 POST-CMD=C1BF743C\r\n[SyncCheck] tick=16 PRE-AI-EXEC=C1BF743C aiCmds=0\r\n[SyncCheck] tick=17 checksum=C699C1BC\r\n[SyncCheck] tick=17 PRE-CMD=46FA6757 cmds=0\r\n[SyncCheck] tick=17 POST-CMD=46FA6757\r\n[SyncCheck] tick=17 PRE-AI-EXEC=46FA6757 aiCmds=0\r\n[SyncCheck] tick=18 checksum=2835C834\r\n[SyncCheck] tick=18 PRE-CMD=B242D1CC cmds=0\r\n[SyncCheck] tick=18 POST-CMD=B242D1CC\r\n[SyncCheck] tick=18 PRE-AI-EXEC=B242D1CC aiCmds=0\r\n[SyncCheck] tick=19 checksum=AF65305D\r\n[SyncCheck] tick=19 PRE-CMD=987D665C cmds=0\r\n[SyncCheck] tick=19 POST-CMD=987D665C\r\n[SyncCheck] tick=19 PRE-AI-EXEC=987D665C aiCmds=0\r\n[SyncCheck] tick=20 checksum=4FB528D1\r\n[SyncCheck] tick=20 PRE-CMD=D79264E4 cmds=0\r\n[SyncCheck] tick=20 POST-CMD=D79264E4\r\n[SyncCheck] tick=20 PRE-AI-EXEC=D79264E4 aiCmds=0\r\n[SyncCheck] tick=21 checksum=0BF662E8\r\n[SyncCheck] tick=21 PRE-CMD=16A7636C cmds=0\r\n[SyncCheck] tick=21 POST-CMD=16A7636C\r\n[SyncCheck] tick=21 PRE-AI-EXEC=16A7636C aiCmds=0\r\n[SyncCheck] tick=22 checksum=C8379CFF\r\n[SyncCheck] tick=22 PRE-CMD=55BC61F4 cmds=0\r\n[SyncCheck] tick=22 POST-CMD=55BC61F4\r\n[SyncCheck] tick=22 PRE-AI-EXEC=55BC61F4 aiCmds=0\r\n[SyncCheck] tick=23 checksum=8478D716\r\n[SyncCheck] tick=23 PRE-CMD=94D1607C cmds=0\r\n[SyncCheck] tick=23 POST-CMD=94D1607C\r\n[SyncCheck] tick=23 PRE-AI-EXEC=94D1607C aiCmds=0\r\n[SyncCheck] tick=24 checksum=40BA112D\r\n[SyncCheck] tick=24 PRE-CMD=D3E65F04 cmds=0\r\n[SyncCheck] tick=24 POST-CMD=D3E65F04\r\n[SyncCheck] tick=24 PRE-AI-EXEC=D3E65F04 aiCmds=0\r\n[SyncCheck] tick=25 checksum=FCFB4B44\r\n[SyncCheck] tick=25 PRE-CMD=12FB5D8C cmds=0\r\n[SyncCheck] tick=25 POST-CMD=12FB5D8C\r\n[SyncCheck] tick=25 PRE-AI-EXEC=12FB5D8C aiCmds=0\r\n[SyncCheck] tick=26 checksum=B93C855B\r\n[SyncCheck] tick=26 PRE-CMD=52105C14 cmds=0\r\n[SyncCheck] tick=26 POST-CMD=52105C14\r\n[SyncCheck] tick=26 PRE-AI-EXEC=52105C14 aiCmds=0\r\n[SyncCheck] tick=27 checksum=757DBF72\r\n[SyncCheck] tick=27 PRE-CMD=91255A9C cmds=0\r\n[SyncCheck] tick=27 POST-CMD=91255A9C\r\n[SyncCheck] tick=27 PRE-AI-EXEC=91255A9C aiCmds=0\r\n[SyncCheck] tick=28 checksum=31BEF989\r\n[SyncCheck] tick=28 PRE-CMD=D03A5924 cmds=0\r\n[SyncCheck] tick=28 POST-CMD=D03A5924\r\n[SyncCheck] tick=28 PRE-AI-EXEC=D03A5924 aiCmds=0\r\n[SyncCheck] tick=29 checksum=EE0033A0\r\n[SyncCheck] tick=29 PRE-CMD=0F4F57AC cmds=0\r\n[SyncCheck] tick=29 POST-CMD=0F4F57AC\r\n[SyncCheck] tick=29 PRE-AI-EXEC=0F4F57AC aiCmds=0\r\n[SyncCheck] tick=30 checksum=AA416DB7\r\n[SyncCheck] tick=30 PRE-CMD=4E645634 cmds=0\r\n[SyncCheck] tick=30 POST-CMD=4E645634\r\n[SyncCheck] tick=30 PRE-AI-EXEC=4E645634 aiCmds=0\r\n[SyncCheck] tick=31 checksum=6682A7CE\r\n[SyncCheck] tick=31 PRE-CMD=8D7954BC cmds=0\r\n[SyncCheck] tick=31 POST-CMD=8D7954BC\r\n[SyncCheck] tick=31 PRE-AI-EXEC=8D7954BC aiCmds=0\r\n[SyncCheck] tick=32 checksum=22C3E1E5\r\n[SyncCheck] tick=32 PRE-CMD=CC8E5344 cmds=0\r\n[SyncCheck] tick=32 POST-CMD=CC8E5344\r\n[SyncCheck] tick=32 PRE-AI-EXEC=CC8E5344 aiCmds=0\r\n[SyncCheck] tick=33 checksum=DF051BFC\r\n[SyncCheck] tick=33 PRE-CMD=0BA351CC cmds=0\r\n[SyncCheck] tick=33 POST-CMD=0BA351CC\r\n[SyncCheck] tick=33 PRE-AI-EXEC=0BA351CC aiCmds=0\r\n[SyncCheck] tick=34 checksum=9B465613\r\n[SyncCheck] tick=34 PRE-CMD=4AB85054 cmds=0\r\n[SyncCheck] tick=34 POST-CMD=4AB85054\r\n[SyncCheck] tick=34 PRE-AI-EXEC=4AB85054 aiCmds=0\r\n[SyncCheck] tick=35 checksum=5787902A\r\n[SyncCheck] tick=35 PRE-CMD=89CD4EDC cmds=0\r\n[SyncCheck] tick=35 POST-CMD=89CD4EDC\r\n[SyncCheck] tick=35 PRE-AI-EXEC=89CD4EDC aiCmds=0\r\n[SyncCheck] tick=36 checksum=13C8CA41\r\n[SyncCheck] tick=36 PRE-CMD=C8E24D64 cmds=0\r\n[SyncCheck] tick=36 POST-CMD=C8E24D64\r\n[SyncCheck] tick=36 PRE-AI-EXEC=C8E24D64 aiCmds=0\r\n[SyncCheck] tick=37 checksum=6B7F5E7C\r\n[SyncCheck] tick=37 PRE-CMD=AB0CBEE6 cmds=0\r\n[SyncCheck] tick=37 POST-CMD=AB0CBEE6\r\n[SyncCheck] tick=37 PRE-AI-EXEC=AB0CBEE6 aiCmds=0\r\n[SyncCheck] tick=38 checksum=CAF686C1\r\n[SyncCheck] tick=38 PRE-CMD=3A17F782 cmds=0\r\n[SyncCheck] tick=38 POST-CMD=3A17F782\r\n[SyncCheck] tick=38 PRE-AI-EXEC=3A17F782 aiCmds=0\r\n[SyncCheck] tick=39 checksum=E759D7A3\r\n[SyncCheck] tick=39 PRE-CMD=34B20F7B cmds=0\r\n[SyncCheck] tick=39 POST-CMD=34B20F7B\r\n[SyncCheck] tick=39 PRE-AI-EXEC=34B20F7B aiCmds=0\r\n[SyncCheck] tick=40 checksum=4CA76DE2\r\n[SyncCheck] tick=40 PRE-CMD=59891F14 cmds=0\r\n[SyncCheck] tick=40 POST-CMD=59891F14\r\n[SyncCheck] tick=40 PRE-AI-EXEC=59891F14 aiCmds=0\r\n[SyncCheck] tick=41 checksum=86DD663E\r\n[SyncCheck] tick=41 PRE-CMD=674B3E90 cmds=0\r\n[SyncCheck] tick=41 POST-CMD=674B3E90\r\n[SyncCheck] tick=41 PRE-AI-EXEC=674B3E90 aiCmds=0\r\n[SyncCheck] tick=42 checksum=3E3330D6\r\n[SyncCheck] tick=42 PRE-CMD=B18B38F3 cmds=0\r\n[SyncCheck] tick=42 POST-CMD=B18B38F3\r\n[SyncCheck] tick=42 PRE-AI-EXEC=B18B38F3 aiCmds=0\r\n[SyncCheck] tick=43 checksum=9F88F7EC\r\n[SyncCheck] tick=43 PRE-CMD=621273BF cmds=0\r\n[SyncCheck] tick=43 POST-CMD=621273BF\r\n[SyncCheck] tick=43 PRE-AI-EXEC=621273BF aiCmds=0\r\n[SyncCheck] tick=44 checksum=95FACABE\r\n[SyncCheck] tick=44 PRE-CMD=CC73B9F8 cmds=0\r\n[SyncCheck] tick=44 POST-CMD=CC73B9F8\r\n[SyncCheck] tick=44 PRE-AI-EXEC=CC73B9F8 aiCmds=0\r\n[SyncCheck] tick=45 checksum=4E68D38E\r\n[SyncCheck] tick=45 PRE-CMD=1A787120 cmds=0\r\n[SyncCheck] tick=45 POST-CMD=1A787120\r\n[SyncCheck] tick=45 PRE-AI-EXEC=1A787120 aiCmds=0\r\n[SyncCheck] tick=46 checksum=97B5CE3B\r\n[SyncCheck] tick=46 PRE-CMD=0ACEB17A cmds=0\r\n[SyncCheck] tick=46 POST-CMD=0ACEB17A\r\n[SyncCheck] tick=46 PRE-AI-EXEC=0ACEB17A aiCmds=0\r\n[SyncCheck] tick=47 checksum=E1A68426\r\n[SyncCheck] tick=47 PRE-CMD=C73FE088 cmds=0\r\n[SyncCheck] tick=47 POST-CMD=C73FE088\r\n[SyncCheck] tick=47 PRE-AI-EXEC=C73FE088 aiCmds=0\r\n[SyncCheck] tick=48 checksum=929D90A8\r\n[SyncCheck] tick=48 PRE-CMD=0654DF10 cmds=0\r\n[SyncCheck] tick=48 POST-CMD=0654DF10\r\n[SyncCheck] tick=48 PRE-AI-EXEC=0654DF10 aiCmds=0\r\n[SyncCheck] tick=49 checksum=4EDECABF\r\n[SyncCheck] tick=49 PRE-CMD=4569DD98 cmds=0\r\n[SyncCheck] tick=49 POST-CMD=4569DD98\r\n[SyncCheck] tick=49 PRE-AI-EXEC=4569DD98 aiCmds=0\r\n[SyncCheck] tick=50 checksum=0B2004D6\r\n[SyncCheck] tick=50 PRE-CMD=847EDC20 cmds=0\r\n[SyncCheck] tick=50 POST-CMD=847EDC20\r\n[SyncCheck] tick=50 PRE-AI-EXEC=847EDC20 aiCmds=0\r\n[SyncCheck] tick=51 checksum=C7613EED\r\n[SyncCheck] tick=51 PRE-CMD=C393DAA8 cmds=0\r\n[SyncCheck] tick=51 POST-CMD=C393DAA8\r\n[SyncCheck] tick=51 PRE-AI-EXEC=C393DAA8 aiCmds=0\r\n[SyncCheck] tick=52 checksum=83A27904\r\n[SyncCheck] tick=52 PRE-CMD=02A8D930 cmds=0\r\n[SyncCheck] tick=52 POST-CMD=02A8D930\r\n[SyncCheck] tick=52 PRE-AI-EXEC=02A8D930 aiCmds=0\r\n[SyncCheck] tick=53 checksum=3FE3B31B\r\n[SyncCheck] tick=53 PRE-CMD=41BDD7B8 cmds=0\r\n[SyncCheck] tick=53 POST-CMD=41BDD7B8\r\n[SyncCheck] tick=53 PRE-AI-EXEC=41BDD7B8 aiCmds=0\r\n[SyncCheck] tick=54 checksum=FC24ED32\r\n[SyncCheck] tick=54 PRE-CMD=80D2D640 cmds=0\r\n[SyncCheck] tick=54 POST-CMD=80D2D640\r\n[SyncCheck] tick=54 PRE-AI-EXEC=80D2D640 aiCmds=0\r\n[SyncCheck] tick=55 checksum=B8662749\r\n[SyncCheck] tick=55 PRE-CMD=BFE7D4C8 cmds=0\r\n[SyncCheck] tick=55 POST-CMD=BFE7D4C8\r\n[SyncCheck] tick=55 PRE-AI-EXEC=BFE7D4C8 aiCmds=0\r\n[SyncCheck] tick=56 checksum=D174BBEE\r\n[SyncCheck] tick=56 PRE-CMD=E3642E07 cmds=0\r\n[SyncCheck] tick=56 POST-CMD=E3642E07\r\n[SyncCheck] tick=56 PRE-AI-EXEC=E3642E07 aiCmds=0\r\n[SyncCheck] tick=57 checksum=D54C6759\r\n[SyncCheck] tick=57 PRE-CMD=CBBD62B9 cmds=0\r\n[SyncCheck] tick=57 POST-CMD=CBBD62B9\r\n[SyncCheck] tick=57 PRE-AI-EXEC=CBBD62B9 aiCmds=0\r\n[SyncCheck] tick=58 checksum=EC85B689\r\n[SyncCheck] tick=58 PRE-CMD=9D75396C cmds=0\r\n[SyncCheck] tick=58 POST-CMD=9D75396C\r\n[SyncCheck] tick=58 PRE-AI-EXEC=9D75396C aiCmds=0\r\n[SyncCheck] tick=59 checksum=35087DED\r\n[SyncCheck] tick=59 PRE-CMD=E828C5ED cmds=0\r\n[SyncCheck] tick=59 POST-CMD=E828C5ED\r\n[SyncCheck] tick=59 PRE-AI-EXEC=E828C5ED aiCmds=0\r\n[SyncCheck] tick=60 checksum=1A132974\r\n[SyncCheck] tick=60 PRE-CMD=11ABB687 cmds=0\r\n[SyncCheck] tick=60 POST-CMD=11ABB687\r\n[SyncCheck] tick=60 PRE-AI-EXEC=11ABB687 aiCmds=0\r\n[SyncCheck] tick=61 checksum=1CE57EBB\r\n[SyncCheck] tick=61 PRE-CMD=50C0B50F cmds=0\r\n[SyncCheck] tick=61 POST-CMD=50C0B50F\r\n[SyncCheck] tick=61 PRE-AI-EXEC=50C0B50F aiCmds=0\r\n[SyncCheck] tick=62 checksum=D926B8D2\r\n[SyncCheck] tick=62 PRE-CMD=8FD5B397 cmds=0\r\n[SyncCheck] tick=62 POST-CMD=8FD5B397\r\n[SyncCheck] tick=62 PRE-AI-EXEC=8FD5B397 aiCmds=0\r\n[SyncCheck] tick=63 checksum=9567F2E9\r\n[SyncCheck] tick=63 PRE-CMD=CEEAB21F cmds=0\r\n[SyncCheck] tick=63 POST-CMD=CEEAB21F\r\n[SyncCheck] tick=63 PRE-AI-EXEC=CEEAB21F aiCmds=0\r\n[SyncCheck] tick=64 checksum=51A92D00\r\n[SyncCheck] tick=64 PRE-CMD=0DFFB0A7 cmds=0\r\n[SyncCheck] tick=64 POST-CMD=0DFFB0A7\r\n[SyncCheck] tick=64 PRE-AI-EXEC=0DFFB0A7 aiCmds=0\r\n[SyncCheck] tick=65 checksum=0DEA6717\r\n[SyncCheck] tick=65 PRE-CMD=4D14AF2F cmds=0\r\n[SyncCheck] tick=65 POST-CMD=4D14AF2F\r\n[SyncCheck] tick=65 PRE-AI-EXEC=4D14AF2F aiCmds=0\r\n[SyncCheck] tick=66 checksum=D1592BED\r\n[SyncCheck] tick=66 PRE-CMD=135623BE cmds=0\r\n[SyncCheck] tick=66 POST-CMD=135623BE\r\n[SyncCheck] tick=66 PRE-AI-EXEC=135623BE aiCmds=0\r\n[SyncCheck] tick=67 checksum=84D37F5B\r\n[SyncCheck] tick=67 PRE-CMD=58C2114B cmds=0\r\n[SyncCheck] tick=67 POST-CMD=58C2114B\r\n[SyncCheck] tick=67 PRE-AI-EXEC=58C2114B aiCmds=0\r\n[SyncCheck] tick=68 checksum=0C07348A\r\n[SyncCheck] tick=68 PRE-CMD=97D70FD3 cmds=0\r\n[SyncCheck] tick=68 POST-CMD=97D70FD3\r\n[SyncCheck] tick=68 PRE-AI-EXEC=97D70FD3 aiCmds=0\r\n[SyncCheck] tick=69 checksum=16BF8A3C\r\n[SyncCheck] tick=69 PRE-CMD=D6EC0E5B cmds=0\r\n[SyncCheck] tick=69 POST-CMD=D6EC0E5B\r\n[SyncCheck] tick=69 PRE-AI-EXEC=D6EC0E5B aiCmds=0\r\n[SyncCheck] tick=70 checksum=9BAEA1B0\r\n[SyncCheck] tick=70 PRE-CMD=16010CE3 cmds=0\r\n[SyncCheck] tick=70 POST-CMD=16010CE3\r\n[SyncCheck] tick=70 PRE-AI-EXEC=16010CE3 aiCmds=0\r\n[SyncCheck] tick=71 checksum=4723E4DD\r\n[SyncCheck] tick=71 PRE-CMD=7281EA8D cmds=0\r\n[SyncCheck] tick=71 POST-CMD=7281EA8D\r\n[SyncCheck] tick=71 PRE-AI-EXEC=7281EA8D aiCmds=0\r\n[SyncCheck] tick=72 checksum=099E0D51\r\n[SyncCheck] tick=72 PRE-CMD=B196E915 cmds=0\r\n[SyncCheck] tick=72 POST-CMD=B196E915\r\n[SyncCheck] tick=72 PRE-AI-EXEC=B196E915 aiCmds=0\r\n[SyncCheck] tick=73 checksum=B941D71E\r\n[SyncCheck] tick=73 PRE-CMD=B7A76332 cmds=0\r\n[SyncCheck] tick=73 POST-CMD=B7A76332\r\n[SyncCheck] tick=73 PRE-AI-EXEC=B7A76332 aiCmds=0\r\n[SyncCheck] tick=74 checksum=76C50304\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; Garrisoned 1/2 in the exact owned TownCenter; protected 0; unaccommodated 1.\r\n"
+          },
+          {
+            "name": "SemanticUngarrison_ExplicitBuildingWideCommandRestoresAllHousedUnits",
+            "fullName": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.SemanticUngarrison_ExplicitBuildingWideCommandRestoresAllHousedUnits",
+            "state": "Passed",
+            "durationSeconds": 0.8066259,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] Goal #1 submitted: CapabilityAction\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Building-wide ungarrison will release all 2 housed unit(s).\r\n[SyncCheck] tick=0 PRE-CMD=D49A784F cmds=1\r\n[SyncCheck] tick=0 POST-CMD=247DE62E\r\n[SyncCheck] tick=0 PRE-AI-EXEC=247DE62E aiCmds=0\r\n[SyncCheck] INIT tick=1 checksum=B5CD4C6B systemDetail=247DE62E,247DE62E,247DE62E,5D8DE62E,5D8DE62E,5D8DE62E,5D8DE62E,5D8DE62E,5D8DE62E\r\n[Commander] Goal #1: status=Completed owned=2 queued=0; Building-wide ungarrison released 2/2 from the exact owned shelter.\r\n"
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

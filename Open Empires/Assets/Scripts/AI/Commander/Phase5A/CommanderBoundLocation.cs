@@ -21,16 +21,18 @@ namespace OpenEmpires
         private readonly ResourceSourceKind sourceKind;
         private readonly bool worked;
         private readonly BuildStructureGoal futureSource;
+        private readonly IReadOnlyList<int> resourceSideIds;
 
         internal CommanderSemanticPlacementRelation Relation { get; }
         internal int ClearGapTiles { get; }
+        internal bool IsResourceSide => resourceSideIds != null;
 
         private CommanderBoundLocation(AnchorKind kind, GameSimulation runtime,
             CommanderGoalManager owner, int playerId, int anchorId,
             int x, int z, int width, int height, BuildingType buildingType,
             ResourceType resourceType, ResourceSourceKind sourceKind, bool worked,
             BuildStructureGoal futureSource, CommanderSemanticPlacementRelation relation,
-            int gap)
+            int gap, IReadOnlyList<int> resourceSideIds = null)
         {
             if (runtime == null || owner == null || playerId != owner.PlayerId
                 || !ReferenceEquals(owner.Simulation, runtime)
@@ -52,6 +54,7 @@ namespace OpenEmpires
             this.sourceKind = sourceKind;
             this.worked = worked;
             this.futureSource = futureSource;
+            this.resourceSideIds = resourceSideIds;
             Relation = relation;
             ClearGapTiles = gap;
         }
@@ -80,6 +83,70 @@ namespace OpenEmpires
                 resource.Id, resource.TileX, resource.TileZ,
                 resource.FootprintWidth, resource.FootprintHeight, default,
                 type, sourceKind, worked, null, relation, gap);
+        }
+
+        // A bounded, admission-time visible source set tied to one frozen owned anchor.
+        // Provider supplies neither runtime node IDs nor world coordinates.
+        internal static CommanderBoundLocation FromResourceSide(GameSimulation runtime,
+            CommanderGoalManager owner, int playerId, BuildingData anchor,
+            ResourceType type, ResourceSourceKind sourceKind, int gap)
+        {
+            if (!ValidBuilding(runtime, playerId, anchor, BuildingType.TownCenter)
+                || !ResourceSourceRules.IsCompatible(type, sourceKind))
+                throw new ArgumentException("The owned Town Center or resource/source pair is unavailable.");
+            var ids = new List<int>();
+            foreach (ResourceNodeData resource in runtime.MapData.GetAllResourceNodes())
+                if (ValidResource(runtime, playerId, resource, type, sourceKind, false)
+                    && (long)resource.TileX + resource.FootprintWidth + gap <= anchor.OriginTileX)
+                    ids.Add(resource.Id);
+            ids.Sort();
+            if (ids.Count < 1 || ids.Count > 200)
+                throw new ArgumentException("No bounded visible source set lies west of the owned Town Center.");
+            return new CommanderBoundLocation(AnchorKind.Building, runtime, owner, playerId,
+                anchor.Id, anchor.OriginTileX, anchor.OriginTileZ,
+                anchor.TileFootprintWidth, anchor.TileFootprintHeight,
+                BuildingType.TownCenter, type, sourceKind, false, null,
+                CommanderSemanticPlacementRelation.MapWest, gap, Array.AsReadOnly(ids.ToArray()));
+        }
+
+        internal bool AllowsResource(GameSimulation currentRuntime, int currentPlayerId, ResourceNodeData resource)
+        {
+            if (resourceSideIds == null || resource == null
+                || !TryResolve(currentRuntime, currentPlayerId, out int x, out _, out _, out _)
+                || (long)resource.TileX + resource.FootprintWidth + ClearGapTiles > x
+                || !ValidResource(runtime, playerId, resource, resourceType, sourceKind, false)) return false;
+            foreach (int id in resourceSideIds)
+                if (id == resource.Id) return true;
+            return false;
+        }
+
+        internal bool TryResolveResourceSidePoint(GameSimulation currentRuntime, int currentPlayerId,
+            out FixedVector3 position, out int resourceId)
+        {
+            position = default;
+            resourceId = -1;
+            if (resourceSideIds == null) return false;
+            foreach (int id in resourceSideIds)
+            {
+                ResourceNodeData candidate = runtime.MapData.GetResourceNode(id);
+                if (!AllowsResource(currentRuntime, currentPlayerId, candidate)) continue;
+                position = runtime.MapData.TileToWorldFixed(candidate.TileX, candidate.TileZ);
+                resourceId = id;
+                return true;
+            }
+            return false;
+        }
+
+        internal bool AllowsMoveTile(GameSimulation currentRuntime, int currentPlayerId,
+            int resourceId, int x, int z)
+        {
+            if (resourceSideIds == null || !TryResolve(currentRuntime, currentPlayerId,
+                    out int anchorX, out _, out _, out _)
+                || (long)x + ClearGapTiles >= anchorX) return false;
+            ResourceNodeData resource = runtime.MapData.GetResourceNode(resourceId);
+            return AllowsResource(currentRuntime, currentPlayerId, resource)
+                && Math.Abs(x - resource.TileX) <= 10
+                && Math.Abs(z - resource.TileZ) <= 10;
         }
 
         internal static CommanderBoundLocation FromFutureBuild(GameSimulation runtime,
