@@ -1,0 +1,80 @@
+{
+  "job_id": "fbaa77610ebd4caab6a403ab58830fbc",
+  "status": "succeeded",
+  "mode": "EditMode",
+  "started_unix_ms": 1791855321144,
+  "finished_unix_ms": 1791855336758,
+  "last_update_unix_ms": 1791855336758,
+  "progress": {
+    "completed": 5,
+    "total": 5,
+    "current_test_full_name": null,
+    "current_test_started_unix_ms": 1791855335450,
+    "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.ComposableWoodlineUtterances_ReceiveExecutableTypedRouting(\"Move my Spearmen to the top woodline.\",\"move-units\")",
+    "last_finished_unix_ms": 1791855335489,
+    "stuck_suspected": false,
+    "editor_is_focused": false,
+    "blocked_reason": null,
+    "failures_so_far": [],
+    "failures_capped": false
+  },
+  "error": null,
+  "result": {
+    "mode": "EditMode",
+    "summary": {
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0,
+      "durationSeconds": 5.1382538,
+      "resultState": "Passed"
+    },
+    "results": [
+      {
+        "name": "DestinationPlacement_OwnsGameplayInputUntilCancelled",
+        "fullName": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.DestinationPlacement_OwnsGameplayInputUntilCancelled",
+        "state": "Passed",
+        "durationSeconds": 1.8118767,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "MarkerContinuation_PreservesRequestAndDoesNotInterpretOrApproveAgain",
+        "fullName": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.MarkerContinuation_PreservesRequestAndDoesNotInterpretOrApproveAgain",
+        "state": "Passed",
+        "durationSeconds": 2.3707566,
+        "message": null,
+        "stackTrace": null,
+        "output": "[Commander] context=projected;provider-request=started\r\n"
+      },
+      {
+        "name": "ComposableWoodlineUtterances_ReceiveExecutableTypedRouting(\"Build a Lumber Yard near the woodline my villagers are working.\",\"mode:Worked\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.ComposableWoodlineUtterances_ReceiveExecutableTypedRouting(\"Build a Lumber Yard near the woodline my villagers are working.\",\"mode:Worked\")",
+        "state": "Passed",
+        "durationSeconds": 0.2575487,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "ComposableWoodlineUtterances_ReceiveExecutableTypedRouting(\"Build a Lumber Yard near the woodline right of my Town Center.\",\"relation:MapEast\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.ComposableWoodlineUtterances_ReceiveExecutableTypedRouting(\"Build a Lumber Yard near the woodline right of my Town Center.\",\"relation:MapEast\")",
+        "state": "Passed",
+        "durationSeconds": 0.0135318,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      },
+      {
+        "name": "ComposableWoodlineUtterances_ReceiveExecutableTypedRouting(\"Move my Spearmen to the top woodline.\",\"move-units\")",
+        "fullName": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.ComposableWoodlineUtterances_ReceiveExecutableTypedRouting(\"Move my Spearmen to the top woodline.\",\"move-units\")",
+        "state": "Passed",
+        "durationSeconds": 0.0381565,
+        "message": null,
+        "stackTrace": null,
+        "output": ""
+      }
+    ]
+  }
+}

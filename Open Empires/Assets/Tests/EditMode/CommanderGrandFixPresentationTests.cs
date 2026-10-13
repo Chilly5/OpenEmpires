@@ -47,6 +47,124 @@ namespace OpenEmpires.Tests
             CommanderVoiceSettings.VoiceEnabled=enabledBefore; CommanderVoiceSettings.AutoSubmit=autoBefore;
         }
         private RectTransform Panel=> (RectTransform)typeof(CommanderChatUI).GetField("commanderPanel",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(chat);
+        [Test]
+        public async Task ProviderLocationClarification_MarkerResumesSameSingleBuildExactlyOnce()
+        {
+            provider.Json=CommanderPhase5CStabilizationTests.MissingBuildLocation;
+            await chat.SubmitMessageAsync("Build a lumber yard");
+            Assert.That(chat.PendingClarification,Is.Not.Null,"A displayed location question must retain the typed draft.");
+            long request=chat.LastSubmittedSemanticRequestId.Value;
+            var tile=new Vector2Int(sim.MapData.Width/2+6,sim.MapData.Height/2+6);
+            sim.MapData.Tiles[tile.x,tile.y]=TileType.Grass;
+            sim.FogOfWar.SetVisible(0,tile.x,tile.y);
+            Assert.That(chat.TryPlaceDestinationMarker(tile.x,tile.y),Is.True);
+            Assert.That(provider.Calls,Is.EqualTo(1));
+            Assert.That(chat.LastSubmittedSemanticRequestId,Is.EqualTo(request));
+            Assert.That(chat.PendingClarification,Is.Null);
+            Assert.That(chat.PendingActionPlan,Is.Null,"An ordinary authorized single build retains its automatic submission rule.");
+            Assert.That(manager.Goals.Count,Is.EqualTo(1));
+            Assert.That(chat.TryPlaceDestinationMarker(tile.x,tile.y),Is.True);
+            Assert.That(manager.Goals.Count,Is.EqualTo(1),"A late duplicate marker cannot create another building goal.");
+        }
+
+        [Test]
+        public async Task MarkerAndOtherMissingSlot_AnswersOnlyLocationAndStillRequiresPlanApproval()
+        {
+            var draft=Newtonsoft.Json.Linq.JObject.Parse(CommanderPhase5CStabilizationTests.MissingBuildLocation);
+            draft["pending"]["executionOrder"]="Sequential";
+            var nodes=(Newtonsoft.Json.Linq.JArray)draft["pending"]["nodes"];
+            ((Newtonsoft.Json.Linq.JObject)nodes[0]).Remove("count");
+            nodes.Add(Newtonsoft.Json.Linq.JObject.Parse("{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":3,\"quantityMode\":\"New\",\"dependsOn\":[0]}"));
+            ((Newtonsoft.Json.Linq.JArray)draft["missingSlots"]).Insert(0,
+                Newtonsoft.Json.Linq.JObject.Parse("{\"node\":0,\"path\":\"count\",\"type\":\"Count\",\"alternatives\":[1]}"));
+            provider.Json=draft.ToString();
+            var parsed=CommanderSemanticJson.Parse(provider.Json);
+            Assert.That(parsed.IsValid,Is.True,parsed.SchemaDiagnostic);
+            await chat.SubmitMessageAsync("Build a lumber yard then train 3 new Spearmen");
+            Assert.That(chat.PendingClarification?.GraphDraft,Is.Not.Null,chat.DisplayedTranscript);
+            int x=sim.MapData.Width/2+6,z=sim.MapData.Height/2+6;sim.FogOfWar.SetVisible(0,x,z);
+            Assert.That(chat.TryPlaceDestinationMarker(x,z),Is.True);
+            Assert.That(chat.PendingClarification.GraphDraft.MissingSlots.Count,Is.EqualTo(1));
+            Assert.That(chat.PendingClarification.GraphDraft.MissingSlots[0].Type,Is.EqualTo("Count"));
+            Assert.That(manager.Goals,Is.Empty);Assert.That(provider.Calls,Is.EqualTo(1));
+            // EditMode has no advancing input frames. Model marker release before a
+            // later text reply; the actual PlayMode callback checks real frame ownership.
+            typeof(CommanderChatUI).GetField("markerInputFrame",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(chat,-1);
+            await chat.SubmitMessageAsync("1");
+            Assert.That(chat.PendingActionPlan,Is.Not.Null,chat.DisplayedTranscript);Assert.That(manager.Goals,Is.Empty);
+            Assert.That(provider.Calls,Is.EqualTo(1));
+            Assert.That(chat.PendingActionPlan.RequestId,Is.EqualTo(chat.LastSubmittedSemanticRequestId));
+            Assert.That(chat.PendingActionPlan.Interpretation.Nodes[1].DependsOn,Does.Contain(0));
+        }
+
+        [Test]
+        public async Task ResetClearsPendingMarkerDraftAndLateClickCannotResumeOldRequest()
+        {
+            provider.Json=CommanderPhase5CStabilizationTests.MissingBuildLocation;
+            await chat.SubmitMessageAsync("Build a lumber yard");
+            Assert.That(chat.PendingClarification,Is.Not.Null);
+            chat.ResetConversation();
+            int x=sim.MapData.Width/2+6,z=sim.MapData.Height/2+6;sim.FogOfWar.SetVisible(0,x,z);
+            Assert.That(chat.TryPlaceDestinationMarker(x,z),Is.True);
+            Assert.That(manager.Goals,Is.Empty);Assert.That(chat.PendingClarification,Is.Null);
+            Assert.That(chat.PendingActionPlan,Is.Null);Assert.That(provider.Calls,Is.EqualTo(1));
+        }
+
+        [Test]
+        public async Task TextualLocationReply_PreservesTenNewUnitsAndDependencyWithoutAnotherInterpretation()
+        {
+            provider.Json="{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":10,\"quantityMode\":\"New\"},{\"type\":\"MoveUnits\",\"unitSelector\":\"Spearman\",\"count\":10,\"location\":\"PlayerMarker\",\"dependsOn\":[0],\"resultFromNode\":0}]}";
+            await chat.SubmitMessageAsync("Train ten new Spearmen and send them there");
+            Assert.That(chat.DisplayedTranscript,Does.Contain("Where?"));
+            await chat.SubmitMessageAsync("my town center");
+            Assert.That(provider.Calls,Is.EqualTo(1));
+            Assert.That(chat.PendingActionPlan,Is.Not.Null);
+            var nodes=chat.PendingActionPlan.Interpretation.Nodes;
+            Assert.That(nodes[0].Count,Is.EqualTo(10));
+            Assert.That(nodes[0].QuantityMode,Is.EqualTo(CommanderProductionQuantityMode.New));
+            Assert.That(nodes[1].ResultFromNode,Is.EqualTo(0));
+            Assert.That(nodes[1].DependsOn,Does.Contain(0));
+            Assert.That(nodes[1].LocationSelector,Is.EqualTo(CommanderSemanticLocationSelector.PlayerBase));
+            Assert.That(manager.Goals,Is.Empty);
+        }
+        [Test]
+        public void DestinationPlacement_OwnsGameplayInputUntilCancelled()
+        {
+            var begin=typeof(CommanderChatUI).GetMethod("BeginDestinationPlacement");
+            Assert.That(begin,Is.Not.Null,"The player needs a destination placement control.");
+            begin.Invoke(chat,null);
+            Assert.That(UnitSelectionManager.UIInputSuppressed,Is.True);
+            typeof(CommanderChatUI).GetMethod("ClearDestinationMarker").Invoke(chat,null);
+            Assert.That(UnitSelectionManager.UIInputSuppressed,Is.False);
+            Assert.That(manager.Goals,Is.Empty);
+        }
+
+        [Test]
+        public async Task MarkerContinuation_PreservesRequestAndDoesNotInterpretOrApproveAgain()
+        {
+            provider.Json="{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":3,\"quantityMode\":\"New\"},{\"type\":\"MoveUnits\",\"unitSelector\":\"Spearman\",\"count\":3,\"location\":\"PlayerMarker\",\"dependsOn\":[0],\"resultFromNode\":0}]}";
+            await chat.SubmitMessageAsync("Train three new spearmen then send them to my marker");
+            Assert.That(provider.Calls,Is.EqualTo(1));
+            Assert.That(chat.DisplayedTranscript,Does.Contain("Where?"));
+            Assert.That(manager.Goals,Is.Empty);
+            var tile=new Vector2Int(sim.MapData.Width/2,sim.MapData.Height/2);
+            sim.FogOfWar.SetVisible(0,tile.x+6,tile.y+6);
+            var place=typeof(CommanderChatUI).GetMethod("TryPlaceDestinationMarker");
+            Assert.That(place,Is.Not.Null);
+            Assert.That((bool)place.Invoke(chat,new object[]{tile.x+6,tile.y+6}),Is.True);
+            Assert.That(provider.Calls,Is.EqualTo(1),"Marker click fills the retained semantic location locally.");
+            Assert.That(chat.PendingActionPlan,Is.Not.Null,"Location completion must prepare a separate preview.");
+            Assert.That(manager.Goals,Is.Empty,"A marker click is not gameplay approval.");
+        }
+        [Test]
+        public async Task UnsupportedRequest_IsRejectedRatherThanCompleted()
+        {
+            provider.Json="{\"outcome\":\"Unsupported\",\"message\":\"That action is not supported. Try a supported building order.\"}";
+            await chat.SubmitMessageAsync("build an unsupported object");
+            var state=typeof(CommanderChatUI).GetField("latestRequestState",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(chat);
+            Assert.That(state,Is.EqualTo("Rejected"));
+            Assert.That(manager.Goals,Is.Empty);
+        }
         private void Surface(string method)=>typeof(CommanderChatUI).GetMethod(method,BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic)?.Invoke(chat,null);
         private GameObject Compact=>chat.transform.Find("CommanderCanvas/CompactCommander")?.gameObject;
 

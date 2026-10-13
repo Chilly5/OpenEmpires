@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace OpenEmpires
@@ -78,8 +79,15 @@ namespace OpenEmpires
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void CreateLocalWindow()
         {
+            SceneManager.sceneLoaded -= RestoreLocalWindowAfterSceneLoad;
+            SceneManager.sceneLoaded += RestoreLocalWindowAfterSceneLoad;
             if (Object.FindFirstObjectByType<CommanderChatUI>() != null) return;
             new GameObject("Commander Chat UI").AddComponent<CommanderChatUI>();
+        }
+
+        private static void RestoreLocalWindowAfterSceneLoad(Scene scene, LoadSceneMode mode)
+        {
+            CreateLocalWindow();
         }
 
         private void Awake()
@@ -125,6 +133,7 @@ namespace OpenEmpires
             // Awake is not invoked for a MonoBehaviour added by an EditMode test.
             // Keeping initialization idempotent also makes programmatic local hosts safe.
             EnsureLocalSurface();
+            ResetDestinationState();
             ResetVoiceControls(); // Invalidate old voice work before replacing ANY runtime affinity.
             if (semanticGoalManager != null && !semanticGoalManager.IsDisposed)
                 semanticGoalManager.CancelFutureSubscriptions();
@@ -221,6 +230,7 @@ namespace OpenEmpires
 
         public async Task<CommanderAIChatSubmission> SubmitMessageAsync(string message)
         {
+            if (OwnsDestinationInput) return null;
             string trimmed = (message ?? string.Empty).Trim();
             if (trimmed.Length == 0) return null;
             if(CommanderTacticalStatusProjection.IsInformationQuestion(trimmed))
@@ -258,6 +268,7 @@ namespace OpenEmpires
             long submissionStartedAt = System.Diagnostics.Stopwatch.GetTimestamp();
             if (HandlePendingControl(trimmed)) return null;
             if (HandleActionPlanControl(trimmed)) return null;
+            if (HandleRetainedLocationReply(trimmed)) return null;
             if (pendingClarification == null
                 && (NormalizeWholeForm(trimmed) == "yes" || NormalizeWholeForm(trimmed) == "no"))
             {
@@ -266,6 +277,8 @@ namespace OpenEmpires
                 return null;
             }
             ClearActionPlanPreview(); // An independent player turn supersedes an unapproved candidate.
+            retainedLocationResult = null;
+            retainedLocationLease = null;
             // Any new player turn dismisses an adaptation, while no-plan recommendations
             // retain the established preference/explanation query behavior.
             if (pendingAdaptationProposal != null)
@@ -611,7 +624,8 @@ namespace OpenEmpires
                         if (result.Outcome == CommanderSemanticOutcome.Clarify)
                             Conversation.SemanticMemory.RecordClarification(result.SafeExplanation);
                         PublishLatestRequestState(presentationTurn, result.Outcome == CommanderSemanticOutcome.Clarify
-                            ? "Needs clarification" : "Completed", result.SafeExplanation);
+                            ? "Needs clarification" : result.Outcome == CommanderSemanticOutcome.Answer
+                                ? "Completed" : "Rejected", result.SafeExplanation);
                         AppendLine("Commander", string.IsNullOrWhiteSpace(result.SafeExplanation)
                             ? "Please clarify or try a supported Commander request."
                             : result.SafeExplanation);
@@ -620,6 +634,8 @@ namespace OpenEmpires
                     if (HandleClarificationResult(result, capturedPending, message, generation, requestTicket,
                         ReferenceEquals(result, localGraph)))
                     { observationStatus = "Waiting"; return null; }
+                    if (PrepareMarkerRequest(result, requestTicket.OriginalInput, generation, IsCurrentScope, requestTicket))
+                    { observationStatus = pendingActionPlan != null ? "AwaitingApproval" : "Waiting"; return null; }
                     if (result.Outcome == CommanderSemanticOutcome.DynamicPlan)
                     {
                         semanticStage = "dynamic-admission";
@@ -953,6 +969,7 @@ namespace OpenEmpires
 
         public void ResetConversation()
         {
+            ResetDestinationState();
             CancelActiveSemanticRequest();
             if (semanticGoalManager != null && !semanticGoalManager.IsDisposed)
                 semanticGoalManager.CancelFutureSubscriptions();
@@ -1116,6 +1133,7 @@ namespace OpenEmpires
 
         private void OnDestroy()
         {
+            ResetDestinationState();
             CancelActiveSemanticRequest();
             if (destroyCleanupComplete) return;
             destroyCleanupComplete = true;

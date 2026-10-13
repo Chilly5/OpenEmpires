@@ -1,0 +1,71 @@
+{
+  "schema": "phase5c-stabilization-final-gates@1",
+  "sourceSha": "dcc0122a1d47615de5c25593b08a537ed5104e692b6e31471fbb58de9ae9918a",
+  "editNative": {
+    "jobId": "6146eb56d1354dcfb8e0ab467d3f9f12",
+    "status": "succeeded",
+    "mode": "EditMode",
+    "summary": {
+      "total": 93,
+      "passed": 93,
+      "failed": 0,
+      "skipped": 0,
+      "durationSeconds": 106.6891417,
+      "resultState": "Passed"
+    },
+    "completed": 93,
+    "total": 93,
+    "error": null,
+    "failures": []
+  },
+  "liveFollowup": {
+    "jobId": "f43227bab956422eacde3edf511c19c9",
+    "status": "succeeded",
+    "mode": "EditMode",
+    "summary": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "durationSeconds": 12.1441562,
+      "resultState": "Passed"
+    },
+    "completed": 1,
+    "total": 1,
+    "error": null,
+    "failures": []
+  },
+  "actualSceneUi": {
+    "jobId": "f3f11750530d4a5e883e87293fafe062",
+    "status": "succeeded",
+    "mode": "PlayMode",
+    "summary": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "durationSeconds": 9.4768432,
+      "resultState": "Passed"
+    },
+    "completed": 1,
+    "total": 1,
+    "error": null,
+    "failures": []
+  },
+  "earlierUiInitializationGap": {
+    "jobId": "bc544ac8a2264a63aa3d604e89cc5db1",
+    "status": "failed",
+    "mode": "PlayMode",
+    "summary": null,
+    "completed": 0,
+    "total": null,
+    "error": "Test job failed to initialize (tests did not start within timeout)",
+    "failures": []
+  },
+  "proofLimits": [
+    "EditMode native fixtures use normal commands/timers with accelerated simulation ticks",
+    "Real provider calls are interpretation/compilation only; no admitted/native result from those HTTP calls",
+    "Actual scene UI uses synthetic unlocked-pointer Input System events, production terrain callback, real rendered screenshots and actual Play Again button callback",
+    "No fresh Windows/Web or multiplayer certification"
+  ]
+}

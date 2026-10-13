@@ -137,7 +137,8 @@ namespace OpenEmpires
             }
             ICommand command;
             string reason;
-            bool created = executor.TryCreateCommand(goal.Action, binding, goal.TargetBinding, out command, out reason);
+            bool created = executor.TryCreateCommand(goal.Action, binding, goal.TargetBinding,
+                goal.MarkerMoveLocation, out command, out reason);
             if (!created)
                 return new CommanderPlan(CommanderGoalStatus.Blocked, reason, 0, 0);
             if (command is MoveCommand move
@@ -1094,6 +1095,9 @@ namespace OpenEmpires
             if (primaryBase == null)
                 return new CommanderPlan(CommanderGoalStatus.Blocked,
                     $"No owned Town Center is available as a {type} placement anchor.", owned, queued);
+
+            if (type == BuildingType.LumberYard)
+                return PlanDefaultWoodBuilding(goal, primaryBase, currentTick, owned, queued);
 
             if (!TryFindBuildableTile(goal.PlayerId, type, primaryBase, builder, out Vector2Int tile))
                 return new CommanderPlan(CommanderGoalStatus.Blocked,

@@ -27,6 +27,11 @@ namespace OpenEmpires
 
         internal bool TryCreateCommand(CapabilityActionIntent intent, CommanderResultBinding? binding,
             CommanderTargetBinding targetBinding, out ICommand command, out string reason)
+            => TryCreateCommand(intent, binding, targetBinding, null, out command, out reason);
+
+        internal bool TryCreateCommand(CapabilityActionIntent intent, CommanderResultBinding? binding,
+            CommanderTargetBinding targetBinding, CommanderBoundLocation marker,
+            out ICommand command, out string reason)
         {
             command = null;
             reason = string.Empty;
@@ -95,13 +100,29 @@ namespace OpenEmpires
                 reason = "No eligible owned units match the requested selector.";
                 return false;
             }
-            if (!TryResolveLocation(intent.PlayerId, intent.LocationSelector, unitIds, intent.TargetSelector, targetBinding,
-                out FixedVector3 position, out ResourceNodeData resource,
-                out UnitData enemyUnit, out BuildingData enemyBuilding))
+            FixedVector3 position;
+            ResourceNodeData resource = null;
+            UnitData enemyUnit = null;
+            BuildingData enemyBuilding = null;
+            bool locationResolved;
+            if (intent.LocationSelector.Kind == CommanderLocationSelectorKind.PlayerMarker)
+            {
+                int markerX = 0, markerZ = 0;
+                locationResolved = marker != null
+                    && marker.TryResolve(simulation, intent.PlayerId, out markerX,
+                        out markerZ, out _, out _);
+                position = locationResolved ? simulation.MapData.TileToWorldFixed(markerX, markerZ) : default;
+            }
+            else locationResolved = TryResolveLocation(intent.PlayerId, intent.LocationSelector,
+                unitIds, intent.TargetSelector, targetBinding, out position, out resource,
+                out enemyUnit, out enemyBuilding);
+            if (!locationResolved)
             {
                 reason = intent.TargetSelector.HasValue
                     ? "No currently visible enemy of the requested type is available; no other target will substitute."
-                    : "No visible, legal target location matches the requested selector.";
+                    : intent.LocationSelector.Kind == CommanderLocationSelectorKind.PlayerMarker
+                        ? "The approved destination marker is unavailable or hidden. Place a new marker and approve again."
+                        : "No visible, legal target location matches the requested selector.";
                 return false;
             }
 
@@ -353,15 +374,11 @@ namespace OpenEmpires
                 || selector.Kind == CommanderLocationSelectorKind.VisibleResource)
             {
                 if (!selector.ResourceType.HasValue) return false;
-                var worked = new HashSet<int>(simulation.UnitRegistry.GetAllUnits()
-                    .Where(u => u != null && u.PlayerId == playerId && u.IsVillager
-                        && u.CurrentHealth > 0 && u.State != UnitState.Dead
-                        && u.TargetResourceNodeId >= 0)
-                    .Select(u => u.TargetResourceNodeId));
                 resource = simulation.MapData.GetAllResourceNodes()
                     .Where(n => n != null && !n.IsDepleted && n.Type == selector.ResourceType.Value
                         && simulation.FogOfWar.GetVisibility(playerId, n.TileX, n.TileZ) == TileVisibility.Visible
-                        && (selector.Kind == CommanderLocationSelectorKind.VisibleResource || worked.Contains(n.Id)))
+                        && (selector.Kind == CommanderLocationSelectorKind.VisibleResource
+                            || CommanderBoundLocation.CountOwnedWorkers(simulation, playerId, n) > 0))
                     .OrderBy(n => tc == null ? 0L : DistanceSquared(tc, n))
                     .ThenBy(n => n.Id).FirstOrDefault();
                 if (resource == null) return false;

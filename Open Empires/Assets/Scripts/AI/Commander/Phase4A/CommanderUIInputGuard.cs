@@ -13,6 +13,7 @@ namespace OpenEmpires
             {
                 var commander = CommanderChatUI.Instance;
                 if (commander == null) return false;
+                if (commander.OwnsDestinationInput) return true;
                 var mouse = UnityEngine.InputSystem.Mouse.current;
                 // Input callbacks precede VirtualCursor.Update. Read this event's
                 // live device position, preserving the virtual position while locked.

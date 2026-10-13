@@ -56,7 +56,8 @@ namespace OpenEmpires
         WorkedResource,
         VisibleResource,
         VisibleEnemy,
-        RelativeToSelectedUnits
+        RelativeToSelectedUnits,
+        PlayerMarker
     }
 
     public enum CommanderTargetSelectorKind { UnitType, BuildingType }

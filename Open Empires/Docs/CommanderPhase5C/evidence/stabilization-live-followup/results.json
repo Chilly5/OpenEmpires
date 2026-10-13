@@ -1,0 +1,153 @@
+[
+  {
+    "utterance": "Build 3 archery",
+    "stage": "compiled-preview-only",
+    "owner": 0,
+    "age": 3,
+    "civilization": "English",
+    "valid": true,
+    "outcome": "Request",
+    "schemaDiagnostic": "",
+    "explanation": "",
+    "httpStatus": 200,
+    "actualPromptTokens": 4903,
+    "inputUtf8Estimate": 24317,
+    "attempts": [
+      {
+        "kind": "initial",
+        "stage": "semantic-valid",
+        "httpStatus": 200,
+        "actualPromptTokens": 4903,
+        "elapsedMs": 3867
+      }
+    ],
+    "nodes": [
+      {
+        "type": "BuildStructure",
+        "unitType": null,
+        "buildingType": "ArcheryRange",
+        "count": 3,
+        "quantityMode": "TargetTotal",
+        "producerFromNode": null,
+        "dependsOn": []
+      }
+    ],
+    "dynamicNodes": [],
+    "compiled": true,
+    "compileReason": ""
+  },
+  {
+    "utterance": "Build 50 spearman out of 5 barracks",
+    "stage": "compiled-preview-only",
+    "owner": 0,
+    "age": 3,
+    "civilization": "English",
+    "valid": true,
+    "outcome": "DynamicPlan",
+    "schemaDiagnostic": "",
+    "explanation": "Action plan requires validation and player confirmation.",
+    "httpStatus": 200,
+    "actualPromptTokens": 5772,
+    "inputUtf8Estimate": 27708,
+    "attempts": [
+      {
+        "kind": "initial",
+        "stage": "semantic-valid",
+        "httpStatus": 200,
+        "actualPromptTokens": 5772,
+        "elapsedMs": 2479
+      }
+    ],
+    "nodes": [],
+    "dynamicNodes": [
+      {
+        "mechanic": "select-structures",
+        "parameters": {
+          "building": "building:Barracks",
+          "count": 5
+        },
+        "inputs": {},
+        "dependsOn": []
+      },
+      {
+        "mechanic": "produce",
+        "parameters": {
+          "unit": "unit:1",
+          "count": 50,
+          "quantityMode": "TargetTotal"
+        },
+        "inputs": {
+          "producers": "sources"
+        },
+        "dependsOn": [
+          "sources"
+        ]
+      }
+    ],
+    "compiled": true,
+    "compileReason": ""
+  },
+  {
+    "utterance": "Build a Mill and 8 Farms around it",
+    "stage": "compiled-preview-only",
+    "owner": 0,
+    "age": 3,
+    "civilization": "English",
+    "valid": true,
+    "outcome": "DynamicPlan",
+    "schemaDiagnostic": "",
+    "explanation": "Action plan requires validation and player confirmation.",
+    "httpStatus": 200,
+    "actualPromptTokens": 5576,
+    "inputUtf8Estimate": 27123,
+    "attempts": [
+      {
+        "kind": "initial",
+        "stage": "semantic-valid",
+        "httpStatus": 200,
+        "actualPromptTokens": 5576,
+        "elapsedMs": 3333
+      }
+    ],
+    "nodes": [],
+    "dynamicNodes": [
+      {
+        "mechanic": "build",
+        "parameters": {
+          "building": "building:Mill",
+          "count": 1
+        },
+        "inputs": {},
+        "dependsOn": []
+      },
+      {
+        "mechanic": "resolve-location",
+        "parameters": {
+          "relation": "Near",
+          "clearGapTiles": 1
+        },
+        "inputs": {
+          "structures": "mill"
+        },
+        "dependsOn": [
+          "mill"
+        ]
+      },
+      {
+        "mechanic": "build",
+        "parameters": {
+          "building": "building:Farm",
+          "count": 8
+        },
+        "inputs": {
+          "location": "farmsite"
+        },
+        "dependsOn": [
+          "farmsite"
+        ]
+      }
+    ],
+    "compiled": true,
+    "compileReason": ""
+  }
+]

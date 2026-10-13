@@ -163,6 +163,7 @@ namespace OpenEmpires
                             case "MyBarracks": anchor = CommanderSemanticAnchorSelector.MyBarracks; break;
                             case "WorkedResource": anchor = CommanderSemanticAnchorSelector.WorkedResource; break;
                             case "VisibleResource": anchor = CommanderSemanticAnchorSelector.VisibleResource; break;
+                            case "PlayerMarker": anchor = CommanderSemanticAnchorSelector.PlayerMarker; break;
                             default: throw FailField(placement, "anchor", SchemaFailureCode.InvalidEnum);
                         }
                         if (placement.Property("ordinal") != null)
@@ -181,6 +182,8 @@ namespace OpenEmpires
                             default: throw FailField(placement, "relation", SchemaFailureCode.InvalidEnum);
                         }
                         // Omission is intentional: the deterministic resolver owns its relation-specific default.
+                        if (anchor == CommanderSemanticAnchorSelector.PlayerMarker && relation != CommanderSemanticPlacementRelation.Near)
+                            throw FailField(placement, "relation", SchemaFailureCode.IncompatibleDeclaration);
                         if (placement.Property("clearGapTiles") != null)
                         {
                             clearGapTiles = RequiredBoundedInteger(placement, "clearGapTiles",
@@ -401,6 +404,7 @@ namespace OpenEmpires
                 case "VisibleResource": return CommanderSemanticLocationSelector.VisibleResource;
                 case "VisibleEnemy": return CommanderSemanticLocationSelector.VisibleEnemy;
                 case "RelativeToSelectedUnits": return CommanderSemanticLocationSelector.RelativeToSelectedUnits;
+                case "PlayerMarker": return CommanderSemanticLocationSelector.PlayerMarker;
                 default: throw new JsonException();
             }
         }

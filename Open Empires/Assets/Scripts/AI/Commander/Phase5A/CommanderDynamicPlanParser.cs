@@ -160,16 +160,18 @@ namespace OpenEmpires
                     if (!NamedEnum<CommanderWorkerState>(s)) throw new JsonException();
                     break;
                 case CommanderDynamicFieldKind.WorkerCountMode:
+                case CommanderDynamicFieldKind.UnitCountMode:
                     if (s != "AllMatching") throw new JsonException();
                     break;
                 case CommanderDynamicFieldKind.ResourceMode:
                     if (s != "Visible" && s != "Worked") throw new JsonException();
                     break;
                 case CommanderDynamicFieldKind.Anchor:
-                    if (s != "MyTownCenter" && s != "MyBarracks") throw new JsonException();
+                    if (s != "MyTownCenter" && s != "MyBarracks" && s != "PlayerMarker") throw new JsonException();
                     break;
                 case CommanderDynamicFieldKind.Relation:
-                    if (s != "Near" && s != "MapWest" && s != "MapEast")
+                    if (s != "Near" && s != "MapWest" && s != "MapEast"
+                        && s != "MapNorth" && s != "MapSouth")
                         throw new JsonException();
                     break;
                 case CommanderDynamicFieldKind.QuantityMode:
@@ -196,7 +198,9 @@ namespace OpenEmpires
             if (mechanic == CommanderDynamicMechanic.Build
                 && (int)parameters["count"] > CommanderIntentValidator.MaximumStructureCount)
                 throw new JsonException();
-            if (mechanic == CommanderDynamicMechanic.SelectUnits && (int)parameters["count"] > 50)
+            if (mechanic == CommanderDynamicMechanic.SelectUnits
+                && (parameters.ContainsKey("count") == parameters.ContainsKey("countMode")
+                    || parameters.TryGetValue("count", out object unitCount) && (int)unitCount > 50))
                 throw new JsonException();
             if (mechanic == CommanderDynamicMechanic.SelectUnits &&
                 parameters.ContainsKey("unit") == parameters.ContainsKey("kind"))
@@ -225,6 +229,22 @@ namespace OpenEmpires
                                 (ResourceType)Enum.Parse(typeof(ResourceType), (string)parameters["resource"]),
                                 (ResourceSourceKind)Enum.Parse(typeof(ResourceSourceKind), (string)parameters["sourceKind"])))))
                 throw new JsonException();
+            if (mechanic == CommanderDynamicMechanic.ResolveLocation &&
+                ((string)parameters["relation"] == "MapNorth"
+                    || (string)parameters["relation"] == "MapSouth"))
+                throw new JsonException();
+            if (mechanic == CommanderDynamicMechanic.SelectResources)
+            {
+                int anchors = Convert.ToInt32(parameters.ContainsKey("anchor"))
+                    + Convert.ToInt32(inputs.ContainsKey("units"))
+                    + Convert.ToInt32(inputs.ContainsKey("workers"));
+                bool directional = parameters.ContainsKey("relation");
+                if (anchors > 1 || directional != (anchors == 1)
+                    || parameters.TryGetValue("anchor", out object resourceAnchor)
+                        && (string)resourceAnchor != "MyTownCenter"
+                    || directional && (string)parameters["relation"] == "Near")
+                    throw new JsonException();
+            }
             if (mechanic == CommanderDynamicMechanic.SelectResources ||
                 mechanic == CommanderDynamicMechanic.AllocateWorkers)
             {

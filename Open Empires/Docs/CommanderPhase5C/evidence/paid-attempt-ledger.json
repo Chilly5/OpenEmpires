@@ -2,13 +2,27 @@
   "phase": "5C",
   "authorization": "User approved up to 200 total paid HTTP attempts on 2026-10-12; earlier 10-attempt ceiling superseded. Agent use remains separately accounted from four human screenshot calls.",
   "maximumHttpAttempts": 200,
-  "countsInclude": ["initial", "permitted-repair", "timeout", "failed-http"],
-  "usedHttpAttempts": 15,
+  "countsInclude": [
+    "initial",
+    "permitted-repair",
+    "timeout",
+    "failed-http"
+  ],
+  "usedHttpAttempts": 24,
   "endpoint": "https://openrouter.ai/api/v1/chat/completions",
   "model": "openai/gpt-6-luna",
   "credential": "existing configured credential; never recorded or inspected",
   "payloadScope": "text commands, bounded public canonical facts and owned/controlled fixture counts",
-  "excluded": ["audio", "hidden-enemy observations", "runtime entity IDs", "coordinates", "private files", "credentials", "remote deployment", "paid setup probes"],
+  "excluded": [
+    "audio",
+    "hidden-enemy observations",
+    "runtime entity IDs",
+    "coordinates",
+    "private files",
+    "credentials",
+    "remote deployment",
+    "paid setup probes"
+  ],
   "attempts": [
     {
       "source": "evidence/live-house-scene-5/paid-usage-ledger.json",
@@ -72,6 +86,60 @@
       "utc": "2026-10-12T09:56:27.4807335Z",
       "httpStatus": 0,
       "result": "After user connection change, production transport network failure after12137ms; no HTTP response, approval or game order"
+    },
+    {
+      "source": "evidence/stabilization-live/paid-usage-ledger.json",
+      "kind": "stabilization-reserved-http",
+      "utc": "2026-10-13T09:07:42.8016214Z",
+      "result": "Consumed before dispatch; exact attempt kind and terminal status recorded in scoped journal."
+    },
+    {
+      "source": "evidence/stabilization-live/paid-usage-ledger.json",
+      "kind": "stabilization-reserved-http",
+      "utc": "2026-10-13T09:07:47.0542789Z",
+      "result": "Consumed before dispatch; exact attempt kind and terminal status recorded in scoped journal."
+    },
+    {
+      "source": "evidence/stabilization-live/paid-usage-ledger.json",
+      "kind": "stabilization-reserved-http",
+      "utc": "2026-10-13T09:07:49.1828146Z",
+      "result": "Consumed before dispatch; exact attempt kind and terminal status recorded in scoped journal."
+    },
+    {
+      "source": "evidence/stabilization-live/paid-usage-ledger.json",
+      "kind": "stabilization-reserved-http",
+      "utc": "2026-10-13T09:07:52.452899Z",
+      "result": "Consumed before dispatch; exact attempt kind and terminal status recorded in scoped journal."
+    },
+    {
+      "source": "evidence/stabilization-live/paid-usage-ledger.json",
+      "kind": "stabilization-reserved-http",
+      "utc": "2026-10-13T09:07:54.895528Z",
+      "result": "Consumed before dispatch; exact attempt kind and terminal status recorded in scoped journal."
+    },
+    {
+      "source": "evidence/stabilization-live/paid-usage-ledger.json",
+      "kind": "stabilization-reserved-http",
+      "utc": "2026-10-13T09:07:58.6667634Z",
+      "result": "Consumed before dispatch; exact attempt kind and terminal status recorded in scoped journal."
+    },
+    {
+      "source": "evidence/stabilization-live-followup/paid-usage-ledger.json",
+      "kind": "stabilization-reserved-http",
+      "utc": "2026-10-13T09:29:45.8025081Z",
+      "result": "Consumed before dispatch; exact attempt kind and terminal status recorded in scoped journal."
+    },
+    {
+      "source": "evidence/stabilization-live-followup/paid-usage-ledger.json",
+      "kind": "stabilization-reserved-http",
+      "utc": "2026-10-13T09:29:49.8385185Z",
+      "result": "Consumed before dispatch; exact attempt kind and terminal status recorded in scoped journal."
+    },
+    {
+      "source": "evidence/stabilization-live-followup/paid-usage-ledger.json",
+      "kind": "stabilization-reserved-http",
+      "utc": "2026-10-13T09:29:52.4847892Z",
+      "result": "Consumed before dispatch; exact attempt kind and terminal status recorded in scoped journal."
     }
   ]
 }

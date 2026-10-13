@@ -90,6 +90,7 @@ namespace OpenEmpires
             var candidate = new CommanderActionPlanCandidate(requestTicket?.Id ?? nextRequestId++, this,
                 interpretation, plan, originalInput, generation, strategicSource,
                 requestTicket != null ? requestTicket.IsCurrent : isCurrentRequest, futureBindings);
+            requestTicket?.BindCandidate(candidate);
             TraceRequest(requestTicket, "candidate-compiled");
             return candidate;
         }
@@ -159,7 +160,19 @@ namespace OpenEmpires
                 throw new InvalidOperationException("The registered goal changed the admitted KnownIntent scope.");
             goal.RequestAuthority = scope;
             goal.RequestNodeIndex = 0;
+            BindMarkerAtRegistration(goal, scope);
             TraceActionPlan(scope, "goal-admitted");
+        }
+
+        private void BindMarkerAtRegistration(CommanderGoal goal, CommanderActionPlanCandidate scope)
+        {
+            if (!scope.UsesPlayerMarker) return;
+            var location = CommanderBoundLocation.FromPlayerMarker(simulation, this, playerId,
+                scope.MarkerTileX, scope.MarkerTileZ, CommanderSemanticPlacementRelation.Near, 1);
+            if (goal is BuildStructureGoal build) build.DynamicLocation = location;
+            else if (goal is CommanderCapabilityGoal move) move.MarkerMoveLocation = location;
+            else throw new InvalidOperationException("The marker effect has no typed destination binding.");
+            ClearPlayerMarkerSnapshot();
         }
 
         internal CommanderActionPlanCandidate SingleLiveConfirmedActionPlan(out bool ambiguous)

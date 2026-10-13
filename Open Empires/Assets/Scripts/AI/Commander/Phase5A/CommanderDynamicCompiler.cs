@@ -122,7 +122,8 @@ namespace OpenEmpires
                             return false;
                     }
                     else if (!SupportedUnitKind(node.Parameter<string>("kind"))) return false;
-                    if (node.Parameter<int>("count") > 50) return false;
+                    if (node.Parameters.TryGetValue("count", out object selectedUnitCountValue)
+                        && (int)selectedUnitCountValue > 50) return false;
                     break;
                 case CommanderDynamicMechanic.SelectStructures:
                     if (!TryBuilding(node.Parameter<string>("building"), knowledge,
@@ -193,13 +194,32 @@ namespace OpenEmpires
                             out _, out _, out _)
                         || !byId.TryGetValue(node.Inputs["location"], out var moveLocation)
                         || !TryLocation(moveLocation, byId)
-                        || !moveLocation.Parameters.ContainsKey("resource")
-                        || !moveLocation.Parameters.ContainsKey("sourceKind")
-                        || moveLocation.Parameter<string>("anchor") != "MyTownCenter"
-                        || moveLocation.Parameter<string>("relation") != "MapWest") return false;
+                        || !(moveLocation.Parameters.ContainsKey("resource")
+                            && moveLocation.Parameters.ContainsKey("sourceKind")
+                            && moveLocation.Parameter<string>("anchor") == "MyTownCenter"
+                            && moveLocation.Parameter<string>("relation") == "MapWest"
+                            || moveLocation.Inputs.TryGetValue("resources", out string moveResourceId)
+                                && byId.TryGetValue(moveResourceId, out var moveResource)
+                                && moveResource.Primitive.Mechanic == CommanderDynamicMechanic.SelectResources
+                                && moveLocation.Parameter<string>("relation") == "Near")) return false;
                     intent = new CapabilityActionIntent(playerId, CommanderCapabilityActionType.MoveUnits,
                         new CommanderUnitSelector(CommanderUnitSelectorKind.Villagers),
                         new CommanderLocationSelector(CommanderLocationSelectorKind.PlayerBase),
+                        constraints: constraints);
+                    break;
+                case CommanderDynamicMechanic.MoveUnits:
+                    if (!byId.TryGetValue(node.Inputs["units"], out var movingUnits)
+                        || movingUnits.Primitive.Mechanic != CommanderDynamicMechanic.SelectUnits
+                        || !byId.TryGetValue(node.Inputs["location"], out var unitLocation)
+                        || !TryLocation(unitLocation, byId)
+                        || !unitLocation.Inputs.TryGetValue("resources", out string selectedResourceId)
+                        || !byId.TryGetValue(selectedResourceId, out var selectedResource)
+                        || selectedResource.Primitive.Mechanic != CommanderDynamicMechanic.SelectResources
+                        || unitLocation.Parameter<string>("relation") != "Near"
+                        || !TryCapabilityUnitSelector(movingUnits, knowledge, civilization,
+                            simulation, playerId, out CommanderUnitSelector moveSelector)) return false;
+                    intent = new CapabilityActionIntent(playerId, CommanderCapabilityActionType.MoveUnits,
+                        moveSelector, new CommanderLocationSelector(CommanderLocationSelectorKind.PlayerBase),
                         constraints: constraints);
                     break;
                 case CommanderDynamicMechanic.Produce:
@@ -303,6 +323,85 @@ namespace OpenEmpires
             }
         }
 
+        private static bool TryCapabilityUnitSelector(CommanderDynamicNode selection,
+            GameKnowledgeCatalog knowledge, CivilizationKnowledge civilization,
+            GameSimulation simulation, int playerId, out CommanderUnitSelector selector)
+        {
+            selector = default;
+            bool allMatching = selection.Parameters.ContainsKey("countMode");
+            int count = allMatching ? 1 : selection.Parameter<int>("count");
+            if (count < 1 || count > 50) return false;
+            if (selection.Parameters.TryGetValue("unit", out object canonical))
+            {
+                if (!TryUnit((string)canonical, knowledge, civilization, out UnitKnowledge unit)
+                    || !TryResolveTrainingRequest(unit, knowledge, simulation, playerId,
+                        out int requestedType)) return false;
+                selector = new CommanderUnitSelector(CommanderUnitSelectorKind.UnitType,
+                    count, requestedType);
+                if (!allMatching) return true;
+                if (!TryCountMatchingUnits(simulation, playerId, selector,
+                    out CommanderUnitSelector exactUnitCount)) return false;
+                selector = exactUnitCount;
+                return true;
+            }
+            switch (selection.Parameter<string>("kind"))
+            {
+                case "Spearman": selector = new CommanderUnitSelector(
+                    CommanderUnitSelectorKind.UnitType, count, 1); break;
+                case "Archer": selector = new CommanderUnitSelector(
+                    CommanderUnitSelectorKind.UnitType, count, 2); break;
+                case "Knight": selector = new CommanderUnitSelector(
+                    CommanderUnitSelectorKind.UnitType, count, 7); break;
+                case "Scout": selector = new CommanderUnitSelector(
+                    CommanderUnitSelectorKind.Scout, count); break;
+                case "Villagers": selector = new CommanderUnitSelector(
+                    CommanderUnitSelectorKind.Villagers, count); break;
+                case "Military": selector = new CommanderUnitSelector(
+                    CommanderUnitSelectorKind.Military, count); break;
+                case "DamagedMilitary": selector = new CommanderUnitSelector(
+                    CommanderUnitSelectorKind.DamagedMilitary, count); break;
+                default: return false;
+            }
+            if (!allMatching) return true;
+            if (!TryCountMatchingUnits(simulation, playerId, selector,
+                out CommanderUnitSelector exactCount)) return false;
+            selector = exactCount;
+            return true;
+        }
+
+        private static bool TryCountMatchingUnits(GameSimulation simulation, int playerId,
+            CommanderUnitSelector template, out CommanderUnitSelector counted)
+        {
+            counted = default;
+            int count = 0;
+            foreach (UnitData unit in simulation.UnitRegistry.GetAllUnits())
+            {
+                if (unit == null || unit.PlayerId != playerId || unit.CurrentHealth <= 0
+                    || unit.State == UnitState.Dead) continue;
+                bool match;
+                switch (template.Kind)
+                {
+                    case CommanderUnitSelectorKind.UnitType:
+                        match = unit.UnitType == simulation.ResolveCivUnitType(playerId,
+                            template.UnitType); break;
+                    case CommanderUnitSelectorKind.Villagers: match = unit.IsVillager; break;
+                    case CommanderUnitSelectorKind.Scout: match = unit.UnitType == 4; break;
+                    case CommanderUnitSelectorKind.DamagedMilitary:
+                        match = !unit.IsVillager && !unit.IsSheep && unit.UnitType != 4
+                            && unit.CurrentHealth < unit.MaxHealth; break;
+                    default: match = !unit.IsVillager && !unit.IsSheep && unit.UnitType != 4; break;
+                }
+                if (!match) continue;
+                var tile = simulation.MapData.WorldToTile(unit.SimPosition);
+                if (simulation.FogOfWar.GetVisibility(playerId, tile.x, tile.y)
+                    == TileVisibility.Visible) count++;
+                if (count > 50) return false;
+            }
+            if (count < 1) return false;
+            counted = new CommanderUnitSelector(template.Kind, count, template.UnitType);
+            return true;
+        }
+
         private static bool TryLocation(CommanderDynamicNode node,
             Dictionary<string, CommanderDynamicNode> byId)
         {
@@ -320,7 +419,8 @@ namespace OpenEmpires
                     || !node.Parameters.TryGetValue("anchor", out object composedAnchor)
                     || (string)composedAnchor != "MyTownCenter")) return false;
             if (node.Parameters.TryGetValue("anchor", out object anchor))
-                return (string)anchor == "MyTownCenter" || (string)anchor == "MyBarracks";
+                return (string)anchor == "MyTownCenter" || (string)anchor == "MyBarracks"
+                    || (string)anchor == "PlayerMarker";
             if (node.Inputs.TryGetValue("structures", out string structures))
                 return byId.TryGetValue(structures, out var source)
                     && source.Primitive.Result == CommanderDynamicResultKind.StructureSet;

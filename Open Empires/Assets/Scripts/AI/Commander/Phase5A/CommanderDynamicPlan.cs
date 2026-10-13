@@ -7,7 +7,7 @@ namespace OpenEmpires
     public enum CommanderDynamicMechanic
     {
         SelectWorkers, PartitionWorkers, SelectUnits, SelectStructures,
-        SelectResources, ResolveLocation, Build, AllocateWorkers, MoveWorkers, Produce
+        SelectResources, ResolveLocation, Build, AllocateWorkers, MoveWorkers, MoveUnits, Produce
     }
 
     public enum CommanderDynamicResultKind
@@ -25,7 +25,7 @@ namespace OpenEmpires
     {
         Count, Offset, ClearGapTiles, UnitId, BuildingId, Resource,
         SourceKind, WorkerState, ResourceMode, Anchor, Relation, WorkerCountMode,
-        QuantityMode, UnitKind
+        QuantityMode, UnitKind, UnitCountMode
     }
 
     public sealed class CommanderDynamicField
@@ -92,7 +92,8 @@ namespace OpenEmpires
                     CommanderDynamicResultKind.UnitSet, CommanderDynamicEffectClass.Selection,
                     new[] { P("unit", CommanderDynamicFieldKind.UnitId, false),
                         P("kind", CommanderDynamicFieldKind.UnitKind, false),
-                        P("count", CommanderDynamicFieldKind.Count) },
+                        P("count", CommanderDynamicFieldKind.Count, false),
+                        P("countMode", CommanderDynamicFieldKind.UnitCountMode, false) },
                     Array.Empty<CommanderDynamicInput>()),
                 new CommanderDynamicPrimitive("select-structures", CommanderDynamicMechanic.SelectStructures,
                     CommanderDynamicResultKind.StructureSet, CommanderDynamicEffectClass.Selection,
@@ -104,8 +105,11 @@ namespace OpenEmpires
                     new[] { P("resource", CommanderDynamicFieldKind.Resource),
                         P("sourceKind", CommanderDynamicFieldKind.SourceKind),
                         P("mode", CommanderDynamicFieldKind.ResourceMode),
-                        P("count", CommanderDynamicFieldKind.Count) },
-                    Array.Empty<CommanderDynamicInput>()),
+                        P("count", CommanderDynamicFieldKind.Count),
+                        P("anchor", CommanderDynamicFieldKind.Anchor, false),
+                        P("relation", CommanderDynamicFieldKind.Relation, false) },
+                    new[] { I("units", CommanderDynamicResultKind.UnitSet, false),
+                        I("workers", CommanderDynamicResultKind.WorkerSet, false) }),
                 new CommanderDynamicPrimitive("resolve-location", CommanderDynamicMechanic.ResolveLocation,
                     CommanderDynamicResultKind.LocationIntent, CommanderDynamicEffectClass.Location,
                     new[] { P("anchor", CommanderDynamicFieldKind.Anchor, false),
@@ -131,6 +135,11 @@ namespace OpenEmpires
                     CommanderDynamicResultKind.AssignmentEffect, CommanderDynamicEffectClass.Movement,
                     Array.Empty<CommanderDynamicField>(),
                     new[] { I("workers", CommanderDynamicResultKind.WorkerSet),
+                        I("location", CommanderDynamicResultKind.LocationIntent) }),
+                new CommanderDynamicPrimitive("move-units", CommanderDynamicMechanic.MoveUnits,
+                    CommanderDynamicResultKind.AssignmentEffect, CommanderDynamicEffectClass.Movement,
+                    Array.Empty<CommanderDynamicField>(),
+                    new[] { I("units", CommanderDynamicResultKind.UnitSet),
                         I("location", CommanderDynamicResultKind.LocationIntent) }),
                 new CommanderDynamicPrimitive("produce", CommanderDynamicMechanic.Produce,
                     CommanderDynamicResultKind.UnitResult, CommanderDynamicEffectClass.Production,

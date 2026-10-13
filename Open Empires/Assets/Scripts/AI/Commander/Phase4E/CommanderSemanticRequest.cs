@@ -49,7 +49,8 @@ namespace OpenEmpires
         MyTownCenter,
         MyBarracks,
         WorkedResource,
-        VisibleResource
+        VisibleResource,
+        PlayerMarker
     }
 
     // Near is nondirectional: deterministic placement considers cardinal sides and defaults
@@ -78,7 +79,8 @@ namespace OpenEmpires
         WorkedResource,
         VisibleResource,
         VisibleEnemy,
-        RelativeToSelectedUnits
+        RelativeToSelectedUnits,
+        PlayerMarker
     }
 
     // Parsed provider data only. No player, entity, position, provenance, or command authority lives here.
@@ -169,6 +171,64 @@ namespace OpenEmpires
 
     public sealed partial class CommanderSemanticResult
     {
+        // Local slot filling: change only one unresolved symbolic destination.
+        // All actors, quantities, constraints and dependency edges stay detached and intact.
+        internal CommanderSemanticResult WithMarkerDestination(CommanderSemanticLocationSelector location,
+            ResourceType? resource = null)
+        {
+            if (IsValid && Outcome == CommanderSemanticOutcome.DynamicPlan && DynamicPlan != null
+                && location == CommanderSemanticLocationSelector.PlayerBase && !resource.HasValue)
+            {
+                int count = 0;
+                var dynamicNodes = new List<CommanderDynamicNode>();
+                foreach (var n in DynamicPlan.Nodes)
+                {
+                    var parameters = new Dictionary<string, object>();
+                    foreach (var pair in n.Parameters) parameters.Add(pair.Key, pair.Value);
+                    if (parameters.TryGetValue("anchor", out object anchor) && (string)anchor == "PlayerMarker")
+                    { parameters["anchor"] = "MyTownCenter"; count++; }
+                    var inputs = new Dictionary<string, string>();
+                    foreach (var pair in n.Inputs) inputs.Add(pair.Key, pair.Value);
+                    dynamicNodes.Add(new CommanderDynamicNode(n.Id, n.Primitive, parameters, inputs,
+                        new List<string>(n.DependsOn)));
+                }
+                return count == 1 ? new CommanderSemanticResult(true, Outcome, Array.Empty<CommanderSemanticNode>(),
+                    SafeExplanation, dynamicPlan: new CommanderDynamicPlan(dynamicNodes, DynamicPlan.Constraints)) : null;
+            }
+            if (!IsValid || Outcome != CommanderSemanticOutcome.Request) return null;
+            int markers = 0;
+            foreach (var n in Nodes) if (n.LocationSelector == CommanderSemanticLocationSelector.PlayerMarker
+                || n.PlacementAnchorSelector == CommanderSemanticAnchorSelector.PlayerMarker) markers++;
+            if (markers != 1) return null;
+            var nodes = new List<CommanderSemanticNode>();
+            foreach (var n in Nodes)
+            {
+                if (n.PlacementAnchorSelector == CommanderSemanticAnchorSelector.PlayerMarker)
+                {
+                    if (location != CommanderSemanticLocationSelector.PlayerBase
+                        && (location != CommanderSemanticLocationSelector.WorkedResource || !resource.HasValue)) return null;
+                    nodes.Add(new CommanderSemanticNode(n.Type, n.UnitType, n.BuildingType, resource,
+                        n.Count, n.StrategicObjectiveType,
+                        location == CommanderSemanticLocationSelector.PlayerBase ? CommanderSemanticAnchorSelector.MyTownCenter
+                            : CommanderSemanticAnchorSelector.WorkedResource,
+                        n.PlacementAnchorOrdinal, n.PlacementRelation, n.ClearGapTiles, n.AgeTarget,
+                        n.UnitSelector, n.LocationSelector, n.Technology, n.DependsOn, n.ProducerFromNode,
+                        n.ResultFromNode, n.WorkerAllocation, n.Constraints, n.TargetSelector, n.QuantityMode,
+                        n.ProducerOrdinal, n.FutureAction,
+                        resource == OpenEmpires.ResourceType.Wood ? ResourceSourceKind.Tree
+                            : resource == OpenEmpires.ResourceType.Gold ? ResourceSourceKind.GoldMine : n.SourceKind,
+                        n.AllMatchingUnits));
+                    continue;
+                }
+                if (n.LocationSelector != CommanderSemanticLocationSelector.PlayerMarker) { nodes.Add(n); continue; }
+                nodes.Add(new CommanderSemanticNode(n.Type, n.UnitType, n.BuildingType, resource ?? n.ResourceType,
+                    n.Count, n.StrategicObjectiveType, n.PlacementAnchorSelector, n.PlacementAnchorOrdinal,
+                    n.PlacementRelation, n.ClearGapTiles, n.AgeTarget, n.UnitSelector, location, n.Technology,
+                    n.DependsOn, n.ProducerFromNode, n.ResultFromNode, n.WorkerAllocation, n.Constraints,
+                    n.TargetSelector, n.QuantityMode, n.ProducerOrdinal, n.FutureAction, n.SourceKind, n.AllMatchingUnits));
+            }
+            return new CommanderSemanticResult(true, CommanderSemanticOutcome.Request, nodes.AsReadOnly(), SafeExplanation);
+        }
         public bool IsValid { get; }
         public CommanderSemanticOutcome Outcome { get; }
         public IReadOnlyList<CommanderSemanticNode> Nodes { get; }

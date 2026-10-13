@@ -6,7 +6,7 @@ namespace OpenEmpires
     // Game-owned snapshot of one semantic anchor. Neither IDs nor coordinates are provider data.
     internal sealed class CommanderBoundLocation
     {
-        private enum AnchorKind { Building, Resource, FutureBuild }
+        private enum AnchorKind { Building, Resource, FutureBuild, PlayerMarker }
         private readonly AnchorKind kind;
         private readonly GameSimulation runtime;
         private readonly CommanderGoalManager owner;
@@ -25,7 +25,7 @@ namespace OpenEmpires
 
         internal CommanderSemanticPlacementRelation Relation { get; }
         internal int ClearGapTiles { get; }
-        internal bool IsResourceSide => resourceSideIds != null;
+        internal bool IsResourceSide => resourceSideIds != null || kind == AnchorKind.Resource;
 
         private CommanderBoundLocation(AnchorKind kind, GameSimulation runtime,
             CommanderGoalManager owner, int playerId, int anchorId,
@@ -85,6 +85,24 @@ namespace OpenEmpires
                 type, sourceKind, worked, null, relation, gap);
         }
 
+        internal static CommanderBoundLocation FromPlayerMarker(GameSimulation runtime,
+            CommanderGoalManager owner, int playerId, int tileX, int tileZ,
+            CommanderSemanticPlacementRelation relation, int gap)
+        {
+            if (!ValidMarker(runtime, playerId, tileX, tileZ))
+                throw new ArgumentException("The player destination marker is unavailable or hidden.");
+            return new CommanderBoundLocation(AnchorKind.PlayerMarker, runtime, owner, playerId,
+                -1, tileX, tileZ, 1, 1, default, default, default, false,
+                null, relation, gap);
+        }
+
+        private static bool ValidMarker(GameSimulation runtime, int playerId, int x, int z)
+        {
+            return runtime != null && playerId >= 0 && playerId < runtime.FogOfWar.PlayerCount
+                && x >= 0 && z >= 0 && x < runtime.MapData.Width && z < runtime.MapData.Height
+                && runtime.FogOfWar.GetVisibility(playerId, x, z) == TileVisibility.Visible;
+        }
+
         // A bounded, admission-time visible source set tied to one frozen owned anchor.
         // Provider supplies neither runtime node IDs nor world coordinates.
         internal static CommanderBoundLocation FromResourceSide(GameSimulation runtime,
@@ -111,6 +129,9 @@ namespace OpenEmpires
 
         internal bool AllowsResource(GameSimulation currentRuntime, int currentPlayerId, ResourceNodeData resource)
         {
+            if (kind == AnchorKind.Resource)
+                return resource != null && resource.Id == anchorId
+                    && TryResolve(currentRuntime, currentPlayerId, out _, out _, out _, out _);
             if (resourceSideIds == null || resource == null
                 || !TryResolve(currentRuntime, currentPlayerId, out int x, out _, out _, out _)
                 || (long)resource.TileX + resource.FootprintWidth + ClearGapTiles > x
@@ -125,6 +146,14 @@ namespace OpenEmpires
         {
             position = default;
             resourceId = -1;
+            if (kind == AnchorKind.Resource)
+            {
+                if (!TryResolve(currentRuntime, currentPlayerId, out int x, out int z,
+                    out _, out _)) return false;
+                position = runtime.MapData.TileToWorldFixed(x, z);
+                resourceId = anchorId;
+                return true;
+            }
             if (resourceSideIds == null) return false;
             foreach (int id in resourceSideIds)
             {
@@ -140,6 +169,11 @@ namespace OpenEmpires
         internal bool AllowsMoveTile(GameSimulation currentRuntime, int currentPlayerId,
             int resourceId, int x, int z)
         {
+            if (kind == AnchorKind.Resource)
+                return resourceId == anchorId
+                    && TryResolve(currentRuntime, currentPlayerId, out int resourceX,
+                        out int resourceZ, out _, out _)
+                    && Math.Abs(x - resourceX) <= 10 && Math.Abs(z - resourceZ) <= 10;
             if (resourceSideIds == null || !TryResolve(currentRuntime, currentPlayerId,
                     out int anchorX, out _, out _, out _)
                 || (long)x + ClearGapTiles >= anchorX) return false;
@@ -167,6 +201,12 @@ namespace OpenEmpires
             if (!ReferenceEquals(runtime, currentRuntime) || currentPlayerId != playerId
                 || owner.IsDisposed || !ReferenceEquals(owner.Simulation, currentRuntime))
                 return false;
+            if (kind == AnchorKind.PlayerMarker)
+            {
+                if (!ValidMarker(runtime, playerId, originX, originZ)) return false;
+                x = originX; z = originZ; width = height = 1;
+                return true;
+            }
             if (kind == AnchorKind.Resource)
             {
                 ResourceNodeData resource = runtime.MapData.GetResourceNode(anchorId);
@@ -242,6 +282,14 @@ namespace OpenEmpires
         internal static bool IsWorked(GameSimulation runtime, int playerId,
             ResourceNodeData resource)
         {
+            return CountOwnedWorkers(runtime, playerId, resource) > 0;
+        }
+
+        internal static int CountOwnedWorkers(GameSimulation runtime, int playerId,
+            ResourceNodeData resource)
+        {
+            if (resource == null) return 0;
+            int count = 0;
             List<UnitData> units = runtime.UnitRegistry.GetAllUnits();
             for (int i = 0; i < units.Count; i++)
             {
@@ -256,9 +304,9 @@ namespace OpenEmpires
                     || !ResourceSourceRules.MatchesOwnedSource(resource,
                         worker.GatherSourceKind, playerId, runtime.BuildingRegistry))
                     continue;
-                return true;
+                count++;
             }
-            return false;
+            return count;
         }
     }
 }

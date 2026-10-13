@@ -22,6 +22,8 @@ namespace OpenEmpires
             var required = new HashSet<string>(StringComparer.Ordinal);
             var matchedPhrases = new HashSet<string>(StringComparer.Ordinal);
             var resolutions = new List<JObject>();
+            var resolvedNames = new List<JObject>();
+            var resolvedNameIds = new HashSet<string>(StringComparer.Ordinal);
             var optionalInterpretations = new List<JObject>();
             var optional = new HashSet<string>(StringComparer.Ordinal);
             foreach (string source in new[] { input ?? string.Empty, boundedPending ?? string.Empty })
@@ -55,6 +57,20 @@ namespace OpenEmpires
                         ["ambiguous"] = true });
                     continue;
                 }
+                if (unit.Status == CommanderContentResolutionStatus.Resolved)
+                {
+                    required.Add(unit.Match.StableId);
+                    if (resolvedNameIds.Add(unit.Match.StableId)) resolvedNames.Add(new JObject {
+                        ["phrase"] = phrase, ["category"] = "Unit", ["id"] = unit.Match.StableId,
+                        ["canonicalToken"] = unit.Match.DisplayName });
+                }
+                if (building.Status == CommanderContentResolutionStatus.Resolved)
+                {
+                    required.Add(building.Match.StableId);
+                    if (resolvedNameIds.Add(building.Match.StableId)) resolvedNames.Add(new JObject {
+                        ["phrase"] = phrase, ["category"] = "Building", ["id"] = building.Match.StableId,
+                        ["canonicalToken"] = building.Match.Landmark.HasValue ? building.Match.DisplayName : building.Match.BuildingType.ToString() });
+                }
                 // Only a narrow, resolver-defined near-name can become an optional
                 // interpretation. Common short words never fill the catalog with fuzz.
                 if (phrase.Length < 7 || unit.Status != CommanderContentResolutionStatus.Unknown
@@ -66,6 +82,24 @@ namespace OpenEmpires
                 optionalInterpretations.Add(new JObject { ["phrase"] = phrase, ["interpretationOnly"] = true,
                     ["unitCandidates"] = new JArray(unitCandidates),
                     ["buildingCandidates"] = new JArray(buildingCandidates), ["ambiguous"] = false });
+            }
+            // A requested native unit must retain its producer and civilization replacement
+            // facts even when neither name occurred literally in this turn.
+            foreach (string id in required.ToArray())
+            {
+                var unit = catalog.FindUnit(id);
+                if (unit == null) continue;
+                int resolvedType = GameSimulation.ResolveCanonicalCivilizationUnitType(civilization, unit.UnitType);
+                var replacement = catalog.FindUnitByType(resolvedType);
+                if (replacement != null) required.Add(replacement.StableId);
+                if (unit.ProductionBuildingType >= 0)
+                    required.Add("building:" + (BuildingType)unit.ProductionBuildingType);
+                if (replacement?.ProductionBuildingType >= 0)
+                    required.Add("building:" + (BuildingType)replacement.ProductionBuildingType);
+                if (unit.UnitType == UnitData.KingUnitType)
+                    foreach (var landmark in catalog.Buildings.Where(b => b.Landmark.HasValue
+                        && LandmarkDefinitions.Get(b.Landmark.Value).SpawnsKingOnCompletion))
+                        required.Add(landmark.StableId);
             }
             bool overflow = required.Count > MaximumRequiredEntries || resolutions.Count > 6;
             int addedHints = 0;
@@ -94,7 +128,9 @@ namespace OpenEmpires
                         ["age"] = data.RequiredAge, ["producer"] = data.ProductionBuildingType < 0
                             ? null : ((BuildingType)data.ProductionBuildingType).ToString(),
                         ["cost"] = Cost(data.Cost), ["availableForCivilization"] = resolution.IsAvailableForCivilization,
-                        ["commanderExecutable"] = resolution.IsExecutable });
+                        ["commanderExecutable"] = resolution.IsExecutable,
+                        ["civilizationResolvedId"] = "unit:" + GameSimulation.ResolveCanonicalCivilizationUnitType(civilization, data.UnitType),
+                        ["contentExists"] = true });
                 }
                 else
                 {
@@ -103,16 +139,17 @@ namespace OpenEmpires
                     buildings.Add(new JObject { ["id"] = data.StableId, ["name"] = data.DisplayName,
                         ["age"] = data.RequiredAge, ["cost"] = Cost(data.Cost),
                         ["availableForCivilization"] = resolution.IsAvailableForCivilization,
-                        ["commanderExecutable"] = resolution.IsExecutable,
+                        ["commanderExecutable"] = resolution.IsExecutable, ["contentExists"] = true,
                         ["dropoffResources"] = new JArray(Enum.GetValues(typeof(ResourceType)).Cast<ResourceType>()
                             .Where(r => GameSimulation.AcceptsResourceType(data.BuildingType, r)).Select(r => r.ToString())) });
                 }
             }
             return new JObject { ["units"] = units, ["buildings"] = buildings,
                 ["technologies"] = new JArray(), ["nameInterpretations"] = new JArray(overflow ? Enumerable.Empty<JObject>() : resolutions),
+                ["resolvedNames"] = new JArray(overflow ? Enumerable.Empty<JObject>() : resolvedNames),
                 ["requiredCanonicalIds"] = new JArray(requiredIds), ["optionalCanonicalIds"] = new JArray(optionalIds),
                 ["requiredReferenceOverflow"] = overflow,
-                ["policy"] = "Knowledge is not execution authority. Show canonical interpretations; clarify ambiguous names. Availability and support are separate." }
+                ["policy"] = "Complete catalog retrieved locally. Omission is not unavailability. Content existence, civilization availability, mechanic support, and current age/resources/producer/population readiness are separate facts. Missing resources or producers are execution blockers, not unknown content." }
                 .ToString(Formatting.None);
         }
 

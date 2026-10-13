@@ -422,7 +422,7 @@ namespace OpenEmpires
 
         private static string[] BuildUnitAliases(int type)
         {
-            var aliases = new List<string> { UnitInfoUI.GetUnitTypeDisplayName(type) };
+            var aliases = new List<string> { UnitInfoUI.GetUnitTypeDisplayName(type), UnitInfoUI.GetUnitTypePluralName(type) };
             switch (type)
             {
                 case 0: aliases.AddRange(new[] { "villagers", "worker", "workers", "peasant", "peasants", "builder", "builders", "vil", "vils", "vill", "vills" }); break;
@@ -512,7 +512,7 @@ namespace OpenEmpires
                 case BuildingType.Barracks: aliases.Add("barrack"); break;
                 case BuildingType.Stables: aliases.Add("stable"); break;
                 case BuildingType.TownCenter: aliases.AddRange(new[] { "towncenter", "town centers", "tc", "tcs" }); break;
-                case BuildingType.ArcheryRange: aliases.AddRange(new[] { "archeryrange", "archery ranges" }); break;
+                case BuildingType.ArcheryRange: aliases.AddRange(new[] { "archeryrange", "archery ranges", "archery" }); break;
                 case BuildingType.Tower: aliases.AddRange(new[] { "towers", "watchtower", "watch tower", "watchtowers", "watch towers", "guardtower", "guard tower", "guardtowers", "guard towers" }); break;
                 case BuildingType.Mill: aliases.Add("mills"); break;
                 case BuildingType.Farm: aliases.Add("farms"); break;
@@ -584,6 +584,11 @@ namespace OpenEmpires
                         else if (resolved != unit.UnitType)
                             available.Add("unit:" + resolved);
                     }
+                    // Native landmark rewards exist independently of ordinary training
+                    // adapters. Discover their civilization from the native definitions.
+                    if (Enum.GetValues(typeof(LandmarkId)).Cast<LandmarkId>()
+                        .Select(LandmarkDefinitions.Get).Any(definition => definition.Civ == x && definition.SpawnsKingOnCompletion))
+                        available.Add("unit:" + UnitData.KingUnitType);
                     var availableBuildings = buildings.Where(b => Enum.IsDefined(typeof(BuildingType), b.BuildingType)
                         && (!b.Landmark.HasValue || LandmarkDefinitions.Get(b.Landmark.Value).Civ == x))
                         .Select(b => b.StableId).OrderBy(v => v, StringComparer.Ordinal).ToArray();

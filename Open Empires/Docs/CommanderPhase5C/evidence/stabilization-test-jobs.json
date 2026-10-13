@@ -1,0 +1,335 @@
+{
+  "schema": "phase5c-stabilization-test-jobs@1",
+  "note": "Sanitized MCP job receipts. Failed jobs may omit final NUnit summaries; completed counts are not invented passing totals. Zero-initialization/discovery attempts have no test evidence.",
+  "jobs": [
+    {
+      "label": "redReceipt",
+      "jobId": "6ff0e1c72b0541d0bcdd21b604b36542",
+      "status": "failed",
+      "mode": "EditMode",
+      "startedUnixMs": 1791880231587,
+      "finishedUnixMs": 1791880252283,
+      "summary": null,
+      "completed": 8,
+      "total": 8,
+      "error": null,
+      "failures": [
+        {
+          "name": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.ProviderLocationClarification_MarkerResumesSameSingleBuildExactlyOnce",
+          "message": "  A displayed location question must retain the typed draft.\r\n  Expected: not null\r\n  But was:  null\r\n"
+        },
+        {
+          "name": "OpenEmpires.Tests.CommanderPhase5CStabilizationTests.EveryNativeIdentityAndCivilization_HasPackedAvailabilityAndProducerFacts",
+          "message": "  Missing producer for unit:0\r\n  Expected: True\r\n  But was:  False\r\n"
+        },
+        {
+          "name": "OpenEmpires.Tests.CommanderPhase5CStabilizationTests.LocationClarification_RetainsCompleteTypedBuildAndResolvesOnlyLocation",
+          "message": "  I couldn't understand that request safely.\r\n  Expected: True\r\n  But was:  False\r\n"
+        },
+        {
+          "name": "OpenEmpires.Tests.CommanderPhase5CStabilizationTests.ProductionPrompt_KeepsCapabilityContractConsistent(\"Build house\")",
+          "message": "  Expected: String containing \"structureCapabilities\"\r\n  But was:  \"Context:{\"age\":1,\"civilization\":\"English\",\"resources\":{\"Food\":0,\"Wood\":0,\"Gold\":0,\"Stone\":0},\"population\":0,\"populationCap\":0,\"workerCounts\":{\"idleUnqueued\":0,\"gatheringByResource\":{\"Food\":0,\"Wood\":0,\"Gold\":0,\"Stone\":0}},\"knowledge\":{\"buildingsColumns\":[\"id\",\"name\",\"age\",\"cost\",\"availableForCivilization\",\"commanderExecutable\",\"dropoffResources\"],\"buildings\":[[\"building:House\",\"House\",1,[0,50,0,0],true,true,[]]]},\"ownedUnitCounts\":{\"Scout\":0,\"Villager\":0},\"ownedBuildingCounts\":{}}\nMemory:[]\nFacts:\nBounded pending:\nPlayer:Build house\"\r\n"
+        },
+        {
+          "name": "OpenEmpires.Tests.CommanderPhase5CStabilizationTests.ProductionPrompt_KeepsCapabilityContractConsistent(\"Build 3 stables\")",
+          "message": "  Expected: String containing \"structureCapabilities\"\r\n  But was:  \"Context:{\"age\":1,\"civilization\":\"English\",\"resources\":{\"Food\":0,\"Wood\":0,\"Gold\":0,\"Stone\":0},\"population\":0,\"populationCap\":0,\"workerCounts\":{\"idleUnqueued\":0,\"gatheringByResource\":{\"Food\":0,\"Wood\":0,\"Gold\":0,\"Stone\":0}},\"knowledge\":{\"buildingsColumns\":[\"id\",\"name\",\"age\",\"cost\",\"availableForCivilization\",\"commanderExecutable\",\"dropoffResources\"],\"buildings\":[[\"building:Stables\",\"Stables\",2,[0,150,0,0],true,true,[]]]},\"ownedUnitCounts\":{\"Scout\":0,\"Villager\":0},\"ownedBuildingCounts\":{}}\nMemory:[]\nFacts:\nBounded pending:\nPlayer:Build 3 stables\"\r\n"
+        },
+        {
+          "name": "OpenEmpires.Tests.CommanderPhase5CStabilizationTests.ProductionPrompt_KeepsCapabilityContractConsistent(\"Build 3 archery\")",
+          "message": "  Expected: String containing \"structureCapabilities\"\r\n  But was:  \"Context:{\"age\":1,\"civilization\":\"English\",\"resources\":{\"Food\":0,\"Wood\":0,\"Gold\":0,\"Stone\":0},\"population\":0,\"populationCap\":0,\"workerCounts\":{\"idleUnqueued\":0,\"gatheringByResource\":{\"Food\":0,\"Wood\":0,\"Gold\":0,\"Stone\":0}},\"knowledge\":{\"unitsColumns\":[\"id\",\"name\",\"age\",\"producer\",\"cost\",\"availableForCivilization\",\"commanderExecutable\"],\"units\":[[\"unit:2\",\"Archer\",1,\"ArcheryRange\",[30,50,0,0],false,true]],\"nameInterpretationsColumns\":[\"phrase\",\"interpretationOnly\",\"unitCandidates\",\"buildingCandidates\",\"ambiguous\"],\"nameInterpretations\":[[\"archery\",true,[\"unit:2\"],[],false]]},\"ow"
+        },
+        {
+          "name": "OpenEmpires.Tests.CommanderPhase5CStabilizationTests.ProductionPrompt_KeepsCapabilityContractConsistent(\"Build a Mill and 8 Farms\")",
+          "message": "  Expected: String containing \"structureCapabilities\"\r\n  But was:  \"Context:{\"age\":1,\"civilization\":\"English\",\"resources\":{\"Food\":0,\"Wood\":0,\"Gold\":0,\"Stone\":0},\"population\":0,\"populationCap\":0,\"workerCounts\":{\"idleUnqueued\":0,\"gatheringByResource\":{\"Food\":0,\"Wood\":0,\"Gold\":0,\"Stone\":0}},\"knowledge\":{\"buildingsColumns\":[\"id\",\"name\",\"age\",\"cost\",\"availableForCivilization\",\"commanderExecutable\",\"dropoffResources\"],\"buildings\":[[\"building:Farm\",\"Farm\",1,[0,75,0,0],true,true,[]],[\"building:Mill\",\"Mill\",1,[0,50,0,0],true,true,[\"Food\"]]]},\"ownedUnitCounts\":{\"Scout\":0,\"Villager\":0},\"ownedBuildingCounts\":{}}\nMemory:[]\nFacts:\nBounded pending:\nPlayer:B"
+        },
+        {
+          "name": "OpenEmpires.Tests.CommanderPhase5CStabilizationTests.ProductionPrompt_KeepsCapabilityContractConsistent(\"Build 50 spearman out of 5 barracks\")",
+          "message": "  Expected: String containing \"structureCapabilities\"\r\n  But was:  \"Context:{\"age\":1,\"civilization\":\"English\",\"resources\":{\"Food\":0,\"Wood\":0,\"Gold\":0,\"Stone\":0},\"population\":0,\"populationCap\":0,\"workerCounts\":{\"idleUnqueued\":0,\"gatheringByResource\":{\"Food\":0,\"Wood\":0,\"Gold\":0,\"Stone\":0}},\"knowledge\":{\"unitsColumns\":[\"id\",\"name\",\"age\",\"producer\",\"cost\",\"availableForCivilization\",\"commanderExecutable\"],\"units\":[[\"unit:1\",\"Spearman\",1,\"Barracks\",[60,20,0,0],true,true]],\"buildingsColumns\":[\"id\",\"name\",\"age\",\"cost\",\"availableForCivilization\",\"commanderExecutable\",\"dropoffResources\"],\"buildings\":[[\"building:Barracks\",\"Barracks\",1,[0,150,0,0],true,t"
+        }
+      ]
+    },
+    {
+      "label": "green2Receipt",
+      "jobId": "e69f51167ec74d9fb17f5656f67dd441",
+      "status": "succeeded",
+      "mode": "EditMode",
+      "startedUnixMs": 1791880629376,
+      "finishedUnixMs": 1791880650560,
+      "summary": {
+        "total": 8,
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0,
+        "durationSeconds": 10.8133738,
+        "resultState": "Passed"
+      },
+      "completed": 8,
+      "total": 8,
+      "error": null,
+      "failures": []
+    },
+    {
+      "label": "defaultRedReceipt",
+      "jobId": "c96e4aeb46d64c558017248614256aa1",
+      "status": "failed",
+      "mode": "EditMode",
+      "startedUnixMs": 1791880842325,
+      "finishedUnixMs": 1791880852403,
+      "summary": null,
+      "completed": 1,
+      "total": 1,
+      "error": null,
+      "failures": [
+        {
+          "name": "OpenEmpires.Tests.CommanderPhase5CComposableLocationTests.OrdinaryLumberYardDefault_UsesWorkedClusterInsteadOfTownCenter",
+          "message": "  Expected: less than or equal to 5\r\n  But was:  22\r\n"
+        }
+      ]
+    },
+    {
+      "label": "native1Receipt",
+      "jobId": "e218f74bb8fa40608fd0b54bfbe7213d",
+      "status": "succeeded",
+      "mode": "EditMode",
+      "startedUnixMs": 1791881357173,
+      "finishedUnixMs": 1791881403778,
+      "summary": {
+        "total": 6,
+        "passed": 6,
+        "failed": 0,
+        "skipped": 0,
+        "durationSeconds": 33.6580848,
+        "resultState": "Passed"
+      },
+      "completed": 6,
+      "total": 6,
+      "error": null,
+      "failures": []
+    },
+    {
+      "label": "offlineGateTerminal",
+      "jobId": "e0c55f2cbff040698ed170870d180519",
+      "status": "failed",
+      "mode": "EditMode",
+      "startedUnixMs": 1791881717478,
+      "finishedUnixMs": 1791881925770,
+      "summary": null,
+      "completed": 268,
+      "total": 268,
+      "error": null,
+      "failures": [
+        {
+          "name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_PrunedModelHintsStillRequireGameOwnedConfirmation",
+          "message": "  Fixture must actually exercise optional hint pruning, not preflight rejection.\r\n  Expected: not null\r\n  But was:  null\r\n"
+        },
+        {
+          "name": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.MarkerAndOtherMissingSlot_AnswersOnlyLocationAndStillRequiresPlanApproval",
+          "message": "  Expected: not null\r\n  But was:  null\r\n"
+        },
+        {
+          "name": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.MarkerContinuation_PreservesRequestAndDoesNotInterpretOrApproveAgain",
+          "message": "  Expected: String containing \"Where?\"\r\n  But was:  \"Player:\r\nTrain three new spearmen then send them to my marker\r\n\r\nCommander:\r\nI couldn't understand that request safely.\"\r\n"
+        },
+        {
+          "name": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.OnlinePolicyReviewAndExplicitConsent_DoNotRecordSubmitOrApprove",
+          "message": "  Expected: False\r\n  But was:  True\r\n"
+        },
+        {
+          "name": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange(3.0f,\"3 s\")",
+          "message": "  Expected: String containing \"3 s\"\r\n  But was:  \"Ready\"\r\n"
+        },
+        {
+          "name": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange(3.25f,\"3.25 s\")",
+          "message": "  Expected: String containing \"3.25 s\"\r\n  But was:  \"Ready\"\r\n"
+        },
+        {
+          "name": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.VisibleDurationLimit_IsFrozenForRecordingEvenIfSettingsChange(3.123457f,\"3.1234567 s\")",
+          "message": "  Expected: String containing \"3.1234567 s\"\r\n  But was:  \"Ready\"\r\n"
+        },
+        {
+          "name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.CompletedAttemptSnapshot_RemainsImmutableAcrossLaterRequests",
+          "message": "  Expected: <empty>\r\n  But was:  < <OpenEmpires.CommanderProviderAttempt> >\r\n"
+        },
+        {
+          "name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.GenericRequest_AdvertisesEveryStrictlyParsedSemanticFamily",
+          "message": "  count:1..20\r\n  Expected: String containing \"count:1..20\"\r\n  But was:  \"Translate the player's Commander request into one bounded JSON object, with no markdown or other text. You provide semantic data only, never game authority. Outcomes are Request, DynamicPlan, Clarify, Unsupported, Answer. For Request use {\"outcome\":\"Request\",\"nodes\":[one to four typed nodes]}. Every compound Request MUST also declare executionOrder as Independent, Sequential, or DependencyGraph. Independent has no dependencies; Sequential means each step waits for the previous step's actual completion and each later node MUST include dependsOn:[previousIndex]. Dependency"
+        },
+        {
+          "name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.PreflightRejectionAfterASentRequest_ResetsAttemptCount",
+          "message": "  Expected: 1\r\n  But was:  2\r\n"
+        }
+      ]
+    },
+    {
+      "label": "affectedCorrectionsReceipt",
+      "jobId": "7de5e2eef7974075a702693d07636617",
+      "status": "failed",
+      "mode": "EditMode",
+      "startedUnixMs": 1791882111410,
+      "finishedUnixMs": 1791882114526,
+      "summary": null,
+      "completed": 6,
+      "total": 6,
+      "error": null,
+      "failures": [
+        {
+          "name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_PrunedModelHintsStillRequireGameOwnedConfirmation",
+          "message": "  Fixture must actually exercise optional hint pruning, not preflight rejection.\r\n  Expected: not null\r\n  But was:  null\r\n"
+        },
+        {
+          "name": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.MarkerAndOtherMissingSlot_AnswersOnlyLocationAndStillRequiresPlanApproval",
+          "message": "  Expected: not null\r\n  But was:  null\r\n"
+        },
+        {
+          "name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.GenericRequest_AdvertisesEveryStrictlyParsedSemanticFamily",
+          "message": "  nodes:1..4\r\n  Expected: String containing \"nodes:1..4\"\r\n  But was:  \"Translate the player's Commander request into one bounded JSON object, with no markdown or other text. You provide semantic data only, never game authority. Outcomes are Request, DynamicPlan, Clarify, Unsupported, Answer. For Request use {\"outcome\":\"Request\",\"nodes\":[one to four typed nodes]}. Every compound Request MUST also declare executionOrder as Independent, Sequential, or DependencyGraph. Independent has no dependencies; Sequential means each step waits for the previous step's actual completion and each later node MUST include dependsOn:[previousIndex]. DependencyGr"
+        }
+      ]
+    },
+    {
+      "label": "corrections2Receipt",
+      "jobId": "e3bcd6401c8b4c7982ba900ebc1d4256",
+      "status": "failed",
+      "mode": "EditMode",
+      "startedUnixMs": 1791882421771,
+      "finishedUnixMs": 1791882436011,
+      "summary": null,
+      "completed": 3,
+      "total": 3,
+      "error": null,
+      "failures": [
+        {
+          "name": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.MarkerAndOtherMissingSlot_AnswersOnlyLocationAndStillRequiresPlanApproval",
+          "message": "  Player:\r\nBuild a lumber yard then train 3 new Spearmen\r\n\r\nCommander:\r\nWhere should I build it?\r\n\r\nCommander:\r\nPlease specify the remaining detail.\r\n  Expected: not null\r\n  But was:  null\r\n"
+        },
+        {
+          "name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.GenericRequest_AdvertisesEveryStrictlyParsedSemanticFamily",
+          "message": "  executionOrder:Independent|Sequential|DependencyGraph\r\n  Expected: String containing \"executionOrder:Independent|Sequential|DependencyGraph\"\r\n  But was:  \"Translate the player's Commander request into one bounded JSON object, with no markdown or other text. You provide semantic data only, never game authority. Outcomes are Request, DynamicPlan, Clarify, Unsupported, Answer. For Request use {\"outcome\":\"Request\",\"nodes\":[one to four typed nodes]}. Every compound Request MUST also declare executionOrder as Independent, Sequential, or DependencyGraph. Independent has no dependencies; Sequential means each step waits for the previous step's actu"
+        }
+      ]
+    },
+    {
+      "label": "actualAliasRedReceipt",
+      "jobId": "e15847b44126463ba2892ffc54d1d3c2",
+      "status": "failed",
+      "mode": "EditMode",
+      "startedUnixMs": 1791882845610,
+      "finishedUnixMs": 1791882909777,
+      "summary": null,
+      "completed": 0,
+      "total": null,
+      "error": "Test job failed to initialize (tests did not start within timeout)",
+      "failures": []
+    },
+    {
+      "label": "aliasRedFinalReceipt",
+      "jobId": "bfa0932320fa4c628e062121ce48c735",
+      "status": "failed",
+      "mode": "EditMode",
+      "startedUnixMs": 1791882944248,
+      "finishedUnixMs": 1791882972792,
+      "summary": null,
+      "completed": 13,
+      "total": 13,
+      "error": null,
+      "failures": [
+        {
+          "name": "OpenEmpires.Tests.CommanderPhase5CStabilizationTests.EveryNativeUiPlural_RetrievesItsPositivelyResolvedIdentity",
+          "message": "  Men-at-Arms\r\n  Expected: collection containing \"unit:6\"\r\n  But was:  <empty>\r\n"
+        },
+        {
+          "name": "OpenEmpires.Tests.CommanderPhase5CStabilizationTests.ExactResolvedAliases_KeepCategoryAndCanonicalProviderToken(\"Archery\",\"building:ArcheryRange\",\"Building\",\"ArcheryRange\")",
+          "message": "  Exact alias resolution must be supplied, not an optional typo suggestion.\r\n  Expected: not null\r\n  But was:  null\r\n"
+        },
+        {
+          "name": "OpenEmpires.Tests.CommanderPhase5CStabilizationTests.ExactResolvedAliases_KeepCategoryAndCanonicalProviderToken(\"Spearmen\",\"unit:1\",\"Unit\",\"Spearman\")",
+          "message": "  Exact alias resolution must be supplied, not an optional typo suggestion.\r\n  Expected: not null\r\n  But was:  null\r\n"
+        },
+        {
+          "name": "OpenEmpires.Tests.CommanderPhase5CStabilizationTests.ExactResolvedAliases_KeepCategoryAndCanonicalProviderToken(\"Longbowmen\",\"unit:10\",\"Unit\",\"Longbowman\")",
+          "message": "  Exact alias resolution must be supplied, not an optional typo suggestion.\r\n  Expected: not null\r\n  But was:  null\r\n"
+        },
+        {
+          "name": "OpenEmpires.Tests.CommanderPhase5CStabilizationTests.LandmarkRewardIdentity_IsKnownForItsNativeCivilizationWithoutInventingAdapter",
+          "message": "  Expected: collection containing \"unit:16\"\r\n  But was:  < \"unit:0\", \"unit:1\", \"unit:10\", \"unit:13\", \"unit:14\", \"unit:15\", \"unit:3\", \"unit:4\", \"unit:6\", \"unit:7\"... >\r\n"
+        }
+      ]
+    },
+    {
+      "label": "beforeProducerPromptFixReceipt",
+      "jobId": "9861a302112a420eb8a322ebae45daf4",
+      "status": "failed",
+      "mode": "EditMode",
+      "startedUnixMs": 1791883335926,
+      "finishedUnixMs": 1791883354934,
+      "summary": null,
+      "completed": 13,
+      "total": 13,
+      "error": null,
+      "failures": [
+        {
+          "name": "OpenEmpires.Tests.CommanderPhase5CStabilizationTests.ProductionPrompt_KeepsCapabilityContractConsistent(\"Build 50 spearman out of 5 barracks\")",
+          "message": "  An existing producer restriction cannot require new construction.\r\n  Expected: not String containing \"produce.producers=exact new build result\"\r\n  But was:  \"Translate the player's Commander request into one bounded JSON object, with no markdown or other text. You provide semantic data only, never game authority. Outcomes are Request, DynamicPlan, Clarify, Unsupported, Answer. For Request use {\"outcome\":\"Request\",\"nodes\":[one to four typed nodes]}. Every compound Request MUST also declare executionOrder as Independent, Sequential, or DependencyGraph. Independent has no dependencies; Sequential means each step waits for the previous step's a"
+        }
+      ]
+    },
+    {
+      "label": "finalFocusedTerminal",
+      "jobId": "6146eb56d1354dcfb8e0ab467d3f9f12",
+      "status": "succeeded",
+      "mode": "EditMode",
+      "startedUnixMs": 1791883626795,
+      "finishedUnixMs": 1791883763486,
+      "summary": {
+        "total": 93,
+        "passed": 93,
+        "failed": 0,
+        "skipped": 0,
+        "durationSeconds": 106.6891417,
+        "resultState": "Passed"
+      },
+      "completed": 93,
+      "total": 93,
+      "error": null,
+      "failures": []
+    },
+    {
+      "label": "live1Receipt",
+      "jobId": "0c6665dd9f9843e4b18eabdf4c1ee0c2",
+      "status": "failed",
+      "mode": "EditMode",
+      "startedUnixMs": 1791882456371,
+      "finishedUnixMs": 1791882480814,
+      "summary": null,
+      "completed": 1,
+      "total": 1,
+      "error": null,
+      "failures": [
+        {
+          "name": "OpenEmpires.Tests.CommanderPhase5CStabilizationLiveTests.SixReportedWordings_UseRealProviderAndProductionContext",
+          "message": "  Build 3 archery; Build 50 spearman out of 5 barracks\r\n  Expected: <empty>\r\n  But was:  < \"Build 3 archery\", \"Build 50 spearman out of 5 barracks\" >\r\n"
+        }
+      ]
+    },
+    {
+      "label": "liveFollowupReceipt",
+      "jobId": "f43227bab956422eacde3edf511c19c9",
+      "status": "succeeded",
+      "mode": "EditMode",
+      "startedUnixMs": 1791883779202,
+      "finishedUnixMs": 1791883796170,
+      "summary": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0,
+        "durationSeconds": 12.1441562,
+        "resultState": "Passed"
+      },
+      "completed": 1,
+      "total": 1,
+      "error": null,
+      "failures": []
+    }
+  ]
+}

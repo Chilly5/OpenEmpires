@@ -13,6 +13,7 @@ namespace OpenEmpires
         internal int Generation { get; }
         private Func<bool> current;
         private bool claimed;
+        private CommanderActionPlanCandidate candidate;
 
         internal CommanderRequestTicket(long id, CommanderGoalManager owner, string input,
             int generation, Func<bool> current)
@@ -34,7 +35,7 @@ namespace OpenEmpires
         internal bool BindLocalContinuation(CommanderGoalManager owner, int generation,
             Func<bool> currentTurn)
         {
-            if (claimed || !ReferenceEquals(owner, Owner) || generation != Generation
+            if (claimed && !CanReplaceCancelledCandidate() || !ReferenceEquals(owner, Owner) || generation != Generation
                 || Owner.IsDisposed || !ReferenceEquals(Runtime, owner.Simulation)
                 || currentTurn == null) return false;
             try { if (!currentTurn()) return false; }
@@ -45,10 +46,20 @@ namespace OpenEmpires
 
         internal bool Claim(CommanderGoalManager owner, string input, int generation)
         {
-            if (claimed || !ReferenceEquals(owner, Owner) || generation != Generation
+            if (claimed && !CanReplaceCancelledCandidate() || !ReferenceEquals(owner, Owner) || generation != Generation
                 || input != OriginalInput || !IsCurrent()) return false;
             claimed = true;
             return true;
         }
+
+        internal void BindCandidate(CommanderActionPlanCandidate value)
+        {
+            if (!claimed || value == null || value.RequestId != Id || !ReferenceEquals(value.Owner, Owner))
+                throw new InvalidOperationException("The candidate does not belong to this request.");
+            candidate = value;
+        }
+
+        private bool CanReplaceCancelledCandidate()
+            => candidate != null && candidate.Cancelled && !candidate.IsCommitted;
     }
 }

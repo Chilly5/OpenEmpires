@@ -115,6 +115,22 @@ namespace OpenEmpires.Tests
             Assert.That(instruction, Does.Not.Contain("ALL/current-resource workers/composed side+resource+TC location unsupported"));
             Assert.That(pack.EstimatedInputTokens, Is.LessThan(CommanderSemanticRequestPack.InputByteLimit));
         }
+
+        [TestCase("Build a Lumber Yard near the woodline my villagers are working.", "mode:Worked")]
+        [TestCase("Build a Lumber Yard near the woodline right of my Town Center.", "relation:MapEast")]
+        [TestCase("Move my Spearmen to the top woodline.", "move-units")]
+        public void ComposableWoodlineUtterances_ReceiveExecutableTypedRouting(string utterance,
+            string requiredContract)
+        {
+            var request = new CommanderSemanticProviderRequest(utterance,
+                CommanderEconomyClarificationTests.Context());
+            Assert.That(CommanderSemanticRequestPack.TryBuild(request, "openai/gpt-6-luna", 4096,
+                out var pack, out string reason), Is.True, reason);
+            string instruction = (string)JObject.Parse(pack.Json)["messages"]?[0]?["content"];
+            Assert.That(instruction, Does.Contain("select-resources"));
+            Assert.That(instruction, Does.Contain("resolve-location"));
+            Assert.That(instruction, Does.Contain(requiredContract));
+        }
         [TestCase("Gather 200 Gold with three villagers from Wood.")]
         [TestCase("Build a House, then send the next five villagers from my first Town Center to gather Wood from trees.")]
         public async Task OrdinaryRequests_KeepCompleteModelPayloadBelowConservativeInputBudget(string utterance)
@@ -307,10 +323,10 @@ namespace OpenEmpires.Tests
             string contract = (string)JObject.Parse(pack.Json)["messages"]?[0]?["content"];
             foreach (CommanderSemanticNodeType type in Enum.GetValues(typeof(CommanderSemanticNodeType)))
                 Assert.That(contract, Does.Contain(type.ToString()), type.ToString());
-            foreach (string required in new[] { "count:1..20", "count:0..200", "count:1..200",
-                "count:1..50", "targetAge:Feudal|Castle|Imperial|Next", "resourceAmount?:1..1000000",
-                "MaximumQueue amount1..8", "constraints?<=4", "nodes:1..4", "message<=180",
-                "sourceKind:Any", "currentResource?", "executionOrder:Independent|Sequential|DependencyGraph" })
+            foreach (string required in new[] { "otherwise integer 1..20", "\"count\":integer 0..200", "\"count\":integer 1..200",
+                "\"count\":integer 1..50", "\"Next|Feudal|Castle|Imperial\"", "resourceAmount\":optional integer 1..1000000",
+                "MaximumQueue amount1..8", "constraints?<=4", "one to four typed nodes", "message<=180",
+                "sourceKind:Any", "\"currentResource\":", "declare executionOrder as Independent, Sequential, or DependencyGraph" })
                 Assert.That(contract, Does.Contain(required), required);
             await provider.TranslateSemanticAsync(request, CancellationToken.None);
             Assert.That(transport.Calls == 1 || provider.LastInputEstimate >= CommanderSemanticRequestPack.InputByteLimit, Is.True,
@@ -415,7 +431,7 @@ namespace OpenEmpires.Tests
             await provider.TranslateSemanticAsync(new CommanderSemanticProviderRequest("Build a House.",
                 CommanderEconomyClarificationTests.Context()), CancellationToken.None);
             Assert.That(provider.LastSemanticAttempts, Has.Count.EqualTo(1));
-            await provider.TranslateSemanticAsync(new CommanderSemanticProviderRequest(new string('\u754c', 1000),
+            await provider.TranslateSemanticAsync(new CommanderSemanticProviderRequest(new string('x', CommanderSemanticProviderRequest.MaximumPlayerMessageCharacters + 1),
                 CommanderEconomyClarificationTests.Context()), CancellationToken.None);
             Assert.That(transport.Calls, Is.EqualTo(1));
             Assert.That(provider.LastSemanticAttempts, Is.Empty);
@@ -429,7 +445,7 @@ namespace OpenEmpires.Tests
                 CommanderEconomyClarificationTests.Context()), CancellationToken.None);
             var completed = provider.LastSemanticAttempts;
             Assert.That(completed, Has.Count.EqualTo(1));
-            await provider.TranslateSemanticAsync(new CommanderSemanticProviderRequest(new string('\u754c', 1000),
+            await provider.TranslateSemanticAsync(new CommanderSemanticProviderRequest(new string('x', CommanderSemanticProviderRequest.MaximumPlayerMessageCharacters + 1),
                 CommanderEconomyClarificationTests.Context()), CancellationToken.None);
             Assert.That(completed, Has.Count.EqualTo(1), "A later request may not erase an earlier HTTP attempt record.");
             Assert.That(provider.LastSemanticAttempts, Is.Empty);

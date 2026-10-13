@@ -1,0 +1,191 @@
+{
+  "schema": "openempires-phase5c-scenario-turn@1",
+  "run_id": "e40ccbc7-473e-4b25-a5fe-020a9d128983",
+  "first_failing_stage": null,
+  "first_failure_category": null,
+  "schemaVersion": 1,
+  "caseId": "two-houses-near-town-center",
+  "requestId": "runtime:1",
+  "turnCorrelationId": "ui-turn:2",
+  "utterance": "Build two Houses near my Town Center.",
+  "turnIndex": 0,
+  "status": "observed",
+  "evidenceMode": "offline-production-chat-fixture",
+  "providerCalls": 1,
+  "httpAttempts": 0,
+  "packAccepted": true,
+  "fidelity": "matched",
+  "semanticValid": true,
+  "estimatedInputTokens": 25168,
+  "actualPromptTokens": null,
+  "actualCompletionTokens": null,
+  "actualCachedTokens": null,
+  "actualReasoningTokens": null,
+  "reportedCost": null,
+  "attemptCosts": [],
+  "packingMs": 17.471,
+  "transportMs": null,
+  "parseMs": 0.823,
+  "admissionMs": 55.25,
+  "firstNativeActionMs": 1723.513,
+  "commandCount": 2,
+  "commandTypes": [
+    "PlaceBuildingCommand",
+    "PlaceBuildingCommand"
+  ],
+  "nativeResults": [
+    "PlaceBuildingCommand:processed",
+    "PlaceBuildingCommand:processed"
+  ],
+  "taskStates": [
+    "BuildStructureGoal:Completed"
+  ],
+  "draftBefore": [],
+  "draftAfter": [],
+  "draftChanges": [],
+  "normalizedFields": [
+    {
+      "mechanic": "ResolveLocation",
+      "parameters": {
+        "anchor": "MyTownCenter",
+        "relation": "Near",
+        "clearGap": 1
+      },
+      "inputs": {},
+      "dependencies": []
+    },
+    {
+      "mechanic": "Build",
+      "parameters": {
+        "building": "building:House",
+        "count": 2
+      },
+      "inputs": {
+        "location": 0
+      },
+      "dependencies": [
+        0
+      ]
+    }
+  ],
+  "admittedFields": [
+    {
+      "type": "BuildStructureGoal",
+      "status": "Pending",
+      "originalUtterance": "Build two Houses near my Town Center.",
+      "building": "House",
+      "count": 2,
+      "anchor": null,
+      "anchorOrdinal": null,
+      "relation": null,
+      "resource": null,
+      "source": null
+    }
+  ],
+  "turnHistory": [
+    {
+      "index": 0,
+      "text": "Build two Houses near my Town Center.",
+      "requestId": "runtime:1",
+      "turnCorrelationId": "ui-turn:1",
+      "uiState": "Awaiting approval",
+      "providerCalls": 1,
+      "packAccepted": true,
+      "estimatedInputTokens": 25168,
+      "semanticValid": true,
+      "semanticOutcome": "DynamicPlan",
+      "normalizedFields": [
+        {
+          "mechanic": "ResolveLocation",
+          "parameters": {
+            "anchor": "MyTownCenter",
+            "relation": "Near",
+            "clearGap": 1
+          },
+          "inputs": {},
+          "dependencies": []
+        },
+        {
+          "mechanic": "Build",
+          "parameters": {
+            "building": "building:House",
+            "count": 2
+          },
+          "inputs": {
+            "location": 0
+          },
+          "dependencies": [
+            0
+          ]
+        }
+      ],
+      "admittedFields": [],
+      "draftBefore": [],
+      "draftAfter": [],
+      "draftChanges": [],
+      "approvalRequired": true,
+      "approved": false,
+      "commandTypes": [],
+      "taskStates": [],
+      "uiSubmitMs": 132.889,
+      "packingMs": 17.471,
+      "transportMs": null,
+      "parseMs": 0.823,
+      "admissionMs": 55.25
+    },
+    {
+      "index": 1,
+      "text": "Approve plan",
+      "origin": "offline-fixture-control",
+      "requestId": "runtime:1",
+      "turnCorrelationId": "ui-turn:2",
+      "uiState": "Accepted",
+      "providerCalls": 1,
+      "approved": true,
+      "admittedFields": [
+        {
+          "type": "BuildStructureGoal",
+          "status": "Pending",
+          "originalUtterance": "Build two Houses near my Town Center.",
+          "building": "House",
+          "count": 2,
+          "anchor": null,
+          "anchorOrdinal": null,
+          "relation": null,
+          "resource": null,
+          "source": null
+        }
+      ],
+      "taskStates": [
+        "BuildStructureGoal:Pending"
+      ],
+      "uiSubmitMs": 122.158
+    }
+  ],
+  "fogNewlyExploredCount": null,
+  "garrisonHousedCount": null,
+  "garrisonProtectedCount": null,
+  "garrisonUnaccommodatedCount": null,
+  "futureObservedCount": null,
+  "futureAssignedCount": null,
+  "humanTrainCommands": null,
+  "resourceProgress": null,
+  "gatheredFoodIncome": null,
+  "foodCompletionTick": null,
+  "foodIncomeAtCompletion": null,
+  "commanderCommandsAtFoodCompletion": null,
+  "ordinaryFoodGatherActive": null,
+  "ownedTaskFactCount": null,
+  "readOnlyProviderRequest": false,
+  "questionFactClass": null,
+  "fixtureKind": "correct-synthetic",
+  "turnText": "Build two Houses near my Town Center.",
+  "uiSubmitMs": 132.889,
+  "semanticOutcome": "DynamicPlan",
+  "approvalRequired": true,
+  "approved": true,
+  "uiState": "Accepted",
+  "approvalMode": "offline-fixture-control-not-declared-player-turn",
+  "tickMode": "accelerated-fixture",
+  "ticks": 6000
+}

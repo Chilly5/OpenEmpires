@@ -201,6 +201,7 @@ namespace OpenEmpires
 
         private void LateUpdate()
         {
+            PollDestinationPlacement();
             UpdatePresentation();
             RefreshPanelSize();
             ScanOwnedAdvisories();

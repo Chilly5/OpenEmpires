@@ -101,9 +101,13 @@ namespace OpenEmpires
                 && Has("place", "placed", "near", "beside", "by", "next", "adjacent",
                     "around", "west", "east", "left", "right", "at")
                 && HasRepeatedReferencedBuilding(search, knowledge);
-            bool repeated = sharedWorkers || repeatedPlaced || Has("split", "partition", "third");
+            bool restrictedProducers = production && Has("from", "out", "using", "in")
+                && HasRepeatedReferencedBuilding(search, knowledge);
+            bool repeated = sharedWorkers || repeatedPlaced || restrictedProducers || Has("split", "partition", "third");
             bool composedWoodline = Has("all") && Has("wood", "woodline", "trees", "tree")
                 && Has("west", "western", "left") && Has("town", "center", "tc");
+            bool resourceLocationComposition = !composedWoodline && Has("woodline", "trees", "tree")
+                && (construction || action) && Has("near", "right", "east", "top", "north", "working", "worked");
             var regularSelected = new HashSet<CommanderSemanticNodeType>(selected);
             if (sharedWorkers)
             {
@@ -128,7 +132,8 @@ namespace OpenEmpires
             string instruction = request.IsReadOnlyQuestion ? ReadOnlyRules
                 : OpenRouterCommanderProvider.SemanticInstruction
                     + OpenRouterCommanderProvider.SemanticFidelityCheck
-                    + " Phase 5C construction override: ordinary placed BuildStructure count is exactly 1; any requested repeated placed construction uses the registered DynamicPlan location/build graph, never a partial or unplaced Request. This overrides any older general BuildStructure count range. "
+                    + " Phase 5C construction: unplaced BuildStructure count supports 1..20 under deterministic default placement; a placed Request count is exactly 1. Repeated explicitly placed construction uses DynamicPlan. Never reject an ordinary counted build because no placement was requested. Build followed by a unit name means production; build followed by a building name means construction. Archery in building context means Archery Range. "
+                    + " Context capabilities and requested knowledge rows define known content and supported routes. Knowledge rows are column-aligned arrays with explicit contentExists, availableForCivilization, commanderExecutable and capabilitySupported where present. Current age, resources, producer counts and population are execution readiness, not unknown content. Omitted compact rows do not prove unavailability. Never ask players to confirm canonical IDs or game-data availability. "
                     + " Phase 5C clarification extension: " + ReplyRules;
             if (!request.IsReadOnlyQuestion)
             {
@@ -143,8 +148,23 @@ namespace OpenEmpires
                     instruction += " For this known registered shared-worker or repeated-placed composition, use DynamicPlan ONLY for those effects; do not emit a partial Request. ";
             }
             if (repeated && !request.IsReadOnlyQuestion)
-                instruction += DynamicVocabulary(sharedWorkers, repeatedPlaced, selected);
+            {
+                instruction += DynamicVocabulary(sharedWorkers, repeatedPlaced, selected, knowledge);
+                if (restrictedProducers)
+                {
+                    instruction += " For production out of/from/using a stated number of producers, use select-structures{building:canonical,count:requested producer count} -> StructureSet and produce inputs producers referencing that selection. This selects existing eligible owned producers, not new buildings. Only an explicit request to build producers adds a build node. If existing-versus-new meaning is genuinely ambiguous, ask once and retain the full draft. Preserve TargetTotal versus explicitly New. ";
+                    instruction += ExistingProducerExample(knowledge);
+                }
+            }
             else if (composedWoodline && !request.IsReadOnlyQuestion) instruction += ComposedWoodlineVocabulary;
+            else if (resourceLocationComposition && !request.IsReadOnlyQuestion)
+                instruction += ResourceLocationVocabulary;
+            if (!request.IsReadOnlyQuestion)
+            {
+                instruction += " FINAL route check: resolvedNames rows are exact shared catalog matches, not typo suggestions. Use their category and canonicalToken; do not ask the player to confirm a canonical ID or an exactly resolved alias. A Building row belongs in BuildStructure.structure or build.parameters.building; a Unit row belongs in EnsureUnitCount.unit or produce.parameters.unit. For example Archery resolves to Building/ArcheryRange, never an Archer unit. ";
+                if (repeatedPlaced && Has("around"))
+                    instruction += " The requested around relation is mandatory: connect resolve-location.inputs.structures to the NEW anchor build result, then the repeated build.inputs.location to that resolver, with all matching dependsOn references. Two independent build nodes DROP the requested around relation and are not a complete answer. Never substitute an existing anchor. ";
+            }
             bool optionalStripped = false;
             while (true)
             {
@@ -203,6 +223,24 @@ namespace OpenEmpires
                     RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)) return true;
             }
             return false;
+        }
+
+        private static string ExistingProducerExample(JObject knowledge)
+        {
+            var named = new HashSet<string>((knowledge?["resolvedNames"] as JArray ?? new JArray()).OfType<JObject>()
+                .Where(row => (string)row["category"] == "Unit").Select(row => (string)row["id"]), StringComparer.Ordinal);
+            var unit = (knowledge?["units"] as JArray)?.OfType<JObject>().FirstOrDefault(row => named.Contains((string)row["id"])
+                && (bool?)row["availableForCivilization"] == true && (bool?)row["commanderExecutable"] == true
+                && row["producer"]?.Type == JTokenType.String);
+            if (unit == null) return string.Empty;
+            var example = new JObject { ["outcome"] = "DynamicPlan", ["version"] = 1,
+                ["nodes"] = new JArray(new JObject { ["id"] = "sources", ["mechanic"] = "select-structures",
+                    ["parameters"] = new JObject { ["building"] = "building:" + (string)unit["producer"], ["count"] = 5 },
+                    ["inputs"] = new JObject(), ["dependsOn"] = new JArray() },
+                new JObject { ["id"] = "units", ["mechanic"] = "produce",
+                    ["parameters"] = new JObject { ["unit"] = (string)unit["id"], ["count"] = 50, ["quantityMode"] = "TargetTotal" },
+                    ["inputs"] = new JObject { ["producers"] = "sources" }, ["dependsOn"] = new JArray("sources") }) };
+            return " Complete existing-producer JSON example from this request's canonical catalog (adapt both counts and quantityMode to the actual player meaning; never add construction): " + example.ToString(Formatting.None);
         }
 
         private static bool StripOptionalHints(JObject knowledge)
@@ -270,7 +308,7 @@ namespace OpenEmpires
         private const string RequestRules =
             "Request{outcome:Request,nodes:1..4,executionOrder:Independent|Sequential|DependencyGraph}; dependsOn:[prior0-based]; resultFromNode=exact-new,producerFromNode=explicit-new. ";
         private const string ReplyRules =
-            "Clarify{outcome:Clarify,message<=180,pending:{executionOrder,nodes:partial1..4},missingSlots:[{node,path,type:Confirmation|Count|SourceKind|CanonicalName,alternatives:[canonical]}]};retain known leaves/edges/refs,omit only missing;Confirmation retains offer. Worker pending+missingFields valid;not approval. Answer/Unsupported{outcome,message<=180};no nodes. ";
+            "Clarify{outcome:Clarify,message<=180,pending:{executionOrder,nodes:partial1..4},missingSlots:[{node,path,type:Confirmation|Count|SourceKind|CanonicalName|Location,alternatives:[canonical]}]};retain known leaves/edges/refs,omit only missing;Confirmation retains offer. For missing movement location use Location path location alternatives PlayerMarker|PlayerBase; for construction use Location path placement.anchor alternatives PlayerMarker|MyTownCenter and retain placement.relation Near. A world marker fills only that missing location locally. Prefer ordinary deterministic placement when unspecified and safe; do not ask merely because placement was omitted. Worker pending+missingFields valid;not approval. Answer/Unsupported{outcome,message<=180};no nodes. ";
         private const string CommonRules = BaseRules + RequestRules + ReplyRules;
 
         private static string Vocabulary(HashSet<CommanderSemanticNodeType> selected)
@@ -327,11 +365,11 @@ namespace OpenEmpires
         }
 
         private static string DynamicVocabulary(bool sharedWorkers, bool repeatedPlaced,
-            HashSet<CommanderSemanticNodeType> selected)
+            HashSet<CommanderSemanticNodeType> selected, JObject knowledge)
         {
             var text = new StringBuilder("Shared workers/placed repeats: DynamicPlan{outcome:DynamicPlan,version:1,nodes:[{id,mechanic,parameters:{},inputs:{},dependsOn:[]}]}; ");
             if (sharedWorkers) text.Append("One worker selection, disjoint partitions; ");
-            if (selected.Contains(CommanderSemanticNodeType.EnsureUnitCount))
+            if ((sharedWorkers || repeatedPlaced) && selected.Contains(CommanderSemanticNodeType.EnsureUnitCount))
                 text.Append("produce.producers=exact new build result; ");
             text.Append("Registry p=parameters,in=inputs,?optional; typed input refs also in dependsOn. ");
             // This is contract retrieval, not a capability grant: every advertised primitive
@@ -391,16 +429,35 @@ namespace OpenEmpires
                 foreach (var input in primitive.Inputs) text.Append(input.Role).Append(':').Append(input.Accepts).Append(input.Required ? ";" : "?;");
                 text.Append("] ->").Append(primitive.Result).Append('.');
             }
-            return text.Append(" Types: Count=int1..200 (build<=20); Offset=int0..200; ClearGapTiles=int1..20 (Near=1); UnitId/BuildingId=context canonical IDs; Resource/SourceKind=compatible values above; WorkerState=Any|Idle|Gathering; WorkerCountMode=AllMatching; Anchor=MyTownCenter|MyBarracks; Relation=Near|MapWest|MapEast; QuantityMode=New|TargetTotal. select-workers: count XOR countMode; AllMatching needs non-Any state and cannot partition; currentResource requires Gathering. resolve-location: exactly one anchor/structures/resources; resource+sourceKind together only for MyTownCenter+MapWest. Max12 nodes,4 refs/node,depth5,total non-partition counts200. New=exact new; TargetTotal=existing+new. ").ToString();
+            text.Append(" Types: Count=int1..200 (build<=20); Offset=int0..200; ClearGapTiles=int1..20 (Near=1); UnitId/BuildingId=context canonical IDs; Resource/SourceKind=compatible values above; WorkerState=Any|Idle|Gathering; WorkerCountMode=AllMatching; Anchor=MyTownCenter|MyBarracks; Relation=Near|MapWest|MapEast; QuantityMode=New|TargetTotal. select-workers: count XOR countMode; AllMatching needs non-Any state and cannot partition; currentResource requires Gathering. resolve-location: exactly one anchor/structures/resources; resource+sourceKind together only for MyTownCenter+MapWest. Max12 nodes,4 refs/node,depth5,total non-partition counts200. New=exact new; TargetTotal=existing+new. ");
+            if (repeatedPlaced && HasCanonicalBuilding(knowledge, "building:Mill")
+                && HasCanonicalBuilding(knowledge, "building:Farm"))
+                text.Append(" For repeated buildings around an exact newly requested building, use the first build result as the resolve-location structures input, never select an existing structure. Example: ")
+                    .Append("{\"outcome\":\"DynamicPlan\",\"version\":1,\"nodes\":[")
+                    .Append("{\"id\":\"mill\",\"mechanic\":\"build\",\"parameters\":{\"building\":\"building:Mill\",\"count\":1},\"inputs\":{},\"dependsOn\":[]},")
+                    .Append("{\"id\":\"site\",\"mechanic\":\"resolve-location\",\"parameters\":{\"relation\":\"Near\",\"clearGapTiles\":1},\"inputs\":{\"structures\":\"mill\"},\"dependsOn\":[\"mill\"]},")
+                    .Append("{\"id\":\"farms\",\"mechanic\":\"build\",\"parameters\":{\"building\":\"building:Farm\",\"count\":8},\"inputs\":{\"location\":\"site\"},\"dependsOn\":[\"site\"]}]}. ")
+                    .Append("The first count is one exact new anchor; the second count is the full repeated request. Adjust canonical buildings and counts only to match the player's request. ");
+            return text.ToString();
+        }
+
+        private static bool HasCanonicalBuilding(JObject knowledge, string canonicalId)
+        {
+            return (knowledge?["buildings"] as JArray)?.OfType<JObject>()
+                .Any(row => string.Equals((string)row["id"], canonicalId, StringComparison.Ordinal)) == true;
         }
 
         private const string ComposedWoodlineVocabulary =
             "For all current-Wood villagers and west-of-owned-TC Wood/Tree: DynamicPlan version1 with select-workers{state:Gathering,currentResource:Wood,countMode:AllMatching,omit count} -> WorkerSet; resolve-location{anchor:MyTownCenter,relation:MapWest,clearGapTiles:1,resource:Wood,sourceKind:Tree} -> LocationIntent. For explicit move, move-workers inputs workers:select-workers,location:resolve-location -> native Move (not Gather); for explicit gather, allocate-workers{resource:Wood,sourceKind:Tree} with same inputs -> native Gather. Include dependsOn refs; never replace ALL with count50 or silently change Move to Gather. Game binds owned workers/source/anchor and refuses overflow. No coordinates/IDs. ";
 
+        private const string ResourceLocationVocabulary =
+            "Composable woodline location override: when the player specifies a worked woodline, a side of their Town Center, or a woodline relative to action units, use only the registered DynamicPlan graph for that action, not a Request that drops the location criteria. DynamicPlan{outcome:DynamicPlan,version:1,nodes:[{id,mechanic,parameters:{},inputs:{},dependsOn:[]}]}. Each typed input reference must also occur in dependsOn. select-resources p{resource:Wood,sourceKind:Tree,mode:Visible|Worked,count:1,anchor?:MyTownCenter,relation?:MapEast|MapWest|MapNorth|MapSouth} in{units?:UnitSet,workers?:WorkerSet} -> ResourceSet. For 'my villagers are working', mode:Worked is mandatory; never replace with Visible. For 'right of my Town Center', anchor:MyTownCenter and relation:MapEast are mandatory; game filters the side before choosing. For 'top woodline' with selected Spearmen, omit anchor, set relation:MapNorth and input units from select-units; map north is the game's top. select-units p{kind:Spearman,count?:1..50,countMode?:AllMatching} -> UnitSet; use countMode:AllMatching without count for unnumbered 'my Spearmen', and count for an explicit number. Select units once and retain the selection for the move. resolve-location p{relation:Near,clearGapTiles:1} in{resources:ResourceSet} -> LocationIntent. For construction, build p{building:canonical,count:1} in{location:LocationIntent}; for movement, move-units in{units:UnitSet,location:LocationIntent} -> native Move with legal resource-side formation arrival, not Gather. All actor identities, resource IDs, visibility and paths are chosen by the game, never provider coordinates. If no suitable visible resource exists, preserve the explicit restriction and ask for a marker. ";
+
         private static JObject CompactContext(JObject source, bool includeStrategy)
         {
             var result = new JObject();
-            foreach (string key in new[] { "age", "civilization", "resources", "population", "populationCap", "workerCounts", "tacticalStatus" })
+            foreach (string key in new[] { "age", "civilization", "resources", "population", "populationCap", "workerCounts", "tacticalStatus",
+                "unitCapabilities", "structureCapabilities", "resourceCapabilities", "actionCapabilities", "selectorCapabilities" })
                 if (source[key] != null) result[key] = source[key].DeepClone();
             if (source["knowledge"] is JObject knowledge)
             {

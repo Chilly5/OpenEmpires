@@ -165,6 +165,7 @@ namespace OpenEmpires
             RuntimeOwner=null;RequestAuthority=null;dependencies.Clear();PreparationAllocators.Clear();FrozenWorkerIds=null;
             if(this is CommanderCapabilityGoal capability)
             {capability.TargetBinding=null;capability.ResultSourceGoal=null;capability.IssuedCommand=null;
+                capability.DynamicMoveUnitIds=null;
                 capability.NativeMovementSlots=null;capability.NativeMovementEndpoints=null;
                 capability.NativeMovementProcessed=null;capability.NativeMovementResults=null;
                 capability.NativeMovementScatter=null;}
@@ -341,6 +342,8 @@ namespace OpenEmpires
         internal int GarrisonLastProgressSimulationTick { get; set; } = -1;
         internal int[] UngarrisonInitialIds { get; set; }
         internal CommanderBoundLocation DynamicMoveLocation { get; set; }
+        internal IReadOnlyList<int> DynamicMoveUnitIds { get; set; }
+        internal CommanderBoundLocation MarkerMoveLocation { get; set; }
         internal int DynamicMoveResourceId { get; set; } = -1;
         internal int DiscoveryScoutId { get; set; } = -1;
         internal HashSet<int> DiscoveryVisitedWaypoints { get; } = new HashSet<int>();

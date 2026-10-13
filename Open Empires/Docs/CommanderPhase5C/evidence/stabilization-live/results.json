@@ -1,0 +1,191 @@
+[
+  {
+    "utterance": "Build house",
+    "stage": "compiled-preview-only",
+    "owner": 0,
+    "age": 3,
+    "civilization": "English",
+    "valid": true,
+    "outcome": "Request",
+    "explanation": "",
+    "httpStatus": 200,
+    "actualPromptTokens": 4772,
+    "inputUtf8Estimate": 23681,
+    "attempts": [
+      {
+        "kind": "initial",
+        "stage": "semantic-valid",
+        "httpStatus": 200,
+        "actualPromptTokens": 4772,
+        "elapsedMs": 4144
+      }
+    ],
+    "nodes": [
+      {
+        "type": "BuildStructure",
+        "unitType": null,
+        "buildingType": "House",
+        "count": 1,
+        "quantityMode": "TargetTotal",
+        "producerFromNode": null,
+        "dependsOn": []
+      }
+    ],
+    "dynamicNodes": [],
+    "compiled": true,
+    "compileReason": ""
+  },
+  {
+    "utterance": "Can my civilization train Longbowmen?",
+    "stage": "read-only-answer",
+    "owner": 0,
+    "age": 3,
+    "civilization": "English",
+    "valid": true,
+    "outcome": "Answer",
+    "explanation": "Yes. Longbowmen are available to your civilization, but they require an Archery Range and are age 1; the listed Archery Range requires age 2.",
+    "httpStatus": 200,
+    "actualPromptTokens": 631,
+    "inputUtf8Estimate": 2716,
+    "attempts": [
+      {
+        "kind": "initial",
+        "stage": "semantic-valid",
+        "httpStatus": 200,
+        "actualPromptTokens": 631,
+        "elapsedMs": 1918
+      }
+    ],
+    "nodes": [],
+    "dynamicNodes": []
+  },
+  {
+    "utterance": "Build 3 archery",
+    "stage": "meaning-not-executable",
+    "owner": 0,
+    "age": 3,
+    "civilization": "English",
+    "valid": true,
+    "outcome": "Clarify",
+    "explanation": "Which canonical building do you want to build?",
+    "httpStatus": 200,
+    "actualPromptTokens": 4779,
+    "inputUtf8Estimate": 23701,
+    "attempts": [
+      {
+        "kind": "initial",
+        "stage": "semantic-valid",
+        "httpStatus": 200,
+        "actualPromptTokens": 4779,
+        "elapsedMs": 3144
+      }
+    ],
+    "nodes": [],
+    "dynamicNodes": []
+  },
+  {
+    "utterance": "Build 3 stables",
+    "stage": "compiled-preview-only",
+    "owner": 0,
+    "age": 3,
+    "civilization": "English",
+    "valid": true,
+    "outcome": "Request",
+    "explanation": "",
+    "httpStatus": 200,
+    "actualPromptTokens": 4777,
+    "inputUtf8Estimate": 23690,
+    "attempts": [
+      {
+        "kind": "initial",
+        "stage": "semantic-valid",
+        "httpStatus": 200,
+        "actualPromptTokens": 4777,
+        "elapsedMs": 2275
+      }
+    ],
+    "nodes": [
+      {
+        "type": "BuildStructure",
+        "unitType": null,
+        "buildingType": "Stables",
+        "count": 3,
+        "quantityMode": "TargetTotal",
+        "producerFromNode": null,
+        "dependsOn": []
+      }
+    ],
+    "dynamicNodes": [],
+    "compiled": true,
+    "compileReason": ""
+  },
+  {
+    "utterance": "Build 50 spearman out of 5 barracks",
+    "stage": "meaning-not-executable",
+    "owner": 0,
+    "age": 3,
+    "civilization": "English",
+    "valid": false,
+    "outcome": "Unsupported",
+    "explanation": "Commander AI returned an invalid semantic response; no order was submitted.",
+    "httpStatus": 200,
+    "actualPromptTokens": 5527,
+    "inputUtf8Estimate": 26589,
+    "attempts": [
+      {
+        "kind": "initial",
+        "stage": "schema-invalid",
+        "httpStatus": 200,
+        "actualPromptTokens": 5527,
+        "elapsedMs": 3574
+      }
+    ],
+    "nodes": [],
+    "dynamicNodes": []
+  },
+  {
+    "utterance": "Build a Mill and 8 Farms around it",
+    "stage": "compiled-preview-only",
+    "owner": 0,
+    "age": 3,
+    "civilization": "English",
+    "valid": true,
+    "outcome": "DynamicPlan",
+    "explanation": "Action plan requires validation and player confirmation.",
+    "httpStatus": 200,
+    "actualPromptTokens": 5385,
+    "inputUtf8Estimate": 26133,
+    "attempts": [
+      {
+        "kind": "initial",
+        "stage": "semantic-valid",
+        "httpStatus": 200,
+        "actualPromptTokens": 5385,
+        "elapsedMs": 1870
+      }
+    ],
+    "nodes": [],
+    "dynamicNodes": [
+      {
+        "mechanic": "build",
+        "parameters": {
+          "building": "building:Mill",
+          "count": 1
+        },
+        "inputs": {},
+        "dependsOn": []
+      },
+      {
+        "mechanic": "build",
+        "parameters": {
+          "building": "building:Farm",
+          "count": 8
+        },
+        "inputs": {},
+        "dependsOn": []
+      }
+    ],
+    "compiled": true,
+    "compileReason": ""
+  }
+]

@@ -109,6 +109,7 @@ namespace OpenEmpires
 
         private bool ClaimPresentationAction()
         {
+            if (OwnsDestinationInput) return false;
             // Only physical UI callbacks use this gate. Programmatic text APIs retain
             // their own request lease. One click/Enter cannot submit and approve in a frame.
             if (lastPresentationActionFrame == Time.frameCount) return false;
@@ -456,6 +457,12 @@ namespace OpenEmpires
             PanelElement(CompactButton(settingsMenu.transform,"CloseSettings","Close",CloseSettingsMenu).gameObject,32);
             settingsMenu.SetActive(false);
             compactStatus = Text("Status",compactCommander.transform,"Preparing Commander…",12,TextAlignmentOptions.Left);
+            var setDestination = CompactButton(compactCommander.transform,"SetDestination","Set destination",BeginDestinationPlacement);
+            var clearDestination = CompactButton(compactCommander.transform,"ClearDestination","Clear marker",ClearDestinationMarker);
+            PanelRow("Destination",compactCommander.transform,setDestination.gameObject,clearDestination.gameObject);
+            var expandedSet = CompactButton(commanderPanel,"SetDestination","Set destination",BeginDestinationPlacement);
+            var expandedClear = CompactButton(commanderPanel,"ClearDestination","Clear marker",ClearDestinationMarker);
+            PanelRow("Destination",commanderPanel,expandedSet.gameObject,expandedClear.gameObject);
             compactStatus.richText = false; PanelElement(compactStatus.gameObject,28);
             BuildTaskBoardUI();
             BuildVoiceSetupUI();

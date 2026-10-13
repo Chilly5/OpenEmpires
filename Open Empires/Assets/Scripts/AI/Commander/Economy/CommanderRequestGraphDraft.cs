@@ -454,6 +454,11 @@ namespace OpenEmpires
             else
             {
                 string canonical = slot.Type == "SourceKind" ? SourceAlias(whole) : whole;
+                if (slot.Type == "Location")
+                    canonical = whole == "my town center" || whole == "near my town center" || whole == "my tc"
+                        ? (slot.Path == "location" ? "PlayerBase" : "MyTownCenter")
+                        : whole == "my marker" || whole == "at my marker" || whole == "i placed a marker"
+                            ? "PlayerMarker" : whole;
                 foreach (var offered in slot.Alternatives)
                     if (string.Equals((string)offered, canonical, StringComparison.OrdinalIgnoreCase)) { chosen = offered; break; }
             }
@@ -488,6 +493,7 @@ namespace OpenEmpires
         {
             if (type == "Confirmation") return path == "structure" || path == "unit" || path == "producer";
             if (type == "Count") return path == "count";
+            if (type == "Location") return path == "location" || path == "placement.anchor";
             if (type == "SourceKind") return path == "sourceKind" || path == "destination.sourceKind" || path == "placement.sourceKind";
             if (type == "CanonicalName") return path == "structure" || path == "unit" || path == "producer"
                 || path == "technology" || path == "resource" || path == "destination.resource" || path == "placement.resource";

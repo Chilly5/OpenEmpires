@@ -18,6 +18,7 @@ namespace OpenEmpires
         private readonly Func<bool> isCurrentRequest;
         private bool approved;
         private bool committed;
+        internal bool IsCommitted => committed;
         private IReadOnlyList<CommanderIntent> trustedTypedRoots;
         private string knownIntentEvidence;
         public string AuthorizationEvidence { get; private set; } = "None";
@@ -29,6 +30,9 @@ namespace OpenEmpires
         public string OriginalInput { get; }
         public string Preview { get; }
         public bool Cancelled { get; private set; }
+        internal bool UsesPlayerMarker { get; }
+        internal int MarkerTileX { get; }
+        internal int MarkerTileZ { get; }
 
         internal CommanderActionPlanCandidate(long requestId, CommanderGoalManager owner,
             CommanderSemanticResult interpretation, CommanderSemanticGraphPlan graph,
@@ -47,6 +51,20 @@ namespace OpenEmpires
             this.strategicSource = strategicSource;
             this.isCurrentRequest = isCurrentRequest;
             FutureProducerBindings = futureProducerBindings ?? new Dictionary<int, BuildingData>();
+            UsesPlayerMarker = graph.Nodes.Any(node => node.Intent is CapabilityActionIntent action
+                    && action.LocationSelector.Kind == CommanderLocationSelectorKind.PlayerMarker)
+                || graph.Nodes.Any(node => node.Intent is BuildStructureIntent build
+                    && build.PlacementAnchorSelector == CommanderSemanticAnchorSelector.PlayerMarker)
+                || graph.DynamicProgram?.Nodes.Any(node => node.Primitive.Mechanic == CommanderDynamicMechanic.ResolveLocation
+                    && node.Parameters.TryGetValue("anchor", out object anchor)
+                    && (string)anchor == "PlayerMarker") == true;
+            if (UsesPlayerMarker)
+            {
+                if (!owner.TryGetPlayerMarkerSnapshot(out int markerX, out int markerZ))
+                    throw new ArgumentException("Where? Place a marker or describe the location.");
+                MarkerTileX = markerX;
+                MarkerTileZ = markerZ;
+            }
             strategicRevision = StrategyRevision(strategicSource);
             var unitNames = new Dictionary<int, string>();
             foreach (var node in graph.Nodes)
@@ -67,6 +85,7 @@ namespace OpenEmpires
                 || generation != Generation || !ReferenceEquals(currentStrategicSource, strategicSource)
                 || StrategyRevision(strategicSource) != strategicRevision
                 || !Owner.AreFutureProducerBindingsCurrent(Graph, FutureProducerBindings)) return false;
+            if (!IsMarkerCurrent()) return false;
             if (!Owner.TryCompileActionPlan(Interpretation, out var current, out _)
                 || !CommanderScopeEquivalence.SameGraph(current, Graph)) return false;
             // These exact intents are read-only typed values; re-admission above prevents
@@ -86,6 +105,7 @@ namespace OpenEmpires
                 && ReferenceEquals(owner, Owner) && ReferenceEquals(graph, Graph)
                 && ReferenceEquals(Runtime, owner.Simulation)
                 && Owner.AreFutureProducerBindingsCurrent(Graph, FutureProducerBindings)
+                && IsMarkerCurrent()
                 && StrategyRevision(strategicSource) == strategicRevision
                 && Owner.TryCompileActionPlan(Interpretation, out var current, out _)
                 && CommanderScopeEquivalence.SameGraph(current, Graph);
@@ -123,6 +143,13 @@ namespace OpenEmpires
             catch (Exception) { return false; }
         }
 
+        private bool IsMarkerCurrent()
+        {
+            if (!UsesPlayerMarker) return true;
+            return Owner.TryGetPlayerMarkerSnapshot(out int x, out int z)
+                && x == MarkerTileX && z == MarkerTileZ;
+        }
+
         private static string StrategyRevision(StrategicPipeline pipeline)
         {
             if (pipeline == null) return "none";
@@ -156,6 +183,8 @@ namespace OpenEmpires
                 text.Append(node.Index + 1).Append(". ").Append(
                     dynamicSource?.Primitive.Mechanic == CommanderDynamicMechanic.MoveWorkers
                         ? "Move the full frozen selected villager set to the visible resource-side woodline using native formation travel; no gather order"
+                        : dynamicSource?.Primitive.Mechanic == CommanderDynamicMechanic.MoveUnits
+                            ? "Move the exact selected owned units to the visible resource-side destination using native formation travel"
                         : Describe(node.Intent, canonicalUnitName,resultBuildingName));
                 if (node.Intent is EnsureUnitCountIntent units && !units.NewProductionCount.HasValue)
                     foreach (var quote in graph.ProductionExpectations)

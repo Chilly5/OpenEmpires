@@ -1,5 +1,64 @@
 # OpenEmpires AI Commander — Remaining Phases Handoff
 
+## Latest: Phase 5C stabilization implemented — ready for verification — 2026-10-13
+
+The bounded stabilization repair is implemented in the existing dirty authoritative
+checkout (unit_models_and_voice_control, HEAD 871a42ef). Final relevant EditMode/
+native gate passed 93/93; corrected real-provider follow-up passed its three
+wordings; actual SampleScene marker/approval/Play Again UI test passed 1/1 using
+synthetic Input System mouse events and the production terrain callback.
+Catalog producers, exact categories/UI plurals/reward availability, typed Location
+drafts, original request correlation, ordinary repeated builds, existing/new
+producer guidance and worked-woodline defaults were repaired. This is NOT Phase
+5B/5C acceptance. See [stabilization report](Docs/CommanderPhase5C/stabilization-report.md)
+for exact failures, passing jobs, changed files, source identity and proof limits.
+Paid allowance preserved: 24/200 consumed (nine calls this pass, no repairs).
+Physical/locked-cursor input, real-provider UI-to-native completion on these final
+wordings, fresh Windows/Web package certification and four separately reported
+voice-presentation assertions remain verification/follow-up gates. No commit,
+reset/clean/push, new build, voice-engine work, multiplayer or next phase.
+Next: one short actual English Commander Lumber Yard/marker completion check,
+with one request and no duplicate task/build after another marker event.
+Earlier timed-stop entries below describe previous passes, not this new authorized
+90-minute stabilization brief. Preserve their historical evidence.
+
+## Latest: final timed pass PARTIAL — 2026-10-13
+
+Corrected natural-production marker/worked-Gold/human-override checks passed 3/3.
+Bounded textual Town Center/worked-resource continuation preserves complete
+ten-new-unit graph and uses zero additional interpretation calls (focused 1/1).
+Actual Editor smoke could not inject a recognized mouse press; no marker visual
+or physical click/selection-consumption success claimed. Need a human/working
+input check plus remaining original gates in the latest targeted report. No paid
+calls/builds/full regression. Stop after the approved final 30-minute window;
+do not start another pass or phase automatically.
+
+## Latest: targeted extension PARTIAL — 2026-10-13
+
+Marker UI/local parsed-request continuation and backend snapshots/result movement,
+all-Spearmen/top-woodline path, cluster ranking and provider vocabulary are source-
+implemented. Five focused UI/contract cases passed. Final natural-production
+parity rerun is pending after correcting a NUnit Count assertion; physical UI/
+world-click smoke and retained textual Location clarification remain incomplete.
+See the latest section of the existing targeted-fix-partial-report.md. Do not
+infer acceptance from historical tests below. No paid calls or builds were run.
+The approved extension is limited to 60 minutes; stop with this precise partial
+handoff rather than extending again without the player's permission.
+
+## Latest: Phase5C TARGETED FIX PARTIAL — 2026-10-12
+
+The new brief is partially implemented, NOT fully accepted. Construction/location
+fixtures passed 12/12 (including native eight-Farm completion); restart passed 1/1
+with two scene loads; Unsupported-status passed 1/1 after showing Rejected.
+Marker UI/local clarification/approval consumption, exact new-unit destination
+parity, full Spearmen/top-woodline movement and remaining native/UI checks are still
+pending. No final aggregate regression, paid calls, builds or screenshot smoke. See
+[targeted partial report](Docs/CommanderPhase5C/targeted-fix-partial-report.md)
+for exact jobs, proof boundaries, changed files and the six-item resume checklist.
+The prior closeout below describes earlier work, not acceptance of this new scope.
+Resume only these targeted items; Windows/Web builds and broad regression remain
+deferred. Do not begin another phase.
+
 ## Current: Phase5C PARTIAL HANDOFF — 2026-10-12
 
 User explicitly approved closing after the command fix and focused checks, with

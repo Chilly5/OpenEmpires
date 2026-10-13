@@ -30,7 +30,7 @@ namespace OpenEmpires
         private static string Relation(string value)
             => value=="MapWest"?"map-west (left) of":value=="MapEast"?"map-east (right) of":value=="Near"?"Near":throw new ArgumentException("Unsupported placement relation.");
         private static string Anchor(string value)
-            => value=="MyTownCenter"?"your Town Center":value=="MyBarracks"?"your Barracks":value=="WorkedResource"?"your worked resource":value=="VisibleResource"?"a visible resource (need not be worked)":throw new ArgumentException("Unsupported placement anchor.");
+            => value=="MyTownCenter"?"your Town Center":value=="MyBarracks"?"your Barracks":value=="WorkedResource"?"your worked resource":value=="VisibleResource"?"a visible resource (need not be worked)":value=="PlayerMarker"?"your placed destination marker":throw new ArgumentException("Unsupported placement anchor.");
         private static string UnitName(string canonicalId)
             => KeybindManager.GetUnitTypeDisplayName(int.Parse(canonicalId.Substring("unit:".Length),CultureInfo.InvariantCulture));
         private static string BuildingName(string canonicalId)
@@ -58,6 +58,7 @@ namespace OpenEmpires
                 case CommanderLocationSelectorKind.VisibleResource:return "a visible "+selector.ResourceType+" resource point";
                 case CommanderLocationSelectorKind.VisibleEnemy:return "a currently visible enemy target";
                 case CommanderLocationSelectorKind.RelativeToSelectedUnits:return "the center of the selected units";
+                case CommanderLocationSelectorKind.PlayerMarker:return "your placed destination marker";
                 default:throw new ArgumentException("Unsupported action location.");
             }
         }
@@ -150,7 +151,7 @@ namespace OpenEmpires
                         int first=node.Parameter<int>("offset")+1,last=first+node.Parameter<int>("count")-1;
                         description="Use "+(first==last?"villager "+first:"villagers "+first+"–"+last)+" from "+Label(graph,node.Inputs["workers"])+" as a fixed group";break;
                     case CommanderDynamicMechanic.SelectUnits:
-                        description="Choose "+node.Parameter<int>("count")+" visible owned "+(node.Parameters.TryGetValue("unit",out object unit)?UnitName((string)unit):UnitKind(node.Parameter<string>("kind")))+" once";break;
+                        description="Choose "+(node.Parameters.ContainsKey("countMode")?"all matching":node.Parameter<int>("count").ToString())+" visible owned "+(node.Parameters.TryGetValue("unit",out object unit)?UnitName((string)unit):UnitKind(node.Parameter<string>("kind")))+" once";break;
                     case CommanderDynamicMechanic.SelectStructures:
                         description="Choose "+node.Parameter<int>("count")+" visible completed owned "+BuildingName(node.Parameter<string>("building"))+" once";break;
                     case CommanderDynamicMechanic.SelectResources:
@@ -167,6 +168,7 @@ namespace OpenEmpires
                     case CommanderDynamicMechanic.Build:
                     case CommanderDynamicMechanic.AllocateWorkers:
                     case CommanderDynamicMechanic.MoveWorkers:
+                    case CommanderDynamicMechanic.MoveUnits:
                     case CommanderDynamicMechanic.Produce:continue; // Fully disclosed by effect lines and input bindings.
                     default:throw new ArgumentException("Unsupported preview selection.");
                 }

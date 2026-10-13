@@ -127,7 +127,7 @@ namespace OpenEmpires
                 ["selectorCapabilities"] = new JObject
                 {
                     ["units"] = new JArray("Military", "Scout", "Villagers", "Spearman", "Archer", "Knight", "DamagedMilitary"),
-                    ["locations"] = new JArray("PlayerBase", "WorkedResource", "VisibleResource", "VisibleEnemy", "RelativeToSelectedUnits"),
+                    ["locations"] = new JArray("PlayerBase", "WorkedResource", "VisibleResource", "VisibleEnemy", "RelativeToSelectedUnits", "PlayerMarker"),
                     ["constructionAnchors"] = new JArray("MyTownCenter", "MyBarracks", "WorkedResource", "VisibleResource"),
                     ["targets"] = new JObject {
                         ["UnitType"] = new JArray("Villager", "Spearman", "Archer", "Scout", "Knight"),

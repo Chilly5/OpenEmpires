@@ -9,6 +9,7 @@ namespace OpenEmpires
 
         private bool HandleActionPlanControl(string message)
         {
+            if (OwnsDestinationInput) return true;
             string control = NormalizeWholeForm(message);
             bool approve = control == "approve plan" || control == "confirm plan"
                 || pendingActionPlan != null && control == "yes";
@@ -36,6 +37,11 @@ namespace OpenEmpires
             }
             if (cancel)
             {
+                if (pendingClarification?.RequestId == pendingActionPlan.RequestId) pendingClarification = null;
+                retainedLocationResult = null;
+                retainedLocationLease = null;
+                retainedLocationTicket = null;
+                retainedLocationPending = null;
                 ClearActionPlanPreview();
                 SetLatestRequestState("Cancelled", "Action plan dismissed; nothing started.");
                 AppendLine("Commander", "Action plan dismissed; nothing started.");
@@ -56,6 +62,16 @@ namespace OpenEmpires
                 }
                 var submission = semanticDispatcher.SubmitSemanticGraph(graph);
                 if (submission?.CreatedGoal == true) RecordAcceptedSemanticNodes(candidate.Interpretation.Nodes);
+                if (submission?.CreatedGoal == true && candidate.UsesPlayerMarker)
+                {
+                    retainedLocationResult = null;
+                    retainedLocationLease = null;
+                    RemoveDestinationVisual();
+                }
+                if (submission?.CreatedGoal == true && candidate.OriginalInput == retainedLocationText)
+                { retainedLocationResult = null; retainedLocationLease = null; retainedLocationTicket = null; retainedLocationPending = null; }
+                if (submission?.CreatedGoal == true && pendingClarification?.RequestId == candidate.RequestId)
+                    pendingClarification = null;
                 TrackCurrentRequest(submission);
                 SetLatestRequestState(submission?.CreatedGoal == true ? "Accepted" : "Failed",
                     submission?.Response ?? "Action plan could not be admitted safely.");

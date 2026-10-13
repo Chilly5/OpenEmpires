@@ -279,11 +279,14 @@ namespace OpenEmpires.Tests
             using (var f = new HintFixture(LongbowRequest))
             {
                 CommanderSemanticProviderRequest selected = null;
+                var memory = new CommanderSemanticConversationMemory(12);
+                for (int i = 0; i < 12; i++) memory.RecordClarification(new string('\u754c', 180));
                 for (int length = 0; length < 990; length += 10)
                 {
                     string original = "Train three new longbowmna " + new string('\u754c', length);
                     var request = new CommanderSemanticProviderRequest(original,
-                        new CommanderContextBuilder().Build(f.Economy.Simulation, f.Economy.Manager, original));
+                        new CommanderContextBuilder().Build(f.Economy.Simulation, f.Economy.Manager, original),
+                        memory.Snapshot());
                     if (!CommanderSemanticRequestPack.TryBuild(request, "openai/gpt-6-luna", 4096, out var pack, out _)) continue;
                     string user = (string)JObject.Parse(pack.Json)["messages"][1]["content"];
                     if (!user.Contains("nameInterpretations")) { selected = request; break; }

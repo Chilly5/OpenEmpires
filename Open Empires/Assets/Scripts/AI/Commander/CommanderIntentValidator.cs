@@ -173,6 +173,8 @@ namespace OpenEmpires
                     || !intent.PlacementRelation.HasValue
                     || !Enum.IsDefined(typeof(CommanderSemanticPlacementRelation),
                         intent.PlacementRelation.Value)
+                    || (intent.PlacementAnchorSelector == CommanderSemanticAnchorSelector.PlayerMarker
+                        && intent.PlacementRelation != CommanderSemanticPlacementRelation.Near)
                     || (intent.PlacementAnchorOrdinal.HasValue
                         && (intent.PlacementAnchorSelector != CommanderSemanticAnchorSelector.MyTownCenter
                             || intent.PlacementAnchorOrdinal.Value < CommanderSemanticJson.MinimumTownCenterOrdinal
@@ -263,6 +265,11 @@ namespace OpenEmpires
                 && !intent.LocationSelector.ResourceType.HasValue)
                 return Invalid(CommanderIntentErrorCode.UnknownResource,
                     "Resource locations require a resource selector.");
+            if (intent.LocationSelector.Kind == CommanderLocationSelectorKind.PlayerMarker
+                && (intent.ActionType != CommanderCapabilityActionType.MoveUnits
+                    || intent.LocationSelector.ResourceType.HasValue || intent.TargetSelector.HasValue))
+                return Invalid(CommanderIntentErrorCode.UnknownCommand,
+                    "The placed destination marker supports movement to a point.");
             if ((intent.ActionType == CommanderCapabilityActionType.ResearchTechnology)
                 && (!intent.Technology.HasValue || !Enum.IsDefined(typeof(TechnologyType), intent.Technology.Value)))
                 return Invalid(CommanderIntentErrorCode.UnknownCommand, "A known technology is required.");

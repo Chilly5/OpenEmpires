@@ -351,6 +351,30 @@ namespace OpenEmpires
 
             PrepareDynamicWorkerBindings(plan, byIndex);
             PrepareDynamicLocationBindings(plan, byIndex);
+            if (plan.Authorization.UsesPlayerMarker)
+            {
+                foreach (CommanderSemanticGraphNode node in plan.Nodes)
+                {
+                    if (node.Intent is BuildStructureIntent build
+                        && build.PlacementAnchorSelector == CommanderSemanticAnchorSelector.PlayerMarker)
+                    {
+                        var structure = byIndex[node.Index] as BuildStructureGoal;
+                        if (structure == null) throw new ArgumentException("The marker construction is unavailable.");
+                        structure.DynamicLocation = CommanderBoundLocation.FromPlayerMarker(simulation,
+                            this, playerId, plan.Authorization.MarkerTileX,
+                            plan.Authorization.MarkerTileZ, CommanderSemanticPlacementRelation.Near, 1);
+                    }
+                    if (node.Intent is CapabilityActionIntent action
+                        && action.LocationSelector.Kind == CommanderLocationSelectorKind.PlayerMarker)
+                    {
+                        var move = byIndex[node.Index] as CommanderCapabilityGoal;
+                        if (move == null) throw new ArgumentException("The marker movement is unavailable.");
+                        move.MarkerMoveLocation = CommanderBoundLocation.FromPlayerMarker(simulation,
+                            this, playerId, plan.Authorization.MarkerTileX,
+                            plan.Authorization.MarkerTileZ, CommanderSemanticPlacementRelation.Near, 1);
+                    }
+                }
+            }
             CaptureResultBaselines(pending, plan);
             // Preflight and reserve the complete shared snapshot only after all nodes
             // validate. Roll back these local leases if any acquisition/commit fails.
@@ -391,6 +415,7 @@ namespace OpenEmpires
                 activeGoals.Add(goal);
             }
             if (ActiveGoal == null || ActiveGoal.IsTerminal) ActiveGoal = pending[0];
+            if (plan.Authorization.UsesPlayerMarker) ClearPlayerMarkerSnapshot();
             TraceActionPlan(plan.Authorization, "goal-admitted");
             for (int i = 0; i < pending.Count; i++)
             {
