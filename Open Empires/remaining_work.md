@@ -1,5 +1,109 @@
 # OpenEmpires AI Commander — Remaining Phases Handoff
 
+## Latest: marker and multi-step repair VERIFIED IN EDITOR — 2026-10-14
+
+Captured the exact live mismatch: Confirmation/quantityMode was not a supported
+clarification slot; omission already means TargetTotal. Provider instructions now
+render the strict validator's shared slot table; malformed slots still reject
+atomically with bounded known-path diagnostics. Age1/Wood0 reproduction and recovery
+are recorded. Also repaired the physically reproduced stale step-choice heading.
+Final source9829108a90f7590f9adaff7803b90fdabc3e404096adbd8f1eea80131aae74af
+matches generated/loaded identity; HEAD55e27fcc unchanged. Final live basic A passed
+physical approval→Barracks2→four native Spearmen→completed card. Live B/C/exact new
+producer/Mill+8Farms/Stables resource recovery passed on source82f; the only later
+runtime delta is the heading publication. Final physical marker/native replay used
+an explicitly offline strict-parser fixture and excluded old units. Physical partial
+draft Play Again reset plus fresh final-source minimized next match were verified.
+Contract tests:108 isolated clarification passes,29 distinct scoped integration
+leaves; final focused native/status/authority13/13. Contradictory combined137 root
+is not a green gate. Historical failed receipts and four voice failures retained.
+Latest10-call allowance fully consumed; global68/200,132 remaining. No new paid
+dispatch within the exhausted local scope. Unity idle EditMode, mouse released,
+Blender untouched. No package certification or Phase5B/5C acceptance claimed.
+Next separate step: fresh Windows/Web package and standalone/served-Web input
+verification, with the earlier voice gates still open. See the current
+[repair report](Docs/CommanderPhase5C/marker-multistep-repair-report.md).
+
+## Historical: reproduced Clarify rejection PARTIAL — 2026-10-14
+
+Runtime e4a851 source unchanged; final basic and physical exact-new marker chains
+retain their verified Editor scope. Latest10-call allowance is exhausted:
+10 initial HTTP,0 repair/retries;8 native completions,1 cancelled valid preview,
+1 schema rejection. Global58/200 consumed,142 remaining; broader global cap does
+not grant another call within this exhausted local scope.
+Attempt10 exact basic at age1/wood0 returned HTTP200/finishstop/Clarify and rejected
+at envelope field=$; no new goals/plan/draft. Two pending node/slot container
+shapes captured, scalar slot identifiers masked; exact cause unproven, not fixed.
+Editor-only observer now records allowlisted schema path/type/enum values at exact
+positions; unknown/private prose stays masked. RED1 then GREEN23/23 passed.
+Separate pruning fixture repaired:12 padded history entries already exceeded byte
+ceiling without utterance padding. Normal8-entry history now exercises actual
+pruning and preserves authority assertions; oversized-history rejection coverage
+added. Full clarification class108/108 passed, no runtime/ceiling/prompt change.
+Earlier broad174 failure remains a historical failed receipt, not relabelled green.
+Next executable step: new applicable paid authorization or user reproduction of
+exact basic at age1/wood0 with enhanced fresh-path observer, then repair the first
+captured slot/draft mismatch. No additional paid dispatch was authorized here.
+Unity idle EditMode; no mouse control used this continuation; Blender untouched.
+Fresh Windows/Web and earlier voice gates remain separate; no phase acceptance.
+See [repair report](Docs/CommanderPhase5C/marker-multistep-repair-report.md).
+
+## Previous: per-step marker correction PARTIAL — 2026-10-14
+
+Repaired multi-location overwrite: per-node game-owned snapshots survive approval
+and later marker changes; foreign snapshots reject before claiming the ticket.
+Current runtimeSHA c7b2ef10d452602459f49c7aefadad3a86d425ca2808d04afc4a97008411409c,
+MVID46d35a0c-4e5f-48e3-b63e-dc3aa0276a02, HEAD55e27fcc unchanged.
+Focused2/2, relevant100/100 and extended two-destination native1/1 passed.
+Two final-source live/UI/native checks completed: zero-baseline new Barracks2
+produced47–50; physical marker [189,101] plus New4→Move produced/moved51–54 only,
+old47–50 excluded, maximum arrival distance1.4143, both cards/finite rows complete.
+Old positions drifted near spawn; no unchanged-position claim for this run.
+Physical two-slot continuation with strict-parser offline provider kept request3,
+one provider call, distinct points [177,111]/[188,97], separate physical approval,
+exactly goals5/6, both native-completed. Actual UI click rejection explained;
+replacement/duplicates preserved bindings/count. Partially resolved request4 was
+cleared by normal surrender→physical Play Again; next match had one minimized
+launcher, empty transcript, zero goals/pending/map. Computer Use released; Blender
+untouched; Unity returned EditMode. Paid48/200,152 remaining; both new approved
+attempts exhausted, no repairs/retries or reset. Current protected shape receipts
+are preserved in final-per-step-source; per-step-marker-repair has offline/physical proof.
+Remaining: historical intermittent malformed compound field/root cause remains
+unknown; neither latest request reproduced it. Current scenario successes do not
+identify that failure. A future applicable authorized reproduction must attach
+fresh shape observer before parsing. No third paid call is authorized in this scope.
+Fresh Windows/Web certification and earlier voice failures remain separate gates.
+## Previous: Phase 5C marker/multi-step repair PARTIAL — 2026-10-13
+
+Current project: branch `unit_models_and_voice_control`, HEAD `55e27fcc`, runtime
+source SHA `448dd637e01e7cf09e23b203a87fe4e650b4f7d62967861b2fd8a9cefb72391a`.
+The five newly authorized observed basic-compound calls all returned valid complete
+plans. Two zero-baseline production UI→approval→native runs built the exact new
+Barracks and produced exactly four Spearmen from it. The final task card and both
+finite rows were captured Completed after separate UI frames. Other previews were
+cancelled without extra goals. The same temporarily unresponsive Unity process
+recovered; the existing third request was observed, never resent. No runtime code
+changed during this resumption. Mouse control remained stopped; Unity is now idle
+in Edit mode. Paid usage:46/200,154 remaining; the5-call scope is exhausted, zero
+repair calls or budget resets. See `Docs/CommanderPhase5C/evidence/basic-observed-five/`.
+
+Final-source physical marker/live New4 compound also completed: only new units
+25–28 moved to the stored marker, old23–24 excluded, four TrainUnit/one Move,
+both goals/card complete. Physical saved-marker acknowledgement and Play Again
+checks passed. Pending-location continuation, replacement, invalid clicks,
+request identity, explicit-new producer history and resource/dependency/cancel/
+human-override native gates retain their recorded scope limits. Relevant terminal
+gates:127/127 status/history,76/76 routing,79/79 envelope,11/11 observer.
+
+Still unresolved: an earlier intermittent HTTP200/Clarify envelope rejection was
+not fully observed; its exact malformed field remains unknown. It did not recur
+in the five guarded calls. Current scenario successes do not prove that historical
+cause eliminated. Next diagnostic step: capture a fresh protected response shape
+before parsing an applicable authorized reproduction, then repair the confirmed
+mismatch. Do not guess the field, reset budgets, or silently spend a sixth attempt.
+See [repair report](Docs/CommanderPhase5C/marker-multistep-repair-report.md) and its
+per-requirement completion audit. Fresh Windows/Web acceptance and four earlier
+voice-presentation failures remain separate gates. Phase5B/5C is not accepted.
 ## Latest: Phase 5C stabilization implemented — ready for verification — 2026-10-13
 
 The bounded stabilization repair is implemented in the existing dirty authoritative

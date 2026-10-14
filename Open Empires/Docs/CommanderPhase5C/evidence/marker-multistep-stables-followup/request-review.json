@@ -1,0 +1,89 @@
+{
+  "destination": "https://openrouter.ai/api/v1/chat/completions",
+  "model": "openai/gpt-6-luna",
+  "utterance": "build 3 stables",
+  "contextFields": [
+    "age",
+    "civilization",
+    "resources",
+    "population",
+    "populationCap",
+    "canonicalUnitIds",
+    "canonicalBuildingIds",
+    "ownedUnitCounts",
+    "ownedBuildingCounts",
+    "unitCapabilities",
+    "structureCapabilities",
+    "resourceCapabilities",
+    "strategyCapabilities",
+    "actionCapabilities",
+    "selectorCapabilities",
+    "knowledge",
+    "workerCounts"
+  ],
+  "civilization": "English",
+  "age": 1,
+  "ownedUnitCounts": {
+    "Archer": 0,
+    "Knight": 0,
+    "Scout": 1,
+    "Sheep": 3,
+    "Spearman": 0,
+    "Villager": 9
+  },
+  "ownedBuildingCounts": {
+    "ArcheryRange": 0,
+    "Barracks": 0,
+    "Blacksmith": 0,
+    "Farm": 0,
+    "House": 0,
+    "Keep": 0,
+    "LumberYard": 0,
+    "Market": 0,
+    "Mill": 0,
+    "Mine": 0,
+    "Monastery": 0,
+    "SiegeWorkshop": 0,
+    "Stables": 0,
+    "Tower": 0,
+    "TownCenter": 1,
+    "University": 0
+  },
+  "knowledge": {
+    "units": [],
+    "buildings": [
+      {
+        "id": "building:Stables",
+        "name": "Stables",
+        "age": 2,
+        "cost": {
+          "food": 0,
+          "wood": 150,
+          "gold": 0,
+          "stone": 0
+        },
+        "availableForCivilization": true,
+        "commanderExecutable": true,
+        "contentExists": true,
+        "dropoffResources": []
+      }
+    ],
+    "technologies": [],
+    "nameInterpretations": [],
+    "resolvedNames": [
+      {
+        "phrase": "stables",
+        "category": "Building",
+        "id": "building:Stables",
+        "canonicalToken": "Stables"
+      }
+    ],
+    "requiredCanonicalIds": [
+      "building:Stables"
+    ],
+    "optionalCanonicalIds": [],
+    "requiredReferenceOverflow": false,
+    "policy": "Complete catalog retrieved locally. Omission is not unavailability. Content existence, civilization availability, mechanic support, and current age/resources/producer/population readiness are separate facts. Missing resources or producers are execution blockers, not unknown content."
+  },
+  "maximumPaidHttpAttempts": 1
+}

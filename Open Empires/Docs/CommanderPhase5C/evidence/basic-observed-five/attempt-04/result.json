@@ -1,0 +1,54 @@
+{
+  "tick": 7720,
+  "requestId": 2,
+  "trace": "utc=2026-10-13T19:00:49.1508694Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=5206\nfinish=stop\nassistantContent=extracted;characters=283;finish=stop\nsemantic=Request;nodes=2\n",
+  "attempts": [
+    {
+      "kind": "initial",
+      "stage": "semantic-valid",
+      "http": 200
+    }
+  ],
+  "preview": "Action plan — not started.\n1. Build 1 Barracks\n2. Ensure Spearman total 4; expected 4 newly produced (existing and queued count toward the total); after step 1; only the Barracks built in step 1; no other producer substitutes\nPreparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan.",
+  "nodes": [
+    {
+      "type": "BuildStructure",
+      "count": 1,
+      "quantity": "TargetTotal",
+      "producerFrom": null,
+      "resultFrom": null,
+      "depends": []
+    },
+    {
+      "type": "EnsureUnitCount",
+      "count": 4,
+      "quantity": "TargetTotal",
+      "producerFrom": 0,
+      "resultFrom": null,
+      "depends": [
+        0
+      ]
+    }
+  ],
+  "marker": null,
+  "transcript": "Player:\r\nbuild barracks and 4 spearman\r\n\r\nCommander:\r\nAction plan — not started.\n1. Build 1 Barracks\n2. Ensure Spearman total 4; expected 4 newly produced (existing and queued count toward the total); after step 1; only the Barracks built in step 1; no other producer substitutes\nPreparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan.\r\n\r\nCommander:\r\nAction plan dismissed; nothing started.\r\n\r\nPlayer:\r\nbuild barracks and 4 spearman\r\n\r\nCommander:\r\nAction plan — not started.\n1. Build 1 Barracks\n2. Ensure Spearman total 4; expected 4 newly produced (existing and queued count toward the total); after step 1; only the Barracks built in step 1; no other producer substitutes\nPreparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan.",
+  "goals": [],
+  "buildings": [
+    {
+      "id": 0,
+      "type": "TownCenter",
+      "unfinished": false
+    }
+  ],
+  "spearmen": [],
+  "texts": [
+    {
+      "name": "CommanderStatus",
+      "text": "Awaiting approval — no gameplay started."
+    },
+    {
+      "name": "TaskBadge",
+      "text": "0 active tasks"
+    }
+  ]
+}

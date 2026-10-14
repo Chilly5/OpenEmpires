@@ -1,0 +1,40 @@
+{
+  "request": 3,
+  "draft": {
+    "draftGraph": {
+      "executionOrder": "Sequential",
+      "nodes": [
+        {
+          "type": "EnsureUnitCount",
+          "unit": "Spearman",
+          "count": 4,
+          "quantityMode": "New"
+        },
+        {
+          "type": "MoveUnits",
+          "unitSelector": "Spearman",
+          "count": 4,
+          "resultFromNode": 0,
+          "dependsOn": [
+            0
+          ]
+        }
+      ]
+    },
+    "missingSlots": [
+      {
+        "node": 1,
+        "path": "location",
+        "type": "Location",
+        "alternatives": [
+          "PlayerMarker",
+          "PlayerBase"
+        ]
+      }
+    ],
+    "originalText": "train 4 new spearmen and move them",
+    "question": "Where should I move the new spearmen?"
+  },
+  "attempts": 3,
+  "goals": 4
+}

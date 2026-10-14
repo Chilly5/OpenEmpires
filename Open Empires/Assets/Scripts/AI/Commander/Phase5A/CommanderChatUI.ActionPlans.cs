@@ -42,6 +42,7 @@ namespace OpenEmpires
                 retainedLocationLease = null;
                 retainedLocationTicket = null;
                 retainedLocationPending = null;
+                ClearPendingMarkerLocations();
                 ClearActionPlanPreview();
                 SetLatestRequestState("Cancelled", "Action plan dismissed; nothing started.");
                 AppendLine("Commander", "Action plan dismissed; nothing started.");
@@ -67,6 +68,7 @@ namespace OpenEmpires
                     retainedLocationResult = null;
                     retainedLocationLease = null;
                     RemoveDestinationVisual();
+                    ClearPendingMarkerLocations();
                 }
                 if (submission?.CreatedGoal == true && candidate.OriginalInput == retainedLocationText)
                 { retainedLocationResult = null; retainedLocationLease = null; retainedLocationTicket = null; retainedLocationPending = null; }

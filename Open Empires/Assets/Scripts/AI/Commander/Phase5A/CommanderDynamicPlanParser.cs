@@ -12,8 +12,12 @@ namespace OpenEmpires
     public sealed partial class CommanderSemanticResult
     {
         internal static bool ParseDynamicTrusted(string raw, out CommanderDynamicPlan plan)
+            => ParseDynamicTrusted(raw, out plan, out _);
+
+        private static bool ParseDynamicTrusted(string raw, out CommanderDynamicPlan plan, out string diagnostic)
         {
             plan = null;
+            diagnostic = string.Empty;
             try
             {
                 if (string.IsNullOrWhiteSpace(raw) ||
@@ -48,6 +52,7 @@ namespace OpenEmpires
                 e is FormatException || e is OverflowException)
             {
                 plan = null;
+                diagnostic = e is SchemaFieldFailure field ? field.Detail : "field=$;code=invalid-schema;stage=dynamic-graph";
                 return false;
             }
         }
@@ -72,6 +77,11 @@ namespace OpenEmpires
                 foreach (var candidate in primitive.Parameters)
                     if (candidate.Name == property.Name) { field = candidate; break; }
                 if (field == null) throw new JsonException();
+                JTokenType expected = field.Kind == CommanderDynamicFieldKind.Count
+                    || field.Kind == CommanderDynamicFieldKind.Offset || field.Kind == CommanderDynamicFieldKind.ClearGapTiles
+                    ? JTokenType.Integer : JTokenType.String;
+                if (property.Value.Type != expected)
+                    throw FailField(parametersObject, property.Name, SchemaFailureCode.MissingOrWrongType, expected);
                 parameters.Add(property.Name, ParseDynamicValue(field.Kind, property.Value));
             }
             foreach (var field in primitive.Parameters)

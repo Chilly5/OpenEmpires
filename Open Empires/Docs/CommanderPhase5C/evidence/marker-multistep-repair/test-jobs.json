@@ -1,0 +1,196 @@
+{
+  "integration_red": {
+    "job_id": "946c535370d640cd94828ae2ee2af41e",
+    "status": "failed",
+    "mode": "EditMode",
+    "started_unix_ms": 1791891887725,
+    "finished_unix_ms": 1791891895474,
+    "last_update_unix_ms": 1791891895474,
+    "progress": {
+      "completed": 5,
+      "total": 5,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791891895226,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CIntegrationRepairTests.WrongNumericShape_ReportsKnownPathAndExpectedActualTypesWithoutValues(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"build\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Barracks\\\",\\\"count\\\":\\\"1\\\"},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\",\"nodes[0].parameters.count\")",
+      "last_finished_unix_ms": 1791891895229,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [
+        {
+          "full_name": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.MarkerWithoutPendingRequest_AcknowledgesStorageAndExplainsInvalidClick",
+          "message": "  Expected: String containing \"Destination saved\"\r\n  But was:  <string.Empty>\r\n"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.MultiplePendingLocations_AskForStepAndFillOnlyChosenSlot",
+          "message": "  Expected: String containing \"Which step\"\r\n  But was:  \"Player:\r\nTrain four new spearmen, move them, and move my scout\r\n\r\nCommander:\r\nWhere?\"\r\n"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5CIntegrationRepairTests.PackedRequestedFacts_KeepNamedAvailabilityAndSupportAttachedToIdentity",
+          "message": "  Public availability must remain named data instead of a positional boolean.\r\n  Expected: not null\r\n  But was:  null\r\n"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5CIntegrationRepairTests.WrongNumericShape_ReportsKnownPathAndExpectedActualTypesWithoutValues(\"{\\\"outcome\\\":\\\"Request\\\",\\\"nodes\\\":[{\\\"type\\\":\\\"EnsureUnitCount\\\",\\\"unit\\\":\\\"Spearman\\\",\\\"count\\\":\\\"4\\\"}]}\",\"nodes[0].count\")",
+          "message": "  Expected: String containing \"expected=Integer\"\r\n  But was:  \"field=nodes[0].count;code=missing-or-wrong-type\"\r\n"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5CIntegrationRepairTests.WrongNumericShape_ReportsKnownPathAndExpectedActualTypesWithoutValues(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"build\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Barracks\\\",\\\"count\\\":\\\"1\\\"},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\",\"nodes[0].parameters.count\")",
+          "message": "  Expected: String containing \"field=nodes[0].parameters.count\"\r\n  But was:  \"field=$;code=invalid-schema;stage=envelope;node=-1\"\r\n"
+        }
+      ],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": null
+  },
+  "integration_checkpoint": {
+    "job_id": "f7b87cf8802c4f43b8681f355fad20b9",
+    "status": "failed",
+    "mode": "EditMode",
+    "started_unix_ms": 1791892086693,
+    "finished_unix_ms": 1791892094552,
+    "last_update_unix_ms": 1791892094552,
+    "progress": {
+      "completed": 6,
+      "total": 6,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791892094401,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CIntegrationRepairTests.WrongNumericShape_ReportsKnownPathAndExpectedActualTypesWithoutValues(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"version\\\":1,\\\"nodes\\\":[{\\\"id\\\":\\\"build\\\",\\\"mechanic\\\":\\\"build\\\",\\\"parameters\\\":{\\\"building\\\":\\\"building:Barracks\\\",\\\"count\\\":\\\"1\\\"},\\\"inputs\\\":{},\\\"dependsOn\\\":[]}]}\",\"nodes[0].parameters.count\")",
+      "last_finished_unix_ms": 1791892094404,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [
+        {
+          "full_name": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.MarkerContinuation_PreservesRequestAndDoesNotInterpretOrApproveAgain",
+          "message": "  A duplicate callback must not replace the approval candidate.\r\n  Expected: same as <OpenEmpires.CommanderActionPlanCandidate>\r\n  But was:  <OpenEmpires.CommanderActionPlanCandidate>\r\n"
+        }
+      ],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": null
+  },
+  "integration_green": {
+    "job_id": "7d37ca59ba5d43ccbe3294227bda10f7",
+    "status": "failed",
+    "mode": "EditMode",
+    "started_unix_ms": 1791892224864,
+    "finished_unix_ms": 1791892275858,
+    "last_update_unix_ms": 1791892275858,
+    "progress": {
+      "completed": 123,
+      "total": 123,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791892275492,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CTargetedConstructionTests.RepeatedPlacedFarms_DoNotCompleteAfterOnlyOneNativeFarm",
+      "last_finished_unix_ms": 1791892275757,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.LateCanonicalName_AfterOldWordAndPhraseWindowsSurvivesRealPack",
+          "message": "System.ArgumentNullException : Value cannot be null.\r\nParameter name: source"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.NineExplicitCanonicalNames_SurviveRealContextAndPackedColumns",
+          "message": "System.ArgumentNullException : Value cannot be null.\r\nParameter name: source"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.PendingGraphAndAmbiguousAlternatives_AreRetainedOrWholeRequestRefused",
+          "message": "System.ArgumentNullException : Value cannot be null.\r\nParameter name: source"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.PlaceTwoHousesNearTownCenter_RetrievesAdmittableRepeatedBuildRoute",
+          "message": "System.ArgumentNullException : Value cannot be null.\r\nParameter name: source"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.SimilarNameHint_DoesNotEvictExactCanonicalReferences",
+          "message": "System.ArgumentNullException : Value cannot be null.\r\nParameter name: source"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5CProviderBudgetTests.SimilarNameHint_SurvivesRealRetrievalAndPackWithoutBecomingRequired",
+          "message": "System.ArgumentNullException : Value cannot be null.\r\nParameter name: source"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5CStabilizationNativeTests.OneNewBarracksThenFourSpearmen_WaitsForExactNewProducerAndPreservesQuantity(False)",
+          "message": "  Expected: greater than or equal to 1021\r\n  But was:  1020\r\n"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderPhase5CStabilizationNativeTests.OneNewBarracksThenFourSpearmen_WaitsForExactNewProducerAndPreservesQuantity(True)",
+          "message": "  Expected: greater than or equal to 1021\r\n  But was:  1020\r\n"
+        }
+      ],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": null
+  },
+  "integration_final_tests": {
+    "job_id": "e9a8da9334fe40d2ab672b760324c0a9",
+    "status": "succeeded",
+    "mode": "EditMode",
+    "started_unix_ms": 1791892387097,
+    "finished_unix_ms": 1791892433287,
+    "last_update_unix_ms": 1791892433287,
+    "progress": {
+      "completed": 123,
+      "total": 123,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791892432937,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CTargetedConstructionTests.RepeatedPlacedFarms_DoNotCompleteAfterOnlyOneNativeFarm",
+      "last_finished_unix_ms": 1791892433194,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": {
+      "mode": "EditMode",
+      "summary": {
+        "total": 123,
+        "passed": 123,
+        "failed": 0,
+        "skipped": 0,
+        "durationSeconds": 39.2728105,
+        "resultState": "Passed"
+      },
+      "results": []
+    }
+  },
+  "ui_followup_red": {
+    "job_id": "d07ae073b0cd435dacfddeab687d8f2b",
+    "status": "failed",
+    "mode": "EditMode",
+    "started_unix_ms": 1791895042766,
+    "finished_unix_ms": 1791895054411,
+    "last_update_unix_ms": 1791895054411,
+    "progress": {
+      "completed": 3,
+      "total": 3,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791895053217,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.ProviderLocationClarification_MarkerResumesSameSingleBuildExactlyOnce",
+      "last_finished_unix_ms": 1791895054227,
+      "stuck_suspected": false,
+      "editor_is_focused": false,
+      "blocked_reason": null,
+      "failures_so_far": [
+        {
+          "full_name": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.MarkerStorage_AfterAnAdmittedTaskRemainsVisibleInMinimizedStatus",
+          "message": "  Expected string length 17 but was 8. Strings differ at index 0.\r\n  Expected: \"Destination saved\"\r\n  But was:  \"Accepted\"\r\n  -----------^\r\n"
+        },
+        {
+          "full_name": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.ProviderLocationClarification_MarkerResumesSameSingleBuildExactlyOnce",
+          "message": "  Expected: False\r\n  But was:  True\r\n"
+        }
+      ],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": null
+  }
+}

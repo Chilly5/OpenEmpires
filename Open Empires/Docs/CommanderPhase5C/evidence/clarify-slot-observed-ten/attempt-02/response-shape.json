@@ -1,0 +1,103 @@
+{
+  "mode": "Request",
+  "shape": [
+    {
+      "path": "$",
+      "actualType": "Object",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.outcome",
+      "actualType": "String",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.nodes",
+      "actualType": "Array",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.nodes[0]",
+      "actualType": "Object",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.nodes[0].type",
+      "actualType": "String",
+      "discriminator": "BuildStructure",
+      "schemaValue": null
+    },
+    {
+      "path": "$.nodes[0].structure",
+      "actualType": "String",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.nodes[0].count",
+      "actualType": "Integer",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.nodes[0].builders",
+      "actualType": "Object",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.nodes[0].builders.state",
+      "actualType": "String",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.nodes[0].builders.count",
+      "actualType": "Integer",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.nodes[1]",
+      "actualType": "Object",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.nodes[1].type",
+      "actualType": "String",
+      "discriminator": "EnsureUnitCount",
+      "schemaValue": null
+    },
+    {
+      "path": "$.nodes[1].unit",
+      "actualType": "String",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.nodes[1].count",
+      "actualType": "Integer",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.nodes[1].quantityMode",
+      "actualType": "String",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.executionOrder",
+      "actualType": "String",
+      "discriminator": "Independent",
+      "schemaValue": "Independent"
+    }
+  ],
+  "http": 200,
+  "stage": "response"
+}

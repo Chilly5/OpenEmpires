@@ -1,0 +1,136 @@
+{
+  "source": "9829108a90f7590f9adaff7803b90fdabc3e404096adbd8f1eea80131aae74af",
+  "red": {
+    "job_id": "cf1ce0b2440843b9a4b4b2364a2affe2",
+    "status": "failed",
+    "mode": "EditMode",
+    "started_unix_ms": 1791940738234,
+    "finished_unix_ms": 1791940740291,
+    "last_update_unix_ms": 1791940740291,
+    "progress": {
+      "completed": 1,
+      "total": 1,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791940739489,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.MultiplePendingLocations_AskForStepAndFillOnlyChosenSlot",
+      "last_finished_unix_ms": 1791940740236,
+      "stuck_suspected": false,
+      "editor_is_focused": true,
+      "blocked_reason": null,
+      "failures_so_far": [
+        {
+          "full_name": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.MultiplePendingLocations_AskForStepAndFillOnlyChosenSlot",
+          "message": "  Resolving a destination step must clear the obsolete step-choice heading.\r\n  Expected string length 19 but was 23. Strings differ at index 0.\r\n  Expected: \"Needs clarification\"\r\n  But was:  \"Choose destination step\"\r\n  -----------^\r\n"
+        }
+      ],
+      "failures_capped": false
+    },
+    "error": null,
+    "result": null
+  },
+  "green": {
+    "job_id": "46898938a0a84cd799134ffe4531b533",
+    "status": "succeeded",
+    "progress": {
+      "completed": 13,
+      "total": 13,
+      "current_test_full_name": null,
+      "current_test_started_unix_ms": 1791940789895,
+      "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CMarkerTests.TenNaturallyProducedSpearmen_MoveToMarkerOrWorkedGold_WithoutOldUnits(True,True)",
+      "last_finished_unix_ms": 1791940790887,
+      "stuck_suspected": false,
+      "editor_is_focused": true,
+      "blocked_reason": null,
+      "failures_so_far": [],
+      "failures_capped": false
+    },
+    "summary": {
+      "total": 13,
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "durationSeconds": 7.7867705,
+      "resultState": "Passed"
+    },
+    "tests": [
+      {
+        "fullName": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.MultiplePendingLocations_AskForStepAndFillOnlyChosenSlot",
+        "state": "Passed",
+        "durationSeconds": 0.9231183,
+        "message": null
+      },
+      {
+        "fullName": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.MultiplePendingLocations_KeepEachSelectedPointThroughApprovalAndLaterMarkerChanges",
+        "state": "Passed",
+        "durationSeconds": 0.8566898,
+        "message": null
+      },
+      {
+        "fullName": "OpenEmpires.Tests.CommanderPhase1Tests.Cancellation_StopsFutureCommanderActions",
+        "state": "Passed",
+        "durationSeconds": 0.3637569,
+        "message": null
+      },
+      {
+        "fullName": "OpenEmpires.Tests.CommanderPhase5ADynamicRuntimeTests.CancelRequest_ReleasesItsPendingTrainingOriginsOnly",
+        "state": "Passed",
+        "durationSeconds": 0.4195908,
+        "message": null
+      },
+      {
+        "fullName": "OpenEmpires.Tests.CommanderPhase5AIntentAuthorityTests.ConfirmedCompound_CancelPlanCancelsEveryLiveRoot",
+        "state": "Passed",
+        "durationSeconds": 0.4834356,
+        "message": null
+      },
+      {
+        "fullName": "OpenEmpires.Tests.CommanderPhase5AProductionBindingTests.CancelledOrderOrLostProducedUnit_IsNotSilentlyReplaced(False)",
+        "state": "Passed",
+        "durationSeconds": 0.3919497,
+        "message": null
+      },
+      {
+        "fullName": "OpenEmpires.Tests.CommanderPhase5AProductionBindingTests.CancelledOrderOrLostProducedUnit_IsNotSilentlyReplaced(True)",
+        "state": "Passed",
+        "durationSeconds": 0.3900636,
+        "message": null
+      },
+      {
+        "fullName": "OpenEmpires.Tests.CommanderPhase5BTaskBoardTests.CancelRequest_StopsAllItsGoalsButLeavesUnrelatedGoalUntouched",
+        "state": "Passed",
+        "durationSeconds": 0.3869039,
+        "message": null
+      },
+      {
+        "fullName": "OpenEmpires.Tests.CommanderPhase5CMarkerTests.MarkerSnapshot_ChangedAfterPreviewRequiresNewApproval",
+        "state": "Passed",
+        "durationSeconds": 0.3619345,
+        "message": null
+      },
+      {
+        "fullName": "OpenEmpires.Tests.CommanderPhase5CMarkerTests.RejectedMarkerSidecar_DoesNotClaimTicketAndCandidateCopiesValidOwnedSnapshot",
+        "state": "Passed",
+        "durationSeconds": 0.3727671,
+        "message": null
+      },
+      {
+        "fullName": "OpenEmpires.Tests.CommanderPhase5CMarkerTests.TenNaturallyProducedSpearmen_MoveToMarkerOrWorkedGold_WithoutOldUnits(True,False)",
+        "state": "Passed",
+        "durationSeconds": 0.8561718,
+        "message": null
+      },
+      {
+        "fullName": "OpenEmpires.Tests.CommanderPhase5CMarkerTests.TenNaturallyProducedSpearmen_MoveToMarkerOrWorkedGold_WithoutOldUnits(False,False)",
+        "state": "Passed",
+        "durationSeconds": 0.9073238,
+        "message": null
+      },
+      {
+        "fullName": "OpenEmpires.Tests.CommanderPhase5CMarkerTests.TenNaturallyProducedSpearmen_MoveToMarkerOrWorkedGold_WithoutOldUnits(True,True)",
+        "state": "Passed",
+        "durationSeconds": 0.9919479,
+        "message": null
+      }
+    ]
+  }
+}

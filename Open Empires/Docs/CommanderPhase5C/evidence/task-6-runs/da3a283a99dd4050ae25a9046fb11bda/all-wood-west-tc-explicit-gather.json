@@ -1,0 +1,221 @@
+{
+  "schema": "openempires-phase5c-scenario-turn@1",
+  "run_id": "5d586191-f6c2-49b9-802b-7fcd836fd2e7",
+  "first_failing_stage": null,
+  "first_failure_category": null,
+  "schemaVersion": 1,
+  "caseId": "all-wood-west-tc-explicit-gather",
+  "requestId": "runtime:1",
+  "turnCorrelationId": "ui-turn:2",
+  "utterance": "Gather wood with all of my current wood villagers from trees left of my town center.",
+  "turnIndex": 0,
+  "status": "observed",
+  "evidenceMode": "offline-production-chat-fixture",
+  "providerCalls": 1,
+  "httpAttempts": 0,
+  "packAccepted": true,
+  "fidelity": "matched",
+  "semanticValid": true,
+  "estimatedInputTokens": 27295,
+  "actualPromptTokens": null,
+  "actualCompletionTokens": null,
+  "actualCachedTokens": null,
+  "actualReasoningTokens": null,
+  "reportedCost": null,
+  "attemptCosts": [],
+  "packingMs": 1.474,
+  "transportMs": null,
+  "parseMs": 0.474,
+  "admissionMs": 17.749,
+  "firstNativeActionMs": 1353.512,
+  "commandCount": 1,
+  "commandTypes": [
+    "GatherCommand"
+  ],
+  "nativeResults": [
+    "GatherCommand:processed"
+  ],
+  "taskStates": [
+    "AllocateWorkersGoal:Completed"
+  ],
+  "draftBefore": [],
+  "draftAfter": [],
+  "draftChanges": [],
+  "normalizedFields": [
+    {
+      "mechanic": "SelectWorkers",
+      "parameters": {
+        "countMode": "AllMatching",
+        "state": "Gathering",
+        "currentResource": "Wood"
+      },
+      "inputs": {},
+      "dependencies": []
+    },
+    {
+      "mechanic": "ResolveLocation",
+      "parameters": {
+        "anchor": "MyTownCenter",
+        "relation": "MapWest",
+        "clearGap": 1,
+        "resource": "Wood",
+        "sourceKind": "Tree"
+      },
+      "inputs": {},
+      "dependencies": []
+    },
+    {
+      "mechanic": "AllocateWorkers",
+      "parameters": {
+        "resource": "Wood",
+        "sourceKind": "Tree"
+      },
+      "inputs": {
+        "workers": 0,
+        "location": 1
+      },
+      "dependencies": [
+        0,
+        1
+      ]
+    }
+  ],
+  "admittedFields": [
+    {
+      "type": "AllocateWorkersGoal",
+      "status": "Pending",
+      "originalUtterance": "Gather wood with all of my current wood villagers from trees left of my town center.",
+      "mode": "SelectedCount",
+      "countMode": "AllMatching",
+      "count": null,
+      "state": "Gathering",
+      "currentResource": "Wood",
+      "destinationResource": "Wood",
+      "destinationSource": "Tree",
+      "resourceAmount": null,
+      "resourceAmountMode": null
+    }
+  ],
+  "turnHistory": [
+    {
+      "index": 0,
+      "text": "Gather wood with all of my current wood villagers from trees left of my town center.",
+      "requestId": "runtime:1",
+      "turnCorrelationId": "ui-turn:1",
+      "uiState": "Awaiting approval",
+      "providerCalls": 1,
+      "packAccepted": true,
+      "estimatedInputTokens": 27295,
+      "semanticValid": true,
+      "semanticOutcome": "DynamicPlan",
+      "normalizedFields": [
+        {
+          "mechanic": "SelectWorkers",
+          "parameters": {
+            "countMode": "AllMatching",
+            "state": "Gathering",
+            "currentResource": "Wood"
+          },
+          "inputs": {},
+          "dependencies": []
+        },
+        {
+          "mechanic": "ResolveLocation",
+          "parameters": {
+            "anchor": "MyTownCenter",
+            "relation": "MapWest",
+            "clearGap": 1,
+            "resource": "Wood",
+            "sourceKind": "Tree"
+          },
+          "inputs": {},
+          "dependencies": []
+        },
+        {
+          "mechanic": "AllocateWorkers",
+          "parameters": {
+            "resource": "Wood",
+            "sourceKind": "Tree"
+          },
+          "inputs": {
+            "workers": 0,
+            "location": 1
+          },
+          "dependencies": [
+            0,
+            1
+          ]
+        }
+      ],
+      "admittedFields": [],
+      "draftBefore": [],
+      "draftAfter": [],
+      "draftChanges": [],
+      "approvalRequired": true,
+      "approved": false,
+      "commandTypes": [],
+      "taskStates": [],
+      "uiSubmitMs": 61.863,
+      "packingMs": 1.474,
+      "transportMs": null,
+      "parseMs": 0.474,
+      "admissionMs": 17.749
+    },
+    {
+      "index": 1,
+      "text": "Approve plan",
+      "origin": "offline-fixture-control",
+      "requestId": "runtime:1",
+      "turnCorrelationId": "ui-turn:2",
+      "uiState": "Accepted",
+      "providerCalls": 1,
+      "approved": true,
+      "admittedFields": [
+        {
+          "type": "AllocateWorkersGoal",
+          "status": "Pending",
+          "originalUtterance": "Gather wood with all of my current wood villagers from trees left of my town center.",
+          "mode": "SelectedCount",
+          "countMode": "AllMatching",
+          "count": null,
+          "state": "Gathering",
+          "currentResource": "Wood",
+          "destinationResource": "Wood",
+          "destinationSource": "Tree",
+          "resourceAmount": null,
+          "resourceAmountMode": null
+        }
+      ],
+      "taskStates": [
+        "AllocateWorkersGoal:Pending"
+      ],
+      "uiSubmitMs": 94.058
+    }
+  ],
+  "fogNewlyExploredCount": null,
+  "garrisonHousedCount": null,
+  "garrisonProtectedCount": null,
+  "garrisonUnaccommodatedCount": null,
+  "futureObservedCount": null,
+  "futureAssignedCount": null,
+  "humanTrainCommands": null,
+  "resourceProgress": 0,
+  "gatheredFoodIncome": null,
+  "foodCompletionTick": null,
+  "foodIncomeAtCompletion": null,
+  "commanderCommandsAtFoodCompletion": null,
+  "ordinaryFoodGatherActive": null,
+  "ownedTaskFactCount": null,
+  "readOnlyProviderRequest": false,
+  "questionFactClass": null,
+  "fixtureKind": "correct-synthetic",
+  "turnText": "Gather wood with all of my current wood villagers from trees left of my town center.",
+  "uiSubmitMs": 61.863,
+  "semanticOutcome": "DynamicPlan",
+  "approvalRequired": true,
+  "approved": true,
+  "uiState": "Accepted",
+  "approvalMode": "offline-fixture-control-not-declared-player-turn",
+  "tickMode": "accelerated-fixture",
+  "ticks": 60
+}

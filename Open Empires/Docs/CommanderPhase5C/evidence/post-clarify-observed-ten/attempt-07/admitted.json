@@ -1,0 +1,31 @@
+{
+  "stage": "physical-approved",
+  "goals": [
+    {
+      "id": 1,
+      "type": "BuildStructureGoal",
+      "status": "Completed",
+      "reason": "Completed 1 exact requested Barracks results."
+    },
+    {
+      "id": 2,
+      "type": "EnsureUnitCountGoal",
+      "status": "Completed",
+      "reason": "Owned 4/4 living units."
+    },
+    {
+      "id": 3,
+      "type": "EnsureUnitCountGoal",
+      "status": "WaitingForProduction",
+      "reason": "All compatible production queues are at Commander limit 3."
+    },
+    {
+      "id": 4,
+      "type": "CommanderCapabilityGoal",
+      "status": "WaitingForPrerequisite",
+      "reason": "Waiting for dependency goal #3 to complete."
+    }
+  ],
+  "pendingPlan": false,
+  "pendingClarification": false
+}

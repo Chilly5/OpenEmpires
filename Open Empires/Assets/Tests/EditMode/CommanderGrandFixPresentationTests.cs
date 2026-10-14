@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -48,6 +49,124 @@ namespace OpenEmpires.Tests
         }
         private RectTransform Panel=> (RectTransform)typeof(CommanderChatUI).GetField("commanderPanel",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(chat);
         [Test]
+        public void MarkerWithoutPendingRequest_AcknowledgesStorageAndExplainsInvalidClick()
+        {
+            int x=sim.MapData.Width/2+6,z=sim.MapData.Height/2+6;sim.FogOfWar.SetVisible(0,x,z);
+            Assert.That(chat.TryPlaceDestinationMarker(x,z),Is.True);
+            Assert.That(chat.DisplayedTranscript,Does.Contain("Destination saved"));
+            Assert.That(manager.Goals,Is.Empty);Assert.That(provider.Calls,Is.Zero);
+            Assert.That(chat.TryPlaceDestinationMarker(-1,z),Is.False);
+            Assert.That(chat.DisplayedTranscript,Does.Contain("inside the map"));
+        }
+
+        [Test]
+        public async Task MarkerStorage_AfterAnAdmittedTaskRemainsVisibleInMinimizedStatus()
+        {
+            provider.Json="{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":4}]}";
+            await chat.SubmitMessageAsync("train four spearmen");
+            Assert.That(manager.Goals,Has.Count.EqualTo(1));
+            int x=sim.MapData.Width/2+6,z=sim.MapData.Height/2+6;sim.FogOfWar.SetVisible(0,x,z);
+            chat.TryPlaceDestinationMarker(x,z);
+            typeof(CommanderChatUI).GetMethod("UpdatePresentation",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(chat,null);
+            var status=typeof(CommanderChatUI).GetField("compactStatus",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(chat);
+            Assert.That((string)status.GetType().GetProperty("text").GetValue(status),Is.EqualTo("Destination saved"));
+            Assert.That(manager.Goals,Has.Count.EqualTo(1),"Saving a marker cannot append movement to production.");
+        }
+
+        [Test]
+        public async Task MultiplePendingLocations_AskForStepAndFillOnlyChosenSlot()
+        {
+            provider.Json="{\"outcome\":\"Clarify\",\"message\":\"Where?\",\"pending\":{\"executionOrder\":\"DependencyGraph\",\"nodes\":[{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":4,\"quantityMode\":\"New\"},{\"type\":\"MoveUnits\",\"unitSelector\":\"Spearman\",\"count\":4,\"dependsOn\":[0],\"resultFromNode\":0},{\"type\":\"MoveUnits\",\"unitSelector\":\"Scout\",\"count\":1}]},\"missingSlots\":[{\"node\":1,\"path\":\"location\",\"type\":\"Location\",\"alternatives\":[\"PlayerMarker\",\"PlayerBase\"]},{\"node\":2,\"path\":\"location\",\"type\":\"Location\",\"alternatives\":[\"PlayerMarker\",\"PlayerBase\"]}]}";
+            await chat.SubmitMessageAsync("Train four new spearmen, move them, and move my scout");
+            Assert.That(chat.PendingClarification,Is.Not.Null,chat.DisplayedTranscript);
+            int x=sim.MapData.Width/2+6,z=sim.MapData.Height/2+6;sim.FogOfWar.SetVisible(0,x,z);
+            Assert.That(chat.TryPlaceDestinationMarker(x,z),Is.True);
+            Assert.That(chat.DisplayedTranscript,Does.Contain("Which step"));
+            Assert.That(chat.PendingClarification.GraphDraft.MissingSlots.Count,Is.EqualTo(2));
+            typeof(CommanderChatUI).GetField("markerInputFrame",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(chat,-1);
+            await chat.SubmitMessageAsync("step 2");
+            Assert.That(chat.PendingClarification.GraphDraft.MissingSlots.Count,Is.EqualTo(1));
+            Assert.That(chat.PendingClarification.GraphDraft.MissingSlots[0].Node,Is.EqualTo(2));
+            typeof(CommanderChatUI).GetMethod("UpdatePresentation",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(chat,null);
+            var status=typeof(CommanderChatUI).GetField("latestRequestState",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(chat);
+            Assert.That(status,Is.EqualTo("Needs clarification"),"Resolving a destination step must clear the obsolete step-choice heading.");
+            Assert.That(provider.Calls,Is.EqualTo(1));Assert.That(manager.Goals,Is.Empty);
+        }
+
+        [Test]
+        public async Task MultiplePendingLocations_KeepEachSelectedPointThroughApprovalAndLaterMarkerChanges()
+        {
+            provider.UseProviderDeclarations=true;
+            provider.Json="{\"outcome\":\"Clarify\",\"message\":\"Where?\",\"pending\":{\"executionOrder\":\"Independent\",\"nodes\":[{\"type\":\"MoveUnits\",\"unitSelector\":\"Spearman\",\"count\":1},{\"type\":\"MoveUnits\",\"unitSelector\":\"Scout\",\"count\":1}]},\"missingSlots\":[{\"node\":0,\"path\":\"location\",\"type\":\"Location\",\"alternatives\":[\"PlayerMarker\",\"PlayerBase\"]},{\"node\":1,\"path\":\"location\",\"type\":\"Location\",\"alternatives\":[\"PlayerMarker\",\"PlayerBase\"]}]}";
+            int x=sim.MapData.Width/2,z=sim.MapData.Height/2;
+            for(int tx=x-3;tx<=x+22;tx++)
+                for(int tz=z-3;tz<=z+10;tz++)
+                {
+                    sim.MapData.Tiles[tx,tz]=TileType.Grass;
+                    sim.MapData.ForestDensity[tx,tz]=0;
+                    sim.MapData.FoundationCount[tx,tz]=0;
+                    sim.FogOfWar.SetVisible(0,tx,tz);
+                }
+            var actors=new System.Collections.Generic.List<UnitData>();
+            foreach(string name in new[]{"Spearman","Scout"})
+            {
+                Assert.That(CommanderIntentCatalog.TryResolveUnit(name,out int type),Is.True);
+                var actor=sim.UnitRegistry.CreateUnit(0,sim.MapData.TileToWorldFixed(x,z),Fixed32.One,Fixed32.One,Fixed32.One);
+                actor.UnitType=type;actor.IsVillager=false;actor.MaxHealth=actor.CurrentHealth=100;actor.State=UnitState.Idle;
+                actors.Add(actor);
+            }
+            var first=new Vector2Int(x+6,z+6);var second=new Vector2Int(x+12,z+6);var later=new Vector2Int(x+18,z+6);
+            foreach(var point in new[]{first,second,later})sim.FogOfWar.SetVisible(0,point.x,point.y);
+            await chat.SubmitMessageAsync("Move my Spearman and my Scout to their chosen destinations");
+            long requestId=chat.PendingClarification.RequestId;
+            Assert.That(chat.TryPlaceDestinationMarker(first.x,first.y),Is.True);
+            typeof(CommanderChatUI).GetField("markerInputFrame",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(chat,-1); // Next input frame.
+            await chat.SubmitMessageAsync("step 1");
+            Assert.That(chat.PendingClarification.GraphDraft.MissingSlots.Count,Is.EqualTo(1));
+            Assert.That(chat.TryPlaceDestinationMarker(second.x,second.y),Is.True);
+            Assert.That(chat.PendingActionPlan,Is.Not.Null,chat.DisplayedTranscript);
+            Assert.That(chat.PendingActionPlan.RequestId,Is.EqualTo(requestId));
+            Assert.That(manager.Goals,Is.Empty);Assert.That(provider.Calls,Is.EqualTo(1));
+            typeof(CommanderChatUI).GetField("markerInputFrame",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(chat,-1); // Separate approval frame.
+            await chat.SubmitMessageAsync("approve plan");
+            var moves=manager.Goals.OfType<CommanderCapabilityGoal>().OrderBy(g=>g.RequestNodeIndex).ToArray();
+            Assert.That(moves.Length,Is.EqualTo(2),chat.DisplayedTranscript);
+            Assert.That(moves[0].MarkerMoveLocation.TryResolve(sim,0,out int firstX,out int firstZ,out _,out _),Is.True);
+            Assert.That(new Vector2Int(firstX,firstZ),Is.EqualTo(first),"The second slot must not silently replace the first selected destination.");
+            Assert.That(moves[1].MarkerMoveLocation.TryResolve(sim,0,out int secondX,out int secondZ,out _,out _),Is.True);
+            Assert.That(new Vector2Int(secondX,secondZ),Is.EqualTo(second));
+            Assert.That(manager.TrySetPlayerMarkerSnapshot(later.x,later.y),Is.True);
+            Assert.That(moves[0].MarkerMoveLocation.TryResolve(sim,0,out firstX,out firstZ,out _,out _),Is.True);
+            Assert.That(new Vector2Int(firstX,firstZ),Is.EqualTo(first));
+            Assert.That(moves[1].MarkerMoveLocation.TryResolve(sim,0,out secondX,out secondZ,out _,out _),Is.True);
+            Assert.That(new Vector2Int(secondX,secondZ),Is.EqualTo(second));
+            var commands=new System.Collections.Generic.List<MoveCommand>();
+            sim.CommandBuffer.CommandEnqueued+=(command,origin)=>
+            {if(origin==CommandEnqueueSource.Commander&&command is MoveCommand move)commands.Add(move);};
+            for(int step=0;step<2000&&moves.Any(move=>move.Status!=CommanderGoalStatus.Completed);step++)
+            {manager.Tick(sim.CurrentTick);sim.Tick();}
+            Assert.That(commands,Has.Count.EqualTo(2));
+            for(int i=0;i<moves.Length;i++)
+            {
+                Assert.That(moves[i].Status,Is.EqualTo(CommanderGoalStatus.Completed),moves[i].StatusReason);
+                var target=sim.MapData.TileToWorldFixed(i==0?first.x:second.x,i==0?first.y:second.y);
+                Assert.That((actors[i].SimPosition-target).ToVector3().magnitude,Is.LessThanOrEqualTo(3f));
+                Assert.That(commands.Count(command=>command.UnitIds.Contains(actors[i].Id)),Is.EqualTo(1));
+            }
+            provider.Json="{\"outcome\":\"Request\",\"executionOrder\":\"Independent\",\"nodes\":[{\"type\":\"MoveUnits\",\"unitSelector\":\"Spearman\",\"count\":1,\"location\":\"PlayerMarker\"},{\"type\":\"MoveUnits\",\"unitSelector\":\"Scout\",\"count\":1,\"location\":\"PlayerMarker\"}]}";
+            await chat.SubmitMessageAsync("Move both to my latest marker");
+            Assert.That(chat.PendingActionPlan,Is.Not.Null,chat.DisplayedTranscript);
+            await chat.SubmitMessageAsync("approve plan");
+            var next=manager.Goals.OfType<CommanderCapabilityGoal>().Where(g=>!moves.Contains(g)).ToArray();
+            Assert.That(next.Length,Is.EqualTo(2));Assert.That(provider.Calls,Is.EqualTo(2));
+            foreach(var move in next)
+            {
+                Assert.That(move.MarkerMoveLocation.TryResolve(sim,0,out int nextX,out int nextZ,out _,out _),Is.True);
+                Assert.That(new Vector2Int(nextX,nextZ),Is.EqualTo(later),"A new request cannot inherit the previous request's slot snapshots.");
+            }
+        }
+
+        [Test]
         public async Task ProviderLocationClarification_MarkerResumesSameSingleBuildExactlyOnce()
         {
             provider.Json=CommanderPhase5CStabilizationTests.MissingBuildLocation;
@@ -61,6 +180,7 @@ namespace OpenEmpires.Tests
             Assert.That(provider.Calls,Is.EqualTo(1));
             Assert.That(chat.LastSubmittedSemanticRequestId,Is.EqualTo(request));
             Assert.That(chat.PendingClarification,Is.Null);
+            Assert.That(chat.Conversation.SemanticMemory.Snapshot().Any(e=>e.Kind==CommanderSemanticMemoryKind.Clarification),Is.False);
             Assert.That(chat.PendingActionPlan,Is.Null,"An ordinary authorized single build retains its automatic submission rule.");
             Assert.That(manager.Goals.Count,Is.EqualTo(1));
             Assert.That(chat.TryPlaceDestinationMarker(tile.x,tile.y),Is.True);
@@ -155,6 +275,20 @@ namespace OpenEmpires.Tests
             Assert.That(provider.Calls,Is.EqualTo(1),"Marker click fills the retained semantic location locally.");
             Assert.That(chat.PendingActionPlan,Is.Not.Null,"Location completion must prepare a separate preview.");
             Assert.That(manager.Goals,Is.Empty,"A marker click is not gameplay approval.");
+            var question=(GameObject)typeof(CommanderChatUI).GetField("pendingQuestion",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(chat);
+            Assert.That(question.activeSelf,Is.False,"A resolved destination must not still display the old location question beside its approval preview.");
+            var candidate=chat.PendingActionPlan;
+            string transcript=chat.DisplayedTranscript;
+            Assert.That(chat.TryPlaceDestinationMarker(tile.x+6,tile.y+6),Is.True);
+            Assert.That(chat.PendingActionPlan,Is.SameAs(candidate),"A duplicate callback must not replace the approval candidate.");
+            Assert.That(chat.DisplayedTranscript,Is.EqualTo(transcript),"A duplicate callback must not repeat the preview/question.");
+            chat.BeginDestinationPlacement();
+            typeof(CommanderChatUI).GetMethod("UpdatePresentation",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(chat,null);
+            var compact=typeof(CommanderChatUI).GetField("compactStatus",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(chat);
+            Assert.That((string)compact.GetType().GetProperty("text").GetValue(compact),Is.EqualTo("Select destination"),
+                "An approval preview must not mask the active world-click input state.");
+            Assert.That(chat.PendingActionPlan,Is.SameAs(candidate));
+            Assert.That(provider.Calls,Is.EqualTo(1));Assert.That(manager.Goals,Is.Empty);
         }
         [Test]
         public async Task UnsupportedRequest_IsRejectedRatherThanCompleted()
@@ -625,8 +759,9 @@ namespace OpenEmpires.Tests
         private sealed class SemanticProvider:ICommanderAIProvider,ICommanderSemanticProvider
         {
             internal int Calls; internal string Json="{\"outcome\":\"Answer\",\"message\":\"fixture answer\"}";
+            internal bool UseProviderDeclarations;
             public Task<CommanderSemanticResult> TranslateSemanticAsync(CommanderSemanticProviderRequest request,CancellationToken token)
-            {Calls++;return Task.FromResult(CommanderSemanticJson.Parse(Json));}
+            {Calls++;return Task.FromResult(UseProviderDeclarations?CommanderSemanticJson.ParseProviderResponse(Json):CommanderSemanticJson.Parse(Json));}
             public Task<CommanderAIProviderResult> TranslateAsync(CommanderAIRequest request,CancellationToken token)
             {Calls++;return Task.FromResult(CommanderAIProviderResult.Rejected(CommanderIntentErrorCode.ProviderFailure,"fixture"));}
         }

@@ -1,0 +1,19 @@
+{
+  "schema": "commander-pruning-fixture-repair@1",
+  "runtimeSource": "e4a851c0f45bdd3bbb3253ec1abfaa5b6da015c6c1af4d40018eba9199740098",
+  "changeScope": "Test fixture only; no runtime source, byte ceiling, provider contract, parser or admission changed.",
+  "cause": "Twelve synthetic180-character CJK history entries already exceed required-context ceiling without utterance padding; the old fixture could never enter its intended optional-hint pruning path.",
+  "observedMinimumBytes": {
+    "history12": 33900,
+    "history8": 31715,
+    "inputCeiling": 32768
+  },
+  "correction": "Use ordinary bounded history capacity; assert unpadded input fits and retains hints, then require pruned input to fit and still require game-owned confirmation. Preserve every prior semantic/authority/transport assertion.",
+  "additionalCoverage": "Oversized required history still rejects before HTTP and is not silently truncated.",
+  "redJob": "92529ffb65cb4e58a3edc9e522374943",
+  "focusedGreenJob": "be8eb5c6906645bf9765e0ed9b3a93b0",
+  "classGreenJob": "80cf8c0df1b8455a9cba16243b6f4846",
+  "focusedPassed": 2,
+  "classPassed": 108,
+  "earlierBroadGate": "Historical174-case gate remains failed as recorded; do not relabel it green. The named failing fixture is now corrected and passed in the current108-case clarification class."
+}

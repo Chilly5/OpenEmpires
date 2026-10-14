@@ -1,0 +1,20 @@
+{
+  "schema": "commander-phase5c-bounded-authorization@2",
+  "authorized_attempts": 10,
+  "starting_global_used": 58,
+  "global_cap": 200,
+  "scope_http_cap": 10,
+  "integration_attempt_start_count": 24,
+  "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+  "model": "openai/gpt-6-luna",
+  "payload": "Exact text commands, public canonical game facts and controlled owned-game counts; no runtime IDs,coordinates,private files or credentials.",
+  "authorization": "User directly approved 10 more accepted on 2026-10-14; no new question within this10.",
+  "runtime_source_sha256": "9829108a90f7590f9adaff7803b90fdabc3e404096adbd8f1eea80131aae74af",
+  "retries": 0,
+  "repair_http": 0,
+  "preserve_failed_attempts": true,
+  "utc": "2026-10-14T00:28:55.465Z",
+  "initial_runtime_source_sha256": "e4a851c0f45bdd3bbb3253ec1abfaa5b6da015c6c1af4d40018eba9199740098",
+  "source_transition": "Attempt01 on e4 reproduced Confirmation quantityMode mismatch. Subsequent calls use shared parser/provider slot vocabulary82f after observed-cause repair. Original startingGlobal58/startIntegration24/cap10 unchanged.",
+  "final_source_transition": "After attempts01-08, only a missing top-status publication after partial marker resolution changed runtime source. Calls09-10 cover final A/B."
+}

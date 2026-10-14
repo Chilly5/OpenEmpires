@@ -20,7 +20,7 @@ namespace OpenEmpires
             string whole = NormalizeWholeForm(message);
             if (whole == "cancel" || whole == "never mind" || whole == "nevermind" || whole == "forget it")
             {
-                pendingClarification = null; AppendLine("Player", message);
+                pendingClarification = null; ClearPendingMarkerLocations(); AppendLine("Player", message);
                 SetLatestRequestState("Cancelled", "Pending request cancelled; no goal was created.");
                 AppendLine("Commander", "Pending request cancelled; no goal was created."); return true;
             }
@@ -28,7 +28,7 @@ namespace OpenEmpires
                 @"^no,\s*cancel(?:\s+(?:that|this)\s+(?:proposal|plan))?$");
             if (pendingClarification.GraphDraft != null && (whole == "no" || negativeCancellation))
             {
-                pendingClarification = null; AppendLine("Player", message);
+                pendingClarification = null; ClearPendingMarkerLocations(); AppendLine("Player", message);
                 SetLatestRequestState("Cancelled", "Proposal dismissed; existing tasks are unchanged.");
                 AppendLine("Commander", "Proposal dismissed; existing tasks are unchanged."); return true;
             }

@@ -1,0 +1,128 @@
+{
+  "source": "c7b2ef10d452602459f49c7aefadad3a86d425ca2808d04afc4a97008411409c",
+  "stage": "basic-native-completed",
+  "tick": 11560,
+  "goals": [
+    {
+      "id": 1,
+      "type": "BuildStructureGoal",
+      "status": "Completed",
+      "reason": "Completed 1 exact requested Barracks results."
+    },
+    {
+      "id": 2,
+      "type": "EnsureUnitCountGoal",
+      "status": "Completed",
+      "reason": "Owned 4/4 living units."
+    }
+  ],
+  "commands": [
+    {
+      "tick": 3150,
+      "type": "PlaceBuildingCommand",
+      "command": {
+        "BuildingType": 1,
+        "TileX": 185,
+        "TileZ": 118,
+        "VillagerUnitIds": [
+          0
+        ],
+        "IsQueued": false,
+        "LandmarkIdValue": -1,
+        "Type": 7,
+        "PlayerId": 0
+      }
+    },
+    {
+      "tick": 4215,
+      "type": "PlaceBuildingCommand",
+      "command": {
+        "BuildingType": 0,
+        "TileX": 190,
+        "TileZ": 118,
+        "VillagerUnitIds": [
+          0
+        ],
+        "IsQueued": false,
+        "LandmarkIdValue": -1,
+        "Type": 7,
+        "PlayerId": 0
+      }
+    },
+    {
+      "tick": 4230,
+      "type": "TrainUnit",
+      "command": {
+        "BuildingId": 2,
+        "UnitType": 1,
+        "Type": 5,
+        "PlayerId": 0
+      }
+    },
+    {
+      "tick": 4245,
+      "type": "TrainUnit",
+      "command": {
+        "BuildingId": 2,
+        "UnitType": 1,
+        "Type": 5,
+        "PlayerId": 0
+      }
+    },
+    {
+      "tick": 4260,
+      "type": "TrainUnit",
+      "command": {
+        "BuildingId": 2,
+        "UnitType": 1,
+        "Type": 5,
+        "PlayerId": 0
+      }
+    },
+    {
+      "tick": 4680,
+      "type": "TrainUnit",
+      "command": {
+        "BuildingId": 2,
+        "UnitType": 1,
+        "Type": 5,
+        "PlayerId": 0
+      }
+    }
+  ],
+  "buildings": [
+    {
+      "id": 0,
+      "type": "TownCenter",
+      "unfinished": false
+    },
+    {
+      "id": 2,
+      "type": "Barracks",
+      "unfinished": false
+    },
+    {
+      "id": 3,
+      "type": "House",
+      "unfinished": false
+    }
+  ],
+  "units": [
+    {
+      "id": 47,
+      "position": "(185.0000, 0.0000, 119.5000)"
+    },
+    {
+      "id": 48,
+      "position": "(182.6005, 0.0000, 119.5000)"
+    },
+    {
+      "id": 49,
+      "position": "(183.4003, 0.0000, 119.5000)"
+    },
+    {
+      "id": 50,
+      "position": "(184.2001, 0.0000, 119.5000)"
+    }
+  ]
+}

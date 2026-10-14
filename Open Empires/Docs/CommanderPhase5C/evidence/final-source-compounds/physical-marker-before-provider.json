@@ -1,0 +1,54 @@
+{
+  "tick": 7264,
+  "requestId": 1,
+  "trace": "utc=2026-10-13T18:31:02.0143944Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=6730\nfinish=stop\nassistantContent=extracted;characters=442;finish=stop\nschema=field=$;code=invalid-schema;stage=envelope;node=-1;mode=Clarify\nsemantic=invalid;nodes=0\n",
+  "attempts": [
+    {
+      "kind": "initial",
+      "stage": "schema-invalid",
+      "http": 200
+    }
+  ],
+  "preview": null,
+  "nodes": null,
+  "marker": [
+    200,
+    124
+  ],
+  "transcript": "Player:\r\nbuild barracks and 4 spearman\r\n\r\nCommander:\r\nCommander AI returned an invalid semantic response; no order was submitted.\r\n\r\nCommander:\r\nClick a visible destination to save it for the next applicable request.\r\n\r\nCommander:\r\nDestination saved for the next applicable request. Existing tasks keep their approved destination.",
+  "goals": [],
+  "buildings": [
+    {
+      "id": 0,
+      "type": "TownCenter",
+      "unfinished": false
+    },
+    {
+      "id": 1,
+      "type": "Barracks",
+      "unfinished": false
+    }
+  ],
+  "spearmen": [
+    {
+      "id": 23,
+      "position": "(205.0002, 0.0000, 140.5000)",
+      "state": "Idle"
+    },
+    {
+      "id": 24,
+      "position": "(206.9998, 0.0000, 140.5000)",
+      "state": "Idle"
+    }
+  ],
+  "texts": [
+    {
+      "name": "CommanderStatus",
+      "text": "Destination saved for the next applicable request. Existing tasks keep their approved destination."
+    },
+    {
+      "name": "TaskBadge",
+      "text": "0 active tasks"
+    }
+  ]
+}

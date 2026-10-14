@@ -1,0 +1,52 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "20fa9e71da134e0aa5defa624fabc791",
+      "status": "failed",
+      "mode": "EditMode",
+      "started_unix_ms": 1791930716766,
+      "finished_unix_ms": 1791930718887,
+      "last_update_unix_ms": 1791930718887,
+      "progress": {
+        "completed": 15,
+        "total": 15,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791930718864,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CIntegrationRepairTests.OverlongExplanation_ReportsKnownMessageFieldWithoutPersistingItsContent(\"Unsupported\")",
+        "last_finished_unix_ms": 1791930718865,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.MarkerContinuation_PreservesRequestAndDoesNotInterpretOrApproveAgain",
+            "message": "  An approval preview must not mask the active world-click input state.\r\n  Expected string length 18 but was 15. Strings differ at index 0.\r\n  Expected: \"Select destination\"\r\n  But was:  \"Approval needed\"\r\n  -----------^\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CIntegrationRepairTests.MalformedEnvelope_RejectsWithKnownFieldTypesInsteadOfLosingTheFirstFailure(\"{\\\"outcome\\\":\\\"Clarify\\\",\\\"message\\\":{}}\",\"message\",\"String\",\"Object\")",
+            "message": "  Expected: String containing \"field=message\"\r\n  But was:  \"field=$;code=invalid-schema;stage=envelope;node=-1;mode=Clarify\"\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CIntegrationRepairTests.OverlongExplanation_ReportsKnownMessageFieldWithoutPersistingItsContent(\"Clarify\")",
+            "message": "  Expected: String containing \"field=message;code=out-of-range;expected=String;actual=String\"\r\n  But was:  \"field=$;code=invalid-schema;stage=envelope;node=-1;mode=Clarify\"\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CIntegrationRepairTests.OverlongExplanation_ReportsKnownMessageFieldWithoutPersistingItsContent(\"Answer\")",
+            "message": "  Expected: String containing \"field=message;code=out-of-range;expected=String;actual=String\"\r\n  But was:  \"field=$;code=invalid-schema;stage=envelope;node=-1;mode=Answer\"\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CIntegrationRepairTests.OverlongExplanation_ReportsKnownMessageFieldWithoutPersistingItsContent(\"Unsupported\")",
+            "message": "  Expected: String containing \"field=message;code=out-of-range;expected=String;actual=String\"\r\n  But was:  \"field=$;code=invalid-schema;stage=envelope;node=-1;mode=Unsupported\"\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

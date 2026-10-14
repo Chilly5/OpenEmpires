@@ -87,6 +87,43 @@ namespace OpenEmpires.Tests
             Assert.That(f.Sim.BuildingRegistry.GetAllBuildings().Count(b=>b.Type==BuildingType.Mill&&!b.IsUnderConstruction),Is.EqualTo(1));
         }
 
+        [TestCase(false)]
+        [TestCase(true)]
+        public void OneNewBarracksThenFourSpearmen_WaitsForExactNewProducerAndPreservesQuantity(bool explicitlyNew)
+        {
+            using var f=new Fixture();
+            var oldProducer=f.Sim.CreateBuilding(0,BuildingType.Barracks,f.X-20,f.Z+15,false,true);
+            int baseline=explicitlyNew?2:0;
+            for(int i=0;i<baseline;i++)
+            {
+                var old=f.Sim.UnitRegistry.CreateUnit(0,f.Sim.MapData.TileToWorldFixed(f.X+4+i,f.Z+3),Fixed32.One,Fixed32.One,Fixed32.One);
+                old.UnitType=1;old.IsVillager=false;old.CurrentHealth=old.MaxHealth=100;old.State=UnitState.Idle;
+            }
+            var train=new JObject{["type"]="EnsureUnitCount",["unit"]="Spearman",["count"]=4,
+                ["quantityMode"]=explicitlyNew?"New":"TargetTotal",["producerFromNode"]=0,["dependsOn"]=new JArray(0)};
+            var goals=f.Admit(new JObject{["outcome"]="Request",["executionOrder"]="Sequential",
+                ["nodes"]=new JArray(Build(BuildingType.Barracks,1),train)}.ToString(),"Build a barracks then train four spearmen from it");
+            int trainTick=-1,buildingCompletedTick=-1;
+            f.Sim.TrainingOrderAccepted += receipt=> {
+                if(trainTick<0)trainTick=f.Sim.CurrentTick;
+                Assert.That(goals[0].Status,Is.EqualTo(CommanderGoalStatus.Completed));
+                Assert.That(f.Sim.BuildingRegistry.GetBuilding(receipt.ProducerId).IsUnderConstruction,Is.False);
+            };
+            for(int i=0;i<12000&&goals.Any(g=>!g.IsTerminal);i++)
+            {
+                f.Manager.Tick(f.Sim.CurrentTick);
+                if(goals[0].Status==CommanderGoalStatus.Completed&&buildingCompletedTick<0)buildingCompletedTick=f.Sim.CurrentTick;
+                f.Sim.Tick();
+            }
+            Assert.That(goals.All(g=>g.Status==CommanderGoalStatus.Completed),Is.True,string.Join(";",goals.Select(g=>g.StatusReason)));
+            var build=(BuildStructureGoal)goals[0];
+            Assert.That(build.ResultBuildingIds,Has.Count.EqualTo(1));
+            Assert.That(f.AcceptedProducerIds,Has.Count.EqualTo(4));
+            Assert.That(f.AcceptedProducerIds.All(id=>id==build.ResultBuildingIds[0]&&id!=oldProducer.Id),Is.True);
+            Assert.That(trainTick,Is.GreaterThanOrEqualTo(buildingCompletedTick));
+            Assert.That(f.Sim.UnitRegistry.GetAllUnits().Count(u=>u.PlayerId==0&&u.UnitType==1&&u.State!=UnitState.Dead),Is.EqualTo(baseline+4));
+        }
+
         [Test]
         public void FiveNewBarracks_TrainFiftyNewSpearmenOnlyFromExactBuildResults()
         {

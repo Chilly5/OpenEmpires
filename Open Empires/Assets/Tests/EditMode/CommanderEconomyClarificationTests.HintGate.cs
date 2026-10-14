@@ -279,8 +279,19 @@ namespace OpenEmpires.Tests
             using (var f = new HintFixture(LongbowRequest))
             {
                 CommanderSemanticProviderRequest selected = null;
-                var memory = new CommanderSemanticConversationMemory(12);
-                for (int i = 0; i < 12; i++) memory.RecordClarification(new string('\u754c', 180));
+                // Twelve padded entries already exceed the required-context ceiling.
+                // Use ordinary history capacity so this fixture crosses the optional
+                // hint boundary rather than testing an unrelated preflight rejection.
+                var memory = new CommanderSemanticConversationMemory();
+                for (int i = 0; i < memory.Capacity; i++) memory.RecordClarification(new string('\u754c', 180));
+                const string unpadded = "Train three new longbowmna";
+                var ordinary = new CommanderSemanticProviderRequest(unpadded,
+                    new CommanderContextBuilder().Build(f.Economy.Simulation, f.Economy.Manager, unpadded),
+                    memory.Snapshot());
+                Assert.That(CommanderSemanticRequestPack.TryBuild(ordinary, "openai/gpt-6-luna", 4096,
+                    out var ordinaryPack, out var ordinaryReason), Is.True, ordinaryReason);
+                Assert.That((string)JObject.Parse(ordinaryPack.Json)["messages"][1]["content"],
+                    Does.Contain("nameInterpretations"), "The unpadded request must retain its optional hints.");
                 for (int length = 0; length < 990; length += 10)
                 {
                     string original = "Train three new longbowmna " + new string('\u754c', length);
@@ -298,6 +309,30 @@ namespace OpenEmpires.Tests
                 Assert.That(f.Transport.Calls, Is.EqualTo(1));
                 Assert.That(f.Transport.Body, Does.Not.Contain("nameInterpretations"));
                 Assert.That(f.Provider.LastInputEstimate, Is.LessThan(CommanderSemanticRequestPack.InputByteLimit));
+            }
+        }
+
+        [Test]
+        public async Task NearName_OversizedRequiredHistoryRejectsBeforeHttp()
+        {
+            using (var f = new HintFixture(LongbowRequest))
+            {
+                var memory = new CommanderSemanticConversationMemory(12);
+                for (int i = 0; i < memory.Capacity; i++) memory.RecordClarification(new string('\u754c', 180));
+                const string original = "Train three new longbowmna";
+                var request = new CommanderSemanticProviderRequest(original,
+                    new CommanderContextBuilder().Build(f.Economy.Simulation, f.Economy.Manager, original),
+                    memory.Snapshot());
+                Assert.That(CommanderSemanticRequestPack.TryBuild(request, "openai/gpt-6-luna", 4096,
+                    out var pack, out var reason), Is.False);
+                Assert.That(pack.EstimatedInputTokens, Is.GreaterThanOrEqualTo(CommanderSemanticRequestPack.InputByteLimit));
+                Assert.That(reason, Does.Contain("input limit"));
+                Assert.That(request.SerializedSemanticMemory, Does.Contain(new string('\u754c', 180)),
+                    "Required history must not be silently truncated to dispatch.");
+                var result = await f.Provider.TranslateSemanticAsync(request, CancellationToken.None);
+                Assert.That(result.Outcome, Is.EqualTo(CommanderSemanticOutcome.Unsupported));
+                Assert.That(f.Transport.Calls, Is.Zero);
+                Assert.That(f.Economy.Manager.Goals, Is.Empty);
             }
         }
 

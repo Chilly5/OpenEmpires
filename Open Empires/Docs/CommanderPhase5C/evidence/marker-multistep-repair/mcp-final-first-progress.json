@@ -1,0 +1,73 @@
+{
+  "requestId": null,
+  "trace": "utc=2026-10-13T15:00:16.8567711Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=5847\nfinish=stop\nassistantContent=extracted;characters=400;finish=stop\nsemantic=Clarify;nodes=0\n",
+  "attempts": [
+    {
+      "kind": "initial",
+      "stage": "semantic-valid",
+      "http": 200
+    }
+  ],
+  "preview": null,
+  "transcript": "Player:\r\ntrain 4 new spearmen and move them\r\n\r\nCommander:\r\nWhere should I move the new spearmen?\r\n\r\nCommander:\r\nDestination selected for step 2 of: train 4 new spearmen and move them.\r\n\r\nCommander:\r\nAction plan — not started.\n1. Produce 4 new Spearman\n2. Move 4 owned Spearman to your placed destination marker; after step 1; only the 4 new Spearman produced in step 1; no existing or human-produced units substitute\nPreparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan.\r\n\r\nCommander:\r\nDestination selected for: train 4 new spearmen and move them. Review and approve the complete plan.\r\n\r\nCommander:\r\nCompound Commander order submitted.",
+  "cursor": "None",
+  "screen": [
+    1520,
+    656
+  ],
+  "marker": null,
+  "tick": 6305,
+  "goals": [
+    {
+      "id": 1,
+      "type": "EnsureUnitCountGoal",
+      "status": "Completed",
+      "reason": "Owned 4/4 living units."
+    },
+    {
+      "id": 2,
+      "type": "CommanderCapabilityGoal",
+      "status": "Completed",
+      "reason": "The movement objective is satisfied in simulation state."
+    }
+  ],
+  "buildings": [
+    {
+      "id": 0,
+      "type": "TownCenter",
+      "unfinished": false
+    },
+    {
+      "id": 2,
+      "type": "House",
+      "unfinished": false
+    },
+    {
+      "id": 3,
+      "type": "Barracks",
+      "unfinished": false
+    }
+  ],
+  "spearmen": [
+    {
+      "id": 47,
+      "position": "(209.5277, 0.0000, 142.5143)",
+      "state": "Idle"
+    },
+    {
+      "id": 48,
+      "position": "(208.4693, 0.0000, 141.4377)",
+      "state": "Idle"
+    },
+    {
+      "id": 49,
+      "position": "(208.8099, 0.0000, 142.1612)",
+      "state": "Idle"
+    },
+    {
+      "id": 50,
+      "position": "(208.5000, 0.0000, 143.5000)",
+      "state": "Idle"
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "tick": 3272,
+  "requestId": 1,
+  "trace": "utc=2026-10-13T18:49:46.8741079Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=5214\nfinish=stop\nassistantContent=extracted;characters=283;finish=stop\nsemantic=Request;nodes=2\n",
+  "attempts": [
+    {
+      "kind": "initial",
+      "stage": "semantic-valid",
+      "http": 200
+    }
+  ],
+  "preview": null,
+  "nodes": null,
+  "marker": null,
+  "transcript": "Player:\r\nbuild barracks and 4 spearman\r\n\r\nCommander:\r\nAction plan — not started.\n1. Build 1 Barracks\n2. Ensure Spearman total 4; expected 4 newly produced (existing and queued count toward the total); after step 1; only the Barracks built in step 1; no other producer substitutes\nPreparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan.\r\n\r\nCommander:\r\nCompound Commander order submitted.",
+  "goals": [
+    {
+      "id": 1,
+      "type": "BuildStructureGoal",
+      "status": "WaitingForConstruction",
+      "reason": "Requested construction: building #1 is advancing with villager #0."
+    },
+    {
+      "id": 2,
+      "type": "EnsureUnitCountGoal",
+      "status": "WaitingForPrerequisite",
+      "reason": "Waiting for dependency goal #1 to complete."
+    }
+  ],
+  "buildings": [
+    {
+      "id": 0,
+      "type": "TownCenter",
+      "unfinished": false
+    },
+    {
+      "id": 1,
+      "type": "Barracks",
+      "unfinished": true
+    }
+  ],
+  "spearmen": [],
+  "texts": [
+    {
+      "name": "CommanderStatus",
+      "text": "Working — Build 1 Barracks"
+    },
+    {
+      "name": "TaskBadge",
+      "text": "1 active task"
+    }
+  ]
+}

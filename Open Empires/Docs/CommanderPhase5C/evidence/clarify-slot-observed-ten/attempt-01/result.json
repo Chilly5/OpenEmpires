@@ -1,0 +1,17 @@
+{
+  "stage": "provider-observed",
+  "done": true,
+  "request": 1,
+  "preview": null,
+  "pending": false,
+  "trace": "utc=2026-10-14T00:30:44.8146244Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=5763\nfinish=stop\nassistantContent=extracted;characters=475;finish=stop\nschema=field=$;code=invalid-schema;stage=envelope;node=-1;mode=Clarify\nsemantic=invalid;nodes=0\n",
+  "attempts": [
+    {
+      "kind": "initial",
+      "stage": "schema-invalid",
+      "http": 200
+    }
+  ],
+  "transcript": "Player:\r\nbuild barracks and 4 spearman\r\n\r\nCommander:\r\nCommander AI returned an invalid semantic response; no order was submitted.",
+  "goals": 0
+}

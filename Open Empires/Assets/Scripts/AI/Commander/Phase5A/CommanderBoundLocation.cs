@@ -26,6 +26,9 @@ namespace OpenEmpires
         internal CommanderSemanticPlacementRelation Relation { get; }
         internal int ClearGapTiles { get; }
         internal bool IsResourceSide => resourceSideIds != null || kind == AnchorKind.Resource;
+        internal bool IsPlayerMarkerFor(CommanderGoalManager currentOwner)
+            => kind == AnchorKind.PlayerMarker && ReferenceEquals(owner,currentOwner)
+                && ReferenceEquals(runtime,currentOwner.Simulation) && playerId == currentOwner.PlayerId;
 
         private CommanderBoundLocation(AnchorKind kind, GameSimulation runtime,
             CommanderGoalManager owner, int playerId, int anchorId,

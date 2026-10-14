@@ -1,0 +1,29 @@
+{
+  "requestId": 1,
+  "trace": "utc=2026-10-13T16:55:28.2817214Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=3618\nfinish=stop\nassistantContent=extracted;characters=91;finish=stop\nschema=field=<unknown>;code=unexpected-field;expected=AllowedField;actual=String;mode=DynamicPlan\nsemantic=invalid;nodes=0\n",
+  "attempts": [
+    {
+      "kind": "initial",
+      "stage": "schema-invalid",
+      "http": 200
+    }
+  ],
+  "preview": null,
+  "transcript": "Player:\r\nbuild 3 stables\r\n\r\nCommander:\r\nCommander AI returned an invalid semantic response; no order was submitted.",
+  "cursor": "None",
+  "screen": [
+    1520,
+    656
+  ],
+  "marker": null,
+  "tick": 12282,
+  "goals": [],
+  "buildings": [
+    {
+      "id": 0,
+      "type": "TownCenter",
+      "unfinished": false
+    }
+  ],
+  "spearmen": []
+}

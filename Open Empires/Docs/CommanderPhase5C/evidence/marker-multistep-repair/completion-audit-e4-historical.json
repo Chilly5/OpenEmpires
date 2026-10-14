@@ -1,0 +1,245 @@
+{
+  "schema": "commander-phase5c-repair-completion-audit@1",
+  "verdict": "PARTIAL",
+  "identity": {
+    "branch": "unit_models_and_voice_control",
+    "head": "55e27fcc28f37ee9e2f2f89661c1117c125ff2af",
+    "sourceSha256": "e4a851c0f45bdd3bbb3253ec1abfaa5b6da015c6c1af4d40018eba9199740098"
+  },
+  "requirements": [
+    {
+      "id": "authoritative-state",
+      "status": "proved",
+      "evidence": [
+        "source-identity.json",
+        "partial-closeout-source-manifest.json"
+      ],
+      "limit": "Source identity and manifest do not certify packages."
+    },
+    {
+      "id": "pre-repair-physical-reproduction",
+      "status": "partial",
+      "evidence": [
+        "pre-repair-ui.json",
+        "pre-repair-marker.json",
+        "../post-clarify-observed-ten/attempt-10/result.json",
+        "../post-clarify-observed-ten/attempt-10/response-shape.json",
+        "../post-clarify-observed-ten/attempt-10/no-admission.json"
+      ],
+      "limit": "Actual compound rejection and physical marker were captured before fixes; original malformed field was not retained."
+    },
+    {
+      "id": "basic-live-ui-native-compound-zero-baseline",
+      "status": "proved-final-source-live-physical-approval-native",
+      "evidence": [
+        "../basic-observed-five/attempt-01/native-proof.json",
+        "../basic-observed-five/attempt-05/result.json",
+        "../basic-observed-five/attempt-05/admitted.json",
+        "../basic-observed-five/attempt-05/native-proof.json",
+        "../basic-observed-five/attempt-05/task-card-completed.json",
+        "../basic-observed-five/attempt-05/task-card-completed.png",
+        "../basic-observed-five/runtime-02-commands.json",
+        "../basic-observed-five/observed-attempts.json",
+        "../final-per-step-source/basic/preview.json",
+        "../final-per-step-source/basic/admitted.json",
+        "../final-per-step-source/basic/native-proof.json",
+        "../final-per-step-source/basic/completed-card.json",
+        "../post-clarify-observed-ten/attempt-06/native-proof.json",
+        "../post-clarify-observed-ten/attempt-06/completed-card.json"
+      ],
+      "limit": "Final e4: zero baseline, Barracks2 produced44–47, physical approval; both goals complete. Combined attempt07 card records both finite rows Completed."
+    },
+    {
+      "id": "explicit-new-producer-with-old-units",
+      "status": "proved-recorded-source71-live-native",
+      "evidence": [
+        "mcp-final-from-it-with-history-preview.json",
+        "mcp-final-native-command-details.json",
+        "envelope-diagnostic-gates.json",
+        "../post-clarify-observed-ten/attempt-02/native-proof.json",
+        "../post-clarify-observed-ten/attempt-02/completed-card.json"
+      ],
+      "limit": "Source71: old producer2/units47–50 present; exact new producer4 alone produced attributed51–54, dependency complete. Production UI approval callback through MCP."
+    },
+    {
+      "id": "three-stables-production-provider-path",
+      "status": "proved-recorded-source71-live-native",
+      "evidence": [
+        "../marker-multistep-stables-shape/result.json",
+        "../marker-multistep-stables-shape/native-completion.json",
+        "../marker-multistep-stables-shape/native-completion.png",
+        "next-response-shape.json",
+        "../post-clarify-observed-ten/attempt-03/native-proof.json",
+        "../post-clarify-observed-ten/attempt-03/completed-card.json"
+      ],
+      "limit": "Source71: KnownIntentAutomatic, wood0 wait and normal gathering recovered, three distinct Stables5/6/7 native-completed, card3/3."
+    },
+    {
+      "id": "exact-new-mill-eight-farms",
+      "status": "proved-recorded-source71-live-native",
+      "evidence": [
+        "repaired-mill-farms-preview.json",
+        "final-gates.json",
+        "../post-clarify-observed-ten/attempt-04/native-proof.json",
+        "../post-clarify-observed-ten/attempt-04/completed-card.json"
+      ],
+      "limit": "Source71: same live-to-native chain, exact new Mill8 footprint binding, eight Farms9–16 completed; production UI approval callback through MCP."
+    },
+    {
+      "id": "physical-marker-exact-new-unit-arrival",
+      "status": "proved-final-source-production-chain",
+      "evidence": [
+        "../final-source-compounds/marker-preview.json",
+        "../final-source-compounds/marker-admitted.json",
+        "../final-source-compounds/marker-native-proof.json",
+        "../final-source-compounds/commands.json",
+        "../final-per-step-source/marker/physical-marker.json",
+        "../final-per-step-source/marker/preview.json",
+        "../final-per-step-source/marker/admitted.json",
+        "../final-per-step-source/marker/native-proof.json",
+        "../final-per-step-source/marker/old-unit-exclusion.json",
+        "../final-per-step-source/marker/completed-card.json",
+        "../post-clarify-observed-ten/attempt-07/native-proof.json",
+        "../post-clarify-observed-ten/attempt-07/completed-card.json"
+      ],
+      "limit": "Final e4: physical saved marker/replacement[224,85], same request2/one HTTP, physical approval, new48–51 alone in Move32475, old44–47 excluded, max arrival distance1.4143, goals/card complete. No unchanged-old-position claim."
+    },
+    {
+      "id": "physical-pending-local-continuation",
+      "status": "proved-recorded-source71-live-physical-native",
+      "evidence": [
+        "pending-location-before-click.json",
+        "pending-location-after-click.json",
+        "pending-location-admitted.json",
+        "physical-invalid-click.json",
+        "pending-marker-replaced.json",
+        "../per-step-marker-repair/physical-preview-resumed.json",
+        "../per-step-marker-repair/physical-admitted-resumed.json",
+        "../per-step-marker-repair/physical-native-resumed.json",
+        "../final-per-step-source/marker/pending-invalid-ui.json",
+        "../post-clarify-observed-ten/attempt-05/native-proof.json",
+        "../post-clarify-observed-ten/attempt-05/completed-card.json"
+      ],
+      "limit": "Source71: live Clarify request5, physical invalid UI click actual reason, local ground selection/replacement same request/one HTTP/no pre-approval goals, physical approval, new55–58 arrived, old47–54 excluded. Prior c7 multi-slot fixture remains dated offline-provider proof."
+    },
+    {
+      "id": "duplicate-callback-and-multiple-location-slot-selection",
+      "status": "proved-in-focused-native-and-physical-continuation-tests",
+      "evidence": [
+        "envelope-diagnostic-gates.json",
+        "mcp-final-local-continuation.json",
+        "../per-step-marker-repair/red-overwritten-first-point.json",
+        "../per-step-marker-repair/focused-green.json",
+        "../per-step-marker-repair/broad-gate.json",
+        "../per-step-marker-repair/native-two-destinations-gate.json",
+        "../per-step-marker-repair/physical-preview.json",
+        "../per-step-marker-repair/physical-preview.png",
+        "../per-step-marker-repair/physical-preview-resumed.json",
+        "../per-step-marker-repair/physical-native-resumed.json"
+      ],
+      "limit": "Sourcec7b2ef: copied per-node snapshots; rejected foreign marker does not claim ticket. Actual physical points [177,111]/[188,97], same request3 and one fixture-provider call, exactly two additional goals after separate physical approval; both completed. Later MCP marker replacement and duplicate callbacks preserved destinations/counts. Earlier preview interruption remains separate."
+    },
+    {
+      "id": "resource-waiting-dependency-cancellation-human-override",
+      "status": "proved-in-focused-native-tests",
+      "evidence": [
+        "final-gates.json",
+        "envelope-diagnostic-gates.json"
+      ],
+      "limit": "Controlled normal native commands/timers; not a full match or standalone test."
+    },
+    {
+      "id": "final-physical-marker-acknowledgement",
+      "status": "proved-final-source-recorded-editor-run",
+      "evidence": [
+        "../marker-multistep-stables-shape/physical-marker-final.json",
+        "../marker-multistep-stables-shape/physical-marker-final.png",
+        "../marker-multistep-stables-shape/physical-marker-invalid-final.json",
+        "../final-per-step-source/marker/physical-marker.json",
+        "../final-per-step-source/marker/physical-marker.png",
+        "../final-per-step-source/marker/native-proof.json",
+        "../final-per-step-source/marker/old-unit-exclusion.json",
+        "../final-per-step-source/marker/completed-card.json",
+        "../post-clarify-observed-ten/attempt-07/native-proof.json",
+        "../post-clarify-observed-ten/attempt-07/completed-card.json"
+      ],
+      "limit": "Final e4: no-pending marker issued no work, physical replacement retained same request, armed compact Select destination observed, physical approval/native completed."
+    },
+    {
+      "id": "play-again-one-minimized-launcher-and-stale-state",
+      "status": "proved-recorded-sourcec7-physical-partial-draft-reset",
+      "evidence": [
+        "../marker-multistep-stables-shape/physical-reset-final.json",
+        "../marker-multistep-stables-shape/physical-reset-new-runtime.json",
+        "../marker-multistep-stables-shape/physical-reset-new-runtime.png",
+        "../stabilization-ui/result.json",
+        "../per-step-marker-repair/reset-before.json",
+        "../per-step-marker-repair/physical-reset-after.json",
+        "../per-step-marker-repair/reset-next-match.json"
+      ],
+      "limit": "Sourcec7b2ef: request4 retained one slot and one stored marker point; normal surrender command and physical Play Again cleared draft/map/pin/placement. MCP controlled next match: one minimized launcher, empty transcript, zero goals/pending/points. No new semantic call."
+    },
+    {
+      "id": "strict-malformed-rejection-and-diagnostics",
+      "status": "proved-for-tested-shapes",
+      "evidence": [
+        "envelope-diagnostic-gates.json",
+        "../clarify-diagnostic-repair/red.json",
+        "../clarify-diagnostic-repair/focused-green.json",
+        "../clarify-diagnostic-repair/class-green.json",
+        "../clarify-diagnostic-repair/broad-checkpoint.json",
+        "../clarify-diagnostic-repair/pruning-fixture-sizing.json",
+        "../arming-message-repair/red.json",
+        "../arming-message-repair/green.json",
+        "../clarify-slot-observer-repair/red.json",
+        "../clarify-slot-observer-repair/class-green.json",
+        "../pruning-fixture-repair/class-green.json"
+      ],
+      "limit": "Runtime e4 strict rejection retained, attempt10 no prefix. Editor-only observer23/23 and corrected clarification class108/108 pass. Historical broad174 failure remains recorded; named fixture corrected without runtime/ceiling change. Actual rejected slot values still missing."
+    },
+    {
+      "id": "no-provider-authority-no-prefix-no-unrequested-movement",
+      "status": "proved-for-tested-and-recorded-cases",
+      "evidence": [
+        "native-command-details.json",
+        "mcp-final-native-command-details.json",
+        "envelope-diagnostic-gates.json"
+      ],
+      "limit": "This does not assert semantic correctness for arbitrary future model replies."
+    },
+    {
+      "id": "paid-accounting",
+      "status": "proved",
+      "evidence": [
+        "../paid-attempt-ledger.json",
+        "../basic-observed-five/authorization.json",
+        "../basic-observed-five/resumption-summary.json",
+        "../final-per-step-source/authorization.json",
+        "../final-per-step-source/basic/paid-usage-ledger.json",
+        "../final-per-step-source/marker/paid-usage-ledger.json",
+        "../final-per-step-source/resumption-summary.json",
+        "../post-clarify-observed-ten/authorization.json",
+        "../post-clarify-observed-ten/resumption-summary.json"
+      ],
+      "limit": "58/200 consumed,142 remaining; latest10 scope exhausted,10 initial/0 repair/retry HTTPs. Eight native completions, one cancelled preview, one schema-invalid Clarify. No reset/CU; Blender untouched."
+    },
+    {
+      "id": "report-and-handoff",
+      "status": "proved",
+      "evidence": [
+        "../../marker-multistep-repair-report.md",
+        "../../../../remaining_work.md"
+      ],
+      "limit": "Verdict remains partial and enumerates the next executable steps."
+    },
+    {
+      "id": "windows-web-packages-and-earlier-voice-regressions",
+      "status": "separate-pending-gates",
+      "evidence": [
+        "../../marker-multistep-repair-report.md"
+      ],
+      "limit": "No fresh package or Phase5B/5C acceptance claim."
+    }
+  ],
+  "unresolved_reliability_evidence": "Attempt10 exact basic HTTP200/finishstop/Clarify schema-invalid. Both pending nodes and slot containers captured; scalar slot path/type/alternatives masked. Exact malformed field unproven. Enhanced observer23/23 captures schema scalars for next fresh reproduction. Latest10 scope exhausted; new applicable paid authorization or user reproduction needed."
+}

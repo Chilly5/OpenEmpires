@@ -133,8 +133,10 @@ namespace OpenEmpires
                 : OpenRouterCommanderProvider.SemanticInstruction
                     + OpenRouterCommanderProvider.SemanticFidelityCheck
                     + " Phase 5C construction: unplaced BuildStructure count supports 1..20 under deterministic default placement; a placed Request count is exactly 1. Repeated explicitly placed construction uses DynamicPlan. Never reject an ordinary counted build because no placement was requested. Build followed by a unit name means production; build followed by a building name means construction. Archery in building context means Archery Range. "
-                    + " Context capabilities and requested knowledge rows define known content and supported routes. Knowledge rows are column-aligned arrays with explicit contentExists, availableForCivilization, commanderExecutable and capabilitySupported where present. Current age, resources, producer counts and population are execution readiness, not unknown content. Omitted compact rows do not prove unavailability. Never ask players to confirm canonical IDs or game-data availability. "
-                    + " Phase 5C clarification extension: " + ReplyRules;
+                    + " Context capabilities and requested knowledge objects define known content and supported routes. Each named object keeps its id, contentExists, availableForCivilization, commanderExecutable and capabilitySupported together. These current game facts take precedence over earlier conversational claims about support. Current age, resources, producer counts and population are execution readiness, not unknown content. Omitted facts do not prove unavailability. Never ask players to confirm canonical IDs or game-data availability. "
+                    + CompositionExamples
+                    + " Phase 5C clarification extension: " + ReplyRules
+                    + " Supported clarification slot paths: " + CommanderRequestGraphDraft.SupportedSlotPathsJson + ". ";
             if (!request.IsReadOnlyQuestion)
             {
                 var extraActions = new HashSet<CommanderSemanticNodeType>(regularSelected.Where(type =>
@@ -161,6 +163,11 @@ namespace OpenEmpires
                 instruction += ResourceLocationVocabulary;
             if (!request.IsReadOnlyQuestion)
             {
+                bool dynamicAvailable = repeated || composedWoodline || resourceLocationComposition;
+                if (!dynamicAvailable)
+                    instruction = instruction.Replace("Outcomes are Request, DynamicPlan, Clarify, Unsupported, Answer.",
+                        "Outcomes are Request, Clarify, Unsupported, Answer.");
+                instruction += " DynamicPlan is never a message-only outcome: it requires the complete version 1 typed nodes graph and only applies when its registered representation is retrieved above. Otherwise use the complete Request form, or Clarify/Unsupported with a message if the meaning cannot be represented. ";
                 instruction += " FINAL route check: resolvedNames rows are exact shared catalog matches, not typo suggestions. Use their category and canonicalToken; do not ask the player to confirm a canonical ID or an exactly resolved alias. A Building row belongs in BuildStructure.structure or build.parameters.building; a Unit row belongs in EnsureUnitCount.unit or produce.parameters.unit. For example Archery resolves to Building/ArcheryRange, never an Archer unit. ";
                 if (repeatedPlaced && Has("around"))
                     instruction += " The requested around relation is mandatory: connect resolve-location.inputs.structures to the NEW anchor build result, then the repeated build.inputs.location to that resolver, with all matching dependsOn references. Two independent build nodes DROP the requested around relation and are not a complete answer. Never substitute an existing anchor. ";
@@ -268,6 +275,9 @@ namespace OpenEmpires
             var present = new HashSet<string>(StringComparer.Ordinal);
             foreach (string table in new[] { "units", "buildings" })
             {
+                if (compactKnowledge?[table] is JArray namedRows)
+                    foreach (var row in namedRows.OfType<JObject>())
+                        if (row["id"]?.Type == JTokenType.String) present.Add((string)row["id"]);
                 if (!(compactKnowledge?[table + "Columns"] is JArray columns)
                     || !(compactKnowledge[table] is JArray rows)) continue;
                 int id = columns.Select((value, index) => (value: (string)value, index))
@@ -282,6 +292,10 @@ namespace OpenEmpires
         private const string ReadOnlyRules = "Return one JSON object, no markdown: {\"outcome\":\"Answer\",\"message\":\"brief grounded answer\"}, "
             + "{\"outcome\":\"Clarify\",\"message\":\"specific missing fact\"} or {\"outcome\":\"Unsupported\",\"message\":\"reason\"}. "
             + "Message<=180 chars. INFORMATION ONLY: no nodes/plans/approval. Use owned task facts; unknown facts remain unknown. No hidden state, IDs or commands.";
+        private const string CompositionExamples =
+            " Complete Request composition examples; adapt canonical names/counts/quantityMode to the actual request, never add effects. A self-contained new request does not inherit old actions or old unanswered questions from semantic memory. Resolve 'it' against a named antecedent in the current utterance first. Only the active bounded pending draft carries unresolved slots; historical clarification text cannot append movement or any omitted action. "
+            + "Explicit new construction supplying requested production: {\"outcome\":\"Request\",\"executionOrder\":\"Sequential\",\"nodes\":[{\"type\":\"BuildStructure\",\"structure\":\"Barracks\",\"count\":1,\"builders\":{\"state\":\"Eligible\",\"count\":1}},{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":4,\"quantityMode\":\"TargetTotal\",\"producerFromNode\":0,\"dependsOn\":[0]}]}. If the player asks NEW units use New, preserving that count. 'from it' requires this exact newly built producer. Future building results are symbolic dependencies, never missing current buildings. "
+            + "Explicit new production then movement: {\"outcome\":\"Request\",\"executionOrder\":\"Sequential\",\"nodes\":[{\"type\":\"EnsureUnitCount\",\"unit\":\"Spearman\",\"count\":4,\"quantityMode\":\"New\"},{\"type\":\"MoveUnits\",\"unitSelector\":\"Spearman\",\"count\":4,\"location\":\"PlayerMarker\",\"resultFromNode\":0,\"dependsOn\":[0]}]}. PlayerMarker stays symbolic; absent marker is resolved locally by the game without discarding the graph. The move uses only that production result. Counts in these examples are illustrative; preserve the player's quantities. ";
         private static bool MatchesAction(CommanderCapabilityActionType type, HashSet<string> words)
         {
             bool Has(params string[] terms) => terms.Any(words.Contains);
@@ -308,7 +322,7 @@ namespace OpenEmpires
         private const string RequestRules =
             "Request{outcome:Request,nodes:1..4,executionOrder:Independent|Sequential|DependencyGraph}; dependsOn:[prior0-based]; resultFromNode=exact-new,producerFromNode=explicit-new. ";
         private const string ReplyRules =
-            "Clarify{outcome:Clarify,message<=180,pending:{executionOrder,nodes:partial1..4},missingSlots:[{node,path,type:Confirmation|Count|SourceKind|CanonicalName|Location,alternatives:[canonical]}]};retain known leaves/edges/refs,omit only missing;Confirmation retains offer. For missing movement location use Location path location alternatives PlayerMarker|PlayerBase; for construction use Location path placement.anchor alternatives PlayerMarker|MyTownCenter and retain placement.relation Near. A world marker fills only that missing location locally. Prefer ordinary deterministic placement when unspecified and safe; do not ask merely because placement was omitted. Worker pending+missingFields valid;not approval. Answer/Unsupported{outcome,message<=180};no nodes. ";
+            "Clarify{outcome:Clarify,message<=180,pending:{executionOrder,nodes:partial1..4},missingSlots:[{node,path,type:Confirmation|Count|SourceKind|CanonicalName|Location,alternatives:[typed values]}]};retain known leaves/edges/refs. Count alternatives are integers; other alternatives are canonical strings. Omit only the missing leaf. Confirmation is only canonical-name confirmation: retain that leaf and offer only its same value; never use it for quantityMode, resource shortages or plan approval. Omitted quantityMode defaults TargetTotal even with existing units; explicit new/more/additional means New. Readiness shortages are planner prerequisites, not missing semantic slots. For missing movement location use Location path location alternatives PlayerMarker|PlayerBase; for construction use Location path placement.anchor alternatives PlayerMarker|MyTownCenter and retain placement.relation Near. A world marker fills only that missing location locally. Prefer ordinary deterministic placement when unspecified and safe; do not ask merely because placement was omitted. Worker pending+missingFields valid;not approval. Answer/Unsupported{outcome,message<=180};no nodes. ";
         private const string CommonRules = BaseRules + RequestRules + ReplyRules;
 
         private static string Vocabulary(HashSet<CommanderSemanticNodeType> selected)
@@ -484,13 +498,7 @@ namespace OpenEmpires
                                 if (differs) foreach (var row in detachedRows)
                                     row["capabilitySupported"] = supportedIds.Contains((string)row["id"]);
                             }
-                            var columns = detachedRows.SelectMany(v => v.Properties().Select(p => p.Name))
-                                .Distinct(StringComparer.Ordinal).ToArray();
-                            facts[property.Name + "Columns"] = new JArray(columns);
-                            facts[property.Name] = new JArray(detachedRows.Select(row => new JArray(columns.Select(column =>
-                                column == "cost" && row[column] is JObject cost
-                                    ? (JToken)new JArray(new[] { "food", "wood", "gold", "stone" }.Select(resource => cost[resource]?.DeepClone() ?? JValue.CreateNull()))
-                                    : row[column]?.DeepClone() ?? JValue.CreateNull()))));
+                            facts[property.Name] = new JArray(detachedRows);
                         }
                         else facts[property.Name] = property.Value.DeepClone();
                     }

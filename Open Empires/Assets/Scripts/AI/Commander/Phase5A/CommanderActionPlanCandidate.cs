@@ -33,11 +33,13 @@ namespace OpenEmpires
         internal bool UsesPlayerMarker { get; }
         internal int MarkerTileX { get; }
         internal int MarkerTileZ { get; }
+        internal IReadOnlyDictionary<int, CommanderBoundLocation> MarkerLocations { get; }
 
         internal CommanderActionPlanCandidate(long requestId, CommanderGoalManager owner,
             CommanderSemanticResult interpretation, CommanderSemanticGraphPlan graph,
             string originalInput, int generation, StrategicPipeline strategicSource,
-            Func<bool> isCurrentRequest, IReadOnlyDictionary<int, BuildingData> futureProducerBindings = null)
+            Func<bool> isCurrentRequest, IReadOnlyDictionary<int, BuildingData> futureProducerBindings = null,
+            IReadOnlyDictionary<int, CommanderBoundLocation> resolvedMarkerLocations = null)
         {
             if (originalInput == null || originalInput.Length > 1024 || generation < 0)
                 throw new ArgumentException("The request envelope is outside its bounds.");
@@ -58,13 +60,34 @@ namespace OpenEmpires
                 || graph.DynamicProgram?.Nodes.Any(node => node.Primitive.Mechanic == CommanderDynamicMechanic.ResolveLocation
                     && node.Parameters.TryGetValue("anchor", out object anchor)
                     && (string)anchor == "PlayerMarker") == true;
+            var markerNodes=graph.Nodes.Where(node=>node.Intent is CapabilityActionIntent action
+                && action.LocationSelector.Kind==CommanderLocationSelectorKind.PlayerMarker
+                ||node.Intent is BuildStructureIntent build&&build.PlacementAnchorSelector==CommanderSemanticAnchorSelector.PlayerMarker).ToArray();
+            if(resolvedMarkerLocations!=null&&(resolvedMarkerLocations.Count>CommanderSemanticGraphAdmission.MaximumNodes
+                ||resolvedMarkerLocations.Keys.Any(index=>!markerNodes.Any(node=>node.Index==index))))
+                throw new ArgumentException("The selected destination does not belong to a marker step.");
+            var markerLocations=new Dictionary<int,CommanderBoundLocation>();
+            var selectedMarkerSteps=new HashSet<int>();
             if (UsesPlayerMarker)
             {
                 if (!owner.TryGetPlayerMarkerSnapshot(out int markerX, out int markerZ))
                     throw new ArgumentException("Where? Place a marker or describe the location.");
                 MarkerTileX = markerX;
                 MarkerTileZ = markerZ;
+                foreach(var node in markerNodes)
+                {
+                    CommanderBoundLocation location=null;
+                    bool selected=resolvedMarkerLocations?.TryGetValue(node.Index,out location)==true;
+                    if(!selected)location=CommanderBoundLocation.FromPlayerMarker(Runtime,owner,PlayerId,
+                        markerX,markerZ,CommanderSemanticPlacementRelation.Near,1);
+                    if(location==null||!location.IsPlayerMarkerFor(owner)
+                        ||!location.TryResolve(Runtime,PlayerId,out int x,out int z,out _,out _))
+                        throw new ArgumentException("A selected step destination is stale or unavailable.");
+                    markerLocations.Add(node.Index,location);
+                    if(selected&&(resolvedMarkerLocations.Count>1||x!=markerX||z!=markerZ))selectedMarkerSteps.Add(node.Index);
+                }
             }
+            MarkerLocations=new System.Collections.ObjectModel.ReadOnlyDictionary<int,CommanderBoundLocation>(markerLocations);
             strategicRevision = StrategyRevision(strategicSource);
             var unitNames = new Dictionary<int, string>();
             foreach (var node in graph.Nodes)
@@ -74,7 +97,7 @@ namespace OpenEmpires
                 if (requested.HasValue) unitNames[node.Index] = CommanderIntentCatalog.GetUnitDisplayName(
                     Runtime.ResolveCivUnitType(PlayerId, requested.Value));
             }
-            Preview = CommanderPlanPreview.Render(graph, unitNames);
+            Preview = CommanderPlanPreview.Render(graph, unitNames,selectedMarkerSteps);
         }
 
         internal bool TryApprove(CommanderGoalManager owner, int generation,
@@ -147,7 +170,9 @@ namespace OpenEmpires
         {
             if (!UsesPlayerMarker) return true;
             return Owner.TryGetPlayerMarkerSnapshot(out int x, out int z)
-                && x == MarkerTileX && z == MarkerTileZ;
+                && x == MarkerTileX && z == MarkerTileZ
+                && MarkerLocations.Values.All(location=>location.IsPlayerMarkerFor(Owner)
+                    &&location.TryResolve(Runtime,PlayerId,out _,out _,out _,out _));
         }
 
         private static string StrategyRevision(StrategicPipeline pipeline)
@@ -164,7 +189,8 @@ namespace OpenEmpires
 
     internal static partial class CommanderPlanPreview
     {
-        internal static string Render(CommanderSemanticGraphPlan graph, IReadOnlyDictionary<int, string> canonicalUnitNames = null)
+        internal static string Render(CommanderSemanticGraphPlan graph, IReadOnlyDictionary<int, string> canonicalUnitNames = null,
+            IReadOnlyCollection<int> selectedMarkerSteps = null)
         {
             var text = new StringBuilder("Action plan — not started.\n");
             foreach (var node in graph.Nodes)
@@ -180,12 +206,15 @@ namespace OpenEmpires
                 }
                 string resultBuildingName=node.ResultFromNode.HasValue&&graph.Nodes[node.ResultFromNode.Value].Intent is BuildStructureIntent boundBuilding
                     ?Words(CommanderIntentCatalog.GetStructureDisplayName(boundBuilding.StructureType)):null;
-                text.Append(node.Index + 1).Append(". ").Append(
+                string description=
                     dynamicSource?.Primitive.Mechanic == CommanderDynamicMechanic.MoveWorkers
                         ? "Move the full frozen selected villager set to the visible resource-side woodline using native formation travel; no gather order"
                         : dynamicSource?.Primitive.Mechanic == CommanderDynamicMechanic.MoveUnits
                             ? "Move the exact selected owned units to the visible resource-side destination using native formation travel"
-                        : Describe(node.Intent, canonicalUnitName,resultBuildingName));
+                        : Describe(node.Intent, canonicalUnitName,resultBuildingName);
+                if(selectedMarkerSteps?.Contains(node.Index)==true)
+                    description=description.Replace("your placed destination marker","the destination selected for step "+(node.Index+1));
+                text.Append(node.Index+1).Append(". ").Append(description);
                 if (node.Intent is EnsureUnitCountIntent units && !units.NewProductionCount.HasValue)
                     foreach (var quote in graph.ProductionExpectations)
                         if (quote.NodeIndex == node.Index)

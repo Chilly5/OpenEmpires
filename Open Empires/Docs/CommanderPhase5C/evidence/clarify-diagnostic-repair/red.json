@@ -1,0 +1,60 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "ff7667e8e2154e1caffcee7bf0c96e02",
+      "status": "failed",
+      "mode": "EditMode",
+      "started_unix_ms": 1791927216672,
+      "finished_unix_ms": 1791927226761,
+      "last_update_unix_ms": 1791927226761,
+      "progress": {
+        "completed": 10,
+        "total": 10,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791927226478,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CIntegrationRepairTests.MalformedEnvelope_RejectsWithKnownFieldTypesInsteadOfLosingTheFirstFailure(\"{\\\"outcome\\\":\\\"Clarify\\\",\\\"pending\\\":{\\\"type\\\":\\\"AllocateWorkers\\\"},\\\"missingFields\\\":{}}\",\"missingFields\",\"Array\",\"Object\")",
+        "last_finished_unix_ms": 1791927226479,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CIntegrationRepairTests.MalformedEnvelope_RejectsWithKnownFieldTypesInsteadOfLosingTheFirstFailure(\"{\\\"outcome\\\":\\\"Clarify\\\",\\\"pending\\\":[],\\\"missingFields\\\":[\\\"Count\\\"]}\",\"pending\",\"Object\",\"Array\")",
+            "message": "  Expected: String containing \"field=pending\"\r\n  But was:  \"field=$;code=invalid-schema;stage=envelope;node=-1;mode=Clarify\"\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CIntegrationRepairTests.MalformedEnvelope_RejectsWithKnownFieldTypesInsteadOfLosingTheFirstFailure(\"{\\\"outcome\\\":\\\"Clarify\\\",\\\"pending\\\":{\\\"nodes\\\":{}},\\\"missingSlots\\\":[]}\",\"pending.nodes\",\"Array\",\"Object\")",
+            "message": "  Expected: String containing \"field=pending.nodes\"\r\n  But was:  \"field=$;code=invalid-schema;stage=envelope;node=-1;mode=Clarify\"\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CIntegrationRepairTests.MalformedEnvelope_RejectsWithKnownFieldTypesInsteadOfLosingTheFirstFailure(\"{\\\"outcome\\\":\\\"Clarify\\\",\\\"pending\\\":{\\\"nodes\\\":[],\\\"executionOrder\\\":\\\"Independent\\\"},\\\"missingSlots\\\":{}}\",\"missingSlots\",\"Array\",\"Object\")",
+            "message": "  Expected: String containing \"field=missingSlots\"\r\n  But was:  \"field=$;code=invalid-schema;stage=envelope;node=-1;mode=Clarify\"\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CIntegrationRepairTests.MalformedEnvelope_RejectsWithKnownFieldTypesInsteadOfLosingTheFirstFailure(\"{\\\"outcome\\\":\\\"Clarify\\\",\\\"pending\\\":{\\\"nodes\\\":[\\\"PRIVATE_REPLY_SENTINEL\\\"],\\\"executionOrder\\\":\\\"Independent\\\"},\\\"missingSlots\\\":[{}]}\",\"pending.nodes[0]\",\"Object\",\"String\")",
+            "message": "  Expected: String containing \"field=pending.nodes[0]\"\r\n  But was:  \"field=$;code=invalid-schema;stage=envelope;node=-1;mode=Clarify\"\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CIntegrationRepairTests.MalformedEnvelope_RejectsWithKnownFieldTypesInsteadOfLosingTheFirstFailure(\"{\\\"outcome\\\":\\\"Clarify\\\",\\\"pending\\\":{\\\"nodes\\\":[{}],\\\"executionOrder\\\":\\\"Independent\\\"},\\\"missingSlots\\\":[\\\"PRIVATE_REPLY_SENTINEL\\\"]}\",\"missingSlots[0]\",\"Object\",\"String\")",
+            "message": "  Expected: String containing \"field=missingSlots[0]\"\r\n  But was:  \"field=$;code=invalid-schema;stage=envelope;node=-1;mode=Clarify\"\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CIntegrationRepairTests.MalformedEnvelope_RejectsWithKnownFieldTypesInsteadOfLosingTheFirstFailure(\"{\\\"outcome\\\":\\\"Clarify\\\",\\\"pending\\\":{\\\"nodes\\\":[{}],\\\"executionOrder\\\":\\\"Independent\\\"},\\\"missingSlots\\\":[{\\\"node\\\":0,\\\"path\\\":\\\"location\\\",\\\"type\\\":\\\"Location\\\",\\\"alternatives\\\":{}}]}\",\"missingSlots[0].alternatives\",\"Array\",\"Object\")",
+            "message": "  Expected: String containing \"field=missingSlots[0].alternatives\"\r\n  But was:  \"field=$;code=invalid-schema;stage=envelope;node=-1;mode=Clarify\"\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CIntegrationRepairTests.MalformedEnvelope_RejectsWithKnownFieldTypesInsteadOfLosingTheFirstFailure(\"{\\\"outcome\\\":\\\"Clarify\\\",\\\"pending\\\":{\\\"type\\\":\\\"AllocateWorkers\\\"},\\\"missingFields\\\":{}}\",\"missingFields\",\"Array\",\"Object\")",
+            "message": "  Expected: String containing \"field=missingFields\"\r\n  But was:  \"field=countMode;code=missing-or-wrong-type;expected=String;actual=Missing;stage=envelope;node=-1;mode=Clarify\"\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

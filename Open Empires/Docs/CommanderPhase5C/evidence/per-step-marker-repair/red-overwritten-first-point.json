@@ -1,0 +1,36 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "7a6d801631a5474ba8b6450b0f4160cc",
+      "status": "failed",
+      "mode": "EditMode",
+      "started_unix_ms": 1791919901717,
+      "finished_unix_ms": 1791919902624,
+      "last_update_unix_ms": 1791919902624,
+      "progress": {
+        "completed": 1,
+        "total": 1,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791919902243,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.MultiplePendingLocations_KeepEachSelectedPointThroughApprovalAndLaterMarkerChanges",
+        "last_finished_unix_ms": 1791919902607,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.MultiplePendingLocations_KeepEachSelectedPointThroughApprovalAndLaterMarkerChanges",
+            "message": "  The second slot must not silently replace the first selected destination.\r\n  Expected: (134, 134)\r\n  But was:  (140, 134)\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

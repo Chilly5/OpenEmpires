@@ -412,16 +412,13 @@ namespace OpenEmpires.Tests
             Assert.That(user, Does.Contain(pending.Serialize()));
             string compact = user.Substring("Context:".Length, user.IndexOf("\nMemory:", StringComparison.Ordinal) - "Context:".Length);
             var facts = (JObject)JObject.Parse(compact)["knowledge"];
-            var columns = ((JArray)facts["unitsColumns"]).Select(x => (string)x).ToArray();
             var rows = (JArray)facts["units"];
-            int id = Array.IndexOf(columns, "id"), producer = Array.IndexOf(columns, "producer");
-            int cost = Array.IndexOf(columns, "cost"), capability = Array.IndexOf(columns, "capabilitySupported");
             Assert.That(rows.Count, Is.EqualTo(2));
-            Assert.That((string)rows[0][id], Is.EqualTo("unit:Spearman"));
-            Assert.That((string)rows[1][id], Is.EqualTo("unit:Horseman"));
-            Assert.That(rows[1][producer].Type, Is.EqualTo(JTokenType.Null));
-            Assert.That((int)rows[0][cost][0], Is.EqualTo(50));
-            Assert.That((bool)rows[1][capability], Is.False, "Knowledge must not grant unavailable execution capability.");
+            Assert.That((string)rows[0]["id"], Is.EqualTo("unit:Spearman"));
+            Assert.That((string)rows[1]["id"], Is.EqualTo("unit:Horseman"));
+            Assert.That(rows[1]["producer"].Type, Is.EqualTo(JTokenType.Null));
+            Assert.That((int)rows[0]["cost"]["food"], Is.EqualTo(50));
+            Assert.That((bool)rows[1]["capabilitySupported"], Is.False, "Knowledge must not grant unavailable execution capability.");
         }
 
         [Test] public async Task PreflightRejectionAfterASentRequest_ResetsAttemptCount()
@@ -475,13 +472,12 @@ namespace OpenEmpires.Tests
             string compact = user.Substring("Context:".Length,
                 user.IndexOf("\nMemory:", StringComparison.Ordinal) - "Context:".Length);
             var packedKnowledge = (JObject)JObject.Parse(compact)["knowledge"];
-            var columns = ((JArray)packedKnowledge["nameInterpretationsColumns"]).Select(x => (string)x).ToArray();
             var interpretations = (JArray)packedKnowledge["nameInterpretations"];
             Assert.That(interpretations, Is.Not.Null);
-            var typo = interpretations.OfType<JArray>().Single(x => (string)x[Array.IndexOf(columns, "phrase")] == "longbowmna");
-            Assert.That((bool)typo[Array.IndexOf(columns, "interpretationOnly")], Is.True);
-            Assert.That((bool)typo[Array.IndexOf(columns, "ambiguous")], Is.False);
-            Assert.That(((JArray)typo[Array.IndexOf(columns, "unitCandidates")]).Select(x => (string)x), Does.Contain("unit:10"));
+            var typo = interpretations.OfType<JObject>().Single(x => (string)x["phrase"] == "longbowmna");
+            Assert.That((bool)typo["interpretationOnly"], Is.True);
+            Assert.That((bool)typo["ambiguous"], Is.False);
+            Assert.That(((JArray)typo["unitCandidates"]).Select(x => (string)x), Does.Contain("unit:10"));
             Assert.That(PackedKnowledgeIds(pack), Does.Contain("unit:10"));
             Assert.That(pack.EstimatedInputTokens, Is.LessThan(CommanderSemanticRequestPack.InputByteLimit));
             string contract = (string)JObject.Parse(pack.Json)["messages"]?[0]?["content"];
@@ -703,9 +699,7 @@ namespace OpenEmpires.Tests
             foreach (string table in new[] { "units", "buildings" })
             {
                 if (!(knowledge[table] is JArray rows)) continue;
-                var columns = ((JArray)knowledge[table + "Columns"]).Select(x => (string)x).ToArray();
-                int idColumn = Array.IndexOf(columns, "id");
-                foreach (JArray row in rows) ids.Add((string)row[idColumn]);
+                foreach (JObject row in rows) ids.Add((string)row["id"]);
             }
             return ids;
         }

@@ -102,7 +102,10 @@ namespace OpenEmpires
                 int index = (int)spec["node"];
                 string path = (string)spec["path"], type = (string)spec["type"];
                 if (index < 0 || index >= nodes.Count || !(nodes[index] is JObject node)
-                    || !Allowed(type, path) || !seen.Add(index + ":" + path)) throw new JsonException();
+                    ) throw new JsonException();
+                if (!Allowed(type, path))
+                    throw CommanderSemanticResult.InvalidClarificationSlot(spec, supportedSlotPaths.ContainsKey(type));
+                if (!seen.Add(index + ":" + path)) throw new JsonException();
                 JObject parent = Parent(node, path);
                 string leaf = Leaf(path);
                 if (parent == null || type == "Confirmation" && parent[leaf]?.Type != JTokenType.String
@@ -194,6 +197,18 @@ namespace OpenEmpires
                 slot = candidate; chosen = match;
             }
             if (slot == null) return null;
+            return ResolveSlot(slot, chosen);
+        }
+
+        internal CommanderSemanticResult ResolveMarkerLocation(int node)
+        {
+            var eligible = slots.Where(s => s.Node == node && s.Type == "Location"
+                && s.Alternatives.Any(a => a.Type == JTokenType.String && (string)a == "PlayerMarker")).ToArray();
+            return eligible.Length == 1 ? ResolveSlot(eligible[0], new JValue("PlayerMarker")) : null;
+        }
+
+        private CommanderSemanticResult ResolveSlot(Slot slot, JToken chosen)
+        {
             if (slots.Count == 1)
             {
                 var parsed = ParseLocal(CompletedProposal(slot, chosen), slot.Path, chosen);
@@ -489,16 +504,20 @@ namespace OpenEmpires
             return result;
         }
 
-        private static bool Allowed(string type, string path)
+        // One slot vocabulary serves the strict draft parser and the provider contract.
+        // This is the existing accepted set; advertising it grants no admission authority.
+        private static readonly Dictionary<string,string[]> supportedSlotPaths = new Dictionary<string,string[]>(StringComparer.Ordinal)
         {
-            if (type == "Confirmation") return path == "structure" || path == "unit" || path == "producer";
-            if (type == "Count") return path == "count";
-            if (type == "Location") return path == "location" || path == "placement.anchor";
-            if (type == "SourceKind") return path == "sourceKind" || path == "destination.sourceKind" || path == "placement.sourceKind";
-            if (type == "CanonicalName") return path == "structure" || path == "unit" || path == "producer"
-                || path == "technology" || path == "resource" || path == "destination.resource" || path == "placement.resource";
-            return false;
-        }
+            ["Confirmation"]=new[]{"structure","unit","producer"},
+            ["Count"]=new[]{"count"},
+            ["Location"]=new[]{"location","placement.anchor"},
+            ["SourceKind"]=new[]{"sourceKind","destination.sourceKind","placement.sourceKind"},
+            ["CanonicalName"]=new[]{"structure","unit","producer","technology","resource","destination.resource","placement.resource"}
+        };
+        internal static string SupportedSlotPathsJson => new JObject(supportedSlotPaths.Select(pair=>
+            new JProperty(pair.Key,new JArray(pair.Value)))).ToString(Formatting.None);
+        private static bool Allowed(string type,string path)
+            => supportedSlotPaths.TryGetValue(type,out var paths)&&Array.IndexOf(paths,path)>=0;
         private static JObject Parent(JObject node, string path)
         {
             int dot = path.IndexOf('.');

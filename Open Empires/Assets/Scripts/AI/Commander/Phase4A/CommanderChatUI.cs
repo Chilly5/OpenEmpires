@@ -264,6 +264,7 @@ namespace OpenEmpires
                 if (pendingClarification == null) TryHandleStrategicLifecycle(trimmed);
                 return null;
             }
+            if (HandleMarkerStepReply(trimmed)) return null;
             long presentationTurn = BeginPresentationTurn();
             long submissionStartedAt = System.Diagnostics.Stopwatch.GetTimestamp();
             if (HandlePendingControl(trimmed)) return null;
@@ -279,6 +280,7 @@ namespace OpenEmpires
             ClearActionPlanPreview(); // An independent player turn supersedes an unapproved candidate.
             retainedLocationResult = null;
             retainedLocationLease = null;
+            if(pendingClarification==null)ClearPendingMarkerLocations();
             // Any new player turn dismisses an adaptation, while no-plan recommendations
             // retain the established preference/explanation query behavior.
             if (pendingAdaptationProposal != null)

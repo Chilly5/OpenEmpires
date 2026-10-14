@@ -1,0 +1,109 @@
+{
+  "schema": "commander-phase5c-observed-ten-checkpoint@2",
+  "authorized": 10,
+  "consumed": 10,
+  "remainingScope": 0,
+  "globalUsed": 58,
+  "globalRemaining": 142,
+  "initialHttp": 10,
+  "repairHttp": 0,
+  "retries": 0,
+  "attempts": [
+    {
+      "attempt": "attempt-01",
+      "source": "71bbbf0ec4210fcf06c25181e88f20443f9cd51983c1e25495c4bfdb490e6996",
+      "request": 1,
+      "initialHttp": 1,
+      "repairHttp": 0,
+      "allRecordedGoalsCompleted": true,
+      "responseShape": "attempt-01/response-shape.json"
+    },
+    {
+      "attempt": "attempt-02",
+      "source": "71bbbf0ec4210fcf06c25181e88f20443f9cd51983c1e25495c4bfdb490e6996",
+      "request": 2,
+      "initialHttp": 1,
+      "repairHttp": 0,
+      "allRecordedGoalsCompleted": true,
+      "responseShape": "attempt-02/response-shape.json"
+    },
+    {
+      "attempt": "attempt-03",
+      "source": "71bbbf0ec4210fcf06c25181e88f20443f9cd51983c1e25495c4bfdb490e6996",
+      "request": 3,
+      "initialHttp": 1,
+      "repairHttp": 0,
+      "allRecordedGoalsCompleted": true,
+      "responseShape": "attempt-03/response-shape.json",
+      "requestEvidence": "attempt-03/admitted.json; early result observer incorrectly reported0 for KnownIntentAutomatic; original receipt preserved"
+    },
+    {
+      "attempt": "attempt-04",
+      "source": "71bbbf0ec4210fcf06c25181e88f20443f9cd51983c1e25495c4bfdb490e6996",
+      "request": 4,
+      "initialHttp": 1,
+      "repairHttp": 0,
+      "allRecordedGoalsCompleted": true,
+      "responseShape": "attempt-04/response-shape.json"
+    },
+    {
+      "attempt": "attempt-05",
+      "source": "71bbbf0ec4210fcf06c25181e88f20443f9cd51983c1e25495c4bfdb490e6996",
+      "request": 5,
+      "initialHttp": 1,
+      "repairHttp": 0,
+      "allRecordedGoalsCompleted": true,
+      "responseShape": "attempt-05/response-shape.json"
+    },
+    {
+      "attempt": "attempt-06",
+      "source": "e4a851c0f45bdd3bbb3253ec1abfaa5b6da015c6c1af4d40018eba9199740098",
+      "request": 1,
+      "initialHttp": 1,
+      "repairHttp": 0,
+      "allRecordedGoalsCompleted": true,
+      "responseShape": "attempt-06/response-shape.json"
+    },
+    {
+      "attempt": "attempt-07",
+      "source": "e4a851c0f45bdd3bbb3253ec1abfaa5b6da015c6c1af4d40018eba9199740098",
+      "request": 2,
+      "initialHttp": 1,
+      "repairHttp": 0,
+      "allRecordedGoalsCompleted": true,
+      "responseShape": "attempt-07/response-shape.json"
+    },
+    {
+      "attempt": "attempt-08",
+      "source": "e4a851c0f45bdd3bbb3253ec1abfaa5b6da015c6c1af4d40018eba9199740098",
+      "request": 1,
+      "initialHttp": 1,
+      "repairHttp": 0,
+      "outcome": "valid-plan-native-completed",
+      "responseShape": "attempt-08/response-shape.json"
+    },
+    {
+      "attempt": "attempt-09",
+      "source": "e4a851c0f45bdd3bbb3253ec1abfaa5b6da015c6c1af4d40018eba9199740098",
+      "request": 2,
+      "initialHttp": 1,
+      "repairHttp": 0,
+      "outcome": "valid-plan-cancelled-without-admission",
+      "responseShape": "attempt-09/response-shape.json"
+    },
+    {
+      "attempt": "attempt-10",
+      "source": "e4a851c0f45bdd3bbb3253ec1abfaa5b6da015c6c1af4d40018eba9199740098",
+      "request": 3,
+      "initialHttp": 1,
+      "repairHttp": 0,
+      "outcome": "Clarify-schema-rejected-no-admission",
+      "responseShape": "attempt-10/response-shape.json"
+    }
+  ],
+  "historicalMalformedFailure": "Attempt10 reproduced HTTP200/finishstop/Clarify envelope rejection at age1 and wood0; both typed pending node/container shapes captured. Slot schema string values were masked, exact failed field remains unknown. No added goals/pending state. Not proven same historical malformed field.",
+  "sourceTransition": "Attempts01-05 source71;06-10 finale4. Later changes test fixtures and Editor-only safe observer; runtime source unchanged.",
+  "nativeCompletedAttempts": 8,
+  "previewCancelledAttempts": 1,
+  "schemaRejectedAttempts": 1
+}

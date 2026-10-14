@@ -1,0 +1,41 @@
+{
+  "schema": "openempires-grand-fix-paid-budget@2",
+  "run_id": "6cdd6489-5a8f-45f9-ad1d-169b17262354",
+  "accounting": "Conservative run-wide reservations at the attempt boundary; unfinished/unknown attempts remain consumed. No raw requests, headers or audio. No reset API.",
+  "semantic_http_limit": 1,
+  "semantic_initial_http": 1,
+  "semantic_repair_http": 0,
+  "live_submission_limit": 1,
+  "live_submissions": 1,
+  "cloud_asr_billable_seconds_limit": 600.0,
+  "cloud_asr_billable_seconds": 0.0,
+  "cloud_asr_requests": 0,
+  "transactions": [
+    {
+      "id": "4d3a820b-515b-447d-b416-040d92d4480d",
+      "kind": "submission",
+      "utc": "2026-10-13T18:34:27.8785744Z",
+      "status": "reserved",
+      "category": "unknown",
+      "billable_seconds": 0.0,
+      "http_status": 0,
+      "audio_duration_seconds": 0.0,
+      "minimum_billable_seconds": 0.0,
+      "billing_quantum_seconds": 0.0,
+      "billing_basis_reference": null
+    },
+    {
+      "id": "428910aa-ee53-446a-aa34-0dc69e7d5c2d",
+      "kind": "semantic-initial",
+      "utc": "2026-10-13T18:34:27.9216335Z",
+      "status": "completed",
+      "category": "response",
+      "billable_seconds": 0.0,
+      "http_status": 200,
+      "audio_duration_seconds": 0.0,
+      "minimum_billable_seconds": 0.0,
+      "billing_quantum_seconds": 0.0,
+      "billing_basis_reference": null
+    }
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "stage": "native-proof",
+  "source": "e4a851c0f45bdd3bbb3253ec1abfaa5b6da015c6c1af4d40018eba9199740098",
+  "tick": 23478,
+  "goals": [
+    {
+      "id": 1,
+      "type": "BuildStructureGoal",
+      "status": "Completed",
+      "reason": "Completed 1 exact requested Barracks results.",
+      "buildingResults": [
+        2
+      ],
+      "unitResults": null
+    },
+    {
+      "id": 2,
+      "type": "EnsureUnitCountGoal",
+      "status": "Completed",
+      "reason": "Owned 4/4 living units.",
+      "buildingResults": null,
+      "unitResults": []
+    }
+  ],
+  "commands": [
+    {
+      "tick": 1170,
+      "type": "PlaceBuildingCommand",
+      "command": {
+        "BuildingType": 1,
+        "TileX": 220,
+        "TileZ": 108,
+        "VillagerUnitIds": [
+          0
+        ],
+        "IsQueued": false,
+        "LandmarkIdValue": -1,
+        "Type": 7,
+        "PlayerId": 0
+      }
+    },
+    {
+      "tick": 2235,
+      "type": "TrainUnitCommand",
+      "command": {
+        "BuildingId": 2,
+        "UnitType": 1,
+        "Type": 5,
+        "PlayerId": 0
+      }
+    },
+    {
+      "tick": 2250,
+      "type": "TrainUnitCommand",
+      "command": {
+        "BuildingId": 2,
+        "UnitType": 1,
+        "Type": 5,
+        "PlayerId": 0
+      }
+    },
+    {
+      "tick": 2265,
+      "type": "PlaceBuildingCommand",
+      "command": {
+        "BuildingType": 0,
+        "TileX": 225,
+        "TileZ": 108,
+        "VillagerUnitIds": [
+          0
+        ],
+        "IsQueued": false,
+        "LandmarkIdValue": -1,
+        "Type": 7,
+        "PlayerId": 0
+      }
+    },
+    {
+      "tick": 2280,
+      "type": "TrainUnitCommand",
+      "command": {
+        "BuildingId": 2,
+        "UnitType": 1,
+        "Type": 5,
+        "PlayerId": 0
+      }
+    },
+    {
+      "tick": 2535,
+      "type": "TrainUnitCommand",
+      "command": {
+        "BuildingId": 2,
+        "UnitType": 1,
+        "Type": 5,
+        "PlayerId": 0
+      }
+    }
+  ],
+  "buildings": [
+    {
+      "id": 0,
+      "type": "TownCenter",
+      "unfinished": false,
+      "x": 222,
+      "z": 102
+    },
+    {
+      "id": 2,
+      "type": "Barracks",
+      "unfinished": false,
+      "x": 220,
+      "z": 108
+    },
+    {
+      "id": 3,
+      "type": "House",
+      "unfinished": false,
+      "x": 225,
+      "z": 108
+    }
+  ],
+  "units": [
+    {
+      "id": 44,
+      "position": "(220.0000, 0.0000, 109.5000)"
+    },
+    {
+      "id": 45,
+      "position": "(217.6005, 0.0000, 109.5000)"
+    },
+    {
+      "id": 46,
+      "position": "(218.4003, 0.0000, 109.5000)"
+    },
+    {
+      "id": 47,
+      "position": "(219.2001, 0.0000, 109.5000)"
+    }
+  ]
+}

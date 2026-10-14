@@ -9,6 +9,39 @@ namespace OpenEmpires.Tests
     public sealed class CommanderPhase5CMarkerTests
     {
         [Test]
+        public void RejectedMarkerSidecar_DoesNotClaimTicketAndCandidateCopiesValidOwnedSnapshot()
+        {
+            var config=ScriptableObject.CreateInstance<SimulationConfig>();
+            var sim=new GameSimulation(config,1,new[]{0},Array.Empty<int>());
+            using var manager=new CommanderGoalManager(sim,0);
+            using var foreignOwner=new CommanderGoalManager(sim,0);
+            try
+            {
+                int x=sim.MapData.Width/2,z=sim.MapData.Height/2;
+                sim.FogOfWar.SetVisible(0,x,z);sim.FogOfWar.SetVisible(0,x+6,z);
+                Assert.That(manager.TrySetPlayerMarkerSnapshot(x+6,z),Is.True);
+                var parsed=CommanderSemanticJson.ParseProviderResponse("{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"MoveUnits\",\"unitSelector\":\"Spearman\",\"count\":1,\"location\":\"PlayerMarker\"}]}");
+                const string input="Move my Spearman to the selected point";
+                var ticket=manager.BeginSemanticRequest(input,0,()=>true);
+                var foreign=CommanderBoundLocation.FromPlayerMarker(sim,foreignOwner,0,x,z,CommanderSemanticPlacementRelation.Near,1);
+                Assert.Throws<ArgumentException>(()=>manager.PrepareActionPlan(parsed,input,0,requestTicket:ticket,
+                    resolvedMarkerLocations:new Dictionary<int,CommanderBoundLocation>{{0,foreign}}));
+                Assert.That(manager.Goals,Is.Empty);
+                var owned=CommanderBoundLocation.FromPlayerMarker(sim,manager,0,x,z,CommanderSemanticPlacementRelation.Near,1);
+                var markers=new Dictionary<int,CommanderBoundLocation>{{0,owned}};
+                CommanderActionPlanCandidate candidate=null;
+                Assert.DoesNotThrow(()=>candidate=manager.PrepareActionPlan(parsed,input,0,requestTicket:ticket,resolvedMarkerLocations:markers),
+                    "A rejected sidecar must not consume the request's one candidate claim.");
+                markers[0]=CommanderBoundLocation.FromPlayerMarker(sim,manager,0,x+6,z,CommanderSemanticPlacementRelation.Near,1);
+                Assert.That(candidate.MarkerLocations[0].TryResolve(sim,0,out int actualX,out int actualZ,out _,out _),Is.True);
+                Assert.That((actualX,actualZ),Is.EqualTo((x,z)),"Caller mutation cannot redirect the immutable preview.");
+                Assert.That(candidate.RequestId,Is.EqualTo(ticket.Id));
+                Assert.That(manager.ApproveActionPlan(candidate,0),Is.Not.Null);
+            }
+            finally{UnityEngine.Object.DestroyImmediate(config);}
+        }
+
+        [Test]
         public void HiddenAndInvalidMarkers_RetainValidOwnedMarkerAndRejectCrossRuntimeBinding()
         {
             var config = ScriptableObject.CreateInstance<SimulationConfig>();

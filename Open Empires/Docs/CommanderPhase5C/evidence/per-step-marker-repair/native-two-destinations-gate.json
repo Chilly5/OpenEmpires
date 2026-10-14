@@ -1,0 +1,52 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "6638ef809dce49939cb9553d4d5e457e",
+      "status": "succeeded",
+      "mode": "EditMode",
+      "started_unix_ms": 1791924430734,
+      "finished_unix_ms": 1791924432853,
+      "last_update_unix_ms": 1791924432853,
+      "progress": {
+        "completed": 1,
+        "total": 1,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791924431968,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.MultiplePendingLocations_KeepEachSelectedPointThroughApprovalAndLaterMarkerChanges",
+        "last_finished_unix_ms": 1791924432808,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "EditMode",
+        "summary": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 0.8891923,
+          "resultState": "Passed"
+        },
+        "results": [
+          {
+            "name": "MultiplePendingLocations_KeepEachSelectedPointThroughApprovalAndLaterMarkerChanges",
+            "fullName": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.MultiplePendingLocations_KeepEachSelectedPointThroughApprovalAndLaterMarkerChanges",
+            "state": "Passed",
+            "durationSeconds": 0.8360351,
+            "message": null,
+            "stackTrace": null,
+            "output": "[Commander] context=projected;provider-request=started\r\n[Commander] Goal #1 submitted: CapabilityAction\r\n[Commander] Goal #2 submitted: CapabilityAction\r\n[Commander] Goal #1: status=Executing owned=0 queued=0; Moving exact selected units to known reachable native formation positions.\r\n[SyncCheck] tick=1 checksum=78BF85E1\r\n[SyncCheck] tick=2 checksum=F779BA80\r\n[SyncCheck] tick=3 checksum=D291EF1F\r\n[SyncCheck] tick=4 checksum=AC2223BE\r\n[SyncCheck] tick=5 checksum=FB22787D\r\n[SyncCheck] tick=6 checksum=41F30CFC\r\n[SyncCheck] tick=7 checksum=BB4261BB\r\n[SyncCheck] tick=8 checksum=1F3AF63A\r\n[SyncCheck] tick=9 checksum=7F0D4AF9\r\n[SyncCheck] tick=10 checksum=D85E5F78\r\n[SyncCheck] tick=11 checksum=F8129417\r\n[SyncCheck] tick=12 checksum=EAF568D6\r\n[SyncCheck] tick=13 checksum=701A9D75\r\n[SyncCheck] tick=14 checksum=EF21D214\r\n[SyncCheck] tick=15 checksum=001A86B3\r\n[Commander] Goal #1: status=Executing owned=1 queued=0; Waiting for the exact selected units to reach their native formation endpoints.\r\n[Commander] Goal #2: status=Blocked owned=0 queued=0; The approved destination marker is unavailable or hidden. Place a new marker and approve again.\r\n[SyncCheck] tick=16 checksum=BFFB9B32\r\n[SyncCheck] tick=17 checksum=C1CDEFF1\r\n[SyncCheck] tick=18 checksum=A2A7A490\r\n[SyncCheck] tick=19 checksum=8381592F\r\n[SyncCheck] tick=20 checksum=645B0DCE\r\n[SyncCheck] tick=21 checksum=243C224D\r\n[SyncCheck] tick=22 checksum=260E770C\r\n[SyncCheck] tick=23 checksum=E5EF8B8B\r\n[SyncCheck] tick=24 checksum=E7C1E04A\r\n[SyncCheck] tick=25 checksum=A7A2F4C9\r\n[SyncCheck] tick=26 checksum=A9754988\r\n[SyncCheck] tick=27 checksum=69565E07\r\n[SyncCheck] tick=28 checksum=6B28B2C6\r\n[SyncCheck] tick=29 checksum=4C026765\r\n[SyncCheck] tick=30 checksum=2CDC1C04\r\n[SyncCheck] tick=31 checksum=0DB5D0A3\r\n[SyncCheck] tick=32 checksum=CD96E522\r\n[SyncCheck] tick=33 checksum=CF6939E1\r\n[SyncCheck] tick=34 checksum=8F4A4E60\r\n[SyncCheck] tick=35 checksum=911CA31F\r\n[SyncCheck] tick=36 checksum=50FDB79E\r\n[SyncCheck] tick=37 checksum=52D00C5D\r\n[SyncCheck] tick=38 checksum=12B120DC\r\n[SyncCheck] tick=39 checksum=1483759B\r\n[SyncCheck] tick=40 checksum=F55D2A3A\r\n[SyncCheck] tick=41 checksum=D636DED9\r\n[SyncCheck] tick=42 checksum=B7109378\r\n[SyncCheck] tick=43 checksum=76F1A7F7\r\n[SyncCheck] tick=44 checksum=78C3FCB6\r\n[SyncCheck] tick=45 checksum=38A51135\r\n[SyncCheck] tick=46 checksum=3A7765F4\r\n[SyncCheck] tick=47 checksum=B030E393\r\n[SyncCheck] tick=48 checksum=4BD86132\r\n[SyncCheck] tick=49 checksum=8BAEAD11\r\n[SyncCheck] tick=50 checksum=6FB3C730\r\n[SyncCheck] tick=51 checksum=18E04FAF\r\n[SyncCheck] tick=52 checksum=4C855EAE\r\n[SyncCheck] tick=53 checksum=24593BED\r\n[SyncCheck] tick=54 checksum=65ACFF8C\r\n[SyncCheck] tick=55 checksum=1080A98B\r\n[SyncCheck] tick=56 checksum=45CCDA0A\r\n[SyncCheck] tick=57 checksum=E498F0E9\r\n[SyncCheck] tick=58 checksum=ECE4EE28\r\n[SyncCheck] tick=59 checksum=44FA8A07\r\n[SyncCheck] tick=60 checksum=E5976C26\r\n[SyncCheck] tick=61 checksum=D5FDECE5\r\n[SyncCheck] tick=62 checksum=F5356C24\r\n[SyncCheck] tick=63 checksum=433DE9E3\r\n[SyncCheck] tick=64 checksum=9F1EC602\r\n[SyncCheck] tick=65 checksum=4AC940C1\r\n[SyncCheck] tick=66 checksum=EA95D220\r\n[SyncCheck] tick=67 checksum=983AC1DF\r\n[SyncCheck] tick=68 checksum=5AFA685E\r\n[SyncCheck] tick=69 checksum=F0E3855D\r\n[SyncCheck] tick=70 checksum=7AEEB8FC\r\n[SyncCheck] tick=71 checksum=F91C033B\r\n[SyncCheck] tick=72 checksum=4A72C3FA\r\n[SyncCheck] tick=73 checksum=B0E43B79\r\n[SyncCheck] tick=74 checksum=EA7F2978\r\n[SyncCheck] tick=75 checksum=BC94A617\r\n[SyncCheck] tick=76 checksum=6915F196\r\n[SyncCheck] tick=77 checksum=C7C81375\r\n[SyncCheck] tick=78 checksum=00E60434\r\n[SyncCheck] tick=79 checksum=D27E8393\r\n[SyncCheck] tick=80 checksum=3C919192\r\n[SyncCheck] tick=81 checksum=2568E671\r\n[SyncCheck] tick=82 checksum=C7B36A10\r\n[SyncCheck] tick=83 checksum=E17FDC2F\r\n[SyncCheck] tick=84 checksum=9B09354E\r\n[SyncCheck] tick=85 checksum=9165950D\r\n[SyncCheck] tick=86 checksum=4135238C\r\n[SyncCheck] tick=87 checksum=4ED058CB\r\n[SyncCheck] tick=88 checksum=DB2FD4EA\r\n[SyncCheck] tick=89 checksum=AE6423A9\r\n[SyncCheck] tick=90 checksum=8F3DD848\r\n[SyncCheck] tick=91 checksum=70178CE7\r\n[SyncCheck] tick=92 checksum=50F14186\r\n[SyncCheck] tick=93 checksum=31CAF625\r\n[SyncCheck] tick=94 checksum=12A4AAC4\r\n[SyncCheck] tick=95 checksum=F37E5F63\r\n[SyncCheck] tick=96 checksum=D4581402\r\n[SyncCheck] tick=97 checksum=B531C8A1\r\n[SyncCheck] tick=98 checksum=960B7D40\r\n[SyncCheck] tick=99 checksum=76E531DF\r\n[SyncCheck] tick=100 checksum=36C6465E\r\n[Commander] Goal #1: status=Completed owned=1 queued=0; The movement objective is satisfied in simulation state.\r\n[Commander] Goal #2: status=Executing owned=0 queued=0; Moving exact selected units to known reachable native formation positions.\r\n[Commander] Goal #2: status=Executing owned=1 queued=0; Waiting for the exact selected units to reach their native formation endpoints.\r\n[Commander] Goal #2: status=Completed owned=1 queued=0; The movement objective is satisfied in simulation state.\r\n[Commander] context=projected;provider-request=started\r\n[Commander] Goal #3 submitted: CapabilityAction\r\n[Commander] Goal #4 submitted: CapabilityAction\r\n"
+          }
+        ]
+      }
+    },
+    "hint": null
+  }
+}

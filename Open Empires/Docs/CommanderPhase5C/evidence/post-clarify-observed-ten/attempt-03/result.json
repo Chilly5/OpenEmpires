@@ -1,0 +1,17 @@
+{
+  "stage": "provider-observed",
+  "done": true,
+  "request": 0,
+  "preview": null,
+  "pending": false,
+  "trace": "utc=2026-10-13T22:07:00.0450626Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=2644\nfinish=stop\nassistantContent=extracted;characters=131;finish=stop\nsemantic=Request;nodes=1\n",
+  "attempts": [
+    {
+      "kind": "initial",
+      "stage": "semantic-valid",
+      "http": 200
+    }
+  ],
+  "transcript": "Player:\r\nbuild barracks and 4 spearman\r\n\r\nCommander:\r\nAction plan — not started.\n1. Build 1 Barracks\n2. Ensure Spearman total 4; expected 4 newly produced (existing and queued count toward the total); after step 1; only the Barracks built in step 1; no other producer substitutes\nPreparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan.\r\n\r\nCommander:\r\nCompound Commander order submitted.\r\n\r\nPlayer:\r\nbuild a barracks, then train 4 new spearmen from it\r\n\r\nCommander:\r\nAction plan — not started.\n1. Build 1 Barracks\n2. Produce 4 new Spearman; after step 1; only the Barracks built in step 1; no other producer substitutes\nPreparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan.\r\n\r\nCommander:\r\nCompound Commander order submitted.\r\n\r\nPlayer:\r\nbuild 3 stables\r\n\r\nCommander:\r\nAccepted: build 3 stables. Planning will check placement and workers; construction has not started yet.",
+  "goals": 5
+}

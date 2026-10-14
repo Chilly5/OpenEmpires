@@ -1,0 +1,79 @@
+{
+  "tick": 9691,
+  "requestId": 2,
+  "trace": "utc=2026-10-13T18:34:27.9190978Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=3252\nfinish=stop\nassistantContent=extracted;characters=255;finish=stop\nsemantic=Request;nodes=2\n",
+  "attempts": [
+    {
+      "kind": "initial",
+      "stage": "semantic-valid",
+      "http": 200
+    }
+  ],
+  "preview": null,
+  "nodes": null,
+  "marker": null,
+  "transcript": "Player:\r\nbuild barracks and 4 spearman\r\n\r\nCommander:\r\nCommander AI returned an invalid semantic response; no order was submitted.\r\n\r\nCommander:\r\nClick a visible destination to save it for the next applicable request.\r\n\r\nCommander:\r\nDestination saved for the next applicable request. Existing tasks keep their approved destination.\r\n\r\nPlayer:\r\ntrain 4 new spearmen and move them to my marker\r\n\r\nCommander:\r\nAction plan — not started.\n1. Produce 4 new Spearman\n2. Move 4 owned Spearman to your placed destination marker; after step 1; only the 4 new Spearman produced in step 1; no existing or human-produced units substitute\nPreparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan.\r\n\r\nCommander:\r\nCompound Commander order submitted.",
+  "goals": [
+    {
+      "id": 1,
+      "type": "EnsureUnitCountGoal",
+      "status": "WaitingForProduction",
+      "reason": "Owned 4, queued 2, target 4."
+    },
+    {
+      "id": 2,
+      "type": "CommanderCapabilityGoal",
+      "status": "WaitingForPrerequisite",
+      "reason": "Waiting for dependency goal #1 to complete."
+    }
+  ],
+  "buildings": [
+    {
+      "id": 0,
+      "type": "TownCenter",
+      "unfinished": false
+    },
+    {
+      "id": 1,
+      "type": "Barracks",
+      "unfinished": false
+    },
+    {
+      "id": 2,
+      "type": "House",
+      "unfinished": false
+    }
+  ],
+  "spearmen": [
+    {
+      "id": 23,
+      "position": "(205.0002, 0.0000, 140.5000)",
+      "state": "Idle"
+    },
+    {
+      "id": 24,
+      "position": "(206.9998, 0.0000, 140.5000)",
+      "state": "Idle"
+    },
+    {
+      "id": 25,
+      "position": "(208.8706, 0.0000, 137.5000)",
+      "state": "Idle"
+    },
+    {
+      "id": 26,
+      "position": "(208.1294, 0.0000, 137.5000)",
+      "state": "Idle"
+    }
+  ],
+  "texts": [
+    {
+      "name": "CommanderStatus",
+      "text": "Waiting — Produce 4 new Spearman"
+    },
+    {
+      "name": "TaskBadge",
+      "text": "1 active task"
+    }
+  ]
+}

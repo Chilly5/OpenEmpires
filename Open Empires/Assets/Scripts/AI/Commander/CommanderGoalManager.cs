@@ -360,18 +360,14 @@ namespace OpenEmpires
                     {
                         var structure = byIndex[node.Index] as BuildStructureGoal;
                         if (structure == null) throw new ArgumentException("The marker construction is unavailable.");
-                        structure.DynamicLocation = CommanderBoundLocation.FromPlayerMarker(simulation,
-                            this, playerId, plan.Authorization.MarkerTileX,
-                            plan.Authorization.MarkerTileZ, CommanderSemanticPlacementRelation.Near, 1);
+                        structure.DynamicLocation = plan.Authorization.MarkerLocations[node.Index];
                     }
                     if (node.Intent is CapabilityActionIntent action
                         && action.LocationSelector.Kind == CommanderLocationSelectorKind.PlayerMarker)
                     {
                         var move = byIndex[node.Index] as CommanderCapabilityGoal;
                         if (move == null) throw new ArgumentException("The marker movement is unavailable.");
-                        move.MarkerMoveLocation = CommanderBoundLocation.FromPlayerMarker(simulation,
-                            this, playerId, plan.Authorization.MarkerTileX,
-                            plan.Authorization.MarkerTileZ, CommanderSemanticPlacementRelation.Near, 1);
+                        move.MarkerMoveLocation = plan.Authorization.MarkerLocations[node.Index];
                     }
                 }
             }

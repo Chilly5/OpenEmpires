@@ -1,0 +1,285 @@
+{
+  "stage": "native-proof",
+  "source": "e4a851c0f45bdd3bbb3253ec1abfaa5b6da015c6c1af4d40018eba9199740098",
+  "tick": 33851,
+  "goals": [
+    {
+      "id": 3,
+      "type": "EnsureUnitCountGoal",
+      "status": "Completed",
+      "reason": "Owned 8/4 living units.",
+      "buildingResults": null,
+      "unitResults": [
+        48,
+        49,
+        50,
+        51
+      ]
+    },
+    {
+      "id": 4,
+      "type": "CommanderCapabilityGoal",
+      "status": "Completed",
+      "reason": "The movement objective is satisfied in simulation state.",
+      "buildingResults": null,
+      "unitResults": null
+    }
+  ],
+  "commands": [
+    {
+      "tick": 1170,
+      "type": "PlaceBuildingCommand",
+      "command": {
+        "BuildingType": 1,
+        "TileX": 220,
+        "TileZ": 108,
+        "VillagerUnitIds": [
+          0
+        ],
+        "IsQueued": false,
+        "LandmarkIdValue": -1,
+        "Type": 7,
+        "PlayerId": 0
+      }
+    },
+    {
+      "tick": 2235,
+      "type": "TrainUnitCommand",
+      "command": {
+        "BuildingId": 2,
+        "UnitType": 1,
+        "Type": 5,
+        "PlayerId": 0
+      }
+    },
+    {
+      "tick": 2250,
+      "type": "TrainUnitCommand",
+      "command": {
+        "BuildingId": 2,
+        "UnitType": 1,
+        "Type": 5,
+        "PlayerId": 0
+      }
+    },
+    {
+      "tick": 2265,
+      "type": "PlaceBuildingCommand",
+      "command": {
+        "BuildingType": 0,
+        "TileX": 225,
+        "TileZ": 108,
+        "VillagerUnitIds": [
+          0
+        ],
+        "IsQueued": false,
+        "LandmarkIdValue": -1,
+        "Type": 7,
+        "PlayerId": 0
+      }
+    },
+    {
+      "tick": 2280,
+      "type": "TrainUnitCommand",
+      "command": {
+        "BuildingId": 2,
+        "UnitType": 1,
+        "Type": 5,
+        "PlayerId": 0
+      }
+    },
+    {
+      "tick": 2535,
+      "type": "TrainUnitCommand",
+      "command": {
+        "BuildingId": 2,
+        "UnitType": 1,
+        "Type": 5,
+        "PlayerId": 0
+      }
+    },
+    {
+      "tick": 31275,
+      "type": "TrainUnitCommand",
+      "command": {
+        "BuildingId": 2,
+        "UnitType": 1,
+        "Type": 5,
+        "PlayerId": 0
+      }
+    },
+    {
+      "tick": 31290,
+      "type": "TrainUnitCommand",
+      "command": {
+        "BuildingId": 2,
+        "UnitType": 1,
+        "Type": 5,
+        "PlayerId": 0
+      }
+    },
+    {
+      "tick": 31305,
+      "type": "TrainUnitCommand",
+      "command": {
+        "BuildingId": 2,
+        "UnitType": 1,
+        "Type": 5,
+        "PlayerId": 0
+      }
+    },
+    {
+      "tick": 31575,
+      "type": "TrainUnitCommand",
+      "command": {
+        "BuildingId": 2,
+        "UnitType": 1,
+        "Type": 5,
+        "PlayerId": 0
+      }
+    },
+    {
+      "tick": 32475,
+      "type": "MoveCommand",
+      "command": {
+        "UnitIds": [
+          48,
+          49,
+          50,
+          51
+        ],
+        "TargetPosition": {
+          "x": {
+            "Raw": 14712832
+          },
+          "y": {
+            "Raw": 0
+          },
+          "z": {
+            "Raw": 5603328
+          }
+        },
+        "FormationPositions": [
+          {
+            "x": {
+              "Raw": 14712832
+            },
+            "y": {
+              "Raw": 0
+            },
+            "z": {
+              "Raw": 5603328
+            }
+          },
+          {
+            "x": {
+              "Raw": 14647296
+            },
+            "y": {
+              "Raw": 0
+            },
+            "z": {
+              "Raw": 5537792
+            }
+          },
+          {
+            "x": {
+              "Raw": 14647296
+            },
+            "y": {
+              "Raw": 0
+            },
+            "z": {
+              "Raw": 5603328
+            }
+          },
+          {
+            "x": {
+              "Raw": 14647296
+            },
+            "y": {
+              "Raw": 0
+            },
+            "z": {
+              "Raw": 5668864
+            }
+          }
+        ],
+        "FacingDirection": {
+          "x": {
+            "Raw": 0
+          },
+          "y": {
+            "Raw": 0
+          },
+          "z": {
+            "Raw": 0
+          }
+        },
+        "HasFacing": false,
+        "PreserveFormation": false,
+        "IsAttackMove": false,
+        "IsQueued": false,
+        "Type": 0,
+        "PlayerId": 0
+      }
+    }
+  ],
+  "buildings": [
+    {
+      "id": 0,
+      "type": "TownCenter",
+      "unfinished": false,
+      "x": 222,
+      "z": 102
+    },
+    {
+      "id": 2,
+      "type": "Barracks",
+      "unfinished": false,
+      "x": 220,
+      "z": 108
+    },
+    {
+      "id": 3,
+      "type": "House",
+      "unfinished": false,
+      "x": 225,
+      "z": 108
+    }
+  ],
+  "units": [
+    {
+      "id": 44,
+      "position": "(220.0000, 0.0000, 109.5868)"
+    },
+    {
+      "id": 45,
+      "position": "(215.4223, 0.0000, 109.5000)"
+    },
+    {
+      "id": 46,
+      "position": "(216.2221, 0.0000, 109.5000)"
+    },
+    {
+      "id": 47,
+      "position": "(217.0219, 0.0000, 109.5001)"
+    },
+    {
+      "id": 48,
+      "position": "(224.5000, 0.0000, 85.5000)"
+    },
+    {
+      "id": 49,
+      "position": "(223.5000, 0.0000, 84.5000)"
+    },
+    {
+      "id": 50,
+      "position": "(223.4531, 0.0000, 85.4201)"
+    },
+    {
+      "id": 51,
+      "position": "(223.8124, 0.0000, 86.1345)"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "92529ffb65cb4e58a3edc9e522374943",
+      "status": "failed",
+      "mode": "EditMode",
+      "started_unix_ms": 1791931974384,
+      "finished_unix_ms": 1791931977301,
+      "last_update_unix_ms": 1791931977301,
+      "progress": {
+        "completed": 1,
+        "total": 1,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791931975248,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_PrunedModelHintsStillRequireGameOwnedConfirmation",
+        "last_finished_unix_ms": 1791931977283,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderEconomyClarificationTests.NearName_PrunedModelHintsStillRequireGameOwnedConfirmation",
+            "message": "  Fixture must actually exercise optional hint pruning, not preflight rejection.\r\n  Expected: not null\r\n  But was:  null\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}

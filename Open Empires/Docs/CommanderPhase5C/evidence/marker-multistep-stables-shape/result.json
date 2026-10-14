@@ -1,0 +1,25 @@
+{
+  "requestId": 1,
+  "trace": "utc=2026-10-13T18:16:45.3000066Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=3123\nfinish=stop\nassistantContent=extracted;characters=131;finish=stop\nsemantic=Request;nodes=1\n",
+  "attempts": [
+    {
+      "kind": "initial",
+      "stage": "semantic-valid",
+      "http": 200
+    }
+  ],
+  "preview": false,
+  "transcript": "Player:\r\nbuild 3 stables\r\n\r\nCommander:\r\nAccepted: build 3 stables. Planning will check placement and workers; construction has not started yet.",
+  "goals": [
+    {
+      "id": 1,
+      "status": "WaitingForConstruction"
+    }
+  ],
+  "stables": [
+    {
+      "id": 1,
+      "unfinished": true
+    }
+  ]
+}

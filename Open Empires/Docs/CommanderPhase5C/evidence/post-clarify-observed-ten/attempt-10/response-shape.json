@@ -1,0 +1,147 @@
+{
+  "mode": "Clarify",
+  "shape": [
+    {
+      "path": "$",
+      "actualType": "Object",
+      "discriminator": null
+    },
+    {
+      "path": "$.outcome",
+      "actualType": "String",
+      "discriminator": null
+    },
+    {
+      "path": "$.message",
+      "actualType": "String",
+      "discriminator": null
+    },
+    {
+      "path": "$.pending",
+      "actualType": "Object",
+      "discriminator": null
+    },
+    {
+      "path": "$.pending.executionOrder",
+      "actualType": "String",
+      "discriminator": null
+    },
+    {
+      "path": "$.pending.nodes",
+      "actualType": "Array",
+      "discriminator": null
+    },
+    {
+      "path": "$.pending.nodes[0]",
+      "actualType": "Object",
+      "discriminator": null
+    },
+    {
+      "path": "$.pending.nodes[0].type",
+      "actualType": "String",
+      "discriminator": "BuildStructure"
+    },
+    {
+      "path": "$.pending.nodes[0].structure",
+      "actualType": "String",
+      "discriminator": null
+    },
+    {
+      "path": "$.pending.nodes[0].count",
+      "actualType": "Integer",
+      "discriminator": null
+    },
+    {
+      "path": "$.pending.nodes[0].builders",
+      "actualType": "Object",
+      "discriminator": null
+    },
+    {
+      "path": "$.pending.nodes[0].builders.state",
+      "actualType": "String",
+      "discriminator": null
+    },
+    {
+      "path": "$.pending.nodes[0].builders.count",
+      "actualType": "Integer",
+      "discriminator": null
+    },
+    {
+      "path": "$.pending.nodes[1]",
+      "actualType": "Object",
+      "discriminator": null
+    },
+    {
+      "path": "$.pending.nodes[1].type",
+      "actualType": "String",
+      "discriminator": "EnsureUnitCount"
+    },
+    {
+      "path": "$.pending.nodes[1].unit",
+      "actualType": "String",
+      "discriminator": null
+    },
+    {
+      "path": "$.pending.nodes[1].count",
+      "actualType": "Integer",
+      "discriminator": null
+    },
+    {
+      "path": "$.pending.nodes[1].producerFromNode",
+      "actualType": "Integer",
+      "discriminator": null
+    },
+    {
+      "path": "$.pending.nodes[1].dependsOn",
+      "actualType": "Array",
+      "discriminator": null
+    },
+    {
+      "path": "$.pending.nodes[1].dependsOn[0]",
+      "actualType": "Integer",
+      "discriminator": null
+    },
+    {
+      "path": "$.missingSlots",
+      "actualType": "Array",
+      "discriminator": null
+    },
+    {
+      "path": "$.missingSlots[0]",
+      "actualType": "Object",
+      "discriminator": null
+    },
+    {
+      "path": "$.missingSlots[0].node",
+      "actualType": "Integer",
+      "discriminator": null
+    },
+    {
+      "path": "$.missingSlots[0].path",
+      "actualType": "String",
+      "discriminator": null
+    },
+    {
+      "path": "$.missingSlots[0].type",
+      "actualType": "String",
+      "discriminator": null
+    },
+    {
+      "path": "$.missingSlots[0].alternatives",
+      "actualType": "Array",
+      "discriminator": null
+    },
+    {
+      "path": "$.missingSlots[0].alternatives[0]",
+      "actualType": "String",
+      "discriminator": null
+    },
+    {
+      "path": "$.missingSlots[0].alternatives[1]",
+      "actualType": "String",
+      "discriminator": null
+    }
+  ],
+  "http": 200,
+  "stage": "response"
+}

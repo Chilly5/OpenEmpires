@@ -1,0 +1,37 @@
+{
+  "repair_envelope_red": {
+    "job_id": "c673525dd0744dbc8e86ea0750f9bb42",
+    "status": "failed",
+    "completed": 3,
+    "total": 3,
+    "failures": [
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5CIntegrationRepairTests.MalformedEnvelope_RejectsWithKnownFieldTypesInsteadOfLosingTheFirstFailure(\"{\\\"outcome\\\":\\\"Request\\\",\\\"nodes\\\":{}}\",\"nodes\",\"Array\",\"Object\")",
+        "message": "  Expected: String containing \"field=nodes\"\r\n  But was:  \"field=$;code=invalid-schema;stage=envelope;node=-1\"\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5CIntegrationRepairTests.MalformedEnvelope_RejectsWithKnownFieldTypesInsteadOfLosingTheFirstFailure(\"{\\\"outcome\\\":\\\"Request\\\",\\\"nodes\\\":[\\\"unexpected\\\"]}\",\"nodes[0]\",\"Object\",\"String\")",
+        "message": "  Expected: String containing \"field=nodes[0]\"\r\n  But was:  \"field=$;code=invalid-schema;stage=envelope;node=-1\"\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5CIntegrationRepairTests.MalformedEnvelope_RejectsWithKnownFieldTypesInsteadOfLosingTheFirstFailure(\"{\\\"outcome\\\":\\\"DynamicPlan\\\",\\\"message\\\":\\\"not a graph\\\"}\",\"message\",\"AllowedField\",\"String\")",
+        "message": "  Expected: String containing \"field=message\"\r\n  But was:  \"field=<unknown>;code=unexpected-field;expected=AllowedField;actual=String;mode=DynamicPlan\"\r\n"
+      }
+    ]
+  },
+  "repair_envelope_green": {
+    "job_id": "fa049df126b84c9b955b0063f8d77196",
+    "status": "succeeded",
+    "completed": 79,
+    "total": 79,
+    "summary": {
+      "total": 79,
+      "passed": 79,
+      "failed": 0,
+      "skipped": 0,
+      "durationSeconds": 25.8389731,
+      "resultState": "Passed"
+    },
+    "failures": []
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "requestId": 3,
+  "trace": "utc=2026-10-13T11:34:09.1860828Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=3220\nfinish=stop\nassistantContent=extracted;characters=149;finish=stop\nsemantic=Unsupported;nodes=0\n",
+  "attempts": [
+    {
+      "kind": "initial",
+      "stage": "semantic-valid",
+      "http": 200
+    }
+  ],
+  "preview": null,
+  "transcript": "Player:\r\nbuild barracks and 4 spearman\r\n\r\nCommander:\r\nAction plan — not started.\n1. Build 1 Barracks\n2. Ensure Spearman total 4; expected 4 newly produced (existing and queued count toward the total)\nPreparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan.\r\n\r\nCommander:\r\nAction plan dismissed; nothing started.\r\n\r\nPlayer:\r\nbuild a barracks, then train 4 new spearmen from it\r\n\r\nCommander:\r\nI can retain the Barracks construction, but Spearman training is unavailable to the Commander for English.\r\n\r\nPlayer:\r\ntrain 4 new spearmen and move them to my marker\r\n\r\nCommander:\r\nSpearman training is unavailable to the Commander for English, so I can’t request those new units or move them.",
+  "cursor": "None",
+  "screen": [
+    1520,
+    656
+  ],
+  "marker": null,
+  "tick": 4991,
+  "goals": [],
+  "buildings": [
+    {
+      "id": 0,
+      "type": "TownCenter",
+      "unfinished": false
+    }
+  ],
+  "spearmen": []
+}

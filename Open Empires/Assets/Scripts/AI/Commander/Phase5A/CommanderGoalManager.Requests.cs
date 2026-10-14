@@ -73,7 +73,8 @@ namespace OpenEmpires
 
         internal CommanderActionPlanCandidate PrepareActionPlan(CommanderSemanticResult interpretation,
             string originalInput, int generation, StrategicPipeline strategicSource = null,
-            Func<bool> isCurrentRequest = null, CommanderRequestTicket requestTicket = null)
+            Func<bool> isCurrentRequest = null, CommanderRequestTicket requestTicket = null,
+            IReadOnlyDictionary<int,CommanderBoundLocation> resolvedMarkerLocations = null)
         {
             ThrowIfDisposed();
             if (nextRequestId == long.MaxValue)
@@ -85,18 +86,20 @@ namespace OpenEmpires
                 throw new ArgumentException(reason);
             if (!TryBindFutureProducers(plan, out var futureBindings, out reason))
                 throw new ArgumentException(reason);
-            if (requestTicket != null && !requestTicket.Claim(this, originalInput, generation))
-                throw new ArgumentException("The request ticket is stale, foreign or already bound.");
             var candidate = new CommanderActionPlanCandidate(requestTicket?.Id ?? nextRequestId++, this,
                 interpretation, plan, originalInput, generation, strategicSource,
-                requestTicket != null ? requestTicket.IsCurrent : isCurrentRequest, futureBindings);
+                requestTicket != null ? requestTicket.IsCurrent : isCurrentRequest, futureBindings,resolvedMarkerLocations);
+            // Validate every immutable sidecar before consuming the one candidate claim.
+            if (requestTicket != null && !requestTicket.Claim(this, originalInput, generation))
+                throw new ArgumentException("The request ticket is stale, foreign or already bound.");
             requestTicket?.BindCandidate(candidate);
             TraceRequest(requestTicket, "candidate-compiled");
             return candidate;
         }
 
         internal CommanderActionPlanCandidate PrepareKnownIntentScope(CommanderSemanticResult interpretation,
-            CommanderRequestTicket ticket, StrategicPipeline strategicSource, bool clarified)
+            CommanderRequestTicket ticket, StrategicPipeline strategicSource, bool clarified,
+            IReadOnlyDictionary<int,CommanderBoundLocation> resolvedMarkerLocations = null)
         {
             if (interpretation?.IsValid != true || interpretation.Outcome != CommanderSemanticOutcome.Request
                 || interpretation.Nodes.Count != 1 || ticket == null
@@ -104,7 +107,7 @@ namespace OpenEmpires
                 || interpretation.Nodes[0].Type == CommanderSemanticNodeType.WatchFutureUnits)
                 throw new ArgumentException("Only the established narrow KnownIntent path can use automatic admission.");
             var candidate = PrepareActionPlan(interpretation, ticket.OriginalInput, ticket.Generation,
-                strategicSource, ticket.IsCurrent, ticket);
+                strategicSource, ticket.IsCurrent, ticket,resolvedMarkerLocations);
             candidate.SetKnownIntentEvidence(this, clarified);
             if (ApproveActionPlan(candidate, ticket.Generation, strategicSource) == null)
                 throw new ArgumentException("The KnownIntent request scope is stale.");
@@ -167,8 +170,7 @@ namespace OpenEmpires
         private void BindMarkerAtRegistration(CommanderGoal goal, CommanderActionPlanCandidate scope)
         {
             if (!scope.UsesPlayerMarker) return;
-            var location = CommanderBoundLocation.FromPlayerMarker(simulation, this, playerId,
-                scope.MarkerTileX, scope.MarkerTileZ, CommanderSemanticPlacementRelation.Near, 1);
+            var location = scope.MarkerLocations[goal.RequestNodeIndex];
             if (goal is BuildStructureGoal build) build.DynamicLocation = location;
             else if (goal is CommanderCapabilityGoal move) move.MarkerMoveLocation = location;
             else throw new InvalidOperationException("The marker effect has no typed destination binding.");

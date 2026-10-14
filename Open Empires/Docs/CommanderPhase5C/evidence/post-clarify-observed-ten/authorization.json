@@ -1,0 +1,19 @@
+{
+  "schema": "commander-phase5c-bounded-authorization@1",
+  "authorized_attempts": 10,
+  "starting_global_used": 48,
+  "global_cap": 200,
+  "scope_http_cap": 10,
+  "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+  "model": "openai/gpt-6-luna",
+  "payload": "Public canonical game facts, text commands and controlled owned-game counts",
+  "authorization": "User directly authorized another10 paid calls if needed without asking again before sleep",
+  "utc": "2026-10-13T21:52:51.5042731Z",
+  "retries": 0,
+  "repair_http": 0,
+  "preserve_failed_attempts": true,
+  "runtime_source_sha256": "e4a851c0f45bdd3bbb3253ec1abfaa5b6da015c6c1af4d40018eba9199740098",
+  "integration_attempt_start_count": 14,
+  "initial_runtime_source_sha256": "71bbbf0ec4210fcf06c25181e88f20443f9cd51983c1e25495c4bfdb490e6996",
+  "source_transition": "First5 observed calls source71bbbf; remaining calls after compact arming/message diagnostics correction. The original10-attempt cap and starting counts are unchanged."
+}

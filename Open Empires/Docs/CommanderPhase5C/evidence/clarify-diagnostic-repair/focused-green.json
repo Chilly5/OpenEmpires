@@ -1,0 +1,42 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "da7e1c121154469895871492a893cafc",
+      "status": "succeeded",
+      "mode": "EditMode",
+      "started_unix_ms": 1791927328334,
+      "finished_unix_ms": 1791927340256,
+      "last_update_unix_ms": 1791927340256,
+      "progress": {
+        "completed": 10,
+        "total": 10,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791927339952,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CIntegrationRepairTests.MalformedEnvelope_RejectsWithKnownFieldTypesInsteadOfLosingTheFirstFailure(\"{\\\"outcome\\\":\\\"Clarify\\\",\\\"pending\\\":{\\\"type\\\":\\\"AllocateWorkers\\\",\\\"mode\\\":\\\"SelectedCount\\\",\\\"countMode\\\":\\\"Exact\\\",\\\"workers\\\":{\\\"state\\\":\\\"Any\\\"},\\\"destination\\\":{\\\"resource\\\":\\\"Food\\\"}},\\\"missingFields\\\":{}}\",\"missingFields\",\"Array\",\"Object\")",
+        "last_finished_unix_ms": 1791927339952,
+        "stuck_suspected": false,
+        "editor_is_focused": false,
+        "blocked_reason": null,
+        "failures_so_far": [],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": {
+        "mode": "EditMode",
+        "summary": {
+          "total": 10,
+          "passed": 10,
+          "failed": 0,
+          "skipped": 0,
+          "durationSeconds": 0.7580204,
+          "resultState": "Passed"
+        },
+        "results": []
+      }
+    },
+    "hint": null
+  }
+}

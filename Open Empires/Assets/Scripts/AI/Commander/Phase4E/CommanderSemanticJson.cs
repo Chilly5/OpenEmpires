@@ -31,6 +31,7 @@ namespace OpenEmpires
         internal static CommanderSemanticResult ParseTrusted(string raw, bool requireProviderDeclarations = false)
         {
             string failureStage = "syntax";
+            string failureMode = "Unknown";
             int failureNode = -1;
             try
             {
@@ -52,9 +53,13 @@ namespace OpenEmpires
                 }
 
                 string outcomeName = RequiredString(root, "outcome");
+                if (outcomeName == "Request" || outcomeName == "DynamicPlan" || outcomeName == "Clarify"
+                    || outcomeName == "Unsupported" || outcomeName == "Answer") failureMode = outcomeName;
                 if (outcomeName == "DynamicPlan")
                 {
-                    if (!ParseDynamicTrusted(raw, out var dynamicPlan)) throw new JsonException();
+                    if (!ParseDynamicTrusted(raw, out var dynamicPlan, out string diagnostic))
+                        return new CommanderSemanticResult(false, CommanderSemanticOutcome.Unsupported,
+                            Array.Empty<CommanderSemanticNode>(), InvalidExplanation) { SchemaDiagnostic = diagnostic + ";mode=DynamicPlan" };
                     return new CommanderSemanticResult(true, CommanderSemanticOutcome.DynamicPlan,
                         Array.Empty<CommanderSemanticNode>(), "Action plan requires validation and player confirmation.",
                         dynamicPlan: dynamicPlan);
@@ -78,13 +83,19 @@ namespace OpenEmpires
                 {
                     if (outcome == CommanderSemanticOutcome.Clarify && root.Property("pending") != null)
                     {
-                        if (root["pending"] is JObject graph && graph.Property("nodes") != null)
+                        if (!(root["pending"] is JObject graph))
+                            throw FailField(root, "pending", SchemaFailureCode.MissingOrWrongType, JTokenType.Object);
+                        if (graph.Property("nodes") != null)
                         {
                             CheckFields(root, "outcome", "message", "pending", "missingSlots");
+                            ValidatePendingGraphFieldTypes(root, graph);
+                            failureStage = "clarification";
                             return new CommanderSemanticResult(true, outcome, Array.Empty<CommanderSemanticNode>(),
                                 OptionalExplanation(root), pendingGraphDraft: CommanderRequestGraphDraft.Parse(root));
                         }
                         CheckFields(root, "outcome", "message", "pending", "missingFields");
+                        if (!(root["missingFields"] is JArray))
+                            throw FailField(root, "missingFields", SchemaFailureCode.MissingOrWrongType, JTokenType.Array);
                         return new CommanderSemanticResult(true, outcome, Array.Empty<CommanderSemanticNode>(),
                             OptionalExplanation(root), ParsePendingDraft(root));
                     }
@@ -96,14 +107,18 @@ namespace OpenEmpires
 
                 if (requireProviderDeclarations) CheckFields(root, "outcome", "nodes", "executionOrder");
                 else CheckFields(root, "outcome", "nodes");
-                if (!(root["nodes"] is JArray items) || items.Count < 1 || items.Count > CommanderSemanticJson.MaximumNodes)
-                    throw new JsonException();
+                if (!(root["nodes"] is JArray items))
+                    throw FailField(root, "nodes", SchemaFailureCode.MissingOrWrongType, JTokenType.Array);
+                if (items.Count < 1 || items.Count > CommanderSemanticJson.MaximumNodes)
+                    throw FailField(root, "nodes", SchemaFailureCode.OutOfRange, JTokenType.Array);
                 string executionOrder = requireProviderDeclarations
                     ? ReadProviderExecutionOrder(root, items.Count) : null;
                 var nodes = new List<CommanderSemanticNode>(items.Count);
                 foreach (JToken item in items)
                 {
-                    if (!(item is JObject node)) throw new JsonException();
+                    if (!(item is JObject node))
+                        throw new SchemaFieldFailure("nodes[" + nodes.Count + "]", SchemaFailureCode.MissingOrWrongType,
+                            JTokenType.Object.ToString(), item.Type.ToString());
                     failureStage = "node"; failureNode = nodes.Count;
                     nodes.Add(ParseNode(node, requireProviderDeclarations));
                 }
@@ -118,8 +133,8 @@ namespace OpenEmpires
                 // The provider's raw text and fields are not safe diagnostics for the player.
                 return new CommanderSemanticResult(false, CommanderSemanticOutcome.Unsupported,
                     Array.Empty<CommanderSemanticNode>(), InvalidExplanation)
-                { SchemaDiagnostic = error is SchemaFieldFailure field ? field.Detail
-                    : "field=$;code=invalid-schema;stage=" + failureStage + ";node=" + failureNode };
+                { SchemaDiagnostic = (error is SchemaFieldFailure field ? field.Detail
+                    : "field=$;code=invalid-schema") + ";stage=" + failureStage + ";node=" + failureNode + ";mode=" + failureMode };
             }
         }
 
@@ -611,7 +626,7 @@ namespace OpenEmpires
         {
             JToken token = value[name];
             if (token == null || token.Type != JTokenType.String)
-                throw FailField(value, name, SchemaFailureCode.MissingOrWrongType);
+                throw FailField(value, name, SchemaFailureCode.MissingOrWrongType, JTokenType.String);
             return (string)token;
         }
 
@@ -624,7 +639,7 @@ namespace OpenEmpires
         {
             JToken token = value[name];
             if (token == null || token.Type != JTokenType.Integer)
-                throw FailField(value, name, SchemaFailureCode.MissingOrWrongType);
+                throw FailField(value, name, SchemaFailureCode.MissingOrWrongType, JTokenType.Integer);
             int number;
             try { number = token.Value<int>(); }
             catch (OverflowException) { throw FailField(value, name, SchemaFailureCode.OutOfRange); }
@@ -637,9 +652,11 @@ namespace OpenEmpires
         {
             JToken token = value["message"];
             if (token == null) return string.Empty;
-            if (token.Type != JTokenType.String) throw new JsonException();
+            if (token.Type != JTokenType.String)
+                throw FailField(value, "message", SchemaFailureCode.MissingOrWrongType, JTokenType.String);
             string message = (string)token;
-            if (message.Length > 180) throw new JsonException();
+            if (message.Length > 180)
+                throw FailField(value, "message", SchemaFailureCode.OutOfRange, JTokenType.String);
             foreach (char c in message)
                 if (char.IsControl(c) || c == '<' || c == '>') throw new JsonException();
             return message;

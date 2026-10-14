@@ -1,0 +1,175 @@
+{
+  "mode": "Clarify",
+  "shape": [
+    {
+      "path": "$",
+      "actualType": "Object",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.outcome",
+      "actualType": "String",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.message",
+      "actualType": "String",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.pending",
+      "actualType": "Object",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.pending.executionOrder",
+      "actualType": "String",
+      "discriminator": null,
+      "schemaValue": "Sequential"
+    },
+    {
+      "path": "$.pending.nodes",
+      "actualType": "Array",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.pending.nodes[0]",
+      "actualType": "Object",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.pending.nodes[0].type",
+      "actualType": "String",
+      "discriminator": "BuildStructure",
+      "schemaValue": null
+    },
+    {
+      "path": "$.pending.nodes[0].structure",
+      "actualType": "String",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.pending.nodes[0].count",
+      "actualType": "Integer",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.pending.nodes[0].builders",
+      "actualType": "Object",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.pending.nodes[0].builders.state",
+      "actualType": "String",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.pending.nodes[0].builders.count",
+      "actualType": "Integer",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.pending.nodes[1]",
+      "actualType": "Object",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.pending.nodes[1].type",
+      "actualType": "String",
+      "discriminator": "EnsureUnitCount",
+      "schemaValue": null
+    },
+    {
+      "path": "$.pending.nodes[1].unit",
+      "actualType": "String",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.pending.nodes[1].count",
+      "actualType": "Integer",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.pending.nodes[1].producerFromNode",
+      "actualType": "Integer",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.pending.nodes[1].dependsOn",
+      "actualType": "Array",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.pending.nodes[1].dependsOn[0]",
+      "actualType": "Integer",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.missingSlots",
+      "actualType": "Array",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.missingSlots[0]",
+      "actualType": "Object",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.missingSlots[0].node",
+      "actualType": "Integer",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.missingSlots[0].path",
+      "actualType": "String",
+      "discriminator": null,
+      "schemaValue": "quantityMode"
+    },
+    {
+      "path": "$.missingSlots[0].type",
+      "actualType": "String",
+      "discriminator": null,
+      "schemaValue": "Confirmation"
+    },
+    {
+      "path": "$.missingSlots[0].alternatives",
+      "actualType": "Array",
+      "discriminator": null,
+      "schemaValue": null
+    },
+    {
+      "path": "$.missingSlots[0].alternatives[0]",
+      "actualType": "String",
+      "discriminator": null,
+      "schemaValue": "TargetTotal"
+    },
+    {
+      "path": "$.missingSlots[0].alternatives[1]",
+      "actualType": "String",
+      "discriminator": null,
+      "schemaValue": "New"
+    }
+  ],
+  "http": 200,
+  "stage": "response"
+}

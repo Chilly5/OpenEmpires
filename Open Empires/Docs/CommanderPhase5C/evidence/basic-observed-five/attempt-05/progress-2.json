@@ -1,0 +1,78 @@
+{
+  "tick": 19857,
+  "requestId": 3,
+  "trace": "utc=2026-10-13T19:04:01.2021559Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=2946\nfinish=stop\nassistantContent=extracted;characters=283;finish=stop\nsemantic=Request;nodes=2\n",
+  "attempts": [
+    {
+      "kind": "initial",
+      "stage": "semantic-valid",
+      "http": 200
+    }
+  ],
+  "preview": null,
+  "nodes": null,
+  "transcript": "Player:\r\nbuild barracks and 4 spearman\r\n\r\nCommander:\r\nAction plan — not started.\n1. Build 1 Barracks\n2. Ensure Spearman total 4; expected 4 newly produced (existing and queued count toward the total); after step 1; only the Barracks built in step 1; no other producer substitutes\nPreparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan.\r\n\r\nCommander:\r\nAction plan dismissed; nothing started.\r\n\r\nPlayer:\r\nbuild barracks and 4 spearman\r\n\r\nCommander:\r\nAction plan — not started.\n1. Build 1 Barracks\n2. Ensure Spearman total 4; expected 4 newly produced (existing and queued count toward the total); after step 1; only the Barracks built in step 1; no other producer substitutes\nPreparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan.\r\n\r\nCommander:\r\nAction plan dismissed; nothing started.\r\n\r\nPlayer:\r\nbuild barracks and 4 spearman\r\n\r\nCommander:\r\nAction plan — not started.\n1. Build 1 Barracks\n2. Ensure Spearman total 4; expected 4 newly produced (existing and queued count toward the total); after step 1; only the Barracks built in step 1; no other producer substitutes\nPreparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan.\r\n\r\nCommander:\r\nCompound Commander order submitted.",
+  "goals": [
+    {
+      "id": 1,
+      "type": "BuildStructureGoal",
+      "status": "Completed",
+      "reason": "Completed 1 exact requested Barracks results."
+    },
+    {
+      "id": 2,
+      "type": "EnsureUnitCountGoal",
+      "status": "Completed",
+      "reason": "Owned 4/4 living units."
+    }
+  ],
+  "buildings": [
+    {
+      "id": 0,
+      "type": "TownCenter",
+      "unfinished": false
+    },
+    {
+      "id": 1,
+      "type": "Barracks",
+      "unfinished": false
+    },
+    {
+      "id": 2,
+      "type": "House",
+      "unfinished": false
+    }
+  ],
+  "spearmen": [
+    {
+      "id": 22,
+      "position": "(197.0000, 0.0000, 141.5000)",
+      "state": "Idle"
+    },
+    {
+      "id": 23,
+      "position": "(194.6005, 0.0000, 141.5000)",
+      "state": "Idle"
+    },
+    {
+      "id": 24,
+      "position": "(195.4003, 0.0000, 141.5000)",
+      "state": "Idle"
+    },
+    {
+      "id": 25,
+      "position": "(196.2001, 0.0000, 141.5000)",
+      "state": "Idle"
+    }
+  ],
+  "texts": [
+    {
+      "name": "CommanderStatus",
+      "text": "Completed — Owned units: 4 / 4"
+    },
+    {
+      "name": "TaskBadge",
+      "text": "0 active tasks"
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "repair_routing_red": {
+    "job_id": "5efcb4cc2fdf4d448cf2526239000aeb",
+    "status": "failed",
+    "error": null,
+    "completed": 3,
+    "total": 3,
+    "failures": [
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5CIntegrationRepairTests.ExecutableOutcomeDeclaration_OnlyAdvertisesRetrievedRepresentations(\"build 3 stables\",False)",
+        "message": "  Expected: False\r\n  But was:  True\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5CIntegrationRepairTests.ExecutableOutcomeDeclaration_OnlyAdvertisesRetrievedRepresentations(\"build 4 houses\",False)",
+        "message": "  Expected: False\r\n  But was:  True\r\n"
+      },
+      {
+        "full_name": "OpenEmpires.Tests.CommanderPhase5CIntegrationRepairTests.ExecutableOutcomeDeclaration_OnlyAdvertisesRetrievedRepresentations(\"place 3 houses near my town center\",True)",
+        "message": "  Expected: String containing \"DynamicPlan is never a message-only outcome\"\r\n  But was:  \"Translate the player's Commander request into one bounded JSON object, with no markdown or other text. You provide semantic data only, never game authority. Outcomes are Request, DynamicPlan"
+      }
+    ]
+  },
+  "repair_routing_green": {
+    "job_id": "220501bc472940058b94882e96263baf",
+    "status": "succeeded",
+    "error": null,
+    "completed": 76,
+    "total": 76,
+    "summary": {
+      "total": 76,
+      "passed": 76,
+      "failed": 0,
+      "skipped": 0,
+      "durationSeconds": 25.7924315,
+      "resultState": "Passed"
+    },
+    "failures": []
+  },
+  "repair_reset_focused": {
+    "job_id": "9ec1c1892a3e4356aca834c1bf8012e2",
+    "status": "failed",
+    "error": "Test job failed to initialize (tests did not start within timeout)",
+    "completed": 0,
+    "total": null,
+    "failures": []
+  },
+  "observed_final_status_history": {
+    "job_id": "8697dceef25a4728ae13e4aa5936c046",
+    "status": "succeeded",
+    "total": 127,
+    "passed": 127,
+    "failed": 0,
+    "durationSeconds": 108.3017985,
+    "note": "Terminal receipt observed in this conversation; server cache later expired."
+  }
+}

@@ -694,7 +694,7 @@ namespace OpenEmpires
             if(taskBoardScroll!=null)taskBoardScroll.gameObject.SetActive(tasksVisible);
             if(pendingQuestion!=null)
             {
-                pendingQuestion.SetActive(pendingClarification!=null);
+                pendingQuestion.SetActive(pendingClarification!=null&&!hasApproval);
                 if(pendingClarification!=null)pendingQuestionText.text="Needs clarification — "+pendingClarification.Question;
             }
             if(expandedApproval!=null)
@@ -754,7 +754,7 @@ namespace OpenEmpires
                 : VoiceState == CommanderVoiceState.Transcribing ? "Transcribing"
                 : VoiceState == CommanderVoiceState.Error ? "Voice unavailable"
                 : submitting ? "Interpreting"
-                : approving ? "Approval needed"
+                : approving && !placingDestination ? "Approval needed"
                 : reviewing ? "Review transcript"
                 : latestRequestState.Length > 30 ? latestRequestState.Substring(0,27) + "…" : latestRequestState;
         }

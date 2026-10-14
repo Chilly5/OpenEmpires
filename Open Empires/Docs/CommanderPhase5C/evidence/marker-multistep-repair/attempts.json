@@ -1,0 +1,3645 @@
+[
+  {
+    "http": 200,
+    "mode": "Request",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.executionOrder",
+        "actualType": "String",
+        "discriminator": "Independent"
+      },
+      {
+        "path": "$.nodes",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "BuildStructure"
+      },
+      {
+        "path": "$.nodes[0].structure",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders.state",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders.count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].type",
+        "actualType": "String",
+        "discriminator": "EnsureUnitCount"
+      },
+      {
+        "path": "$.nodes[1].unit",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].count",
+        "actualType": "Integer",
+        "discriminator": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Clarify",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>",
+        "actualType": "String",
+        "discriminator": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Unsupported",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>",
+        "actualType": "String",
+        "discriminator": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Request",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.executionOrder",
+        "actualType": "String",
+        "discriminator": "Sequential"
+      },
+      {
+        "path": "$.nodes",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "BuildStructure"
+      },
+      {
+        "path": "$.nodes[0].structure",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders.state",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders.count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].type",
+        "actualType": "String",
+        "discriminator": "EnsureUnitCount"
+      },
+      {
+        "path": "$.nodes[1].unit",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].producerFromNode",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn[0]",
+        "actualType": "Integer",
+        "discriminator": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Request",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.executionOrder",
+        "actualType": "String",
+        "discriminator": "Sequential"
+      },
+      {
+        "path": "$.nodes",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "EnsureUnitCount"
+      },
+      {
+        "path": "$.nodes[0].unit",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].quantityMode",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].type",
+        "actualType": "String",
+        "discriminator": "MoveUnits"
+      },
+      {
+        "path": "$.nodes[1].unitSelector",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].location",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].resultFromNode",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn[0]",
+        "actualType": "Integer",
+        "discriminator": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Clarify",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.executionOrder",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "EnsureUnitCount"
+      },
+      {
+        "path": "$.<unknown>.nodes[0].unit",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[0].quantityMode",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[1].type",
+        "actualType": "String",
+        "discriminator": "MoveUnits"
+      },
+      {
+        "path": "$.<unknown>.nodes[1].unitSelector",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[1].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[1].resultFromNode",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[1].dependsOn",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[1].dependsOn[0]",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>[0]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>[0].<unknown>",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>[0].<unknown>",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>[0].type",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>[0].<unknown>",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>[0].<unknown>[0]",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>[0].<unknown>[1]",
+        "actualType": "String",
+        "discriminator": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Clarify",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.executionOrder",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "BuildStructure"
+      },
+      {
+        "path": "$.<unknown>.nodes[0].structure",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[0].builders",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[0].builders.state",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[0].builders.count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[1].type",
+        "actualType": "String",
+        "discriminator": "EnsureUnitCount"
+      },
+      {
+        "path": "$.<unknown>.nodes[1].unit",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[1].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[1].quantityMode",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[1].producerFromNode",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[1].dependsOn",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[1].dependsOn[0]",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[2]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[2].type",
+        "actualType": "String",
+        "discriminator": "MoveUnits"
+      },
+      {
+        "path": "$.<unknown>.nodes[2].unitSelector",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[2].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[2].dependsOn",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[2].dependsOn[0]",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[2].resultFromNode",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>[0]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>[0].<unknown>",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>[0].<unknown>",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>[0].type",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>[0].<unknown>",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>[0].<unknown>[0]",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>[0].<unknown>[1]",
+        "actualType": "String",
+        "discriminator": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "DynamicPlan",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.version",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].id",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].mechanic",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].parameters",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].parameters.<unknown>",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].parameters.count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].inputs",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].dependsOn",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].id",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].mechanic",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].parameters",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].parameters.relation",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].parameters.clearGapTiles",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].inputs",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].inputs.<unknown>",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn[0]",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[2]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[2].id",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[2].mechanic",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[2].parameters",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[2].parameters.<unknown>",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[2].parameters.count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[2].inputs",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[2].inputs.location",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[2].dependsOn",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[2].dependsOn[0]",
+        "actualType": "String",
+        "discriminator": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Request",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.executionOrder",
+        "actualType": "String",
+        "discriminator": "Sequential"
+      },
+      {
+        "path": "$.nodes",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "BuildStructure"
+      },
+      {
+        "path": "$.nodes[0].structure",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders.state",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders.count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].type",
+        "actualType": "String",
+        "discriminator": "EnsureUnitCount"
+      },
+      {
+        "path": "$.nodes[1].unit",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].quantityMode",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].producerFromNode",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn[0]",
+        "actualType": "Integer",
+        "discriminator": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Clarify",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.executionOrder",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "EnsureUnitCount"
+      },
+      {
+        "path": "$.<unknown>.nodes[0].unit",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[0].quantityMode",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[1].type",
+        "actualType": "String",
+        "discriminator": "MoveUnits"
+      },
+      {
+        "path": "$.<unknown>.nodes[1].unitSelector",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[1].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[1].dependsOn",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[1].dependsOn[0]",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>.nodes[1].resultFromNode",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>[0]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>[0].<unknown>",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>[0].<unknown>",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>[0].type",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>[0].<unknown>",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>[0].<unknown>[0]",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>[0].<unknown>[1]",
+        "actualType": "String",
+        "discriminator": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Request",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.executionOrder",
+        "actualType": "String",
+        "discriminator": "Sequential"
+      },
+      {
+        "path": "$.nodes",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "BuildStructure"
+      },
+      {
+        "path": "$.nodes[0].structure",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders.state",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders.count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].type",
+        "actualType": "String",
+        "discriminator": "EnsureUnitCount"
+      },
+      {
+        "path": "$.nodes[1].unit",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].quantityMode",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].producerFromNode",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn[0]",
+        "actualType": "Integer",
+        "discriminator": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "DynamicPlan",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.<unknown>",
+        "actualType": "String",
+        "discriminator": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Request",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.executionOrder",
+        "actualType": "String",
+        "discriminator": "Sequential"
+      },
+      {
+        "path": "$.nodes",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "BuildStructure"
+      },
+      {
+        "path": "$.nodes[0].structure",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders.state",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders.count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].type",
+        "actualType": "String",
+        "discriminator": "EnsureUnitCount"
+      },
+      {
+        "path": "$.nodes[1].unit",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].quantityMode",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].producerFromNode",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn[0]",
+        "actualType": "Integer",
+        "discriminator": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Request",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.executionOrder",
+        "actualType": "String",
+        "discriminator": "Sequential"
+      },
+      {
+        "path": "$.nodes",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "EnsureUnitCount"
+      },
+      {
+        "path": "$.nodes[0].unit",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].quantityMode",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].type",
+        "actualType": "String",
+        "discriminator": "MoveUnits"
+      },
+      {
+        "path": "$.nodes[1].unitSelector",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].location",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].resultFromNode",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn[0]",
+        "actualType": "Integer",
+        "discriminator": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Request",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.executionOrder",
+        "actualType": "String",
+        "discriminator": "Sequential"
+      },
+      {
+        "path": "$.nodes",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "BuildStructure"
+      },
+      {
+        "path": "$.nodes[0].structure",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders.state",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders.count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].type",
+        "actualType": "String",
+        "discriminator": "EnsureUnitCount"
+      },
+      {
+        "path": "$.nodes[1].unit",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].quantityMode",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].producerFromNode",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn[0]",
+        "actualType": "Integer",
+        "discriminator": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Request",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.executionOrder",
+        "actualType": "String",
+        "discriminator": "Sequential"
+      },
+      {
+        "path": "$.nodes",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "BuildStructure"
+      },
+      {
+        "path": "$.nodes[0].structure",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders.state",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders.count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].type",
+        "actualType": "String",
+        "discriminator": "EnsureUnitCount"
+      },
+      {
+        "path": "$.nodes[1].unit",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].quantityMode",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].producerFromNode",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn[0]",
+        "actualType": "Integer",
+        "discriminator": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Request",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "BuildStructure"
+      },
+      {
+        "path": "$.nodes[0].structure",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders.state",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders.count",
+        "actualType": "Integer",
+        "discriminator": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "DynamicPlan",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.version",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].id",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].mechanic",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].parameters",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].parameters.<unknown>",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].parameters.count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].inputs",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].dependsOn",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].id",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].mechanic",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].parameters",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].parameters.relation",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].parameters.clearGapTiles",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].inputs",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].inputs.<unknown>",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn[0]",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[2]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[2].id",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[2].mechanic",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[2].parameters",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[2].parameters.<unknown>",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[2].parameters.count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[2].inputs",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[2].inputs.location",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[2].dependsOn",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[2].dependsOn[0]",
+        "actualType": "String",
+        "discriminator": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Clarify",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.message",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending.executionOrder",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending.nodes",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "EnsureUnitCount"
+      },
+      {
+        "path": "$.pending.nodes[0].unit",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending.nodes[0].quantityMode",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending.nodes[1].type",
+        "actualType": "String",
+        "discriminator": "MoveUnits"
+      },
+      {
+        "path": "$.pending.nodes[1].unitSelector",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending.nodes[1].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending.nodes[1].resultFromNode",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending.nodes[1].dependsOn",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending.nodes[1].dependsOn[0]",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.missingSlots",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.missingSlots[0]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.missingSlots[0].node",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.missingSlots[0].path",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.missingSlots[0].type",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.missingSlots[0].alternatives",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.missingSlots[0].alternatives[0]",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.missingSlots[0].alternatives[1]",
+        "actualType": "String",
+        "discriminator": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Request",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.executionOrder",
+        "actualType": "String",
+        "discriminator": "Sequential"
+      },
+      {
+        "path": "$.nodes",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "BuildStructure"
+      },
+      {
+        "path": "$.nodes[0].structure",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders.state",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders.count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].type",
+        "actualType": "String",
+        "discriminator": "EnsureUnitCount"
+      },
+      {
+        "path": "$.nodes[1].unit",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].quantityMode",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].producerFromNode",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn[0]",
+        "actualType": "Integer",
+        "discriminator": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Request",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.executionOrder",
+        "actualType": "String",
+        "discriminator": "Sequential"
+      },
+      {
+        "path": "$.nodes",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "EnsureUnitCount"
+      },
+      {
+        "path": "$.nodes[0].unit",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].quantityMode",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].type",
+        "actualType": "String",
+        "discriminator": "MoveUnits"
+      },
+      {
+        "path": "$.nodes[1].unitSelector",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].location",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].resultFromNode",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn[0]",
+        "actualType": "Integer",
+        "discriminator": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Request",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.executionOrder",
+        "actualType": "String",
+        "discriminator": "Sequential"
+      },
+      {
+        "path": "$.nodes",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "BuildStructure"
+      },
+      {
+        "path": "$.nodes[0].structure",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders.state",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders.count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].type",
+        "actualType": "String",
+        "discriminator": "EnsureUnitCount"
+      },
+      {
+        "path": "$.nodes[1].unit",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].quantityMode",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].producerFromNode",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn[0]",
+        "actualType": "Integer",
+        "discriminator": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Request",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.executionOrder",
+        "actualType": "String",
+        "discriminator": "Sequential"
+      },
+      {
+        "path": "$.nodes",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "BuildStructure"
+      },
+      {
+        "path": "$.nodes[0].structure",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders.state",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[0].builders.count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].type",
+        "actualType": "String",
+        "discriminator": "EnsureUnitCount"
+      },
+      {
+        "path": "$.nodes[1].unit",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].quantityMode",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].producerFromNode",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn[0]",
+        "actualType": "Integer",
+        "discriminator": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Clarify",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.message",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending.executionOrder",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending.nodes",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "BuildStructure"
+      },
+      {
+        "path": "$.pending.nodes[0].structure",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending.nodes[0].builders",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending.nodes[0].builders.state",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending.nodes[0].builders.count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending.nodes[1].type",
+        "actualType": "String",
+        "discriminator": "EnsureUnitCount"
+      },
+      {
+        "path": "$.pending.nodes[1].unit",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending.nodes[1].count",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending.nodes[1].producerFromNode",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending.nodes[1].dependsOn",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.pending.nodes[1].dependsOn[0]",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.missingSlots",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.missingSlots[0]",
+        "actualType": "Object",
+        "discriminator": null
+      },
+      {
+        "path": "$.missingSlots[0].node",
+        "actualType": "Integer",
+        "discriminator": null
+      },
+      {
+        "path": "$.missingSlots[0].path",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.missingSlots[0].type",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.missingSlots[0].alternatives",
+        "actualType": "Array",
+        "discriminator": null
+      },
+      {
+        "path": "$.missingSlots[0].alternatives[0]",
+        "actualType": "String",
+        "discriminator": null
+      },
+      {
+        "path": "$.missingSlots[0].alternatives[1]",
+        "actualType": "String",
+        "discriminator": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Clarify",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.message",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.executionOrder",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": "Sequential"
+      },
+      {
+        "path": "$.pending.nodes",
+        "actualType": "Array",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "BuildStructure",
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.nodes[0].structure",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.nodes[0].builders",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.nodes[0].builders.state",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.nodes[0].builders.count",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.nodes[1].type",
+        "actualType": "String",
+        "discriminator": "EnsureUnitCount",
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.nodes[1].unit",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.nodes[1].count",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.nodes[1].producerFromNode",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.nodes[1].dependsOn",
+        "actualType": "Array",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.nodes[1].dependsOn[0]",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.missingSlots",
+        "actualType": "Array",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.missingSlots[0]",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.missingSlots[0].node",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.missingSlots[0].path",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": "quantityMode"
+      },
+      {
+        "path": "$.missingSlots[0].type",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": "Confirmation"
+      },
+      {
+        "path": "$.missingSlots[0].alternatives",
+        "actualType": "Array",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.missingSlots[0].alternatives[0]",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": "TargetTotal"
+      },
+      {
+        "path": "$.missingSlots[0].alternatives[1]",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": "New"
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Request",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes",
+        "actualType": "Array",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "BuildStructure",
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].structure",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].builders",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].builders.state",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].builders.count",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].type",
+        "actualType": "String",
+        "discriminator": "EnsureUnitCount",
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].unit",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].count",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].quantityMode",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.executionOrder",
+        "actualType": "String",
+        "discriminator": "Independent",
+        "schemaValue": "Independent"
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Request",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.executionOrder",
+        "actualType": "String",
+        "discriminator": "Sequential",
+        "schemaValue": "Sequential"
+      },
+      {
+        "path": "$.nodes",
+        "actualType": "Array",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "BuildStructure",
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].structure",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].builders",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].builders.state",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].builders.count",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].type",
+        "actualType": "String",
+        "discriminator": "EnsureUnitCount",
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].unit",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].count",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].quantityMode",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].producerFromNode",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn",
+        "actualType": "Array",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn[0]",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Request",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.executionOrder",
+        "actualType": "String",
+        "discriminator": "Sequential",
+        "schemaValue": "Sequential"
+      },
+      {
+        "path": "$.nodes",
+        "actualType": "Array",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "BuildStructure",
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].structure",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].builders",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].builders.state",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].builders.count",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].type",
+        "actualType": "String",
+        "discriminator": "EnsureUnitCount",
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].unit",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].count",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].quantityMode",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].producerFromNode",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn",
+        "actualType": "Array",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn[0]",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Request",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.executionOrder",
+        "actualType": "String",
+        "discriminator": "Sequential",
+        "schemaValue": "Sequential"
+      },
+      {
+        "path": "$.nodes",
+        "actualType": "Array",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "EnsureUnitCount",
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].unit",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].quantityMode",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].type",
+        "actualType": "String",
+        "discriminator": "MoveUnits",
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].unitSelector",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].count",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].location",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].resultFromNode",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn",
+        "actualType": "Array",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn[0]",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Clarify",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.message",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.executionOrder",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": "Sequential"
+      },
+      {
+        "path": "$.pending.nodes",
+        "actualType": "Array",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "EnsureUnitCount",
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.nodes[0].unit",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.nodes[0].quantityMode",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.nodes[1].type",
+        "actualType": "String",
+        "discriminator": "MoveUnits",
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.nodes[1].unitSelector",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.nodes[1].count",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.nodes[1].resultFromNode",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.nodes[1].dependsOn",
+        "actualType": "Array",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.pending.nodes[1].dependsOn[0]",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.missingSlots",
+        "actualType": "Array",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.missingSlots[0]",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.missingSlots[0].node",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.missingSlots[0].path",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": "location"
+      },
+      {
+        "path": "$.missingSlots[0].type",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": "Location"
+      },
+      {
+        "path": "$.missingSlots[0].alternatives",
+        "actualType": "Array",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.missingSlots[0].alternatives[0]",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": "PlayerMarker"
+      },
+      {
+        "path": "$.missingSlots[0].alternatives[1]",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": "PlayerBase"
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "DynamicPlan",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.version",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes",
+        "actualType": "Array",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].id",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].mechanic",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].parameters",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].parameters.<unknown>",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].parameters.count",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].inputs",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].dependsOn",
+        "actualType": "Array",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].id",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].mechanic",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].parameters",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].parameters.relation",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].parameters.clearGapTiles",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].inputs",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].inputs.<unknown>",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn",
+        "actualType": "Array",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn[0]",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[2]",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[2].id",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[2].mechanic",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[2].parameters",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[2].parameters.<unknown>",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[2].parameters.count",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[2].inputs",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[2].inputs.location",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[2].dependsOn",
+        "actualType": "Array",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[2].dependsOn[0]",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Request",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes",
+        "actualType": "Array",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "BuildStructure",
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].structure",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].builders",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].builders.state",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].builders.count",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Clarify",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.message",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      }
+    ]
+  },
+  {
+    "http": 200,
+    "mode": "Request",
+    "shape": [
+      {
+        "path": "$",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.outcome",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.executionOrder",
+        "actualType": "String",
+        "discriminator": "Sequential",
+        "schemaValue": "Sequential"
+      },
+      {
+        "path": "$.nodes",
+        "actualType": "Array",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0]",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].type",
+        "actualType": "String",
+        "discriminator": "BuildStructure",
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].structure",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].count",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].builders",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].builders.state",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[0].builders.count",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1]",
+        "actualType": "Object",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].type",
+        "actualType": "String",
+        "discriminator": "EnsureUnitCount",
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].unit",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].count",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].quantityMode",
+        "actualType": "String",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].producerFromNode",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn",
+        "actualType": "Array",
+        "discriminator": null,
+        "schemaValue": null
+      },
+      {
+        "path": "$.nodes[1].dependsOn[0]",
+        "actualType": "Integer",
+        "discriminator": null,
+        "schemaValue": null
+      }
+    ]
+  }
+]

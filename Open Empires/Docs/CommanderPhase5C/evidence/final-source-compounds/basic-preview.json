@@ -1,0 +1,35 @@
+{
+  "tick": 3048,
+  "requestId": 1,
+  "trace": "utc=2026-10-13T18:31:02.0143944Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=6730\nfinish=stop\nassistantContent=extracted;characters=442;finish=stop\nschema=field=$;code=invalid-schema;stage=envelope;node=-1;mode=Clarify\nsemantic=invalid;nodes=0\n",
+  "attempts": [
+    {
+      "kind": "initial",
+      "stage": "schema-invalid",
+      "http": 200
+    }
+  ],
+  "preview": null,
+  "nodes": null,
+  "marker": null,
+  "transcript": "Player:\r\nbuild barracks and 4 spearman\r\n\r\nCommander:\r\nCommander AI returned an invalid semantic response; no order was submitted.",
+  "goals": [],
+  "buildings": [
+    {
+      "id": 0,
+      "type": "TownCenter",
+      "unfinished": false
+    }
+  ],
+  "spearmen": [],
+  "texts": [
+    {
+      "name": "CommanderStatus",
+      "text": "Commander AI returned an invalid semantic response; no order was submitted."
+    },
+    {
+      "name": "TaskBadge",
+      "text": "0 active tasks"
+    }
+  ]
+}

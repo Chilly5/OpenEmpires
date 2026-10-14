@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
@@ -17,6 +19,23 @@ namespace OpenEmpires
         private Func<bool> retainedLocationLease;
         private CommanderRequestTicket retainedLocationTicket;
         private CommanderPendingClarification retainedLocationPending;
+        private int? selectedMarkerLocationNode;
+        private Material destinationMarkerMaterial;
+        private CommanderRequestTicket markerLocationsTicket;
+        private readonly Dictionary<int,CommanderBoundLocation> pendingMarkerLocations=new Dictionary<int,CommanderBoundLocation>();
+
+        private void ClearPendingMarkerLocations()
+        {pendingMarkerLocations.Clear();markerLocationsTicket=null;}
+
+        private IReadOnlyDictionary<int,CommanderBoundLocation> RetainedMarkerLocations()
+        {
+            if(!ReferenceEquals(markerLocationsTicket,retainedLocationTicket)||retainedLocationResult?.Nodes==null)return null;
+            // An explicit typed text destination supersedes its prior marker selection.
+            return pendingMarkerLocations.Where(pair=>pair.Key<retainedLocationResult.Nodes.Count
+                &&(retainedLocationResult.Nodes[pair.Key].LocationSelector==CommanderSemanticLocationSelector.PlayerMarker
+                    ||retainedLocationResult.Nodes[pair.Key].PlacementAnchorSelector==CommanderSemanticAnchorSelector.PlayerMarker))
+                .ToDictionary(pair=>pair.Key,pair=>pair.Value);
+        }
 
         internal bool OwnsDestinationInput => placingDestination || consumeDestinationRelease || markerInputFrame == Time.frameCount;
 
@@ -24,9 +43,16 @@ namespace OpenEmpires
         {
             if (submitting || semanticGoalManager == null || semanticGoalManager.IsDisposed) return;
             placingDestination = true;
+            currentRequestGoalId = 0;
             markerInputFrame = Time.frameCount;
             MinimizeCommander();
-            AppendLine("Commander", "Click a visible destination. This does not issue an order.", false);
+            string detail = pendingClarification?.GraphDraft?.MissingSlots.Count(s => s.Type == "Location") > 1
+                ? "Click a visible destination, then choose which step uses it."
+                : retainedLocationResult != null || pendingClarification?.GraphDraft?.MissingSlots.Any(s => s.Type == "Location") == true
+                    ? "Click a visible destination for the pending request."
+                    : "Click a visible destination to save it for the next applicable request.";
+            SetLatestRequestState("Select destination", detail);
+            AppendLine("Commander", detail, false);
         }
 
         public void ClearDestinationMarker()
@@ -47,6 +73,8 @@ namespace OpenEmpires
             retainedLocationLease = null;
             retainedLocationTicket = null;
             retainedLocationPending = null;
+            selectedMarkerLocationNode = null;
+            ClearPendingMarkerLocations();
         }
 
         private bool HandleRetainedLocationReply(string reply)
@@ -56,7 +84,7 @@ namespace OpenEmpires
             { retainedLocationResult = null; retainedLocationLease = null; return false; }
             string form = NormalizeWholeForm(reply);
             if (form == "cancel" || form == "never mind")
-            { retainedLocationResult = null; retainedLocationLease = null; SetLatestRequestState("Cancelled", "Request cancelled."); return true; }
+            { retainedLocationResult = null; retainedLocationLease = null; ClearPendingMarkerLocations(); SetLatestRequestState("Cancelled", "Request cancelled."); return true; }
             CommanderSemanticLocationSelector location;
             ResourceType? resource = null;
             switch (form)
@@ -137,7 +165,7 @@ namespace OpenEmpires
                     if (!CommanderSemanticAdmission.TryCreateTacticalIntent(retainedLocationResult.Nodes[0], context,
                         out CommanderIntent intent, out string reason)) throw new ArgumentException(reason);
                     var scope = semanticGoalManager.PrepareKnownIntentScope(retainedLocationResult,
-                        retainedLocationTicket, strategicPipeline, true);
+                        retainedLocationTicket, strategicPipeline, true,RetainedMarkerLocations());
                     var submission = semanticGoalManager.SubmitKnownScopedIntent(scope, intent,
                         () => semanticDispatcher.SubmitIntent(intent));
                     TrackCurrentRequest(submission);
@@ -152,12 +180,13 @@ namespace OpenEmpires
                         retainedLocationLease = null;
                         retainedLocationTicket = null;
                         retainedLocationPending = null;
+                        ClearPendingMarkerLocations();
                         RemoveDestinationVisual();
                     }
                     return;
                 }
                 pendingActionPlan = semanticGoalManager.PrepareActionPlan(retainedLocationResult,
-                    retainedLocationText, runtimeGeneration, strategicPipeline, retainedLocationLease, retainedLocationTicket);
+                    retainedLocationText, runtimeGeneration, strategicPipeline, retainedLocationLease, retainedLocationTicket,RetainedMarkerLocations());
                 SetLatestRequestState("Awaiting approval", "Destination set. Review and approve the plan.");
                 AppendLine("Commander", pendingActionPlan.Preview);
                 UpdateStrategicControls();
@@ -171,10 +200,15 @@ namespace OpenEmpires
 
         public bool TryPlaceDestinationMarker(int tileX, int tileZ)
         {
+            if (!submitting && !placingDestination && semanticGoalManager?.IsDisposed == false
+                && semanticGoalManager.TryGetPlayerMarkerSnapshot(out int previousX, out int previousZ)
+                && previousX == tileX && previousZ == tileZ) return true;
+            bool hadPendingLocation = retainedLocationResult != null
+                || pendingClarification?.GraphDraft?.MissingSlots.Any(s => s.Type == "Location") == true;
             if (submitting || semanticGoalManager == null || semanticGoalManager.IsDisposed
                 || !semanticGoalManager.TrySetPlayerMarkerSnapshot(tileX, tileZ))
             {
-                SetLatestRequestState("Needs clarification", "Choose a visible point inside the map.");
+                DestinationClickFailure("Choose a visible point inside the map. The destination was not changed.");
                 return false;
             }
             placingDestination = false;
@@ -184,7 +218,44 @@ namespace OpenEmpires
             if (pendingActionPlan?.UsesPlayerMarker == true) ClearActionPlanPreview();
             FillPendingMarkerLocation();
             PrepareRetainedDestinationPreview();
+            if (pendingActionPlan != null && pendingActionPlan.UsesPlayerMarker)
+            {
+                AppendLine("Commander", "Destination selected for: " + retainedLocationText + ". Review and approve the complete plan.", false);
+                OpenCommander();
+            }
+            else if (!hadPendingLocation)
+            {
+                currentRequestGoalId = 0;
+                string acknowledgement = "Destination saved for the next applicable request. Existing tasks keep their approved destination.";
+                SetLatestRequestState("Destination saved", acknowledgement);
+                AppendLine("Commander", acknowledgement, false);
+            }
             return true;
+        }
+
+        private bool HandleMarkerStepReply(string reply)
+        {
+            var pending = pendingClarification;
+            string form = NormalizeWholeForm(reply);
+            if (pending?.GraphDraft == null || pending.RuntimeGeneration != runtimeGeneration
+                || pending.RequestTicket?.IsCurrent() != true || !form.StartsWith("step ", StringComparison.Ordinal)
+                || !int.TryParse(form.Substring(5), out int step)) return false;
+            if (!pending.GraphDraft.MissingSlots.Any(s => s.Type == "Location" && s.Node == step - 1))
+            { AppendLine("Commander", "That step has no unresolved destination."); return true; }
+            selectedMarkerLocationNode = step - 1;
+            AppendLine("Player", reply);
+            if (semanticGoalManager.TryGetPlayerMarkerSnapshot(out _, out _))
+            { FillPendingMarkerLocation(); PrepareRetainedDestinationPreview(); }
+            else AppendLine("Commander", "Place a destination for step " + step + ".");
+            return true;
+        }
+
+        private void DestinationClickFailure(string reason)
+        {
+            markerInputFrame = Time.frameCount;
+            consumeDestinationRelease = Mouse.current?.leftButton.isPressed == true;
+            SetLatestRequestState("Destination not selected", reason);
+            AppendLine("Commander", reason, false);
         }
 
         private void FillPendingMarkerLocation()
@@ -195,14 +266,34 @@ namespace OpenEmpires
             int locationSlots = 0;
             foreach (var slot in pending.GraphDraft.MissingSlots)
                 if (slot.Type == "Location") locationSlots++;
-            if (locationSlots != 1) return; // A marker never chooses between unrelated slots.
-            var completed = pending.GraphDraft.Resolve("PlayerMarker");
+            if (locationSlots == 0) return;
+            int node;
+            if (locationSlots == 1) node = pending.GraphDraft.MissingSlots.Single(s => s.Type == "Location").Node;
+            else if (selectedMarkerLocationNode.HasValue) node = selectedMarkerLocationNode.Value;
+            else
+            {
+                string question = "Which step should use this destination? Reply " + string.Join(" or ",
+                    pending.GraphDraft.MissingSlots.Where(s => s.Type == "Location").Select(s => "step " + (s.Node + 1))) + ".";
+                SetLatestRequestState("Choose destination step", question);
+                AppendLine("Commander", question, false);
+                OpenCommander();
+                return;
+            }
+            var completed = pending.GraphDraft.ResolveMarkerLocation(node);
             if (completed?.IsValid != true) return;
+            if(!semanticGoalManager.TryGetPlayerMarkerSnapshot(out int markerX,out int markerZ))return;
+            if(!ReferenceEquals(markerLocationsTicket,pending.RequestTicket))
+            {ClearPendingMarkerLocations();markerLocationsTicket=pending.RequestTicket;}
+            pendingMarkerLocations[node]=CommanderBoundLocation.FromPlayerMarker(semanticSimulation,semanticGoalManager,
+                semanticGoalManager.PlayerId,markerX,markerZ,CommanderSemanticPlacementRelation.Near,1);
+            selectedMarkerLocationNode = null;
+            AppendLine("Commander", "Destination selected for step " + (node + 1) + " of: " + pending.OriginalText + ".", false);
             if (completed.Outcome == CommanderSemanticOutcome.Clarify)
             {
                 pendingClarification = new CommanderPendingClarification(completed.PendingGraphDraft,
                     pending.OriginalText, completed.SafeExplanation, runtimeGeneration,
                     pending.Sequence, pending.Turns, pending.RequestTicket);
+                SetLatestRequestState("Needs clarification", completed.SafeExplanation);
                 AppendLine("Commander", completed.SafeExplanation);
                 return;
             }
@@ -220,6 +311,11 @@ namespace OpenEmpires
             if (Application.isPlaying) Destroy(destinationMarkerVisual);
             else DestroyImmediate(destinationMarkerVisual);
             destinationMarkerVisual = null;
+            if (destinationMarkerMaterial != null)
+            {
+                if (Application.isPlaying) Destroy(destinationMarkerMaterial); else DestroyImmediate(destinationMarkerMaterial);
+                destinationMarkerMaterial = null;
+            }
         }
 
         private void ShowDestinationVisual(int x, int z)
@@ -231,11 +327,20 @@ namespace OpenEmpires
             destinationMarkerVisual.transform.SetParent(transform, false);
             Vector3 point = semanticSimulation.MapData.TileToWorldFixed(x, z).ToVector3();
             if (Physics.Raycast(new Vector3(point.x, 100, point.z), Vector3.down,
-                out RaycastHit hit, 200)) point.y = hit.point.y;
+                out RaycastHit hit, 200, LayerMask.GetMask("Ground"))) point.y = hit.point.y;
             destinationMarkerVisual.transform.position = point + Vector3.up * .15f;
             destinationMarkerVisual.transform.localScale = new Vector3(.8f, .07f, .8f);
             var collider = destinationMarkerVisual.GetComponent<Collider>();
             if (collider != null) Destroy(collider);
+            destinationMarkerMaterial = destinationMarkerVisual.GetComponent<Renderer>().material;
+            destinationMarkerMaterial.color = Color.cyan;
+            var head = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            head.name = "Destination pin";
+            head.transform.SetParent(destinationMarkerVisual.transform, false);
+            head.transform.localPosition = new Vector3(0, 12, 0);
+            head.transform.localScale = new Vector3(.6f, 6, .6f);
+            head.GetComponent<Renderer>().sharedMaterial = destinationMarkerMaterial;
+            Destroy(head.GetComponent<Collider>());
         }
 
         private void PollDestinationPlacement()
@@ -252,11 +357,16 @@ namespace OpenEmpires
             var mouse = Mouse.current;
             if (mouse == null || !mouse.leftButton.wasPressedThisFrame) return;
             Vector2 point = Cursor.lockState == CursorLockMode.Locked ? VirtualCursor.Position : mouse.position.ReadValue();
-            if (ContainsScreenPoint(point) || EventSystem.current?.IsPointerOverGameObject() == true) return;
+            if (ContainsScreenPoint(point) || EventSystem.current?.IsPointerOverGameObject() == true)
+            { DestinationClickFailure("That click hit a UI control. Click visible terrain outside the panels."); return; }
             markerInputFrame = Time.frameCount;
             Camera camera = Camera.main;
-            if (camera == null || !Physics.Raycast(camera.ScreenPointToRay(point), out RaycastHit hit, 1000,
-                LayerMask.GetMask("Ground"))) return;
+            if (camera == null)
+            { DestinationClickFailure("The game camera is unavailable. No destination was selected."); return; }
+            if (!camera.pixelRect.Contains(point))
+            { DestinationClickFailure("That click is outside the game camera view. Click visible terrain."); return; }
+            if (!Physics.Raycast(camera.ScreenPointToRay(point), out RaycastHit hit, 1000, LayerMask.GetMask("Ground")))
+            { DestinationClickFailure("That click did not hit terrain. Click a visible ground tile."); return; }
             Vector2Int tile = semanticSimulation.MapData.WorldToTile(FixedVector3.FromVector3(hit.point));
             TryPlaceDestinationMarker(tile.x, tile.y);
         }

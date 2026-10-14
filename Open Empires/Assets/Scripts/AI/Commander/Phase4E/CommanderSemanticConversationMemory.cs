@@ -153,6 +153,10 @@ namespace OpenEmpires
         {
             lock (sync)
             {
+                // Accepted work closes prior questions. The active typed pending draft,
+                // rather than an obsolete conversational question, owns any unresolved slot.
+                if (kind != CommanderSemanticMemoryKind.Clarification)
+                    entries.RemoveAll(entry => entry.Kind == CommanderSemanticMemoryKind.Clarification);
                 entries.Add(new CommanderSemanticMemoryEntry(nextSequence++, kind,
                     unit, targetTotal, structure, count, anchor, relation,
                     clearGapTiles, message));

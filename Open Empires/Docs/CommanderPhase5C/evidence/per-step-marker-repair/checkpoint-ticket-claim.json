@@ -1,0 +1,40 @@
+{
+  "result": {
+    "success": true,
+    "message": "Test job status retrieved.",
+    "error": null,
+    "data": {
+      "job_id": "f9ce4731d0d14c38be1381a485b3c18d",
+      "status": "failed",
+      "mode": "EditMode",
+      "started_unix_ms": 1791920909896,
+      "finished_unix_ms": 1791920923121,
+      "last_update_unix_ms": 1791920923121,
+      "progress": {
+        "completed": 2,
+        "total": 2,
+        "current_test_full_name": null,
+        "current_test_started_unix_ms": 1791920922815,
+        "last_finished_test_full_name": "OpenEmpires.Tests.CommanderPhase5CMarkerTests.RejectedMarkerSidecar_DoesNotClaimTicketAndCandidateCopiesValidOwnedSnapshot",
+        "last_finished_unix_ms": 1791920923078,
+        "stuck_suspected": false,
+        "editor_is_focused": true,
+        "blocked_reason": null,
+        "failures_so_far": [
+          {
+            "full_name": "OpenEmpires.Tests.CommanderGrandFixPresentationTests.MultiplePendingLocations_KeepEachSelectedPointThroughApprovalAndLaterMarkerChanges",
+            "message": "  Player:\r\nMove my Spearman and my Scout to their chosen destinations\r\n\r\nCommander:\r\nWhere?\r\n\r\nCommander:\r\nWhich step should use this destination? Reply step 1 or step 2.\r\n\r\nPlayer:\r\nstep 1\r\n\r\nCommander:\r\nDestination selected for step 1 of: Move my Spearman and my Scout to their chosen destinations.\r\n\r\nCommander:\r\nPlease specify the remaining detail.\r\n\r\nCommander:\r\nDestination selected for step 2 of: Move my Spearman and my Scout to their chosen destinations.\r\n\r\nCommander:\r\nAction plan — not started.\n1. Move 1 owned Spearman to the destination selected for step 1\n2. Move 1 owned Scout to the destination selected for step 2\nPreparation may include canonical required buildings, population and resources within these effects. No unrelated strategy is authorized. Approve plan or cancel plan.\r\n\r\nCommander:\r\nDestination selected for: Move my Spearman and my Scout to their chosen destinations. Review and approve the complete plan.\r\n\r\nCommander:\r\nCompound Commander order submitted.\r\n\r\nPlayer:\r\nMove both to my latest marker\r\n\r\nCommander:\r\nI couldn't understand that request safely.\r\n  Expected: not null\r\n  But was:  null\r\n"
+          },
+          {
+            "full_name": "OpenEmpires.Tests.CommanderPhase5CMarkerTests.RejectedMarkerSidecar_DoesNotClaimTicketAndCandidateCopiesValidOwnedSnapshot",
+            "message": "  A rejected sidecar must not consume the request's one candidate claim.\r\n  Expected: No Exception to be thrown\r\n  But was:  <System.ArgumentException: The request ticket is stale, foreign or already bound.\r\n  at OpenEmpires.CommanderGoalManager.PrepareActionPlan (OpenEmpires.CommanderSemanticResult interpretation, System.String originalInput, System.Int32 generation, OpenEmpires.StrategicPipeline strategicSource, System.Func`1[TResult] isCurrentRequest, OpenEmpires.CommanderRequestTicket requestTicket, System.Collections.Generic.IReadOnlyDictionary`2[TKey,TValue] resolvedMarkerLocations) [0x000f7] in D:\\unity_projects\\OpenEmpires\\Open Empires\\Assets\\Scripts\\AI\\Commander\\Phase5A\\CommanderGoalManager.Requests.cs:96 \r\n  at OpenEmpires.Tests.CommanderPhase5CMarkerTests+<>c__DisplayClass0_0.<RejectedMarkerSidecar_DoesNotClaimTicketAndCandidateCopiesValidOwnedSnapshot>b__2 () [0x00000] in D:\\unity_projects\\OpenEmpires\\Open Empires\\Assets\\Tests\\EditMode\\CommanderPhase5CMarkerTests.cs:33 \r\n  at NUnit.Framework.Constraints.ThrowsConstraint+VoidInvocationDescriptor.Invoke () [0x00001] in <8b63e8ac0a4746599ed207982825ae6c>:0 \r\n  at NUnit.Framework.Constraints.ThrowsConstraint+ExceptionInterceptor.Intercept (System.Object invocation) [0x00050] in <8b63e8ac0a4746599ed207982825ae6c>:0 >\r\n"
+          }
+        ],
+        "failures_capped": false
+      },
+      "error": null,
+      "result": null
+    },
+    "hint": null
+  }
+}
