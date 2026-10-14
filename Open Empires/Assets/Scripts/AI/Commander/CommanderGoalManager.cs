@@ -371,6 +371,10 @@ namespace OpenEmpires
                     }
                 }
             }
+            foreach (CommanderGoal pendingGoal in pending)
+                if (pendingGoal is CommanderCapabilityGoal markerMove
+                    && !planner.PreflightMarkerMovement(markerMove, simulation.CurrentTick, out string markerReason))
+                    throw new CommanderMovementAdmissionException(markerReason);
             CaptureResultBaselines(pending, plan);
             // Preflight and reserve the complete shared snapshot only after all nodes
             // validate. Roll back these local leases if any acquisition/commit fails.

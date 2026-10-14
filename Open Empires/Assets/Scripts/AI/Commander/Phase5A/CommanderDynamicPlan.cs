@@ -92,6 +92,8 @@ namespace OpenEmpires
                     CommanderDynamicResultKind.UnitSet, CommanderDynamicEffectClass.Selection,
                     new[] { P("unit", CommanderDynamicFieldKind.UnitId, false),
                         P("kind", CommanderDynamicFieldKind.UnitKind, false),
+                        P("excludeKind", CommanderDynamicFieldKind.UnitKind, false),
+                        P("excludeUnit", CommanderDynamicFieldKind.UnitId, false),
                         P("count", CommanderDynamicFieldKind.Count, false),
                         P("countMode", CommanderDynamicFieldKind.UnitCountMode, false) },
                     Array.Empty<CommanderDynamicInput>()),

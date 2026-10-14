@@ -1,0 +1,7 @@
+var b=OpenEmpires.GameBootstrapper.Instance;var s=b.Simulation;var c=OpenEmpires.CommanderChatUI.Instance;int owner=b.Commander.PlayerId;
+var u=s.UnitRegistry.GetAllUnits().First(v=>v.PlayerId==owner&&v.CurrentHealth>0);var tile=s.MapData.WorldToTile(u.SimPosition);int x=tile.x+10,z=tile.y+10;
+for(int dx=-14;dx<=14;dx++)for(int dz=-14;dz<=14;dz++){int px=x+dx,pz=z+dz;if(!s.MapData.IsInBounds(px,pz))continue;s.FogOfWar.SetVisible(owner,px,pz);if(s.MapData.FoundationCount[px,pz]==0){s.MapData.Tiles[px,pz]=OpenEmpires.TileType.Grass;s.MapData.ForestDensity[px,pz]=0;}}
+var before=s.UnitRegistry.GetAllUnits().Select(v=>v.Id).ToArray();foreach(int type in new[]{1,s.ResolveCivUnitType(owner,2)})s.CommandBuffer.EnqueueCommand(new OpenEmpires.CheatSpawnUnitCommand(owner,type,s.MapData.TileToWorldFixed(x,z),2,owner));s.Tick();Time.timeScale=0;
+UnityEngine.Object.FindAnyObjectByType<OpenEmpires.RTSCameraController>().PivotPosition=s.MapData.TileToWorldFixed(x+2,z+2).ToVector3();OpenEmpires.SettingsMenuUI.Close();OpenEmpires.UnitSelectionManager.SetChatFocused(false);
+UnityEditor.SessionState.SetInt("small-fix-x",x+6);UnityEditor.SessionState.SetInt("small-fix-z",z+4);
+return new{marker=new[]{x+6,z+4},units=s.UnitRegistry.GetAllUnits().Where(v=>v.PlayerId==owner).Select(v=>new{id=v.Id,type=v.UnitType,villager=v.IsVillager,pos=v.SimPosition.ToVector3().ToString(),created=!before.Contains(v.Id)}).ToArray()};

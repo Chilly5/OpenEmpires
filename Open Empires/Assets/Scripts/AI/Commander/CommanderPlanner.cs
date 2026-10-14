@@ -5,6 +5,15 @@ using UnityEngine;
 
 namespace OpenEmpires
 {
+    // Expected game-owned admission rejection, before any goal is registered.
+    // Keep it distinct from unexpected argument/operation failures in the UI.
+    internal sealed class CommanderMovementAdmissionException : ArgumentException
+    {
+        internal CommanderMovementAdmissionException(string reason)
+            : base(!string.IsNullOrWhiteSpace(reason) && reason.Length <= 240
+                ? reason : "The selected movement cannot be admitted safely.") { }
+    }
+
     internal readonly struct CommanderPlan
     {
         public readonly CommanderGoalStatus Status;
@@ -138,7 +147,7 @@ namespace OpenEmpires
             ICommand command;
             string reason;
             bool created = executor.TryCreateCommand(goal.Action, binding, goal.TargetBinding,
-                goal.MarkerMoveLocation, out command, out reason);
+                goal.MarkerMoveLocation, out command, out reason, goal.DynamicMoveUnitIds);
             if (!created)
                 return new CommanderPlan(CommanderGoalStatus.Blocked, reason, 0, 0);
             if (command is MoveCommand move
@@ -272,6 +281,22 @@ namespace OpenEmpires
             }
         }
 
+        internal bool PreflightMarkerMovement(CommanderCapabilityGoal goal, int currentTick, out string reason)
+        {
+            reason = string.Empty;
+            if (goal.Action.ActionType != CommanderCapabilityActionType.MoveUnits
+                || goal.Action.LocationSelector.Kind != CommanderLocationSelectorKind.PlayerMarker
+                || goal.RequiresResultBinding || goal.Dependencies.Count != 0) return true;
+            var executor = new CommanderCapabilityExecutor(simulation);
+            if (!executor.TryCreateCommand(goal.Action, null, goal.TargetBinding, goal.MarkerMoveLocation,
+                out ICommand command, out reason, goal.DynamicMoveUnitIds) || !(command is MoveCommand move)) return false;
+            if (!TryResolveNativeMovementSlots(goal, move, currentTick, out _, out reason)) return false;
+            // Freeze the exact preflight actors; later losses never authorize substitution.
+            if (goal.DynamicMoveUnitIds == null)
+                goal.DynamicMoveUnitIds = Array.AsReadOnly((int[])move.UnitIds.Clone());
+            return true;
+        }
+
         private bool TryResolveNativeMovementSlots(CommanderCapabilityGoal goal, MoveCommand original,
             int currentTick, out MoveCommand move, out string reason)
         {
@@ -288,7 +313,10 @@ namespace OpenEmpires
             {
                 UnitData unit = simulation.UnitRegistry.GetUnit(original.UnitIds[i]);
                 if (unit == null || unit.PlayerId != goal.PlayerId || unit.CurrentHealth <= 0
-                    || unit.State == UnitState.Dead || workerAuthority.IsHumanProtected(unit.Id, currentTick)) return false;
+                    || unit.State == UnitState.Dead)
+                { reason = "An exact selected unit is no longer available; no replacement is authorized."; return false; }
+                if (workerAuthority.IsHumanProtected(unit.Id, currentTick))
+                { reason = "An exact selected unit is protected by a recent player order; no takeover is authorized."; return false; }
                 bool found = false;
                 for (int radius = 0; radius <= 10 && !found; radius++)
                     for (int dx = -radius; dx <= radius && !found; dx++)
@@ -309,7 +337,7 @@ namespace OpenEmpires
                                 commandAnchor, proposed, occupied, out FixedVector3 nativeCenter,
                                 out Fixed32 scatter, out HashSet<Vector2Int> covered,
                                 goal.DynamicMoveLocation, goal.DynamicMoveResourceId)) continue;
-                            occupied.UnionWith(covered);
+                            occupied.Add(simulation.MapData.WorldToTile(nativeCenter));
                             slots[i] = proposed;
                             nativeCenters[i] = nativeCenter;
                             scatterLimits[i] = scatter;
@@ -343,6 +371,9 @@ namespace OpenEmpires
             center = simulation.NativeMoveFormationCenter(commandAnchor, slot, unit);
             scatter = simulation.MaximumNativeMoveScatter(unit);
             covered = new HashSet<Vector2Int>();
+            // Reserve the center, not every possible random-scatter tile. Overlapping
+            // scatter envelopes do not imply an illegal native endpoint or formation.
+            if (occupied.Contains(simulation.MapData.WorldToTile(center))) return false;
             if (scatter > Fixed32.FromInt(10)) return false;
             Vector2Int low = simulation.MapData.WorldToTile(new FixedVector3(center.x - scatter,
                 center.y, center.z - scatter));
@@ -357,7 +388,6 @@ namespace OpenEmpires
                     if (Mathf.Max(Mathf.Abs(x - semanticAnchor.x), Mathf.Abs(z - semanticAnchor.y)) > 10
                         || dynamicMoveLocation != null && !dynamicMoveLocation.AllowsMoveTile(
                             simulation, playerId, dynamicMoveResourceId, x, z)
-                        || occupied.Contains(tile)
                         || !simulation.MapData.IsWalkable(x, z, playerId, simulation.BuildingRegistry)
                         || !IsKnownTile(playerId, x, z)
                         || !GridPathfinder.TryFindCompletePath(simulation.MapData, start, tile,

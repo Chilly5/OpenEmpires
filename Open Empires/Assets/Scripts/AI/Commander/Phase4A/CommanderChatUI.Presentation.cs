@@ -30,6 +30,14 @@ namespace OpenEmpires
         private int lastPresentationActionFrame = -1;
         private int lastEscapeActionFrame = -1;
 
+        private TMP_InputField compactTranscriptInput;
+        private TMP_Text compactPttHint;
+        private Button dockRecord;
+        private bool IsVoiceApprovalCandidateDisplayed =>
+            !settingsMenuVisible && !voiceSetupVisible && !semanticSetupVisible
+            && ((expandedApproval != null && expandedApproval.activeInHierarchy)
+                || (compactApproval != null && compactApproval.activeInHierarchy));
+
         public bool IsExpanded => expanded;
 
         private string VoiceCaptureLimitLabel
@@ -364,7 +372,7 @@ namespace OpenEmpires
             var image = card.AddComponent<Image>(); image.color = new Color(.055f,.075f,.11f,.98f);
             PanelElement(card, 190);
             var layout = card.AddComponent<VerticalLayoutGroup>();
-            layout.padding = new RectOffset(8,8,8,8); layout.spacing = 6;
+            layout.padding = new RectOffset(8,8,8,8); layout.spacing = 4;
             layout.childControlWidth = layout.childControlHeight = true;
             layout.childForceExpandWidth = true; layout.childForceExpandHeight = false;
             var heading = Text("Heading", card.transform, title, 14, TextAlignmentOptions.Left);
@@ -388,6 +396,32 @@ namespace OpenEmpires
             return card;
         }
 
+        private void BuildCompactTranscriptEditor()
+        {
+            compactReview.GetComponent<LayoutElement>().preferredHeight = 240;
+            compactReview.GetComponent<LayoutElement>().minHeight = 240;
+            var scroll = compactReview.transform.Find("Scroll").GetComponent<LayoutElement>();
+            scroll.minHeight = scroll.preferredHeight = 46;
+            var editor = UIObject("Editor",compactReview.transform);
+            editor.transform.SetSiblingIndex(1);
+            PanelElement(editor,80);
+            editor.AddComponent<Image>().color = new Color(.06f,.07f,.09f,1);
+            compactTranscriptInput = editor.AddComponent<TMP_InputField>();
+            compactTranscriptInput.targetGraphic = editor.GetComponent<Image>();
+            compactTranscriptInput.lineType = TMP_InputField.LineType.MultiLineNewline;
+            var viewport = UIObject("Viewport",editor.transform);
+            SetRect(viewport.GetComponent<RectTransform>(),Vector2.zero,Vector2.one,new Vector2(6,4),new Vector2(-6,-4));
+            viewport.AddComponent<RectMask2D>();
+            var body = Text("Text",viewport.transform,"",14,TextAlignmentOptions.TopLeft);
+            body.richText = false;
+            SetRect(body.rectTransform,Vector2.zero,Vector2.one,Vector2.zero,Vector2.zero);
+            compactTranscriptInput.textViewport = viewport.GetComponent<RectTransform>();
+            compactTranscriptInput.textComponent = body;
+            compactTranscriptInput.onValueChanged.AddListener(value=>InputText=value);
+            compactTranscriptInput.onSelect.AddListener(_=>UnitSelectionManager.SetChatFocused(true));
+            compactTranscriptInput.onDeselect.AddListener(_=>UnitSelectionManager.SetChatFocused(false));
+        }
+
         private void BuildPresentationUI()
         {
             var transcriptViewport = transcriptScroll.viewport;
@@ -408,12 +442,12 @@ namespace OpenEmpires
             RefreshChatBubbles();
             compactCommander = UIObject("CompactCommander",canvasRoot.transform);
             var rect = compactCommander.GetComponent<RectTransform>();
-            rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(0,1);
+            rect.anchorMin = rect.anchorMax = rect.pivot = Vector2.one;
             // Sit beside the player-list HUD rather than covering the right-side controls.
-            rect.anchoredPosition = new Vector2(350,-16); rect.sizeDelta = new Vector2(178,0);
+            rect.anchoredPosition = new Vector2(-12,-56); rect.sizeDelta = new Vector2(340,0);
             compactCommander.AddComponent<Image>().color = new Color(.055f,.065f,.075f,1f);
             var layout = compactCommander.AddComponent<VerticalLayoutGroup>();
-            layout.padding = new RectOffset(8,8,8,8); layout.spacing = 6;
+            layout.padding = new RectOffset(8,8,8,8); layout.spacing = 4;
             layout.childControlWidth = layout.childControlHeight = true;
             layout.childForceExpandWidth = true; layout.childForceExpandHeight = false;
             compactCommander.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
@@ -423,7 +457,10 @@ namespace OpenEmpires
             var textSettings = CompactButton(compactCommander.transform,"TextAIOptions","Text AI",()=>{if(semanticSetupVisible)HideSemanticSetup();else ShowSemanticSetup();});
             compactRecord = CompactButton(compactCommander.transform,"Record","● Record",OnPttButtonClicked);
             compactRecordLabel = compactRecord.GetComponentInChildren<TMP_Text>();
-            compactCancel = CompactButton(compactCommander.transform,"CancelVoice","Cancel",OnVoiceCancelClicked);
+            compactPttHint = Text("PttHint",compactCommander.transform,"Hold V to talk",12,TextAlignmentOptions.Left);
+            PanelElement(compactPttHint.gameObject,20);
+            compactCancel = CompactButton(compactCommander.transform,"CancelVoice","Cancel",()=>{if(submitting)CancelActiveSemanticRequest();else OnVoiceCancelClicked();});
+            PanelRow("VoiceControls",compactCommander.transform,compactRecord.gameObject,compactCancel.gameObject);
             PanelRow("Launcher",compactCommander.transform,open.gameObject);
             compactCommander.transform.Find("Launcher").SetAsFirstSibling();
             settings.gameObject.SetActive(false);
@@ -471,7 +508,8 @@ namespace OpenEmpires
             DockSetupCard(semanticSetupCard);
             settingsMenu.transform.SetAsLastSibling();
             compactReview = ReviewCard("TranscriptReview","Review transcript — not submitted",out compactReviewText,
-                new[]{"Send","Edit","Discard"},new UnityEngine.Events.UnityAction[]{()=>{_ = SubmitCurrentInputAsync();},OpenCommander,OnVoiceCancelClicked});
+                new[]{"Send","Discard"},new UnityEngine.Events.UnityAction[]{()=>{_ = SubmitCurrentInputAsync();},OnVoiceCancelClicked});
+            BuildCompactTranscriptEditor();
             compactApproval = ReviewCard("PlanApproval","Plan approval — not started",out compactApprovalText,
                 new[]{"Details","Approve","Reject"},new UnityEngine.Events.UnityAction[]{OpenCommander,
                     ()=>{if(pendingActionPlan!=null)HandleActionPlanControl("approve plan");else OpenCommander();},
@@ -490,7 +528,8 @@ namespace OpenEmpires
             var tasks = CompactButton(commanderPanel,"TasksTab","Tasks",()=>
             {tasksVisible=true;UpdateStrategicHostControls();UpdatePresentation();});
             chatTabButton = chat; tasksTabButton = tasks;
-            var views = PanelRow("Views",commanderPanel,chat.gameObject,tasks.gameObject);
+            dockRecord = CompactButton(commanderPanel,"DockRecord","Record",OnPttButtonClicked);
+            var views = PanelRow("Views",commanderPanel,chat.gameObject,tasks.gameObject,dockRecord.gameObject);
             views.transform.SetSiblingIndex(4);
             var settingsButton = CompactButton(commanderPanel,"Settings","Settings",OpenSettingsMenu);
             PanelElement(settingsButton.gameObject,28);
@@ -509,7 +548,8 @@ namespace OpenEmpires
             PanelElement(pendingQuestion,64);pendingQuestion.transform.SetSiblingIndex(5);
             expandedApproval = UIObject("Approval",commanderPanel);
             expandedApproval.AddComponent<Image>().color = new Color(.14f,.19f,.23f,1f);
-            PanelElement(expandedApproval,168,true);expandedApproval.transform.SetSiblingIndex(6);
+            PanelElement(expandedApproval,120,true);
+            expandedApproval.GetComponent<LayoutElement>().preferredHeight=168;expandedApproval.transform.SetSiblingIndex(6);
             var approvalScroll = UIObject("PreviewScroll",expandedApproval.transform);
             SetRect(approvalScroll.GetComponent<RectTransform>(),Vector2.zero,Vector2.one,
                 new Vector2(8,44),new Vector2(-8,-8));
@@ -560,12 +600,31 @@ namespace OpenEmpires
             PanelElement(requestRecovery,36);
             expandedReview=UIObject("VoiceReview",commanderPanel);
             expandedReview.AddComponent<Image>().color=new Color(.13f,.19f,.21f,1f);
-            PanelElement(expandedReview,68);
-            expandedReviewText=Text("ReviewText",expandedReview.transform,
-                "Reviewed transcript — not sent",13,TextAlignmentOptions.Left);
+            PanelElement(expandedReview,120,true);
+            // The dock can be only 350 canvas units above the minimap. Let the
+            // review shrink while preserving its scroll viewport and composer.
+            expandedReview.GetComponent<LayoutElement>().minHeight=68;
+            var reviewScrollObject=UIObject("Scroll",expandedReview.transform);
+            SetRect(reviewScrollObject.GetComponent<RectTransform>(),Vector2.zero,Vector2.one,
+                new Vector2(8,42),new Vector2(-8,-6));
+            var reviewScroll=reviewScrollObject.AddComponent<ScrollRect>();
+            reviewScroll.horizontal=false;reviewScroll.vertical=true;
+            reviewScroll.movementType=ScrollRect.MovementType.Clamped;
+            var reviewViewport=UIObject("Viewport",reviewScrollObject.transform);
+            SetRect(reviewViewport.GetComponent<RectTransform>(),Vector2.zero,Vector2.one,Vector2.zero,Vector2.zero);
+            reviewViewport.AddComponent<Image>().color=new Color(0,0,0,.1f);
+            reviewViewport.AddComponent<RectMask2D>();
+            reviewScroll.viewport=reviewViewport.GetComponent<RectTransform>();
+            expandedReviewText=Text("ReviewText",reviewViewport.transform,
+                "Reviewed transcript — not sent",13,TextAlignmentOptions.TopLeft);
             expandedReviewText.richText=false;
-            SetRect(expandedReviewText.rectTransform,new Vector2(0,1),Vector2.one,
-                new Vector2(8,-25),new Vector2(-8,-4));
+            expandedReviewText.textWrappingMode=TextWrappingModes.Normal;
+            expandedReviewText.rectTransform.anchorMin=new Vector2(0,1);
+            expandedReviewText.rectTransform.anchorMax=Vector2.one;
+            expandedReviewText.rectTransform.pivot=new Vector2(.5f,1);
+            expandedReviewText.rectTransform.sizeDelta=Vector2.zero;
+            expandedReviewText.gameObject.AddComponent<ContentSizeFitter>().verticalFit=ContentSizeFitter.FitMode.PreferredSize;
+            reviewScroll.content=expandedReviewText.rectTransform;
             var sendReviewed=CompactButton(expandedReview.transform,"SendReviewed","Send reviewed",()=>{_ = SubmitCurrentInputAsync();});
             var editReviewed=CompactButton(expandedReview.transform,"EditReviewed","Edit",()=>inputField?.ActivateInputField());
             var discardReviewed=CompactButton(expandedReview.transform,"DiscardReviewed","Discard",OnVoiceCancelClicked);
@@ -608,6 +667,8 @@ namespace OpenEmpires
             inputField.lineType=TMP_InputField.LineType.MultiLineNewline;
             inputField.textComponent.fontSize=14;
             transcriptText.fontSize=15;
+            transcriptScroll.GetComponent<LayoutElement>().minHeight=32;
+            transcriptScroll.GetComponent<LayoutElement>().preferredHeight=100;
             var transcriptImage=transcriptScroll.GetComponent<Image>();
             if(transcriptImage!=null)transcriptImage.color=new Color(.09f,.105f,.12f,1f);
             inputField.onValueChanged.AddListener(OnDraftChanged);
@@ -653,6 +714,7 @@ namespace OpenEmpires
 
         private void UpdatePresentation()
         {
+            RefreshPanelSize();
             if (compactCommander == null) return;
             RefreshTaskBoard();
             RefreshSemanticSetupStatus();
@@ -674,7 +736,7 @@ namespace OpenEmpires
                 voiceRootObject.GetComponent<LayoutElement>().minHeight = voiceNeedsStatus ? 56 : 36;
                 voiceRootObject.GetComponent<LayoutElement>().preferredHeight = voiceNeedsStatus ? 56 : 36;
                 if (voiceStatusText != null) voiceStatusText.gameObject.SetActive(voiceNeedsStatus);
-                voiceRootObject.SetActive(!reviewing);
+                voiceRootObject.SetActive(!reviewing && voiceNeedsStatus);
             }
             if (latestRequestText != null)
             {
@@ -690,16 +752,16 @@ namespace OpenEmpires
             bool hasApproval = pendingActionPlan!=null||strategicBridge?.PendingIntent!=null;
             // A pending preview replaces Chat's transcript scroll, rather than
             // nesting an approval scroller alongside the conversation scroller.
-            if(transcriptScroll!=null)transcriptScroll.gameObject.SetActive(!tasksVisible&&!hasApproval);
-            if(taskBoardScroll!=null)taskBoardScroll.gameObject.SetActive(tasksVisible);
+            if(transcriptScroll!=null)transcriptScroll.gameObject.SetActive(!tasksVisible&&!hasApproval&&!reviewing);
+            if(taskBoardScroll!=null)taskBoardScroll.gameObject.SetActive(tasksVisible&&!reviewing);
             if(pendingQuestion!=null)
             {
-                pendingQuestion.SetActive(pendingClarification!=null&&!hasApproval);
+                pendingQuestion.SetActive(pendingClarification!=null&&!hasApproval&&!reviewing);
                 if(pendingClarification!=null)pendingQuestionText.text="Needs clarification — "+pendingClarification.Question;
             }
             if(expandedApproval!=null)
             {
-                expandedApproval.SetActive(hasApproval&&!tasksVisible);
+                expandedApproval.SetActive(hasApproval&&!tasksVisible&&!reviewing);
                 if(hasApproval)expandedApprovalText.text=pendingActionPlan?.Preview??StrategicApprovalPreview();
                 var approvePlan=expandedApproval.transform.Find("ApprovePlan");
                 var rejectPlan=expandedApproval.transform.Find("RejectPlan");
@@ -729,25 +791,38 @@ namespace OpenEmpires
             if(expandedReview!=null)
             {
                 expandedReview.SetActive(reviewing);
-                if(reviewing)expandedReviewText.text="Reviewed transcript — not sent. Edit or Send: "
-                    +(InputText.Length>72?InputText.Substring(0,69)+"…":InputText);
+                if(reviewing)expandedReviewText.text="Voice review — not sent. Edit the text below, then Send or Discard.\n"+VoiceReviewMessage;
             }
             if(retryRequestButton!=null)retryRequestButton.gameObject.SetActive(recoveryAvailable);
             if(editRequestButton!=null)editRequestButton.gameObject.SetActive(recoveryAvailable);
             if(cancelRequestButton!=null)cancelRequestButton.gameObject.SetActive(recoveryAvailable||submitting&&semanticProvider!=null);
             BoundSetupCard(voiceSetupCard,532);
             BoundSetupCard(semanticSetupCard,336);
-            compactReview.SetActive(false);
+            compactReview.SetActive(reviewing);
+            if(reviewing && taskBadgeText != null) taskBadgeText.gameObject.SetActive(false);
+            if(dockRecord != null)
+            {
+                dockRecord.interactable=voiceController!=null && CommanderVoiceSettings.VoiceEnabled && !submitting
+                    && VoiceState!=CommanderVoiceState.Transcribing && !reviewing;
+                dockRecord.GetComponentInChildren<TMP_Text>().text=VoiceState==CommanderVoiceState.Recording?"Stop":"Record";
+            }
             bool approving = pendingActionPlan != null || strategicBridge?.PendingIntent != null;
-            compactApproval.SetActive(false);
+            compactApproval.SetActive(approving && !reviewing);
             compactApproveLabel.text = pendingActionPlan != null ? "Approve plan" : "Review strategy";
-            if (reviewing) compactReviewText.text = InputText;
+            if (reviewing)
+            {
+                compactReviewText.text = VoiceReviewMessage;
+                compactTranscriptInput.SetTextWithoutNotify(InputText);
+            }
+            compactPttHint.text = "Hold " + ResolvePttKey().ToString().ToUpperInvariant() + " to talk";
             if (approving) compactApprovalText.text = pendingActionPlan?.Preview ?? StrategicApprovalPreview();
             bool busy = VoiceState == CommanderVoiceState.Recording || VoiceState == CommanderVoiceState.Transcribing;
-            compactCancel.gameObject.SetActive(false);
+            compactCancel.gameObject.SetActive(true);
+            compactCancel.interactable = busy || reviewing || submitting;
             compactRecord.interactable = voiceController != null && !submitting && CommanderVoiceSettings.VoiceEnabled
                 && (VoiceState == CommanderVoiceState.Idle || VoiceState == CommanderVoiceState.Error || VoiceState == CommanderVoiceState.Recording);
-            compactRecord.gameObject.SetActive(false);
+            compactRecord.gameObject.SetActive(true);
+            compactRecordLabel.text = VoiceState == CommanderVoiceState.Recording ? "Stop recording" : "● Record";
             compactStatus.text = VoiceState == CommanderVoiceState.Recording
                 ? ((voiceAudioCapture is ICommanderCaptureReadiness ready && !ready.IsListening)
                     ? "Mic opening • " : "Listening • ") + VoiceCaptureLimitLabel.Replace(" limit", "")
@@ -756,7 +831,9 @@ namespace OpenEmpires
                 : submitting ? "Interpreting"
                 : approving && !placingDestination ? "Approval needed"
                 : reviewing ? "Review transcript"
+                : latestRequestState == "Ready" ? "Ready • " + VoiceCaptureLimitLabel
                 : latestRequestState.Length > 30 ? latestRequestState.Substring(0,27) + "…" : latestRequestState;
+            ObserveVoiceApprovalCandidate();
         }
         private void DockSetupCard(GameObject card)
         {

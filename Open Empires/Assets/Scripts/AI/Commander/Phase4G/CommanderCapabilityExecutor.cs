@@ -31,7 +31,7 @@ namespace OpenEmpires
 
         internal bool TryCreateCommand(CapabilityActionIntent intent, CommanderResultBinding? binding,
             CommanderTargetBinding targetBinding, CommanderBoundLocation marker,
-            out ICommand command, out string reason)
+            out ICommand command, out string reason, IReadOnlyList<int> selectedIds = null)
         {
             command = null;
             reason = string.Empty;
@@ -94,10 +94,17 @@ namespace OpenEmpires
             if (intent.ActionType != CommanderCapabilityActionType.SetRallyPoint
                 && !TryResolveUnits(intent.PlayerId, intent.UnitSelector,
                 binding.HasValue && resolvedBinding.Kind == CommanderResultKind.Units
-                    ? resolvedBinding.UnitIds : null,
+                    ? resolvedBinding.UnitIds : selectedIds,
                 out unitIds))
             {
-                reason = "No eligible owned units match the requested selector.";
+                int owned = 0, matching = 0;
+                foreach (UnitData unit in simulation.UnitRegistry.GetAllUnits())
+                    if (unit != null && unit.PlayerId == intent.PlayerId && unit.CurrentHealth > 0 && unit.State != UnitState.Dead)
+                    { owned++; if (MatchesSelector(unit, intent.UnitSelector)) matching++; }
+                reason = binding.HasValue || selectedIds != null ? "The exact bound unit selection is unavailable or no longer matches; no substitute is authorized."
+                    : owned == 0 ? "No living owned units are available."
+                    : matching == 0 ? "Owned units exist, but none match the requested unit type and exclusions."
+                    : "Only " + matching + " owned units match; the requested exact count is " + intent.UnitSelector.Count + ".";
                 return false;
             }
             FixedVector3 position;
@@ -290,17 +297,7 @@ namespace OpenEmpires
             {
                 if (unit == null || unit.PlayerId != playerId || unit.CurrentHealth <= 0
                     || unit.State == UnitState.Dead) continue;
-                bool match;
-                switch (selector.Kind)
-                {
-                    case CommanderUnitSelectorKind.Scout: match = unit.UnitType == 4; break;
-                    case CommanderUnitSelectorKind.Villagers: match = unit.IsVillager; break;
-                    case CommanderUnitSelectorKind.UnitType:
-                        match = unit.UnitType == simulation.ResolveCivUnitType(playerId, selector.UnitType); break;
-                    case CommanderUnitSelectorKind.DamagedMilitary:
-                        match = !unit.IsVillager && unit.UnitType != 4 && unit.CurrentHealth < unit.MaxHealth; break;
-                    default: match = !unit.IsVillager && !unit.IsSheep && unit.UnitType != 4; break;
-                }
+                bool match = MatchesSelector(unit, selector);
                 if (match) candidates.Add(unit);
             }
             candidates.Sort((a, b) => a.Id.CompareTo(b.Id));
@@ -311,8 +308,12 @@ namespace OpenEmpires
 
         internal bool MatchesSelector(UnitData unit, CommanderUnitSelector selector)
         {
+            if (selector.ExcludedKind.HasValue && MatchesSelector(unit,
+                new CommanderUnitSelector(selector.ExcludedKind.Value))) return false;
+            if (selector.ExcludedUnitType >= 0 && unit.UnitType == simulation.ResolveCivUnitType(unit.PlayerId, selector.ExcludedUnitType)) return false;
             switch (selector.Kind)
             {
+                case CommanderUnitSelectorKind.AllUnits: return true;
                 case CommanderUnitSelectorKind.Scout: return unit.UnitType == 4;
                 case CommanderUnitSelectorKind.Villagers: return unit.IsVillager;
                 case CommanderUnitSelectorKind.UnitType:

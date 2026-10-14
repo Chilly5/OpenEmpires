@@ -269,6 +269,7 @@ namespace OpenEmpires
             long submissionStartedAt = System.Diagnostics.Stopwatch.GetTimestamp();
             if (HandlePendingControl(trimmed)) return null;
             if (HandleActionPlanControl(trimmed)) return null;
+            if (HandleMovementGroupClarification(trimmed)) return null;
             if (HandleRetainedLocationReply(trimmed)) return null;
             if (pendingClarification == null
                 && (NormalizeWholeForm(trimmed) == "yes" || NormalizeWholeForm(trimmed) == "no"))
@@ -781,6 +782,21 @@ namespace OpenEmpires
                     }
                     return null;
                 }
+                catch (CommanderMovementAdmissionException error)
+                {
+                    observationStage = "rejected";
+                    observationStatus = "Rejected";
+                    if (this != null && generation == runtimeGeneration
+                        && semanticRequestRevision == requestRevision
+                        && !request.IsCancellationRequested && !lifetime.IsCancellationRequested
+                        && IsLatestPresentationTurn(presentationTurn))
+                    {
+                        string rejection = error.Message + " No goal was created; your destination marker is retained.";
+                        PublishLatestRequestState(presentationTurn, "Rejected", rejection);
+                        AppendLine("Commander", rejection);
+                    }
+                    return null;
+                }
                 catch (System.Exception error)
                 {
                     observationStage = "rejected";
@@ -1035,6 +1051,7 @@ namespace OpenEmpires
         {
             if (submitting) return null;
             string text = InputText;
+            if (!CanSubmitVoiceReview(text)) return null;
             if (text.Length > CommanderSemanticProviderRequest.MaximumPlayerMessageCharacters)
             {
                 SetCommanderStatus("This request is too long. Shorten it to 1024 characters before sending.",true);
@@ -1336,14 +1353,15 @@ namespace OpenEmpires
             GameObject input, GameObject send)
         {
             var layout = panel.gameObject.AddComponent<VerticalLayoutGroup>();
-            layout.padding = new RectOffset(12, 12, 12, 12);
-            layout.spacing = 8;
+            layout.padding = new RectOffset(8, 8, 8, 8);
+            layout.spacing = 4;
             layout.childControlWidth = layout.childControlHeight = true;
             layout.childForceExpandWidth = true;
             layout.childForceExpandHeight = false;
             PanelElement(title.gameObject, 24);
             PanelElement(commanderStatusText.gameObject, 32);
-            PanelElement(conversation, 140, true);
+            PanelElement(conversation, 32, true);
+            conversation.GetComponent<LayoutElement>().preferredHeight = 140;
             PanelElement(currentPlanStatusText.gameObject, 44);
             strategicHostRow = PanelRow("TaskControls", panel, selectPlanButton.gameObject,
                 pausePlanButton.gameObject, resumePlanButton.gameObject, cancelPlanButton.gameObject);
@@ -1375,15 +1393,39 @@ namespace OpenEmpires
             float right = safe.width > 0 ? safe.xMax / scale : canvasRect.rect.width;
             float top = safe.height > 0 ? safe.yMax / scale : canvasRect.rect.height;
             float bottom = safe.height > 0 ? safe.yMin / scale : 0;
-            // Preserve the real player-list HUD at the left; a zoomed Editor
-            // preview is not a reason to translate every HUD element.
-            float x = Mathf.Max(left + 16, 350);
-            float width = Mathf.Clamp(Mathf.Min(420, right - x - 16), 320, 460);
-            if (x + width + 16 > right) x = Mathf.Max(left + 8, right - width - 16);
-            float yInset = 16;
-            float height = Mathf.Clamp(top - bottom - yInset - 16, 320, 620);
+            // The native minimap occupies the lower-right 200 pixels. Reserve its
+            // margin plus the top resource HUD, in the same canvas coordinates.
+            float width = Mathf.Min(360, Mathf.Max(260, (right - left) * .28f));
+            width = Mathf.Min(width, Mathf.Max(180, right - left - 24));
+            float yInset = 56;
+            float height = Mathf.Max(180, top - bottom - yInset - 224);
+            commanderPanel.anchorMin = commanderPanel.anchorMax = commanderPanel.pivot = Vector2.one;
             commanderPanel.sizeDelta = new Vector2(width, height);
-            commanderPanel.anchoredPosition = new Vector2(x, -(canvasRect.rect.height - top + yInset));
+            var position = new Vector2(-(canvasRect.rect.width - right + 12), -(canvasRect.rect.height - top + yInset));
+            commanderPanel.anchoredPosition = position;
+            if (compactCommander != null)
+            {
+                var compactRect = compactCommander.GetComponent<RectTransform>();
+                compactRect.anchoredPosition = position;
+                compactRect.sizeDelta = new Vector2(width, compactRect.sizeDelta.y);
+                FitCompactReview(compactReview, Mathf.Clamp(height - 184, 150, 240), true);
+                FitCompactReview(compactApproval, Mathf.Clamp(height - 184, 140, 190), false);
+            }
+        }
+
+        private static void FitCompactReview(GameObject card, float height, bool editable)
+        {
+            if(card==null)return;
+            var element=card.GetComponent<LayoutElement>();
+            element.minHeight=element.preferredHeight=height;
+            float editorHeight=editable?Mathf.Clamp(height*.33f,40,80):0;
+            if(editable)
+            {
+                var editor=card.transform.Find("Editor")?.GetComponent<LayoutElement>();
+                if(editor!=null)editor.minHeight=editor.preferredHeight=editorHeight;
+            }
+            var scroll=card.transform.Find("Scroll")?.GetComponent<LayoutElement>();
+            if(scroll!=null)scroll.minHeight=scroll.preferredHeight=Mathf.Max(16,height-editorHeight-86);
         }
 
         private Button StrategyButton(Transform parent, string label, float left, float width,

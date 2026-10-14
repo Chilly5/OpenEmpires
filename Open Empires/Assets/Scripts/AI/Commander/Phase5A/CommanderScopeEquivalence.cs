@@ -36,6 +36,8 @@ namespace OpenEmpires
                     && c.UnitSelector.Kind == d.UnitSelector.Kind && c.UnitSelector.UnitType == d.UnitSelector.UnitType
                     && c.UnitSelector.Count == d.UnitSelector.Count
                     && c.UnitSelector.AllMatching == d.UnitSelector.AllMatching
+                    && c.UnitSelector.ExcludedKind == d.UnitSelector.ExcludedKind
+                    && c.UnitSelector.ExcludedUnitType == d.UnitSelector.ExcludedUnitType
                     && c.LocationSelector.Kind == d.LocationSelector.Kind
                     && c.LocationSelector.ResourceType == d.LocationSelector.ResourceType
                     && c.LocationSelector.RadiusTiles == d.LocationSelector.RadiusTiles

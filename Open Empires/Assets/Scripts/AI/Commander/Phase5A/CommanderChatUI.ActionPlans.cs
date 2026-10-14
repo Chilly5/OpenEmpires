@@ -79,6 +79,13 @@ namespace OpenEmpires
                     submission?.Response ?? "Action plan could not be admitted safely.");
                 AppendLine("Commander", submission?.Response ?? "Action plan could not be admitted safely.");
             }
+            catch (CommanderMovementAdmissionException error)
+            {
+                candidate.Cancel();
+                string reason = error.Message + " No goal was created; your destination marker is retained.";
+                SetLatestRequestState("Rejected", reason);
+                AppendLine("Commander", reason);
+            }
             catch (Exception error) when (error is InvalidOperationException || error is ArgumentException)
             {
                 candidate.Cancel();

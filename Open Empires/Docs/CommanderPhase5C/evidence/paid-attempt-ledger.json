@@ -8,7 +8,7 @@
     "timeout",
     "failed-http"
   ],
-  "usedHttpAttempts": 68,
+  "usedHttpAttempts": 71,
   "endpoint": "https://openrouter.ai/api/v1/chat/completions",
   "model": "openai/gpt-6-luna",
   "credential": "existing configured credential; never recorded or inspected",
@@ -370,6 +370,24 @@
       "source": "evidence/marker-multistep-repair/attempts.json",
       "kind": "integration-reserved-http",
       "utc": "2026-10-14T01:22:12.8481130Z"
+    },
+    {
+      "source": "small-movement-ui-voice/live-archers/paid-usage-ledger.json",
+      "kind": "semantic-initial",
+      "httpAttempts": 1,
+      "result": "Small movement UI voice scope; see adjacent provider-result.json. One initial HTTP, no retries; controlled owned game context."
+    },
+    {
+      "source": "small-movement-ui-voice/live-spearman/paid-usage-ledger.json",
+      "kind": "semantic-initial",
+      "httpAttempts": 1,
+      "result": "Small movement UI voice scope; see adjacent provider-result.json. One initial HTTP, no retries; controlled owned game context."
+    },
+    {
+      "source": "small-movement-ui-voice/live-archers-corrected/paid-usage-ledger.json",
+      "kind": "semantic-initial",
+      "httpAttempts": 1,
+      "result": "Small movement UI voice scope; see adjacent provider-result.json. One initial HTTP, no retries; controlled owned game context."
     }
   ]
 }

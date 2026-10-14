@@ -312,29 +312,29 @@ namespace OpenEmpires.Tests
             Assert.That(chat.InputText,Is.Empty);
         }
         [Test]
-        public void LauncherAndSettings_UseTopLeftCompactAndWideExpandedSurfaces()
+        public void LauncherAndSettings_UseNarrowRightDockAndVisibleVoiceControls()
         {
             var compactRect=Compact.GetComponent<RectTransform>();
-            Assert.That(compactRect.anchorMin,Is.EqualTo(new Vector2(0,1)));
-            Assert.That(compactRect.anchoredPosition.x,Is.GreaterThanOrEqualTo(320));
-            Assert.That(compactRect.anchoredPosition.y,Is.GreaterThanOrEqualTo(-24));
+            Assert.That(compactRect.anchorMin,Is.EqualTo(new Vector2(1,1)));
+            Assert.That(compactRect.anchoredPosition.x,Is.LessThan(0));
+            Assert.That(compactRect.anchoredPosition.y,Is.LessThanOrEqualTo(-48));
             Assert.That(Compact.transform.Find("Launcher").gameObject.activeSelf,Is.True);
-            Assert.That(Compact.transform.Find("Record").gameObject.activeSelf,Is.False);
-            Assert.That(Compact.transform.Find("CancelVoice").gameObject.activeSelf,Is.False);
+            Assert.That(Compact.transform.Find("VoiceControls/Record").gameObject.activeSelf,Is.True);
+            Assert.That(Compact.transform.Find("VoiceControls/CancelVoice").gameObject.activeSelf,Is.True);
             var statusObject=Compact.transform.Find("Status").GetComponent("TextMeshProUGUI");
             var status=(string)statusObject.GetType().GetProperty("text").GetValue(statusObject);
             Assert.That(status,Does.Not.Contain("\n"));
             Assert.That(status.Length,Is.LessThanOrEqualTo(30));
             Surface("OpenCommander");
             Assert.That(Panel.anchoredPosition.x,Is.EqualTo(compactRect.anchoredPosition.x).Within(1));
-            Assert.That(Panel.anchoredPosition.y,Is.GreaterThanOrEqualTo(-24));
+            Assert.That(Panel.anchoredPosition.y,Is.LessThanOrEqualTo(-48));
             Surface("OpenSettingsMenu");
             var menu=Panel.Find("SettingsMenu");
             Assert.That(chat.IsExpanded,Is.True);
             Assert.That(menu,Is.Not.Null);
             Assert.That(menu.gameObject.activeInHierarchy,Is.True);
             Canvas.ForceUpdateCanvases();
-            Assert.That(menu.GetComponent<RectTransform>().rect.width,Is.GreaterThanOrEqualTo(320));
+            Assert.That(menu.GetComponent<RectTransform>().rect.width,Is.LessThanOrEqualTo(360));
             Assert.That(provider.Calls,Is.Zero);
             Assert.That(manager.Goals,Is.Empty);
         }
@@ -364,7 +364,59 @@ namespace OpenEmpires.Tests
             Assert.That(chat.VoiceState,Is.EqualTo(CommanderVoiceState.Preview));
             Assert.That(Panel.gameObject.activeSelf,Is.False);
             Assert.That(chat.InputText,Is.EqualTo("make four spearmen"));
+            Assert.That(Compact.transform.Find("TranscriptReview").gameObject.activeSelf,Is.True);
+            var editor=Compact.transform.Find("TranscriptReview/Editor").GetComponent("TMP_InputField");
+            Assert.That(editor,Is.Not.Null);
+            editor.GetType().GetProperty("text").SetValue(editor,"move my archers to marker");
+            Assert.That(chat.InputText,Is.EqualTo("move my archers to marker"));
+            Canvas.ForceUpdateCanvases();
+            var bounds=new Vector3[4];Compact.GetComponent<RectTransform>().GetWorldCorners(bounds);
+            float scale=Compact.GetComponentInParent<Canvas>().scaleFactor;
+            Assert.That(bounds[0].y,Is.GreaterThanOrEqualTo(216*scale),"Compact review must remain above the native minimap.");
             Assert.That(provider.Calls,Is.Zero); Assert.That(manager.Goals,Is.Empty);
+        }
+        [TestCase(false)] [TestCase(true)]
+        public async Task ExpandedVoiceReview_ShowsFullOriginalAndGuidanceInBoundedScroll(bool ambiguous)
+        {
+            string raw="train four rider " + string.Join(" ",Enumerable.Repeat("original recognition details",12));
+            string reviewed=ambiguous?raw:"train four Spearmen";
+            string guidance=ambiguous?"Choose Knight or Horseman. Edit the transcript before Send.":"Catalog spelling corrected. Review the editable text before Send.";
+            chat.SetVoiceProvider(new MockCommanderSpeechToTextProvider(raw),new Capture());
+            chat.VoiceController.TranscriptProcessor=text=>new CommanderVoiceTranscriptReview(text,reviewed,guidance,ambiguous);
+            Surface("OpenCommander");
+            Assert.That(chat.VoiceController.StartRecording(),Is.True);
+            await chat.VoiceController.StopRecordingAndTranscribeAsync();
+            Canvas.ForceUpdateCanvases();
+            var review=Panel.Find("VoiceReview");
+            Assert.That(review.gameObject.activeInHierarchy,Is.True);
+            var scroll=review.Find("Scroll");
+            Assert.That(scroll,Is.Not.Null,"Original recognition and choices need a bounded scroll surface, not an ellipsis label.");
+            var scrollComponent=scroll.GetComponent("ScrollRect");
+            Assert.That((bool)scrollComponent.GetType().GetProperty("vertical").GetValue(scrollComponent),Is.True);
+            var details=scroll.Find("Viewport/ReviewText").GetComponent("TextMeshProUGUI");
+            string displayed=(string)details.GetType().GetProperty("text").GetValue(details);
+            Assert.That(displayed,Does.Contain(raw).And.Contain(guidance));
+            Assert.That(chat.InputText,Is.EqualTo(reviewed));
+            var input=Panel.Find("TextSubmission/Input").GetComponent("TMP_InputField");
+            Assert.That(input.gameObject.activeInHierarchy,Is.True);
+            input.GetType().GetProperty("text").SetValue(input,"my reviewed correction");
+            Assert.That(chat.InputText,Is.EqualTo("my reviewed correction"));
+            // Reproduce the 350-canvas-unit dock observed in the 1520x656 game
+            // view even when the EditMode runner happens to have a taller view.
+            Panel.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,350);
+            Canvas.ForceUpdateCanvases();
+            var conversation=(Component)typeof(CommanderChatUI).GetField("transcriptScroll",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(chat);
+            Assert.That(conversation.gameObject.activeSelf,Is.False,"Review replaces the conversation body to fit the short dock.");
+            var cardBounds=new Vector3[4];var panelBounds=new Vector3[4];
+            review.GetComponent<RectTransform>().GetWorldCorners(cardBounds);Panel.GetWorldCorners(panelBounds);
+            Assert.That(cardBounds[0].y,Is.GreaterThanOrEqualTo(panelBounds[0].y-1));
+            Assert.That(cardBounds[1].y,Is.LessThanOrEqualTo(panelBounds[1].y+1));
+            var composerBounds=new Vector3[4];
+            Panel.Find("TextSubmission").GetComponent<RectTransform>().GetWorldCorners(composerBounds);
+            Assert.That(composerBounds[0].y,Is.GreaterThanOrEqualTo(panelBounds[0].y-1),"Editable composer must remain inside the short dock above the minimap.");
+            Assert.That(composerBounds[1].y,Is.LessThanOrEqualTo(panelBounds[1].y+1));
+            Assert.That(scroll.GetComponent<RectTransform>().rect.height,Is.GreaterThanOrEqualTo(20),"Original and guidance must retain an accessible scroll viewport.");
+            Assert.That(provider.Calls,Is.Zero);Assert.That(manager.Goals,Is.Empty);
         }
         [TestCase(false)] [TestCase(true)]
         public async Task DiscardVoiceDraft_ClearsOnlyUnchangedOwnedText(bool edited)
@@ -407,7 +459,7 @@ namespace OpenEmpires.Tests
             Assert.That(prepared,Is.True);Assert.That(gateway.PolicyCalls,Is.EqualTo(1));Assert.That(gateway.SpeechCalls,Is.Zero);
             var accept=typeof(CommanderChatUI).GetMethod("AcceptOnlineVoiceConsent");Assert.That(accept,Is.Not.Null);
             Assert.That((bool)accept.Invoke(chat,new object[]{new Capture()}),Is.True);
-            Assert.That(chat.VoiceState,Is.EqualTo(CommanderVoiceState.Idle));Assert.That(chat.IsExpanded,Is.False);
+            Assert.That(chat.VoiceState,Is.EqualTo(CommanderVoiceState.Idle));Assert.That(chat.IsExpanded,Is.True,"Explicit policy review opens Settings; consent must not start recording or an order.");
             Assert.That(provider.Calls,Is.Zero);Assert.That(gateway.SpeechCalls,Is.Zero);Assert.That(manager.Goals,Is.Empty);
         }
         private sealed class GatewayPolicyTransport:ICommanderGatewayTransport
@@ -484,8 +536,8 @@ namespace OpenEmpires.Tests
             await chat.SubmitMessageAsync("Assign the three workers to the two requested roles.");
             var candidate=chat.PendingActionPlan;
             Assert.That(candidate,Is.Not.Null);
-            Assert.That(Compact.transform.Find("PlanApproval").gameObject.activeSelf,Is.False,
-                "The compact approval card is intentionally hidden in this presentation.");
+            Assert.That(Compact.transform.Find("PlanApproval").gameObject.activeSelf,Is.True,
+                "The candidate must be visible for recording-bound spoken approval.");
             Surface("OpenCommander");
             typeof(CommanderChatUI).GetMethod("UpdatePresentation",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(chat,null);
             var flags=BindingFlags.Instance|BindingFlags.NonPublic;

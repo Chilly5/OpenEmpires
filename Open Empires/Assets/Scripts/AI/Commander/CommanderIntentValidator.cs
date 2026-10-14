@@ -226,8 +226,14 @@ namespace OpenEmpires
                 || !Enum.IsDefined(typeof(CommanderLocationSelectorKind), intent.LocationSelector.Kind))
                 return Invalid(CommanderIntentErrorCode.UnknownCommand, "Unknown Commander selector.");
             if (intent.UnitSelector.Kind == CommanderUnitSelectorKind.UnitType
-                && !CommanderIntentCatalog.IsSupportedUnit(intent.UnitSelector.UnitType))
+                && GameKnowledgeCatalog.BuildCanonicalIdentityCatalog().FindUnitByType(intent.UnitSelector.UnitType) == null)
                 return Invalid(CommanderIntentErrorCode.UnknownUnit, "The requested unit selector is not supported.");
+            if (intent.UnitSelector.ExcludedUnitType >= 0
+                && GameKnowledgeCatalog.BuildCanonicalIdentityCatalog().FindUnitByType(intent.UnitSelector.ExcludedUnitType) == null)
+                return Invalid(CommanderIntentErrorCode.UnknownUnit, "The excluded unit type is not registered.");
+            if ((intent.UnitSelector.ExcludedKind.HasValue || intent.UnitSelector.ExcludedUnitType >= 0)
+                && intent.ActionType != CommanderCapabilityActionType.MoveUnits)
+                return Invalid(CommanderIntentErrorCode.UnknownCommand, "Unit exclusions are supported for movement only.");
             if (intent.TargetSelector.HasValue && !intent.TargetSelector.Value.IsCompatible(intent.ActionType, intent.LocationSelector.Kind))
                 return Invalid(CommanderIntentErrorCode.UnknownCommand, "The requested target type is incompatible with this action.");
             if (intent.ActionType == CommanderCapabilityActionType.DiscoverEnemy

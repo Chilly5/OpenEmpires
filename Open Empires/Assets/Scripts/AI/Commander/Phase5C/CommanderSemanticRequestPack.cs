@@ -71,6 +71,7 @@ namespace OpenEmpires
             bool age = Has("age", "ages", "feudal", "castle", "imperial", "advance");
             bool action = Has("move", "march", "go", "guard", "protect", "defend", "defense", "patrol", "scout", "explore", "find", "discover", "enemy", "attack", "strike", "retreat", "withdraw", "repair", "fix", "rally", "garrison", "ungarrison")
                 || Has("send") && Has("spearmen", "archers", "knights", "army", "troops", "military");
+            bool markerMovement = Has("move", "march", "send") && Has("marker", "there");
             bool research = Has("research", "technology", "upgrade");
             bool strategy = Has("strategy", "strategic");
             if (!construction && !allocation && !future && !production && !age && !action && !research && !strategy)
@@ -161,14 +162,17 @@ namespace OpenEmpires
             else if (composedWoodline && !request.IsReadOnlyQuestion) instruction += ComposedWoodlineVocabulary;
             else if (resourceLocationComposition && !request.IsReadOnlyQuestion)
                 instruction += ResourceLocationVocabulary;
+            if (markerMovement && !request.IsReadOnlyQuestion)
+                instruction += MarkerMovementVocabulary + (!Has("train", "produce", "recruit", "build", "make", "new", "more", "additional")
+                    ? ExistingMarkerMovementExample(knowledge) : string.Empty);
             if (!request.IsReadOnlyQuestion)
             {
-                bool dynamicAvailable = repeated || composedWoodline || resourceLocationComposition;
+                bool dynamicAvailable = repeated || composedWoodline || resourceLocationComposition || markerMovement;
                 if (!dynamicAvailable)
                     instruction = instruction.Replace("Outcomes are Request, DynamicPlan, Clarify, Unsupported, Answer.",
                         "Outcomes are Request, Clarify, Unsupported, Answer.");
                 instruction += " DynamicPlan is never a message-only outcome: it requires the complete version 1 typed nodes graph and only applies when its registered representation is retrieved above. Otherwise use the complete Request form, or Clarify/Unsupported with a message if the meaning cannot be represented. ";
-                instruction += " FINAL route check: resolvedNames rows are exact shared catalog matches, not typo suggestions. Use their category and canonicalToken; do not ask the player to confirm a canonical ID or an exactly resolved alias. A Building row belongs in BuildStructure.structure or build.parameters.building; a Unit row belongs in EnsureUnitCount.unit or produce.parameters.unit. For example Archery resolves to Building/ArcheryRange, never an Archer unit. ";
+                instruction += " FINAL route check: resolvedNames rows are exact shared catalog matches, not typo suggestions. Use their category; DynamicPlan unit/building fields require the row id (unit:N/building:Name), while legacy Request name fields use canonicalToken; do not ask the player to confirm a canonical ID or an exactly resolved alias. A Building row belongs in BuildStructure.structure or build.parameters.building; a Unit row belongs in select-units.parameters.unit for existing-unit movement, or EnsureUnitCount.unit/produce.parameters.unit only for requested production. For example Archery resolves to Building/ArcheryRange, never an Archer unit. ";
                 if (repeatedPlaced && Has("around"))
                     instruction += " The requested around relation is mandatory: connect resolve-location.inputs.structures to the NEW anchor build result, then the repeated build.inputs.location to that resolver, with all matching dependsOn references. Two independent build nodes DROP the requested around relation and are not a complete answer. Never substitute an existing anchor. ";
             }
@@ -230,6 +234,21 @@ namespace OpenEmpires
                     RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)) return true;
             }
             return false;
+        }
+
+        private static string ExistingMarkerMovementExample(JObject knowledge)
+        {
+            var named = (knowledge?["resolvedNames"] as JArray ?? new JArray()).OfType<JObject>()
+                .Where(row => (string)row["category"] == "Unit")
+                .Select(row => (string)row["id"]).Distinct(StringComparer.Ordinal).ToArray();
+            if (named.Length != 1) return string.Empty;
+            var graph = new JObject { ["outcome"] = "DynamicPlan", ["version"] = 1,
+                ["nodes"] = new JArray(
+                    new JObject { ["id"] = "units", ["mechanic"] = "select-units", ["parameters"] = new JObject { ["unit"] = named[0], ["countMode"] = "AllMatching" }, ["inputs"] = new JObject(), ["dependsOn"] = new JArray() },
+                    new JObject { ["id"] = "destination", ["mechanic"] = "resolve-location", ["parameters"] = new JObject { ["anchor"] = "PlayerMarker", ["relation"] = "Near", ["clearGapTiles"] = 1 }, ["inputs"] = new JObject(), ["dependsOn"] = new JArray() },
+                    new JObject { ["id"] = "move", ["mechanic"] = "move-units", ["parameters"] = new JObject(), ["inputs"] = new JObject { ["units"] = "units", ["location"] = "destination" }, ["dependsOn"] = new JArray("units", "destination") }) };
+            return " For an unnumbered plural existing group, use this complete graph with this request's resolved unit id. For singular one or an explicit number replace countMode with count. Existing marker movement example: "
+                + graph.ToString(Formatting.None) + " END marker example. ";
         }
 
         private static string ExistingProducerExample(JObject knowledge)
@@ -464,8 +483,11 @@ namespace OpenEmpires
         private const string ComposedWoodlineVocabulary =
             "For all current-Wood villagers and west-of-owned-TC Wood/Tree: DynamicPlan version1 with select-workers{state:Gathering,currentResource:Wood,countMode:AllMatching,omit count} -> WorkerSet; resolve-location{anchor:MyTownCenter,relation:MapWest,clearGapTiles:1,resource:Wood,sourceKind:Tree} -> LocationIntent. For explicit move, move-workers inputs workers:select-workers,location:resolve-location -> native Move (not Gather); for explicit gather, allocate-workers{resource:Wood,sourceKind:Tree} with same inputs -> native Gather. Include dependsOn refs; never replace ALL with count50 or silently change Move to Gather. Game binds owned workers/source/anchor and refuses overflow. No coordinates/IDs. ";
 
+        private const string MarkerMovementVocabulary =
+            "Existing-unit marker movement overrides the legacy Request count requirement: an unnumbered plural such as my archers is AllMatching, not a missing Count slot. Do not ask for count or manufacture a clarification. Base unit names select their current civilization replacement through the game resolver; a zero base-name count does not prove the replacement is absent. Never ask the player to choose between the base name and its civilization replacement. Canonical DynamicPlan unit values are row id values such as unit:2, never display-name canonicalToken strings. Existing-unit movement to a marker: use DynamicPlan version 1 with select-units -> UnitSet, resolve-location{anchor:PlayerMarker,relation:Near,clearGapTiles:1} -> LocationIntent, move-units inputs{units:selectionId,location:locationId} and dependsOn containing both references. select-units parameters use exactly one of unit:canonical unit:id or kind:AllUnits|Military|Scout|Villagers|Spearman|Archer|Knight|DamagedMilitary. Use canonical unit IDs from catalog for every named unit, plural, alias or civilization replacement. Use exactly one of count:1..50 for explicit numbers (or one singular unit) or countMode:AllMatching for unnumbered plurals/my archers/all. Optional typed exclusion is exactly one of excludeKind (same kind vocabulary) or excludeUnit:canonical unit:id; all except villagers means kind:AllUnits,excludeKind:Villagers,countMode:AllMatching, preserving scouts and other nonvillagers. Never change an explicit count to all, drop exclusions, substitute another unit type or add production to a move-existing request. Unknown group: clarify and retain movement plus destination. No coordinates or runtime IDs. For new produced result units continue using the existing Request dependency/resultFromNode route; never substitute a current-unit selection for a production result. ";
+
         private const string ResourceLocationVocabulary =
-            "Composable woodline location override: when the player specifies a worked woodline, a side of their Town Center, or a woodline relative to action units, use only the registered DynamicPlan graph for that action, not a Request that drops the location criteria. DynamicPlan{outcome:DynamicPlan,version:1,nodes:[{id,mechanic,parameters:{},inputs:{},dependsOn:[]}]}. Each typed input reference must also occur in dependsOn. select-resources p{resource:Wood,sourceKind:Tree,mode:Visible|Worked,count:1,anchor?:MyTownCenter,relation?:MapEast|MapWest|MapNorth|MapSouth} in{units?:UnitSet,workers?:WorkerSet} -> ResourceSet. For 'my villagers are working', mode:Worked is mandatory; never replace with Visible. For 'right of my Town Center', anchor:MyTownCenter and relation:MapEast are mandatory; game filters the side before choosing. For 'top woodline' with selected Spearmen, omit anchor, set relation:MapNorth and input units from select-units; map north is the game's top. select-units p{kind:Spearman,count?:1..50,countMode?:AllMatching} -> UnitSet; use countMode:AllMatching without count for unnumbered 'my Spearmen', and count for an explicit number. Select units once and retain the selection for the move. resolve-location p{relation:Near,clearGapTiles:1} in{resources:ResourceSet} -> LocationIntent. For construction, build p{building:canonical,count:1} in{location:LocationIntent}; for movement, move-units in{units:UnitSet,location:LocationIntent} -> native Move with legal resource-side formation arrival, not Gather. All actor identities, resource IDs, visibility and paths are chosen by the game, never provider coordinates. If no suitable visible resource exists, preserve the explicit restriction and ask for a marker. ";
+            "Composable woodline location override: when the player specifies a worked woodline, a side of their Town Center, or a woodline relative to action units, use only the registered DynamicPlan graph for that action, not a Request that drops the location criteria. DynamicPlan{outcome:DynamicPlan,version:1,nodes:[{id,mechanic,parameters:{},inputs:{},dependsOn:[]}]}. Each typed input reference must also occur in dependsOn. select-resources p{resource:Wood,sourceKind:Tree,mode:Visible|Worked,count:1,anchor?:MyTownCenter,relation?:MapEast|MapWest|MapNorth|MapSouth} in{units?:UnitSet,workers?:WorkerSet} -> ResourceSet. For 'my villagers are working', mode:Worked is mandatory; never replace with Visible. For 'right of my Town Center', anchor:MyTownCenter and relation:MapEast are mandatory; game filters the side before choosing. For 'top woodline' with selected Spearmen, omit anchor, set relation:MapNorth and input units from select-units; map north is the game's top. select-units p{unit?:canonical unit:id,kind?:AllUnits|Military|Scout|Villagers|Spearman|Archer|Knight|DamagedMilitary,excludeKind?:Villagers|Military|Scout,excludeUnit?:canonical unit:id,count?:1..50,countMode?:AllMatching} (unit/kind and count/countMode are exclusive pairs; excludeKind/excludeUnit are exclusive) -> UnitSet; use countMode:AllMatching without count for unnumbered 'my Spearmen', and count for an explicit number. Select units once and retain the selection for the move. resolve-location p{relation:Near,clearGapTiles:1} in{resources:ResourceSet} -> LocationIntent. For construction, build p{building:canonical,count:1} in{location:LocationIntent}; for movement, move-units in{units:UnitSet,location:LocationIntent} -> native Move with legal resource-side formation arrival, not Gather. All actor identities, resource IDs, visibility and paths are chosen by the game, never provider coordinates. If no suitable visible resource exists, preserve the explicit restriction and ask for a marker. ";
 
         private static JObject CompactContext(JObject source, bool includeStrategy)
         {

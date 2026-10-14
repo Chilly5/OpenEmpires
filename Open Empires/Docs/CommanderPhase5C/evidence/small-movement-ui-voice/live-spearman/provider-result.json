@@ -1,0 +1,50 @@
+{
+  "trace": "utc=2026-10-14T20:56:03.1591957Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=3818\nfinish=stop\nassistantContent=extracted;characters=114;finish=stop\nsemantic=Request;nodes=1\n",
+  "usage": {
+    "PromptTokens": 5779,
+    "CompletionTokens": 34,
+    "TotalTokens": 5813,
+    "CachedTokens": 0,
+    "ReasoningTokens": 0,
+    "Cost": 0.0007393,
+    "HasReportedUsage": true
+  },
+  "attempts": [
+    {
+      "Kind": "initial",
+      "InputEstimate": 28555,
+      "SectionEstimates": {
+        "contract": 26038,
+        "context": 2178,
+        "memory": 2,
+        "questionFacts": 0,
+        "pending": 0,
+        "utterance": 23,
+        "messageMargin": 256
+      },
+      "Usage": {
+        "PromptTokens": 5779,
+        "CompletionTokens": 34,
+        "TotalTokens": 5813,
+        "CachedTokens": 0,
+        "ReasoningTokens": 0,
+        "Cost": 0.0007393,
+        "HasReportedUsage": true
+      },
+      "ElapsedMilliseconds": 3824,
+      "HttpStatusCode": 200,
+      "ResultStage": "semantic-valid"
+    }
+  ],
+  "http": 1,
+  "repairs": 0,
+  "transcript": "Commander:\r\nDestination saved for the next applicable request. Existing tasks keep their approved destination.\r\n\r\nPlayer:\r\nmove spearman to marker\r\n\r\nCommander:\r\nUnderstood.",
+  "preview": null,
+  "goals": [
+    {
+      "id": 1,
+      "status": "Pending",
+      "reason": ""
+    }
+  ]
+}

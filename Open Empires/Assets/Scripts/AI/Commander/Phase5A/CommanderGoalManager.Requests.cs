@@ -159,6 +159,12 @@ namespace OpenEmpires
                     && reached.RequestedTarget == age.RequestedTarget && reached.TargetAge == age.TargetAge
                 || intent is CapabilityActionIntent action && goal is CommanderCapabilityGoal capability
                     && CommanderScopeEquivalence.SameIntent(capability.Action, action));
+            if (matches && scope.UsesPlayerMarker && goal is CommanderCapabilityGoal markerMove)
+            {
+                markerMove.MarkerMoveLocation = scope.MarkerLocations[0];
+                if (!planner.PreflightMarkerMovement(markerMove, simulation.CurrentTick, out string markerReason))
+                    throw new CommanderMovementAdmissionException(markerReason);
+            }
             if (!matches || !scope.Consume(this, scope.Graph))
                 throw new InvalidOperationException("The registered goal changed the admitted KnownIntent scope.");
             goal.RequestAuthority = scope;

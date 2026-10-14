@@ -1,5 +1,29 @@
 # OpenEmpires AI Commander — Remaining Phases Handoff
 
+## Latest: small movement, UI and voice repair — 2026-10-15
+
+Implemented canonical existing-unit marker movement, typed exclusions and retained
+group clarification; frozen actors/destination and legal nearby native arrivals;
+specific protected/unreachable rejection with retained marker. Repaired live archer
+provider contract mismatch. Commander now docks narrowly above the minimap, with
+compact editable voice review and catalog correction. Exact raw approve is locally
+bound to the same displayed candidate from recording start.
+
+Final source `535add94aecc339e5023661c5df77df8e8ccd5fae3d7baebf314d311c59299cf`,
+HEAD `679238464e959fc175a2d8bd897e90c15bb7defe`. Final targeted tests14/14 pass;
+earlier movement/voice/correction and UI receipts are scoped individually in the
+[short results report](Docs/CommanderPhase5C/small-movement-ui-voice-report.md).
+Live spearman and English archer replacement movement completed; local
+all-except-villagers completed with all nine selected actors and zero villager
+orders. Actual Record/Stop and compact edit/Discard checks used synthetic
+recognition. Final-source virtual keyboard V hold/release approved exactly one
+candidate locally; typing focus prevented recording. Physical microphone
+recognition remains an external check.
+Latest10-call allowance:3 used,7 remaining; global71/200. Unity idle EditMode,
+Computer Use released, Blender untouched. No new Windows/Web package verification
+or overall Phase5C acceptance. Next: one physical PTT approve/negative/stale-candidate
+check in a fresh match, then the separately pending package/standalone gates.
+
 ## Latest: marker and multi-step repair VERIFIED IN EDITOR — 2026-10-14
 
 Captured the exact live mismatch: Confirmation/quantityMode was not a supported

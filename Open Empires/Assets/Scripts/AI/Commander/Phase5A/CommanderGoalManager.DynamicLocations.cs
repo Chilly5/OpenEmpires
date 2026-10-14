@@ -182,8 +182,8 @@ namespace OpenEmpires
                         || !(effect is CommanderCapabilityGoal move)
                         || !node.Inputs.TryGetValue("location", out string moveLocationId)
                         || !locations.TryGetValue(moveLocationId, out CommanderBoundLocation bound)
-                        || !bound.IsResourceSide)
-                        throw new ArgumentException("The exact resource-side move location is unavailable.");
+                        || !(bound.IsResourceSide || unitMove && bound.IsPlayerMarkerFor(this)))
+                        throw new ArgumentException("The exact selected move location is unavailable.");
                     IReadOnlyList<int> actorIds = null;
                     if (unitMove && (!node.Inputs.TryGetValue("units", out string selectedUnitId)
                         || !units.TryGetValue(selectedUnitId, out actorIds)
@@ -210,7 +210,8 @@ namespace OpenEmpires
             foreach (var binding in allocationBindings) binding.goal.DynamicResourceLocation = binding.location;
             foreach (var binding in moveBindings)
             {
-                binding.goal.DynamicMoveLocation = binding.location;
+                if (binding.location.IsPlayerMarkerFor(this)) binding.goal.MarkerMoveLocation = binding.location;
+                else binding.goal.DynamicMoveLocation = binding.location;
                 binding.goal.DynamicMoveUnitIds = binding.actorIds;
             }
             foreach (var binding in producerBindings) binding.goal.BoundProducerBuildingIds = binding.ids;
@@ -449,46 +450,23 @@ namespace OpenEmpires
 
         private IReadOnlyList<int> FreezeUnits(CommanderDynamicNode node)
         {
-            int? selectedType = null;
-            if (node.Parameters.TryGetValue("unit", out object canonicalId))
-            {
-                string id = (string)canonicalId;
-                int type = int.Parse(id.Substring("unit:".Length));
-                selectedType = type;
-            }
-            string kind = node.Parameters.TryGetValue("kind", out object kindValue)
-                ? (string)kindValue : null;
+            var knowledge = GameKnowledgeCatalog.Build(simulation);
+            if (!CommanderDynamicCompiler.TryCapabilityUnitSelector(node, knowledge, null,
+                simulation, playerId, out CommanderUnitSelector selector))
+                throw new ArgumentException("No owned visible units match the requested selection, or the selection exceeds 50 units.");
+            var executor = new CommanderCapabilityExecutor(simulation);
             var ids = new List<int>();
             foreach (UnitData unit in simulation.UnitRegistry.GetAllUnits())
             {
                 if (unit == null || unit.PlayerId != playerId || unit.CurrentHealth <= 0
                     || unit.State == UnitState.Dead
-                    || !MatchesUnitSelection(unit, selectedType, kind)) continue;
+                    || !executor.MatchesSelector(unit, selector)) continue;
                 Vector2Int tile = simulation.MapData.WorldToTile(unit.SimPosition);
                 if (simulation.FogOfWar.GetVisibility(playerId, tile.x, tile.y)
                     == TileVisibility.Visible) ids.Add(unit.Id);
             }
             return ExactFirst(ids, node.Parameters.ContainsKey("countMode")
                 ? ids.Count : node.Parameter<int>("count"));
-        }
-
-        private bool MatchesUnitSelection(UnitData unit, int? selectedType, string kind)
-        {
-            if (selectedType.HasValue) return unit.UnitType == selectedType.Value;
-            switch (kind)
-            {
-                case "Scout": return unit.UnitType == 4;
-                case "Villagers": return unit.IsVillager;
-                case "Spearman": return unit.UnitType == simulation.ResolveCivUnitType(playerId, 1);
-                case "Archer": return unit.UnitType == simulation.ResolveCivUnitType(playerId, 2);
-                case "Knight": return unit.UnitType == simulation.ResolveCivUnitType(playerId, 7);
-                case "DamagedMilitary":
-                    return !unit.IsVillager && !unit.IsSheep && unit.UnitType != 4
-                        && unit.CurrentHealth < unit.MaxHealth;
-                case "Military":
-                    return !unit.IsVillager && !unit.IsSheep && unit.UnitType != 4;
-                default: return false;
-            }
         }
 
         private static IReadOnlyList<int> ExactFirst(List<int> candidates, int count)

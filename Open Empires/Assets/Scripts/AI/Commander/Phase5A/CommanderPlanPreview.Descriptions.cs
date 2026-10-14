@@ -39,6 +39,7 @@ namespace OpenEmpires
         {
             switch(kind)
             {
+                case "AllUnits":return "units";
                 case "Military":return "military units";
                 case "DamagedMilitary":return "damaged military units";
                 case "Villagers":return "villagers";
@@ -66,6 +67,10 @@ namespace OpenEmpires
         {
             string actors=(action.UnitSelector.AllMatching?"all currently eligible owned ":action.UnitSelector.Count+" owned ")+(action.UnitSelector.Kind==CommanderUnitSelectorKind.UnitType
                 ?CommanderIntentCatalog.GetUnitDisplayName(action.UnitSelector.UnitType):UnitKind(action.UnitSelector.Kind.ToString()));
+            if (action.UnitSelector.ExcludedKind.HasValue)
+                actors += " except " + UnitKind(action.UnitSelector.ExcludedKind.Value.ToString());
+            if (action.UnitSelector.ExcludedUnitType >= 0)
+                actors += " except " + CommanderIntentCatalog.GetUnitDisplayName(action.UnitSelector.ExcludedUnitType, true);
             string location=Location(action.LocationSelector);
             string target=action.TargetSelector.HasValue
                 ?action.TargetSelector.Value.Kind==CommanderTargetSelectorKind.UnitType
@@ -133,6 +138,28 @@ namespace OpenEmpires
             if(node.DependsOn.Count>0)
                 text.Append("; requires ").Append(string.Join(", ",node.DependsOn.Select(id=>Label(graph,id))));
         }
+        private static string DynamicUnitSelectionDescription(CommanderDynamicNode selection)
+        {
+            string description = (selection.Parameters.ContainsKey("countMode") ? "all matching" : selection.Parameter<int>("count").ToString())
+                + " visible owned " + (selection.Parameters.TryGetValue("unit", out object unit)
+                    ? UnitName((string)unit) : UnitKind(selection.Parameter<string>("kind")));
+            if (selection.Parameters.TryGetValue("excludeKind", out object excludedKind))
+                description += " except " + UnitKind((string)excludedKind);
+            if (selection.Parameters.TryGetValue("excludeUnit", out object excludedUnit))
+                description += " except " + UnitName((string)excludedUnit);
+            return description;
+        }
+
+        private static string DescribeDynamicUnitMove(CommanderSemanticGraphPlan graph, CommanderDynamicNode move)
+        {
+            var selection = Source(graph, move.Inputs["units"]);
+            var location = Source(graph, move.Inputs["location"]);
+            bool marker = location.Parameters.TryGetValue("anchor", out object anchor) && (string)anchor == "PlayerMarker";
+            return "Move " + DynamicUnitSelectionDescription(selection) + " to "
+                + (marker ? "your placed destination marker" : "the visible resource-side destination")
+                + "; keep the exact selected units; require legal nearby arrivals and complete known paths";
+        }
+
         private static void AppendSelections(StringBuilder text,CommanderSemanticGraphPlan graph)
         {
             text.Append("Selections and placement (fixed for this plan):\n");
@@ -151,7 +178,7 @@ namespace OpenEmpires
                         int first=node.Parameter<int>("offset")+1,last=first+node.Parameter<int>("count")-1;
                         description="Use "+(first==last?"villager "+first:"villagers "+first+"–"+last)+" from "+Label(graph,node.Inputs["workers"])+" as a fixed group";break;
                     case CommanderDynamicMechanic.SelectUnits:
-                        description="Choose "+(node.Parameters.ContainsKey("countMode")?"all matching":node.Parameter<int>("count").ToString())+" visible owned "+(node.Parameters.TryGetValue("unit",out object unit)?UnitName((string)unit):UnitKind(node.Parameter<string>("kind")))+" once";break;
+                        description="Choose "+DynamicUnitSelectionDescription(node)+" once";break;
                     case CommanderDynamicMechanic.SelectStructures:
                         description="Choose "+node.Parameter<int>("count")+" visible completed owned "+BuildingName(node.Parameter<string>("building"))+" once";break;
                     case CommanderDynamicMechanic.SelectResources:
@@ -164,6 +191,10 @@ namespace OpenEmpires
                             ? "Only currently visible "+node.Parameter<string>("sourceKind")+"/"+node.Parameter<string>("resource")
                                 +" sources "+Relation(node.Parameter<string>("relation"))+" "+anchor
                                 +"; at least "+node.Parameter<int>("clearGapTiles")+" clear tile(s); freeze eligible source identities at admission"
+                            : node.Parameters.TryGetValue("anchor", out object markerAnchor) && (string)markerAnchor == "PlayerMarker"
+                                && graph.DynamicProgram.Nodes.Any(effect => effect.Primitive.Mechanic == CommanderDynamicMechanic.MoveUnits
+                                    && effect.Inputs.TryGetValue("location", out string inputLocation) && inputLocation == node.Id)
+                                ? anchor + "; require a legal nearby walkable arrival and complete known path for every selected unit"
                             : Relation(node.Parameter<string>("relation"))+" "+anchor+"; "+node.Parameter<int>("clearGapTiles")+"-tile clear gap between footprints within bounded tolerance; report a blocker if no valid site exists";break;
                     case CommanderDynamicMechanic.Build:
                     case CommanderDynamicMechanic.AllocateWorkers:

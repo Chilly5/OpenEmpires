@@ -18,6 +18,8 @@ namespace OpenEmpires
         public JObject placement;
         public string technology;
         public int? unitType;
+        public string excludedKind;
+        public int? excludedUnitType;
         public string objectiveType;
         public int? priority;
         public Dictionary<string, string> parameters;
@@ -77,7 +79,7 @@ namespace OpenEmpires
                     if (reader.Read()) throw new JsonException("Trailing JSON content is not allowed.");
                 }
                 NormalizeExternalJson(root);
-                CheckFields(root, "intentCategory", "intentType", "action", "location", "technology", "unitType", "objectiveType", "priority", "parameters", "unit", "structure", "resource", "mode", "targetAge", "amount", "constraints", "countMode", "workerState", "currentResource", "sourceKind", "target", "quantityMode", "resourceAmount", "resourceAmountMode", "placement");
+                CheckFields(root, "intentCategory", "intentType", "action", "location", "technology", "unitType", "excludedKind", "excludedUnitType", "objectiveType", "priority", "parameters", "unit", "structure", "resource", "mode", "targetAge", "amount", "constraints", "countMode", "workerState", "currentResource", "sourceKind", "target", "quantityMode", "resourceAmount", "resourceAmountMode", "placement");
                 var dto = new CommanderIntentDTO
                 {
                     intentCategory = ReadString(root, "intentCategory"),
@@ -86,6 +88,8 @@ namespace OpenEmpires
                     location = ReadString(root, "location"),
                     technology = ReadString(root, "technology"),
                     unitType = ReadAmount(root, "unitType"),
+                    excludedKind = ReadString(root, "excludedKind"),
+                    excludedUnitType = ReadAmount(root, "excludedUnitType"),
                     objectiveType = ReadString(root, "objectiveType"),
                     priority = ReadAmount(root, "priority"),
                     unit = ReadString(root, "unit"),
@@ -167,7 +171,7 @@ namespace OpenEmpires
                     && !Enum.TryParse(rawObjective, true, out objectiveType)
                     && !TryResolveObjectiveAlias(rawObjective, out objectiveType))
                     return Reject(CommanderIntentErrorCode.UnknownCommand, "objectiveType", "Unknown strategic objective type.");
-                if (dto.action != null || dto.location != null || dto.technology != null || dto.unitType.HasValue
+                if (dto.action != null || dto.location != null || dto.technology != null || dto.unitType.HasValue || dto.excludedKind != null || dto.excludedUnitType.HasValue
                     || dto.unit != null || dto.structure != null || dto.resource != null || dto.mode != null || dto.targetAge != null)
                     return UnexpectedFields();
 
@@ -192,7 +196,7 @@ namespace OpenEmpires
             if (!NamedEnum(dto.intentType, out CommanderIntentType type))
                 return Reject(CommanderIntentErrorCode.UnknownCommand, "intentType", "Unknown intent type.");
             if (type != CommanderIntentType.CapabilityAction
-                && (dto.action != null || dto.location != null || dto.technology != null || dto.unitType.HasValue))
+                && (dto.action != null || dto.location != null || dto.technology != null || dto.unitType.HasValue || dto.excludedKind != null || dto.excludedUnitType.HasValue))
                 return UnexpectedFields();
             var constraints = new List<CommanderConstraint>();
             var seen = new HashSet<string>(StringComparer.Ordinal);
@@ -341,10 +345,20 @@ namespace OpenEmpires
                         || !NamedEnum(dto.location, out CommanderLocationSelectorKind locationKind))
                         return Reject(CommanderIntentErrorCode.UnknownCommand, "action", "Unknown or incomplete capability action selectors.");
                     if (unitKind == CommanderUnitSelectorKind.UnitType
-                        && (!dto.unitType.HasValue || !CommanderIntentCatalog.IsSupportedUnit(dto.unitType.Value)))
+                        && (!dto.unitType.HasValue || GameKnowledgeCatalog.BuildCanonicalIdentityCatalog().FindUnitByType(dto.unitType.Value) == null))
                         return Reject(CommanderIntentErrorCode.UnknownUnit, "unitType", "The capability unit type is not supported.");
                     if (unitKind != CommanderUnitSelectorKind.UnitType && dto.unitType.HasValue)
                         return UnexpectedFields();
+                    CommanderUnitSelectorKind? excludedKind = null;
+                    if (dto.excludedKind != null)
+                    {
+                        if (!NamedEnum(dto.excludedKind, out CommanderUnitSelectorKind excluded)
+                            || excluded == CommanderUnitSelectorKind.UnitType || dto.excludedUnitType.HasValue)
+                            return UnexpectedFields();
+                        excludedKind = excluded;
+                    }
+                    if (dto.excludedUnitType.HasValue && GameKnowledgeCatalog.BuildCanonicalIdentityCatalog()
+                        .FindUnitByType(dto.excludedUnitType.Value) == null) return UnexpectedFields();
                     ResourceType? actionResource = null;
                     if (dto.resource != null)
                     {
@@ -385,7 +399,8 @@ namespace OpenEmpires
                         if (!actionTarget.Value.IsCompatible(action, locationKind)) return UnexpectedFields();
                     }
                     intent = new CapabilityActionIntent(context.PlayerId, action,
-                        new CommanderUnitSelector(unitKind, dto.amount.Value, dto.unitType ?? -1),
+                        new CommanderUnitSelector(unitKind, dto.amount.Value, dto.unitType ?? -1,
+                            excludedKind: excludedKind, excludedUnitType: dto.excludedUnitType ?? -1),
                         new CommanderLocationSelector(locationKind, actionResource), actionTechnology,
                         actionStructure, constraints, actionTarget);
                     break;
@@ -547,6 +562,9 @@ namespace OpenEmpires
                 dto.unit = capability.UnitSelector.Kind.ToString();
                 dto.unitType = capability.UnitSelector.Kind == CommanderUnitSelectorKind.UnitType
                     ? capability.UnitSelector.UnitType : (int?)null;
+                dto.excludedKind = capability.UnitSelector.ExcludedKind?.ToString();
+                dto.excludedUnitType = capability.UnitSelector.ExcludedUnitType >= 0
+                    ? capability.UnitSelector.ExcludedUnitType : (int?)null;
                 dto.location = capability.LocationSelector.Kind.ToString();
                 dto.target = capability.TargetSelector.HasValue
                     ? CommanderSemanticResult.TargetSelectorJson(capability.TargetSelector.Value) : null;

@@ -210,7 +210,7 @@ namespace OpenEmpires
                     dynamicSource?.Primitive.Mechanic == CommanderDynamicMechanic.MoveWorkers
                         ? "Move the full frozen selected villager set to the visible resource-side woodline using native formation travel; no gather order"
                         : dynamicSource?.Primitive.Mechanic == CommanderDynamicMechanic.MoveUnits
-                            ? "Move the exact selected owned units to the visible resource-side destination using native formation travel"
+                            ? DescribeDynamicUnitMove(graph, dynamicSource)
                         : Describe(node.Intent, canonicalUnitName,resultBuildingName);
                 if(selectedMarkerSteps?.Contains(node.Index)==true)
                     description=description.Replace("your placed destination marker","the destination selected for step "+(node.Index+1));

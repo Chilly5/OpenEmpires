@@ -25,7 +25,8 @@ namespace OpenEmpires
         Scout,
         Villagers,
         UnitType,
-        DamagedMilitary
+        DamagedMilitary,
+        AllUnits
     }
 
     public readonly struct CommanderUnitSelector
@@ -34,9 +35,11 @@ namespace OpenEmpires
         public int UnitType { get; }
         public int Count { get; }
         public bool AllMatching { get; }
+        public CommanderUnitSelectorKind? ExcludedKind { get; }
+        public int ExcludedUnitType { get; }
 
         public CommanderUnitSelector(CommanderUnitSelectorKind kind, int count = 1, int unitType = -1,
-            bool allMatching = false)
+            bool allMatching = false, CommanderUnitSelectorKind? excludedKind = null, int excludedUnitType = -1)
         {
             if (!Enum.IsDefined(typeof(CommanderUnitSelectorKind), kind))
                 throw new ArgumentOutOfRangeException(nameof(kind));
@@ -47,6 +50,12 @@ namespace OpenEmpires
             Count = count;
             UnitType = unitType;
             AllMatching = allMatching;
+            if (excludedKind.HasValue && (!Enum.IsDefined(typeof(CommanderUnitSelectorKind), excludedKind.Value)
+                || excludedKind.Value == CommanderUnitSelectorKind.UnitType || excludedUnitType >= 0))
+                throw new ArgumentException("Invalid unit exclusion.");
+            if (excludedUnitType < -1) throw new ArgumentOutOfRangeException(nameof(excludedUnitType));
+            ExcludedKind = excludedKind;
+            ExcludedUnitType = excludedUnitType;
         }
     }
 

@@ -188,7 +188,7 @@ namespace OpenEmpires
                     if (s != "New" && s != "TargetTotal") throw new JsonException();
                     break;
                 case CommanderDynamicFieldKind.UnitKind:
-                    if (!NamedEnum<CommanderSemanticUnitSelector>(s)) throw new JsonException();
+                    if (s != "AllUnits" && !NamedEnum<CommanderSemanticUnitSelector>(s)) throw new JsonException();
                     break;
                 default: throw new JsonException();
             }
@@ -211,6 +211,9 @@ namespace OpenEmpires
             if (mechanic == CommanderDynamicMechanic.SelectUnits
                 && (parameters.ContainsKey("count") == parameters.ContainsKey("countMode")
                     || parameters.TryGetValue("count", out object unitCount) && (int)unitCount > 50))
+                throw new JsonException();
+            if (mechanic == CommanderDynamicMechanic.SelectUnits
+                && parameters.ContainsKey("excludeKind") && parameters.ContainsKey("excludeUnit"))
                 throw new JsonException();
             if (mechanic == CommanderDynamicMechanic.SelectUnits &&
                 parameters.ContainsKey("unit") == parameters.ContainsKey("kind"))

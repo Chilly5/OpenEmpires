@@ -1,0 +1,50 @@
+{
+  "trace": "utc=2026-10-14T20:57:44.3201767Z;model=openai/gpt-6-luna;request=built\nhttp=sent\nhttp=200;durationMs=1860\nfinish=stop\nassistantContent=extracted;characters=354;finish=stop\nschema=field=missingSlots[0].path;code=conflicting-declarations;expected=String;actual=String;stage=clarification;node=-1;mode=Clarify\nsemantic=invalid;nodes=0\n",
+  "usage": {
+    "PromptTokens": 5850,
+    "CompletionTokens": 92,
+    "TotalTokens": 5942,
+    "CachedTokens": 5181,
+    "ReasoningTokens": 0,
+    "Cost": 0.00018136,
+    "HasReportedUsage": true
+  },
+  "attempts": [
+    {
+      "Kind": "initial",
+      "InputEstimate": 28801,
+      "SectionEstimates": {
+        "contract": 26038,
+        "context": 2422,
+        "memory": 2,
+        "questionFacts": 0,
+        "pending": 0,
+        "utterance": 25,
+        "messageMargin": 256
+      },
+      "Usage": {
+        "PromptTokens": 5850,
+        "CompletionTokens": 92,
+        "TotalTokens": 5942,
+        "CachedTokens": 5181,
+        "ReasoningTokens": 0,
+        "Cost": 0.00018136,
+        "HasReportedUsage": true
+      },
+      "ElapsedMilliseconds": 1864,
+      "HttpStatusCode": 200,
+      "ResultStage": "schema-invalid"
+    }
+  ],
+  "http": 1,
+  "repairs": 0,
+  "transcript": "Commander:\r\nDestination saved for the next applicable request. Existing tasks keep their approved destination.\r\n\r\nPlayer:\r\nmove my archers to marker\r\n\r\nCommander:\r\nCommander AI returned an invalid semantic response; no order was submitted.",
+  "preview": null,
+  "goals": [
+    {
+      "id": 1,
+      "status": "Completed",
+      "reason": "The movement objective is satisfied in simulation state."
+    }
+  ]
+}

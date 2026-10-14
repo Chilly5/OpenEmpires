@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -19,6 +20,11 @@ namespace OpenEmpires
         private TMP_Text voicePttButtonText;
         private Button voiceCancelButton;
         private bool pttMouseButtonHeld;
+        private CommanderVoiceApprovalTicket voiceApprovalTicket;
+        private string voiceLocalMessage = string.Empty;
+        public string VoiceReviewMessage => voiceController?.TranscriptReview != null
+            ? "Original: " + voiceController.OriginalTranscript + "\n" + voiceController.TranscriptReview.Message
+            : voiceLocalMessage;
 
         public CommanderVoiceInputController VoiceController => voiceController;
         public CommanderVoiceState VoiceState => voiceController?.State ?? CommanderVoiceState.Idle;
@@ -32,6 +38,7 @@ namespace OpenEmpires
             {
                 voiceController.Cancel(); // Preserve edited input, remove only unchanged owned voice draft.
                 voiceController.StateChanged -= OnVoiceStateChanged;
+                voiceController.RecordingStarting -= CaptureVoiceApproval;
                 voiceController.TranscriptPreviewReady -= OnVoiceTranscriptPreviewReady;
                 voiceController.ErrorOccurred -= OnVoiceErrorOccurred;
                 voiceController.Dispose();
@@ -47,7 +54,9 @@ namespace OpenEmpires
                     voiceProvider,
                     voiceAudioCapture,
                     SubmitVoiceTranscriptAsync);
+                ConfigureVoiceReview();
                 voiceController.StateChanged += OnVoiceStateChanged;
+                voiceController.RecordingStarting += CaptureVoiceApproval;
                 voiceController.TranscriptPreviewReady += OnVoiceTranscriptPreviewReady;
                 voiceController.ErrorOccurred += OnVoiceErrorOccurred;
             }
@@ -75,8 +84,10 @@ namespace OpenEmpires
                 voiceProvider,
                 voiceAudioCapture,
                 SubmitVoiceTranscriptAsync);
+            ConfigureVoiceReview();
 
             voiceController.StateChanged += OnVoiceStateChanged;
+            voiceController.RecordingStarting += CaptureVoiceApproval;
             voiceController.TranscriptPreviewReady += OnVoiceTranscriptPreviewReady;
             voiceController.ErrorOccurred += OnVoiceErrorOccurred;
 
@@ -86,6 +97,7 @@ namespace OpenEmpires
         public async Task<CommanderAIChatSubmission> SubmitVoiceTranscriptAsync(string transcript)
         {
             if (string.IsNullOrWhiteSpace(transcript) || submitting) return null;
+            if (!CanSubmitVoiceReview(transcript)) return null;
             if (voiceController?.State == CommanderVoiceState.Preview) voiceController.Cancel();
 
             // Display in input text field so player visually sees the identical text
@@ -112,6 +124,7 @@ namespace OpenEmpires
             if (voiceController != null)
             {
                 voiceController.StateChanged -= OnVoiceStateChanged;
+                voiceController.RecordingStarting -= CaptureVoiceApproval;
                 voiceController.TranscriptPreviewReady -= OnVoiceTranscriptPreviewReady;
                 voiceController.ErrorOccurred -= OnVoiceErrorOccurred;
                 voiceController.Dispose();
@@ -274,8 +287,24 @@ namespace OpenEmpires
 
         private void OnVoiceStateChanged(CommanderVoiceState state)
         {
+            if (state == CommanderVoiceState.Idle || state == CommanderVoiceState.Error)
+                voiceApprovalTicket = null;
             if (state != CommanderVoiceState.Preview) ReleaseVoiceDraft();
             UpdateVoiceUI();
+        }
+
+        private void CaptureVoiceApproval()
+        {
+            voiceLocalMessage = string.Empty;
+            object candidate = SingleVoiceApprovalCandidate(out string preview, out bool displayed);
+            voiceApprovalTicket = new CommanderVoiceApprovalTicket(candidate, preview, runtimeGeneration, displayed);
+        }
+
+        private void ObserveVoiceApprovalCandidate()
+        {
+            if (voiceApprovalTicket == null) return;
+            object candidate = SingleVoiceApprovalCandidate(out string preview, out bool displayed);
+            voiceApprovalTicket.Observe(candidate, preview, runtimeGeneration, displayed);
         }
 
         private void OnVoiceTranscriptPreviewReady(string transcript)
@@ -299,7 +328,7 @@ namespace OpenEmpires
             switch (state)
             {
                 case CommanderVoiceState.Idle:
-                    voiceStatusText.text = submitting ? "Commander is interpreting..." : CurrentVoiceModeLabel+". Hold " + ResolvePttKey() + " to talk (or click Record; " + VoiceCaptureLimitLabel + ")";
+                    voiceStatusText.text = !string.IsNullOrEmpty(voiceLocalMessage) ? voiceLocalMessage : submitting ? "Commander is interpreting..." : CurrentVoiceModeLabel+". Hold " + ResolvePttKey() + " to talk (or click Record; " + VoiceCaptureLimitLabel + ")";
                     voiceStatusText.color = new Color(0.7f, 0.8f, 0.95f);
                     if (voicePttButtonText != null) voicePttButtonText.text = "Record voice";
                     if (voiceCancelButton != null) voiceCancelButton.gameObject.SetActive(false);
@@ -320,7 +349,7 @@ namespace OpenEmpires
                     break;
 
                 case CommanderVoiceState.Preview:
-                    voiceStatusText.text = $"Heard: \"{voiceController?.CurrentTranscript}\"";
+                    voiceStatusText.text = VoiceReviewMessage;
                     voiceStatusText.color = new Color(0.4f, 1f, 0.5f);
                     if (voicePttButtonText != null) voicePttButtonText.text = "Send edited text";
                     if (voiceCancelButton != null) voiceCancelButton.gameObject.SetActive(true);
@@ -337,6 +366,69 @@ namespace OpenEmpires
             if (voicePttButton != null) voicePttButton.interactable = !submitting
                 && state != CommanderVoiceState.Transcribing && CommanderVoiceSettings.VoiceEnabled;
             UpdatePresentation();
+        }
+
+        private void ConfigureVoiceReview()
+        {
+            // Every ordinary utterance remains editable, regardless of a stale autosubmit setting.
+            voiceController.AutoSubmit = false;
+            voiceController.RawTranscriptHandler = HandleRawVoiceApproval;
+            voiceController.TranscriptProcessor = ReviewVoiceTranscript;
+        }
+
+        private static CommanderVoiceTranscriptReview ReviewVoiceTranscript(string raw)
+        {
+            var catalog = GameKnowledgeCatalog.BuildCanonicalIdentityCatalog();
+            var names = catalog.Units.Select(x => new CommanderVoiceName(x.StableId, x.DisplayName, x.Aliases.ToArray()))
+                .Concat(catalog.Buildings.Select(x => new CommanderVoiceName(x.StableId, x.DisplayName, x.Aliases.ToArray())));
+            return CommanderVoiceTranscriptCorrection.Review(raw, names);
+        }
+
+        private object SingleVoiceApprovalCandidate(out string preview, out bool displayed)
+        {
+            preview = string.Empty;
+            displayed = false;
+            // Hidden alternatives, simultaneous pending requests, marker input and adaptation
+            // replacement all require explicit review; voice never chooses among them.
+            if (submitting || OwnsDestinationInput || pendingClarification != null || pendingAdaptationProposal != null
+                || pendingActionPlan != null && strategicBridge?.PendingIntent != null) return null;
+            object candidate = pendingActionPlan ?? (object)strategicBridge?.PendingIntent;
+            if (candidate == null || pendingActionPlan?.Cancelled == true) return null;
+            preview = pendingActionPlan?.Preview ?? StrategicApprovalPreview();
+            displayed = IsVoiceApprovalCandidateDisplayed;
+            return candidate;
+        }
+
+        private bool HandleRawVoiceApproval(string raw)
+        {
+            // Deliberately inspect UNCORRECTED output. Quotes, punctuation, negation and
+            // longer utterances cannot accidentally enter the local approval route.
+            if (raw == null || raw.IndexOf("approv", StringComparison.OrdinalIgnoreCase) < 0) return false;
+            object candidate = SingleVoiceApprovalCandidate(out string preview, out bool displayed);
+            bool approved = voiceApprovalTicket?.TryConsume(raw, candidate, preview, runtimeGeneration, displayed) == true;
+            voiceApprovalTicket = null;
+            if (!approved)
+            {
+                voiceLocalMessage = "Approval needs review. Display one pending candidate, then record only 'approve', or use its approval button.";
+                AppendLine("Commander", voiceLocalMessage);
+                SetLatestRequestState("Needs clarification", voiceLocalMessage);
+                return true;
+            }
+            if (candidate is CommanderActionPlanCandidate) HandleActionPlanControl("approve plan");
+            else ApproveStrategicRecommendation();
+            voiceLocalMessage = "Voice approval sent through the existing approval checks.";
+            UpdatePresentation();
+            return true;
+        }
+
+        private bool CanSubmitVoiceReview(string editedText)
+        {
+            var review = voiceController?.TranscriptReview;
+            if (voiceController?.State != CommanderVoiceState.Preview || review?.HasAmbiguity != true) return true;
+            var editedReview = ReviewVoiceTranscript(editedText);
+            if (!editedReview.HasAmbiguity) return true;
+            SetCommanderStatus(editedReview.Message, true);
+            return false;
         }
     }
 }

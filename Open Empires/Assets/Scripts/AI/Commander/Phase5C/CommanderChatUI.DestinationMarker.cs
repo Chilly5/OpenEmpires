@@ -191,6 +191,16 @@ namespace OpenEmpires
                 AppendLine("Commander", pendingActionPlan.Preview);
                 UpdateStrategicControls();
             }
+            catch (CommanderMovementAdmissionException error)
+            {
+                if (this != null && runtimeGeneration == retainedLocationGeneration
+                    && retainedLocationLease?.Invoke() == true)
+                {
+                    string rejection = error.Message + " No goal was created; your destination marker is retained.";
+                    SetLatestRequestState("Rejected", rejection);
+                    AppendLine("Commander", rejection);
+                }
+            }
             catch (ArgumentException)
             {
                 SetLatestRequestState("Rejected", "That destination cannot be used for this request. Choose another marker.");

@@ -29,11 +29,17 @@ namespace OpenEmpires
 
         public CommanderVoiceState State { get; private set; } = CommanderVoiceState.Idle;
         public string CurrentTranscript { get; private set; } = string.Empty;
+        public string OriginalTranscript { get; private set; } = string.Empty;
+        public CommanderVoiceTranscriptReview TranscriptReview { get; private set; }
+        // Local UI hooks: the raw handler runs before correction or the semantic text path.
+        public Func<string, bool> RawTranscriptHandler { get; set; }
+        public Func<string, CommanderVoiceTranscriptReview> TranscriptProcessor { get; set; }
         public string LastError { get; private set; } = string.Empty;
         public bool AutoSubmit { get; set; } = false;
         public float RecordingDurationLimitSeconds { get; private set; } = 15f;
 
         public event Action<CommanderVoiceState> StateChanged;
+        public event Action RecordingStarting;
         public event Action<string> TranscriptPreviewReady;
         public event Action<string> ErrorOccurred;
 
@@ -96,6 +102,8 @@ namespace OpenEmpires
             // host while the gate runs. A stale positive return cannot record.
             if (disposed || recordingGeneration != currentSessionId) return false;
 
+            RecordingStarting?.Invoke();
+            if (disposed || disposing || recordingGeneration != currentSessionId) return false;
             bool started = audioCapture.StartRecording(dev, duration);
             if (!started)
             {
@@ -107,6 +115,8 @@ namespace OpenEmpires
             }
 
             CurrentTranscript = string.Empty;
+            OriginalTranscript = string.Empty;
+            TranscriptReview = null;
             LastError = string.Empty;
             TransitionTo(CommanderVoiceState.Recording);
             return true;
@@ -205,16 +215,25 @@ namespace OpenEmpires
                     return CommanderSpeechToTextResult.Empty();
                 }
 
-                CurrentTranscript = cleanTranscript;
+                OriginalTranscript = result.Transcript;
+                if (RawTranscriptHandler?.Invoke(result.Transcript) == true)
+                {
+                    if (sessionId == currentSessionId && !disposed) TransitionTo(CommanderVoiceState.Idle);
+                    return result;
+                }
+                if (sessionId != currentSessionId || disposed || requestCancellation.IsCancellationRequested)
+                    return CommanderSpeechToTextResult.Cancelled();
+                TranscriptReview = TranscriptProcessor?.Invoke(cleanTranscript);
+                CurrentTranscript = TranscriptReview?.Text ?? cleanTranscript;
 
-                if (AutoSubmit)
+                if (AutoSubmit && TranscriptReview?.RequiresReview != true)
                 {
                     TransitionTo(CommanderVoiceState.Idle);
                     if (sessionId != currentSessionId || disposed || requestCancellation.IsCancellationRequested)
                         return CommanderSpeechToTextResult.Cancelled();
                     if (submitAction != null)
                     {
-                        await submitAction(cleanTranscript);
+                        await submitAction(CurrentTranscript);
                     }
                 }
                 else
@@ -222,7 +241,7 @@ namespace OpenEmpires
                     TransitionTo(CommanderVoiceState.Preview);
                     if (sessionId != currentSessionId || disposed || requestCancellation.IsCancellationRequested)
                         return CommanderSpeechToTextResult.Cancelled();
-                    TranscriptPreviewReady?.Invoke(cleanTranscript);
+                    TranscriptPreviewReady?.Invoke(CurrentTranscript);
                 }
 
                 return result;
@@ -253,10 +272,13 @@ namespace OpenEmpires
         {
             if (disposed || disposing || State != CommanderVoiceState.Preview || string.IsNullOrWhiteSpace(CurrentTranscript))
                 return null;
+            if (TranscriptReview?.HasAmbiguity == true) return null;
 
             string textToSubmit = CurrentTranscript;
             int confirmationSession = currentSessionId;
             CurrentTranscript = string.Empty;
+            OriginalTranscript = string.Empty;
+            TranscriptReview = null;
             TransitionTo(CommanderVoiceState.Idle);
 
             if (disposed || disposing || confirmationSession != currentSessionId || State != CommanderVoiceState.Idle)
@@ -283,6 +305,8 @@ namespace OpenEmpires
             audioCapture.CancelRecording(); // Also cancels pending async final-tail/load work.
 
             CurrentTranscript = string.Empty;
+            OriginalTranscript = string.Empty;
+            TranscriptReview = null;
             TransitionTo(CommanderVoiceState.Idle);
         }
 
