@@ -1358,16 +1358,16 @@ namespace OpenEmpires
             layout.childControlWidth = layout.childControlHeight = true;
             layout.childForceExpandWidth = true;
             layout.childForceExpandHeight = false;
-            PanelElement(title.gameObject, 24);
-            PanelElement(commanderStatusText.gameObject, 32);
+            PanelElement(title.gameObject, 20);
+            PanelElement(commanderStatusText.gameObject, 24);
             PanelElement(conversation, 32, true);
-            conversation.GetComponent<LayoutElement>().preferredHeight = 140;
-            PanelElement(currentPlanStatusText.gameObject, 44);
+            conversation.GetComponent<LayoutElement>().preferredHeight = 180;
+            PanelElement(currentPlanStatusText.gameObject, 32);
             strategicHostRow = PanelRow("TaskControls", panel, selectPlanButton.gameObject,
                 pausePlanButton.gameObject, resumePlanButton.gameObject, cancelPlanButton.gameObject);
             strategicApprovalRow = PanelRow("StrategyApproval", panel, approveStrategyButton.gameObject,
                 confirmStrategyButton.gameObject, dismissStrategyButton.gameObject);
-            PanelElement(voiceRootObject, 64);
+            PanelElement(voiceRootObject, 48);
             var inputRow = PanelRow("TextSubmission", panel, input, send);
             send.GetComponent<LayoutElement>().preferredWidth = 72;
             send.GetComponent<LayoutElement>().flexibleWidth = 0;
@@ -1393,23 +1393,28 @@ namespace OpenEmpires
             float right = safe.width > 0 ? safe.xMax / scale : canvasRect.rect.width;
             float top = safe.height > 0 ? safe.yMax / scale : canvasRect.rect.height;
             float bottom = safe.height > 0 ? safe.yMin / scale : 0;
-            // The native minimap occupies the lower-right 200 pixels. Reserve its
-            // margin plus the top resource HUD, in the same canvas coordinates.
-            float width = Mathf.Min(360, Mathf.Max(260, (right - left) * .28f));
-            width = Mathf.Min(width, Mathf.Max(180, right - left - 24));
+            // Keep the compact dock above the minimap. The expanded view grows
+            // downward by 40%, capped inside the safe screen bounds.
+            float availableWidth = right - left;
+            float expandedWidth = Mathf.Min(420, Mathf.Max(390, availableWidth * .30f));
+            expandedWidth = Mathf.Min(expandedWidth, Mathf.Max(180, availableWidth - 24));
+            float compactWidth = Mathf.Min(360, Mathf.Max(260, availableWidth * .28f));
+            compactWidth = Mathf.Min(compactWidth, Mathf.Max(180, availableWidth - 24));
             float yInset = 56;
-            float height = Mathf.Max(180, top - bottom - yInset - 224);
+            float compactUsableHeight = Mathf.Max(180, top - bottom - yInset - 224);
+            float maximumExpandedHeight = Mathf.Max(180, top - bottom - yInset - 24);
+            float height = Mathf.Min(maximumExpandedHeight, compactUsableHeight * 1.4f);
             commanderPanel.anchorMin = commanderPanel.anchorMax = commanderPanel.pivot = Vector2.one;
-            commanderPanel.sizeDelta = new Vector2(width, height);
+            commanderPanel.sizeDelta = new Vector2(expandedWidth, height);
             var position = new Vector2(-(canvasRect.rect.width - right + 12), -(canvasRect.rect.height - top + yInset));
             commanderPanel.anchoredPosition = position;
             if (compactCommander != null)
             {
                 var compactRect = compactCommander.GetComponent<RectTransform>();
                 compactRect.anchoredPosition = position;
-                compactRect.sizeDelta = new Vector2(width, compactRect.sizeDelta.y);
-                FitCompactReview(compactReview, Mathf.Clamp(height - 184, 150, 240), true);
-                FitCompactReview(compactApproval, Mathf.Clamp(height - 184, 140, 190), false);
+                compactRect.sizeDelta = new Vector2(compactWidth, compactRect.sizeDelta.y);
+                FitCompactReview(compactReview, Mathf.Clamp(compactUsableHeight - 184, 150, 240), true);
+                FitCompactReview(compactApproval, Mathf.Clamp(compactUsableHeight - 184, 140, 190), false);
             }
         }
 
@@ -1458,7 +1463,10 @@ namespace OpenEmpires
             GameObject obj = UIObject(name, parent);
             var text = obj.AddComponent<TextMeshProUGUI>();
             text.text = value;
-            text.fontSize = fontSize;
+            var owner = parent.GetComponentInParent<CommanderChatUI>();
+            bool expandedText = owner != null && owner.commanderPanel != null
+                && (parent == owner.commanderPanel || parent.IsChildOf(owner.commanderPanel));
+            text.fontSize = expandedText ? Mathf.Max(9, fontSize * .72f) : fontSize;
             text.alignment = alignment;
             text.color = Color.white;
             text.raycastTarget = false;

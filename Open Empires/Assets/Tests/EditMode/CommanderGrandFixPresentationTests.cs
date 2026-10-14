@@ -328,13 +328,16 @@ namespace OpenEmpires.Tests
             Surface("OpenCommander");
             Assert.That(Panel.anchoredPosition.x,Is.EqualTo(compactRect.anchoredPosition.x).Within(1));
             Assert.That(Panel.anchoredPosition.y,Is.LessThanOrEqualTo(-48));
+            Assert.That(compactRect.rect.width,Is.LessThanOrEqualTo(360));
+            Assert.That(Panel.rect.width,Is.GreaterThan(compactRect.rect.width));
             Surface("OpenSettingsMenu");
             var menu=Panel.Find("SettingsMenu");
             Assert.That(chat.IsExpanded,Is.True);
             Assert.That(menu,Is.Not.Null);
             Assert.That(menu.gameObject.activeInHierarchy,Is.True);
             Canvas.ForceUpdateCanvases();
-            Assert.That(menu.GetComponent<RectTransform>().rect.width,Is.LessThanOrEqualTo(360));
+            Assert.That(menu.GetComponent<RectTransform>().rect.width,
+                Is.EqualTo(Panel.rect.width - 16).Within(1));
             Assert.That(provider.Calls,Is.Zero);
             Assert.That(manager.Goals,Is.Empty);
         }

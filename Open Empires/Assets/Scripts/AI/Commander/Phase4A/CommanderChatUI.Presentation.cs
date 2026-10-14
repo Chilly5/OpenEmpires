@@ -432,8 +432,8 @@ namespace OpenEmpires
             bubbleContent.pivot = new Vector2(.5f, 1);
             bubbleContent.sizeDelta = Vector2.zero;
             var bubbleLayout = bubbles.AddComponent<VerticalLayoutGroup>();
-            bubbleLayout.padding = new RectOffset(8, 8, 8, 8);
-            bubbleLayout.spacing = 8;
+            bubbleLayout.padding = new RectOffset(6, 6, 6, 6);
+            bubbleLayout.spacing = 5;
             bubbleLayout.childControlWidth = bubbleLayout.childControlHeight = true;
             bubbleLayout.childForceExpandWidth = true; bubbleLayout.childForceExpandHeight = false;
             bubbles.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
@@ -519,9 +519,9 @@ namespace OpenEmpires
             if (title != null) title.text = "COMMANDER";
             commanderPanel.GetComponent<Image>().color = new Color(.065f,.075f,.085f,1f);
             latestRequestText = Text("LatestRequest",commanderPanel,"Ready",14,TextAlignmentOptions.Left);
-            latestRequestText.richText = false; PanelElement(latestRequestText.gameObject,36);
+            latestRequestText.richText = false; PanelElement(latestRequestText.gameObject,28);
             providerConnectionText = Text("ProviderConnection",commanderPanel,"Text AI: local translator",12,TextAlignmentOptions.Left);
-            providerConnectionText.richText = false; PanelElement(providerConnectionText.gameObject,18);
+            providerConnectionText.richText = false; PanelElement(providerConnectionText.gameObject,15);
             providerConnectionText.transform.SetSiblingIndex(2);
             latestRequestText.transform.SetSiblingIndex(3);
             var chat = CompactButton(commanderPanel,"ChatTab","Chat",()=>{tasksVisible=false;UpdatePresentation();});
@@ -545,7 +545,7 @@ namespace OpenEmpires
             pendingQuestionText = Text("Question",pendingQuestion.transform,"",14,TextAlignmentOptions.Left);
             pendingQuestionText.richText=false;
             SetRect(pendingQuestionText.rectTransform,Vector2.zero,Vector2.one,new Vector2(8,4),new Vector2(-8,-4));
-            PanelElement(pendingQuestion,64);pendingQuestion.transform.SetSiblingIndex(5);
+            PanelElement(pendingQuestion,48);pendingQuestion.transform.SetSiblingIndex(5);
             expandedApproval = UIObject("Approval",commanderPanel);
             expandedApproval.AddComponent<Image>().color = new Color(.14f,.19f,.23f,1f);
             PanelElement(expandedApproval,120,true);
@@ -632,7 +632,7 @@ namespace OpenEmpires
             SetRect(editReviewed.GetComponent<RectTransform>(),new Vector2(.5f,0),new Vector2(.75f,0),new Vector2(4,5),new Vector2(-4,35));
             SetRect(discardReviewed.GetComponent<RectTransform>(),new Vector2(.75f,0),new Vector2(1,0),new Vector2(4,5),new Vector2(-8,35));
             inputLengthText = Text("RequestLength",commanderPanel,"0 / 1024 characters",11,TextAlignmentOptions.Left);
-            inputLengthText.richText = false; PanelElement(inputLengthText.gameObject,18);
+            inputLengthText.richText = false; PanelElement(inputLengthText.gameObject,15);
             requestRecovery.transform.SetSiblingIndex(commanderPanel.childCount-4);
             expandedReview.transform.SetSiblingIndex(commanderPanel.childCount-3);
             inputLengthText.transform.SetSiblingIndex(commanderPanel.childCount-2);
@@ -646,13 +646,13 @@ namespace OpenEmpires
                 var inputLayout=inputRow.Find("Input")?.GetComponent<LayoutElement>();
                 if(inputLayout!=null)
                 {
-                    inputLayout.minHeight=inputLayout.preferredHeight=64;
+                    inputLayout.minHeight=inputLayout.preferredHeight=48;
                     inputLayout.flexibleWidth=1;
                 }
                 var sendLayout=inputRow.Find("Send")?.GetComponent<LayoutElement>();
                 if(sendLayout!=null)
                 {
-                    sendLayout.minHeight=sendLayout.preferredHeight=64;
+                    sendLayout.minHeight=sendLayout.preferredHeight=48;
                     sendLayout.preferredWidth=76;
                     sendLayout.flexibleWidth=0;
                 }
@@ -660,13 +660,13 @@ namespace OpenEmpires
             var inputRect=commanderPanel.Find("TextSubmission/Input")?.GetComponent<RectTransform>();
             if(inputRect!=null)
             {
-                inputRect.parent.GetComponent<LayoutElement>().minHeight=68;
-                inputRect.parent.GetComponent<LayoutElement>().preferredHeight=68;
+                inputRect.parent.GetComponent<LayoutElement>().minHeight=52;
+                inputRect.parent.GetComponent<LayoutElement>().preferredHeight=52;
                 inputRect.GetComponent<Image>().color=new Color(.12f,.14f,.16f,1f);
             }
             inputField.lineType=TMP_InputField.LineType.MultiLineNewline;
-            inputField.textComponent.fontSize=14;
-            transcriptText.fontSize=15;
+            inputField.textComponent.fontSize=10;
+            transcriptText.fontSize=11;
             transcriptScroll.GetComponent<LayoutElement>().minHeight=32;
             transcriptScroll.GetComponent<LayoutElement>().preferredHeight=100;
             var transcriptImage=transcriptScroll.GetComponent<Image>();
@@ -694,14 +694,14 @@ namespace OpenEmpires
                 bubble.AddComponent<Image>().color = player
                     ? new Color(.17f, .28f, .33f, 1f) : new Color(.13f, .15f, .17f, 1f);
                 var layout = bubble.AddComponent<VerticalLayoutGroup>();
-                layout.padding = new RectOffset(10, 10, 8, 8);
-                layout.spacing = 4;
+                layout.padding = new RectOffset(7, 7, 5, 5);
+                layout.spacing = 2;
                 layout.childControlWidth = layout.childControlHeight = true;
                 layout.childForceExpandWidth = true; layout.childForceExpandHeight = false;
                 var name = Text("Speaker", bubble.transform, player ? "YOU" : "COMMANDER", 12,
                     TextAlignmentOptions.Left);
                 name.richText = false; name.color = new Color(.6f, .83f, .87f, 1f);
-                PanelElement(name.gameObject, 16);
+                PanelElement(name.gameObject, 12);
                 var message = Text("Message", bubble.transform, body, 15, TextAlignmentOptions.Left);
                 message.richText = false;
                 message.textWrappingMode = TextWrappingModes.Normal;

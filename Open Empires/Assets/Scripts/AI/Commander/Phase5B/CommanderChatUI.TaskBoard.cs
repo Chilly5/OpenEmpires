@@ -154,8 +154,8 @@ namespace OpenEmpires
             var root = UIObject("TaskCard", taskBoardContent);
             root.AddComponent<Image>().color = new Color(.13f, .15f, .17f, 1f);
             var layout = root.AddComponent<VerticalLayoutGroup>();
-            layout.padding = new RectOffset(8, 8, 8, 8);
-            layout.spacing = 8;
+            layout.padding = new RectOffset(6, 6, 6, 6);
+            layout.spacing = 5;
             layout.childControlWidth = layout.childControlHeight = true;
             layout.childForceExpandWidth = true;
             layout.childForceExpandHeight = false;
@@ -163,7 +163,7 @@ namespace OpenEmpires
                 ? card.Blocker : string.Empty;
             var status = Text("Status", root.transform, card.Status + " — "
                 + (string.IsNullOrWhiteSpace(attention) ? card.Progress : attention), 14, TextAlignmentOptions.Left);
-            status.richText = false; PanelElement(status.gameObject, 40);
+            status.richText = false; PanelElement(status.gameObject, 28);
             if (card.CanCancel)
             {
                 var cancel = CompactButton(root.transform, "CancelTask", "Cancel task", () =>
@@ -178,11 +178,11 @@ namespace OpenEmpires
                 PanelElement(cancel.gameObject, 28);
             }
             var title = Text("Objective", root.transform, card.Objective, 15, TextAlignmentOptions.Left);
-            title.richText = false; PanelElement(title.gameObject, 44);
+            title.richText = false; PanelElement(title.gameObject, 32);
             var stepText = Text("CurrentStep", root.transform,
                 "Current: " + card.CurrentStep + (string.IsNullOrEmpty(card.Blocker) ? "" : " — " + card.Blocker),
                 14, TextAlignmentOptions.Left);
-            stepText.richText = false; PanelElement(stepText.gameObject, 40);
+            stepText.richText = false; PanelElement(stepText.gameObject, 28);
             var details = UIObject("Details", root.transform);
             var detailsLayout = details.AddComponent<VerticalLayoutGroup>();
             detailsLayout.spacing = 4;
@@ -192,7 +192,7 @@ namespace OpenEmpires
             {
                 var detail = Text("Step", details.transform, "• " + step.Label + " — " + step.Status
                     + (string.IsNullOrEmpty(step.Progress) ? "" : " — " + step.Progress), 13, TextAlignmentOptions.Left);
-                detail.richText = false; PanelElement(detail.gameObject, 42);
+                detail.richText = false; PanelElement(detail.gameObject, 30);
             }
             details.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             var toggle = CompactButton(root.transform,"DetailsToggle","Show details",()=>
