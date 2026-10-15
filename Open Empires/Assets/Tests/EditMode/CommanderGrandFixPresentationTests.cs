@@ -689,16 +689,18 @@ namespace OpenEmpires.Tests
         }
 
         [TestCase(false)] [TestCase(true)]
-        public void CommanderPointerOwnership_IsLimitedToCurrentlyVisiblePanel(bool expanded)
+        public void CommanderPointerOwnership_ExpandedIsModalAndCompactIsLocal(bool expanded)
         {
             if(expanded)Surface("OpenCommander");else Surface("MinimizeCommander");
             Canvas.ForceUpdateCanvases();
             var region=expanded?Panel:Compact.GetComponent<RectTransform>();
             var corners=new Vector3[4];region.GetWorldCorners(corners);
             var center=RectTransformUtility.WorldToScreenPoint(null,(corners[0]+corners[2])*.5f);
-            var outside=RectTransformUtility.WorldToScreenPoint(null,corners[0]-new Vector3(100,100,0));
+            var outside=new Vector2(-10000,-10000);
             Assert.That(PointerOwned(center),Is.True,"A click on the visible Commander must not reach gameplay selection or camera control.");
-            Assert.That(PointerOwned(outside),Is.False,"The rest of the game remains interactive; no full-screen hit blocker.");
+            Assert.That(PointerOwned(outside),Is.EqualTo(expanded), expanded
+                ? "An expanded Commander must take priority over map and camera input everywhere."
+                : "The map remains interactive outside the compact Commander.");
         }
 
         [Test]

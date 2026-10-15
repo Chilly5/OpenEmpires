@@ -66,12 +66,14 @@ namespace OpenEmpires
             }
         }
 
-        // Evaluate the real current region before gameplay Input System callbacks;
+        // Expanded Commander is modal for gameplay input; compact Commander owns
+        // only its visible rectangle. Evaluate this before gameplay callbacks because
         // EventSystem's selected/hovered object can still describe the prior frame.
         public bool ContainsScreenPoint(Vector2 screenPoint)
         {
             if (!isActiveAndEnabled || canvasRoot == null || !canvasRoot.activeInHierarchy) return false;
-            var region = expanded ? commanderPanel : compactCommander?.GetComponent<RectTransform>();
+            if (expanded) return commanderPanel != null && commanderPanel.gameObject.activeInHierarchy;
+            var region = compactCommander?.GetComponent<RectTransform>();
             return region != null && region.gameObject.activeInHierarchy
                 && RectTransformUtility.RectangleContainsScreenPoint(region, screenPoint, null);
         }
