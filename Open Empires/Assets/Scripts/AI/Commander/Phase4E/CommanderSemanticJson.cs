@@ -397,17 +397,8 @@ namespace OpenEmpires
 
         private static CommanderSemanticUnitSelector ParseUnitSelector(string name)
         {
-            switch (name)
-            {
-                case "Military": return CommanderSemanticUnitSelector.Military;
-                case "Scout": return CommanderSemanticUnitSelector.Scout;
-                case "Villagers": return CommanderSemanticUnitSelector.Villagers;
-                case "Spearman": return CommanderSemanticUnitSelector.Spearman;
-                case "Archer": return CommanderSemanticUnitSelector.Archer;
-                case "Knight": return CommanderSemanticUnitSelector.Knight;
-                case "DamagedMilitary": return CommanderSemanticUnitSelector.DamagedMilitary;
-                default: throw new JsonException();
-            }
+            if (CommanderMovementContract.TryRequestSelector(name, out var selector)) return selector;
+            throw new JsonException();
         }
 
         private static CommanderSemanticLocationSelector ParseLocationSelector(string name)

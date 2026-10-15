@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,6 +11,383 @@ namespace OpenEmpires.Tests
 {
     public sealed class CommanderMovementSelectionRepairTests
     {
+        [TestCase(false)]
+        [TestCase(true)]
+        public async Task OfflineHttpEnvelope_ArcherSavedOrSpearmanTraceShaped_ReachesExactUnits(bool syntheticSpearman)
+        {
+            var instance = typeof(CommanderChatUI).GetField("instance", BindingFlags.Static | BindingFlags.NonPublic);
+            var previous = instance.GetValue(null);
+            instance.SetValue(null, null);
+            var config = ScriptableObject.CreateInstance<SimulationConfig>();
+            CommanderChatUI chat = null;
+            CommanderGoalManager manager = null;
+            CommanderIntentDispatcher dispatcher = null;
+            try
+            {
+                var sim = new GameSimulation(config, 1, new[] { 0 }, Array.Empty<int>());
+                sim.SetPlayerCivilizations(new[] { Civilization.English });
+                manager = new CommanderGoalManager(sim, 0);
+                dispatcher = new CommanderIntentDispatcher(sim, manager);
+                string path = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "Docs",
+                    "CommanderPhase5C", "evidence", "small-movement-ui-voice", "live-archers-corrected", "response.json"));
+                string body = File.ReadAllText(path);
+                if (syntheticSpearman)
+                {
+                    const string semantic = "{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"MoveUnits\",\"unitSelector\":\"Spearman\",\"count\":1,\"location\":\"PlayerMarker\"}]}";
+                    Assert.That(semantic.Length, Is.EqualTo(114),
+                        "This is a trace-length-matched synthetic fixture, not archived provider bytes.");
+                    body = new Newtonsoft.Json.Linq.JObject
+                    {
+                        ["choices"] = new Newtonsoft.Json.Linq.JArray(new Newtonsoft.Json.Linq.JObject
+                        {
+                            ["finish_reason"] = "stop",
+                            ["message"] = new Newtonsoft.Json.Linq.JObject { ["content"] = semantic }
+                        })
+                    }.ToString(Newtonsoft.Json.Formatting.None);
+                }
+                var transport = new SavedMovementEnvelopeTransport(body);
+                var provider = new OpenRouterCommanderProvider("offline-fixture-only", transport);
+                chat = new GameObject("SavedArcherEnvelopeFixture").AddComponent<CommanderChatUI>();
+                chat.Initialize(provider, sim, manager, dispatcher);
+                instance.SetValue(null, chat);
+                int x = sim.MapData.Width / 2, z = sim.MapData.Height / 2;
+                for (int ix = x - 20; ix <= x + 20; ix++)
+                    for (int iz = z - 20; iz <= z + 20; iz++) sim.FogOfWar.SetVisible(0, ix, iz);
+                var archers = new List<int>();
+                for (int i = 0; i < 2; i++)
+                {
+                    var archer = sim.UnitRegistry.CreateUnit(0, sim.MapData.TileToWorldFixed(x + 8 + i, z),
+                        Fixed32.One, Fixed32.FromFloat(.4f), Fixed32.One);
+                    archer.UnitType = sim.ResolveCivUnitType(0, 2);
+                    archer.CurrentHealth = archer.MaxHealth = 100;
+                    archers.Add(archer.Id);
+                }
+                var spearman = sim.UnitRegistry.CreateUnit(0, sim.MapData.TileToWorldFixed(x + 10, z),
+                    Fixed32.One, Fixed32.FromFloat(.4f), Fixed32.One);
+                spearman.UnitType = sim.ResolveCivUnitType(0, 1);
+                spearman.CurrentHealth = spearman.MaxHealth = 100;
+                var issued = new List<MoveCommand>();
+                sim.CommandBuffer.CommandEnqueued += (command, origin) =>
+                { if (origin == CommandEnqueueSource.Commander && command is MoveCommand move) issued.Add(move); };
+                Assert.That(chat.TryPlaceDestinationMarker(x, z), Is.True);
+                typeof(CommanderChatUI).GetField("markerInputFrame", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(chat, -1);
+                await chat.SubmitMessageAsync(syntheticSpearman
+                    ? "move spearman to marker" : "move my archers to marker");
+                Assert.That(transport.Calls, Is.EqualTo(1));
+                Assert.That(chat.PendingActionPlan, Is.Not.Null, chat.DisplayedTranscript);
+                Assert.That(manager.Goals, Is.Empty);
+                await chat.SubmitMessageAsync("approve plan");
+                Assert.That(manager.Goals, Has.Count.EqualTo(1), chat.DisplayedTranscript);
+                var goal = (CommanderCapabilityGoal)manager.Goals[0];
+                var expected = syntheticSpearman ? new[] { spearman.Id } : archers.ToArray();
+                Assert.That(goal.DynamicMoveUnitIds, Is.EquivalentTo(expected));
+                if (!syntheticSpearman) Assert.That(goal.DynamicMoveUnitIds, Has.None.EqualTo(spearman.Id));
+                for (int step = 0; step < 2000 && goal.Status != CommanderGoalStatus.Completed; step++)
+                { manager.Tick(sim.CurrentTick); sim.Tick(); }
+                Assert.That(goal.Status, Is.EqualTo(CommanderGoalStatus.Completed), goal.StatusReason);
+                Assert.That(issued, Has.Count.EqualTo(1));
+                Assert.That(issued[0].UnitIds, Is.EquivalentTo(expected));
+            }
+            finally
+            {
+                if (chat != null) UnityEngine.Object.DestroyImmediate(chat.gameObject);
+                dispatcher?.Dispose(); manager?.Dispose();
+                UnityEngine.Object.DestroyImmediate(config); instance.SetValue(null, previous);
+            }
+        }
+
+        private sealed class SavedMovementEnvelopeTransport : ICommanderHttpTransport
+        {
+            private readonly string body;
+            internal int Calls;
+            internal SavedMovementEnvelopeTransport(string body) { this.body = body; }
+            public Task<CommanderHttpResponse> PostJsonAsync(Uri uri, string json,
+                IReadOnlyDictionary<string, string> headers, CancellationToken token)
+            { Calls++; return Task.FromResult(new CommanderHttpResponse(200, body)); }
+        }
+
+        [Test]
+        public async Task ResetPendingExistingMarkerMove_RejectsOldApprovalAndLateYes()
+        {
+            var instance = typeof(CommanderChatUI).GetField("instance", BindingFlags.Static | BindingFlags.NonPublic);
+            var previous = instance.GetValue(null);
+            instance.SetValue(null, null);
+            var config = ScriptableObject.CreateInstance<SimulationConfig>();
+            CommanderChatUI chat = null;
+            CommanderGoalManager manager = null;
+            CommanderIntentDispatcher dispatcher = null;
+            try
+            {
+                var sim = new GameSimulation(config, 1, new[] { 0 }, Array.Empty<int>());
+                manager = new CommanderGoalManager(sim, 0);
+                dispatcher = new CommanderIntentDispatcher(sim, manager);
+                var provider = new NoMovementProvider { Json =
+                    "{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"MoveUnits\",\"unitSelector\":\"Spearman\",\"count\":1,\"location\":\"PlayerMarker\"}]}" };
+                chat = new GameObject("ResetMarkerMovementFixture").AddComponent<CommanderChatUI>();
+                chat.Initialize(provider, sim, manager, dispatcher);
+                instance.SetValue(null, chat);
+                int x = sim.MapData.Width / 2, z = sim.MapData.Height / 2;
+                for (int ix = x - 10; ix <= x + 10; ix++)
+                    for (int iz = z - 10; iz <= z + 10; iz++) sim.FogOfWar.SetVisible(0, ix, iz);
+                var unit = sim.UnitRegistry.CreateUnit(0, sim.MapData.TileToWorldFixed(x + 5, z),
+                    Fixed32.One, Fixed32.FromFloat(.4f), Fixed32.One);
+                unit.UnitType = 1; unit.CurrentHealth = unit.MaxHealth = 100;
+                Assert.That(chat.TryPlaceDestinationMarker(x, z), Is.True);
+                typeof(CommanderChatUI).GetField("markerInputFrame", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(chat, -1);
+                await chat.SubmitMessageAsync("move one spearman to marker");
+                var pending = chat.PendingActionPlan;
+                Assert.That(pending, Is.Not.Null, chat.DisplayedTranscript);
+                Assert.That(manager.Goals, Is.Empty);
+                chat.ResetConversation();
+                Assert.That(chat.PendingActionPlan, Is.Null);
+                Assert.That(manager.ApproveActionPlan(pending, pending.Generation), Is.Null);
+                provider.Json = "{\"outcome\":\"Answer\",\"message\":\"No active plan.\"}";
+                await chat.SubmitMessageAsync("yes");
+                Assert.That(manager.Goals, Is.Empty);
+                Assert.That(sim.CommandBuffer.FlushCommands(), Is.Empty);
+            }
+            finally
+            {
+                if (chat != null) UnityEngine.Object.DestroyImmediate(chat.gameObject);
+                dispatcher?.Dispose(); manager?.Dispose();
+                UnityEngine.Object.DestroyImmediate(config); instance.SetValue(null, previous);
+            }
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void ForeignOnlyActorsAndHiddenMarker_CannotAdmitExistingMove(bool dynamicPlan)
+        {
+            var config = ScriptableObject.CreateInstance<SimulationConfig>();
+            try
+            {
+                var sim = new GameSimulation(config, 2, new[] { 0, 1 }, Array.Empty<int>());
+                using var manager = new CommanderGoalManager(sim, 0);
+                int x = sim.MapData.Width / 2, z = sim.MapData.Height / 2;
+                for (int ix = x - 10; ix <= x + 10; ix++)
+                    for (int iz = z - 10; iz <= z + 10; iz++) sim.FogOfWar.SetVisible(0, ix, iz);
+                var foreign = sim.UnitRegistry.CreateUnit(1, sim.MapData.TileToWorldFixed(x + 5, z),
+                    Fixed32.One, Fixed32.FromFloat(.4f), Fixed32.One);
+                foreign.UnitType = 1; foreign.CurrentHealth = foreign.MaxHealth = 100;
+                string json = dynamicPlan ? Plan("\"unit\":\"unit:1\",\"count\":1")
+                    : "{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"MoveUnits\",\"unitSelector\":\"Spearman\",\"count\":1,\"location\":\"PlayerMarker\"}]}";
+                var parsed = CommanderSemanticJson.Parse(json);
+                Assert.That(manager.TrySetPlayerMarkerSnapshot(x, z), Is.True);
+                var approved = manager.ApproveActionPlan(manager.PrepareActionPlan(parsed,
+                    "move one spearman to marker", 0), 0);
+                Assert.That(() => manager.SubmitSemanticGraph(approved),
+                    Throws.InstanceOf<ArgumentException>(), "No owned matching actor may be frozen or admitted.");
+                Assert.That(manager.Goals, Is.Empty);
+                Assert.That(sim.CommandBuffer.FlushCommands(), Is.Empty);
+                Assert.That(manager.TrySetPlayerMarkerSnapshot(x + 20, z), Is.False,
+                    "A hidden destination cannot replace the valid marker.");
+                Assert.That(manager.TryGetPlayerMarkerSnapshot(out int retainedX, out int retainedZ), Is.True);
+                Assert.That((retainedX, retainedZ), Is.EqualTo((x, z)));
+            }
+            finally { UnityEngine.Object.DestroyImmediate(config); }
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public async Task EquivalentMarkerMoves_WaitForApprovalThenAdmitExactActorOnce(bool dynamicPlan)
+        {
+            var instance = typeof(CommanderChatUI).GetField("instance", BindingFlags.Static | BindingFlags.NonPublic);
+            var previous = instance.GetValue(null);
+            instance.SetValue(null, null);
+            var config = ScriptableObject.CreateInstance<SimulationConfig>();
+            CommanderChatUI chat = null;
+            CommanderGoalManager manager = null;
+            CommanderIntentDispatcher dispatcher = null;
+            try
+            {
+                var sim = new GameSimulation(config, 1, new[] { 0 }, Array.Empty<int>());
+                manager = new CommanderGoalManager(sim, 0);
+                dispatcher = new CommanderIntentDispatcher(sim, manager);
+                var provider = new NoMovementProvider { Json = dynamicPlan
+                    ? Plan("\"unit\":\"unit:1\",\"count\":1")
+                    : "{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"MoveUnits\",\"unitSelector\":\"Spearman\",\"count\":1,\"location\":\"PlayerMarker\"}]}" };
+                chat = new GameObject("MovementParityFixture").AddComponent<CommanderChatUI>();
+                chat.Initialize(provider, sim, manager, dispatcher);
+                instance.SetValue(null, chat);
+                int x = sim.MapData.Width / 2, z = sim.MapData.Height / 2;
+                for (int ix = x - 20; ix <= x + 20; ix++)
+                    for (int iz = z - 20; iz <= z + 20; iz++) sim.FogOfWar.SetVisible(0, ix, iz);
+                var intended = sim.UnitRegistry.CreateUnit(0, sim.MapData.TileToWorldFixed(x + 8, z),
+                    Fixed32.One, Fixed32.FromFloat(.4f), Fixed32.One);
+                intended.UnitType = 1; intended.CurrentHealth = intended.MaxHealth = 100;
+                var unrelated = sim.UnitRegistry.CreateUnit(0, sim.MapData.TileToWorldFixed(x + 9, z),
+                    Fixed32.One, Fixed32.FromFloat(.4f), Fixed32.One);
+                unrelated.UnitType = 2; unrelated.CurrentHealth = unrelated.MaxHealth = 100;
+                var issuedMoves = new List<MoveCommand>();
+                sim.CommandBuffer.CommandEnqueued += (command, origin) =>
+                { if (origin == CommandEnqueueSource.Commander && command is MoveCommand move) issuedMoves.Add(move); };
+                Assert.That(chat.TryPlaceDestinationMarker(x, z), Is.True);
+                typeof(CommanderChatUI).GetField("markerInputFrame", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(chat, -1);
+                await chat.SubmitMessageAsync("move one spearman to marker");
+                Assert.That(chat.PendingActionPlan, Is.Not.Null, chat.DisplayedTranscript);
+                Assert.That(manager.Goals, Is.Empty, "Translation is not approval.");
+                Assert.That(sim.CommandBuffer.FlushCommands(), Is.Empty);
+                Assert.That(chat.TryPlaceDestinationMarker(x + 1, z), Is.True);
+                Assert.That(chat.PendingActionPlan, Is.Not.Null, chat.DisplayedTranscript);
+                Assert.That(chat.PendingActionPlan.MarkerTileX, Is.EqualTo(x + 1));
+                typeof(CommanderChatUI).GetField("markerInputFrame", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(chat, -1);
+                await chat.SubmitMessageAsync("yes");
+                Assert.That(manager.Goals, Has.Count.EqualTo(1), chat.DisplayedTranscript);
+                var move = (CommanderCapabilityGoal)manager.Goals[0];
+                Assert.That(move.DynamicMoveUnitIds, Is.EqualTo(new[] { intended.Id }));
+                Assert.That(move.DynamicMoveUnitIds, Has.None.EqualTo(unrelated.Id));
+                await chat.SubmitMessageAsync("approve plan");
+                Assert.That(manager.Goals, Has.Count.EqualTo(1), "An approval cannot admit twice.");
+                Assert.That(provider.Calls, Is.EqualTo(1));
+                for (int step = 0; step < 2000 && move.Status != CommanderGoalStatus.Completed; step++)
+                { manager.Tick(sim.CurrentTick); sim.Tick(); }
+                Assert.That(issuedMoves, Has.Count.EqualTo(1));
+                Assert.That(issuedMoves[0].UnitIds, Is.EqualTo(new[] { intended.Id }));
+                Assert.That(move.Status, Is.EqualTo(CommanderGoalStatus.Completed), move.StatusReason);
+                Assert.That(sim.MapData.WorldToTile(intended.SimPosition),
+                    Is.EqualTo(sim.MapData.WorldToTile(issuedMoves[0].TargetPosition)),
+                    "The exact frozen actor must reach the native destination tile.");
+            }
+            finally
+            {
+                if (chat != null) UnityEngine.Object.DestroyImmediate(chat.gameObject);
+                dispatcher?.Dispose(); manager?.Dispose();
+                UnityEngine.Object.DestroyImmediate(config); instance.SetValue(null, previous);
+            }
+        }
+
+        [Test]
+        public void NormalizedMovement_CountsEffectsAndKeepsDistinctSelectorsAndDestinations()
+        {
+            var config = ScriptableObject.CreateInstance<SimulationConfig>();
+            try
+            {
+                var sim = new GameSimulation(config, 1, new[] { 0 }, Array.Empty<int>());
+                using var manager = new CommanderGoalManager(sim, 0);
+                int x = sim.MapData.Width / 2, z = sim.MapData.Height / 2;
+                for (int ix = x - 12; ix <= x + 12; ix++)
+                    for (int iz = z - 12; iz <= z + 12; iz++) sim.FogOfWar.SetVisible(0, ix, iz);
+                for (int i = 0; i < 3; i++)
+                {
+                    var unit = sim.UnitRegistry.CreateUnit(0, sim.MapData.TileToWorldFixed(x + i + 2, z),
+                        Fixed32.One, Fixed32.FromFloat(.4f), Fixed32.One);
+                    unit.UnitType = i == 2 ? 2 : 1; unit.CurrentHealth = unit.MaxHealth = 100;
+                }
+                Assert.That(manager.TrySetPlayerMarkerSnapshot(x, z), Is.True);
+                var request = manager.PrepareActionPlan(CommanderSemanticJson.Parse(
+                    "{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"MoveUnits\",\"unitSelector\":\"Spearman\",\"count\":1,\"location\":\"PlayerMarker\"}]}"),
+                    "move one spearman to marker", 0);
+                var dynamicCandidate = manager.PrepareActionPlan(CommanderSemanticJson.Parse(
+                    Plan("\"unit\":\"unit:1\",\"count\":1")), "move one spearman to marker", 0);
+                Assert.That(request.MovementOrder, Is.Not.Null);
+                Assert.That(dynamicCandidate.MovementOrder, Is.Not.Null);
+                Assert.That(request.MovementOrder.GameplayEffectCount, Is.EqualTo(1));
+                Assert.That(dynamicCandidate.MovementOrder.GameplayEffectCount, Is.EqualTo(1),
+                    "Selection and location are not gameplay effects.");
+                Assert.That(request.MovementOrder.SameGameplayEffects(dynamicCandidate.MovementOrder), Is.True);
+                var more = manager.PrepareActionPlan(CommanderSemanticJson.Parse(
+                    Plan("\"unit\":\"unit:1\",\"count\":2")), "move two spearmen to marker", 0);
+                Assert.That(request.MovementOrder.SameGameplayEffects(more.MovementOrder), Is.False);
+                var allMatching = manager.PrepareActionPlan(CommanderSemanticJson.Parse(
+                    Plan("\"unit\":\"unit:1\",\"countMode\":\"AllMatching\"")),
+                    "move all spearmen to marker", 0);
+                Assert.That(request.MovementOrder.SameGameplayEffects(allMatching.MovementOrder), Is.False,
+                    "An exact count and AllMatching are different order revisions.");
+                var excluded = manager.PrepareActionPlan(CommanderSemanticJson.Parse(
+                    Plan("\"kind\":\"AllUnits\",\"excludeKind\":\"Villagers\",\"count\":1")),
+                    "move one unit except villagers", 0);
+                Assert.That(request.MovementOrder.SameGameplayEffects(excluded.MovementOrder), Is.False);
+                string constrainedJson = Plan("\"unit\":\"unit:1\",\"count\":1")
+                    .Replace("\"version\":1,", "\"version\":1,\"constraints\":[{\"type\":\"NoConstruction\"}],");
+                CommanderActionPlanCandidate PrepareChecked(string json, string label)
+                {
+                    var parsed = CommanderSemanticJson.Parse(json);
+                    Assert.That(parsed.IsValid, Is.True,
+                        label + " must pass strict parsing: " + parsed.SchemaDiagnostic);
+                    try { return manager.PrepareActionPlan(parsed, label, 0); }
+                    catch (ArgumentException error)
+                    { Assert.Fail(label + " rejected at compilation: " + error.Message); return null; }
+                }
+                var constrained = PrepareChecked(constrainedJson, "constrained movement");
+                Assert.That(request.MovementOrder.SameGameplayEffects(constrained.MovementOrder), Is.False,
+                    "Typed restrictions cannot be dropped when comparing order revisions.");
+                const string firstMove = "{\"type\":\"MoveUnits\",\"unitSelector\":\"Spearman\",\"count\":1,\"location\":\"PlayerMarker\"}";
+                const string dependentMove = "{\"type\":\"MoveUnits\",\"unitSelector\":\"Spearman\",\"count\":1,\"location\":\"PlayerMarker\",\"dependsOn\":[0]}";
+                var independent = PrepareChecked(
+                    "{\"outcome\":\"Request\",\"nodes\":[" + firstMove + "," + firstMove + "]}",
+                    "independent moves");
+                var dependent = PrepareChecked(
+                    "{\"outcome\":\"Request\",\"nodes\":[" + firstMove + "," + dependentMove + "]}",
+                    "dependent moves");
+                Assert.That(independent.MovementOrder.GameplayEffectCount, Is.EqualTo(2));
+                Assert.That(independent.MovementOrder.SameGameplayEffects(dependent.MovementOrder), Is.False,
+                    "Dependency edges are part of the immutable order revision.");
+                Assert.That(manager.TrySetPlayerMarkerSnapshot(x + 1, z), Is.True);
+                var otherDestination = manager.PrepareActionPlan(CommanderSemanticJson.Parse(
+                    Plan("\"unit\":\"unit:1\",\"count\":1")), "move one spearman there", 0);
+                Assert.That(request.MovementOrder.SameGameplayEffects(otherDestination.MovementOrder), Is.False);
+                Assert.That(manager.ApproveActionPlan(request, 0), Is.Null,
+                    "Approval of a stale destination must fail.");
+                Assert.That(manager.Goals, Is.Empty);
+            }
+            finally { UnityEngine.Object.DestroyImmediate(config); }
+        }
+
+        [Test]
+        public void ExistingMarkerMove_CannotEnterAutomaticKnownIntentAdmission()
+        {
+            var config = ScriptableObject.CreateInstance<SimulationConfig>();
+            try
+            {
+                var sim = new GameSimulation(config, 1, new[] { 0 }, Array.Empty<int>());
+                using var manager = new CommanderGoalManager(sim, 0);
+                int x = sim.MapData.Width / 2, z = sim.MapData.Height / 2;
+                sim.FogOfWar.SetVisible(0, x, z);
+                var unit = sim.UnitRegistry.CreateUnit(0, sim.MapData.TileToWorldFixed(x, z),
+                    Fixed32.One, Fixed32.FromFloat(.4f), Fixed32.One);
+                unit.UnitType = 1; unit.CurrentHealth = unit.MaxHealth = 100;
+                Assert.That(manager.TrySetPlayerMarkerSnapshot(x, z), Is.True);
+                var result = CommanderSemanticJson.Parse(
+                    "{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"MoveUnits\",\"unitSelector\":\"Spearman\",\"count\":1,\"location\":\"PlayerMarker\"}]}");
+                var ticket = manager.BeginSemanticRequest("move one spearman to marker", 0, () => true);
+                Assert.Throws<ArgumentException>(() => manager.PrepareKnownIntentScope(result, ticket, null, false));
+                Assert.That(manager.Goals, Is.Empty);
+                Assert.That(sim.CommandBuffer.FlushCommands(), Is.Empty);
+            }
+            finally { UnityEngine.Object.DestroyImmediate(config); }
+        }
+
+        [Test]
+        public void MovementSelectorClarification_UsesStrictSharedSlotAndRetainsOrder()
+        {
+            var pending = new Newtonsoft.Json.Linq.JObject
+            {
+                ["outcome"] = "Clarify", ["message"] = "Which units should move?",
+                ["pending"] = new Newtonsoft.Json.Linq.JObject
+                {
+                    ["executionOrder"] = "Independent",
+                    ["nodes"] = new Newtonsoft.Json.Linq.JArray(new Newtonsoft.Json.Linq.JObject
+                    {
+                        ["type"] = "MoveUnits", ["count"] = 1, ["location"] = "PlayerMarker"
+                    })
+                },
+                ["missingSlots"] = new Newtonsoft.Json.Linq.JArray(new Newtonsoft.Json.Linq.JObject
+                {
+                    ["node"] = 0, ["path"] = CommanderMovementContract.RequestSelectionSlotPath,
+                    ["type"] = "CanonicalName", ["alternatives"] = new Newtonsoft.Json.Linq.JArray("Spearman")
+                })
+            };
+            var clarify = CommanderSemanticJson.ParseProviderResponse(pending.ToString());
+            Assert.That(clarify.IsValid, Is.True);
+            Assert.That(clarify.PendingGraphDraft, Is.Not.Null);
+            var completed = clarify.PendingGraphDraft.Resolve("Spearman");
+            Assert.That(completed.IsValid, Is.True);
+            Assert.That(completed.Outcome, Is.EqualTo(CommanderSemanticOutcome.Request));
+            Assert.That(completed.Nodes[0].Count, Is.EqualTo(1));
+            Assert.That(completed.Nodes[0].LocationSelector, Is.EqualTo(CommanderSemanticLocationSelector.PlayerMarker));
+            Assert.That(completed.Nodes[0].UnitSelector, Is.EqualTo(CommanderSemanticUnitSelector.Spearman));
+        }
+
         [TestCase(false, false)]
         [TestCase(true, false)]
         [TestCase(false, true)]
@@ -60,9 +438,11 @@ namespace OpenEmpires.Tests
                     {
                         Assert.That(manager.Goals, Is.Empty);
                         Assert.That(chat.TryPlaceDestinationMarker(x, z), Is.True);
+                        typeof(CommanderChatUI).GetField("markerInputFrame", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(chat, -1);
                     }
+                    Assert.That(chat.PendingActionPlan, Is.Not.Null, chat.DisplayedTranscript);
                 }
-                else await chat.SubmitMessageAsync("yes");
+                await chat.SubmitMessageAsync("yes");
                 Assert.That(chat.DisplayedTranscript, Does.Contain(humanProtected
                     ? "protected by a recent player order" : "No complete known reachable"));
                 Assert.That(chat.DisplayedTranscript, Does.Contain("No goal was created"));
@@ -217,7 +597,7 @@ namespace OpenEmpires.Tests
                 Assert.That(start, Is.GreaterThanOrEqualTo(0));
                 start += prefix.Length;
                 int end = instruction.IndexOf(" END marker example.", start, StringComparison.Ordinal);
-                var example = CommanderSemanticJson.Parse(instruction.Substring(start, end - start));
+                var example = CommanderSemanticJson.ParseProviderResponse(instruction.Substring(start, end - start));
                 Assert.That(example.IsValid, Is.True);
                 Assert.That(CommanderDynamicCompiler.TryCompile(example.DynamicPlan, sim, manager,
                     out var graph, out reason), Is.True, reason);
@@ -229,8 +609,9 @@ namespace OpenEmpires.Tests
             finally { UnityEngine.Object.DestroyImmediate(config); }
         }
 
-        [Test]
-        public void UnreachableMarker_RejectedBeforeAdmissionAndRetainsMarker()
+        [TestCase(false)]
+        [TestCase(true)]
+        public void UnreachableMarker_RejectedBeforeAdmissionAndRetainsMarker(bool dynamicPlan)
         {
             var config = ScriptableObject.CreateInstance<SimulationConfig>();
             try
@@ -246,7 +627,9 @@ namespace OpenEmpires.Tests
                     Fixed32.One, Fixed32.FromFloat(.4f), Fixed32.One);
                 unit.UnitType = 1; unit.CurrentHealth = unit.MaxHealth = 100;
                 Assert.That(manager.TrySetPlayerMarkerSnapshot(x, z), Is.True);
-                var parsed = CommanderSemanticJson.Parse(Plan("\"unit\":\"unit:1\",\"count\":1"));
+                var parsed = CommanderSemanticJson.Parse(dynamicPlan
+                    ? Plan("\"unit\":\"unit:1\",\"count\":1")
+                    : "{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"MoveUnits\",\"unitSelector\":\"Spearman\",\"count\":1,\"location\":\"PlayerMarker\"}]}");
                 var approved = manager.ApproveActionPlan(manager.PrepareActionPlan(parsed,
                     "move one spearman to marker", 0), 0);
                 Assert.Throws<CommanderMovementAdmissionException>(() => manager.SubmitSemanticGraph(approved));
@@ -258,8 +641,9 @@ namespace OpenEmpires.Tests
             finally { UnityEngine.Object.DestroyImmediate(config); }
         }
 
-        [Test]
-        public void MarkerSelection_IsFrozenAndMissingActorCannotBeReplaced()
+        [TestCase(false)]
+        [TestCase(true)]
+        public void MarkerSelection_IsFrozenAndMissingActorCannotBeReplaced(bool dynamicPlan)
         {
             var config = ScriptableObject.CreateInstance<SimulationConfig>();
             try
@@ -276,7 +660,9 @@ namespace OpenEmpires.Tests
                     Fixed32.One, Fixed32.FromFloat(.4f), Fixed32.One);
                 replacement.UnitType = 1; replacement.CurrentHealth = replacement.MaxHealth = 100;
                 Assert.That(manager.TrySetPlayerMarkerSnapshot(x, z), Is.True);
-                var interpretation = CommanderSemanticJson.Parse(Plan("\"unit\":\"unit:1\",\"count\":1"));
+                var interpretation = CommanderSemanticJson.Parse(dynamicPlan
+                    ? Plan("\"unit\":\"unit:1\",\"count\":1")
+                    : "{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"MoveUnits\",\"unitSelector\":\"Spearman\",\"count\":1,\"location\":\"PlayerMarker\"}]}");
                 var approved = manager.ApproveActionPlan(manager.PrepareActionPlan(interpretation,
                     "move one spearman to marker", 0), 0);
                 var goals = manager.SubmitSemanticGraph(approved);

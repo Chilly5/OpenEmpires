@@ -34,6 +34,11 @@ namespace OpenEmpires
         internal int MarkerTileX { get; }
         internal int MarkerTileZ { get; }
         internal IReadOnlyDictionary<int, CommanderBoundLocation> MarkerLocations { get; }
+        internal CommanderMovementOrderDraft MovementOrder { get; }
+        internal bool RequiresPlayerConfirmation => trustedTypedRoots == null
+            && (MovementOrder?.RequiresPlayerConfirmation == true
+                || Graph.DynamicProgram != null || Graph.Nodes.Count > 1
+                || Graph.Nodes[0].Intent is WatchFutureUnitsIntent);
 
         internal CommanderActionPlanCandidate(long requestId, CommanderGoalManager owner,
             CommanderSemanticResult interpretation, CommanderSemanticGraphPlan graph,
@@ -88,6 +93,9 @@ namespace OpenEmpires
                 }
             }
             MarkerLocations=new System.Collections.ObjectModel.ReadOnlyDictionary<int,CommanderBoundLocation>(markerLocations);
+            if (CommanderMovementOrderDraft.ContainsExistingMarkerMovement(graph))
+                MovementOrder = new CommanderMovementOrderDraft(graph, owner, requestId, generation,
+                    MarkerTileX, MarkerTileZ, MarkerLocations);
             strategicRevision = StrategyRevision(strategicSource);
             var unitNames = new Dictionary<int, string>();
             foreach (var node in graph.Nodes)
@@ -110,7 +118,8 @@ namespace OpenEmpires
                 || !Owner.AreFutureProducerBindingsCurrent(Graph, FutureProducerBindings)) return false;
             if (!IsMarkerCurrent()) return false;
             if (!Owner.TryCompileActionPlan(Interpretation, out var current, out _)
-                || !CommanderScopeEquivalence.SameGraph(current, Graph)) return false;
+                || !CommanderScopeEquivalence.SameGraph(current, Graph)
+                || MovementOrder != null && !MovementOrder.MatchesRevision(current)) return false;
             // These exact intents are read-only typed values; re-admission above prevents
             // e.g. a changed Next-age observation from silently repairing the approved plan.
             approved = true;
@@ -131,7 +140,8 @@ namespace OpenEmpires
                 && IsMarkerCurrent()
                 && StrategyRevision(strategicSource) == strategicRevision
                 && Owner.TryCompileActionPlan(Interpretation, out var current, out _)
-                && CommanderScopeEquivalence.SameGraph(current, Graph);
+                && CommanderScopeEquivalence.SameGraph(current, Graph)
+                && (MovementOrder == null || MovementOrder.MatchesRevision(current));
 
         internal bool Consume(CommanderGoalManager owner, CommanderSemanticGraphPlan graph)
         {
@@ -145,7 +155,8 @@ namespace OpenEmpires
         internal void SetKnownIntentEvidence(CommanderGoalManager owner, bool clarified)
         {
             if (!ReferenceEquals(owner, Owner) || approved || committed || Cancelled
-                || Graph.DynamicProgram != null || Graph.Nodes.Count != 1 || trustedTypedRoots != null)
+                || Graph.DynamicProgram != null || Graph.Nodes.Count != 1 || trustedTypedRoots != null
+                || RequiresPlayerConfirmation)
                 throw new InvalidOperationException("The established KnownIntent scope is unavailable.");
             knownIntentEvidence = clarified ? "ClarifiedKnownIntentAutomatic" : "KnownIntentAutomatic";
         }

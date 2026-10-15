@@ -1,5 +1,32 @@
 # OpenEmpires AI Commander — Remaining Phases Handoff
 
+## Latest: movement order and approval consistency PARTIAL — 2026-10-15
+
+The single-node Request auto-admission versus DynamicPlan approval mismatch for
+existing-unit marker movement has a source repair. Both formats now compile to a
+game-owned movement draft and require the same local confirmation; KnownIntent
+cannot auto-admit this slice. Shared movement vocabulary keeps Request display
+selectors and DynamicPlan canonical IDs distinct. Focused current-source EditMode
+job `15720c6b2da7410b8316f0c801277178` passed 29/29, including offline
+saved English Archer and separately labeled synthetic Spearman HTTP-envelope
+replays through provider/UI/native movement. The Spearman archive has only a
+semantic trace, not its raw envelope. A rendered
+offline PlayMode UI button fixture passed 1/1 (`e1c76fb2955a4bf3a4928a3577048c2f`);
+confirmation cancellation/replay passed 2/2 (`153de0fd810343a6807d19c6a27b9c7c`);
+a causal UI RED/GREEN pair now exists (RED `3728b2cf12564326b53da8fcfbbaaa85`,
+GREEN `44bb1f24d9da42b882995527881fcd02`); actual-match physical UI remains open. Current
+Windows compatibility source identity was regenerated and loaded as
+`47a5846847093816dd49dde1370a6377c21118003c235222a53b06dc0a81abb7`;
+no build or package claim. See [checkpoint report](Docs/CommanderPhase5C/order-approval-consistency-report.md)
+and [identity evidence](Docs/CommanderPhase5C/evidence/order-approval-consistency-identity.json).
+The same focused job covers reset, foreign/dead actors, hidden/unreachable
+markers, quantity/constraint/dependency distinctions and exact native arrival;
+the generated example passes the production provider parser. The user does not
+know a saved Spearman raw-envelope location; this goal closes PARTIAL with exact
+replay unverified, to revisit only if the bytes surface. Physical full-match input remains a
+separate release gate.
+No overall Phase 5C acceptance.
+
 ## Latest: small movement, UI and voice repair — 2026-10-15
 
 Implemented canonical existing-unit marker movement, typed exclusions and retained

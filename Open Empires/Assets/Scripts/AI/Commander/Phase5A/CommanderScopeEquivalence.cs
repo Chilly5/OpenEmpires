@@ -55,7 +55,7 @@ namespace OpenEmpires
                 && a.Workers.State == b.Workers.State && a.Workers.CurrentResource == b.Workers.CurrentResource
                 && a.Destination.Resource == b.Destination.Resource && a.Destination.SourceKind == b.Destination.SourceKind;
 
-        private static bool SameConstraints(IReadOnlyList<CommanderConstraint> a, IReadOnlyList<CommanderConstraint> b)
+        internal static bool SameConstraints(IReadOnlyList<CommanderConstraint> a, IReadOnlyList<CommanderConstraint> b)
         {
             if (a == null || b == null || a.Count != b.Count || a.Count > 4) return false;
             var seenA = new HashSet<CommanderConstraintType>(); var seenB = new HashSet<CommanderConstraintType>();

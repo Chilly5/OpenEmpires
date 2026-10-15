@@ -1,0 +1,26 @@
+# Movement order and approval consistency checkpoint — 2026-10-15
+
+**Verdict: PARTIAL — source repair and scoped verification passed; the saved Spearman raw provider envelope is unavailable for exact replay.** This is not Phase 5C acceptance.
+
+## Root cause and change
+
+The prior UI chose automatic admission for a single-node `Request` movement but required player confirmation for equivalent `DynamicPlan` movement. Provider format was therefore deciding authority. The game now compiles a strictly parsed existing-unit marker movement into a side-effect-free `CommanderMovementOrderDraft` before choosing the route. This draft retains the compiled graph, effect count, selection/count/exclusion semantics, dependencies and constraints, marker snapshot, owner/runtime and request identity. It does not replace the graph used for native execution.
+
+For this movement slice, both formats enter the existing pending candidate and require local confirmation. `PrepareKnownIntentScope`, `AdmitPreparedKnownIntent`, and `SubmitKnownScopedIntent` reject an attempt to bypass that policy. Approval still checks the original compiled graph and candidate lease, marker revision, owner, runtime and generation; replay cannot commit again. The existing spoken approval handler remains in place. The Request display selectors and DynamicPlan canonical IDs remain distinct, with shared movement guidance/validator/clarification vocabulary. Saved valid wire representations remain accepted. Other capabilities, including result-bound new-unit movement, keep their established routes.
+
+## Evidence
+
+- Correct Unity project, branch `unit_models_and_voice_control`, unchanged HEAD `02730b44b21fb887d40840b6c9b4649e052005ab`; local edits preserved, no commit.
+- Current source compiled with zero Unity console errors. Final focused EditMode job `15720c6b2da7410b8316f0c801277178`: **29/29 passed** (27 movement cases and two simple KnownIntent regressions). It checks equivalent Request/DynamicPlan approval and native movement, exact native destination tiles, marker replacement, single-use approval, distinctions in count, quantity mode, exclusions, constraints, dependencies and destination, strict selector clarification, protected/unreachable/foreign/hidden denial, dead frozen actors, reset and late approval rejection, and generated movement example parsing through `ParseProviderResponse`.
+- The archived English Archer `response.json` was supplied through an offline `ICommanderHttpTransport` to the production OpenRouter provider, then through `CommanderChatUI` parsing/normalization/approval to an exact two-Archer native move and completed goal. A separately labeled synthetic Spearman HTTP envelope, with a 114-character Request matching the archived trace's reported length, passed the same production path and completed an exact single-Spearman native move. No paid request was sent. The Spearman archive contains `provider-result.json` with `semantic=Request;nodes=1`, but lacks the raw HTTP envelope; the synthetic replay does **not** prove its saved bytes.
+- Rendered PlayMode UI job `e1c76fb2955a4bf3a4928a3577048c2f`: **1/1 passed**. An offline provider fixture drove a Request marker move; the actual approval button was visible, no goal existed before its click, and two clicks admitted only one goal. This controlled component fixture does not certify physical input or a full match scene.
+- Focused confirmation integrity job `153de0fd810343a6807d19c6a27b9c7c`: **2/2 passed** for cancellation and cross-runtime/replay rejection.
+- Causal RED/GREEN: temporarily removing the effect-based UI decision caused the Request movement preview test to fail (`3728b2cf12564326b53da8fcfbbaaa85`, 1 expected failure); restoring it made the same test pass (`44bb1f24d9da42b882995527881fcd02`, 1/1). The separate manager admission guard remained active during RED, so this isolates the UI route and demonstrates defense in depth rather than a pre-change full-source build.
+- Generated Windows compatibility identity was refreshed and loaded. Computed and loaded source SHA-256 both `47a5846847093816dd49dde1370a6377c21118003c235222a53b06dc0a81abb7`; runtime MVID `6235a751-5122-4558-95a6-2bef05ae5b69`. Full hashes and test receipt are in [identity evidence](evidence/order-approval-consistency-identity.json). `git diff --check` had no whitespace errors (only line-ending warnings).
+
+## Remaining verification
+
+1. The exact saved Spearman raw envelope was not found in the repository or its history, and the user does not know an external copy or path. This goal closes with that replay explicitly unverified; if the bytes surface later, replay them through production parsing and native movement. The archived trace and native result cannot establish the exact provider bytes. The trace-shaped offline HTTP fixture already exercises the equivalent game path.
+2. Perform a separate actual-match UI/physical-input check if this slice is promoted for release; the controlled rendered PlayMode component fixture proves the button route only.
+
+No build, full match, full suite, paid provider call, commit, Git reset, clean or push was performed. Windows/Web package and standalone checks remain separate gates.

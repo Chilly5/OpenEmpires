@@ -188,7 +188,7 @@ namespace OpenEmpires
                     if (s != "New" && s != "TargetTotal") throw new JsonException();
                     break;
                 case CommanderDynamicFieldKind.UnitKind:
-                    if (s != "AllUnits" && !NamedEnum<CommanderSemanticUnitSelector>(s)) throw new JsonException();
+                    if (!CommanderMovementContract.IsDynamicKind(s)) throw new JsonException();
                     break;
                 default: throw new JsonException();
             }

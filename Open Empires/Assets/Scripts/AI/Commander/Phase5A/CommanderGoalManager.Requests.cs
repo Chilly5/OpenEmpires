@@ -106,10 +106,25 @@ namespace OpenEmpires
                 || interpretation.Nodes[0].Type == CommanderSemanticNodeType.StrategicObjective
                 || interpretation.Nodes[0].Type == CommanderSemanticNodeType.WatchFutureUnits)
                 throw new ArgumentException("Only the established narrow KnownIntent path can use automatic admission.");
+            if (!TryCompileActionPlan(interpretation, out var normalized, out string reason))
+                throw new ArgumentException(reason);
+            if (CommanderMovementOrderDraft.ContainsExistingMarkerMovement(normalized))
+                throw new ArgumentException("This marker movement requires separate player confirmation.");
             var candidate = PrepareActionPlan(interpretation, ticket.OriginalInput, ticket.Generation,
                 strategicSource, ticket.IsCurrent, ticket,resolvedMarkerLocations);
+            return AdmitPreparedKnownIntent(candidate, clarified, strategicSource);
+        }
+
+        internal CommanderActionPlanCandidate AdmitPreparedKnownIntent(
+            CommanderActionPlanCandidate candidate, bool clarified, StrategicPipeline strategicSource)
+        {
+            if (candidate == null || candidate.RequiresPlayerConfirmation
+                || candidate.Interpretation?.Outcome != CommanderSemanticOutcome.Request
+                || candidate.Graph.Nodes.Count != 1 || candidate.Graph.DynamicProgram != null
+                || candidate.Graph.Nodes[0].Intent is WatchFutureUnitsIntent)
+                throw new ArgumentException("This order requires separate player confirmation.");
             candidate.SetKnownIntentEvidence(this, clarified);
-            if (ApproveActionPlan(candidate, ticket.Generation, strategicSource) == null)
+            if (ApproveActionPlan(candidate, candidate.Generation, strategicSource) == null)
                 throw new ArgumentException("The KnownIntent request scope is stale.");
             return candidate;
         }
@@ -120,6 +135,7 @@ namespace OpenEmpires
             if (pendingKnownAuthority != null || scope == null || submit == null
                 || !scope.CanCommit(this, scope.Graph) || scope.Graph.DynamicProgram != null
                 || scope.Graph.Nodes.Count != 1
+                || scope.RequiresPlayerConfirmation
                 || (scope.AuthorizationEvidence != "KnownIntentAutomatic"
                     && scope.AuthorizationEvidence != "ClarifiedKnownIntentAutomatic")
                 || !CommanderScopeEquivalence.SameIntent(intent, scope.Graph.Nodes[0].Intent))

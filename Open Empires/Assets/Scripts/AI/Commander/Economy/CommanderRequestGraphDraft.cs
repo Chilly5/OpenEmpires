@@ -105,6 +105,8 @@ namespace OpenEmpires
                     ) throw new JsonException();
                 if (!Allowed(type, path))
                     throw CommanderSemanticResult.InvalidClarificationSlot(spec, supportedSlotPaths.ContainsKey(type));
+                if (path == CommanderMovementContract.RequestSelectionSlotPath
+                    && (string)node["type"] != "MoveUnits") throw new JsonException();
                 if (!seen.Add(index + ":" + path)) throw new JsonException();
                 JObject parent = Parent(node, path);
                 string leaf = Leaf(path);
@@ -159,7 +161,8 @@ namespace OpenEmpires
             var catalog = GameKnowledgeCatalog.BuildCanonicalIdentityCatalog();
             if (selectedValue?.Type == JTokenType.String)
             {
-                if (selectedPath == "unit" && CommanderIntentCatalog.TryResolveUnit((string)selectedValue, out int unit))
+                if ((selectedPath == "unit" || selectedPath == CommanderMovementContract.RequestSelectionSlotPath)
+                    && CommanderIntentCatalog.TryResolveUnit((string)selectedValue, out int unit))
                 { selectedId = catalog.FindUnitByType(unit)?.StableId; candidates = "unitCandidates"; }
                 else if ((selectedPath == "structure" || selectedPath == "producer")
                     && CommanderIntentCatalog.TryResolveStructure((string)selectedValue, out BuildingType building))
@@ -509,10 +512,10 @@ namespace OpenEmpires
         private static readonly Dictionary<string,string[]> supportedSlotPaths = new Dictionary<string,string[]>(StringComparer.Ordinal)
         {
             ["Confirmation"]=new[]{"structure","unit","producer"},
-            ["Count"]=new[]{"count"},
-            ["Location"]=new[]{"location","placement.anchor"},
+            ["Count"]=new[]{CommanderMovementContract.CountSlotPath},
+            ["Location"]=new[]{CommanderMovementContract.MarkerLocationSlotPath,"placement.anchor"},
             ["SourceKind"]=new[]{"sourceKind","destination.sourceKind","placement.sourceKind"},
-            ["CanonicalName"]=new[]{"structure","unit","producer","technology","resource","destination.resource","placement.resource"}
+            ["CanonicalName"]=new[]{"structure","unit",CommanderMovementContract.RequestSelectionSlotPath,"producer","technology","resource","destination.resource","placement.resource"}
         };
         internal static string SupportedSlotPathsJson => new JObject(supportedSlotPaths.Select(pair=>
             new JProperty(pair.Key,new JArray(pair.Value)))).ToString(Formatting.None);

@@ -154,9 +154,14 @@ namespace OpenEmpires
             try
             {
                 ClearActionPlanPreview();
-                // A location answer is semantic slot completion. The ordinary one-node
-                // automatic authority gate still applies; compound/strategic approval does not change.
-                if (retainedLocationResult.Outcome == CommanderSemanticOutcome.Request
+                // Compile once into the game-owned effect draft before choosing the
+                // admission route. Marker movement uses the same confirmation policy
+                // for Request and DynamicPlan representations.
+                var candidate = semanticGoalManager.PrepareActionPlan(retainedLocationResult,
+                    retainedLocationText, runtimeGeneration, strategicPipeline, retainedLocationLease,
+                    retainedLocationTicket, RetainedMarkerLocations());
+                if (!candidate.RequiresPlayerConfirmation
+                    && retainedLocationResult.Outcome == CommanderSemanticOutcome.Request
                     && retainedLocationResult.Nodes.Count == 1
                     && retainedLocationResult.Nodes[0].Type != CommanderSemanticNodeType.WatchFutureUnits
                     && retainedLocationResult.Nodes[0].Type != CommanderSemanticNodeType.StrategicObjective)
@@ -164,8 +169,7 @@ namespace OpenEmpires
                     var context = new CommanderContextBuilder().Build(semanticSimulation, semanticGoalManager);
                     if (!CommanderSemanticAdmission.TryCreateTacticalIntent(retainedLocationResult.Nodes[0], context,
                         out CommanderIntent intent, out string reason)) throw new ArgumentException(reason);
-                    var scope = semanticGoalManager.PrepareKnownIntentScope(retainedLocationResult,
-                        retainedLocationTicket, strategicPipeline, true,RetainedMarkerLocations());
+                    var scope = semanticGoalManager.AdmitPreparedKnownIntent(candidate, true, strategicPipeline);
                     var submission = semanticGoalManager.SubmitKnownScopedIntent(scope, intent,
                         () => semanticDispatcher.SubmitIntent(intent));
                     TrackCurrentRequest(submission);
@@ -185,8 +189,7 @@ namespace OpenEmpires
                     }
                     return;
                 }
-                pendingActionPlan = semanticGoalManager.PrepareActionPlan(retainedLocationResult,
-                    retainedLocationText, runtimeGeneration, strategicPipeline, retainedLocationLease, retainedLocationTicket,RetainedMarkerLocations());
+                pendingActionPlan = candidate;
                 SetLatestRequestState("Awaiting approval", "Destination set. Review and approve the plan.");
                 AppendLine("Commander", pendingActionPlan.Preview);
                 UpdateStrategicControls();

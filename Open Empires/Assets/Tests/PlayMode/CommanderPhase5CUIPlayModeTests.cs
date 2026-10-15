@@ -623,6 +623,41 @@ namespace OpenEmpires.Tests
         }
 
         [UnityTest]
+        public IEnumerator MarkerMoveRequest_OfflineProviderUsesRenderedApprovalButtonOnce()
+        {
+            chat.Initialize(provider, simulation, goals, dispatcher, TimeSpan.FromSeconds(2));
+            chat.enabled = true;
+            chat.OpenCommander();
+            yield return null;
+            int x = simulation.MapData.Width / 2, z = simulation.MapData.Height / 2;
+            for (int ix = x - 10; ix <= x + 10; ix++)
+                for (int iz = z - 10; iz <= z + 10; iz++) simulation.FogOfWar.SetVisible(0, ix, iz);
+            var unit = simulation.UnitRegistry.CreateUnit(0, simulation.MapData.TileToWorldFixed(x + 5, z),
+                Fixed32.One, Fixed32.FromFloat(.4f), Fixed32.One);
+            unit.UnitType = 1; unit.CurrentHealth = unit.MaxHealth = 100;
+            Assert.That(chat.TryPlaceDestinationMarker(x, z), Is.True);
+            yield return null;
+            var parsed = CommanderSemanticJson.Parse(
+                "{\"outcome\":\"Request\",\"nodes\":[{\"type\":\"MoveUnits\",\"unitSelector\":\"Spearman\",\"count\":1,\"location\":\"PlayerMarker\"}]}");
+            var turn = chat.SubmitMessageAsync("move one spearman to marker");
+            provider.CompleteLatest(parsed);
+            while (!turn.IsCompleted) yield return null;
+            yield return null;
+            Assert.That(chat.PendingActionPlan, Is.Not.Null, chat.DisplayedTranscript);
+            Assert.That(goals.Goals, Is.Empty);
+            Canvas.ForceUpdateCanvases();
+            var approve = chat.transform.Find("CommanderCanvas/Panel/Approval/ApprovePlan").GetComponent<Button>();
+            Assert.That(approve.gameObject.activeInHierarchy, Is.True);
+            approve.onClick.Invoke();
+            Assert.That(goals.Goals, Has.Count.EqualTo(1), chat.DisplayedTranscript);
+            var move = (CommanderCapabilityGoal)goals.Goals[0];
+            Assert.That(move.DynamicMoveUnitIds, Is.EqualTo(new[] { unit.Id }));
+            approve.onClick.Invoke();
+            Assert.That(goals.Goals, Has.Count.EqualTo(1));
+            Assert.That(provider.Attempts, Is.EqualTo(1));
+        }
+
+        [UnityTest]
         public IEnumerator ApprovePlan_UsesExistingSingleUseAuthorityAndUpdatesLatestStatus()
         {
             chat.Initialize(provider, simulation, goals, dispatcher, TimeSpan.FromSeconds(2));
